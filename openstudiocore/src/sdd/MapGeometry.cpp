@@ -1873,9 +1873,8 @@ namespace sdd {
 
     // building azimuth
     double buildingAzimuth = fixAngle(building.northAxis());
-    pugi::xml_node buildingAzimuthElement = doc.createElement("BldgAz");
-    result.appendChild(buildingAzimuthElement);
-    buildingAzimuthElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(buildingAzimuth))));
+    pugi::xml_node buildingAzimuthElement = result.append_child("BldgAz");
+    buildingAzimuthElement.text() = buildingAzimuth;// OR openstudio::string_conversions::number(buildingAzimuth)
 
     // TotStoryCnt - required, Standards Number of Stories
     // AboveGrdStoryCnt - required, Standards Number of Above Ground Stories
@@ -1903,9 +1902,8 @@ namespace sdd {
       }
     }
 
-    pugi::xml_node aboveGradeStoryCountElement = doc.createElement("AboveGrdStoryCnt");
-    result.appendChild(aboveGradeStoryCountElement);
-    aboveGradeStoryCountElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(numAboveGroundStories)));
+    pugi::xml_node aboveGradeStoryCountElement = result.append_child("AboveGrdStoryCnt");
+    aboveGradeStoryCountElement.text() = numAboveGroundStories);
     */
 
     // translate building shading
@@ -1925,10 +1923,7 @@ namespace sdd {
         Transformation transformation = shadingSurfaceGroup.siteTransformation();
 
         for (const model::ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()){
-          boost::optional<pugi::xml_node> shadingSurfaceElement = translateShadingSurface(shadingSurface, transformation, doc);
-          if (shadingSurfaceElement){
-            result.appendChild(*shadingSurfaceElement);
-          }
+          translateShadingSurface(shadingSurface, transformation, result);
         }
       }
 
@@ -1939,11 +1934,7 @@ namespace sdd {
 
     // translate building story
     for (const model::BuildingStory& buildingStory : buildingStories){
-
-      boost::optional<pugi::xml_node> buildingStoryElement = translateBuildingStory(buildingStory, doc);
-      if (buildingStoryElement){
-        result.appendChild(*buildingStoryElement);
-      }
+      translateBuildingStory(buildingStory, result);
 
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
@@ -2020,10 +2011,7 @@ namespace sdd {
 
     for (const model::ThermalZone& thermalZone : thermalZones){
 
-      boost::optional<pugi::xml_node> thermalZoneElement = translateThermalZone(thermalZone, doc);
-      if (thermalZoneElement){
-        result.appendChild(*thermalZoneElement);
-      }
+      translateThermalZone(thermalZone, result);
 
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
@@ -2042,10 +2030,7 @@ namespace sdd {
     }
 
     for (const auto & airLoop : airLoops) {
-      auto airLoopElement = translateAirLoopHVAC(airLoop,doc);
-      if (airLoopElement) {
-        result.appendChild(*airLoopElement);
-      }
+      translateAirLoopHVAC(airLoop, result);
 
       if (m_progressBar){
         m_progressBar->setValue(m_progressBar->value() + 1);
@@ -2055,16 +2040,15 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateBuildingStory(const openstudio::model::BuildingStory& buildingStory, QDomDocument& doc)
+  boost::optional<pugi::xml_node> ForwardTranslator::translateBuildingStory(const openstudio::model::BuildingStory& buildingStory, pugi::xml_node& root)
   {
-    pugi::xml_node result = doc.createElement("Story");
+    pugi::xml_node result = root.append_child("Story");
     m_translatedObjects[buildingStory.handle()] = result;
 
     // name
     std::string name = buildingStory.name().get();
-    pugi::xml_node nameElement = doc.createElement("Name");
-    result.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(escapeName(name)));
+    pugi::xml_node nameElement = result.append_child("Name");
+    nameElement.text() = escapeName(name).c_str();
 
     // SDD:
     // Mult - defaulted, ignore (OS doesn't have this)
@@ -2077,28 +2061,24 @@ namespace sdd {
     std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
 
     for (const model::Space& space : spaces){
-      boost::optional<pugi::xml_node> spaceElement = translateSpace(space, doc);
-      if (spaceElement){
-        result.appendChild(*spaceElement);
-      }
+      translateSpace(space, result);
     }
 
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateSpace(const openstudio::model::Space& space, QDomDocument& doc)
+  boost::optional<pugi::xml_node> ForwardTranslator::translateSpace(const openstudio::model::Space& space, pugi::xml_node& root)
   {
     UnitSystem ipSys(UnitSystem::IP);
     UnitSystem btuSys(UnitSystem::BTU);
 
-    pugi::xml_node result = doc.createElement("Spc");
+    pugi::xml_node result = root.append_child("Spc");
     m_translatedObjects[space.handle()] = result;
 
     // name
     std::string name = space.name().get();
-    pugi::xml_node nameElement = doc.createElement("Name");
-    result.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(escapeName(name)));
+    pugi::xml_node nameElement = result.append_child("Name");
+    nameElement.text() = escapeName(name).c_str();
 
     // SDD:
     // Status - required, need to add
@@ -2229,9 +2209,8 @@ namespace sdd {
     OptionalQuantity volumeIP = QuantityConverter::instance().convert(volumeSI, ipSys);
     OS_ASSERT(volumeIP);
     OS_ASSERT(volumeIP->units() == IPUnit(IPExpnt(0,3,0)));
-    pugi::xml_node volumeElement = doc.createElement("Vol");
-    result.appendChild(volumeElement);
-    volumeElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(volumeIP->value()))));
+    pugi::xml_node volumeElement = result.append_child("Vol");
+    volumeElement.text() = volumeIP->value();  // Or openstudio::string_conversions::number(volumeIP->value())
 
     // log warning if volume is 0
     if (volumeIP->value() < std::numeric_limits<double>::epsilon()){
@@ -2244,9 +2223,8 @@ namespace sdd {
     OptionalQuantity floorAreaIP = QuantityConverter::instance().convert(floorAreaSI, ipSys);
     OS_ASSERT(floorAreaIP);
     OS_ASSERT(floorAreaIP->units() == IPUnit(IPExpnt(0,2,0)));
-    pugi::xml_node floorAreaElement = doc.createElement("Area");  // SAC 3/14/14
-    result.appendChild(floorAreaElement);
-    floorAreaElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(floorAreaIP->value()))));
+    pugi::xml_node floorAreaElement = result.append_child("Area");   // SAC 3/14/14
+    floorAreaElement.text() = floorAreaIP->value();  // Or openstudio::string_conversions::number(floorAreaIP->value())
 
     // log warning if area is 0
     if (floorAreaIP->value() < std::numeric_limits<double>::epsilon()){
@@ -2272,32 +2250,26 @@ namespace sdd {
       }
     }
 
-    pugi::xml_node polyLoopElement = doc.createElement("PolyLp");
-    result.appendChild(polyLoopElement);
+    pugi::xml_node polyLoopElement = result.append_child("PolyLp");
     for (const Point3d& vertex : vertices){
-      pugi::xml_node cartesianPointElement = doc.createElement("CartesianPt");
-      polyLoopElement.appendChild(cartesianPointElement);
+      pugi::xml_node cartesianPointElement = polyLoopElement.append_child("CartesianPt");
 
-      pugi::xml_node coordinateXElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.x()))));
+      pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
+      coordinateXElement.text() = meterToFoot*vertex.x(); // Or openstudio::string_conversions::number(meterToFoot*vertex.x());
 
-      pugi::xml_node coordinateYElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.y()))));
+      pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
+      coordinateYElement.text() = meterToFoot*vertex.y(); // Or openstudio::string_conversions::number(meterToFoot*vertex.y());
 
-      pugi::xml_node coordinateZElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.z()))));
+      pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
+      coordinateZElement.text() = meterToFoot*vertex.z(); // Or openstudio::string_conversions::number(meterToFoot*vertex.z());
     }
 
     // thermal zone
     boost::optional<model::ThermalZone> thermalZone = space.thermalZone();
     if (thermalZone){
       std::string thermalZoneName = thermalZone->name().get();
-      pugi::xml_node thermalZoneElement = doc.createElement("ThrmlZnRef");
-      result.appendChild(thermalZoneElement);
-      thermalZoneElement.appendChild(doc.createTextNode(escapeName(thermalZoneName)));
+      pugi::xml_node thermalZoneElement = result.append_child("ThrmlZnRef");
+      thermalZoneElement.text() = escapeName(thermalZoneName).c_str();
 
       // CondgType - required
       // SupPlenumSpcRef - optional
@@ -2313,10 +2285,7 @@ namespace sdd {
       Transformation shadingTransformation = shadingSurfaceGroup.siteTransformation();
 
       for (const model::ShadingSurface& shadingSurface : shadingSurfaceGroup.shadingSurfaces()){
-        boost::optional<pugi::xml_node> shadingSurfaceElement = translateShadingSurface(shadingSurface, shadingTransformation, doc);
-        if (shadingSurfaceElement){
-          result.appendChild(*shadingSurfaceElement);
-        }
+        translateShadingSurface(shadingSurface, shadingTransformation, result);
       }
     }
 
@@ -2337,10 +2306,7 @@ namespace sdd {
         ++numFloors;
       }
 
-      boost::optional<pugi::xml_node> surfaceElement = translateSurface(surface, transformation, doc);
-      if (surfaceElement){
-        result.appendChild(*surfaceElement);
-      }
+      translateSurface(surface, transformation, result);
     }
 
     if (numFloors < 1){
@@ -2356,7 +2322,7 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateSurface(const openstudio::model::Surface& surface, const openstudio::Transformation& transformation, QDomDocument& doc)
+  boost::optional<pugi::xml_node> ForwardTranslator::translateSurface(const openstudio::model::Surface& surface, const openstudio::Transformation& transformation, pugi::xml_node& root)
   {
     UnitSystem ipSys(UnitSystem::IP);
 
@@ -2371,32 +2337,32 @@ namespace sdd {
     std::string outsideBoundaryCondition = surface.outsideBoundaryCondition();
     if (istringEqual("Wall", surfaceType)){
       if (istringEqual("Outdoors", outsideBoundaryCondition)){
-        result = doc.createElement("ExtWall");
+        result = root.append_child("ExtWall");
       }else if (surface.isGroundSurface()){
-        result = doc.createElement("UndgrWall");
+        result = root.append_child("UndgrWall");
       }else if (istringEqual("Surface", outsideBoundaryCondition) ||
                 istringEqual("Adiabatic", outsideBoundaryCondition)){
-        result = doc.createElement("IntWall");
+        result = root.append_child("IntWall");
       }
     }else if (istringEqual("RoofCeiling", surfaceType)){
       if (istringEqual("Outdoors", outsideBoundaryCondition)){
-        result = doc.createElement("Roof");
+        result = root.append_child("Roof");
       }else if (surface.isGroundSurface()){
         // DLM: what to do here?
       }else if (istringEqual("Surface", outsideBoundaryCondition) ||
                 istringEqual("Adiabatic", outsideBoundaryCondition)){
         // DLM: we are not translating interior ceiling surfaces, the paired interior floor will be written instead
-        //result = doc.createElement("Ceiling");
+        //result = root.append_child("Ceiling");
         return boost::none;
       }
     }else if (istringEqual("Floor", surfaceType)){
       if (surface.isGroundSurface()){
-        result = doc.createElement("UndgrFlr");
+        result = root.append_child("UndgrFlr");
       }else if (istringEqual("Surface", outsideBoundaryCondition) ||
                 istringEqual("Adiabatic", outsideBoundaryCondition)){
-        result = doc.createElement("IntFlr");
+        result = root.append_child("IntFlr");
       }else if (istringEqual("Outdoors", outsideBoundaryCondition)){
-        result = doc.createElement("ExtFlr");
+        result = root.append_child("ExtFlr");
       }
     }
 
@@ -2409,9 +2375,8 @@ namespace sdd {
 
     // name
     std::string name = surface.name().get();
-    pugi::xml_node nameElement = doc.createElement("Name");
-    result->appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(escapeName(name)));
+    pugi::xml_node nameElement = result->append_child("Name");
+    nameElement.text() = escapeName(name).c_str();
 
     // SDD:
     // Status - required (ExtFlr, ExtWall, IntWall, Roof, UndgrFlr, UndgrWall), need to add
@@ -2444,9 +2409,8 @@ namespace sdd {
       boost::optional<model::Space> adjacentSpace = adjacentSurface->space();
       if (adjacentSpace){
         std::string adjacentSpaceName = adjacentSpace->name().get();
-        pugi::xml_node adjacentSpaceElement = doc.createElement("AdjacentSpcRef");
-        result->appendChild(adjacentSpaceElement);
-        adjacentSpaceElement.appendChild(doc.createTextNode(escapeName(adjacentSpaceName)));
+        pugi::xml_node adjacentSpaceElement = result->append_child("AdjacentSpcRef");
+        adjacentSpaceElement.text() = escapeName(adjacentSpaceName).c_str();
 
         // count adjacent surface as translated
         m_translatedObjects[adjacentSurface->handle()] = *result;
@@ -2461,9 +2425,8 @@ namespace sdd {
 
       // check that construction has been translated
       if (m_translatedObjects.find(construction->handle()) != m_translatedObjects.end()){
-        pugi::xml_node constructionReferenceElement = doc.createElement("ConsAssmRef");
-        result->appendChild(constructionReferenceElement);
-        constructionReferenceElement.appendChild(doc.createTextNode(escapeName(constructionName)));
+        pugi::xml_node constructionReferenceElement = result->append_child("ConsAssmRef");
+        constructionReferenceElement.text() = escapeName(constructionName).c_str();
       }else{
         //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
         //LOG(Error, "Surface '" << name << "' uses construction '" << constructionName << "' which has not been translated");
@@ -2480,9 +2443,8 @@ namespace sdd {
         if (fFactorConstruction.getModelObjectSources<model::Surface>().size() == 1){
           double perimeterExposedSI = fFactorConstruction.perimeterExposed();
           double perimeterExposedIP = meterToFoot*perimeterExposedSI;
-          pugi::xml_node perimExposedElement = doc.createElement("PerimExposed");
-          result->appendChild(perimExposedElement);
-          perimExposedElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(perimeterExposedIP))));
+          pugi::xml_node perimExposedElement = result->append_child("PerimExposed");
+          perimExposedElement.text() = perimeterExposedIP; // Or openstudio::string_conversions::number(perimeterExposedIP)
         }else{
           //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
           //LOG(Error, "Cannot compute exposed perimeter for surface '" << name << "'.");
@@ -2503,9 +2465,8 @@ namespace sdd {
         if (cFactorConstruction.getModelObjectSources<model::Surface>().size() == 1){
           double heightSI = cFactorConstruction.height();
           double heightIP = meterToFoot*heightSI;
-          pugi::xml_node heightElement = doc.createElement("Hgt");
-          result->appendChild(heightElement);
-          heightElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(heightIP))));
+          pugi::xml_node heightElement = result->append_child("Hgt");
+          heightElement.text() = heightIP; // Or openstudio::string_conversions::number(heightIP)
         }else{
           //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
           //LOG(Error, "Cannot compute height for surface '" << name << "'.");
@@ -2530,11 +2491,9 @@ namespace sdd {
 
     // translate vertices
     Point3dVector vertices = transformation*surface.vertices();
-    pugi::xml_node polyLoopElement = doc.createElement("PolyLp");
-    result->appendChild(polyLoopElement);
+    pugi::xml_node polyLoopElement = result->append_child("PolyLp");
     for (const Point3d& vertex : vertices){
-      pugi::xml_node cartesianPointElement = doc.createElement("CartesianPt");
-      polyLoopElement.appendChild(cartesianPointElement);
+      pugi::xml_node cartesianPointElement = polyLoopElement.append_child("CartesianPt");
 
       /* DLM: these conversions were taking about 75% of the time to convert a large model
 
@@ -2554,30 +2513,26 @@ namespace sdd {
       OS_ASSERT(zIP);
       OS_ASSERT(zIP->units() == IPUnit(IPExpnt(0,1,0)));
 
-      pugi::xml_node coordinateXElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(xIP->value())));
+      pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
+      coordinateXElement.text() = xIP->value()); // Or openstudio::string_conversions::number(xIP->value());
 
-      pugi::xml_node coordinateYElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(yIP->value())));
+      pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
+      coordinateYElement.text() = yIP->value()); // Or openstudio::string_conversions::number(yIP->value());
 
-      pugi::xml_node coordinateZElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(zIP->value())));
+      pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
+      coordinateZElement.text() = zIP->value()); // Or openstudio::string_conversions::number(zIP->value());
+
       */
 
-      pugi::xml_node coordinateXElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.x()))));
+      pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
+      coordinateXElement.text() = meterToFoot*vertex.x(); // Or openstudio::string_conversions::number(meterToFoot*vertex.x());
 
-      pugi::xml_node coordinateYElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.y()))));
+      pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
+      coordinateYElement.text() = meterToFoot*vertex.y(); // Or openstudio::string_conversions::number(meterToFoot*vertex.y());
 
-      pugi::xml_node coordinateZElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.z()))));
+      pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
+      coordinateZElement.text() = meterToFoot*vertex.z(); // Or openstudio::string_conversions::number(meterToFoot*vertex.z());
+
     }
 
     // translate sub surfaces
@@ -2585,16 +2540,13 @@ namespace sdd {
     std::sort(subSurfaces.begin(), subSurfaces.end(), WorkspaceObjectNameLess());
 
     for (const model::SubSurface& subSurface : subSurfaces){
-      boost::optional<pugi::xml_node> subSurfaceElement = translateSubSurface(subSurface, transformation, doc);
-      if (subSurfaceElement){
-        result->appendChild(*subSurfaceElement);
-      }
+      translateSubSurface(subSurface, transformation, *result);
     }
 
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateSubSurface(const openstudio::model::SubSurface& subSurface, const openstudio::Transformation& transformation, QDomDocument& doc)
+  boost::optional<pugi::xml_node> ForwardTranslator::translateSubSurface(const openstudio::model::SubSurface& subSurface, const openstudio::Transformation& transformation, pugi::xml_node& root)
   {
     UnitSystem ipSys(UnitSystem::IP);
 
@@ -2606,19 +2558,19 @@ namespace sdd {
     }
 
     std::string subSurfaceType = subSurface.subSurfaceType();
-    QString consRefElementName;
+    std::string consRefElementName;
     if (istringEqual("FixedWindow", subSurfaceType) ||
         istringEqual("OperableWindow", subSurfaceType) ||
         istringEqual("GlassDoor", subSurfaceType)){
       consRefElementName = "FenConsRef";
-      result = doc.createElement("Win");
+      result = root.append_child("Win");
     }else if (istringEqual("Door", subSurfaceType) ||
               istringEqual("OverheadDoor", subSurfaceType)){
       consRefElementName = "DrConsRef";
-      result = doc.createElement("Dr");
+      result = root.append_child("Dr");
     }else if (istringEqual("Skylight", subSurfaceType)){
       consRefElementName = "FenConsRef";
-      result = doc.createElement("Skylt");
+      result = root.append_child("Skylt");
     }
 
     if (!result){
@@ -2630,9 +2582,8 @@ namespace sdd {
 
     // name
     std::string name = subSurface.name().get();
-    pugi::xml_node nameElement = doc.createElement("Name");
-    result->appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(escapeName(name)));
+    pugi::xml_node nameElement = result->append_child("Name");
+    nameElement.text() = escapeName(name).c_str();
 
     // SDD:
     // Status - required (Win, Skylt, Dr), need to add
@@ -2649,9 +2600,8 @@ namespace sdd {
 
       // check that construction has been translated
       if (m_translatedObjects.find(construction->handle()) != m_translatedObjects.end()){
-        pugi::xml_node constructionReferenceElement = doc.createElement(consRefElementName);
-        result->appendChild(constructionReferenceElement);
-        constructionReferenceElement.appendChild(doc.createTextNode(escapeName(constructionName)));
+        pugi::xml_node constructionReferenceElement = result->append_child(consRefElementName.c_str());
+        constructionReferenceElement.text() = escapeName(constructionName).c_str();
       }else{
         //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
         //LOG(Error, "SubSurface '" << name << "' uses construction '" << constructionName << "' which has not been translated");
@@ -2672,11 +2622,9 @@ namespace sdd {
 
     // translate vertices
     Point3dVector vertices = transformation*subSurface.vertices();
-    pugi::xml_node polyLoopElement = doc.createElement("PolyLp");
-    result->appendChild(polyLoopElement);
+    pugi::xml_node polyLoopElement = result->append_child("PolyLp");
     for (const Point3d& vertex : vertices){
-      pugi::xml_node cartesianPointElement = doc.createElement("CartesianPt");
-      polyLoopElement.appendChild(cartesianPointElement);
+      pugi::xml_node cartesianPointElement = polyLoopElement.append_child("CartesianPt");
 
       /* DLM: these conversions were taking about 75% of the time it takes to convert a large model
 
@@ -2696,36 +2644,31 @@ namespace sdd {
       OS_ASSERT(zIP);
       OS_ASSERT(zIP->units() == IPUnit(IPExpnt(0,1,0)));
 
-      pugi::xml_node coordinateXElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(xIP->value())));
+      pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
+      coordinateXElement.text() = xIP->value()); // Or openstudio::string_conversions::number(xIP->value());
 
-      pugi::xml_node coordinateYElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(yIP->value())));
+      pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
+      coordinateYElement.text() = yIP->value()); // Or openstudio::string_conversions::number(yIP->value());
 
-      pugi::xml_node coordinateZElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(zIP->value())));
+      pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
+      coordinateZElement.text() = zIP->value()); // Or openstudio::string_conversions::number(zIP->value());
+
       */
 
-      pugi::xml_node coordinateXElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.x()))));
+      pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
+      coordinateXElement.text() = meterToFoot*vertex.x(); // Or openstudio::string_conversions::number(meterToFoot*vertex.x());
 
-      pugi::xml_node coordinateYElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.y()))));
+      pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
+      coordinateYElement.text() = meterToFoot*vertex.y(); // Or openstudio::string_conversions::number(meterToFoot*vertex.y());
 
-      pugi::xml_node coordinateZElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.z()))));
+      pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
+      coordinateZElement.text() = meterToFoot*vertex.z(); // Or openstudio::string_conversions::number(meterToFoot*vertex.z());
     }
 
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, const openstudio::Transformation& transformation, QDomDocument& doc)
+  boost::optional<pugi::xml_node> ForwardTranslator::translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, const openstudio::Transformation& transformation, pugi::xml_node& root)
   {
     UnitSystem ipSys(UnitSystem::IP);
 
@@ -2736,14 +2679,13 @@ namespace sdd {
       return boost::none;
     }
 
-    result = doc.createElement("ExtShdgObj");
+    result = root.append_child("ExtShdgObj");
     m_translatedObjects[shadingSurface.handle()] = *result;
 
     // name
     std::string name = shadingSurface.name().get();
-    pugi::xml_node nameElement = doc.createElement("Name");
-    result->appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(escapeName(name)));
+    pugi::xml_node nameElement = result->append_child("Name");
+    nameElement.text() = escapeName(name).c_str();
 
     // SDD:
     // Status - required, need to add
@@ -2759,11 +2701,11 @@ namespace sdd {
 
       // check that construction has been translated
       if (m_translatedObjects.find(transmittanceSchedule->handle()) != m_translatedObjects.end()){
-        pugi::xml_node transmittanceScheduleReferenceElement = doc.createElement("TransSchRef");
-        result->appendChild(transmittanceScheduleReferenceElement);
-        transmittanceScheduleReferenceElement.appendChild(doc.createTextNode(escapeName(transmittanceScheduleName)));
+        pugi::xml_node transmittanceScheduleReferenceElement = result->append_child("TransSchRef");
+        transmittanceScheduleReferenceElement.text() = escapeName(transmittanceScheduleName).c_str();
       }else{
-        LOG(Error, "ShadingSurface '" << name << "' uses transmittance schedule '" << transmittanceScheduleName << "' which has not been translated");
+        LOG(Error, "ShadingSurface '" << name << "' uses transmittance schedule '" << transmittanceScheduleName
+                << "' which has not been translated");
       }
     }
 
@@ -2815,21 +2757,17 @@ namespace sdd {
       }
     }
 
-    pugi::xml_node solReflElement = doc.createElement("SolRefl");
-    result->appendChild(solReflElement);
-    solReflElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(solRefl))));
+    pugi::xml_node solReflElement = result->append_child("SolRefl");
+    solReflElement.text() = solRefl; // OR openstudio::string_conversions::number(solRefl)
 
-    pugi::xml_node visReflElement = doc.createElement("VisRefl");
-    result->appendChild(visReflElement);
-    visReflElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(visRefl))));
+    pugi::xml_node visReflElement = result->append_child("VisRefl");
+    visReflElement.text() = visRefl; // OR openstudio::string_conversions::number(visRefl)
 
     // translate vertices
     Point3dVector vertices = transformation*shadingSurface.vertices();
-    pugi::xml_node polyLoopElement = doc.createElement("PolyLp");
-    result->appendChild(polyLoopElement);
+    pugi::xml_node polyLoopElement = result->append_child("PolyLp");
     for (const Point3d& vertex : vertices){
-      pugi::xml_node cartesianPointElement = doc.createElement("CartesianPt");
-      polyLoopElement.appendChild(cartesianPointElement);
+      pugi::xml_node cartesianPointElement = polyLoopElement.append_child("CartesianPt");
 
       /* DLM: these conversions were taking about 75% of the time it takes to convert a large model
 
@@ -2849,45 +2787,39 @@ namespace sdd {
       OS_ASSERT(zIP);
       OS_ASSERT(zIP->units() == IPUnit(IPExpnt(0,1,0)));
 
-      pugi::xml_node coordinateXElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(xIP->value())));
+      pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
+      coordinateXElement.text() = xIP->value()); // Or openstudio::string_conversions::number(xIP->value());
 
-      pugi::xml_node coordinateYElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(yIP->value())));
+      pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
+      coordinateYElement.text() = yIP->value()); // Or openstudio::string_conversions::number(yIP->value());
 
-      pugi::xml_node coordinateZElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(zIP->value())));
+      pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
+      coordinateZElement.text() = zIP->value()); // Or openstudio::string_conversions::number(zIP->value());
+
       */
 
-      pugi::xml_node coordinateXElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateXElement);
-      coordinateXElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.x()))));
+      pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
+      coordinateXElement.text() = meterToFoot*vertex.x(); // Or openstudio::string_conversions::number(meterToFoot*vertex.x());
 
-      pugi::xml_node coordinateYElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateYElement);
-      coordinateYElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.y()))));
+      pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
+      coordinateYElement.text() = meterToFoot*vertex.y(); // Or openstudio::string_conversions::number(meterToFoot*vertex.y());
 
-      pugi::xml_node coordinateZElement = doc.createElement("Coord");
-      cartesianPointElement.appendChild(coordinateZElement);
-      coordinateZElement.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(meterToFoot*vertex.z()))));
+      pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
+      coordinateZElement.text() = meterToFoot*vertex.z(); // Or openstudio::string_conversions::number(meterToFoot*vertex.z());
     }
 
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateThermalZone(const openstudio::model::ThermalZone& thermalZone, QDomDocument& doc)
+  boost::optional<pugi::xml_node> ForwardTranslator::translateThermalZone(const openstudio::model::ThermalZone& thermalZone, pugi::xml_node& root)
   {
-    pugi::xml_node result = doc.createElement("ThrmlZn");
+    pugi::xml_node result = root.append_child("ThrmlZn");
     m_translatedObjects[thermalZone.handle()] = result;
 
     // Name
     std::string name = thermalZone.name().get();
-    pugi::xml_node nameElement = doc.createElement("Name");
-    result.appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(escapeName(name)));
+    pugi::xml_node nameElement = result.append_child("Name");
+    nameElement.text() = escapeName(name).c_str();
 
     // Type
     std::string type; // Conditioned, Unconditioned, Plenum
@@ -2896,15 +2828,13 @@ namespace sdd {
     }else {
       type = "Unconditioned";
     }
-    pugi::xml_node typeElement = doc.createElement("Type");
-    result.appendChild(typeElement);
-    typeElement.appendChild(doc.createTextNode(toQString(type)));
+    pugi::xml_node typeElement = result.append_child("Type");
+    typeElement.text() = type.c_str();
 
     // DLM: Not input
     // Mult
-    //pugi::xml_node multElement = doc.createElement("Mult");
-    //result.appendChild(multElement);
-    //multElement.appendChild(doc.createTextNode(openstudio::string_conversions::number(thermalZone.multiplier())));
+    //pugi::xml_node multElement = result.append_child("Mult");
+    //multElement.text() = thermalZone.multiplier();
 
     return result;
   }

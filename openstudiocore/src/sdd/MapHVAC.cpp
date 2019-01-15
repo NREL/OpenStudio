@@ -228,17 +228,10 @@
 #include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
 
-#include <QDomDocument>
-#include <QDomElement>
 #include <cmath>
 #include <functional>
 
-///
-/// TODO: Remove this helper when Qt is fully removed
-///
-static auto toQString(const std::string &s) {
-  return QString::fromUtf8(s.data(), s.size());
-};
+#include <pugixml.hpp>
 
 namespace openstudio {
 namespace sdd {

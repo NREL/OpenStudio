@@ -743,7 +743,6 @@ Visible Absorptance, IDD default of 0.7
         // DLM: prescribed, not input
         // specification method
         //pugi::xml_node specMthdElement = result->append_child("SpecMthd");
-        //result.appendChild(specMthdElement);
         //specMthdElement.text() = "FFactor";
 
         // DLM: not input
