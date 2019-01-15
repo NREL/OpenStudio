@@ -154,12 +154,14 @@ namespace sdd {
     // If the loop is found in the model it will simply be returned.
     boost::optional<model::PlantLoop> serviceHotWaterLoopForSupplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root, openstudio::model::Model& model);
 
-    // Return the "ZnSys" element with the name znSysName.
+    // Return the "ZnSys" element with the name znSysName. root should be the proper root (=document_element) which has "Proj" under it
     pugi::xml_node findZnSysElement(const std::string& znSysName, const pugi::xml_node& root);
 
+    // TODO: Not sure what root needs to be  (I think it's "Proj")
     pugi::xml_node findAirSysElement(const std::string& airSysName, const pugi::xml_node& root);
 
     // Return the "TrmlUnit" element serving zoneName
+    // TODO: Not sure what root needs to be (I think it's "Proj")
     pugi::xml_node findTrmlUnitElementForZone(const std::string& zoneName,const pugi::xml_node& root);
 
     model::Schedule alwaysOnSchedule(openstudio::model::Model& model);

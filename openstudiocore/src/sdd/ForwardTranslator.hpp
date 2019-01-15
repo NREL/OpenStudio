@@ -116,10 +116,10 @@ namespace sdd {
     boost::optional<pugi::xml_node> translateThermalZone(const openstudio::model::ThermalZone& thermalZone, pugi::xml_node& root);
     boost::optional<pugi::xml_node> translateAirLoopHVAC(const openstudio::model::AirLoopHVAC& airLoop, pugi::xml_node& root);
 
-    boost::optional<pugi::xml_node> translateFanConstantVolume(const openstudio::model::FanConstantVolume& fan, pugi::xml_node& parentElement);
-    boost::optional<pugi::xml_node> translateCoilCoolingDXSingleSpeed(const openstudio::model::CoilCoolingDXSingleSpeed& coil, pugi::xml_node& parentElement);
-    boost::optional<pugi::xml_node> translateCoilHeatingGas(const openstudio::model::CoilHeatingGas& coil, pugi::xml_node& parentElement);
-    boost::optional<pugi::xml_node> translateAirLoopHVACOutdoorAirSystem(const openstudio::model::AirLoopHVACOutdoorAirSystem& oasys, pugi::xml_node& parentElement);
+    boost::optional<pugi::xml_node> translateFanConstantVolume(const openstudio::model::FanConstantVolume& fan, pugi::xml_node& airSegElement);
+    boost::optional<pugi::xml_node> translateCoilCoolingDXSingleSpeed(const openstudio::model::CoilCoolingDXSingleSpeed& coil, pugi::xml_node& airSegElement);
+    boost::optional<pugi::xml_node> translateCoilHeatingGas(const openstudio::model::CoilHeatingGas& coil, pugi::xml_node& airSegElement);
+    boost::optional<pugi::xml_node> translateAirLoopHVACOutdoorAirSystem(const openstudio::model::AirLoopHVACOutdoorAirSystem& oasys, pugi::xml_node& airSegElement);
 
     std::map<openstudio::Handle, pugi::xml_node> m_translatedObjects;
 
