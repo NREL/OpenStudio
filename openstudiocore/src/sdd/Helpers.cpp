@@ -105,7 +105,8 @@ namespace openstudio {
       return result;
     }
 
-    boost::optional<unsigned> lexicalCastToUnsigned(const pugi::xml_attribute& element) {
+    // Lexical cast the text() of an attribute as an unsigned int (and don't return if a negative int is there)
+    boost::optional<unsigned> lexicalCastToUnsigned(const pugi::xml_attribute& attr) {
       boost::optional<unsigned> result;
       if (attr) {
         try {

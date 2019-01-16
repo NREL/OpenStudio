@@ -247,21 +247,8 @@ namespace sdd {
 
   std::string ForwardTranslator::escapeName(std::string name)
   {
-    std::replace(name.begin(), name.end(), ' ', '_');
-    std::replace(name.begin(), name.end(), '(', '_');
-    std::replace(name.begin(), name.end(), ')', '_');
-    std::replace(name.begin(), name.end(), '[', '_');
-    std::replace(name.begin(), name.end(), ']', '_');
-    std::replace(name.begin(), name.end(), '{', '_');
-    std::replace(name.begin(), name.end(), '}', '_');
-    std::replace(name.begin(), name.end(), '/', '_');
-    std::replace(name.begin(), name.end(), '\\', '_');
-    //name.replace("-", "_"); // ok
-    //std::replace(name.begin(), name.end(),'-', '_'); // ok
-    //name.replace(".", "_"); // ok
-    //std::replace(name.begin(), name.end(),'.', '_'); // ok
-    std::replace(name.begin(), name.end(), ':', '_');
-    std::replace(name.begin(), name.end(), ';', '_');
+     /// JMT: I don't think this function does what its name implies
+    // TODO: this does nothing!
     return name;
   }
 
