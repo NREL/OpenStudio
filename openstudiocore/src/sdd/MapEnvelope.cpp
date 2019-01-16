@@ -673,49 +673,49 @@ Visible Absorptance, IDD default of 0.7
           // ext roughness
           //if (!extRoughness.empty()) {
           //  pugi::xml_node roughnessElement = result->append_child("ExtRoughness");
-          //  roughnessElement.text() = *extRoughness; // OR openstudio::string_conversions::number(*extRoughness)
+          //  roughnessElement.text() = openstudio::string_conversions::number(*extRoughness).c_str()
           //}
 
           // DLM: Not input
           // ext solarAbsorptance
           //if (extSolarAbsorptance) {
           //  pugi::xml_node solarAbsorptanceElement = result->append_child("ExtSolAbs");
-          //  solarAbsorptanceElement.text() = *extSolarAbsorptance;
+          //  solarAbsorptanceElement.text() = openstudio::string_conversions::number(*extSolarAbsorptance).c_str();
           //}
 
           // DLM: Not input
           // ext thermalAbsorptance
           //if (extThermalAbsorptance) {
           //  pugi::xml_node thermalAbsorptanceElement = result->append_child("ExtThrmlAbs");
-          //  thermalAbsorptanceElement.text() = *extThermalAbsorptance)
+          //  thermalAbsorptanceElement.text() = openstudio::string_conversions::number(*extThermalAbsorptance).c_str();
           //}
 
           // DLM: Not input
           // ext visibleAbsorptance
           //if (extVisibleAbsorptance) {
           //  pugi::xml_node visibleAbsorptanceElement = result->append_child("ExtVisAbs");
-          //  visibleAbsorptanceElement.text() = *extVisibleAbsorptance;
+          //  visibleAbsorptanceElement.text() = openstudio::string_conversions::number(*extVisibleAbsorptance).c_str();
           //}
 
           // DLM: Not input
           // int solarAbsorptance
           //if (intSolarAbsorptance) {
           //  pugi::xml_node solarAbsorptanceElement = result->append_child("IntSolAbs");
-          //  solarAbsorptanceElement.text() = *intSolarAbsorptance;
+          //  solarAbsorptanceElement.text() = openstudio::string_conversions::number(*intSolarAbsorptance).c_str();
           //}
 
           // DLM: Not input
           // int thermalAbsorptance
           //if (intThermalAbsorptance) {
           //  pugi::xml_node thermalAbsorptanceElement = result->append_child("IntThrmlAbs");
-          //  thermalAbsorptanceElement.text() = *intThermalAbsorptance;
+          //  thermalAbsorptanceElement.text() = openstudio::string_conversions::number(*intThermalAbsorptance).c_str();
           //}
 
           // DLM: Not input
           // int visibleAbsorptance
           //if (intVisibleAbsorptance) {
           //  pugi::xml_node visibleAbsorptanceElement = result->append_child("IntVisAbs");
-          //  visibleAbsorptanceElement.text() = *intVisibleAbsorptance;
+          //  visibleAbsorptanceElement.text() = openstudio::string_conversions::number(*intVisibleAbsorptance).c_str();
           //}
         }
 
@@ -753,7 +753,7 @@ Visible Absorptance, IDD default of 0.7
         //OptionalQuantity fFactorIP = QuantityConverter::instance().convert(fFactorSI, UnitSystem(UnitSystem::BTU));
         //OS_ASSERT(fFactorIP);
         //OS_ASSERT(fFactorIP->units() == BTUUnit(BTUExpnt(1,-1,-1,-1)));
-        //fFactorElement.text() = fFactorIP->value();
+        //fFactorElement.text() = openstudio::string_conversions::number(fFactorIP->value()).c_str();
 
         // DLM: cannot write out
         //<IntSolAbs>0.7</IntSolAbs>
@@ -788,7 +788,7 @@ Visible Absorptance, IDD default of 0.7
         //OptionalQuantity cFactorIP = QuantityConverter::instance().convert(cFactorSI, UnitSystem(UnitSystem::BTU));
         //OS_ASSERT(cFactorIP);
         //OS_ASSERT(cFactorIP->units() == BTUUnit(BTUExpnt(1,-2,-1,-1)));
-        //cFactorElement.text() = cFactorIP->value();
+        //cFactorElement.text() = openstudio::string_conversions::number(cFactorIP->value()).c_str();
 
         // DLM: cannot write out
         //<IntSolAbs>0.7</IntSolAbs>
@@ -875,7 +875,7 @@ Visible Absorptance, IDD default of 0.7
         }
         if (uFactor) {
           pugi::xml_node uFactorElement = result->append_child("UFactor");
-          uFactorElement.text() = uFactor.get(); // OR openstudio::string_conversions::number(*uFactor)
+          uFactorElement.text() = openstudio::string_conversions::number(*uFactor).c_str();
         } else{
           //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
           //LOG(Error, "Could not calculate UFactor for DrCons '" << name << "'");
@@ -1133,21 +1133,21 @@ Visible Absorptance, IDD default of 0.7
         // Numbers
         if (shgc) {
           pugi::xml_node shgcElement = result->append_child("SHGC");
-          shgcElement.text() = *shgc; // OR openstudio::string_conversions::number(*shgc)
+          shgcElement.text() = openstudio::string_conversions::number(*shgc).c_str();
         } else{
           //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
           //LOG(Error, "Could not calculate SHGC for FenCons '" << name << "'");
         }
         if (uFactor) {
           pugi::xml_node uFactorElement = result->append_child("UFactor");
-          uFactorElement.text() = *uFactor;
+          uFactorElement.text() = openstudio::string_conversions::number(*uFactor).c_str();
         } else{
           //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
           //LOG(Error, "Could not calculate UFactor for FenCons '" << name << "'");
         }
         if (vt) {
           pugi::xml_node vtElement = result->append_child("VT");
-          vtElement.text() = *vt;
+          vtElement.text() = openstudio::string_conversions::number(*vt).c_str();
         } else{
           //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
           //LOG(Error, "Could not calculate VT for FenCons '" << name << "'");

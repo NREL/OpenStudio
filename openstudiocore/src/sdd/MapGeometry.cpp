@@ -1850,7 +1850,7 @@ namespace sdd {
     // building azimuth
     double buildingAzimuth = fixAngle(building.northAxis());
     pugi::xml_node buildingAzimuthElement = result.append_child("BldgAz");
-    buildingAzimuthElement.text() = buildingAzimuth;// OR openstudio::string_conversions::number(buildingAzimuth)
+    buildingAzimuthElement.text() = openstudio::string_conversions::number(buildingAzimuth).c_str();
 
     // TotStoryCnt - required, Standards Number of Stories
     // AboveGrdStoryCnt - required, Standards Number of Above Ground Stories
@@ -1879,7 +1879,7 @@ namespace sdd {
     }
 
     pugi::xml_node aboveGradeStoryCountElement = result.append_child("AboveGrdStoryCnt");
-    aboveGradeStoryCountElement.text() = numAboveGroundStories);
+    aboveGradeStoryCountElement.text() = openstudio::string_conversions::number(numAboveGroundStories).c_str();
     */
 
     // translate building shading
@@ -2186,7 +2186,7 @@ namespace sdd {
     OS_ASSERT(volumeIP);
     OS_ASSERT(volumeIP->units() == IPUnit(IPExpnt(0,3,0)));
     pugi::xml_node volumeElement = result.append_child("Vol");
-    volumeElement.text() = volumeIP->value();  // Or openstudio::string_conversions::number(volumeIP->value())
+    volumeElement.text() = openstudio::string_conversions::number(volumeIP->value()).c_str();
 
     // log warning if volume is 0
     if (volumeIP->value() < std::numeric_limits<double>::epsilon()){
@@ -2200,7 +2200,7 @@ namespace sdd {
     OS_ASSERT(floorAreaIP);
     OS_ASSERT(floorAreaIP->units() == IPUnit(IPExpnt(0,2,0)));
     pugi::xml_node floorAreaElement = result.append_child("Area");   // SAC 3/14/14
-    floorAreaElement.text() = floorAreaIP->value();  // Or openstudio::string_conversions::number(floorAreaIP->value())
+    floorAreaElement.text() = openstudio::string_conversions::number(floorAreaIP->value()).c_str();
 
     // log warning if area is 0
     if (floorAreaIP->value() < std::numeric_limits<double>::epsilon()){
@@ -2231,13 +2231,13 @@ namespace sdd {
       pugi::xml_node cartesianPointElement = polyLoopElement.append_child("CartesianPt");
 
       pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
-      coordinateXElement.text() = meterToFoot*vertex.x(); // Or openstudio::string_conversions::number(meterToFoot*vertex.x());
+      coordinateXElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.x()).c_str();
 
       pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
-      coordinateYElement.text() = meterToFoot*vertex.y(); // Or openstudio::string_conversions::number(meterToFoot*vertex.y());
+      coordinateYElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.y()).c_str();
 
       pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
-      coordinateZElement.text() = meterToFoot*vertex.z(); // Or openstudio::string_conversions::number(meterToFoot*vertex.z());
+      coordinateZElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.z()).c_str();
     }
 
     // thermal zone
@@ -2420,7 +2420,7 @@ namespace sdd {
           double perimeterExposedSI = fFactorConstruction.perimeterExposed();
           double perimeterExposedIP = meterToFoot*perimeterExposedSI;
           pugi::xml_node perimExposedElement = result->append_child("PerimExposed");
-          perimExposedElement.text() = perimeterExposedIP; // Or openstudio::string_conversions::number(perimeterExposedIP)
+          perimExposedElement.text() = openstudio::string_conversions::number(perimeterExposedIP).c_str();
         }else{
           //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
           //LOG(Error, "Cannot compute exposed perimeter for surface '" << name << "'.");
@@ -2442,7 +2442,7 @@ namespace sdd {
           double heightSI = cFactorConstruction.height();
           double heightIP = meterToFoot*heightSI;
           pugi::xml_node heightElement = result->append_child("Hgt");
-          heightElement.text() = heightIP; // Or openstudio::string_conversions::number(heightIP)
+          heightElement.text() = openstudio::string_conversions::number(heightIP).c_str();
         }else{
           //Do not want this logged, http://code.google.com/p/cbecc/issues/detail?id=695
           //LOG(Error, "Cannot compute height for surface '" << name << "'.");
@@ -2490,24 +2490,24 @@ namespace sdd {
       OS_ASSERT(zIP->units() == IPUnit(IPExpnt(0,1,0)));
 
       pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
-      coordinateXElement.text() = xIP->value()); // Or openstudio::string_conversions::number(xIP->value());
+      coordinateXElement.text() = openstudio::string_conversions::number(xIP->value()).c_str();
 
       pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
-      coordinateYElement.text() = yIP->value()); // Or openstudio::string_conversions::number(yIP->value());
+      coordinateYElement.text() = openstudio::string_conversions::number(yIP->value()).c_str();
 
       pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
-      coordinateZElement.text() = zIP->value()); // Or openstudio::string_conversions::number(zIP->value());
+      coordinateZElement.text() = openstudio::string_conversions::number(zIP->value()).c_str();
 
       */
 
       pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
-      coordinateXElement.text() = meterToFoot*vertex.x(); // Or openstudio::string_conversions::number(meterToFoot*vertex.x());
+      coordinateXElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.x()).c_str();
 
       pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
-      coordinateYElement.text() = meterToFoot*vertex.y(); // Or openstudio::string_conversions::number(meterToFoot*vertex.y());
+      coordinateYElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.y()).c_str();
 
       pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
-      coordinateZElement.text() = meterToFoot*vertex.z(); // Or openstudio::string_conversions::number(meterToFoot*vertex.z());
+      coordinateZElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.z()).c_str();
 
     }
 
@@ -2621,25 +2621,26 @@ namespace sdd {
       OS_ASSERT(zIP->units() == IPUnit(IPExpnt(0,1,0)));
 
       pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
-      coordinateXElement.text() = xIP->value()); // Or openstudio::string_conversions::number(xIP->value());
+      coordinateXElement.text() = openstudio::string_conversions::number(xIP->value()).c_str();
 
       pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
-      coordinateYElement.text() = yIP->value()); // Or openstudio::string_conversions::number(yIP->value());
+      coordinateYElement.text() = openstudio::string_conversions::number(yIP->value()).c_str();
 
       pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
-      coordinateZElement.text() = zIP->value()); // Or openstudio::string_conversions::number(zIP->value());
+      coordinateZElement.text() = openstudio::string_conversions::number(zIP->value()).c_str();
 
       */
 
       pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
-      coordinateXElement.text() = meterToFoot*vertex.x(); // Or openstudio::string_conversions::number(meterToFoot*vertex.x());
+      coordinateXElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.x()).c_str();
 
       pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
-      coordinateYElement.text() = meterToFoot*vertex.y(); // Or openstudio::string_conversions::number(meterToFoot*vertex.y());
+      coordinateYElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.y()).c_str();
 
       pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
-      coordinateZElement.text() = meterToFoot*vertex.z(); // Or openstudio::string_conversions::number(meterToFoot*vertex.z());
-    }
+      coordinateZElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.z()).c_str();
+
+   }
 
     return result;
   }
@@ -2734,10 +2735,10 @@ namespace sdd {
     }
 
     pugi::xml_node solReflElement = result->append_child("SolRefl");
-    solReflElement.text() = solRefl; // OR openstudio::string_conversions::number(solRefl)
+    solReflElement.text() = openstudio::string_conversions::number(solRefl).c_str();
 
     pugi::xml_node visReflElement = result->append_child("VisRefl");
-    visReflElement.text() = visRefl; // OR openstudio::string_conversions::number(visRefl)
+    visReflElement.text() = openstudio::string_conversions::number(visRefl).c_str();
 
     // translate vertices
     Point3dVector vertices = transformation*shadingSurface.vertices();
@@ -2764,24 +2765,24 @@ namespace sdd {
       OS_ASSERT(zIP->units() == IPUnit(IPExpnt(0,1,0)));
 
       pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
-      coordinateXElement.text() = xIP->value()); // Or openstudio::string_conversions::number(xIP->value());
+      coordinateXElement.text() = openstudio::string_conversions::number(xIP->value()).c_str();
 
       pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
-      coordinateYElement.text() = yIP->value()); // Or openstudio::string_conversions::number(yIP->value());
+      coordinateYElement.text() = openstudio::string_conversions::number(yIP->value()).c_str();
 
       pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
-      coordinateZElement.text() = zIP->value()); // Or openstudio::string_conversions::number(zIP->value());
+      coordinateZElement.text() = openstudio::string_conversions::number(zIP->value()).c_str();
 
       */
 
       pugi::xml_node coordinateXElement = cartesianPointElement.append_child("Coord");
-      coordinateXElement.text() = meterToFoot*vertex.x(); // Or openstudio::string_conversions::number(meterToFoot*vertex.x());
+      coordinateXElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.x()).c_str();
 
       pugi::xml_node coordinateYElement = cartesianPointElement.append_child("Coord");
-      coordinateYElement.text() = meterToFoot*vertex.y(); // Or openstudio::string_conversions::number(meterToFoot*vertex.y());
+      coordinateYElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.y()).c_str();
 
       pugi::xml_node coordinateZElement = cartesianPointElement.append_child("Coord");
-      coordinateZElement.text() = meterToFoot*vertex.z(); // Or openstudio::string_conversions::number(meterToFoot*vertex.z());
+      coordinateZElement.text() = openstudio::string_conversions::number(meterToFoot*vertex.z()).c_str();
     }
 
     return result;
