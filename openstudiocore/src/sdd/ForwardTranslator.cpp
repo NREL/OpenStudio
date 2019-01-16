@@ -266,7 +266,7 @@ namespace sdd {
     pugi::xml_node projectElement = sddElement.append_child("Proj");
 
     // DLM: what name to use here?
-    pugi::xml_node projectNameElement = sddElement.append_child("Name");
+    pugi::xml_node projectNameElement = projectElement.append_child("Name");
     projectNameElement.text() = "unknown";
 
     // site data
