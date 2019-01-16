@@ -5765,7 +5765,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
 
     if( scheme ) {
-      for( std::vector<double>::size_type i = 0; i != ldRngLims.size(); ++i ) {
+      for( std::vector<double>::size_type i = 0; i < ldRngLims.size(); ++i ) {
         std::vector<model::HVACComponent> equipment;
         auto ldRngLim = ldRngLims[i];
         auto equipmentList = equipmentLists[i];
@@ -8963,7 +8963,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvM
     return table;
   }
 
-  for(std::vector<pugi::xml_node>::size_type i = 0; i != arrayVar1Elements.size(); i++) {
+  for(std::vector<pugi::xml_node>::size_type i = 0; i < arrayVar1Elements.size(); i++) {
 
     boost::optional<double> _arrayVar1 = lexicalCastToDouble(arrayVar1Elements[i]);
     boost::optional<double> _arrayVar2 = lexicalCastToDouble(arrayVar2Elements[i]);
@@ -9057,7 +9057,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvM
     return table;
   }
 
-  for(std::vector<pugi::xml_node>::size_type i = 0; i != arrayVar1Elements.size(); i++) {
+  for(std::vector<pugi::xml_node>::size_type i = 0; i < arrayVar1Elements.size(); i++) {
     boost::optional<double> _arrayVar1 = lexicalCastToDouble(arrayVar1Elements[i]);
     boost::optional<double> _arrayOut = lexicalCastToDouble(arrayOutElements[i]);
 
