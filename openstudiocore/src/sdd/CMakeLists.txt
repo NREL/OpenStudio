@@ -11,6 +11,8 @@ set(${target_name}_src
   MapGeometry.cpp
   MapSchedules.cpp
   MapHVAC.cpp
+  Helpers.hpp
+  Helpers.cpp
 )
 
 set(${target_name}_test_src

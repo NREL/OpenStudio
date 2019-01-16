@@ -29,6 +29,8 @@
 
 #include "ReverseTranslator.hpp"
 #include "ForwardTranslator.hpp"
+#include "Helpers.hpp"
+
 #include "../model/AirLoopHVAC.hpp"
 #include "../model/AirLoopHVAC_Impl.hpp"
 #include "../model/AirLoopHVACUnitarySystem.hpp"
@@ -423,39 +425,6 @@ model::ScheduleYear deepScheduleYearClone(const model::ScheduleYear & scheduleYe
   }
 
   return scheduleYearClone;
-}
-
-// Helper to make a vector of pugi::xml_node
-std::vector<pugi::xml_node> makeVectorOfChildren(const pugi::xml_node& root, const char * tagName) {
-  std::vector<pugi::xml_node> result;
-  for (const pugi::xml_node &e : root.children(tagName)) {
-    result.push_back(e);
-  }
-  return result;
-}
-
-boost::optional<double> lexicalCastToDouble(const pugi::xml_node& element) {
-  boost::optional<double> result;
-  if (element) {
-    try {
-      result = boost::lexical_cast<double>(element.text().as_string());
-    } catch(const boost::bad_lexical_cast &) {
-      // LOG(Error, "Cannot convert element to double");
-    }
-  }
-  return result;
-}
-
-boost::optional<int> lexicalCastToInt(const pugi::xml_node& element) {
-  boost::optional<int> result;
-  if (element) {
-    try {
-      result = boost::lexical_cast<int>(element.text().as_string());
-    } catch(const boost::bad_lexical_cast &) {
-      // LOG(Error, "Cannot convert element to double");
-    }
-  }
-  return result;
 }
 
 model::Schedule ReverseTranslator::defaultDeckTempSchedule(openstudio::model::Model& model)
@@ -1298,7 +1267,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   std::vector<model::ModelObject> coolingComponents;
   std::vector<model::ModelObject> heatingComponents;
 
-  for (int i = 0; i < airSegmentElements.size(); i++)
+  for (std::vector<pugi::xml_node>::size_type i = 0; i < airSegmentElements.size(); i++)
   {
     pugi::xml_node airSegmentElement = airSegmentElements[i];
 
@@ -1307,15 +1276,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     // Supply Segments
     if(istringEqual(airSegmentTypeElement.text().as_string(),"Supply"))
     {
-      std::vector<pugi::xml_node> airSegmentChildElements;
-      for (auto &e : airSegmentElement.children()) {
-        airSegmentChildElements.push_back(e);
-      }
+      // Get all children
+      std::vector<pugi::xml_node> airSegmentChildElements = makeVectorOfChildren(airSegmentElement);
 
       // Locate and add the fan first
       // This is so we don't mess up control nodes
 
-      for(int j = 0; j != airSegmentChildElements.size(); j++)
+      for (std::vector<pugi::xml_node>::size_type j = 0; j < airSegmentChildElements.size(); j++)
       {
         pugi::xml_node airSegmentChildElement = airSegmentChildElements[j];
 
@@ -1700,7 +1667,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     OS_ASSERT(oaSystem);
     auto outboardOANode = oaSystem->outboardOANode().get();
 
-    for (int i = 0; i < airSegmentElements.size(); i++) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < airSegmentElements.size(); i++) {
       auto airSegmentElement = airSegmentElements[i];
       auto airSegmentTypeElement = airSegmentElement.child("Type");
 
@@ -1734,7 +1701,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     [[maybe_unused]] auto htRcvryRefElement = airSystemOACtrlElement.child("HtRcvryRef");
 
     std::vector<pugi::xml_node> htRcvryElements = makeVectorOfChildren(airSystemElement, "HtRcvry");
-    for(int i = 0; i < htRcvryElements.size(); i++) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < htRcvryElements.size(); i++) {
       auto htRcvryElement = htRcvryElements[i];
       if( auto mo = translateHtRcvry(htRcvryElement, model) ) {
         auto hx = mo->cast<model::HeatExchangerAirToAirSensibleAndLatent>();
@@ -1778,7 +1745,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     }
   }
 
-  for (int i = 0; i < airSegmentElements.size(); i++)
+  for (std::vector<pugi::xml_node>::size_type i = 0; i < airSegmentElements.size(); i++)
   {
     pugi::xml_node airSegmentElement = airSegmentElements[i];
     pugi::xml_node airSegmentTypeElement = airSegmentElement.child("Type");
@@ -4440,7 +4407,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   {
     std::vector<pugi::xml_node> elements = makeVectorOfChildren(thermalZoneElement, "PriAirCondgSysRef");
-    for (int i = 0; i < elements.size(); i++)
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < elements.size(); i++)
     {
       const auto & element = elements[i];
       SysInfo sysInfo;
@@ -4457,7 +4424,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   {
     std::vector<pugi::xml_node> elements = makeVectorOfChildren(thermalZoneElement, "SimSysRef");
-    for (int i = 0; i < elements.size(); i++)
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < elements.size(); i++)
     {
       const auto & element = elements[i];
       SysInfo sysInfo;
@@ -4621,7 +4588,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   }
 
   // Set priority
-  auto setPriority = [&thermalZone, &thermalZoneElement](const SysInfo & sysInfo, std::string& priorityElement) {
+  auto setPriority = [&thermalZone, &thermalZoneElement](const SysInfo & sysInfo, const std::string& priorityElement) {
     if( sysInfo.ModelObject ) {
       // Clg and Htg
       for (const pugi::xml_node& element: thermalZoneElement.children(priorityElement.c_str()) ) {
@@ -4667,7 +4634,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   };
 
   for( const SysInfo& sysInfo : priAirCondInfo ) {
-    setPriority(sysInfo, std::string("PriAirCondgSysPriority"));
+    setPriority(sysInfo, "PriAirCondgSysPriority");
   }
   for( const SysInfo& sysInfo : simSysInfo ) {
     setPriority(sysInfo, "SimSysPriority");
@@ -5068,7 +5035,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
 
       std::vector<pugi::xml_node> thrmlZnElements = makeVectorOfChildren(trmlUnitElement.parent().parent().parent(), "ThrmlZn");
 
-      for( int j = 0; j < thrmlZnElements.size(); j++ )
+      for (std::vector<pugi::xml_node>::size_type j = 0; j < thrmlZnElements.size(); j++ )
       {
         pugi::xml_node thrmlZnElement = thrmlZnElements[j];
 
@@ -5394,7 +5361,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
   // Boilers
   std::vector<pugi::xml_node> boilerElements = makeVectorOfChildren(fluidSysElement, "Blr");
-  for (int i = 0; i < boilerElements.size(); i++) {
+  for (std::vector<pugi::xml_node>::size_type i = 0; i < boilerElements.size(); i++) {
     auto boilerElement = boilerElements[i];
 
     if( boost::optional<model::ModelObject> mo = translateBoiler(boilerElement, model) ) {
@@ -5409,6 +5376,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   boost::optional<model::ThermalStorageChilledWaterStratified> thermalStorage;
   std::string thermalStorageDischargePriority;
   boost::optional<model::ScheduleRuleset> tesSchedule;
+  // TODO: this variable will be used un-initialized in case the "TankSetptTemp" child key is ill-formed (not present or, doesn't cast to double)
   double thermalStorageTankSetptTemp;
   if( auto mo = translateThrmlEngyStor(thrmlEngyStorElement, model) ) {
     thermalStorage = mo->cast<model::ThermalStorageChilledWaterStratified>();
@@ -5458,7 +5426,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   // in thermal energy storage discharge
   std::map<model::ModelObject,bool> enableOnThrmlEngyStorDischargeMap;
   std::vector<pugi::xml_node> chillerElements = makeVectorOfChildren(fluidSysElement, "Chlr");
-  for (int i = 0; i < chillerElements.size(); i++) {
+  for (std::vector<pugi::xml_node>::size_type i = 0; i < chillerElements.size(); i++) {
     auto chillerElement = chillerElements[i];
 
     if( auto mo = translateChiller(chillerElement, model) ) {
@@ -5483,7 +5451,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
   // HtRej
   std::vector<pugi::xml_node> htRejElements = makeVectorOfChildren(fluidSysElement, "HtRej");
-  for(int i = 0; i < htRejElements.size(); i++) {
+  for (std::vector<pugi::xml_node>::size_type i = 0; i < htRejElements.size(); i++) {
     auto htRejElement = htRejElements[i];
 
     if( auto mo = translateHtRej(htRejElement, model) ) {
@@ -5495,7 +5463,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
   // HX
   std::vector<pugi::xml_node> hxElements = makeVectorOfChildren(fluidSysElement, "HX");
-  for(int i = 0; i < hxElements.size(); i++) {
+  for (std::vector<pugi::xml_node>::size_type i = 0; i < hxElements.size(); i++) {
     auto hxElement = hxElements[i];
 
     if( auto mo = translateHX(hxElement, model) ) {
@@ -5513,7 +5481,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   // Water Heaters
   std::vector<pugi::xml_node> wtrHtrElements = makeVectorOfChildren(fluidSysElement, "WtrHtr");
 
-  for (int i = 0; i < wtrHtrElements.size(); i++)
+  for (std::vector<pugi::xml_node>::size_type i = 0; i < wtrHtrElements.size(); i++)
   {
     pugi::xml_node wtrHtrElement = wtrHtrElements[i];
 
@@ -5572,7 +5540,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
   std::vector<pugi::xml_node> fluidSegElements = makeVectorOfChildren(fluidSysElement, "FluidSeg");
 
-  for (int i = 0; i < fluidSegElements.size(); i++)
+  for (std::vector<pugi::xml_node>::size_type i = 0; i < fluidSegElements.size(); i++)
   {
     pugi::xml_node fluidSegElement = fluidSegElements[i];
 
@@ -5724,12 +5692,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   std::vector<EquipmentList> equipmentLists;
   // Do some gymastics because we don't know that we will get childNodes
   // back in the order of their "index" attribute.
-  std::vector<pugi::xml_node> childNodes;
-  for (auto &e : fluidSysElement.children()) {
-    childNodes.push_back(e);
-  }
+  std::vector<pugi::xml_node> childNodes = makeVectorOfChildren(fluidSysElement);
 
-  for( int i = 0; i != childNodes.size(); ++i ) {
+  for( std::vector<pugi::xml_node>::size_type i = 0; i < childNodes.size(); ++i ) {
     auto element = childNodes[i];
     if( istringEqual(element.name(), "LdRngLim") ) {
       ldRngLimElements.push_back(element);
@@ -5759,7 +5724,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     // EqpList1Name
     // Get an unordered list of the equipment list elements for this range
     std::vector<pugi::xml_node> eqpListNameElements;
-    for( int j = 0; j != childNodes.size(); ++j ) {
+    for( std::vector<pugi::xml_node>::size_type j = 0; j < childNodes.size(); ++j ) {
       auto element = childNodes[j];
       std::string nodeName = "EqpList" + openstudio::string_conversions::number(i + 1) + "Name";
       if (openstudio::istringEqual(element.name(), nodeName)) {
@@ -6863,8 +6828,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
     tes.setUseSideAvailabilitySchedule(schedule.get());
   }
 
-  // Note JM 2019-01-15: TODO: This is a redefinition, not sure what was meant here
-  boost::optional<double> _tankHgt = lexicalCastToDouble(tesElement.child("TankHgt"));
+  // Note JM 2019-01-15: TODO: This is a redefinition (and exactly the same key as above),
+  // not sure what was meant here
+  // boost::optional<double> _tankHgt = lexicalCastToDouble(tesElement.child("TankHgt"));
   if( _tankHgt ) {
     double value = unitToUnit(_tankHgt.get(),"ft","m").get();
     tes.setUseSideInletHeight(value);
@@ -7450,8 +7416,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       fan.setPressureRise(_fanTotStaticPressSim.get() * 249.0889 );
     }
 
-    // TODO: this is a redefinition
-    boost::optional<double> _fanFlowCapSim = lexicalCastToDouble(element.child("FanFlowCapSim"));
+    // TODO: this is a redefinition (exaclty the same "key" as above, except above sets the heatPump.setEvaporatorAirFlowRate)
+    // boost::optional<double> _fanFlowCapSim = lexicalCastToDouble(element.child("FanFlowCapSim"));
     if( _fanFlowCapSim ) {
       double value = unitToUnit(_fanFlowCapSim.get(),"cfm","m^3/s").get();
       fan.setMaximumFlowRate(value);
@@ -7771,7 +7737,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     boost::optional<model::CoilHeatingWaterToAirHeatPumpEquationFit> heatingCoil;
     boost::optional<model::HVACComponent> suppHeatingCoil;
     std::vector<pugi::xml_node> heatingCoilElements = makeVectorOfChildren(element, "CoilHtg");
-    for(int i = 0; i < heatingCoilElements.size(); i++)
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < heatingCoilElements.size(); i++)
     {
       pugi::xml_node heatingCoilElement = heatingCoilElements[i];
       pugi::xml_node typeElement = heatingCoilElement.child("Type");
@@ -7901,7 +7867,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     boost::optional<model::HVACComponent> heatingCoil;
     boost::optional<model::HVACComponent> suppHeatingCoil;
     std::vector<pugi::xml_node> heatingCoilElements = makeVectorOfChildren(element, "CoilHtg");
-    for(int i = 0; i < heatingCoilElements.size(); i++)
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < heatingCoilElements.size(); i++)
     {
       pugi::xml_node heatingCoilElement = heatingCoilElements[i];
       pugi::xml_node typeElement = heatingCoilElement.child("Type");
@@ -9144,7 +9110,7 @@ pugi::xml_node ReverseTranslator::findZnSysElement(const std::string& znSysName,
 {
   std::vector<pugi::xml_node> znSysElements = makeVectorOfChildren(root.child("Proj"), "ZnSys");
 
-  for (int i = 0; i < znSysElements.size(); i++)
+  for (std::vector<pugi::xml_node>::size_type i = 0; i < znSysElements.size(); i++)
   {
     pugi::xml_node znSysElement = znSysElements[i];
     std::string znSysElementName = znSysElement.child("Name").text().as_string();
@@ -9161,11 +9127,11 @@ pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(const std::string& 
 {
   std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(root.child("Proj"), "AirSys");
 
-  for( int i = 0; i < airSystemElements.size(); i++ )
+  for( std::vector<pugi::xml_node>::size_type i = 0; i < airSystemElements.size(); i++ )
   {
     pugi::xml_node airSystemElement = airSystemElements[i];
     std::vector<pugi::xml_node> terminalElements = makeVectorOfChildren(airSystemElement, "TrmlUnit");
-    for( int j = 0; j < terminalElements.size(); j++ )
+    for (std::vector<pugi::xml_node>::size_type j = 0; j < terminalElements.size(); j++ )
     {
       pugi::xml_node terminalElement = terminalElements[j];
       std::string zoneServedElementName = terminalElement.child("ZnServedRef").text().as_string();
@@ -9183,7 +9149,7 @@ pugi::xml_node ReverseTranslator::findAirSysElement(const std::string& airSysNam
 {
   std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(root.child("Proj"), "AirSys");
 
-  for( int i = 0; i < airSystemElements.size(); i++ )
+  for( std::vector<pugi::xml_node>::size_type i = 0; i < airSystemElements.size(); i++ )
   {
     pugi::xml_node airSystemElement = airSystemElements[i];
     std::string airSystemElementName = airSystemElement.child("Name").text().as_string();

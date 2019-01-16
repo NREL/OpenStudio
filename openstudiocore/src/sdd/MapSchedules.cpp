@@ -28,6 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "ReverseTranslator.hpp"
+#include "Helpers.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/ScheduleDay.hpp"
@@ -70,10 +71,7 @@ namespace sdd {
     }
     std::string type = escapeName(typeElement.text().as_string());
 
-    std::vector<pugi::xml_node> hrElements;
-    for (auto &child : element.children("Hr")) {
-      hrElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> hrElements = makeVectorOfChildren(element, "Hr");
 
     if (hrElements.size() != 24){
       LOG(Error, "SchDay does not have 24 'Hr' elements empty for SchDay named '" << name << "'.  ScheduleDay will not be created");
@@ -116,7 +114,7 @@ namespace sdd {
       scheduleDay.setScheduleTypeLimits(*scheduleTypeLimits);
     }
 
-    for (int i = 0; i < hrElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < hrElements.size(); ++i) {
       pugi::xml_node hrElement = hrElements[i];
       double value = hrElement.text().as_double();
 
@@ -280,18 +278,9 @@ namespace sdd {
     }
     std::string type = escapeName(typeElement.text().as_string());
 
-    std::vector<pugi::xml_node> endMonthElements;
-    for (auto &child : element.children("EndMonth")) {
-      endMonthElements.push_back(child);
-    }
-    std::vector<pugi::xml_node> endDayElements;
-    for (auto &child : element.children("EndDay")) {
-      endMonthElements.push_back(child);
-    }
-    std::vector<pugi::xml_node> schWeekRefElements;
-    for (auto &child : element.children("SchWeekRef")) {
-      endMonthElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> endMonthElements = makeVectorOfChildren(element, "EndMonth");
+    std::vector<pugi::xml_node> endDayElements = makeVectorOfChildren(element, "EndDay");
+    std::vector<pugi::xml_node> schWeekRefElements = makeVectorOfChildren(element, "SchWeekRef");
 
     if (endMonthElements.size() != endDayElements.size()){
       LOG(Error, "Number of 'EndMonth' elements not equal to number of 'EndDay' elements for Sch named '" << name << "'.  ScheduleYear will not be created");
@@ -311,7 +300,7 @@ namespace sdd {
       scheduleYear.setScheduleTypeLimits(*scheduleTypeLimits);
     }
 
-    for (int i = 0; i < endMonthElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < endMonthElements.size(); ++i) {
       pugi::xml_node endMonthElement = endMonthElements[i];
       pugi::xml_node endDayElement = endDayElements[i];
       pugi::xml_node schWeekRefElement = schWeekRefElements[i];

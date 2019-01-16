@@ -28,6 +28,8 @@
 ***********************************************************************************************************************/
 
 #include "ReverseTranslator.hpp"
+#include "Helpers.hpp"
+
 #include "../model/Model.hpp"
 #include "../model/Component.hpp"
 #include "../model/ModelObject.hpp"
@@ -301,10 +303,7 @@ namespace sdd {
     sp.setCoolingSizingFactor(1.0);
 
     // do materials before constructions
-    std::vector<pugi::xml_node> materialElements;
-    for (auto &adj : projectElement.children("Mat")) {
-      materialElements.push_back(adj);
-    }
+    std::vector<pugi::xml_node> materialElements = makeVectorOfChildren(projectElement, "Mat");
 
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Materials"));
@@ -313,7 +312,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < materialElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < materialElements.size(); ++i) {
       boost::optional<model::ModelObject> material = translateMaterial(materialElements[i], *result);
       if (!material) {
         LOG(Error, "Failed to translate 'Mat' element " << i);
@@ -327,10 +326,7 @@ namespace sdd {
     // do constructions before geometry
 
     // layered constructions
-    std::vector<pugi::xml_node> constructionElements;
-    for (const pugi::xml_node& child: projectElement.children("ConsAssm")) {
-      constructionElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> constructionElements = makeVectorOfChildren(projectElement, "ConsAssm");
 
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Constructions"));
@@ -339,7 +335,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < constructionElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < constructionElements.size(); ++i) {
       boost::optional<model::ModelObject> construction = translateConstructAssembly(constructionElements[i], *result);
       if (!construction) {
         LOG(Error, "Failed to translate 'ConsAssm' element " << i);
@@ -351,10 +347,7 @@ namespace sdd {
     }
 
     // door constructions
-    std::vector<pugi::xml_node> doorConstructionElements;
-    for (const pugi::xml_node& child: projectElement.children("DrCons")) {
-      doorConstructionElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> doorConstructionElements = makeVectorOfChildren(projectElement, "DrCons");
 
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Door Constructions"));
@@ -363,7 +356,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < doorConstructionElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < doorConstructionElements.size(); ++i) {
       boost::optional<model::ModelObject> doorConstruction = translateDoorConstruction(doorConstructionElements[i], *result);
       if (!doorConstruction) {
         LOG(Error, "Failed to translate 'DrCons' element " << i);
@@ -375,10 +368,7 @@ namespace sdd {
     }
 
     // fenestration constructions
-    std::vector<pugi::xml_node> fenestrationConstructionElements;
-    for (const pugi::xml_node& child: projectElement.children("FenCons")) {
-      fenestrationConstructionElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> fenestrationConstructionElements = makeVectorOfChildren(projectElement, "FenCons");
 
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Fenestration Constructions"));
@@ -387,7 +377,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < fenestrationConstructionElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < fenestrationConstructionElements.size(); ++i) {
       boost::optional<model::ModelObject> fenestrationConstruction = translateFenestrationConstruction(fenestrationConstructionElements[i], *result);
       if (!fenestrationConstruction) {
         LOG(Error, "Failed to translate 'FenCons' element " << i);
@@ -449,10 +439,7 @@ namespace sdd {
 
 
     // do schedules before loads
-    std::vector<pugi::xml_node> scheduleDayElements;
-    for (const pugi::xml_node& child: projectElement.children("SchDay")) {
-      scheduleDayElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> scheduleDayElements = makeVectorOfChildren(projectElement, "SchDay");
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Day Schedules"));
       m_progressBar->setMinimum(0);
@@ -460,7 +447,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < scheduleDayElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < scheduleDayElements.size(); ++i) {
       boost::optional<model::ModelObject> scheduleDay = translateScheduleDay(scheduleDayElements[i], *result);
       if (!scheduleDay) {
         LOG(Error, "Failed to translate 'SchDay' element " << i);
@@ -471,10 +458,7 @@ namespace sdd {
       }
     }
 
-    std::vector<pugi::xml_node> scheduleWeekElements;
-    for (const pugi::xml_node& child: projectElement.children("SchWeek")) {
-      scheduleWeekElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> scheduleWeekElements = makeVectorOfChildren(projectElement, "SchWeek");
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Week Schedules"));
       m_progressBar->setMinimum(0);
@@ -482,7 +466,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < scheduleWeekElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < scheduleWeekElements.size(); ++i) {
       boost::optional<model::ModelObject> scheduleWeek = translateScheduleWeek(scheduleWeekElements[i], *result);
       if (!scheduleWeek) {
         LOG(Error, "Failed to translate 'SchWeek' element " << i);
@@ -493,10 +477,7 @@ namespace sdd {
       }
     }
 
-    std::vector<pugi::xml_node> scheduleElements;
-    for (const pugi::xml_node& child: projectElement.children("Sch")) {
-      scheduleElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> scheduleElements = makeVectorOfChildren(projectElement, "Sch");
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Year Schedules"));
       m_progressBar->setMinimum(0);
@@ -504,7 +485,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < scheduleElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < scheduleElements.size(); ++i) {
       boost::optional<model::ModelObject> schedule = translateSchedule(scheduleElements[i], *result);
       if (!schedule) {
         LOG(Error, "Failed to translate 'Sch' element " << i);
@@ -515,10 +496,7 @@ namespace sdd {
       }
     }
 
-    std::vector<pugi::xml_node> holidayElements;
-    for (const pugi::xml_node& child: projectElement.children("Hol")) {
-      holidayElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> holidayElements = makeVectorOfChildren(projectElement, "Hol");
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Holidays"));
       m_progressBar->setMinimum(0);
@@ -526,7 +504,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < holidayElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < holidayElements.size(); ++i) {
       boost::optional<model::ModelObject> holiday = translateHoliday(holidayElements[i], *result);
       if (!holiday) {
         LOG(Error, "Failed to translate 'Hol' element " << i);
@@ -544,15 +522,12 @@ namespace sdd {
     //}
 
     // translate shadingSurfaces
-    std::vector<pugi::xml_node> exteriorShadingElements;
-    for (const pugi::xml_node& child: projectElement.children("ExtShdgObj")) {
-      exteriorShadingElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> exteriorShadingElements = makeVectorOfChildren(projectElement, "ExtShdgObj");
     if (exteriorShadingElements.size() > 0) {
       model::ShadingSurfaceGroup shadingSurfaceGroup(*result);
       shadingSurfaceGroup.setName("Site ShadingGroup");
       shadingSurfaceGroup.setShadingSurfaceType("Site");
-      for (int i = 0; i < exteriorShadingElements.size(); ++i) {
+      for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorShadingElements.size(); ++i) {
         if (exteriorShadingElements[i].parent() == projectElement) {
           boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements[i], shadingSurfaceGroup);
           if (!exteriorShading) {
@@ -578,10 +553,7 @@ namespace sdd {
     result->setFastNaming(false);
 
     // FluidSys
-    std::vector<pugi::xml_node> fluidSysElements;
-    for (const pugi::xml_node& child: projectElement.children("FluidSys")) {
-      fluidSysElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> fluidSysElements = makeVectorOfChildren(projectElement, "FluidSys");
     if (m_progressBar){
       m_progressBar->setWindowTitle(toString("Translating Fluid Systems"));
       m_progressBar->setMinimum(0);
@@ -590,7 +562,7 @@ namespace sdd {
     }
 
     // Translate condenser systems
-    for (int i = 0; i < fluidSysElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < fluidSysElements.size(); ++i) {
       if (!fluidSysElements[i].child("Name")) {
         continue;
       }
@@ -606,7 +578,7 @@ namespace sdd {
     }
 
     // Translate hot water systems
-    for (int i = 0; i < fluidSysElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < fluidSysElements.size(); ++i) {
       if (!fluidSysElements[i].child("Name")) {
         continue;
       }
@@ -625,7 +597,7 @@ namespace sdd {
 
 
     // Translate chilled water systems
-    for (int i = 0; i < fluidSysElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < fluidSysElements.size(); ++i) {
       if (!fluidSysElements[i].child("Name")) {
         continue;
       }
@@ -645,10 +617,7 @@ namespace sdd {
 
 
     // AirSystem
-    std::vector<pugi::xml_node> airSystemElements;
-    for (const pugi::xml_node& child: buildingElement.children("AirSys")) {
-      airSystemElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(buildingElement, "AirSys");
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Air Systems"));
       m_progressBar->setMinimum(0);
@@ -656,7 +625,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < airSystemElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < airSystemElements.size(); ++i) {
       if (!airSystemElements[i].child("Name")) {
         continue;
       }
@@ -669,10 +638,7 @@ namespace sdd {
     }
 
     // VRFSys
-    std::vector<pugi::xml_node> vrfSystemElements;
-    for (const pugi::xml_node& child: buildingElement.children("VRFSys")) {
-      vrfSystemElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> vrfSystemElements = makeVectorOfChildren(buildingElement, "VRFSys");
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating VRF Systems"));
       m_progressBar->setMinimum(0);
@@ -680,7 +646,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < vrfSystemElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < vrfSystemElements.size(); ++i) {
       if (!vrfSystemElements[i].child("Name")) {
         continue;
       }
@@ -693,10 +659,7 @@ namespace sdd {
     }
 
     // ThermalZone
-    std::vector<pugi::xml_node> thermalZoneElements;
-    for (const pugi::xml_node& child: buildingElement.children("ThrmlZn")) {
-      thermalZoneElements.push_back(child);
-    }
+    std::vector<pugi::xml_node> thermalZoneElements = makeVectorOfChildren(buildingElement, "ThrmlZn");
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Thermal Zones"));
       m_progressBar->setMinimum(0);
@@ -704,7 +667,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < thermalZoneElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < thermalZoneElements.size(); ++i) {
       if (!thermalZoneElements[i].child("Name")) {
         continue;
       }

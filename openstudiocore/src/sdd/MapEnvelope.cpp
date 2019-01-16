@@ -772,7 +772,7 @@ Visible Absorptance, IDD default of 0.7
 
         // name
         std::string name = construction.name().get();
-        pugi::xml_node nameElement = result.append_child("Name");
+        pugi::xml_node nameElement = result->append_child("Name");
         nameElement.text() = escapeName(name).c_str();
 
         // DLM: prescribed, not input
@@ -1177,7 +1177,7 @@ Visible Absorptance, IDD default of 0.7
       // name
       std::string name = material.name().get();
       pugi::xml_node nameElement = result.append_child("Name");
-      result.text() = escapeName(name).c_str();
+      nameElement.text() = escapeName(name).c_str();
 
       // SDD:
       // CodeCat - compulsory, done

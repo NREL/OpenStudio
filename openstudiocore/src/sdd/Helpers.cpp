@@ -38,8 +38,8 @@ namespace openstudio {
     // Helper to make a vector of pugi::xml_node of all children
     std::vector<pugi::xml_node> makeVectorOfChildren(const pugi::xml_node& root) {
       std::vector<pugi::xml_node> result;
-      for (const pugi::xml_node &e : root.children()) {
-        result.push_back(e);
+      for (const pugi::xml_node& child : root.children()) {
+        result.push_back(child);
       }
       return result;
     }
@@ -47,35 +47,79 @@ namespace openstudio {
     // Helper to make a vector of pugi::xml_node matching a tag
     std::vector<pugi::xml_node> makeVectorOfChildren(const pugi::xml_node& root, const char * tagName) {
       std::vector<pugi::xml_node> result;
-      for (const pugi::xml_node &e : root.children(tagName)) {
-        result.push_back(e);
+      for (const pugi::xml_node& child : root.children(tagName)) {
+        result.push_back(child);
       }
       return result;
     }
 
+    // Lexical cast the text() of a node as a double
     boost::optional<double> lexicalCastToDouble(const pugi::xml_node& element) {
       boost::optional<double> result;
       if (element) {
         try {
           result = boost::lexical_cast<double>(element.text().as_string());
         } catch(const boost::bad_lexical_cast &) {
-          // LOG(Error, "Cannot convert element to double");
+          // LOG(Error, "Cannot convert element text to double");
         }
       }
       return result;
     }
 
+    // Lexical cast the text() of a node as an int
     boost::optional<int> lexicalCastToInt(const pugi::xml_node& element) {
       boost::optional<int> result;
       if (element) {
         try {
           result = boost::lexical_cast<int>(element.text().as_string());
         } catch(const boost::bad_lexical_cast &) {
-          // LOG(Error, "Cannot convert element to double");
+          // LOG(Error, "Cannot convert element text to double");
         }
       }
       return result;
     }
+
+    // Lexical cast the text() of an attribute as a double
+    boost::optional<double> lexicalCastToDouble(const pugi::xml_attribute& attr) {
+      boost::optional<double> result;
+      if (attr) {
+        try {
+          result = boost::lexical_cast<double>(attr.value());
+        } catch(const boost::bad_lexical_cast &) {
+          // LOG(Error, "Cannot convert attribute value to double");
+        }
+      }
+      return result;
+    }
+
+    // Lexical cast the text() of an attribute as an int
+    boost::optional<int> lexicalCastToInt(const pugi::xml_attribute& attr) {
+      boost::optional<int> result;
+      if (attr) {
+        try {
+          result = boost::lexical_cast<int>(attr.value());
+        } catch(const boost::bad_lexical_cast &) {
+          // LOG(Error, "Cannot convert attribute value to integer");
+        }
+      }
+      return result;
+    }
+
+    boost::optional<unsigned> lexicalCastToUnsigned(const pugi::xml_attribute& element) {
+      boost::optional<unsigned> result;
+      if (attr) {
+        try {
+          boost::optional<int> _int = boost::lexical_cast<int>(attr.value());
+          if( _int && (_int.get() > 0) ) {
+            result = static_cast<unsigned>(_int.get());
+          }
+        } catch(const boost::bad_lexical_cast &) {
+          // LOG(Error, "Cannot convert attribute value to integer");
+        }
+      }
+      return result;
+    }
+
 
   } // sdd
 } // openstudio

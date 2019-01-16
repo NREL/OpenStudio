@@ -29,6 +29,7 @@
 
 #include "ReverseTranslator.hpp"
 #include "ForwardTranslator.hpp"
+#include "Helpers.hpp"
 
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
@@ -153,27 +154,6 @@ namespace sdd {
     return result;
   }
 
-  // Helper to make a vector of pugi::xml_node
-  std::vector<pugi::xml_node> makeVectorOfChildren(const pugi::xml_node& root, const char * tagName) {
-    std::vector<pugi::xml_node> result;
-    for (const pugi::xml_node &e : root.children(tagName)) {
-      result.push_back(e);
-    }
-    return result;
-  }
-
-  boost::optional<double> lexicalCastToDouble(const pugi::xml_node& element) {
-    boost::optional<double> result;
-    if (element) {
-      try {
-        result = boost::lexical_cast<double>(element.text().as_string());
-      } catch(const boost::bad_lexical_cast &) {
-        // LOG(Error, "Cannot convert element to double");
-      }
-    }
-    return result;
-  }
-
   boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
@@ -213,7 +193,7 @@ namespace sdd {
     model::ShadingSurfaceGroup shadingSurfaceGroup(model);
     shadingSurfaceGroup.setName("Building ShadingGroup");
     shadingSurfaceGroup.setShadingSurfaceType("Building");
-    for (int i = 0; i < exteriorShadingElements.size(); ++i) {
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorShadingElements.size(); ++i) {
       if (exteriorShadingElements[i].parent() == element){
         boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements[i], shadingSurfaceGroup);
         if (!exteriorShading){
@@ -227,7 +207,7 @@ namespace sdd {
     std::vector<pugi::xml_node> buildingStoryElements = makeVectorOfChildren(element, "Story");
 
     // create all spaces
-    for (int i = 0; i < spaceElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < spaceElements.size(); i++){
       pugi::xml_node spaceElement = spaceElements[i];
       boost::optional<model::ModelObject> space = createSpace(spaceElement, model);
       if (!space){
@@ -236,7 +216,7 @@ namespace sdd {
     }
 
     // create all thermal zones
-    for (int i = 0; i < thermalZoneElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < thermalZoneElements.size(); i++){
 
       // TODO: check already exists inside createThermalZone, this is redundant
       if (thermalZoneElements[i].child("Name")) {
@@ -258,7 +238,7 @@ namespace sdd {
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < buildingStoryElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < buildingStoryElements.size(); i++){
       boost::optional<model::ModelObject> buildingStory = translateBuildingStory(buildingStoryElements[i], model);
       if (!buildingStory){
         LOG(Error, "Failed to translate 'Story' element " << i);
@@ -326,7 +306,7 @@ namespace sdd {
 
     std::string name = buildingStory.nameString();
 
-    for (int i = 0; i < spaceElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < spaceElements.size(); i++){
       pugi::xml_node spaceElement = spaceElements[i];
       boost::optional<model::ModelObject> space = translateSpace(spaceElement, buildingStory);
       if (!space){
@@ -412,56 +392,56 @@ namespace sdd {
 
     translateLoads(element, *space);
 
-    for (int i = 0; i < exteriorWallElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorWallElements.size(); i++){
       boost::optional<model::ModelObject> surface = translateSurface(exteriorWallElements[i], *space);
       if (!surface){
         LOG(Error, "Failed to translate 'ExtWall' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (int i = 0; i < exteriorFloorElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorFloorElements.size(); i++){
       boost::optional<model::ModelObject> surface = translateSurface(exteriorFloorElements[i], *space);
       if (!surface){
         LOG(Error, "Failed to translate 'ExtFlr' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (int i = 0; i < roofElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < roofElements.size(); i++){
       boost::optional<model::ModelObject> surface = translateSurface(roofElements[i], *space);
       if (!surface){
         LOG(Error, "Failed to translate 'Roof' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (int i = 0; i < undergroundFloorElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < undergroundFloorElements.size(); i++){
       boost::optional<model::ModelObject> surface = translateSurface(undergroundFloorElements[i], *space);
       if (!surface){
         LOG(Error, "Failed to translate 'UndgrFlr' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (int i = 0; i < undergroundWallElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < undergroundWallElements.size(); i++){
       boost::optional<model::ModelObject> surface = translateSurface(undergroundWallElements[i], *space);
       if (!surface){
         LOG(Error, "Failed to translate 'UndgrWall' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (int i = 0; i < ceilingElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < ceilingElements.size(); i++){
       boost::optional<model::ModelObject> surface = translateSurface(ceilingElements[i], *space);
       if (!surface){
         LOG(Error, "Failed to translate 'Ceiling' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (int i = 0; i < interiorWallElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < interiorWallElements.size(); i++){
       boost::optional<model::ModelObject> surface = translateSurface(interiorWallElements[i], *space);
       if (!surface){
         LOG(Error, "Failed to translate 'IntWall' element " << i << " for Space named '" << spaceName << "'.");
       }
     }
 
-    for (int i = 0; i < interiorFloorElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < interiorFloorElements.size(); i++){
       boost::optional<model::ModelObject> surface = translateSurface(interiorFloorElements[i], *space);
       if (!surface){
         LOG(Error, "Failed to translate 'IntFlr' element " << i << " for Space named '" << spaceName << "'.");
@@ -473,7 +453,7 @@ namespace sdd {
     model::ShadingSurfaceGroup shadingSurfaceGroup(space->model());
     shadingSurfaceGroup.setName(spaceName + " ShadingGroup");
     shadingSurfaceGroup.setSpace(*space);
-    for (int i = 0; i < exteriorShadingElements.size(); ++i){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorShadingElements.size(); ++i){
       if (exteriorShadingElements[i].parent() == element){
         boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements[i], shadingSurfaceGroup);
         if (!exteriorShading){
@@ -651,7 +631,7 @@ namespace sdd {
 
       //InfMthd = {AirChangesPerHour, FlowArea, FlowExteriorArea, FlowExteriorWallArea, FlowSpace}
       std::vector<pugi::xml_node> infMthdNodes = makeVectorOfChildren(element, "InfMthd");
-      for (int i = 0; i < infMthdNodes.size(); i++){
+      for (std::vector<pugi::xml_node>::size_type i = 0; i < infMthdNodes.size(); i++){
 
         pugi::xml_node infMthdElement = infMthdNodes[i];
 
@@ -1299,7 +1279,7 @@ namespace sdd {
     }
 
     std::vector<pugi::xml_node> cartesianPointElements = makeVectorOfChildren(polyLoopElement, "CartesianPt");
-    for (int i = 0; i < cartesianPointElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < cartesianPointElements.size(); i++){
       std::vector<pugi::xml_node> coordinateElements = makeVectorOfChildren(cartesianPointElements[i], "Coord");
       if (coordinateElements.size() != 3){
         LOG(Error, "PolyLp element 'CartesianPt' does not have exactly 3 'Coord' elements, cannot create Surface.");
@@ -1458,19 +1438,19 @@ namespace sdd {
     std::vector<pugi::xml_node> doorElements = makeVectorOfChildren(element, "Dr");
     std::vector<pugi::xml_node> skylightElements = makeVectorOfChildren(element, "Skylt");
 
-    for (int i = 0; i < windowElements.size(); ++i){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < windowElements.size(); ++i){
       boost::optional<model::ModelObject> subSurface = translateSubSurface(windowElements[i], surface);
       if (!subSurface){
         LOG(Error, "Failed to translate 'Win' element " << i << " for Surface named '" << name << "'");
       }
     }
-    for (int i = 0; i < doorElements.size(); ++i){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < doorElements.size(); ++i){
       boost::optional<model::ModelObject> subSurface = translateSubSurface(doorElements[i], surface);
       if (!subSurface){
         LOG(Error, "Failed to translate 'Dr' element " << i << " for Surface named '" << name << "'");
       }
     }
-    for (int i = 0; i < skylightElements.size(); ++i){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < skylightElements.size(); ++i){
       boost::optional<model::ModelObject> subSurface = translateSubSurface(skylightElements[i], surface);
       if (!subSurface){
         LOG(Error, "Failed to translate 'Skylt' element " << i << " for Surface named '" << name << "'");
@@ -1529,7 +1509,7 @@ namespace sdd {
     }
 
     std::vector<pugi::xml_node> cartesianPointElements = makeVectorOfChildren(polyLoopElement, "CartesianPt");
-    for (int i = 0; i < cartesianPointElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < cartesianPointElements.size(); i++){
       std::vector<pugi::xml_node> coordinateElements = makeVectorOfChildren(cartesianPointElements[i], "Coord");
       if (coordinateElements.size() != 3){
         LOG(Error, "PolyLp element 'CartesianPt' does not have exactly 3 'Coord' elements, cannot create SubSurface.");
@@ -1654,7 +1634,7 @@ namespace sdd {
     }
 
     std::vector<pugi::xml_node> cartesianPointElements = makeVectorOfChildren(polyLoopElement, "CartesianPt");
-    for (int i = 0; i < cartesianPointElements.size(); i++){
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < cartesianPointElements.size(); i++){
       std::vector<pugi::xml_node> coordinateElements = makeVectorOfChildren(cartesianPointElements[i], "Coord");
       if (coordinateElements.size() != 3){
         LOG(Error, "PolyLp element 'CartesianPt' does not have exactly 3 'Coord' elements, cannot create ShadingSurface.");
