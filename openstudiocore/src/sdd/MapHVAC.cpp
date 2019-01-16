@@ -9308,19 +9308,19 @@ boost::optional<pugi::xml_node> ForwardTranslator::translateAirLoopHVAC(const mo
 
         auto clRstSupHiElement = result.append_child("ClRstSupHi");
         auto clRstSupHi = convert(tempSPM->setpointatOutdoorHighTemperature(),"C","F").get();
-        clRstSupHiElement.text() = clRstSupHi;
+        clRstSupHiElement.text() = openstudio::string_conversions::number(clRstSupHi).c_str();
 
         auto clRstSupLowElement = result.append_child("ClRstSupLow");
         auto clRstSupLow = convert(tempSPM->setpointatOutdoorLowTemperature(),"C","F").get();
-        clRstSupLowElement.text() = clRstSupLow;
+        clRstSupLowElement.text() = openstudio::string_conversions::number(clRstSupLow).c_str();
 
         auto clRstOutdrHiElement = result.append_child("ClRstOutdrHi");
         auto clRstOutdrHi = convert(tempSPM->outdoorHighTemperature(),"C","F").get();
-        clRstOutdrHiElement.text() = clRstOutdrHi;
+        clRstOutdrHiElement.text() = openstudio::string_conversions::number(clRstOutdrHi).c_str();
 
         auto clRstOutdrLowElement = result.append_child("ClRstOutdrLow");
         auto clRstOutdrLow = convert(tempSPM->outdoorHighTemperature(),"C","F").get();
-        clRstOutdrLowElement.text() = clRstOutdrLow;
+        clRstOutdrLowElement.text() = openstudio::string_conversions::number(clRstOutdrLow).c_str();
 
         m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
       } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerScheduled>() ) {
@@ -9349,15 +9349,15 @@ boost::optional<pugi::xml_node> ForwardTranslator::translateAirLoopHVAC(const mo
 
         auto clRstSupHiElement = result.append_child("ClRstSupHi");
         auto clRstSupHi = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
-        clRstSupHiElement.text() = clRstSupHi;
+        clRstSupHiElement.text() = openstudio::string_conversions::number(clRstSupHi).c_str();
 
         auto clRstSupLowElement = result.append_child("ClRstSupLow");
         auto clRstSupLow = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
-        clRstSupLowElement.text() = clRstSupLow;
+        clRstSupLowElement.text() = openstudio::string_conversions::number(clRstSupLow).c_str();
 
         auto dsgnAirFlowMinElement = result.append_child("DsgnAirFlowMin");
         auto dsgnAirFlowMin = tempSPM->minimumTurndownRatio();
-        dsgnAirFlowMinElement.text() = dsgnAirFlowMin;
+        dsgnAirFlowMinElement.text() = openstudio::string_conversions::number(dsgnAirFlowMin).c_str();
 
         m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
       } else if( auto tempSPM = spm.optionalCast<model::SetpointManagerWarmest>() ) {
@@ -9366,11 +9366,11 @@ boost::optional<pugi::xml_node> ForwardTranslator::translateAirLoopHVAC(const mo
 
         auto clRstSupHiElement = result.append_child("ClRstSupHi");
         auto clRstSupHi = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
-        clRstSupHiElement.text() = clRstSupHi;
+        clRstSupHiElement.text() = openstudio::string_conversions::number(clRstSupHi).c_str();
 
         auto clRstSupLowElement = result.append_child("ClRstSupLow");
         auto clRstSupLow = convert(tempSPM->maximumSetpointTemperature(),"C","F").get();
-        clRstSupLowElement.text() = clRstSupLow;
+        clRstSupLowElement.text() = openstudio::string_conversions::number(clRstSupLow).c_str();
 
         m_translatedObjects[tempSPM->handle()] = clgCtrlElement;
       } else {
@@ -9436,12 +9436,12 @@ boost::optional<pugi::xml_node> ForwardTranslator::translateCoilHeatingGas(const
     m_autoHardSize = true;
   } else if( auto value = coil.nominalCapacity() ) {
     auto capTotGrossRtdElement = result.append_child("CapTotGrossRtd");
-    capTotGrossRtdElement.text() = convert(value.get(),"W","Btu/h").get();
+    capTotGrossRtdElement.text() = openstudio::string_conversions::number(convert(value.get(),"W","Btu/h").get()).c_str();
   }
 
   // FurnThrmlEff
   auto furnThrmlEffElement = result.append_child("FurnThrmlEff");
-  furnThrmlEffElement.text() = convert(coil.gasBurnerEfficiency(),"W","Btu/h").get();
+  furnThrmlEffElement.text() = openstudio::string_conversions::number(convert(coil.gasBurnerEfficiency(),"W","Btu/h").get()).c_str();
 
   return result;
 }
@@ -9464,7 +9464,7 @@ boost::optional<pugi::xml_node> ForwardTranslator::translateCoilCoolingDXSingleS
     m_autoHardSize = true;
   } else if( auto value = coil.ratedTotalCoolingCapacity() ) {
     auto capTotGrossRtdElement = result.append_child("CapTotGrossRtd");
-    capTotGrossRtdElement.text() = convert(value.get(),"W","Btu/h").get();
+    capTotGrossRtdElement.text() = openstudio::string_conversions::number(convert(value.get(),"W","Btu/h").get()).c_str();
   }
 
   // DXEER
@@ -9473,7 +9473,7 @@ boost::optional<pugi::xml_node> ForwardTranslator::translateCoilCoolingDXSingleS
     auto eer = (cop.get() * (1 - r)  - r) * 3.413;
 
     auto dxEERElement = result.append_child("DXEER");
-    dxEERElement.text() = eer;
+    dxEERElement.text() = openstudio::string_conversions::number(eer).c_str();
   } else {
     m_autoEfficiency = true;
   }
@@ -9508,21 +9508,22 @@ boost::optional<pugi::xml_node> ForwardTranslator::translateFanConstantVolume(co
     m_autoHardSize = true;
   } else if( auto value = fan.maximumFlowRate() ) {
     auto flowCapElement = result.append_child("FlowCap");
-    flowCapElement.text() = convert(value.get(),"m^3/s","cfm").get();
+    // Note JM 2019-01-16: I use string_conversions::number here to mimic QString::number's number of decimals
+    flowCapElement.text() = openstudio::string_conversions::number(convert(value.get(),"m^3/s","cfm").get()).c_str();
   }
 
   // FlowEff
   auto flowEffElement = result.append_child("FlowEff");
-  flowEffElement.text() = fan.fanEfficiency();
+  flowEffElement.text() = openstudio::string_conversions::number(fan.fanEfficiency()).c_str();
 
   // TotStaticPress
   auto totStaticPressElement = result.append_child("TotStaticPress");
   // Convert in PA to WC
-  totStaticPressElement.text() = fan.pressureRise() / 249.0889;
+  totStaticPressElement.text() = openstudio::string_conversions::number(fan.pressureRise() / 249.0889).c_str();
 
   // MtrEff
   auto mtrEffElement = result.append_child("MtrEff");
-  mtrEffElement.text() = fan.motorEfficiency();
+  mtrEffElement.text() = openstudio::string_conversions::number(fan.motorEfficiency()).c_str();
 
   // MtrPos
   auto mtrPosElement = result.append_child("MtrfPos");
