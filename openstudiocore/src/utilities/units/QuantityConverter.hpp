@@ -38,8 +38,6 @@
 #include <string>
 #include <map>
 
-class QDomElement;
-
 namespace openstudio {
 
 class Quantity;

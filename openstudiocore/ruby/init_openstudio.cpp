@@ -48,7 +48,7 @@ extern "C" {
   void Init_openstudioutilitiestime(void);
   void Init_openstudioisomodel(void);
   void Init_openstudiomodelgeometry(void);
-  //void Init_openstudiosdd(void); //DLM: temp code
+  void Init_openstudiosdd(void);
   void Init_openstudioutilitiesfiletypes(void);
   void Init_openstudioutilitiesunits(void);
   void Init_openstudiomodelhvac(void);
@@ -170,10 +170,9 @@ void init_openstudio_internal() {
   Init_openstudioisomodel();
   rb_provide("openstudioisomodel");
   rb_provide("openstudioisomodel.so");
-  // DLM: temp code
-  //Init_openstudiosdd();
-  //rb_provide("openstudiosdd");
-  //rb_provide("openstudiosdd.so");
+  Init_openstudiosdd();
+  rb_provide("openstudiosdd");
+  rb_provide("openstudiosdd.so");
 
   //Init_openstudiomodeleditor(); # happens separately in openstudio.so only, for SketchUp plug-in
   //rb_provide("openstudiomodeleditor");

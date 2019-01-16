@@ -1417,7 +1417,7 @@ set(project_directories
   isomodel
   osversion
   measure
-#  sdd # DLM: temp code
+  sdd
   cli
   install_utility
 )
@@ -1628,7 +1628,7 @@ set(all_lib_targets
   openstudio_radiance_static
   openstudio_gbxml_static 
   openstudio_isomodel_static
-#  openstudio_sdd_static # DLM: temp code
+  openstudio_sdd_static
   openstudio_airflow_static
   miniziplib
   sqlite

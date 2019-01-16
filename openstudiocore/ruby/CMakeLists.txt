@@ -45,7 +45,7 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioUtilitiesTime
  ruby_OpenStudioISOModel
  ruby_OpenStudioModelGeometry
-# ruby_OpenStudioSDD # DLM: temp code
+ ruby_OpenStudioSDD
  ruby_OpenStudioUtilitiesFileTypes
  ruby_OpenStudioUtilitiesUnits
  ruby_OpenStudioModelHVAC
@@ -142,7 +142,7 @@ target_link_libraries(openstudio_rb
   openstudio_energyplus_static
   openstudio_measure_static
   openstudio_osversion_static
-#  openstudio_sdd_static # DLM: temp code
+  openstudio_sdd_static
   openstudio_isomodel_static
   openstudio_gbxml_static 
   openstudio_radiance_static

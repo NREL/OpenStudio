@@ -41,10 +41,10 @@
 
 #include <map>
 
-class QDomDocument;
-class QDomElement;
-class QDomNodeList;
-class QString;
+namespace pugi {
+  class xml_node;
+  class xml_document;
+}
 
 namespace openstudio {
 
@@ -91,7 +91,7 @@ namespace sdd {
 
   private:
 
-    QString escapeName(const std::string& name);
+    std::string escapeName(std::string name);
 
     // listed in translation order
     // Any of these may throw if they encounter something so terrible they cannot continue,
@@ -102,25 +102,26 @@ namespace sdd {
     // Prefer LOG(Error over LOG_AND_THROW if possible.
     // Use OS_ASSERT to catch logic errors in the translator implementation.  Do not use OS_ASSERT on bad input, use LOG( instead.
 
-    boost::optional<QDomDocument> translateModel(const openstudio::model::Model& model);
-    boost::optional<QDomElement> translateMaterial(const openstudio::model::Material& material, QDomDocument& doc);
-    boost::optional<QDomElement> translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, QDomDocument& doc);
-    boost::optional<QDomElement> translateDoorConstruction(const openstudio::model::ConstructionBase& constructionBase, QDomDocument& doc);
-    boost::optional<QDomElement> translateFenestrationConstruction(const openstudio::model::ConstructionBase& constructionBase, QDomDocument& doc);
-    boost::optional<QDomElement> translateBuilding(const openstudio::model::Building& building, QDomDocument& doc);
-    boost::optional<QDomElement> translateBuildingStory(const openstudio::model::BuildingStory& buildingStory, QDomDocument& doc);
-    boost::optional<QDomElement> translateSpace(const openstudio::model::Space& space, QDomDocument& doc);
-    boost::optional<QDomElement> translateSurface(const openstudio::model::Surface& surface, const openstudio::Transformation& transformation, QDomDocument& doc);
-    boost::optional<QDomElement> translateSubSurface(const openstudio::model::SubSurface& subSurface, const openstudio::Transformation& transformation, QDomDocument& doc);
-    boost::optional<QDomElement> translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, const openstudio::Transformation& transformation, QDomDocument& doc);
-    boost::optional<QDomElement> translateThermalZone(const openstudio::model::ThermalZone& thermalZone, QDomDocument& doc);
-    boost::optional<QDomElement> translateAirLoopHVAC(const openstudio::model::AirLoopHVAC& airLoop, QDomDocument& doc);
-    boost::optional<QDomElement> translateFanConstantVolume(const openstudio::model::FanConstantVolume& fan, QDomElement & airSegElement, QDomDocument& doc);
-    boost::optional<QDomElement> translateCoilCoolingDXSingleSpeed(const openstudio::model::CoilCoolingDXSingleSpeed& coil, QDomElement & airSegElement, QDomDocument& doc);
-    boost::optional<QDomElement> translateCoilHeatingGas(const openstudio::model::CoilHeatingGas& coil, QDomElement & airSegElement, QDomDocument& doc);
-    boost::optional<QDomElement> translateAirLoopHVACOutdoorAirSystem(const openstudio::model::AirLoopHVACOutdoorAirSystem& oasys, QDomElement & airSysElement, QDomDocument& doc);
+    bool translateModel(const openstudio::model::Model& model, pugi::xml_document& document);
+    boost::optional<pugi::xml_node> translateMaterial(const openstudio::model::Material& material, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateDoorConstruction(const openstudio::model::ConstructionBase& constructionBase, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateFenestrationConstruction(const openstudio::model::ConstructionBase& constructionBase, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateBuilding(const openstudio::model::Building& building, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateBuildingStory(const openstudio::model::BuildingStory& buildingStory, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateSpace(const openstudio::model::Space& space, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateSurface(const openstudio::model::Surface& surface, const openstudio::Transformation& transformation, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateSubSurface(const openstudio::model::SubSurface& subSurface, const openstudio::Transformation& transformation, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateShadingSurface(const openstudio::model::ShadingSurface& shadingSurface, const openstudio::Transformation& transformation, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateThermalZone(const openstudio::model::ThermalZone& thermalZone, pugi::xml_node& root);
+    boost::optional<pugi::xml_node> translateAirLoopHVAC(const openstudio::model::AirLoopHVAC& airLoop, pugi::xml_node& root);
 
-    std::map<openstudio::Handle, QDomElement> m_translatedObjects;
+    boost::optional<pugi::xml_node> translateFanConstantVolume(const openstudio::model::FanConstantVolume& fan, pugi::xml_node& airSegElement);
+    boost::optional<pugi::xml_node> translateCoilCoolingDXSingleSpeed(const openstudio::model::CoilCoolingDXSingleSpeed& coil, pugi::xml_node& airSegElement);
+    boost::optional<pugi::xml_node> translateCoilHeatingGas(const openstudio::model::CoilHeatingGas& coil, pugi::xml_node& airSegElement);
+    boost::optional<pugi::xml_node> translateAirLoopHVACOutdoorAirSystem(const openstudio::model::AirLoopHVACOutdoorAirSystem& oasys, pugi::xml_node& airSegElement);
+
+    std::map<openstudio::Handle, pugi::xml_node> m_translatedObjects;
 
     // Log untranslated objects as an error,
     // unless the type is in the m_ignoreTypes or m_ignoreObjects member.

@@ -731,7 +731,7 @@ set(depends
   openstudio_energyplus_static
   openstudio_modeleditor_static
   openstudio_measure_static
-  #openstudio_sdd_static # DLM: temp code
+  openstudio_sdd_static
   openstudio_gbxml_static
   ${QT_LIBS}
   qtwinmigrate_static

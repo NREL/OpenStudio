@@ -189,7 +189,7 @@ set(depends
   openstudio_model_static
   openstudio_energyplus_static
   openstudio_modeleditor_static
-  #openstudio_sdd_static # DLM: temp code
+  openstudio_sdd_static
   openstudio_gbxml_static
   openstudio_bimserver
   ${QT_WEB_LIBS}

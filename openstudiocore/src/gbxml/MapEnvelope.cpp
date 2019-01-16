@@ -68,8 +68,7 @@ namespace gbxml {
     std::string constructionName = element.child("Name").text().as_string();
     construction.setName(escapeName(constructionId, constructionName));
 
-    auto layerIdList = element.children("LayerId");
-
+    // auto layerIdList = element.children("LayerId");
     // Construction::LayerId (layerIdList) -> Layer (layerElements), Layer::MaterialId -> Material
     std::vector<openstudio::model::Material> materials;
     for (auto &layerIdEl : element.children("LayerId")) {
@@ -128,21 +127,21 @@ namespace gbxml {
     boost::optional<double> tVis;
 
     for (auto &uValueElement : element.children("U-value")) {
-      if (uValueElement.attribute("unit").value() == "WPerSquareMeterK") {
+      if (uValueElement.attribute("unit").value() == std::string("WPerSquareMeterK")) {
         uValue = uValueElement.text().as_double();
         break;
       }
     }
 
     for (auto &shgcElement : element.children("SolarHeatGainCoeff")) {
-      if (shgcElement.attribute("unit").value() == "Fraction") {
+      if (shgcElement.attribute("unit").value() == std::string("Fraction")) {
         shgc = shgcElement.text().as_double();
         break;
       }
     }
 
     for (auto &transmittanceElement : element.children("Transmittance")) {
-      if (transmittanceElement.attribute("type").value() == "Visible") {
+      if (transmittanceElement.attribute("type").value() == std::string("Visible")) {
         tVis = transmittanceElement.text().as_double();
         break;
       }
@@ -354,7 +353,7 @@ namespace gbxml {
     // id
     result.append_attribute("id") = escapeName(name).c_str();
 
-    // name 
+    // name
     auto nameElement = result.append_child("Name");
     nameElement.text() = name.c_str();
 

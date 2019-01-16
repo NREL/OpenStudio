@@ -11,6 +11,8 @@ set(${target_name}_src
   MapGeometry.cpp
   MapSchedules.cpp
   MapHVAC.cpp
+  Helpers.hpp
+  Helpers.cpp
 )
 
 set(${target_name}_test_src
@@ -62,7 +64,7 @@ CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
 if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends}")
-  add_dependencies(${target_name}_tests openstudio_sdd_resources)
+  add_dependencies(${target_name}_static_tests openstudio_sdd_resources)
 endif()
 
 MAKE_SWIG_TARGET(OpenStudioSDD SDD "${CMAKE_CURRENT_SOURCE_DIR}/SDD.i" "${${target_name}_swig_src}" ${target_name}_static "OpenStudioEnergyPlus;OpenStudioOSVersion")

@@ -116,7 +116,7 @@ namespace gbxml {
     if (file.is_open()) {
       doc.save(file, "  ");
       file.close();
-      return true;
+      return result;
     }
 
     return false;
@@ -284,7 +284,8 @@ namespace gbxml {
     platformElement.text() = "Linux";
 #endif
 
-    auto projectEntityElement = programInfoElement.append_child("ProjectEntity");
+    // TODO: not used
+    // auto projectEntityElement = programInfoElement.append_child("ProjectEntity");
 
     auto personInfoElement = documentHistoryElement.append_child("PersonInfo");
     personInfoElement.append_attribute("id") = "unknown";
@@ -1228,7 +1229,6 @@ namespace gbxml {
     auto planarGeometryElement = result.append_child("PlanarGeometry");
 
     auto polyLoopElement = planarGeometryElement.append_child("PolyLoop");
-    (polyLoopElement);
     for (const Point3d& vertex : vertices) {
       auto cartesianPointElement = polyLoopElement.append_child("CartesianPoint");
 
