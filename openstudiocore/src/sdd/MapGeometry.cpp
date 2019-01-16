@@ -137,16 +137,12 @@ namespace sdd {
     if( useIndex ){
 
       for (const pugi::xml_node& e: root.children(tagName.c_str())) {
-        // We do not use pugixml's text().as_double (as_int, as_uint)
-        // because it's too permissive and will return 0 even if the string isn't actually representing a number
-        // So we use boost::lexical_cast instead
-        try {
-          int thisIndex = boost::lexical_cast<int>(e.attribute("id").value());
-          if (thisIndex == index) {
-            result = e;
-            break;
-          }
-        } catch(const boost::bad_lexical_cast &) {}
+        // Check if the node has an attribute 'id' that is an int *and* matches the one we seek
+        boost::optional<int> _thisIndex = lexicalCastToInt(e.attribute("id"));
+        if (_thisIndex && _thisIndex.get() == index) {
+          result = e;
+          break;
+        }
       }
     } else {
       result = root.child(tagName.c_str());

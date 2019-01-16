@@ -888,14 +888,11 @@ namespace sdd {
 
     // timestep
     pugi::xml_node numTimeStepsPerHrElement = projectElement.child("NumTimeStepsPerHr");
-    // Note JM 2019-01-14: We do not use pugixml's text().as_double (as_int, as_uint)
-    // because it's too permissive and will return 0 even if the string isn't actually representing a number
-    // So we use boost::lexical_cast instead
-    try {
-      int numTimeStepsPerHr = boost::lexical_cast<int>(numTimeStepsPerHrElement.text().as_string());
+    boost::optional<int> _numTimeStepsPerHr = lexicalCastToInt(numTimeStepsPerHrElement);
+    if (_numTimeStepsPerHr) {
       model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
-      timestep.setNumberOfTimestepsPerHour(numTimeStepsPerHr);
-    } catch(const boost::bad_lexical_cast &) {
+      timestep.setNumberOfTimestepsPerHour(_numTimeStepsPerHr.get());
+    } else {
       LOG(Warn, "Cannot cast NumTimeStepsPerHr to an integer, NumTimeStepsPerHr: [" << numTimeStepsPerHrElement.text().as_string()
              << "]. Defaulting to 4/hr.");
       model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();

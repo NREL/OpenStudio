@@ -4414,10 +4414,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       sysInfo.SysRefElement = element;
       sysInfo.ZnSysElement = findZnSysElement(element.text().as_string(), element.root());
       sysInfo.AirSysElement = findAirSysElement(element.text().as_string(), element.root());
-      try {
-        int index = boost::lexical_cast<int>(element.attribute("index").value());
-        sysInfo.Index = index;
-      } catch(const boost::bad_lexical_cast &) {  }
+      // Check if the node has an attribute 'index' that can be converted to an int
+      boost::optional<int> _index = lexicalCastToInt(element.attribute("index"));
+      if (_index) {
+        sysInfo.Index = _index.get();
+      }
       priAirCondInfo.push_back(sysInfo);
     }
   }
@@ -4431,10 +4432,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       sysInfo.SysRefElement = element;
       sysInfo.ZnSysElement = findZnSysElement(element.text().as_string(), element.root());
       sysInfo.AirSysElement = findAirSysElement(element.text().as_string(), element.root());
-      try {
-        int index = boost::lexical_cast<int>(element.attribute("index").value());
-        sysInfo.Index = index;
-      } catch(const boost::bad_lexical_cast &) {  }
+      // Check if the node has an attribute 'index' that can be converted to an int
+      boost::optional<int> _index = lexicalCastToInt(element.attribute("index"));
+      if (_index) {
+        sysInfo.Index = _index.get();
+      }
       simSysInfo.push_back(sysInfo);
     }
   }
@@ -4592,43 +4594,43 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     if( sysInfo.ModelObject ) {
       // Clg and Htg
       for (const pugi::xml_node& element: thermalZoneElement.children(priorityElement.c_str()) ) {
-          try {
-            int index = boost::lexical_cast<int>(element.attribute("index").value());
-            if (index == sysInfo.Index) {
-              boost::optional<int> _priority = lexicalCastToInt(element);
-              if (_priority) {
-                thermalZone.setCoolingPriority(sysInfo.ModelObject.get(), _priority.get());
-                thermalZone.setHeatingPriority(sysInfo.ModelObject.get(), _priority.get());
-              }
-              break;
-            }
-         } catch(const boost::bad_lexical_cast &) {  }
+        // Check if the node has an attribute 'index' that is an int *and* matches our sysInfo.index
+        boost::optional<int> _index = lexicalCastToInt(element.attribute("index"));
+        if (_index && _index.get() == sysInfo.Index) {
+          // Now we check if it has a priority in its text()
+          boost::optional<int> _priority = lexicalCastToInt(element);
+          if (_priority) {
+            thermalZone.setCoolingPriority(sysInfo.ModelObject.get(), _priority.get());
+            thermalZone.setHeatingPriority(sysInfo.ModelObject.get(), _priority.get());
+          }
+          break;
+        }
       }
       // Clg
       for (const pugi::xml_node& element: thermalZoneElement.children((priorityElement + "Clg").c_str()) ) {
-        try {
-            int index = boost::lexical_cast<int>(element.attribute("index").value());
-            if (index == sysInfo.Index) {
-              boost::optional<int> _priority = lexicalCastToInt(element);
-              if (_priority) {
-                thermalZone.setCoolingPriority(sysInfo.ModelObject.get(), _priority.get());
-              }
-              break;
-            }
-         } catch(const boost::bad_lexical_cast &) {  }
+        // Check if the node has an attribute 'index' that is an int *and* matches our sysInfo.index
+        boost::optional<int> _index = lexicalCastToInt(element.attribute("index"));
+        if (_index && _index.get() == sysInfo.Index) {
+          // Now we check if it has a priority in its text()
+          boost::optional<int> _priority = lexicalCastToInt(element);
+          if (_priority) {
+            thermalZone.setCoolingPriority(sysInfo.ModelObject.get(), _priority.get());
+          }
+          break;
+        }
       }
       // Htg
       for (const pugi::xml_node& element: thermalZoneElement.children((priorityElement + "Htg").c_str()) ) {
-        try {
-            int index = boost::lexical_cast<int>(element.attribute("index").value());
-            if (index == sysInfo.Index) {
-              boost::optional<int> _priority = lexicalCastToInt(element);
-              if (_priority) {
-                thermalZone.setHeatingPriority(sysInfo.ModelObject.get(), _priority.get());
-              }
-              break;
-            }
-         } catch(const boost::bad_lexical_cast &) {  }
+        // Check if the node has an attribute 'index' that is an int *and* matches our sysInfo.index
+        boost::optional<int> _index = lexicalCastToInt(element.attribute("index"));
+        if (_index && _index.get() == sysInfo.Index) {
+          // Now we check if it has a priority in its text()
+          boost::optional<int> _priority = lexicalCastToInt(element);
+          if (_priority) {
+            thermalZone.setHeatingPriority(sysInfo.ModelObject.get(), _priority.get());
+          }
+          break;
+        }
       }
     }
   };
@@ -5700,27 +5702,24 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       ldRngLimElements.push_back(element);
     }
   }
-  for( std::vector<pugi::xml_node>::size_type i = 0; i != ldRngLimElements.size(); ++i ) {
-    for( std::vector<pugi::xml_node>::size_type j = 0; j != ldRngLimElements.size(); ++j ) {
+  for( std::vector<pugi::xml_node>::size_type i = 0; i < ldRngLimElements.size(); ++i ) {
+    for( std::vector<pugi::xml_node>::size_type j = 0; j < ldRngLimElements.size(); ++j ) {
       auto element = childNodes[j];
-      try {
-        // boost::lexical_cast<unsigned>(-1) would not throw but return gibberish
-        int index = boost::lexical_cast<int>(element.attribute("index").value());
-        if( (index > 0) && (static_cast<unsigned>(index) == i) ) {
-          boost::optional<double> _value = lexicalCastToDouble(element);
-          if( _value ) {
-            double value = unitToUnit(_value.get(),"Btu/h","W").get();
-            ldRngLims.push_back(value);
-            break;
-          }
+      boost::optional<unsigned> _index = lexicalCastToUnsigned(element.attribute("index"));
+      if( _index && (_index.get() == i) ) {
+        boost::optional<double> _value = lexicalCastToDouble(element);
+        if( _value ) {
+          double value = unitToUnit(_value.get(),"Btu/h","W").get();
+          ldRngLims.push_back(value);
+          break;
         }
+      }
 
-      } catch(const boost::bad_lexical_cast &) {  }
     }
   }
 
   // Try to get an equipment list for each load range
-  for( std::vector<double>::size_type i = 0; i != ldRngLims.size(); ++i ) {
+  for( std::vector<double>::size_type i = 0; i < ldRngLims.size(); ++i ) {
     // EqpList1Name
     // Get an unordered list of the equipment list elements for this range
     std::vector<pugi::xml_node> eqpListNameElements;
@@ -5734,16 +5733,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
     EquipmentList equipmentList;
     // Now put eqpListNameElements in order according to the index attribute
-    for( std::vector<pugi::xml_node>::size_type j = 0; j != eqpListNameElements.size(); ++j ) {
+    for( std::vector<pugi::xml_node>::size_type j = 0; j < eqpListNameElements.size(); ++j ) {
       for( auto & eqpListNameElement : eqpListNameElements ) {
-        try {
-          // boost::lexical_cast<unsigned>(-1) would not throw but return gibberish
-          int index = boost::lexical_cast<int>(eqpListNameElement.attribute("index").value());
-          if( (index > 0) && (static_cast<unsigned>(index) == j) ) {
-            equipmentList.push_back(eqpListNameElement.text().as_string());
-            break;
-          }
-        } catch(const boost::bad_lexical_cast &) {  }
+        boost::optional<unsigned> _index = lexicalCastToUnsigned(eqpListNameElement.attribute("index"));
+        if( _index && (_index.get() == j) ) {
+          equipmentList.push_back(eqpListNameElement.text().as_string());
+          break;
+        }
       }
     }
     equipmentLists.push_back(equipmentList);
