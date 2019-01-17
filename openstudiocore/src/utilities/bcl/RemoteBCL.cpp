@@ -255,7 +255,7 @@ namespace openstudio{
   int RemoteBCL::checkForComponentUpdates()
   {
     m_componentsWithUpdates.clear();
-
+/*
     for (const BCLComponent& component : LocalBCL::instance().components()) {
       // can't start another search until the last one is done
       if (!m_mutex.try_lock()){
@@ -279,9 +279,10 @@ namespace openstudio{
 //#ifndef QT_NO_OPENSSL
 //      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 //#endif
-
+*/
       //QNetworkRequest request = QNetworkRequest(QUrl(url));
       //request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+/* 
       //request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
       //m_networkManager->get(request);
       //std::vector<BCLSearchResult> result = waitForSearch();
@@ -289,14 +290,14 @@ namespace openstudio{
        // m_componentsWithUpdates.push_back(result[0]);
       //}
     }
-
+*/
     return m_componentsWithUpdates.size();
   }
 
   int RemoteBCL::checkForMeasureUpdates()
   {
     m_measuresWithUpdates.clear();
-
+/*
     for (const BCLMeasure& measure : LocalBCL::instance().measures()) {
       // can't start another search until the last one is done
       if (!m_mutex.try_lock()){
@@ -320,17 +321,18 @@ namespace openstudio{
 //#ifndef QT_NO_OPENSSL
 //      connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 //#endif
-
+*/
       //QNetworkRequest request = QNetworkRequest(QUrl(url));
       //request.setRawHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
       //request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
+/*
       //m_networkManager->get(request);
       //std::vector<BCLSearchResult> result = waitForSearch();
       //if (result.size() > 0 && result[0].versionId() != measure.versionId()){
       //  m_measuresWithUpdates.push_back(result[0]);
       //}
     }
-
+*/
     return m_measuresWithUpdates.size();
   }
 
