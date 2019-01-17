@@ -215,7 +215,7 @@ namespace sdd {
     for (std::vector<pugi::xml_node>::size_type i = 0; i < thermalZoneElements.size(); i++){
 
       // TODO: check already exists inside createThermalZone, this is redundant
-      if (thermalZoneElements[i].child("Name")) {
+      if (!thermalZoneElements[i].child("Name")) {
         LOG(Error, "ThrmlZn element 'Name' is empty, object will not be translated.")
         continue;
       }

@@ -245,7 +245,7 @@ namespace sdd {
     }
 
     // check if this is a simulation xml or input xml
-    pugi::xml_node simFlagElement = root.child("SimFlag");
+    pugi::xml_node simFlagElement = projectElement.child("SimFlag");
     if (!simFlagElement) {
       m_isInputXML = true;
       LOG(Error, "Import of Input SDD XML type is not currently supported");
