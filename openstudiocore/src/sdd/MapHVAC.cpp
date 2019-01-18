@@ -2307,29 +2307,34 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
     pugi::xml_node fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
 
-    boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement, model);
+    boost::optional<model::PlantLoop> plant;
+    if (!fluidSegInRefElement) {
+      LOG(Error, "CoilHeatingWater '" << coilName << "' doesn't have a FluidSegInRef element! It will not be connected.");
+    } else {
+      boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement, model);
 
-    if( plant )
-    {
-      plant->addDemandBranchForComponent(coil);
-      // Figure out if this is connected to a ServiceHotWater system
-      // If it is then make sure any supply segment pumps go on the branch,
-      // as opposed to the demand side inlet branch
-      auto supplySegmentElement = supplySegment(fluidSegInRefElement);
-      auto fluidSysTypeElment = supplySegmentElement.parent().child("Type");
-      if (openstudio::istringEqual(fluidSysTypeElment.text().as_string(), "ServiceHotWater")) {
-        auto pumpElement = supplySegmentElement.child("Pump");
-        if (pumpElement) {
-          if( auto modelObject = translatePump(pumpElement, model) ) {
-            auto hvacComponent = modelObject->cast<model::HVACComponent>();
-            auto inletNode = coil.waterInletModelObject()->cast<model::Node>();
-            hvacComponent.addToNode(inletNode);
+      if( plant )
+      {
+        plant->addDemandBranchForComponent(coil);
+        // Figure out if this is connected to a ServiceHotWater system
+        // If it is then make sure any supply segment pumps go on the branch,
+        // as opposed to the demand side inlet branch
+        auto supplySegmentElement = supplySegment(fluidSegInRefElement);
+        auto fluidSysTypeElment = supplySegmentElement.parent().child("Type");
+        if (openstudio::istringEqual(fluidSysTypeElment.text().as_string(), "ServiceHotWater")) {
+          auto pumpElement = supplySegmentElement.child("Pump");
+          if (pumpElement) {
+            if( auto modelObject = translatePump(pumpElement, model) ) {
+              auto hvacComponent = modelObject->cast<model::HVACComponent>();
+              auto inletNode = coil.waterInletModelObject()->cast<model::Node>();
+              hvacComponent.addToNode(inletNode);
+            }
           }
         }
+      } else {
+        LOG(Error, "CoilHeatingWater '" << coilName << "' has a FluidSegInRef of '" << fluidSegInRefElement.text().as_string()
+                << "' but we couldn't find a plantLoop that matches.");
       }
-    } else {
-      LOG(Error, "CoilHeatingWater '" << coilName << "' has a FluidSegInRef of '" << fluidSegInRefElement.text().as_string()
-              << "' but we couldn't find a plantLoop that matches.");
     }
 
     if( capTotGrossRtd )
@@ -2422,11 +2427,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       }
 
       // Plant
-      pugi::xml_node fluidSegNameElement = heatingCoilElement.child("FluidSegInRef");
-      boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegNameElement, model);
-      if( plant )
-      {
-        plant->addDemandBranchForComponent(coil);
+      pugi::xml_node fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
+      if (!fluidSegInRefElement) {
+        LOG(Error, "CoilHeatingWaterToAirHeatPumpEquationFit '" << coilName << "' doesn't have a FluidSegInRef element! It will not be connected.");
+      } else {
+        boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement, model);
+        if( plant )
+        {
+          plant->addDemandBranchForComponent(coil);
+        }
       }
 
       if( ! autosize() )
@@ -3362,13 +3371,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       }
 
       // Plant
-      pugi::xml_node fluidSegNameElement = coolingCoilElement.child("FluidSegInRef");
-      boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegNameElement, model);
-      if( plant )
-      {
-        plant->addDemandBranchForComponent(coil);
+      pugi::xml_node fluidSegInRefElement = coolingCoilElement.child("FluidSegInRef");
+      if (!fluidSegInRefElement) {
+        LOG(Error, "CoilCoolingWaterToAirHeatPumpEquationFit '" << coilName << "' doesn't have a FluidSegInRef element! It will not be connected.");
+      } else {
+        boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement, model);
+        if( plant )
+        {
+          plant->addDemandBranchForComponent(coil);
+        }
       }
-
       if( ! autosize() )
       {
         boost::optional<double> _flowCap = lexicalCastToDouble(flowCapElement);
@@ -3873,22 +3885,26 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     model::CoilCoolingWater coilCooling(model,schedule);
 
     // Name
-
     pugi::xml_node nameElement = coolingCoilElement.child("Name");
+    std::string coilName = nameElement.text().as_string();
 
-    coilCooling.setName(nameElement.text().as_string());
+    coilCooling.setName(coilName);
 
     coilCooling.setTypeOfAnalysis("DetailedAnalysis");
 
     // Plant
+    boost::optional<model::PlantLoop> plant;
 
-    pugi::xml_node fluidSegNameElement = coolingCoilElement.child("FluidSegInRef");
+    pugi::xml_node fluidSegInRefElement = coolingCoilElement.child("FluidSegInRef");
+    if (!fluidSegInRefElement) {
+      LOG(Error, "CoilCoolingWater '" << coilName << "' doesn't have a FluidSegInRef element! It will not be connected.");
+    } else {
+      plant = loopForSupplySegment(fluidSegInRefElement, model);
 
-    boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegNameElement, model);
-
-    if( plant )
-    {
-      plant->addDemandBranchForComponent(coilCooling);
+      if( plant )
+      {
+        plant->addDemandBranchForComponent(coilCooling);
+      }
     }
 
     coilCooling.autosizeDesignInletAirTemperature();
@@ -6694,8 +6710,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHX(
   hx.setName(name);
 
   auto cWFluidSegInRefElement = hxElement.child("CWFluidSegInRef");
-  if( auto condenserSystem = loopForSupplySegment(cWFluidSegInRefElement, model) ) {
-    condenserSystem->addDemandBranchForComponent(hx);
+  if (!cWFluidSegInRefElement) {
+    LOG(Error, "HeatExchangerFluidToFluid '" << name << "' doesn't have a CWFluidSegInRef element! It will not be connected.");
+  } else {
+    // The HX is on the demand side, so its inlet (CWFluidSegInRef) is the supply side
+    if( auto condenserSystem = loopForSupplySegment(cWFluidSegInRefElement, model) ) {
+      condenserSystem->addDemandBranchForComponent(hx);
+    }
   }
 
   if( ! autosize() ) {
@@ -6889,17 +6910,25 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
     result = chiller;
 
     auto cndsrInRefElement = chillerElement.child("CndsrFluidSegInRef");
-    auto condenserSystem = loopForSupplySegment(cndsrInRefElement ,model);
-    if( condenserSystem ) {
-      condenserSystem->addDemandBranchForComponent(chiller);
-      double value = condenserSystem->sizingPlant().designLoopExitTemperature();
-      chiller.setDesignCondenserWaterFlowRate(value);
+    if (!cndsrInRefElement) {
+      LOG(Error, "ChillerAbsorptionIndirect '" << name << "' doesn't have a CndsrFluidSegInRef element! It will not be connected.");
+    } else {
+      auto condenserSystem = loopForSupplySegment(cndsrInRefElement ,model);
+      if( condenserSystem ) {
+        condenserSystem->addDemandBranchForComponent(chiller);
+        double value = condenserSystem->sizingPlant().designLoopExitTemperature();
+        chiller.setDesignCondenserWaterFlowRate(value);
+      }
     }
 
     auto genFluidSegInRefElement = chillerElement.child("GenFluidSegInRef");
-    auto genSystem = loopForSupplySegment(genFluidSegInRefElement, model);
-    if( genSystem ) {
-      genSystem->addDemandBranchForComponent(chiller,true);
+    if (!genFluidSegInRefElement) {
+      LOG(Error, "ChillerAbsorptionIndirect '" << name << "' doesn't have a GenFluidSegInRef element! It will not be connected.");
+    } else {
+      auto genSystem = loopForSupplySegment(genFluidSegInRefElement, model);
+      if( genSystem ) {
+        genSystem->addDemandBranchForComponent(chiller,true);
+      }
     }
 
     if( ! autosize() ) {
@@ -7083,13 +7112,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
     chiller.setName(name);
 
     // CndsrInRef
+    // Will be aircooled if Condenser not specified
     pugi::xml_node cndsrInRefElement = chillerElement.child("CndsrFluidSegInRef");
-    boost::optional<model::PlantLoop> condenserSystem = loopForSupplySegment(cndsrInRefElement, model);
-;
-    if( condenserSystem ) {
-      condenserSystem->addDemandBranchForComponent(chiller);
-      double value = condenserSystem->sizingPlant().designLoopExitTemperature();
-      chiller.setReferenceEnteringCondenserFluidTemperature(value);
+    if (cndsrInRefElement) {
+      boost::optional<model::PlantLoop> condenserSystem = loopForSupplySegment(cndsrInRefElement, model);
+      if( condenserSystem ) {
+        condenserSystem->addDemandBranchForComponent(chiller);
+        double value = condenserSystem->sizingPlant().designLoopExitTemperature();
+        chiller.setReferenceEnteringCondenserFluidTemperature(value);
+      }
     }
 
     // COP
@@ -8087,22 +8118,25 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
       //Hook Coil to PlantLoop
       pugi::xml_node fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
-
-      if( boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement, model) )
-      {
-        plant->addDemandBranchForComponent(coil);
-        // Figure out if this is connected to a ServiceHotWater system
-        // If it is then make sure any supply segment pumps go on the branch,
-        // as opposed to the demand side inlet branch
-        auto supplySegmentElement = supplySegment(fluidSegInRefElement);
-        auto fluidSysTypeElment = supplySegmentElement.parent().child("Type");
-        if (openstudio::istringEqual(fluidSysTypeElment.text().as_string(), "ServiceHotWater")) {
-          auto pumpElement = supplySegmentElement.child("Pump");
-          if (pumpElement) {
-            if( auto modelObject = translatePump(pumpElement, model) ) {
-              auto hvacComponent = modelObject->cast<model::HVACComponent>();
-              auto inletNode = coil.inletModelObject()->cast<model::Node>();
-              hvacComponent.addToNode(inletNode);
+      if (!fluidSegInRefElement) {
+        LOG(Error, "CoilHeatingWaterBaseboard for ZnSys '" << name << "' doesn't have a FluidSegInRef element! It will not be connected.");
+      } else {
+        if( boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement, model) )
+        {
+          plant->addDemandBranchForComponent(coil);
+          // Figure out if this is connected to a ServiceHotWater system
+          // If it is then make sure any supply segment pumps go on the branch,
+          // as opposed to the demand side inlet branch
+          auto supplySegmentElement = supplySegment(fluidSegInRefElement);
+          auto fluidSysTypeElment = supplySegmentElement.parent().child("Type");
+          if (openstudio::istringEqual(fluidSysTypeElment.text().as_string(), "ServiceHotWater")) {
+            auto pumpElement = supplySegmentElement.child("Pump");
+            if (pumpElement) {
+              if( auto modelObject = translatePump(pumpElement, model) ) {
+                auto hvacComponent = modelObject->cast<model::HVACComponent>();
+                auto inletNode = coil.inletModelObject()->cast<model::Node>();
+                hvacComponent.addToNode(inletNode);
+              }
             }
           }
         }

@@ -500,7 +500,10 @@ namespace sdd {
 
     model::Model model = buildingStory.model();
 
-    boost::optional<model::PlantLoop> shwSys = serviceHotWaterLoopForSupplySegment(shwFluidSegRefElement, model);
+    boost::optional<model::PlantLoop> shwSys;
+    if (shwFluidSegRefElement) {
+      shwSys = serviceHotWaterLoopForSupplySegment(shwFluidSegRefElement, model);
+    }
 
     if( _d  && shwSys )
     {

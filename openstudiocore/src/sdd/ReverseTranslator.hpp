@@ -142,6 +142,8 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateZnSys(const pugi::xml_node& element, openstudio::model::Model& model);
 
     // Looks for a loop in the SDD instance with a segment named like the fluidSegInRefElement.text().as_string()
+    // fluidSegInRefElement must correspond to the primary/secondary SUPPLY segment. If the object is supposed to be in the demand side
+    // it's usually the 'FluidSegInRef' key (demand means the inlet is the supply, the outlet is the return)
     // If found then looks for a model::Loop with that name and returns it
     // This is useful for hooking water coils up to their plant and maybe other things.
     boost::optional<model::PlantLoop> loopForSupplySegment(const pugi::xml_node& fluidSegInRefElement, openstudio::model::Model& model);

@@ -135,8 +135,8 @@ namespace openstudio {
     pugi::xml_node getProjectElement(const pugi::xml_node& element) {
 
       // root() returns the root that has the SDDXML element as the only child, which is the one we want (has 'Proj')
-      pugi::xml_node result = element.root().first_child();
-      if(!result.child("Proj")) {
+      pugi::xml_node result = element.root().first_child().child("Proj");
+      if(!result) {
         LOG_FREE(Error, "openstudio.sdd.Helpers", "Couldn't find the 'Proj' element in the tree from the supplied element "
                 << "(name()='" << element.name() << "', text()='" << element.text().as_string() << "').");
         OS_ASSERT(false);
