@@ -4863,7 +4863,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     boost::optional<double> _operableWinOALimHi = lexicalCastToDouble(operableWinOALimHiElement);
     if( _operableWinOALimHi ) {
       double operableWinOALimHi = unitToUnit(_operableWinOALimHi.get(),"F","C").get();
-      zoneVent.setMinimumOutdoorTemperature(operableWinOALimHi);
+      zoneVent.setMaximumOutdoorTemperature(operableWinOALimHi);
     }
 
     // priAirCondInfo zoneVent
