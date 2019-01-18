@@ -4467,10 +4467,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   boost::optional<model::ModelObject> ventSysEquip;
 
   // ThermalZoneVentilationSystem
-  // Find out if ventSys is already a simsys or a priaircondgsys
+  // Find out if ventSys is already a simsys or a priaircondgsys (=they have the same inner TEXT)
   bool translateVentSys = true;
   for( const auto & info : priAirCondInfo ) {
-    if( info.SysRefElement == ventSysRefElement ) {
+    if( openstudio::istringEqual(info.SysRefElement.text().as_string(),
+                                 ventSysRefElement.text().as_string()) ) {
       translateVentSys = false;
       break;
     }
@@ -4478,7 +4479,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   if( translateVentSys ) {
     for( const auto & info : simSysInfo ) {
-      if( info.SysRefElement == ventSysRefElement ) {
+      if( openstudio::istringEqual(info.SysRefElement.text().as_string(),
+                                   ventSysRefElement.text().as_string()) ) {
         translateVentSys = false;
         break;
       }
@@ -4552,7 +4554,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
           zoneHVACComponent->addToThermalZone(thermalZone);
 
           // If not the ventilation system we lock down the oa system of the zone equipment
-          if( sysInfo.SysRefElement.text() != ventSysRefElement.text() ) {
+          if( sysInfo.SysRefElement.text().as_string() != ventSysRefElement.text().as_string() ) {
             if( boost::optional<model::ZoneHVACPackagedTerminalAirConditioner> ptac =
                 zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalAirConditioner>() ) {
               ptac->setOutdoorAirFlowRateDuringHeatingOperation(0.0);
@@ -9146,7 +9148,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvM
 pugi::xml_node ReverseTranslator::findZnSysElement(const pugi::xml_node& znSysRefElement)
 {
   pugi::xml_node projectElement = getProjectElement(znSysRefElement);
-  std::vector<pugi::xml_node> znSysElements = makeVectorOfChildren(projectElement, "ZnSys");
+  // TODO: perhaps we should rely on the makeVectorOfChildrenRecursive instead (uses Xpath instead of having to harcoded the path)
+  // Not sure about speed penalties
+  // makeVectorOfChildrenRecursive("ZnSys") would work, regardless of which level 'ZnSys' is at
+  // Proj > Bldg > [ZnSys]
+  std::vector<pugi::xml_node> znSysElements = makeVectorOfChildren(projectElement.child("Bldg"), "ZnSys");
   std::string znSysName = znSysRefElement.text().as_string();
 
   if (znSysName.empty()) {
@@ -9164,13 +9170,15 @@ pugi::xml_node ReverseTranslator::findZnSysElement(const pugi::xml_node& znSysRe
     }
   }
 
+  LOG(Warn, "Couldn't locate the ZnSys element with name '" << znSysName << "'.");
   return pugi::xml_node();
 }
 
 pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(const pugi::xml_node& znNameElement)
 {
   pugi::xml_node projectElement = getProjectElement(znNameElement);
-  std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(projectElement, "AirSys");
+  // Proj > Bldg > [AirSys]
+  std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(projectElement.child("Bldg"), "AirSys");
   std::string zoneName = znNameElement.text().as_string();
   if (zoneName.empty()) {
     LOG(Error, "findTrmlUnitElementForZone called with an empty zoneName");
@@ -9191,6 +9199,8 @@ pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(const pugi::xml_nod
       }
     }
   }
+
+  LOG(Warn, "Couldn't locate the TrmlUnit element for zoneName '" << zoneName << "'.");
 
   return pugi::xml_node();
 }
@@ -9214,7 +9224,8 @@ pugi::xml_node ReverseTranslator::findAirSysElement(const std::string& airSysNam
     OS_ASSERT(false);
   }
 
-  std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(projectElement, "AirSys");
+  // Proj > Bldg > [AirSys]
+  std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(projectElement.child("Bldg"), "AirSys");
 
   for( std::vector<pugi::xml_node>::size_type i = 0; i < airSystemElements.size(); i++ )
   {
@@ -9225,6 +9236,8 @@ pugi::xml_node ReverseTranslator::findAirSysElement(const std::string& airSysNam
       return airSystemElement;
     }
   }
+
+  LOG(Warn, "Couldn't locate the AirSys element for airSysName '" << airSysName << "'.");
 
   return pugi::xml_node();
 }

@@ -202,7 +202,7 @@ namespace sdd {
 
     std::vector<pugi::xml_node> thermalZoneElements = makeVectorOfChildren(element, "ThrmlZn");
 
-    // Has to be recursive here, since Spc lives inside Story
+    // It **Must** to be recursive here, since Spc lives inside Story and there are multiple stories
     std::vector<pugi::xml_node> spaceElements = makeVectorOfChildrenRecursive(element, "Spc");
 
     std::vector<pugi::xml_node> buildingStoryElements = makeVectorOfChildren(element, "Story");
