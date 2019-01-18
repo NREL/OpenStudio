@@ -445,24 +445,6 @@ model::Schedule ReverseTranslator::defaultDeckTempSchedule(openstudio::model::Mo
   return m_defaultDeckTempSchedule.get();
 }
 
-model::Schedule ReverseTranslator::alwaysOnSchedule(openstudio::model::Model& model)
-{
-  if( ! m_alwaysOnSchedule )
-  {
-    model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
-
-    scheduleRuleset.setName("Always On");
-
-    model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
-
-    scheduleDay.addValue(Time(1.0),1.0);
-
-    m_alwaysOnSchedule = scheduleRuleset;
-  }
-
-  return m_alwaysOnSchedule.get();
-}
-
 model::Schedule ReverseTranslator::hotWaterPlantSetpointSchedule(openstudio::model::Model& model)
 {
   if( ! m_hotWaterPlantSetpointSchedule )
@@ -1551,7 +1533,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       pugi::xml_node oaSchMthdElement = airSystemOACtrlElement.child("OASchMthd");
       if( istringEqual(oaSchMthdElement.text().as_string(),"Constant") )
       {
-        model::Schedule schedule = alwaysOnSchedule(model);
+        model::Schedule schedule = model.alwaysOnDiscreteSchedule();
         oaController.setMinimumOutdoorAirSchedule(schedule);
       }
       else if( istringEqual(oaSchMthdElement.text().as_string(),"FollowHVACAvailability") && availabilitySchedule )
@@ -2254,7 +2236,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   // Furnace
   if( istringEqual(coilHeatingTypeElement.text().as_string(),"Furnace") )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::CoilHeatingGas coil(model,schedule);
 
@@ -2391,7 +2373,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   }
   else if( istringEqual(coilHeatingTypeElement.text().as_string(),"Resistance") )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::CoilHeatingElectric coil(model,schedule);
 
@@ -2737,7 +2719,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   }
   else
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::CoilHeatingElectric coil(model,schedule);
 
@@ -2848,7 +2830,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
           )
         )
       {
-        model::Schedule schedule = alwaysOnSchedule(model);
+        model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
         model::FanOnOff fan(model,schedule);
 
@@ -2914,7 +2896,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
 
     if( ! result )
     {
-      model::Schedule schedule = alwaysOnSchedule(model);
+      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
       model::FanConstantVolume fan(model,schedule);
 
@@ -2968,7 +2950,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
   // Variable Volume
   else if( istringEqual(fanControlMethodElement.text().as_string(),"VariableSpeedDrive") )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::FanVariableVolume fan(model,schedule);
 
@@ -3654,7 +3636,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     }
     else if( numClgStagesElement.text().as_int() == 2 )
     {
-      model::Schedule schedule = alwaysOnSchedule(model);
+      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
       // Cap_fTempCrvRef
 
@@ -4942,7 +4924,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
 
   if( istringEqual("VAVNoReheatBox",typeElement.text().as_string()) )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::AirTerminalSingleDuctVAVNoReheat terminal(model,schedule);
 
@@ -4982,7 +4964,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
   }
   else if( istringEqual("VAVReheatBox",typeElement.text().as_string()) )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     pugi::xml_node coilElement = trmlUnitElement.child("CoilHtg");
 
@@ -5106,7 +5088,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
   }
   else if( istringEqual("SeriesFanBox",typeElement.text().as_string()) )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     // CoilHtg
     pugi::xml_node coilHtgElement = trmlUnitElement.child("CoilHtg");
@@ -5179,7 +5161,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
   }
   else if( istringEqual("ParallelFanBox",typeElement.text().as_string()) )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     // CoilHtg
 
@@ -5272,7 +5254,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
   }
   else if( istringEqual("Uncontrolled",typeElement.text().as_string()) )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,schedule);
 
@@ -5286,7 +5268,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
   }
   else
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,schedule);
 

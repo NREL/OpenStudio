@@ -167,9 +167,6 @@ namespace sdd {
     // Return the "TrmlUnit" element serving a zone named znNameElement.text().as_string()
     pugi::xml_node findTrmlUnitElementForZone(const pugi::xml_node& znNameElement);
 
-    model::Schedule alwaysOnSchedule(openstudio::model::Model& model);
-    boost::optional<model::Schedule> m_alwaysOnSchedule;
-
     model::Schedule defaultDeckTempSchedule(openstudio::model::Model& model);
     boost::optional<model::Schedule> m_defaultDeckTempSchedule;
 
