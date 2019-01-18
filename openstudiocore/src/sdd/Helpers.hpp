@@ -31,6 +31,8 @@
 #define SDD_HELPERS_HPP
 
 #include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/core/Assert.hpp"
 
 namespace pugi {
   class xml_node;
@@ -45,6 +47,9 @@ namespace openstudio {
 
     // Helper to make a vector of pugi::xml_node of children matching a specific tag (first-descendants only)
     std::vector<pugi::xml_node> makeVectorOfChildren(const pugi::xml_node& root, const char * tagName);
+
+    // Helper to make a vector of pugi::xml_node of children matching a specific tag (any level descendants)
+    std::vector<pugi::xml_node> makeVectorOfChildrenRecursive(const pugi::xml_node& root, const std::string& tagName);
 
     // Lexical cast the text() of a node as a double
     // Checks if the element actually exists, then if it can be converted to a double.
@@ -68,7 +73,11 @@ namespace openstudio {
     // (boost::lexical_cast<unsigned>(-1) would not throw but return gibberish)
     boost::optional<unsigned> lexicalCastToUnsigned(const pugi::xml_attribute& attr);
 
+    // Returns the 'Proj' element from any element in the tree
+    pugi::xml_node getProjectElement(const pugi::xml_node& element);
+
   } // sdd
 } // openstudio
 
-#endif // SDD_REVERSETRANSLATOR_HPP
+
+#endif // SDD_HELPERS_HPP

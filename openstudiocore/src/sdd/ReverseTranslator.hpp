@@ -141,28 +141,29 @@ namespace sdd {
     boost::optional<openstudio::model::ModelObject> translateVRFSys(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateZnSys(const pugi::xml_node& element, openstudio::model::Model& model);
 
-    // Looks for a loop in the SDD instance with a segment named fluidSegmentName
+    // Looks for a loop in the SDD instance with a segment named like the fluidSegInRefElement.text().as_string()
     // If found then looks for a model::Loop with that name and returns it
     // This is useful for hooking water coils up to their plant and maybe other things.
-    boost::optional<model::PlantLoop> loopForSupplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root, openstudio::model::Model& model);
+    boost::optional<model::PlantLoop> loopForSupplySegment(const pugi::xml_node& fluidSegInRefElement, openstudio::model::Model& model);
 
-    // Return the supply segment by name
-    pugi::xml_node supplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root);
+    // Return the supply segment by the fluidSegInRefElement's text
+    pugi::xml_node supplySegment(const pugi::xml_node& fluidSegInRefElement);
 
-    // Retruns the ServiceHotWater loop in the SDD instance with a segment named fluidSegmentName
-    // If the loop is not found in the model, this function will attempt to translate it out of the SDD.
+    // Returns the ServiceHotWater loop in the SDD instance with a segment named like the fluidSegInRefElement.text().as_string()
+    // // If the loop is not found in the model, this function will attempt to translate it out of the SDD.
     // If the loop is found in the model it will simply be returned.
-    boost::optional<model::PlantLoop> serviceHotWaterLoopForSupplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root, openstudio::model::Model& model);
+    boost::optional<model::PlantLoop> serviceHotWaterLoopForSupplySegment(const pugi::xml_node& fluidSegInRefElement, openstudio::model::Model& model);
 
-    // Return the "ZnSys" element with the name znSysName. root should be the proper root (=document_element) which has "Proj" under it
-    pugi::xml_node findZnSysElement(const std::string& znSysName, const pugi::xml_node& root);
+    // Return the "ZnSys" element with the name matching the znSysRefElement.text().as_string()
+    pugi::xml_node findZnSysElement(const pugi::xml_node& znSysRefElement);
 
-    // TODO: Not sure what root needs to be  (I think it's "Proj")
-    pugi::xml_node findAirSysElement(const std::string& airSysName, const pugi::xml_node& root);
+    // Find the AirSys element that is named like the airSyRefElement.text().as_string()
+    pugi::xml_node findAirSysElement(const pugi::xml_node& airSyRefElement);
+    // projectElement has to be the 'Proj' one
+    pugi::xml_node findAirSysElement(const std::string& airSysName, const pugi::xml_node& projectElement);
 
-    // Return the "TrmlUnit" element serving zoneName
-    // TODO: Not sure what root needs to be (I think it's "Proj")
-    pugi::xml_node findTrmlUnitElementForZone(const std::string& zoneName,const pugi::xml_node& root);
+    // Return the "TrmlUnit" element serving a zone named znNameElement.text().as_string()
+    pugi::xml_node findTrmlUnitElementForZone(const pugi::xml_node& znNameElement);
 
     model::Schedule alwaysOnSchedule(openstudio::model::Model& model);
     boost::optional<model::Schedule> m_alwaysOnSchedule;

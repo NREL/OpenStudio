@@ -406,10 +406,10 @@ namespace sdd {
     }
 
     i = 0;
-    for (const pugi::xml_node& crvQuadElement: projectElement.children("CrvCubic")) {
+    for (const pugi::xml_node& crvQuadElement: projectElement.children("CrvQuad")) {
       boost::optional<model::ModelObject> curve = translateCrvQuad(crvQuadElement, *result);
       if (!curve) {
-        LOG(Error, "Failed to translate 'CrvQuad' element " << i);
+        LOG(Error, "Failed to translate 'CrvQuad' element " << i << " named '" << crvQuadElement.child("Name").text().as_string() << "'.");
       }
     }
 
@@ -2027,16 +2027,25 @@ namespace sdd {
   }
 
 
-pugi::xml_node ReverseTranslator::supplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root)
+pugi::xml_node ReverseTranslator::supplySegment(const pugi::xml_node& fluidSegInRefElement)
 {
-  for(auto& fluidSysElement : root.child("Proj").children("FluidSys")) {
+
+  pugi::xml_node projectElement = getProjectElement(fluidSegInRefElement);
+  std::string fluidSegmentName = fluidSegInRefElement.text().as_string();
+
+  if (fluidSegmentName.empty()) {
+    LOG(Error, "supplySegment called with an empty fluidSegmentName");
+    OS_ASSERT(false);
+  }
+
+  for(auto& fluidSysElement : projectElement.children("FluidSys")) {
     for(auto& fluidSegmentElement : fluidSysElement.children("FluidSeg")) {
       auto nameElement = fluidSegmentElement.child("Name");
       auto typeElement = fluidSegmentElement.child("Type");
 
       if ((istringEqual(typeElement.text().as_string(), "SECONDARYSUPPLY") ||
-        istringEqual(typeElement.text().as_string(), "PRIMARYSUPPLY")) &&
-        istringEqual(nameElement.text().as_string(), fluidSegmentName)) {
+           istringEqual(typeElement.text().as_string(), "PRIMARYSUPPLY")) &&
+          istringEqual(nameElement.text().as_string(), fluidSegmentName)) {
         return fluidSegmentElement;
       }
     }
@@ -2045,20 +2054,28 @@ pugi::xml_node ReverseTranslator::supplySegment(const std::string & fluidSegment
   return pugi::xml_node();
 }
 
-boost::optional<model::PlantLoop> ReverseTranslator::loopForSupplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root, openstudio::model::Model& model)
+boost::optional<model::PlantLoop> ReverseTranslator::loopForSupplySegment(const pugi::xml_node& fluidSegInRefElement, openstudio::model::Model& model)
 {
-  auto fluidSegmentElement = supplySegment(fluidSegmentName, root);
+  auto fluidSegmentElement = supplySegment(fluidSegInRefElement);
   auto fluidSysElement = fluidSegmentElement.parent();
   auto fluidSysNameElement = fluidSysElement.child("Name");
 
   return model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string());
 }
 
-boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSupplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root, openstudio::model::Model& model)
+boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSupplySegment(const pugi::xml_node& fluidSegInRefElement, openstudio::model::Model& model)
 {
+
+  pugi::xml_node projectElement = getProjectElement(fluidSegInRefElement);
+  std::string fluidSegmentName = fluidSegInRefElement.text().as_string();
+  if (fluidSegmentName.empty()) {
+    LOG(Error, "supplySegment called with an empty fluidSegmentName");
+    OS_ASSERT(false);
+  }
+
   boost::optional<model::PlantLoop> result;
 
-  for(auto& fluidSysElement : root.child("Proj").children("FluidSys")) {
+  for(auto& fluidSysElement : projectElement.children("FluidSys")) {
 
     auto fluidSysNameElement = fluidSysElement.child("Name");
 

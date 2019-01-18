@@ -53,6 +53,16 @@ namespace openstudio {
       return result;
     }
 
+    // Helper to make a vector of pugi::xml_node matching a tag: any level
+    std::vector<pugi::xml_node> makeVectorOfChildrenRecursive(const pugi::xml_node& root, const std::string& tagName) {
+      std::vector<pugi::xml_node> result;
+      // We use xpath '//tagName'
+      for (const pugi::xpath_node& n : root.select_nodes((std::string("//") + tagName).c_str())) {
+        result.push_back(n.node());
+      }
+      return result;
+    }
+
     // Lexical cast the text() of a node as a double
     boost::optional<double> lexicalCastToDouble(const pugi::xml_node& element) {
       boost::optional<double> result;
@@ -117,6 +127,19 @@ namespace openstudio {
         } catch(const boost::bad_lexical_cast &) {
           // LOG(Error, "Cannot convert attribute value to integer");
         }
+      }
+      return result;
+    }
+
+
+    pugi::xml_node getProjectElement(const pugi::xml_node& element) {
+
+      // root() returns the root that has the SDDXML element as the only child, which is the one we want (has 'Proj')
+      pugi::xml_node result = element.root().first_child();
+      if(!result.child("Proj")) {
+        LOG_FREE(Error, "openstudio.sdd.Helpers", "Couldn't find the 'Proj' element in the tree from the supplied element "
+                << "(name()='" << element.name() << "', text()='" << element.text().as_string() << "').");
+        OS_ASSERT(false);
       }
       return result;
     }

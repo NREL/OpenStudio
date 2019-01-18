@@ -166,11 +166,11 @@ namespace sdd {
     if (!nameElement) {
       LOG(Error, "Bldg element 'Name' is empty.")
     } else {
-      std::string bdlgname = nameElement.text().as_string();
-      if (bdlgname.empty()) {
+      std::string bldgname = nameElement.text().as_string();
+      if (bldgname.empty()) {
         LOG(Error, "Bldg element 'Name' is empty.")
       } else {
-        building.setName(escapeName(bdlgname));
+        building.setName(escapeName(bldgname));
       }
     }
 
@@ -186,28 +186,44 @@ namespace sdd {
 
     // translate shadingSurfaces
     std::vector<pugi::xml_node> exteriorShadingElements = makeVectorOfChildren(element, "ExtShdgObj");
-    model::ShadingSurfaceGroup shadingSurfaceGroup(model);
-    shadingSurfaceGroup.setName("Building ShadingGroup");
-    shadingSurfaceGroup.setShadingSurfaceType("Building");
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorShadingElements.size(); ++i) {
-      if (exteriorShadingElements[i].parent() == element){
-        boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements[i], shadingSurfaceGroup);
-        if (!exteriorShading){
-          LOG(Error, "Failed to translate 'ExtShdgObj' element " << i);
+    if (exteriorShadingElements.size() > 0) {
+      model::ShadingSurfaceGroup shadingSurfaceGroup(model);
+      shadingSurfaceGroup.setName("Building ShadingGroup");
+      shadingSurfaceGroup.setShadingSurfaceType("Building");
+      for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorShadingElements.size(); ++i) {
+        if (exteriorShadingElements[i].parent() == element){
+          boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements[i], shadingSurfaceGroup);
+          if (!exteriorShading){
+            LOG(Error, "Failed to translate 'ExtShdgObj' element " << i);
+          }
         }
       }
     }
 
-    std::vector<pugi::xml_node> spaceElements = makeVectorOfChildren(element, "Spc");
     std::vector<pugi::xml_node> thermalZoneElements = makeVectorOfChildren(element, "ThrmlZn");
+
+    // Has to be recursive here, since Spc lives inside Story
+    std::vector<pugi::xml_node> spaceElements = makeVectorOfChildrenRecursive(element, "Spc");
+
     std::vector<pugi::xml_node> buildingStoryElements = makeVectorOfChildren(element, "Story");
+
+    // OR:
+    /*
+    std::vector<pugi::xml_node> spaceElements;
+    for (const pugi::xml_node& buildingStoryElement: buildingStoryElements) {
+      for (const pugi::xml_node& spaceElement: buildingStoryElement.children("Spc")) {
+        spaceElements.push_back(spaceElement);
+      }
+    }
+    */
 
     // create all spaces
     for (std::vector<pugi::xml_node>::size_type i = 0; i < spaceElements.size(); i++){
       pugi::xml_node spaceElement = spaceElements[i];
       boost::optional<model::ModelObject> space = createSpace(spaceElement, model);
       if (!space){
-        LOG(Error, "Failed to translate 'Spc' element " << i);
+        LOG(Error, "Failed to translate 'Spc' element " << i << ", named:"
+                 << spaceElement.child("Name").text().as_string());
       }
     }
 
@@ -317,6 +333,7 @@ namespace sdd {
   {
     pugi::xml_node nameElement = element.child("Name");
 
+    // TODO: move into block where we do set the name no?
     model::Space space(model);
 
     if (!nameElement) {
@@ -326,7 +343,7 @@ namespace sdd {
       if (name.empty()) {
         LOG(Error, "Spc element 'Name' is empty.");
       } else {
-        space.setName(name);
+        space.setName(escapeName(name));
       }
     }
 
@@ -358,7 +375,7 @@ namespace sdd {
       if (name.empty()) {
         LOG(Error, "Spc element 'Name' is empty.");
       } else {
-        spaceName = name;
+        spaceName = escapeName(name);
       }
     }
 
@@ -483,9 +500,7 @@ namespace sdd {
 
     model::Model model = buildingStory.model();
 
-    boost::optional<model::PlantLoop> shwSys = serviceHotWaterLoopForSupplySegment(shwFluidSegRefElement.text().as_string(),
-                                                                                   element.root(), // root
-                                                                                   model);
+    boost::optional<model::PlantLoop> shwSys = serviceHotWaterLoopForSupplySegment(shwFluidSegRefElement, model);
 
     if( _d  && shwSys )
     {
