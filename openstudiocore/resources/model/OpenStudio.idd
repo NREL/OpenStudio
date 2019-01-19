@@ -4919,6 +4919,7 @@ OS:ScheduleTypeLimits,
        \key LinearPowerDensity
 
 OS:External:File,
+       \url-object
        \min-fields 3
        \memo An External:File points to a text computer file for use in Schedule:File objects.
   A1,  \field Handle
@@ -4931,6 +4932,7 @@ OS:External:File,
   A3,  \field File Name
        \required-field
        \retaincase
+       \type url
   A4;  \field Column Separator
        \note Currently unused
        \type choice
