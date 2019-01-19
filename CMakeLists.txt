@@ -269,7 +269,7 @@ elseif(WIN32)
 
   set(OPENSSL_VERSION "1.1.0i")
   set(OPENSSL_SOURCE_URL "https://github.com/openssl/openssl/archive/OpenSSL_1_1_0i.zip")
-  set(OPENSSL_SOURCE_HASH fb2aa1a8ceb85f68055044a85f1dbc94)
+  set(OPENSSL_SOURCE_HASH 1c2d021ae210af9aae8079498bac180b)
   if(CMAKE_CL_64)
     set(OPENSSL_ARCH 64)
     set(OPENSSL_EXPECTED_HASH 33f0c2f1072ce0d7c64afcae3c78d74b)
