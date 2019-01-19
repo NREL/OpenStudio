@@ -1606,7 +1606,7 @@ set(${target_name}_swig_src
   ModelZoneHVAC.i
 )
 
-qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
+#qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
 set(${target_name}_depends
   openstudio_utilities
@@ -1636,7 +1636,7 @@ source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
 
 
-add_library(${target_name} ${${target_name}_src} ${${target_name}_moc_src} ${EMBEDDED_OUTPUT})
+add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
 target_link_libraries(${target_name} "${${target_name}_depends}")
 AddPCH(${target_name})
 
@@ -1644,7 +1644,7 @@ set(${target_name}_static_depends
   openstudio_utilities_static
 )
 
-add_library(${target_name}_static ${${target_name}_src} ${${target_name}_moc_src} ${EMBEDDED_OUTPUT})
+add_library(${target_name}_static ${${target_name}_src} ${EMBEDDED_OUTPUT})
 
 target_link_libraries(${target_name}_static "${${target_name}_static_depends}")
 

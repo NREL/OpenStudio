@@ -712,7 +712,8 @@ AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
 
     val = autosizedNumberofBeams();
     if (val) {
-      setNumberofBeams(val.get());
+     // DLM: assuming you want to round up?
+      setNumberofBeams((int)std::ceil(val.get()));
     }
 
     val = autosizedBeamLength();

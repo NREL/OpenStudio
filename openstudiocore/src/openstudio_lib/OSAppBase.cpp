@@ -33,6 +33,7 @@
 #include "MainRightColumnController.hpp"
 #include "MainWindow.hpp"
 #include "OSDocument.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include "../shared_gui_components/EditController.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"

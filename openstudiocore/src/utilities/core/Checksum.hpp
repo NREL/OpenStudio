@@ -47,6 +47,9 @@ namespace openstudio {
   /// return 8 character hex checksum of file contents
   UTILITIES_API std::string checksum(const path& p);
 
+  /// returns the CRC-16 checksum of the first len bytes of data.  Replaces Qt implementation qChecksum.
+  UTILITIES_API int crc16(const char *ptr, int count);
+
 } // openstudio
 
 

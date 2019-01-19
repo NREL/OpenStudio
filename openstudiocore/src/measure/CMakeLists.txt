@@ -45,7 +45,7 @@ set(${target_name}_depends
 
 add_library(${target_name}
   ${${target_name}_src}
-  ${${target_name}_moc_src}
+#  ${${target_name}_moc_src}
 )
 
 AddPCH(${target_name})
@@ -83,7 +83,7 @@ set(${target_name}_static_depends
 
 add_library(${target_name}_static
   ${${target_name}_src}
-  ${${target_name}_moc_src}
+#  ${${target_name}_moc_src}
 )
 
 target_link_libraries(${target_name}_static ${${target_name}_static_depends})

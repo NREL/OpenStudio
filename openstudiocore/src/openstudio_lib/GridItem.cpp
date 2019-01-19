@@ -110,6 +110,9 @@
 #include "../model/Mixer.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
+
+#include "../model_editor/Utilities.hpp"
+
 #include <algorithm>
 
 #include <utilities/idd/IddEnums.hxx>

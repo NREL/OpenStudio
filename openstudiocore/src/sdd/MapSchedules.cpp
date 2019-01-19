@@ -366,7 +366,7 @@ namespace sdd {
         return boost::none;
       }
 
-      MonthOfYear monthOfYear(toString(monthElement.text()));
+      MonthOfYear monthOfYear(monthElement.text().toStdString());
       unsigned day = dayElement.text().toUInt();
 
       result = model::RunPeriodControlSpecialDays(monthOfYear, day, model);
@@ -387,14 +387,14 @@ namespace sdd {
       }
 
       // fifth is treated equivalently to last
-      std::string specificationMethod = toString(specificationMethodElement.text());
+      std::string specificationMethod = specificationMethodElement.text().toStdString();
       if (specificationMethod == "Last"){
         specificationMethod = "Fifth";
       }
 
       NthDayOfWeekInMonth nth(specificationMethod);
-      DayOfWeek dayOfWeek(toString(dayOfWeekElement.text()));
-      MonthOfYear monthOfYear(toString(monthElement.text()));
+      DayOfWeek dayOfWeek(dayOfWeekElement.text().toStdString());
+      MonthOfYear monthOfYear(monthElement.text().toStdString());
 
       result = model::RunPeriodControlSpecialDays(nth, dayOfWeek, monthOfYear, model);
       result->setName(escapeName(nameElement.text()));

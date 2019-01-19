@@ -32,8 +32,6 @@
 
 #include "Filesystem.hpp"
 
-class QString;
-
 namespace openstudio {
   namespace filesystem {
     /// reads entire file from the current read position until the end of file
@@ -41,7 +39,7 @@ namespace openstudio {
     UTILITIES_API std::vector<char> read(openstudio::filesystem::ifstream &t_path);
 
     /// reads entire file from the current read position until the end of file
-    /// and returns as QByteArray
+    /// and returns as std::vector<char>
     UTILITIES_API std::vector<char> read(const openstudio::path &t_path);
 
     /// reads entire file from the current read position until the end of file
@@ -66,9 +64,6 @@ namespace openstudio {
 
     /// Copies file from src to dest. If there is an error, false is returned
     UTILITIES_API bool copy_file_no_throw(const openstudio::path &t_src, const openstudio::path &t_dest);
-
-    // consider making this a operator<< overload. Did it this way for now to keep the changes straight
-    UTILITIES_API void write(openstudio::filesystem::ofstream &t_file, const QString &);
 
     UTILITIES_API time_t last_write_time_as_time_t(const openstudio::path &t_path);
 

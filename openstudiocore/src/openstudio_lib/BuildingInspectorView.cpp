@@ -38,6 +38,7 @@
 #include "ModelObjectItem.hpp"
 #include "OSDropZone.hpp"
 #include "OSVectorController.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include "../model/Building.hpp"
 #include "../model/Building_Impl.hpp"

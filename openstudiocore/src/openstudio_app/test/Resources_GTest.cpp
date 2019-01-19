@@ -38,6 +38,9 @@
 #include "../../model/SpaceLoad_Impl.hpp"
 #include "../../model/SpaceType.hpp"
 
+#include "../../model_editor/Utilities.hpp"
+
+
 #include "../../utilities/core/ApplicationPathHelpers.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
 

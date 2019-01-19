@@ -19,7 +19,13 @@ add_library( init_openstudio STATIC
 )
 
 if(MSVC)
+  # TODO: JM 2019-01-04: @macumber it seems like all three targets use the same COMPILE_FLAGS,
+  # so instead of defining that three times, perhaps modify CMAKE_CXX_FLAGS?
+  # wd4996=no deprecated warnings ; wd5033=register
   set_target_properties(init_openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
+elseif (UNIX)
+  # Disable register warnings
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=register -Wno-register")
 endif()
 
 target_link_libraries(init_openstudio
@@ -140,44 +146,47 @@ target_link_libraries(openstudio_modeleditor_rb
 
 if( UNIX AND NOT APPLE )
   # DLM: dependencies of Qt Static plugins do not seem to be linked in to openstudio.so on Unix. Force these to link fully.
-  target_link_libraries(openstudio_rb
-    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libxcb-static.a" -Wl,--no-whole-archive
-  )
+#target_link_libraries(openstudio_rb
+#    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libxcb-static.a" -Wl,--no-whole-archive
+#  )
   target_link_libraries(openstudio_modeleditor_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libxcb-static.a" -Wl,--no-whole-archive
   )
-  
+
 #target_link_libraries(openstudio_rb
 #    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformSupport.a" -Wl,--no-whole-archive
 #  )
+  target_link_libraries(openstudio_modeleditor_rb
+    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5PlatformCompositorSupport.a" -Wl,--no-whole-archive
+  )
 
-  target_link_libraries(openstudio_rb
-    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5FontDatabaseSupport.a" -Wl,--no-whole-archive
-  )
+#target_link_libraries(openstudio_rb
+#    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5FontDatabaseSupport.a" -Wl,--no-whole-archive
+#  )
   target_link_libraries(openstudio_modeleditor_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5FontDatabaseSupport.a" -Wl,--no-whole-archive
   )
-  
-  target_link_libraries(openstudio_rb
-    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5EventDispatcherSupport.a" -Wl,--no-whole-archive
-  )
+
+#target_link_libraries(openstudio_rb
+#    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5EventDispatcherSupport.a" -Wl,--no-whole-archive
+#  )
   target_link_libraries(openstudio_modeleditor_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5EventDispatcherSupport.a" -Wl,--no-whole-archive
   )
-  
-  target_link_libraries(openstudio_rb
-    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5ThemeSupport.a" -Wl,--no-whole-archive
-  )
+
+#target_link_libraries(openstudio_rb
+#    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5ThemeSupport.a" -Wl,--no-whole-archive
+#  )
   target_link_libraries(openstudio_modeleditor_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5ThemeSupport.a" -Wl,--no-whole-archive
   )
-  
-  target_link_libraries(openstudio_rb
-    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a" -Wl,--no-whole-archive
-  )
+
+#target_link_libraries(openstudio_rb
+#    -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a" -Wl,--no-whole-archive
+#  )
   target_link_libraries(openstudio_modeleditor_rb
     -Wl,--whole-archive "${QT_STATIC_INSTALL_DIR}/lib/libQt5XcbQpa.a" -Wl,--no-whole-archive
-  ) 
+  )
 endif()
 
 if( WIN32 )

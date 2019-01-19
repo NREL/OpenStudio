@@ -116,6 +116,13 @@
 #include <QDomDocument>
 #include <QDomElement>
 
+///
+/// TODO: Remove this helper when Qt is fully removed
+///
+static auto toQString(const std::string &s) {
+  return QString::fromUtf8(s.data(), s.size());
+};
+
 namespace openstudio {
 namespace sdd {
 
@@ -1359,7 +1366,7 @@ namespace sdd {
       surface.setSunExposure("NoSun");
       surface.setWindExposure("NoWind");
     }else{
-      LOG(Error, "Unknown surface type '" << toString(tagName) << "'");
+      LOG(Error, "Unknown surface type '" << tagName.toStdString() << "'");
     }
 
     QDomElement perimExposedElement = element.firstChildElement("PerimExposed");
@@ -1588,7 +1595,7 @@ namespace sdd {
       translateConvectionCoefficients(element, doc, subSurface);
 
     }else{
-      LOG(Error, "Unknown subsurface type '" << toString(tagName) << "'");
+      LOG(Error, "Unknown subsurface type '" << tagName.toStdString() << "'");
     }
 
     // DLM: currently unhandled
@@ -1727,7 +1734,7 @@ namespace sdd {
       }
 
     }else{
-      LOG(Error, "Unknown shading surface type '" << toString(tagName) << "'");
+      LOG(Error, "Unknown shading surface type '" << tagName.toStdString() << "'");
     }
 
     return shadingSurface;

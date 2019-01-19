@@ -35,6 +35,8 @@
 #include "../model/ScheduleTypeLimits_Impl.hpp"
 #include "../model/ScheduleDay.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include "../utilities/units/OSOptionalQuantity.hpp"
 #include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/QuantityConverter.hpp"

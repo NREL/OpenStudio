@@ -154,7 +154,7 @@ TEST_F(ModelFixture, BuildingUnit_Spaces)
   surf2.setSpace(space2);
 
   double floorArea = bldgUnit.floorArea();
-  EXPECT_FLOAT_EQ(floorArea, 10 * 10 + 5 * 5);
+  EXPECT_DOUBLE_EQ(floorArea, 10.0 * 10.0 + 5.0 * 5.0);
 
   space1.resetBuildingUnit();
   retrievedBldgUnit = space1.buildingUnit();
@@ -221,7 +221,7 @@ TEST_F(ModelFixture, BuildingUnit_Features)
   ASSERT_TRUE(dblValue);
   boost::optional<int> intValue = bldgUnit.getFeatureAsInteger("NumberOfBathrooms");
   ASSERT_FALSE(intValue);
-  ASSERT_FLOAT_EQ(*dblValue, 1.5);
+  ASSERT_DOUBLE_EQ(*dblValue, 1.5);
 
   // Test setting a feature to a value of a different type
   EXPECT_TRUE(bldgUnit.setFeature("NumberOfBedrooms", 3));

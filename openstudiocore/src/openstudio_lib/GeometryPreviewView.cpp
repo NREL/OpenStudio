@@ -59,7 +59,7 @@ GeometryPreviewView::GeometryPreviewView(bool isIP,
                                          QWidget * parent)
 : QWidget(parent)
 {
-  // TODO: DLM impliment units switching
+  // TODO: DLM implement units switching
   //connect(this, &GeometryPreviewView::toggleUnitsClicked, modelObjectInspectorView(), &ModelObjectInspectorView::toggleUnitsClicked);
 
   QVBoxLayout *layout = new QVBoxLayout;
@@ -77,8 +77,8 @@ GeometryPreviewView::~GeometryPreviewView()
 
 PreviewWebView::PreviewWebView(bool isIP, const model::Model& model, QWidget *t_parent)
   : QWidget(t_parent),
-    m_model(model),
     m_isIP(isIP),
+    m_model(model),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh"))
 {
@@ -125,9 +125,9 @@ PreviewWebView::PreviewWebView(bool isIP, const model::Model& model, QWidget *t_
   connect(m_view, &QWebEngineView::renderProcessTerminated, this, &PreviewWebView::onRenderProcessTerminated);
 
   // Qt 5.8 and higher
-  //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
-
-  //m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  m_view->settings()->setAttribute(QWebEngineSettings::AllowRunningInsecureContent, true);
+  // Force QWebEngineView to fill the rest of the space
+  m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   m_view->setContextMenuPolicy(Qt::NoContextMenu);
 
   //mainLayout->addWidget(m_view, 10, Qt::AlignTop);

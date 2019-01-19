@@ -106,7 +106,7 @@ namespace openstudio {
           const auto p = dir_itr->path();
           if (predicate(p)) {
             files.push_back(rebuild_path(advance_itr_copy(p.begin(), num_path_elems), p.end()));
-            LOG_FREE(Debug, "FilesystemHelpers", 
+            LOG_FREE(Debug, "FilesystemHelpers",
                 "directory_elements '" << openstudio::toString(p) << "' -> '" << openstudio::toString(files.back()) << "'");
           }
         }
@@ -160,11 +160,6 @@ namespace openstudio {
       } catch (const std::exception &) {
         return false;
       }
-    }
-
-    void write(openstudio::filesystem::ofstream &t_file, const QString &s)
-    {
-      t_file << openstudio::toString(s);
     }
 
     time_t to_time_t(time_t t) {
@@ -241,18 +236,19 @@ namespace openstudio {
         }
       };
 
+      // TODO: instead of trace, just comment out?
       if (const auto home = build_path("USERPROFILE"); !home.empty()) {
-        LOG_FREE(Debug, "FilesystemHelpers", "home_path USERPROFILE: " << toString(home));
+        LOG_FREE(Trace, "FilesystemHelpers", "home_path USERPROFILE: " << toString(home));
         return home;
       }
 
       if (const auto home = build_path("HOMEDRIVE", "HOMEPATH"); !home.empty()) {
-        LOG_FREE(Debug, "FilesystemHelpers", "home_path HOMEDRIVE/HOMEPATH: " << toString(home));
+        LOG_FREE(Trace, "FilesystemHelpers", "home_path HOMEDRIVE/HOMEPATH: " << toString(home));
         return home;
       }
 
       if (const auto home = build_path("HOME"); !home.empty()) {
-        LOG_FREE(Debug, "FilesystemHelpers", "home_path HOME: " << toString(home));
+        LOG_FREE(Trace, "FilesystemHelpers", "home_path HOME: " << toString(home));
         return home;
       }
 

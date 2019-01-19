@@ -207,7 +207,7 @@ bool IdfFile::removeObject(const IdfObject& object) {
   auto it = std::find_if(m_objects.begin(),m_objects.end(),
     std::bind(handleEquals<IdfObject, Handle>, std::placeholders::_1, object.handle()));
   if (it != m_objects.end()) {
-    unsigned index(it - m_objects.begin());
+    IdfObjectVector::size_type index(it - m_objects.begin());
     if (it->iddObject().isVersionObject() ||
         ((object.iddObject().type() == IddObjectType::Catchall) &&
          (object.numFields() > 0u) &&
@@ -216,13 +216,13 @@ bool IdfFile::removeObject(const IdfObject& object) {
       m_versionObjectIndices.erase(index);
     }
     m_objects.erase(it);
-    std::vector<unsigned> toModify;
-    for (const unsigned i : m_versionObjectIndices) {
+    std::vector<IdfObjectVector::size_type> toModify;
+    for (const auto i : m_versionObjectIndices) {
       if (i > index) {
         toModify.push_back(i);
       }
     }
-    for (unsigned i : toModify) {
+    for (auto i : toModify) {
       m_versionObjectIndices.erase(i);
       m_versionObjectIndices.insert(i-1);
     }

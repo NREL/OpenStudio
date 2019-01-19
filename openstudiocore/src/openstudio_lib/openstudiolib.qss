@@ -689,3 +689,8 @@ QComboBox#ScheduleDialog {
     min-width: 215px;
     max-width: 215px;
 }
+
+/* Disable icons in buttons (especially standard buttons like OK/SAVE/etc) */
+QDialogButtonBox {
+    dialogbuttonbox-buttons-have-icons: 0;
+}

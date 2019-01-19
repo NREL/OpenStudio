@@ -30,6 +30,8 @@
 #include "ModelObjectInspectorView.hpp"
 #include "ModelObjectItem.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
 #include "../model/ModelObject_Impl.hpp"

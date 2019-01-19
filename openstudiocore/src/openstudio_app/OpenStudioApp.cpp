@@ -36,6 +36,7 @@
 #include "../openstudio_lib/OSDocument.hpp"
 
 #include "../model_editor/AccessPolicyStore.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include "../shared_gui_components/WaitDialog.hpp"
 #include "../shared_gui_components/MeasureManager.hpp"
@@ -142,6 +143,10 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   setOrganizationName("NREL");
   QCoreApplication::setOrganizationDomain("nrel.gov");
   setApplicationName("OpenStudioApp");
+
+  // Don't use native menu bar, necessary on Ubuntu 16.04
+  // TODO: check for adverse side effects on other OSes
+  QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar, true);
 
   readSettings();
 

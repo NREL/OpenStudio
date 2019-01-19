@@ -693,9 +693,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateZoneCapacitanceMultipli
   ASSERT_EQ(1u, workspace.numObjectsOfType(IddObjectType::ZoneCapacitanceMultiplier_ResearchSpecial));
 
   IdfObject zcmidf = workspace.getObjectsByType(IddObjectType::ZoneCapacitanceMultiplier_ResearchSpecial)[0];
-  EXPECT_FLOAT_EQ(zcmidf.getDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier).get(), 2.0);
-  EXPECT_FLOAT_EQ(zcmidf.getDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier).get(), 3.0);
-  EXPECT_FLOAT_EQ(zcmidf.getDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier).get(), 4.0);
+  EXPECT_DOUBLE_EQ(zcmidf.getDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::TemperatureCapacityMultiplier).get(), 2.0);
+  EXPECT_DOUBLE_EQ(zcmidf.getDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::HumidityCapacityMultiplier).get(), 3.0);
+  EXPECT_DOUBLE_EQ(zcmidf.getDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier).get(), 4.0);
 }
 
 

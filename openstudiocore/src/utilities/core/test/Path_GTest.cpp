@@ -42,7 +42,6 @@
 using openstudio::path;
 using openstudio::toPath;
 using openstudio::toString;
-using openstudio::toQString;
 using openstudio::completePathToFile;
 using openstudio::setFileExtension;
 using openstudio::makeParentFolder;
@@ -378,33 +377,16 @@ TEST_F(CoreFixture, Path_Conversions)
   w = std::wstring(L"basic_path");
   p = path(s);
   EXPECT_EQ(s, p.string());
-  EXPECT_EQ(s, toQString(p).toStdString());
   EXPECT_EQ(s, toString(p));
-  EXPECT_EQ(s, toQString(toString(p)).toStdString());
-  EXPECT_EQ(s, std::string(toQString(toString(p)).toUtf8()));
-  EXPECT_EQ(s, toPath(toQString(toString(p))).string());
   EXPECT_EQ(w, p.wstring());
-  EXPECT_EQ(w, toQString(p).toStdWString());
-  //EXPECT_EQ(w, toString(p));
-  EXPECT_EQ(w, toQString(toString(p)).toStdWString());
-  //EXPECT_EQ(w, std::wstring(toQString(toString(p)).toUtf16()));
-  EXPECT_EQ(w, toPath(toQString(toString(p))).wstring());
 
   p = path(w);
   EXPECT_EQ(s, p.string());
-  EXPECT_EQ(s, toQString(p).toStdString());
   EXPECT_EQ(s, toString(p));
-  EXPECT_EQ(s, toQString(toString(p)).toStdString());
-  EXPECT_EQ(s, std::string(toQString(toString(p)).toUtf8()));
-  EXPECT_EQ(s, toPath(toQString(toString(p))).string());
 
   p = path(w);
   EXPECT_EQ(s, p.string());
-  EXPECT_EQ(s, toQString(p).toStdString());
   EXPECT_EQ(s, toString(p));
-  EXPECT_EQ(s, toQString(toString(p)).toStdString());
-  EXPECT_EQ(s, std::string(toQString(toString(p)).toUtf8()));
-  EXPECT_EQ(s, toPath(toQString(toString(p))).string());
 
   // http://utf8everywhere.org/
 
@@ -421,34 +403,18 @@ TEST_F(CoreFixture, Path_Conversions)
   const char kSpanishSampleText[] = {99, 97, -61, -79, -61, -77, 110, 0};
 
   std::string t;
-  QString q;
 
   t = std::string(kChineseSampleText);
-  q = QString::fromUtf8(t.c_str());
   p = toPath(t);
-  EXPECT_EQ(t, std::string(toQString(p).toUtf8()));
   EXPECT_EQ(t, toString(p));
-  EXPECT_EQ(t, toString(toQString(toString(p))));
-  EXPECT_EQ(t, std::string(toQString(toString(p)).toUtf8()));
-  EXPECT_EQ(t, toString(toPath(toQString(toString(p)))));
 
   t = std::string(kArabicSampleText);
-  q = QString::fromUtf8(t.c_str());
   p = toPath(t);
-  EXPECT_EQ(t, std::string(toQString(p).toUtf8()));
   EXPECT_EQ(t, toString(p));
-  EXPECT_EQ(t, toString(toQString(toString(p))));
-  EXPECT_EQ(t, std::string(toQString(toString(p)).toUtf8()));
-  EXPECT_EQ(t, toString(toPath(toQString(toString(p)))));
 
   t = std::string(kSpanishSampleText);
-  q = QString::fromUtf8(t.c_str());
   p = toPath(t);
-  EXPECT_EQ(t, std::string(toQString(p).toUtf8()));
   EXPECT_EQ(t, toString(p));
-  EXPECT_EQ(t, toString(toQString(toString(p))));
-  EXPECT_EQ(t, std::string(toQString(toString(p)).toUtf8()));
-  EXPECT_EQ(t, toString(toPath(toQString(toString(p)))));
 
 }
 

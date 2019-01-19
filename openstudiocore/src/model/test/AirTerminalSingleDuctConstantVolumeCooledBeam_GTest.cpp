@@ -124,7 +124,6 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeCooledBeam_addToNode) {
 
   // Field N1 Supply Air Volumetric Flow Rate
 
-  boost::optional<double> testSupplyAirVolumetricFlowRate = cooledBeam.supplyAirVolumetricFlowRate();
   cooledBeam.setSupplyAirVolumetricFlowRate(10);
   EXPECT_FALSE(cooledBeam.isSupplyAirVolumetricFlowRateDefaulted());
   EXPECT_FALSE(cooledBeam.isSupplyAirVolumetricFlowRateAutosized());

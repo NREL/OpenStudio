@@ -314,7 +314,7 @@ bool ForwardTranslator::applyAirtightnessLevel(contam::IndexModel model)
   std::vector<std::string> floor({ "FloorLeaky", "FloorAvg", "FloorTight" });
   std::vector<std::string> roof({ "RoofLeaky", "RoofAvg", "RoofTight" });
   int index = -1;
-  for (int i=0; i < grade.size(); ++i) {
+  for (std::vector<std::string>::size_type i=0; i < grade.size(); ++i) {
     if (grade[i] == m_leakageDescriptor.get()) {
       index = i;
     }
@@ -902,7 +902,7 @@ boost::optional<contam::IndexModel> ForwardTranslator::translateModel(model::Mod
             m_prjModel.airflowPaths()[supplyNr - 1].setFahs(std::to_string(flowRate));
           }
 
-          int returnNr = 0; 
+          int returnNr = 0;
           const auto& itr = m_pathMap.find(returnName);
           if (itr != m_pathMap.end()) {
             returnNr = itr->second;
@@ -1014,7 +1014,7 @@ bool ForwardTranslator::linkExteriorSurface(openstudio::model::ThermalZone zone,
   double area = surface.grossArea();
   std::string type = surface.surfaceType();
   double averageZ = 0;
-  double numVertices = surface.vertices().size();
+  double numVertices = (double)surface.vertices().size();
   for(const Point3d& point : surface.vertices()) {
     averageZ += point.z();
   }
@@ -1058,7 +1058,7 @@ bool ForwardTranslator::linkInteriorSurface(openstudio::model::ThermalZone zone,
   double area = 0.5*(surface.grossArea() + adjacentSurface.grossArea());
   std::string type = surface.surfaceType();
   double averageZ = 0;
-  double numVertices = surface.vertices().size();
+  double numVertices = (double)surface.vertices().size();
   for(const Point3d& point : surface.vertices()) {
     averageZ += point.z();
   }

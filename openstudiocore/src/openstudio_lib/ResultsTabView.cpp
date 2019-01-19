@@ -30,6 +30,7 @@
 #include "ResultsTabView.hpp"
 #include "OSDocument.hpp"
 #include "OSAppBase.hpp"
+#include "../model_editor/Utilities.hpp"
 
 #include <QFile>
 #include <QBoxLayout>
@@ -90,8 +91,8 @@ ResultsView::ResultsView(QWidget *t_parent)
 
   connect(m_openDViewBtn, &QPushButton::clicked, this, &ResultsView::openDViewClicked);
 
+  // Prepare the top portion inside a QHBoxLayout
   auto hLayout = new QHBoxLayout(this);
-  mainLayout->addLayout(hLayout);
 
   m_reportLabel = new QLabel("Reports: ",this);
   m_reportLabel->setObjectName("H2");
@@ -115,6 +116,11 @@ ResultsView::ResultsView(QWidget *t_parent)
 
   hLayout->addWidget(m_openDViewBtn, 0, Qt::AlignVCenter);
 
+  // Add the Top portion to the main layout
+  mainLayout->addLayout(hLayout);
+  // mainLayout->addStretch(0);
+
+  // create a web widget
   m_view = new QWebEngineView(this);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::SpatialNavigationEnabled, true);
@@ -125,9 +131,10 @@ ResultsView::ResultsView(QWidget *t_parent)
   connect(m_view, &QWebEngineView::renderProcessTerminated, this, &ResultsView::onRenderProcessTerminated);
 
   // Qt 5.8 and higher
-  //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
+  m_view->settings()->setAttribute(QWebEngineSettings::AllowRunningInsecureContent, true);
+  // Force QWebEngineView to fill the rest of the space
+  m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-  //m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   m_view->setContextMenuPolicy(Qt::NoContextMenu);
 
   //mainLayout->addWidget(m_view, 10, Qt::AlignTop);
@@ -226,7 +233,7 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir, con
   std::vector<openstudio::path> reports;
 
   // Check that the directory does exists first
-  if (openstudio::filesystem::is_directory(t_runDir) 
+  if (openstudio::filesystem::is_directory(t_runDir)
     && openstudio::filesystem::exists(t_runDir)) {
     for ( openstudio::filesystem::recursive_directory_iterator end, dir(t_runDir);
           dir != end;

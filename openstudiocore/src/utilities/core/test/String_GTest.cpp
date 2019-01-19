@@ -56,22 +56,15 @@ TEST(String, SimpleConversions)
   const char* const cStr = "Hello world";
   const wchar_t* const wStr = L"Hello world";
   std::wstring w(L"Hello world");
-  QString q("Hello world");
   path p = toPath("Hello world");
 
   EXPECT_EQ(s, s);
   EXPECT_EQ(s, cStr);
   EXPECT_EQ(s, toString(w));
   EXPECT_EQ(s, toString(wStr));
-  EXPECT_EQ(s, toString(q));
   EXPECT_EQ(s, toString(p));
-  EXPECT_EQ(s, toString(toQString(s)));
   EXPECT_EQ(s, toString(toPath(s)));
-  EXPECT_EQ(s, toString(toQString(toPath(s))));
-  EXPECT_TRUE(q == toQString(s));
-  EXPECT_TRUE(q == toQString(p));
   EXPECT_TRUE(p == toPath(s));
-  EXPECT_TRUE(p == toPath(q));
 }
 
 //TEST(String, UnicodeConversions)

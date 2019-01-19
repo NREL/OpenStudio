@@ -104,10 +104,10 @@ namespace detail {
     boost::optional<Space> space = this->space();
     boost::optional<SpaceType> spaceType = this->spaceType();
     if (space){
-      result = this->multiplier()*space->multiplier();
+      result = (int)(this->multiplier()*space->multiplier());
     }else if (spaceType){
       for (const Space& space : spaceType->spaces()){
-        result += this->multiplier()*space.multiplier();
+        result += (int)(this->multiplier()*space.multiplier());
       }
     }
 

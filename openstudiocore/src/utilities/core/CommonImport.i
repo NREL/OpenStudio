@@ -10,6 +10,7 @@
   #include <utilities/core/Containers.hpp>
   #include <boost/regex.hpp>
   #include <boost/variant.hpp>
+  #include <pugixml.hpp>
 %}
 
 %include <utilities/core/Deprecated.hpp>
@@ -300,6 +301,22 @@ namespace boost
 
 
 %template(OptionalRegex) boost::optional<boost::regex>;
+
+// pugi 
+namespace pugi
+{
+  class xml_node{
+  public:
+    xml_node();
+  };
+  
+  class xml_document{
+  public:
+    xml_document();
+  private:
+    xml_document(const xml_document&);
+  };
+}
 
 
 #ifdef SWIGCSHARP

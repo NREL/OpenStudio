@@ -227,13 +227,13 @@ namespace openstudio{
   /// whole number of minutes remaining after hours
   int Time::minutes() const
   {
-    return m_impl.minutes();
+    return (int)m_impl.minutes();
   }
 
   /// whole number of seconds remaining after minutes
   int Time::seconds() const
   {
-    return m_impl.seconds();
+    return (int)m_impl.seconds();
   }
 
   /// entire time in days
@@ -257,7 +257,7 @@ namespace openstudio{
   /// entire time in seconds
   int Time::totalSeconds() const
   {
-    return m_impl.total_seconds();
+    return (int)m_impl.total_seconds();
   }
 
   // reference to impl

@@ -613,7 +613,7 @@ TEST_F(ModelFixture, Construction_NetArea) {
 
   // now test multipliers
   ThermalZone thermalZone(model);
-  thermalZone.setMultiplier(10.0);
+  thermalZone.setMultiplier(10);
   space.setThermalZone(thermalZone);
   EXPECT_DOUBLE_EQ(10.0, space.multiplier());
   EXPECT_DOUBLE_EQ(7.5, construction1.getNetArea());

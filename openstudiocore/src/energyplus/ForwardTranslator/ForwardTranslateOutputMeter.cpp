@@ -37,6 +37,7 @@
 #include <utilities/idd/Output_Meter_Cumulative_FieldEnums.hxx>
 #include <utilities/idd/Output_Meter_MeterFileOnly_FieldEnums.hxx>
 #include <utilities/idd/Output_Meter_Cumulative_MeterFileOnly_FieldEnums.hxx>
+#include "../../utilities/core/StringHelpers.hpp"
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -52,13 +53,13 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputMeter( OutputMeter 
 {
   boost::optional<IdfObject> idfObject;
 
-  QString name = toQString(modelObject.name()).replace(QString("FuelOil_"), QString("FuelOil#"));
+  const auto name = openstudio::replace(modelObject.name(), "FuelOil_", "FuelOil#");
 
   if (modelObject.meterFileOnly() && modelObject.cumulative()){
     idfObject = IdfObject (openstudio::IddObjectType::Output_Meter_Cumulative_MeterFileOnly);
     m_idfObjects.push_back(*idfObject);
 
-    idfObject->setString(Output_Meter_Cumulative_MeterFileOnlyFields::KeyName, toString(name));
+    idfObject->setString(Output_Meter_Cumulative_MeterFileOnlyFields::KeyName, name);
 
     if (!modelObject.isReportingFrequencyDefaulted()){
       idfObject->setString(Output_Meter_Cumulative_MeterFileOnlyFields::ReportingFrequency, modelObject.reportingFrequency());
@@ -68,7 +69,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputMeter( OutputMeter 
     idfObject = IdfObject (openstudio::IddObjectType::Output_Meter_MeterFileOnly);
     m_idfObjects.push_back(*idfObject);
 
-    idfObject->setString(Output_Meter_MeterFileOnlyFields::KeyName, toString(name));
+    idfObject->setString(Output_Meter_MeterFileOnlyFields::KeyName, name);
 
     if (!modelObject.isReportingFrequencyDefaulted()){
       idfObject->setString(Output_Meter_MeterFileOnlyFields::ReportingFrequency, modelObject.reportingFrequency());
@@ -78,7 +79,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputMeter( OutputMeter 
     idfObject = IdfObject (openstudio::IddObjectType::Output_Meter_Cumulative);
     m_idfObjects.push_back(*idfObject);
 
-    idfObject->setString(Output_Meter_CumulativeFields::KeyName, toString(name));
+    idfObject->setString(Output_Meter_CumulativeFields::KeyName, name);
 
     if (!modelObject.isReportingFrequencyDefaulted()){
       idfObject->setString(Output_Meter_CumulativeFields::ReportingFrequency, modelObject.reportingFrequency());
@@ -88,7 +89,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputMeter( OutputMeter 
     idfObject = IdfObject (openstudio::IddObjectType::Output_Meter);
     m_idfObjects.push_back(*idfObject);
 
-    idfObject->setString(Output_MeterFields::KeyName, toString(name));
+    idfObject->setString(Output_MeterFields::KeyName, name);
 
     if (!modelObject.isReportingFrequencyDefaulted()){
       idfObject->setString(Output_MeterFields::ReportingFrequency, modelObject.reportingFrequency());

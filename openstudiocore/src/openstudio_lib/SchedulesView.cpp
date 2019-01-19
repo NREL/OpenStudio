@@ -45,6 +45,8 @@
 #include "../model/ScheduleTypeLimits.hpp"
 #include "../model/ScheduleTypeLimits_Impl.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
 #include "../utilities/time/Date.hpp"
 #include "../utilities/time/Time.hpp"
 #include "../utilities/units/QuantityConverter.hpp"

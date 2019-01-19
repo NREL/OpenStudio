@@ -37,6 +37,10 @@
 #include "../model/Loop_Impl.hpp"
 #include "../model/PlantLoop.hpp"
 #include "../model/PlantLoop_Impl.hpp"
+
+#include "../model_editor/Utilities.hpp"
+
+
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QStyleOption>

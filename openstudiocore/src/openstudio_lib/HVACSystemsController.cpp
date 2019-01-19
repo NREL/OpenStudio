@@ -119,6 +119,9 @@
 #include "../model/ComponentData.hpp"
 #include "../model/ComponentData_Impl.hpp"
 
+#include "../model_editor/Utilities.hpp"
+
+
 #include "../energyplus/ForwardTranslator/ForwardTranslatePlantEquipmentOperationSchemes.hpp"
 
 #include "../utilities/core/Assert.hpp"
