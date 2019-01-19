@@ -223,13 +223,6 @@ if(WIN32)
   list(APPEND ${target_name}_depends mpr)
 endif()
 
-# moc files
-set(bcl_moc
-  bcl/BCL.hpp
-  bcl/LocalBCL.hpp
-  bcl/RemoteBCL.hpp
-)
-
 #set(cloud_moc
 #  cloud/AWSProvider_Impl.hpp
 #  cloud/CloudProvider_Impl.hpp
@@ -281,7 +274,6 @@ set(data_moc
 ###############################################################################
 
 ## Qt MOC generation
-qt5_wrap_cpp_minimally(bcl_moc_src ${bcl_moc})
 #qt5_wrap_cpp_minimally(cloud_moc_src ${cloud_moc})
 qt5_wrap_cpp_minimally(core_moc_src ${core_moc}) # RM
 qt5_wrap_cpp_minimally(idf_moc_src ${idfxx_moc})
@@ -290,14 +282,14 @@ qt5_wrap_cpp_minimally(data_moc_src ${data_moc}) # RM
 
 # embedded files, bump again to update common files
 file(GLOB_RECURSE BCL_TEMPLATES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/bcl/templates/**/*.*")
-foreach( _FILE ${BCL_TEMPLATES} )
+foreach(_FILE ${BCL_TEMPLATES})
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/bcl/" ${_FILE})
   list(APPEND E_FILES ${_FILE})
   list(APPEND E_PATHS ${LOCATION})
 endforeach()
 
 file(GLOB_RECURSE IDD_FILES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/idd/versions/*/*.idd")
-foreach( _FILE ${IDD_FILES} )
+foreach(_FILE ${IDD_FILES})
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
   list(APPEND E_FILES ${_FILE})
   list(APPEND E_PATHS ${LOCATION})
@@ -527,7 +519,7 @@ AddPCH(${target_name})
 #  )
 #endif()
 
-target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} GeographicLib_STATIC ${QT_LIBS})
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} GeographicLib_STATIC cpprestsdk::cpprest ${QT_LIBS})
 
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")

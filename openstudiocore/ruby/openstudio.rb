@@ -29,15 +29,11 @@
 
 # add binary dir to system path
 original_path = ENV['PATH']
-platform_specific_path = nil
 if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
   front = []
   back = []
   original_path.split(';').each do |p|
     if /SketchUp/.match(p)
-      if /platform_specific/.match(p)
-        platform_specific_path = p
-      end
       front << p
     else
       back << p
@@ -60,16 +56,3 @@ ENV['PATH'] = original_path
 
 # add this directory to Ruby load path
 $:.unshift(File.expand_path(File.dirname(__FILE__)))
-
-# initialize ssl
-have_open_ssl  = false
-if platform_specific_path
-  have_open_ssl = OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new(platform_specific_path))
-end
-if (!have_open_ssl)
-  if (!OpenStudio::RemoteBCL::initializeSSL(OpenStudio::Path.new(File.dirname(__FILE__))))
-    if (!OpenStudio::RemoteBCL::initializeSSL())
-      raise "Unable to initialize OpenSSL: Verify that ruby can access the OpenSSL libraries"
-    end
-  end
-end

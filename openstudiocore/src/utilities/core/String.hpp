@@ -53,6 +53,9 @@ namespace openstudio {
   /** wstring to std::string. */
   UTILITIES_API std::string toString(const std::wstring& w);
 
+  /** string to std::wstring. */
+  UTILITIES_API std::wstring toWString(const std::string& s);
+
   /** wchar_t* to std::string. */
   UTILITIES_API std::string toString(const wchar_t* w);
 

@@ -37,10 +37,6 @@
 #include "../core/Logger.hpp"
 #include "../data/Attribute.hpp"
 
-#include <QObject>
-
-class QNetworkReply;
-
 namespace pugi {
   class xml_node;
 }
@@ -63,12 +59,12 @@ namespace openstudio{
 
     /// Possible values for the facet as well as the number of search results after applying each value,
     /// e.g. [['steel framed', 30], ['metal building', 21], ...]
-    std::vector<std::pair<std::string, uint> > items() const;
+    std::vector<std::pair<std::string, unsigned> > items() const;
 
   private:
     std::string m_field;
     std::string m_label;
-    std::vector<std::pair<std::string, uint> > m_items;
+    std::vector<std::pair<std::string, unsigned> > m_items;
   };
 
   /// This gives information about a taxonomy term from the taxonomy.
@@ -221,10 +217,7 @@ namespace openstudio{
   };
 
   /// This is a generic interface that can be used for searching either the local or remote bcl.
-  class UTILITIES_API BCL : public QObject {
-
-    Q_OBJECT
-
+  class UTILITIES_API BCL {
   public:
 
     /** @name Constructor */
@@ -262,7 +255,7 @@ namespace openstudio{
 
   protected:
     /// Default constructor
-    BCL(QObject * parent = nullptr);
+    BCL();
 
   };
 

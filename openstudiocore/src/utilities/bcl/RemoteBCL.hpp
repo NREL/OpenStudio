@@ -37,9 +37,9 @@
 #include <mutex>
 #include <memory>
 
-class QNetworkAccessManager;
-class QNetworkRequest;
-class QSslError;
+#include <cpprest/http_client.h>
+
+#include <nano/nano_signal_slot.hpp>
 
 namespace openstudio{
 
@@ -58,9 +58,6 @@ namespace openstudio{
 
   /// Class for accessing the remote BCL.
   class UTILITIES_API RemoteBCL : public BCL {
-
-    Q_OBJECT
-
   public:
 
     /** @name Constructor */
@@ -197,8 +194,6 @@ namespace openstudio{
     /// Returns the download if it completed in the allowable time
     std::vector<BCLSearchResult> waitForSearch(int msec = 120000) const;
 
-    static bool initializeSSL(const openstudio::path &t_pathToSSLLibraries = openstudio::path());
-
     //@}
     /** @name Non-blocking class members */
     //@{
@@ -218,33 +213,13 @@ namespace openstudio{
     bool startComponentLibrarySearch(const std::string& searchTerm, const unsigned componentTypeTID, const std::string& filterType, const unsigned page = 0);
 
     //@}
-  signals:
+  // signals:
 
     /// Emitted when a component download completes
-    //void componentDownloaded(const std::string& uid, const boost::optional<BCLComponent>& component) const;
-
+    Nano::Signal<void(const std::string& uid, const boost::optional<BCLComponent>& component)> componentDownloaded;
+    
     /// Emitted when a measure download completes
-    //void measureDownloaded(const std::string& uid, const boost::optional<BCLMeasure>& measure) const;
-
-    /// Emitted when a meta search request completes
-    //void metaSearchCompleted(const boost::optional<BCLMetaSearchResult>& metaSearchResult) const;
-
-    /// Emitted when a search request completes
-    //void searchCompleted(const std::vector<BCLSearchResult>& searchResults) const;
-
-  protected slots:
-
-    void downloadData();
-
-    void onDownloadComplete(QNetworkReply* reply);
-
-    void onMetaSearchResponseComplete(QNetworkReply* reply);
-
-    void onSearchResponseComplete(QNetworkReply* reply);
-
-  private slots:
-
-    void catchSslErrors(QNetworkReply* reply, const QList<QSslError>& errorList);
+    Nano::Signal<void(const std::string& uid, const boost::optional<BCLMeasure>& measure)> measureDownloaded;
 
   private:
 
@@ -257,15 +232,15 @@ namespace openstudio{
     /// Validate an OAuth key
     bool validateAuthKey(const std::string& authKey, const std::string& remoteUrl);
 
-    QString checkForRedirect(const QNetworkReply* reply) const;
-
     bool waitForLock(int msec) const;
 
-    boost::optional<RemoteQueryResponse> processReply(QNetworkReply* reply);
+    boost::optional<RemoteQueryResponse> processReply(const std::string& reply);
 
     boost::optional<BCLMetaSearchResult> processMetaSearchResponse(const RemoteQueryResponse& remoteQueryResponse) const;
 
     std::vector<BCLSearchResult> processSearchResponse(const RemoteQueryResponse& remoteQueryResponse) const;
+
+    void onDownloadComplete();
 
     int setResultsPerQuery(const int numResults);
 
@@ -273,13 +248,7 @@ namespace openstudio{
 
     // members
 
-    QNetworkAccessManager* m_networkManager;
-
-    QNetworkReply* m_downloadReply;
-
-    mutable std::mutex m_mutex;
-
-    boost::optional<RemoteQueryResponse> m_queryResponse;
+    boost::optional<pplx::task<void> > m_httpResponse;
 
     struct DownloadFile
     {
@@ -288,7 +257,7 @@ namespace openstudio{
       void flush();
       void close();
       const openstudio::path &fileName() const noexcept;
-      void write(const std::string &data);
+      void write(const std::vector<unsigned char> &data);
       bool open();
 
       private:

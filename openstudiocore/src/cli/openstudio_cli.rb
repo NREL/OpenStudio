@@ -276,7 +276,6 @@ def parse_main_args(main_args)
   # Operate on the include option to add to $LOAD_PATH
   remove_indices = []
   new_path = []
-  init_ssl = true
   main_args.each_index do |i|
 
     if main_args[i] == '-I' || main_args[i] == '--include'
@@ -294,17 +293,6 @@ def parse_main_args(main_args)
         #$logger.warn "'#{dir}' passed to #{main_args[i]} is not a directory"
       end
       new_path << dir
-    elsif main_args[i] == '--no-ssl'
-      # remove from further processing
-      remove_indices << i
-      
-      init_ssl = false
-    end
-  end
-  
-  if init_ssl
-    if (!OpenStudio::RemoteBCL::initializeSSL())
-      puts "Unable to initialize OpenSSL: Verify that openstudio.exe can access the OpenSSL libraries"
     end
   end
 
@@ -737,7 +725,6 @@ class CLI
     if quiet
       commands = ['-h','--help',
                   '--verbose',
-                  '--no-ssl',
                   '-i', '--include',
                   '-e', '--execute',
                   '--gem_path', '--gem_home', '--bundle', '--bundle_path']
@@ -755,7 +742,6 @@ class CLI
         o.separator ''
         o.on('-h', '--help', 'Print this help.')
         o.on('--verbose', 'Print the full log to STDOUT')
-        o.on('--no-ssl', 'Skip initializing SSL')
         o.on('-I', '--include DIR', 'Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)')
         o.on('-e', '--execute CMD', 'Execute one line of script (may be used more than once). Returns after executing commands.')
         o.on('--gem_path DIR', 'Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)')

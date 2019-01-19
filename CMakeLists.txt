@@ -141,7 +141,7 @@ if("Ninja" STREQUAL ${CMAKE_GENERATOR})
   endif()
 endif()
 
-#if(MSVC)
+if(MSVC)
 #  # Visual Studio compiler check
 #  # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
 #  if    (${CMAKE_C_COMPILER_VERSION} VERSION_LESS "18.0.21005.1")
@@ -167,11 +167,11 @@ endif()
 #  else()
 #    message(STATUS "This version of Visual Studio will not use the 64 bit linker. Build times will likely suffer.")
 #  endif()
-#
-#  # Build with Multiple Processes
-#  set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
-#  mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
-#endif()
+
+  # Build with Multiple Processes
+  set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
+  mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
+endif()
 
 
 # Apple Sanity Check

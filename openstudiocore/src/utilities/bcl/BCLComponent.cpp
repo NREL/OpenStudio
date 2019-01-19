@@ -71,7 +71,7 @@ namespace openstudio{
 
     auto attributes = comp.child("attributes");
     if (attributes) {
-      for (auto &componentElement : files.children("attribute")) {
+      for (auto &componentElement : attributes.children("attribute")) {
         if (componentElement.first_child()) {
           std::string name = componentElement.child("name").text().as_string();
           std::string value = componentElement.child("value").text().as_string();

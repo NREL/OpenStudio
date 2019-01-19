@@ -52,7 +52,6 @@ TEST_F(BCLFixture, LocalBCL_AuthKey)
 
 TEST_F(BCLFixture, RemoteBCLTest)
 {
-  FAIL() << "RemoteBCL currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
   RemoteBCL remoteBCL;
 
   // set temporary production auth key
@@ -69,56 +68,56 @@ TEST_F(BCLFixture, RemoteBCLTest)
   EXPECT_EQ(remoteBCL.remoteProductionUrl(), remoteBCL.remoteUrl());
 
   // get all roofs (not children), via empty first arg and non-null second string
-  std::vector<BCLSearchResult> responses = remoteBCL.searchComponentLibrary("","Exterior Roof");
+  std::vector<BCLSearchResult> responses = remoteBCL.searchComponentLibrary("", "Exterior Roof");
   EXPECT_GT(static_cast<int>(responses.size()),0);
 
   // test total result and page functions
-  EXPECT_GT(remoteBCL.resultsPerQuery(),0);
-  EXPECT_LT(remoteBCL.resultsPerQuery(),101);
-  EXPECT_GT(remoteBCL.lastTotalResults(),0);
-  EXPECT_GT(remoteBCL.numResultPages(),0);
-  EXPECT_GT(remoteBCL.lastTotalResults(),remoteBCL.numResultPages());
+  EXPECT_GT(remoteBCL.resultsPerQuery(), 0);
+  EXPECT_LT(remoteBCL.resultsPerQuery(), 101);
+  EXPECT_GT(remoteBCL.lastTotalResults(), 0);
+  EXPECT_GT(remoteBCL.numResultPages(), 0);
+  EXPECT_GT(remoteBCL.lastTotalResults(), remoteBCL.numResultPages());
 
   // get all roofs (not children), via wildcard first arg and non-null second string
-  responses = remoteBCL.searchComponentLibrary("*","Exterior Roof");
-  EXPECT_GT(static_cast<int>(responses.size()),0);
+  responses = remoteBCL.searchComponentLibrary("*", "Exterior Roof");
+  EXPECT_GT(static_cast<int>(responses.size()), 0);
 
   // get all nonresidential components, via non-null first arg and wildcard second string
-  responses = remoteBCL.searchComponentLibrary("ashrae","*");
-  EXPECT_GT(static_cast<int>(responses.size()),0);
+  responses = remoteBCL.searchComponentLibrary("ashrae", "*");
+  EXPECT_GT(static_cast<int>(responses.size()), 0);
 
   // get all nonresidential roofs (not children), via non-null first arg and non-null second string
-  responses = remoteBCL.searchComponentLibrary("ashrae","Exterior Roof");
-  EXPECT_GT(static_cast<int>(responses.size()),0);
+  responses = remoteBCL.searchComponentLibrary("ashrae", "Exterior Roof");
+  EXPECT_GT(static_cast<int>(responses.size()), 0);
 
   // get all things wall, via non-null first string and default arg second string
-  responses = remoteBCL.searchComponentLibrary("wall","");
-  EXPECT_GT(static_cast<int>(responses.size()),0);
+  responses = remoteBCL.searchComponentLibrary("wall", "");
+  EXPECT_GT(static_cast<int>(responses.size()), 0);
 
   // get all constructions and children, via null first arg and tid
-  responses = remoteBCL.searchComponentLibrary("",127);
-  EXPECT_GT(static_cast<int>(responses.size()),0);
+  responses = remoteBCL.searchComponentLibrary("", 127);
+  EXPECT_GT(static_cast<int>(responses.size()), 0);
 
   // get all constructions and children, via wildcard first arg and tid
-  responses = remoteBCL.searchComponentLibrary("*",127);
-  EXPECT_GT(static_cast<int>(responses.size()),0);
+  responses = remoteBCL.searchComponentLibrary("*", 127);
+  EXPECT_GT(static_cast<int>(responses.size()), 0);
 
   // get all constructions matching "office", via non-null first arg and tid
-  responses = remoteBCL.searchComponentLibrary("office",127);
-  EXPECT_GT(static_cast<int>(responses.size()),0);
+  responses = remoteBCL.searchComponentLibrary("office", 127);
+  EXPECT_GT(static_cast<int>(responses.size()), 0);
 
   // verify that different pages of results are returning different uids
-  responses = remoteBCL.searchComponentLibrary("",127,0);
+  responses = remoteBCL.searchComponentLibrary("", 127, 0);
   unsigned numResponsesSearch1 = responses.size();
-  ASSERT_GT(static_cast<int>(numResponsesSearch1),0);
-  std::vector<BCLSearchResult> responses2 = remoteBCL.searchComponentLibrary("",127,1);
+  ASSERT_GT(static_cast<int>(numResponsesSearch1), 0);
+  std::vector<BCLSearchResult> responses2 = remoteBCL.searchComponentLibrary("", 127, 1);
   unsigned numResponsesSearch2 = responses2.size();
-  ASSERT_GT(static_cast<int>(numResponsesSearch2),0);
+  ASSERT_GT(static_cast<int>(numResponsesSearch2), 0);
   EXPECT_NE(responses[0].uid(), responses2[0].uid());
 
   // get all denver weather files
-  responses = remoteBCL.searchComponentLibrary("Denver","Weather File");
-  ASSERT_GT(static_cast<int>(responses.size()),0);
+  responses = remoteBCL.searchComponentLibrary("Denver", "Weather File");
+  ASSERT_GT(static_cast<int>(responses.size()), 0);
 
   /// Download an individual component by uid and extract
   /// returns true if a download is started
@@ -203,16 +202,14 @@ TEST_F(BCLFixture, RemoteBCLTest)
 
 TEST_F(BCLFixture, RemoteBCLTest2)
 {
-  FAIL() << "RemoteBCL currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
-
   time_t startTime;
   time(&startTime);
 
   RemoteBCL remoteBCL;
 
   // get all constructions, via empty first arg and tid
-  std::vector<BCLSearchResult> responses = remoteBCL.searchComponentLibrary("",127);
-  ASSERT_GT(responses.size(),0u);
+  std::vector<BCLSearchResult> responses = remoteBCL.searchComponentLibrary("", 127);
+  ASSERT_GT(responses.size(), 0u);
 
   bool success = remoteBCL.downloadComponent(responses[0].uid());
   ASSERT_TRUE(success);
@@ -222,7 +219,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
 
   /// delete this component if we already have it
   boost::optional<BCLComponent> testComponent = LocalBCL::instance().getComponent(responses[0].uid(), responses[0].versionId());
-  if(testComponent){
+  if (testComponent) {
     bool test = LocalBCL::instance().removeComponent(*testComponent);
     EXPECT_TRUE(test);
   }
@@ -266,6 +263,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
 
   // read all attributes, look for "OpenStudio Type"
   std::string openstudioType;
+  EXPECT_FALSE(component->attributes().empty());
   for (const Attribute& attribute : component->attributes()) {
     if (istringEqual("OpenStudio Type", attribute.name())){
       openstudioType = attribute.valueAsString();
@@ -306,14 +304,12 @@ TEST_F(BCLFixture, RemoteBCLTest2)
 
 TEST_F(BCLFixture, GetComponentByUID)
 {
-  FAIL() << "RemoteBCL currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
-
   std::string uid = "c2c40a00-5ea5-0130-aa1d-14109fdf0b37";
   std::string versionId = "0c316887-63ef-45a3-a132-3b0a1c566b77";
 
   /// delete this component if we already have it
   boost::optional<BCLComponent> testComponent = LocalBCL::instance().getComponent(uid, versionId);
-  if(testComponent){
+  if (testComponent) {
     bool test = LocalBCL::instance().removeComponent(*testComponent);
     EXPECT_TRUE(test);
   }
@@ -341,14 +337,12 @@ TEST_F(BCLFixture, GetComponentByUID)
 
 TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
 {
-  FAIL() << "RemoteBCL currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
-
   RemoteBCL remoteBCL;
 
   typedef std::pair<std::string, uint> PairType;
 
   // get all constructions, via empty first arg and tid
-  bool test = remoteBCL.metaSearchComponentLibrary("",127).has_value();
+  bool test = remoteBCL.metaSearchComponentLibrary("", 127).has_value();
   ASSERT_TRUE(test);
   boost::optional<BCLMetaSearchResult> result = remoteBCL.waitForMetaSearch();
   ASSERT_TRUE(result);
@@ -366,7 +360,7 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
 
 
   // get all exterior wall constructions, via empty first arg and non-null second string
-  test = remoteBCL.metaSearchComponentLibrary("","Exterior Wall").has_value();
+  test = remoteBCL.metaSearchComponentLibrary("", "Exterior Wall").has_value();
   ASSERT_TRUE(test);
   result = remoteBCL.waitForMetaSearch();
   ASSERT_TRUE(result);
@@ -384,7 +378,7 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   EXPECT_FALSE(result->taxonomyTerms().empty());
 
   // get all constructions, via non-null first and second strings
-  test = remoteBCL.metaSearchComponentLibrary("office",127).has_value();
+  test = remoteBCL.metaSearchComponentLibrary("office", 127).has_value();
   ASSERT_TRUE(test);
   result = remoteBCL.waitForMetaSearch();
   ASSERT_TRUE(result);
@@ -402,7 +396,7 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   EXPECT_FALSE(result->taxonomyTerms().empty());
 
   // get all things office, via non-null first string and empty second string
-  test = remoteBCL.metaSearchComponentLibrary("office","").has_value();
+  test = remoteBCL.metaSearchComponentLibrary("office", "").has_value();
   ASSERT_TRUE(test);
   result = remoteBCL.waitForMetaSearch();
   ASSERT_TRUE(result);
@@ -436,4 +430,3 @@ TEST_F(BCLFixture, RemoteBCLMetaSearchTest)
   }
   EXPECT_TRUE(result->taxonomyTerms().empty());
 }
-

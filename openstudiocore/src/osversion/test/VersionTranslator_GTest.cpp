@@ -46,10 +46,6 @@
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
 
-#include "../../utilities/bcl/RemoteBCL.hpp"
-#include "../../utilities/bcl/LocalBCL.hpp"
-#include "../../utilities/bcl/BCLComponent.hpp"
-
 #include "../../utilities/idf/IdfObject.hpp"
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 

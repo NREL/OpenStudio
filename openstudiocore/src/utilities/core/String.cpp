@@ -31,7 +31,7 @@
 
 #include "Logger.hpp"
 
-
+#include <codecvt>
 #include <iomanip>
 
 namespace openstudio {
@@ -57,7 +57,15 @@ std::string toString(const wchar_t* w)
 /** wstring to std::string. */
 std::string toString(const std::wstring& w)
 {
-  return toString(toQString(w));
+  std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+  return converter.to_bytes(w);
+}
+
+/** string to std::wstring. */
+std::wstring toWString(const std::string& s)
+{
+  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+  return converter.from_bytes(s);
 }
 
 /** QString to UTF-8 encoded std::string. */

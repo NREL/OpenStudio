@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10.2)
 cmake_policy(SET CMP0048 NEW)
 
-set (CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
 
 # Use ccache is available, has to be before "project()"
 find_program(CCACHE_PROGRAM ccache)
@@ -16,7 +16,7 @@ include(ExternalProject)
 include(CPackComponent)
 include(CheckCXXCompilerFlag)
 
-if( POLICY CMP0022 )
+if(POLICY CMP0022)
   cmake_policy(SET CMP0022 NEW)
 endif()
 cmake_policy(SET CMP0020 NEW)
@@ -161,7 +161,7 @@ option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
 # This option will require shared libs
 option(BUILD_OS_APP "Build OS App" ON)
 
-if (BUILD_SHARED_LIBS)
+if(BUILD_SHARED_LIBS)
   add_definitions("-DSHARED_OS_LIBS")
 endif()
 
@@ -169,7 +169,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
 endif()
 
-if( WIN32 )
+if(WIN32)
   option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 endif()
 
@@ -202,16 +202,16 @@ if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
 endif()
 
-IF (APPLE)
-   find_library(COREFOUNDATION_LIBRARY CoreFoundation )
-ENDIF (APPLE)
+if(APPLE)
+  find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+endif()
 
 if(UNIX AND NOT APPLE)
   # Enable libgtest linking
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
 endif()
 
-if( WIN32 )
+if(WIN32)
   if(CMAKE_CL_64)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
@@ -308,8 +308,8 @@ if(MSVC)
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
 
   # create compiler processes on all effective processors
-    add_definitions(/MP)
   if(BUILD_WITH_MULTIPLE_PROCESSES)
+    add_definitions(/MP)
   endif()
 
   #Enable warning on thread un-safe static member initialization - DLM: we have been bit by this many times
@@ -345,11 +345,11 @@ endif()
 
 # Add Color Output if Using Ninja
 macro(AddCXXFlagIfSupported flag test)
-   CHECK_CXX_COMPILER_FLAG(${flag} ${test})
-   if( ${${test}} )
-      message("adding ${flag}")
+  CHECK_CXX_COMPILER_FLAG(${flag} ${test})
+  if(${${test}})
+    message("adding ${flag}")
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
-   endif()
+  endif()
 endmacro()
 
 if("Ninja" STREQUAL ${CMAKE_GENERATOR})
@@ -389,7 +389,7 @@ endif()
 # Dependencies
 
 # If Linux, check LSB_RELEASE globally so we can use it after
-if( UNIX AND NOT APPLE )
+if(UNIX AND NOT APPLE)
 
   find_program(LSB_RELEASE lsb_release)
   # -rs outputs only 16.04, or 18.04
@@ -521,7 +521,7 @@ set(RUBY_INSTALL_DIR "" CACHE PATH "Path to Ruby Install")
 mark_as_advanced(RUBY_INSTALL_DIR)
 
 if(NOT EXISTS ${RUBY_INSTALL_DIR})
-  if( WIN32 )
+  if(WIN32)
     if(CMAKE_CL_64)
       set(RUBY_ZIP_FILENAME "ruby_2_5_1_msvc2017_static_v2.tar.gz")
       set(RUBY_ZIP_EXPECTED_MD5 "c9e57216b16fbdf3329846ee2c240435")
@@ -529,7 +529,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
       set(RUBY_ZIP_FILENAME "DOES_NOT_EXIST_ruby_2_2_4_msvc2013_32_static.tar.gz")
       set(RUBY_ZIP_EXPECTED_MD5 "4c2055305b105b0c8210697aaa596419")
     endif()
-  elseif( APPLE )
+  elseif(APPLE)
     set(RUBY_ZIP_FILENAME "ruby_2_5_1_osx_static.tar.gz")
     set(RUBY_ZIP_EXPECTED_MD5 "84abcea1411929c113f4030a3b2bd3ee")
   elseif(EXISTS "/etc/redhat-release")
@@ -553,16 +553,16 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     file(MD5 "${RUBY_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
   endif()
 
-  if( NOT RUBY_ZIP_MD5 STREQUAL RUBY_ZIP_EXPECTED_MD5)
+  if(NOT RUBY_ZIP_MD5 STREQUAL RUBY_ZIP_EXPECTED_MD5)
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_ZIP_FILENAME}"
       ${RUBY_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${RUBY_ZIP_EXPECTED_MD5})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
 
-  if( WIN32 )
+  if(WIN32)
     set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/release")
   else()
     set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/")
@@ -570,7 +570,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
 endif()
 
 list(INSERT CMAKE_PREFIX_PATH 0 "${RUBY_INSTALL_DIR}")
-if( WIN32 )
+if(WIN32)
   find_package(Ruby 2.5 REQUIRED)
   get_filename_component(RUBY_LIBRARY_NAME_WE ${RUBY_LIBRARY} NAME_WE)
   get_filename_component(RUBY_LIBRARY_DIRECTORY ${RUBY_LIBRARY} DIRECTORY)
@@ -579,7 +579,7 @@ if( WIN32 )
   set(RUBY_STATIC_LIBRARY_DEBUG "${RUBY_LIBRARY_DIRECTORY}/../../debug/lib/${RUBY_LIBRARY_NAME_WE}-static${CMAKE_STATIC_LIBRARY_SUFFIX}")
   set(RUBY_LIBRARY_DEBUG "${RUBY_LIBRARY_DIRECTORY}/../../debug/lib/${RUBY_LIBRARY_NAME_WE}${CMAKE_STATIC_LIBRARY_SUFFIX}")
 else()
-  if( APPLE )
+  if(APPLE)
     set(RUBY_STATIC_LIBRARY "${RUBY_INSTALL_DIR}/lib/libruby.2.5.1-static.a")
   else()
     set(RUBY_STATIC_LIBRARY "${RUBY_INSTALL_DIR}/lib/libruby-static.a")
@@ -596,49 +596,50 @@ endif()
 # We need this for stand alone ruby bindings
 # target to use with typical ruby installations (those that are not msvc)
 # Only need this on Windows systems
-if( WIN32 )
-if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
-  set(RUBY_MINGW_LIB_ZIP_FILENAME "Ruby250-mingw-install.tar.gz")
-  set(RUBY_MINGW_LIB_ZIP_EXPECTED_MD5 "ce454cfe886b32f7fe829385bc06af1c")
+if(WIN32)
+  if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
+    set(RUBY_MINGW_LIB_ZIP_FILENAME "Ruby250-mingw-install.tar.gz")
+    set(RUBY_MINGW_LIB_ZIP_EXPECTED_MD5 "ce454cfe886b32f7fe829385bc06af1c")
 
-  set(RUBY_MINGW_LIB_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_MINGW_LIB_ZIP_FILENAME}")
-  if(EXISTS "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}")
-    file(MD5 "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}" RUBY_MINGW_LIB_ZIP_MD5)
-  endif()
+    set(RUBY_MINGW_LIB_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_MINGW_LIB_ZIP_FILENAME}")
+    if(EXISTS "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}")
+      file(MD5 "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}" RUBY_MINGW_LIB_ZIP_MD5)
+    endif()
 
-  if( NOT RUBY_MINGW_LIB_ZIP_MD5 STREQUAL RUBY_MINGW_LIB_ZIP_EXPECTED_MD5)
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_MINGW_LIB_ZIP_FILENAME}"
-      ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${RUBY_MINGW_LIB_ZIP_EXPECTED_MD5})
+    if(NOT RUBY_MINGW_LIB_ZIP_MD5 STREQUAL RUBY_MINGW_LIB_ZIP_EXPECTED_MD5)
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_MINGW_LIB_ZIP_FILENAME}"
+        ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}
+        INACTIVITY_TIMEOUT 120
+        SHOW_PROGRESS
+        EXPECTED_MD5 ${RUBY_MINGW_LIB_ZIP_EXPECTED_MD5})
+
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    endif()
+
+    set(RUBY_MINGW_STUB_LIB "${CMAKE_BINARY_DIR}/Ruby-mingw-install/libx64-msvcrt-ruby250.dll.a")
   endif()
-
-  set(RUBY_MINGW_STUB_LIB "${CMAKE_BINARY_DIR}/Ruby-mingw-install/libx64-msvcrt-ruby250.dll.a")
-endif()
 endif()
 
-if( UNIX )
-  if( APPLE )
-    find_library(GDBM libgdbm.a PATHS /usr/local/opt/gdbm/lib )
-    find_library(GMP libgmp.a PATHS /usr/local/opt/gmp/lib )
-    find_library(EDIT libedit.dylib )
-    find_library(UTIL libutil.dylib )
-    find_library(CURSES libncurses.dylib )
-    find_library(Z libz.dylib )
-    find_library(FFI libffi.dylib )
+if(UNIX)
+  if(APPLE)
+    find_library(GDBM libgdbm.a PATHS /usr/local/opt/gdbm/lib)
+    find_library(GMP libgmp.a PATHS /usr/local/opt/gmp/lib)
+    find_library(EDIT libedit.dylib)
+    find_library(UTIL libutil.dylib)
+    find_library(CURSES libncurses.dylib)
+    find_library(Z libz.dylib)
+    find_library(FFI libffi.dylib)
     set(ADDITIONAL_RUBY_LIBS ${GDBM} ${GMP} ${EDIT} ${UTIL} ${CURSES} ${Z} ${FFI})
   else()
     find_library(GDBM libgdbm.a)
     # libqdbm-dev
     find_library(QDBM libqdbm.a)
     find_library(GMP libgmp.a)
-    find_library(FFI libffi.a )
-    find_library(READLINE libreadline.a )
-    find_library(TERMCAP libtermcap.a )
+    find_library(FFI libffi.a)
+    find_library(READLINE libreadline.a)
+    find_library(TERMCAP libtermcap.a)
     find_library(YAML libyaml.a)
-    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} )
+    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML})
   endif()
 else()
   set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017.zip")
@@ -648,7 +649,7 @@ else()
     file(MD5 "${FFI_ZIP_LOCAL_PATH}" FFI_ZIP_MD5)
   endif()
 
-  if( NOT FFI_ZIP_MD5 STREQUAL FFI_ZIP_EXPECTED_MD5)
+  if(NOT FFI_ZIP_MD5 STREQUAL FFI_ZIP_EXPECTED_MD5)
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${FFI_ZIP_FILENAME}"
       ${FFI_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -659,7 +660,7 @@ else()
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${FFI_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
 
-  find_library(FFI libffi.lib PATHS "${CMAKE_BINARY_DIR}/FFI-install/lib" )
+  find_library(FFI libffi.lib PATHS "${CMAKE_BINARY_DIR}/FFI-install/lib")
   set(ADDITIONAL_RUBY_LIBS ${FFI})
 endif()
 
@@ -677,7 +678,7 @@ if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
   file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
 endif()
 
-if( NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
+if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
   file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
     ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
     INACTIVITY_TIMEOUT 120
@@ -728,6 +729,8 @@ if(BUILD_WITH_OPENSSL)
     # libeay32.dll -> libcrypto.dll
     # ssleay32.dll -> libssl.dll
     set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
+    set(OPENSSL_INCLUDE_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}/include")
+    set(OPENSSL_LIBRARIES "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}/lib")
     set(LIBEAY32_PATH "${OPENSSL_ROOT_DIR}/bin/libcrypto-1_1-x64.dll")
     set(SSLEAY32_PATH "${OPENSSL_ROOT_DIR}/bin/libssl-1_1-x64.dll")
     set(LIB_EAY_DEBUG "${OPENSSL_ROOT_DIR}/lib/libcrypto.lib")
@@ -746,21 +749,27 @@ if(BUILD_WITH_OPENSSL)
     file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/MinSizeRel/")
     install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "bin")
     #install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION ${RUBY_MODULE_ARCH_DIR})
+
+#    find_package(OpenSSL REQUIRED PATHS "${OPENSSL_ROOT_DIR}")
+#    if(NOT ${OPENSSL_FOUND})
+#      message(SEND_ERROR "DAMN - OpenSSL could not be found, and is required for HTTPS communication")
+#      message(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
+#    endif()
   endif()
 endif()
 
 # DView
 option(BUILD_DVIEW "Build DView" OFF)
 
-if( BUILD_DVIEW )
+if(BUILD_DVIEW)
   set(DVIEW_INSTALL_DIR "" CACHE PATH "Path to DView Install")
   mark_as_advanced(DVIEW_INSTALL_DIR)
 
   if(NOT EXISTS ${DVIEW_INSTALL_DIR})
-    if( WIN32 )
+    if(WIN32)
       set(DVIEW_ZIP_FILENAME "DView-windows-20180621.zip")
       set(DVIEW_ZIP_EXPECTED_MD5 "8443b09cbfcc118943127b006b14dbca")
-    elseif( APPLE )
+    elseif(APPLE)
       set(DVIEW_ZIP_FILENAME "DView-osx-20180621.tar.gz")
       set(DVIEW_ZIP_EXPECTED_MD5 "41038cbf7c472522e700d850d9de1133")
     else()
@@ -773,21 +782,21 @@ if( BUILD_DVIEW )
       file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
     endif()
 
-    if( NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
+    if(NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${DVIEW_ZIP_FILENAME}"
         ${DVIEW_ZIP_LOCAL_PATH}
         INACTIVITY_TIMEOUT 120
         SHOW_PROGRESS
         EXPECTED_MD5 ${DVIEW_ZIP_EXPECTED_MD5})
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${DVIEW_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${DVIEW_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
     endif()
 
     set(DVIEW_INSTALL_DIR "${CMAKE_BINARY_DIR}/DView-install")
   endif()
 
-  if( WIN32 )
+  if(WIN32)
     install(PROGRAMS "${DVIEW_INSTALL_DIR}/DView.exe" DESTINATION ./bin COMPONENT "DView")
-  elseif( APPLE )
+  elseif(APPLE)
     install(DIRECTORY "${DVIEW_INSTALL_DIR}/DView.app" DESTINATION . USE_SOURCE_PERMISSIONS COMPONENT "DView")
   else()
     install(PROGRAMS "${DVIEW_INSTALL_DIR}/DView" DESTINATION ./bin COMPONENT "DView")
@@ -833,6 +842,24 @@ else()
   endif()
 
   set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/${SWIG_DIR}/swig.exe)
+endif()
+
+
+# cpprestsdk
+if(WIN32)
+  set(CPPRESTSDK_ZIP "cpprestsdk-2.10.8-win64.zip")
+  set(CPPRESTSDK_DIR "cpprestsdk-2.10.8-win64")
+  set(CPPRESTSDK_EXPECTED_HASH "9fb03187e390a0ddd9f71c758d0f60af")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}")
+    file(MD5 "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" CPPRESTSDK_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}" OR NOT "${CPPRESTSDK_HASH}" MATCHES "${CPPRESTSDK_EXPECTED_HASH}")
+    message(STATUS "Downloading cpprestsdk)")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${CPPRESTSDK_ZIP}" "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${CPPRESTSDK_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  find_package(cpprestsdk REQUIRED PATHS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/cpprestsdk")
 endif()
 
 
@@ -927,7 +954,7 @@ endif()
 set(GEOGRAPHICLIB_LIB_TYPE "STATIC" CACHE INTERNAL "Build Static Lib")
 set(GEOGRAPHICLIB_STATIC_LIB ON CACHE INTERNAL "Build Static Lib")
 set(GEOGRAPHICLIB_SHARED_LIB OFF CACHE INTERNAL "Build Shared Lib")
-set(GEOGRAPHICLIB_DOCUMENTATION OFF CACHE INTERNAL "Build Documenation")
+set(GEOGRAPHICLIB_DOCUMENTATION OFF CACHE INTERNAL "Build Documentation")
 set(BUILD_NETGEOGRAPHICLIB OFF CACHE INTERNAL "Build .NET")
 set(GEOGRAPHICLIB_PRECISION "2" CACHE INTERNAL "Precision")
 include_directories(SYSTEM src/geographic_lib/include)
@@ -938,7 +965,7 @@ set(BOOST_INSTALL_DIR "" CACHE PATH "Path to Boost Install")
 mark_as_advanced(BOOST_INSTALL_DIR)
 
 if(NOT EXISTS ${BOOST_INSTALL_DIR})
-  if( WIN32 )
+  if(WIN32)
     if(CMAKE_CL_64)
       set(BOOST_ZIP_FILENAME "boost_1_68_0_msvc2017_64_static.zip")
       set(BOOST_ZIP_EXPECTED_MD5 "9117e888cc7b49140e638c0993532291")
@@ -946,9 +973,9 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
       set(BOOST_ZIP_FILENAME "DOES_NOT_EXIST_boost_1_68_0_msvc2017_32_static.zip")
       set(BOOST_ZIP_EXPECTED_MD5 "4ebc2a84ef13ef1853fcf3e6c27fc10c")
     endif()
-  elseif( APPLE )
-      set(BOOST_ZIP_FILENAME "DOES_NOT_EXIST_boost_1_68_0_osx.tar.gz")
-      set(BOOST_ZIP_EXPECTED_MD5 "9e4c01a3f5c63e3bbf5cc76021eceb75")
+  elseif(APPLE)
+    set(BOOST_ZIP_FILENAME "DOES_NOT_EXIST_boost_1_68_0_osx.tar.gz")
+    set(BOOST_ZIP_EXPECTED_MD5 "9e4c01a3f5c63e3bbf5cc76021eceb75")
   elseif(EXISTS "/etc/redhat-release")
     set(BOOST_ZIP_FILENAME "DOES_NOT_EXIST_boost_1_68_0_redhat.tar.gz")
     set(BOOST_ZIP_EXPECTED_MD5 "de952e0c36900a3ad000d74a1c41b7d2")
@@ -970,13 +997,13 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
     file(MD5 "${BOOST_ZIP_LOCAL_PATH}" BOOST_ZIP_MD5)
   endif()
 
-  if( NOT BOOST_ZIP_MD5 STREQUAL BOOST_ZIP_EXPECTED_MD5)
+  if(NOT BOOST_ZIP_MD5 STREQUAL BOOST_ZIP_EXPECTED_MD5)
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${BOOST_ZIP_FILENAME}"
       ${BOOST_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${BOOST_ZIP_EXPECTED_MD5})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${BOOST_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${BOOST_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
   set(BOOST_INSTALL_DIR "${CMAKE_BINARY_DIR}/Boost-install/")
 endif()
@@ -1014,7 +1041,7 @@ mark_as_advanced(QT_INSTALL_DIR)
 
 if(NOT EXISTS ${QT_INSTALL_DIR})
   # download qt
-  if( WIN32 )
+  if(WIN32)
     if(CMAKE_CL_64)
       set(QT_ZIP_FILENAME "qt_5_11_msvc2017_64_shared.zip")
       set(QT_ZIP_EXPECTED_MD5 "82f44a8decf101ca7cb7efafd899e8ee")
@@ -1022,9 +1049,9 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_msvc2017_32_shared.zip")
       set(QT_ZIP_EXPECTED_MD5 "25abd383e7db2dfd971b4a4ef145002b")
     endif()
-  elseif( APPLE )
-      set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_osx_shared.tar.gz")
-      set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
+  elseif(APPLE)
+    set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_osx_shared.tar.gz")
+    set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
   elseif(EXISTS "/etc/redhat-release")
     set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_redhat_shared.tar.gz")
     set(QT_ZIP_EXPECTED_MD5 "b0610716854ed91a003347c455b22eb8")
@@ -1045,13 +1072,13 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
     file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
   endif()
 
-  if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
+  if(NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
       ${QT_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
 
   set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-install/")
@@ -1078,7 +1105,7 @@ if(BUILD_OS_APP)
   #find_package(Qt53DInput 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
   #find_package(Qt53DRender 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
 
-  if( APPLE )
+  if(APPLE)
     set(QtWebEngineProcess "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers/QtWebEngineProcess.app" CACHE PATH "Path to the QtWebEngineProcess")
   else()
     find_program(QtWebEngineProcess NAMES QtWebEngineProcess PATHS "${QT_INSTALL_DIR}/bin/" "${QT_INSTALL_DIR}/libexec/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers" NO_DEFAULT_PATH)
@@ -1096,7 +1123,7 @@ if(BUILD_OS_APP)
   #list(APPEND QT_WEB_LIBS Qt5::3DCore)
   #list(APPEND QT_WEB_LIBS Qt5::3DInput)
   #list(APPEND QT_WEB_LIBS Qt5::3DRender)
-  set_target_properties( ${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "" )
+  set_target_properties(${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "")
 
   if(NOT APPLE)
 
@@ -1133,7 +1160,7 @@ list(APPEND QT_LIBS Qt5::Concurrent)
 list(APPEND QT_LIBS Qt5::PrintSupport)
 list(APPEND QT_LIBS Qt5::Gui)
 
-if( WIN32 )
+if(WIN32)
   find_package(Qt5WinExtras 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
   list(APPEND QT_LIBS Qt5::WinExtras)
 
@@ -1149,14 +1176,14 @@ list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5Gui_INCLUDE_DIRS})
 list(APPEND QT_INCLUDES ${Qt5PrintSupport_INCLUDE_DIRS})
 
-if( UNIX )
+if(UNIX)
   list(APPEND QT_INCLUDES ${Qt5XcbQpa_INCLUDE_DIRS})
 endif()
 
 set(CMAKE_AUTOMOC OFF)
 
 # download qt static
-if( WIN32 )
+if(WIN32)
   if(CMAKE_CL_64)
     set(QT_STATIC_ZIP_FILENAME "qt_5_11_msvc2017_64_static.zip")
     set(QT_STATIC_ZIP_EXPECTED_MD5 "1826e3b83c7103a2a82f463490630ab1")
@@ -1164,7 +1191,7 @@ if( WIN32 )
     set(QT_STATIC_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_msvc2017_32_static.zip")
     set(QT_STATIC_ZIP_EXPECTED_MD5 "d03d2fae40cba06f8b4887c8dce64a07")
   endif()
-elseif( APPLE )
+elseif(APPLE)
   set(QT_STATIC_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_osx_static.tar.gz")
   set(QT_STATIC_ZIP_EXPECTED_MD5 "d24756746d2fe07212070f675871cf93")
 elseif(EXISTS "/etc/redhat-release")
@@ -1186,13 +1213,13 @@ if(EXISTS "${QT_STATIC_ZIP_LOCAL_PATH}")
   file(MD5 "${QT_STATIC_ZIP_LOCAL_PATH}" QT_STATIC_ZIP_MD5)
 endif()
 
-if( NOT QT_STATIC_ZIP_MD5 STREQUAL QT_STATIC_ZIP_EXPECTED_MD5)
+if(NOT QT_STATIC_ZIP_MD5 STREQUAL QT_STATIC_ZIP_EXPECTED_MD5)
   file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_STATIC_ZIP_FILENAME}"
     ${QT_STATIC_ZIP_LOCAL_PATH}
     INACTIVITY_TIMEOUT 120
     SHOW_PROGRESS
     EXPECTED_MD5 ${QT_STATIC_ZIP_EXPECTED_MD5})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_STATIC_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_STATIC_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
 endif()
 
 set(QT_STATIC_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-static-install/" CACHE PATH "QT Static Path")
@@ -1214,12 +1241,12 @@ FIND_QT_STATIC_LIB("QtNetwork;Qt5Network" "${QT_STATIC_INSTALL_DIR}/lib/")
 FIND_QT_STATIC_LIB("Qt5Gui;Qt5Gui" "${QT_STATIC_INSTALL_DIR}/lib/")
 FIND_QT_STATIC_LIB("QtPrintSupport;Qt5PrintSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
 
-if( WIN32 )
+if(WIN32)
   FIND_QT_STATIC_LIB("Qt5WinExtras" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("qtmain" "${QT_STATIC_INSTALL_DIR}/lib/")
 endif()
 
-if( UNIX )
+if(UNIX)
   FIND_QT_STATIC_LIB("QtDBus;Qt5DBus" "${QT_STATIC_INSTALL_DIR}/lib/")
 
   find_package(OpenGL REQUIRED)
@@ -1227,7 +1254,7 @@ if( UNIX )
   list(APPEND QT_STATIC_LIBS_D "${OPENGL_LIBRARIES}")
 endif()
 
-if( UNIX AND NOT APPLE )
+if(UNIX AND NOT APPLE)
   # http://doc.qt.io/qt-5/linux-requirements.html
   # DLM: the order of linking for static archives matter because symbols will only be included if they are needed by previous libraries
   # in some cases we may need to relink libraries a second time
@@ -1283,7 +1310,7 @@ if( UNIX AND NOT APPLE )
   endif()
 endif()
 
-if( APPLE )
+if(APPLE)
   # DLM: the order of linking for static archives matter because symbols will only be included if they are needed by previous libraries
   # in some cases we may need to relink libraries a second time
 
@@ -1314,7 +1341,7 @@ if( APPLE )
   FIND_QT_STATIC_LIB("cups" "*")
 endif()
 
-if( WIN32 )
+if(WIN32)
   FIND_QT_STATIC_LIB("Qt5FontDatabaseSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5PlatformCompositorSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
   FIND_QT_STATIC_LIB("Qt5WindowsUIAutomationSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
@@ -1340,7 +1367,6 @@ if( WIN32 )
   FIND_QT_STATIC_LIB("Userenv" "*")
   FIND_QT_STATIC_LIB("Dwmapi" "*")
   FIND_QT_STATIC_LIB("legacy_stdio_definitions" "*")
-
 
   if(BUILD_WITH_OPENSSL)
     FIND_QT_STATIC_LIB("libcrypto" "${OPENSSL_ROOT_DIR}/lib/")
@@ -1392,7 +1418,7 @@ endif()
 
 include("embedded/EmbedFiles.cmake")
 add_subdirectory("embedded")
-if( BUILD_PAT )
+if(BUILD_PAT)
   add_subdirectory("pat")
 endif()
 
@@ -1618,6 +1644,8 @@ set(all_lib_targets
   openstudio_sdd
   openstudio_airflow
   miniziplib
+  zlib
+  zlibstatic
   sqlite
   jsoncpp
   ${ALL_RUBY_BINDING_TARGETS}
@@ -1668,7 +1696,7 @@ install(FILES "${CMAKE_SOURCE_DIR}/../copyright.txt" DESTINATION .)
 ###############################################################################
 
 if(NOT UNIX)
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl" DESTINATION ./Perl/ COMPONENT Radiance USE_SOURCE_PERMISSIONS )
+  install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl" DESTINATION ./Perl/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
 
   #set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
   include(InstallRequiredSystemLibraries)
@@ -1695,14 +1723,14 @@ set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://www.openstudio.net")
 set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}")
 set(CPACK_PACKAGE_CONTACT "openstudio@nrel.gov")
 
-if( APPLE )
-  set( CPACK_IFW_TARGET_DIRECTORY /Applications/OpenStudio-${OpenStudio_VERSION}/ )
-elseif( UNIX )
+if(APPLE)
+  set(CPACK_IFW_TARGET_DIRECTORY /Applications/OpenStudio-${OpenStudio_VERSION}/)
+elseif(UNIX)
   # Default method doesn't use IFW but Deb, so this one is probably useless (but harmless)
-  set( CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/ )
+  set(CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/)
   # These two will set the .deb install path correctly
-  set( CPACK_SET_DESTDIR ON )
-  set( CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/ )
+  set(CPACK_SET_DESTDIR ON)
+  set(CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/)
   # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio
   # Add an arbitrary link (broken) at build/openstudio (if build/ is your build folder) that already points to the **future** /usr/local/openstudio-x.y.z/bin/openstudio
   execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio openstudio)
@@ -1764,51 +1792,51 @@ elseif( UNIX )
 
   ## Install the Desktop Menu
   ## xdg-desktop-menu install --novendor /usr/share/applications/openstudioapp.desktop
-  #INSTALL(CODE "execute_process(COMMAND ${XDG-DESKTOP-MENU_EXECUTABLE} install --novendor --mode system /usr/share/applications/openstudioapp.desktop)")
+  #install(CODE "execute_process(COMMAND ${XDG-DESKTOP-MENU_EXECUTABLE} install --novendor --mode system /usr/share/applications/openstudioapp.desktop)")
 
   ## Register the mime description: this places it in /usr/share/mime/packages/
   ## sudo xdg-mime install --novendor --mode system x-openstudio.xml
-  #INSTALL(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} install --novendor --mode system /usr/share/mime/application/x-openstudio.xml)")
-  #INSTALL(CODE "execute_process(COMMAND echo COUCOU)")
+  #install(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} install --novendor --mode system /usr/share/mime/application/x-openstudio.xml)")
+  #install(CODE "execute_process(COMMAND echo COUCOU)")
 
   ## Register the application launcher with the registered mimetype
   ## sudo xdg-mime default openstudio.desktop application/x-openstudio
-  #INSTALL(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} default /usr/share/applications/openstudio.desktop application/x-openstudio)")
+  #install(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} default /usr/share/applications/openstudio.desktop application/x-openstudio)")
 
 
   ## Update the mime cache and icon cache
   ## sudo update-mime-database /usr/share/mime
-  #INSTALL(CODE "execute_process(COMMAND ${UPDATE-MIME-DATABASE-EXECUTABLE} /usr/share/mime)")
+  #install(CODE "execute_process(COMMAND ${UPDATE-MIME-DATABASE-EXECUTABLE} /usr/share/mime)")
   ## sudo gtk-update-icon-cache /usr/share/icons/hicolor/ -f
-  #INSTALL(CODE "execute_process(COMMAND ${GTK-UPDATE-ICON-CACHE-EXECUTABLE} /usr/share/icons/hicolor/ -f)")
+  #install(CODE "execute_process(COMMAND ${GTK-UPDATE-ICON-CACHE-EXECUTABLE} /usr/share/icons/hicolor/ -f)")
 
 
 endif()
 
 if(WIN32)
-  set( CPACK_PACKAGE_INSTALL_DIRECTORY "openstudio-${OpenStudio_VERSION}" )
-  set( CPACK_IFW_TARGET_DIRECTORY "C:/${CPACK_PACKAGE_INSTALL_DIRECTORY}" )
-  set( CPACK_BINARY_NSIS OFF )
-  set( CPACK_BINARY_IFW ON )
+  set(CPACK_PACKAGE_INSTALL_DIRECTORY "openstudio-${OpenStudio_VERSION}")
+  set(CPACK_IFW_TARGET_DIRECTORY "C:/${CPACK_PACKAGE_INSTALL_DIRECTORY}")
+  set(CPACK_BINARY_NSIS OFF)
+  set(CPACK_BINARY_IFW ON)
 endif()
 
-install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
-install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
+install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
+install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
 
 get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 file(GLOB ENERGYPLUS_FILES "${ENERGYPLUS_DIR}/energyplus*")
 file(GLOB ENERGYPLUS_LIB_FILES "${ENERGYPLUS_DIR}/libenergyplus*")
 file(GLOB EXPAND_OBJECTS "${ENERGYPLUS_DIR}/ExpandObjects*")
 
-install(FILES "${ENERGYPLUS_IDD}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
-install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
-install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
-install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+install(FILES "${ENERGYPLUS_IDD}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 
-if( APPLE )
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
-elseif( WIN32 )
+if(APPLE)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+elseif(WIN32)
   file(GLOB ENERGYPLUS_MSVC_FILES "${ENERGYPLUS_DIR}/msvc*.dll")
   foreach(msvc_file IN LISTS ENERGYPLUS_MSVC_FILES)
     install(PROGRAMS "${msvc_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
@@ -1832,21 +1860,21 @@ else()
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
 endif()
 
-if ( WIN32 )
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS )
+if(WIN32)
+  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
 else()
   string(REPLACE "-Redhat" "-Linux" RADIANCE_PATH ${RADIANCE_PATH})
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS )
+  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
 endif()
 
-if( BUILD_PAT AND APPLE )
-  install(FILES "${ENERGYPLUS_IDD}" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
-  install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
-  install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
-  install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.3.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS )
+if(BUILD_PAT AND APPLE)
+  install(FILES "${ENERGYPLUS_IDD}" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.3.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
 endif()
 
 include(CPack)
@@ -1954,8 +1982,8 @@ cpack_ifw_configure_component(Unspecified
   REQUIRES_ADMIN_RIGHTS
 )
 
-if( BUILD_NUGET_PACKAGE )
-  configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )
+if(BUILD_NUGET_PACKAGE)
+  configure_file(OpenStudio.nuspec.in OpenStudio.nuspec)
 
   add_custom_target(nuget_package
     COMMAND NuGet pack OpenStudio.nuspec -BasePath "${CMAKE_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
