@@ -51,70 +51,59 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/StringHelpers.hpp"
 
-#include <QDomDocument>
-#include <QDomElement>
-
-///
-/// TODO: Remove this helper when Qt is fully removed
-///
-static auto toQString(const std::string &s) {
-  return QString::fromUtf8(s.data(), s.size());
-};
+#include <pugixml.hpp>
 
 namespace openstudio {
 namespace gbxml {
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConstruction(const QDomElement& element, const QDomNodeList& layerElements, const QDomDocument& doc, openstudio::model::Model& model)
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateConstruction(const pugi::xml_node& element, const std::unordered_map<std::string, pugi::xml_node> &layerElements, openstudio::model::Model& model)
   {
     // Krishnan, this constructor should only be used for unique objects like Building and Site
     //openstudio::model::Construction construction = model.getUniqueModelObject<openstudio::model::Construction>();
 
     openstudio::model::Construction construction(model);
-    QString constructionId = element.attribute("id");
+    std::string constructionId = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(constructionId, construction));
 
-    QString constructionName = element.firstChildElement("Name").toElement().text();
+    std::string constructionName = element.child("Name").text().as_string();
     construction.setName(escapeName(constructionId, constructionName));
 
-    QDomNodeList layerIdList = element.elementsByTagName("LayerId");
-
-    if (layerIdList.isEmpty()){
-      return construction;
-    }
-
+    // auto layerIdList = element.children("LayerId");
     // Construction::LayerId (layerIdList) -> Layer (layerElements), Layer::MaterialId -> Material
     std::vector<openstudio::model::Material> materials;
-    for (int layerIdIdx = 0; layerIdIdx < layerIdList.count(); layerIdIdx++) {
-      QString layerId = layerIdList.at(layerIdIdx).toElement().attribute("layerIdRef");
+    for (auto &layerIdEl : element.children("LayerId")) {
+      std::string layerId = layerIdEl.attribute("layerIdRef").value();
 
       // find this layerId in all the layers
-      for (int i = 0; i < layerElements.count(); i++) {
-        QDomElement layerElement = layerElements.at(i).toElement();
-        if (layerId == layerElement.attribute("id")) {
-          QDomNodeList materialIdElements = layerElement.elementsByTagName("MaterialId");
-          for (int j = 0; j < materialIdElements.count(); j++) {
-            QString materialId = materialIdElements.at(j).toElement().attribute("materialIdRef");
-            auto materialIt = m_idToObjectMap.find(materialId);
-            if (materialIt != m_idToObjectMap.end()) {
-              boost::optional<openstudio::model::Material> material = materialIt->second.optionalCast<openstudio::model::Material>();
-              OS_ASSERT(material); // Krishnan, what type of error handling do you want?
-              materials.push_back(*material);
-            }
+      auto result = layerElements.find(layerId);
+      if (result != layerElements.end()) {
+        for (auto &materialIdElement : result->second.children("MaterialId")) {
+          std::string materialId = materialIdElement.attribute("materialIdRef").value();
+          auto materialIt = m_idToObjectMap.find(materialId);
+          if (materialIt != m_idToObjectMap.end()) {
+            boost::optional<openstudio::model::Material> material = materialIt->second.optionalCast<openstudio::model::Material>();
+            OS_ASSERT(material); // Krishnan, what type of error handling do you want?
+            materials.push_back(*material);
           }
-          break;
         }
+      } else {
+        // Error handling?
       }
     }
 
+    if (materials.empty()) {
+      return construction;
+    }
+
     // now assign all layers to real material, does gbXML have same layer order convention as E+?
-    for (unsigned i = 0; i < materials.size(); ++i){
+    for (unsigned i = 0; i < materials.size(); ++i) {
       bool test = false;
 
-      if (materials[i].optionalCast<openstudio::model::OpaqueMaterial>()){
+      if (materials[i].optionalCast<openstudio::model::OpaqueMaterial>()) {
         test = construction.insertLayer(i, materials[i].cast<openstudio::model::OpaqueMaterial>());
-      }else if (materials[i].optionalCast<openstudio::model::FenestrationMaterial>()){
+      } else if (materials[i].optionalCast<openstudio::model::FenestrationMaterial>()) {
         test = construction.insertLayer(i, materials[i].cast<openstudio::model::FenestrationMaterial>());
-      }else if (materials[i].optionalCast<openstudio::model::ModelPartitionMaterial>()){
+      } else if (materials[i].optionalCast<openstudio::model::ModelPartitionMaterial>()) {
         test = construction.setLayer(materials[i].cast<openstudio::model::ModelPartitionMaterial>());
       }
 
@@ -124,47 +113,41 @@ namespace gbxml {
     return construction;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWindowType(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWindowType(const pugi::xml_node &element, openstudio::model::Model& model)
   {
     openstudio::model::Construction construction(model);
-    QString windowTypeId = element.attribute("id");
+    std::string windowTypeId = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(windowTypeId, construction));
 
-    QString windowTypeName = element.firstChildElement("Name").toElement().text();
+    std::string windowTypeName = element.child("Name").text().as_string();
     construction.setName(escapeName(windowTypeId, windowTypeName));
 
     boost::optional<double> uValue;
     boost::optional<double> shgc;
     boost::optional<double> tVis;
 
-    QDomNodeList uValueElements = element.elementsByTagName("U-value");
-    for (int i = 0; i < uValueElements.count(); i++){
-      QDomElement uValueElement = uValueElements.at(i).toElement();
-      if (uValueElement.attribute("unit") == "WPerSquareMeterK"){
-        uValue = uValueElement.text().toDouble();
+    for (auto &uValueElement : element.children("U-value")) {
+      if (uValueElement.attribute("unit").value() == std::string("WPerSquareMeterK")) {
+        uValue = uValueElement.text().as_double();
         break;
       }
     }
 
-    QDomNodeList shgcElements = element.elementsByTagName("SolarHeatGainCoeff");
-    for (int i = 0; i < shgcElements.count(); i++){
-      QDomElement shgcElement = shgcElements.at(i).toElement();
-      if (shgcElement.attribute("unit") == "Fraction"){
-        shgc = shgcElement.text().toDouble();
+    for (auto &shgcElement : element.children("SolarHeatGainCoeff")) {
+      if (shgcElement.attribute("unit").value() == std::string("Fraction")) {
+        shgc = shgcElement.text().as_double();
         break;
       }
     }
 
-    QDomNodeList transmittanceElements = element.elementsByTagName("Transmittance");
-    for (int i = 0; i < transmittanceElements.count(); i++){
-      QDomElement transmittanceElement = transmittanceElements.at(i).toElement();
-      if (transmittanceElement.attribute("type") == "Visible"){
-        tVis = transmittanceElement.text().toDouble();
+    for (auto &transmittanceElement : element.children("Transmittance")) {
+      if (transmittanceElement.attribute("type").value() == std::string("Visible")) {
+        tVis = transmittanceElement.text().as_double();
         break;
       }
     }
 
-    if (uValue && shgc && tVis){
+    if (uValue && shgc && tVis) {
       model::SimpleGlazing glazing(model);
       glazing.setUFactor(*uValue);
       glazing.setSolarHeatGainCoefficient(*shgc);
@@ -178,36 +161,36 @@ namespace gbxml {
     return construction;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateMaterial(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateMaterial(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     boost::optional<openstudio::model::ModelObject> result;
 
-    QDomNodeList rvalueElements = element.elementsByTagName("R-value");
-    QDomNodeList densityElements = element.elementsByTagName("Density");
-    QDomNodeList conductivityElements = element.elementsByTagName("Conductivity");
-    QDomNodeList thicknessElements = element.elementsByTagName("Thickness");
-    QDomNodeList specificHeatElements = element.elementsByTagName("SpecificHeat");
-    QDomNodeList roughnessElements = element.elementsByTagName("Roughness");
+    auto rvalueElement = element.child("R-value");
+    auto densityElement = element.child("Density");
+    auto conductivityElement = element.child("Conductivity");
+    auto thicknessElement = element.child("Thickness");
+    auto specificHeatElement = element.child("SpecificHeat");
+    auto roughnessElement = element.child("Roughness");
 
-    if (!(densityElements.isEmpty() || conductivityElements.isEmpty() || thicknessElements.isEmpty() || specificHeatElements.isEmpty())){
+    if (!(densityElement.empty() || conductivityElement.empty() || thicknessElement.empty() || specificHeatElement.empty())) {
 
-      double density = densityElements.at(0).toElement().text().toDouble();
-      double conductivity = conductivityElements.at(0).toElement().text().toDouble();
-      double thickness = thicknessElements.at(0).toElement().text().toDouble();
-      double specificHeat = specificHeatElements.at(0).toElement().text().toDouble();
+      double density = densityElement.text().as_double();
+      double conductivity = conductivityElement.text().as_double();
+      double thickness = thicknessElement.text().as_double();
+      double specificHeat = specificHeatElement.text().as_double();
 
       std::string roughness = "MediumRough";
-      if (!roughnessElements.isEmpty()){
-        roughness = roughnessElements.at(0).toElement().text().toStdString();
+      if (!roughnessElement.empty()) {
+        roughness = roughnessElement.text().as_string();
       }
 
       openstudio::model::StandardOpaqueMaterial material(model);
       result = material;
 
-      QString id = element.attribute("id");
+      std::string id = element.attribute("id").value();
       m_idToObjectMap.insert(std::make_pair(id, material));
 
-      QString name = element.firstChildElement("Name").toElement().text();
+      std::string name = element.child("Name").text().as_string();
       material.setName(escapeName(id, name));
 
       material.setDensity(density);
@@ -216,12 +199,12 @@ namespace gbxml {
       material.setSpecificHeat(specificHeat);
       material.setRoughness(roughness);
 
-    } else if (!rvalueElements.isEmpty())  //Material no mass that has only R-value
+    } else if (!rvalueElement.empty())  //Material no mass that has only R-value
     {
       // Krishnan, this constructor should only be used for unique objects like Building and Site
       //openstudio::model::MasslessOpaqueMaterial material = model.getUniqueModelObject<openstudio::model::MasslessOpaqueMaterial>();
 
-      double rvalue = rvalueElements.at(0).toElement().text().toDouble();
+      double rvalue = rvalueElement.text().as_double();
 
       // the idd specifies a minimum value of .001 for rvalue
       rvalue = std::max(rvalue, .001);
@@ -229,27 +212,27 @@ namespace gbxml {
       openstudio::model::MasslessOpaqueMaterial material(model);
       result = material;
 
-      QString id = element.attribute("id");
+      std::string id = element.attribute("id").value();
       m_idToObjectMap.insert(std::make_pair(id, material));
 
-      QString name = element.firstChildElement("Name").toElement().text();
+      std::string name = element.child("Name").text().as_string();
       material.setName(escapeName(id, name));
 
       material.setThermalResistance(rvalue);
 
     } else {
 
-        // make a stub material
+      // make a stub material
       openstudio::model::MasslessOpaqueMaterial material(model);
       result = material;
 
-      QString id = element.attribute("id");
+      std::string id = element.attribute("id").value();
       m_idToObjectMap.insert(std::make_pair(id, material));
 
-      QString name = element.firstChildElement("Name").toElement().text();
+      std::string name = element.child("Name").text().as_string();
       material.setName(escapeName(id, name));
 
-      LOG(Warn, "Creating stub material '" << name.toStdString() << "'");
+      LOG(Warn, "Creating stub material '" << name << "'");
 
       material.setThermalResistance(.001);
     }
@@ -257,49 +240,47 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<QDomElement> ForwardTranslator::translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, QDomDocument& doc)
+  boost::optional<pugi::xml_node> ForwardTranslator::translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, pugi::xml_node& root)
   {
-    boost::optional<QDomElement> result;
+    boost::optional<pugi::xml_node> result;
 
     bool isOpaque = constructionBase.isOpaque();
 
-    if (isOpaque){
-      result = doc.createElement("Construction");
+    if (isOpaque) {
+      result = root.append_child("Construction");
       m_translatedObjects[constructionBase.handle()] = *result;
-    } else{
-      result = doc.createElement("WindowType");
+    } else {
+      result = root.append_child("WindowType");
       m_translatedObjects[constructionBase.handle()] = *result;
     }
 
     std::string name = constructionBase.name().get();
 
     // id
-    result->setAttribute("id", escapeName(name));
+    result->append_attribute("id") = escapeName(name).c_str();
 
     // name
-    QDomElement nameElement = doc.createElement("Name");
-    result->appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
+    auto nameElement = result->append_child("Name");
+    nameElement.text() = name.c_str();
 
-    if (isOpaque){
-      if (constructionBase.optionalCast<model::LayeredConstruction>()){
-        for (const auto& layer : constructionBase.cast<model::LayeredConstruction>().layers()){
-          QDomElement layerIdElement = doc.createElement("LayerId");
-          result->appendChild(layerIdElement);
-          layerIdElement.setAttribute("layerIdRef", escapeName(layer.name().get() + " Layer"));
+    if (isOpaque) {
+      if (constructionBase.optionalCast<model::LayeredConstruction>()) {
+        for (const auto& layer : constructionBase.cast<model::LayeredConstruction>().layers()) {
+          auto layerIdElement = result->append_child("LayerId");
+          layerIdElement.append_attribute("layerIdRef") = escapeName(layer.name().get() + " Layer").c_str();
 
           m_materials.insert(layer);
         }
       }
-    } else{
+    } else {
       boost::optional<double> visibleTransmittance;
       boost::optional<double> uFactor;
       boost::optional<double> solarHeatGainCoefficient;
 
-      if (constructionBase.optionalCast<model::LayeredConstruction>()){
+      if (constructionBase.optionalCast<model::LayeredConstruction>()) {
         std::vector<model::Material> layers = constructionBase.cast<model::LayeredConstruction>().layers();
-        if (layers.size() == 1u){
-          if (layers[0].optionalCast<model::SimpleGlazing>()){
+        if (layers.size() == 1u) {
+          if (layers[0].optionalCast<model::SimpleGlazing>()) {
             model::SimpleGlazing glazing = layers[0].cast<model::SimpleGlazing>();
             visibleTransmittance = glazing.visibleTransmittance();
             uFactor = glazing.uFactor();
@@ -308,10 +289,10 @@ namespace gbxml {
         }
       }
 
-      if (!visibleTransmittance){
+      if (!visibleTransmittance) {
         visibleTransmittance = constructionBase.visibleTransmittance();
       }
-      if (!uFactor){
+      if (!uFactor) {
         uFactor = constructionBase.uFactor();
       }
       //if (!solarHeatGainCoefficient){
@@ -319,72 +300,62 @@ namespace gbxml {
       //}
 
 
-      if (visibleTransmittance){
-        QDomElement element = doc.createElement("Transmittance");
-        result->appendChild(element);
-        element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*visibleTransmittance))));
-        element.setAttribute("unit", "Fraction");
-        element.setAttribute("type", "Visible");
-        element.setAttribute("surfaceType", "Both");
+      if (visibleTransmittance) {
+        auto element = result->append_child("Transmittance");
+        element.text() = *visibleTransmittance;
+        element.append_attribute("unit") = "Fraction";
+        element.append_attribute("type") = "Visible";
+        element.append_attribute("surfaceType") = "Both";
       }
 
-      if (uFactor){
-        QDomElement element = doc.createElement("U-value");
-        result->appendChild(element);
-        element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*uFactor))));
-        element.setAttribute("unit", "WPerSquareMeterK");
+      if (uFactor) {
+        auto element = result->append_child("U-value");
+        element.text() = *uFactor;
+        element.append_attribute("unit") = "WPerSquareMeterK";
       }
 
-      if (solarHeatGainCoefficient){
-        QDomElement element = doc.createElement("SolarHeatGainCoeff");
-        result->appendChild(element);
-        element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*solarHeatGainCoefficient))));
-        element.setAttribute("unit", "Fraction");
+      if (solarHeatGainCoefficient) {
+        auto element = result->append_child("SolarHeatGainCoeff");
+        element.text() = *solarHeatGainCoefficient;
+        element.append_attribute("unit") = "Fraction";
       }
     }
     return result;
   }
 
-  boost::optional<QDomElement> ForwardTranslator::translateLayer(const openstudio::model::Material& material, QDomDocument& doc)
+  boost::optional<pugi::xml_node> ForwardTranslator::translateLayer(const openstudio::model::Material& material, pugi::xml_node& root)
   {
-    boost::optional<QDomElement> result;
-
-    result = doc.createElement("Layer");
+    auto result = root.append_child("Layer");
 
     std::string materialName = material.name().get();
     std::string layerName = materialName + " Layer";
 
     // id
-    result->setAttribute("id", escapeName(layerName));
+    result.append_attribute("id") = escapeName(layerName).c_str();
 
     // name
-    QDomElement nameElement = doc.createElement("Name");
-    result->appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(QString::fromStdString(layerName)));
+    auto nameElement = result.append_child("Name");
+    nameElement.text() = layerName.c_str();
 
     // name
-    QDomElement materialIdElement = doc.createElement("MaterialId");
-    result->appendChild(materialIdElement);
-    materialIdElement.setAttribute("materialIdRef", escapeName(materialName));
+    auto materialIdElement = result.append_child("MaterialId");
+    materialIdElement.append_attribute("materialIdRef") = escapeName(materialName).c_str();
 
     return result;
   }
 
-  boost::optional<QDomElement> ForwardTranslator::translateMaterial(const openstudio::model::Material& material, QDomDocument& doc)
+  boost::optional<pugi::xml_node> ForwardTranslator::translateMaterial(const openstudio::model::Material& material, pugi::xml_node& root)
   {
-    boost::optional<QDomElement> result;
-
-    result = doc.createElement("Material");
+    auto result = root.append_child("Material");
 
     std::string name = material.name().get();
 
     // id
-    result->setAttribute("id", escapeName(name));
+    result.append_attribute("id") = escapeName(name).c_str();
 
     // name
-    QDomElement nameElement = doc.createElement("Name");
-    result->appendChild(nameElement);
-    nameElement.appendChild(doc.createTextNode(QString::fromStdString(name)));
+    auto nameElement = result.append_child("Name");
+    nameElement.text() = name.c_str();
 
     boost::optional<double> thermalReflectance;
     boost::optional<double> solarReflectance;
@@ -399,7 +370,7 @@ namespace gbxml {
     boost::optional<double> solarAbsorptance;
     boost::optional<double> visibleAbsorptance;
 
-    if (material.optionalCast<openstudio::model::StandardOpaqueMaterial>()){
+    if (material.optionalCast<openstudio::model::StandardOpaqueMaterial>()) {
       openstudio::model::StandardOpaqueMaterial som = material.cast<openstudio::model::StandardOpaqueMaterial>();
       thermalReflectance = som.thermalReflectance();
       solarReflectance = som.solarReflectance();
@@ -412,145 +383,129 @@ namespace gbxml {
       thermalAbsorptance = som.thermalAbsorptance();
       solarAbsorptance = som.solarAbsorptance();
       visibleAbsorptance = som.visibleAbsorptance();
-    }else if (material.optionalCast<openstudio::model::MasslessOpaqueMaterial>()){
+    } else if (material.optionalCast<openstudio::model::MasslessOpaqueMaterial>()) {
       openstudio::model::MasslessOpaqueMaterial mom = material.cast<openstudio::model::MasslessOpaqueMaterial>();
       roughness = mom.roughness();
       resistance = mom.thermalResistance();
       thermalAbsorptance = mom.thermalAbsorptance();
       solarAbsorptance = mom.solarAbsorptance();
       visibleAbsorptance = mom.visibleAbsorptance();
-    }else if (material.optionalCast<openstudio::model::AirGap>()){
+    } else if (material.optionalCast<openstudio::model::AirGap>()) {
       openstudio::model::AirGap gap = material.cast<openstudio::model::AirGap>();
       resistance = gap.thermalResistance();
     }
 
-    if (thermalReflectance){
-      QDomElement element = doc.createElement("Reflectance");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*thermalReflectance))));
-      element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "ExtIR");
-      element.setAttribute("surfaceType", "Both");
+    if (thermalReflectance) {
+      auto element = result.append_child("Reflectance");
+      element.text() = *thermalReflectance;
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "ExtIR";
+      element.append_attribute("surfaceType") = "Both";
 
-      element = doc.createElement("Reflectance");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*thermalReflectance))));
-      element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntIR");
-      element.setAttribute("surfaceType", "Both");
+      element = result.append_child("Reflectance");
+      element.text() = *thermalReflectance;
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "IntIR";
+      element.append_attribute("surfaceType") = "Both";
     }
 
-    if (solarReflectance){
-      QDomElement element = doc.createElement("Reflectance");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*solarReflectance))));
-      element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "ExtSolar");
-      element.setAttribute("surfaceType", "Both");
+    if (solarReflectance) {
+      auto element = result.append_child("Reflectance");
+      element.text() = *solarReflectance;
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "ExtSolar";
+      element.append_attribute("surfaceType") = "Both";
 
-      element = doc.createElement("Reflectance");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*solarReflectance))));
-      element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntSolar");
-      element.setAttribute("surfaceType", "Both");
+      element = result.append_child("Reflectance");
+      element.text() = *solarReflectance;
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "IntSolar";
+      element.append_attribute("surfaceType") = "Both";
     }
 
-    if (visibleReflectance){
-      QDomElement element = doc.createElement("Reflectance");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*visibleReflectance))));
-      element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "ExtVisible");
-      element.setAttribute("surfaceType", "Both");
+    if (visibleReflectance) {
+      auto element = result.append_child("Reflectance");
+      element.text() = *visibleReflectance;
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "ExtVisible";
+      element.append_attribute("surfaceType") = "Both";
 
-      element = doc.createElement("Reflectance");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*visibleReflectance))));
-      element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntVisible");
-      element.setAttribute("surfaceType", "Both");
+      element = result.append_child("Reflectance");
+      element.text() = *visibleReflectance;
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "IntVisible";
+      element.append_attribute("surfaceType") = "Both";
     }
 
-    if (roughness){
-      QDomElement element = doc.createElement("Roughness");
-      result->appendChild(element);
-      element.setAttribute("value", QString::fromStdString(*roughness));
+    if (roughness) {
+      auto element = result.append_child("Roughness");
+      element.append_attribute("value") = (*roughness).c_str();
     }
 
-    if (thickness){
-      QDomElement element = doc.createElement("Thickness");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*thickness))));
-      element.setAttribute("unit", "Meters");
+    if (thickness) {
+      auto element = result.append_child("Thickness");
+      element.text() = *thickness;
+      element.append_attribute("unit") = "Meters";
     }
 
-    if (conductivity){
-      QDomElement element = doc.createElement("Conductivity");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*conductivity))));
-      element.setAttribute("unit", "WPerMeterK");
+    if (conductivity) {
+      auto element = result.append_child("Conductivity");
+      element.text() = *conductivity;
+      element.append_attribute("unit") = "WPerMeterK";
     }
 
-    if (resistance){
-      QDomElement element = doc.createElement("R-value");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*resistance))));
-      element.setAttribute("unit", "SquareMeterKPerW");
+    if (resistance) {
+      auto element = result.append_child("R-value");
+      element.text() = *resistance;
+      element.append_attribute("unit") = "SquareMeterKPerW";
     }
 
-    if (density){
-      QDomElement element = doc.createElement("Density");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*density))));
-      element.setAttribute("unit", "KgPerCubicM");
+    if (density) {
+      auto element = result.append_child("Density");
+      element.text() = *density;
+      element.append_attribute("unit") = "KgPerCubicM";
     }
 
-    if (specificHeat){
-      QDomElement element = doc.createElement("SpecificHeat");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*specificHeat))));
-      element.setAttribute("unit", "JPerKgK");
+    if (specificHeat) {
+      auto element = result.append_child("SpecificHeat");
+      element.text() = *specificHeat;
+      element.append_attribute("unit") = "JPerKgK";
     }
 
-    if (thermalAbsorptance){
-      QDomElement element = doc.createElement("Absorptance");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*thermalAbsorptance))));
-      element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "ExtIR");
+    if (thermalAbsorptance) {
+      auto element = result.append_child("Absorptance");
+      element.text() = *thermalAbsorptance;
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "ExtIR";
 
-      element = doc.createElement("Absorptance");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*thermalAbsorptance))));
-      element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntIR");
+      element = result.append_child("Absorptance");
+      element.text() = *thermalAbsorptance;
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "IntIR";
     }
 
-    if (solarAbsorptance){
-      QDomElement element = doc.createElement("Absorptance");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*solarAbsorptance))));
-      element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "ExtSolar");
-      element = doc.createElement("Absorptance");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*solarAbsorptance))));
-      element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntSolar");
+    if (solarAbsorptance) {
+      auto element = result.append_child("Absorptance");
+      element.text() = *solarAbsorptance;
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "ExtSolar";
+
+      element = result.append_child("Absorptance");
+      element.text() = *solarAbsorptance;
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "IntSolar";
     }
 
-    if (visibleAbsorptance){
-      QDomElement element = doc.createElement("Absorptance");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*visibleAbsorptance))));
-      element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "ExtVisible");
-      element = doc.createElement("Absorptance");
-      result->appendChild(element);
-      element.appendChild(doc.createTextNode(toQString(openstudio::string_conversions::number(*visibleAbsorptance))));
-      element.setAttribute("unit", "Fraction");
-      element.setAttribute("type", "IntVisible");
+    if (visibleAbsorptance) {
+      auto element = result.append_child("Absorptance");
+      element.text() = *visibleAbsorptance;
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "ExtVisible";
+
+      element = result.append_child("Absorptance");
+      element.text() = *visibleAbsorptance;
+      element.append_attribute("unit") = "Fraction";
+      element.append_attribute("type") = "IntVisible";
     }
     return result;
   }

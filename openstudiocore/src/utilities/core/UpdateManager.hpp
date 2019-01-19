@@ -108,14 +108,14 @@ namespace openstudio {
     std::vector<std::string> m_updateMessages;
 
     // returns true if release being checked is newer than current release
-    bool checkRelease(const QDomElement& release);
+    //bool checkRelease(const QDomElement& release);
 
     // url used for checking updates
     std::string updateUrl() const;
 
-    QNetworkAccessManager* m_manager;
-    QNetworkRequest* m_request;
-    QNetworkReply* m_reply;
+    //QNetworkAccessManager* m_manager;
+    //QNetworkRequest* m_request;
+    //QNetworkReply* m_reply;
 
   };
 

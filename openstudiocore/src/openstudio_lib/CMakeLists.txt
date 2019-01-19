@@ -1,6 +1,7 @@
 set(target_name openstudio_lib)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${QT_INCLUDES})
 #include_directories(${RUBY_INCLUDE_DIR})
 #include_directories(${SWIG_DIR})
 #
@@ -726,13 +727,14 @@ add_library(${target_name}
 )
 
 set(depends
-  openstudio_model
-  openstudio_energyplus
-  openstudio_modeleditor
-  openstudio_measure
-  openstudio_sdd
-  openstudio_gbxml
-  ${QT_WEB_LIBS}
+  openstudio_model_static
+  openstudio_energyplus_static
+  openstudio_modeleditor_static
+  openstudio_measure_static
+  openstudio_sdd_static
+  openstudio_gbxml_static
+  ${QT_LIBS}
+  qtwinmigrate_static
 )
 
 target_link_libraries(${target_name} ${depends})

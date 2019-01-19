@@ -28,6 +28,8 @@
 ***********************************************************************************************************************/
 
 #include "ReverseTranslator.hpp"
+#include "Helpers.hpp"
+
 #include "../model/Model.hpp"
 #include "../model/Component.hpp"
 #include "../model/ModelObject.hpp"
@@ -120,6 +122,7 @@
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
+#include "../utilities/core/StringHelpers.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/units/Quantity.hpp"
 #include "../utilities/units/IPUnit.hpp"
@@ -133,19 +136,16 @@
 #include "../utilities/units/UnitFactory.hpp"
 #include "../utilities/units/Unit.hpp"
 
-#include <QDomDocument>
-#include <QDomElement>
-#include <QTextStream>
+#include <pugixml.hpp>
 
 namespace openstudio {
 namespace sdd {
 
-  std::ostream& operator<<(std::ostream& os, const QDomElement& element)
+  std::ostream& operator<<(std::ostream& os, const pugi::xml_node& element)
   {
-    QString str;
-    QTextStream qts(&str);
-    element.save(qts, 2);
-    os << str.toStdString();
+    pugi::xml_document doc;
+    doc.append_copy(element);
+    doc.save(os, "  ");
     return os;
   }
 
@@ -177,12 +177,11 @@ namespace sdd {
     if (openstudio::filesystem::exists(path)){
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()){
-        QDomDocument doc;
-        bool ok = doc.setContent(QString::fromStdString(openstudio::filesystem::read_as_string(file)));
+        pugi::xml_document doc;
+        pugi::xml_parse_result success = doc.load(file);
         file.close();
-
-        if (ok) {
-          result = this->convert(doc);
+        if (success) {
+          result = this->convert(doc.document_element());
         } else{
           LOG(Error, "Could not open file '" << toString(path) << "'");
         }
@@ -222,1582 +221,1554 @@ namespace sdd {
     return result;
   }
 
-  std::string ReverseTranslator::escapeName(QString name)
+  std::string ReverseTranslator::escapeName(std::string name)
   {
-    return name.replace(',', '-').replace(';', '-').toStdString();
+    std::replace(name.begin(), name.end(), ',', '-');
+    std::replace(name.begin(), name.end(), ';', '-');
+    return name;
   }
 
-  boost::optional<model::Model> ReverseTranslator::convert(const QDomDocument& doc)
+  boost::optional<model::Model> ReverseTranslator::convert(const pugi::xml_node& root)
   {
-    return translateSDD(doc.documentElement(), doc);
+    return translateSDD(root);
   }
 
-  boost::optional<model::Model> ReverseTranslator::translateSDD(const QDomElement& element, const QDomDocument& doc)
+  boost::optional<model::Model> ReverseTranslator::translateSDD(const pugi::xml_node& root)
   {
     boost::optional<model::Model> result;
 
     // get project, assume one project per file
-    QDomElement projectElement = element.firstChildElement("Proj");
-    if (projectElement.isNull()){
+    pugi::xml_node projectElement = root.child("Proj");
+    if (!projectElement) {
       LOG(Error, "Could not find required element 'Proj'");
       return boost::none;
-    }else{
+    }
 
-      // check if this is a simulation xml or input xml
-      QDomElement simFlagElement = projectElement.firstChildElement("SimFlag");
-      if (simFlagElement.isNull()){
-        m_isInputXML = true;
-        LOG(Error, "Import of Input SDD XML type is not currently supported");
-        return boost::none;
-      } else {
-        m_isInputXML = false;
+    // check if this is a simulation xml or input xml
+    pugi::xml_node simFlagElement = root.child("SimFlag");
+    if (!simFlagElement) {
+      m_isInputXML = true;
+      LOG(Error, "Import of Input SDD XML type is not currently supported");
+      return boost::none;
+    } else {
+      m_isInputXML = false;
+    }
+
+    result = openstudio::model::Model();
+    result->setFastNaming(true);
+
+    // do runperiod
+    boost::optional<model::ModelObject> runPeriod = translateRunPeriod(projectElement, *result);
+    //if (!runPeriod) {
+    //  LOG(Error, "Could not translate RunPeriod");
+    //}
+
+    // do design days
+    std::vector<WorkspaceObject> designDays = translateDesignDays(projectElement, *result);
+    //if (designDays.empty()) {
+    //  LOG(Error, "Empty DesignDays");
+    //}
+
+    // do weather file
+    boost::optional<model::ModelObject> weatherFile = translateWeatherFile(projectElement, *result);
+    //if (!weatherFile) {
+    //  LOG(Error, "Could not translate WeatherFile");
+    //}
+
+
+    // do site after design days and weather file
+    boost::optional<model::ModelObject> site = translateSite(projectElement, *result);
+    if (!site) {
+      LOG(Error, "Could not find site information in SDD");
+    }
+
+    // Shading Model
+    std::string solDistribution = projectElement.child("SolDistribution").text().as_string();
+    if(istringEqual("FullExterior", solDistribution)) {
+      model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
+      simulationControl.setSolarDistribution("FullExterior");
+    } else if(istringEqual("", solDistribution)) {
+      model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
+      simulationControl.setSolarDistribution("MinimalShadowing");
+    }
+
+    // HVACAutoSizing
+    pugi::xml_node hvacAutoSizingElement = projectElement.child("HVACAutoSizing");
+    if( hvacAutoSizingElement.text().as_int() == 0 ) {
+      m_autosize = false;
+    }
+
+    model::SizingParameters sp = result->getUniqueModelObject<model::SizingParameters>();
+    sp.setHeatingSizingFactor(1.0);
+    sp.setCoolingSizingFactor(1.0);
+
+    // do materials before constructions
+    std::vector<pugi::xml_node> materialElements = makeVectorOfChildren(projectElement, "Mat");
+
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(toString("Translating Materials"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(materialElements.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < materialElements.size(); ++i) {
+      boost::optional<model::ModelObject> material = translateMaterial(materialElements[i], *result);
+      if (!material) {
+        LOG(Error, "Failed to translate 'Mat' element " << i);
       }
 
-      result = openstudio::model::Model();
-      result->setFastNaming(true);
+      if (m_progressBar) {
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
 
-      // do runperiod
-      boost::optional<model::ModelObject> runPeriod = translateRunPeriod(projectElement, doc, *result);
-      //if (!runPeriod){
-      //  LOG(Error, "Could not translate RunPeriod");
-      //}
+    // do constructions before geometry
 
-      // do design days
-      std::vector<WorkspaceObject> designDays = translateDesignDays(projectElement, doc, *result);
-      //if (designDays.empty()){
-      //  LOG(Error, "Empty DesignDays");
-      //}
+    // layered constructions
+    std::vector<pugi::xml_node> constructionElements = makeVectorOfChildren(projectElement, "ConsAssm");
 
-      // do weather file
-      boost::optional<model::ModelObject> weatherFile = translateWeatherFile(projectElement, doc, *result);
-      //if (!weatherFile){
-      //  LOG(Error, "Could not translate WeatherFile");
-      //}
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(toString("Translating Constructions"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(constructionElements.size());
+      m_progressBar->setValue(0);
+    }
 
-
-      // do site after design days and weather file
-      boost::optional<model::ModelObject> site = translateSite(projectElement, doc, *result);
-      if (!site){
-        LOG(Error, "Could not find site information in SDD");
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < constructionElements.size(); ++i) {
+      boost::optional<model::ModelObject> construction = translateConstructAssembly(constructionElements[i], *result);
+      if (!construction) {
+        LOG(Error, "Failed to translate 'ConsAssm' element " << i);
       }
 
-      // Shading Model
-      QDomElement solDistributionElement = projectElement.firstChildElement("SolDistribution");
-      if(istringEqual("FullExterior",solDistributionElement.text().toStdString()))
-      {
-        model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
-        simulationControl.setSolarDistribution("FullExterior");
+      if (m_progressBar) {
+        m_progressBar->setValue(m_progressBar->value() + 1);
       }
-      else if(istringEqual("MinimalShadowing",solDistributionElement.text().toStdString()))
-      {
-        model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
-        simulationControl.setSolarDistribution("MinimalShadowing");
-      }
+    }
 
-      // HVACAutoSizing
-      QDomElement hvacAutoSizingElement = projectElement.firstChildElement("HVACAutoSizing");
-      if( hvacAutoSizingElement.text().toInt() == 0 )
-      {
-        m_autosize = false;
-      }
+    // door constructions
+    std::vector<pugi::xml_node> doorConstructionElements = makeVectorOfChildren(projectElement, "DrCons");
 
-      model::SizingParameters sp = result->getUniqueModelObject<model::SizingParameters>();
-      sp.setHeatingSizingFactor(1.0);
-      sp.setCoolingSizingFactor(1.0);
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(toString("Translating Door Constructions"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(doorConstructionElements.size());
+      m_progressBar->setValue(0);
+    }
 
-      // do materials before constructions
-      QDomNodeList materialElements = projectElement.elementsByTagName("Mat");
-      if (m_progressBar){
-        m_progressBar->setWindowTitle(toString("Translating Materials"));
-        m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum(materialElements.count());
-        m_progressBar->setValue(0);
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < doorConstructionElements.size(); ++i) {
+      boost::optional<model::ModelObject> doorConstruction = translateDoorConstruction(doorConstructionElements[i], *result);
+      if (!doorConstruction) {
+        LOG(Error, "Failed to translate 'DrCons' element " << i);
       }
 
-      for (int i = 0; i < materialElements.count(); i++){
-        QDomElement materialElement = materialElements.at(i).toElement();
-        boost::optional<model::ModelObject> material = translateMaterial(materialElement, doc, *result);
-        if (!material){
-          LOG(Error, "Failed to translate 'Mat' element " << i);
-        }
+      if (m_progressBar) {
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
 
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
+    // fenestration constructions
+    std::vector<pugi::xml_node> fenestrationConstructionElements = makeVectorOfChildren(projectElement, "FenCons");
+
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(toString("Translating Fenestration Constructions"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(fenestrationConstructionElements.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < fenestrationConstructionElements.size(); ++i) {
+      boost::optional<model::ModelObject> fenestrationConstruction = translateFenestrationConstruction(fenestrationConstructionElements[i], *result);
+      if (!fenestrationConstruction) {
+        LOG(Error, "Failed to translate 'FenCons' element " << i);
       }
 
-      // do constructions before geometry
+      if (m_progressBar) {
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
 
-      // layered constructions
-      QDomNodeList constructionElements = projectElement.elementsByTagName("ConsAssm");
-      if (m_progressBar){
-        m_progressBar->setWindowTitle(toString("Translating Constructions"));
-        m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum(constructionElements.count());
-        m_progressBar->setValue(0);
+    int i = 0;
+    for (const pugi::xml_node& crvDblQuadElement: projectElement.children("CrvDblQuad")) {
+      boost::optional<model::ModelObject> curve = translateCrvDblQuad(crvDblQuadElement, *result);
+      if (!curve) {
+        LOG(Error, "Failed to translate 'CrvDblQuad' element " << i);
+      }
+    }
+
+
+    i = 0;
+    for (const pugi::xml_node& crvCubicElement: projectElement.children("CrvCubic")) {
+      boost::optional<model::ModelObject> curve = translateCrvCubic(crvCubicElement, *result);
+      if (!curve) {
+        LOG(Error, "Failed to translate 'CrvCubic' element " << i);
+      }
+    }
+
+    i = 0;
+    for (const pugi::xml_node& crvQuadElement: projectElement.children("CrvCubic")) {
+      boost::optional<model::ModelObject> curve = translateCrvQuad(crvQuadElement, *result);
+      if (!curve) {
+        LOG(Error, "Failed to translate 'CrvQuad' element " << i);
+      }
+    }
+
+    i = 0;
+    for (const pugi::xml_node& crvLinElement: projectElement.children("CrvLin")) {
+      boost::optional<model::ModelObject> curve = translateCrvLin(crvLinElement, *result);
+      if (!curve) {
+        LOG(Error, "Failed to translate 'CrvLin' element " << i);
+      }
+    }
+
+    i = 0;
+    for (const pugi::xml_node& crvMapSglVarElement: projectElement.children("CrvMapSglVar")) {
+      boost::optional<model::ModelObject> curve = translateCrvMapSglVar(crvMapSglVarElement, *result);
+      if (!curve) {
+        LOG(Error, "Failed to translate 'CrvMapSglVar' element " << i);
+      }
+    }
+
+    i = 0;
+    for (const pugi::xml_node& crvMapDblVarElement: projectElement.children("CrvMapDblVar")) {
+      boost::optional<model::ModelObject> curve = translateCrvMapDblVar(crvMapDblVarElement, *result);
+      if (!curve) {
+        LOG(Error, "Failed to translate 'CrvMapDblVar' element " << i);
+      }
+    }
+
+
+    // do schedules before loads
+    std::vector<pugi::xml_node> scheduleDayElements = makeVectorOfChildren(projectElement, "SchDay");
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(toString("Translating Day Schedules"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(scheduleDayElements.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < scheduleDayElements.size(); ++i) {
+      boost::optional<model::ModelObject> scheduleDay = translateScheduleDay(scheduleDayElements[i], *result);
+      if (!scheduleDay) {
+        LOG(Error, "Failed to translate 'SchDay' element " << i);
       }
 
-      for (int i = 0; i < constructionElements.count(); i++){
-        QDomElement constructionElement = constructionElements.at(i).toElement();
-        boost::optional<model::ModelObject> construction = translateConstructAssembly(constructionElement, doc, *result);
-        if (!construction){
-          LOG(Error, "Failed to translate 'ConsAssm' element " << i);
-        }
+      if (m_progressBar ){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
 
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
+    std::vector<pugi::xml_node> scheduleWeekElements = makeVectorOfChildren(projectElement, "SchWeek");
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(toString("Translating Week Schedules"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(scheduleWeekElements.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < scheduleWeekElements.size(); ++i) {
+      boost::optional<model::ModelObject> scheduleWeek = translateScheduleWeek(scheduleWeekElements[i], *result);
+      if (!scheduleWeek) {
+        LOG(Error, "Failed to translate 'SchWeek' element " << i);
       }
 
-      // door constructions
-      QDomNodeList doorConstructionElements = projectElement.elementsByTagName("DrCons");
-      if (m_progressBar){
-        m_progressBar->setWindowTitle(toString("Translating Door Constructions"));
-        m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum(doorConstructionElements.count());
-        m_progressBar->setValue(0);
+      if (m_progressBar) {
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
+    std::vector<pugi::xml_node> scheduleElements = makeVectorOfChildren(projectElement, "Sch");
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(toString("Translating Year Schedules"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(scheduleElements.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < scheduleElements.size(); ++i) {
+      boost::optional<model::ModelObject> schedule = translateSchedule(scheduleElements[i], *result);
+      if (!schedule) {
+        LOG(Error, "Failed to translate 'Sch' element " << i);
       }
 
-      for (int i = 0; i < doorConstructionElements.count(); i++){
-        QDomElement doorConstructionElement = doorConstructionElements.at(i).toElement();
-        boost::optional<model::ModelObject> doorConstruction = translateDoorConstruction(doorConstructionElement, doc, *result);
-        if (!doorConstruction){
-          LOG(Error, "Failed to translate 'DrCons' element " << i);
-        }
+      if (m_progressBar) {
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
 
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
+    std::vector<pugi::xml_node> holidayElements = makeVectorOfChildren(projectElement, "Hol");
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Holidays"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(holidayElements.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < holidayElements.size(); ++i) {
+      boost::optional<model::ModelObject> holiday = translateHoliday(holidayElements[i], *result);
+      if (!holiday) {
+        LOG(Error, "Failed to translate 'Hol' element " << i);
       }
 
-      // fenestration constructions
-      QDomNodeList fenestrationConstructionElements = projectElement.elementsByTagName("FenCons");
-      if (m_progressBar){
-        m_progressBar->setWindowTitle(toString("Translating Fenestration Constructions"));
-        m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum(fenestrationConstructionElements.count());
-        m_progressBar->setValue(0);
+      if (m_progressBar) {
+        m_progressBar->setValue(m_progressBar->value() + 1);
       }
+    }
 
-      for (int i = 0; i < fenestrationConstructionElements.count(); i++){
-        QDomElement fenestrationConstructionElement = fenestrationConstructionElements.at(i).toElement();
-        boost::optional<model::ModelObject> fenestrationConstruction = translateFenestrationConstruction(fenestrationConstructionElement, doc, *result);
-        if (!fenestrationConstruction){
-          LOG(Error, "Failed to translate 'FenCons' element " << i);
-        }
+    // do water mains temperatures, do after schedules
+    boost::optional<model::ModelObject> waterMainsTemperature = translateWaterMainsTemperature(projectElement, *result);
+    //if (!waterMainsTemperature){
+    //  LOG(Error, "Could not translate WaterMainsTemperature");
+    //}
 
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
-      }
-
-      QDomNodeList crvDblQuadElements = projectElement.elementsByTagName("CrvDblQuad");
-      for (int i = 0; i < crvDblQuadElements.count(); i++){
-        QDomElement crvDblQuadElement = crvDblQuadElements.at(i).toElement();
-        boost::optional<model::ModelObject> curve = translateCrvDblQuad(crvDblQuadElement, doc, *result);
-        if (!curve){
-          LOG(Error, "Failed to translate 'CrvDblQuad' element " << i);
-        }
-      }
-
-      QDomNodeList crvCubicElements = projectElement.elementsByTagName("CrvCubic");
-      for (int i = 0; i < crvCubicElements.count(); i++){
-        QDomElement crvCubicElement = crvCubicElements.at(i).toElement();
-        boost::optional<model::ModelObject> curve = translateCrvCubic(crvCubicElement, doc, *result);
-        if (!curve){
-          LOG(Error, "Failed to translate 'CrvCubic' element " << i);
-        }
-      }
-
-      QDomNodeList crvQuadElements = projectElement.elementsByTagName("CrvQuad");
-      for (int i = 0; i < crvQuadElements.count(); i++){
-        QDomElement crvQuadElement = crvQuadElements.at(i).toElement();
-        boost::optional<model::ModelObject> curve = translateCrvQuad(crvQuadElement, doc, *result);
-        if (!curve){
-          LOG(Error, "Failed to translate 'CrvQuad' element " << i);
-        }
-      }
-
-      QDomNodeList crvLinElements = projectElement.elementsByTagName("CrvLin");
-      for (int i = 0; i < crvLinElements.count(); i++){
-        QDomElement crvLinElement = crvLinElements.at(i).toElement();
-        boost::optional<model::ModelObject> curve = translateCrvLin(crvLinElement, doc, *result);
-        if (!curve){
-          LOG(Error, "Failed to translate 'CrvLin' element " << i);
-        }
-      }
-
-      auto crvMapSglVarElements = projectElement.elementsByTagName("CrvMapSglVar");
-      for (int i = 0; i < crvMapSglVarElements.count(); i++){
-        auto crvMapSglVarElement = crvMapSglVarElements.at(i).toElement();
-        auto curve = translateCrvMapSglVar(crvMapSglVarElement, doc, *result);
-        if (!curve){
-          LOG(Error, "Failed to translate 'CrvMapSglVar' element " << i);
-        }
-      }
-
-      auto crvMapDblVarElements = projectElement.elementsByTagName("CrvMapDblVar");
-      for (int i = 0; i < crvMapDblVarElements.count(); i++){
-        auto crvMapDblVarElement = crvMapDblVarElements.at(i).toElement();
-        auto curve = translateCrvMapDblVar(crvMapDblVarElement, doc, *result);
-        if (!curve){
-          LOG(Error, "Failed to translate 'CrvMapDblVar' element " << i);
-        }
-      }
-
-      // do schedules before loads
-      QDomNodeList scheduleDayElements = projectElement.elementsByTagName("SchDay");
-      if (m_progressBar){
-        m_progressBar->setWindowTitle(toString("Translating Day Schedules"));
-        m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum(scheduleDayElements.count());
-        m_progressBar->setValue(0);
-      }
-
-      for (int i = 0; i < scheduleDayElements.count(); i++){
-        QDomElement scheduleDayElement = scheduleDayElements.at(i).toElement();
-        boost::optional<model::ModelObject> scheduleDay = translateScheduleDay(scheduleDayElement, doc, *result);
-        if (!scheduleDay){
-          LOG(Error, "Failed to translate 'SchDay' element " << i);
-        }
-
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
-      }
-
-      QDomNodeList scheduleWeekElements = projectElement.elementsByTagName("SchWeek");
-      if (m_progressBar){
-        m_progressBar->setWindowTitle(toString("Translating Week Schedules"));
-        m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum(scheduleWeekElements.count());
-        m_progressBar->setValue(0);
-      }
-
-      for (int i = 0; i < scheduleWeekElements.count(); i++){
-        QDomElement scheduleWeekElement = scheduleWeekElements.at(i).toElement();
-        boost::optional<model::ModelObject> scheduleWeek = translateScheduleWeek(scheduleWeekElement, doc, *result);
-        if (!scheduleWeek){
-          LOG(Error, "Failed to translate 'SchWeek' element " << i);
-        }
-
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
-      }
-
-      QDomNodeList scheduleElements = projectElement.elementsByTagName("Sch");
-      if (m_progressBar){
-        m_progressBar->setWindowTitle(toString("Translating Year Schedules"));
-        m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum(scheduleElements.count());
-        m_progressBar->setValue(0);
-      }
-
-      for (int i = 0; i < scheduleElements.count(); i++){
-        QDomElement scheduleElement = scheduleElements.at(i).toElement();
-        boost::optional<model::ModelObject> schedule = translateSchedule(scheduleElement, doc, *result);
-        if (!schedule){
-          LOG(Error, "Failed to translate 'Sch' element " << i);
-        }
-
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
-      }
-
-      QDomNodeList holidayElements = projectElement.elementsByTagName("Hol");
-      if (m_progressBar){
-        m_progressBar->setWindowTitle(toString("Translating Holidays"));
-        m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum(holidayElements.count());
-        m_progressBar->setValue(0);
-      }
-
-      for (int i = 0; i < holidayElements.count(); i++){
-        QDomElement holidayElement = holidayElements.at(i).toElement();
-        boost::optional<model::ModelObject> holiday = translateHoliday(holidayElement, doc, *result);
-        if (!holiday){
-          LOG(Error, "Failed to translate 'Hol' element " << i);
-        }
-
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
-      }
-
-      // do water mains temperatures, do after schedules
-      boost::optional<model::ModelObject> waterMainsTemperature = translateWaterMainsTemperature(projectElement, doc, *result);
-      //if (!waterMainsTemperature){
-      //  LOG(Error, "Could not translate WaterMainsTemperature");
-      //}
-
-      // translate shadingSurfaces
-      QDomNodeList exteriorShadingElements = element.elementsByTagName("ExtShdgObj");
+    // translate shadingSurfaces
+    std::vector<pugi::xml_node> exteriorShadingElements = makeVectorOfChildren(projectElement, "ExtShdgObj");
+    if (exteriorShadingElements.size() > 0) {
       model::ShadingSurfaceGroup shadingSurfaceGroup(*result);
       shadingSurfaceGroup.setName("Site ShadingGroup");
       shadingSurfaceGroup.setShadingSurfaceType("Site");
-      for (int i = 0; i < exteriorShadingElements.count(); ++i){
-        if (exteriorShadingElements.at(i).parentNode() == projectElement){
-          boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements.at(i).toElement(), doc, shadingSurfaceGroup);
-          if (!exteriorShading){
+      for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorShadingElements.size(); ++i) {
+        if (exteriorShadingElements[i].parent() == projectElement) {
+          boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements[i], shadingSurfaceGroup);
+          if (!exteriorShading) {
             LOG(Error, "Failed to translate 'ExtShdgObj' element " << i);
           }
         }
       }
+    }
 
-      openstudio::model::Facility facility = result->getUniqueModelObject<openstudio::model::Facility>();
+    openstudio::model::Facility facility = result->getUniqueModelObject<openstudio::model::Facility>();
 
-      // translate the building
-      QDomElement buildingElement = projectElement.firstChildElement("Bldg");
-      if (buildingElement.isNull()){
-        LOG(Error, "Required 'Bldg' element is Null");
-      } else{
-        boost::optional<model::ModelObject> building = translateBuilding(buildingElement, doc, *result);
-        if (!building){
-          LOG(Error, "Failed to translate 'Bldg'");
-        }
+    // translate the building
+    pugi::xml_node buildingElement = projectElement.child("Bldg");
+    if (!buildingElement) {
+      LOG(Error, "Required 'Bldg' element is Null");
+    } else {
+      boost::optional<model::ModelObject> building = translateBuilding(buildingElement, *result);
+      if (!building) {
+        LOG(Error, "Failed to translate 'Bldg'");
       }
+    }
 
-      result->setFastNaming(false);
+    result->setFastNaming(false);
 
-      // FluidSys
-      QDomNodeList fluidSysElements = projectElement.elementsByTagName("FluidSys");
+    // FluidSys
+    std::vector<pugi::xml_node> fluidSysElements = makeVectorOfChildren(projectElement, "FluidSys");
+    if (m_progressBar){
+      m_progressBar->setWindowTitle(toString("Translating Fluid Systems"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(fluidSysElements.size());
+      m_progressBar->setValue(0);
+    }
+
+    // Translate condenser systems
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < fluidSysElements.size(); ++i) {
+      if (!fluidSysElements[i].child("Name")) {
+        continue;
+      }
+      if (!openstudio::istringEqual(fluidSysElements[i].child("Type").text().as_string(), "condenserwater")) {
+        continue;
+      }
+      boost::optional<model::ModelObject> plantLoop = translateFluidSys(fluidSysElements[i], *result);
+      OS_ASSERT(plantLoop);
+
       if (m_progressBar){
-        m_progressBar->setWindowTitle(toString("Translating Fluid Systems"));
-        m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum(fluidSysElements.count());
-        m_progressBar->setValue(0);
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
+    // Translate hot water systems
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < fluidSysElements.size(); ++i) {
+      if (!fluidSysElements[i].child("Name")) {
+        continue;
+      }
+      if (!openstudio::istringEqual(fluidSysElements[i].child("Type").text().as_string(), "hotwater")) {
+        continue;
       }
 
-      // Translate condenser systems
-      for (int i = 0; i < fluidSysElements.count(); i++){
-        if (fluidSysElements.at(i).firstChildElement("Name").isNull()){
-          continue;
-        }
-        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() != "condenserwater"){
-          continue;
-        }
+      boost::optional<model::ModelObject> plantLoop = translateFluidSys(fluidSysElements[i], *result);
+      OS_ASSERT(plantLoop);
 
-        QDomElement fluidSysElement = fluidSysElements.at(i).toElement();
-        boost::optional<model::ModelObject> plantLoop = translateFluidSys(fluidSysElement,doc,*result);
-        OS_ASSERT(plantLoop);
-
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
-      }
-
-      // Translate hot water systems
-      for (int i = 0; i < fluidSysElements.count(); i++){
-        if (fluidSysElements.at(i).firstChildElement("Name").isNull()){
-          continue;
-        }
-        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "servicehotwater"){
-          continue;
-        }
-        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "condenserwater"){
-          continue;
-        }
-        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "chilledwater"){
-          continue;
-        }
-
-        QDomElement fluidSysElement = fluidSysElements.at(i).toElement();
-        boost::optional<model::ModelObject> plantLoop = translateFluidSys(fluidSysElement,doc,*result);
-        OS_ASSERT(plantLoop);
-
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
-      }
-
-      // Translate chilled water systems
-      for (int i = 0; i < fluidSysElements.count(); i++){
-        if (fluidSysElements.at(i).firstChildElement("Name").isNull()){
-          continue;
-        }
-        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "servicehotwater"){
-          continue;
-        }
-        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "condenserwater"){
-          continue;
-        }
-        if (fluidSysElements.at(i).firstChildElement("Type").text().toLower() == "hotwater"){
-          continue;
-        }
-
-        QDomElement fluidSysElement = fluidSysElements.at(i).toElement();
-        boost::optional<model::ModelObject> plantLoop = translateFluidSys(fluidSysElement,doc,*result);
-        OS_ASSERT(plantLoop);
-
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
-      }
-
-      // AirSystem
-      QDomNodeList airSystemElements = buildingElement.elementsByTagName("AirSys");
       if (m_progressBar){
-        m_progressBar->setWindowTitle(toString("Translating Air Systems"));
-        m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum(airSystemElements.count());
-        m_progressBar->setValue(0);
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
+
+
+    // Translate chilled water systems
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < fluidSysElements.size(); ++i) {
+      if (!fluidSysElements[i].child("Name")) {
+        continue;
+      }
+      if (!openstudio::istringEqual(fluidSysElements[i].child("Type").text().as_string(), "chilledwater")) {
+        continue;
       }
 
-      for (int i = 0; i < airSystemElements.count(); i++){
-        if (airSystemElements.at(i).firstChildElement("Name").isNull()){
-          continue;
-        }
+      boost::optional<model::ModelObject> plantLoop = translateFluidSys(fluidSysElements[i], *result);
+      OS_ASSERT(plantLoop);
 
-        QDomElement airSystemElement = airSystemElements.at(i).toElement();
-        translateAirSystem(airSystemElement,doc,*result);
-
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
-      }
-
-      // VRFSys
-      QDomNodeList vrfSystemElements = buildingElement.elementsByTagName("VRFSys");
       if (m_progressBar){
-        m_progressBar->setWindowTitle(toString("Translating VRF Systems"));
-        m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum(vrfSystemElements.count());
-        m_progressBar->setValue(0);
+        m_progressBar->setValue(m_progressBar->value() + 1);
       }
+    }
 
-      for (int i = 0; i < vrfSystemElements.count(); i++){
-        if (vrfSystemElements.at(i).firstChildElement("Name").isNull()){
-          continue;
-        }
+    // We're left with 'servicehotwater' type
 
-        QDomElement vrfSystemElement = vrfSystemElements.at(i).toElement();
-        translateVRFSys(vrfSystemElement,doc,*result);
 
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
+    // AirSystem
+    std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(buildingElement, "AirSys");
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(toString("Translating Air Systems"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(airSystemElements.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < airSystemElements.size(); ++i) {
+      if (!airSystemElements[i].child("Name")) {
+        continue;
       }
+      // TODO: No check on whether that worked or not?
+      translateAirSystem(airSystemElements[i], *result);
 
-      // ThermalZone
-      QDomNodeList thermalZoneElements = buildingElement.elementsByTagName("ThrmlZn");
       if (m_progressBar){
-        m_progressBar->setWindowTitle(toString("Translating Thermal Zones"));
-        m_progressBar->setMinimum(0);
-        m_progressBar->setMaximum(airSystemElements.count());
-        m_progressBar->setValue(0);
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
+    // VRFSys
+    std::vector<pugi::xml_node> vrfSystemElements = makeVectorOfChildren(buildingElement, "VRFSys");
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(toString("Translating VRF Systems"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(vrfSystemElements.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < vrfSystemElements.size(); ++i) {
+      if (!vrfSystemElements[i].child("Name")) {
+        continue;
+      }
+      // TODO: No check on whether that worked or not?
+      translateVRFSys(vrfSystemElements[i],*result);
+
+      if (m_progressBar){
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
+
+    // ThermalZone
+    std::vector<pugi::xml_node> thermalZoneElements = makeVectorOfChildren(buildingElement, "ThrmlZn");
+    if (m_progressBar) {
+      m_progressBar->setWindowTitle(toString("Translating Thermal Zones"));
+      m_progressBar->setMinimum(0);
+      m_progressBar->setMaximum(airSystemElements.size());
+      m_progressBar->setValue(0);
+    }
+
+    for (std::vector<pugi::xml_node>::size_type i = 0; i < thermalZoneElements.size(); ++i) {
+      if (!thermalZoneElements[i].child("Name")) {
+        continue;
       }
 
-      for (int i = 0; i < thermalZoneElements.count(); i++){
-        if (thermalZoneElements.at(i).firstChildElement("Name").isNull()){
-          continue;
-        }
-
-        QDomElement thermalZoneElement = thermalZoneElements.at(i).toElement();
-        boost::optional<model::ModelObject> thermalZone = translateThermalZone(thermalZoneElement,doc,*result);
-        if (!thermalZone){
-          LOG(Error, "Failed to translate 'ThrmlZn' element " << i);
-        }
-
-        if (m_progressBar){
-          m_progressBar->setValue(m_progressBar->value() + 1);
-        }
+      boost::optional<model::ModelObject> thermalZone = translateThermalZone(thermalZoneElements[i], *result);
+      if (!thermalZone) {
+        LOG(Error, "Failed to translate 'ThrmlZn' element " << i);
       }
 
-      // Give the nodes better names
-      // We do this here because the loops need to be completely assembled
-      // with their supply AND demand sides.  ie. After zones are attached.
-      std::vector<model::PlantLoop> plantLoops = result->getModelObjects<model::PlantLoop>();
+      if (m_progressBar) {
+        m_progressBar->setValue(m_progressBar->value() + 1);
+      }
+    }
 
-      for( auto plantLoop = plantLoops.begin();
-           plantLoop != plantLoops.end();
-           ++plantLoop )
+    // Give the nodes better names
+    // We do this here because the loops need to be completely assembled
+    // with their supply AND demand sides.  ie. After zones are attached.
+    std::vector<model::PlantLoop> plantLoops = result->getModelObjects<model::PlantLoop>();
+
+    for (auto plantLoop = plantLoops.begin();
+         plantLoop != plantLoops.end();
+         ++plantLoop)
+    {
+      std::string plantName = plantLoop->name().get();
+      plantLoop->supplyInletNode().setName(plantName + " Supply Inlet Node");
+      plantLoop->demandInletNode().setName(plantName + " Demand Inlet Node");
+      plantLoop->demandSplitter().setName(plantName + " Demand Splitter");
+      plantLoop->demandMixer().setName(plantName + " Demand Mixer");
+      plantLoop->supplySplitter().setName(plantName + " Supply Splitter");
+      plantLoop->supplyMixer().setName(plantName + " Supply Mixer");
+
+      std::vector<model::ModelObject> comps = plantLoop->components();
+      for( auto it = comps.begin();
+          it != comps.end();
+          ++it )
       {
-        std::string plantName = plantLoop->name().get();
-        plantLoop->supplyInletNode().setName(plantName + " Supply Inlet Node");
-        plantLoop->demandInletNode().setName(plantName + " Demand Inlet Node");
-        plantLoop->demandSplitter().setName(plantName + " Demand Splitter");
-        plantLoop->demandMixer().setName(plantName + " Demand Mixer");
-        plantLoop->supplySplitter().setName(plantName + " Supply Splitter");
-        plantLoop->supplyMixer().setName(plantName + " Supply Mixer");
-
-        std::vector<model::ModelObject> comps = plantLoop->components();
-        for( auto it = comps.begin();
-             it != comps.end();
-             ++it )
+        if( ! it->optionalCast<model::Node>() )
         {
-          if( ! it->optionalCast<model::Node>() )
+          if( boost::optional<model::StraightComponent> comp = it->optionalCast<model::StraightComponent>() )
           {
-            if( boost::optional<model::StraightComponent> comp = it->optionalCast<model::StraightComponent>() )
+            if( boost::optional<model::ModelObject> mo = comp->outletModelObject() )
             {
-              if( boost::optional<model::ModelObject> mo = comp->outletModelObject() )
+              mo->setName(comp->name().get() + " Outlet Node");
+            }
+          }
+          else if( boost::optional<model::WaterToAirComponent> comp = it->optionalCast<model::WaterToAirComponent>() )
+          {
+            if( boost::optional<model::ModelObject> mo = comp->waterOutletModelObject() )
+            {
+              mo->setName(comp->name().get() + " Water Outlet Node");
+            }
+          }
+          else if( boost::optional<model::WaterToWaterComponent> comp = it->optionalCast<model::WaterToWaterComponent>() )
+          {
+            if( boost::optional<model::ModelObject> mo = comp->supplyOutletModelObject() )
+            {
+              mo->setName(comp->name().get() + " Supply Outlet Node");
+            }
+            if( boost::optional<model::ModelObject> mo = comp->demandOutletModelObject() )
+            {
+              mo->setName(comp->name().get() + " Demand Outlet Node");
+            }
+            if( boost::optional<model::ModelObject> mo = comp->tertiaryOutletModelObject() )
+            {
+              mo->setName(comp->name().get() + " Tertiary Demand Outlet Node");
+            }
+          }
+          else if( boost::optional<model::Splitter> comp = it->optionalCast<model::Splitter>() )
+          {
+            int branchI = 1;
+            std::vector<model::ModelObject> splitterOutletObjects =
+              comp->outletModelObjects();
+            for( auto it = splitterOutletObjects.begin();
+                it != splitterOutletObjects.end();
+                ++it )
+            {
+              if( it->optionalCast<model::Node>() )
               {
-                mo->setName(comp->name().get() + " Outlet Node");
+                std::string branchOutuletName =
+                  comp->name().get() + " Outlet Node " + boost::lexical_cast<std::string>(branchI);
+                it->setName(branchOutuletName);
+                ++branchI;
               }
             }
-            else if( boost::optional<model::WaterToAirComponent> comp = it->optionalCast<model::WaterToAirComponent>() )
+          }
+          else if( boost::optional<model::Mixer> comp = it->optionalCast<model::Mixer>() )
+          {
+            if( boost::optional<model::ModelObject> mixerOutlet = comp->outletModelObject() )
             {
-              if( boost::optional<model::ModelObject> mo = comp->waterOutletModelObject() )
-              {
-                mo->setName(comp->name().get() + " Water Outlet Node");
-              }
-            }
-            else if( boost::optional<model::WaterToWaterComponent> comp = it->optionalCast<model::WaterToWaterComponent>() )
-            {
-              if( boost::optional<model::ModelObject> mo = comp->supplyOutletModelObject() )
-              {
-                mo->setName(comp->name().get() + " Supply Outlet Node");
-              }
-              if( boost::optional<model::ModelObject> mo = comp->demandOutletModelObject() )
-              {
-                mo->setName(comp->name().get() + " Demand Outlet Node");
-              }
-              if( boost::optional<model::ModelObject> mo = comp->tertiaryOutletModelObject() )
-              {
-                mo->setName(comp->name().get() + " Tertiary Demand Outlet Node");
-              }
-            }
-            else if( boost::optional<model::Splitter> comp = it->optionalCast<model::Splitter>() )
-            {
-              int branchI = 1;
-              std::vector<model::ModelObject> splitterOutletObjects =
-                comp->outletModelObjects();
-              for( auto it = splitterOutletObjects.begin();
-                   it != splitterOutletObjects.end();
-                   ++it )
-              {
-                if( it->optionalCast<model::Node>() )
-                {
-                  std::string branchOutuletName =
-                    comp->name().get() + " Outlet Node " + boost::lexical_cast<std::string>(branchI);
-                  it->setName(branchOutuletName);
-                  ++branchI;
-                }
-              }
-            }
-            else if( boost::optional<model::Mixer> comp = it->optionalCast<model::Mixer>() )
-            {
-              if( boost::optional<model::ModelObject> mixerOutlet = comp->outletModelObject() )
-              {
-                mixerOutlet->setName(comp->name().get() + " Outlet Node");
-              }
+              mixerOutlet->setName(comp->name().get() + " Outlet Node");
             }
           }
         }
       }
+    }
 
-      std::vector<model::AirLoopHVAC> airSystems = result->getModelObjects<model::AirLoopHVAC>();
+    std::vector<model::AirLoopHVAC> airSystems = result->getModelObjects<model::AirLoopHVAC>();
 
-      for( auto airSystem = airSystems.begin();
-           airSystem != airSystems.end();
-           ++airSystem )
+    for( auto airSystem = airSystems.begin();
+        airSystem != airSystems.end();
+        ++airSystem )
+    {
+      std::string systemName = airSystem->name().get();
+      airSystem->supplyInletNode().setName(systemName + " Supply Side (Return Air) Inlet Node");
+      airSystem->demandInletNode().setName(systemName + " Demand Side (Supply Air) Inlet Node");
+      airSystem->demandSplitter().setName(systemName + " Zone Splitter");
+      airSystem->demandMixer().setName(systemName + " Zone Mixer");
+
+      std::vector<model::ModelObject> comps = airSystem->components();
+      for( auto it = comps.begin();
+          it != comps.end();
+          ++it )
       {
-        std::string systemName = airSystem->name().get();
-        airSystem->supplyInletNode().setName(systemName + " Supply Side (Return Air) Inlet Node");
-        airSystem->demandInletNode().setName(systemName + " Demand Side (Supply Air) Inlet Node");
-        airSystem->demandSplitter().setName(systemName + " Zone Splitter");
-        airSystem->demandMixer().setName(systemName + " Zone Mixer");
-
-        std::vector<model::ModelObject> comps = airSystem->components();
-        for( auto it = comps.begin();
-             it != comps.end();
-             ++it )
+        if( ! it->optionalCast<model::Node>() )
         {
-          if( ! it->optionalCast<model::Node>() )
+          if( boost::optional<model::StraightComponent> comp = it->optionalCast<model::StraightComponent>() )
           {
-            if( boost::optional<model::StraightComponent> comp = it->optionalCast<model::StraightComponent>() )
+            if( boost::optional<model::ModelObject> mo = comp->outletModelObject() )
             {
-              if( boost::optional<model::ModelObject> mo = comp->outletModelObject() )
+              mo->setName(comp->name().get() + " Outlet Node");
+            }
+          }
+          else if( boost::optional<model::WaterToAirComponent> comp = it->optionalCast<model::WaterToAirComponent>() )
+          {
+            if( boost::optional<model::ModelObject> mo = comp->airOutletModelObject() )
+            {
+              mo->setName(comp->name().get() + " Air Outlet Node");
+            }
+          }
+          else if( boost::optional<model::Splitter> comp = it->optionalCast<model::Splitter>() )
+          {
+            int branchI = 1;
+            std::vector<model::ModelObject> splitterOutletObjects =
+              comp->outletModelObjects();
+            for( auto it = splitterOutletObjects.begin();
+                it != splitterOutletObjects.end();
+                ++it )
+            {
+              if( it->optionalCast<model::Node>() )
               {
-                mo->setName(comp->name().get() + " Outlet Node");
+                std::string branchOutuletName =
+                  comp->name().get() + " Outlet Node " + boost::lexical_cast<std::string>(branchI);
+                it->setName(branchOutuletName);
+                ++branchI;
               }
             }
-            else if( boost::optional<model::WaterToAirComponent> comp = it->optionalCast<model::WaterToAirComponent>() )
+          }
+          else if( boost::optional<model::ThermalZone> comp = it->optionalCast<model::ThermalZone>() )
+          {
+            if( boost::optional<model::ModelObject> returnAir = comp->returnAirModelObject() )
             {
-              if( boost::optional<model::ModelObject> mo = comp->airOutletModelObject() )
-              {
-                mo->setName(comp->name().get() + " Air Outlet Node");
-              }
+              returnAir->setName(comp->name().get() + " Return Air Node");
             }
-            else if( boost::optional<model::Splitter> comp = it->optionalCast<model::Splitter>() )
+          }
+          else if( boost::optional<model::AirLoopHVACOutdoorAirSystem> comp = it->optionalCast<model::AirLoopHVACOutdoorAirSystem>() )
+          {
+            if( boost::optional<model::ModelObject> mixedAir = comp->mixedAirModelObject() )
             {
-              int branchI = 1;
-              std::vector<model::ModelObject> splitterOutletObjects =
-                comp->outletModelObjects();
-              for( auto it = splitterOutletObjects.begin();
-                   it != splitterOutletObjects.end();
-                   ++it )
-              {
-                if( it->optionalCast<model::Node>() )
-                {
-                  std::string branchOutuletName =
-                    comp->name().get() + " Outlet Node " + boost::lexical_cast<std::string>(branchI);
-                  it->setName(branchOutuletName);
-                  ++branchI;
-                }
-              }
+              mixedAir->setName(comp->name().get() + " Mixed Air Node");
             }
-            else if( boost::optional<model::ThermalZone> comp = it->optionalCast<model::ThermalZone>() )
-            {
-              if( boost::optional<model::ModelObject> returnAir = comp->returnAirModelObject() )
-              {
-                returnAir->setName(comp->name().get() + " Return Air Node");
-              }
-            }
-            else if( boost::optional<model::AirLoopHVACOutdoorAirSystem> comp = it->optionalCast<model::AirLoopHVACOutdoorAirSystem>() )
-            {
-              if( boost::optional<model::ModelObject> mixedAir = comp->mixedAirModelObject() )
-              {
-                mixedAir->setName(comp->name().get() + " Mixed Air Node");
-              }
 
-              auto oaNode = comp->outboardOANode();
-              auto reliefNode = comp->outboardReliefNode();
-              if( oaNode ) {
-                oaNode->setName(comp->name().get() + " OA Node");
-              }
-              if( reliefNode ) {
-                reliefNode->setName(comp->name().get() + " Relief Node");
-              }
+            auto oaNode = comp->outboardOANode();
+            auto reliefNode = comp->outboardReliefNode();
+            if( oaNode ) {
+              oaNode->setName(comp->name().get() + " OA Node");
+            }
+            if( reliefNode ) {
+              reliefNode->setName(comp->name().get() + " Relief Node");
+            }
 
-              {
-                auto oaNodes = subsetCastVector<model::Node>(comp->oaComponents());
-                for( auto & node : oaNodes ) {
-                  if( oaNode && (node != oaNode.get()) ) {
-                    if( const auto & outletComp = node.inletModelObject() ) {
-                      node.setName(outletComp->nameString() + " OA Stream Outlet Node");
-                    }
-                  }
-                }
-              }
-
-              {
-                auto reliefNodes = subsetCastVector<model::Node>(comp->reliefComponents());
-                for( auto & node : reliefNodes ) {
-                  if( reliefNode && (node != reliefNode.get()) ) {
-                    if( const auto & outletComp = node.inletModelObject() ) {
-                      node.setName(outletComp->nameString() + " Relief Stream Outlet Node");
-                    }
+            {
+              auto oaNodes = subsetCastVector<model::Node>(comp->oaComponents());
+              for( auto & node : oaNodes ) {
+                if( oaNode && (node != oaNode.get()) ) {
+                  if( const auto & outletComp = node.inletModelObject() ) {
+                    node.setName(outletComp->nameString() + " OA Stream Outlet Node");
                   }
                 }
               }
             }
-            else if( boost::optional<model::Mixer> comp = it->optionalCast<model::Mixer>() )
+
             {
-              if( boost::optional<model::ModelObject> mixerOutlet = comp->outletModelObject() )
-              {
-                mixerOutlet->setName(comp->name().get() + " Outlet Node");
+              auto reliefNodes = subsetCastVector<model::Node>(comp->reliefComponents());
+              for( auto & node : reliefNodes ) {
+                if( reliefNode && (node != reliefNode.get()) ) {
+                  if( const auto & outletComp = node.inletModelObject() ) {
+                    node.setName(outletComp->nameString() + " Relief Stream Outlet Node");
+                  }
+                }
               }
+            }
+          }
+          else if( boost::optional<model::Mixer> comp = it->optionalCast<model::Mixer>() )
+          {
+            if( boost::optional<model::ModelObject> mixerOutlet = comp->outletModelObject() )
+            {
+              mixerOutlet->setName(comp->name().get() + " Outlet Node");
             }
           }
         }
       }
+    }
 
-      std::vector<model::ZoneHVACComponent> zoneEquipment = result->getModelObjects<model::ZoneHVACComponent>();
-      for( auto zoneComp = zoneEquipment.begin();
-           zoneComp != zoneEquipment.end();
-           ++zoneComp )
+    std::vector<model::ZoneHVACComponent> zoneEquipment = result->getModelObjects<model::ZoneHVACComponent>();
+    for( auto zoneComp = zoneEquipment.begin();
+        zoneComp != zoneEquipment.end();
+        ++zoneComp )
+    {
+      if( boost::optional<model::Node> inlet = zoneComp->inletNode() )
       {
-        if( boost::optional<model::Node> inlet = zoneComp->inletNode() )
-        {
-          inlet->setName(zoneComp->name().get() + " Inlet Node");
-        }
-        if( boost::optional<model::Node> outlet = zoneComp->outletNode() )
-        {
-          outlet->setName(zoneComp->name().get() + " Outlet Node");
-        }
+        inlet->setName(zoneComp->name().get() + " Inlet Node");
+      }
+      if( boost::optional<model::Node> outlet = zoneComp->outletNode() )
+      {
+        outlet->setName(zoneComp->name().get() + " Outlet Node");
+      }
+    }
+
+    // timestep
+    pugi::xml_node numTimeStepsPerHrElement = projectElement.child("NumTimeStepsPerHr");
+    boost::optional<int> _numTimeStepsPerHr = lexicalCastToInt(numTimeStepsPerHrElement);
+    if (_numTimeStepsPerHr) {
+      model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
+      timestep.setNumberOfTimestepsPerHour(_numTimeStepsPerHr.get());
+    } else {
+      LOG(Warn, "Cannot cast NumTimeStepsPerHr to an integer, NumTimeStepsPerHr: [" << numTimeStepsPerHrElement.text().as_string()
+             << "]. Defaulting to 4/hr.");
+      model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
+      timestep.setNumberOfTimestepsPerHour(4);
+    }
+
+    // request output meters for TDV calculations
+    std::set<int> fuelTypes = FuelType::getValues();
+    for (int fuelType : fuelTypes){
+
+      if (fuelType == FuelType::Gasoline ||
+          fuelType == FuelType::Diesel ||
+          fuelType == FuelType::FuelOil_1 ||
+          fuelType == FuelType::FuelOil_2 ||
+          fuelType == FuelType::Propane ||
+          fuelType == FuelType::Water ||
+          fuelType == FuelType::Steam ||
+          fuelType == FuelType::EnergyTransfer){
+        // skip these to avoid E+ warning, EnergyTransfer is internal to the simulation
+        continue;
       }
 
-      bool ok;
-      // timestep
-      QDomElement numTimeStepsPerHrElement = projectElement.firstChildElement("NumTimeStepsPerHr");
-      int numTimeStepsPerHr = numTimeStepsPerHrElement.text().toInt(&ok);
-      if( ok )
-      {
-        model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
-        timestep.setNumberOfTimestepsPerHour(numTimeStepsPerHr);
-      }
-      else
-      {
-        model::Timestep timestep = result->getUniqueModelObject<model::Timestep>();
-        timestep.setNumberOfTimestepsPerHour(4);
-      }
+      // overall meter for this fuel type
+      model::OutputMeter meter(*result);
+      meter.setFuelType(FuelType(fuelType));
+      meter.setInstallLocationType(InstallLocationType::Facility);
+      meter.setReportingFrequency("Hourly");
 
-      // request output meters for TDV calculations
-      std::set<int> fuelTypes = FuelType::getValues();
-      for (int fuelType : fuelTypes){
+      std::set<int> endUseTypes = EndUseType::getValues();
+      for (int endUseType : endUseTypes){
 
-        if (fuelType == FuelType::Gasoline ||
-            fuelType == FuelType::Diesel ||
-            fuelType == FuelType::FuelOil_1 ||
-            fuelType == FuelType::FuelOil_2 ||
-            fuelType == FuelType::Propane ||
-            fuelType == FuelType::Water ||
-            fuelType == FuelType::Steam ||
-            fuelType == FuelType::EnergyTransfer){
-          // skip these to avoid E+ warning, EnergyTransfer is internal to the simulation
+        if (endUseType == EndUseType::HeatingCoils ||
+            endUseType == EndUseType::CoolingCoils ||
+            endUseType == EndUseType::Boilers ||
+            endUseType == EndUseType::Baseboard ||
+            endUseType == EndUseType::HeatRecoveryForCooling ||
+            endUseType == EndUseType::HeatRecoveryForHeating){
+          // ignore energy transfer meters
           continue;
         }
 
-        // overall meter for this fuel type
+        // meter for this fuel type and end use
+        // DLM: many of these will not be applicable and will cause E+ warnings
         model::OutputMeter meter(*result);
         meter.setFuelType(FuelType(fuelType));
+        meter.setEndUseType(EndUseType(endUseType));
         meter.setInstallLocationType(InstallLocationType::Facility);
         meter.setReportingFrequency("Hourly");
-
-        std::set<int> endUseTypes = EndUseType::getValues();
-        for (int endUseType : endUseTypes){
-
-          if (endUseType == EndUseType::HeatingCoils ||
-              endUseType == EndUseType::CoolingCoils ||
-              endUseType == EndUseType::Boilers ||
-              endUseType == EndUseType::Baseboard ||
-              endUseType == EndUseType::HeatRecoveryForCooling ||
-              endUseType == EndUseType::HeatRecoveryForHeating){
-            // ignore energy transfer meters
-            continue;
-          }
-
-          // meter for this fuel type and end use
-          // DLM: many of these will not be applicable and will cause E+ warnings
-          model::OutputMeter meter(*result);
-          meter.setFuelType(FuelType(fuelType));
-          meter.setEndUseType(EndUseType(endUseType));
-          meter.setInstallLocationType(InstallLocationType::Facility);
-          meter.setReportingFrequency("Hourly");
-        }
       }
-
-      // request specific meters
-      // ElectricEquipment - Receptacle, Process, Refrig
-      model::OutputMeter meter(*result);
-      meter.setFuelType(FuelType::Electricity);
-      meter.setEndUseType(EndUseType::InteriorEquipment);
-      meter.setSpecificEndUse("Receptacle");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Electricity);
-      meter.setEndUseType(EndUseType::InteriorEquipment);
-      meter.setSpecificEndUse("Process");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Electricity);
-      meter.setEndUseType(EndUseType::InteriorEquipment);
-      meter.setSpecificEndUse("Refrig");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Electricity);
-      meter.setEndUseType(EndUseType::InteriorEquipment);
-      meter.setSpecificEndUse("Internal Transport");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Electricity);
-      meter.setEndUseType(EndUseType::ExteriorEquipment);
-      meter.setSpecificEndUse("Receptacle");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Electricity);
-      meter.setEndUseType(EndUseType::ExteriorEquipment);
-      meter.setSpecificEndUse("Process");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Electricity);
-      meter.setEndUseType(EndUseType::ExteriorEquipment);
-      meter.setSpecificEndUse("Refrig");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      // GasEquipment - Receptacle, Process
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Gas);
-      meter.setEndUseType(EndUseType::InteriorEquipment);
-      meter.setSpecificEndUse("Receptacle");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Gas);
-      meter.setEndUseType(EndUseType::InteriorEquipment);
-      meter.setSpecificEndUse("Process");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Gas);
-      meter.setEndUseType(EndUseType::ExteriorEquipment);
-      meter.setSpecificEndUse("Receptacle");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Gas);
-      meter.setEndUseType(EndUseType::ExteriorEquipment);
-      meter.setSpecificEndUse("Process");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      // Lights - ComplianceLtg, NonComplianceLtg
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Electricity);
-      meter.setEndUseType(EndUseType::InteriorLights);
-      meter.setSpecificEndUse("ComplianceLtg");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Electricity);
-      meter.setEndUseType(EndUseType::InteriorLights);
-      meter.setSpecificEndUse("NonComplianceLtg");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      // Exterior Lights - Reg Ltg, NonReg Ltg
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Electricity);
-      meter.setEndUseType(EndUseType::ExteriorLights);
-      meter.setSpecificEndUse("Reg Ltg");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      meter = model::OutputMeter(*result);
-      meter.setFuelType(FuelType::Electricity);
-      meter.setEndUseType(EndUseType::ExteriorLights);
-      meter.setSpecificEndUse("NonReg Ltg");
-      meter.setInstallLocationType(InstallLocationType::Facility);
-      meter.setReportingFrequency("Hourly");
-
-      {
-        auto fanZoneExhausts = result->getModelObjects<model::FanZoneExhaust>();
-        std::vector<std::string> subCategories(fanZoneExhausts.size());
-        std::transform(fanZoneExhausts.begin(), fanZoneExhausts.end(), subCategories.begin(), [](const model::FanZoneExhaust & fan) {
-          return fan.endUseSubcategory();
-        });
-        std::sort(subCategories.begin(),subCategories.end());
-        auto last = std::unique(subCategories.begin(),subCategories.end());
-        subCategories.erase(last,subCategories.end());
-
-        for( const auto & subcat : subCategories ) {
-          meter = model::OutputMeter(*result);
-          meter.setFuelType(FuelType::Electricity);
-          meter.setEndUseType(EndUseType::Fans);
-          meter.setSpecificEndUse(subcat);
-          meter.setInstallLocationType(InstallLocationType::Facility);
-          meter.setReportingFrequency("Hourly");
-        }
-      }
-
-      // Output Variables
-
-      QDomElement simVarsIntervalElement = projectElement.firstChildElement("SimVarsInterval");
-
-      std::string interval = simVarsIntervalElement.text().toStdString();
-
-      // SimVarsSite
-
-      QDomElement simVarsSiteElement = projectElement.firstChildElement("SimVarsSite");
-
-      if( simVarsSiteElement.text().toInt() == 1 )
-      {
-        model::OutputVariable var("Site Outdoor Air Drybulb Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Site Outdoor Air Wetbulb Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Site Direct Solar Radiation Rate per Area",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Site Diffuse Solar Radiation Rate per Area", *result);
-        var.setReportingFrequency(interval);
-      }
-
-      // SimVarsDayltg
-      QDomElement simVarsDayltgElement = projectElement.firstChildElement("SimVarsDayltg");
-      if( simVarsDayltgElement.text().toInt() == 1 )
-      {
-        model::OutputVariable var("Zone Lights Electric Power",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Daylighting Reference Point 1 Illuminance",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Daylighting Reference Point 2 Illuminance",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Daylighting Lighting Power Multiplier",*result);
-        var.setReportingFrequency(interval);
-      }
-
-      // SimVarsFen
-
-      QDomElement simVarsFenElement = projectElement.firstChildElement("SimVarsFen");
-
-      if ((simVarsFenElement.text().toInt() == 1))
-      {
-        for (const auto& subSurface : result->getConcreteModelObjects<model::SubSurface>())
-        {
-          std::string subSurfaceType = subSurface.subSurfaceType();
-
-          if (istringEqual(subSurfaceType, "FixedWindow") ||
-              istringEqual(subSurfaceType, "OperableWindow") ||
-              istringEqual(subSurfaceType, "GlassDoor") ||
-              istringEqual(subSurfaceType, "Skylight") ||
-              istringEqual(subSurfaceType, "TubularDaylightDome") ||
-              istringEqual(subSurfaceType, "TubularDaylightDiffuser"))
-          {
-            model::OutputVariable var("Surface Window Heat Gain Rate", *result);
-            var.setKeyValue(subSurface.name().get());
-            var.setReportingFrequency(interval);
-
-            var = model::OutputVariable("Surface Window Heat Loss Rate", *result);
-            var.setKeyValue(subSurface.name().get());
-            var.setReportingFrequency(interval);
-
-            var = model::OutputVariable("Surface Inside Face Adjacent Air Temperature", *result);
-            var.setKeyValue(subSurface.name().get());
-            var.setReportingFrequency(interval);
-
-            var = model::OutputVariable("Surface Outside Face Outdoor Air Drybulb Temperature", *result);
-            var.setKeyValue(subSurface.name().get());
-            var.setReportingFrequency(interval);
-          }
-        }
-      }
-
-      // SimVarsDr
-
-      QDomElement simVarsDrElement = projectElement.firstChildElement("SimVarsDr");
-
-      if ((simVarsDrElement.text().toInt() == 1))
-      {
-        for (const auto& subSurface : result->getConcreteModelObjects<model::SubSurface>())
-        {
-          std::string subSurfaceType = subSurface.subSurfaceType();
-
-          if (istringEqual(subSurfaceType, "Door") ||
-              istringEqual(subSurfaceType, "OverheadDoor"))
-          {
-            model::OutputVariable var("Surface Average Face Conduction Heat Gain Rate", *result);
-            var.setKeyValue(subSurface.name().get());
-            var.setReportingFrequency(interval);
-
-            var = model::OutputVariable("Surface Average Face Conduction Heat Loss Rate", *result);
-            var.setKeyValue(subSurface.name().get());
-            var.setReportingFrequency(interval);
-
-            var = model::OutputVariable("Surface Inside Face Adjacent Air Temperature", *result);
-            var.setKeyValue(subSurface.name().get());
-            var.setReportingFrequency(interval);
-
-            var = model::OutputVariable("Surface Outside Face Outdoor Air Drybulb Temperature", *result);
-            var.setKeyValue(subSurface.name().get());
-            var.setReportingFrequency(interval);
-          }
-        }
-      }
-
-      // SimVarsThrmlZn
-
-      QDomElement simVarsThrmlZnElement = projectElement.firstChildElement("SimVarsThrmlZn");
-
-      if( simVarsThrmlZnElement.text().toInt() == 1 )
-      {
-        model::OutputVariable var("Zone Air Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        std::vector<model::ThermalZone> zones = result->getModelObjects<model::ThermalZone>();
-        for( auto it = zones.begin();
-             it != zones.end();
-             ++it )
-        {
-          if( boost::optional<model::ModelObject> returnAirNode = it->returnAirModelObject() )
-          {
-            var = model::OutputVariable("System Node Temperature",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(returnAirNode->name().get());
-
-            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(returnAirNode->name().get());
-          }
-
-          std::vector<model::ModelObject> objects = it->inletPortList().modelObjects();
-          for( auto inletIt = objects.begin();
-               inletIt != objects.end();
-               ++inletIt )
-          {
-            var = model::OutputVariable("System Node Temperature",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(inletIt->name().get());
-
-            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(inletIt->name().get());
-          }
-
-          objects = it->exhaustPortList().modelObjects();
-          for( auto exhIt = objects.begin();
-               exhIt != objects.end();
-               ++exhIt )
-          {
-            var = model::OutputVariable("System Node Temperature",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(exhIt->name().get());
-
-            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(exhIt->name().get());
-          }
-        }
-      }
-
-      // SimVarsVRFSys
-      QDomElement simVarsVRFSys = projectElement.firstChildElement("SimVarsVRFSys");
-      if( simVarsVRFSys.text().toInt() == 1 ) {
-        model::OutputVariable var("VRF Heat Pump Total Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Total Heating Rate",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Cooling Electric Power",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Heating Electric Power",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Cooling COP",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Heating COP",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump COP",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Defrost Electric Power",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Part Load Ratio",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Runtime Fraction",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Cycling Ratio",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Operating Mode",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Condenser Inlet Temperature",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Maximum Capacity Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Maximum Capacity Heating Rate",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Crankcase Heater Electric Power",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Terminal Unit Cooling Load Rate",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Terminal Unit Heating Load Rate",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("VRF Heat Pump Heat Recovery Status Change Multiplier",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("Zone VRF Air Terminal Cooling Electric Power",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("Zone VRF Air Terminal Total Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("Zone VRF Air Terminal Sensible Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("Zone VRF Air Terminal Latent Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("Zone VRF Air Terminal Heating Electric Power",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("Zone VRF Air Terminal Total Heating Rate",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("Zone VRF Air Terminal Sensible Heating Rate",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("Zone VRF Air Terminal Latent Heating Rate",*result);
-        var.setReportingFrequency(interval);
-        var = model::OutputVariable("Zone VRF Air Terminal Fan Availability Status",*result);
-        var.setReportingFrequency(interval);
-      }
-
-      // SimVarsHVACZn
-
-      QDomElement simVarsHVACZnElement = projectElement.firstChildElement("SimVarsHVACZn");
-
-      if( simVarsHVACZnElement.text().toInt() == 1 )
-      {
-        model::OutputVariable var("Zone Air Terminal VAV Damper Position",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Zone Air Terminal Outdoor Air Volume Flow Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Zone Packaged Terminal Heat Pump Total Heating Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Zone Packaged Terminal Heat Pump Total Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Zone Packaged Terminal Air Conditioner Total Heating Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Zone Packaged Terminal Air Conditioner Total Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Baseboard Total Heating Rate",*result);
-        var.setReportingFrequency(interval);
-
-        auto createOutputForNode = [&](const std::string & nodename) {
-          auto var = model::OutputVariable("System Node Temperature",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(nodename);
-          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(nodename);
-        };
-
-        auto createOutputForZoneHVAC = [&](const model::ZoneHVACComponent & comp) {
-          auto name = comp.name().get();
-          if( auto mo = comp.inletNode() ) {
-            createOutputForNode(mo->name().get());
-          }
-          if( auto mo = comp.outletNode() ) {
-            createOutputForNode(mo->name().get());
-          }
-          auto mixedAirNodeName = name + " Mixed Air Node";
-          createOutputForNode(mixedAirNodeName);
-          auto reliefAirNodeName = name + " Relief Air Node";
-          createOutputForNode(reliefAirNodeName);
-          auto oaNodeName = name + " OA Node";
-          createOutputForNode(oaNodeName);
-        };
-
-        // Really need some abstraction so this sillyness isn't required
-        {
-          auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalAirConditioner>();
-          for( const auto & comp : zonehvac ) {
-            createOutputForZoneHVAC(comp);
-          }
-        }
-        {
-          auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalHeatPump>();
-          for( const auto & comp : zonehvac ) {
-            createOutputForZoneHVAC(comp);
-          }
-        }
-        {
-          auto zonehvac = result->getModelObjects<model::ZoneHVACWaterToAirHeatPump>();
-          for( const auto & comp : zonehvac ) {
-            createOutputForZoneHVAC(comp);
-
-        		var = model::OutputVariable("Zone Water to Air Heat Pump Total Heating Rate",*result);
-        		var.setReportingFrequency(interval);
-          	var.setKeyValue(comp.nameString());
-
-        		var = model::OutputVariable("Zone Water to Air Heat Pump Total Cooling Rate",*result);
-        		var.setReportingFrequency(interval);
-          	var.setKeyValue(comp.nameString());
-
-        		var = model::OutputVariable("Zone Water to Air Heat Pump Total Cooling Rate",*result);
-        		var.setReportingFrequency(interval);
-          	var.setKeyValue(comp.nameString());
-
-        		var = model::OutputVariable("Zone Water to Air Heat Pump Sensible Cooling Rate",*result);
-        		var.setReportingFrequency(interval);
-          	var.setKeyValue(comp.nameString());
-
-        		var = model::OutputVariable("Zone Water to Air Heat Pump Electric Power",*result);
-        		var.setReportingFrequency(interval);
-          	var.setKeyValue(comp.nameString());
-
-        		var = model::OutputVariable("Zone Water to Air Heat Pump Compressor Part Load Ratio",*result);
-        		var.setReportingFrequency(interval);
-          	var.setKeyValue(comp.nameString());
-          }
-        }
-        {
-          auto zonehvac = result->getModelObjects<model::ZoneHVACFourPipeFanCoil>();
-          for( const auto & comp : zonehvac ) {
-            createOutputForZoneHVAC(comp);
-          }
-        }
-        {
-          auto zonehvac = result->getModelObjects<model::ZoneHVACBaseboardConvectiveElectric>();
-          for( const auto & comp : zonehvac ) {
-        		var = model::OutputVariable("Baseboard Electric Power",*result);
-        		var.setReportingFrequency(interval);
-          	var.setKeyValue(comp.nameString());
-          }
-        }
-      }
-
-      // SimVarsHVACSec
-
-      QDomElement simVarsHVACSecElement = projectElement.firstChildElement("SimVarsHVACSec");
-
-      if( simVarsHVACSecElement.text().toInt() == 1 )
-      {
-        model::OutputVariable var("Heating Coil Air Heating Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Heating Coil Heating Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Cooling Coil Total Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Cooling Coil Sensible Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Cooling Coil Electric Power",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Cooling Coil Part Load Ratio",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Cooling Coil Runtime Fraction",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Fan Electric Power",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Heating Coil Gas Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Heating Coil Electric Power",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Heating Coil Runtime Fraction",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Heating Coil Part Load Ratio",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Evaporative Cooler Electric Power",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Heating Coil Total Heating Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Air System Outdoor Air Heat Recovery Bypass Status",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Air System Outdoor Air Economizer Status",*result);
-        var.setReportingFrequency(interval);
-
-        auto hxs = result->getModelObjects<model::HeatExchangerAirToAirSensibleAndLatent>();
-        for( auto & hx : hxs ) {
-          var = model::OutputVariable("Heat Exchanger Sensible Heating Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(hx.nameString());
-          var = model::OutputVariable("Heat Exchanger Latent Gain Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(hx.nameString());
-          var = model::OutputVariable("Heat Exchanger Total Heating Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(hx.nameString());
-          var = model::OutputVariable("Heat Exchanger Sensible Cooling Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(hx.nameString());
-          var = model::OutputVariable("Heat Exchanger Latent Cooling Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(hx.nameString());
-          var = model::OutputVariable("Heat Exchanger Total Cooling Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(hx.nameString());
-          var = model::OutputVariable("Heat Exchanger Electric Power",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(hx.nameString());
-          var = model::OutputVariable("Heat Exchanger Sensible Effectiveness",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(hx.nameString());
-          var = model::OutputVariable("Heat Exchanger Latent Effectiveness",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(hx.nameString());
-          var = model::OutputVariable("Heat Exchanger Supply Air Bypass Mass Flow Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(hx.nameString());
-          var = model::OutputVariable("Heat Exchanger Exhaust Air Bypass Mass Flow Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(hx.nameString());
-          var = model::OutputVariable("Heat Exchanger Defrost Time Fraction",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(hx.nameString());
-
-          if( auto node = hx.primaryAirOutletModelObject() ) {
-            var = model::OutputVariable("System Node Temperature",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(node->name().get());
-
-            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(node->name().get());
-          }
-
-          if( auto node = hx.secondaryAirOutletModelObject() ) {
-            var = model::OutputVariable("System Node Temperature",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(node->name().get());
-
-            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(node->name().get());
-          }
-        }
-
-        std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
-        for( auto & airloop : airloops)
-        {
-          var = model::OutputVariable("System Node Temperature",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(airloop.supplyInletNode().name().get());
-
-          var = model::OutputVariable("System Node Temperature",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(airloop.supplyOutletNode().name().get());
-
-          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(airloop.supplyOutletNode().name().get());
-
-          var = model::OutputVariable("System Node Temperature",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(airloop.demandInletNode().name().get());
-
-          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(airloop.demandInletNode().name().get());
-
-          if( boost::optional<model::Node> node = airloop.mixedAirNode() )
-          {
-            var = model::OutputVariable("System Node Temperature",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(node->name().get());
-
-            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-            var.setReportingFrequency(interval);
-            var.setKeyValue(node->name().get());
-          }
-
-          if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airloop.airLoopHVACOutdoorAirSystem() )
-          {
-            if( boost::optional<model::ModelObject> node = oaSystem->reliefAirModelObject() )
-            {
-              var = model::OutputVariable("System Node Temperature",*result);
-              var.setReportingFrequency(interval);
-              var.setKeyValue(node->name().get());
-
-              var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-              var.setReportingFrequency(interval);
-              var.setKeyValue(node->name().get());
-            }
-
-            if( boost::optional<model::Node> node = oaSystem->outboardOANode() )
-            {
-              var = model::OutputVariable("System Node Temperature",*result);
-              var.setReportingFrequency(interval);
-              var.setKeyValue(node->name().get());
-
-              var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
-              var.setReportingFrequency(interval);
-              var.setKeyValue(node->name().get());
-            }
-          }
-        }
-      }
-
-      // SimVarsHVACPri
-
-      QDomElement simVarsHVACPriElement = projectElement.firstChildElement("SimVarsHVACPri");
-
-      if( (simVarsHVACPriElement.text().toInt() == 1) ||
-          autosize() )
-      {
-        model::OutputVariable var("Chiller Evaporator Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Cooling Tower Heat Transfer Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Boiler Heating Rate",*result);
-        var.setReportingFrequency(interval);
-      }
-
-      if( simVarsHVACPriElement.text().toInt() == 1 )
-      {
-        model::OutputVariable var("Pump Electric Power",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Pump Mass Flow Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Pump Outlet Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Debug Plant Loop Bypass Fraction",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Debug Plant Loop Bypass Fraction",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chiller Condenser Heat Transfer Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chiller Electric Power",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Cooling Tower Heat Transfer Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Cooling Tower Fan Electric Power",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Boiler Gas Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Boiler Ancillary Electric Power",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Plant Supply Side Cooling Demand Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Plant Supply Side Heating Demand Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chiller Evaporator Cooling Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Boiler Heating Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Plant Supply Side Inlet Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Plant Supply Side Outlet Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        std::vector<model::PlantLoop> plants = result->getModelObjects<model::PlantLoop>();
-        for( auto & plant : plants ) {
-          var = model::OutputVariable("System Node Mass Flow Rate",*result);
-          var.setReportingFrequency(interval);
-          var.setKeyValue(plant.demandOutletNode().name().get());
-        }
-      }
-
-      // SimVarsWtrHtrSys
-      auto simVarsWtrHtrSys = projectElement.firstChildElement("SimVarsWtrHtr");
-      if( simVarsWtrHtrSys.text().toInt() == 1 ) {
-        model::OutputVariable var("Water Heater Tank Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Electric Energy",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Electric Power",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Heating Energy",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Heating Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Mains Water Volume",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Use Side Inlet Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Use Side Outlet Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Use Side Mass Flow Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Use Side Heat Transfer Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Source Side Inlet Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Source Side Outlet Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Source Side Mass Flow Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Source Side Heat Transfer Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Water Volume Flow Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Heat Pump Control Tank Final Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Heat Pump Control Tank Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Gas Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Water Heater Gas Energy",*result);
-        var.setReportingFrequency(interval);
-      }
-
-      // SimVarsThrmlEngyStor
-      auto simVarsThrmlEngyStorElement = projectElement.firstChildElement("SimVarsThrmlEngyStor");
-
-      if( simVarsThrmlEngyStorElement.text().toInt() == 1 )
-      {
-        model::OutputVariable var("Chilled Water Thermal Storage Tank Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chilled Water Thermal Storage Use Side Mass Flow Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chilled Water Thermal Storage Use Side Inlet Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chilled Water Thermal Storage Use Side Outlet Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chilled Water Thermal Storage Use Side Heat Transfer Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chilled Water Thermal Storage Use Side Heat Transfer Energy",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chilled Water Thermal Storage Source Side Mass Flow Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chilled Water Thermal Storage Source Side Inlet Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chilled Water Thermal Storage Source Side Outlet Temperature",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chilled Water Thermal Storage Source Side Heat Transfer Rate",*result);
-        var.setReportingFrequency(interval);
-
-        var = model::OutputVariable("Chilled Water Thermal Storage Source Side Heat Transfer Energy",*result);
-        var.setReportingFrequency(interval);
-      }
-
-      model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
-      rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
-      rt.setToleranceforTimeHeatingSetpointNotMet(0.56);
     }
+
+    // request specific meters
+    // ElectricEquipment - Receptacle, Process, Refrig
+    model::OutputMeter meter(*result);
+    meter.setFuelType(FuelType::Electricity);
+    meter.setEndUseType(EndUseType::InteriorEquipment);
+    meter.setSpecificEndUse("Receptacle");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Electricity);
+    meter.setEndUseType(EndUseType::InteriorEquipment);
+    meter.setSpecificEndUse("Process");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Electricity);
+    meter.setEndUseType(EndUseType::InteriorEquipment);
+    meter.setSpecificEndUse("Refrig");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Electricity);
+    meter.setEndUseType(EndUseType::InteriorEquipment);
+    meter.setSpecificEndUse("Internal Transport");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Electricity);
+    meter.setEndUseType(EndUseType::ExteriorEquipment);
+    meter.setSpecificEndUse("Receptacle");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Electricity);
+    meter.setEndUseType(EndUseType::ExteriorEquipment);
+    meter.setSpecificEndUse("Process");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Electricity);
+    meter.setEndUseType(EndUseType::ExteriorEquipment);
+    meter.setSpecificEndUse("Refrig");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    // GasEquipment - Receptacle, Process
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Gas);
+    meter.setEndUseType(EndUseType::InteriorEquipment);
+    meter.setSpecificEndUse("Receptacle");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Gas);
+    meter.setEndUseType(EndUseType::InteriorEquipment);
+    meter.setSpecificEndUse("Process");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Gas);
+    meter.setEndUseType(EndUseType::ExteriorEquipment);
+    meter.setSpecificEndUse("Receptacle");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Gas);
+    meter.setEndUseType(EndUseType::ExteriorEquipment);
+    meter.setSpecificEndUse("Process");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    // Lights - ComplianceLtg, NonComplianceLtg
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Electricity);
+    meter.setEndUseType(EndUseType::InteriorLights);
+    meter.setSpecificEndUse("ComplianceLtg");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Electricity);
+    meter.setEndUseType(EndUseType::InteriorLights);
+    meter.setSpecificEndUse("NonComplianceLtg");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    // Exterior Lights - Reg Ltg, NonReg Ltg
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Electricity);
+    meter.setEndUseType(EndUseType::ExteriorLights);
+    meter.setSpecificEndUse("Reg Ltg");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    meter = model::OutputMeter(*result);
+    meter.setFuelType(FuelType::Electricity);
+    meter.setEndUseType(EndUseType::ExteriorLights);
+    meter.setSpecificEndUse("NonReg Ltg");
+    meter.setInstallLocationType(InstallLocationType::Facility);
+    meter.setReportingFrequency("Hourly");
+
+    {
+      auto fanZoneExhausts = result->getModelObjects<model::FanZoneExhaust>();
+      std::vector<std::string> subCategories(fanZoneExhausts.size());
+      std::transform(fanZoneExhausts.begin(), fanZoneExhausts.end(), subCategories.begin(), [](const model::FanZoneExhaust & fan) {
+          return fan.endUseSubcategory();
+          });
+      std::sort(subCategories.begin(),subCategories.end());
+      auto last = std::unique(subCategories.begin(),subCategories.end());
+      subCategories.erase(last,subCategories.end());
+
+      for( const auto & subcat : subCategories ) {
+        meter = model::OutputMeter(*result);
+        meter.setFuelType(FuelType::Electricity);
+        meter.setEndUseType(EndUseType::Fans);
+        meter.setSpecificEndUse(subcat);
+        meter.setInstallLocationType(InstallLocationType::Facility);
+        meter.setReportingFrequency("Hourly");
+      }
+    }
+
+    // Output Variables
+
+    pugi::xml_node simVarsIntervalElement = projectElement.child("SimVarsInterval");
+
+    std::string interval(simVarsIntervalElement.text().as_string());
+
+    // SimVarsSite
+
+    pugi::xml_node simVarsSiteElement = projectElement.child("SimVarsSite");
+
+    // Here as_int() is fine, if the key wasn't present or not an int, it'd convert to zero
+    if( simVarsSiteElement.text().as_int() == 1 )
+    {
+      model::OutputVariable var("Site Outdoor Air Drybulb Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Site Outdoor Air Wetbulb Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Site Direct Solar Radiation Rate per Area",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Site Diffuse Solar Radiation Rate per Area", *result);
+      var.setReportingFrequency(interval);
+    }
+
+    // SimVarsDayltg
+    pugi::xml_node simVarsDayltgElement = projectElement.child("SimVarsDayltg");
+    if( simVarsDayltgElement.text().as_int() == 1 )
+    {
+      model::OutputVariable var("Zone Lights Electric Power",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Daylighting Reference Point 1 Illuminance",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Daylighting Reference Point 2 Illuminance",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Daylighting Lighting Power Multiplier",*result);
+      var.setReportingFrequency(interval);
+    }
+
+    // SimVarsFen
+    pugi::xml_node simVarsFenElement = projectElement.child("SimVarsFen");
+    if ((simVarsFenElement.text().as_int() == 1))
+    {
+      for (const auto& subSurface : result->getConcreteModelObjects<model::SubSurface>())
+      {
+        std::string subSurfaceType = subSurface.subSurfaceType();
+
+        if (istringEqual(subSurfaceType, "FixedWindow") ||
+            istringEqual(subSurfaceType, "OperableWindow") ||
+            istringEqual(subSurfaceType, "GlassDoor") ||
+            istringEqual(subSurfaceType, "Skylight") ||
+            istringEqual(subSurfaceType, "TubularDaylightDome") ||
+            istringEqual(subSurfaceType, "TubularDaylightDiffuser"))
+        {
+          model::OutputVariable var("Surface Window Heat Gain Rate", *result);
+          var.setKeyValue(subSurface.name().get());
+          var.setReportingFrequency(interval);
+
+          var = model::OutputVariable("Surface Window Heat Loss Rate", *result);
+          var.setKeyValue(subSurface.name().get());
+          var.setReportingFrequency(interval);
+
+          var = model::OutputVariable("Surface Inside Face Adjacent Air Temperature", *result);
+          var.setKeyValue(subSurface.name().get());
+          var.setReportingFrequency(interval);
+
+          var = model::OutputVariable("Surface Outside Face Outdoor Air Drybulb Temperature", *result);
+          var.setKeyValue(subSurface.name().get());
+          var.setReportingFrequency(interval);
+        }
+      }
+    }
+
+    // SimVarsDr
+
+    pugi::xml_node simVarsDrElement = projectElement.child("SimVarsDr");
+    if ((simVarsDrElement.text().as_int() == 1))
+    {
+      for (const auto& subSurface : result->getConcreteModelObjects<model::SubSurface>())
+      {
+        std::string subSurfaceType = subSurface.subSurfaceType();
+
+        if (istringEqual(subSurfaceType, "Door") ||
+            istringEqual(subSurfaceType, "OverheadDoor"))
+        {
+          model::OutputVariable var("Surface Average Face Conduction Heat Gain Rate", *result);
+          var.setKeyValue(subSurface.name().get());
+          var.setReportingFrequency(interval);
+
+          var = model::OutputVariable("Surface Average Face Conduction Heat Loss Rate", *result);
+          var.setKeyValue(subSurface.name().get());
+          var.setReportingFrequency(interval);
+
+          var = model::OutputVariable("Surface Inside Face Adjacent Air Temperature", *result);
+          var.setKeyValue(subSurface.name().get());
+          var.setReportingFrequency(interval);
+
+          var = model::OutputVariable("Surface Outside Face Outdoor Air Drybulb Temperature", *result);
+          var.setKeyValue(subSurface.name().get());
+          var.setReportingFrequency(interval);
+        }
+      }
+    }
+
+    // SimVarsThrmlZn
+
+    pugi::xml_node simVarsThrmlZnElement = projectElement.child("SimVarsThrmlZn");
+    if( simVarsThrmlZnElement.text().as_int() == 1 )
+    {
+      model::OutputVariable var("Zone Air Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      std::vector<model::ThermalZone> zones = result->getModelObjects<model::ThermalZone>();
+      for( auto it = zones.begin();
+          it != zones.end();
+          ++it )
+      {
+        if( boost::optional<model::ModelObject> returnAirNode = it->returnAirModelObject() )
+        {
+          var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(returnAirNode->name().get());
+
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(returnAirNode->name().get());
+        }
+
+        std::vector<model::ModelObject> objects = it->inletPortList().modelObjects();
+        for( auto inletIt = objects.begin();
+            inletIt != objects.end();
+            ++inletIt )
+        {
+          var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(inletIt->name().get());
+
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(inletIt->name().get());
+        }
+
+        objects = it->exhaustPortList().modelObjects();
+        for( auto exhIt = objects.begin();
+            exhIt != objects.end();
+            ++exhIt )
+        {
+          var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(exhIt->name().get());
+
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(exhIt->name().get());
+        }
+      }
+    }
+
+    // SimVarsVRFSys
+    pugi::xml_node simVarsVRFSys = projectElement.child("SimVarsVRFSys");
+    if( simVarsVRFSys.text().as_int() == 1 ) {
+      model::OutputVariable var("VRF Heat Pump Total Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Total Heating Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Cooling Electric Power",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Heating Electric Power",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Cooling COP",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Heating COP",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump COP",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Defrost Electric Power",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Part Load Ratio",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Runtime Fraction",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Cycling Ratio",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Operating Mode",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Condenser Inlet Temperature",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Maximum Capacity Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Maximum Capacity Heating Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Crankcase Heater Electric Power",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Terminal Unit Cooling Load Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Terminal Unit Heating Load Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("VRF Heat Pump Heat Recovery Status Change Multiplier",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone VRF Air Terminal Cooling Electric Power",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone VRF Air Terminal Total Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone VRF Air Terminal Sensible Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone VRF Air Terminal Latent Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone VRF Air Terminal Heating Electric Power",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone VRF Air Terminal Total Heating Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone VRF Air Terminal Sensible Heating Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone VRF Air Terminal Latent Heating Rate",*result);
+      var.setReportingFrequency(interval);
+      var = model::OutputVariable("Zone VRF Air Terminal Fan Availability Status",*result);
+      var.setReportingFrequency(interval);
+    }
+
+    // SimVarsHVACZn
+
+    pugi::xml_node simVarsHVACZnElement = projectElement.child("SimVarsHVACZn");
+    if( simVarsHVACZnElement.text().as_int() == 1 )
+    {
+      model::OutputVariable var("Zone Air Terminal VAV Damper Position",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Zone Air Terminal Outdoor Air Volume Flow Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Zone Packaged Terminal Heat Pump Total Heating Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Zone Packaged Terminal Heat Pump Total Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Zone Packaged Terminal Air Conditioner Total Heating Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Zone Packaged Terminal Air Conditioner Total Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Baseboard Total Heating Rate",*result);
+      var.setReportingFrequency(interval);
+
+      auto createOutputForNode = [&](const std::string & nodename) {
+        auto var = model::OutputVariable("System Node Temperature",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(nodename);
+        var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(nodename);
+      };
+
+      auto createOutputForZoneHVAC = [&](const model::ZoneHVACComponent & comp) {
+        auto name = comp.name().get();
+        if( auto mo = comp.inletNode() ) {
+          createOutputForNode(mo->name().get());
+        }
+        if( auto mo = comp.outletNode() ) {
+          createOutputForNode(mo->name().get());
+        }
+        auto mixedAirNodeName = name + " Mixed Air Node";
+        createOutputForNode(mixedAirNodeName);
+        auto reliefAirNodeName = name + " Relief Air Node";
+        createOutputForNode(reliefAirNodeName);
+        auto oaNodeName = name + " OA Node";
+        createOutputForNode(oaNodeName);
+      };
+
+      // Really need some abstraction so this sillyness isn't required
+      {
+        auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalAirConditioner>();
+        for( const auto & comp : zonehvac ) {
+          createOutputForZoneHVAC(comp);
+        }
+      }
+      {
+        auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalHeatPump>();
+        for( const auto & comp : zonehvac ) {
+          createOutputForZoneHVAC(comp);
+        }
+      }
+      {
+        auto zonehvac = result->getModelObjects<model::ZoneHVACWaterToAirHeatPump>();
+        for( const auto & comp : zonehvac ) {
+          createOutputForZoneHVAC(comp);
+
+          var = model::OutputVariable("Zone Water to Air Heat Pump Total Heating Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(comp.nameString());
+
+          var = model::OutputVariable("Zone Water to Air Heat Pump Total Cooling Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(comp.nameString());
+
+          var = model::OutputVariable("Zone Water to Air Heat Pump Total Cooling Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(comp.nameString());
+
+          var = model::OutputVariable("Zone Water to Air Heat Pump Sensible Cooling Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(comp.nameString());
+
+          var = model::OutputVariable("Zone Water to Air Heat Pump Electric Power",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(comp.nameString());
+
+          var = model::OutputVariable("Zone Water to Air Heat Pump Compressor Part Load Ratio",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(comp.nameString());
+        }
+      }
+      {
+        auto zonehvac = result->getModelObjects<model::ZoneHVACFourPipeFanCoil>();
+        for( const auto & comp : zonehvac ) {
+          createOutputForZoneHVAC(comp);
+        }
+      }
+      {
+        auto zonehvac = result->getModelObjects<model::ZoneHVACBaseboardConvectiveElectric>();
+        for( const auto & comp : zonehvac ) {
+          var = model::OutputVariable("Baseboard Electric Power",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(comp.nameString());
+        }
+      }
+    }
+
+    // SimVarsHVACSec
+
+    pugi::xml_node simVarsHVACSecElement = projectElement.child("SimVarsHVACSec");
+
+    if( simVarsHVACSecElement.text().as_int() == 1 )
+    {
+      model::OutputVariable var("Heating Coil Air Heating Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Heating Coil Heating Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Cooling Coil Total Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Cooling Coil Sensible Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Cooling Coil Electric Power",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Cooling Coil Part Load Ratio",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Cooling Coil Runtime Fraction",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Fan Electric Power",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Heating Coil Gas Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Heating Coil Electric Power",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Heating Coil Runtime Fraction",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Heating Coil Part Load Ratio",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Evaporative Cooler Electric Power",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Heating Coil Total Heating Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Air System Outdoor Air Heat Recovery Bypass Status",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Air System Outdoor Air Economizer Status",*result);
+      var.setReportingFrequency(interval);
+
+      auto hxs = result->getModelObjects<model::HeatExchangerAirToAirSensibleAndLatent>();
+      for( auto & hx : hxs ) {
+        var = model::OutputVariable("Heat Exchanger Sensible Heating Rate",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(hx.nameString());
+        var = model::OutputVariable("Heat Exchanger Latent Gain Rate",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(hx.nameString());
+        var = model::OutputVariable("Heat Exchanger Total Heating Rate",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(hx.nameString());
+        var = model::OutputVariable("Heat Exchanger Sensible Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(hx.nameString());
+        var = model::OutputVariable("Heat Exchanger Latent Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(hx.nameString());
+        var = model::OutputVariable("Heat Exchanger Total Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(hx.nameString());
+        var = model::OutputVariable("Heat Exchanger Electric Power",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(hx.nameString());
+        var = model::OutputVariable("Heat Exchanger Sensible Effectiveness",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(hx.nameString());
+        var = model::OutputVariable("Heat Exchanger Latent Effectiveness",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(hx.nameString());
+        var = model::OutputVariable("Heat Exchanger Supply Air Bypass Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(hx.nameString());
+        var = model::OutputVariable("Heat Exchanger Exhaust Air Bypass Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(hx.nameString());
+        var = model::OutputVariable("Heat Exchanger Defrost Time Fraction",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(hx.nameString());
+
+        if( auto node = hx.primaryAirOutletModelObject() ) {
+          var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(node->name().get());
+
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(node->name().get());
+        }
+
+        if( auto node = hx.secondaryAirOutletModelObject() ) {
+          var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(node->name().get());
+
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(node->name().get());
+        }
+      }
+
+      std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
+      for( auto & airloop : airloops)
+      {
+        var = model::OutputVariable("System Node Temperature",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(airloop.supplyInletNode().name().get());
+
+        var = model::OutputVariable("System Node Temperature",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(airloop.supplyOutletNode().name().get());
+
+        var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(airloop.supplyOutletNode().name().get());
+
+        var = model::OutputVariable("System Node Temperature",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(airloop.demandInletNode().name().get());
+
+        var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(airloop.demandInletNode().name().get());
+
+        if( boost::optional<model::Node> node = airloop.mixedAirNode() )
+        {
+          var = model::OutputVariable("System Node Temperature",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(node->name().get());
+
+          var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+          var.setReportingFrequency(interval);
+          var.setKeyValue(node->name().get());
+        }
+
+        if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airloop.airLoopHVACOutdoorAirSystem() )
+        {
+          if( boost::optional<model::ModelObject> node = oaSystem->reliefAirModelObject() )
+          {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+
+            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+          }
+
+          if( boost::optional<model::Node> node = oaSystem->outboardOANode() )
+          {
+            var = model::OutputVariable("System Node Temperature",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+
+            var = model::OutputVariable("System Node Standard Density Volume Flow Rate",*result);
+            var.setReportingFrequency(interval);
+            var.setKeyValue(node->name().get());
+          }
+        }
+      }
+    }
+
+    // SimVarsHVACPri
+
+    pugi::xml_node simVarsHVACPriElement = projectElement.child("SimVarsHVACPri");
+
+    if( (simVarsHVACPriElement.text().as_int() == 1) ||
+        autosize() )
+    {
+      model::OutputVariable var("Chiller Evaporator Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Cooling Tower Heat Transfer Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Boiler Heating Rate",*result);
+      var.setReportingFrequency(interval);
+    }
+
+    if( simVarsHVACPriElement.text().as_int() == 1 )
+    {
+      model::OutputVariable var("Pump Electric Power",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Pump Mass Flow Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Pump Outlet Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Debug Plant Loop Bypass Fraction",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Debug Plant Loop Bypass Fraction",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chiller Condenser Heat Transfer Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chiller Electric Power",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Cooling Tower Heat Transfer Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Cooling Tower Fan Electric Power",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Boiler Gas Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Boiler Ancillary Electric Power",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Plant Supply Side Cooling Demand Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Plant Supply Side Heating Demand Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chiller Evaporator Cooling Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Boiler Heating Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Plant Supply Side Inlet Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Plant Supply Side Outlet Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      std::vector<model::PlantLoop> plants = result->getModelObjects<model::PlantLoop>();
+      for( auto & plant : plants ) {
+        var = model::OutputVariable("System Node Mass Flow Rate",*result);
+        var.setReportingFrequency(interval);
+        var.setKeyValue(plant.demandOutletNode().name().get());
+      }
+    }
+
+    // SimVarsWtrHtrSys
+    pugi::xml_node simVarsWtrHtrSys = projectElement.child("SimVarsWtrHtr");
+    if( simVarsWtrHtrSys.text().as_int() == 1 ) {
+      model::OutputVariable var("Water Heater Tank Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Electric Energy",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Electric Power",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Heating Energy",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Heating Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Mains Water Volume",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Use Side Inlet Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Use Side Outlet Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Use Side Mass Flow Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Use Side Heat Transfer Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Source Side Inlet Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Source Side Outlet Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Source Side Mass Flow Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Source Side Heat Transfer Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Water Volume Flow Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Heat Pump Control Tank Final Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Heat Pump Control Tank Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Gas Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Water Heater Gas Energy",*result);
+      var.setReportingFrequency(interval);
+    }
+
+    // SimVarsThrmlEngyStor
+    pugi::xml_node simVarsThrmlEngyStorElement = projectElement.child("SimVarsThrmlEngyStor");
+
+    if( simVarsThrmlEngyStorElement.text().as_int() == 1 )
+    {
+      model::OutputVariable var("Chilled Water Thermal Storage Tank Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chilled Water Thermal Storage Use Side Mass Flow Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chilled Water Thermal Storage Use Side Inlet Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chilled Water Thermal Storage Use Side Outlet Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chilled Water Thermal Storage Use Side Heat Transfer Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chilled Water Thermal Storage Use Side Heat Transfer Energy",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chilled Water Thermal Storage Source Side Mass Flow Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chilled Water Thermal Storage Source Side Inlet Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chilled Water Thermal Storage Source Side Outlet Temperature",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chilled Water Thermal Storage Source Side Heat Transfer Rate",*result);
+      var.setReportingFrequency(interval);
+
+      var = model::OutputVariable("Chilled Water Thermal Storage Source Side Heat Transfer Energy",*result);
+      var.setReportingFrequency(interval);
+    }
+
+    model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
+    rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
+    rt.setToleranceforTimeHeatingSetpointNotMet(0.56);
+
 
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRunPeriod(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateRunPeriod(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     //<HVACAutoSizing>1</HVACAutoSizing>
     //<SimDsgnDays>0</SimDsgnDays>
@@ -1809,41 +1780,41 @@ namespace sdd {
 
     boost::optional<openstudio::model::ModelObject> result;
 
-    QDomElement hvacAutoSizingElement = element.firstChildElement("HVACAutoSizing");
-    QDomElement runDesignDaysElement = element.firstChildElement("SimDsgnDays");
-    QDomElement beginMonthElement = element.firstChildElement("RunPeriodBeginMonth");
-    QDomElement beginDayElement = element.firstChildElement("RunPeriodBeginDay");
-    QDomElement endMonthElement = element.firstChildElement("RunPeriodEndMonth");
-    QDomElement endDayElement = element.firstChildElement("RunPeriodEndDay");
-    QDomElement yearElement = element.firstChildElement("RunPeriodYear");
+    pugi::xml_node hvacAutoSizingElement = element.child("HVACAutoSizing");
+    pugi::xml_node runDesignDaysElement = element.child("SimDsgnDays");
+    pugi::xml_node beginMonthElement = element.child("RunPeriodBeginMonth");
+    pugi::xml_node beginDayElement = element.child("RunPeriodBeginDay");
+    pugi::xml_node endMonthElement = element.child("RunPeriodEndMonth");
+    pugi::xml_node endDayElement = element.child("RunPeriodEndDay");
+    pugi::xml_node yearElement = element.child("RunPeriodYear");
 
     bool test = true;
 
-    if (hvacAutoSizingElement.isNull()){
+    if (!hvacAutoSizingElement){
       test = false;
       LOG(Error, "HVACAutoSizing not specified");
     }
-    if (runDesignDaysElement.isNull()){
+    if (!runDesignDaysElement){
       test = false;
       LOG(Error, "SimDsgnDays not specified");
     }
-    if (beginMonthElement.isNull()){
+    if (!beginMonthElement){
       test = false;
       LOG(Error, "RunPeriodBeginMonth not specified");
     }
-    if (beginDayElement.isNull()){
+    if (!beginDayElement){
       test = false;
       LOG(Error, "RunPeriodBeginDay not specified");
     }
-    if (endMonthElement.isNull()){
+    if (!endMonthElement){
       test = false;
       LOG(Error, "RunPeriodEndMonth not specified");
     }
-    if (endDayElement.isNull()){
+    if (!endDayElement){
       test = false;
       LOG(Error, "RunPeriodEndDay not specified");
     }
-    if (yearElement.isNull()){
+    if (!yearElement){
       test = false;
       LOG(Error, "RunPeriodYear not specified");
     }
@@ -1856,7 +1827,7 @@ namespace sdd {
 
     simulationControl.setMaximumNumberofWarmupDays(50);
 
-    if( (runDesignDaysElement.text().toInt() == 1) || (hvacAutoSizingElement.text().toInt() == 1) || m_masterAutosize )
+    if( (runDesignDaysElement.text().as_int() == 1) || (hvacAutoSizingElement.text().as_int() == 1) || m_masterAutosize )
     {
       simulationControl.setRunSimulationforSizingPeriods(true);
     }
@@ -1865,7 +1836,7 @@ namespace sdd {
       simulationControl.setRunSimulationforSizingPeriods(false);
     }
 
-    if (beginMonthElement.text().toInt() == 0){
+    if (beginMonthElement.text().as_int(-1) == 0){
       simulationControl.setRunSimulationforWeatherFileRunPeriods(false);
 
       // remove any existing run periods
@@ -1878,20 +1849,20 @@ namespace sdd {
       simulationControl.setRunSimulationforWeatherFileRunPeriods(true);
 
       model::YearDescription yearDescription = model.getUniqueModelObject<model::YearDescription>();
-      yearDescription.setCalendarYear(yearElement.text().toInt());
+      yearDescription.setCalendarYear(yearElement.text().as_int());
 
       std::string runPeriodName = "Run Period";
-      QDomElement annualWeatherFileElement = element.firstChildElement("AnnualWeatherFile");
-      if (!annualWeatherFileElement.isNull()){
-        runPeriodName = openstudio::toString(openstudio::toPath(annualWeatherFileElement.text().toStdString()).stem());
+      pugi::xml_node annualWeatherFileElement = element.child("AnnualWeatherFile");
+      if (annualWeatherFileElement){
+        runPeriodName = openstudio::toString(openstudio::toPath(annualWeatherFileElement.text().as_string()).stem());
       }
 
       model::RunPeriod runPeriod = model.getUniqueModelObject<model::RunPeriod>();
       runPeriod.setName(runPeriodName);
-      runPeriod.setBeginMonth(beginMonthElement.text().toInt());
-      runPeriod.setBeginDayOfMonth(beginDayElement.text().toInt());
-      runPeriod.setEndMonth(endMonthElement.text().toInt());
-      runPeriod.setEndDayOfMonth(endDayElement.text().toInt());
+      runPeriod.setBeginMonth(beginMonthElement.text().as_int());
+      runPeriod.setBeginDayOfMonth(beginDayElement.text().as_int());
+      runPeriod.setEndMonth(endMonthElement.text().as_int());
+      runPeriod.setEndDayOfMonth(endDayElement.text().as_int());
       runPeriod.setUseWeatherFileHolidays(false);
       runPeriod.setUseWeatherFileDaylightSavings(false);
       runPeriod.setApplyWeekendHolidayRule(true);
@@ -1901,33 +1872,33 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSite(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSite(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     //<CliZn>ClimateZone12</CliZn>
     //<Lat>38.58</Lat>
     //<Long>-121.49</Long>
     //<Elevation>839.9</Elevation>
 
-    QDomElement climateZoneElement = element.firstChildElement("CliZn");
-    QDomElement latElement = element.firstChildElement("Lat");
-    QDomElement longElement = element.firstChildElement("Long");
-    QDomElement elevationElement = element.firstChildElement("Elevation");
+    pugi::xml_node climateZoneElement = element.child("CliZn");
+    pugi::xml_node latElement = element.child("Lat");
+    pugi::xml_node longElement = element.child("Long");
+    pugi::xml_node elevationElement = element.child("Elevation");
 
     bool test = true;
 
-    if (climateZoneElement.isNull()){
+    if (!climateZoneElement){
       //test = false;
       LOG(Error, "No climate zone specified");
     }
-    if (latElement.isNull()){
+    if (!latElement){
       test = false;
       LOG(Error, "No lattitude specified");
     }
-    if (longElement.isNull()){
+    if (!longElement){
       test = false;
       LOG(Error, "No longitude specified");
     }
-    if (elevationElement.isNull()){
+    if (!elevationElement){
       test = false;
       LOG(Error, "No elevation specified");
     }
@@ -1941,10 +1912,10 @@ namespace sdd {
 
     // DLM: what about time zone and terrain?
 
-    double latitude = latElement.text().toDouble();
-    double longitude = longElement.text().toDouble();
-    double elevationIP = elevationElement.text().toDouble();
-    double elevationSI = 0.3048*elevationIP;
+    double latitude = latElement.text().as_double();
+    double longitude = longElement.text().as_double();
+    double elevationIP = elevationElement.text().as_double();
+    double elevationSI = 0.3048 * elevationIP;
 
     site.setLatitude(latitude);
     site.setLongitude(longitude);
@@ -1956,13 +1927,13 @@ namespace sdd {
     return site;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWaterMainsTemperature(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWaterMainsTemperature(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     //<WtrMnTempSchRef>WaterMainCZ12</WtrMnTempSchRef>
 
-    QDomElement wtrMnTempSchRefElement = element.firstChildElement("WtrMnTempSchRef");
-    if (!wtrMnTempSchRefElement.isNull()){
-      boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(wtrMnTempSchRefElement.text().toStdString());
+    pugi::xml_node wtrMnTempSchRefElement = element.child("WtrMnTempSchRef");
+    if (wtrMnTempSchRefElement){
+      boost::optional<model::Schedule> schedule = model.getModelObjectByName<model::Schedule>(wtrMnTempSchRefElement.text().as_string());
       if (schedule){
         model::SiteWaterMainsTemperature waterMains = model.getUniqueModelObject<model::SiteWaterMainsTemperature>();
         waterMains.setTemperatureSchedule(*schedule);
@@ -1973,20 +1944,20 @@ namespace sdd {
     return boost::none;
   }
 
-  std::vector<WorkspaceObject> ReverseTranslator::translateDesignDays(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  std::vector<WorkspaceObject> ReverseTranslator::translateDesignDays(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     std::vector<WorkspaceObject> result;
 
     //<DDWeatherFile>F:/360Local/AEC/CBECCn/CBECC Source Files/CBECC-Com13/Data/EPW/SACRAMENTO-EXECUTIVE_724830_CZ2010.ddy</DDWeatherFile>
 
-    QDomElement ddWeatherFileElement = element.firstChildElement("DDWeatherFile");
+    pugi::xml_node ddWeatherFileElement = element.child("DDWeatherFile");
 
-    if (ddWeatherFileElement.isNull()){
+    if (!ddWeatherFileElement){
       LOG(Error, "No design day file specified");
       return result;
     }
 
-    openstudio::path ddyFilePath = toPath(ddWeatherFileElement.text().toStdString());
+    openstudio::path ddyFilePath = toPath(ddWeatherFileElement.text().as_string());
     if (!ddyFilePath.is_complete()){
       ddyFilePath = complete(ddyFilePath, m_path.parent_path());
     }
@@ -2013,18 +1984,18 @@ namespace sdd {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWeatherFile(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWeatherFile(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     //<AnnualWeatherFile>F:/360Local/AEC/CBECCn/CBECC Source Files/CBECC-Com13/Data/EPW/SACRAMENTO-EXECUTIVE_724830_CZ2010.epw</AnnualWeatherFile>
 
-    QDomElement annualWeatherFileElement = element.firstChildElement("AnnualWeatherFile");
+    pugi::xml_node annualWeatherFileElement = element.child("AnnualWeatherFile");
 
-    if (annualWeatherFileElement.isNull()){
+    if (!annualWeatherFileElement){
       LOG(Error, "No annual weather file specified");
       return boost::none;
     }
 
-    openstudio::path epwFilePath = toPath(annualWeatherFileElement.text().toStdString());
+    openstudio::path epwFilePath = toPath(annualWeatherFileElement.text().as_string());
     if (!epwFilePath.is_complete()){
       epwFilePath = complete(epwFilePath, m_path.parent_path());
     }
@@ -2055,77 +2026,59 @@ namespace sdd {
     return weatherFile.get();
   }
 
-QDomElement ReverseTranslator::supplySegment(const QString & fluidSegmentName, const QDomDocument& doc)
+
+pugi::xml_node ReverseTranslator::supplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root)
 {
-  QDomNodeList fluidSysElements = doc.documentElement().firstChildElement("Proj").elementsByTagName("FluidSys");
+  for(auto& fluidSysElement : root.child("Proj").children("FluidSys")) {
+    for(auto& fluidSegmentElement : fluidSysElement.children("FluidSeg")) {
+      auto nameElement = fluidSegmentElement.child("Name");
+      auto typeElement = fluidSegmentElement.child("Type");
 
-  for (int i = 0; i < fluidSysElements.count(); i++) {
-    QDomElement fluidSysElement = fluidSysElements.at(i).toElement();
-    QDomNodeList fluidSegmentElements = fluidSysElement.elementsByTagName("FluidSeg");
-
-    for (int i = 0; i < fluidSegmentElements.count(); i++) {
-      QDomElement fluidSegmentElement = fluidSegmentElements.at(i).toElement();
-
-      QDomElement nameElement = fluidSegmentElement.firstChildElement("Name");
-      QDomElement typeElement = fluidSegmentElement.firstChildElement("Type");
-
-      if( (typeElement.text().toLower() == "secondarysupply" ||
-           typeElement.text().toLower() == "primarysupply" ) &&
-           nameElement.text().toLower() == fluidSegmentName.toLower() ) {
+      if ((istringEqual(typeElement.text().as_string(), "SECONDARYSUPPLY") ||
+        istringEqual(typeElement.text().as_string(), "PRIMARYSUPPLY")) &&
+        istringEqual(nameElement.text().as_string(), fluidSegmentName)) {
         return fluidSegmentElement;
       }
     }
   }
 
-  return QDomElement();
+  return pugi::xml_node();
 }
 
-boost::optional<model::PlantLoop> ReverseTranslator::loopForSupplySegment(const QString & fluidSegmentName, const QDomDocument& doc, openstudio::model::Model& model)
+boost::optional<model::PlantLoop> ReverseTranslator::loopForSupplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root, openstudio::model::Model& model)
 {
-  auto fluidSegmentElement = supplySegment(fluidSegmentName,doc);
-  auto fluidSysElement = fluidSegmentElement.parentNode().toElement();
-  auto fluidSysNameElement = fluidSysElement.firstChildElement("Name");
+  auto fluidSegmentElement = supplySegment(fluidSegmentName, root);
+  auto fluidSysElement = fluidSegmentElement.parent();
+  auto fluidSysNameElement = fluidSysElement.child("Name");
 
-  return model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().toStdString());
+  return model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string());
 }
 
-boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSupplySegment(const QString & fluidSegmentName, const QDomDocument & doc, openstudio::model::Model& model)
+boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSupplySegment(const std::string & fluidSegmentName, const pugi::xml_node& root, openstudio::model::Model& model)
 {
   boost::optional<model::PlantLoop> result;
 
-  QDomNodeList fluidSysElements = doc.documentElement().firstChildElement("Proj").elementsByTagName("FluidSys");
+  for(auto& fluidSysElement : root.child("Proj").children("FluidSys")) {
 
-  for (int i = 0; i < fluidSysElements.count(); i++)
-  {
-    QDomElement fluidSysElement = fluidSysElements.at(i).toElement();
+    auto fluidSysNameElement = fluidSysElement.child("Name");
 
-    QDomElement fluidSysNameElement = fluidSysElement.firstChildElement("Name");
+    auto fluidSysTypeElement = fluidSysElement.child("Type");
 
-    QDomElement fluidSysTypeElement = fluidSysElement.firstChildElement("Type");
-
-    if( fluidSysTypeElement.text().toLower() == "servicehotwater" )
+    if (openstudio::istringEqual(fluidSysTypeElement.text().as_string(), "SERVICEHOTWATER"))
     {
-      QDomNodeList fluidSegmentElements = fluidSysElement.elementsByTagName("FluidSeg");
+      for(auto& fluidSegmentElement : fluidSysElement.children("FluidSeg")) {
 
-      for (int i = 0; i < fluidSegmentElements.count(); i++)
-      {
-        QDomElement fluidSegmentElement = fluidSegmentElements.at(i).toElement();
+        auto nameElement = fluidSegmentElement.child("Name");
+        auto typeElement = fluidSegmentElement.child("Type");
 
-        QDomElement nameElement = fluidSegmentElement.firstChildElement("Name");
-        QDomElement typeElement = fluidSegmentElement.firstChildElement("Type");
-
-        if( (typeElement.text().toLower() == "secondarysupply" ||
-             typeElement.text().toLower() == "primarysupply" ) &&
-            nameElement.text().toLower() == fluidSegmentName.toLower()
-          )
-        {
-          if( boost::optional<model::PlantLoop> loop = model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().toStdString()) )
-          {
+        if ((openstudio::istringEqual(typeElement.text().as_string(), "SECONDARYSUPPLY") ||
+             openstudio::istringEqual(typeElement.text().as_string(), "PRIMARYSUPPLY"))
+            && openstudio::istringEqual(nameElement.text().as_string(), fluidSegmentName)
+           ) {
+          if (boost::optional<model::PlantLoop> loop = model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string())) {
             return loop;
-          }
-          else
-          {
-            if( boost::optional<model::ModelObject> mo = translateFluidSys(fluidSysElement,doc,model) )
+          } else {
+            if (boost::optional<model::ModelObject> mo = translateFluidSys(fluidSysElement, model))
             {
               return mo->optionalCast<model::PlantLoop>();
             }

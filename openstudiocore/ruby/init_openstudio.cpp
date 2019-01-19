@@ -42,7 +42,7 @@ extern "C" {
   void Init_openstudioosversion(void);
   void Init_openstudioutilitiesdata(void);
   void Init_openstudioutilitiessql(void);
-  void Init_openstudiogbxml(void);
+  void Init_openstudiogbxml(void); 
   void Init_openstudiomodelgenerators(void);
   void Init_openstudioradiance(void);
   void Init_openstudioutilitiestime(void);

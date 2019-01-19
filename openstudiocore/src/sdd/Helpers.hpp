@@ -27,41 +27,48 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <RubyAPI.hpp>
-#include <QtPlugin>
-#include <iostream>
-#include <ruby.h>
+#ifndef SDD_HELPERS_HPP
+#define SDD_HELPERS_HPP
 
+#include "../utilities/core/Optional.hpp"
 
-//#if defined(__APPLE__)
-//  Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin);
-//#elif (defined (_WIN32) || defined (_WIN64))
-//  Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
-//#elif defined(__linux__)
-//  Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);
-//#endif
-
-inline void initResources() {
-
-  #ifndef SHARED_OS_LIBS
-    Q_INIT_RESOURCE(modeleditorlib);
-  #endif // SHARED_OS_LIBS
-
+namespace pugi {
+  class xml_node;
+  class xml_attribute;
 }
 
-extern "C" {
- 
-void Init_openstudiomodeleditor(void);
+namespace openstudio {
+  namespace sdd {
 
-RUBY_API void Init_openstudio_modeleditor(void) {
+    // Helper to make a vector of pugi::xml_node of all children under an element (regardless of their tag)
+    std::vector<pugi::xml_node> makeVectorOfChildren(const pugi::xml_node& root);
 
-  initResources();
+    // Helper to make a vector of pugi::xml_node of children matching a specific tag (first-descendants only)
+    std::vector<pugi::xml_node> makeVectorOfChildren(const pugi::xml_node& root, const char * tagName);
 
-  Init_openstudiomodeleditor();
-  rb_provide("openstudiomodeleditor");
-  rb_provide("openstudiomodeleditor.so");
+    // Lexical cast the text() of a node as a double
+    // Checks if the element actually exists, then if it can be converted to a double.
+    // (pugi::xml_node::text().as_double() will return a default value in all cases, which is too permissive)
+    boost::optional<double> lexicalCastToDouble(const pugi::xml_node& element);
 
-}
+    // Lexical cast an attribute's value() as a double
+    // Checks if the attribute actually exists, then if it can be converted to a double
+    boost::optional<double> lexicalCastToDouble(const pugi::xml_attribute& attr);
 
-}
+    // Lexical cast the text() of a node as an integer
+    // Checks if the element actually exists, then if it can be converted to an int.
+    boost::optional<int> lexicalCastToInt(const pugi::xml_node& element);
 
+    // Lexical cast an attribute's value() as an integer
+    // Checks if the attribute actually exists, then if it can be converted to an integer
+    boost::optional<int> lexicalCastToInt(const pugi::xml_attribute& attr);
+
+    // Lexical cast an attribute's value() as an Unsigned
+    // Checks if the attribute actually exists, then if it can be converted to an Unsigned
+    // (boost::lexical_cast<unsigned>(-1) would not throw but return gibberish)
+    boost::optional<unsigned> lexicalCastToUnsigned(const pugi::xml_attribute& attr);
+
+  } // sdd
+} // openstudio
+
+#endif // SDD_REVERSETRANSLATOR_HPP

@@ -56,9 +56,9 @@ include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudioradiance)
 # message("EMBEDDED_OUTPUT: ${EMBEDDED_OUTPUT}")
 
-add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
-target_link_libraries(${target_name} ${${target_name}_depends})
-AddPCH(${target_name})
+#add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
+#target_link_libraries(${target_name} ${${target_name}_depends})
+#AddPCH(${target_name})
 
 # set up groups of source files for Visual Studio
 source_group(embedded FILES ${EMBEDDED_OUTPUT})
@@ -80,7 +80,7 @@ target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 #  )
 #endif()
 
-CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends}")
 
 MAKE_SWIG_TARGET(OpenStudioRadiance radiance "${CMAKE_CURRENT_SOURCE_DIR}/Radiance.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioModel)
 

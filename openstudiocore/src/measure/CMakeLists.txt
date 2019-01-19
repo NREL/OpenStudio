@@ -38,19 +38,19 @@ set(${target_name}_swig_src
   Measure.i
 )
 
-set(${target_name}_depends
-  openstudio_osversion
-)
+#set(${target_name}_depends
+#  openstudio_osversion
+#)
 
 
-add_library(${target_name}
-  ${${target_name}_src}
-#  ${${target_name}_moc_src}
-)
+#add_library(${target_name}
+#  ${${target_name}_src}
+##  ${${target_name}_moc_src}
+#)
 
-AddPCH(${target_name})
+#AddPCH(${target_name})
 
-target_link_libraries(${target_name} ${${target_name}_depends})
+#target_link_libraries(${target_name} ${${target_name}_depends})
 
 # No need to install static lib
 #if(NOT APPLE)
@@ -66,9 +66,9 @@ target_link_libraries(${target_name} ${${target_name}_depends})
 #if(MINGW)
 #  set_target_properties(${target_name} PROPERTIES COMPILE_DEFINITIONS "WIN_GCC")
 #endif()
-if(MSVC)
-  set_target_properties(${target_name} PROPERTIES COMPILE_DEFINITIONS "WIN_MVC")
-endif()
+#if(MSVC)
+#  set_target_properties(${target_name} PROPERTIES COMPILE_DEFINITIONS "WIN_MVC")
+#endif()
 #if(APPLE)
 #  set_target_properties(${target_name} PROPERTIES COMPILE_DEFINITIONS "DARWIN")
 #endif()
@@ -93,7 +93,7 @@ if( MSVC )
 endif()
 
 #CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};${RUBY_LIBRARY};${COREFOUNDATION_LIBRARY}")
-CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};${COREFOUNDATION_LIBRARY}")
+CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends};${COREFOUNDATION_LIBRARY}")
 
 MAKE_SWIG_TARGET(OpenStudioMeasure measure "${CMAKE_CURRENT_SOURCE_DIR}/Measure.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioOSVersion)
 

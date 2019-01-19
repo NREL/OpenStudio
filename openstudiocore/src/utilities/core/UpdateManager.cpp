@@ -30,18 +30,15 @@
 #include "UpdateManager.hpp"
 #include "Assert.hpp"
 #include <OpenStudio.hxx>
-#include <QNetworkReply>
-#include <QDomDocument>
 
 #include <boost/lexical_cast.hpp>
-
 
 namespace openstudio{
 
   UpdateManager::UpdateManager(const std::string& appName)
     : m_appName(appName), m_finished(false), m_error(false),
       m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
-      m_mostRecentVersion(openStudioVersion()), m_manager(new QNetworkAccessManager())
+      m_mostRecentVersion(openStudioVersion())//, m_manager(new QNetworkAccessManager())
   {
     // TODO: QT-Separation-Move
     //Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
@@ -50,19 +47,19 @@ namespace openstudio{
 
     //connect(this, &UpdateManager::processed, this, &UpdateManager::replyProcessed);
 
-    QUrl url(QString::fromStdString(updateUrl()));
+    //QUrl url(QString::fromStdString(updateUrl()));
 
-    m_request = new QNetworkRequest(url);
-    OS_ASSERT(m_request);
+    //m_request = new QNetworkRequest(url);
+    //OS_ASSERT(m_request);
 
-    m_reply = m_manager->get(*m_request);
-    OS_ASSERT(m_reply);
+    //m_reply = m_manager->get(*m_request);
+    //OS_ASSERT(m_reply);
   }
 
   UpdateManager::UpdateManager(const std::string& appName, const std::string& url)
     : m_appName(appName), m_finished(false), m_error(false),
       m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
-      m_mostRecentVersion(openStudioVersion()), m_manager(new QNetworkAccessManager())
+      m_mostRecentVersion(openStudioVersion())//, m_manager(new QNetworkAccessManager())
   {
     //TODO: QT - Separation - Move
     //Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
@@ -71,9 +68,9 @@ namespace openstudio{
 
     //connect(this, &UpdateManager::processed, this, &UpdateManager::replyProcessed);
 
-    m_request = new QNetworkRequest(QUrl(QString::fromStdString(url)));
+    //m_request = new QNetworkRequest(QUrl(QString::fromStdString(url)));
 
-    m_reply = m_manager->get(*m_request);
+    //m_reply = m_manager->get(*m_request);
   }
 
   std::string UpdateManager::appName() const
@@ -171,7 +168,7 @@ namespace openstudio{
   //void UpdateManager::replyProcessed()
   //{
   //}
-
+  /*
   bool UpdateManager::checkRelease(const QDomElement& release)
   {
     bool updateAvailable = false;
@@ -233,6 +230,6 @@ namespace openstudio{
 
     return updateAvailable;
   }
-
+  */
 
 } // openstudio

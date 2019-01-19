@@ -1104,7 +1104,7 @@ boost::optional<Attribute> Attribute::loadFromXml(const openstudio::path& xmlPat
 
   openstudio::filesystem::ifstream file(xmlPath, std::ios_base::binary);
   if (file.is_open()){
-    auto success = attributeXML.load_file(xmlPath.c_str());
+    auto success = attributeXML.load(file);
     if (!success) {
       LOG(Error, "'" << xmlPath << "' could not be read as XML data");
       return result;

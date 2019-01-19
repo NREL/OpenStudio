@@ -22,9 +22,6 @@
 
   #include <model/Model.hpp>
   #include <model/ModelObject.hpp>
-
-  #include <QDomDocument>
-  #include <QDomElement>
 %}
 
 // #ifdef SWIGCSHARP

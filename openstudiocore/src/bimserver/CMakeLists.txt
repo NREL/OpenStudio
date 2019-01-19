@@ -2,6 +2,8 @@ set(target_name openstudio_bimserver)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+include_directories(${QT_INCLUDES})
+
 set(${target_name}_src
   BIMserverAPI.hpp
   mainpage.hpp
@@ -23,10 +25,12 @@ set(${target_name}_swig_src
 set(${target_name}_depends
   ${Boost_LIBRARIES}
   ${CMAKE_THREAD_LIBS}
-  openstudio_utilities
-  openstudio_model
-  openstudio_energyplus
-  openstudio_osversion
+  openstudio_utilities_static
+  openstudio_model_static
+  openstudio_energyplus_static
+  openstudio_osversion_static
+  ${QT_LIBS}
+  qtwinmigrate_static  
 )
 
 add_library(${target_name} ${${target_name}_src})
@@ -45,9 +49,9 @@ CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
-if(BUILD_TESTING)
-  add_dependencies(${target_name}_tests openstudio_bimserver_resources)
-endif()
+#if(BUILD_TESTING)
+#  add_dependencies(${target_name}_tests openstudio_bimserver_resources)
+#endif()
 
 #MAKE_SWIG_TARGET(OpenStudioGBXML gbXML "${CMAKE_CURRENT_SOURCE_DIR}/gbXML.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)
 
