@@ -41,27 +41,21 @@ namespace openstudio
 
   TEST(UpdateManager, GeneralTest)
   {
-    FAIL() << "UpdateManager currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
     UpdateManager manager("GTest");
     EXPECT_EQ("GTest", manager.appName());
-    while (!manager.finished()){
-      // DLM: no longer calls Application::instance().processEvents(msecPerLoop);
-      System::msleep(100);
-    }
+    auto result = manager.waitForFinished();
+    ASSERT_TRUE(result);
     EXPECT_TRUE(manager.finished());
     EXPECT_FALSE(manager.error());
   }
 
   TEST(UpdateManager, ExpandedTest)
   {
-    FAIL() << "UpdateManager currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
-    std::string url = "https://www.openstudio.net/updateGTest.html?app=GTest&version=0.0.0";
+    std::string url("https://www.openstudio.net/updateGTest.html?app=GTest&version=0.0.0");
     UpdateManager manager("GTest", url);
     EXPECT_EQ("GTest", manager.appName());
-    while (!manager.finished()){
-      // DLM: no longer calls Application::instance().processEvents(msecPerLoop);
-      System::msleep(100);
-    }
+    auto result = manager.waitForFinished();
+    ASSERT_TRUE(result);
     EXPECT_TRUE(manager.finished());
     EXPECT_FALSE(manager.error());
     EXPECT_TRUE(manager.newMajorRelease());
@@ -69,6 +63,6 @@ namespace openstudio
     EXPECT_FALSE(manager.newPatchRelease());
     EXPECT_EQ("99.99.99.99", manager.mostRecentVersion());
     EXPECT_EQ("https://www.openstudio.net/downloads/99", manager.mostRecentDownloadUrl());
-    ASSERT_EQ(static_cast<unsigned>(2), manager.updateMessages().size());
+    ASSERT_EQ(2u, manager.updateMessages().size());
   }
 }

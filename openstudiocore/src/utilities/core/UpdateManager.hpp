@@ -33,13 +33,11 @@
 #include "../UtilitiesAPI.hpp"
 #include "Logger.hpp"
 
+#include <cpprest/http_client.h>
+#include <pugixml.hpp>
+
 #include <string>
 #include <vector>
-
-class QNetworkRequest;
-class QNetworkReply;
-class QNetworkAccessManager;
-class QDomElement;
 
 namespace openstudio {
 
@@ -60,6 +58,8 @@ namespace openstudio {
 
     /// returns the application name
     std::string appName() const;
+
+    bool waitForFinished(int msec = 120000) const;
 
     /// returns true when the manager is finished checking for updates
     bool finished() const;
@@ -107,15 +107,15 @@ namespace openstudio {
     std::string m_mostRecentDownloadUrl;
     std::vector<std::string> m_updateMessages;
 
+    boost::optional<pplx::task<void> > m_httpResponse;
+
+    void processReply(const std::string& reply);
+
     // returns true if release being checked is newer than current release
-    //bool checkRelease(const QDomElement& release);
+    bool checkRelease(const pugi::xml_node& release);
 
     // url used for checking updates
-    std::string updateUrl() const;
-
-    //QNetworkAccessManager* m_manager;
-    //QNetworkRequest* m_request;
-    //QNetworkReply* m_reply;
+    static std::string updateUrl(const std::string& appName);
 
   };
 

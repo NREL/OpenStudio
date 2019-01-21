@@ -29,53 +29,62 @@
 
 #include "UpdateManager.hpp"
 #include "Assert.hpp"
+#include "System.hpp"
 #include <OpenStudio.hxx>
 
 #include <boost/lexical_cast.hpp>
 
+#include <regex>
+
 namespace openstudio{
 
   UpdateManager::UpdateManager(const std::string& appName)
-    : m_appName(appName), m_finished(false), m_error(false),
-      m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
-      m_mostRecentVersion(openStudioVersion())//, m_manager(new QNetworkAccessManager())
-  {
-    // TODO: QT-Separation-Move
-    //Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
-
-    //connect(m_manager, &QNetworkAccessManager::finished, this, &UpdateManager::replyFinished);
-
-    //connect(this, &UpdateManager::processed, this, &UpdateManager::replyProcessed);
-
-    //QUrl url(QString::fromStdString(updateUrl()));
-
-    //m_request = new QNetworkRequest(url);
-    //OS_ASSERT(m_request);
-
-    //m_reply = m_manager->get(*m_request);
-    //OS_ASSERT(m_reply);
-  }
+    : UpdateManager(appName, updateUrl(appName))
+  {}
 
   UpdateManager::UpdateManager(const std::string& appName, const std::string& url)
     : m_appName(appName), m_finished(false), m_error(false),
       m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
-      m_mostRecentVersion(openStudioVersion())//, m_manager(new QNetworkAccessManager())
+      m_mostRecentVersion(openStudioVersion())
   {
-    //TODO: QT - Separation - Move
-    //Application::instance().processEvents(); // a kludge to make sure that updatemanager works correctly in a non-application environment on unix
-
-    //connect(m_manager, &QNetworkAccessManager::finished, this, &UpdateManager::replyFinished);
-
-    //connect(this, &UpdateManager::processed, this, &UpdateManager::replyProcessed);
-
-    //m_request = new QNetworkRequest(QUrl(QString::fromStdString(url)));
-
-    //m_reply = m_manager->get(*m_request);
+    web::http::client::http_client client(toWString(url));
+    m_httpResponse = client
+      .request(web::http::methods::GET)
+      .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
+      .then([this](const std::string& xml) { processReply(xml); });
   }
 
   std::string UpdateManager::appName() const
   {
     return m_appName;
+  }
+
+  bool UpdateManager::waitForFinished(int msec) const
+  {
+    int msecPerLoop = 20;
+    int numTries = msec / msecPerLoop;
+    int current = 0;
+    while (true) {
+      // if no request was made and the optional is empty return
+      if (!m_httpResponse) {
+        return false;
+      }
+
+      if (m_httpResponse->is_done()) {
+        return true;
+      }
+
+      System::msleep(msecPerLoop);
+
+      if (current > numTries) {
+        LOG(Error, "waitForFinished timeout");
+        break;
+      }
+
+      ++current;
+    }
+
+    return false;
   }
 
   bool UpdateManager::finished() const
@@ -118,118 +127,102 @@ namespace openstudio{
     return m_updateMessages;
   }
 
-
-  std::string UpdateManager::updateUrl() const
+  std::string UpdateManager::updateUrl(const std::string& appName)
   {
-    return std::string("https://www.openstudio.net/update.html?app=") + appName() + std::string("&version=") + openStudioVersion();
+    const std::string url("https://www.openstudio.net");
+    
+    web::uri_builder builder(U("/update.html"));
+
+    builder.append_query(U("app"), toWString(appName));
+    builder.append_query(U("version"), toWString(openStudioVersion()));
+
+    return url + toString(builder.to_string());
   }
 
-  //void UpdateManager::replyFinished(QNetworkReply* reply)
-  //{
-  //  // finished after this
-  //  m_finished = true;
-  //
-  //  if (reply){
-  //    // don't delete here
-  //    reply->deleteLater();
-  //
-  //    m_error = (reply->error() != QNetworkReply::NoError);
-  //    if (!m_error){
-  //
-  //      // create xml document to read the response
-  //      QDomDocument document;
-  //      document.setContent(reply->readAll());
-  //      QDomNodeList openstudioelements = document.elementsByTagName("openstudio");
-  //
-  //      if (openstudioelements.size() > 0)
-  //      {
-  //        // Only process the first one for now
-  //        QDomNodeList nodes = openstudioelements.at(0).childNodes();
-  //
-  //        // all child nodes will be releases
-  //        for(int i = 0; i < nodes.size(); ++i){
-  //          QDomElement release = nodes.at(i).toElement();
-  //          if (!release.isNull()){
-  //            if (!checkRelease(release)){
-  //              // break if not newer than current
-  //              break;
-  //            }
-  //          }
-  //        }
-  //      }
-  //    }else{
-  //      LOG(Error, "QNetworkReply " << reply->error());
-  //    }
-  //  }
-  //
-  //  emit processed();
-  //}
+  void UpdateManager::processReply(const std::string& reply)
+  {
+    m_error = false;
 
-  //void UpdateManager::replyProcessed()
-  //{
-  //}
-  /*
-  bool UpdateManager::checkRelease(const QDomElement& release)
+    if (!m_error) {
+      // create xml document to read the response
+      pugi::xml_document document;
+      auto result = document.load_string(reply.c_str());
+      if (!result) {
+        m_error = true;
+        LOG(Error, "Bad XML Response: " << result.description());
+      } else {
+        auto openstudio = document.document_element().child("openstudio");
+        for (auto release = openstudio.child("release"); release; release = release.next_sibling("release")) {
+          if (!checkRelease(release)) {
+            // break if not newer than current
+            break;
+          }
+        }
+      }
+    }
+    
+    m_finished = true;
+  }
+  
+  bool UpdateManager::checkRelease(const pugi::xml_node& release)
   {
     bool updateAvailable = false;
 
-    try{
-
-      std::string version = release.attribute("version").toStdString();
+    try {
+      std::string version = release.attribute("version").value();
       std::string currentVersion = openStudioVersion();
-      boost::regex versionRegex("^([0-9]+)\\.([0-9]+)\\.([0-9]+).*?");
+      std::regex versionRegex("^([0-9]+)\\.([0-9]+)\\.([0-9]+).*?");
 
-      boost::smatch versionMatch;
-      boost::smatch currentVersionMatch;
-      if( boost::regex_search(version, versionMatch, versionRegex) &&
-          boost::regex_search(currentVersion, currentVersionMatch, versionRegex)){
-        std::string versionMajorString = std::string(versionMatch[1].first,versionMatch[1].second); boost::trim(versionMajorString);
-        std::string versionMinorString = std::string(versionMatch[2].first,versionMatch[2].second); boost::trim(versionMinorString);
-        std::string versionPatchString = std::string(versionMatch[3].first,versionMatch[3].second); boost::trim(versionPatchString);
+      std::smatch versionMatch;
+      std::smatch currentVersionMatch;
+      if (std::regex_search(version, versionMatch, versionRegex) && std::regex_search(currentVersion, currentVersionMatch, versionRegex)) {
+        auto versionMajorString = std::string(versionMatch[1].first, versionMatch[1].second);
+        auto versionMinorString = std::string(versionMatch[2].first, versionMatch[2].second);
+        auto versionPatchString = std::string(versionMatch[3].first, versionMatch[3].second);
 
-        unsigned versionMajor = boost::lexical_cast<unsigned>(versionMajorString);
-        unsigned versionMinor = boost::lexical_cast<unsigned>(versionMinorString);
-        unsigned versionPatch = boost::lexical_cast<unsigned>(versionPatchString);
+        auto versionMajor = boost::lexical_cast<unsigned>(versionMajorString);
+        auto versionMinor = boost::lexical_cast<unsigned>(versionMinorString);
+        auto versionPatch = boost::lexical_cast<unsigned>(versionPatchString);
 
-        std::string currentVersionMajorString = std::string(currentVersionMatch[1].first,currentVersionMatch[1].second); boost::trim(currentVersionMajorString);
-        std::string currentVersionMinorString = std::string(currentVersionMatch[2].first,currentVersionMatch[2].second); boost::trim(currentVersionMinorString);
-        std::string currentVersionPatchString = std::string(currentVersionMatch[3].first,currentVersionMatch[3].second); boost::trim(currentVersionPatchString);
+        auto currentVersionMajorString = std::string(currentVersionMatch[1].first,currentVersionMatch[1].second);
+        auto currentVersionMinorString = std::string(currentVersionMatch[2].first,currentVersionMatch[2].second);
+        auto currentVersionPatchString = std::string(currentVersionMatch[3].first,currentVersionMatch[3].second);
 
-        unsigned currentVersionMajor = boost::lexical_cast<unsigned>(currentVersionMajorString);
-        unsigned currentVersionMinor = boost::lexical_cast<unsigned>(currentVersionMinorString);
-        unsigned currentVersionPatch = boost::lexical_cast<unsigned>(currentVersionPatchString);
+        auto currentVersionMajor = boost::lexical_cast<unsigned>(currentVersionMajorString);
+        auto currentVersionMinor = boost::lexical_cast<unsigned>(currentVersionMinorString);
+        auto currentVersionPatch = boost::lexical_cast<unsigned>(currentVersionPatchString);
 
-        if (versionMajor > currentVersionMajor){
+        if (versionMajor > currentVersionMajor) {
           m_newMajorRelease = true;
           updateAvailable = true;
-        }else if(versionMajor == currentVersionMajor){
-          if (versionMinor > currentVersionMinor){
+        } else if (versionMajor == currentVersionMajor) {
+          if (versionMinor > currentVersionMinor) {
             m_newMinorRelease = true;
             updateAvailable = true;
-          }else if(versionMinor == currentVersionMinor){
-            if (versionPatch > currentVersionPatch){
+          } else if (versionMinor == currentVersionMinor) {
+            if (versionPatch > currentVersionPatch) {
               m_newPatchRelease = true;
               updateAvailable = true;
             }
           }
         }
 
-        if (updateAvailable){
+        if (updateAvailable) {
           // only set download url to most recent (e.g. first) release
-          if (m_updateMessages.empty()){
+          if (m_updateMessages.empty()) {
             m_mostRecentVersion = version;
-            m_mostRecentDownloadUrl = release.attribute("download").toStdString();
+            m_mostRecentDownloadUrl = release.attribute("download").value();
           }
           // add messages from all releases newer than current
-          m_updateMessages.push_back(release.firstChild().toCDATASection().data().toStdString());
+          m_updateMessages.push_back(release.first_child().value());
         }
       }
-    }catch(const std::exception& e){
+    } catch(const std::exception& e) {
       LOG(Error, e.what());
     }
 
     return updateAvailable;
   }
-  */
+  
 
 } // openstudio

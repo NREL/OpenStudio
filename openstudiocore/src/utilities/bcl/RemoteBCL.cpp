@@ -35,8 +35,6 @@
 #include "../core/System.hpp"
 #include "../core/UnzipFile.hpp"
 
-#include <cpprest/http_client.h>
-
 #include <regex>
 
 #define REMOTE_PRODUCTION_SERVER "https://bcl.nrel.gov"
@@ -88,7 +86,7 @@ namespace openstudio{
     m_ofs.close();
   }
 
-  void RemoteBCL::DownloadFile::write(const std::vector<unsigned char> &data)
+  void RemoteBCL::DownloadFile::write(const std::vector<unsigned char>& data)
   {
     m_ofs.write(reinterpret_cast<const char*>(data.data()), data.size());
   }
@@ -242,7 +240,7 @@ namespace openstudio{
       m_httpResponse = client
         .request(web::http::methods::GET, builder.to_string())
         .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
-        .then([this](std::string xml) {
+        .then([this](const std::string& xml) {
           auto remoteQueryResponse = processReply(xml);
 
           if (remoteQueryResponse) {
@@ -285,7 +283,7 @@ namespace openstudio{
       m_httpResponse = client
         .request(web::http::methods::GET, builder.to_string())
         .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
-        .then([this](std::string xml) {
+        .then([this](const std::string& xml) {
           auto remoteQueryResponse = processReply(xml);
 
           if (remoteQueryResponse) {
@@ -524,7 +522,7 @@ namespace openstudio{
       m_httpResponse = client
         .request(web::http::methods::GET, builder.to_string())
         .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
-        .then([this](std::string xml) {
+        .then([this](const std::string& xml) {
           auto remoteQueryResponse = processReply(xml);
 
           if (remoteQueryResponse) {
@@ -620,7 +618,7 @@ namespace openstudio{
       .then([](web::http::http_response resp) {
         return resp.extract_vector();
       })
-      .then([this](std::vector<unsigned char> zip) {
+      .then([this](const std::vector<unsigned char>& zip) {
         m_downloadFile->write(zip);
         m_downloadFile->flush();
         m_downloadFile->close();
@@ -668,7 +666,7 @@ namespace openstudio{
     m_httpResponse = client
       .request(web::http::methods::GET, builder.to_string())
       .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
-      .then([this](std::string xml) {
+      .then([this](const std::string& xml) {
         auto remoteQueryResponse = processReply(xml);
 
         if (remoteQueryResponse) {
@@ -715,7 +713,7 @@ namespace openstudio{
     m_httpResponse = client
       .request(web::http::methods::GET, builder.to_string())
       .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
-      .then([this](std::string xml) {
+      .then([this](const std::string& xml) {
         auto remoteQueryResponse = processReply(xml);
 
         if (remoteQueryResponse) {
@@ -765,7 +763,7 @@ namespace openstudio{
     m_httpResponse = client
       .request(web::http::methods::GET, builder.to_string())
       .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
-      .then([this](std::string xml) {
+      .then([this](const std::string& xml) {
         auto remoteQueryResponse = processReply(xml);
 
         if (remoteQueryResponse) {
@@ -807,7 +805,7 @@ namespace openstudio{
     m_httpResponse = client
       .request(web::http::methods::GET, builder.to_string())
       .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
-      .then([this](std::string xml) {
+      .then([this](const std::string& xml) {
         auto remoteQueryResponse = processReply(xml);
 
         if (remoteQueryResponse) {

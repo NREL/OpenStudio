@@ -33,13 +33,11 @@
 #include "BCL.hpp"
 #include "../core/Path.hpp"
 
-#include <pugixml.hpp>
-#include <mutex>
-#include <memory>
-
 #include <cpprest/http_client.h>
-
 #include <nano/nano_signal_slot.hpp>
+#include <pugixml.hpp>
+
+#include <memory>
 
 namespace openstudio{
 
