@@ -4536,13 +4536,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
           zoneHVACComponent->addToThermalZone(thermalZone);
 
           // If not the ventilation system we lock down the oa system of the zone equipment
-          if( sysInfo.SysRefElement.text().as_string() != ventSysRefElement.text().as_string() ) {
+          if( !openstudio::istringEqual(sysInfo.SysRefElement.text().as_string(),
+                                        ventSysRefElement.text().as_string()) ) {
             if( boost::optional<model::ZoneHVACPackagedTerminalAirConditioner> ptac =
                 zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalAirConditioner>() ) {
               ptac->setOutdoorAirFlowRateDuringHeatingOperation(0.0);
               ptac->setOutdoorAirFlowRateDuringCoolingOperation(0.0);
-              ptac->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.0); }
-            else if( boost::optional<model::ZoneHVACPackagedTerminalHeatPump> pthp =
+              ptac->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.0);
+            } else if( boost::optional<model::ZoneHVACPackagedTerminalHeatPump> pthp =
                 zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalHeatPump>() ) {
               pthp->setOutdoorAirFlowRateDuringHeatingOperation(0.0);
               pthp->setOutdoorAirFlowRateDuringCoolingOperation(0.0);
