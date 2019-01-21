@@ -287,7 +287,7 @@ namespace sdd {
     if(istringEqual("FullExterior", solDistribution)) {
       model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
       simulationControl.setSolarDistribution("FullExterior");
-    } else if(istringEqual("", solDistribution)) {
+    } else if(istringEqual("MinimalShadowing", solDistribution)) {
       model::SimulationControl simulationControl = result->getUniqueModelObject<model::SimulationControl>();
       simulationControl.setSolarDistribution("MinimalShadowing");
     }
