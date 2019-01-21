@@ -55,6 +55,7 @@ OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 # debug Gem::Resolver, must go before resolver is required
 #ENV['DEBUG_RESOLVER'] = "1"
 
+
 # load embedded ruby gems
 require 'rubygems'
 require 'rubygems/version'
