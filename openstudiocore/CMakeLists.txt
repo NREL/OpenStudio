@@ -527,6 +527,8 @@ mark_as_advanced(RUBY_INSTALL_DIR)
 if(NOT EXISTS ${RUBY_INSTALL_DIR})
   if( WIN32 )
     if(CMAKE_CL_64)
+      # DLM: ruby_2_5_1_msvc2017_static_v3.tar.gz on s3 was built with
+      # experimental patch from ruby_patches branch, not using it for now
       set(RUBY_ZIP_FILENAME "ruby_2_5_1_msvc2017_static_v2.tar.gz")
       set(RUBY_ZIP_EXPECTED_MD5 "c9e57216b16fbdf3329846ee2c240435")
     else()
@@ -572,6 +574,8 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/")
   endif()
 endif()
+
+message(STATUS "ruby_install_dir ${RUBY_INSTALL_DIR}")
 
 list(INSERT CMAKE_PREFIX_PATH 0 "${RUBY_INSTALL_DIR}")
 if( WIN32 )
@@ -646,14 +650,16 @@ if( UNIX )
     set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} ${CRYPTO})
   endif()
 else()
-  set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017.zip")
-  set(FFI_ZIP_EXPECTED_MD5 "a375aa12367becd107defb7fd6f9df8d")
+  set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017_v2.zip")
+  set(FFI_ZIP_EXPECTED_MD5 "9d43417932447eb5830a389273954a75")
   set(FFI_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${FFI_ZIP_FILENAME}")
   if(EXISTS "${FFI_ZIP_LOCAL_PATH}")
     file(MD5 "${FFI_ZIP_LOCAL_PATH}" FFI_ZIP_MD5)
   endif()
 
   if( NOT FFI_ZIP_MD5 STREQUAL FFI_ZIP_EXPECTED_MD5)
+    unset(FFI CACHE)
+    unset(FFID CACHE)
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${FFI_ZIP_FILENAME}"
       ${FFI_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -664,8 +670,10 @@ else()
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${FFI_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
 
-  find_library(FFI libffi.lib PATHS "${CMAKE_BINARY_DIR}/FFI-install/lib" )
-  set(ADDITIONAL_RUBY_LIBS ${FFI} Iphlpapi)
+  find_library(FFI libffi.lib PATHS "${CMAKE_BINARY_DIR}/FFI-install/Release/lib" )
+  find_library(FFID libffi.lib PATHS "${CMAKE_BINARY_DIR}/FFI-install/Debug/lib" )
+  set(ADDITIONAL_RUBY_LIBS_RELEASE ${FFI} Iphlpapi)
+  set(ADDITIONAL_RUBY_LIBS_DEBUG ${FFID} Iphlpapi)
 endif()
 
 # openstudio gems
