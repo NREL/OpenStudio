@@ -41,7 +41,6 @@ using namespace openstudio;
 
 TEST_F(BCLFixture, LocalBCL_AuthKey)
 {
-  FAIL() << "LocalBCL::setProdAuthKey currently requires QApplication or else it will hang, re-enable this test when QNetworkAccessManager is replaced";
   EXPECT_TRUE(LocalBCL::instance().setProdAuthKey(defaultProdAuthKey));
   EXPECT_EQ(defaultProdAuthKey, LocalBCL::instance().prodAuthKey());
 

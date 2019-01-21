@@ -38,15 +38,15 @@ using openstudio::FileLogSink;
 
 void BCLFixture::SetUp() {
 
-  // TODO Uncomment after network error handling is in place
-  /*if (LocalBCL::instance().prodAuthKey().empty()) {
+  if (LocalBCL::instance().prodAuthKey().empty()) {
     prodAuthKey = defaultProdAuthKey;
     LocalBCL::instance().setProdAuthKey(prodAuthKey);
   } else {
     prodAuthKey = LocalBCL::instance().prodAuthKey();
   }
 
-  if (LocalBCL::instance().devAuthKey().empty()) {
+  // TODO Uncomment after network error handling is in place
+  /*if (LocalBCL::instance().devAuthKey().empty()) {
     devAuthKey = defaultDevAuthKey;
     LocalBCL::instance().setDevAuthKey(devAuthKey);
   } else {
