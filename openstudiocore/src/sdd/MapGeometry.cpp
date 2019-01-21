@@ -132,19 +132,21 @@ namespace sdd {
     return angle;
   }
 
-  pugi::xml_node elementByTagNameAndIndex(const pugi::xml_node & root, const std::string& tagName, bool useIndex, const int & index){
+  pugi::xml_node elementByTagNameAndIndex(const pugi::xml_node & root, const std::string& tagName, boost::optional<int> _index){
+
     pugi::xml_node result;
-    if( useIndex ){
+    if( _index ){
 
       for (const pugi::xml_node& e: root.children(tagName.c_str())) {
         // Check if the node has an attribute 'id' that is an int *and* matches the one we seek
-        boost::optional<int> _thisIndex = lexicalCastToInt(e.attribute("id"));
-        if (_thisIndex && _thisIndex.get() == index) {
+        boost::optional<int> _thisIndex = lexicalCastToInt(e.attribute("index"));
+        if (_thisIndex && (_thisIndex.get() == _index.get()) ) {
           result = e;
           break;
         }
       }
     } else {
+      // return first child (should be unique)
       result = root.child(tagName.c_str());
     }
     return result;
@@ -546,6 +548,8 @@ namespace sdd {
 
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateLoads(const pugi::xml_node& element, openstudio::model::Space& space)
   {
+    // element is 'Spc' here
+
     UnitSystem siSys(UnitSystem::SI);
     UnitSystem whSys(UnitSystem::Wh);
 
@@ -649,11 +653,11 @@ namespace sdd {
 
         pugi::xml_node infMthdElement = infMthdNodes[i];
 
-        // TODO: not sure what was meant here... hasIndex would be passed as false
-        bool hasIndex = false;
-        int infIndex = infMthdElement.attribute("index").as_int(-99);
 
-        pugi::xml_node dsgnInfRtElement = elementByTagNameAndIndex(element,"DsgnInfRt",hasIndex,infIndex);
+        boost::optional<int> _infIndex = lexicalCastToInt(infMthdElement.attribute("index"));
+
+        pugi::xml_node dsgnInfRtElement = elementByTagNameAndIndex(element,"DsgnInfRt", _infIndex);
+
 
         if (infMthdElement && dsgnInfRtElement) {
 
@@ -665,16 +669,16 @@ namespace sdd {
               openstudio::istringEqual(infMthd, "FlowExteriorWallArea") ||
               openstudio::istringEqual(infMthd, "FlowSpace")){
 
-            pugi::xml_node infSchRefElement = elementByTagNameAndIndex(element,"InfSchRef",hasIndex,infIndex);
-            pugi::xml_node infModelCoefAElement = elementByTagNameAndIndex(element,"InfModelCoefA",hasIndex,infIndex); // unitless
-            pugi::xml_node infModelCoefBElement = elementByTagNameAndIndex(element,"InfModelCoefB",hasIndex,infIndex); // 1/deltaF
-            pugi::xml_node infModelCoefCElement = elementByTagNameAndIndex(element,"InfModelCoefC",hasIndex,infIndex); // hr/mile
-            pugi::xml_node infModelCoefDElement = elementByTagNameAndIndex(element,"InfModelCoefD",hasIndex,infIndex); // hr^2/mile^2
+            pugi::xml_node infSchRefElement = elementByTagNameAndIndex(element, "InfSchRef", _infIndex);
+            pugi::xml_node infModelCoefAElement = elementByTagNameAndIndex(element, "InfModelCoefA", _infIndex); // unitless
+            pugi::xml_node infModelCoefBElement = elementByTagNameAndIndex(element, "InfModelCoefB", _infIndex); // 1/deltaF
+            pugi::xml_node infModelCoefCElement = elementByTagNameAndIndex(element, "InfModelCoefC", _infIndex); // hr/mile
+            pugi::xml_node infModelCoefDElement = elementByTagNameAndIndex(element, "InfModelCoefD", _infIndex); // hr^2/mile^2
 
             openstudio::model::SpaceInfiltrationDesignFlowRate spaceInfiltrationDesignFlowRate(model);
             std::string infName;
-            if( hasIndex ) {
-              infName = name + " Space Infiltration Design Flow Rate " + openstudio::string_conversions::number(infIndex + 1);
+            if( _infIndex ) {
+              infName = name + " Space Infiltration Design Flow Rate " + openstudio::string_conversions::number(_infIndex.get() + 1);
             }
             else
             {
