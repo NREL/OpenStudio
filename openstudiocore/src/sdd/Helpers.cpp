@@ -121,7 +121,7 @@ namespace openstudio {
       if (attr) {
         try {
           boost::optional<int> _int = boost::lexical_cast<int>(attr.value());
-          if( _int && (_int.get() > 0) ) {
+          if( _int && (_int.get() >= 0) ) {
             result = static_cast<unsigned>(_int.get());
           }
         } catch(const boost::bad_lexical_cast &) {

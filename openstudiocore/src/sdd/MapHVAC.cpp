@@ -5296,8 +5296,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   }
 
   pugi::xml_node nameElement = fluidSysElement.child("Name");
+  std::string plantName = nameElement.text().as_string();
 
-  if( boost::optional<model::PlantLoop> plant = model.getModelObjectByName<model::PlantLoop>(nameElement.text().as_string()) )
+  if( boost::optional<model::PlantLoop> plant = model.getModelObjectByName<model::PlantLoop>(plantName) )
   {
     return plant.get();
   }
@@ -5311,7 +5312,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
   // Name
 
-  plantLoop.setName(nameElement.text().as_string());
+  plantLoop.setName(plantName);
 
   model::SizingPlant sizingPlant = plantLoop.sizingPlant();
 
@@ -5696,60 +5697,64 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   }
 
   // Plant Operation Schemes
-  std::vector<pugi::xml_node> ldRngLimElements;
+
   std::vector<double> ldRngLims;
   typedef std::vector<std::string> EquipmentList;
   std::vector<EquipmentList> equipmentLists;
-  // Do some gymastics because we don't know that we will get childNodes
-  // back in the order of their "index" attribute.
-  std::vector<pugi::xml_node> childNodes = makeVectorOfChildren(fluidSysElement);
 
-  for( std::vector<pugi::xml_node>::size_type i = 0; i < childNodes.size(); ++i ) {
-    auto element = childNodes[i];
-    if( istringEqual(element.name(), "LdRngLim") ) {
-      ldRngLimElements.push_back(element);
+  // Lambda to sort two pugi::xml_node according to their 'index' attribute
+  auto sortByIndex = [&plantName](const pugi::xml_node& lhs, const::pugi::xml_node& rhs) {
+    boost::optional<unsigned> _lhs_index = lexicalCastToUnsigned(lhs.attribute("index"));
+    boost::optional<unsigned> _rhs_index = lexicalCastToUnsigned(rhs.attribute("index"));
+    if (_lhs_index && _rhs_index) {
+      return _lhs_index.get() < _rhs_index.get();
+    } else if (_lhs_index) {
+      LOG(Error, "Seems like some of the 'LdRngLim' for FluidSys '" << plantName << "' are missing the 'index' attribute.");
+      return true;
+    } else {
+      LOG(Error, "Seems like some of the 'LdRngLim' for FluidSys '" << plantName << "' are missing the 'index' attribute.");
+      return false;
+    }
+  };
+
+  std::vector<pugi::xml_node> ldRngLimElements = makeVectorOfChildren(fluidSysElement, "LdRngLim");
+  // Sort by their index attribute
+  std::sort(ldRngLimElements.begin(), ldRngLimElements.end(), sortByIndex);
+
+  // Get the range limits
+  for (const pugi::xml_node& rngElement: ldRngLimElements) {
+    boost::optional<double> _value = lexicalCastToDouble(rngElement);
+    if( _value ) {
+      double value = unitToUnit(_value.get(),"Btu/h","W").get();
+      ldRngLims.push_back(value);
     }
   }
-  for( std::vector<pugi::xml_node>::size_type i = 0; i < ldRngLimElements.size(); ++i ) {
-    for( std::vector<pugi::xml_node>::size_type j = 0; j < ldRngLimElements.size(); ++j ) {
-      auto element = childNodes[j];
-      boost::optional<unsigned> _index = lexicalCastToUnsigned(element.attribute("index"));
-      if( _index && (_index.get() == i) ) {
-        boost::optional<double> _value = lexicalCastToDouble(element);
-        if( _value ) {
-          double value = unitToUnit(_value.get(),"Btu/h","W").get();
-          ldRngLims.push_back(value);
-          break;
-        }
-      }
 
-    }
-  }
 
   // Try to get an equipment list for each load range
   for( std::vector<double>::size_type i = 0; i < ldRngLims.size(); ++i ) {
-    // EqpList1Name
-    // Get an unordered list of the equipment list elements for this range
-    std::vector<pugi::xml_node> eqpListNameElements;
-    for( std::vector<pugi::xml_node>::size_type j = 0; j < childNodes.size(); ++j ) {
-      auto element = childNodes[j];
-      std::string nodeName = "EqpList" + openstudio::string_conversions::number(i + 1) + "Name";
-      if (openstudio::istringEqual(element.name(), nodeName)) {
-        eqpListNameElements.push_back(element);
-      }
+    // Create a tag like 'EqpList1Name'
+    std::string nodeName = "EqpList" + openstudio::string_conversions::number(i + 1) + "Name";
+
+    // Get the correspond children
+    std::vector<pugi::xml_node> eqpListNameElements = makeVectorOfChildren(fluidSysElement, nodeName.c_str());
+
+    if (eqpListNameElements.empty()) {
+      LOG(Debug, "Couldn't find any '" << nodeName << "' for FluidSys '" << plantName << "'.");
     }
 
+    // Create the plantEquipmentList, regardless of whether we found equipment to put on it
+    // (assume if not there, means there's no equipment which is fine)
     EquipmentList equipmentList;
-    // Now put eqpListNameElements in order according to the index attribute
-    for( std::vector<pugi::xml_node>::size_type j = 0; j < eqpListNameElements.size(); ++j ) {
-      for( auto & eqpListNameElement : eqpListNameElements ) {
-        boost::optional<unsigned> _index = lexicalCastToUnsigned(eqpListNameElement.attribute("index"));
-        if( _index && (_index.get() == j) ) {
-          equipmentList.push_back(eqpListNameElement.text().as_string());
-          break;
-        }
-      }
+
+    // Sort them by index too so we push them in the right order
+    std::sort(eqpListNameElements.begin(), eqpListNameElements.end(), sortByIndex);
+
+    for (const pugi::xml_node eqpListNameElement: eqpListNameElements) {
+      equipmentList.push_back(eqpListNameElement.text().as_string());
     }
+
+    // Push the equipment list for that range to the vector
     equipmentLists.push_back(equipmentList);
   }
 
@@ -5780,7 +5785,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
         for( auto & name : equipmentList ) {
           for( const auto & comp : allPlantComponents ) {
-            if( istringEqual(name,comp.nameString()) ) {
+            if( istringEqual(name, comp.nameString()) ) {
               equipment.push_back(comp.cast<model::HVACComponent>());
               break;
             }
@@ -6024,7 +6029,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
     else
     {
-      LOG(Warn,nameElement.text().as_string() << " requests OA reset control, but does not define setpoints."
+      LOG(Warn,  plantName << " requests OA reset control, but does not define setpoints."
         << "  Using OpenStudio defaults.");
     }
   }
