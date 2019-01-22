@@ -445,24 +445,6 @@ model::Schedule ReverseTranslator::defaultDeckTempSchedule(openstudio::model::Mo
   return m_defaultDeckTempSchedule.get();
 }
 
-model::Schedule ReverseTranslator::alwaysOnSchedule(openstudio::model::Model& model)
-{
-  if( ! m_alwaysOnSchedule )
-  {
-    model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
-
-    scheduleRuleset.setName("Always On");
-
-    model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
-
-    scheduleDay.addValue(Time(1.0),1.0);
-
-    m_alwaysOnSchedule = scheduleRuleset;
-  }
-
-  return m_alwaysOnSchedule.get();
-}
-
 model::Schedule ReverseTranslator::hotWaterPlantSetpointSchedule(openstudio::model::Model& model)
 {
   if( ! m_hotWaterPlantSetpointSchedule )
@@ -1382,7 +1364,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
             lastComponent = mo;
 
             model::HVACComponent hvacComponent = mo->cast<model::HVACComponent>();
-            hvacComponent.addToNode(dropNode.get());
+            if (!hvacComponent.addToNode(dropNode.get())) {
+              LOG(Error, "Cannot add HVACComponent named '" << hvacComponent.nameString() << "' to node '" << dropNode->nameString()
+                     <<  "' on AirLoopHVAC '" << airLoopHVAC.nameString());
+            }
 
             heatingComponents.push_back(mo.get());
 
@@ -1548,7 +1533,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       pugi::xml_node oaSchMthdElement = airSystemOACtrlElement.child("OASchMthd");
       if( istringEqual(oaSchMthdElement.text().as_string(),"Constant") )
       {
-        model::Schedule schedule = alwaysOnSchedule(model);
+        model::Schedule schedule = model.alwaysOnDiscreteSchedule();
         oaController.setMinimumOutdoorAirSchedule(schedule);
       }
       else if( istringEqual(oaSchMthdElement.text().as_string(),"FollowHVACAvailability") && availabilitySchedule )
@@ -2251,7 +2236,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   // Furnace
   if( istringEqual(coilHeatingTypeElement.text().as_string(),"Furnace") )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::CoilHeatingGas coil(model,schedule);
 
@@ -2304,25 +2289,33 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
 
     pugi::xml_node fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
 
-    boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement.text().as_string(), heatingCoilElement.root(), model);
+    boost::optional<model::PlantLoop> plant;
+    if (!fluidSegInRefElement) {
+      LOG(Error, "CoilHeatingWater '" << coilName << "' doesn't have a FluidSegInRef element! It will not be connected.");
+    } else {
+      boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement, model);
 
-    if( plant )
-    {
-      plant->addDemandBranchForComponent(coil);
-      // Figure out if this is connected to a ServiceHotWater system
-      // If it is then make sure any supply segment pumps go on the branch,
-      // as opposed to the demand side inlet branch
-      auto supplySegmentElement = supplySegment(fluidSegInRefElement.text().as_string(), heatingCoilElement.root());
-      auto fluidSysTypeElment = supplySegmentElement.parent().child("Type");
-      if (openstudio::istringEqual(fluidSysTypeElment.text().as_string(), "ServiceHotWater")) {
-        auto pumpElement = supplySegmentElement.child("Pump");
-        if (pumpElement) {
-          if( auto modelObject = translatePump(pumpElement, model) ) {
-            auto hvacComponent = modelObject->cast<model::HVACComponent>();
-            auto inletNode = coil.waterInletModelObject()->cast<model::Node>();
-            hvacComponent.addToNode(inletNode);
+      if( plant )
+      {
+        plant->addDemandBranchForComponent(coil);
+        // Figure out if this is connected to a ServiceHotWater system
+        // If it is then make sure any supply segment pumps go on the branch,
+        // as opposed to the demand side inlet branch
+        auto supplySegmentElement = supplySegment(fluidSegInRefElement);
+        auto fluidSysTypeElment = supplySegmentElement.parent().child("Type");
+        if (openstudio::istringEqual(fluidSysTypeElment.text().as_string(), "ServiceHotWater")) {
+          auto pumpElement = supplySegmentElement.child("Pump");
+          if (pumpElement) {
+            if( auto modelObject = translatePump(pumpElement, model) ) {
+              auto hvacComponent = modelObject->cast<model::HVACComponent>();
+              auto inletNode = coil.waterInletModelObject()->cast<model::Node>();
+              hvacComponent.addToNode(inletNode);
+            }
           }
         }
+      } else {
+        LOG(Error, "CoilHeatingWater '" << coilName << "' has a FluidSegInRef of '" << fluidSegInRefElement.text().as_string()
+                << "' but we couldn't find a plantLoop that matches.");
       }
     }
 
@@ -2380,7 +2373,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   }
   else if( istringEqual(coilHeatingTypeElement.text().as_string(),"Resistance") )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::CoilHeatingElectric coil(model,schedule);
 
@@ -2416,11 +2409,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       }
 
       // Plant
-      pugi::xml_node fluidSegNameElement = heatingCoilElement.child("FluidSegInRef");
-      boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegNameElement.text().as_string(), heatingCoilElement.root(),model);
-      if( plant )
-      {
-        plant->addDemandBranchForComponent(coil);
+      pugi::xml_node fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
+      if (!fluidSegInRefElement) {
+        LOG(Error, "CoilHeatingWaterToAirHeatPumpEquationFit '" << coilName << "' doesn't have a FluidSegInRef element! It will not be connected.");
+      } else {
+        boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement, model);
+        if( plant )
+        {
+          plant->addDemandBranchForComponent(coil);
+        }
       }
 
       if( ! autosize() )
@@ -2722,7 +2719,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
   }
   else
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::CoilHeatingElectric coil(model,schedule);
 
@@ -2833,7 +2830,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
           )
         )
       {
-        model::Schedule schedule = alwaysOnSchedule(model);
+        model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
         model::FanOnOff fan(model,schedule);
 
@@ -2899,7 +2896,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
 
     if( ! result )
     {
-      model::Schedule schedule = alwaysOnSchedule(model);
+      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
       model::FanConstantVolume fan(model,schedule);
 
@@ -2953,7 +2950,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFan(
   // Variable Volume
   else if( istringEqual(fanControlMethodElement.text().as_string(),"VariableSpeedDrive") )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::FanVariableVolume fan(model,schedule);
 
@@ -3356,13 +3353,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
       }
 
       // Plant
-      pugi::xml_node fluidSegNameElement = coolingCoilElement.child("FluidSegInRef");
-      boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegNameElement.text().as_string(), coolingCoilElement.root(), model);
-      if( plant )
-      {
-        plant->addDemandBranchForComponent(coil);
+      pugi::xml_node fluidSegInRefElement = coolingCoilElement.child("FluidSegInRef");
+      if (!fluidSegInRefElement) {
+        LOG(Error, "CoilCoolingWaterToAirHeatPumpEquationFit '" << coilName << "' doesn't have a FluidSegInRef element! It will not be connected.");
+      } else {
+        boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement, model);
+        if( plant )
+        {
+          plant->addDemandBranchForComponent(coil);
+        }
       }
-
       if( ! autosize() )
       {
         boost::optional<double> _flowCap = lexicalCastToDouble(flowCapElement);
@@ -3636,7 +3636,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     }
     else if( numClgStagesElement.text().as_int() == 2 )
     {
-      model::Schedule schedule = alwaysOnSchedule(model);
+      model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
       // Cap_fTempCrvRef
 
@@ -3867,22 +3867,26 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
     model::CoilCoolingWater coilCooling(model,schedule);
 
     // Name
-
     pugi::xml_node nameElement = coolingCoilElement.child("Name");
+    std::string coilName = nameElement.text().as_string();
 
-    coilCooling.setName(nameElement.text().as_string());
+    coilCooling.setName(coilName);
 
     coilCooling.setTypeOfAnalysis("DetailedAnalysis");
 
     // Plant
+    boost::optional<model::PlantLoop> plant;
 
-    pugi::xml_node fluidSegNameElement = coolingCoilElement.child("FluidSegInRef");
+    pugi::xml_node fluidSegInRefElement = coolingCoilElement.child("FluidSegInRef");
+    if (!fluidSegInRefElement) {
+      LOG(Error, "CoilCoolingWater '" << coilName << "' doesn't have a FluidSegInRef element! It will not be connected.");
+    } else {
+      plant = loopForSupplySegment(fluidSegInRefElement, model);
 
-    boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegNameElement.text().as_string(), coolingCoilElement.root(), model);
-
-    if( plant )
-    {
-      plant->addDemandBranchForComponent(coilCooling);
+      if( plant )
+      {
+        plant->addDemandBranchForComponent(coilCooling);
+      }
     }
 
     coilCooling.autosizeDesignInletAirTemperature();
@@ -4412,8 +4416,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       const auto & element = elements[i];
       SysInfo sysInfo;
       sysInfo.SysRefElement = element;
-      sysInfo.ZnSysElement = findZnSysElement(element.text().as_string(), element.root());
-      sysInfo.AirSysElement = findAirSysElement(element.text().as_string(), element.root());
+      sysInfo.ZnSysElement = findZnSysElement(element);
+      sysInfo.AirSysElement = findAirSysElement(element);
       // Check if the node has an attribute 'index' that can be converted to an int
       boost::optional<int> _index = lexicalCastToInt(element.attribute("index"));
       if (_index) {
@@ -4430,8 +4434,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
       const auto & element = elements[i];
       SysInfo sysInfo;
       sysInfo.SysRefElement = element;
-      sysInfo.ZnSysElement = findZnSysElement(element.text().as_string(), element.root());
-      sysInfo.AirSysElement = findAirSysElement(element.text().as_string(), element.root());
+      sysInfo.ZnSysElement = findZnSysElement(element);
+      sysInfo.AirSysElement = findAirSysElement(element);
       // Check if the node has an attribute 'index' that can be converted to an int
       boost::optional<int> _index = lexicalCastToInt(element.attribute("index"));
       if (_index) {
@@ -4445,10 +4449,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   boost::optional<model::ModelObject> ventSysEquip;
 
   // ThermalZoneVentilationSystem
-  // Find out if ventSys is already a simsys or a priaircondgsys
+  // Find out if ventSys is already a simsys or a priaircondgsys (=they have the same inner TEXT)
   bool translateVentSys = true;
   for( const auto & info : priAirCondInfo ) {
-    if( info.SysRefElement == ventSysRefElement ) {
+    if( openstudio::istringEqual(info.SysRefElement.text().as_string(),
+                                 ventSysRefElement.text().as_string()) ) {
       translateVentSys = false;
       break;
     }
@@ -4456,7 +4461,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
   if( translateVentSys ) {
     for( const auto & info : simSysInfo ) {
-      if( info.SysRefElement == ventSysRefElement ) {
+      if( openstudio::istringEqual(info.SysRefElement.text().as_string(),
+                                   ventSysRefElement.text().as_string()) ) {
         translateVentSys = false;
         break;
       }
@@ -4468,7 +4474,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
     if( airLoopHVAC && ! thermalZone.airLoopHVAC() )
     {
-      pugi::xml_node trmlUnitElement = findTrmlUnitElementForZone(nameElement.text().as_string(), nameElement.root());
+      pugi::xml_node trmlUnitElement = findTrmlUnitElementForZone(nameElement);
       if (trmlUnitElement) {
         if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement, model) )
         {
@@ -4530,13 +4536,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
           zoneHVACComponent->addToThermalZone(thermalZone);
 
           // If not the ventilation system we lock down the oa system of the zone equipment
-          if( sysInfo.SysRefElement.text() != ventSysRefElement.text() ) {
+          if( !openstudio::istringEqual(sysInfo.SysRefElement.text().as_string(),
+                                        ventSysRefElement.text().as_string()) ) {
             if( boost::optional<model::ZoneHVACPackagedTerminalAirConditioner> ptac =
                 zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalAirConditioner>() ) {
               ptac->setOutdoorAirFlowRateDuringHeatingOperation(0.0);
               ptac->setOutdoorAirFlowRateDuringCoolingOperation(0.0);
-              ptac->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.0); }
-            else if( boost::optional<model::ZoneHVACPackagedTerminalHeatPump> pthp =
+              ptac->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.0);
+            } else if( boost::optional<model::ZoneHVACPackagedTerminalHeatPump> pthp =
                 zoneHVACComponent->optionalCast<model::ZoneHVACPackagedTerminalHeatPump>() ) {
               pthp->setOutdoorAirFlowRateDuringHeatingOperation(0.0);
               pthp->setOutdoorAirFlowRateDuringCoolingOperation(0.0);
@@ -4555,7 +4562,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
 
       if( airLoopHVAC && ! thermalZone.airLoopHVAC() )
       {
-        pugi::xml_node trmlUnitElement = findTrmlUnitElementForZone(nameElement.text().as_string(), nameElement.root());
+        pugi::xml_node trmlUnitElement = findTrmlUnitElementForZone(nameElement);
         if (trmlUnitElement) {
           if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement, model) )
           {
@@ -4796,7 +4803,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
 
     // Only set the control zone if there is a SetpointManagerSingleZoneReheat on the supply outlet node
-    pugi::xml_node airSystemElement = findAirSysElement(airLoopHVAC->name().get(), thermalZoneElement.root());
+    pugi::xml_node airSystemElement = findAirSysElement(airLoopHVAC->name().get(), getProjectElement(thermalZoneElement));
     if( spm && airSystemElement )
     {
       pugi::xml_node ctrlZnRefElement = airSystemElement.child("CtrlZnRef");
@@ -4839,7 +4846,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     boost::optional<double> _operableWinOALimHi = lexicalCastToDouble(operableWinOALimHiElement);
     if( _operableWinOALimHi ) {
       double operableWinOALimHi = unitToUnit(_operableWinOALimHi.get(),"F","C").get();
-      zoneVent.setMinimumOutdoorTemperature(operableWinOALimHi);
+      zoneVent.setMaximumOutdoorTemperature(operableWinOALimHi);
     }
 
     // priAirCondInfo zoneVent
@@ -4918,7 +4925,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
 
   if( istringEqual("VAVNoReheatBox",typeElement.text().as_string()) )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::AirTerminalSingleDuctVAVNoReheat terminal(model,schedule);
 
@@ -4958,7 +4965,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
   }
   else if( istringEqual("VAVReheatBox",typeElement.text().as_string()) )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     pugi::xml_node coilElement = trmlUnitElement.child("CoilHtg");
 
@@ -5082,7 +5089,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
   }
   else if( istringEqual("SeriesFanBox",typeElement.text().as_string()) )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     // CoilHtg
     pugi::xml_node coilHtgElement = trmlUnitElement.child("CoilHtg");
@@ -5155,7 +5162,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
   }
   else if( istringEqual("ParallelFanBox",typeElement.text().as_string()) )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     // CoilHtg
 
@@ -5248,7 +5255,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
   }
   else if( istringEqual("Uncontrolled",typeElement.text().as_string()) )
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,schedule);
 
@@ -5262,7 +5269,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
   }
   else
   {
-    model::Schedule schedule = alwaysOnSchedule(model);
+    model::Schedule schedule = model.alwaysOnDiscreteSchedule();
 
     model::AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,schedule);
 
@@ -5289,8 +5296,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   }
 
   pugi::xml_node nameElement = fluidSysElement.child("Name");
+  std::string plantName = nameElement.text().as_string();
 
-  if( boost::optional<model::PlantLoop> plant = model.getModelObjectByName<model::PlantLoop>(nameElement.text().as_string()) )
+  if( boost::optional<model::PlantLoop> plant = model.getModelObjectByName<model::PlantLoop>(plantName) )
   {
     return plant.get();
   }
@@ -5304,7 +5312,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
   // Name
 
-  plantLoop.setName(nameElement.text().as_string());
+  plantLoop.setName(plantName);
 
   model::SizingPlant sizingPlant = plantLoop.sizingPlant();
 
@@ -5379,6 +5387,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   std::string thermalStorageDischargePriority;
   boost::optional<model::ScheduleRuleset> tesSchedule;
   // TODO: this variable will be used un-initialized in case the "TankSetptTemp" child key is ill-formed (not present or, doesn't cast to double)
+  // Set a default or something
   double thermalStorageTankSetptTemp;
   if( auto mo = translateThrmlEngyStor(thrmlEngyStorElement, model) ) {
     thermalStorage = mo->cast<model::ThermalStorageChilledWaterStratified>();
@@ -5688,60 +5697,64 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   }
 
   // Plant Operation Schemes
-  std::vector<pugi::xml_node> ldRngLimElements;
+
   std::vector<double> ldRngLims;
   typedef std::vector<std::string> EquipmentList;
   std::vector<EquipmentList> equipmentLists;
-  // Do some gymastics because we don't know that we will get childNodes
-  // back in the order of their "index" attribute.
-  std::vector<pugi::xml_node> childNodes = makeVectorOfChildren(fluidSysElement);
 
-  for( std::vector<pugi::xml_node>::size_type i = 0; i < childNodes.size(); ++i ) {
-    auto element = childNodes[i];
-    if( istringEqual(element.name(), "LdRngLim") ) {
-      ldRngLimElements.push_back(element);
+  // Lambda to sort two pugi::xml_node according to their 'index' attribute
+  auto sortByIndex = [&plantName](const pugi::xml_node& lhs, const::pugi::xml_node& rhs) {
+    boost::optional<unsigned> _lhs_index = lexicalCastToUnsigned(lhs.attribute("index"));
+    boost::optional<unsigned> _rhs_index = lexicalCastToUnsigned(rhs.attribute("index"));
+    if (_lhs_index && _rhs_index) {
+      return _lhs_index.get() < _rhs_index.get();
+    } else if (_lhs_index) {
+      LOG(Error, "Seems like some of the 'LdRngLim' for FluidSys '" << plantName << "' are missing the 'index' attribute.");
+      return true;
+    } else {
+      LOG(Error, "Seems like some of the 'LdRngLim' for FluidSys '" << plantName << "' are missing the 'index' attribute.");
+      return false;
+    }
+  };
+
+  std::vector<pugi::xml_node> ldRngLimElements = makeVectorOfChildren(fluidSysElement, "LdRngLim");
+  // Sort by their index attribute
+  std::sort(ldRngLimElements.begin(), ldRngLimElements.end(), sortByIndex);
+
+  // Get the range limits
+  for (const pugi::xml_node& rngElement: ldRngLimElements) {
+    boost::optional<double> _value = lexicalCastToDouble(rngElement);
+    if( _value ) {
+      double value = unitToUnit(_value.get(),"Btu/h","W").get();
+      ldRngLims.push_back(value);
     }
   }
-  for( std::vector<pugi::xml_node>::size_type i = 0; i < ldRngLimElements.size(); ++i ) {
-    for( std::vector<pugi::xml_node>::size_type j = 0; j < ldRngLimElements.size(); ++j ) {
-      auto element = childNodes[j];
-      boost::optional<unsigned> _index = lexicalCastToUnsigned(element.attribute("index"));
-      if( _index && (_index.get() == i) ) {
-        boost::optional<double> _value = lexicalCastToDouble(element);
-        if( _value ) {
-          double value = unitToUnit(_value.get(),"Btu/h","W").get();
-          ldRngLims.push_back(value);
-          break;
-        }
-      }
 
-    }
-  }
 
   // Try to get an equipment list for each load range
   for( std::vector<double>::size_type i = 0; i < ldRngLims.size(); ++i ) {
-    // EqpList1Name
-    // Get an unordered list of the equipment list elements for this range
-    std::vector<pugi::xml_node> eqpListNameElements;
-    for( std::vector<pugi::xml_node>::size_type j = 0; j < childNodes.size(); ++j ) {
-      auto element = childNodes[j];
-      std::string nodeName = "EqpList" + openstudio::string_conversions::number(i + 1) + "Name";
-      if (openstudio::istringEqual(element.name(), nodeName)) {
-        eqpListNameElements.push_back(element);
-      }
+    // Create a tag like 'EqpList1Name'
+    std::string nodeName = "EqpList" + openstudio::string_conversions::number(i + 1) + "Name";
+
+    // Get the correspond children
+    std::vector<pugi::xml_node> eqpListNameElements = makeVectorOfChildren(fluidSysElement, nodeName.c_str());
+
+    if (eqpListNameElements.empty()) {
+      LOG(Debug, "Couldn't find any '" << nodeName << "' for FluidSys '" << plantName << "'.");
     }
 
+    // Create the plantEquipmentList, regardless of whether we found equipment to put on it
+    // (assume if not there, means there's no equipment which is fine)
     EquipmentList equipmentList;
-    // Now put eqpListNameElements in order according to the index attribute
-    for( std::vector<pugi::xml_node>::size_type j = 0; j < eqpListNameElements.size(); ++j ) {
-      for( auto & eqpListNameElement : eqpListNameElements ) {
-        boost::optional<unsigned> _index = lexicalCastToUnsigned(eqpListNameElement.attribute("index"));
-        if( _index && (_index.get() == j) ) {
-          equipmentList.push_back(eqpListNameElement.text().as_string());
-          break;
-        }
-      }
+
+    // Sort them by index too so we push them in the right order
+    std::sort(eqpListNameElements.begin(), eqpListNameElements.end(), sortByIndex);
+
+    for (const pugi::xml_node eqpListNameElement: eqpListNameElements) {
+      equipmentList.push_back(eqpListNameElement.text().as_string());
     }
+
+    // Push the equipment list for that range to the vector
     equipmentLists.push_back(equipmentList);
   }
 
@@ -5772,7 +5785,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
         for( auto & name : equipmentList ) {
           for( const auto & comp : allPlantComponents ) {
-            if( istringEqual(name,comp.nameString()) ) {
+            if( istringEqual(name, comp.nameString()) ) {
               equipment.push_back(comp.cast<model::HVACComponent>());
               break;
             }
@@ -6016,7 +6029,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
     else
     {
-      LOG(Warn,nameElement.text().as_string() << " requests OA reset control, but does not define setpoints."
+      LOG(Warn,  plantName << " requests OA reset control, but does not define setpoints."
         << "  Using OpenStudio defaults.");
     }
   }
@@ -6687,8 +6700,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHX(
   hx.setName(name);
 
   auto cWFluidSegInRefElement = hxElement.child("CWFluidSegInRef");
-  if( auto condenserSystem = loopForSupplySegment(cWFluidSegInRefElement.text().as_string(), hxElement.root(), model) ) {
-    condenserSystem->addDemandBranchForComponent(hx);
+  if (!cWFluidSegInRefElement) {
+    LOG(Error, "HeatExchangerFluidToFluid '" << name << "' doesn't have a CWFluidSegInRef element! It will not be connected.");
+  } else {
+    // The HX is on the demand side, so its inlet (CWFluidSegInRef) is the supply side
+    if( auto condenserSystem = loopForSupplySegment(cWFluidSegInRefElement, model) ) {
+      condenserSystem->addDemandBranchForComponent(hx);
+    }
   }
 
   if( ! autosize() ) {
@@ -6882,17 +6900,25 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
     result = chiller;
 
     auto cndsrInRefElement = chillerElement.child("CndsrFluidSegInRef");
-    auto condenserSystem = loopForSupplySegment(cndsrInRefElement.text().as_string(), chillerElement.root() ,model);
-    if( condenserSystem ) {
-      condenserSystem->addDemandBranchForComponent(chiller);
-      double value = condenserSystem->sizingPlant().designLoopExitTemperature();
-      chiller.setDesignCondenserWaterFlowRate(value);
+    if (!cndsrInRefElement) {
+      LOG(Error, "ChillerAbsorptionIndirect '" << name << "' doesn't have a CndsrFluidSegInRef element! It will not be connected.");
+    } else {
+      auto condenserSystem = loopForSupplySegment(cndsrInRefElement ,model);
+      if( condenserSystem ) {
+        condenserSystem->addDemandBranchForComponent(chiller);
+        double value = condenserSystem->sizingPlant().designLoopExitTemperature();
+        chiller.setDesignCondenserWaterFlowRate(value);
+      }
     }
 
     auto genFluidSegInRefElement = chillerElement.child("GenFluidSegInRef");
-    auto genSystem = loopForSupplySegment(genFluidSegInRefElement.text().as_string(), chillerElement.root(), model);
-    if( genSystem ) {
-      genSystem->addDemandBranchForComponent(chiller,true);
+    if (!genFluidSegInRefElement) {
+      LOG(Error, "ChillerAbsorptionIndirect '" << name << "' doesn't have a GenFluidSegInRef element! It will not be connected.");
+    } else {
+      auto genSystem = loopForSupplySegment(genFluidSegInRefElement, model);
+      if( genSystem ) {
+        genSystem->addDemandBranchForComponent(chiller,true);
+      }
     }
 
     if( ! autosize() ) {
@@ -7076,13 +7102,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
     chiller.setName(name);
 
     // CndsrInRef
+    // Will be aircooled if Condenser not specified
     pugi::xml_node cndsrInRefElement = chillerElement.child("CndsrFluidSegInRef");
-    boost::optional<model::PlantLoop> condenserSystem = loopForSupplySegment(cndsrInRefElement.text().as_string(), chillerElement.root() ,model);
-;
-    if( condenserSystem ) {
-      condenserSystem->addDemandBranchForComponent(chiller);
-      double value = condenserSystem->sizingPlant().designLoopExitTemperature();
-      chiller.setReferenceEnteringCondenserFluidTemperature(value);
+    if (cndsrInRefElement) {
+      boost::optional<model::PlantLoop> condenserSystem = loopForSupplySegment(cndsrInRefElement, model);
+      if( condenserSystem ) {
+        condenserSystem->addDemandBranchForComponent(chiller);
+        double value = condenserSystem->sizingPlant().designLoopExitTemperature();
+        chiller.setReferenceEnteringCondenserFluidTemperature(value);
+      }
     }
 
     // COP
@@ -8080,22 +8108,25 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
       //Hook Coil to PlantLoop
       pugi::xml_node fluidSegInRefElement = heatingCoilElement.child("FluidSegInRef");
-
-      if( boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement.text().as_string(),heatingCoilElement.root(),model) )
-      {
-        plant->addDemandBranchForComponent(coil);
-        // Figure out if this is connected to a ServiceHotWater system
-        // If it is then make sure any supply segment pumps go on the branch,
-        // as opposed to the demand side inlet branch
-        auto supplySegmentElement = supplySegment(fluidSegInRefElement.text().as_string(),heatingCoilElement.root());
-        auto fluidSysTypeElment = supplySegmentElement.parent().child("Type");
-        if (openstudio::istringEqual(fluidSysTypeElment.text().as_string(), "ServiceHotWater")) {
-          auto pumpElement = supplySegmentElement.child("Pump");
-          if (pumpElement) {
-            if( auto modelObject = translatePump(pumpElement, model) ) {
-              auto hvacComponent = modelObject->cast<model::HVACComponent>();
-              auto inletNode = coil.inletModelObject()->cast<model::Node>();
-              hvacComponent.addToNode(inletNode);
+      if (!fluidSegInRefElement) {
+        LOG(Error, "CoilHeatingWaterBaseboard for ZnSys '" << name << "' doesn't have a FluidSegInRef element! It will not be connected.");
+      } else {
+        if( boost::optional<model::PlantLoop> plant = loopForSupplySegment(fluidSegInRefElement, model) )
+        {
+          plant->addDemandBranchForComponent(coil);
+          // Figure out if this is connected to a ServiceHotWater system
+          // If it is then make sure any supply segment pumps go on the branch,
+          // as opposed to the demand side inlet branch
+          auto supplySegmentElement = supplySegment(fluidSegInRefElement);
+          auto fluidSysTypeElment = supplySegmentElement.parent().child("Type");
+          if (openstudio::istringEqual(fluidSysTypeElment.text().as_string(), "ServiceHotWater")) {
+            auto pumpElement = supplySegmentElement.child("Pump");
+            if (pumpElement) {
+              if( auto modelObject = translatePump(pumpElement, model) ) {
+                auto hvacComponent = modelObject->cast<model::HVACComponent>();
+                auto inletNode = coil.inletModelObject()->cast<model::Node>();
+                hvacComponent.addToNode(inletNode);
+              }
             }
           }
         }
@@ -9102,9 +9133,20 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCrvM
   return table;
 }
 
-pugi::xml_node ReverseTranslator::findZnSysElement(const std::string& znSysName, const pugi::xml_node& root)
+pugi::xml_node ReverseTranslator::findZnSysElement(const pugi::xml_node& znSysRefElement)
 {
-  std::vector<pugi::xml_node> znSysElements = makeVectorOfChildren(root.child("Proj"), "ZnSys");
+  pugi::xml_node projectElement = getProjectElement(znSysRefElement);
+  // TODO: perhaps we should rely on the makeVectorOfChildrenRecursive instead (uses Xpath instead of having to harcoded the path)
+  // Not sure about speed penalties
+  // makeVectorOfChildrenRecursive("ZnSys") would work, regardless of which level 'ZnSys' is at
+  // Proj > Bldg > [ZnSys]
+  std::vector<pugi::xml_node> znSysElements = makeVectorOfChildren(projectElement.child("Bldg"), "ZnSys");
+  std::string znSysName = znSysRefElement.text().as_string();
+
+  if (znSysName.empty()) {
+    LOG(Error, "findZnSysElement called with an empty znSysName");
+    OS_ASSERT(false);
+  }
 
   for (std::vector<pugi::xml_node>::size_type i = 0; i < znSysElements.size(); i++)
   {
@@ -9116,12 +9158,20 @@ pugi::xml_node ReverseTranslator::findZnSysElement(const std::string& znSysName,
     }
   }
 
+  LOG(Debug, "Couldn't locate the ZnSys element with name '" << znSysName << "'.");
   return pugi::xml_node();
 }
 
-pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(const std::string& zoneName, const pugi::xml_node& root)
+pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(const pugi::xml_node& znNameElement)
 {
-  std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(root.child("Proj"), "AirSys");
+  pugi::xml_node projectElement = getProjectElement(znNameElement);
+  // Proj > Bldg > [AirSys]
+  std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(projectElement.child("Bldg"), "AirSys");
+  std::string zoneName = znNameElement.text().as_string();
+  if (zoneName.empty()) {
+    LOG(Error, "findTrmlUnitElementForZone called with an empty zoneName");
+    OS_ASSERT(false);
+  }
 
   for( std::vector<pugi::xml_node>::size_type i = 0; i < airSystemElements.size(); i++ )
   {
@@ -9138,12 +9188,32 @@ pugi::xml_node ReverseTranslator::findTrmlUnitElementForZone(const std::string& 
     }
   }
 
+  LOG(Debug, "Couldn't locate the TrmlUnit element for zoneName '" << zoneName << "'.");
+
   return pugi::xml_node();
 }
 
-pugi::xml_node ReverseTranslator::findAirSysElement(const std::string& airSysName, const pugi::xml_node& root)
+pugi::xml_node ReverseTranslator::findAirSysElement(const pugi::xml_node& airSyRefElement)
 {
-  std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(root.child("Proj"), "AirSys");
+
+  pugi::xml_node projectElement = getProjectElement(airSyRefElement);
+  std::string airSysName = airSyRefElement.text().as_string();
+  return  findAirSysElement(airSysName, projectElement);
+}
+
+pugi::xml_node ReverseTranslator::findAirSysElement(const std::string& airSysName, const pugi::xml_node& projectElement)
+{
+  if (!projectElement || (strcmp(projectElement.name(), "Proj") != 0)) {
+    LOG(Error, "findAirSysElement has to be called with the projectElement");
+    OS_ASSERT(false);
+  }
+  if (airSysName.empty()) {
+    LOG(Error, "findAirSysElement called with an empty airSysName");
+    OS_ASSERT(false);
+  }
+
+  // Proj > Bldg > [AirSys]
+  std::vector<pugi::xml_node> airSystemElements = makeVectorOfChildren(projectElement.child("Bldg"), "AirSys");
 
   for( std::vector<pugi::xml_node>::size_type i = 0; i < airSystemElements.size(); i++ )
   {
@@ -9154,6 +9224,8 @@ pugi::xml_node ReverseTranslator::findAirSysElement(const std::string& airSysNam
       return airSystemElement;
     }
   }
+
+  LOG(Debug, "Couldn't locate the AirSys element for airSysName '" << airSysName << "'.");
 
   return pugi::xml_node();
 }

@@ -290,7 +290,9 @@ CREATE_SRC_GROUPS("${gbxml_resources_src}")
 # clear runs, calls to RUN_ENERGYPLUS will populate this
 set(ENERGYPLUS_OUTPUTS "")
 
-set(sdd_resources_src)
+set(sdd_resources_src
+  simxml/OffLrg-ThermalEnergyStorage_StoragePriority-ap.xml
+)
 
 # update the resources
 UPDATE_RESOURCES("${sdd_resources_src}")

@@ -165,7 +165,7 @@ namespace sdd {
       //scheduleWeek.setScheduleTypeLimits(*scheduleTypeLimits);
     }
 
-    if (!schDaySunRefElement){
+    if (schDaySunRefElement){
       boost::optional<model::ScheduleDay> scheduleDay = model.getModelObjectByName<model::ScheduleDay>(escapeName(schDaySunRefElement.text().as_string()));
       if (scheduleDay){
         scheduleWeek.setSundaySchedule(*scheduleDay);
@@ -174,7 +174,7 @@ namespace sdd {
       }
     }
 
-    if (!schDayMonRefElement){
+    if (schDayMonRefElement){
       boost::optional<model::ScheduleDay> scheduleDay = model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayMonRefElement.text().as_string()));
       if (scheduleDay){
         scheduleWeek.setMondaySchedule(*scheduleDay);
@@ -183,7 +183,7 @@ namespace sdd {
       }
     }
 
-    if (!schDayTueRefElement){
+    if (schDayTueRefElement){
       boost::optional<model::ScheduleDay> scheduleDay = model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayTueRefElement.text().as_string()));
       if (scheduleDay){
         scheduleWeek.setTuesdaySchedule(*scheduleDay);
@@ -192,7 +192,7 @@ namespace sdd {
       }
     }
 
-    if (!schDayWedRefElement){
+    if (schDayWedRefElement){
       boost::optional<model::ScheduleDay> scheduleDay = model.getModelObjectByName<model::ScheduleDay>(escapeName(schDayWedRefElement.text().as_string()));
       if (scheduleDay){
         scheduleWeek.setWednesdaySchedule(*scheduleDay);

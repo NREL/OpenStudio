@@ -132,19 +132,21 @@ namespace sdd {
     return angle;
   }
 
-  pugi::xml_node elementByTagNameAndIndex(const pugi::xml_node & root, const std::string& tagName, bool useIndex, const int & index){
+  pugi::xml_node elementByTagNameAndIndex(const pugi::xml_node & root, const std::string& tagName, boost::optional<int> _index){
+
     pugi::xml_node result;
-    if( useIndex ){
+    if( _index ){
 
       for (const pugi::xml_node& e: root.children(tagName.c_str())) {
         // Check if the node has an attribute 'id' that is an int *and* matches the one we seek
-        boost::optional<int> _thisIndex = lexicalCastToInt(e.attribute("id"));
-        if (_thisIndex && _thisIndex.get() == index) {
+        boost::optional<int> _thisIndex = lexicalCastToInt(e.attribute("index"));
+        if (_thisIndex && (_thisIndex.get() == _index.get()) ) {
           result = e;
           break;
         }
       }
     } else {
+      // return first child (should be unique)
       result = root.child(tagName.c_str());
     }
     return result;
@@ -166,11 +168,11 @@ namespace sdd {
     if (!nameElement) {
       LOG(Error, "Bldg element 'Name' is empty.")
     } else {
-      std::string bdlgname = nameElement.text().as_string();
-      if (bdlgname.empty()) {
+      std::string bldgname = nameElement.text().as_string();
+      if (bldgname.empty()) {
         LOG(Error, "Bldg element 'Name' is empty.")
       } else {
-        building.setName(escapeName(bdlgname));
+        building.setName(escapeName(bldgname));
       }
     }
 
@@ -186,28 +188,44 @@ namespace sdd {
 
     // translate shadingSurfaces
     std::vector<pugi::xml_node> exteriorShadingElements = makeVectorOfChildren(element, "ExtShdgObj");
-    model::ShadingSurfaceGroup shadingSurfaceGroup(model);
-    shadingSurfaceGroup.setName("Building ShadingGroup");
-    shadingSurfaceGroup.setShadingSurfaceType("Building");
-    for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorShadingElements.size(); ++i) {
-      if (exteriorShadingElements[i].parent() == element){
-        boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements[i], shadingSurfaceGroup);
-        if (!exteriorShading){
-          LOG(Error, "Failed to translate 'ExtShdgObj' element " << i);
+    if (exteriorShadingElements.size() > 0) {
+      model::ShadingSurfaceGroup shadingSurfaceGroup(model);
+      shadingSurfaceGroup.setName("Building ShadingGroup");
+      shadingSurfaceGroup.setShadingSurfaceType("Building");
+      for (std::vector<pugi::xml_node>::size_type i = 0; i < exteriorShadingElements.size(); ++i) {
+        if (exteriorShadingElements[i].parent() == element){
+          boost::optional<model::ModelObject> exteriorShading = translateShadingSurface(exteriorShadingElements[i], shadingSurfaceGroup);
+          if (!exteriorShading){
+            LOG(Error, "Failed to translate 'ExtShdgObj' element " << i);
+          }
         }
       }
     }
 
-    std::vector<pugi::xml_node> spaceElements = makeVectorOfChildren(element, "Spc");
     std::vector<pugi::xml_node> thermalZoneElements = makeVectorOfChildren(element, "ThrmlZn");
+
+    // It **Must** to be recursive here, since Spc lives inside Story and there are multiple stories
+    std::vector<pugi::xml_node> spaceElements = makeVectorOfChildrenRecursive(element, "Spc");
+
     std::vector<pugi::xml_node> buildingStoryElements = makeVectorOfChildren(element, "Story");
+
+    // OR:
+    /*
+    std::vector<pugi::xml_node> spaceElements;
+    for (const pugi::xml_node& buildingStoryElement: buildingStoryElements) {
+      for (const pugi::xml_node& spaceElement: buildingStoryElement.children("Spc")) {
+        spaceElements.push_back(spaceElement);
+      }
+    }
+    */
 
     // create all spaces
     for (std::vector<pugi::xml_node>::size_type i = 0; i < spaceElements.size(); i++){
       pugi::xml_node spaceElement = spaceElements[i];
       boost::optional<model::ModelObject> space = createSpace(spaceElement, model);
       if (!space){
-        LOG(Error, "Failed to translate 'Spc' element " << i);
+        LOG(Error, "Failed to translate 'Spc' element " << i << ", named:"
+                 << spaceElement.child("Name").text().as_string());
       }
     }
 
@@ -215,7 +233,7 @@ namespace sdd {
     for (std::vector<pugi::xml_node>::size_type i = 0; i < thermalZoneElements.size(); i++){
 
       // TODO: check already exists inside createThermalZone, this is redundant
-      if (thermalZoneElements[i].child("Name")) {
+      if (!thermalZoneElements[i].child("Name")) {
         LOG(Error, "ThrmlZn element 'Name' is empty, object will not be translated.")
         continue;
       }
@@ -317,6 +335,7 @@ namespace sdd {
   {
     pugi::xml_node nameElement = element.child("Name");
 
+    // TODO: move into block where we do set the name no?
     model::Space space(model);
 
     if (!nameElement) {
@@ -326,7 +345,7 @@ namespace sdd {
       if (name.empty()) {
         LOG(Error, "Spc element 'Name' is empty.");
       } else {
-        space.setName(name);
+        space.setName(escapeName(name));
       }
     }
 
@@ -358,7 +377,7 @@ namespace sdd {
       if (name.empty()) {
         LOG(Error, "Spc element 'Name' is empty.");
       } else {
-        spaceName = name;
+        spaceName = escapeName(name);
       }
     }
 
@@ -483,9 +502,10 @@ namespace sdd {
 
     model::Model model = buildingStory.model();
 
-    boost::optional<model::PlantLoop> shwSys = serviceHotWaterLoopForSupplySegment(shwFluidSegRefElement.text().as_string(),
-                                                                                   element.root(), // root
-                                                                                   model);
+    boost::optional<model::PlantLoop> shwSys;
+    if (shwFluidSegRefElement) {
+      shwSys = serviceHotWaterLoopForSupplySegment(shwFluidSegRefElement, model);
+    }
 
     if( _d  && shwSys )
     {
@@ -528,6 +548,8 @@ namespace sdd {
 
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateLoads(const pugi::xml_node& element, openstudio::model::Space& space)
   {
+    // element is 'Spc' here
+
     UnitSystem siSys(UnitSystem::SI);
     UnitSystem whSys(UnitSystem::Wh);
 
@@ -631,11 +653,11 @@ namespace sdd {
 
         pugi::xml_node infMthdElement = infMthdNodes[i];
 
-        // TODO: not sure what was meant here... hasIndex would be passed as false
-        bool hasIndex = false;
-        int infIndex = infMthdElement.attribute("index").as_int(-99);
 
-        pugi::xml_node dsgnInfRtElement = elementByTagNameAndIndex(element,"DsgnInfRt",hasIndex,infIndex);
+        boost::optional<int> _infIndex = lexicalCastToInt(infMthdElement.attribute("index"));
+
+        pugi::xml_node dsgnInfRtElement = elementByTagNameAndIndex(element,"DsgnInfRt", _infIndex);
+
 
         if (infMthdElement && dsgnInfRtElement) {
 
@@ -647,16 +669,16 @@ namespace sdd {
               openstudio::istringEqual(infMthd, "FlowExteriorWallArea") ||
               openstudio::istringEqual(infMthd, "FlowSpace")){
 
-            pugi::xml_node infSchRefElement = elementByTagNameAndIndex(element,"InfSchRef",hasIndex,infIndex);
-            pugi::xml_node infModelCoefAElement = elementByTagNameAndIndex(element,"InfModelCoefA",hasIndex,infIndex); // unitless
-            pugi::xml_node infModelCoefBElement = elementByTagNameAndIndex(element,"InfModelCoefB",hasIndex,infIndex); // 1/deltaF
-            pugi::xml_node infModelCoefCElement = elementByTagNameAndIndex(element,"InfModelCoefC",hasIndex,infIndex); // hr/mile
-            pugi::xml_node infModelCoefDElement = elementByTagNameAndIndex(element,"InfModelCoefD",hasIndex,infIndex); // hr^2/mile^2
+            pugi::xml_node infSchRefElement = elementByTagNameAndIndex(element, "InfSchRef", _infIndex);
+            pugi::xml_node infModelCoefAElement = elementByTagNameAndIndex(element, "InfModelCoefA", _infIndex); // unitless
+            pugi::xml_node infModelCoefBElement = elementByTagNameAndIndex(element, "InfModelCoefB", _infIndex); // 1/deltaF
+            pugi::xml_node infModelCoefCElement = elementByTagNameAndIndex(element, "InfModelCoefC", _infIndex); // hr/mile
+            pugi::xml_node infModelCoefDElement = elementByTagNameAndIndex(element, "InfModelCoefD", _infIndex); // hr^2/mile^2
 
             openstudio::model::SpaceInfiltrationDesignFlowRate spaceInfiltrationDesignFlowRate(model);
             std::string infName;
-            if( hasIndex ) {
-              infName = name + " Space Infiltration Design Flow Rate " + openstudio::string_conversions::number(infIndex + 1);
+            if( _infIndex ) {
+              infName = name + " Space Infiltration Design Flow Rate " + openstudio::string_conversions::number(_infIndex.get() + 1);
             }
             else
             {
