@@ -542,7 +542,13 @@ add_library(${target_name}_static
 )
 add_dependencies("${target_name}_static" GenerateIddFactoryRun)
 
-target_link_libraries(${target_name}_static ${${target_name}_static_depends} GeographicLib_STATIC cpprestsdk::cpprest)
+target_link_libraries(${target_name}_static ${${target_name}_static_depends} GeographicLib_STATIC)
+
+if(WIN32)
+  target_link_libraries(${target_name}_static optimized ${CPPRESTSDK_LIB_RELEASE} debug ${CPPRESTSDK_LIB_DEBUG})
+else()
+  target_link_libraries(${target_name}_static ${CPPRESTSDK_LIB})
+endif()
 
 #target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
 
