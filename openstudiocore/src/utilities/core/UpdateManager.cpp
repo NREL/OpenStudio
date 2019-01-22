@@ -154,7 +154,7 @@ namespace openstudio{
         LOG(Error, "Bad XML Response: " << result.description());
       } else {
         auto openstudio = document.document_element().child("openstudio");
-        for (auto release = openstudio.child("release"); release; release = release.next_sibling("release")) {
+        for (const pugi::xml_node& release : openstudio.children("release")) {
           if (!checkRelease(release)) {
             // break if not newer than current
             break;
