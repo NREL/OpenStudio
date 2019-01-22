@@ -33,7 +33,15 @@
 #include "../UtilitiesAPI.hpp"
 #include "Logger.hpp"
 
+#if (defined (__GNUC__))
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#endif
 #include <cpprest/http_client.h>
+#if (defined (__GNUC__))
+  #pragma GCC diagnostic pop
+#endif
+
 #include <pugixml.hpp>
 
 #include <string>

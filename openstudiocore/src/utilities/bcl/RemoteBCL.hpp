@@ -33,7 +33,15 @@
 #include "BCL.hpp"
 #include "../core/Path.hpp"
 
+#if (defined (__GNUC__))
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#endif
 #include <cpprest/http_client.h>
+#if (defined (__GNUC__))
+  #pragma GCC diagnostic pop
+#endif
+
 #include <nano/nano_signal_slot.hpp>
 #include <pugixml.hpp>
 
