@@ -664,7 +664,7 @@ else()
     file(MD5 "${FFI_ZIP_LOCAL_PATH}" FFI_ZIP_MD5)
   endif()
 
-  if( NOT FFI_ZIP_MD5 STREQUAL FFI_ZIP_EXPECTED_MD5)
+  if(NOT FFI_ZIP_MD5 STREQUAL FFI_ZIP_EXPECTED_MD5)
     unset(FFI CACHE)
     unset(FFID CACHE)
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${FFI_ZIP_FILENAME}"
@@ -859,7 +859,23 @@ endif()
 
 
 # cpprestsdk
-if(WIN32)
+if(APPLE)
+  # TODO
+elseif(UNIX)
+  set(CPPRESTSDK_ZIP "cpprestsdk-2.10.8-Linux-x86_64.tar.bz2")
+  set(CPPRESTSDK_DIR "cpprestsdk-2.10.8-Linux-x86_64")
+  set(CPPRESTSDK_EXPECTED_HASH "2384a172cf1ee8c58d16794a8b420fc7")
+  if(EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}")
+    file(MD5 "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" CPPRESTSDK_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}" OR NOT "${CPPRESTSDK_HASH}" MATCHES "${CPPRESTSDK_EXPECTED_HASH}")
+    message(STATUS "Downloading cpprestsdk)")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${CPPRESTSDK_ZIP}" "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${CPPRESTSDK_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  find_package(cpprestsdk REQUIRED PATHS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/cpprestsdk")
+elseif(WIN32)
   set(CPPRESTSDK_ZIP "cpprestsdk-2.10.8-win64.zip")
   set(CPPRESTSDK_DIR "cpprestsdk-2.10.8-win64")
   set(CPPRESTSDK_EXPECTED_HASH "fd77a7e572da93f79eec3297b8150438")
@@ -1188,13 +1204,13 @@ if(BUILD_OS_APP)
   list(APPEND QT_INCLUDES ${Qt5Gui_INCLUDE_DIRS})
   list(APPEND QT_INCLUDES "${QT_INSTALL_DIR}/include/QtGui/5.11.2/QtGui") # needed by qtwinmigrate
   list(APPEND QT_INCLUDES ${Qt5PrintSupport_INCLUDE_DIRS})
-  
+
   # DLM: added this, but seems to conflict with idea of a separate set of Qt Web dependencies?
   list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
   list(APPEND QT_INCLUDES ${Qt5WebEngine_INCLUDE_DIRS})
   list(APPEND QT_INCLUDES ${Qt5WebEngineCore_INCLUDE_DIRS})
   list(APPEND QT_INCLUDES ${Qt5WebEngineWidgets_INCLUDE_DIRS})
-  
+
   if(UNIX)
     list(APPEND QT_INCLUDES ${Qt5XcbQpa_INCLUDE_DIRS})
   endif()
@@ -1662,7 +1678,7 @@ set(all_lib_targets
   openstudio_energyplus_static
   openstudio_measure_static
   openstudio_radiance_static
-  openstudio_gbxml_static 
+  openstudio_gbxml_static
   openstudio_isomodel_static
   openstudio_sdd_static
   openstudio_airflow_static

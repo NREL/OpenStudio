@@ -36,6 +36,8 @@
 
 #include <regex>
 
+using namespace utility::conversions;
+
 namespace openstudio{
 
   UpdateManager::UpdateManager(const std::string& appName)
@@ -47,7 +49,7 @@ namespace openstudio{
       m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
       m_mostRecentVersion(openStudioVersion())
   {
-    web::http::client::http_client client(toWString(url));
+    web::http::client::http_client client(to_string_t(url));
     m_httpResponse = client
       .request(web::http::methods::GET)
       .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
@@ -130,11 +132,11 @@ namespace openstudio{
   std::string UpdateManager::updateUrl(const std::string& appName)
   {
     const std::string url("https://www.openstudio.net");
-    
+
     web::uri_builder builder(U("/update.html"));
 
-    builder.append_query(U("app"), toWString(appName));
-    builder.append_query(U("version"), toWString(openStudioVersion()));
+    builder.append_query(U("app"), to_string_t(appName));
+    builder.append_query(U("version"), to_string_t(openStudioVersion()));
 
     return url + toString(builder.to_string());
   }
@@ -160,10 +162,10 @@ namespace openstudio{
         }
       }
     }
-    
+
     m_finished = true;
   }
-  
+
   bool UpdateManager::checkRelease(const pugi::xml_node& release)
   {
     bool updateAvailable = false;
@@ -223,6 +225,6 @@ namespace openstudio{
 
     return updateAvailable;
   }
-  
+
 
 } // openstudio
