@@ -204,7 +204,8 @@ namespace openstudio {
       }
     #else
       cliPath = getOpenStudioModuleDirectory() / toPath("openstudio");
-      if (!openstudio::filesystem::exists(cliPath)){
+      // If it doesn't exist or it's a directory, try one level above
+      if (!openstudio::filesystem::exists(cliPath) || openstudio::filesystem::is_directory(cliPath)) {
         cliPath = getOpenStudioModuleDirectory() / toPath("../openstudio");
       }
     #endif
