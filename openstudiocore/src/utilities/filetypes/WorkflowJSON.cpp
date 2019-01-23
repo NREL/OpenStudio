@@ -519,6 +519,13 @@ namespace detail{
         return canonicalOrAbsolute(p);
       }
     }
+
+    // Extra check: if it starts with file://
+    std::string fileName = toString(file);
+    if (fileName.rfind("file://", 0) == 0) {
+      // We strip it, and try again
+      return findFile(toPath(fileName.substr(7)));
+    }
     return boost::none;
   }
 

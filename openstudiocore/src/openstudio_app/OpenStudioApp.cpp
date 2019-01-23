@@ -352,9 +352,12 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
   // Get the first Qlabel waitDialog (0 = stretch, 1 = "Loading model", 2 = "This may take a minute...", 3=hidden lable,   = stretch)
   waitDialog()->m_firstLine->setText("Loading Library Files");
   waitDialog()->m_secondLine->setText("(Manage library files in Preferences->Change default libraries)");
+ 
+  // DLM: this was causing a crash because waitDialog is created on the main thread but this is called on the wait thread.
+  // Because this is just the wait dialog let's just keep the line always visible.
   // Make it visible
-  waitDialog()->m_thirdLine->setVisible(true);
-  waitDialog()->m_fourthLine->setVisible(true);
+  //waitDialog()->m_thirdLine->setVisible(true);
+  //waitDialog()->m_fourthLine->setVisible(true);
 
   m_compLibrary = model::Model();
 
