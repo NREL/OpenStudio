@@ -862,9 +862,9 @@ endif()
 if(APPLE)
   # TODO
 elseif(UNIX)
-  set(CPPRESTSDK_ZIP "cpprestsdk-2.10.8-Linux-x86_64.tar.bz2")
+  set(CPPRESTSDK_ZIP "cpprestsdk-2.10.8-Linux-x86_64.tar.xz")
   set(CPPRESTSDK_DIR "cpprestsdk-2.10.8-Linux-x86_64")
-  set(CPPRESTSDK_EXPECTED_HASH "97b9c1b5eab9f2d2bfca4ca0551218db")
+  set(CPPRESTSDK_EXPECTED_HASH "866e8fa7ce1e507fcb19b0ab9b89399c")
   if(EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}")
     file(MD5 "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" CPPRESTSDK_HASH)
   endif()
@@ -1012,8 +1012,8 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
     if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
       # ubuntu 18.04
       # This should work with 16.04 and 14.04 too.
-      set(BOOST_ZIP_FILENAME "boost_1_68_0_linux.tar.gz")
-      set(BOOST_ZIP_EXPECTED_MD5 "0d6a2bf1bb403cde1a5396d0ef3dda4e")
+      set(BOOST_ZIP_FILENAME "boost_1_68_0_linux_v2.tar.xz")
+      set(BOOST_ZIP_EXPECTED_MD5 "1f5d0d8bc7a5c26723013cf72823a4b4")
     else()
       # 16.04
       set(BOOST_ZIP_FILENAME "boost_1_68_0_linux_xenial.tar.gz")
