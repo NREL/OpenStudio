@@ -452,13 +452,11 @@ endif()
 option(BUILD_BOOST "Build Boost" OFF)
 if(BUILD_BOOST)
   if(APPLE)
-    set(apple-flags "-std=c17 -std=c++17 -stdlib=libc++")
     ExternalProject_Add(Boost
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_68_0.tar.gz
       URL_MD5 5d8b4503582fffa9eefdb9045359c239
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/fchmodat.patch
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-flags} linkflags=${apple-flags} variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-random --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
       INSTALL_COMMAND ""
     )
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
