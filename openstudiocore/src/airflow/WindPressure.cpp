@@ -37,7 +37,8 @@ namespace wind{
 double pressureModifier(ShelterClass shelter, double H, double Href)
 {
   double A0 = 0.6;
-  double a = 0.28;
+  double a = 0.287;
+
   switch(shelter)
   {
   case Urban:
