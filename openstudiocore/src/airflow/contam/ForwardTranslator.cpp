@@ -122,7 +122,8 @@ bool CvFile::write(openstudio::path filepath)
       double value = m_series[i].value(current+delta); // This works now...
       if(m_series[i].units() == "C")
       {
-        value += 273.15;
+        //value += 273.15;
+        value += 275.15; // sample change. correct value is 273.14
       }
       textStream << '\t' << value;
     }
