@@ -410,10 +410,6 @@ def parse_main_args(main_args)
     $logger.info "Setting BUNDLE_PATH to ':/ruby/2.2.0/'"
     ENV['BUNDLE_PATH'] = ':/ruby/2.2.0/'
     
-    # match configuration in build_openstudio_gems
-    $logger.info "Setting BUNDLE_WITHOUT to 'test'"
-    ENV['BUNDLE_WITHOUT'] = 'test'
-    
     # ignore any local config on disk
     #DLM: this would be correct if the bundle was created here
     #it would not be correct if the bundle was transfered from another computer
@@ -477,6 +473,13 @@ def parse_main_args(main_args)
   if use_bundler
   
     current_dir = Dir.pwd
+    
+    original_arch = nil
+    if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
+      original_arch = RbConfig::CONFIG['arch']
+      $logger.info "Temporarily replacing arch '#{original_arch}' with 'x64-mingw32' for Bundle"
+      RbConfig::CONFIG['arch'] = 'x64-mingw32'
+    end
   
     # require bundler
     # have to do some forward declaration and pre-require to get around autoload cycles
@@ -495,16 +498,34 @@ def parse_main_args(main_args)
     require 'bundler/definition'
     require 'bundler/dsl'
     require 'bundler'
-
+    
     begin
       # activate bundled gems
       # bundler will look in:
       # 1) ENV["BUNDLE_GEMFILE"]
       # 2) find_file("Gemfile", "gems.rb")
       #require 'bundler/setup'
-
-      Bundler.setup
-      #Bundler.require
+      
+      groups = Bundler.definition.groups
+      keep_groups = []
+      groups.each do |g| 
+        if (g == :test) || (g == :development)  || (g == :openstudio_no_cli)
+          $logger.info "Bundling without group #{g}"
+        else
+          keep_groups << g
+        end
+      end
+      
+      $logger.info "Bundling with groups [#{keep_groups.join(',')}]"
+      
+      remaining_specs = []
+      Bundler.definition.specs_for(keep_groups).each {|s| remaining_specs << s.name}
+      
+      $logger.info "Specs to be included [#{remaining_specs.join(',')}]"
+        
+      Bundler.setup(*keep_groups) 
+      #Bundler.require(*keep_groups)
+      
     #rescue Bundler::BundlerError => e
     
       #$logger.info e.backtrace.join("\n")
@@ -512,6 +533,11 @@ def parse_main_args(main_args)
       #exit e.status_code
 
     ensure
+    
+      if original_arch
+        $logger.info "Restoring arch '#{original_arch}'"
+        RbConfig::CONFIG['arch'] = 'x64-mingw32'
+      end
     
       Dir.chdir(current_dir)
     end
