@@ -497,6 +497,7 @@ def parse_main_args(main_args)
     require 'bundler/source'
     require 'bundler/definition'
     require 'bundler/dsl'
+    require 'bundler/uri_credentials_filter'
     require 'bundler'
     
     begin
