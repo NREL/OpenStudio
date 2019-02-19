@@ -105,8 +105,18 @@
 #include "../model/DesignSpecificationOutdoorAir_Impl.hpp"
 #include "../model/CoolingTowerSingleSpeed.hpp"
 #include "../model/CoolingTowerSingleSpeed_Impl.hpp"
+#include "../model/CoolingTowerTwoSpeed.hpp"
+#include "../model/CoolingTowerTwoSpeed_Impl.hpp"
 #include "../model/CoolingTowerVariableSpeed.hpp"
 #include "../model/CoolingTowerVariableSpeed_Impl.hpp"
+#include "../model/FluidCoolerSingleSpeed.hpp"
+#include "../model/FluidCoolerSingleSpeed_Impl.hpp"
+#include "../model/FluidCoolerTwoSpeed.hpp"
+#include "../model/FluidCoolerTwoSpeed_Impl.hpp"
+#include "../model/EvaporativeFluidCoolerSingleSpeed.hpp"
+#include "../model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp"
+#include "../model/EvaporativeFluidCoolerTwoSpeed.hpp"
+#include "../model/EvaporativeFluidCoolerTwoSpeed_Impl.hpp"
 #include "../model/SetpointManagerFollowOutdoorAirTemperature.hpp"
 #include "../model/SetpointManagerFollowOutdoorAirTemperature_Impl.hpp"
 #include "../model/SetpointManagerMixedAir.hpp"
@@ -4235,78 +4245,102 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   }
 
   // Exhaust Fan(s)
+  struct ExhaustFanInfo {
+    QDomElement exhFanNameElement;
+    QDomElement exhFlowRtSimElement;
+    QDomElement exhFanEndUseCatElement;
+    QDomElement exhAvailSchRefElement;
+    QDomElement exhTotEffElement;
+    QDomElement exhTotStaticPressElement;
+    QDomElement exhFlowSchRefElement;
+    QDomElement exhOperModeElement;
+    QDomElement exhMinTempSchRefElement;
+    QDomElement exhBalancedSchRefElement;
+  };
 
-  QDomElement exhFlowRtSimElement = thermalZoneElement.firstChildElement("ExhFlowSim");
-  QDomElement exhFanNameElement = thermalZoneElement.firstChildElement("ExhFanName");
-  QDomElement exhFanEndUseCatElement = thermalZoneElement.firstChildElement("ExhFanEndUseCat");
+  std::map<int, ExhaustFanInfo> exhaustFanInfo;
 
-  value = exhFlowRtSimElement.text().toDouble(&ok);
-  if( ok && (! exhFanNameElement.isNull()) )
-  {
+  auto getFanElement = [&](const QString & elementName, QDomElement ExhaustFanInfo::*member ) {
+    auto elements = thermalZoneElement.elementsByTagName(elementName);
+    for ( int i = 0; i < elements.count(); ++i ) {
+      auto element = elements.at(i).toElement();
+      auto index = element.attribute("index").toInt(&ok);
+      auto it = exhaustFanInfo.find(index);
+      if ( it != exhaustFanInfo.end() ) {
+        it->second.*member = element;
+      }
+    }
+  };
+
+  auto elements = thermalZoneElement.elementsByTagName("ExhFanName");
+  for ( int i = 0; i < elements.count(); ++i ) {
+    ExhaustFanInfo info;
+    info.exhFanNameElement = elements.at(i).toElement();
+    auto index = info.exhFanNameElement.attribute("index").toInt(&ok);
+    exhaustFanInfo[index] = info;
+  }
+
+  getFanElement("ExhFlowSim", &ExhaustFanInfo::exhFlowRtSimElement);
+  getFanElement("ExhFanEndUseCat", &ExhaustFanInfo::exhFanEndUseCatElement);
+  getFanElement("ExhAvailSchRef", &ExhaustFanInfo::exhAvailSchRefElement);
+  getFanElement("ExhTotEff", &ExhaustFanInfo::exhTotEffElement);
+  getFanElement("ExhTotStaticPress", &ExhaustFanInfo::exhTotStaticPressElement);
+  getFanElement("ExhFlowSchRef", &ExhaustFanInfo::exhFlowSchRefElement);
+  getFanElement("ExhOperMode", &ExhaustFanInfo::exhOperModeElement);
+  getFanElement("ExhMinTempSchRef", &ExhaustFanInfo::exhMinTempSchRefElement);
+  getFanElement("ExhBalancedSchRef", &ExhaustFanInfo::exhBalancedSchRefElement);
+
+  for ( const auto & fanInfo: exhaustFanInfo ) {
     model::FanZoneExhaust exhaustFan(model);
-    exhaustFan.setName(exhFanNameElement.text().toStdString());
-
-    if( ! exhFanEndUseCatElement.text().isEmpty() ) {
-      exhaustFan.setEndUseSubcategory(exhFanEndUseCatElement.text().toStdString());
+    exhaustFan.setName(fanInfo.second.exhFanNameElement.text().toStdString());
+    if ( fanInfo.second.exhFanEndUseCatElement.text().isEmpty() ) {
+      exhaustFan.setEndUseSubcategory("General");
+    } else {
+      exhaustFan.setEndUseSubcategory(fanInfo.second.exhFanEndUseCatElement.text().toStdString());
     }
 
+    value = fanInfo.second.exhFlowRtSimElement.text().toDouble(&ok);
     value = unitToUnit(value,"cfm","m^3/s").get();
     exhaustFan.setMaximumFlowRate(value);
 
-    QDomElement exhAvailSchRefElement = thermalZoneElement.firstChildElement("ExhAvailSchRef");
-    std::string exhAvailSchRef = escapeName(exhAvailSchRefElement.text());
+    std::string exhAvailSchRef = escapeName(fanInfo.second.exhAvailSchRefElement.text());
     boost::optional<model::Schedule> exhAvailSch = model.getModelObjectByName<model::Schedule>(exhAvailSchRef);
-    if( exhAvailSch )
-    {
+    if ( exhAvailSch ) {
       exhaustFan.setAvailabilitySchedule(exhAvailSch.get());
     }
 
-    QDomElement exhTotEffElement = thermalZoneElement.firstChildElement("ExhTotEff");
-    value = exhTotEffElement.text().toDouble(&ok);
-    if( ok )
-    {
+    value = fanInfo.second.exhTotEffElement.text().toDouble(&ok);
+    if ( ok ) {
       exhaustFan.setFanEfficiency(value);
     }
 
-    QDomElement exhTotStaticPressElement = thermalZoneElement.firstChildElement("ExhTotStaticPress");
-    value = exhTotStaticPressElement.text().toDouble(&ok);
-    if( ok )
-    {
+    value = fanInfo.second.exhTotStaticPressElement.text().toDouble(&ok);
+    if ( ok ) {
       // Convert in WC to Pa
       exhaustFan.setPressureRise(value * 249.0889 );
     }
 
-    QDomElement exhFlowSchRefElement = thermalZoneElement.firstChildElement("ExhFlowSchRef");
-    std::string exhFlowSchRef = escapeName(exhFlowSchRefElement.text());
+    std::string exhFlowSchRef = escapeName(fanInfo.second.exhFlowSchRefElement.text());
     boost::optional<model::Schedule> exhFlowSch = model.getModelObjectByName<model::Schedule>(exhFlowSchRef);
-    if( exhFlowSch )
-    {
+    if ( exhFlowSch ) {
       exhaustFan.setFlowFractionSchedule(exhFlowSch.get());
     }
 
-    QDomElement exhOperModeElement = thermalZoneElement.firstChildElement("ExhOperMode");
-    if( exhOperModeElement.text().compare("DecoupledFromSystem",Qt::CaseInsensitive) == 0 )
-    {
+    if ( fanInfo.second.exhOperModeElement.text().compare("DecoupledFromSystem",Qt::CaseInsensitive) == 0 ) {
       exhaustFan.setSystemAvailabilityManagerCouplingMode("Decoupled");
-    }
-    else if( exhOperModeElement.text().compare("CoupledToSystem",Qt::CaseInsensitive) == 0 )
-    {
+    } else if ( fanInfo.second.exhOperModeElement.text().compare("CoupledToSystem",Qt::CaseInsensitive) == 0 ) {
       exhaustFan.setSystemAvailabilityManagerCouplingMode("Coupled");
     }
 
-    QDomElement exhMinTempSchRefElement = thermalZoneElement.firstChildElement("ExhMinTempSchRef");
-    std::string exhMinTempSchRef = escapeName(exhMinTempSchRefElement.text());
+    std::string exhMinTempSchRef = escapeName(fanInfo.second.exhMinTempSchRefElement.text());
     boost::optional<model::Schedule> exhMinTempSch = model.getModelObjectByName<model::Schedule>(exhMinTempSchRef);
-    if( exhMinTempSch )
-    {
+    if ( exhMinTempSch ) {
       exhaustFan.setMinimumZoneTemperatureLimitSchedule(exhMinTempSch.get());
     }
 
-    QDomElement exhBalancedSchRefElement = thermalZoneElement.firstChildElement("ExhBalancedSchRef");
-    std::string exhBalancedSchRef = escapeName(exhBalancedSchRefElement.text());
+    std::string exhBalancedSchRef = escapeName(fanInfo.second.exhBalancedSchRefElement.text());
     boost::optional<model::Schedule> exhBalancedSch = model.getModelObjectByName<model::Schedule>(exhBalancedSchRef);
-    if( exhBalancedSch )
-    {
+    if ( exhBalancedSch ) {
       exhaustFan.setBalancedExhaustFractionSchedule(exhBalancedSch.get());
     }
 
@@ -4968,6 +5002,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     zoneVent.setMaximumIndoorTemperature(100);
     zoneVent.setDeltaTemperature(-100);
 
+    // OperableWinOAFlow
+    auto operableWinOAFlow = thermalZoneElement.firstChildElement("OperableWinOAFlow").text().toDouble(&ok);
+    if( ok ) {
+      zoneVent.setDesignFlowRateCalculationMethod("Flow/Zone");
+      operableWinOAFlow = unitToUnit(operableWinOAFlow,"cfm","m^3/s").get();
+      zoneVent.setDesignFlowRate(operableWinOAFlow);
+    }
+
     auto operableWinOALimLo = thermalZoneElement.firstChildElement("OperableWinOALimLo").text().toDouble(&ok);
     if( ok ) {
       operableWinOALimLo = unitToUnit(operableWinOALimLo,"F","C").get();
@@ -5572,7 +5614,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
   // Keep a map of chiller to a flag indicating if it should be used
   // in thermal energy storage discharge
-  std::map<model::ModelObject,bool> enableOnThrmlEngyStorDischargeMap;
+  std::vector< std::pair<model::ModelObject,bool> > enableOnThrmlEngyStorDischargeMap;
   auto chillerElements = fluidSysElement.elementsByTagName("Chlr");
   for (int i = 0; i < chillerElements.count(); i++) {
     auto chillerElement = chillerElements.at(i).toElement();
@@ -5589,9 +5631,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
       if( thermalStorage ) {
         if( chillerElement.firstChildElement("EnableOnThrmlEngyStorDischrg").text().toInt() == 1 ) {
-          enableOnThrmlEngyStorDischargeMap.insert(std::make_pair(chiller,true));
+          enableOnThrmlEngyStorDischargeMap.push_back(std::make_pair(chiller,true));
         } else {
-          enableOnThrmlEngyStorDischargeMap.insert(std::make_pair(chiller,false));
+          enableOnThrmlEngyStorDischargeMap.push_back(std::make_pair(chiller,false));
         }
       }
     }
@@ -6293,6 +6335,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
       spm2.addToNode(node.get());
     }
 
+    std::vector<model::CoolingTowerTwoSpeed> twoSpeedTowers =
+    subsetCastVector<model::CoolingTowerTwoSpeed>(plantLoop.supplyComponents(model::CoolingTowerTwoSpeed::iddObjectType()));
+    for(auto it = twoSpeedTowers.begin();
+        it != twoSpeedTowers.end();
+        ++it)
+    {
+      boost::optional<model::ModelObject> mo = it->outletModelObject();
+      OS_ASSERT(mo);
+      boost::optional<model::Node> node = mo->optionalCast<model::Node>();
+      OS_ASSERT(node);
+
+      model::SetpointManagerScheduled spm2(model,schedule);
+      spm2.setName(it->name().get() + " SPM");
+      spm2.addToNode(node.get());
+    }
+
     std::vector<model::CoolingTowerSingleSpeed> constantTowers =
     subsetCastVector<model::CoolingTowerSingleSpeed>(plantLoop.supplyComponents(model::CoolingTowerSingleSpeed::iddObjectType()));
     for(auto it = constantTowers.begin();
@@ -6622,202 +6680,632 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
 
   bool ok;
   double value;
+  std::string svalue;
 
   if( ! istringEqual(htRejElement.tagName().toStdString(),"HtRej") )
   {
     return result;
   }
 
-  // ModCtrl
+  // HtRej:ModCtrl
+  // HtRej:CapRtd
+  // HtRej:FanType
+  // HtRej:TotFanHP
+  // HtRej:AirFlowCap
+  // HtRej:WtrFlowCap
+  // HtRej:LowSpdAirFlowRat
+  // HtRej:LowSpdPwrRat
+  // HtRej:CellCnt
 
-  QDomElement modCtrlElement = htRejElement.firstChildElement("ModCtrl");
+  auto typeElement = htRejElement.firstChildElement("Type");
+  auto modCtrlElement = htRejElement.firstChildElement("ModCtrl");
 
-  if( modCtrlElement.text().compare("VariableSpeedDrive",Qt::CaseInsensitive) == 0 )
-  {
-    model::CoolingTowerVariableSpeed tower(model);
+  if ( typeElement.text().compare("OpenTower", Qt::CaseInsensitive) == 0 ) {
+    if ( ( modCtrlElement.text().compare("Bypass",Qt::CaseInsensitive) == 0 ) || ( modCtrlElement.text().compare("Cycling",Qt::CaseInsensitive) == 0 ) ) {
+      model::CoolingTowerSingleSpeed tower(model);
 
-    QDomElement wetBulbApproachElement = htRejElement.parentNode().firstChildElement("WetBulbApproach");
-    QDomElement dsgnSupWtrTempElement = htRejElement.parentNode().firstChildElement("DsgnSupWtrTemp");
-    QDomElement dsgnSupWtrDelTElement = htRejElement.parentNode().firstChildElement("DsgnSupWtrDelT");
+      QDomElement nameElement = htRejElement.firstChildElement("Name");
+      tower.setName(nameElement.text().toStdString());
 
-    boost::optional<double> wetBulbApproach;
-    boost::optional<double> dsgnSupWtrTemp;
-    boost::optional<double> dsgnSupWtrDelT;
-
-    value = wetBulbApproachElement.text().toDouble(&ok);
-    if( ok )
-    {
-      wetBulbApproach = value * 5.0 / 9.0;
-    }
-
-    value = dsgnSupWtrTempElement.text().toDouble(&ok);
-    if( ok )
-    {
-      dsgnSupWtrTemp = unitToUnit(value,"F","C");
-    }
-
-    value = dsgnSupWtrDelTElement.text().toDouble(&ok);
-    if( ok )
-    {
-      dsgnSupWtrDelT = value * 5.0 / 9.0;
-    }
-
-    if( dsgnSupWtrDelT )
-    {
-      tower.setDesignRangeTemperature(dsgnSupWtrDelT.get());
-    }
-
-    tower.setDesignInletAirWetBulbTemperature(20.01);
-
-    if( dsgnSupWtrTemp && wetBulbApproach )
-    {
-      tower.setDesignInletAirWetBulbTemperature(dsgnSupWtrTemp.get() - wetBulbApproach.get());
-    }
-    else if( dsgnSupWtrTemp )
-    {
-      tower.setDesignInletAirWetBulbTemperature(dsgnSupWtrTemp.get() - 5.55556);
-    }
-
-    if( wetBulbApproach )
-    {
-      tower.setDesignApproachTemperature(wetBulbApproach.get());
-    }
-    else
-    {
-      tower.setDesignApproachTemperature(5.55556);
-    }
-
-    if( ! autosize() )
-    {
-      QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCapSim");
-
-      value = airFlowCapElement.text().toDouble(&ok);
-      if( ok )
+      if( modCtrlElement.text().compare("Cycling",Qt::CaseInsensitive) == 0 )
       {
-        tower.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+        tower.setCapacityControl("FanCycling");
+      }
+      else if( modCtrlElement.text().compare("Bypass",Qt::CaseInsensitive) == 0 )
+      {
+        tower.setCapacityControl("FluidBypass");
       }
 
-      QDomElement wtrFlowCapElement = htRejElement.firstChildElement("WtrFlowCapSim");
-
-      value = wtrFlowCapElement.text().toDouble(&ok);
+      QDomElement cellCntElement = htRejElement.firstChildElement("CellCnt");
+      int cellCnt = cellCntElement.text().toInt(&ok);
       if( ok )
       {
-        tower.setDesignWaterFlowRate(unitToUnit(value, "gal/min", "m^3/s").get());
+        tower.setNumberofCells(cellCnt);
       }
 
-      QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHPSim");
+      tower.autosizeUFactorTimesAreaValueatDesignAirFlowRate();
+      
+      if( ! autosize() )
+      {
+        // PerformanceInputMethod
+        tower.setPerformanceInputMethod("NominalCapacity");
 
-      value = totFanHPElement.text().toDouble(&ok);
+        // CapRtd
+        QDomElement capRtdElement = htRejElement.firstChildElement("CapRtdSim");
+        value = capRtdElement.text().toDouble(&ok);
+        if( ok )
+        {
+          // NominalCapacity
+          double cap = unitToUnit(value,"Btu/h","W").get();
+
+          tower.setNominalCapacity(cap);
+        }
+
+        QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCapSim");
+
+        value = airFlowCapElement.text().toDouble(&ok);
+        if( ok )
+        {
+          tower.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+        }
+        
+        QDomElement wtrFlowCapElement = htRejElement.firstChildElement("WtrFlowCapSim");
+
+        value = wtrFlowCapElement.text().toDouble(&ok);
+        if( ok )
+        {
+          tower.setDesignWaterFlowRate(unitToUnit(value,"gal","m^3").get());
+        }
+
+        QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHPSim");
+
+        value = totFanHPElement.text().toDouble(&ok);
+        if( ok )
+        {
+          tower.setFanPoweratDesignAirFlowRate(value * 745.7);
+        }
+      }
+      result = tower;
+    } else if ( ( modCtrlElement.text().compare("VariableSpeedDrive",Qt::CaseInsensitive) == 0 ) ) {
+      model::CoolingTowerVariableSpeed tower(model);
+
+      QDomElement nameElement = htRejElement.firstChildElement("Name");
+      tower.setName(nameElement.text().toStdString());
+
+      tower.setModelType("CoolToolsCrossFlow");
+      //tower.setModelCoefficient();
+
+      QDomElement wetBulbApproachElement = htRejElement.parentNode().firstChildElement("WetBulbApproach");
+      QDomElement dsgnSupWtrTempElement = htRejElement.parentNode().firstChildElement("DsgnSupWtrTemp");
+      QDomElement dsgnSupWtrDelTElement = htRejElement.parentNode().firstChildElement("DsgnSupWtrDelT");
+
+      boost::optional<double> wetBulbApproach;
+      boost::optional<double> dsgnSupWtrTemp;
+      boost::optional<double> dsgnSupWtrDelT;
+      boost::optional<double> dsgnWBT;
+
+      value = wetBulbApproachElement.text().toDouble(&ok);
       if( ok )
       {
-        tower.setDesignFanPower(value * 745.7);
+        wetBulbApproach = value * 5.0 / 9.0;
       }
-    }
 
-    QDomElement minSpdRatElement = htRejElement.firstChildElement("LowSpdAirFlowRat");
+      value = dsgnSupWtrTempElement.text().toDouble(&ok);
+      if( ok )
+      {
+        dsgnSupWtrTemp = unitToUnit(value,"F","C");
+      }
 
-    value = minSpdRatElement.text().toDouble(&ok);
-    if( ok )
-    {
-      tower.setMinimumAirFlowRateRatio(value);
-    }
+      value = dsgnSupWtrDelTElement.text().toDouble(&ok);
+      if( ok )
+      {
+        dsgnSupWtrDelT = value * 5.0 / 9.0; 
+      }
 
-    boost::optional<model::CurveCubic> vsdFanPwrRatio_fQRatio;
-    QDomElement vsdFanPwrRatio_fQRatioElement = htRejElement.firstChildElement("VSDFanPwrRatio_fQRatio");
-    vsdFanPwrRatio_fQRatio = model.getModelObjectByName<model::CurveCubic>(vsdFanPwrRatio_fQRatioElement.text().toStdString());
+      value = doc.documentElement().firstChildElement("Proj").firstChildElement("DsgnWBT").text().toDouble(&ok);
+      if ( ok ) {
+        dsgnWBT = unitToUnit(value,"F","C");
+      }
 
-    if( vsdFanPwrRatio_fQRatio )
-    {
-      tower.setFanPowerRatioFunctionofAirFlowRateRatioCurve(vsdFanPwrRatio_fQRatio.get());
-    }
+      if( dsgnSupWtrDelT )
+      {
+        tower.setDesignRangeTemperature(dsgnSupWtrDelT.get());
+      }
 
-    QDomElement cellCntElement = htRejElement.firstChildElement("CellCnt");
-    int cellCnt = cellCntElement.text().toInt(&ok);
-    if( ok )
-    {
-      tower.setNumberofCells(cellCnt);
-    }
+      if ( dsgnWBT ) {
+        tower.setDesignInletAirWetBulbTemperature(dsgnWBT.get());
+      }
 
-    result = tower;
-  }
-  else
-  {
-    model::CoolingTowerSingleSpeed tower(model);
+      tower.setDesignApproachTemperature( 5.6 );
 
-    result = tower;
+      tower.setDesignInletAirWetBulbTemperature(20.01);
 
-    if( modCtrlElement.text().compare("Cycling",Qt::CaseInsensitive) == 0 )
-    {
-      tower.setCapacityControl("FanCycling");
-    }
-    else if( modCtrlElement.text().compare("Bypass",Qt::CaseInsensitive) == 0 )
-    {
-      tower.setCapacityControl("FluidBypass");
-    }
+      if( dsgnSupWtrTemp && wetBulbApproach )
+      {
+        tower.setDesignInletAirWetBulbTemperature(dsgnSupWtrTemp.get() - wetBulbApproach.get());
+      }
+      else if( dsgnSupWtrTemp )
+      {
+        tower.setDesignInletAirWetBulbTemperature(dsgnSupWtrTemp.get() - 5.55556);
+      }
 
-    QDomElement cellCntElement = htRejElement.firstChildElement("CellCnt");
-    int cellCnt = cellCntElement.text().toInt(&ok);
-    if( ok )
-    {
-      tower.setNumberofCells(cellCnt);
-    }
+      if( wetBulbApproach )
+      {
+        tower.setDesignApproachTemperature(wetBulbApproach.get());
+      }
+      else
+      {
+        tower.setDesignApproachTemperature(5.55556);
+      }
 
-    if( ! autosize() )
-    {
-      // PerformanceInputMethod
+      if( ! autosize() )
+      {
+        if ( dsgnWBT && dsgnSupWtrTemp ) {
+          tower.setDesignApproachTemperature( dsgnWBT.get() - dsgnSupWtrTemp.get() );
+        }
+
+        QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCapSim");
+        value = airFlowCapElement.text().toDouble(&ok);
+        if( ok )
+        {
+          tower.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+        }
+        
+        QDomElement wtrFlowCapElement = htRejElement.firstChildElement("WtrFlowCapSim");
+
+        value = wtrFlowCapElement.text().toDouble(&ok);
+        if( ok )
+        {
+          tower.setDesignWaterFlowRate(unitToUnit(value, "gal/min", "m^3/s").get());
+        }
+
+        QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHPSim");
+
+        value = totFanHPElement.text().toDouble(&ok);
+        if( ok )
+        {
+          tower.setDesignFanPower(value * 745.7);
+        }
+      }
+
+      QDomElement minSpdRatElement = htRejElement.firstChildElement("LowSpdAirFlowRatSim");
+
+      value = minSpdRatElement.text().toDouble(&ok);
+      if( ok )
+      {
+        tower.setMinimumAirFlowRateRatio(value);
+      }
+
+      boost::optional<model::CurveCubic> vsdFanPwrRatio_fQRatio;
+      QDomElement vsdFanPwrRatio_fQRatioElement = htRejElement.firstChildElement("VSDFanPwrRatio_fQRatio");
+      vsdFanPwrRatio_fQRatio = model.getModelObjectByName<model::CurveCubic>(vsdFanPwrRatio_fQRatioElement.text().toStdString());
+
+      if( vsdFanPwrRatio_fQRatio )
+      {
+        tower.setFanPowerRatioFunctionofAirFlowRateRatioCurve(vsdFanPwrRatio_fQRatio.get());
+      }
+
+      QDomElement cellCntElement = htRejElement.firstChildElement("CellCnt");
+      int cellCnt = cellCntElement.text().toInt(&ok);
+      if( ok )
+      {
+        tower.setNumberofCells(cellCnt);
+      }
+
+      result = tower;
+    } else if ( modCtrlElement.text().compare("TwoSpeed",Qt::CaseInsensitive) == 0 ) {
+      model::CoolingTowerTwoSpeed tower(model);
+
+      svalue = htRejElement.firstChildElement("Name").text().toStdString();
+      tower.setName(svalue);
+
+      value = htRejElement.firstChildElement("WtrFlowCapSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value, "gal/min", "m^3/s").get();
+        tower.setDesignWaterFlowRate(value);
+      }
+
+      value = htRejElement.firstChildElement("AirFlowCapSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"cfm","m^3/s").get();
+        tower.setHighFanSpeedAirFlowRate(value);
+      }
+
+      value = htRejElement.firstChildElement("TotFanHPSim").text().toDouble(&ok);
+      if ( ok ) {
+        tower.setHighFanSpeedFanPower(value * 745.7);
+      }
+
+      //tower.autosizeUFactorTimesAreaValue();
+
+      value = htRejElement.firstChildElement("LowSpdAirFlowRatSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"cfm","m^3/s").get();
+        tower.setLowFanSpeedAirFlowRate(value);
+      }
+
+      value = htRejElement.firstChildElement("LowSpdPwrRatSim").text().toDouble(&ok);
+      if ( ok ) {
+        tower.setLowFanSpeedFanPower(value * 745.7);
+      }
+
+      tower.autosizeLowFanSpeedUFactorTimesAreaValue();
+
       tower.setPerformanceInputMethod("NominalCapacity");
 
-      tower.resetDesignWaterFlowRate();
-
-      tower.resetUFactorTimesAreaValueatDesignAirFlowRate();
-
-      tower.resetUFactorTimesAreaValueatFreeConvectionAirFlowRate();
-
-      // CapRtd
-      QDomElement capRtdElement = htRejElement.firstChildElement("CapRtdSim");
-      value = capRtdElement.text().toDouble(&ok);
-
-      if( ok )
-      {
-        // NominalCapacity
-        double cap = unitToUnit(value,"Btu/h","W").get();
-
-        tower.setNominalCapacity(cap);
+      value = htRejElement.firstChildElement("CapRtdSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"Btu/h","W").get();
+        tower.setHighSpeedNominalCapacity(value);
       }
 
-      QDomElement airFlowCapElement = htRejElement.firstChildElement("AirFlowCapSim");
+      result = tower;
+    }
+  } else if ( typeElement.text().compare("ClosedTower", Qt::CaseInsensitive) == 0 )  {
+    if ( ( modCtrlElement.text().compare("Bypass",Qt::CaseInsensitive) == 0 ) || ( modCtrlElement.text().compare("Cycling",Qt::CaseInsensitive) == 0 ) ) {
+      model::FluidCoolerSingleSpeed fluidCooler(model);
 
+      QDomElement nameElement = htRejElement.firstChildElement("Name");
+      fluidCooler.setName(nameElement.text().toStdString());
+
+      auto calcMthd = htRejElement.firstChildElement("CalcMthd").text();
+      if ( calcMthd.compare("UserSpecified", Qt::CaseInsensitive) == 0 ) {
+        fluidCooler.setPerformanceInputMethod("NominalCapacity");
+
+        auto value = htRejElement.firstChildElement("EntTempDsgn").text().toDouble(&ok);
+        if ( ok ) {
+          value = unitToUnit(value,"F","C").get();
+          fluidCooler.setDesignEnteringWaterTemperature(value);
+        }
+
+        value = htRejElement.firstChildElement("DsgnDBT").text().toDouble(&ok);
+        if ( ok ) {
+          value = unitToUnit(value,"F","C").get();
+          fluidCooler.setDesignEnteringAirTemperature(value);
+        }
+
+        value = htRejElement.firstChildElement("DsgnWBT").text().toDouble(&ok);
+        if ( ok ) {
+          value = unitToUnit(value,"F","C").get();
+          fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
+        }
+      } else if ( calcMthd.compare("UAFactorSim", Qt::CaseInsensitive) == 0 ) {
+        fluidCooler.setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
+
+        value = htRejElement.firstChildElement("UAFactorSim").text().toDouble(&ok);
+        if ( ok ) {
+          // Convert Btu/h-F to W/K
+          fluidCooler.setDesignAirFlowRateUfactorTimesAreaValue(value * 0.5275);
+        }
+      }
+
+      value = htRejElement.firstChildElement("CapRtdSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"Btu/h","W").get();
+        fluidCooler.setNominalCapacity(value);
+      }
+
+      value = htRejElement.firstChildElement("WtrFlowCapSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"gal/min","m^3/s").get();
+        fluidCooler.setDesignWaterFlowRate(value);
+      }
+
+      value = htRejElement.firstChildElement("AirFlowCapSim").text().toDouble(&ok);
+      if ( ok ) {
+        fluidCooler.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+      }
+
+      auto totFanHPElement = htRejElement.firstChildElement("TotFanHPSim");
+      value = totFanHPElement.text().toDouble(&ok);
+      if ( ok ) {
+        fluidCooler.setDesignAirFlowRateFanPower(value * 745.7);
+      }
+
+      result = fluidCooler;
+    } else if ( ( modCtrlElement.text().compare("VariableSpeedDrive",Qt::CaseInsensitive) == 0 ) || ( modCtrlElement.text().compare("TwoSpeed",Qt::CaseInsensitive) == 0 ) ) {
+      model::FluidCoolerTwoSpeed fluidCooler(model);
+
+      QDomElement nameElement = htRejElement.firstChildElement("Name");
+      fluidCooler.setName(nameElement.text().toStdString());
+
+      fluidCooler.setPerformanceInputMethod("NominalCapacity");
+
+      value = htRejElement.firstChildElement("CapRtdSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"Btu/h","W").get();
+        fluidCooler.setHighSpeedNominalCapacity(value);
+      }
+
+      value = htRejElement.firstChildElement("LowSpdCapRtdSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"Btu/h","W").get();
+        fluidCooler.setLowSpeedNominalCapacity(value);
+      }
+
+      auto calcMthd = htRejElement.firstChildElement("CalcMthd").text();
+      if ( calcMthd.compare("UserSpecified", Qt::CaseInsensitive) == 0 ) {
+        fluidCooler.setPerformanceInputMethod("NominalCapacity");
+      } else if ( calcMthd.compare("UAFactorSim", Qt::CaseInsensitive) == 0 ) {
+        fluidCooler.setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
+
+        value = htRejElement.firstChildElement("UAFactorSim").text().toDouble(&ok);
+        if ( ok ) {
+          // Convert Btu/h-F to W/K
+          fluidCooler.setHighFanSpeedUfactorTimesAreaValue(value * 0.5275);
+        }
+
+        value = htRejElement.firstChildElement("LowSpdUAFactorSim").text().toDouble(&ok);
+        if ( ok ) {
+          // Convert Btu/h-F to W/K
+          fluidCooler.setLowFanSpeedUfactorTimesAreaValue(value * 0.5275);
+        }
+      }
+
+      value = htRejElement.firstChildElement("EntTempDsgn").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"F","C").get();
+        fluidCooler.setDesignEnteringWaterTemperature(value);
+      }
+
+      value = htRejElement.firstChildElement("DsgnDBT").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"F","C").get();
+        fluidCooler.setDesignEnteringAirTemperature(value);
+      }
+
+      value = htRejElement.firstChildElement("DsgnWBT").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"F","C").get();
+        fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
+      }
+
+      value = htRejElement.firstChildElement("WtrFlowCapSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"gal/min","m^3/s").get();
+        fluidCooler.setDesignWaterFlowRate(value);
+      }
+
+      value = htRejElement.firstChildElement("AirFlowCapSim").text().toDouble(&ok);
+      if ( ok ) {
+        fluidCooler.setHighFanSpeedAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+      }
+
+      value = htRejElement.firstChildElement("LowSpdAirFlowCapSim").text().toDouble(&ok);
+      if ( ok ) {
+        fluidCooler.setLowFanSpeedAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+      }
+
+      auto totFanHPElement = htRejElement.firstChildElement("TotFanHPSim");
+      value = totFanHPElement.text().toDouble(&ok);
+      if ( ok ) {
+        fluidCooler.setHighFanSpeedFanPower(value * 745.7);
+      }
+
+      //auto lowSpdAirFlowRatSimElement = htRejElement.firstChildElement("LowSpdAirFlowRatSim");
+      //value = lowSpdAirFlowRatSimElement.text().toDouble(&ok);
+      //if ( ok ) {
+      //  fluidCooler.setLowFanSpeedAirFlowRateSizingFactor(value);
+      //}
+
+      auto lowSpdPwrRatSimElement = htRejElement.firstChildElement("LowSpdPwrRatSim");
+      value = lowSpdPwrRatSimElement.text().toDouble(&ok);
+      if ( ok ) {
+        fluidCooler.setLowFanSpeedFanPowerSizingFactor(value);
+      }
+
+      //fluidCooler.autosizeLowFanSpeedAirFlowRate();
+      
+      result = fluidCooler;
+    }
+  } else if ( typeElement.text().compare("ClosedTowerEvaporative", Qt::CaseInsensitive) == 0 )  {
+    if ( ( modCtrlElement.text().compare("Bypass",Qt::CaseInsensitive) == 0 ) || ( modCtrlElement.text().compare("Cycling",Qt::CaseInsensitive) == 0 ) ) {
+      model::EvaporativeFluidCoolerSingleSpeed fluidCooler(model);
+
+      QDomElement nameElement = htRejElement.firstChildElement("Name");
+      fluidCooler.setName(nameElement.text().toStdString());
+
+      auto airFlowCapElement = htRejElement.firstChildElement("AirFlowCapSim");
       value = airFlowCapElement.text().toDouble(&ok);
-      if( ok )
-      {
-        tower.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+      if( ok ) {
+        fluidCooler.setDesignAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
       }
 
-      QDomElement wtrFlowCapElement = htRejElement.firstChildElement("WtrFlowCapSim");
-
-      value = wtrFlowCapElement.text().toDouble(&ok);
-      if( ok )
-      {
-        tower.setDesignWaterFlowRate(unitToUnit(value,"gal","m^3").get());
-      }
-
-      QDomElement totFanHPElement = htRejElement.firstChildElement("TotFanHPSim");
-
+      auto totFanHPElement = htRejElement.firstChildElement("TotFanHPSim");
       value = totFanHPElement.text().toDouble(&ok);
       if( ok )
       {
-        tower.setFanPoweratDesignAirFlowRate(value * 745.7);
+        fluidCooler.setFanPoweratDesignAirFlowRate(value * 745.7);
       }
+
+      auto sprayWtrFlowCapSimElement = htRejElement.firstChildElement("SprayWtrFlowCapSim");
+      value = sprayWtrFlowCapSimElement.text().toDouble(&ok);
+      if( ok ) {
+        fluidCooler.setDesignSprayWaterFlowRate(unitToUnit(value, "gal/min", "m^3/s").get());
+      }
+
+      auto calcMthd = htRejElement.firstChildElement("CalcMthd").text();
+      if ( calcMthd.compare("StandardDesign", Qt::CaseInsensitive) == 0 ) {
+        fluidCooler.setPerformanceInputMethod("StandardDesignCapacity");
+      } else if ( calcMthd.compare("UserSpecified", Qt::CaseInsensitive) == 0 ) {
+        fluidCooler.setPerformanceInputMethod("UserSpecifiedDesignCapacity");
+
+        value = htRejElement.firstChildElement("CapRtdSim").text().toDouble(&ok);
+        if ( ok ) {
+          value = unitToUnit(value,"Btu/h","W").get();
+          fluidCooler.setStandardDesignCapacity(value);
+        }
+
+        auto entTempDsgnElement = htRejElement.firstChildElement("EntTempDsgn");
+        value = entTempDsgnElement.text().toDouble(&ok);
+        if ( ok ) {
+          value = unitToUnit(value,"F","C").get();
+          fluidCooler.setDesignEnteringWaterTemperature(value);
+        }
+
+        value = htRejElement.firstChildElement("DsgnDBT").text().toDouble(&ok);
+        if ( ok ) {
+          value = unitToUnit(value,"F","C").get();
+          fluidCooler.setDesignEnteringAirTemperature(value);
+        }
+
+        value = htRejElement.firstChildElement("DsgnWBT").text().toDouble(&ok);
+        if ( ok ) {
+          value = unitToUnit(value,"F","C").get();
+          fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
+        }
+      } else if ( calcMthd.compare("UAFactor", Qt::CaseInsensitive) == 0 ) {
+        fluidCooler.setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
+        value = htRejElement.firstChildElement("UAFactorSim").text().toDouble(&ok);
+        if ( ok ) {
+          // Convert Btu/h-F to W/K
+          fluidCooler.setUfactorTimesAreaValueatDesignAirFlowRate(value * 0.5275);
+        }
+      }
+
+      value = htRejElement.firstChildElement("WtrFlowCapSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"gal/min","m^3/s").get();
+        fluidCooler.setDesignWaterFlowRate(value);
+      }
+
+      fluidCooler.setCapacityControl(modCtrlElement.text().toStdString());
+
+      fluidCooler.setEvaporationLossMode("LossFactor");
+
+      fluidCooler.setEvaporationLossFactor(0.2);
+
+      fluidCooler.setDriftLossPercent(0.008);
+
+      fluidCooler.setBlowdownCalculationMode("ConcentrationRatio");
+
+      fluidCooler.setBlowdownConcentrationRatio(0.2);
+
+      result = fluidCooler;
+    } else if ( ( modCtrlElement.text().compare("VariableSpeedDrive",Qt::CaseInsensitive) == 0 ) || ( modCtrlElement.text().compare("TwoSpeed",Qt::CaseInsensitive) == 0 ) ) {
+      model::EvaporativeFluidCoolerTwoSpeed fluidCooler(model);
+
+      QDomElement nameElement = htRejElement.firstChildElement("Name");
+      fluidCooler.setName(nameElement.text().toStdString());
+
+      fluidCooler.resetLowFanSpeedUfactorTimesAreaValue();
+
+      auto airFlowCapElement = htRejElement.firstChildElement("AirFlowCapSim");
+      value = airFlowCapElement.text().toDouble(&ok);
+      if( ok ) {
+        fluidCooler.setHighFanSpeedAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+      }
+
+      value = htRejElement.firstChildElement("LowSpdAirFlowCapSim").text().toDouble(&ok);
+      if ( ok ) {
+        fluidCooler.setLowFanSpeedAirFlowRate(unitToUnit(value,"cfm","m^3/s").get());
+      }
+
+      auto totFanHPElement = htRejElement.firstChildElement("TotFanHPSim");
+      value = totFanHPElement.text().toDouble(&ok);
+      if ( ok ) {
+        fluidCooler.setHighFanSpeedFanPower(value * 745.7);
+      }
+
+      value = htRejElement.firstChildElement("LowSpdAirFlowRatSim").text().toDouble(&ok);
+      if ( ok ) {
+        fluidCooler.setLowFanSpeedAirFlowRateSizingFactor(value);
+      }
+
+      value = htRejElement.firstChildElement("LowSpdPwrRatSim").text().toDouble(&ok);
+      if ( ok ) {
+        fluidCooler.setLowFanSpeedFanPowerSizingFactor(value);
+      }
+
+      auto sprayWtrFlowCapSimElement = htRejElement.firstChildElement("SprayWtrFlowCapSim");
+      value = sprayWtrFlowCapSimElement.text().toDouble(&ok);
+      if( ok ) {
+        fluidCooler.setDesignSprayWaterFlowRate(unitToUnit(value, "gal/min", "m^3/s").get());
+      }
+
+      auto calcMthd = htRejElement.firstChildElement("CalcMthd").text();
+      if ( calcMthd.compare("StandardDesign", Qt::CaseInsensitive) == 0 ) {
+        fluidCooler.setPerformanceInputMethod("StandardDesignCapacity");
+
+        fluidCooler.setHeatRejectionCapacityandNominalCapacitySizingRatio(1.0);
+
+        value = htRejElement.firstChildElement("CapRtdSim").text().toDouble(&ok);
+        if ( ok ) {
+          value = unitToUnit(value,"Btu/h","W").get();
+          fluidCooler.setHighSpeedStandardDesignCapacity(value);
+        }
+
+        value = htRejElement.firstChildElement("LowSpdCapRtdSim").text().toDouble(&ok);
+        if ( ok ) {
+          value = unitToUnit(value,"Btu/h","W").get();
+          fluidCooler.setLowSpeedStandardDesignCapacity(value);
+        }
+      } else if ( calcMthd.compare("UserSpecified", Qt::CaseInsensitive) == 0 ) {
+        fluidCooler.setPerformanceInputMethod("UserSpecifiedDesignCapacity");
+
+        value = htRejElement.firstChildElement("CapRtdSim").text().toDouble(&ok);
+        if ( ok ) {
+          value = unitToUnit(value,"Btu/h","W").get();
+          fluidCooler.setHighSpeedUserSpecifiedDesignCapacity(value);
+        }
+
+        value = htRejElement.firstChildElement("LowSpdCapRtdSim").text().toDouble(&ok);
+        if ( ok ) {
+          value = unitToUnit(value,"Btu/h","W").get();
+          fluidCooler.setLowSpeedUserSpecifiedDesignCapacity(value);
+        }
+      } else if ( calcMthd.compare("UAFactor", Qt::CaseInsensitive) == 0 ) {
+        fluidCooler.setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
+
+        value = htRejElement.firstChildElement("UAFactorSim").text().toDouble(&ok);
+        if ( ok ) {
+          // Convert Btu/h-F to W/K
+          fluidCooler.setHighFanSpeedUfactorTimesAreaValue(value * 0.5275);
+        }
+
+        value = htRejElement.firstChildElement("LowSpdUAFactorSim").text().toDouble(&ok);
+        if ( ok ) {
+          // Convert Btu/h-F to W/K
+          fluidCooler.setLowFanSpeedUfactorTimesAreaValue(value * 0.5275);
+        }
+      }
+
+      value = htRejElement.firstChildElement("WtrFlowCapSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"gal/min","m^3/s").get();
+        fluidCooler.setDesignWaterFlowRate(value);
+      }
+
+      value = htRejElement.firstChildElement("EntTempDsgn").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"F","C").get();
+        fluidCooler.setDesignEnteringWaterTemperature(value);
+      }
+
+      value = htRejElement.firstChildElement("DsgnDBT").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"F","C").get();
+        fluidCooler.setDesignEnteringAirTemperature(value);
+      }
+
+      value = htRejElement.firstChildElement("DsgnWBT").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"F","C").get();
+        fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
+      }
+
+      fluidCooler.setEvaporationLossMode("LossFactor");
+
+      fluidCooler.setEvaporationLossFactor(0.2);
+
+      fluidCooler.setDriftLossPercent(0.008);
+
+      fluidCooler.setBlowdownCalculationMode("ConcentrationRatio");
+
+      fluidCooler.setBlowdownConcentrationRatio(0.2);
+
+      result = fluidCooler;
     }
-  }
-
-  if( result )
-  {
-    // Name
-
-    QDomElement nameElement = htRejElement.firstChildElement("Name");
-
-    result->setName(nameElement.text().toStdString());
   }
 
   return result;
@@ -6920,23 +7408,24 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
 
   tes.setName(name);
 
-  value = tesElement.firstChildElement("StorCap").text().toDouble(&ok);
+  value = tesElement.firstChildElement("StorCapSim").text().toDouble(&ok);
   if( ok ) {
    value = unitToUnit(value,"gal","m^3").get();
    tes.setTankVolume(value);
   }
 
-  value = tesElement.firstChildElement("TankHgt").text().toDouble(&ok);
+  value = tesElement.firstChildElement("TankHgtSim").text().toDouble(&ok);
   if( ok ) {
    value = unitToUnit(value,"ft","m").get();
    tes.setTankHeight(value);
    tes.setSourceSideOutletHeight(value);
+   tes.setUseSideInletHeight(value);
   }
 
   text = tesElement.firstChildElement("TankShapeSim").text().toStdString();
   tes.setTankShape(text);
   if( istringEqual("Other",text) ) {
-    value = tesElement.firstChildElement("TankPerim").text().toDouble(&ok);
+    value = tesElement.firstChildElement("TankPerimSim").text().toDouble(&ok);
     if( ok ) {
       value = unitToUnit(value,"ft","m").get();
       tes.setTankPerimeter(value);
@@ -6949,7 +7438,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
   tes.setTemperatureSensorHeight(0.0);
   tes.setMinimumTemperatureLimit(1.0);
 
-  value = tesElement.firstChildElement("CapRtd").text().toDouble(&ok);
+  value = tesElement.firstChildElement("CapRtdSim").text().toDouble(&ok);
   if( ok ) {
     value = unitToUnit(value,"Btu/h","W").get();
     tes.setNominalCoolingCapacity(value);
@@ -6985,15 +7474,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
     tes.setUseSideAvailabilitySchedule(schedule.get());
   }
 
-  value = tesElement.firstChildElement("TankHgt").text().toDouble(&ok);
-  if( ok ) {
-    value = unitToUnit(value,"ft","m").get();
-    tes.setUseSideInletHeight(value);
-  }
-
   tes.setUseSideOutletHeight(0.0);
 
-  value = tesElement.firstChildElement("WtrFlowCap").text().toDouble(&ok);
+  value = tesElement.firstChildElement("WtrFlowCapSim").text().toDouble(&ok);
   if( ok ) {
     value = unitToUnit(value,"gal/min","m^3/s").get();
     tes.setUseSideDesignFlowRate(value);
@@ -7086,7 +7569,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
         chiller.setDesignGeneratorFluidFlowRate(value);
       }
 
-      auto cndsrFlowCapElement = chillerElement.firstChildElement("CndsrFlowCap");
+      auto cndsrFlowCapElement = chillerElement.firstChildElement("CndsrFlowCapSim");
       value = cndsrFlowCapElement.text().toDouble(&ok);
       if( ok ) {
         value = unitToUnit(value,"gal/min","m^3/s").get();
@@ -7300,7 +7783,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
         chiller.setReferenceChilledWaterFlowRate(flow);
       }
 
-      auto cndsrFlowCapElement = chillerElement.firstChildElement("CndsrFlowCap");
+      auto cndsrFlowCapElement = chillerElement.firstChildElement("CndsrFlowCapSim");
       value = cndsrFlowCapElement.text().toDouble(&ok);
       if( ok ) {
         value = unitToUnit(value,"gal/min","m^3/s").get();
@@ -7346,6 +7829,17 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     heatPump.setFanPlacement("DrawThrough");
     heatPump.setOnCycleParasiticElectricLoad(0.0);
     heatPump.setOffCycleParasiticElectricLoad(0.0);
+
+    value = element.firstChildElement("DeadBandTempDiff").text().toDouble(&ok);
+    if ( ok ) {
+      heatPump.setDeadBandTemperatureDifference( value * 5.0 / 9.0 );
+    }
+
+    value = element.firstChildElement("MinInletAirTempCprsrOper").text().toDouble(&ok);
+    if ( ok ) {
+      value = unitToUnit(value, "F", "C").get();
+      heatPump.setMinimumInletAirTemperatureforCompressorOperation( value );
+    }
 
     {
       auto schedule = model.alwaysOnDiscreteSchedule();

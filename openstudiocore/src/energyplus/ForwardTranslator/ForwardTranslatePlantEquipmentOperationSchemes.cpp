@@ -72,6 +72,8 @@
 #include "../../model/PlantEquipmentOperationScheme_Impl.hpp"
 #include "../../model/EvaporativeFluidCoolerSingleSpeed.hpp"
 #include "../../model/EvaporativeFluidCoolerSingleSpeed_Impl.hpp"
+#include "../../model/EvaporativeFluidCoolerTwoSpeed.hpp"
+#include "../../model/EvaporativeFluidCoolerTwoSpeed_Impl.hpp"
 #include "../../model/FluidCoolerSingleSpeed.hpp"
 #include "../../model/FluidCoolerSingleSpeed_Impl.hpp"
 #include "../../model/FluidCoolerTwoSpeed.hpp"
@@ -266,6 +268,12 @@ boost::optional<double> flowrate(const HVACComponent & component)
     case openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed:
     {
       auto mo = component.cast<EvaporativeFluidCoolerSingleSpeed>();
+      result = mo.designWaterFlowRate();
+      break;
+    }
+    case openstudio::IddObjectType::OS_EvaporativeFluidCooler_TwoSpeed:
+    {
+      auto mo = component.cast<EvaporativeFluidCoolerTwoSpeed>();
       result = mo.designWaterFlowRate();
       break;
     }
@@ -540,6 +548,10 @@ ComponentType componentType(const HVACComponent & component)
       return ComponentType::COOLING;
     }
     case openstudio::IddObjectType::OS_EvaporativeFluidCooler_SingleSpeed:
+    {
+      return ComponentType::COOLING;
+    }
+    case openstudio::IddObjectType::OS_EvaporativeFluidCooler_TwoSpeed:
     {
       return ComponentType::COOLING;
     }
