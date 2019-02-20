@@ -5734,7 +5734,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   // Try to get an equipment list for each load range
   for( std::vector<double>::size_type i = 0; i < ldRngLims.size(); ++i ) {
     // Create a tag like 'EqpList1Name'
-    std::string nodeName = "EqpList" + openstudio::string_conversions::number(i + 1) + "Name";
+    std::string nodeName = "EqpList" + openstudio::string_conversions::number(std::int32_t(i + 1)) + "Name";
 
     // Get the correspond children
     std::vector<pugi::xml_node> eqpListNameElements = makeVectorOfChildren(fluidSysElement, nodeName.c_str());

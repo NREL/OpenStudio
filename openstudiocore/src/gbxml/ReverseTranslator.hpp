@@ -40,6 +40,7 @@
 #include "../utilities/core/StringStreamLogSink.hpp"
 
 #include "../utilities/units/Unit.hpp"
+#include <unordered_map>
 
 namespace pugi {
   class xml_node;

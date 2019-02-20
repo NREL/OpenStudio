@@ -147,7 +147,10 @@ extern "C" {
   void Init_wait(void);
   void Init_zlib(void);
 
-  void Init_openssl(void);
+  #ifndef __APPLE__
+    void Init_openssl(void);
+  #endif
+
   void Init_nonblock(void);
 
   #ifndef _WIN32
@@ -496,9 +499,11 @@ int main(int argc, char *argv[])
     rb_provide("zlib");
     rb_provide("zlib.so");
 
-    Init_openssl();
-    rb_provide("openssl");
-    rb_provide("openssl.so");
+    #ifndef __APPLE__
+      Init_openssl();
+      rb_provide("openssl");
+      rb_provide("openssl.so");
+    #endif
 
     Init_nonblock();
     rb_provide("io/nonblock");

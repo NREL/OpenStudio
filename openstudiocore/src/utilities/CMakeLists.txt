@@ -544,6 +544,10 @@ add_dependencies("${target_name}_static" GenerateIddFactoryRun)
 
 target_link_libraries(${target_name}_static ${${target_name}_static_depends} GeographicLib_STATIC)
 
+if( APPLE )
+  target_link_libraries(${target_name}_static ${${target_name}_static_depends} cpprest)
+endif()
+
 if(WIN32)
   target_link_libraries(${target_name}_static optimized ${CPPRESTSDK_LIB_RELEASE} debug ${CPPRESTSDK_LIB_DEBUG})
 else()

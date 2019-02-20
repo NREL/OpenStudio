@@ -210,6 +210,8 @@ endif()
 
 if(APPLE)
   find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+  add_definitions(-D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
+  add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -972,7 +974,7 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
     endif()
   elseif(APPLE)
     set(BOOST_ZIP_FILENAME "boost_1_68_0_osx.tar.gz")
-    set(BOOST_ZIP_EXPECTED_MD5 "5bd1957658a14a12e0c0ba2f010c885b")
+    set(BOOST_ZIP_EXPECTED_MD5 "d79bc29cd0f63aa35f6643187efd43a9")
   elseif(EXISTS "/etc/redhat-release")
     set(BOOST_ZIP_FILENAME "DOES_NOT_EXIST_boost_1_68_0_redhat.tar.gz")
     set(BOOST_ZIP_EXPECTED_MD5 "de952e0c36900a3ad000d74a1c41b7d2")
@@ -1013,10 +1015,26 @@ mark_as_advanced(
   BOOST_THREAD_LIBRARY
 )
 
+# require these run time checks
+add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
+add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
+add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
+
+if(UNIX AND NOT APPLE)
+  # TODO: If boost is compiled with C++17, maybe need to change this
+  add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
+endif()
+
+# use chrono as a header only library
+add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
+
+# do not autolink with serialization
+add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
+
 # cpprestsdk
 if(APPLE)
   # TODO
-  add_subdirectory(../cpprestsdk cpprestsdk)
+  add_subdirectory(../cpprestsdk cpprestsdk EXCLUDE_FROM_ALL)
 elseif(UNIX)
   set(CPPRESTSDK_ZIP "cpprestsdk-2.10.8-Linux-x86_64.tar.xz")
   set(CPPRESTSDK_DIR "cpprestsdk-2.10.8-Linux-x86_64")
@@ -1053,22 +1071,6 @@ elseif(WIN32)
   set(CPPRESTSDK_LIB_RELEASE "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/cpprest141_2_10.lib")
   set(CPPRESTSDK_LIB_DEBUG "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/cpprest141_2_10d.lib")
 endif()
-
-# require these run time checks
-add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
-add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
-add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
-
-if(UNIX AND NOT APPLE)
-  # TODO: If boost is compiled with C++17, maybe need to change this
-  add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
-endif()
-
-# use chrono as a header only library
-add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
-
-# do not autolink with serialization
-add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
 
 # SQLite definitions, used in sqlite and litesql
 add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
