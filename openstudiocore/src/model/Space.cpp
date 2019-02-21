@@ -2397,6 +2397,22 @@ namespace detail {
 
             std::vector<Surface> newSurfaces2 = intersection->newSurfaces2();
             newOtherSurfaces.insert(newOtherSurfaces.end(), newSurfaces2.begin(), newSurfaces2.end());
+
+            // surfaces involved in this intersection are ineligible to be re-intersected with other surfaces in this intersection
+            std::vector<Surface> ineligibleSurfaces;
+            ineligibleSurfaces.push_back(surface);
+            ineligibleSurfaces.insert(ineligibleSurfaces.end(), newSurfaces1.begin(), newSurfaces1.end());
+
+            std::vector<Surface> ineligibleOtherSurfaces;
+            ineligibleOtherSurfaces.push_back(otherSurface);
+            ineligibleOtherSurfaces.insert(ineligibleOtherSurfaces.end(), newSurfaces2.begin(), newSurfaces2.end());
+            for (Surface ineligibleSurface : ineligibleSurfaces){
+              for (Surface ineligibleOtherSurface : ineligibleOtherSurfaces){
+                std::string ineligibleIntersectionKey = toString(ineligibleSurface.handle()) + toString(ineligibleOtherSurface.handle()); 
+                completedIntersections.insert(ineligibleIntersectionKey);
+              }
+            }
+           
           }
         }
       }
