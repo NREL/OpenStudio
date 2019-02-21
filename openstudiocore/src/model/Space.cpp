@@ -2347,6 +2347,9 @@ namespace detail {
     std::vector<Surface> surfaces = this->surfaces();
     std::vector<Surface> otherSurfaces = other.surfaces();
 
+    std::sort(surfaces.begin(), surfaces.end(), [](const Surface & a, const Surface & b) -> bool {return a.grossArea() > b.grossArea(); });
+    std::sort(otherSurfaces.begin(), otherSurfaces.end(), [](const Surface & a, const Surface & b) -> bool {return a.grossArea() > b.grossArea(); });
+
     std::map<std::string, bool> hasSubSurfaceMap;
     std::map<std::string, bool> hasAdjacentSurfaceMap;
     std::set<std::string> completedIntersections;
