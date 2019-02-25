@@ -394,7 +394,7 @@ EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(c
 
   this->setAvailabilitySchedule(schedule);
 
-  setCoolerEffectiveness(1.0);
+  setCoolerDesignEffectiveness(1.0);
 
   setRecirculatingWaterPumpPowerConsumption(0.0);
 
@@ -402,6 +402,9 @@ EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(c
 
   setBlowdownConcentrationRatio(0.0);
 
+  // TODO: JM 2019-02-25: This input seems wrong given the current E+ IDD notes / IO documentation.
+  // This isn't a regular sizing factor, but something in W/(m3/s), with a default of 90 and a range of 55 to 150.0
+  // @kbenne for review please
   setWaterPumpPowerSizingFactor(0.1);
 
 
