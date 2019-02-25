@@ -47833,7 +47833,6 @@ PlantEquipmentList,
     \memo should be OFF (not operate) within the specified lower/upper limit.
     \extensible:2
     \min-fields 1
-    \max-fields 21
   A1 , \field Name
         \required-field
         \reference PlantAndCondenserEquipmentLists
