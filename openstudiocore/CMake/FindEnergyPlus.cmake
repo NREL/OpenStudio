@@ -71,7 +71,7 @@ foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
     file(READ "${PATH}/Energy+.idd" IDD_TEXT LIMIT 1000)
     string(REGEX MATCH "!IDD_BUILD [0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]" BUILD_SHA_LINE "${IDD_TEXT}")
     string(REGEX MATCH "[0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]" BUILD_SHA "${BUILD_SHA_LINE}")
-    set(ENERGYPLUS_GE_8_2_0 true)
+    set(ENERGYPLUS_GE_8_2_0 TRUE)
   endif()
 
   # set is match false
