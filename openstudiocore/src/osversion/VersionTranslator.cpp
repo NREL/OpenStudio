@@ -4443,6 +4443,29 @@ std::string VersionTranslator::update_2_7_1_to_2_7_2(const IdfFile& idf_2_7_1, c
         ss << object;
       }
 
+    } else if (iddname == "OS:ZoneHVAC:EquipmentList") {
+
+      auto iddObject = idd_2_7_2.getObject("OS:ZoneHVAC:EquipmentList");
+      IdfObject newObject(iddObject.get());
+
+      // Copy non extensible fields in place
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+      // Copy the existing eg values (the new fields were added at the end of the extensible groups, and have defaults)
+      for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
+        IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();
+        for (size_t i = 0; i < 3; ++i) {
+          new_eg.setString(i, eg.getString(i).get());
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
+      ss << newObject;
+
     // No-op
     } else {
       ss << object;
