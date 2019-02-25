@@ -785,6 +785,16 @@ namespace detail {
     return types;
   }
 
+  std::string PumpConstantSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_Pump_ConstantSpeedFields::EndUseSubcategory, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool PumpConstantSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_Pump_ConstantSpeedFields::EndUseSubcategory, endUseSubcategory);
+  }
+
 } // detail
 
 PumpConstantSpeed::PumpConstantSpeed(const Model& model)
@@ -808,6 +818,8 @@ PumpConstantSpeed::PumpConstantSpeed(const Model& model)
   setString(OS_Pump_ConstantSpeedFields::RotationalSpeed,"");
   setString(OS_Pump_ConstantSpeedFields::Zone,"");
   setString(OS_Pump_ConstantSpeedFields::SkinLossRadiativeFraction,"");
+
+  setEndUseSubcategory("General");
 }
 
 IddObjectType PumpConstantSpeed::iddObjectType() {

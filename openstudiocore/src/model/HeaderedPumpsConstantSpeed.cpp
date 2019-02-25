@@ -336,6 +336,16 @@ namespace detail {
     return types;
   }
 
+  std::string HeaderedPumpsConstantSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_HeaderedPumps_ConstantSpeedFields::EndUseSubcategory, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool HeaderedPumpsConstantSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_HeaderedPumps_ConstantSpeedFields::EndUseSubcategory, endUseSubcategory);
+  }
+
 } // detail
 
 HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(const Model& model)
@@ -352,6 +362,8 @@ HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(const Model& model)
   setFractionofMotorInefficienciestoFluidStream(0.0);
   setPumpControlType("Continuous");
   setSkinLossRadiativeFraction(0.1);
+
+  setEndUseSubcategory("General");
 }
 
 IddObjectType HeaderedPumpsConstantSpeed::iddObjectType() {
