@@ -256,6 +256,9 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpVariableSpeed(
     idfObject.setDouble(Pump_VariableSpeedFields::DesignMinimumFlowRateFraction,value.get());
   }
 
+  // End Use Subcategory
+  idfObject.setString(Pump_VariableSpeedFields::EndUseSubcategory, modelObject.endUseSubcategory());
+
   return idfObject;
 }
 
