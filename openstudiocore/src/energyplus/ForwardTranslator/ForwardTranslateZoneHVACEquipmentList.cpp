@@ -142,6 +142,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
     idfObject.setName(name);
   }
 
+  // LoadDistributionScheme
+  {
+    auto scheme = modelObject.loadDistributionScheme();
+    idfObject.setString(ZoneHVAC_EquipmentListFields::LoadDistributionScheme,scheme);
+  }
+
   for( auto & elem : stdEquipment )
   {
     unsigned coolingPriority = coolingMap[elem];
@@ -155,6 +161,17 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
       eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName,_equipment->name().get());
       eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,coolingPriority);
       eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,heatingPriority);
+
+      // Only translate the Sequential Load Fractions if appropriate (model checks for Load Distribution = SequentialLoad, and has heating/cooling
+      // Priority that isn't zero)
+      if (boost::optional<double> _frac = modelObject.sequentialCoolingFraction(elem)) {
+        eg.setDouble(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFraction, _frac.get());
+      }
+
+      if (boost::optional<double> _frac = modelObject.sequentialHeatingFraction(elem)) {
+        eg.setDouble(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFraction, _frac.get());
+      }
+
     }
 
     auto zoneHVAC = elem.optionalCast<ZoneHVACComponent>();
@@ -164,12 +181,6 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
         auto _plenum = translateAndMapModelObject(plenum.get());
       }
     }
-  }
-
-  // LoadDistributionScheme
-  {
-    auto scheme = modelObject.loadDistributionScheme();
-    idfObject.setString(ZoneHVAC_EquipmentListFields::LoadDistributionScheme,scheme);
   }
 
 
