@@ -22719,7 +22719,7 @@ OS:ZoneControl:Thermostat:StagedDualSetpoint,
 
 OS:ZoneHVAC:EquipmentList,
        \min-fields 1
-       \extensible:6 Duplicate the six fields Zone Equipment Object Type through Sequential Heating Fraction
+       \extensible:5 Duplicate the five fields Zone Equipment Object Type through Sequential Heating Fraction
        \memo List equipment in simulation order.  Note that an ZoneHVAC:AirDistributionUnit or
        \memo AirTerminal:SingleDuct:Uncontrolled object must be listed in this statement if there is a forced
        \memo air system serving the zone from the air loop.
@@ -22756,13 +22756,13 @@ OS:ZoneHVAC:EquipmentList,
   N1 , \field Zone Equipment 1 Cooling Sequence
        \required-field
        \type integer
-       \minimum 1
+       \minimum 0
        \note Specifies the zone equipment simulation order
        \note when the zone thermostat requests cooling
   N2 , \field Zone Equipment 1 Heating or No-Load Sequence
        \required-field
        \type integer
-       \minimum 1
+       \minimum 0
        \note Specifies the zone equipment simulation order
        \note when the zone thermostat requests heating or no load
   N3 , \field Zone Equipment 1 Sequential Cooling Fraction
