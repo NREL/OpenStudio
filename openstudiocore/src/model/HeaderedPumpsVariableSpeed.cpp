@@ -597,6 +597,14 @@ bool HeaderedPumpsVariableSpeed::setSkinLossRadiativeFraction(double skinLossRad
   return getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->setSkinLossRadiativeFraction(skinLossRadiativeFraction);
 }
 
+std::string HeaderedPumpsVariableSpeed::endUseSubcategory() const {
+  return getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->endUseSubcategory();
+}
+
+bool HeaderedPumpsVariableSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
+}
+
 /// @cond
 HeaderedPumpsVariableSpeed::HeaderedPumpsVariableSpeed(std::shared_ptr<detail::HeaderedPumpsVariableSpeed_Impl> impl)
   : StraightComponent(std::move(impl))

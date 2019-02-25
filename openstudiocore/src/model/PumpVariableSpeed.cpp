@@ -1666,6 +1666,14 @@ bool PumpVariableSpeed::setDesignMinimumFlowRateFraction(double designMinimumFlo
   return getImpl<detail::PumpVariableSpeed_Impl>()->setDesignMinimumFlowRateFraction(designMinimumFlowRateFraction);
 }
 
+std::string PumpVariableSpeed::endUseSubcategory() const {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->endUseSubcategory();
+}
+
+bool PumpVariableSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
+}
+
 /// @cond
 PumpVariableSpeed::PumpVariableSpeed(std::shared_ptr<detail::PumpVariableSpeed_Impl> impl)
   : StraightComponent(std::move(impl))

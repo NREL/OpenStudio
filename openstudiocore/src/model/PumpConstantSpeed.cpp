@@ -1100,6 +1100,14 @@ bool PumpConstantSpeed::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double des
   return getImpl<detail::PumpConstantSpeed_Impl>()->setDesignShaftPowerPerUnitFlowRatePerUnitHead(designShaftPowerPerUnitFlowRatePerUnitHead);
 }
 
+std::string PumpConstantSpeed::endUseSubcategory() const {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->endUseSubcategory();
+}
+
+bool PumpConstantSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
+}
+
 /// @cond
 PumpConstantSpeed::PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_Impl> impl)
   : StraightComponent(std::move(impl))
