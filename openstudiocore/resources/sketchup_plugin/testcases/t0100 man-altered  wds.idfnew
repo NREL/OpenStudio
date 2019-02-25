@@ -1,12 +1,25 @@
+!-Generator IDFEditor 1.36a
+!-Option SortedOrder
+!-NOTE: All comments with '!-' are ignored by the IDFEditor and are generated automatically.
+!-      Use '!' comments if they need to be retained when using the IDFEditor.
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
   Version,9.1;
 
+!-   ===========  ALL OBJECTS IN CLASS: SIMULATIONCONTROL ===========
+
+  SimulationControl,
+    No,                      !- Do Zone Sizing Calculation
+    No,                      !- Do System Sizing Calculation
+    No,                      !- Do Plant Sizing Calculation
+    Yes,                     !- Run Simulation for Sizing Periods
+    Yes;                     !- Run Simulation for Weather File Run Periods
+
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
   Building,
-    Building,                !- Name
-    30.0,                    !- North Axis {deg}
+    skylight-rotate,         !- Name
+    0.0,                     !- North Axis {deg}
     City,                    !- Terrain
     0.04,                    !- Loads Convergence Tolerance Value
     0.4,                     !- Temperature Convergence Tolerance Value {deltaC}
@@ -18,16 +31,7 @@
 
   Timestep,4;
 
-!-   ===========  ALL OBJECTS IN CLASS: SIMULATIONCONTROL ===========
-
-  SimulationControl,
-    No,                      !- Do Zone Sizing Calculation
-    No,                      !- Do System Sizing Calculation
-    No,                      !- Do Plant Sizing Calculation
-    Yes,                     !- Run Simulation for Sizing Periods
-    Yes;                     !- Run Simulation for Weather File Run Periods
-
-!-   ===========  ALL OBJECTS IN CLASS: LOCATION ===========
+!-   ===========  ALL OBJECTS IN CLASS: SITE:LOCATION ===========
 
   Site:Location,
     CHICAGO_IL_USA TMY2-94846,  !- Name
@@ -35,29 +39,6 @@
     -87.75,                  !- Longitude {deg}
     -6.0,                    !- Time Zone {hr}
     190.00;                  !- Elevation {m}
-
-  GlobalGeometryRules,
-    UpperLeftCorner,         !- Starting Vertex Position
-    Counterclockwise,        !- Vertex Entry Direction
-    Relative,                !- Coordinate System
-    Relative,                !- Daylighting Reference Point Coordinate System
-    Relative;                !- Rectangular Surface Coordinate System
-
-  RunPeriod,
-    ,                        !- Name
-    1,                       !- Begin Month
-    1,                       !- Begin Day of Month
-    ,                        !- Begin Year
-    12,                      !- End Month
-    31,                      !- End Day of Month
-    ,                        !- End Year
-    ,                        !- Day of Week for Start Day
-    Yes,                     !- Use Weather File Holidays and Special Days
-    Yes,                     !- Use Weather File Daylight Saving Period
-    No,                      !- Apply Weekend Holiday Rule
-    Yes,                     !- Use Weather File Rain Indicators
-    Yes,                     !- Use Weather File Snow Indicators
-    No;                      !- Treat Weather as Actual
 
 !-   ===========  ALL OBJECTS IN CLASS: MATERIAL ===========
 
@@ -234,158 +215,123 @@
     Interior Door,           !- Name
     G05 25mm wood;           !- Outside Layer
 
-  Output:VariableDictionary,Regular;
+!-   ===========  ALL OBJECTS IN CLASS: GLOBALGEOMETRYRULES ===========
+
+  GlobalGeometryRules,
+    UpperLeftCorner,         !- Starting Vertex Position
+    Counterclockwise,        !- Vertex Entry Direction
+    Absolute;                !- Coordinate System
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONE ===========
 
   Zone,
-    Zone1,                   !- Name
-    40.0,                    !- Direction of Relative North {deg}
-    10.0,                    !- X Origin {m}
-    10.0,                    !- Y Origin {m}
-    10.0,                    !- Z Origin {m}
+    zone 1,                  !- Name
+    0.0,                     !- Direction of Relative North {deg}
+    0.0,                     !- X Origin {m}
+    0.0,                     !- Y Origin {m}
+    0.0,                     !- Z Origin {m}
     1,                       !- Type
     1;                       !- Multiplier
 
+!-   ===========  ALL OBJECTS IN CLASS: BUILDINGSURFACE:DETAILED ===========
+
   BuildingSurface:Detailed,
-    Floor,                   !- Name
+    floor-01,                !- Name
     Floor,                   !- Surface Type
     Exterior Floor,          !- Construction Name
-    Zone1,                   !- Zone Name
+    zone 1,                  !- Zone Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
     NoWind,                  !- Wind Exposure
     0.0,                     !- View Factor to Ground
     4,                       !- Number of Vertices
-    -3.904000,-3.904000,-10.000000,  !- X,Y,Z ==> Vertex 1 {m}
-    -3.904000,-10.000000,-10.000000,  !- X,Y,Z ==> Vertex 2 {m}
-    -10.000000,-10.000000,-10.000000,  !- X,Y,Z ==> Vertex 3 {m}
-    -10.000000,-3.904000,-10.000000;  !- X,Y,Z ==> Vertex 4 {m}
+    10.668000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 1 {m}
+    10.668000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
+    1.524000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
+    1.524000,10.668000,0.000000;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
-    EastWall,                !- Name
+    wall-04,                 !- Name
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
-    Zone1,                   !- Zone Name
+    zone 1,                  !- Zone Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
     Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    -3.904000,-10.000000,-8.288675,  !- X,Y,Z ==> Vertex 1 {m}
-    -3.904000,-10.000000,-10.000000,  !- X,Y,Z ==> Vertex 2 {m}
-    -3.904000,-3.904000,-10.000000,  !- X,Y,Z ==> Vertex 3 {m}
-    -3.904000,-3.904000,-8.288675;  !- X,Y,Z ==> Vertex 4 {m}
+    1.524000,10.668000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
+    1.524000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
+    1.524000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
+    1.524000,1.524000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
-    NorthWall,               !- Name
+    wall-03,                 !- Name
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
-    Zone1,                   !- Zone Name
+    zone 1,                  !- Zone Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
     Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    -3.904000,-3.904000,-8.288675,  !- X,Y,Z ==> Vertex 1 {m}
-    -3.904000,-3.904000,-10.000000,  !- X,Y,Z ==> Vertex 2 {m}
-    -10.000000,-3.904000,-10.000000,  !- X,Y,Z ==> Vertex 3 {m}
-    -10.000000,-3.904000,-8.288675;  !- X,Y,Z ==> Vertex 4 {m}
+    10.668000,10.668000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
+    10.668000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
+    1.524000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
+    1.524000,10.668000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
-    WestWall,                !- Name
+    wall-02,                 !- Name
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
-    Zone1,                   !- Zone Name
+    zone 1,                  !- Zone Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
     Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    -10.000000,-3.904000,-8.288675,  !- X,Y,Z ==> Vertex 1 {m}
-    -10.000000,-3.904000,-10.000000,  !- X,Y,Z ==> Vertex 2 {m}
-    -10.000000,-10.000000,-10.000000,  !- X,Y,Z ==> Vertex 3 {m}
-    -10.000000,-10.000000,-8.288675;  !- X,Y,Z ==> Vertex 4 {m}
+    10.668000,1.524000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
+    10.668000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
+    10.668000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
+    10.668000,10.668000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
-    Roof,                    !- Name
+    roof-01,                 !- Name
     Roof,                    !- Surface Type
     Exterior Roof,           !- Construction Name
-    Zone1,                   !- Zone Name
+    zone 1,                  !- Zone Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
     Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    -10.000000,-3.904000,-8.288675,  !- X,Y,Z ==> Vertex 1 {m}
-    -10.000000,-10.000000,-8.288675,  !- X,Y,Z ==> Vertex 2 {m}
-    -3.904000,-10.000000,-8.288675,  !- X,Y,Z ==> Vertex 3 {m}
-    -3.904000,-3.904000,-8.288675;  !- X,Y,Z ==> Vertex 4 {m}
+    1.524000,10.668000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
+    1.524000,1.524000,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
+    10.668000,1.524000,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
+    10.668000,10.668000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
 
   BuildingSurface:Detailed,
-    SouthWall,               !- Name
+    wall-01,                 !- Name
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
-    Zone1,                   !- Zone Name
+    zone 1,                  !- Zone Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
     Autocalculate,           !- View Factor to Ground
     4,                       !- Number of Vertices
-    -10.000000,-10.000000,-8.288675,  !- X,Y,Z ==> Vertex 1 {m}
-    -10.000000,-10.000000,-10.000000,  !- X,Y,Z ==> Vertex 2 {m}
-    -3.904000,-10.000000,-10.000000,  !- X,Y,Z ==> Vertex 3 {m}
-    -3.904000,-10.000000,-8.288675;  !- X,Y,Z ==> Vertex 4 {m}
+    1.524000,1.524000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
+    1.524000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
+    10.668000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
+    10.668000,1.524000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
 
-  Daylighting:Controls,
-    Zone1_DaylCtrl,          !- Name
-    Zone1,                   !- Zone Name
-    SplitFlux,               !- Daylighting Method
-    ,                        !- Availability Schedule Name
-    Continuous,              !- Lighting Control Type
-    0.3,                     !- Minimum Input Power Fraction for Continuous or ContinuousOff Dimming Control
-    0.2,                     !- Minimum Light Output Fraction for Continuous or ContinuousOff Dimming Control
-    1,                       !- Number of Stepped Control Steps
-    1.0,                     !- Probability Lighting will be Reset When Needed in Manual Stepped Control
-    Zone1_DaylRefPt1,        !- Glare Calculation Daylighting Reference Point Name
-    0,                       !- Glare Calculation Azimuth Angle of View Direction Clockwise from Zone y-Axis {deg}
-    22,                      !- Maximum Allowable Discomfort Glare Index
-    ,                        !- DElight Gridding Resolution {m2}
-    Zone1_DaylRefPt1,        !- Daylighting Reference Point 1 Name
-    1.0,                     !- Fraction of Zone Controlled by Reference Point 1
-    500,                     !- Illuminance Setpoint at Reference Point 1 {lux}
-    Zone1_DaylRefPt2,        !- Daylighting Reference Point 2 Name
-    0.0,                     !- Fraction of Zone Controlled by Reference Point 2
-    500;                     !- Illuminance Setpoint at Reference Point 2 {lux}
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:VARIABLEDICTIONARY ===========
 
-  Daylighting:ReferencePoint,
-    Zone1_DaylRefPt1,        !- Name
-    Zone1,                   !- Zone Name
-    0,                       !- X-Coordinate of Reference Point {m}
-    0,                       !- Y-Coordinate of Reference Point {m}
-    0;                       !- Z-Coordinate of Reference Point {m}
-
-  Daylighting:ReferencePoint,
-    Zone1_DaylRefPt2,        !- Name
-    Zone1,                   !- Zone Name
-    6,                       !- X-Coordinate of Reference Point {m}
-    6,                       !- Y-Coordinate of Reference Point {m}
-    1;                       !- Z-Coordinate of Reference Point {m}
-
-  Output:IlluminanceMap,
-    Zone1 Map,               !- Name
-    Zone1,                   !- Zone Name
-    0.5,                     !- Z height {m}
-    0.1,                     !- X Minimum Coordinate {m}
-    6,                       !- X Maximum Coordinate {m}
-    10,                      !- Number of X Grid Points
-    0.1,                     !- Y Minimum Coordinate {m}
-    6,                       !- Y Maximum Coordinate {m}
-    10;                      !- Number of Y Grid Points
-
-  Output:Surfaces:Drawing,dxf;
+  Output:VariableDictionary,Regular;
 

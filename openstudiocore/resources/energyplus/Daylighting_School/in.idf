@@ -33,7 +33,7 @@
 ! WeatherFileName=USA_CO_Boulder_TMY2.epw
 ! End SimMetaData
 
-  Version,9.0;
+  Version,9.1;
 
   Timestep,6;
 
@@ -58,7 +58,7 @@
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
-    ;                        !- Treat Weather as Actual
+    No;                      !- Treat Weather as Actual
 
   SurfaceConvectionAlgorithm:Inside,TARP;
 
@@ -1252,7 +1252,9 @@
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Classroom Direct Air,    !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   AirTerminal:SingleDuct:Uncontrolled,
     Classroom Direct Air,    !- Name
