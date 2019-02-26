@@ -34,6 +34,8 @@
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "Model.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ZoneHVAC_EquipmentList_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
@@ -528,6 +530,16 @@ IddObjectType ZoneHVACEquipmentList::iddObjectType() {
 std::string ZoneHVACEquipmentList::loadDistributionScheme() const
 {
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->loadDistributionScheme();
+}
+
+
+std::vector<std::string> ZoneHVACEquipmentList::loadDistributionSchemeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme);
+}
+
+std::vector<std::string> ZoneHVACEquipmentList::validLoadDistributionSchemeValues() {
+  return loadDistributionSchemeValues();
 }
 
 bool ZoneHVACEquipmentList::setLoadDistributionScheme(std::string scheme)

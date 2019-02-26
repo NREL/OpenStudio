@@ -54,6 +54,11 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
 
   static IddObjectType iddObjectType();
 
+  static std::vector<std::string> loadDistributionSchemeValues();
+
+  static std::vector<std::string> validLoadDistributionSchemeValues();
+
+
   std::string loadDistributionScheme() const;
 
   bool setLoadDistributionScheme(std::string scheme);
