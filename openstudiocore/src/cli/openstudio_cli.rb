@@ -409,6 +409,10 @@ def parse_main_args(main_args)
     $logger.info "Setting BUNDLE_PATH to ':/ruby/2.5.0/'"
     ENV['BUNDLE_PATH'] = ':/ruby/2.5.0/'
     
+    # match configuration in build_openstudio_gems
+    $logger.info "Setting BUNDLE_WITHOUT to 'test'"
+    ENV['BUNDLE_WITHOUT'] = 'test'
+    
     # ignore any local config on disk
     #DLM: this would be correct if the bundle was created here
     #it would not be correct if the bundle was transfered from another computer
@@ -509,11 +513,12 @@ def parse_main_args(main_args)
       groups = Bundler.definition.groups
       keep_groups = []
       groups.each do |g| 
-        if (g == :test) || (g == :development)  || (g == :openstudio_no_cli)
-          $logger.info "Bundling without group #{g}"
-        else
+        # DLM: can include in the future but need to be able to override
+        #if (g == :test) || (g == :development)  || (g == :openstudio_no_cli)
+        #  $logger.info "Bundling without group #{g}"
+        #else
           keep_groups << g
-        end
+        #end
       end
       
       $logger.info "Bundling with groups [#{keep_groups.join(',')}]"

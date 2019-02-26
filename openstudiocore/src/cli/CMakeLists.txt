@@ -36,6 +36,7 @@ foreach( _FILE ${EXTENSION_RB} )
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
+set(GEMFILE_FILES "${CMAKE_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile" "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile.lock")
 file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/**/*.rb")
 file(GLOB_RECURSE ERB_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/**/*.erb")
 file(GLOB_RECURSE JS_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/**/*.js")
@@ -54,6 +55,12 @@ file(GLOB_RECURSE SPEC_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gem
 file(GLOB_RECURSE GZ_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/**/*.gz")
 file(GLOB_RECURSE YML_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/**/*.yml")
 file(GLOB_RECURSE OS_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/**/*.rb") # DLM: this is temporary, these files should live somewhere else and be included in the shared Ruby lib
+
+foreach( _FILE ${GEMFILE_FILES} )
+  file(RELATIVE_PATH LOCATION "${CMAKE_BINARY_DIR}/openstudio-gems" ${_FILE})
+  list(APPEND FILES ${_FILE})
+  list(APPEND EMBEDDED_PATHS ${LOCATION})
+endforeach()
 
 foreach( _FILE ${RB_FILES} )
   file(RELATIVE_PATH LOCATION "${CMAKE_BINARY_DIR}/openstudio-gems" ${_FILE})
@@ -245,7 +252,7 @@ endif()
 
 
 # -Wno-deprecated-declaration, /wd4996: suppresses deprecated warning
-# -Wno-register, /wd5033: ISO C++1z does not allow â€˜registerâ€™ storage class specifier
+# -Wno-register, /wd5033: ISO C++1z does not allow ‘register’ storage class specifier
 if(MSVC)
   set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
   set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
@@ -282,6 +289,7 @@ target_link_libraries(openstudio
 
 if (UNIX AND NOT APPLE)
   target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt ssl)
+  target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
 elseif(WIN32)
   target_link_libraries(openstudio debug ${RUBY_STATIC_LIBRARY_DEBUG} optimized ${RUBY_STATIC_LIBRARY})
   target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi)

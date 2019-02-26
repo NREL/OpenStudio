@@ -78,6 +78,8 @@ class Bundle_Test < Minitest::Test
     
     #assert(system('bundle install --path ./test_gems'))
     #assert(system('bundle lock --add_platform ruby'))
+    
+    # intentionally called with dependencies not found in the CLI, expected to fail
     assert_equal(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --verbose test.rb"), false)
     
   ensure
@@ -102,17 +104,42 @@ class Bundle_Test < Minitest::Test
       skip("Embedded gems not available unless CLI") 
     end
     
-    gemdir = File.realpath(File.join(File.dirname(__FILE__), '../../../../dependencies/ruby'))
-    gemfile = File.join(gemdir, 'Gemfile')
-    gemlock = File.join(gemdir, 'Gemfile.lock')
-    gemcnfg = File.join(gemdir, './bundle')
-    assert(File.exists?(gemfile))
-    assert(File.exists?(gemlock))
-    assert(!File.exists?(gemcnfg))
-    
-    FileUtils.cp(gemfile, File.join(File.dirname(__FILE__), 'bundle_default', 'Gemfile'))
-    FileUtils.cp(gemlock, File.join(File.dirname(__FILE__), 'bundle_default', 'Gemfile.lock'))
     Dir.chdir(File.join(File.dirname(__FILE__), 'bundle_default'))
+    
+    rm_if_exist('openstudio-gems.gemspec')
+    rm_if_exist('Gemfile')
+    rm_if_exist('Gemfile.lock')
+    rm_if_exist('./test_gems')
+    rm_if_exist('./bundle')
+    
+    assert(EmbeddedScripting::hasFile(':/openstudio-gems.gemspec'))
+    assert(EmbeddedScripting::hasFile(':/Gemfile'))
+    assert(EmbeddedScripting::hasFile(':/Gemfile.lock'))
+    
+    File.open(File.join(File.dirname(__FILE__), 'bundle_default', 'openstudio-gems.gemspec'), 'w') do |f|
+      f.puts EmbeddedScripting::getFileAsString(':/openstudio-gems.gemspec')
+      begin
+        f.fsync
+      rescue
+        f.flush
+      end      
+    end
+    File.open(File.join(File.dirname(__FILE__), 'bundle_default', 'Gemfile'), 'w') do |f|
+      f.puts EmbeddedScripting::getFileAsString(':/Gemfile')
+      begin
+        f.fsync
+      rescue
+        f.flush
+      end      
+    end
+    File.open(File.join(File.dirname(__FILE__), 'bundle_default', 'Gemfile.lock'), 'w') do |f|
+      f.puts EmbeddedScripting::getFileAsString(':/Gemfile.lock')
+      begin
+        f.fsync
+      rescue
+        f.flush
+      end      
+    end
 
     # don't pass bundle_path since we want to use embedded gems
     assert(system("'#{OpenStudio::getOpenStudioCLI}' --bundle './Gemfile' --verbose test.rb"))
