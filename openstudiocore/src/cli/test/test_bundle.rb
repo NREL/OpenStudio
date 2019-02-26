@@ -78,6 +78,8 @@ class Bundle_Test < Minitest::Test
     
     #assert(system('bundle install --path ./test_gems'))
     #assert(system('bundle lock --add_platform ruby'))
+    
+    # intentionally called with dependencies not found in the CLI, expected to fail
     assert_equal(system("'#{OpenStudio::getOpenStudioCLI}' --bundle Gemfile --verbose test.rb"), false)
     
   ensure
