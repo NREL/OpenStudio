@@ -108,7 +108,7 @@ bool ZoneHVACEquipmentList_Impl::setLoadDistributionScheme(std::string scheme)
 bool ZoneHVACEquipmentList_Impl::addEquipment(const ModelObject & equipment)
 {
 
-  // Get max priorities before pushing an extensible groups
+  // Get max priorities before pushing an extensible group
   unsigned heatingCount = this->equipmentInHeatingOrder().size();
   unsigned coolingCount = this->equipmentInCoolingOrder().size();
 
@@ -118,8 +118,6 @@ bool ZoneHVACEquipmentList_Impl::addEquipment(const ModelObject & equipment)
 
   if( ok )
   {
-
-
     eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence, coolingCount + 1);
     eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence, heatingCount + 1);
   }
@@ -134,7 +132,12 @@ bool ZoneHVACEquipmentList_Impl::setCoolingPriority(const ModelObject & equipmen
 {
   std::vector<ModelObject> equipmentVector = equipmentInCoolingOrder();
 
-  if( priority > equipmentVector.size() ) priority = equipmentVector.size();
+  if( priority > equipmentVector.size() ) {
+    priority = equipmentVector.size();
+  } else if (priority < 1) {
+    // TODO: Temp, until E+ actually allows zero priority (=unavailable) like the IDD seems to indicate
+    priority = 1;
+  }
 
   boost::optional<WorkspaceExtensibleGroup> _eg = getGroupForModelObject(equipment);
   if (!_eg) {
@@ -142,7 +145,8 @@ bool ZoneHVACEquipmentList_Impl::setCoolingPriority(const ModelObject & equipmen
     return false;
   } else {
     // Set the priority of this one, in case we actually put it to zero
-    _eg->setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence, priority);
+    bool success = _eg->setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence, priority);
+    OS_ASSERT(success);
   }
 
   equipmentVector.erase(std::find(equipmentVector.begin(),equipmentVector.end(),equipment));
@@ -174,15 +178,20 @@ bool ZoneHVACEquipmentList_Impl::setHeatingPriority(const ModelObject & equipmen
 {
   std::vector<ModelObject> equipmentVector = equipmentInHeatingOrder();
 
-  if( priority > equipmentVector.size() ) priority = equipmentVector.size();
-
+  if( priority > equipmentVector.size() ) {
+    priority = equipmentVector.size();
+  } else if (priority < 1) {
+    // TODO: Temp, until E+ actually allows zero priority (=unavailable) like the IDD seems to indicate
+    priority = 1;
+  }
   boost::optional<WorkspaceExtensibleGroup> _eg = getGroupForModelObject(equipment);
   if (!_eg) {
     LOG(Warn, "Cannot set Heating priority of an equipment that isn't in the ZoneHVACEquipmentList for " << briefDescription());
     return false;
   } else {
     // Set the priority of this one, in case we actually put it to zero
-    _eg->setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence, priority);
+    bool success = _eg->setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence, priority);
+    OS_ASSERT(success);
   }
 
   equipmentVector.erase(std::find(equipmentVector.begin(),equipmentVector.end(),equipment));
