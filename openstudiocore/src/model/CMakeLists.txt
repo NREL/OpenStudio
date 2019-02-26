@@ -2015,6 +2015,7 @@ set(${target_name}_test_src
   test/ZoneHVACDehumidifierDX_GTest.cpp
   test/ZoneHVACEnergyRecoveryVentilator_GTest.cpp
   test/ZoneHVACEnergyRecoveryVentilatorController_GTest.cpp
+  test/ZoneHVACEquipmentList_GTest.cpp
   test/ZoneHVACFourPipeFanCoil_GTest.cpp
   test/ZoneHVACHighTemperatureRadiant_GTest.cpp
   test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
