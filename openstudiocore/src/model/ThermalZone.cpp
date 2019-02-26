@@ -2369,6 +2369,26 @@ namespace detail {
     return zoneHVACEquipmentList().equipmentInCoolingOrder();
   }
 
+  boost::optional<double> ThermalZone_Impl::sequentialCoolingFraction(const ModelObject& equipment) const
+  {
+    return zoneHVACEquipmentList().sequentialCoolingFraction(equipment);
+  }
+
+  boost::optional<double> ThermalZone_Impl::sequentialHeatingFraction(const ModelObject& equipment) const
+  {
+    return zoneHVACEquipmentList().sequentialHeatingFraction(equipment);
+  }
+
+  bool ThermalZone_Impl::setSequentialCoolingFraction(const ModelObject & equipment, double fraction)
+  {
+    return zoneHVACEquipmentList().setSequentialCoolingFraction(equipment, fraction);
+  }
+
+  bool ThermalZone_Impl::setSequentialHeatingFraction(const ModelObject & equipment, double fraction)
+  {
+    return zoneHVACEquipmentList().setSequentialHeatingFraction(equipment, fraction);
+  }
+
   ModelObject ThermalZone_Impl::clone(Model model) const
   {
     ThermalZone tz = HVACComponent_Impl::clone(model).cast<ThermalZone>();
@@ -3383,6 +3403,24 @@ bool ThermalZone::setCoolingPriority(const ModelObject & equipment, unsigned pri
 bool ThermalZone::setHeatingPriority(const ModelObject & equipment, unsigned priority)
 {
   return getImpl<detail::ThermalZone_Impl>()->setHeatingPriority(equipment,priority);
+}
+
+boost::optional<double> ThermalZone::sequentialCoolingFraction(const ModelObject& equipment) const {
+  return getImpl<detail::ThermalZone_Impl>()->sequentialCoolingFraction(equipment);
+}
+
+bool ThermalZone::setSequentialCoolingFraction(const ModelObject& equipment, double fraction)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setSequentialCoolingFraction(equipment, fraction);
+}
+
+boost::optional<double> ThermalZone::sequentialHeatingFraction(const ModelObject& equipment) const {
+  return getImpl<detail::ThermalZone_Impl>()->sequentialHeatingFraction(equipment);
+}
+
+bool ThermalZone::setSequentialHeatingFraction(const ModelObject& equipment, double fraction)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setSequentialHeatingFraction(equipment, fraction);
 }
 
 std::vector<ModelObject> ThermalZone::equipment() const

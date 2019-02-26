@@ -385,6 +385,9 @@ namespace detail {
 
     PortList returnPortList() const;
 
+
+    ZoneHVACEquipmentList zoneHVACEquipmentList() const;
+
     bool addEquipment(const ModelObject & equipment);
 
     bool removeEquipment(const ModelObject & equipment);
@@ -401,7 +404,14 @@ namespace detail {
 
     std::vector<ModelObject> equipmentInCoolingOrder() const;
 
-    ZoneHVACEquipmentList zoneHVACEquipmentList() const;
+    boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+
+    boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+
+    bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+
+    bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
+
 
     virtual ModelObject clone(Model model) const override;
 
