@@ -109,7 +109,7 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
   // Setting a priority to zero should reset the corresponding Sequential Fraction
   EXPECT_TRUE(z.setCoolingPriority(b2, 0));
   EXPECT_EQ(2u, z.equipment().size());
-  ASSERT_EQ(2u, z.equipmentInCoolingOrder().size());
+  ASSERT_EQ(1u, z.equipmentInCoolingOrder().size());
   EXPECT_EQ(b1, z.equipmentInCoolingOrder()[0]);
 
   EXPECT_FALSE(z.sequentialCoolingFraction(b2)); // reset
