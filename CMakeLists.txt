@@ -338,23 +338,9 @@ if( BUILD_RUBY )
 endif()
 
 # OpenStudio Gems
+# DLM: moved to https://github.com/NREL/openstudio-gems
 
-option(BUILD_OPENSTUDIO_GEMS "Build OpenStudio Gems" OFF)
-if(BUILD_OPENSTUDIO_GEMS)
-  # depends on system Ruby and Git, Ruby must be same version as OpenStudio
-  if (WIN32)
-    file(GLOB POTENTIAL_RUBY_LOCATIONS "c:/ruby*2.2.*/bin")
-    get_filename_component(POTENTIAL_TAR_LOCATIONS ${GIT_EXECUTABLE} DIRECTORY )
-    list(APPEND POTENTIAL_TAR_LOCATIONS "${POTENTIAL_TAR_LOCATIONS}/../bin" "${POTENTIAL_TAR_LOCATIONS}/../usr/bin")
-  endif()
-  find_program(RUBY_EXE ruby HINTS ${POTENTIAL_RUBY_LOCATIONS})
-  find_program(TAR_EXE tar HINTS ${POTENTIAL_TAR_LOCATIONS})
-  set(OPENSTUDIO_GEMS_DIR "${CMAKE_BINARY_DIR}/openstudio-gems")
-  add_custom_target(openstudio-gems ALL
-                    ${RUBY_EXE} "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}" "${TAR_EXE}" "2.2.4"
-                    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
-                    DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb")
-endif()
+# Boost
 
 option(BUILD_BOOST "Build Boost" OFF)
 if(BUILD_BOOST)
@@ -444,10 +430,10 @@ if(BUILD_QT)
     # also reference https://wiki.qt.io/Building_Qt_5_from_Git
     # need to apply the workaround at https://bugreports.qt.io/browse/QTBUG-52605 manually
     if( Qt5Static )
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -qt-pcre -qt-harfbuzz -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
     else()
       message(WARNING "Shared Unix Qt build untested")
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -shared -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -shared -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -qt-pcre -qt-harfbuzz -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
     endif()
     ExternalProject_Add(Qt
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.tar.gz
