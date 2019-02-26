@@ -70,7 +70,7 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
 
   std::vector<ModelObject> equipmentInCoolingOrder() const;
 
-  boost::optional<WorkspaceExtensibleGroup> getGroupForModelObject(const ModelObject & modelObject);
+  boost::optional<WorkspaceExtensibleGroup> getGroupForModelObject(const ModelObject & modelObject) const;
 
   virtual ~ZoneHVACEquipmentList_Impl() {}
 

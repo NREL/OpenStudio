@@ -197,7 +197,7 @@ bool ZoneHVACEquipmentList_Impl::setHeatingPriority(const ModelObject & equipmen
   return true;
 }
 
-boost::optional<WorkspaceExtensibleGroup> ZoneHVACEquipmentList_Impl::getGroupForModelObject(const ModelObject & modelObject)
+boost::optional<WorkspaceExtensibleGroup> ZoneHVACEquipmentList_Impl::getGroupForModelObject(const ModelObject & modelObject) const
 {
   boost::optional<WorkspaceExtensibleGroup> result;
 
@@ -460,7 +460,7 @@ boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialHeatingFraction(co
       OS_ASSERT(wo);
 
       if (wo->handle() == equipment.handle()) {
-        result = group.getDouble(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFraction, true);
+        result = group.getDouble(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFraction, true);
         break;
       }
     }
