@@ -3520,8 +3520,11 @@ Space::Space(std::shared_ptr<detail::Space_Impl> impl)
 {}
 /// @endcond
 
-void intersectSurfaces(std::vector<Space>& spaces)
+void intersectSurfaces(std::vector<Space>& t_spaces)
 {
+  std::vector<Space> spaces(t_spaces);	
+  std::sort(spaces.begin(), spaces.end(), [](const Space & a, const Space & b) -> bool {return a.floorArea() < b.floorArea(); });
+ 
   std::vector<BoundingBox> bounds;
   for (const Space& space : spaces){
     bounds.push_back(space.transformation()*space.boundingBox());
