@@ -4,11 +4,12 @@
 .vs
 test_gems
 test_fails.txt
-/build*/
-/core-build/
-/super-build/
-/super-build-shared/
-/super-build-static/
+# Ignore build folders, no matter where in the tree they might be
+build*/
+core-build/
+super-build/
+super-build-shared/
+super-build-static/
 
 *.sublime-workspace
 
