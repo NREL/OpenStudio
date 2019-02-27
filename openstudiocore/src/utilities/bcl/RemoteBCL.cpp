@@ -621,11 +621,14 @@ namespace openstudio{
     connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onDownloadComplete);
 
 #ifndef QT_NO_OPENSSL
+    LOG(Debug, "Connecting catchSslErrors");
     connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
     m_downloadReply = m_networkManager->get(request);
-    if (!m_downloadReply->isRunning()){
+    if (m_downloadReply->isRunning()) {
+      LOG(Debug, "Download running");
+    }else{
       m_mutex->unlock();
       m_downloadReply->deleteLater();
       m_downloadReply = nullptr;
@@ -989,6 +992,8 @@ namespace openstudio{
 
   void RemoteBCL::onDownloadComplete(QNetworkReply* reply)
   {
+    LOG(Debug, "Download complete");
+
     QString redirect = this->checkForRedirect(reply);
     if (!redirect.isEmpty()) {
       LOG(Debug, "Processing redirect '" << toString(redirect) << "'");
@@ -1112,7 +1117,7 @@ namespace openstudio{
           removeDirectory(tempDest);
 
         } else {
-          LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt());
+          LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << " - " << reply->errorString().toStdString());
         }
       }
 
