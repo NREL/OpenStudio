@@ -558,42 +558,26 @@ def parse_main_args(main_args)
     #  end
     #end
 
-    # find final set of embedded gems that are also found on disk with equal or higher version but compatible major version
-    final_embedded_gems = original_embedded_gems.clone
-    Gem::Specification.each do |spec|
-      current_embedded_gem = final_embedded_gems[spec.name]
-      
-      # not an embedded gem
-      next if current_embedded_gem.nil?
-      
-      if spec.version > current_embedded_gem.version
-        # only allow higher versions with compatible major version
-        if spec.version.to_s.split('.').first == current_embedded_gem.version.to_s.split('.').first
-          $logger.debug "Found system gem #{spec.name} #{spec.version}, overrides embedded gem"
-          final_embedded_gems[spec.name] = spec
-        end
-      end
-    end
-    
-    # get a list of all the embedded gems and their dependencies 
+    # get a list of all the embedded gems
     dependencies = []
-    final_embedded_gems.each_value do |spec|
-      #$logger.debug "Accumulating dependencies for #{spec.name} #{spec.version}"
-      dependencies << Gem::Dependency.new(spec.name)
-      dependencies.concat(spec.runtime_dependencies)
+    original_embedded_gems.each_value do |spec|
+      $logger.debug "Adding dependency on #{spec.name} '~> #{spec.version}'"
+      dependencies << Gem::Dependency.new(spec.name, "~> #{spec.version}")
     end
-    #dependencies.each {|d| $logger.debug "Found dependency #{d}"}
+    #dependencies.each {|d| $logger.debug "Added dependency #{d}"}
 
     # resolve dependencies
     activation_errors = false
     original_load_path = $:.clone
     resolver = Gem::Resolver.for_current_gems(dependencies)
-    resolver.resolve.each do |request|
+    activation_requests = resolver.resolve
+    $logger.debug "Processing #{activation_requests.size} activation requests"
+    activation_requests.each do |request|
       do_activate = true
       spec = request.spec
 
       # check if this is one of our embedded gems
-      if final_embedded_gems[spec.name]
+      if original_embedded_gems[spec.name]
 
         # check if gem can be loaded from RUBYLIB, this supports developer use case
         original_load_path.each do |lp|
