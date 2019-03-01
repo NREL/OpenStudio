@@ -1065,6 +1065,19 @@ namespace detail {
       return boost::none;
     }
 
+    boost::optional<double> area1 = getArea(faceVertices);
+    boost::optional<double> area2 = getArea(otherFaceVertices);
+    if (area1) {
+      if (std::abs(area1.get() - intersection->area1()) > tol*tol) {
+        LOG(Error, "Initial area of surface '" << this->nameString() << "' " << area1.get() << " does not equal post intersection area " << intersection->area1());
+      }
+    }
+    if (area2) {
+      if (std::abs(area2.get() - intersection->area2()) > tol*tol) {
+        LOG(Error, "Initial area of other surface '" << otherSurface.nameString() << "' " << area2.get() << " does not equal post intersection area " << intersection->area2());
+      }
+    }
+
     // non-zero intersection
     // could match here but will save that for other discrete operation
     Surface surface(std::dynamic_pointer_cast<Surface_Impl>(this->shared_from_this()));
