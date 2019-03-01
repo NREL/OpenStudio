@@ -2029,3 +2029,145 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
 
   //m.save("intersect3.osm", true);
 }
+
+TEST_F(ModelFixture, Space_intersectSurfaces_slivercheck1) {
+
+  std::vector<double> xs{10};
+  std::vector<double> ys{5};
+  std::vector<double> x1offsets{-1, -0.1, -0.01, 0.0, 0.01, 0.1, 1}; //{-1, -0.1, 0.0, 0.1, 1}  {-1, -0.1, -0.01, -0.001, 0.0, 0.001, 0.01, 0.1, 1}
+  std::vector<double> x2offsets{-1, -0.1, -0.01, 0.0, 0.01, 0.1, 1};
+  std::vector<double> y1offsets{-1, -0.1, -0.01, 0.0, 0.01, 0.1, 1};
+  std::vector<double> y2offsets{-1, -0.1, -0.01, 0.0, 0.01, 0.1, 1};
+
+  for (const auto& x: xs) {
+    for (const auto& y : ys) {
+      for (const auto& x1offset : x1offsets) {
+        for (const auto& x2offset : x2offsets) {
+          for (const auto& y1offset : y1offsets) {
+            for (const auto& y2offset : y2offsets) {
+
+              Model m;
+              std::vector<Point3d> vertices;
+
+              // bottom floor
+
+              // bottom core
+              vertices.clear();
+              vertices.push_back(Point3d(0, y, 0));
+              vertices.push_back(Point3d(x, y, 0));
+              vertices.push_back(Point3d(x, 0, 0));
+              vertices.push_back(Point3d(0, 0, 0));
+              boost::optional<Space> bottomCore = Space::fromFloorPrint(vertices, 3, m);
+              ASSERT_TRUE(bottomCore);
+              bottomCore->setZOrigin(0);
+
+              // top floor
+
+              // top core
+              vertices.clear();
+              vertices.push_back(Point3d(x1offset, y + y2offset, 0));
+              vertices.push_back(Point3d(x + x2offset, y + y2offset, 0));
+              vertices.push_back(Point3d(x + x2offset, y1offset, 0));
+              vertices.push_back(Point3d(x1offset, y1offset, 0));
+              boost::optional<Space> topCore = Space::fromFloorPrint(vertices, 3, m);
+              ASSERT_TRUE(topCore);
+              topCore->setZOrigin(3);
+
+              // create thermal zones
+              std::vector<Space> spaces = m.getConcreteModelObjects<Space>();
+              for (auto& space : spaces) {
+                ThermalZone z(m);
+                space.setThermalZone(z);
+              }
+
+              intersectSurfaces(spaces);
+              matchSurfaces(spaces);
+
+              double exteriorFloorArea = 0;
+              double interiorFloorArea = 0;
+              double exteriorRoofArea = 0;
+              double interiorRoofArea = 0;
+              double exteriorWallArea = 0;
+              double interiorWallArea = 0;
+
+              std::vector<Surface> surfaces = m.getConcreteModelObjects<Surface>();
+              for (auto& surface : surfaces) {
+                if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
+                  if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
+                    exteriorRoofArea += surface.grossArea();
+                  } else {
+                    interiorRoofArea += surface.grossArea();
+                  }
+                } else if (istringEqual(surface.surfaceType(), "Floor")) {
+                  if (istringEqual(surface.outsideBoundaryCondition(), "Ground")) {
+                    exteriorFloorArea += surface.grossArea();
+                  } else {
+                    interiorFloorArea += surface.grossArea();
+                  }
+                } else if (istringEqual(surface.surfaceType(), "Wall")) {
+                  if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
+                    exteriorWallArea += surface.grossArea();
+                  } else {
+                    interiorWallArea += surface.grossArea();
+                  }
+                }
+              }
+
+              double firstFloorArea = x*y;
+              double secondFloorArea = (x - x1offset + x2offset)*(y - y1offset + y2offset);
+
+              double intersectx1 = std::max(0.0, x1offset);
+              double intersectx2 = std::min(x, x + x2offset);
+              double intersecty1 = std::max(0.0, y1offset);
+              double intersecty2 = std::min(y, y + y2offset);
+              double intersectArea = (intersectx2 - intersectx1)*(intersecty2 - intersecty1);
+
+              double overhangArea = std::max(0.0, secondFloorArea - intersectArea);
+
+              double expectedExteriorFloorArea = firstFloorArea + overhangArea;
+              double expectedExteriorRoofArea = firstFloorArea + secondFloorArea - intersectArea;
+
+
+              double tol = 1;
+              bool success = true;
+              if (std::abs(exteriorFloorArea - expectedExteriorFloorArea) > tol) {
+                success = false;
+              } else if (std::abs(interiorFloorArea - intersectArea) > tol) {
+                success = false;
+              } else if (std::abs(exteriorRoofArea - expectedExteriorRoofArea) > tol) {
+                success = false;
+              } else if (std::abs(interiorRoofArea - intersectArea) > tol) {
+                success = false;
+              }
+              EXPECT_NEAR(exteriorFloorArea, expectedExteriorFloorArea, tol);
+              EXPECT_NEAR(interiorFloorArea, intersectArea, tol);
+              EXPECT_NEAR(exteriorRoofArea, expectedExteriorRoofArea, tol);
+              EXPECT_NEAR(interiorRoofArea, intersectArea, tol);
+
+              bool debug = false;
+              if (debug && !success) {
+                std::stringstream ss;
+                ss << "slivercheck1_" << x << "_" << y << "_" << x1offset << "_" << x2offset << "_" << y1offset << "_" << y2offset << ".osm";
+                
+                std::cout << ss.str() << std::endl;
+                std::cout << "firstFloorArea:" << firstFloorArea << std::endl;
+                std::cout << "secondFloorArea:" << secondFloorArea << std::endl;
+                std::cout << "intersectArea:" << intersectArea << std::endl;
+                std::cout << "overhangArea:" << overhangArea << std::endl;
+                std::cout << "expectedExteriorFloorArea:" << expectedExteriorFloorArea << std::endl;
+                std::cout << "expectedExteriorRoofArea:" << expectedExteriorRoofArea << std::endl << std::endl;
+
+                
+                m.save(ss.str(), true);
+
+                //ASSERT_TRUE(success);
+              }
+
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
