@@ -544,7 +544,7 @@ add_dependencies("${target_name}_static" GenerateIddFactoryRun)
 
 target_link_libraries(${target_name}_static ${${target_name}_static_depends} GeographicLib_STATIC)
 
-target_link_libraries(${target_name}_static ${${target_name}_static_depends} cpprest)
+target_link_libraries(${target_name}_static ${${target_name}_static_depends} cpprest OpenSSL::OpenSSL)
 
 #target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
 
