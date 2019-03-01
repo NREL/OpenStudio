@@ -26,4 +26,6 @@ cmake-build-debug
 
 developer/msvc/Visualizers/all_concat.natvis
 .vscode/
+.vs/
+*.cache
 
