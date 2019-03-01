@@ -33,6 +33,32 @@ if(POLICY CMP0077)
 endif()
 
 
+
+
+
+# Download automatically, you can also just copy the conan.cmake file
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
+    "${CMAKE_BINARY_DIR}/conan.cmake")
+endif()
+
+include(${CMAKE_BINARY_DIR}/conan.cmake)
+
+conan_check(VERSION 1.0.0 REQUIRED)
+
+conan_add_remote(NAME bincrafters
+  URL https://api.bintray.com/conan/bincrafters/public-conan)
+
+conan_cmake_run(REQUIRES OpenSSL/1.1.0j@conan/stable
+  BASIC_SETUP CMAKE_TARGETS
+  BUILD missing
+  )
+
+# OpenSSL / libssh support
+find_package(OpenSSL)
+
+
 ###############################################################################
 # Project version information
 set(PROJECT_VERSION_BUILD "Unknown" CACHE STRING "Build number") # git sha
@@ -714,67 +740,6 @@ if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
   file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/src/cli/embedded_files")
 endif()
 
-# OpenSSL / libssh support
-if(BUILD_WITH_OPENSSL)
-  if(UNIX)
-    find_package(OpenSSL)
-    if(NOT ${OPENSSL_FOUND})
-      message(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
-      message(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
-    else()
-      mark_as_advanced(
-        LIB_EAY_DEBUG
-        LIB_EAY_RELEASE
-        SSL_EAY_DEBUG
-        SSL_EAY_RELEASE
-      )
-    endif()
-  elseif(WIN32)
-    if(CMAKE_CL_64)
-      set(OPENSSL_ARCH 64)
-      set(OPENSSL_EXPECTED_HASH 33f0c2f1072ce0d7c64afcae3c78d74b)
-    else()
-      set(OPENSSL_ARCH 32)
-      set(OPENSSL_EXPECTED_HASH DOES_NOT_EXIST_e4b5a3481503867c1f2020a3f7ce52a8)
-    endif()
-    set(OPENSSL_VERSION "1.1.0i")
-    set(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
-    if(EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
-      file(MD5 "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OPENSSL_HASH)
-    endif()
-    if(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
-      message(STATUS "Downloading OpenSSL ${OPENSSL_VERSION} (${OPENSSL_ARCH}-bit)")
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-    endif()
-    # Since version 1.1.0 OpenSSL have changed their library names from:
-    # libeay32.dll -> libcrypto.dll
-    # ssleay32.dll -> libssl.dll
-    set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
-    set(OPENSSL_INCLUDE_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}/include")
-    set(OPENSSL_LIBRARIES "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}/lib")
-    set(LIBEAY32_PATH "${OPENSSL_ROOT_DIR}/bin/libcrypto-1_1-x64.dll")
-    set(SSLEAY32_PATH "${OPENSSL_ROOT_DIR}/bin/libssl-1_1-x64.dll")
-    set(LIB_EAY_DEBUG "${OPENSSL_ROOT_DIR}/lib/libcrypto.lib")
-    set(LIB_EAY_RELEASE "${OPENSSL_ROOT_DIR}/lib/libcrypto.lib")
-    set(SSL_EAY_DEBUG "${OPENSSL_ROOT_DIR}/lib/libssl.lib")
-    set(SSL_EAY_RELEASE "${OPENSSL_ROOT_DIR}/lib/libssl.lib")
-    mark_as_advanced(
-      LIB_EAY_DEBUG
-      LIB_EAY_RELEASE
-      SSL_EAY_DEBUG
-      SSL_EAY_RELEASE
-    )
-    file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Release/")
-    file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Debug/")
-    file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo/")
-    file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/MinSizeRel/")
-    install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "bin")
-    #install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION ${RUBY_MODULE_ARCH_DIR})
-  endif()
-endif()
-
 # DView
 option(BUILD_DVIEW "Build DView" OFF)
 
@@ -1032,45 +997,7 @@ add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
 add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
 
 # cpprestsdk
-if(APPLE)
-  # TODO
-  add_subdirectory(../cpprestsdk cpprestsdk EXCLUDE_FROM_ALL)
-elseif(UNIX)
-  set(CPPRESTSDK_ZIP "cpprestsdk-2.10.8-Linux-x86_64.tar.xz")
-  set(CPPRESTSDK_DIR "cpprestsdk-2.10.8-Linux-x86_64")
-  set(CPPRESTSDK_EXPECTED_HASH "866e8fa7ce1e507fcb19b0ab9b89399c")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}")
-    file(MD5 "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" CPPRESTSDK_HASH)
-  endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}" OR NOT "${CPPRESTSDK_HASH}" MATCHES "${CPPRESTSDK_EXPECTED_HASH}")
-    message(STATUS "Downloading cpprestsdk)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${CPPRESTSDK_ZIP}" "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${CPPRESTSDK_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-  #find_package(cpprestsdk REQUIRED PATHS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/cpprestsdk")
-  set(CPPRESTSDK_INCLUDE_DIR "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/include")
-  include_directories(${CPPRESTSDK_INCLUDE_DIR})
-  set(CPPRESTSDK_LIB "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/libcpprest.a")
-elseif(WIN32)
-  set(CPPRESTSDK_ZIP "cpprestsdk-2.10.8-win64.zip")
-  set(CPPRESTSDK_DIR "cpprestsdk-2.10.8-win64")
-  set(CPPRESTSDK_EXPECTED_HASH "467df76fa7c96fc3465a4b5f596361f8")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}")
-    file(MD5 "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" CPPRESTSDK_HASH)
-  endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}" OR NOT "${CPPRESTSDK_HASH}" MATCHES "${CPPRESTSDK_EXPECTED_HASH}")
-    message(STATUS "Downloading cpprestsdk)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${CPPRESTSDK_ZIP}" "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${CPPRESTSDK_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-  #find_package(cpprestsdk REQUIRED PATHS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/cpprestsdk")
-  set(CPPRESTSDK_INCLUDE_DIR "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/include")
-  include_directories(${CPPRESTSDK_INCLUDE_DIR})
-  set(CPPRESTSDK_LIB_RELEASE "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/cpprest141_2_10.lib")
-  set(CPPRESTSDK_LIB_DEBUG "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/cpprest141_2_10d.lib")
-endif()
+add_subdirectory(../cpprestsdk cpprestsdk EXCLUDE_FROM_ALL)
 
 # SQLite definitions, used in sqlite and litesql
 add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
