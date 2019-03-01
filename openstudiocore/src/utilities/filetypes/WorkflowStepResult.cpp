@@ -30,7 +30,7 @@
 #include "WorkflowStepResult.hpp"
 #include "WorkflowStepResult_Impl.hpp"
 
-#include "../utilities/core/Assert.hpp"
+#include "../../utilities/core/Assert.hpp"
 
 
 #include <jsoncpp/json.h>

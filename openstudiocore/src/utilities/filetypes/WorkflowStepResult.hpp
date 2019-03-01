@@ -32,10 +32,10 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include "../utilities/core/Enum.hpp"
-#include "../utilities/core/Logger.hpp"
-#include "../utilities/core/Path.hpp"
-#include "../utilities/data/Variant.hpp"
+#include "../core/Enum.hpp"
+#include "../core/Logger.hpp"
+#include "../core/Path.hpp"
+#include "../data/Variant.hpp"
 
 namespace openstudio {
 

@@ -36,14 +36,14 @@
 #include "../SurfaceNetworkBuilder.hpp"
 
 //#include "../model/Model.hpp"
-#include "../utilities/idf/Handle.hpp"
-#include "../utilities/core/Path.hpp"
-#include "../utilities/core/Optional.hpp"
-#include "../utilities/core/Logger.hpp"
-#include "../utilities/core/StringStreamLogSink.hpp"
-#include "../utilities/data/TimeSeries.hpp"
-#include "../utilities/time/Date.hpp"
-#include "../utilities/filetypes/EpwFile.hpp"
+#include "../../utilities/idf/Handle.hpp"
+#include "../../utilities/core/Path.hpp"
+#include "../../utilities/core/Optional.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/StringStreamLogSink.hpp"
+#include "../../utilities/data/TimeSeries.hpp"
+#include "../../utilities/time/Date.hpp"
+#include "../../utilities/filetypes/EpwFile.hpp"
 
 namespace openstudio{
 class ProgressBar;

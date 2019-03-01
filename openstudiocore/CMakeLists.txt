@@ -36,27 +36,6 @@ endif()
 
 
 
-# Download automatically, you can also just copy the conan.cmake file
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
-    "${CMAKE_BINARY_DIR}/conan.cmake")
-endif()
-
-include(${CMAKE_BINARY_DIR}/conan.cmake)
-
-conan_check(VERSION 1.0.0 REQUIRED)
-
-conan_add_remote(NAME bincrafters
-  URL https://api.bintray.com/conan/bincrafters/public-conan)
-
-conan_cmake_run(REQUIRES OpenSSL/1.1.0j@conan/stable
-  BASIC_SETUP CMAKE_TARGETS
-  BUILD missing
-  )
-
-# OpenSSL / libssh support
-find_package(OpenSSL)
 
 
 ###############################################################################
@@ -287,8 +266,9 @@ set(LIBRARY_SEARCH_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" "${CMAKE_LIBRAR
 # Include project specific macros
 include(ProjectMacros.cmake)
 
-# Search for modules in the root dir first to override cmake ones
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
+# Search first in the binary dir, where conan will install finders, then
+# search for modules in the root dir to override cmake ones
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}/CMake")
 
 # Use CTest
 set(ALL_TESTING_TARGETS "") # global list
@@ -296,6 +276,38 @@ if(BUILD_TESTING)
   enable_testing()
   include(CTest)
 endif()
+
+
+# Download automatically, you can also just copy the conan.cmake file
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
+    "${CMAKE_BINARY_DIR}/conan.cmake")
+endif()
+
+include(${CMAKE_BINARY_DIR}/conan.cmake)
+
+message("RUNNING CONAN")
+conan_check(VERSION 1.0.0 REQUIRED)
+
+conan_add_remote(NAME bincrafters
+  URL https://api.bintray.com/conan/bincrafters/public-conan)
+
+conan_cmake_run(REQUIRES OpenSSL/1.1.0i@conan/stable
+  BASIC_SETUP CMAKE_TARGETS
+  GENERATORS cmake_find_package
+  OPTIONS zlib:minizip=True
+  BUILD missing
+  )
+message("DONE RUNNING CONAN")
+
+find_package(OpenSSL)
+include_directories(${OpenSSL_INCLUDE_DIRS})
+find_package(zlib)
+include_directories(${zlib_INCLUDE_DIRS})
+
+
+
 ###############################################################################
 
 ###############################################################################
@@ -891,10 +903,10 @@ if(UNIX)
 endif()
 
 # Zlib
-include_directories(SYSTEM src/zlib)
-add_subdirectory(src/zlib)
+# include_directories(SYSTEM src/zlib)
+# add_subdirectory(src/zlib)
 # make sure zconf.h can be found
-include_directories(${CMAKE_BINARY_DIR}/src/zlib)
+# include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 
 if(BUILD_TESTING)
   # force gtest to build as a static library no matter what, otherwise we get error about undefined death test symbols when building shared libs
@@ -997,7 +1009,14 @@ add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
 add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
 
 # cpprestsdk
+if(WIN32)
+  # cpprest defines its own NOMINMAX and this is causes a macro redefinition "warning as error"
+  remove_definitions(-DNOMINMAX)
+endif()
 add_subdirectory(../cpprestsdk cpprestsdk EXCLUDE_FROM_ALL)
+if(WIN32)
+  add_definitions(-DNOMINMAX)
+endif()
 
 # SQLite definitions, used in sqlite and litesql
 add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
@@ -1620,9 +1639,9 @@ set(all_lib_targets
   openstudio_isomodel_static
   openstudio_sdd_static
   openstudio_airflow_static
-  miniziplib
-  zlib
-  zlibstatic
+#  miniziplib
+#  zlib
+#  zlibstatic
   sqlite
   jsoncpp
   ${ALL_RUBY_BINDING_TARGETS}

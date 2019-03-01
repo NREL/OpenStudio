@@ -211,7 +211,7 @@ set(${target_name}_depends
   jsoncpp
   #litesql
   #litesql-util
-  miniziplib
+  zlib::zlib
   pugixml
   ${Boost_LIBRARIES}
   #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
@@ -527,7 +527,7 @@ add_subdirectory(pch)
 set(${target_name}_static_depends
   sqlite
   jsoncpp
-  miniziplib
+  zlib::zlib
   pugixml
   ${Boost_LIBRARIES}
 )

@@ -31,9 +31,9 @@
 #include <iostream>
 #include <stdlib.h>
 
-#include "../utilities/core/Logger.hpp"
-#include "../utilities/core/FilesystemHelpers.hpp"
-#include "../utilities/core/StringHelpers.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/FilesystemHelpers.hpp"
+#include "../../utilities/core/StringHelpers.hpp"
 
 namespace openstudio {
 namespace contam {
