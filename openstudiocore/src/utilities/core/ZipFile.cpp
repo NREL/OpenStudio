@@ -30,7 +30,7 @@
 #include "ZipFile.hpp"
 #include "FilesystemHelpers.hpp"
 
-#include <zlib/contrib/minizip/zip.h>
+#include <zip.h>
 
 
 

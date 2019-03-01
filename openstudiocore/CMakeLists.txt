@@ -12,6 +12,34 @@ endif()
 
 project(OpenStudio VERSION 2.7.2)
 
+# conan
+
+# Download automatically, you can also just copy the conan.cmake file
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
+    "${CMAKE_BINARY_DIR}/conan.cmake")
+endif()
+
+include(${CMAKE_BINARY_DIR}/conan.cmake)
+
+message("RUNNING CONAN")
+conan_check(VERSION 1.0.0 REQUIRED)
+
+conan_add_remote(NAME bincrafters
+  URL https://api.bintray.com/conan/bincrafters/public-conan)
+
+conan_cmake_run(REQUIRES OpenSSL/1.1.0i@conan/stable
+  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
+  GENERATORS cmake_find_package
+  OPTIONS zlib:minizip=True
+  BUILD missing
+  )
+message("DONE RUNNING CONAN")
+
+
+
+
 include(ExternalProject)
 include(CPackComponent)
 include(CheckCXXCompilerFlag)
@@ -277,29 +305,6 @@ if(BUILD_TESTING)
   include(CTest)
 endif()
 
-
-# Download automatically, you can also just copy the conan.cmake file
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
-    "${CMAKE_BINARY_DIR}/conan.cmake")
-endif()
-
-include(${CMAKE_BINARY_DIR}/conan.cmake)
-
-message("RUNNING CONAN")
-conan_check(VERSION 1.0.0 REQUIRED)
-
-conan_add_remote(NAME bincrafters
-  URL https://api.bintray.com/conan/bincrafters/public-conan)
-
-conan_cmake_run(REQUIRES OpenSSL/1.1.0i@conan/stable
-  BASIC_SETUP CMAKE_TARGETS
-  GENERATORS cmake_find_package
-  OPTIONS zlib:minizip=True
-  BUILD missing
-  )
-message("DONE RUNNING CONAN")
 
 find_package(OpenSSL)
 include_directories(${OpenSSL_INCLUDE_DIRS})
