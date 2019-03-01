@@ -1561,3 +1561,471 @@ TEST_F(ModelFixture, Space_hardApplySpaceType_Plenum2)
   ASSERT_NE(m.plenumSpaceType().handle(), s2.spaceType().get().handle());
   ASSERT_NE(s1.spaceType().get().handle(), s2.spaceType().get().handle());
 }
+
+TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
+  Model m;
+  std::vector<Point3d> vertices;
+
+  // bottom floor
+
+  // bottom core
+  vertices.clear();
+  vertices.push_back(Point3d(-13.0256,  7.1598, 0));
+  vertices.push_back(Point3d( 13.0256,  7.1598, 0));
+  vertices.push_back(Point3d( 13.0256, -7.1598, 0));
+  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
+  boost::optional<Space> bottomCore = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomCore);
+  bottomCore->setZOrigin(0);
+
+  // bottom top
+  vertices.clear();
+  vertices.push_back(Point3d(-17.5976, 11.7318, 0));
+  vertices.push_back(Point3d( 17.5976, 11.7318, 0));
+  vertices.push_back(Point3d( 13.0256,  7.1598, 0));
+  vertices.push_back(Point3d(-13.0256,  7.1598, 0));
+  boost::optional<Space> bottomTop = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomTop);
+  bottomTop->setZOrigin(0);
+
+  // bottom right
+  vertices.clear();
+  vertices.push_back(Point3d(17.5976,  11.7318, 0));
+  vertices.push_back(Point3d(17.5976, -11.7318, 0));
+  vertices.push_back(Point3d(13.0256,  -7.1598, 0));
+  vertices.push_back(Point3d(13.0256,   7.1598, 0));
+  boost::optional<Space> bottomRight = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomRight);
+  bottomRight->setZOrigin(0);
+
+  // bottom bottom
+  vertices.clear();
+  vertices.push_back(Point3d( 17.5976, -11.7318, 0));
+  vertices.push_back(Point3d(-17.5976, -11.7318, 0));
+  vertices.push_back(Point3d(-13.0256,  -7.1598, 0));
+  vertices.push_back(Point3d( 13.0256,  -7.1598, 0));
+  boost::optional<Space> bottomBottom = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomBottom);
+  bottomBottom->setZOrigin(0);
+
+  // bottom left
+  vertices.clear();
+  vertices.push_back(Point3d(-17.5976,  11.7318, 0));
+  vertices.push_back(Point3d(-13.0256,   7.1598, 0));
+  vertices.push_back(Point3d(-13.0256,  -7.1598, 0));
+  vertices.push_back(Point3d(-17.5976, -11.7318, 0));
+  boost::optional<Space> bottomLeft = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomLeft);
+  bottomLeft->setZOrigin(0);
+
+  // top floor
+
+  // top core
+  vertices.clear();
+  vertices.push_back(Point3d(-7.8714,  3.7236, 0));
+  vertices.push_back(Point3d( 7.8714,  3.7236, 0));
+  vertices.push_back(Point3d( 7.8714, -3.7236, 0));
+  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
+  boost::optional<Space> topCore = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topCore);
+  topCore->setZOrigin(3);
+
+  // top top
+  vertices.clear();
+  vertices.push_back(Point3d(-12.4434, 8.2956, 0));
+  vertices.push_back(Point3d( 12.4434, 8.2956, 0));
+  vertices.push_back(Point3d(  7.8714, 3.7236, 0));
+  vertices.push_back(Point3d( -7.8714, 3.7236, 0));
+  boost::optional<Space> topTop = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topTop);
+  topTop->setZOrigin(3);
+
+  // top right
+  vertices.clear();
+  vertices.push_back(Point3d(12.4434,  8.2956, 0));
+  vertices.push_back(Point3d(12.4434, -8.2956, 0));
+  vertices.push_back(Point3d( 7.8714, -3.7236, 0));
+  vertices.push_back(Point3d( 7.8714,  3.7236, 0));
+  boost::optional<Space> topRight = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topRight);
+  topRight->setZOrigin(3);
+
+  // top bottom
+  vertices.clear();
+  vertices.push_back(Point3d( 12.4434, -8.2956, 0));
+  vertices.push_back(Point3d(-12.4434, -8.2956, 0));
+  vertices.push_back(Point3d( -7.8714, -3.7236, 0));
+  vertices.push_back(Point3d(  7.8714, -3.7236, 0));
+  boost::optional<Space> topBottom = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topBottom);
+  topBottom->setZOrigin(3);
+
+  // top left
+  vertices.clear();
+  vertices.push_back(Point3d(-12.4434,  8.2956, 0));
+  vertices.push_back(Point3d( -7.8714,  3.7236, 0));
+  vertices.push_back(Point3d( -7.8714, -3.7236, 0));
+  vertices.push_back(Point3d(-12.4434, -8.2956, 0));
+  boost::optional<Space> topLeft = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topLeft);
+  topLeft->setZOrigin(3);
+
+  // create thermal zones
+  std::vector<Space> spaces = m.getConcreteModelObjects<Space>();
+  for (auto& space : spaces) {
+    ThermalZone z(m);
+    space.setThermalZone(z);
+  }
+
+  intersectSurfaces(spaces);
+  matchSurfaces(spaces);
+
+  double exteriorFloorArea = 0;
+  double interiorFloorArea = 0;
+  double exteriorRoofArea = 0;
+  double interiorRoofArea = 0;
+  double exteriorWallArea = 0;
+  double interiorWallArea = 0;
+
+  std::vector<Surface> surfaces = m.getConcreteModelObjects<Surface>();
+  for (auto& surface : surfaces) {
+    if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
+      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
+        exteriorRoofArea += surface.grossArea();
+      } else {
+        interiorRoofArea += surface.grossArea();
+      }
+    }else if (istringEqual(surface.surfaceType(), "Floor")) {
+      if (istringEqual(surface.outsideBoundaryCondition(), "Ground")) {
+        exteriorFloorArea += surface.grossArea();
+      } else {
+        interiorFloorArea += surface.grossArea();
+      }
+    } else if (istringEqual(surface.surfaceType(), "Wall")) {
+      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
+        exteriorWallArea += surface.grossArea();
+      } else {
+        interiorWallArea += surface.grossArea();
+      }
+    }
+  }
+
+  EXPECT_NEAR(exteriorFloorArea, 825.8048, 0.01);
+  EXPECT_NEAR(interiorFloorArea, 412.9019, 0.01);
+  EXPECT_NEAR(exteriorRoofArea, 825.8048, 0.01);
+  EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
+
+  //m.save("intersect1.osm", true);
+}
+
+TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
+  Model m;
+  std::vector<Point3d> vertices;
+
+  // bottom floor
+
+  // bottom core
+  vertices.clear();
+  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
+  vertices.push_back(Point3d(13.0256, 7.1598, 0));
+  vertices.push_back(Point3d(13.0256, -7.1598, 0));
+  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
+  boost::optional<Space> bottomCore = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomCore);
+  bottomCore->setZOrigin(0);
+
+  // bottom top
+  vertices.clear();
+  vertices.push_back(Point3d(-17.5976, 11.7318, 0));
+  vertices.push_back(Point3d(17.5976, 11.7318, 0));
+  vertices.push_back(Point3d(13.0256, 7.1598, 0));
+  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
+  boost::optional<Space> bottomTop = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomTop);
+  bottomTop->setZOrigin(0);
+
+  // bottom right
+  vertices.clear();
+  vertices.push_back(Point3d(17.5976, 11.7318, 0));
+  vertices.push_back(Point3d(17.5976, -11.7318, 0));
+  vertices.push_back(Point3d(13.0256, -7.1598, 0));
+  vertices.push_back(Point3d(13.0256, 7.1598, 0));
+  boost::optional<Space> bottomRight = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomRight);
+  bottomRight->setZOrigin(0);
+
+  // bottom bottom
+  vertices.clear();
+  vertices.push_back(Point3d(17.5976, -11.7318, 0));
+  vertices.push_back(Point3d(-17.5976, -11.7318, 0));
+  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
+  vertices.push_back(Point3d(13.0256, -7.1598, 0));
+  boost::optional<Space> bottomBottom = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomBottom);
+  bottomBottom->setZOrigin(0);
+
+  // bottom left
+  vertices.clear();
+  vertices.push_back(Point3d(-17.5976, 11.7318, 0));
+  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
+  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
+  vertices.push_back(Point3d(-17.5976, -11.7318, 0));
+  boost::optional<Space> bottomLeft = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomLeft);
+  bottomLeft->setZOrigin(0);
+
+  // top floor
+
+  // top core
+  vertices.clear();
+  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
+  vertices.push_back(Point3d(7.8714, 3.7236, 0));
+  vertices.push_back(Point3d(7.8714, -3.7236, 0));
+  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
+  boost::optional<Space> topCore = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topCore);
+  topCore->setZOrigin(3);
+
+  // top top
+  vertices.clear();
+  vertices.push_back(Point3d(-14.1614, 8.2956, 0));
+  vertices.push_back(Point3d(14.1614, 8.2956, 0));
+  vertices.push_back(Point3d(7.8714, 3.7236, 0));
+  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
+  boost::optional<Space> topTop = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topTop);
+  topTop->setZOrigin(3);
+
+  // top right
+  vertices.clear();
+  vertices.push_back(Point3d(14.1614, 8.2956, 0));
+  vertices.push_back(Point3d(14.1614, -8.2956, 0));
+  vertices.push_back(Point3d(7.8714, -3.7236, 0));
+  vertices.push_back(Point3d(7.8714, 3.7236, 0));
+  boost::optional<Space> topRight = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topRight);
+  topRight->setZOrigin(3);
+
+  // top bottom
+  vertices.clear();
+  vertices.push_back(Point3d(14.1614, -8.2956, 0));
+  vertices.push_back(Point3d(-14.1614, -8.2956, 0));
+  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
+  vertices.push_back(Point3d(7.8714, -3.7236, 0));
+  boost::optional<Space> topBottom = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topBottom);
+  topBottom->setZOrigin(3);
+
+  // top left
+  vertices.clear();
+  vertices.push_back(Point3d(-14.1614, 8.2956, 0));
+  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
+  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
+  vertices.push_back(Point3d(-14.1614, -8.2956, 0));
+  boost::optional<Space> topLeft = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topLeft);
+  topLeft->setZOrigin(3);
+
+  // create thermal zones
+  std::vector<Space> spaces = m.getConcreteModelObjects<Space>();
+  for (auto& space : spaces) {
+    ThermalZone z(m);
+    space.setThermalZone(z);
+  }
+
+  intersectSurfaces(spaces);
+  matchSurfaces(spaces);
+
+  double exteriorFloorArea = 0;
+  double interiorFloorArea = 0;
+  double exteriorRoofArea = 0;
+  double interiorRoofArea = 0;
+  double exteriorWallArea = 0;
+  double interiorWallArea = 0;
+
+  std::vector<Surface> surfaces = m.getConcreteModelObjects<Surface>();
+  for (auto& surface : surfaces) {
+    if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
+      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
+        exteriorRoofArea += surface.grossArea();
+      } else {
+        interiorRoofArea += surface.grossArea();
+      }
+    } else if (istringEqual(surface.surfaceType(), "Floor")) {
+      if (istringEqual(surface.outsideBoundaryCondition(), "Ground")) {
+        exteriorFloorArea += surface.grossArea();
+      } else {
+        interiorFloorArea += surface.grossArea();
+      }
+    } else if (istringEqual(surface.surfaceType(), "Wall")) {
+      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
+        exteriorWallArea += surface.grossArea();
+      } else {
+        interiorWallArea += surface.grossArea();
+      }
+    }
+  }
+
+  EXPECT_NEAR(exteriorFloorArea, 825.8048, 0.01);
+  //EXPECT_NEAR(interiorFloorArea, 412.9019, 0.01);
+  EXPECT_NEAR(exteriorRoofArea, 825.8048, 0.01);
+  //EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
+
+  //m.save("intersect2.osm", true);
+}
+
+TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
+  Model m;
+  std::vector<Point3d> vertices;
+
+  // bottom floor
+
+  // bottom core
+  vertices.clear();
+  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
+  vertices.push_back(Point3d(13.0256, 7.1598, 0));
+  vertices.push_back(Point3d(13.0256, -7.1598, 0));
+  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
+  boost::optional<Space> bottomCore = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomCore);
+  bottomCore->setZOrigin(0);
+
+  // bottom top
+  vertices.clear();
+  vertices.push_back(Point3d(-17.5976, 11.7318, 0));
+  vertices.push_back(Point3d(17.5976, 11.7318, 0));
+  vertices.push_back(Point3d(13.0256, 7.1598, 0));
+  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
+  boost::optional<Space> bottomTop = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomTop);
+  bottomTop->setZOrigin(0);
+
+  // bottom right
+  vertices.clear();
+  vertices.push_back(Point3d(17.5976, 11.7318, 0));
+  vertices.push_back(Point3d(17.5976, -11.7318, 0));
+  vertices.push_back(Point3d(13.0256, -7.1598, 0));
+  vertices.push_back(Point3d(13.0256, 7.1598, 0));
+  boost::optional<Space> bottomRight = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomRight);
+  bottomRight->setZOrigin(0);
+
+  // bottom bottom
+  vertices.clear();
+  vertices.push_back(Point3d(17.5976, -11.7318, 0));
+  vertices.push_back(Point3d(-17.5976, -11.7318, 0));
+  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
+  vertices.push_back(Point3d(13.0256, -7.1598, 0));
+  boost::optional<Space> bottomBottom = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomBottom);
+  bottomBottom->setZOrigin(0);
+
+  // bottom left
+  vertices.clear();
+  vertices.push_back(Point3d(-17.5976, 11.7318, 0));
+  vertices.push_back(Point3d(-13.0256, 7.1598, 0));
+  vertices.push_back(Point3d(-13.0256, -7.1598, 0));
+  vertices.push_back(Point3d(-17.5976, -11.7318, 0));
+  boost::optional<Space> bottomLeft = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(bottomLeft);
+  bottomLeft->setZOrigin(0);
+
+  // top floor
+
+  // top core
+  vertices.clear();
+  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
+  vertices.push_back(Point3d(7.8714, 3.7236, 0));
+  vertices.push_back(Point3d(7.8714, -3.7236, 0));
+  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
+  boost::optional<Space> topCore = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topCore);
+  topCore->setZOrigin(3);
+
+  // top top
+  vertices.clear();
+  vertices.push_back(Point3d(-15.4434, 8.2956, 0));
+  vertices.push_back(Point3d(15.4434, 8.2956, 0));
+  vertices.push_back(Point3d(7.8714, 3.7236, 0));
+  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
+  boost::optional<Space> topTop = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topTop);
+  topTop->setZOrigin(3);
+
+  // top right
+  vertices.clear();
+  vertices.push_back(Point3d(15.4434, 8.2956, 0));
+  vertices.push_back(Point3d(15.4434, -8.2956, 0));
+  vertices.push_back(Point3d(7.8714, -3.7236, 0));
+  vertices.push_back(Point3d(7.8714, 3.7236, 0));
+  boost::optional<Space> topRight = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topRight);
+  topRight->setZOrigin(3);
+
+  // top bottom
+  vertices.clear();
+  vertices.push_back(Point3d(15.4434, -8.2956, 0));
+  vertices.push_back(Point3d(-15.4434, -8.2956, 0));
+  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
+  vertices.push_back(Point3d(7.8714, -3.7236, 0));
+  boost::optional<Space> topBottom = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topBottom);
+  topBottom->setZOrigin(3);
+
+  // top left
+  vertices.clear();
+  vertices.push_back(Point3d(-15.4434, 8.2956, 0));
+  vertices.push_back(Point3d(-7.8714, 3.7236, 0));
+  vertices.push_back(Point3d(-7.8714, -3.7236, 0));
+  vertices.push_back(Point3d(-15.4434, -8.2956, 0));
+  boost::optional<Space> topLeft = Space::fromFloorPrint(vertices, 3, m);
+  ASSERT_TRUE(topLeft);
+  topLeft->setZOrigin(3);
+
+  // create thermal zones
+  std::vector<Space> spaces = m.getConcreteModelObjects<Space>();
+  for (auto& space : spaces) {
+    ThermalZone z(m);
+    space.setThermalZone(z);
+  }
+
+  intersectSurfaces(spaces);
+  matchSurfaces(spaces);
+
+  double exteriorFloorArea = 0;
+  double interiorFloorArea = 0;
+  double exteriorRoofArea = 0;
+  double interiorRoofArea = 0;
+  double exteriorWallArea = 0;
+  double interiorWallArea = 0;
+
+  std::vector<Surface> surfaces = m.getConcreteModelObjects<Surface>();
+  for (auto& surface : surfaces) {
+    if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
+      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
+        exteriorRoofArea += surface.grossArea();
+      } else {
+        interiorRoofArea += surface.grossArea();
+      }
+    } else if (istringEqual(surface.surfaceType(), "Floor")) {
+      if (istringEqual(surface.outsideBoundaryCondition(), "Ground")) {
+        exteriorFloorArea += surface.grossArea();
+      } else {
+        interiorFloorArea += surface.grossArea();
+      }
+    } else if (istringEqual(surface.surfaceType(), "Wall")) {
+      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
+        exteriorWallArea += surface.grossArea();
+      } else {
+        interiorWallArea += surface.grossArea();
+      }
+    }
+  }
+
+  EXPECT_NEAR(exteriorFloorArea, 825.8048, 0.01);
+  //EXPECT_NEAR(interiorFloorArea, 412.9019, 0.01);
+  EXPECT_NEAR(exteriorRoofArea, 825.8048, 0.01);
+  //EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
+
+  //m.save("intersect3.osm", true);
+}

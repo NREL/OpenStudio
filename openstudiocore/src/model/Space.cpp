@@ -2347,6 +2347,9 @@ namespace detail {
     std::vector<Surface> surfaces = this->surfaces();
     std::vector<Surface> otherSurfaces = other.surfaces();
 
+    std::sort(surfaces.begin(), surfaces.end(), [](const Surface & a, const Surface & b) -> bool {return a.grossArea() > b.grossArea(); });
+    std::sort(otherSurfaces.begin(), otherSurfaces.end(), [](const Surface & a, const Surface & b) -> bool {return a.grossArea() > b.grossArea(); });
+
     std::map<std::string, bool> hasSubSurfaceMap;
     std::map<std::string, bool> hasAdjacentSurfaceMap;
     std::set<std::string> completedIntersections;
@@ -2397,6 +2400,22 @@ namespace detail {
 
             std::vector<Surface> newSurfaces2 = intersection->newSurfaces2();
             newOtherSurfaces.insert(newOtherSurfaces.end(), newSurfaces2.begin(), newSurfaces2.end());
+
+            // surfaces involved in this intersection are ineligible to be re-intersected with other surfaces in this intersection
+            std::vector<Surface> ineligibleSurfaces;
+            ineligibleSurfaces.push_back(surface);
+            ineligibleSurfaces.insert(ineligibleSurfaces.end(), newSurfaces1.begin(), newSurfaces1.end());
+
+            std::vector<Surface> ineligibleOtherSurfaces;
+            ineligibleOtherSurfaces.push_back(otherSurface);
+            ineligibleOtherSurfaces.insert(ineligibleOtherSurfaces.end(), newSurfaces2.begin(), newSurfaces2.end());
+            for (Surface ineligibleSurface : ineligibleSurfaces){
+              for (Surface ineligibleOtherSurface : ineligibleOtherSurfaces){
+                std::string ineligibleIntersectionKey = toString(ineligibleSurface.handle()) + toString(ineligibleOtherSurface.handle()); 
+                completedIntersections.insert(ineligibleIntersectionKey);
+              }
+            }
+           
           }
         }
       }
@@ -3501,8 +3520,11 @@ Space::Space(std::shared_ptr<detail::Space_Impl> impl)
 {}
 /// @endcond
 
-void intersectSurfaces(std::vector<Space>& spaces)
+void intersectSurfaces(std::vector<Space>& t_spaces)
 {
+  std::vector<Space> spaces(t_spaces);	
+  std::sort(spaces.begin(), spaces.end(), [](const Space & a, const Space & b) -> bool {return a.floorArea() < b.floorArea(); });
+ 
   std::vector<BoundingBox> bounds;
   for (const Space& space : spaces){
     bounds.push_back(space.transformation()*space.boundingBox());

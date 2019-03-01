@@ -59,6 +59,12 @@ namespace openstudio{
     // new polygons generated from the second surface
     std::vector< std::vector<Point3d> > newPolygons2() const;
 
+    // total area from the first set of polygons
+    double area1() const;
+
+    // total area from the second set of polygons
+    double area2() const;
+
   private:
     std::vector<Point3d> m_polygon1;
     std::vector<Point3d> m_polygon2;

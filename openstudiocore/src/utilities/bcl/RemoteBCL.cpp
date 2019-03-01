@@ -593,19 +593,22 @@ namespace openstudio{
 
     // can't start another download until last one is done
     if (!m_mutex->tryLock()){
+      LOG(Debug, "Cannot get mutex lock");
       return false;
     }
 
-    m_downloadFile = std::shared_ptr<QFile>(new QFile(QDir::tempPath().append(toQString("/"+uid+".bcl"))));
+    QString downloadPath = QDir::tempPath().append(toQString("/" + uid + ".bcl"));
+    m_downloadFile = std::shared_ptr<QFile>(new QFile(downloadPath));
     if (!m_downloadFile->open(QIODevice::WriteOnly | QIODevice::Truncate)){
       m_mutex->unlock();
+      LOG(Debug, "Cannot create temporary file '" << toString(downloadPath) << "'");
       return false;
     }
 
     m_downloadUid = uid;
 
     QString url = toQString(remoteUrl() + "/api/component/download?uids=" + uid);
-    //LOG(Warn, toString(url));
+    LOG(Debug, "Download URL '" << toString(url) << "'");
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
@@ -618,14 +621,18 @@ namespace openstudio{
     connect(m_networkManager, &QNetworkAccessManager::finished, this, &RemoteBCL::onDownloadComplete);
 
 #ifndef QT_NO_OPENSSL
+    LOG(Debug, "Connecting catchSslErrors");
     connect(m_networkManager, &QNetworkAccessManager::sslErrors, this, &RemoteBCL::catchSslErrors);
 #endif
 
     m_downloadReply = m_networkManager->get(request);
-    if (!m_downloadReply->isRunning()){
+    if (m_downloadReply->isRunning()) {
+      LOG(Debug, "Download running");
+    }else{
       m_mutex->unlock();
       m_downloadReply->deleteLater();
       m_downloadReply = nullptr;
+      LOG(Debug, "Download failed to start");
       return false;
     }
 
@@ -985,8 +992,11 @@ namespace openstudio{
 
   void RemoteBCL::onDownloadComplete(QNetworkReply* reply)
   {
+    LOG(Debug, "Download complete");
+
     QString redirect = this->checkForRedirect(reply);
     if (!redirect.isEmpty()) {
+      LOG(Debug, "Processing redirect '" << toString(redirect) << "'");
       QNetworkRequest request = QNetworkRequest(QUrl(redirect));
       request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
       m_downloadReply = m_networkManager->get(request);
@@ -1107,7 +1117,7 @@ namespace openstudio{
           removeDirectory(tempDest);
 
         } else {
-          LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt());
+          LOG(Error, "Network Error: " << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << " - " << reply->errorString().toStdString());
         }
       }
 
