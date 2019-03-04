@@ -42387,7 +42387,6 @@ HeatPump:WaterToWater:EIR:Cooling,
    N1,  \field Load Side Reference Flow Rate
         \note This component is currently a constant-flow device, meaning it will always
         \note try to request the full design flow from the central plant manager.
-        \required-field
         \type real
         \minimum> 0.0
         \units m3/s
@@ -42395,7 +42394,6 @@ HeatPump:WaterToWater:EIR:Cooling,
         \autosizable
         \default autosize
    N2,  \field Source Side Reference Flow Rate
-        \required-field
         \type real
         \minimum> 0.0
         \units m3/s
@@ -42403,20 +42401,17 @@ HeatPump:WaterToWater:EIR:Cooling,
         \autosizable
         \default autosize
    N3,  \field Reference Capacity
-        \required-field
         \type real
         \minimum> 0.0
         \units W
         \autosizable
         \default autosize
    N4,  \field Reference Coefficient of Performance
-        \required-field
         \type real
         \minimum> 0.0
         \default 7.5
         \units W/W
    N5,  \field Sizing Factor
-        \required-field
         \note Multiplies the autosized capacity and flow rates
         \type real
         \minimum> 0.0
@@ -42480,7 +42475,6 @@ HeatPump:WaterToWater:EIR:Heating,
    N1,  \field Load Side Reference Flow Rate
         \note This component is currently a constant-flow device, meaning it will always
         \note try to request the full design flow from the central plant manager.
-        \required-field
         \type real
         \minimum> 0.0
         \units m3/s
@@ -42488,7 +42482,6 @@ HeatPump:WaterToWater:EIR:Heating,
         \autosizable
         \default autosize
    N2,  \field Source Side Reference Flow Rate
-        \required-field
         \type real
         \minimum> 0.0
         \units m3/s
@@ -42496,21 +42489,18 @@ HeatPump:WaterToWater:EIR:Heating,
         \autosizable
         \default autosize
    N3,  \field Reference Capacity
-        \required-field
         \type real
         \minimum> 0.0
         \units W
         \autosizable
         \default autosize
    N4,  \field Reference Coefficient of Performance
-        \required-field
         \type real
         \minimum> 0.0
         \default 7.5
         \units W/W
    N5,  \field Sizing Factor
         \note Multiplies the autosized capacity and flow rates
-        \required-field
         \type real
         \minimum> 0.0
         \default 1.0
