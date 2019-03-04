@@ -1319,6 +1319,7 @@ OS:SizingPeriod:DesignDay,
        \key ZhangHuang
        \key Schedule
        \key ASHRAETau
+       \key ASHRAETau2017
   A9, \field Beam Solar Day Schedule Name
        \note if Solar Model Indicator = Schedule, then beam schedule name (for day)
        \type object-list
@@ -1328,16 +1329,16 @@ OS:SizingPeriod:DesignDay,
        \type object-list
        \object-list DayScheduleNames
   N13, \field ASHRAE Taub
-       \note Required if Solar Model Indicator = ASHRAETau
-       \type real
        \units dimensionless
+       \note Required if Solar Model Indicator = ASHRAETau or ASHRAETau2017
+       \note ASHRAETau2017 solar model can be used with 2013 and 2017 HOF matching taub
        \minimum 0
-       \maximum 1
+       \maximum 1.2
        \default 0
   N14, \field ASHRAE Taud
-       \note Required if Solar Model Indicator = ASHRAETau
-       \type real
        \units dimensionless
+       \note required if solar model indicator = ashraetau or ashraetau2017
+       \note ashraetau2017 solar model can be used with 2013 and 2017 hof matching taud
        \minimum 0
        \maximum 3
        \default 0
