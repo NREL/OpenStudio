@@ -1397,7 +1397,8 @@ namespace openstudio {
           //if (!tags.empty()){
           //  srmStep.setTaxonomy(tags[0]);
           //}
-          srmStep.setName(srm->displayName());
+          srmStep.setName(srm->name());
+          srmStep.setDisplayName(srm->displayName());
           srmStep.setDescription(srm->description());
           srmStep.setModelerDescription(srm->modelerDescription());
           steps.push_back(srmStep);

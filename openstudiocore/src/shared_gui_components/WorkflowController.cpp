@@ -298,8 +298,6 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
     return;
   }
 
-  // the new measure
-  std::string name = m_app->measureManager().suggestMeasureName(*projectMeasure);
   // DLM: moved to WorkflowStepResult
   //measureStep.setMeasureId(projectMeasure->uid());
   //measureStep.setVersionId(projectMeasure->versionId());
@@ -307,8 +305,23 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
   //if (!tags.empty()){
   //  measureStep.setTaxonomy(tags[0]);
   //}
+
+  // We set the (non-editable) name for the measure on drop.
+  std::string name = projectMeasure->name();
   measureStep.setName(name);
-  //measureStep.setDisplayName(name); // DLM: TODO
+
+
+  // the new measure display name, which will include an integer counter as apppropriate if already used
+  std::string suggestedMeasureDisplayName = m_app->measureManager().suggestMeasureDisplayName(*projectMeasure);
+
+  if (!suggestedMeasureDisplayName.empty()) {
+    // If if has a displayName already, use that
+    measureStep.setDisplayName(suggestedMeasureDisplayName);
+  } else {
+    // Otherwise, use the set as the name
+    measureStep.setDisplayName(name);
+  }
+
   measureStep.setDescription(projectMeasure->description());
   measureStep.setModelerDescription(projectMeasure->modelerDescription());
 
@@ -403,15 +416,14 @@ QString MeasureStepItem::name() const
   return result;
 }
 
-//QString MeasureStepItem::displayName() const
-//{
-//  // DLM: TODO, add display name
-//  QString result;
-//  if (boost::optional<std::string> name = m_step.name()){
-//    return result = QString::fromStdString(*name);
-//  }
-//  return result;
-//}
+QString MeasureStepItem::displayName() const
+{
+  QString result;
+  if (boost::optional<std::string> displayName = m_step.displayName()){
+    return result = QString::fromStdString(*displayName);
+  }
+  return result;
+}
 
 MeasureType MeasureStepItem::measureType() const
 {
@@ -545,12 +557,12 @@ void MeasureStepItem::setName(const QString & name)
   emit nameChanged(name);
 }
 
-//void MeasureStepItem::setDisplayName(const QString & displayName)
-//{
-//  m_step.setName(displayName.toStdString());
-//
-//  emit displayNameChanged(displayName);
-//}
+void MeasureStepItem::setDisplayName(const QString & displayName)
+{
+  m_step.setDisplayName(displayName.toStdString());
+
+  emit displayNameChanged(displayName);
+}
 
 void MeasureStepItem::setDescription(const QString & description)
 {
@@ -608,9 +620,9 @@ QWidget * MeasureStepItemDelegate::view(QSharedPointer<OSListItem> dataSource)
   if(QSharedPointer<MeasureStepItem> measureStepItem = dataSource.objectCast<MeasureStepItem>())
   {
     auto workflowStepView = new WorkflowStepView();
-    workflowStepView->workflowStepButton->nameLabel->setText(measureStepItem->name());
+    workflowStepView->workflowStepButton->nameLabel->setText(measureStepItem->displayName());
 
-    connect(measureStepItem.data(), &MeasureStepItem::nameChanged, workflowStepView->workflowStepButton->nameLabel, &QLabel::setText);
+    connect(measureStepItem.data(), &MeasureStepItem::displayNameChanged, workflowStepView->workflowStepButton->nameLabel, &QLabel::setText);
 
     // Remove
 

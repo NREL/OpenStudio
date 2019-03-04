@@ -81,7 +81,7 @@ foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
     endif()
 
     # we just need to read the first part of this large file
-    file(READ "${ENERGYPLUS_IDD}" IDD_TEXT LIMIT 1000) 
+    file(READ "${ENERGYPLUS_IDD}" IDD_TEXT LIMIT 1000)
     string(REGEX MATCH "!IDD_BUILD [0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]" BUILD_SHA_LINE "${IDD_TEXT}")
     string(REGEX MATCH "[0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]" BUILD_SHA "${BUILD_SHA_LINE}")
     set(ENERGYPLUS_GE_8_2_0 TRUE)

@@ -67,6 +67,7 @@ EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   m_mainVLayout->setAlignment(Qt::AlignTop);
   scrollWidget->setLayout(m_mainVLayout);
 
+  // Editable Name, maps to 'displayName'
   QLabel * measureOptionTitleLabel = new QLabel("Name");
   measureOptionTitleLabel->setObjectName("H2");
   m_mainVLayout->addWidget(measureOptionTitleLabel);
@@ -78,6 +79,17 @@ EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   nameLineEdit->setValidator(validator);
   m_mainVLayout->addWidget(nameLineEdit);
 
+  // Non Editable name, maps to 'name'
+  QLabel * measureOptionTitleLabel2 = new QLabel("Original Name");
+  measureOptionTitleLabel2->setObjectName("H2");
+  m_mainVLayout->addWidget(measureOptionTitleLabel2);
+
+  nameNonEditableLineEdit = new QLineEdit();
+  m_mainVLayout->addWidget(nameNonEditableLineEdit);
+  nameNonEditableLineEdit->setStyleSheet("background: #E6E6E6;");
+  nameNonEditableLineEdit->setReadOnly(true);
+
+  // Description
   QLabel * descriptionTitleLabel = new QLabel("Description");
   descriptionTitleLabel->setObjectName("H2");
   m_mainVLayout->addWidget(descriptionTitleLabel);
@@ -89,6 +101,7 @@ EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
   descriptionTextEdit->setTabChangesFocus(true);
   m_mainVLayout->addWidget(descriptionTextEdit);
 
+  // Modeler Description
   QLabel * modelerDescriptionTitleLabel = new QLabel("Modeler Description");
   modelerDescriptionTitleLabel->setObjectName("H2");
   m_mainVLayout->addWidget(modelerDescriptionTitleLabel);
@@ -121,6 +134,7 @@ EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
 
   if(applyMeasureNow){
     nameLineEdit->setReadOnly(true);
+    nameNonEditableLineEdit->setVisible(false);
     descriptionTextEdit->setReadOnly(true);
     nameLineEdit->setDisabled(true);
     descriptionTextEdit->setDisabled(true);

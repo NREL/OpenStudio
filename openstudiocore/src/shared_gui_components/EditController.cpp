@@ -76,9 +76,10 @@ void EditController::setMeasureStepItem(measuretab::MeasureStepItem * measureSte
 
   // Ruby Measure Name
 
-  editRubyMeasureView->nameLineEdit->setText(m_measureStepItem->name());
+  editRubyMeasureView->nameLineEdit->setText(m_measureStepItem->displayName());
+  editRubyMeasureView->nameNonEditableLineEdit->setText(m_measureStepItem->name());
 
-  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureStepItem.data(), &measuretab::MeasureStepItem::setName);
+  connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureStepItem.data(), &measuretab::MeasureStepItem::setDisplayName);
 
   // Measure Description
 

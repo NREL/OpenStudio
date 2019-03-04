@@ -143,7 +143,8 @@ class MeasureManager : public QObject
     //// Will throw if arguments cannot be computed.
     std::vector<measure::OSArgument> getArguments(const BCLMeasure &t_measure);
 
-    std::string suggestMeasureName(const BCLMeasure &t_measure);
+    // Suggest a Measure Display Name by looking at existing names, and adding an integer counter as needed
+    std::string suggestMeasureDisplayName(const BCLMeasure &t_measure);
 
     bool isMeasureSelected();
 

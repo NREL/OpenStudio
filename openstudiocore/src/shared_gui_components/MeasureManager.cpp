@@ -683,15 +683,15 @@ boost::optional<measure::OSArgument> MeasureManager::getArgument(const measure::
 //  updateMeasures(t_project, toUpdate);
 //}
 
-std::string MeasureManager::suggestMeasureName(const BCLMeasure &t_measure)
+std::string MeasureManager::suggestMeasureDisplayName(const BCLMeasure &t_measure)
 {
   std::string baseName = t_measure.displayName();
 
   std::set<std::string> allNames;
   WorkflowJSON workflowJSON = m_app->currentModel()->workflowJSON();
   for (const auto& step : workflowJSON.workflowSteps()){
-    if (step.optionalCast<MeasureStep>()){
-      boost::optional<std::string> name = step.cast<MeasureStep>().name();
+    if (step.optionalCast<MeasureStep>()) {
+      boost::optional<std::string> name = step.cast<MeasureStep>().displayName();
       if (name){
         allNames.insert(*name);
       }

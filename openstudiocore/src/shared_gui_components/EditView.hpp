@@ -71,6 +71,8 @@ class EditRubyMeasureView : public QWidget
 
   QLineEdit * nameLineEdit;
 
+  QLineEdit * nameNonEditableLineEdit;
+
   QTextEdit * descriptionTextEdit;
 
   QTextEdit * modelerDescriptionTextEdit;
