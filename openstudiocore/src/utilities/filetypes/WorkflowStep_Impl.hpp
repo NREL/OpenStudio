@@ -89,9 +89,15 @@ namespace detail {
     std::string measureDirName() const;
     bool setMeasureDirName(const std::string& measureDirName);
 
+    // This is the uneditable name
     boost::optional<std::string> name() const;
     bool setName(const std::string& name);
     void resetName();
+
+    // This is the display, editable, name
+    boost::optional<std::string> displayName() const;
+    bool setDisplayName(const std::string& displayName);
+    void resetDisplayName();
 
     boost::optional<std::string> description() const;
     bool setDescription(const std::string& description);
@@ -120,7 +126,10 @@ namespace detail {
     REGISTER_LOGGER("openstudio.MeasureStep");
 
     std::string m_measureDirName;
+    // This is the uneditable measure name
     boost::optional<std::string> m_name;
+    // This is the editable one
+    boost::optional<std::string> m_displayName;
     boost::optional<std::string> m_description;
     boost::optional<std::string> m_modelerDescription;
     std::map<std::string, Variant> m_arguments;

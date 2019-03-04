@@ -127,9 +127,15 @@ public:
 
   std::string measureDirName() const;
 
+  // This is the uneditable name
   boost::optional<std::string> name() const;
   bool setName(const std::string& name);
   void resetName();
+
+  // This is the display, editable, name
+  boost::optional<std::string> displayName() const;
+  bool setDisplayName(const std::string& displayName);
+  void resetDisplayName();
 
   boost::optional<std::string> description() const;
   bool setDescription(const std::string& description);

@@ -125,6 +125,10 @@ namespace detail{
       result["name"] = m_name.get();
     }
 
+    if (m_displayName){
+      result["display_name"] = m_displayName.get();
+    }
+
     if (m_description){
       result["description"] = m_description.get();
     }
@@ -192,6 +196,24 @@ namespace detail{
   void MeasureStep_Impl::resetName()
   {
     m_name.reset();
+    onUpdate();
+  }
+
+  boost::optional<std::string> MeasureStep_Impl::displayName() const
+  {
+    return m_displayName;
+  }
+
+  bool MeasureStep_Impl::setDisplayName(const std::string& displayName)
+  {
+    m_displayName = displayName;
+    onUpdate();
+    return true;
+  }
+
+  void MeasureStep_Impl::resetDisplayName()
+  {
+    m_displayName.reset();
     onUpdate();
   }
 
@@ -311,9 +333,18 @@ boost::optional<WorkflowStep> WorkflowStep::fromString(const std::string& s)
     MeasureStep measureStep(measureDirName.asString());
     result = measureStep;
 
+    std::string name;
     if (value.isMember("name")){
-      Json::Value name = value["name"];
-      measureStep.setName(name.asString());
+      Json::Value _name = value["name"];
+      name = _name.asString();
+      measureStep.setName(name);
+    }
+
+    if (value.isMember("display_name")){
+      Json::Value displayName = value["display_name"];
+      measureStep.setDisplayName(displayName.asString());
+    } else {
+      // TODO: Default to non editable name?
     }
 
     if (value.isMember("description")){
@@ -415,6 +446,21 @@ bool MeasureStep::setName(const std::string& name)
 void MeasureStep::resetName()
 {
   getImpl<detail::MeasureStep_Impl>()->resetName();
+}
+
+boost::optional<std::string> MeasureStep::displayName() const
+{
+  return getImpl<detail::MeasureStep_Impl>()->displayName();
+}
+
+bool MeasureStep::setDisplayName(const std::string& displayName)
+{
+  return getImpl<detail::MeasureStep_Impl>()->setDisplayName(displayName);
+}
+
+void MeasureStep::resetDisplayName()
+{
+  getImpl<detail::MeasureStep_Impl>()->resetDisplayName();
 }
 
 boost::optional<std::string> MeasureStep::description() const
