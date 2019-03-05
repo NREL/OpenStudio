@@ -2025,7 +2025,7 @@ OS:BuildingUnit,
        \default Residential
 
 OS:DefaultConstructionSet,
-       \min-fields 11
+       \min-fields 12
   A1, \field Handle
        \type handle
        \required-field
@@ -2057,7 +2057,10 @@ OS:DefaultConstructionSet,
   A10, \field Building Shading Construction Name
        \type object-list
        \object-list ConstructionNames
-  A11; \field Site Shading Construction Name
+  A11, \field Site Shading Construction Name
+       \type object-list
+       \object-list ConstructionNames
+  A12; \field Adiabatic Surface Construction Name
        \type object-list
        \object-list ConstructionNames
 
