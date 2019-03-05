@@ -40,6 +40,7 @@
 #include "../AirLoopHVAC.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../Node.hpp"
+#include "../ThermalZone.hpp"
 
 // Needed for getConcreteModelObjects
 #include "../CoilCoolingFourPipeBeam_Impl.hpp"
@@ -145,10 +146,27 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeBeam_CloneAndRem
 {
 
   Model m;
+  ThermalZone z(m);
+  AirLoopHVAC a(m);
+  PlantLoop hw_p(m);
+  PlantLoop chw_p(m);
+
   CoilCoolingFourPipeBeam cc(m);
   CoilHeatingFourPipeBeam hc(m);
   AirTerminalSingleDuctConstantVolumeFourPipeBeam atu(m, cc, hc);
 
+  EXPECT_TRUE(a.addBranchForZone(z, atu));
+  EXPECT_TRUE(chw_p.addDemandBranchForComponent(cc));
+  EXPECT_TRUE( hw_p.addDemandBranchForComponent(hc));
+
+  EXPECT_EQ(1u, z.equipment().size());
+  EXPECT_EQ(1u, z.equipmentInHeatingOrder().size()); // Would crash before remove() got implemented
+  // 7u = Node, Splitter, One branch with Node - Coil - Node, Mixer, Node
+  EXPECT_EQ(7u, chw_p.demandComponents().size());
+  EXPECT_EQ(7u,  hw_p.demandComponents().size());
+
+
+  // Now clone
   AirTerminalSingleDuctConstantVolumeFourPipeBeam atuClone = atu.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
 
   // I expect the cooling/heating coils to have been cloned too
@@ -156,16 +174,34 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeBeam_CloneAndRem
   EXPECT_EQ(2u, m.getConcreteModelObjects<CoilCoolingFourPipeBeam>().size());
   EXPECT_EQ(2u, m.getConcreteModelObjects<CoilHeatingFourPipeBeam>().size());
 
+
   // And they should have been reassigned to the clone too
-  ASSERT_TRUE(atuClone.coolingCoil());
-  ASSERT_TRUE(atuClone.heatingCoil());
+  boost::optional<HVACComponent> _ccClone = atuClone.coolingCoil();
+  boost::optional<HVACComponent> _hcClone = atuClone.heatingCoil();
+  ASSERT_TRUE(_ccClone);
+  ASSERT_TRUE(_hcClone);
+  EXPECT_NE(_ccClone->handle(), cc.handle());
+  EXPECT_NE(_hcClone->handle(), hc.handle());
+
+
+  // Shouldn't have been added to the Zone though
+  EXPECT_EQ(1u, z.equipment().size());
+  EXPECT_EQ(1u, z.equipmentInHeatingOrder().size()); // Would crash before remove() got implemented
+
+  // And coils shouldn't have been connected to the PlantLoops either (to match other objects)
+  // 7u = Node, Splitter, One branch with Node - Coil - Node, Mixer, Node
+  EXPECT_EQ(7u, chw_p.demandComponents().size());
+  EXPECT_EQ(7u,  hw_p.demandComponents().size());
+
 
   // test remove method
-  atuClone.remove();
+  atu.remove();
   EXPECT_EQ(1u, m.getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeFourPipeBeam>().size());
   EXPECT_EQ(1u, m.getConcreteModelObjects<CoilCoolingFourPipeBeam>().size());
   EXPECT_EQ(1u, m.getConcreteModelObjects<CoilHeatingFourPipeBeam>().size());
 
+  EXPECT_EQ(0u, z.equipment().size());
+  EXPECT_EQ(0u, z.equipmentInHeatingOrder().size()); // Would crash before remove() got implemented
 
 }
 
