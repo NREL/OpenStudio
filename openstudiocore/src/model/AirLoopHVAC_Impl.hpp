@@ -181,6 +181,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
                         Splitter & splitter,
                         Mixer & mixer);
 
+  // TODO: remove?
   //bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone,
   //                          boost::optional<StraightComponent> & optAirTerminal);
 
