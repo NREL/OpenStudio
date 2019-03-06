@@ -481,8 +481,8 @@ namespace detail {
           if (n_subsurfaces > 0) {
             // Note JM 2019-03-05: Warn user, it's not obvious that this is happening and they might try to access again
             // one of these subsurfaces which are now disconnected objects
-            LOG(Warn, "When setting the Outside Boundary Condition for Surface '" << this->nameString()
-                   << "' to 'Adiabatic', we removed " << n_subsurfaces << " SubSurfaces.");
+            LOG(Warn, "Setting the Outside Boundary Condition for Surface '" << this->nameString()
+                   << "' to 'Adiabatic', removed " << n_subsurfaces << " SubSurfaces.");
           }
 
         }

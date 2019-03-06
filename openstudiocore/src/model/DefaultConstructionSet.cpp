@@ -255,7 +255,6 @@ namespace detail {
         result = this->adiabaticSurfaceConstruction();
         return result;
       }else{
-       //Adiabatic
        //GroundFCfactorMethod
        //OtherSideCoefficients
        //OtherSideConditionsModel
