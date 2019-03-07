@@ -211,7 +211,7 @@ set(${target_name}_depends
   jsoncpp
   #litesql
   #litesql-util
-  zlib::zlib
+  CONAN_PKG::zlib
   pugixml
   ${Boost_LIBRARIES}
   #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
@@ -527,7 +527,7 @@ add_subdirectory(pch)
 set(${target_name}_static_depends
   sqlite
   jsoncpp
-  zlib::zlib
+  CONAN_PKG::zlib
   pugixml
   ${Boost_LIBRARIES}
 )
@@ -544,7 +544,7 @@ add_dependencies("${target_name}_static" GenerateIddFactoryRun)
 
 target_link_libraries(${target_name}_static ${${target_name}_static_depends} GeographicLib_STATIC)
 
-target_link_libraries(${target_name}_static ${${target_name}_static_depends} cpprest OpenSSL::OpenSSL)
+target_link_libraries(${target_name}_static ${${target_name}_static_depends} cpprest CONAN_PKG::OpenSSL)
 
 #target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
 
