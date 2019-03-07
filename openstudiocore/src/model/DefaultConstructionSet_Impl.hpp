@@ -47,16 +47,6 @@ namespace detail {
   /** DefaultConstructionSet_Impl is a ResourceObject_Impl that is the implementation class for DefaultConstructionSet.*/
   class MODEL_API DefaultConstructionSet_Impl : public ResourceObject_Impl {
 
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -100,6 +90,8 @@ namespace detail {
 
     boost::optional<ConstructionBase> siteShadingConstruction() const;
 
+    boost::optional<ConstructionBase> adiabaticSurfaceConstruction() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -140,6 +132,10 @@ namespace detail {
 
     void resetSiteShadingConstruction();
 
+    bool setAdiabaticSurfaceConstruction(const ConstructionBase& construction);
+
+    void resetAdiabaticSurfaceConstruction();
+
     //@}
 
     /// Returns the default construction for this planar surface if available.
@@ -161,6 +157,7 @@ namespace detail {
     boost::optional<ModelObject> spaceShadingConstructionAsModelObject() const;
     boost::optional<ModelObject> buildingShadingConstructionAsModelObject() const;
     boost::optional<ModelObject> siteShadingConstructionAsModelObject() const;
+    boost::optional<ModelObject> adiabaticSurfaceConstructionAsModelObject() const;
 
     bool setDefaultExteriorSurfaceConstructionsAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setDefaultInteriorSurfaceConstructionsAsModelObject(const boost::optional<ModelObject>& modelObject);
@@ -171,6 +168,7 @@ namespace detail {
     bool setSpaceShadingConstructionAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setBuildingShadingConstructionAsModelObject(const boost::optional<ModelObject>& modelObject);
     bool setSiteShadingConstructionAsModelObject(const boost::optional<ModelObject>& modelObject);
+    bool setAdiabaticSurfaceConstructionAsModelObject(const boost::optional<ModelObject>& modelObject);
 
   };
 

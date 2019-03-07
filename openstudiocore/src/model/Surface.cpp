@@ -473,9 +473,18 @@ namespace detail {
 
         if (istringEqual("Adiabatic", outsideBoundaryCondition)){
           // remove all subsurfaces
+          int n_subsurfaces = 0;
           for (auto subSurface : subSurfaces()){
             subSurface.remove();
+            ++n_subsurfaces;
           }
+          if (n_subsurfaces > 0) {
+            // Note JM 2019-03-05: Warn user, it's not obvious that this is happening and they might try to access again
+            // one of these subsurfaces which are now disconnected objects
+            LOG(Warn, "Setting the Outside Boundary Condition for Surface '" << this->nameString()
+                   << "' to 'Adiabatic', removed " << n_subsurfaces << " SubSurfaces.");
+          }
+
         }
       }else if(adjacentSurface){
         // restore the adjacent surface if set boundary condition fails
