@@ -550,6 +550,8 @@ set(${target_name}_static_depends
   CONAN_PKG::boost_functional
   CONAN_PKG::boost_geometry
   CONAN_PKG::cpprestsdk
+  CONAN_PKG::OpenSSL
+  GeographicLib_STATIC
 )
 
 if(WIN32)
@@ -562,9 +564,9 @@ add_library(${target_name}_static
 )
 add_dependencies("${target_name}_static" GenerateIddFactoryRun)
 
-target_link_libraries(${target_name}_static ${${target_name}_static_depends} GeographicLib_STATIC)
+target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
-target_link_libraries(${target_name}_static ${${target_name}_static_depends} cpprest CONAN_PKG::OpenSSL)
+#target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
 #target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
 
