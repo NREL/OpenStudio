@@ -208,12 +208,22 @@ set(documentation_src
 
 set(${target_name}_depends
   CONAN_PKG::sqlite3
-  jsoncpp
+  CONAN_PKG::jsoncpp
   #litesql
   #litesql-util
   CONAN_PKG::zlib
-  pugixml
-  ${Boost_LIBRARIES}
+  CONAN_PKG::pugixml
+  CONAN_PKG::boost_filesystem 
+  CONAN_PKG::boost_crc 
+  CONAN_PKG::boost_regex 
+  CONAN_PKG::boost_algorithm 
+  CONAN_PKG::boost_uuid 
+  CONAN_PKG::boost_log
+  CONAN_PKG::boost_program_options
+  CONAN_PKG::boost_numeric_ublas
+  CONAN_PKG::boost_functional
+  CONAN_PKG::boost_geometry
+  CONAN_PKG::cpprestsdk
   #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
   # ${CMAKE_THREAD_LIBS}
 )
@@ -526,10 +536,20 @@ add_subdirectory(pch)
 
 set(${target_name}_static_depends
   CONAN_PKG::sqlite3
-  jsoncpp
+  CONAN_PKG::jsoncpp
   CONAN_PKG::zlib
-  pugixml
-  ${Boost_LIBRARIES}
+  CONAN_PKG::pugixml
+  CONAN_PKG::boost_filesystem 
+  CONAN_PKG::boost_crc 
+  CONAN_PKG::boost_regex 
+  CONAN_PKG::boost_algorithm 
+  CONAN_PKG::boost_uuid 
+  CONAN_PKG::boost_log 
+  CONAN_PKG::boost_program_options
+  CONAN_PKG::boost_numeric_ublas
+  CONAN_PKG::boost_functional
+  CONAN_PKG::boost_geometry
+  CONAN_PKG::cpprestsdk
 )
 
 if(WIN32)

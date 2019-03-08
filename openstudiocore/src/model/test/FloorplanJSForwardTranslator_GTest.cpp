@@ -56,7 +56,7 @@
 #include "../../utilities/geometry/FloorplanJS.hpp"
 #include "../../utilities/geometry/ThreeJS.hpp"
 
-#include <jsoncpp/json.h>
+#include <json/json.h>
 
 using namespace openstudio;
 using namespace openstudio::model;

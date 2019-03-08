@@ -56,7 +56,7 @@
 #include "../utilities/filetypes/WorkflowStep.hpp"
 #include "../utilities/filetypes/WorkflowStep_Impl.hpp"
 
-#include <jsoncpp/json.h>
+#include <json/json.h>
 
 #include <QAbstractButton>
 #include <QBoxLayout>
