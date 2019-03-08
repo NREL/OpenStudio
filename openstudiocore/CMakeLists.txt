@@ -44,6 +44,13 @@ conan_cmake_run(REQUIRES OpenSSL/1.1.0i@conan/stable
   OPTIONS zlib:minizip=True
   BUILD missing
   )
+
+conan_cmake_run(REQUIRES sqlite3/3.27.2@bincrafters/stable
+  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
+  GENERATORS cmake_find_package
+  BUILD missing
+  )
+
 message("DONE RUNNING CONAN")
 
 
@@ -1023,9 +1030,6 @@ if(WIN32)
   add_definitions(-DNOMINMAX)
 endif()
 
-# SQLite definitions, used in sqlite and litesql
-add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
-
 if(BUILD_OS_APP)
   # Qt
   set(QT_INSTALL_DIR "" CACHE PATH "Path to Qt Install")
@@ -1379,11 +1383,6 @@ endif()
 add_subdirectory(src/jsoncpp)
 ###############################################################################
 
-################################################################################
-## sqlite
-add_subdirectory(src/sqlite)
-################################################################################
-
 ###############################################################################
 ## pugixml
 add_subdirectory(src/pugixml)
@@ -1647,7 +1646,7 @@ set(all_lib_targets
 #  miniziplib
 #  zlib
 #  zlibstatic
-  sqlite
+  #sqlite
   jsoncpp
   ${ALL_RUBY_BINDING_TARGETS}
 )
@@ -1991,3 +1990,4 @@ if(BUILD_NUGET_PACKAGE)
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
   )
 endif()
+

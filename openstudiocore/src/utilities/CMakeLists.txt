@@ -207,7 +207,7 @@ set(documentation_src
 )
 
 set(${target_name}_depends
-  sqlite
+  CONAN_PKG::sqlite3
   jsoncpp
   #litesql
   #litesql-util
@@ -525,7 +525,7 @@ add_subdirectory(pch)
 #CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 
 set(${target_name}_static_depends
-  sqlite
+  CONAN_PKG::sqlite3
   jsoncpp
   CONAN_PKG::zlib
   pugixml
@@ -567,6 +567,13 @@ if(NOT BUILD_SHARED_LIBS)
   #target_compile_definitions(${target_name} PUBLIC openstudio_utilities_EXPORTS)
   target_compile_definitions(${target_name}_static PUBLIC openstudio_utilities_EXPORTS)
 endif()
+
+#install(TARGETS ${target_name}_static
+#  EXPORT openstudio
+#  RUNTIME DESTINATION bin
+#  LIBRARY DESTINATION lib
+#  ARCHIVE DESTINATION lib
+#)
 
 if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends}")
