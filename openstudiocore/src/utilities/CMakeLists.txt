@@ -206,28 +206,6 @@ set(documentation_src
   mainpage.hpp
 )
 
-set(${target_name}_depends
-  CONAN_PKG::sqlite3
-  CONAN_PKG::jsoncpp
-  #litesql
-  #litesql-util
-  CONAN_PKG::zlib
-  CONAN_PKG::pugixml
-  CONAN_PKG::boost_filesystem 
-  CONAN_PKG::boost_crc 
-  CONAN_PKG::boost_regex 
-  CONAN_PKG::boost_algorithm 
-  CONAN_PKG::boost_uuid 
-  CONAN_PKG::boost_log
-  CONAN_PKG::boost_program_options
-  CONAN_PKG::boost_numeric_ublas
-  CONAN_PKG::boost_functional
-  CONAN_PKG::boost_geometry
-  CONAN_PKG::cpprestsdk
-  #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
-  # ${CMAKE_THREAD_LIBS}
-)
-
 #if(WIN32)
 #  list(APPEND ${target_name}_depends qtwinmigrate)
 #  list(APPEND ${target_name}_depends mpr)
@@ -555,8 +533,9 @@ set(${target_name}_static_depends
 )
 
 if(WIN32)
-#  list(APPEND ${target_name}_static_depends qtwinmigrate_static)
   list(APPEND ${target_name}_static_depends mpr)
+elseif(APPLE)
+  list(APPEND ${target_name}_static_depends ${SECURITY_FRAMEWORK})
 endif()
 
 add_library(${target_name}_static
