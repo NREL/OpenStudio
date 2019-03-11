@@ -624,9 +624,6 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
     else{
 
       bool foundEndLine(false);
-
-      // a valid Idf object to parse
-      ++objectNum;
       firstBlock = false;
       bool isVersion = false;
 
@@ -682,16 +679,22 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
       }
 
       // construct the object
-      if (!versionOnly || isVersion) {
+      if (foundEndLine && (!versionOnly || isVersion)) {
         OptionalIdfObject object = IdfObject::load(text,*iddObject);
         if (!object) {
           LOG(Error,"Unable to construct IdfObject from text: " << std::endl << text
               << std::endl << "Throwing this object out and parsing the remainder of the file.");
           continue;
+        } else {
+          // a valid Idf object to parse
+          if (object->iddObject().type() != IddObjectType::Catchall) {
+            ++objectNum;
+          }
+
+          // put it in the object list
+          addObject(*object);
         }
 
-        // put it in the object list
-        addObject(*object);
       }
 
       if (versionOnly && isVersion) {
@@ -701,7 +704,13 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
     }
   }
 
-  return true;
+  // If we sucessfully parsed at least one object, we return true, otherwise false
+  if (objectNum > 0) {
+    return true;
+  } else {
+    LOG(Error, "Could not parse a single valid object in file.");
+    return false;
+  }
 }
 
 IddFileAndFactoryWrapper IdfFile::iddFileAndFactoryWrapper() const {
