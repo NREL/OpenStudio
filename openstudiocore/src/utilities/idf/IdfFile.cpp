@@ -381,9 +381,21 @@ OptionalIdfFile IdfFile::load(const path& p,
   path wp(p);
 
   if (iddFileType == IddFileType::OpenStudio) {
+
     // can be Model or Component
+    std::string ext = getFileExtension(p);
+    if (! ( openstudio::istringEqual(ext, "osm") ||
+            openstudio::istringEqual(ext, "osc")) ) {
+      LOG_FREE(Warn,"openstudio.setFileExtension","Path p, '" << toString(p)
+                 << "', has an unexpected file extension. Was expecting 'osm' or 'osc'.");
+    }
+
+    // This isn't issuing warnings because we pass false (we have to, since it can be either osm or osc)
+    // hence why we do check above
     wp = completePathToFile(wp,path(),modelFileExtension(),false);
-    if (wp.empty()) { wp = completePathToFile(wp,path(),componentFileExtension(),false); }
+    if (wp.empty()) {
+      wp = completePathToFile(wp,path(),componentFileExtension(),false);
+    }
   }
   else {
     wp = completePathToFile(wp,path(),"idf",true);
