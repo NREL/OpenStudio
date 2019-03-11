@@ -80,6 +80,14 @@ namespace detail {
 
     virtual bool addToNode(Node & node) override;
 
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -150,17 +158,11 @@ namespace detail {
 
     boost::optional<Schedule> maximumRPMSchedule() const;
 
-  boost::optional<double> autosizedRatedFlowRate() const ;
+    boost::optional<double> autosizedRatedFlowRate() const ;
 
-  boost::optional<double> autosizedRatedPowerConsumption() const ;
+    boost::optional<double> autosizedRatedPowerConsumption() const ;
 
-  virtual void autosize() override;
-
-  virtual void applySizingValues() override;
-
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
-
-  virtual std::vector<std::string> emsInternalVariableNames() const override;
+    std::string endUseSubcategory() const;
 
     //@}
     /** @name Setters */
@@ -275,6 +277,8 @@ namespace detail {
     double designMinimumFlowRateFraction() const;
 
     bool setDesignMinimumFlowRateFraction(double designMinimumFlowRateFraction);
+
+    bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
     //@}
    private:

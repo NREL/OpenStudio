@@ -1,7 +1,7 @@
 ! Basecase reference for SimpleSurfaces_Test
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,9.0;
+  Version,9.1;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -42,7 +42,7 @@
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
-    ;                        !- Treat Weather as Actual
+    No;                      !- Treat Weather as Actual
 
 !-   ===========  ALL OBJECTS IN CLASS: LOCATION ===========
 

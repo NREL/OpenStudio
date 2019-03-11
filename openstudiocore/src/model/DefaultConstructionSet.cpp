@@ -250,8 +250,11 @@ namespace detail {
         defaultSurfaceConstructions = this->defaultGroundContactSurfaceConstructions();
       }else if (istringEqual("Surface", outsideBoundaryCondition)){
         defaultSurfaceConstructions = this->defaultInteriorSurfaceConstructions();
+      } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
+        // Adiabatic is special - doesn't has multiple choices by orientation - so return directly
+        result = this->adiabaticSurfaceConstruction();
+        return result;
       }else{
-       //Adiabatic
        //GroundFCfactorMethod
        //OtherSideCoefficients
        //OtherSideConditionsModel
@@ -696,6 +699,48 @@ namespace detail {
     return true;
   }
 
+
+  // Adiabatic Surface Construction Methods
+  boost::optional<ConstructionBase> DefaultConstructionSet_Impl::adiabaticSurfaceConstruction() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<ConstructionBase>(OS_DefaultConstructionSetFields::AdiabaticSurfaceConstructionName);
+  }
+
+  bool DefaultConstructionSet_Impl::setAdiabaticSurfaceConstruction(const ConstructionBase& construction)
+  {
+    return setPointer(OS_DefaultConstructionSetFields::AdiabaticSurfaceConstructionName, construction.handle());
+  }
+
+  void DefaultConstructionSet_Impl::resetAdiabaticSurfaceConstruction()
+  {
+    setString(OS_DefaultConstructionSetFields::AdiabaticSurfaceConstructionName, "");
+  }
+
+  boost::optional<ModelObject> DefaultConstructionSet_Impl::adiabaticSurfaceConstructionAsModelObject() const {
+    OptionalModelObject result;
+    OptionalConstructionBase intermediate = adiabaticSurfaceConstruction();
+    if (intermediate) {
+      result = *intermediate;
+    }
+    return result;
+  }
+
+  bool DefaultConstructionSet_Impl::setAdiabaticSurfaceConstructionAsModelObject(const boost::optional<ModelObject>& modelObject) {
+    if (modelObject) {
+      OptionalConstructionBase intermediate = modelObject->optionalCast<ConstructionBase>();
+      if (intermediate) {
+        return setAdiabaticSurfaceConstruction(*intermediate);
+      }
+      else {
+        return false;
+      }
+    }
+    else {
+      resetAdiabaticSurfaceConstruction();
+    }
+    return true;
+  }
+
 } // detail
 
 DefaultConstructionSet::DefaultConstructionSet(const Model& model)
@@ -823,6 +868,18 @@ boost::optional<ConstructionBase> DefaultConstructionSet::getDefaultConstruction
 
 void DefaultConstructionSet::merge(const DefaultConstructionSet& other){
   getImpl<detail::DefaultConstructionSet_Impl>()->merge(other);
+}
+
+boost::optional<ConstructionBase> DefaultConstructionSet::adiabaticSurfaceConstruction() const{
+  return getImpl<detail::DefaultConstructionSet_Impl>()->adiabaticSurfaceConstruction();
+}
+
+bool DefaultConstructionSet::setAdiabaticSurfaceConstruction(const ConstructionBase& construction){
+ return getImpl<detail::DefaultConstructionSet_Impl>()->setAdiabaticSurfaceConstruction(construction);
+}
+
+void DefaultConstructionSet::resetAdiabaticSurfaceConstruction(){
+  getImpl<detail::DefaultConstructionSet_Impl>()->resetAdiabaticSurfaceConstruction();
 }
 
 /// @cond

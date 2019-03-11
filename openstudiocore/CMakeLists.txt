@@ -68,14 +68,15 @@ set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.$
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 9)
-set(ENERGYPLUS_VERSION_MINOR 0)
-set(ENERGYPLUS_VERSION_PATCH 1)
+set(ENERGYPLUS_VERSION_MINOR 1)
+set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "bb7ca4f0da")
+set(ENERGYPLUS_BUILD_SHA "d830726d9e")
+
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.0.1")
+set(ENERGYPLUS_RELEASE_NAME "v9.1.0-IOFreeze")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -408,14 +409,14 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 7b8b8481a5f261800570de0d86e9c608)
+    set(ENERGYPLUS_EXPECTED_HASH e88d0ad1078c9ee7b176a9e9fbcaf4b0)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH 42b2fe2ef5df1d4cfef2160e46529a2f)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 135e17dd5e4ca355b25bf77b61fc8cf2)
+    set(ENERGYPLUS_EXPECTED_HASH 00c6e9ca936927efe719e2c0244ac56b)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -436,12 +437,19 @@ if(UNIX)
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
-  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+  # Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
+  if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
+    set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+  else()
+    # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
+    set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+  endif()
+
 elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 4094c49b908ba2feb3f0b352126ea0ac)
+    set(ENERGYPLUS_EXPECTED_HASH 11926295eddb3d7b6d5bcd851a1a0849)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
@@ -1441,7 +1449,9 @@ add_subdirectory(resources)
 
 add_subdirectory(ruby)
 
-add_subdirectory(sketchup_plugin)
+if(BUILD_OS_APP)
+  add_subdirectory(sketchup_plugin)
+endif()
 
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
@@ -1865,11 +1875,6 @@ endif()
 include(CPack)
 include(CPackIFW)
 
-cpack_add_component(SketchUpPlugin
-  DISPLAY_NAME "SketchUp Plugin"
-  DESCRIPTION "SketchUp Plugin"
-)
-
 cpack_add_component(CLI
   DISPLAY_NAME "Command Line Interface"
   DESCRIPTION "Command Line Interface"
@@ -1878,26 +1883,6 @@ cpack_add_component(CLI
 cpack_add_component(RubyAPI
   DISPLAY_NAME "Ruby API"
   DESCRIPTION "Ruby API"
-)
-
-cpack_add_component(CSharpAPI
-  DISPLAY_NAME "C# API"
-  DESCRIPTION "C# API"
-)
-
-cpack_add_component(PAT
-  DISPLAY_NAME "Parametric Analysis Tool"
-  DESCRIPTION "Parametric Analysis Tool"
-)
-
-cpack_add_component(OpenStudioApp
-  DISPLAY_NAME "OpenStudio Application"
-  DESCRIPTION "OpenStudio Application"
-)
-
-cpack_add_component(DView
-  DISPLAY_NAME "DView"
-  DESCRIPTION "DView Application for viewing results"
 )
 
 cpack_add_component(EnergyPlus
@@ -1910,43 +1895,12 @@ cpack_add_component(Radiance
   DESCRIPTION "Full Radiance installation"
 )
 
-cpack_add_component(Resources
-  DISPLAY_NAME "Application Resources"
-  DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
-)
-
-cpack_ifw_configure_component(SketchUpPlugin
-  DEPENDS Resources
-  SCRIPT sketchup_plugin/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
 cpack_ifw_configure_component(CLI
   SCRIPT src/cli/install_operations.qs
   REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(RubyAPI
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(CSharpAPI
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(PAT
-  DEPENDS CLI RubyAPI
-  SCRIPT pat/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(OpenStudioApp
-  DEPENDS Resources CLI
-  SCRIPT src/openstudio_app/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(DView
   REQUIRES_ADMIN_RIGHTS
 )
 
@@ -1958,14 +1912,79 @@ cpack_ifw_configure_component(Radiance
   REQUIRES_ADMIN_RIGHTS
 )
 
-cpack_ifw_configure_component(Resources
-  REQUIRES_ADMIN_RIGHTS
-)
-
 cpack_ifw_configure_component(Unspecified
   SCRIPT src/install_utility/install_operations.qs
   REQUIRES_ADMIN_RIGHTS
 )
+
+if(BUILD_CSHARP_BINDINGS)
+  cpack_add_component(CSharpAPI
+    DISPLAY_NAME "C# API"
+    DESCRIPTION "C# API"
+  )
+
+  cpack_ifw_configure_component(CSharpAPI
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_OS_APP)
+  
+  cpack_add_component(Resources
+    DISPLAY_NAME "Application Resources"
+    DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
+  )
+  
+  cpack_add_component(SketchUpPlugin
+    DISPLAY_NAME "SketchUp Plugin"
+    DESCRIPTION "SketchUp Plugin"
+  )
+
+  cpack_add_component(OpenStudioApp
+    DISPLAY_NAME "OpenStudio Application"
+    DESCRIPTION "OpenStudio Application"
+  )
+
+  cpack_ifw_configure_component(Resources
+    REQUIRES_ADMIN_RIGHTS
+  )
+  
+  cpack_ifw_configure_component(SketchUpPlugin
+    DEPENDS Resources
+    SCRIPT sketchup_plugin/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+  
+  cpack_ifw_configure_component(OpenStudioApp
+    DEPENDS Resources CLI
+    SCRIPT src/openstudio_app/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_PAT)
+  cpack_add_component(PAT
+    DISPLAY_NAME "Parametric Analysis Tool"
+    DESCRIPTION "Parametric Analysis Tool"
+  )
+
+  cpack_ifw_configure_component(PAT
+    DEPENDS CLI RubyAPI
+    SCRIPT pat/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_DVIEW)
+  cpack_add_component(DView
+    DISPLAY_NAME "DView"
+    DESCRIPTION "DView Application for viewing results"
+  )
+
+  cpack_ifw_configure_component(DView
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
 
 if( BUILD_NUGET_PACKAGE )
   configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )
