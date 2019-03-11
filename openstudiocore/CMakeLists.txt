@@ -586,8 +586,8 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     if(CMAKE_CL_64)
       # DLM: ruby_2_5_1_msvc2017_static_v3.tar.gz on s3 was built with
       # experimental patch from ruby_patches branch, not using it for now
-      set(RUBY_ZIP_FILENAME "ruby_2_5_1_msvc2017_static_v2.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "c9e57216b16fbdf3329846ee2c240435")
+      set(RUBY_ZIP_FILENAME "ruby_2_5_1_msvc2017_static_v4.tar.gz")
+      set(RUBY_ZIP_EXPECTED_MD5 "5a3937cb811e75dd1f8360f5ac0d5d2d")
     else()
       set(RUBY_ZIP_FILENAME "DOES_NOT_EXIST_ruby_2_2_4_msvc2013_32_static.tar.gz")
       set(RUBY_ZIP_EXPECTED_MD5 "4c2055305b105b0c8210697aaa596419")

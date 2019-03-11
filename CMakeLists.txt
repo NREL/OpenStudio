@@ -267,12 +267,14 @@ elseif(WIN32)
 
   option(BUILD_OPENSSL "Build OpenSSL From Source" OFF)
 
-  set(OPENSSL_VERSION "1.1.0i")
-  set(OPENSSL_SOURCE_URL "https://github.com/openssl/openssl/archive/OpenSSL_1_1_0i.zip")
-  set(OPENSSL_SOURCE_HASH 1c2d021ae210af9aae8079498bac180b)
+
+  set(OPENSSL_VERSION "1.0.2q")
+  set(OPENSSL_SOURCE_URL "https://github.com/openssl/openssl/archive/OpenSSL_1_0_2q.zip")
+  
+  set(OPENSSL_SOURCE_HASH ffeaa3eadabfeb7170f85ecca14fb0d9)
   if(CMAKE_CL_64)
     set(OPENSSL_ARCH 64)
-    set(OPENSSL_EXPECTED_HASH 33f0c2f1072ce0d7c64afcae3c78d74b)
+    set(OPENSSL_EXPECTED_HASH 4ee78779f5777a854b242e777c990b7a)
   else()
     set(OPENSSL_ARCH 32)
     set(OPENSSL_EXPECTED_HASH DOES_NOT_EXIST_fb2aa1a8ceb85f68055044a85f1dbc94)
@@ -411,9 +413,9 @@ if( BUILD_RUBY )
     # Post Build:
     # rename libs to : x64-msvcr140-ruby251.lib and x64-msvcr140-ruby251-static.lib 
     # copy OpenSSL dlls into release and debug bin directories
-    # tar -zcvf ruby_2_5_1_msvc2017_static.tar.gz Ruby-install
     # patch config.h to allow for multiple _MSC_VER values: 
     #   #if !(_MSC_VER == 1915 || _MSC_VER == 1916 || _MSC_VER == 1917 || _MSC_VER == 1918 || _MSC_VER == 1919)
+    # tar -zcvf ruby_2_5_1_msvc2017_static.tar.gz Ruby-install    
     ExternalProject_Add(Ruby
       DEPENDS ZLib FFI
       URL https://codeload.github.com/ruby/ruby/tar.gz/v2_5_1
