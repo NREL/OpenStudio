@@ -642,7 +642,7 @@ namespace openstudio{
     m_downloadUid = uid;
 
     QString url = toQString(remoteUrl() + "/api/component/download?uids=" + uid);
-    LOG(Debug, "Download URL '" << toString(url) << "'");
+    //LOG(Debug, "Download URL '" << toString(url) << "'");
 
     QNetworkRequest request = QNetworkRequest(QUrl(url));
     request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
