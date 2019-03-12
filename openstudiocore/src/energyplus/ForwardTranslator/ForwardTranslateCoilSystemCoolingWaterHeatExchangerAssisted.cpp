@@ -117,6 +117,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilSystemCoolingWaterHea
       if( idf->iddObject().type() == IddObjectType::Coil_Cooling_Water ) {
         idf->setString(Coil_Cooling_WaterFields::AirInletNodeName,hxSupplyAirOutletNodeName);
         idf->setString(Coil_Cooling_WaterFields::AirOutletNodeName,hxExhaustAirInletNodeName);
+      // Add IddObjectType::Coil_Cooling_Water_DetailedGeometry if implemented
+      } else {
+        // Shouldn't happen, accepts only Coil:Cooling:Water or Coil:Cooling:Water:DetailedGeometry
+        OS_ASSERT(false);
       }
     }
     if( auto coilCoolingWater = coolingCoil.optionalCast<CoilCoolingWater>() ) {
