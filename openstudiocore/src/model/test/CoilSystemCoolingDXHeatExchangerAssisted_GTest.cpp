@@ -32,6 +32,16 @@
 #include "../CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "../CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 
+#include "../CoilCoolingDXSingleSpeed.hpp"
+#include "../CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../CoilCoolingDXTwoSpeed.hpp"
+#include "../CoilCoolingDXVariableSpeed.hpp"
+#include "../HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "../HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -48,4 +58,114 @@ TEST_F(ModelFixture,CoilSystemCoolingDXHeatExchangerAssisted)
      exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
+}
+
+// This test ensures that only the parent CoilSystem can call addToNode, the individual CoilCoolingDXSingleSpeed and HX cannot
+TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_addToNode) {
+
+  Model m;
+  CoilSystemCoolingDXHeatExchangerAssisted coilSystem(m);
+
+  AirLoopHVAC a(m);
+  Node n = a.supplyOutletNode();
+
+  CoilCoolingDXSingleSpeed cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
+  HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+
+  EXPECT_EQ(2, a.supplyComponents().size());
+
+  EXPECT_FALSE(cc.addToNode(n));
+  EXPECT_EQ(2, a.supplyComponents().size());
+
+  EXPECT_FALSE(hx.addToNode(n));
+  EXPECT_EQ(2, a.supplyComponents().size());
+
+  EXPECT_TRUE(coilSystem.addToNode(n));
+  EXPECT_EQ(3, a.supplyComponents().size());
+
+  {
+    auto containingHVACComponent = cc.containingHVACComponent();
+    ASSERT_TRUE(containingHVACComponent);
+    EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
+  }
+
+  {
+    auto containingHVACComponent = hx.containingHVACComponent();
+    ASSERT_TRUE(containingHVACComponent);
+    EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
+  }
+
+}
+
+TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_GettersSetters) {
+
+  Model m;
+
+  // Create a CoilSystem, connected to an AirLoopHVAC
+  CoilSystemCoolingDXHeatExchangerAssisted coilSystem(m);
+  CoilCoolingDXSingleSpeed cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
+  HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+
+  // Check the cooling coils
+  CoilCoolingDXTwoSpeed cc_bad(m);
+  CoilCoolingDXVariableSpeed cc_ok(m);
+
+  EXPECT_FALSE(coilSystem.setCoolingCoil(cc_bad));
+  EXPECT_EQ(cc, coilSystem.coolingCoil());
+
+  EXPECT_TRUE(coilSystem.setCoolingCoil(cc_ok));
+  EXPECT_EQ(cc_ok, coilSystem.coolingCoil());
+
+  HeatExchangerAirToAirSensibleAndLatent hx2(m);
+  EXPECT_TRUE(coilSystem.setHeatExchanger(hx2));
+  EXPECT_EQ(hx2, coilSystem.heatExchanger());
+
+}
+
+
+TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_clone) {
+
+  Model m;
+
+  // Create a CoilSystem, connected to an AirLoopHVAC
+  CoilSystemCoolingDXHeatExchangerAssisted coilSystem(m);
+  CoilCoolingDXSingleSpeed cc = coilSystem.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
+  HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+
+  AirLoopHVAC a(m);
+  Node n = a.supplyOutletNode();
+  EXPECT_TRUE(coilSystem.addToNode(n));
+
+  EXPECT_EQ(1u, m.getModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>().size());
+  EXPECT_EQ(1u, m.getModelObjects<CoilCoolingDXSingleSpeed>().size());
+  EXPECT_EQ(1u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+
+  ASSERT_TRUE(coilSystem.airLoopHVAC());
+  EXPECT_EQ(coilSystem.airLoopHVAC()->handle(), a.handle());
+
+  // TODO: should these work?
+  // EXPECT_TRUE(hx.airLoopHVAC());
+
+  CoilSystemCoolingDXHeatExchangerAssisted coilSystem2 = coilSystem.clone(m).cast<CoilSystemCoolingDXHeatExchangerAssisted>();
+
+  EXPECT_EQ(2u, m.getModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>().size());
+  EXPECT_EQ(2u, m.getModelObjects<CoilCoolingDXSingleSpeed>().size());
+  EXPECT_EQ(2u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+
+  EXPECT_TRUE(coilSystem.airLoopHVAC());
+  EXPECT_TRUE(coilSystem.inletModelObject());
+  EXPECT_TRUE(coilSystem.outletModelObject());
+
+  EXPECT_FALSE(coilSystem2.airLoopHVAC());
+  EXPECT_FALSE(coilSystem2.inletModelObject());
+  EXPECT_FALSE(coilSystem2.outletModelObject());
+
+  CoilCoolingDXSingleSpeed cc2 = coilSystem2.coolingCoil().cast<CoilCoolingDXSingleSpeed>();
+  HeatExchangerAirToAirSensibleAndLatent hx2 = coilSystem2.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+
+  EXPECT_NE(cc2.handle(), cc.handle());
+  EXPECT_NE(hx2.handle(), hx.handle());
+
+  EXPECT_FALSE(hx2.airLoopHVAC());
+
 }
