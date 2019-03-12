@@ -90,6 +90,18 @@
     <rule IddField="Energy Part Load Fraction Curve Name" Access="LOCKED"/>
     <rule IddField="Speed Data List" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_CoilSystem_Cooling_Water_HeatExchangerAssisted">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heat Exchanger" Access="HIDDEN"/>
+    <rule IddField="Cooling Coil" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_CoilSystem_Cooling_DX_HeatExchangerAssisted">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heat Exchanger" Access="HIDDEN"/>
+    <rule IddField="Cooling Coil" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_HighTemperatureRadiant">
     <rule IddField="Radiant Surface Type" Access="HIDDEN"/>
   </POLICY>
