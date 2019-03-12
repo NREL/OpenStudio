@@ -31,6 +31,8 @@
 #include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "CoilSystemCoolingWaterHeatExchangerAssisted.hpp"
 #include "CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Model.hpp"
@@ -146,6 +148,16 @@ namespace detail {
       }
     }
 
+    // CoilSystemCoolingDXHeatExchangerAssisted
+    {
+      auto coilSystems = model().getConcreteModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>();
+      for( const auto & coilSystem : coilSystems ) {
+        if( coilSystem.heatExchanger().handle() == handle() ) {
+          return coilSystem;
+        }
+      }
+    }
+
     return boost::none;
   }
 
@@ -155,8 +167,15 @@ namespace detail {
 
     auto t_containingHVACComponent = containingHVACComponent();
 
-    if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemCoolingWaterHeatExchangerAssisted>()) {
-      LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemCoolingWaterHeatExchangerAssisted. Please call CoilSystemCoolingWaterHeatExchangerAssisted::addToNode instead");
+    if (t_containingHVACComponent) {
+      if (t_containingHVACComponent->optionalCast<CoilSystemCoolingWaterHeatExchangerAssisted>()) {
+        LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemCoolingWaterHeatExchangerAssisted. Please call CoilSystemCoolingWaterHeatExchangerAssisted::addToNode instead");
+      } else if (t_containingHVACComponent->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
+        LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemCoolingDXHeatExchangerAssisted. Please call CoilSystemCoolingDXHeatExchangerAssisted::addToNode instead");
+      } else {
+        // Shouldn't happen
+        OS_ASSERT(false);
+      }
     } else {
       success =  AirToAirComponent_Impl::addToNode( node );
     }
