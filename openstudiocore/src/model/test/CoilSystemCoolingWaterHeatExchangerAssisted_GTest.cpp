@@ -31,6 +31,12 @@
 #include "ModelFixture.hpp"
 #include "../CoilSystemCoolingWaterHeatExchangerAssisted.hpp"
 #include "../CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp"
+#include "../CoilCoolingWater.hpp"
+#include "../CoilCoolingWater_Impl.hpp"
+#include "../HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "../HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../Node.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -43,9 +49,45 @@ TEST_F(ModelFixture,CoilSystemCoolingWaterHeatExchangerAssisted)
   ASSERT_EXIT (
   {
      Model m;
-     CoilSystemCoolingWaterHeatExchangerAssisted valve(m);
+     CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
 
      exit(0);
   } ,
     ::testing::ExitedWithCode(0), "" );
+}
+
+// This test ensures that only the parent CoilSystem can call addToNode, the individual CoilCoolingWater and HX cannot
+TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_addToNode) {
+
+  Model m;
+  CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
+
+  AirLoopHVAC a(m);
+  Node n = a.supplyOutletNode();
+
+  CoilCoolingWater cc = coilSystem.coolingCoil().cast<CoilCoolingWater>();
+  HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+
+  EXPECT_EQ(2u, a.supplyComponents().size());
+
+  EXPECT_FALSE(cc.addToNode(n));
+  EXPECT_EQ(2u, a.supplyComponents().size());
+
+  EXPECT_FALSE(hx.addToNode(n));
+  EXPECT_EQ(2u, a.supplyComponents().size());
+
+  EXPECT_TRUE(coilSystem.addToNode(n));
+  EXPECT_EQ(3u, a.supplyComponents().size());
+
+  {
+    auto containingHVACComponent = cc.containingHVACComponent();
+    ASSERT_TRUE(containingHVACComponent);
+    EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
+  }
+
+  {
+    auto containingHVACComponent = hx.containingHVACComponent();
+    ASSERT_TRUE(containingHVACComponent);
+    EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
+  }
 }
