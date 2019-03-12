@@ -69,6 +69,13 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual unsigned inletPort() const override;
+
+    virtual unsigned outletPort() const override;
+
+    // This function will connect the underlying Coil:Cooling:Water object
+    virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{
@@ -88,12 +95,6 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-
-    virtual unsigned inletPort() const override;
-
-    virtual unsigned outletPort() const override;
-
-    bool addToNode(Node & node) override;
 
     //@}
    protected:

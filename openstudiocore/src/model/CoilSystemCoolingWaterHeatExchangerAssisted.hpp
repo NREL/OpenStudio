@@ -51,6 +51,7 @@ class MODEL_API CoilSystemCoolingWaterHeatExchangerAssisted : public StraightCom
   /** @name Constructors and Destructors */
   //@{
 
+  // This constructor will also create the underlying objects CoilCoolingWater and HeatExchangerAirToAirSensibleAndLatent
   explicit CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model);
 
   virtual ~CoilSystemCoolingWaterHeatExchangerAssisted() {}
