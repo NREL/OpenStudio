@@ -71,6 +71,14 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -101,17 +109,11 @@ namespace detail {
 
     double skinLossRadiativeFraction() const;
 
-  boost::optional<double> autosizedTotalRatedFlowRate() const ;
+    boost::optional<double> autosizedTotalRatedFlowRate() const ;
 
-  boost::optional<double> autosizedRatedPowerConsumption() const ;
+    boost::optional<double> autosizedRatedPowerConsumption() const ;
 
-  virtual void autosize() override;
-
-  virtual void applySizingValues() override;
-
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
-
-  virtual std::vector<std::string> emsInternalVariableNames() const override;
+    std::string endUseSubcategory() const;
 
     //@}
     /** @name Setters */
@@ -146,6 +148,8 @@ namespace detail {
     void resetThermalZone();
 
     bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
+
+    bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
     //@}
     /** @name Other */

@@ -169,6 +169,9 @@ boost::optional<IdfObject> ForwardTranslator::translateHeaderedPumpsVariableSpee
     idfObject.setDouble(HeaderedPumps_VariableSpeedFields::SkinLossRadiativeFraction,value);
   }
 
+  // End Use Subcategory
+  idfObject.setString(HeaderedPumps_VariableSpeedFields::EndUseSubcategory, modelObject.endUseSubcategory());
+
   return idfObject;
 }
 

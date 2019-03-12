@@ -1319,6 +1319,7 @@ OS:SizingPeriod:DesignDay,
        \key ZhangHuang
        \key Schedule
        \key ASHRAETau
+       \key ASHRAETau2017
   A9, \field Beam Solar Day Schedule Name
        \note if Solar Model Indicator = Schedule, then beam schedule name (for day)
        \type object-list
@@ -1328,16 +1329,16 @@ OS:SizingPeriod:DesignDay,
        \type object-list
        \object-list DayScheduleNames
   N13, \field ASHRAE Taub
-       \note Required if Solar Model Indicator = ASHRAETau
-       \type real
        \units dimensionless
+       \note Required if Solar Model Indicator = ASHRAETau or ASHRAETau2017
+       \note ASHRAETau2017 solar model can be used with 2013 and 2017 HOF matching taub
        \minimum 0
-       \maximum 1
+       \maximum 1.2
        \default 0
   N14, \field ASHRAE Taud
-       \note Required if Solar Model Indicator = ASHRAETau
-       \type real
        \units dimensionless
+       \note required if solar model indicator = ashraetau or ashraetau2017
+       \note ashraetau2017 solar model can be used with 2013 and 2017 hof matching taud
        \minimum 0
        \maximum 3
        \default 0
@@ -2024,7 +2025,7 @@ OS:BuildingUnit,
        \default Residential
 
 OS:DefaultConstructionSet,
-       \min-fields 11
+       \min-fields 12
   A1, \field Handle
        \type handle
        \required-field
@@ -2056,7 +2057,10 @@ OS:DefaultConstructionSet,
   A10, \field Building Shading Construction Name
        \type object-list
        \object-list ConstructionNames
-  A11; \field Site Shading Construction Name
+  A11, \field Site Shading Construction Name
+       \type object-list
+       \object-list ConstructionNames
+  A12; \field Adiabatic Surface Construction Name
        \type object-list
        \object-list ConstructionNames
 
@@ -4046,7 +4050,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \type real
        \units W
        \ip-units W
-       \minimum 0 
+       \minimum 0
   N2 , \field Watts per Zone Floor Area
        \type real
        \units W/m2
@@ -4059,7 +4063,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \note Design Entering Air Temperature).
        \note A default curve named “Data Center Servers Power fLoadTemp” is assigned.
        \type object-list
-	   \required-field
+       \required-field
        \object-list BicubicBiquadraticCurves
        \object-list BiVariateTables
   N3 , \field Design Fan Power Input Fraction
@@ -4180,7 +4184,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \type object-list
        \object-list ScheduleNames
   N10, \field Return Temperature Difference
-       \note The difference of the AHU return air temperature from  IT outlet temperature.
+       \note The difference of the the actual AHU return air temperature to the IT equipment outlet temperature.
        \note Either Return Temperature Difference or Return Temperature Difference Schedule is required if Air Flow Calculation Method is set to FlowControlWithApproachTemperatures.
        \note This field is ignored when Air Flow Calculation Method is FlowFromSystem.
        \type real
@@ -4188,7 +4192,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \ip-units F
        \default 2.0
   A13; \field Return Temperature Difference Schedule
-       \note The difference schedule of the AHU return air temperature from IT outlet temperature.
+       \note The difference schedule of the actual AHU return air temperature to the IT equipment outlet temperature.
        \note Either Return Temperature Difference or Return Temperature Difference Schedule is required if Air Flow Calculation Method is set to FlowControlWithApproachTemperatures.
        \note This field is ignored when Air Flow Calculation Method is FlowFromSystem.
        \type object-list
@@ -6692,7 +6696,7 @@ OS:ElectricEquipment:ITE:AirCooled,
        \type alpha
        \retaincase
        \default ITE-UPS
-	   
+
 OS:GasEquipment,
        \min-fields 1
   A1, \field Handle
@@ -17429,6 +17433,7 @@ OS:Connector:Mixer,
        \type alpha
        \required-field
        \reference ConnectionObject
+       \reference PlantConnectors
   A3, \field Outlet Branch Name
        \type object-list
        \required-field
@@ -17451,6 +17456,7 @@ OS:Connector:Splitter,
        \type alpha
        \required-field
        \reference ConnectionObject
+       \reference PlantConnectors
   A3, \field Inlet Branch Name
        \type object-list
        \required-field
@@ -18909,6 +18915,7 @@ OS:Table:MultiVariableLookup,
        \key Dimensionless
        \key Capacity
        \key Power
+       \key Temperature
        \default Dimensionless
   N15, \field Number of Independent Variables
        \type integer
@@ -19190,6 +19197,9 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \autosizable
 
 OS:EvaporativeCooler:Direct:ResearchSpecial,
+       \memo Direct evaporative cooler with user-specified effectiveness (can represent rigid pad
+       \memo or similar media), and recirculating water pump, and secondary air fan. This model is
+       \memo controlled to meet the primary air outlet temperature setpoint.
        \min-fields 1
   A1, \field Handle
        \type handle
@@ -19202,7 +19212,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \type object-list
        \required-field
        \object-list ScheduleNames
-  N1, \field Cooler Effectiveness
+  N1, \field Cooler Design Effectiveness
        \note effectiveness with respect to wetbulb depression
        \type real
        \required-field
@@ -19262,15 +19272,20 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \note Table:OneIndependentVariable
   N6,  \field Water Pump Power Sizing Factor
        \type real
-       \required-field
        \units W/(m3/s)
+       \ip-units W/(gal/min)
+       \default 90.0
        \note this field is used when the previous field is set to autosize. The pump power is scaled with Primary Air Design Air Flow Rate
+       \note This value was backed out from inputs in energy plus example files. Average Pump Power
+       \note sizing factor was estimated from pump power and primary air design flow rates inputs from energyplus example
+       \note files is about 90.0 [W/(m3/s)] (=90.0 ~ Pump Power / Primary Air Design Flow Rate). The factor ranges from
+       \note 55.0 to 150.0 [W/(m3/s)]. The pump power can be sized to zero by setting this factor to zero.
   A8,  \field Water Pump Power Modifier Curve Name
        \note this curve modifies the pump power in the previous field by multiplying the design power by the result of this curve.
-       \note x = ff = flow fraction on the primary air.  The flow fraction is the secondary air flow rate during current operation divided
+       \note x = ff = flow fraction on the primary air.  The flow fraction is the primary air flow rate during current operation divided
        \note by Primary Air Design Flow Rate
        \type object-list
-       \object-list AllCurves
+       \object-list UniVariateCurves
        \note Any curve or table with one independent variable can be used:
        \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
@@ -19914,7 +19929,6 @@ OS:Fan:ZoneExhaust,
        \object-list ScheduleNames
   A10; \field Balanced Exhaust Fraction Schedule Name
        \note Used to control fan's impact on flow at the return air node. Enter the portion of the exhaust that is balanced by simple airflows.
-       \note
        \type object-list
        \object-list ScheduleNames
 
@@ -20794,13 +20808,18 @@ OS:Pump:ConstantSpeed,
        \units W/(m3/s)
        \ip-units W/(gal/min)
        \minimum> 0
-  N10; \field Design Shaft Power per Unit Flow Rate per Unit Head
+  N10, \field Design Shaft Power per Unit Flow Rate per Unit Head
        \required-field
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
        \units W-s/m3-Pa
        \ip-units W-min/gal-ftH2O
        \minimum> 0
+  A10; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:Pump:VariableSpeed,
        \memo This pump model is described in the ASHRAE secondary HVAC toolkit.
@@ -20928,30 +20947,35 @@ OS:Pump:VariableSpeed,
         \minimum 0.0
         \maximum 1.0
   A15,  \field Design Power Sizing Method
-       \required-field
+        \required-field
         \type choice
         \key PowerPerFlow
         \key PowerPerFlowPerPressure
   N13,  \field Design Electric Power per Unit Flow Rate
-       \required-field
+        \required-field
         \type real
         \note Used to size Design Power Consumption from design flow rate
         \units W/(m3/s)
         \ip-units W/(gal/min)
         \minimum> 0
   N14,  \field Design Shaft Power per Unit Flow Rate per Unit Head
-       \required-field
+        \required-field
         \type real
         \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
         \units W-s/m3-Pa
         \ip-units W-min/gal-ftH2O
         \minimum> 0
-  N15;  \field Design Minimum Flow Rate Fraction
-       \required-field
+  N15,  \field Design Minimum Flow Rate Fraction
+        \required-field
         \type real
         \note Used to size Design Minimum Flow Rate
         \minimum 0
         \maximum 1.0
+  A16;  \field End-Use Subcategory
+        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+        \type alpha
+        \retaincase
+        \default General
 
 OS:HeaderedPumps:ConstantSpeed,
        \memo This Headered pump object describes a pump bank with more than 1 pump in parallel
@@ -21041,12 +21065,17 @@ OS:HeaderedPumps:ConstantSpeed,
        \units W/(m3/s)
        \ip-units W/(gal/min)
        \minimum> 0
-  N9; \field Design Shaft Power per Unit Flow Rate per Unit Head
+  N9, \field Design Shaft Power per Unit Flow Rate per Unit Head
        \type real
         \required-field
        \units W-s/m3-Pa
        \ip-units W-min/gal-ftH2O
        \minimum> 0
+  A10; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:HeaderedPumps:VariableSpeed,
        \memo This Headered pump object describes a pump bank with more than 1 pump in parallel
@@ -21148,12 +21177,17 @@ OS:HeaderedPumps:VariableSpeed,
        \units W/(m3/s)
        \ip-units W/(gal/min)
        \minimum> 0
-  N14; \field Design Shaft Power per Unit Flow Rate per Unit Head
+  N14, \field Design Shaft Power per Unit Flow Rate per Unit Head
        \required-field
        \type real
        \units W-s/m3-Pa
        \ip-units W-min/gal-ftH2O
        \minimum> 0
+  A10; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:TemperingValve,
       \memo Temperature-controlled diversion valve used to divert flow around one or more plant
@@ -22689,7 +22723,7 @@ OS:ZoneControl:Thermostat:StagedDualSetpoint,
 
 OS:ZoneHVAC:EquipmentList,
        \min-fields 1
-       \extensible:3 Duplicate the three fields Zone Equipment Object Type through Heating Priority
+       \extensible:5 Duplicate the five fields Zone Equipment Object Type through Sequential Heating Fraction
        \memo List equipment in simulation order.  Note that an ZoneHVAC:AirDistributionUnit or
        \memo AirTerminal:SingleDuct:Uncontrolled object must be listed in this statement if there is a forced
        \memo air system serving the zone from the air loop.
@@ -22726,15 +22760,30 @@ OS:ZoneHVAC:EquipmentList,
   N1 , \field Zone Equipment 1 Cooling Sequence
        \required-field
        \type integer
-       \minimum 1
+       \minimum 0
        \note Specifies the zone equipment simulation order
        \note when the zone thermostat requests cooling
-  N2 ; \field Zone Equipment 1 Heating or No-Load Sequence
+  N2 , \field Zone Equipment 1 Heating or No-Load Sequence
        \required-field
        \type integer
-       \minimum 1
+       \minimum 0
        \note Specifies the zone equipment simulation order
        \note when the zone thermostat requests heating or no load
+  N3 , \field Zone Equipment 1 Sequential Cooling Fraction
+       \note The fraction of the remaining cooling load this equipment will attempt to serve
+       \note if the load distribution scheme is SequentialLoad, otherwise ignored.
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 1.0
+  N4 ; \field Zone Equipment 1 Sequential Heating Fraction
+       \note The fraction of the remaining heating load this equipment will attempt to serve
+       \note if the load distribution scheme is SequentialLoad, otherwise ignored.
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 1.0
+
 
 OS:ZoneVentilation:DesignFlowRate,
   A1, \field Handle
@@ -29481,6 +29530,8 @@ OS:EnergyManagementSystem:ProgramCallingManager,
        \type choice
        \key BeginNewEnvironment
        \key AfterNewEnvironmentWarmUpIsComplete
+       \key BeginZoneTimestepBeforeInitHeatBalance
+       \key BeginZoneTimestepAfterInitHeatBalance
        \key BeginTimestepBeforePredictor
        \key AfterPredictorBeforeHVACManagers
        \key AfterPredictorAfterHVACManagers

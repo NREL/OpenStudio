@@ -99,7 +99,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,9.0;
+  Version,9.1;
 
   Building,
     Building,                !- Name
@@ -184,7 +184,7 @@
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
-    ;                        !- Treat Weather as Actual
+    No;                      !- Treat Weather as Actual
 
   RunPeriod,
     ,                        !- Name
@@ -200,7 +200,7 @@
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
-    ;                        !- Treat Weather as Actual
+    No;                      !- Treat Weather as Actual
 
 !
 

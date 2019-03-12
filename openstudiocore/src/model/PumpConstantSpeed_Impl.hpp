@@ -104,6 +104,8 @@ namespace detail {
 
     boost::optional<double> skinLossRadiativeFraction() const;
 
+    std::string endUseSubcategory() const;
+
     bool setRatedFlowRate(boost::optional<double> ratedFlowRate);
 
     void resetRatedFlowRate();
@@ -185,6 +187,8 @@ namespace detail {
     virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
     virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+    bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
    protected:
 

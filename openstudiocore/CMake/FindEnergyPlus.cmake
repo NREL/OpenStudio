@@ -8,6 +8,7 @@
 # 'EnergyPlusV${Major}-${Minor}-${Patch}-${Build}'.  This finder assumes that
 # internal releases of the same major/minor/patch versions are prefered to official
 # release builds.
+# Note: after 9.1.0 included, E+ doesn't ship with a sublevel 'EnergyPlusV${Major}-${Minor}-${Patch}' anymore
 #
 # The module defines the following variables:
 #  ENERGYPLUS_FOUND - was a compatible version of EnergyPlus found
@@ -42,8 +43,7 @@
 # (To distributed this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-file(GLOB ENERGYPLUS_POSSIBLE_PATHS "${CMAKE_BINARY_DIR}/../../../[eE]nergy[pP]lus?*")
-
+file(GLOB ENERGYPLUS_POSSIBLE_PATHS "${CMAKE_BINARY_DIR}/[eE]nergy[pP]lus-*")
 #if(WIN32)
 #  file(GLOB ENERGYPLUS_POSSIBLE_PATHS "C:/[eE]nergy[pP]lus?*")
 #elseif(APPLE)
@@ -57,21 +57,34 @@ list(SORT ENERGYPLUS_POSSIBLE_PATHS)
 list(APPEND ENERGYPLUS_POSSIBLE_PATHS $ENV{ENERGYPLUSDIR})
 list(REVERSE ENERGYPLUS_POSSIBLE_PATHS)
 
+# If modifying this file, you may want to uncomment these lines (they are only cleared when redownloading the E+ package)
+# unset(ENERGYPLUS_FOUND CACHE)
+# unset(ENERGYPLUS_EXE CACHE)
+# unset(ENERGYPLUS_IDD CACHE)
+# unset(ENERGYPLUS_WEATHER_DIR CACHE)
+
 # try to find the first path that matches all of the version requirements where EnergyPlus is found
 foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
 
-  # extract version from path
-  string(REGEX REPLACE "^.*[eE]nergy[pP]lus[vV]?[-]?" "" VERSION ${PATH})
+  # extract version from path, in the format X.Y.Z.buildsha (where '.' here can also be '-', and build sha could be omitted)
+  # (could also just get BUILD_SHA there isn't of opening IDD below...)
+  string(REGEX REPLACE "^.*[eE]nergy[pP]lus[vV]?[-]?([0-9]+[\\.|-][0-9]+[\\.|-][0-9]+)([\\.|-][0-9a-z]+)?.*$" "\\1" VERSION ${PATH})
   string(REGEX REPLACE "-" "." VERSION ${VERSION})
   string(REGEX REPLACE "^([0-9]+\\.[0-9]+)\\..*" "\\1" VERSION_MAJOR_MINOR ${VERSION})
 
   # if 8.2.0 or greater then look for a build number in the idd file
-  if((${VERSION} VERSION_EQUAL 8.2.0) OR (${VERSION} VERSION_GREATER 8.2.0))
+  if(${VERSION} VERSION_GREATER_EQUAL 8.2.0)
+    # Check that the file actually exists first, if not skip iteration
+    find_file(ENERGYPLUS_IDD "Energy+.idd" PATHS "${PATH}" "${PATH}/bin" NO_DEFAULT_PATH)
+    if(NOT EXISTS "${ENERGYPLUS_IDD}")
+      continue()
+    endif()
+
     # we just need to read the first part of this large file
-    file(READ "${PATH}/Energy+.idd" IDD_TEXT LIMIT 1000)
+    file(READ "${ENERGYPLUS_IDD}" IDD_TEXT LIMIT 1000) 
     string(REGEX MATCH "!IDD_BUILD [0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]" BUILD_SHA_LINE "${IDD_TEXT}")
     string(REGEX MATCH "[0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]" BUILD_SHA "${BUILD_SHA_LINE}")
-    set(ENERGYPLUS_GE_8_2_0 true)
+    set(ENERGYPLUS_GE_8_2_0 TRUE)
   endif()
 
   # set is match false
@@ -79,6 +92,7 @@ foreach(PATH ${ENERGYPLUS_POSSIBLE_PATHS})
 
   # if a build SHA is provided then assume we need an exact match
   if(ENERGYPLUS_GE_8_2_0 AND ENERGYPLUS_BUILD_SHA)
+    # EnergyPlus_FIND_VERSION is the argument passed by `find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)`
     if(${VERSION} VERSION_EQUAL ${EnergyPlus_FIND_VERSION})
       if(ENERGYPLUS_BUILD_SHA STREQUAL BUILD_SHA)
         set(IS_MATCH TRUE)

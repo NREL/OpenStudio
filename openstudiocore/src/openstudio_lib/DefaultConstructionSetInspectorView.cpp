@@ -949,6 +949,53 @@ void SiteShadingVC::onDrop(const OSItemId& itemId)
   }
 }
 
+
+// AdiabaticSurfaceVC
+
+void AdiabaticSurfaceVC::onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle)
+{
+  if (index == OS_DefaultConstructionSetFields::AdiabaticSurfaceConstructionName){
+    emit itemIds(makeVector());
+  }
+}
+
+std::vector<OSItemId> AdiabaticSurfaceVC::makeVector()
+{
+  std::vector<OSItemId> result;
+  if (m_modelObject){
+    model::DefaultConstructionSet defaultConstructionSet = m_modelObject->cast<model::DefaultConstructionSet>();
+    boost::optional<model::ConstructionBase> constructionBase = defaultConstructionSet.adiabaticSurfaceConstruction();
+    if (constructionBase){
+      result.push_back(modelObjectToItemId(*constructionBase, false));
+    }
+  }
+  return result;
+}
+
+void AdiabaticSurfaceVC::onRemoveItem(OSItem* item)
+{
+  if (m_modelObject){
+    model::DefaultConstructionSet defaultConstructionSet = m_modelObject->cast<model::DefaultConstructionSet>();
+    defaultConstructionSet.resetAdiabaticSurfaceConstruction();
+  }
+}
+
+void AdiabaticSurfaceVC::onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId)
+{
+  onDrop(replacementItemId);
+}
+
+void AdiabaticSurfaceVC::onDrop(const OSItemId& itemId)
+{
+  if (m_modelObject){
+    model::DefaultConstructionSet defaultConstructionSet = m_modelObject->cast<model::DefaultConstructionSet>();
+    boost::optional<model::ConstructionBase> constructionBase = this->addToModel<model::ConstructionBase>(itemId);
+    if (constructionBase){
+      defaultConstructionSet.setAdiabaticSurfaceConstruction(*constructionBase);
+    }
+  }
+}
+
 DefaultConstructionSetInspectorView::DefaultConstructionSetInspectorView(const model::Model& model,
                                                                          QWidget * parent)
   : ModelObjectInspectorView(model, true, parent),
@@ -978,6 +1025,7 @@ DefaultConstructionSetInspectorView::DefaultConstructionSetInspectorView(const m
   m_spaceShadingDZ(nullptr),
   m_buildingShadingDZ(nullptr),
   m_siteShadingDZ(nullptr),
+  m_adiabaticSurfaceDZ(nullptr),
 
   m_exteriorWallConstructionVC(nullptr),
   m_exteriorFloorConstructionVC(nullptr),
@@ -1003,6 +1051,7 @@ DefaultConstructionSetInspectorView::DefaultConstructionSetInspectorView(const m
   m_spaceShadingVC(nullptr),
   m_buildingShadingVC(nullptr),
   m_siteShadingVC(nullptr),
+  m_adiabaticSurfaceVC(nullptr),
 
   m_vectorControllers(std::vector<ModelObjectVectorController *>()),
   m_dropZones(std::vector<OSDropZone *>())
@@ -1419,7 +1468,18 @@ DefaultConstructionSetInspectorView::DefaultConstructionSetInspectorView(const m
   gridLayout->addWidget(label,row,leftCol);
   gridLayout->addWidget(m_interiorPartitionsDZ,row+1,leftCol);
 
-  OS_ASSERT(m_vectorControllers.size() == 24);
+  label = new QLabel();
+  label->setText("Adiabatic Surfaces");
+  label->setObjectName("H2");
+  //label->setContentsMargins(padding,0,padding,0);
+  m_adiabaticSurfaceVC = new AdiabaticSurfaceVC();
+  m_vectorControllers.push_back(m_adiabaticSurfaceVC);
+  m_adiabaticSurfaceDZ = new OSDropZone(m_adiabaticSurfaceVC);
+  m_dropZones.push_back(m_adiabaticSurfaceDZ);
+  gridLayout->addWidget(label, row, middleCol);
+  gridLayout->addWidget(m_adiabaticSurfaceDZ, row+1, middleCol);
+
+  OS_ASSERT(m_vectorControllers.size() == 25);
 
   configDropZones();
 
@@ -1614,6 +1674,9 @@ void DefaultConstructionSetInspectorView::attach(openstudio::model::DefaultConst
 
   m_siteShadingVC->attach(defaultConstructionSet);
   m_siteShadingVC->reportItems();
+
+  m_adiabaticSurfaceVC->attach(defaultConstructionSet);
+  m_adiabaticSurfaceVC->reportItems();
 
   m_defaultConstructionSet = defaultConstructionSet;
 

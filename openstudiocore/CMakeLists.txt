@@ -68,14 +68,15 @@ set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.$
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 9)
-set(ENERGYPLUS_VERSION_MINOR 0)
-set(ENERGYPLUS_VERSION_PATCH 1)
+set(ENERGYPLUS_VERSION_MINOR 1)
+set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "bb7ca4f0da")
+set(ENERGYPLUS_BUILD_SHA "d830726d9e")
+
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.0.1")
+set(ENERGYPLUS_RELEASE_NAME "v9.1.0-IOFreeze")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -408,14 +409,14 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 7b8b8481a5f261800570de0d86e9c608)
+    set(ENERGYPLUS_EXPECTED_HASH e88d0ad1078c9ee7b176a9e9fbcaf4b0)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH xyz)
+    set(ENERGYPLUS_EXPECTED_HASH 42b2fe2ef5df1d4cfef2160e46529a2f)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 135e17dd5e4ca355b25bf77b61fc8cf2)
+    set(ENERGYPLUS_EXPECTED_HASH 00c6e9ca936927efe719e2c0244ac56b)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -428,16 +429,27 @@ if(UNIX)
     unset(ENERGYPLUS_EXE CACHE)
     unset(ENERGYPLUS_IDD CACHE)
     unset(ENERGYPLUS_WEATHER_DIR CACHE)
+  if(EXISTS "/etc/redhat-release")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+  else()
     file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+  endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
-  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+  # Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
+  if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
+    set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+  else()
+    # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
+    set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+  endif()
+
 elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 4094c49b908ba2feb3f0b352126ea0ac)
+    set(ENERGYPLUS_EXPECTED_HASH 11926295eddb3d7b6d5bcd851a1a0849)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
@@ -467,8 +479,8 @@ if(UNIX)
     set(RADIANCE_EXPECTED_HASH 115ef9052ad5011d3fc7cebc2991644f)
     set(RADIANCE_PLATFORM "Darwin")
   elseif(EXISTS "/etc/redhat-release")
-    #message(FATAL_ERROR "Radiance ${RADIANCE_VERSION} redhat build missing")
-    set(RADIANCE_EXPECTED_HASH c1f4211b131a445941eb91ed1a248891)
+    # DLM: note that the installer expects the extracted directory to be named radiance-5.0.a.12-Linux
+    set(RADIANCE_EXPECTED_HASH f75898bbfd238a740c1902d385c42b92)
     set(RADIANCE_PLATFORM "Redhat")
   else()
     set(RADIANCE_EXPECTED_HASH 7b9e4df2b6050fe51c6e138e4c0e6a5a)
@@ -479,8 +491,13 @@ if(UNIX)
     file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" RADIANCE_HASH)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
-    message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
+  message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
+  if(EXISTS "/etc/redhat-release")
+    message("http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+  else()
     file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+  endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
@@ -538,7 +555,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     set(RUBY_ZIP_EXPECTED_MD5 "84abcea1411929c113f4030a3b2bd3ee")
   elseif(EXISTS "/etc/redhat-release")
     set(RUBY_ZIP_FILENAME "DOES_NOT_EXIST_ruby_2_2_4_redhat_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "0491123e60186896bae838f7d148bf20")
+    set(RUBY_ZIP_EXPECTED_MD5 "d130a17b23cc532975665ee4e9095c8d")
   else()
     if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
       # ubuntu 18.04
@@ -672,8 +689,8 @@ endif()
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20181217.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d87131108e1160037ab8d26b8c48f9cf")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20190307.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "3dcc9690c1a9969e0824d6e2780df56c")
 
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
@@ -955,7 +972,7 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
       set(BOOST_ZIP_EXPECTED_MD5 "9e4c01a3f5c63e3bbf5cc76021eceb75")
   elseif(EXISTS "/etc/redhat-release")
     set(BOOST_ZIP_FILENAME "DOES_NOT_EXIST_boost_1_68_0_redhat.tar.gz")
-    set(BOOST_ZIP_EXPECTED_MD5 "de952e0c36900a3ad000d74a1c41b7d2")
+    set(BOOST_ZIP_EXPECTED_MD5 "1517315d5b07fe5e1bdb135ecdc0213d")
   else()
     if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
       # ubuntu 18.04
@@ -1031,7 +1048,7 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
   elseif(EXISTS "/etc/redhat-release")
     set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_redhat_shared.tar.gz")
-    set(QT_ZIP_EXPECTED_MD5 "b0610716854ed91a003347c455b22eb8")
+    set(QT_ZIP_EXPECTED_MD5 "12576637037b8d5428e2d63a5e298131")
   else()
     if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
       set(QT_ZIP_FILENAME "qt_5_11_linux_shared.tar.gz")
@@ -1173,7 +1190,7 @@ elseif( APPLE )
   set(QT_STATIC_ZIP_EXPECTED_MD5 "d24756746d2fe07212070f675871cf93")
 elseif(EXISTS "/etc/redhat-release")
   set(QT_STATIC_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_redhat_static.tar.gz")
-  set(QT_STATIC_ZIP_EXPECTED_MD5 "f5d9406349d1688e99db012862c22072")
+  set(QT_STATIC_ZIP_EXPECTED_MD5 "52159660cbdd95a41ab84a2c43140f11")
 else()
   if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
     set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static.tar.gz")
@@ -1432,7 +1449,9 @@ add_subdirectory(resources)
 
 add_subdirectory(ruby)
 
-add_subdirectory(sketchup_plugin)
+if(BUILD_OS_APP)
+  add_subdirectory(sketchup_plugin)
+endif()
 
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
@@ -1856,11 +1875,6 @@ endif()
 include(CPack)
 include(CPackIFW)
 
-cpack_add_component(SketchUpPlugin
-  DISPLAY_NAME "SketchUp Plugin"
-  DESCRIPTION "SketchUp Plugin"
-)
-
 cpack_add_component(CLI
   DISPLAY_NAME "Command Line Interface"
   DESCRIPTION "Command Line Interface"
@@ -1869,26 +1883,6 @@ cpack_add_component(CLI
 cpack_add_component(RubyAPI
   DISPLAY_NAME "Ruby API"
   DESCRIPTION "Ruby API"
-)
-
-cpack_add_component(CSharpAPI
-  DISPLAY_NAME "C# API"
-  DESCRIPTION "C# API"
-)
-
-cpack_add_component(PAT
-  DISPLAY_NAME "Parametric Analysis Tool"
-  DESCRIPTION "Parametric Analysis Tool"
-)
-
-cpack_add_component(OpenStudioApp
-  DISPLAY_NAME "OpenStudio Application"
-  DESCRIPTION "OpenStudio Application"
-)
-
-cpack_add_component(DView
-  DISPLAY_NAME "DView"
-  DESCRIPTION "DView Application for viewing results"
 )
 
 cpack_add_component(EnergyPlus
@@ -1901,43 +1895,12 @@ cpack_add_component(Radiance
   DESCRIPTION "Full Radiance installation"
 )
 
-cpack_add_component(Resources
-  DISPLAY_NAME "Application Resources"
-  DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
-)
-
-cpack_ifw_configure_component(SketchUpPlugin
-  DEPENDS Resources
-  SCRIPT sketchup_plugin/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
 cpack_ifw_configure_component(CLI
   SCRIPT src/cli/install_operations.qs
   REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(RubyAPI
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(CSharpAPI
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(PAT
-  DEPENDS CLI RubyAPI
-  SCRIPT pat/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(OpenStudioApp
-  DEPENDS Resources CLI
-  SCRIPT src/openstudio_app/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(DView
   REQUIRES_ADMIN_RIGHTS
 )
 
@@ -1949,14 +1912,79 @@ cpack_ifw_configure_component(Radiance
   REQUIRES_ADMIN_RIGHTS
 )
 
-cpack_ifw_configure_component(Resources
-  REQUIRES_ADMIN_RIGHTS
-)
-
 cpack_ifw_configure_component(Unspecified
   SCRIPT src/install_utility/install_operations.qs
   REQUIRES_ADMIN_RIGHTS
 )
+
+if(BUILD_CSHARP_BINDINGS)
+  cpack_add_component(CSharpAPI
+    DISPLAY_NAME "C# API"
+    DESCRIPTION "C# API"
+  )
+
+  cpack_ifw_configure_component(CSharpAPI
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_OS_APP)
+  
+  cpack_add_component(Resources
+    DISPLAY_NAME "Application Resources"
+    DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
+  )
+  
+  cpack_add_component(SketchUpPlugin
+    DISPLAY_NAME "SketchUp Plugin"
+    DESCRIPTION "SketchUp Plugin"
+  )
+
+  cpack_add_component(OpenStudioApp
+    DISPLAY_NAME "OpenStudio Application"
+    DESCRIPTION "OpenStudio Application"
+  )
+
+  cpack_ifw_configure_component(Resources
+    REQUIRES_ADMIN_RIGHTS
+  )
+  
+  cpack_ifw_configure_component(SketchUpPlugin
+    DEPENDS Resources
+    SCRIPT sketchup_plugin/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+  
+  cpack_ifw_configure_component(OpenStudioApp
+    DEPENDS Resources CLI
+    SCRIPT src/openstudio_app/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_PAT)
+  cpack_add_component(PAT
+    DISPLAY_NAME "Parametric Analysis Tool"
+    DESCRIPTION "Parametric Analysis Tool"
+  )
+
+  cpack_ifw_configure_component(PAT
+    DEPENDS CLI RubyAPI
+    SCRIPT pat/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_DVIEW)
+  cpack_add_component(DView
+    DISPLAY_NAME "DView"
+    DESCRIPTION "DView Application for viewing results"
+  )
+
+  cpack_ifw_configure_component(DView
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
 
 if( BUILD_NUGET_PACKAGE )
   configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )

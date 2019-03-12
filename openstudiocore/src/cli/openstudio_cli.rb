@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 ########################################################################################################################
 #  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
@@ -476,6 +478,13 @@ def parse_main_args(main_args)
   if use_bundler
   
     current_dir = Dir.pwd
+    
+    original_arch = nil
+    if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
+      original_arch = RbConfig::CONFIG['arch']
+      $logger.info "Temporarily replacing arch '#{original_arch}' with 'x64-mingw32' for Bundle"
+      RbConfig::CONFIG['arch'] = 'x64-mingw32'
+    end
   
     # require bundler
     # have to do some forward declaration and pre-require to get around autoload cycles
@@ -493,17 +502,37 @@ def parse_main_args(main_args)
     require 'bundler/source'
     require 'bundler/definition'
     require 'bundler/dsl'
+    require 'bundler/uri_credentials_filter'
     require 'bundler'
-
+    
     begin
       # activate bundled gems
       # bundler will look in:
       # 1) ENV["BUNDLE_GEMFILE"]
       # 2) find_file("Gemfile", "gems.rb")
       #require 'bundler/setup'
-
-      Bundler.setup
-      #Bundler.require
+      
+      groups = Bundler.definition.groups
+      keep_groups = []
+      groups.each do |g| 
+        # DLM: can include in the future but need to be able to override
+        #if (g == :test) || (g == :development)  || (g == :openstudio_no_cli)
+        #  $logger.info "Bundling without group #{g}"
+        #else
+          keep_groups << g
+        #end
+      end
+      
+      $logger.info "Bundling with groups [#{keep_groups.join(',')}]"
+      
+      remaining_specs = []
+      Bundler.definition.specs_for(keep_groups).each {|s| remaining_specs << s.name}
+      
+      $logger.info "Specs to be included [#{remaining_specs.join(',')}]"
+        
+      Bundler.setup(*keep_groups) 
+      #Bundler.require(*keep_groups)
+      
     #rescue Bundler::BundlerError => e
     
       #$logger.info e.backtrace.join("\n")
@@ -512,59 +541,47 @@ def parse_main_args(main_args)
 
     ensure
     
+      if original_arch
+        $logger.info "Restoring arch '#{original_arch}'"
+        RbConfig::CONFIG['arch'] = 'x64-mingw32'
+      end
+    
       Dir.chdir(current_dir)
     end
 
   else 
     # not using_bundler
     
-    # DLM: test code, useful for testing from command line using system ruby
-    #Gem::Specification.each do |spec|
-    #  if /openstudio/.match(spec.name) 
-    #    original_embedded_gems[spec.name] = spec
-    #  end
-    #end
-    
     current_dir = Dir.pwd
-
+    
     begin
-      
-      # find final set of embedded gems that are also found on disk with equal or higher version but compatible major version
-      final_embedded_gems = original_embedded_gems.clone
-      Gem::Specification.each do |spec|
-        current_embedded_gem = final_embedded_gems[spec.name]
-        
-        # not an embedded gem
-        next if current_embedded_gem.nil?
-        
-        if spec.version > current_embedded_gem.version
-          # only allow higher versions with compatible major version
-          if spec.version.to_s.split('.').first == current_embedded_gem.version.to_s.split('.').first
-            $logger.debug "Found system gem #{spec.name} #{spec.version}, overrides embedded gem"
-            final_embedded_gems[spec.name] = spec
-          end
-        end
-      end
-     
-      # get a list of all the embedded gems and their dependencies 
+      # DLM: test code, useful for testing from command line using system ruby
+      #Gem::Specification.each do |spec|
+      #  if /openstudio/.match(spec.name) 
+      #    original_embedded_gems[spec.name] = spec
+      #  end
+      #end
+
+      # get a list of all the embedded gems
       dependencies = []
-      final_embedded_gems.each_value do |spec|
-        $logger.debug "Accumulating dependencies for #{spec.name} #{spec.version}"
-        dependencies << Gem::Dependency.new(spec.name)
-        dependencies.concat(spec.runtime_dependencies)
+      original_embedded_gems.each_value do |spec|
+        $logger.debug "Adding dependency on #{spec.name} '~> #{spec.version}'"
+        dependencies << Gem::Dependency.new(spec.name, "~> #{spec.version}")
       end
-      dependencies.each {|d| $logger.debug "Found dependency #{d}"}
+      #dependencies.each {|d| $logger.debug "Added dependency #{d}"}
 
       # resolve dependencies
       activation_errors = false
       original_load_path = $:.clone
       resolver = Gem::Resolver.for_current_gems(dependencies)
-      resolver.resolve.each do |request|
+      activation_requests = resolver.resolve
+      $logger.debug "Processing #{activation_requests.size} activation requests"
+      activation_requests.each do |request|
         do_activate = true
         spec = request.spec
 
         # check if this is one of our embedded gems
-        if final_embedded_gems[spec.name]
+        if original_embedded_gems[spec.name]
 
           # check if gem can be loaded from RUBYLIB, this supports developer use case
           original_load_path.each do |lp|
@@ -583,6 +600,7 @@ def parse_main_args(main_args)
             spec.activate
           rescue Gem::LoadError
             $logger.error "Error activating gem #{spec.spec_file}"
+            activation_errors = true
           end
         end
           
@@ -592,10 +610,9 @@ def parse_main_args(main_args)
         return false
       end
       
-    ensure
+    ensure 
       Dir.chdir(current_dir)
     end
-    
     
   end # use_bundler
     

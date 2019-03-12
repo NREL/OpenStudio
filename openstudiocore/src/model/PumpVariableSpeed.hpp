@@ -145,6 +145,8 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
 
   boost::optional<Schedule> maximumRPMSchedule() const;
 
+  std::string endUseSubcategory() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -263,6 +265,8 @@ class MODEL_API PumpVariableSpeed : public StraightComponent
   double designMinimumFlowRateFraction() const;
 
   bool setDesignMinimumFlowRateFraction(double designMinimumFlowRateFraction);
+
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
   //@}
  protected:

@@ -1,4 +1,4 @@
-  Version,9.0;
+  Version,9.1;
 
   Building,
     Building 1,              !- Name
@@ -462,7 +462,9 @@
     ZoneHVAC:PackagedTerminalAirConditioner,  !- Zone Equipment 1 Object Type
     PTAC DX Clg HW Htg,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 1 Core Space,  !- Zone or ZoneList Name
@@ -888,7 +890,9 @@
     ZoneHVAC:PackagedTerminalHeatPump,  !- Zone Equipment 1 Object Type
     PTHP,                    !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone or ZoneList Name
@@ -1094,7 +1098,9 @@
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Uncontrolled 1,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone or ZoneList Name
@@ -1312,7 +1318,9 @@
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Uncontrolled 2,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone or ZoneList Name
@@ -1531,7 +1539,9 @@
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Uncontrolled 3,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone or ZoneList Name
@@ -1760,7 +1770,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ADU Air Terminal Single Duct VAV Reheat 1,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 2 Core Space,  !- Zone or ZoneList Name
@@ -2017,7 +2029,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ADU Air Terminal Single Duct VAV Reheat 2,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone or ZoneList Name
@@ -2223,7 +2237,9 @@
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Uncontrolled 4,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone or ZoneList Name
@@ -2487,7 +2503,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Parallel PIU Reheat 1 Air Distribution Unit,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone or ZoneList Name
@@ -2754,7 +2772,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Parallel PIU Reheat 2 Air Distribution Unit,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone or ZoneList Name
@@ -2983,7 +3003,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ADU Air Terminal Single Duct VAV Reheat 3,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 3 Core Space,  !- Zone or ZoneList Name
@@ -3243,7 +3265,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ADU Air Terminal Single Duct VAV Reheat 4,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone or ZoneList Name
@@ -3495,7 +3519,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ADU Air Terminal Single Duct VAV Reheat 5,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone or ZoneList Name
@@ -3749,7 +3775,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Parallel PIU Reheat 3 Air Distribution Unit,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone or ZoneList Name
@@ -4016,7 +4044,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     Air Terminal Single Duct Parallel PIU Reheat 4 Air Distribution Unit,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction
 
   Sizing:Zone,
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone or ZoneList Name
@@ -4074,7 +4104,7 @@
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
-    ;                        !- Treat Weather as Actual
+    No;                      !- Treat Weather as Actual
 
   ShadowCalculation,
     AverageOverDaysInFrequency,  !- Calculation Method
