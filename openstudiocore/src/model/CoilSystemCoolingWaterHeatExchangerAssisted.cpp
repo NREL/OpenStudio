@@ -87,6 +87,34 @@ namespace detail {
     return CoilSystemCoolingWaterHeatExchangerAssisted::iddObjectType();
   }
 
+  std::vector<ModelObject> CoilSystemCoolingWaterHeatExchangerAssisted_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    result.push_back(coolingCoil());
+    result.push_back(heatExchanger());
+
+    return result;
+  }
+
+  ModelObject CoilSystemCoolingWaterHeatExchangerAssisted_Impl::clone(Model model) const
+  {
+    auto newCoilSystem = StraightComponent_Impl::clone(model).cast<CoilSystemCoolingWaterHeatExchangerAssisted>();
+
+    {
+      auto mo = coolingCoil().clone(model).cast<WaterToAirComponent>();
+      newCoilSystem.setCoolingCoil(mo);
+    }
+
+    {
+      auto mo = heatExchanger().clone(model).cast<AirToAirComponent>();
+      newCoilSystem.setHeatExchanger(mo);
+    }
+
+    return newCoilSystem;
+  }
+
+
   AirToAirComponent CoilSystemCoolingWaterHeatExchangerAssisted_Impl::heatExchanger() const {
     boost::optional<AirToAirComponent> value = optionalHeatExchanger();
     if (!value) {
@@ -205,4 +233,5 @@ CoilSystemCoolingWaterHeatExchangerAssisted::CoilSystemCoolingWaterHeatExchanger
 
 } // model
 } // openstudio
+
 

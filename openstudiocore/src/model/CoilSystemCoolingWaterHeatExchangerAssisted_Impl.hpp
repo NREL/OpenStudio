@@ -73,6 +73,12 @@ namespace detail {
 
     virtual unsigned outletPort() const override;
 
+    // will return the coolingCoil and heatExchanger
+    virtual std::vector<ModelObject> children() const override;
+
+    // Will also clone the coolingCoil and heatExchanger
+    virtual ModelObject clone(Model model) const override;
+
     // This function will connect the underlying Coil:Cooling:Water object
     virtual bool addToNode(Node & node) override;
 

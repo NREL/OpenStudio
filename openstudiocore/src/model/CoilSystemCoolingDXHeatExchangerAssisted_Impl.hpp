@@ -68,6 +68,17 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual unsigned inletPort() const override;
+    virtual unsigned outletPort() const override;
+
+    virtual bool addToNode(Node & node) override;
+
+    // will return the coolingCoil and heatExchanger
+    virtual std::vector<ModelObject> children() const override;
+
+    // Will also clone the coolingCoil and heatExchanger
+    virtual ModelObject clone(Model model) const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -88,12 +99,6 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual unsigned inletPort() const override;
-    virtual unsigned outletPort() const override;
-
-    bool addToNode(Node & node) override;
-    std::vector<ModelObject> children() const override;
-    ModelObject clone(Model model) const override;
 
     //@}
    protected:

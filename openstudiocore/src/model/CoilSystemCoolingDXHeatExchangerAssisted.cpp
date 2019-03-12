@@ -84,6 +84,34 @@ namespace detail {
     return CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType();
   }
 
+
+  std::vector<ModelObject> CoilSystemCoolingDXHeatExchangerAssisted_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    result.push_back(coolingCoil());
+    result.push_back(heatExchanger());
+
+    return result;
+  }
+
+  ModelObject CoilSystemCoolingDXHeatExchangerAssisted_Impl::clone(Model model) const
+  {
+    auto newCoilSystem = StraightComponent_Impl::clone(model).cast<CoilSystemCoolingDXHeatExchangerAssisted>();
+
+    {
+      auto mo = coolingCoil().clone(model).cast<StraightComponent>();
+      newCoilSystem.setCoolingCoil(mo);
+    }
+
+    {
+      auto mo = heatExchanger().clone(model).cast<AirToAirComponent>();
+      newCoilSystem.setHeatExchanger(mo);
+    }
+
+    return newCoilSystem;
+  }
+
   AirToAirComponent CoilSystemCoolingDXHeatExchangerAssisted_Impl::heatExchanger() const {
     boost::optional<AirToAirComponent> value = optionalHeatExchanger();
     if (!value) {
@@ -139,33 +167,6 @@ namespace detail {
     }
 
     return false;
-  }
-
-  ModelObject CoilSystemCoolingDXHeatExchangerAssisted_Impl::clone(Model model) const
-  {
-    auto newCoil = StraightComponent_Impl::clone(model).cast<CoilSystemCoolingDXHeatExchangerAssisted>();
-
-    {
-      auto mo = heatExchanger().clone(model).cast<AirToAirComponent>();
-      newCoil.setHeatExchanger(mo);
-    }
-
-    {
-      auto mo = coolingCoil().clone(model).cast<StraightComponent>();
-      newCoil.setCoolingCoil(mo);
-    }
-
-    return newCoil;
-  }
-
-  std::vector<ModelObject> CoilSystemCoolingDXHeatExchangerAssisted_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-
-    result.push_back(heatExchanger());
-    result.push_back(coolingCoil());
-
-    return result;
   }
 
 } // detail
