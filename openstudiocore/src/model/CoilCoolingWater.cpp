@@ -344,9 +344,12 @@ namespace detail {
     bool success(false);
 
     auto t_containingHVACComponent = containingHVACComponent();
+    auto t_airLoop = node.airLoopHVAC();
 
-    if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemCoolingWaterHeatExchangerAssisted>()) {
-      LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemCoolingWaterHeatExchangerAssisted. Please call CoilSystemCoolingWaterHeatExchangerAssisted::addToNode instead");
+    if (t_airLoop &&
+        t_containingHVACComponent &&
+        t_containingHVACComponent->optionalCast<CoilSystemCoolingWaterHeatExchangerAssisted>()) {
+      LOG(Warn, this->briefDescription() << " cannot be connected directly to an AirLoopHVAC when it's part of a parent CoilSystemCoolingWaterHeatExchangerAssisted. Please call CoilSystemCoolingWaterHeatExchangerAssisted::addToNode instead");
     } else {
 
       success =  WaterToAirComponent_Impl::addToNode( node );
