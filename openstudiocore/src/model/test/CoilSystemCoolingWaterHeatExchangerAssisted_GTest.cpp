@@ -97,3 +97,54 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_addToNode) {
   PlantLoop p(m);
   EXPECT_TRUE(p.addDemandBranchForComponent(cc));
 }
+
+TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_clone) {
+
+  Model m;
+
+  // Create a CoilSystem, connected to an AirLoopHVAC, and with its coolingCoil connected to a PlantLoop
+  CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
+  CoilCoolingWater cc = coilSystem.coolingCoil().cast<CoilCoolingWater>();
+  HeatExchangerAirToAirSensibleAndLatent hx = coilSystem.heatExchanger().cast<HeatExchangerAirToAirSensibleAndLatent>();
+
+
+  AirLoopHVAC a(m);
+  Node n = a.supplyOutletNode();
+  EXPECT_TRUE(coilSystem.addToNode(n));
+
+  PlantLoop p(m);
+  EXPECT_TRUE(p.addDemandBranchForComponent(cc));
+
+  EXPECT_EQ(1u, m.getModelObjects<CoilSystemCoolingWaterHeatExchangerAssisted>().size());
+  EXPECT_EQ(1u, m.getModelObjects<CoilCoolingWater>().size());
+  EXPECT_EQ(1u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+
+  ASSERT_TRUE(coilSystem.airLoopHVAC());
+  EXPECT_EQ(coilSystem.airLoopHVAC()->handle(), a.handle());
+
+  EXPECT_TRUE(cc.plantLoop());
+
+  // TODO: should these work?
+  //ASSERT_TRUE(coilSystem.plantLoop());
+  //EXPECT_EQ(coilSystem.plantLoop()->handle(), p.handle());
+  //EXPECT_TRUE(hx.airLoopHVAC());
+
+
+  CoilSystemCoolingWaterHeatExchangerAssisted coilSystem2 = coilSystem.clone(m).cast<CoilSystemCoolingWaterHeatExchangerAssisted>();
+
+  EXPECT_EQ(2u, m.getModelObjects<CoilSystemCoolingWaterHeatExchangerAssisted>().size());
+  EXPECT_EQ(2u, m.getModelObjects<CoilCoolingWater>().size());
+  EXPECT_EQ(2u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+
+  EXPECT_TRUE(coilSystem.airLoopHVAC());
+  EXPECT_TRUE(coilSystem.inletModelObject());
+  EXPECT_TRUE(coilSystem.outletModelObject());
+
+  EXPECT_FALSE(coilSystem2.airLoopHVAC());
+  EXPECT_FALSE(coilSystem2.inletModelObject());
+  EXPECT_FALSE(coilSystem2.outletModelObject());
+
+  EXPECT_NE(coilSystem2.coolingCoil().handle(), cc.handle());
+  EXPECT_NE(coilSystem2.heatExchanger().handle(), hx.handle());
+
+}
