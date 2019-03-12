@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 ########################################################################################################################
 #  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
@@ -550,35 +552,36 @@ def parse_main_args(main_args)
   else 
     # not using_bundler
     
-    # DLM: test code, useful for testing from command line using system ruby
-    #Gem::Specification.each do |spec|
-    #  if /openstudio/.match(spec.name) 
-    #    original_embedded_gems[spec.name] = spec
-    #  end
-    #end
-    
     current_dir = Dir.pwd
+    
+    begin
+      # DLM: test code, useful for testing from command line using system ruby
+      #Gem::Specification.each do |spec|
+      #  if /openstudio/.match(spec.name) 
+      #    original_embedded_gems[spec.name] = spec
+      #  end
+      #end
 
-    # get a list of all the embedded gems
-    dependencies = []
-    original_embedded_gems.each_value do |spec|
-      $logger.debug "Adding dependency on #{spec.name} '~> #{spec.version}'"
-      dependencies << Gem::Dependency.new(spec.name, "~> #{spec.version}")
-    end
-    #dependencies.each {|d| $logger.debug "Added dependency #{d}"}
+      # get a list of all the embedded gems
+      dependencies = []
+      original_embedded_gems.each_value do |spec|
+        $logger.debug "Adding dependency on #{spec.name} '~> #{spec.version}'"
+        dependencies << Gem::Dependency.new(spec.name, "~> #{spec.version}")
+      end
+      #dependencies.each {|d| $logger.debug "Added dependency #{d}"}
 
-    # resolve dependencies
-    activation_errors = false
-    original_load_path = $:.clone
-    resolver = Gem::Resolver.for_current_gems(dependencies)
-    activation_requests = resolver.resolve
-    $logger.debug "Processing #{activation_requests.size} activation requests"
-    activation_requests.each do |request|
-      do_activate = true
-      spec = request.spec
+      # resolve dependencies
+      activation_errors = false
+      original_load_path = $:.clone
+      resolver = Gem::Resolver.for_current_gems(dependencies)
+      activation_requests = resolver.resolve
+      $logger.debug "Processing #{activation_requests.size} activation requests"
+      activation_requests.each do |request|
+        do_activate = true
+        spec = request.spec
 
-      # check if this is one of our embedded gems
-      if original_embedded_gems[spec.name]
+        # check if this is one of our embedded gems
+        if original_embedded_gems[spec.name]
 
           # check if gem can be loaded from RUBYLIB, this supports developer use case
           original_load_path.each do |lp|
@@ -597,6 +600,7 @@ def parse_main_args(main_args)
             spec.activate
           rescue Gem::LoadError
             $logger.error "Error activating gem #{spec.spec_file}"
+            activation_errors = true
           end
         end
           
@@ -606,10 +610,9 @@ def parse_main_args(main_args)
         return false
       end
       
-    ensure
+    ensure 
       Dir.chdir(current_dir)
     end
-    
     
   end # use_bundler
     
