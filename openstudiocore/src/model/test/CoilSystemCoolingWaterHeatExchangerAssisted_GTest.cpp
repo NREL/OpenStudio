@@ -36,6 +36,7 @@
 #include "../HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "../HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
+#include "../PlantLoop.hpp"
 #include "../Node.hpp"
 
 using namespace openstudio;
@@ -90,4 +91,9 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_addToNode) {
     ASSERT_TRUE(containingHVACComponent);
     EXPECT_EQ(containingHVACComponent->handle(), coilSystem.handle());
   }
+
+
+  // BUT, we need to be able to connect the water side of the Coil...
+  PlantLoop p(m);
+  EXPECT_TRUE(p.addDemandBranchForComponent(cc));
 }
