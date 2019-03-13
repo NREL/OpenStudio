@@ -41,6 +41,15 @@
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
+#include "../AirLoopHVACUnitarySystem.hpp"
+#include "../AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "../AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
+#include "../ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../CoilHeatingDXSingleSpeed.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../Schedule.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -80,8 +89,14 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_addToNode) {
   EXPECT_FALSE(hx.addToNode(n));
   EXPECT_EQ(2, a.supplyComponents().size());
 
-  EXPECT_TRUE(coilSystem.addToNode(n));
-  EXPECT_EQ(3, a.supplyComponents().size());
+  /**
+   * Note JM 2019-03-13: At this point in time
+   * CoilSystemCoolingDXHeatExchangerAssisted is **NOT** allowed on a Branch directly and should be placed inside one of the Unitary systems
+   * cf https://github.com/NREL/EnergyPlus/issues/7222
+   * This method returns false and does nothing as a result
+   */
+  EXPECT_FALSE(coilSystem.addToNode(n));
+  EXPECT_EQ(2, a.supplyComponents().size());
 
   {
     auto containingHVACComponent = cc.containingHVACComponent();
@@ -134,14 +149,22 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_clone) {
 
   AirLoopHVAC a(m);
   Node n = a.supplyOutletNode();
-  EXPECT_TRUE(coilSystem.addToNode(n));
+
+    /**
+   * Note JM 2019-03-13: At this point in time
+   * CoilSystemCoolingDXHeatExchangerAssisted is **NOT** allowed on a Branch directly and should be placed inside one of the Unitary systems
+   * cf https://github.com/NREL/EnergyPlus/issues/7222
+   * This method returns false and does nothing as a result
+   */
+  EXPECT_FALSE(coilSystem.addToNode(n));
+  // ASSERT_TRUE(coilSystem.airLoopHVAC());
+  // EXPECT_EQ(coilSystem.airLoopHVAC()->handle(), a.handle());
 
   EXPECT_EQ(1u, m.getModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>().size());
   EXPECT_EQ(1u, m.getModelObjects<CoilCoolingDXSingleSpeed>().size());
   EXPECT_EQ(1u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
 
-  ASSERT_TRUE(coilSystem.airLoopHVAC());
-  EXPECT_EQ(coilSystem.airLoopHVAC()->handle(), a.handle());
+
 
   // TODO: should these work?
   // EXPECT_TRUE(hx.airLoopHVAC());
@@ -152,9 +175,10 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_clone) {
   EXPECT_EQ(2u, m.getModelObjects<CoilCoolingDXSingleSpeed>().size());
   EXPECT_EQ(2u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
 
-  EXPECT_TRUE(coilSystem.airLoopHVAC());
-  EXPECT_TRUE(coilSystem.inletModelObject());
-  EXPECT_TRUE(coilSystem.outletModelObject());
+  // Cannot be directly on airLoopHVAC right now
+  // EXPECT_TRUE(coilSystem.airLoopHVAC());
+  // EXPECT_TRUE(coilSystem.inletModelObject());
+  // EXPECT_TRUE(coilSystem.outletModelObject());
 
   EXPECT_FALSE(coilSystem2.airLoopHVAC());
   EXPECT_FALSE(coilSystem2.inletModelObject());
