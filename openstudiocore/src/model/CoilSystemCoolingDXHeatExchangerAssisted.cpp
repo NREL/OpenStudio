@@ -156,15 +156,24 @@ namespace detail {
 
   bool CoilSystemCoolingDXHeatExchangerAssisted_Impl::addToNode(Node & node)
   {
-    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() ) {
-      if( ! airLoop->demandComponent(node.handle()) ) {
-        return StraightComponent_Impl::addToNode( node );
-      }
-    }
 
-    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
-      return StraightComponent_Impl::addToNode( node );
-    }
+    /**
+     * Note JM 2019-03-13: At this point in time
+     * CoilSystemCoolingDXHeatExchangerAssisted is **NOT** allowed on a Branch directly and should be placed inside one of the Unitary systems
+     * cf https://github.com/NREL/EnergyPlus/issues/7222
+     * This method returns false and does nothing as a result
+     */
+
+    // TODO: uncomment this if it becomes allowed
+    //if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() ) {
+      //if( ! airLoop->demandComponent(node.handle()) ) {
+        //return StraightComponent_Impl::addToNode( node );
+      //}
+    //}
+
+    //if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      //return StraightComponent_Impl::addToNode( node );
+    //}
 
     return false;
   }
