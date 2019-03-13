@@ -85,6 +85,10 @@ namespace detail {
     // Will also clone the coolingCoil and heatExchanger
     virtual ModelObject clone(Model model) const override;
 
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
     //@}
     /** @name Getters */
     //@{

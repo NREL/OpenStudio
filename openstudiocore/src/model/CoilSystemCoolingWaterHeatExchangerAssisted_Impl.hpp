@@ -82,6 +82,10 @@ namespace detail {
     // This function will connect the underlying Coil:Cooling:Water object
     virtual bool addToNode(Node & node) override;
 
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
     //@}
     /** @name Getters */
     //@{
