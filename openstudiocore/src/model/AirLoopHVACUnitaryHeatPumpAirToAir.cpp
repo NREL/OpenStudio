@@ -704,16 +704,43 @@ AirLoopHVACUnitaryHeatPumpAirToAir::AirLoopHVACUnitaryHeatPumpAirToAir( const Mo
 {
   OS_ASSERT(getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>());
 
-  setAvailabilitySchedule( availabilitySchedule );
-  setSupplyAirFan( supplyFan );
+  bool ok = setAvailabilitySchedule( availabilitySchedule );
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s availability schedule to "
+                  << availabilitySchedule.briefDescription() << ".");
+  }
+
+  ok = setSupplyAirFan(supplyFan);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s supply fan to "
+                  << supplyFan.briefDescription() << ".");
+  }
+
   setHeatingCoil( heatingCoil );
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s heating coil to "
+                  << heatingCoil.briefDescription() << ".");
+  }
+
   setCoolingCoil( coolingCoil );
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s cooling coil to "
+                  << coolingCoil.briefDescription() << ".");
+  }
+
   setSupplementalHeatingCoil( supplementalHeatingCoil );
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s supplemental heating coil to "
+                  << supplementalHeatingCoil.briefDescription() << ".");
+  }
 
   autosizeSupplyAirFlowRateDuringCoolingOperation();
-
   autosizeSupplyAirFlowRateDuringHeatingOperation();
-
   autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 }
 
