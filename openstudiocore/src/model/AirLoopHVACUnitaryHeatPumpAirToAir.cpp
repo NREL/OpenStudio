@@ -42,6 +42,8 @@
 #include "CoilHeatingDXSingleSpeed_Impl.hpp"
 #include "CoilCoolingDXSingleSpeed.hpp"
 #include "CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "CoilHeatingElectric.hpp"
 #include "CoilHeatingElectric_Impl.hpp"
 #include "CoilHeatingGas.hpp"
@@ -416,7 +418,11 @@ namespace detail {
 
   bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setCoolingCoil( HVACComponent & hvacComponent )
   {
-    if( ! hvacComponent.optionalCast<CoilCoolingDXSingleSpeed>() ) { return false; };
+    if( !( hvacComponent.optionalCast<CoilCoolingDXSingleSpeed>() ||
+           hvacComponent.optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>() )
+        ) {
+      return false;
+    };
 
     return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName,hvacComponent.handle());;
   }
