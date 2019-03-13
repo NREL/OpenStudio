@@ -60,7 +60,7 @@ conan_cmake_run(REQUIRES
   cpprestsdk/2.10.10@bincrafters/stable
   websocketpp/0.8.1@bincrafters/stable
   BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
-  OPTIONS zlib:minizip=True
+  OPTIONS zlib:minizip=True jsoncpp:use_pic=True
   BUILD missing boost_asio websocketpp
   )
 else()
