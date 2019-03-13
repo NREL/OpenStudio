@@ -39,6 +39,31 @@ conan_check(VERSION 1.0.0 REQUIRED)
 conan_add_remote(NAME bincrafters
   URL https://api.bintray.com/conan/bincrafters/public-conan)
 
+if(UNIX AND NOT APPLE)
+conan_cmake_run(REQUIRES 
+  OpenSSL/1.1.0g@conan/stable
+  boost_asio/1.69.0@bincrafters/stable
+  boost_program_options/1.69.0@bincrafters/stable
+  boost_regex/1.69.0@bincrafters/stable
+  boost_filesystem/1.69.0@bincrafters/stable
+  boost_crc/1.69.0@bincrafters/stable
+  boost_algorithm/1.69.0@bincrafters/stable
+  boost_uuid/1.69.0@bincrafters/stable
+  boost_log/1.69.0@bincrafters/stable
+  boost_numeric_ublas/1.69.0@bincrafters/stable
+  boost_functional/1.69.0@bincrafters/stable
+  boost_geometry/1.69.0@bincrafters/stable
+  pugixml/1.9@bincrafters/stable
+  jsoncpp/1.8.4@theirix/stable
+  zlib/1.2.11@conan/stable
+  sqlite3/3.27.2@bincrafters/stable
+  cpprestsdk/2.10.10@bincrafters/stable
+  websocketpp/0.8.1@bincrafters/stable
+  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
+  OPTIONS zlib:minizip=True
+  BUILD missing boost_asio websocketpp
+  )
+else()
 conan_cmake_run(REQUIRES 
   boost_program_options/1.69.0@bincrafters/stable
   boost_regex/1.69.0@bincrafters/stable
@@ -59,6 +84,8 @@ conan_cmake_run(REQUIRES
   OPTIONS zlib:minizip=True
   BUILD missing
   )
+
+endif()
 
 message("DONE RUNNING CONAN")
 
@@ -704,8 +731,8 @@ if(UNIX)
     find_library(READLINE libreadline.a)
     find_library(TERMCAP libtermcap.a)
     find_library(YAML libyaml.a)
-    find_library(CRYPTO libcrypto.a)
-    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} ${CRYPTO})
+    #    find_library(CRYPTO libcrypto.a)
+    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} CONAN_PKG::OpenSSL)
   endif()
 else()
   set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017_v2.zip")
