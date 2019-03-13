@@ -38,6 +38,13 @@
 #include "../AirLoopHVAC.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
+#include "../AirLoopHVACUnitarySystem.hpp"
+#include "../ZoneHVACUnitVentilator.hpp"
+#include "../ZoneHVACFourPipeFanCoil.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../CoilHeatingWater.hpp"
+#include "../CoilCoolingWater.hpp"
+#include "../Schedule.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -146,5 +153,47 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_clone) {
 
   EXPECT_NE(coilSystem2.coolingCoil().handle(), cc.handle());
   EXPECT_NE(coilSystem2.heatExchanger().handle(), hx.handle());
+
+}
+
+TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_containingComponent) {
+
+  Model m;
+
+  {
+    AirLoopHVACUnitarySystem unitary(m);
+    CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
+
+    EXPECT_TRUE(unitary.setCoolingCoil(coilSystem));
+    boost::optional<HVACComponent> _c = coilSystem.containingHVACComponent();
+    ASSERT_TRUE(_c);
+    EXPECT_EQ(_c->handle(), unitary.handle());
+  }
+
+
+  {
+    ZoneHVACUnitVentilator uv(m);
+
+    CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
+    EXPECT_TRUE(uv.setCoolingCoil(coilSystem));
+    boost::optional<ZoneHVACComponent> _c = coilSystem.containingZoneHVACComponent();
+    ASSERT_TRUE(_c);
+    EXPECT_EQ(_c->handle(), uv.handle());
+  }
+
+  {
+    Schedule s = m.alwaysOnDiscreteSchedule();
+    FanConstantVolume supplyFan(m);
+    CoilCoolingWater coolingCoil(m);
+    CoilHeatingWater heatingCoil(m);
+
+    ZoneHVACFourPipeFanCoil fc(m, s, supplyFan, coolingCoil, heatingCoil);
+
+    CoilSystemCoolingWaterHeatExchangerAssisted coilSystem(m);
+    EXPECT_TRUE(fc.setCoolingCoil(coilSystem));
+    boost::optional<ZoneHVACComponent> _c = coilSystem.containingZoneHVACComponent();
+    ASSERT_TRUE(_c);
+    EXPECT_EQ(_c->handle(), fc.handle());
+  }
 
 }

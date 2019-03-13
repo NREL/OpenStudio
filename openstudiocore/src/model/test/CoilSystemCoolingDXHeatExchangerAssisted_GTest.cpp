@@ -169,3 +169,81 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_clone) {
   EXPECT_FALSE(hx2.airLoopHVAC());
 
 }
+
+TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_containingComponent) {
+
+  Model m;
+
+  {
+    CoilSystemCoolingDXHeatExchangerAssisted coilSystem(m);
+
+    AirLoopHVACUnitarySystem unitary(m);
+    EXPECT_TRUE(unitary.setCoolingCoil(coilSystem));
+    boost::optional<HVACComponent> _c = coilSystem.containingHVACComponent();
+    ASSERT_TRUE(_c);
+    EXPECT_EQ(_c->handle(), unitary.handle());
+  }
+
+
+
+  {
+    Schedule s = m.alwaysOnDiscreteSchedule();
+    FanConstantVolume supplyFan(m);
+    CoilHeatingDXSingleSpeed coilHeatingDX(m);
+    CoilCoolingDXSingleSpeed coilCoolingDX(m);
+    CoilHeatingElectric supplementalHeatingCoil(m);
+
+    AirLoopHVACUnitaryHeatPumpAirToAir unitary(m, s, supplyFan, coilHeatingDX, coilCoolingDX, supplementalHeatingCoil);
+
+    CoilSystemCoolingDXHeatExchangerAssisted coilSystem(m);
+    EXPECT_TRUE(unitary.setCoolingCoil(coilSystem));
+    boost::optional<HVACComponent> _c = coilSystem.containingHVACComponent();
+    ASSERT_TRUE(_c);
+    EXPECT_EQ(_c->handle(), unitary.handle());
+  }
+
+  {
+    FanConstantVolume supplyFan(m);
+    CoilCoolingDXSingleSpeed coilCoolingDX(m);
+    CoilHeatingElectric coilHeatingElectric(m);
+
+    AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m, supplyFan, coilCoolingDX, coilHeatingElectric);
+
+    CoilSystemCoolingDXHeatExchangerAssisted coilSystem(m);
+    EXPECT_TRUE(unitary.setCoolingCoil(coilSystem));
+    boost::optional<HVACComponent> _c = coilSystem.containingHVACComponent();
+    ASSERT_TRUE(_c);
+    EXPECT_EQ(_c->handle(), unitary.handle());
+  }
+
+  // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed: shouldn't accept it
+  {
+    FanConstantVolume supplyFan(m);
+    CoilHeatingElectric coilHeatingElectric(m);
+    CoilCoolingDXSingleSpeed coilCoolingDX(m);
+    CoilHeatingElectric supplementalHeatingCoil(m);
+
+    AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed unitary(m, supplyFan, coilHeatingElectric, coilCoolingDX, supplementalHeatingCoil);
+
+    CoilSystemCoolingDXHeatExchangerAssisted coilSystem(m);
+    EXPECT_FALSE(unitary.setCoolingCoil(coilSystem));
+  }
+
+
+  {
+    Schedule s = m.alwaysOnDiscreteSchedule();
+    FanConstantVolume supplyFan(m);
+    CoilHeatingElectric coilHeatingElectric(m);
+    CoilCoolingDXSingleSpeed coilCoolingDX(m);
+    CoilHeatingElectric supplementalHeatingCoil(m);
+
+    ZoneHVACPackagedTerminalHeatPump pthp(m, s, supplyFan, coilHeatingElectric, coilCoolingDX, supplementalHeatingCoil);
+
+    CoilSystemCoolingDXHeatExchangerAssisted coilSystem(m);
+    EXPECT_TRUE(pthp.setCoolingCoil(coilSystem));
+    boost::optional<ZoneHVACComponent> _c = coilSystem.containingZoneHVACComponent();
+    ASSERT_TRUE(_c);
+    EXPECT_EQ(_c->handle(), pthp.handle());
+  }
+
+}
