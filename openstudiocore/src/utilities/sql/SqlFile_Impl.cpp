@@ -577,8 +577,10 @@ namespace openstudio{
 
       int hourlyReportIndex = getNextIndex("daylightmaphourlyreports", "HourlyReportIndex");
 
-      // we'll let stmt1 have the transaction
-      PreparedStatement stmt1("insert into daylightmaphourlyreports (HourlyReportIndex, MapNumber, Year, Month, DayOfMonth, Hour) values (?, ?, ?, ?, ?, ?)", m_db, true);
+      // TODO: E+ doesn't have a Year field here: cf https://github.com/NREL/EnergyPlus/issues/7225
+      // PreparedStatement stmt1("insert into daylightmaphourlyreports (HourlyReportIndex, MapNumber, Year, Month, DayOfMonth, Hour) values (?, ?, ?, ?, ?, ?)", m_db, true);
+       // we'll let stmt1 have the transaction
+      PreparedStatement stmt1("insert into daylightmaphourlyreports (HourlyReportIndex, MapNumber, Month, DayOfMonth, Hour) values (?, ?, ?, ?, ?)", m_db, true);
 
       for (size_t dateidx = 0; dateidx < t_times.size(); ++dateidx)
       {
@@ -587,7 +589,7 @@ namespace openstudio{
 
         DateTime dt = t_times[dateidx];
 
-        int year = dt.date().year();
+        // int year = dt.date().year();
         int monthOfYear = dt.date().monthOfYear().value();
         int dayOfMonth = dt.date().dayOfMonth();
         int hours = dt.time().hours();
@@ -605,10 +607,14 @@ namespace openstudio{
           hours = 24;
         }
 
-        stmt1.bind(3, year);
-        stmt1.bind(4, monthOfYear);
-        stmt1.bind(5, dayOfMonth);
-        stmt1.bind(6, hours);
+        // stmt1.bind(3, year);
+        // stmt1.bind(4, monthOfYear);
+        // stmt1.bind(5, dayOfMonth);
+        // stmt1.bind(6, hours);
+        stmt1.bind(3, monthOfYear);
+        stmt1.bind(4, dayOfMonth);
+        stmt1.bind(5, hours);
+
         stmt1.execute();
 
         if (t_xs.size() != t_maps[dateidx].size1()
