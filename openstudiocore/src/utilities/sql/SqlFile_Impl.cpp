@@ -91,7 +91,7 @@ namespace openstudio{
             "CREATE TABLE Simulations (SimulationIndex INTEGER PRIMARY KEY, EnergyPlusVersion TEXT, TimeStamp TEXT, NumTimestepsPerHour INTEGER, Completed BOOL, CompletedSuccessfully BOOL);"
             "CREATE TABLE EnvironmentPeriods ( EnvironmentPeriodIndex INTEGER PRIMARY KEY, SimulationIndex INTEGER, EnvironmentName TEXT, EnvironmentType INTEGER, FOREIGN KEY(SimulationIndex) REFERENCES Simulations(SimulationIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
             "CREATE TABLE Errors ( ErrorIndex INTEGER PRIMARY KEY, SimulationIndex INTEGER, ErrorType INTEGER, ErrorMessage TEXT, Count INTEGER, FOREIGN KEY(SimulationIndex) REFERENCES Simulations(SimulationIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
-            "CREATE TABLE Time (TimeIndex INTEGER PRIMARY KEY, Month INTEGER, Day INTEGER, Hour INTEGER, Minute INTEGER, Dst INTEGER, Interval INTEGER, IntervalType INTEGER, SimulationDays INTEGER, DayType TEXT, EnvironmentPeriodIndex INTEGER, WarmupFlag INTEGER);"
+            "CREATE TABLE Time (TimeIndex INTEGER PRIMARY KEY, Year INTEGER, Month INTEGER, Day INTEGER, Hour INTEGER, Minute INTEGER, Dst INTEGER, Interval INTEGER, IntervalType INTEGER, SimulationDays INTEGER, DayType TEXT, EnvironmentPeriodIndex INTEGER, WarmupFlag INTEGER);"
             "CREATE TABLE Zones (ZoneIndex INTEGER PRIMARY KEY, ZoneName TEXT, RelNorth REAL, OriginX REAL, OriginY REAL, OriginZ REAL, CentroidX REAL, CentroidY REAL, CentroidZ REAL, OfType INTEGER, Multiplier REAL, ListMultiplier REAL, MinimumX REAL, MaximumX REAL, MinimumY REAL, MaximumY REAL, MinimumZ REAL, MaximumZ REAL, CeilingHeight REAL, Volume REAL, InsideConvectionAlgo INTEGER, OutsideConvectionAlgo INTEGER, FloorArea REAL, ExtGrossWallArea REAL, ExtNetWallArea REAL, ExtWindowArea REAL, IsPartOfTotalArea INTEGER);"
             "CREATE TABLE ZoneLists ( ZoneListIndex INTEGER PRIMARY KEY, Name TEXT);"
             "CREATE TABLE ZoneGroups ( ZoneGroupIndex INTEGER PRIMARY KEY, ZoneGroupName TEXT, ZoneListIndex INTEGER, ZoneListMultiplier INTEGER, FOREIGN KEY(ZoneListIndex) REFERENCES ZoneLists(ZoneListIndex) ON UPDATE CASCADE );"
@@ -332,7 +332,7 @@ namespace openstudio{
 
 
 
-      PreparedStatement stmt("insert into time (TimeIndex, Month, Day, Hour, Minute, Dst, Interval, IntervalType, SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag) values (?, ?, ?, ?, 0, 0, 60, 1, ?, ?, ?, null)", m_db, true);
+      PreparedStatement stmt("insert into time (TimeIndex, Year, Month, Day, Hour, Minute, Dst, Interval, IntervalType, SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag) values (?, ?, ?, ?, ?, 0, 0, 60, 1, ?, ?, ?, null)", m_db, true);
 
       int simulationDay = 1;
       for (openstudio::Date d = t_calendar.startDate();
@@ -342,19 +342,20 @@ namespace openstudio{
         for (int i = 1; i <= 24; ++i)
         {
           stmt.bind(1, nextTimeIndex);
-          stmt.bind(2, d.monthOfYear().value());
-          stmt.bind(3, d.dayOfMonth());
-          stmt.bind(4, i);
-          stmt.bind(5, simulationDay);
+          stmt.bind(2, d.year());
+          stmt.bind(3, d.monthOfYear().value());
+          stmt.bind(4, d.dayOfMonth());
+          stmt.bind(5, i);
+          stmt.bind(6, simulationDay);
 
           if (t_calendar.isHoliday(d))
           {
-            stmt.bind(6, "Holiday");
+            stmt.bind(7, "Holiday");
           } else {
-            stmt.bind(6, d.dayOfWeek().valueName());
+            stmt.bind(7, d.dayOfWeek().valueName());
           }
 
-          stmt.bind(7, nextEnvironmentPeriodIndex);
+          stmt.bind(8, nextEnvironmentPeriodIndex);
 
           stmt.execute();
 
@@ -577,7 +578,7 @@ namespace openstudio{
       int hourlyReportIndex = getNextIndex("daylightmaphourlyreports", "HourlyReportIndex");
 
       // we'll let stmt1 have the transaction
-      PreparedStatement stmt1("insert into daylightmaphourlyreports (HourlyReportIndex, MapNumber, Month, DayOfMonth, Hour) values (?, ?, ?, ?, ?)", m_db, true);
+      PreparedStatement stmt1("insert into daylightmaphourlyreports (HourlyReportIndex, MapNumber, Year, Month, DayOfMonth, Hour) values (?, ?, ?, ?, ?, ?)", m_db, true);
 
       for (size_t dateidx = 0; dateidx < t_times.size(); ++dateidx)
       {
@@ -586,6 +587,7 @@ namespace openstudio{
 
         DateTime dt = t_times[dateidx];
 
+        int year = dt.date().year();
         int monthOfYear = dt.date().monthOfYear().value();
         int dayOfMonth = dt.date().dayOfMonth();
         int hours = dt.time().hours();
@@ -603,10 +605,10 @@ namespace openstudio{
           hours = 24;
         }
 
-
-        stmt1.bind(3, monthOfYear);
-        stmt1.bind(4, dayOfMonth);
-        stmt1.bind(5, hours);
+        stmt1.bind(3, year);
+        stmt1.bind(4, monthOfYear);
+        stmt1.bind(5, dayOfMonth);
+        stmt1.bind(6, hours);
         stmt1.execute();
 
         if (t_xs.size() != t_maps[dateidx].size1()
@@ -678,7 +680,7 @@ namespace openstudio{
       openstudio::DateTime firstdate = t_timeSeries.firstReportDateTime();
 
       // we'll let stmt1 have the transaction
-      PreparedStatement stmt("insert into reportdata (ReportDataIndex, TimeIndex, ReportDataDictionaryIndex, Value) values ( ?, (select TimeIndex from time where Month=? and Day=? and Hour=? and Minute=? limit 1), ?, ?);", m_db, true);
+      PreparedStatement stmt("insert into reportdata (ReportDataIndex, TimeIndex, ReportDataDictionaryIndex, Value) values ( ?, (select TimeIndex from time where Year=? and Month=? and Day=? and Hour=? and Minute=? limit 1), ?, ?);", m_db, true);
 
       for (size_t i = 0; i < values.size(); ++i)
       {
@@ -697,6 +699,7 @@ namespace openstudio{
           dt -= openstudio::Time(0,0,0,1);
         }
 
+        int year = dt.date().year();
         int month = dt.date().monthOfYear().value();
         int day = dt.date().dayOfMonth();
         int hour = dt.time().hours();
@@ -706,12 +709,13 @@ namespace openstudio{
 
         int reportdataindex = getNextIndex("reportdata", "ReportDataIndex");
         stmt.bind(1, reportdataindex);
-        stmt.bind(2, month);
-        stmt.bind(3, day);
-        stmt.bind(4, hour);
-        stmt.bind(5, minute);
-        stmt.bind(6, datadicindex);
-        stmt.bind(7, value);
+        stmt.bind(2, year);
+        stmt.bind(3, month);
+        stmt.bind(4, day);
+        stmt.bind(5, hour);
+        stmt.bind(6, minute);
+        stmt.bind(7, datadicindex);
+        stmt.bind(8, value);
 
         stmt.execute();
       }
@@ -2115,12 +2119,13 @@ namespace openstudio{
 
     openstudio::OptionalDate SqlFile_Impl::timeSeriesStartDate(const DataDictionaryItem& dataDictionary)
     {
+      boost::optional<unsigned> year;
       unsigned int day=1;
       unsigned int month=1;
       if (m_db)
       {
         std::stringstream s;
-        s << "SELECT ti.Month, ti.Day, ti.Hour from ";
+        s << "SELECT ti.Year, ti.Month, ti.Day from ";
         s << dataDictionary.table;
         s << " rvd INNER JOIN Time ti on ti.TimeIndex = rvd.TimeIndex";
         if (dataDictionary.table == "ReportMeterData")
@@ -2141,8 +2146,9 @@ namespace openstudio{
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
         {
-          month = sqlite3_column_int(sqlStmtPtr, 0);
-          day = sqlite3_column_int(sqlStmtPtr, 1);
+          year = sqlite3_column_int(sqlStmtPtr, 0);
+          month = sqlite3_column_int(sqlStmtPtr, 1);
+          day = sqlite3_column_int(sqlStmtPtr, 2);
         }
         sqlite3_finalize(sqlStmtPtr);
       }
@@ -2150,7 +2156,11 @@ namespace openstudio{
         // DLM@20100707: RunPeriod timeseries return month=0, day=0.
         // what is a sensible value to put here? is this a bug in E+?
         // DLM: potential leap year problem
-        return openstudio::Date(openstudio::monthOfYear(month), day);
+        if (year) {
+          return openstudio::Date(openstudio::monthOfYear(month), day, *year);
+        } else {
+          return openstudio::Date(openstudio::monthOfYear(month), day);
+        }
       } catch (...){
         //return min date in time table.
         std::stringstream s;
@@ -2247,15 +2257,14 @@ namespace openstudio{
     openstudio::DateTime SqlFile_Impl::firstDateTime(bool includeHourAndMinute, int envPeriodIndex)
     {
       // default until added to eplusout.sql from energy plus
-      unsigned month=1, day=1, hour=1, minute=0;
-
-      openstudio::YearDescription yd;
-      yd.isLeapYear = false;
+      boost::optional<unsigned> year;
+      unsigned month = 1, day = 1, hour = 1, minute = 0;
 
       if (m_db)
       {
         std::stringstream s;
-        s << "SELECT Month, Day, Hour, Minute from Time where Month is not NULL and Day is not null and EnvironmentPeriodIndex = " << envPeriodIndex << " LIMIT 1";
+        s << "SELECT Year, Month, Day, Hour, Minute from Time where Month is not NULL and Day is not null and EnvironmentPeriodIndex = "
+          << envPeriodIndex << " LIMIT 1";
 
         sqlite3_stmt* sqlStmtPtr;
         int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
@@ -2263,11 +2272,12 @@ namespace openstudio{
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
         {
-          month = sqlite3_column_int(sqlStmtPtr, 0);
-          day = sqlite3_column_int(sqlStmtPtr, 1);
+          year = sqlite3_column_int(sqlStmtPtr, 0);
+          month = sqlite3_column_int(sqlStmtPtr, 1);
+          day = sqlite3_column_int(sqlStmtPtr, 2);
           if (includeHourAndMinute){
-            hour = sqlite3_column_int(sqlStmtPtr, 2);
-            minute = sqlite3_column_int(sqlStmtPtr, 3);
+            hour = sqlite3_column_int(sqlStmtPtr, 3);
+            minute = sqlite3_column_int(sqlStmtPtr, 4);
           } else{
             hour = 1;
             minute = 0;
@@ -2275,30 +2285,30 @@ namespace openstudio{
         }
         sqlite3_finalize(sqlStmtPtr);
 
-        // DLM: could also try to check DayType to find yearStartsOnDayOfWeek
-        if ((month == 2) && (day == 29)){
-          yd.isLeapYear = true;
-        }
       }
-      // DLM: potential leap year problem
+
+      // Note JM 2019-03-14: Starting with E+ v8.9.0, we actually have Year in the SQL file
+      // So if we can, we use the actual year, otherwise we initialze with defaults
+      // and let the Date Ctor figure out the assumed year
+      openstudio::Date date = year ? Date(monthOfYear(month), day, *year) : Date(monthOfYear(month), day);
+
       // DLM: get standard time zone?
-      openstudio::Date date(monthOfYear(month), day, yd);
       openstudio::Time time(0, hour, minute, 0);
+
       return openstudio::DateTime(date, time);
     }
 
     openstudio::DateTime SqlFile_Impl::lastDateTime(bool includeHourAndMinute, int envPeriodIndex)
     {
       // default until added to eplusout.sql from energy plus
+      boost::optional<unsigned> year;
       unsigned month = 1, day = 1, hour = 1, minute = 0;
-
-      openstudio::YearDescription yd;
-      yd.isLeapYear = false;
 
       if (m_db)
       {
         std::stringstream s;
-        s << "SELECT Month, Day, Hour, Minute from Time where Month is not NULL and Day is not null and EnvironmentPeriodIndex = " << envPeriodIndex << " order by TimeIndex DESC LIMIT 1";
+        s << "SELECT Year, Month, Day, Hour, Minute from Time where Month is not NULL and Day is not null and EnvironmentPeriodIndex = "
+          << envPeriodIndex << " order by TimeIndex DESC LIMIT 1";
 
         sqlite3_stmt* sqlStmtPtr;
         int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
@@ -2306,11 +2316,12 @@ namespace openstudio{
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
         {
-          month = sqlite3_column_int(sqlStmtPtr, 0);
-          day = sqlite3_column_int(sqlStmtPtr, 1);
+          year = sqlite3_column_int(sqlStmtPtr, 0);
+          month = sqlite3_column_int(sqlStmtPtr, 1);
+          day = sqlite3_column_int(sqlStmtPtr, 2);
           if (includeHourAndMinute){
-            hour = sqlite3_column_int(sqlStmtPtr, 2);
-            minute = sqlite3_column_int(sqlStmtPtr, 3);
+            hour = sqlite3_column_int(sqlStmtPtr, 3);
+            minute = sqlite3_column_int(sqlStmtPtr, 4);
           }else{
             hour = 24;
             minute = 0;
@@ -2318,15 +2329,17 @@ namespace openstudio{
         }
         sqlite3_finalize(sqlStmtPtr);
 
-        // DLM: could also try to check DayType to find yearStartsOnDayOfWeek
-        if ((month == 2) && (day == 29)){
-          yd.isLeapYear = true;
-        }
+
       }
-      // DLM: potential leap year problem
+
+      // Note JM 2019-03-14: Starting with E+ v8.9.0, we actually have Year in the SQL file
+      // So if we can, we use the actual year, otherwise we initialze with defaults
+      // and let the Date Ctor figure out the assumed year
+      openstudio::Date date = year ? Date(monthOfYear(month), day, *year) : Date(monthOfYear(month), day);
+
       // DLM: get standard time zone?
-      openstudio::Date date(monthOfYear(month), day, yd);
       openstudio::Time time(0, hour, minute, 0);
+
       return openstudio::DateTime(date, time);
     }
 
@@ -2361,7 +2374,7 @@ namespace openstudio{
         VersionString version(energyPlusVersion);
 
         std::stringstream s;
-        s << "SELECT dt.VariableValue, Time.Month, Time.Day, Time.Hour, Time.Minute, Time.Interval FROM ";
+        s << "SELECT dt.VariableValue, Time.Year, Time.Month, Time.Day, Time.Hour, Time.Minute, Time.Interval FROM ";
         s << dataDictionary.table;
         s << " dt INNER JOIN Time ON Time.timeIndex = dt.TimeIndex";
         s << " WHERE ";
@@ -2396,9 +2409,10 @@ namespace openstudio{
           double value = sqlite3_column_double(sqlStmtPtr, 0);
           stdValues.push_back(value);
 
-          unsigned month = sqlite3_column_int(sqlStmtPtr, 1);
-          unsigned day = sqlite3_column_int(sqlStmtPtr, 2);
-          unsigned intervalMinutes = sqlite3_column_int(sqlStmtPtr, 5); // used for run periods
+          unsigned year = sqlite3_column_int(sqlStmtPtr, 1);
+          unsigned month = sqlite3_column_int(sqlStmtPtr, 2);
+          unsigned day = sqlite3_column_int(sqlStmtPtr, 3);
+          unsigned intervalMinutes = sqlite3_column_int(sqlStmtPtr, 6); // used for run periods
 
           if ((version.major() == 8) && (version.minor() == 3)){
             // workaround for bug in E+ 8.3, issue #1692
@@ -2419,14 +2433,13 @@ namespace openstudio{
               // gets called for RunPeriod reports
               firstReportDateTime = lastDateTime(false, dataDictionary.envPeriodIndex);
             } else{
-              // DLM: potential leap year problem
               // DLM: get standard time zone?
               if (intervalMinutes >= 24 * 60){
                 // Daily or Monthly
                 OS_ASSERT(intervalMinutes % (24 * 60) == 0);
-                firstReportDateTime = openstudio::DateTime(openstudio::Date(month, day), openstudio::Time(1, 0, 0, 0));
+                firstReportDateTime = openstudio::DateTime(openstudio::Date(month, day, year), openstudio::Time(1, 0, 0, 0));
               } else {
-                firstReportDateTime = openstudio::DateTime(openstudio::Date(month, day), openstudio::Time(0, 0, intervalMinutes, 0));
+                firstReportDateTime = openstudio::DateTime(openstudio::Date(month, day, year), openstudio::Time(0, 0, intervalMinutes, 0));
               }
 
             }
@@ -2472,9 +2485,9 @@ namespace openstudio{
 
       if (m_db) {
         std::stringstream s;
-        s << "SELECT Time.month, Time.day, Time.hour, Time.minute, Time.dst FROM ";
+        s << "SELECT Time.Year, Time.Month, Time.Day, Time.Hour, Time.Minute, Time.Dst FROM ";
         s << dataDictionary.table;
-        s << " dt INNER JOIN Time ON Time.timeIndex = dt.TimeIndex";
+        s << " dt INNER JOIN Time ON Time.TimeIndex = dt.TimeIndex";
         s << " WHERE ";
         if (dataDictionary.table == "ReportMeterData")
         {
@@ -2495,20 +2508,21 @@ namespace openstudio{
         code = sqlite3_step(sqlStmtPtr);
         std::stringstream s2;
         s2 << "SQL Query:" << std::endl;
-        s2 << s.str();
+        s2 << s.str() << std::endl;
         s2 << "Return Code:" << std::endl;
         s2 << code;
         LOG(Debug, s2.str());
         while (code == SQLITE_ROW) {
-          unsigned month, day, hour, minute;//, simulationDay;
-          month = sqlite3_column_int(sqlStmtPtr, 0);
-          day = sqlite3_column_int(sqlStmtPtr, 1);
-          hour = sqlite3_column_int(sqlStmtPtr, 2);
-          minute = sqlite3_column_int(sqlStmtPtr, 3);
+          unsigned year, month, day, hour, minute;//, simulationDay;
+          year = sqlite3_column_int(sqlStmtPtr, 0);
+          month = sqlite3_column_int(sqlStmtPtr, 1);
+          day = sqlite3_column_int(sqlStmtPtr, 2);
+          hour = sqlite3_column_int(sqlStmtPtr, 3);
+          minute = sqlite3_column_int(sqlStmtPtr, 4);
 
-          // DLM: potential leap year problem
+          // Note JM 2019-03-14: E+ v8.9.0 added Year
           // DLM: get standard time zone?
-          openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month),day), openstudio::Time(0,hour, minute, 0));
+          openstudio::DateTime dateTime(openstudio::Date(monthOfYear(month), day, year), openstudio::Time(0,hour, minute, 0));
           dateTimes.push_back(dateTime);
 
           // step to next row
@@ -3341,7 +3355,7 @@ namespace openstudio{
     {
       std::vector< std::pair<int, DateTime> > reportIndicesDates;
       std::stringstream s;
-      s << "select HourlyReportIndex, Month, DayOfMonth, Hour from daylightmaphourlyreports where MapNumber=" << mapIndex;
+      s << "select HourlyReportIndex, Year, Month, DayOfMonth, Hour from daylightmaphourlyreports where MapNumber=" << mapIndex;
 
       sqlite3_stmt* sqlStmtPtr;
 
@@ -3352,9 +3366,14 @@ namespace openstudio{
         std::pair<int, DateTime> pair;
         pair.first = sqlite3_column_int(sqlStmtPtr,0);
 
-        // DLM: potential leap year problem
+        unsigned year = sqlite3_column_int(sqlStmtPtr, 1);
+        unsigned month = sqlite3_column_int(sqlStmtPtr, 2);
+        unsigned day = sqlite3_column_int(sqlStmtPtr, 3);
+        unsigned hour = sqlite3_column_int(sqlStmtPtr, 4);
+
+        // Note JM 2019-03-14: E+ v8.9.0 added Year
         // DLM: get standard time zone?
-        pair.second = DateTime( Date( monthOfYear( sqlite3_column_int(sqlStmtPtr,1) ), sqlite3_column_int(sqlStmtPtr,2) ), Time( 0, sqlite3_column_int(sqlStmtPtr, 3), 0, 0) );
+        pair.second = DateTime(Date(monthOfYear(month),day, year), Time(0, hour, 0, 0));
         reportIndicesDates.push_back( pair );
         // step to next row
         code = sqlite3_step(sqlStmtPtr);
@@ -3368,9 +3387,10 @@ namespace openstudio{
 
     boost::optional<DateTime> SqlFile_Impl::illuminanceMapDate(const int& hourlyReportIndex) const
     {
-      int month=0, dayOfMonth=0, hour=0;
+      boost::optional<unsigned> year;
+      unsigned month=0, dayOfMonth=0, hour=0;
       std::stringstream s;
-      s << "select Month, DayOfMonth, Hour from daylightmaphourlyreports where HourlyReportIndex=" << hourlyReportIndex;
+      s << "select Year, Month, DayOfMonth, Hour from daylightmaphourlyreports where HourlyReportIndex=" << hourlyReportIndex;
 
       sqlite3_stmt* sqlStmtPtr;
 
@@ -3378,9 +3398,10 @@ namespace openstudio{
       code = sqlite3_step(sqlStmtPtr);
       if (code == SQLITE_ROW)
       {
-        month = sqlite3_column_int(sqlStmtPtr,0);
-        dayOfMonth = sqlite3_column_int(sqlStmtPtr,1);
-        hour = sqlite3_column_int(sqlStmtPtr,2);
+        year = sqlite3_column_int(sqlStmtPtr,0);
+        month = sqlite3_column_int(sqlStmtPtr,1);
+        dayOfMonth = sqlite3_column_int(sqlStmtPtr,2);
+        hour = sqlite3_column_int(sqlStmtPtr,3);
       }
       else
       {
@@ -3391,13 +3412,19 @@ namespace openstudio{
       /// must finalize to prevent memory leaks
       sqlite3_finalize(sqlStmtPtr);
 
-      // DLM: potential leap year problem
+
+      // Note JM 2019-03-14: Starting with E+ v8.9.0, we actually have Year in the SQL file
+      // So if we can, we use the actual year, otherwise we initialze with defaults
+      // and let the Date Ctor figure out the assumed year
+      openstudio::Date date = year ? Date(monthOfYear(month), dayOfMonth, *year) : Date(monthOfYear(month), dayOfMonth);
+
       // DLM: get standard time zone?
-      return DateTime(Date(monthOfYear(month),dayOfMonth), Time(0,hour, 0, 0));
+      return DateTime(date, Time(0,hour, 0, 0));
     }
 
     boost::optional<int> SqlFile_Impl::illuminanceMapHourlyReportIndex(const int& mapIndex, const DateTime& dateTime) const
     {
+      int year = dateTime.date().year();
       int monthOfYear = dateTime.date().monthOfYear().value();
       int dayOfMonth = dateTime.date().dayOfMonth();
       int hours = dateTime.time().hours();
@@ -3416,7 +3443,7 @@ namespace openstudio{
 
       std::stringstream s;
       s << "select HourlyReportIndex from daylightmaphourlyreports where MapNumber='" << mapIndex <<
-        "' AND Month=" << monthOfYear <<
+        "' AND Year=" << year << " AND Month=" << monthOfYear <<
         " AND DayOfMonth=" << dayOfMonth <<
         " AND Hour=" << hours ;
 
