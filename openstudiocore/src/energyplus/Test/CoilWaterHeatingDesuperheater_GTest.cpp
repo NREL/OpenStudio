@@ -49,33 +49,35 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater) {
-    Model m;
+  Model m;
 
-    ScheduleConstant temperatureSetpointSchedule(m);
-    CoilWaterHeatingDesuperheater desuperheater(m, temperatureSetpointSchedule);
+  ScheduleConstant temperatureSetpointSchedule(m);
+  CoilWaterHeatingDesuperheater desuperheater(m, temperatureSetpointSchedule);
 
-    std::vector<HVACComponent> testCoils = {
-      CoilCoolingDXSingleSpeed(m),
-      CoilCoolingDXTwoSpeed(m),
-      CoilCoolingDXTwoStageWithHumidityControlMode(m)
-    };
+  std::vector<HVACComponent> testCoils = {
+    CoilCoolingDXSingleSpeed(m),
+    CoilCoolingDXTwoSpeed(m),
+    CoilCoolingDXTwoStageWithHumidityControlMode(m)
+  };
 
-    for (const auto& dxCoil: testCoils) {
+  for (const auto& dxCoil: testCoils) {
 
-      desuperheater.setHeatingSource(dxCoil);
+    desuperheater.setHeatingSource(dxCoil);
 
-      ForwardTranslator forwardTranslator;
-      Workspace workspace = forwardTranslator.translateModel(m);
+    ForwardTranslator forwardTranslator;
+    Workspace workspace = forwardTranslator.translateModel(m);
 
-      WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::Coil_WaterHeating_Desuperheater));
-      ASSERT_EQ(1u, idfObjs.size());
-      WorkspaceObject idf_desuperheater(idfObjs[0]);
+    WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::Coil_WaterHeating_Desuperheater));
+    ASSERT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_desuperheater(idfObjs[0]);
 
-      std::string ep_idd_name = dxCoil.iddObject().name().substr(3);
+    std::string ep_idd_name = dxCoil.iddObject().name().substr(3);
 
-      // Check that the DX coil ends up directly onto the object, and NOT a CoilSystem:Cooling:DX wrapper
-      EXPECT_EQ(ep_idd_name, idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceObjectType).get());
-      EXPECT_EQ(dxCoil.nameString(), idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceName).get());
-    }
+    // Check that the DX coil ends up directly onto the object, and NOT a CoilSystem:Cooling:DX wrapper
+    EXPECT_EQ(ep_idd_name, idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceObjectType).get());
+    EXPECT_EQ(dxCoil.nameString(), idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceName).get());
+
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
+  }
 
 }
