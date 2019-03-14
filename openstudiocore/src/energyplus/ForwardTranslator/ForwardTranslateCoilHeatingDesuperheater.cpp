@@ -32,22 +32,12 @@
 #include "../../model/CoilHeatingDesuperheater.hpp"
 
 #include "../../model/ModelObject.hpp"
-#include "../../model/ModelObject_Impl.hpp"
 #include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
-
-#include "../../model/CoilCoolingDXSingleSpeed.hpp"
-#include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
-#include "../../model/CoilCoolingDXTwoSpeed.hpp"
-#include "../../model/CoilCoolingDXTwoSpeed_Impl.hpp"
-#include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
-#include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
 
 #include <utilities/idd/Coil_Heating_Desuperheater_FieldEnums.hxx>
+#include <utilities/idd/CoilSystem_Cooling_DX_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -111,33 +101,35 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDesuperheater(
   boost::optional<ModelObject> heatingSource = modelObject.heatingSource();
 
   if ( heatingSource ) {
-    // Avoid wrapping inside a CoilSystem:Cooling:DX object
-    boost::optional<IdfObject> _heatingSource;
+    if (boost::optional<IdfObject> _heatingSource = translateAndMapModelObject(*heatingSource)) {
 
-    if( boost::optional<CoilCoolingDXSingleSpeed> _coil = heatingSource->optionalCast<CoilCoolingDXSingleSpeed>() ) {
-      _heatingSource = translateCoilCoolingDXSingleSpeedWithoutUnitary(_coil.get());
-      m_map.insert(std::make_pair(heatingSource->handle(),_heatingSource.get()));
+      // Note JM 2019-03-14:
+      // If the coil in question is a DX coil (CoilCoolingDXSingleSpeed, CoilCoolingDXTwoSpeed, CoilCoolingDXTwoStageWithHumidityControlMode)
+      // and this DX coil isn't already wrapped in a Unitary, then the FT will wrap it into a CoilSystem:Cooling:DX object and return that, but we
+      // need the DX coil here and not the wrapper.
+      //
+      // Note: Other accepted types are Refrigeration objects and don't suffer the same problem
+      // (Refrigeration:Condenser:AirCooled, Refrigeration:Condenser:EvaporativeCooled, Refrigeration:Condenser:WaterCooled)
 
-    } else if( boost::optional<CoilCoolingDXTwoSpeed> _coil = heatingSource->optionalCast<CoilCoolingDXTwoSpeed>() ) {
-      _heatingSource = translateCoilCoolingDXTwoSpeedWithoutUnitary(_coil.get());
-      m_map.insert(std::make_pair(heatingSource->handle(),_heatingSource.get()));
+      std::string objectType;
+      std::string objectName;
 
-    } else if( boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> _coil = heatingSource->optionalCast<CoilCoolingDXTwoStageWithHumidityControlMode>() ) {
-      _heatingSource = translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary(_coil.get());
-      m_map.insert(std::make_pair(heatingSource->handle(),_heatingSource.get()));
+      if (_heatingSource->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX) {
+        // We have retrieve the coil itself, not the wrapper
+        objectType = _heatingSource->getString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType).get();
+        objectName = _heatingSource->getString(CoilSystem_Cooling_DXFields::CoolingCoilName).get();
+      } else {
+        objectType = _heatingSource->iddObject().name();
+        objectName = _heatingSource->name().get();
+      }
 
-    } else  {
-      // Other accepted types are Refrigeration objects and don't suffer the same problem
-      // Refrigeration:Condenser:AirCooled
-      // Refrigeration:Condenser:EvaporativeCooled
-      // Refrigeration:Condenser:WaterCooled
-      _heatingSource = translateAndMapModelObject(*heatingSource);
-    }
-
-    if ( _heatingSource && _heatingSource->name() )
-    {
-      object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceObjectType,_heatingSource->iddObject().name());
-      object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceName,_heatingSource->name().get());
+      if (objectType.empty() || objectName.empty()) {
+        LOG(Error, "Something went wrong in the translation of " << modelObject.briefDescription() << ", couldn't retrieve the coil");
+        OS_ASSERT(false);
+      } else {
+        object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceObjectType, objectType);
+        object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceName, objectName);
+      }
     }
   }
 
