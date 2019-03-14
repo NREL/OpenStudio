@@ -40,6 +40,13 @@
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
+#include "../../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXTwoSpeed.hpp"
+#include "../../model/CoilCoolingDXTwoSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
+
 #include <utilities/idd/Coil_Heating_Desuperheater_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -104,13 +111,34 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDesuperheater(
   boost::optional<ModelObject> heatingSource = modelObject.heatingSource();
 
   if ( heatingSource ) {
-      boost::optional<IdfObject> _heatingSource = translateAndMapModelObject(heatingSource.get());
+    // Avoid wrapping inside a CoilSystem:Cooling:DX object
+    boost::optional<IdfObject> _heatingSource;
 
-      if ( _heatingSource && _heatingSource->name() )
-      {
-        object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceObjectType,_heatingSource->iddObject().name());
-        object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceName,_heatingSource->name().get());
-      }
+    if( boost::optional<CoilCoolingDXSingleSpeed> _coil = heatingSource->optionalCast<CoilCoolingDXSingleSpeed>() ) {
+      _heatingSource = translateCoilCoolingDXSingleSpeedWithoutUnitary(_coil.get());
+      m_map.insert(std::make_pair(heatingSource->handle(),_heatingSource.get()));
+
+    } else if( boost::optional<CoilCoolingDXTwoSpeed> _coil = heatingSource->optionalCast<CoilCoolingDXTwoSpeed>() ) {
+      _heatingSource = translateCoilCoolingDXTwoSpeedWithoutUnitary(_coil.get());
+      m_map.insert(std::make_pair(heatingSource->handle(),_heatingSource.get()));
+
+    } else if( boost::optional<CoilCoolingDXTwoStageWithHumidityControlMode> _coil = heatingSource->optionalCast<CoilCoolingDXTwoStageWithHumidityControlMode>() ) {
+      _heatingSource = translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary(_coil.get());
+      m_map.insert(std::make_pair(heatingSource->handle(),_heatingSource.get()));
+
+    } else  {
+      // Other accepted types are Refrigeration objects and don't suffer the same problem
+      // Refrigeration:Condenser:AirCooled
+      // Refrigeration:Condenser:EvaporativeCooled
+      // Refrigeration:Condenser:WaterCooled
+      _heatingSource = translateAndMapModelObject(*heatingSource);
+    }
+
+    if ( _heatingSource && _heatingSource->name() )
+    {
+      object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceObjectType,_heatingSource->iddObject().name());
+      object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceName,_heatingSource->name().get());
+    }
   }
 
 // Temperature Setpoint Node Name
