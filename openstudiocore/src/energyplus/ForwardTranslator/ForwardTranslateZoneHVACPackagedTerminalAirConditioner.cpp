@@ -342,7 +342,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
   if( boost::optional<CoilCoolingDXSingleSpeed> dxCoil = coolingCoil.optionalCast<CoilCoolingDXSingleSpeed>() )
   {
     _coolingCoil = translateCoilCoolingDXSingleSpeedWithoutUnitary(dxCoil.get());
-
+    // TODO: I think it's Unecessary since containingZoneHVACComponent is true so isHVACComponentWithinUnitary will return true,
+    // so translateCoilCoolingDXSingleSpeedWithoutUnitary will be called
     m_map.insert(std::make_pair(coolingCoil.handle(),_coolingCoil.get()));
   }
   else
