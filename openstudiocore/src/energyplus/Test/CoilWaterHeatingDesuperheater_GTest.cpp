@@ -60,11 +60,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater) {
     CoilCoolingDXTwoStageWithHumidityControlMode(m)
   };
 
+  ForwardTranslator forwardTranslator;
+
   for (const auto& dxCoil: testCoils) {
 
     desuperheater.setHeatingSource(dxCoil);
 
-    ForwardTranslator forwardTranslator;
     Workspace workspace = forwardTranslator.translateModel(m);
 
     WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::Coil_WaterHeating_Desuperheater));
@@ -77,7 +78,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater) {
     EXPECT_EQ(ep_idd_name, idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceObjectType).get());
     EXPECT_EQ(dxCoil.nameString(), idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceName).get());
 
-    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
   }
 
 }
