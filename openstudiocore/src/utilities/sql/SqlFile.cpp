@@ -1725,4 +1725,12 @@ bool SqlFile::supportedVersion() const
   return false;
 }
 
+bool SqlFile::hasYear() const {
+  if (m_impl) {
+    return m_impl->hasYear();
+  }
+
+  return true;
+}
+
 } // openstudio
