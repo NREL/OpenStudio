@@ -39,7 +39,7 @@
 #include "../data/Variant.hpp"
 #include "../bcl/BCLMeasure.hpp"
 
-#include <jsoncpp/json.h>
+#include <json/json.h>
 
 #include <nano/nano_signal_slot.hpp>
 

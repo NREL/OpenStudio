@@ -24,7 +24,10 @@ function(embed_files FILES EMBEDDED_LOCATIONS CXX_OUTPUT_FILES)
     get_filename_component(BASE_PATH ${EMBEDDED_LOCATION} DIRECTORY)
     get_filename_component(BASE_FILENAME ${EMBEDDED_LOCATION} NAME_WE)
     get_filename_component(EXTENSION ${EMBEDDED_LOCATION} EXT)
-    string(REPLACE "." "_" EXTENSION ${EXTENSION})
+    
+    if (EXTENSION)
+      string(REPLACE "." "_" EXTENSION ${EXTENSION})
+    endif()
 
     # EMBED_SOURCE_FILE is the fully qualified path to a cxx file with the embedded data
     set(EMBED_SOURCE_FILE "${CMAKE_CURRENT_BINARY_DIR}/embedded_files/${BASE_PATH}/${BASE_FILENAME}${EXTENSION}.cxx")

@@ -12,6 +12,87 @@ endif()
 
 project(OpenStudio VERSION 2.7.2)
 
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
+    "MinSizeRel" "RelWithDebInfo")
+endif()
+
+# conan
+
+# Download automatically, you can also just copy the conan.cmake file
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
+    "${CMAKE_BINARY_DIR}/conan.cmake")
+endif()
+
+include(${CMAKE_BINARY_DIR}/conan.cmake)
+
+message("RUNNING CONAN")
+
+conan_check(VERSION 1.0.0 REQUIRED)
+
+conan_add_remote(NAME bincrafters
+  URL https://api.bintray.com/conan/bincrafters/public-conan)
+
+if(UNIX AND NOT APPLE)
+conan_cmake_run(REQUIRES 
+  OpenSSL/1.1.0g@conan/stable
+  boost_asio/1.69.0@bincrafters/stable
+  boost_program_options/1.69.0@bincrafters/stable
+  boost_regex/1.69.0@bincrafters/stable
+  boost_filesystem/1.69.0@bincrafters/stable
+  boost_crc/1.69.0@bincrafters/stable
+  boost_algorithm/1.69.0@bincrafters/stable
+  boost_uuid/1.69.0@bincrafters/stable
+  boost_log/1.69.0@bincrafters/stable
+  boost_numeric_ublas/1.69.0@bincrafters/stable
+  boost_functional/1.69.0@bincrafters/stable
+  boost_geometry/1.69.0@bincrafters/stable
+  pugixml/1.9@bincrafters/stable
+  jsoncpp/1.8.4@theirix/stable
+  zlib/1.2.11@conan/stable
+  sqlite3/3.27.2@bincrafters/stable
+  cpprestsdk/2.10.10@bincrafters/stable
+  websocketpp/0.8.1@bincrafters/stable
+  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
+  OPTIONS zlib:minizip=True jsoncpp:use_pic=True
+  BUILD missing boost_asio websocketpp
+  )
+else()
+conan_cmake_run(REQUIRES 
+  boost_program_options/1.69.0@bincrafters/stable
+  boost_regex/1.69.0@bincrafters/stable
+  boost_filesystem/1.69.0@bincrafters/stable
+  boost_crc/1.69.0@bincrafters/stable
+  boost_algorithm/1.69.0@bincrafters/stable
+  boost_uuid/1.69.0@bincrafters/stable
+  boost_log/1.69.0@bincrafters/stable
+  boost_numeric_ublas/1.69.0@bincrafters/stable
+  boost_functional/1.69.0@bincrafters/stable
+  boost_geometry/1.69.0@bincrafters/stable
+  pugixml/1.9@bincrafters/stable
+  jsoncpp/1.8.4@theirix/stable
+  zlib/1.2.11@conan/stable
+  sqlite3/3.27.2@bincrafters/stable
+  cpprestsdk/2.10.10@bincrafters/stable
+  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
+  OPTIONS zlib:minizip=True
+  BUILD missing
+  )
+
+endif()
+
+message("DONE RUNNING CONAN")
+
+if ( APPLE )
+  find_library(SECURITY_FRAMEWORK Security)
+endif()
+
 include(ExternalProject)
 include(CPackComponent)
 include(CheckCXXCompilerFlag)
@@ -31,7 +112,6 @@ endif()
 if(POLICY CMP0077)
   cmake_policy(SET CMP0077 NEW)
 endif()
-
 
 ###############################################################################
 # Project version information
@@ -74,14 +154,15 @@ set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.$
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 9)
-set(ENERGYPLUS_VERSION_MINOR 0)
-set(ENERGYPLUS_VERSION_PATCH 1)
+set(ENERGYPLUS_VERSION_MINOR 1)
+set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "bb7ca4f0da")
+set(ENERGYPLUS_BUILD_SHA "d830726d9e")
+
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.0.1")
+set(ENERGYPLUS_RELEASE_NAME "v9.1.0-IOFreeze")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -103,15 +184,6 @@ elseif(APPLE)
   set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID} ${CMAKE_OSX_ARCHITECTURES} - OSX ${CMAKE_OSX_DEPLOYMENT_TARGET}")
 else()
   set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID}")
-endif()
-
-# Set a default build type if none was specified
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  message(STATUS "Setting build type to 'Release' as none was specified.")
-  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
-  # Set the possible values of build type for cmake-gui
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
-    "MinSizeRel" "RelWithDebInfo")
 endif()
 
 ###############################################################################
@@ -210,6 +282,8 @@ endif()
 
 if(APPLE)
   find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+  add_definitions(-D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
+  #add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -259,8 +333,9 @@ set(LIBRARY_SEARCH_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" "${CMAKE_LIBRAR
 # Include project specific macros
 include(ProjectMacros.cmake)
 
-# Search for modules in the root dir first to override cmake ones
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
+# Search first in the binary dir, where conan will install finders, then
+# search for modules in the root dir to override cmake ones
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}/CMake")
 
 # Use CTest
 set(ALL_TESTING_TARGETS "") # global list
@@ -268,18 +343,22 @@ if(BUILD_TESTING)
   enable_testing()
   include(CTest)
 endif()
+
+
 ###############################################################################
 
 ###############################################################################
 # Compiler and system specific options
 if(UNIX)
 
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing")
+  #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -fno-strict-aliasing")
 
   # all warnings
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fPIC -fno-strict-aliasing -Winvalid-pch")
   # Treat all warnings as errors
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   if(APPLE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -ftemplate-depth=1024")
   else()
@@ -304,8 +383,8 @@ if(MINGW)
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 
   # wchar not supported for MinGW
-  add_definitions(-DBOOST_LOG_USE_CHAR)
-  add_definitions(-DBOOST_LOG_NO_COMPILER_TLS)
+  #add_definitions(-DBOOST_LOG_USE_CHAR)
+  #add_definitions(-DBOOST_LOG_NO_COMPILER_TLS)
 endif()
 if(MSVC)
   # warning level 3
@@ -414,14 +493,14 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 7b8b8481a5f261800570de0d86e9c608)
+    set(ENERGYPLUS_EXPECTED_HASH e88d0ad1078c9ee7b176a9e9fbcaf4b0)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH xyz)
+    set(ENERGYPLUS_EXPECTED_HASH 42b2fe2ef5df1d4cfef2160e46529a2f)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 135e17dd5e4ca355b25bf77b61fc8cf2)
+    set(ENERGYPLUS_EXPECTED_HASH 00c6e9ca936927efe719e2c0244ac56b)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -434,16 +513,27 @@ if(UNIX)
     unset(ENERGYPLUS_EXE CACHE)
     unset(ENERGYPLUS_IDD CACHE)
     unset(ENERGYPLUS_WEATHER_DIR CACHE)
+  if(EXISTS "/etc/redhat-release")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+  else()
     file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+  endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
-  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+  # Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
+  if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
+    set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+  else()
+    # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
+    set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+  endif()
+
 elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 4094c49b908ba2feb3f0b352126ea0ac)
+    set(ENERGYPLUS_EXPECTED_HASH 11926295eddb3d7b6d5bcd851a1a0849)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
@@ -473,8 +563,8 @@ if(UNIX)
     set(RADIANCE_EXPECTED_HASH 115ef9052ad5011d3fc7cebc2991644f)
     set(RADIANCE_PLATFORM "Darwin")
   elseif(EXISTS "/etc/redhat-release")
-    #message(FATAL_ERROR "Radiance ${RADIANCE_VERSION} redhat build missing")
-    set(RADIANCE_EXPECTED_HASH c1f4211b131a445941eb91ed1a248891)
+    # DLM: note that the installer expects the extracted directory to be named radiance-5.0.a.12-Linux
+    set(RADIANCE_EXPECTED_HASH f75898bbfd238a740c1902d385c42b92)
     set(RADIANCE_PLATFORM "Redhat")
   else()
     set(RADIANCE_EXPECTED_HASH 7b9e4df2b6050fe51c6e138e4c0e6a5a)
@@ -485,8 +575,13 @@ if(UNIX)
     file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" RADIANCE_HASH)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
-    message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
+  message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
+  if(EXISTS "/etc/redhat-release")
+    message("http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+  else()
     file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+  endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
@@ -535,8 +630,8 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     if(CMAKE_CL_64)
       # DLM: ruby_2_5_1_msvc2017_static_v3.tar.gz on s3 was built with
       # experimental patch from ruby_patches branch, not using it for now
-      set(RUBY_ZIP_FILENAME "ruby_2_5_1_msvc2017_static_v2.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "c9e57216b16fbdf3329846ee2c240435")
+      set(RUBY_ZIP_FILENAME "ruby_2_5_1_msvc2017_static_v4.tar.gz")
+      set(RUBY_ZIP_EXPECTED_MD5 "5a3937cb811e75dd1f8360f5ac0d5d2d")
     else()
       set(RUBY_ZIP_FILENAME "DOES_NOT_EXIST_ruby_2_2_4_msvc2013_32_static.tar.gz")
       set(RUBY_ZIP_EXPECTED_MD5 "4c2055305b105b0c8210697aaa596419")
@@ -546,7 +641,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     set(RUBY_ZIP_EXPECTED_MD5 "84abcea1411929c113f4030a3b2bd3ee")
   elseif(EXISTS "/etc/redhat-release")
     set(RUBY_ZIP_FILENAME "DOES_NOT_EXIST_ruby_2_2_4_redhat_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "0491123e60186896bae838f7d148bf20")
+    set(RUBY_ZIP_EXPECTED_MD5 "d130a17b23cc532975665ee4e9095c8d")
   else()
     if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
       # ubuntu 18.04
@@ -653,8 +748,8 @@ if(UNIX)
     find_library(READLINE libreadline.a)
     find_library(TERMCAP libtermcap.a)
     find_library(YAML libyaml.a)
-    find_library(CRYPTO libcrypto.a)
-    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} ${CRYPTO})
+    #    find_library(CRYPTO libcrypto.a)
+    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} CONAN_PKG::OpenSSL)
   endif()
 else()
   set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017_v2.zip")
@@ -688,8 +783,8 @@ endif()
 # to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
 # next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20181217.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d87131108e1160037ab8d26b8c48f9cf")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20190307.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "3dcc9690c1a9969e0824d6e2780df56c")
 
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
@@ -708,67 +803,6 @@ if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
 
   file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/src/cli/embedded_files")
-endif()
-
-# OpenSSL / libssh support
-if(BUILD_WITH_OPENSSL)
-  if(UNIX)
-    find_package(OpenSSL)
-    if(NOT ${OPENSSL_FOUND})
-      message(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
-      message(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
-    else()
-      mark_as_advanced(
-        LIB_EAY_DEBUG
-        LIB_EAY_RELEASE
-        SSL_EAY_DEBUG
-        SSL_EAY_RELEASE
-      )
-    endif()
-  elseif(WIN32)
-    if(CMAKE_CL_64)
-      set(OPENSSL_ARCH 64)
-      set(OPENSSL_EXPECTED_HASH 33f0c2f1072ce0d7c64afcae3c78d74b)
-    else()
-      set(OPENSSL_ARCH 32)
-      set(OPENSSL_EXPECTED_HASH DOES_NOT_EXIST_e4b5a3481503867c1f2020a3f7ce52a8)
-    endif()
-    set(OPENSSL_VERSION "1.1.0i")
-    set(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
-    if(EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
-      file(MD5 "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OPENSSL_HASH)
-    endif()
-    if(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
-      message(STATUS "Downloading OpenSSL ${OPENSSL_VERSION} (${OPENSSL_ARCH}-bit)")
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-    endif()
-    # Since version 1.1.0 OpenSSL have changed their library names from:
-    # libeay32.dll -> libcrypto.dll
-    # ssleay32.dll -> libssl.dll
-    set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
-    set(OPENSSL_INCLUDE_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}/include")
-    set(OPENSSL_LIBRARIES "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}/lib")
-    set(LIBEAY32_PATH "${OPENSSL_ROOT_DIR}/bin/libcrypto-1_1-x64.dll")
-    set(SSLEAY32_PATH "${OPENSSL_ROOT_DIR}/bin/libssl-1_1-x64.dll")
-    set(LIB_EAY_DEBUG "${OPENSSL_ROOT_DIR}/lib/libcrypto.lib")
-    set(LIB_EAY_RELEASE "${OPENSSL_ROOT_DIR}/lib/libcrypto.lib")
-    set(SSL_EAY_DEBUG "${OPENSSL_ROOT_DIR}/lib/libssl.lib")
-    set(SSL_EAY_RELEASE "${OPENSSL_ROOT_DIR}/lib/libssl.lib")
-    mark_as_advanced(
-      LIB_EAY_DEBUG
-      LIB_EAY_RELEASE
-      SSL_EAY_DEBUG
-      SSL_EAY_RELEASE
-    )
-    file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Release/")
-    file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/Debug/")
-    file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/RelWithDebInfo/")
-    file(COPY "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "${CMAKE_BINARY_DIR}/Products/MinSizeRel/")
-    install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION "bin")
-    #install(FILES "${LIBEAY32_PATH}" "${SSLEAY32_PATH}" DESTINATION ${RUBY_MODULE_ARCH_DIR})
-  endif()
 endif()
 
 # DView
@@ -858,46 +892,6 @@ else()
 endif()
 
 
-# cpprestsdk
-if(APPLE)
-  # TODO
-elseif(UNIX)
-  set(CPPRESTSDK_ZIP "cpprestsdk-2.10.8-Linux-x86_64.tar.xz")
-  set(CPPRESTSDK_DIR "cpprestsdk-2.10.8-Linux-x86_64")
-  set(CPPRESTSDK_EXPECTED_HASH "866e8fa7ce1e507fcb19b0ab9b89399c")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}")
-    file(MD5 "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" CPPRESTSDK_HASH)
-  endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}" OR NOT "${CPPRESTSDK_HASH}" MATCHES "${CPPRESTSDK_EXPECTED_HASH}")
-    message(STATUS "Downloading cpprestsdk)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${CPPRESTSDK_ZIP}" "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${CPPRESTSDK_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-  #find_package(cpprestsdk REQUIRED PATHS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/cpprestsdk")
-  set(CPPRESTSDK_INCLUDE_DIR "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/include")
-  include_directories(${CPPRESTSDK_INCLUDE_DIR})
-  set(CPPRESTSDK_LIB "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/libcpprest.a")
-elseif(WIN32)
-  set(CPPRESTSDK_ZIP "cpprestsdk-2.10.8-win64.zip")
-  set(CPPRESTSDK_DIR "cpprestsdk-2.10.8-win64")
-  set(CPPRESTSDK_EXPECTED_HASH "467df76fa7c96fc3465a4b5f596361f8")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}")
-    file(MD5 "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" CPPRESTSDK_HASH)
-  endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}" OR NOT "${CPPRESTSDK_HASH}" MATCHES "${CPPRESTSDK_EXPECTED_HASH}")
-    message(STATUS "Downloading cpprestsdk)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${CPPRESTSDK_ZIP}" "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${CPPRESTSDK_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${CPPRESTSDK_ZIP}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-  #find_package(cpprestsdk REQUIRED PATHS "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/cpprestsdk")
-  set(CPPRESTSDK_INCLUDE_DIR "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/include")
-  include_directories(${CPPRESTSDK_INCLUDE_DIR})
-  set(CPPRESTSDK_LIB_RELEASE "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/cpprest141_2_10.lib")
-  set(CPPRESTSDK_LIB_DEBUG "${CMAKE_BINARY_DIR}/${CPPRESTSDK_DIR}/lib/cpprest141_2_10d.lib")
-endif()
-
 set(ALL_RUBY_BINDING_TARGETS "") # global list
 
 # build rdoc
@@ -962,10 +956,10 @@ if(UNIX)
 endif()
 
 # Zlib
-include_directories(SYSTEM src/zlib)
-add_subdirectory(src/zlib)
+# include_directories(SYSTEM src/zlib)
+# add_subdirectory(src/zlib)
 # make sure zconf.h can be found
-include_directories(${CMAKE_BINARY_DIR}/src/zlib)
+# include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 
 if(BUILD_TESTING)
   # force gtest to build as a static library no matter what, otherwise we get error about undefined death test symbols when building shared libs
@@ -994,81 +988,6 @@ set(BUILD_NETGEOGRAPHICLIB OFF CACHE INTERNAL "Build .NET")
 set(GEOGRAPHICLIB_PRECISION "2" CACHE INTERNAL "Precision")
 include_directories(SYSTEM src/geographic_lib/include)
 add_subdirectory(src/geographic_lib)
-
-# Boost
-set(BOOST_INSTALL_DIR "" CACHE PATH "Path to Boost Install")
-mark_as_advanced(BOOST_INSTALL_DIR)
-
-if(NOT EXISTS ${BOOST_INSTALL_DIR})
-  if(WIN32)
-    if(CMAKE_CL_64)
-      set(BOOST_ZIP_FILENAME "boost_1_68_0_msvc2017_64_static.zip")
-      set(BOOST_ZIP_EXPECTED_MD5 "9117e888cc7b49140e638c0993532291")
-    else()
-      set(BOOST_ZIP_FILENAME "DOES_NOT_EXIST_boost_1_68_0_msvc2017_32_static.zip")
-      set(BOOST_ZIP_EXPECTED_MD5 "4ebc2a84ef13ef1853fcf3e6c27fc10c")
-    endif()
-  elseif(APPLE)
-    set(BOOST_ZIP_FILENAME "DOES_NOT_EXIST_boost_1_68_0_osx.tar.gz")
-    set(BOOST_ZIP_EXPECTED_MD5 "9e4c01a3f5c63e3bbf5cc76021eceb75")
-  elseif(EXISTS "/etc/redhat-release")
-    set(BOOST_ZIP_FILENAME "DOES_NOT_EXIST_boost_1_68_0_redhat.tar.gz")
-    set(BOOST_ZIP_EXPECTED_MD5 "de952e0c36900a3ad000d74a1c41b7d2")
-  else()
-    if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
-      # ubuntu 18.04
-      # This should work with 16.04 and 14.04 too.
-      set(BOOST_ZIP_FILENAME "boost_1_68_0_linux_v2.tar.xz")
-      set(BOOST_ZIP_EXPECTED_MD5 "1f5d0d8bc7a5c26723013cf72823a4b4")
-    else()
-      # 16.04
-      set(BOOST_ZIP_FILENAME "boost_1_68_0_linux_xenial.tar.gz")
-      set(BOOST_ZIP_EXPECTED_MD5 "10fe1825fb303b3515762a313e230b81")
-    endif()
-  endif()
-
-  set(BOOST_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${BOOST_ZIP_FILENAME}")
-  if(EXISTS "${BOOST_ZIP_LOCAL_PATH}")
-    file(MD5 "${BOOST_ZIP_LOCAL_PATH}" BOOST_ZIP_MD5)
-  endif()
-
-  if(NOT BOOST_ZIP_MD5 STREQUAL BOOST_ZIP_EXPECTED_MD5)
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${BOOST_ZIP_FILENAME}"
-      ${BOOST_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${BOOST_ZIP_EXPECTED_MD5})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${BOOST_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-  set(BOOST_INSTALL_DIR "${CMAKE_BINARY_DIR}/Boost-install/")
-endif()
-set(BOOST_ROOT "${BOOST_INSTALL_DIR}")
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost 1.68.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
-include_directories(SYSTEM ${Boost_INCLUDE_DIR})
-mark_as_advanced(
-  Boost_DIR
-  BOOST_THREAD_LIBRARY
-)
-
-# require these run time checks
-add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
-add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
-add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
-
-if(UNIX AND NOT APPLE)
-  # TODO: If boost is compiled with C++17, maybe need to change this
-  add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
-endif()
-
-# use chrono as a header only library
-add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
-
-# do not autolink with serialization
-add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
-
-# SQLite definitions, used in sqlite and litesql
-add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
 
 if(BUILD_OS_APP)
   # Qt
@@ -1419,28 +1338,10 @@ if(BUILD_OS_APP)
 endif()
 
 ###############################################################################
-## jsoncpp
-add_subdirectory(src/jsoncpp)
-###############################################################################
-
-################################################################################
-## sqlite
-add_subdirectory(src/sqlite)
-################################################################################
-
-###############################################################################
-## pugixml
-add_subdirectory(src/pugixml)
-###############################################################################
-
-###############################################################################
 # Add to include path
 
 # Project source directory
 include_directories("${CMAKE_HOME_DIRECTORY}/src/")
-
-# XML
-include_directories("${CMAKE_HOME_DIRECTORY}/src/pugixml/src")
 
 # fmtlib
 include_directories("${CMAKE_HOME_DIRECTORY}/src/fmtlib/include")
@@ -1688,11 +1589,6 @@ set(all_lib_targets
   openstudio_isomodel_static
   openstudio_sdd_static
   openstudio_airflow_static
-  miniziplib
-  zlib
-  zlibstatic
-  sqlite
-  jsoncpp
   ${ALL_RUBY_BINDING_TARGETS}
 )
 
@@ -1924,11 +1820,6 @@ endif()
 include(CPack)
 include(CPackIFW)
 
-cpack_add_component(SketchUpPlugin
-  DISPLAY_NAME "SketchUp Plugin"
-  DESCRIPTION "SketchUp Plugin"
-)
-
 cpack_add_component(CLI
   DISPLAY_NAME "Command Line Interface"
   DESCRIPTION "Command Line Interface"
@@ -1937,26 +1828,6 @@ cpack_add_component(CLI
 cpack_add_component(RubyAPI
   DISPLAY_NAME "Ruby API"
   DESCRIPTION "Ruby API"
-)
-
-cpack_add_component(CSharpAPI
-  DISPLAY_NAME "C# API"
-  DESCRIPTION "C# API"
-)
-
-cpack_add_component(PAT
-  DISPLAY_NAME "Parametric Analysis Tool"
-  DESCRIPTION "Parametric Analysis Tool"
-)
-
-cpack_add_component(OpenStudioApp
-  DISPLAY_NAME "OpenStudio Application"
-  DESCRIPTION "OpenStudio Application"
-)
-
-cpack_add_component(DView
-  DISPLAY_NAME "DView"
-  DESCRIPTION "DView Application for viewing results"
 )
 
 cpack_add_component(EnergyPlus
@@ -1969,43 +1840,12 @@ cpack_add_component(Radiance
   DESCRIPTION "Full Radiance installation"
 )
 
-cpack_add_component(Resources
-  DISPLAY_NAME "Application Resources"
-  DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
-)
-
-cpack_ifw_configure_component(SketchUpPlugin
-  DEPENDS Resources
-  SCRIPT sketchup_plugin/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
 cpack_ifw_configure_component(CLI
   SCRIPT src/cli/install_operations.qs
   REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(RubyAPI
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(CSharpAPI
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(PAT
-  DEPENDS CLI RubyAPI
-  SCRIPT pat/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(OpenStudioApp
-  DEPENDS Resources CLI
-  SCRIPT src/openstudio_app/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(DView
   REQUIRES_ADMIN_RIGHTS
 )
 
@@ -2017,17 +1857,82 @@ cpack_ifw_configure_component(Radiance
   REQUIRES_ADMIN_RIGHTS
 )
 
-cpack_ifw_configure_component(Resources
-  REQUIRES_ADMIN_RIGHTS
-)
-
 cpack_ifw_configure_component(Unspecified
   SCRIPT src/install_utility/install_operations.qs
   REQUIRES_ADMIN_RIGHTS
 )
 
-if(BUILD_NUGET_PACKAGE)
-  configure_file(OpenStudio.nuspec.in OpenStudio.nuspec)
+if(BUILD_CSHARP_BINDINGS)
+  cpack_add_component(CSharpAPI
+    DISPLAY_NAME "C# API"
+    DESCRIPTION "C# API"
+  )
+
+  cpack_ifw_configure_component(CSharpAPI
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_OS_APP)
+  
+  cpack_add_component(Resources
+    DISPLAY_NAME "Application Resources"
+    DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
+  )
+  
+  cpack_add_component(SketchUpPlugin
+    DISPLAY_NAME "SketchUp Plugin"
+    DESCRIPTION "SketchUp Plugin"
+  )
+
+  cpack_add_component(OpenStudioApp
+    DISPLAY_NAME "OpenStudio Application"
+    DESCRIPTION "OpenStudio Application"
+  )
+
+  cpack_ifw_configure_component(Resources
+    REQUIRES_ADMIN_RIGHTS
+  )
+  
+  cpack_ifw_configure_component(SketchUpPlugin
+    DEPENDS Resources
+    SCRIPT sketchup_plugin/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+  
+  cpack_ifw_configure_component(OpenStudioApp
+    DEPENDS Resources CLI
+    SCRIPT src/openstudio_app/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_PAT)
+  cpack_add_component(PAT
+    DISPLAY_NAME "Parametric Analysis Tool"
+    DESCRIPTION "Parametric Analysis Tool"
+  )
+
+  cpack_ifw_configure_component(PAT
+    DEPENDS CLI RubyAPI
+    SCRIPT pat/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_DVIEW)
+  cpack_add_component(DView
+    DISPLAY_NAME "DView"
+    DESCRIPTION "DView Application for viewing results"
+  )
+
+  cpack_ifw_configure_component(DView
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if( BUILD_NUGET_PACKAGE )
+  configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )
 
   add_custom_target(nuget_package
     COMMAND NuGet pack OpenStudio.nuspec -BasePath "${CMAKE_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
@@ -2035,3 +1940,4 @@ if(BUILD_NUGET_PACKAGE)
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
   )
 endif()
+

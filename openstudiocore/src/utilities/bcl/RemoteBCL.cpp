@@ -596,6 +596,7 @@ namespace openstudio{
 
     // can't start another request until last one is done
     if (m_httpResponse && !m_httpResponse->is_done()) {
+      LOG(Debug, "Cannot get mutex lock");
       return false;
     }
 

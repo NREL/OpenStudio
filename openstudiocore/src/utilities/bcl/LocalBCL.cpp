@@ -34,7 +34,7 @@
 #include "../core/PathHelpers.hpp"
 #include "../core/FilesystemHelpers.hpp"
 
-#include <sqlite/sqlite3.h>
+#include <sqlite3.h>
 
 #include <boost/algorithm/string/replace.hpp>
 

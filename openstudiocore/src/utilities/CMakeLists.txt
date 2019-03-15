@@ -206,18 +206,6 @@ set(documentation_src
   mainpage.hpp
 )
 
-set(${target_name}_depends
-  sqlite
-  jsoncpp
-  #litesql
-  #litesql-util
-  miniziplib
-  pugixml
-  ${Boost_LIBRARIES}
-  #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
-  # ${CMAKE_THREAD_LIBS}
-)
-
 #if(WIN32)
 #  list(APPEND ${target_name}_depends qtwinmigrate)
 #  list(APPEND ${target_name}_depends mpr)
@@ -525,16 +513,29 @@ add_subdirectory(pch)
 #CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 
 set(${target_name}_static_depends
-  sqlite
-  jsoncpp
-  miniziplib
-  pugixml
-  ${Boost_LIBRARIES}
+  CONAN_PKG::sqlite3
+  CONAN_PKG::jsoncpp
+  CONAN_PKG::zlib
+  CONAN_PKG::pugixml
+  CONAN_PKG::boost_filesystem 
+  CONAN_PKG::boost_crc 
+  CONAN_PKG::boost_regex 
+  CONAN_PKG::boost_algorithm 
+  CONAN_PKG::boost_uuid 
+  CONAN_PKG::boost_log 
+  CONAN_PKG::boost_program_options
+  CONAN_PKG::boost_numeric_ublas
+  CONAN_PKG::boost_functional
+  CONAN_PKG::boost_geometry
+  CONAN_PKG::cpprestsdk
+  CONAN_PKG::OpenSSL
+  GeographicLib_STATIC
 )
 
 if(WIN32)
-#  list(APPEND ${target_name}_static_depends qtwinmigrate_static)
   list(APPEND ${target_name}_static_depends mpr)
+elseif(APPLE)
+  list(APPEND ${target_name}_static_depends ${SECURITY_FRAMEWORK})
 endif()
 
 add_library(${target_name}_static
@@ -542,13 +543,9 @@ add_library(${target_name}_static
 )
 add_dependencies("${target_name}_static" GenerateIddFactoryRun)
 
-target_link_libraries(${target_name}_static ${${target_name}_static_depends} GeographicLib_STATIC)
+target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
-if(WIN32)
-  target_link_libraries(${target_name}_static optimized ${CPPRESTSDK_LIB_RELEASE} debug ${CPPRESTSDK_LIB_DEBUG})
-else()
-  target_link_libraries(${target_name}_static ${CPPRESTSDK_LIB})
-endif()
+#target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
 #target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
 
@@ -571,6 +568,13 @@ if(NOT BUILD_SHARED_LIBS)
   #target_compile_definitions(${target_name} PUBLIC openstudio_utilities_EXPORTS)
   target_compile_definitions(${target_name}_static PUBLIC openstudio_utilities_EXPORTS)
 endif()
+
+#install(TARGETS ${target_name}_static
+#  EXPORT openstudio
+#  RUNTIME DESTINATION bin
+#  LIBRARY DESTINATION lib
+#  ARCHIVE DESTINATION lib
+#)
 
 if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends}")

@@ -36,7 +36,7 @@
 #include "../core/Path.hpp"
 #include "../bcl/BCLMeasure.hpp"
 
-#include <jsoncpp/json.h>
+#include <json/json.h>
 
 class Filetypes_WorkflowJSON_Signals_Test;
 

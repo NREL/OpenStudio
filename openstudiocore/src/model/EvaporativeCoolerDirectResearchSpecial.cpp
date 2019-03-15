@@ -172,14 +172,14 @@ namespace detail{
     return result;
   }
 
-  double EvaporativeCoolerDirectResearchSpecial_Impl::coolerEffectiveness() const
+  double EvaporativeCoolerDirectResearchSpecial_Impl::coolerDesignEffectiveness() const
   {
-    return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::CoolerEffectiveness).get();
+    return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::CoolerDesignEffectiveness).get();
   }
 
-  bool EvaporativeCoolerDirectResearchSpecial_Impl::setCoolerEffectiveness( double value )
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::setCoolerDesignEffectiveness( double value )
   {
-    return this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::CoolerEffectiveness,value);
+    return this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::CoolerDesignEffectiveness,value);
   }
 
   boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::recirculatingWaterPumpPowerConsumption() const
@@ -394,7 +394,7 @@ EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(c
 
   this->setAvailabilitySchedule(schedule);
 
-  setCoolerEffectiveness(1.0);
+  setCoolerDesignEffectiveness(1.0);
 
   setRecirculatingWaterPumpPowerConsumption(0.0);
 
@@ -402,6 +402,9 @@ EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(c
 
   setBlowdownConcentrationRatio(0.0);
 
+  // TODO: JM 2019-02-25: This input seems wrong given the current E+ IDD notes / IO documentation.
+  // This isn't a regular sizing factor, but something in W/(m3/s), with a default of 90 and a range of 55 to 150.0
+  // @kbenne for review please
   setWaterPumpPowerSizingFactor(0.1);
 
 
@@ -432,14 +435,26 @@ bool EvaporativeCoolerDirectResearchSpecial::setAvailableSchedule(Schedule & sch
   return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setAvailabilitySchedule(schedule);
 }
 
+double EvaporativeCoolerDirectResearchSpecial::coolerDesignEffectiveness() const
+{
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->coolerDesignEffectiveness();
+}
+
 double EvaporativeCoolerDirectResearchSpecial::coolerEffectiveness() const
 {
-  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->coolerEffectiveness();
+  LOG(Info, "This method is deprecated, please replace it with coolerDesignEffectiveness.");
+  return coolerDesignEffectiveness();
+}
+
+bool EvaporativeCoolerDirectResearchSpecial::setCoolerDesignEffectiveness( double value )
+{
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setCoolerDesignEffectiveness(value);
 }
 
 bool EvaporativeCoolerDirectResearchSpecial::setCoolerEffectiveness( double value )
 {
-  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setCoolerEffectiveness(value);
+  LOG(Info, "This method is deprecated, please replace it with setCoolerDesignEffectiveness.");
+  return setCoolerDesignEffectiveness(value);
 }
 
 boost::optional<double> EvaporativeCoolerDirectResearchSpecial::recirculatingWaterPumpPowerConsumption() const

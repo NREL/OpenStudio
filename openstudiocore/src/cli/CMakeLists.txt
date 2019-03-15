@@ -36,6 +36,7 @@ foreach( _FILE ${EXTENSION_RB} )
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
+set(GEMFILE_FILES "${CMAKE_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile" "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile.lock")
 file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/**/*.rb")
 file(GLOB_RECURSE ERB_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/**/*.erb")
 file(GLOB_RECURSE JS_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/**/*.js")
@@ -54,6 +55,12 @@ file(GLOB_RECURSE SPEC_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gem
 file(GLOB_RECURSE GZ_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/**/*.gz")
 file(GLOB_RECURSE YML_FILES FOLLOW_SYMLINKS "${CMAKE_BINARY_DIR}/openstudio-gems/**/*.yml")
 file(GLOB_RECURSE OS_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/**/*.rb") # DLM: this is temporary, these files should live somewhere else and be included in the shared Ruby lib
+
+foreach( _FILE ${GEMFILE_FILES} )
+  file(RELATIVE_PATH LOCATION "${CMAKE_BINARY_DIR}/openstudio-gems" ${_FILE})
+  list(APPEND FILES ${_FILE})
+  list(APPEND EMBEDDED_PATHS ${LOCATION})
+endforeach()
 
 foreach( _FILE ${RB_FILES} )
   file(RELATIVE_PATH LOCATION "${CMAKE_BINARY_DIR}/openstudio-gems" ${_FILE})
@@ -281,12 +288,11 @@ target_link_libraries(openstudio
 )
 
 if (UNIX AND NOT APPLE)
-  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt ssl)
+  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt)
+  target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
 elseif(WIN32)
   target_link_libraries(openstudio debug ${RUBY_STATIC_LIBRARY_DEBUG} optimized ${RUBY_STATIC_LIBRARY})
   target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi)
-  target_link_libraries(openstudio ${LIB_EAY_RELEASE})
-  target_link_libraries(openstudio ${SSL_EAY_RELEASE})
   set_target_properties(openstudio PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
   target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY})

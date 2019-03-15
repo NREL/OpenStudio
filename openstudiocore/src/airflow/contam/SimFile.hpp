@@ -32,8 +32,8 @@
 
 #include "PrjDefines.hpp"
 
-#include "../utilities/data/TimeSeries.hpp"
-#include "../utilities/core/Path.hpp"
+#include "../../utilities/data/TimeSeries.hpp"
+#include "../../utilities/core/Path.hpp"
 
 #include "../AirflowAPI.hpp"
 

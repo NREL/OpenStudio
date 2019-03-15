@@ -178,6 +178,9 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpConstantSpeed(
     idfObject.setDouble(Pump_ConstantSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,value.get());
   }
 
+  // End Use Subcategory
+  idfObject.setString(Pump_ConstantSpeedFields::EndUseSubcategory, modelObject.endUseSubcategory());
+
 
   return idfObject;
 }

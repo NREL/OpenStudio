@@ -32,7 +32,7 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include <sqlite/sqlite3.h>
+#include <sqlite3.h>
 #include "SummaryData.hpp"
 #include "SqlFileEnums.hpp"
 #include "SqlFileDataDictionary.hpp"

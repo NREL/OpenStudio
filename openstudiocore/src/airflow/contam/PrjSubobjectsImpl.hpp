@@ -33,7 +33,7 @@
 #include "PrjDefines.hpp"
 #include "PrjReader.hpp"
 
-#include "../utilities/core/String.hpp"
+#include "../../utilities/core/String.hpp"
 
 namespace openstudio {
 namespace contam {

@@ -32,12 +32,12 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include "../utilities/core/Enum.hpp"
-#include "../utilities/core/Logger.hpp"
-#include "../utilities/core/Path.hpp"
-#include "../utilities/data/Variant.hpp"
-#include "../utilities/time/DateTime.hpp"
-#include "../utilities/bcl/BCLMeasure.hpp"
+#include "../core/Enum.hpp"
+#include "../core/Logger.hpp"
+#include "../core/Path.hpp"
+#include "../data/Variant.hpp"
+#include "../time/DateTime.hpp"
+#include "../bcl/BCLMeasure.hpp"
 
 namespace openstudio {
 namespace detail {

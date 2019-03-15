@@ -125,7 +125,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.6.2")] = &VersionTranslator::update_2_6_1_to_2_6_2;
   m_updateMethods[VersionString("2.7.0")] = &VersionTranslator::update_2_6_2_to_2_7_0;
   m_updateMethods[VersionString("2.7.1")] = &VersionTranslator::update_2_7_0_to_2_7_1;
-  m_updateMethods[VersionString("2.7.2")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("2.7.2")] = &VersionTranslator::update_2_7_1_to_2_7_2;
+  //m_updateMethods[VersionString("2.7.3")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -4400,6 +4401,80 @@ std::string VersionTranslator::update_2_7_0_to_2_7_1(const IdfFile& idf_2_7_0, c
   return ss.str();
 
 }
+
+std::string VersionTranslator::update_2_7_1_to_2_7_2(const IdfFile& idf_2_7_1, const IddFileAndFactoryWrapper& idd_2_7_2) {
+  std::stringstream ss;
+  boost::optional<std::string> value;
+
+  ss << idf_2_7_1.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_7_2.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_2_7_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if ( iddname == "OS:WeatherFile" ) {
+      // Note JM 2019-01-08: We remove the file:// prefix from QUrl
+      value = object.getString(10);
+      // If there's a filepath, and it starts with file://
+      if( value && (value.get().rfind("file://", 0) == 0)) {
+        IdfObject newObject = object.clone(true);
+        newObject.setString(10, value.get().substr(7));
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
+        ss << newObject;
+      } else {
+        // Nothing to do here
+        ss << object;
+      }
+
+    // Both of these happen to have the url field at pos 2 (note: neither of these are actually implemented in the SDK, but let's be safe)
+    } else if (( iddname == "OS:Construction:WindowDataFile" ) || ( iddname == "OS:Luminaire:Definition" ) ){
+      // Note JM 2019-01-08: We remove the file:// prefix from QUrl
+      value = object.getString(2);
+      // If there's a filepath, and it starts with file://
+      if( value && (value.get().rfind("file://", 0) == 0)) {
+        IdfObject newObject = object.clone(true);
+        newObject.setString(2, value.get().substr(7));
+        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
+        ss << newObject;
+      } else {
+        // Nothing to do here
+        ss << object;
+      }
+
+    } else if (iddname == "OS:ZoneHVAC:EquipmentList") {
+
+      auto iddObject = idd_2_7_2.getObject("OS:ZoneHVAC:EquipmentList");
+      IdfObject newObject(iddObject.get());
+
+      // Copy non extensible fields in place
+      for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+      // Copy the existing eg values (the new fields were added at the end of the extensible groups, and have defaults)
+      for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
+        IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();
+        for (size_t i = 0; i < 3; ++i) {
+          new_eg.setString(i, eg.getString(i).get());
+        }
+      }
+
+      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
+      ss << newObject;
+
+    // No-op
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+
+}
+
 
 } // osversion
 } // openstudio

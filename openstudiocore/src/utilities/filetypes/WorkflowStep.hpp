@@ -35,7 +35,7 @@
 #include "../core/Logger.hpp"
 #include "../data/Variant.hpp"
 
-#include <jsoncpp/json.h>
+#include <json/json.h>
 
 namespace openstudio{
 namespace detail{

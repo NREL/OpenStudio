@@ -170,6 +170,10 @@ class MODEL_API PumpConstantSpeed : public StraightComponent {
 
   bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
 
+  std::string endUseSubcategory() const;
+
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
+
  protected:
 
   /// @cond

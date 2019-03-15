@@ -141,7 +141,7 @@ TEST_F(IdfFixture,IdfExtensibleGroup_Setters) {
   obj = objs[0];
   eg = obj.getExtensibleGroup(0);
   ASSERT_FALSE(eg.empty());
-  ASSERT_EQ(static_cast<unsigned>(4),eg.numFields());
+  ASSERT_EQ(static_cast<unsigned>(6),eg.numFields());
 
   // setUnsigned
   OptionalUnsigned ou = eg.getUnsigned(2,true);

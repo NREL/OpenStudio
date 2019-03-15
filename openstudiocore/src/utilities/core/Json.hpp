@@ -35,7 +35,7 @@
 #include "Path.hpp"
 #include "Compare.hpp"
 
-#include <jsoncpp/json.h>
+#include <json/json.h>
 
 #include <string>
 #include <vector>

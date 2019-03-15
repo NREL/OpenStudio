@@ -39,7 +39,7 @@
 
 #include <nano/nano_signal_slot.hpp>
 
-#include <jsoncpp/json.h>
+#include <json/json.h>
 
 namespace openstudio{
 

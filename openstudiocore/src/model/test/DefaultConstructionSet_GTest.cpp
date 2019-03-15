@@ -126,6 +126,13 @@ TEST_F(ModelFixture, DefaultConstructionSet)
   EXPECT_EQ(construction.handle(), defaultConstructionSet.siteShadingConstruction()->handle());
   defaultConstructionSet.resetSiteShadingConstruction();
   EXPECT_FALSE(defaultConstructionSet.siteShadingConstruction());
+
+  EXPECT_FALSE(defaultConstructionSet.adiabaticSurfaceConstruction());
+  EXPECT_TRUE(defaultConstructionSet.setAdiabaticSurfaceConstruction(construction));
+  ASSERT_TRUE(defaultConstructionSet.adiabaticSurfaceConstruction());
+  EXPECT_EQ(construction.handle(), defaultConstructionSet.adiabaticSurfaceConstruction()->handle());
+  defaultConstructionSet.resetAdiabaticSurfaceConstruction();
+  EXPECT_FALSE(defaultConstructionSet.adiabaticSurfaceConstruction());
 }
 
 TEST_F(ModelFixture, DefaultConstructionSet_ExteriorSurfaces)
@@ -475,6 +482,33 @@ TEST_F(ModelFixture, DefaultConstructionSet_ShadingSurface)
   ASSERT_TRUE(defaultConstructionSet.getDefaultConstruction(surface));
   EXPECT_EQ(construction.handle(), defaultConstructionSet.getDefaultConstruction(surface)->handle());
   defaultConstructionSet.resetSpaceShadingConstruction();
+  EXPECT_FALSE(defaultConstructionSet.getDefaultConstruction(surface));
+}
+
+TEST_F(ModelFixture, DefaultConstructionSet_AdiabaticSurface)
+{
+  Model model;
+
+  Point3dVector points;
+  points.push_back(Point3d(0,1,0));
+  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(1,0,0));
+  Space space(model);
+  Surface surface(points, model);
+  surface.setSpace(space);
+  EXPECT_TRUE(surface.setOutsideBoundaryCondition("Adiabatic"));
+
+  DefaultConstructionSet defaultConstructionSet(model);
+  Construction construction(model);
+
+  EXPECT_FALSE(defaultConstructionSet.adiabaticSurfaceConstruction());
+  EXPECT_FALSE(defaultConstructionSet.getDefaultConstruction(surface));
+  EXPECT_TRUE(defaultConstructionSet.setAdiabaticSurfaceConstruction(construction));
+  ASSERT_TRUE(defaultConstructionSet.adiabaticSurfaceConstruction());
+  EXPECT_EQ(construction.handle(), defaultConstructionSet.adiabaticSurfaceConstruction()->handle());
+  ASSERT_TRUE(defaultConstructionSet.getDefaultConstruction(surface));
+  EXPECT_EQ(construction.handle(), defaultConstructionSet.getDefaultConstruction(surface)->handle());
+  defaultConstructionSet.resetAdiabaticSurfaceConstruction();
   EXPECT_FALSE(defaultConstructionSet.getDefaultConstruction(surface));
 }
 
