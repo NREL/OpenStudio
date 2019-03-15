@@ -3520,7 +3520,8 @@ namespace openstudio{
 
     boost::optional<int> SqlFile_Impl::illuminanceMapHourlyReportIndex(const int& mapIndex, const DateTime& dateTime) const
     {
-      int year = dateTime.date().year();
+      // E+ doesn't have a Year for this table
+      // int year = dateTime.date().year();
       int monthOfYear = dateTime.date().monthOfYear().value();
       int dayOfMonth = dateTime.date().dayOfMonth();
       int hours = dateTime.time().hours();
