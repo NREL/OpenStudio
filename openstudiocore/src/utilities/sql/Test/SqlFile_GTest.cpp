@@ -510,3 +510,68 @@ TEST_F(SqlFileFixture, Regressions) {
   regressionTestSqlFile("1ZoneEvapCooler-V8-3-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V8-4-0.sql", 43.28, 20, 20);
 }
+
+TEST_F(SqlFileFixture, SqlFile_LeapYear)
+{
+  openstudio::path outfile = openstudio::tempDir() / openstudio::toPath("OpenStudioSqlFileTestLeapYear.sql");
+  if (openstudio::filesystem::exists(outfile))
+  {
+    openstudio::filesystem::remove(outfile);
+  }
+
+  // picking 2012 because it's a Leap Year
+  int year = 2012;
+
+  openstudio::Calendar c(year);
+  c.standardHolidays();
+
+  // 31 days in january, 29 in feb
+  int n_vals = 24*(31+29);
+  std::vector<double> values;
+  values.resize(n_vals, 100);
+
+  TimeSeries timeSeries(c.startDate(), openstudio::Time(0,1), openstudio::createVector(values), "lux");
+
+  // Inject this timeseries into the sql
+  {
+    openstudio::SqlFile sql(outfile,
+        openstudio::EpwFile(resourcesPath() / toPath("utilities/Filetypes/leapday-test.epw")),
+        openstudio::DateTime::now(),
+        c);
+
+    EXPECT_TRUE(sql.connectionOpen());
+
+    sql.insertTimeSeriesData("Sum", "Zone", "Zone", "DAYLIGHTING WINDOW", "Daylight Luminance", openstudio::ReportingFrequency::Hourly,
+        boost::optional<std::string>(), "lux", timeSeries);
+
+  }
+
+
+  // Retrieve and check
+  {
+    openstudio::SqlFile sql(outfile);
+    EXPECT_TRUE(sql.connectionOpen());
+    std::vector<std::string> envPeriods = sql.availableEnvPeriods();
+    ASSERT_EQ(envPeriods.size(), 1u);
+    std::vector<std::string> reportingFrequencies = sql.availableReportingFrequencies(envPeriods[0]);
+    ASSERT_EQ(reportingFrequencies.size(), 1u);
+    std::vector<std::string> timeSeriesNames = sql.availableTimeSeries();
+    ASSERT_EQ(reportingFrequencies.size(), 1u);
+    std::vector<std::string> keyValues = sql.availableKeyValues(envPeriods[0], reportingFrequencies[0], timeSeriesNames[0]);
+    ASSERT_EQ(keyValues.size(), 1u);
+
+    boost::optional<TimeSeries> ts = sql.timeSeries(envPeriods[0], reportingFrequencies[0], timeSeriesNames[0], keyValues[0]);
+    ASSERT_TRUE(ts);
+
+    EXPECT_EQ(openstudio::toStandardVector(ts->values()), openstudio::toStandardVector(timeSeries.values()));
+    // That's the key part!
+    EXPECT_EQ(year, ts->firstReportDateTime().date().year());
+
+    std::vector<DateTime> original_datetimes = ts->dateTimes();
+    std::vector<DateTime> reloaded_datetimes = timeSeries.dateTimes();
+
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Feb, 29, year), Time(0, 24, 0, 0)), reloaded_datetimes.end()[-1]);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Feb, 29, year), Time(0, 23, 0, 0)), reloaded_datetimes.end()[-2]);
+    EXPECT_EQ(original_datetimes, reloaded_datetimes);
+  }
+}
