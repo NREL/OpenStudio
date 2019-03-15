@@ -6793,7 +6793,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrm
   std::string tankShapeSim = tesElement.child("TankShapeSim").text().as_string();
   tes.setTankShape(tankShapeSim);
   if( istringEqual("Other",tankShapeSim) ) {
-    boost::optional<double> _tankPerim = lexicalCastToDouble(tesElement.child("TankPerim"));
+    // Used to be TankPerim I think, but now I'm sure it's TankPerimSim
+    boost::optional<double> _tankPerim = lexicalCastToDouble(tesElement.child("TankPerimSim"));
     if( _tankPerim ) {
       double value = unitToUnit(_tankPerim.get(),"ft","m").get();
       tes.setTankPerimeter(value);
