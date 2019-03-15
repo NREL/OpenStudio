@@ -136,8 +136,10 @@ set(${target_name}_depends
   openstudio_energyplus_static
   openstudio_model_static
   ${QT_LIBS}
-  qtwinmigrate_static  
 )
+if(WIN32)
+  list(APPEND ${target_name}_depends qtwinmigrate_static)
+endif()
 
 add_dependencies(${target_name} ${${target_name}_depends})
 target_link_libraries(${target_name} ${${target_name}_depends})
@@ -158,8 +160,10 @@ set(${target_name}_static_depends
   openstudio_energyplus_static
   openstudio_model_static
   ${QT_LIBS}
-  qtwinmigrate_static    
 )
+if(WIN32)
+  list(APPEND ${target_name}_static_depends qtwinmigrate_static)
+endif()
 
 target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
