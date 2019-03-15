@@ -1530,7 +1530,6 @@ SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
   // DEPRECATED: TODO REMOVED in 2.6.2, REMOVE FROM API In the FUTURE
   boost::optional<double> SizingSystem::minimumSystemAirFlowRatio() const {
     LOG(Warn, "SizingSystem::minimumSystemAirFlowRatio has been deprecated and will be removed in a future release, please use SizingSystem::centralHeatingMaximumSystemAirFlowRatio");
-    LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, now it returns an Optional double");
     if( VersionString( openStudioVersion() ) >= VersionString("2.8.0") ) {
       // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
       LOG(Debug, "Please go tell a developper to remove SizingSystem::minimumSystemAirFlowRatio");
