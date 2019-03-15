@@ -141,7 +141,7 @@ if("Ninja" STREQUAL ${CMAKE_GENERATOR})
   endif()
 endif()
 
-#if(MSVC)
+if(MSVC)
 #  # Visual Studio compiler check
 #  # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
 #  if    (${CMAKE_C_COMPILER_VERSION} VERSION_LESS "18.0.21005.1")
@@ -167,11 +167,11 @@ endif()
 #  else()
 #    message(STATUS "This version of Visual Studio will not use the 64 bit linker. Build times will likely suffer.")
 #  endif()
-#
-#  # Build with Multiple Processes
-#  set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
-#  mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
-#endif()
+
+  # Build with Multiple Processes
+  set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
+  mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
+endif()
 
 
 # Apple Sanity Check
@@ -267,16 +267,19 @@ elseif(WIN32)
 
   option(BUILD_OPENSSL "Build OpenSSL From Source" OFF)
 
-  set(OPENSSL_VERSION "1.1.0i")
-  set(OPENSSL_SOURCE_URL "https://github.com/openssl/openssl/archive/OpenSSL_1_1_0i.zip")
-  set(OPENSSL_SOURCE_HASH fb2aa1a8ceb85f68055044a85f1dbc94)
+
+  set(OPENSSL_VERSION "1.0.2q")
+  set(OPENSSL_SOURCE_URL "https://github.com/openssl/openssl/archive/OpenSSL_1_0_2q.zip")
+  
+  set(OPENSSL_SOURCE_HASH ffeaa3eadabfeb7170f85ecca14fb0d9)
   if(CMAKE_CL_64)
     set(OPENSSL_ARCH 64)
-    set(OPENSSL_EXPECTED_HASH 33f0c2f1072ce0d7c64afcae3c78d74b)
+    set(OPENSSL_EXPECTED_HASH 4ee78779f5777a854b242e777c990b7a)
   else()
     set(OPENSSL_ARCH 32)
     set(OPENSSL_EXPECTED_HASH DOES_NOT_EXIST_fb2aa1a8ceb85f68055044a85f1dbc94)
   endif()
+
   set(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
   set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
 
@@ -374,7 +377,7 @@ if( BUILD_RUBY )
     ExternalProject_Add(ZLib
       URL_HASH SHA256=c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1
       URL http://zlib.net/zlib-1.2.11.tar.gz
-      BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-build" --config Release --config Debug --target INSTALL
+      BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-build" --config $<CONFIG> --target INSTALL
       CMAKE_CACHE_ARGS
         -DINSTALL_BIN_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/bin/
         -DINSTALL_INC_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/include/
@@ -383,21 +386,21 @@ if( BUILD_RUBY )
         -DINSTALL_PKGCONFIG_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/share/pkgconfig/
     )
     
+    # DLM: can't figure out a good way to copy pdb for debug only, just do manually for now
     ExternalProject_Add(FFI
       URL_HASH SHA256=bf6813045c0d470aedc3c69f9ec11fe351c2d7360c7d5396dc9a6ddc4830033c
       URL https://github.com/winlibs/libffi/archive/libffi-3.2.1.zip
       CONFIGURE_COMMAND ""
       BUILD_COMMAND devenv /upgrade ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/libffi-msvc.sln 
-        COMMAND msbuild ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/libffi-msvc.sln /p:Configuration=Debug /p:DefineConstants="FFI_BUILDING"
-        COMMAND msbuild ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/libffi-msvc.sln /p:Configuration=Release /p:DefineConstants="FFI_BUILDING"
-      INSTALL_COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/include ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/include
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/fficonfig.h ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/include/fficonfig.h         
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/src/x86/ffitarget.h ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/include/ffitarget.h                 
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/lib
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/x64/Debug/libffi.lib ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/lib/libffid.lib 
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/x64/Release/libffi.lib ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/lib/libffi.lib
+        COMMAND msbuild ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/libffi-msvc.sln /p:Configuration=$<CONFIG> /p:DefineConstants="FFI_BUILDING" "/p:Platform=${CMAKE_VS_PLATFORM_NAME}" "/p:WindowsTargetPlatformVersion=${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION}"
+      INSTALL_COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/include ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/include
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/fficonfig.h ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/include/fficonfig.h         
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/src/x86/ffitarget.h ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/include/ffitarget.h                 
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/lib
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/x64/$<CONFIG>/libffi.lib ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/lib/libffi.lib 
+        #COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/x64/$<CONFIG>/libffi.pdb ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/lib/libffi.pdb 
     )
 
     configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.bat.in" "${CMAKE_BINARY_DIR}/build_ruby.bat")
@@ -410,18 +413,22 @@ if( BUILD_RUBY )
     # Post Build:
     # rename libs to : x64-msvcr140-ruby251.lib and x64-msvcr140-ruby251-static.lib 
     # copy OpenSSL dlls into release and debug bin directories
-    # tar -zcvf ruby_2_5_1_msvc2017_static.tar.gz Ruby-install
+    # patch config.h to allow for multiple _MSC_VER values: 
+    #   #if !(_MSC_VER == 1915 || _MSC_VER == 1916 || _MSC_VER == 1917 || _MSC_VER == 1918 || _MSC_VER == 1919)
+    # tar -zcvf ruby_2_5_1_msvc2017_static.tar.gz Ruby-install    
     ExternalProject_Add(Ruby
       DEPENDS ZLib FFI
       URL https://codeload.github.com/ruby/ruby/tar.gz/v2_5_1
       URL_MD5 98b550a05fec0f7a43a22d6c37404fd4
       BUILD_IN_SOURCE 1
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.patch
+      # DLM: ruby_2_5_1_msvc2017_static_v3.tar.gz on s3 was built with experimental Ruby.win.wopen.patch patch from ruby_patches branch, not using it for now
+      #PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.wopen.patch
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.patch && ${PATCH_EXE} 
       CONFIGURE_COMMAND ""
-      BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat"
+      BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat" "$<CONFIG>"
       INSTALL_COMMAND ""
     )
-    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install")
+    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/$<CONFIG>")
   endif()
 endif()
 
@@ -433,13 +440,12 @@ endif()
 option(BUILD_BOOST "Build Boost" OFF)
 if(BUILD_BOOST)
   if(APPLE)
-    set(apple-flags "-std=c17 -std=c++17 -stdlib=libc++")
+    set(unix-flags "-std=c++17 -stdlib=libc++ -fPIC")
     ExternalProject_Add(Boost
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_68_0.tar.gz
       URL_MD5 5d8b4503582fffa9eefdb9045359c239
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/fchmodat.patch
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-flags} linkflags=${apple-flags} variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${unix-flags} linkflags=${unix-flags} variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-random --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
       INSTALL_COMMAND ""
     )
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
@@ -451,7 +457,7 @@ if(BUILD_BOOST)
       URL_MD5 5d8b4503582fffa9eefdb9045359c239
       CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
       PATCH_COMMAND ""
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags=${unix-flags} linkflags=${unix-flags} link=static variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-atomic --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
+      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags=${unix-flags} linkflags=${unix-flags} link=static variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-atomic --with-filesystem --with-random --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
       INSTALL_COMMAND ""
     )
     set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)

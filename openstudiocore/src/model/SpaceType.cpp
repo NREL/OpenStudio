@@ -95,7 +95,7 @@
 #include <model/embedded_files.hxx>
 #include "../utilities/filetypes/StandardsJSON.hpp"
 #include "../utilities/core/Json.hpp"
-#include <jsoncpp/json.h>
+#include <json/json.h>
 
 namespace openstudio {
 namespace model {

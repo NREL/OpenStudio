@@ -53,9 +53,10 @@ $logger.level = Logger::WARN
 #OpenStudio::Logger.instance.standardOutLogger.disable
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
-      
+
 # debug Gem::Resolver, must go before resolver is required
 #ENV['DEBUG_RESOLVER'] = "1"
+
 
 # load embedded ruby gems
 require 'rubygems'
@@ -278,7 +279,6 @@ def parse_main_args(main_args)
   # Operate on the include option to add to $LOAD_PATH
   remove_indices = []
   new_path = []
-  init_ssl = true
   main_args.each_index do |i|
 
     if main_args[i] == '-I' || main_args[i] == '--include'
@@ -297,16 +297,7 @@ def parse_main_args(main_args)
       end
       new_path << dir
     elsif main_args[i] == '--no-ssl'
-      # remove from further processing
-      remove_indices << i
-      
-      init_ssl = false
-    end
-  end
-  
-  if init_ssl
-    if (!OpenStudio::RemoteBCL::initializeSSL())
-      puts "Unable to initialize OpenSSL: Verify that openstudio.exe can access the OpenSSL libraries"
+      $logger.warn "'--no-ssl' flag is deprecated"
     end
   end
 
@@ -382,14 +373,14 @@ def parse_main_args(main_args)
     $logger.info "Setting BUNDLE_GEMFILE to #{gemfile}"
     ENV['BUNDLE_GEMFILE'] = gemfile
     use_bundler = true
-    
+
   elsif ENV['BUNDLE_GEMFILE']
     # no argument but env var is set
     $logger.info "ENV['BUNDLE_GEMFILE'] set to '#{ENV['BUNDLE_GEMFILE']}'"
     use_bundler = true
-  
-  end  
-  
+
+  end
+
   if main_args.include? '--bundle_path'
     option_index = main_args.index '--bundle_path'
     path_index = option_index + 1
@@ -399,29 +390,29 @@ def parse_main_args(main_args)
 
     $logger.info "Setting BUNDLE_PATH to #{bundle_path}"
     ENV['BUNDLE_PATH'] = bundle_path
-  
+
   elsif ENV['BUNDLE_PATH']
     # no argument but env var is set
     $logger.info "ENV['BUNDLE_PATH'] set to '#{ENV['BUNDLE_PATH']}'"
-  
+
   elsif use_bundler
     # bundle was requested but bundle_path was not provided
     $logger.warn "Bundle activated but ENV['BUNDLE_PATH'] is not set"
-    
+
     $logger.info "Setting BUNDLE_PATH to ':/ruby/2.5.0/'"
     ENV['BUNDLE_PATH'] = ':/ruby/2.5.0/'
-    
+
     # match configuration in build_openstudio_gems
     $logger.info "Setting BUNDLE_WITHOUT to 'test'"
     ENV['BUNDLE_WITHOUT'] = 'test'
-    
+
     # ignore any local config on disk
     #DLM: this would be correct if the bundle was created here
     #it would not be correct if the bundle was transfered from another computer
     #ENV['BUNDLE_IGNORE_CONFIG'] = 'true'
-  
-  end  
-  
+
+  end
+
   Gem.paths.path << ':/ruby/2.5.0/gems/'
   Gem.paths.path << ':/ruby/2.5.0/bundler/gems/'
 
@@ -429,7 +420,7 @@ def parse_main_args(main_args)
   original_embedded_gems = {}
   begin
     EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
-      if md = /specifications\/.*\.gemspec$/.match(f) || 
+      if md = /specifications\/.*\.gemspec$/.match(f) ||
          md = /bundler\/.*\.gemspec$/.match(f)
         begin
           spec = EmbeddedScripting::getFileAsString(f)
@@ -474,9 +465,9 @@ def parse_main_args(main_args)
       end
     end
   end
-  
+
   if use_bundler
-  
+
     current_dir = Dir.pwd
     
     original_arch = nil
@@ -496,7 +487,7 @@ def parse_main_args(main_args)
     require 'bundler/version'
     require 'bundler/ruby_version'
     #require 'bundler/constants'
-    #require 'bundler/current_ruby'  
+    #require 'bundler/current_ruby'
     require 'bundler/gem_helpers'
     #require 'bundler/plugin'
     require 'bundler/source'
@@ -534,13 +525,13 @@ def parse_main_args(main_args)
       #Bundler.require(*keep_groups)
       
     #rescue Bundler::BundlerError => e
-    
+
       #$logger.info e.backtrace.join("\n")
       #$logger.error "Bundler #{e.class}: Use `bundle install` to install missing gems"
       #exit e.status_code
 
     ensure
-    
+
       if original_arch
         $logger.info "Restoring arch '#{original_arch}'"
         RbConfig::CONFIG['arch'] = 'x64-mingw32'
@@ -549,11 +540,11 @@ def parse_main_args(main_args)
       Dir.chdir(current_dir)
     end
 
-  else 
+  else
     # not using_bundler
-    
+
     current_dir = Dir.pwd
-    
+
     begin
       # DLM: test code, useful for testing from command line using system ruby
       #Gem::Specification.each do |spec|
@@ -593,7 +584,7 @@ def parse_main_args(main_args)
             end
           end
         end
-        
+
         if do_activate
           $logger.debug "Activating gem #{spec.spec_file}"
           begin
@@ -603,19 +594,19 @@ def parse_main_args(main_args)
             activation_errors = true
           end
         end
-          
+
       end
-      
+
       if activation_errors
         return false
       end
-      
+
     ensure 
       Dir.chdir(current_dir)
     end
     
   end # use_bundler
-    
+
   # Handle -e commands
   remove_indices = []
   $eval_cmds = []
@@ -754,7 +745,6 @@ class CLI
     if quiet
       commands = ['-h','--help',
                   '--verbose',
-                  '--no-ssl',
                   '-i', '--include',
                   '-e', '--execute',
                   '--gem_path', '--gem_home', '--bundle', '--bundle_path']
@@ -772,7 +762,6 @@ class CLI
         o.separator ''
         o.on('-h', '--help', 'Print this help.')
         o.on('--verbose', 'Print the full log to STDOUT')
-        o.on('--no-ssl', 'Skip initializing SSL')
         o.on('-I', '--include DIR', 'Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)')
         o.on('-e', '--execute CMD', 'Execute one line of script (may be used more than once). Returns after executing commands.')
         o.on('--gem_path DIR', 'Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)')
@@ -841,7 +830,7 @@ class Run
     if sub_argv.delete '--fast'
       run_options[:fast] = true
     end
-    
+
     options = {}
     options[:debug] = false
     options[:no_simulation] = false
@@ -1157,7 +1146,7 @@ class Measure
       saved_subargv = sub_argv[2..-1]
       sub_argv = sub_argv[0...2]
     end
-    
+
     # find the directory
     directory = nil
     if sub_argv.size > 1
@@ -1193,11 +1182,11 @@ class Measure
       end
       # TODO: run unit tests
     end
-    
+
     # Parse the options
     argv = parse_options(opts, sub_argv)
     return 0 if argv == nil
-    
+
     $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
 
     if !options[:start_server]
@@ -1289,33 +1278,33 @@ class Measure
       safe_puts JSON.generate(hash)
 
     elsif options[:run_tests]
-      
+
       # restore saved arguments for minitest
       ARGV.clear
       saved_subargv.each do |arg|
         ARGV << arg
       end
       $logger.debug("Minitest arguments are '#{saved_subargv}'")
-      
+
       # load openstudio_measure_tester gem
       #begin
         require 'minitest'
         require 'minitest/reporters'
-        
+
         # Minitest Reports use a plugin that is normally found by Minitest::load_plugins using Gem.find
         # until Gem.find is overloaded to find embedded gems, we will manually load the plugin here
         require 'minitest/minitest_reporter_plugin'
         Minitest.extensions << 'minitest_reporter'
-        
+
         require 'openstudio_measure_tester'
       #rescue LoadError
         #puts "Cannot load 'openstudio_measure_tester'"
         #return 1
       #end
-      
+
       runner = OpenStudioMeasureTester::Runner.new(directory)
-      runner.run_all(Dir.pwd) 
-    
+      runner.run_all(Dir.pwd)
+
     elsif options[:start_server]
 
       require_relative 'measure_manager_server'
@@ -1716,7 +1705,7 @@ rescue Exception => e
   puts "Error executing argv: #{ARGV}"
   puts "Error: #{e.message} in #{e.backtrace.join("\n")}"
   result = 1
-end 
+end
 STDOUT.flush
 
 if result != 0

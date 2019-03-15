@@ -252,7 +252,7 @@ endif()
 
 
 # -Wno-deprecated-declaration, /wd4996: suppresses deprecated warning
-# -Wno-register, /wd5033: ISO C++1z does not allow ‘register’ storage class specifier
+# -Wno-register, /wd5033: ISO C++1z does not allow â€˜registerâ€™ storage class specifier
 if(MSVC)
   set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
   set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
@@ -272,7 +272,7 @@ if( UNIX )
 else()
  LINK_DEBUG_AND_RELEASE(openstudio "${EXTENSION_LIBS_DEBUG}" "${EXTENSION_LIBS_RELEASE}")
  LINK_DEBUG_AND_RELEASE(openstudio "${ENC_LIBS_DEBUG}" "${ENC_LIBS_RELEASE}")
- target_link_libraries(openstudio ${ADDITIONAL_RUBY_LIBS})
+ LINK_DEBUG_AND_RELEASE(openstudio "${ADDITIONAL_RUBY_LIBS_DEBUG}" "${ADDITIONAL_RUBY_LIBS_RELEASE}")
 endif()
 
 target_link_libraries(openstudio
@@ -283,18 +283,16 @@ target_link_libraries(openstudio
  openstudio_osversion_static
  openstudio_sdd_static
  openstudio_isomodel_static
- openstudio_gbxml_static
+ openstudio_gbxml_static 
  openstudio_radiance_static
 )
 
 if (UNIX AND NOT APPLE)
-  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt ssl)
+  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt)
   target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
 elseif(WIN32)
   target_link_libraries(openstudio debug ${RUBY_STATIC_LIBRARY_DEBUG} optimized ${RUBY_STATIC_LIBRARY})
   target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi)
-  target_link_libraries(openstudio ${LIB_EAY_RELEASE})
-  target_link_libraries(openstudio ${SSL_EAY_RELEASE})
   set_target_properties(openstudio PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
   target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY})

@@ -2266,7 +2266,6 @@ namespace radiance {
     }
 
     openstudio::RemoteBCL remoteBCL;
-    //remoteBCL.useRemoteDevelopmentUrl(); // TODO: remove
     result = getBSDF(remoteBCL, vlt, vltSpecular, shadeType, searchTerm, tid);
     if (result){
       return toPath(*result);

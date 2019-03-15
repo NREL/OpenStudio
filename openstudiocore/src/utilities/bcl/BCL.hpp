@@ -37,8 +37,6 @@
 #include "../core/Logger.hpp"
 #include "../data/Attribute.hpp"
 
-class QNetworkReply;
-
 namespace pugi {
   class xml_node;
 }

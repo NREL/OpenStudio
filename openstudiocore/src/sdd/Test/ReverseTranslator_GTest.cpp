@@ -31,9 +31,6 @@
 #include "SDDFixture.hpp"
 
 #include "../ReverseTranslator.hpp"
-#include "../ForwardTranslator.hpp"
-
-#include "../../energyplus/ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/Facility.hpp"
@@ -56,14 +53,21 @@
 #include "../../model/RunPeriodControlSpecialDays_Impl.hpp"
 
 
-#include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Optional.hpp"
 
 #include <resources.hxx>
 
 #include <sstream>
 
-using namespace openstudio::model;
-using namespace openstudio;
+TEST_F(SDDFixture, ReverseTranslator_load) {
 
+  openstudio::path p = resourcesPath() / openstudio::toPath("simxml/OffLrg-ThermalEnergyStorage_StoragePriority-ap.xml");
 
+  ASSERT_TRUE(openstudio::filesystem::exists(p)) << "Path '" << p << "' doesn't exist.";
+
+  openstudio::sdd::ReverseTranslator rt;
+  boost::optional<openstudio::model::Model> _m = rt.loadModel(p);
+
+  EXPECT_TRUE(_m);
+
+}

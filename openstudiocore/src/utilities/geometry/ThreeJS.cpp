@@ -35,7 +35,7 @@
 #include "../core/Json.hpp"
 #include "../core/UUID.hpp"
 
-#include <jsoncpp/json.h>
+#include <json/json.h>
 
 #include <iostream>
 #include <string>

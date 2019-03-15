@@ -38,7 +38,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/case_conv.hpp>
 #include <iostream>
-#include <QtGlobal>
 
 #if defined _WIN32
 #include <windows.h>

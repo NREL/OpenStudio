@@ -31,8 +31,8 @@
 #define AIRFLOW_CONTAM_PRJREADER_HPP
 
 #include <sstream>
-#include "../utilities/core/Logger.hpp"
-#include "../utilities/core/Filesystem.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Filesystem.hpp"
 
 #include "PrjDefines.hpp"
 

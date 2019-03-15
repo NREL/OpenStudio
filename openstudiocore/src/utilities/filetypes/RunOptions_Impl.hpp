@@ -36,7 +36,7 @@
 #include "../core/Path.hpp"
 #include "../data/Variant.hpp"
 
-#include <jsoncpp/json.h>
+#include <json/json.h>
 
 #include <nano/nano_signal_slot.hpp>
 

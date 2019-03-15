@@ -30,10 +30,10 @@
 #include "WorkflowStepResult.hpp"
 #include "WorkflowStepResult_Impl.hpp"
 
-#include "../utilities/core/Assert.hpp"
+#include "../../utilities/core/Assert.hpp"
 
 
-#include <jsoncpp/json.h>
+#include <json/json.h>
 
 namespace openstudio {
 namespace detail {

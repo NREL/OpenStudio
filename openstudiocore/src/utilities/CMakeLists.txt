@@ -206,29 +206,10 @@ set(documentation_src
   mainpage.hpp
 )
 
-set(${target_name}_depends
-  sqlite
-  jsoncpp
-  #litesql
-  #litesql-util
-  miniziplib
-  pugixml
-  ${Boost_LIBRARIES}
-  #JWD: On Ubuntu 14.04, the thread lib is included in Boost_LIBRARIES
-  # ${CMAKE_THREAD_LIBS}
-)
-
-if(WIN32)
-  list(APPEND ${target_name}_depends qtwinmigrate)
-  list(APPEND ${target_name}_depends mpr)
-endif()
-
-# moc files
-#set(bcl_moc
-#  bcl/BCL.hpp
-#  bcl/LocalBCL.hpp
-#  bcl/RemoteBCL.hpp
-#)
+#if(WIN32)
+#  list(APPEND ${target_name}_depends qtwinmigrate)
+#  list(APPEND ${target_name}_depends mpr)
+#endif()
 
 #set(cloud_moc
 #  cloud/AWSProvider_Impl.hpp
@@ -281,7 +262,6 @@ endif()
 ###############################################################################
 
 ## Qt MOC generation
-#qt5_wrap_cpp_minimally(bcl_moc_src ${bcl_moc})
 #qt5_wrap_cpp_minimally(cloud_moc_src ${cloud_moc})
 #qt5_wrap_cpp_minimally(core_moc_src ${core_moc}) # RM
 #qt5_wrap_cpp_minimally(idf_moc_src ${idfxx_moc})
@@ -290,14 +270,14 @@ endif()
 
 # embedded files, bump again to update common files
 file(GLOB_RECURSE BCL_TEMPLATES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/bcl/templates/**/*.*")
-foreach( _FILE ${BCL_TEMPLATES} )
+foreach(_FILE ${BCL_TEMPLATES})
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/bcl/" ${_FILE})
   list(APPEND E_FILES ${_FILE})
   list(APPEND E_PATHS ${LOCATION})
 endforeach()
 
 file(GLOB_RECURSE IDD_FILES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/idd/versions/*/*.idd")
-foreach( _FILE ${IDD_FILES} )
+foreach(_FILE ${IDD_FILES})
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
   list(APPEND E_FILES ${_FILE})
   list(APPEND E_PATHS ${LOCATION})
@@ -468,7 +448,7 @@ set(${target_name}_swig_src
   core/Exception.i
   core/Logger.i
   core/Path.i
-  core/Qt.i
+#  core/Qt.i
   core/Singleton.i
   core/System.i
   core/UpdateManager.i
@@ -508,16 +488,16 @@ set(${target_name}_swig_src
 #include subdir for pch
 add_subdirectory(pch)
 
-add_library(${target_name}
-  ${${target_name}_src}
-)
-add_dependencies("${target_name}" GenerateIddFactoryRun)
+#add_library(${target_name}
+#  ${${target_name}_src}
+#)
+#add_dependencies("${target_name}" GenerateIddFactoryRun)
 
-if(UNIX)
-  add_dependencies("${target_name}" SWIG)
-endif()
+#if(UNIX)
+#  add_dependencies("${target_name}" SWIG)
+#endif()
 
-AddPCH(${target_name})
+#AddPCH(${target_name})
 
 # No need to install static lib
 #if(NOT APPLE)
@@ -527,22 +507,35 @@ AddPCH(${target_name})
 #  )
 #endif()
 
-target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} GeographicLib_STATIC ${QT_LIBS})
+#target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} GeographicLib_STATIC cpprestsdk::cpprest)
 
-CREATE_SRC_GROUPS("${${target_name}_test_src}")
-CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+#CREATE_SRC_GROUPS("${${target_name}_test_src}")
+#CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
 
 set(${target_name}_static_depends
-  sqlite
-  jsoncpp
-  miniziplib
-  pugixml
-  ${Boost_LIBRARIES}
+  CONAN_PKG::sqlite3
+  CONAN_PKG::jsoncpp
+  CONAN_PKG::zlib
+  CONAN_PKG::pugixml
+  CONAN_PKG::boost_filesystem 
+  CONAN_PKG::boost_crc 
+  CONAN_PKG::boost_regex 
+  CONAN_PKG::boost_algorithm 
+  CONAN_PKG::boost_uuid 
+  CONAN_PKG::boost_log 
+  CONAN_PKG::boost_program_options
+  CONAN_PKG::boost_numeric_ublas
+  CONAN_PKG::boost_functional
+  CONAN_PKG::boost_geometry
+  CONAN_PKG::cpprestsdk
+  CONAN_PKG::OpenSSL
+  GeographicLib_STATIC
 )
 
 if(WIN32)
-  list(APPEND ${target_name}_static_depends qtwinmigrate_static)
   list(APPEND ${target_name}_static_depends mpr)
+elseif(APPLE)
+  list(APPEND ${target_name}_static_depends ${SECURITY_FRAMEWORK})
 endif()
 
 add_library(${target_name}_static
@@ -550,32 +543,42 @@ add_library(${target_name}_static
 )
 add_dependencies("${target_name}_static" GenerateIddFactoryRun)
 
-target_link_libraries(${target_name}_static ${${target_name}_static_depends} GeographicLib_STATIC)
+target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
-target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
+#target_link_libraries(${target_name}_static ${${target_name}_static_depends})
 
-list(LENGTH QT_STATIC_LIBS QT_STATIC_LIBS_LENGTH)
-list(LENGTH QT_STATIC_LIBS_D QT_STATIC_LIBS_D_LENGTH)
-if (NOT ${QT_STATIC_LIBS_LENGTH} EQUAL ${QT_STATIC_LIBS_D_LENGTH})
-  message(FATAL_ERROR "Mismatched sizes QT_STATIC_LIBS ${QT_STATIC_LIBS_LENGTH} != QT_STATIC_LIBS_D #{QT_STATIC_LIBS_D_LENGTH}")
-endif()
+#target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
 
-math(EXPR N "${QT_STATIC_LIBS_LENGTH} - 1")
-foreach(i RANGE ${N})
-  list(GET QT_STATIC_LIBS ${i} lib_)
-  list(GET QT_STATIC_LIBS_D ${i} libd)
-  target_link_libraries(${target_name}_static optimized ${lib_} debug ${libd})
-endforeach()
+#list(LENGTH QT_STATIC_LIBS QT_STATIC_LIBS_LENGTH)
+#list(LENGTH QT_STATIC_LIBS_D QT_STATIC_LIBS_D_LENGTH)
+#if (NOT ${QT_STATIC_LIBS_LENGTH} EQUAL ${QT_STATIC_LIBS_D_LENGTH})
+#  message(FATAL_ERROR "Mismatched sizes QT_STATIC_LIBS ${QT_STATIC_LIBS_LENGTH} != QT_STATIC_LIBS_D #{QT_STATIC_LIBS_D_LENGTH}")
+#endif()
 
-target_compile_definitions(${target_name}_static PUBLIC ${QT_DEFS})
+#math(EXPR N "${QT_STATIC_LIBS_LENGTH} - 1")
+#foreach(i RANGE ${N})
+#  list(GET QT_STATIC_LIBS ${i} lib_)
+#  list(GET QT_STATIC_LIBS_D ${i} libd)
+#  target_link_libraries(${target_name}_static optimized ${lib_} debug ${libd})
+#endforeach()
+
+#target_compile_definitions(${target_name}_static PUBLIC ${QT_DEFS})
 
 if(NOT BUILD_SHARED_LIBS)
-  target_compile_definitions(${target_name} PUBLIC openstudio_utilities_EXPORTS)
+  #target_compile_definitions(${target_name} PUBLIC openstudio_utilities_EXPORTS)
   target_compile_definitions(${target_name}_static PUBLIC openstudio_utilities_EXPORTS)
 endif()
 
+#install(TARGETS ${target_name}_static
+#  EXPORT openstudio
+#  RUNTIME DESTINATION bin
+#  LIBRARY DESTINATION lib
+#  ARCHIVE DESTINATION lib
+#)
+
 if(BUILD_TESTING)
-  add_dependencies("${target_name}_tests" openstudio_energyplus_resources)
+  CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends}")
+  add_dependencies("${target_name}_static_tests" openstudio_energyplus_resources)
 endif()
 
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")

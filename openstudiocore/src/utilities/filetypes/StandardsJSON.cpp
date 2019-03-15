@@ -31,7 +31,7 @@
 #include "StandardsJSON_Impl.hpp"
 
 #include "../core/Json.hpp"
-#include <jsoncpp/json.h>
+#include <json/json.h>
 
 namespace openstudio{
 namespace detail{

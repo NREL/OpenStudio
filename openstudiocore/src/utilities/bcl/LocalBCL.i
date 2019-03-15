@@ -15,6 +15,9 @@
   #include <utilities/core/UpdateManager.hpp>
 %}
 
+%ignore componentDownloaded;
+%ignore measureDownloaded;
+
 %ignore std::vector<openstudio::RemoteQueryResponse>::vector(size_type);
 %ignore std::vector<openstudio::RemoteQueryResponse>::resize(size_type);
 %template(RemoteQueryResponseVector) std::vector<openstudio::RemoteQueryResponse>;

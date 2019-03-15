@@ -69,22 +69,20 @@
 
 #include <utilities/idd/IddEnums.hxx>
 
-
-#include <QDomDocument>
-#include <QDomElement>
-#include <QTextStream>
-
 #include <thread>
+
+#include <pugixml.hpp>
+#include <algorithm>
+#include <locale>
 
 namespace openstudio {
 namespace gbxml {
 
-  std::ostream& operator<<(std::ostream& os, const QDomElement& element)
+  std::ostream& operator<<(std::ostream& os, const pugi::xml_node& element)
   {
-    QString str;
-    QTextStream qts(&str);
-    element.save(qts, 2);
-    os << str.toStdString();
+    pugi::xml_document doc;
+    doc.append_copy(element);
+    doc.save(os, "  ");
     return os;
   }
 
@@ -116,13 +114,15 @@ namespace gbxml {
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {
-        const auto data = openstudio::filesystem::read(file);
-        QDomDocument doc;
-        doc.setContent(QByteArray(data.data(), data.size()));
+        pugi::xml_document doc;
+        auto load_result = doc.load(file);
+        if (load_result) {
+          result = this->convert(doc.document_element());
+        }
         file.close();
 
-        result = this->convert(doc);
       }
+      // JWD: Would be nice to add some error handling here
     }
 
     return result;
@@ -155,22 +155,23 @@ namespace gbxml {
     return result;
   }
 
-  std::string ReverseTranslator::escapeName(const QString& id, const QString& name)
+  std::string ReverseTranslator::escapeName(const std::string& id, const std::string& name)
   {
-    QString value = id;
-    if (!name.isEmpty()){
+    std::string value = id;
+    if (!name.empty()) {
       value = name;
     }
-
-    return value.replace(',', '-').replace(';', '-').toStdString();
+    std::replace(value.begin(), value.end(), ',', '-');
+    std::replace(value.begin(), value.end(), ';', '-');
+    return value;
   }
 
-  boost::optional<model::Model> ReverseTranslator::convert(const QDomDocument& doc)
+  boost::optional<model::Model> ReverseTranslator::convert(const pugi::xml_node& root)
   {
-    return translateGBXML(doc.documentElement(), doc);
+    return translateGBXML(root);
   }
 
-  boost::optional<model::Model> ReverseTranslator::translateGBXML(const QDomElement& element, const QDomDocument& doc)
+  boost::optional<model::Model> ReverseTranslator::translateGBXML(const pugi::xml_node& root)
   {
     openstudio::model::Model model;
     model.setFastNaming(true);
@@ -178,44 +179,45 @@ namespace gbxml {
     // gbXML attributes not mapped directly to IDF, but needed to map
 
     // {F, C, K, R}
-    QString temperatureUnit = element.attribute("temperatureUnit");
-    if (temperatureUnit.contains("F", Qt::CaseInsensitive)){
+    // JWD: the previous check was not great, this one is better and more true to the schema
+    std::string temperatureUnit{ root.attribute("temperatureUnit").value() };
+    if (temperatureUnit == "F") {
       m_temperatureUnit = UnitFactory::instance().createUnit("F").get();
-    }else if (temperatureUnit.contains("C", Qt::CaseInsensitive)){
+    } else if (temperatureUnit == "C") {
       m_temperatureUnit = UnitFactory::instance().createUnit("C").get();
-    }else if (temperatureUnit.contains("K", Qt::CaseInsensitive)){
+    } else if (temperatureUnit == "K") {
       m_temperatureUnit = UnitFactory::instance().createUnit("K").get();
-    }else if (temperatureUnit.contains("R", Qt::CaseInsensitive)){
+    } else if (temperatureUnit == "R") {
       m_temperatureUnit = UnitFactory::instance().createUnit("R").get();
-    }else{
-      LOG(Warn, "No temperature unit specified, using C");
+    } else {
+      LOG(Warn, "No recognized temperature unit specified, using C");
       m_temperatureUnit = UnitFactory::instance().createUnit("C").get();
     }
 
     // {Kilometers, Centimeters, Millimeters, Meters, Miles, Yards, Feet, Inches}
-    // TODO: still need some help with some units
-    QString lengthUnit = element.attribute("lengthUnit");
-    if (lengthUnit.contains("Kilometers", Qt::CaseInsensitive)){
+    // JWD: the previous check was not great, this one is better, though still not exactly true to the schema
+    std::string lengthUnit{ root.attribute("lengthUnit").value() };
+    if (istringEqual(lengthUnit, "Kilometers")) {
       m_nonBaseMultiplier = 1000.0;
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
-    }else if (lengthUnit.contains("Centimeters", Qt::CaseInsensitive)){
+    } else if (istringEqual(lengthUnit, "Centimeters")) {
       m_nonBaseMultiplier = 1.0e-2;
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
-    }else if (lengthUnit.contains("Millimeters", Qt::CaseInsensitive)){
+    } else if (istringEqual(lengthUnit, "Millimeters")) {
       m_nonBaseMultiplier = 1.0e-3;
       m_lengthUnit = UnitFactory::instance().createUnit("K").get();
-    }else if (lengthUnit.contains("Meters", Qt::CaseInsensitive)){
+    } else if (istringEqual(lengthUnit, "Meters")) {
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
-    }else if (lengthUnit.contains("Miles", Qt::CaseInsensitive)){
+    } else if (istringEqual(lengthUnit, "Miles")) {
       m_lengthUnit = UnitFactory::instance().createUnit("mi").get();
-    }else if (lengthUnit.contains("Yards", Qt::CaseInsensitive)){
+    } else if (istringEqual(lengthUnit, "Yards")) {
       m_nonBaseMultiplier = 3.0;
       m_lengthUnit = UnitFactory::instance().createUnit("ft").get();
-    }else if (lengthUnit.contains("Feet", Qt::CaseInsensitive)){
+    } else if (istringEqual(lengthUnit, "Feet")) {
       m_lengthUnit = UnitFactory::instance().createUnit("ft").get();
-    }else if (lengthUnit.contains("Inches", Qt::CaseInsensitive)){
+    } else if (istringEqual(lengthUnit, "Inches")) {
       m_lengthUnit = UnitFactory::instance().createUnit("in").get();
-    }else{
+    } else {
       LOG(Warn, "No length unit specified, using Meters");
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }
@@ -226,120 +228,119 @@ namespace gbxml {
 
     // {SquareKilometers, SquareMeters, SquareCentimeters, SquareMillimeters, SquareMiles, SquareYards, SquareFeet, SquareInches}
     // TODO: still need some help with some units
-    QString areaUnit = element.attribute("areaUnit");
+    std::string areaUnit = root.attribute("areaUnit").value();
 
     // {CubicKilometers, CubicMeters, CubicCentimeters, CubicMillimeters, CubicMiles, CubicYards, CubicFeet, CubicInches}
     // TODO: still need some help with some units
-    QString volumeUnit = element.attribute("volumeUnit");
+    std::string volumeUnit = root.attribute("volumeUnit").value();
 
     // {true, false}
-    QString useSIUnitsForResults = element.attribute("useSIUnitsForResults");
-    if (useSIUnitsForResults.contains("False", Qt::CaseInsensitive)){
+    m_useSIUnitsForResults = true;
+    std::string useSIUnitsForResults{ root.attribute("useSIUnitsForResults").value() };
+    if (istringEqual(useSIUnitsForResults, "False")) {
       m_useSIUnitsForResults = false;
-    }else{
-      m_useSIUnitsForResults = true;
     }
 
     // do materials before constructions
-    QDomNodeList materialElements = element.elementsByTagName("Material");
-    if (m_progressBar){
+    auto materialElements = root.children("Material");
+    if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Materials"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(materialElements.count());
+      m_progressBar->setMaximum((int)std::distance(materialElements.begin(), materialElements.end()));
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < materialElements.count(); i++){
-      QDomElement materialElement = materialElements.at(i).toElement();
-      boost::optional<model::ModelObject> material = translateMaterial(materialElement, doc, model);
+    for (auto &materialElement : materialElements) {
+      boost::optional<model::ModelObject> material = translateMaterial(materialElement, model);
       OS_ASSERT(material); // Krishnan, what type of error handling do you want?
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
 
     // do constructions before surfaces
-    QDomNodeList layerElements = element.elementsByTagName("Layer");
-    QDomNodeList constructionElements = element.elementsByTagName("Construction");
-    if (m_progressBar){
+    std::unordered_map<std::string, pugi::xml_node> layerElements;
+    for (auto &layerEl : root.children("Layer")) {
+      std::string layerId = layerEl.attribute("id").value();
+      // Could maybe use some error checking here for empty IDs
+      layerElements[layerId] = layerEl;
+    }
+
+    auto constructionElements = root.children("Construction");
+    if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Constructions"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(constructionElements.count());
+      m_progressBar->setMaximum((int)std::distance(constructionElements.begin(), constructionElements.end()));
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < constructionElements.count(); i++){
-      QDomElement constructionElement = constructionElements.at(i).toElement();
-      boost::optional<model::ModelObject> construction = translateConstruction(constructionElement, layerElements, doc, model);
+    for (auto &constructionElement : constructionElements) {
+      boost::optional<model::ModelObject> construction = translateConstruction(constructionElement, layerElements, model);
       OS_ASSERT(construction); // Krishnan, what type of error handling do you want?
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
 
     // do window type before sub surfaces
-    QDomNodeList windowTypeElements = element.elementsByTagName("WindowType");
-    if (m_progressBar){
+    auto windowTypeElements = root.children("WindowType");
+    if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Window Types"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(windowTypeElements.count());
+      m_progressBar->setMaximum((int)std::distance(windowTypeElements.begin(), windowTypeElements.end()));
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < windowTypeElements.count(); i++){
-      QDomElement windowTypeElement = windowTypeElements.at(i).toElement();
-      boost::optional<model::ModelObject> construction = translateWindowType(windowTypeElement, doc, model);
+    for (auto &windowTypeElement : windowTypeElements) {
+      boost::optional<model::ModelObject> construction = translateWindowType(windowTypeElement, model);
       OS_ASSERT(construction); // Krishnan, what type of error handling do you want?
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
 
     // do schedules before loads
-    QDomNodeList scheduleElements = element.elementsByTagName("Schedule");
-    if (m_progressBar){
+    auto scheduleElements = root.children("Schedule");
+    if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Schedules"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(scheduleElements.count());
+      m_progressBar->setMaximum((int)std::distance(scheduleElements.begin(), scheduleElements.end()));
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < scheduleElements.count(); i++){
-      QDomElement scheduleElement = scheduleElements.at(i).toElement();
-      boost::optional<model::ModelObject> schedule = translateSchedule(scheduleElement, doc, model);
+    for (auto &scheduleElement : scheduleElements) {
+      boost::optional<model::ModelObject> schedule = translateSchedule(scheduleElement, root, model);
       OS_ASSERT(schedule); // Krishnan, what type of error handling do you want?
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
 
     // do thermal zones before spaces
-    QDomNodeList zoneElements = element.elementsByTagName("Zone");
-    if (m_progressBar){
+    auto zoneElements = root.children("Zone");
+    if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Zones"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(zoneElements.count());
+      m_progressBar->setMaximum((int)std::distance(zoneElements.begin(), zoneElements.end()));
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < zoneElements.count(); i++){
-      QDomElement zoneElement = zoneElements.at(i).toElement();
-      boost::optional<model::ModelObject> zone = translateThermalZone(zoneElement, doc, model);
+    for (auto &zoneElement : zoneElements) {
+      boost::optional<model::ModelObject> zone = translateThermalZone(zoneElement, model);
       OS_ASSERT(zone); // Krishnan, what type of error handling do you want?
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
 
-    QDomNodeList campusElements = element.elementsByTagName("Campus");
-    OS_ASSERT(campusElements.count() == 1);
-    QDomElement campusElement = campusElements.at(0).toElement();
-    boost::optional<model::ModelObject> facility = translateCampus(campusElement, doc, model);
+    auto campusElement = root.child("Campus");
+    OS_ASSERT(campusElement.next_sibling("Campus").empty());
+    boost::optional<model::ModelObject> facility = translateCampus(campusElement, model);
     OS_ASSERT(facility); // Krishnan, what type of error handling do you want?
 
     model.setFastNaming(false);
@@ -347,33 +348,32 @@ namespace gbxml {
     return model;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateCampus(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  boost::optional<model::ModelObject> ReverseTranslator::translateCampus(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
 
-    QDomNodeList buildingElements = element.elementsByTagName("Building");
-    OS_ASSERT(buildingElements.count() == 1);
+    auto buildingElement = element.child("Building");
+    OS_ASSERT(buildingElement.next_sibling("Building").empty());
 
-    boost::optional<model::ModelObject> building = translateBuilding(buildingElements.at(0).toElement(), doc, model);
+    boost::optional<model::ModelObject> building = translateBuilding(buildingElement, model);
     OS_ASSERT(building);
 
-    QDomNodeList surfaceElements = element.elementsByTagName("Surface");
-    if (m_progressBar){
+    auto surfaceElements = element.children("Surface");
+    if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Surfaces"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(surfaceElements.count());
+      m_progressBar->setMaximum((int)std::distance(surfaceElements.begin(), surfaceElements.end()));
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < surfaceElements.count(); ++i){
-
+    for (auto &surfEl : surfaceElements) {
       try {
-        boost::optional<model::ModelObject> surface = translateSurface(surfaceElements.at(i).toElement(), doc, model);
-      }catch(const std::exception&){
-        LOG(Error, "Could not translate surface " << surfaceElements.at(i).toElement());
+        boost::optional<model::ModelObject> surface = translateSurface(surfEl, model);
+      } catch (const std::exception&) {
+        LOG(Error, "Could not translate surface " << surfEl);
       }
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
@@ -381,46 +381,46 @@ namespace gbxml {
     return facility;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
-    QString id = element.attribute("id");
+    std::string id = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(id, building));
 
-    QString name = element.firstChildElement("Name").toElement().text();
+    std::string name = element.child("Name").text().as_string();
     building.setName(escapeName(id, name));
 
-    QDomNodeList storyElements = element.elementsByTagName("BuildingStorey");
-    if (m_progressBar){
+    auto storyElements = element.children("BuildingStorey");
+    if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Building Stories"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(storyElements.count());
+      m_progressBar->setMaximum((int)std::distance(storyElements.begin(), storyElements.end()));
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < storyElements.count(); ++i){
-      boost::optional<model::ModelObject> story = translateBuildingStory(storyElements.at(i).toElement(), doc, model);
+    for (auto &storyEl : storyElements) {
+      boost::optional<model::ModelObject> story = translateBuildingStory(storyEl, model);
       OS_ASSERT(story);
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
 
-    QDomNodeList spaceElements = element.elementsByTagName("Space");
-    if (m_progressBar){
+    auto spaceElements = element.children("Space");
+    if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Spaces"));
       m_progressBar->setMinimum(0);
-      m_progressBar->setMaximum(spaceElements.count());
+      m_progressBar->setMaximum((int)std::distance(spaceElements.begin(), spaceElements.end()));
       m_progressBar->setValue(0);
     }
 
-    for (int i = 0; i < spaceElements.count(); ++i){
-      boost::optional<model::ModelObject> space = translateSpace(spaceElements.at(i).toElement(), doc, model);
+    for(auto &spaceEl : spaceElements) {
+      boost::optional<model::ModelObject> space = translateSpace(spaceEl, model);
       OS_ASSERT(space);
 
-      if (m_progressBar){
+      if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
@@ -428,14 +428,14 @@ namespace gbxml {
     return building;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateBuildingStory(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  boost::optional<model::ModelObject> ReverseTranslator::translateBuildingStory(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     openstudio::model::BuildingStory story(model);
 
-    QString id = element.attribute("id");
+    std::string id = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(id, story));
 
-    QString name = element.firstChildElement("Name").toElement().text();
+    std::string name = element.child("Name").text().as_string();
     story.setName(escapeName(id, name));
 
     // DLM: we need to better support separate name from id in this translator
@@ -445,14 +445,14 @@ namespace gbxml {
     return story;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateThermalZone(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  boost::optional<model::ModelObject> ReverseTranslator::translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     openstudio::model::ThermalZone zone(model);
 
-    QString id = element.attribute("id");
+    std::string id = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(id, zone));
 
-    QString name = element.firstChildElement("Name").toElement().text();
+    std::string name = element.child("Name").text().as_string();
     zone.setName(escapeName(id, name));
 
     // DLM: we need to better support separate name from id in this translator
@@ -460,46 +460,49 @@ namespace gbxml {
     // DLM: todo, translate setpoints
 
     // import CADObjectId
-    QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
-    if (cadObjectIdElements.size() >= 1){
+    for (auto &cadObjectId : element.children("CADObjectId")) {
       // TODO: import multiple CADObjectIds
-      translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, zone);
+      translateCADObjectId(cadObjectId, zone);
+
+      break; // TODO: import multiple CADObjectIds
     }
 
     return zone;
   }
-  boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+
+
+  boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     openstudio::model::Space space(model);
 
-    QString id = element.attribute("id");
+    std::string id = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(id, space));
 
-    QString name = element.firstChildElement("Name").toElement().text();
+    std::string name = element.child("Name").text().as_string();
     space.setName(escapeName(id, name));
 
     //DLM: we should be using a map of id to model object to get this, not relying on name
-    QString storyId = element.attribute("buildingStoreyIdRef");
+    std::string storyId = element.attribute("buildingStoreyIdRef").value();
     auto storyIt = m_idToObjectMap.find(storyId);
-    if (storyIt != m_idToObjectMap.end()){
+    if (storyIt != m_idToObjectMap.end()) {
       boost::optional<model::BuildingStory> story = storyIt->second.optionalCast<model::BuildingStory>();
-      if (story){
+      if (story) {
         space.setBuildingStory(*story);
       }
     }
 
     // if space doesn't have story assigned should we warn the user?
 
-    QString zoneId = element.attribute("zoneIdRef");
+    std::string zoneId = element.attribute("zoneIdRef").value();
     auto zoneIt = m_idToObjectMap.find(zoneId);
-    if (zoneIt != m_idToObjectMap.end()){
+    if (zoneIt != m_idToObjectMap.end()) {
       boost::optional<model::ThermalZone> thermalZone = zoneIt->second.optionalCast<model::ThermalZone>();
-      if (thermalZone){
+      if (thermalZone) {
         space.setThermalZone(*thermalZone);
       }
     }
 
-    if (!space.thermalZone()){
+    if (!space.thermalZone()) {
       // DLM: may want to revisit this
       // create a new thermal zone if none assigned
       openstudio::model::ThermalZone thermalZone(model);
@@ -509,44 +512,45 @@ namespace gbxml {
 
     // create a stub space type
     // DLM: is this better than nothing?
-    QString spaceTypeId = element.attribute("spaceType");
-    if (!spaceTypeId.isEmpty()){
+    std::string spaceTypeId = element.attribute("spaceType").value();
+    if (!spaceTypeId.empty()) {
       auto spaceTypeIt = m_idToObjectMap.find(spaceTypeId);
 
-      if (spaceTypeIt == m_idToObjectMap.end()){
+      if (spaceTypeIt == m_idToObjectMap.end()) {
         model::SpaceType spaceType(model);
         spaceType.setName(escapeName(spaceTypeId, spaceTypeId));
         spaceTypeIt = m_idToObjectMap.insert(m_idToObjectMap.end(), std::make_pair(spaceTypeId, spaceType));
       }
 
       boost::optional<model::SpaceType> spaceType = spaceTypeIt->second.optionalCast<model::SpaceType>();
-      if (spaceType){
+      if (spaceType) {
         space.setSpaceType(*spaceType);
       }
     }
 
     // import CADObjectId
-    QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
-    if (cadObjectIdElements.size() >= 1){
+    for (auto &cadObjectId : element.children("CADObjectId")) {
       // TODO: import multiple CADObjectIds
-      translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, space);
+      translateCADObjectId(cadObjectId, space);
+
+      break; // TODO: import multiple CADObjectIds
     }
 
     return space;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
+  boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const pugi::xml_node& element, openstudio::model::Model& model)
   {
     boost::optional<model::ModelObject> result;
     std::vector<openstudio::Point3d> vertices;
 
-    QDomNode planarGeometryElement = element.firstChildElement("PlanarGeometry");
-    QDomNode polyLoopElement = planarGeometryElement.firstChildElement("PolyLoop");
-    QDomNodeList cartesianPointElements = polyLoopElement.toElement().elementsByTagName("CartesianPoint");
+    auto planarGeometryElement = element.child("PlanarGeometry");
+    auto polyLoopElement = planarGeometryElement.child("PolyLoop");
+    auto cartesianPointElements = polyLoopElement.children("CartesianPoint");
 
-    for (int i = 0; i < cartesianPointElements.count(); i++){
-      QDomNodeList coordinateElements = cartesianPointElements.at(i).toElement().elementsByTagName("Coordinate");
-      OS_ASSERT(coordinateElements.size() == 3);
+    for (auto &cart_el : cartesianPointElements) {
+      auto coordinateElements = cart_el.children("Coordinate");
+      OS_ASSERT(std::distance(coordinateElements.begin(), coordinateElements.end()) == 3);
 
       /* Calling these conversions every time is unnecessarily slow
 
@@ -560,117 +564,128 @@ namespace gbxml {
       double z = QuantityConverter::instance().convert(zQuantity, targetUnit)->value();
       */
 
-      double x = m_lengthMultiplier*coordinateElements.at(0).toElement().text().toDouble();
-      double y = m_lengthMultiplier*coordinateElements.at(1).toElement().text().toDouble();
-      double z = m_lengthMultiplier*coordinateElements.at(2).toElement().text().toDouble();
+      std::array<double, 3> coords{ {0.0, 0.0, 0.0} };
+      size_t i{ 0 };
+      for (auto &el : coordinateElements) {
+        coords[i] = m_lengthMultiplier*el.text().as_double();
+        ++i;
+        if (i == 3) {
+          break;
+        }
+      }
 
-      vertices.push_back(openstudio::Point3d(x,y,z));
+      vertices.push_back(openstudio::Point3d(coords[0], coords[1], coords[2]));
     }
 
-    QString surfaceType = element.attribute("surfaceType");
-    if (surfaceType.contains("Shade")){
+    std::string surfaceType = element.attribute("surfaceType").value();
+    if (surfaceType.find("Shade") != std::string::npos) {
 
       openstudio::model::ShadingSurface shadingSurface(vertices, model);
 
-      QString shadingSurfaceId = element.attribute("id");
+      std::string shadingSurfaceId = element.attribute("id").value();
       m_idToObjectMap.insert(std::make_pair(shadingSurfaceId, shadingSurface));
 
-      QString shadingSurfaceName = element.firstChildElement("Name").toElement().text();
+      std::string shadingSurfaceName = element.child("Name").text().as_string();
       shadingSurface.setName(escapeName(shadingSurfaceId, shadingSurfaceName));
 
       openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
       std::vector<openstudio::model::ShadingSurfaceGroup> shadingSurfaceGroups = building.shadingSurfaceGroups();
-      if (shadingSurfaceGroups.empty()){
+      if (shadingSurfaceGroups.empty()) {
         openstudio::model::ShadingSurfaceGroup shadingSurfaceGroup(model);
         shadingSurface.setShadingSurfaceGroup(shadingSurfaceGroup);
-      }else{
+      } else {
         shadingSurface.setShadingSurfaceGroup(shadingSurfaceGroups[0]);
       }
 
       result = shadingSurface;
 
-    }else if (surfaceType.contains("FreestandingColumn") || surfaceType.contains("EmbeddedColumn")){
+    } else if ((surfaceType.find("FreestandingColumn") != std::string::npos) || (surfaceType.find("EmbeddedColumn") != std::string::npos)) {
 
       // do not handle these
       return boost::none;
 
-    }else{
+    } else {
 
-      QDomNodeList adjacentSpaceElements = element.elementsByTagName("AdjacentSpaceId");
-      if (adjacentSpaceElements.size() == 0){
+      // The rest of the function wants array-type access to the elements, so create that
+      std::vector<pugi::xml_node> adjacentSpaceElements;
+      for (auto &adj : element.children("AdjacentSpaceId")) {
+        adjacentSpaceElements.push_back(adj);
+      }
+
+      if (adjacentSpaceElements.size() == 0) {
         LOG(Warn, "Surface has no adjacent spaces, will not be translated.");
         return boost::none;
-      } else if (adjacentSpaceElements.size() == 2){
-        QString spaceId1 = adjacentSpaceElements.at(0).toElement().attribute("spaceIdRef");
-        QString spaceId2 = adjacentSpaceElements.at(1).toElement().attribute("spaceIdRef");
-        if (spaceId1 == spaceId2){
-          LOG(Warn, "Surface has two adjacent spaces which are the same space '" << spaceId2.toStdString() << "', will not be translated.");
+      } else if (adjacentSpaceElements.size() == 2) {
+        std::string spaceId1 = adjacentSpaceElements.at(0).attribute("spaceIdRef").value();
+        std::string spaceId2 = adjacentSpaceElements.at(1).attribute("spaceIdRef").value();
+        if (spaceId1 == spaceId2) {
+          LOG(Warn, "Surface has two adjacent spaces which are the same space '" << spaceId2 << "', will not be translated.");
           return boost::none;
         }
-      }else if (adjacentSpaceElements.size() > 2){
+      } else if (adjacentSpaceElements.size() > 2) {
         LOG(Error, "Surface has more than 2 adjacent surfaces, will not be translated.");
         return boost::none;
       }
 
       openstudio::model::Surface surface(vertices, model);
 
-      QString surfaceId = element.attribute("id");
+      std::string surfaceId = element.attribute("id").value();
       m_idToObjectMap.insert(std::make_pair(surfaceId, surface));
 
-      QString surfaceName = element.firstChildElement("Name").toElement().text();
+      std::string surfaceName = element.child("Name").text().as_string();
       surface.setName(escapeName(surfaceId, surfaceName));
 
-      QString exposedToSun = element.attribute("exposedToSun");
+      std::string exposedToSun = element.attribute("exposedToSun").value();
 
       // set surface type
       // wall types
-      if (surfaceType.contains("ExteriorWall")){
+      if (surfaceType.find("ExteriorWall")) {
         surface.setSurfaceType("Wall");
-      }else if (surfaceType.contains("InteriorWall")){
+      } else if (surfaceType.find("InteriorWall")) {
         surface.setSurfaceType("Wall");
-      }else if (surfaceType.contains("UndergroundWall")){
+      } else if (surfaceType.find("UndergroundWall")) {
         surface.setSurfaceType("Wall");
-      // roof types
-      }else if (surfaceType.contains("Roof")){
+        // roof types
+      } else if (surfaceType.find("Roof")) {
         surface.setSurfaceType("RoofCeiling");
-      }else if (surfaceType.contains("Ceiling")){
+      } else if (surfaceType.find("Ceiling")) {
         surface.setSurfaceType("RoofCeiling");
-      }else if (surfaceType.contains("UndergroundCeiling")){
+      } else if (surfaceType.find("UndergroundCeiling")) {
         surface.setSurfaceType("RoofCeiling");
-      // floor types
-      }else if (surfaceType.contains("UndergroundSlab")){
+        // floor types
+      } else if (surfaceType.find("UndergroundSlab")) {
         surface.setSurfaceType("Floor");
-      }else if (surfaceType.contains("SlabOnGrade")){
+      } else if (surfaceType.find("SlabOnGrade")) {
         surface.setSurfaceType("Floor");
-      }else if (surfaceType.contains("InteriorFloor")){
+      } else if (surfaceType.find("InteriorFloor")) {
         surface.setSurfaceType("Floor");
-      }else if (surfaceType.contains("RaisedFloor")){
+      } else if (surfaceType.find("RaisedFloor")) {
         surface.setSurfaceType("Floor");
-      }else if (surfaceType.contains("ExposedFloor")){
+      } else if (surfaceType.find("ExposedFloor")) {
         surface.setSurfaceType("Floor");
-      } else if (surfaceType.contains("Air")){
+      } else if (surfaceType.find("Air")) {
         // this type can be wall, roof, or floor.  just use default surface type based on vertices.
       }
 
       // set boundary conditions
-      if (exposedToSun.contains("true")){
+      if (exposedToSun.find("true") != std::string::npos) {
         surface.setOutsideBoundaryCondition("Outdoors");
         surface.setSunExposure("SunExposed");
         surface.setWindExposure("WindExposed");
-      }else if (surfaceType.contains("Interior")){
+      } else if (surfaceType.find("Interior") != std::string::npos) {
         surface.setOutsideBoundaryCondition("Adiabatic");
         surface.setSunExposure("NoSun");
         surface.setWindExposure("NoWind");
-      } else if (surfaceType.contains("Ceiling")) {
+      } else if (surfaceType.find("Ceiling") != std::string::npos) {
         surface.setOutsideBoundaryCondition("Adiabatic");
         surface.setSunExposure("NoSun");
         surface.setWindExposure("NoWind");
-      } else if (surfaceType.contains("SlabOnGrade")) {
+      } else if (surfaceType.find("SlabOnGrade") != std::string::npos) {
         surface.setOutsideBoundaryCondition("Ground");
         surface.setSunExposure("NoSun");
         surface.setWindExposure("NoWind");
-      } else if (surfaceType.contains("Underground")) {
+      } else if (surfaceType.find("Underground") != std::string::npos) {
         surface.setOutsideBoundaryCondition("Ground");
         surface.setSunExposure("NoSun");
         surface.setWindExposure("NoWind");
@@ -679,20 +694,20 @@ namespace gbxml {
       result = surface;
 
       // if air wall
-      if (surfaceType.contains("Air")){
+      if (surfaceType.find("Air") != std::string::npos) {
         boost::optional<model::Construction> airWall;
 
-        for (const auto& construction : model.getConcreteModelObjects<model::Construction>()){
+        for (const auto& construction : model.getConcreteModelObjects<model::Construction>()) {
           if ((construction.numLayers() == 1) && (construction.isModelPartition())) {
             model::MaterialVector layers = construction.layers();
             OS_ASSERT(layers.size() == 1u);
-            if (layers[0].optionalCast<model::AirWallMaterial>()){
+            if (layers[0].optionalCast<model::AirWallMaterial>()) {
               airWall = construction;
               break;
             }
           }
         }
-        if (!airWall){
+        if (!airWall) {
           airWall = model::Construction(model);
           model::AirWallMaterial airWallMaterial(model);
           airWall->setLayer(airWallMaterial);
@@ -701,46 +716,46 @@ namespace gbxml {
 
         // don't translate subsurfaces of air walls?
 
-      } else{
+      } else {
         // not air wall
 
         // translate construction
-        QString constructionIdRef = element.attribute("constructionIdRef");
+        std::string constructionIdRef = element.attribute("constructionIdRef").value();
         auto constructionIt = m_idToObjectMap.find(constructionIdRef);
-        if (constructionIt != m_idToObjectMap.end()){
+        if (constructionIt != m_idToObjectMap.end()) {
           boost::optional<model::ConstructionBase> construction = constructionIt->second.optionalCast<model::ConstructionBase>();
-          if (construction){
+          if (construction) {
             surface.setConstruction(*construction);
           }
         }
 
         // translate subSurfaces
-        QDomNodeList subSurfaceElements = element.elementsByTagName("Opening");
-        for (int i = 0; i < subSurfaceElements.count(); ++i){
+        for (auto &subsurf : element.children("Opening")) {
           try {
-            boost::optional<model::ModelObject> subSurface = translateSubSurface(subSurfaceElements.at(i).toElement(), doc, surface);
-          } catch (const std::exception&){
-            LOG(Error, "Could not translate sub surface " << subSurfaceElements.at(i).toElement());
+            boost::optional<model::ModelObject> subSurface = translateSubSurface(subsurf, surface);
+          } catch (const std::exception&) {
+            LOG(Error, "Could not translate sub surface " << subsurf);
           }
         }
+
       }
 
       // adjacent surfaces
-      QString spaceId = adjacentSpaceElements.at(0).toElement().attribute("spaceIdRef");
+      std::string spaceId = adjacentSpaceElements.at(0).attribute("spaceIdRef").value();
       auto spaceIt = m_idToObjectMap.find(spaceId);
-      if (spaceIt != m_idToObjectMap.end()){
+      if (spaceIt != m_idToObjectMap.end()) {
         boost::optional<model::Space> space = spaceIt->second.optionalCast<openstudio::model::Space>();
-        if (space){
+        if (space) {
           surface.setSpace(*space);
         }
       }
 
       boost::optional<openstudio::model::Space> space = surface.space();
-      if (!space){
+      if (!space) {
         LOG(Error, "Surface '" << surface.name().get() << "' is not assigned to a space");
       }
 
-      if (space && adjacentSpaceElements.size() == 2){
+      if (space && adjacentSpaceElements.size() == 2) {
 
         // From the GbXML Schema (v6.01):
         //
@@ -756,7 +771,7 @@ namespace gbxml {
         // If not present, the surface type can be assumed based on the description of the surface type enums. When the surfaceTypeEnum is provided and the
         // surface attributes (i.e. adjacency, tilt angle) do not match the enumeration's description, the enumeration should have precedence.
 
-        QString adjacentSpaceId = adjacentSpaceElements.at(1).toElement().attribute("spaceIdRef");
+        std::string adjacentSpaceId = adjacentSpaceElements.at(1).attribute("spaceIdRef").value();
         auto adjacentSpaceIt = m_idToObjectMap.find(adjacentSpaceId);
         if (adjacentSpaceIt != m_idToObjectMap.end()) {
           boost::optional<model::Space> adjacentSpace = adjacentSpaceIt->second.optionalCast<openstudio::model::Space>();
@@ -781,10 +796,10 @@ namespace gbxml {
             std::string currentSurfaceType = surface.surfaceType();
 
             // spaceSurfaceType is the surfaceType that should be in the first space
-            QString spaceSurfaceType = adjacentSpaceElements.at(0).toElement().attribute("surfaceType");
+            std::string spaceSurfaceType = adjacentSpaceElements.at(0).attribute("surfaceType").value();
 
             // spaceSurfaceType is the surfaceType that should be in the second space
-            QString adjacentSpaceSurfaceType = adjacentSpaceElements.at(1).toElement().attribute("surfaceType");
+            std::string adjacentSpaceSurfaceType = adjacentSpaceElements.at(1).attribute("surfaceType").value();
 
             // we will mark figuredOut as true if we are sure of our assignment, otherwise we will log a warning
             bool figuredOut = false;
@@ -792,15 +807,16 @@ namespace gbxml {
             // set reverseConstruction if construction should be applied to the surface created in adjacent space
             bool reverseConstruction = false;
 
-            if (spaceSurfaceType.isEmpty() && adjacentSpaceSurfaceType.isEmpty()) {
+            if (spaceSurfaceType.empty() && adjacentSpaceSurfaceType.empty()) {
+
               // this is ok but gives us no new information, no warning issued
 
-            } else if (spaceSurfaceType.isEmpty() && !adjacentSpaceSurfaceType.isEmpty()) {
+            } else if (spaceSurfaceType.empty() && !adjacentSpaceSurfaceType.empty()) {
 
               // if one adjacent space surfaceType is given then the other should be too
               LOG(Warn, "Only one adjacent surfaceType listed for '" << surface.name().get() << "'");
 
-            } else if (!spaceSurfaceType.isEmpty() && adjacentSpaceSurfaceType.isEmpty()) {
+            } else if (!spaceSurfaceType.empty() && adjacentSpaceSurfaceType.empty()) {
 
               // if one adjacent surfaceType is given then the other should be too
               LOG(Warn, "Only one adjacent surfaceType listed for '" << surface.name().get() << "'");
@@ -817,12 +833,13 @@ namespace gbxml {
                   // one of the spaces lists this as a wall or some other surfaceType
                   // we could try to reapply the surfaceType from the gbXML back here, but then we would be in the same problem as before
                   // at least now we have a surface type that matches the vertex outward normal
-                  LOG(Warn, "Adjacent surfaceTypes '" << spaceSurfaceType.toStdString() << "' and  '" << adjacentSpaceSurfaceType.toStdString() << "' listed for '" << surface.name().get() << "' do not match vertices");
+                  LOG(Warn, "Adjacent surfaceTypes '" << spaceSurfaceType << "' and  '" << adjacentSpaceSurfaceType
+                         << "' listed for '" << surface.name().get() << "' do not match vertices");
 
                 } else if (spaceSurfaceType == adjacentSpaceSurfaceType) {
 
                   // both spaceSurfaceType and adjacentSpaceSurfaceType are either InteriorFloor or Ceiling, not allowed
-                  LOG(Warn, "Duplicate surfaceType '" << spaceSurfaceType.toStdString() << "' listed for '" << surface.name().get() << "'");
+                  LOG(Warn, "Duplicate surfaceType '" << spaceSurfaceType << "' listed for '" << surface.name().get() << "'");
 
                 } else {
 
@@ -841,7 +858,8 @@ namespace gbxml {
 
                       // Schema says, "The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element,
                       // is always pointing away from the first AdjacentSpaceID listed." but this does not match surfaceType in the first AdjacentSpaceID
-                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType '" << spaceSurfaceType.toStdString() << "' attribute of first AdjacentSpaceID");
+                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType '"
+                             << spaceSurfaceType << "' attribute of first AdjacentSpaceID");
 
                       // construction listed in order for first space which is now the adjacent space
                       reverseConstruction = true;
@@ -861,7 +879,8 @@ namespace gbxml {
 
                       // Schema says, "The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element,
                       // is always pointing away from the first AdjacentSpaceID listed." but this does not match surfaceType in the first AdjacentSpaceID
-                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType attribute '" << spaceSurfaceType.toStdString() << "' of first AdjacentSpaceID");
+                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType attribute '"
+                             << spaceSurfaceType << "' of first AdjacentSpaceID");
 
                       // construction listed in order for first space which is now the adjacent space
                       reverseConstruction = true;
@@ -893,14 +912,14 @@ namespace gbxml {
                   surface.resetConstruction(); // will be inherited from the adjacent surface
                 }
               }
-            }else{
+            } else {
               LOG(Error, "Could not create adjacent surface in adjacent space '" << adjacentSpace->name().get() << "' for surface '" << surface.name().get() << "' in space '" << space->name().get() << "'");
             }
 
 
           }
         } else {
-          LOG(Error, "Could not find adjacent space '" << adjacentSpaceId.toStdString() << "' for surface '" << surface.name().get() << "'");
+          LOG(Error, "Could not find adjacent space '" << adjacentSpaceId << "' for surface '" << surface.name().get() << "'");
         }
       }
     }
@@ -908,23 +927,21 @@ namespace gbxml {
     OS_ASSERT(result);
 
     // import CADObjectId
-    QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
-    if (cadObjectIdElements.size() >= 1){
+    for (auto &cadObjectId : element.children("CADObjectId")) {
       // TODO: import multiple CADObjectIds
-      translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *result);
+      translateCADObjectId(cadObjectId, *result);
 
-      if (result->optionalCast<model::Surface>()){
-        boost::optional<openstudio::model::Surface> otherSurface = result->cast<model::Surface>().adjacentSurface();
-        if (otherSurface) {
-          translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *otherSurface);
-        }
+      boost::optional<openstudio::model::Surface> otherSurface = result->cast<model::Surface>().adjacentSurface();
+      if (otherSurface) {
+        translateCADObjectId(cadObjectId, *otherSurface);
       }
+      break; // TODO: import multiple CADObjectIds
     }
 
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSubSurface(const QDomElement& element, const QDomDocument& doc, openstudio::model::Surface& surface)
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSubSurface(const pugi::xml_node& element, openstudio::model::Surface& surface)
   {
     openstudio::model::Model model = surface.model();
 
@@ -932,13 +949,13 @@ namespace gbxml {
 
     std::vector<openstudio::Point3d> vertices;
 
-    QDomNode planarGeometryElement = element.firstChildElement("PlanarGeometry");
-    QDomNode polyLoopElement = planarGeometryElement.firstChildElement("PolyLoop");
-    QDomNodeList cartesianPointElements = polyLoopElement.toElement().elementsByTagName("CartesianPoint");
+    auto planarGeometryElement = element.child("PlanarGeometry");
+    auto polyLoopElement = planarGeometryElement.child("PolyLoop");
+    auto cartesianPointElements = polyLoopElement.children("CartesianPoint");
 
-    for (int i = 0; i < cartesianPointElements.count(); i++){
-      QDomNodeList coordinateElements = cartesianPointElements.at(i).toElement().elementsByTagName("Coordinate");
-      OS_ASSERT(coordinateElements.size() == 3);
+    for (auto &cart_el : cartesianPointElements) {
+      auto coordinateElements = cart_el.children("Coordinate");
+      OS_ASSERT(std::distance(coordinateElements.begin(), coordinateElements.end()) == 3);
 
       /* Calling these conversions every time is unnecessarily slow
 
@@ -951,75 +968,80 @@ namespace gbxml {
       double y = QuantityConverter::instance().convert(yQuantity, targetUnit)->value();
       double z = QuantityConverter::instance().convert(zQuantity, targetUnit)->value();
       */
+      std::array<double, 3> coords{ {0.0, 0.0, 0.0} };
+      size_t i{ 0 };
+      for (auto &el : coordinateElements) {
+        coords[i] = el.text().as_double();
+        ++i;
+        if (i == 3) {
+          break;
+        }
+      }
 
-      double x = m_lengthMultiplier*coordinateElements.at(0).toElement().text().toDouble();
-      double y = m_lengthMultiplier*coordinateElements.at(1).toElement().text().toDouble();
-      double z = m_lengthMultiplier*coordinateElements.at(2).toElement().text().toDouble();
-
-      vertices.push_back(openstudio::Point3d(x,y,z));
+      vertices.push_back(openstudio::Point3d(coords[0], coords[1], coords[2]));
     }
 
     openstudio::model::SubSurface subSurface(vertices, model);
     subSurface.setSurface(surface);
 
-    QString id = element.attribute("id");
-    m_idToObjectMap.insert(std::make_pair(id, subSurface));
+    auto id = element.attribute("id");
+    m_idToObjectMap.insert(std::make_pair(id.as_string(), subSurface));
 
-    QString name = element.firstChildElement("Name").toElement().text();
-    subSurface.setName(escapeName(id, name));
+    std::string name = element.child("Name").text().as_string();
+    subSurface.setName(escapeName(id.value(), name));
 
     result = subSurface;
 
     // translate openingType
-    QString openingType = element.attribute("openingType");
-    if (openingType.contains("FixedWindow")){
+    std::string openingType = element.attribute("openingType").value();
+    if (openingType.find("FixedWindow") != std::string::npos) {
       subSurface.setSubSurfaceType("FixedWindow");
-    }else if (openingType.contains("OperableWindow")){
+    } else if (openingType.find("OperableWindow") != std::string::npos) {
       subSurface.setSubSurfaceType("OperableWindow");
-    }else if (openingType.contains("FixedSkylight")){
+    } else if (openingType.find("FixedSkylight") != std::string::npos) {
       subSurface.setSubSurfaceType("Skylight");
-    }else if (openingType.contains("OperableSkylight")){
+    } else if (openingType.find("OperableSkylight") != std::string::npos) {
       subSurface.setSubSurfaceType("Skylight");
-    }else if (openingType.contains("NonSlidingDoor")){ // do before testing contains door
+    } else if (openingType.find("NonSlidingDoor") != std::string::npos) { // do before testing contains door
       subSurface.setSubSurfaceType("Door");
-    }else if (openingType.contains("SlidingDoor")){
+    } else if (openingType.find("SlidingDoor") != std::string::npos) {
       subSurface.setSubSurfaceType("GlassDoor");
-    } else if (openingType.contains("Air")){
+    } else if (openingType.find("Air") != std::string::npos) {
       // use default sub surface type?
     }
 
     // if air wall
-    if (openingType.contains("Air")){
+    if (openingType.find("Air") != std::string::npos) {
       boost::optional<model::Construction> airWall;
 
-      for (const auto& construction : model.getConcreteModelObjects<model::Construction>()){
+      for (const auto& construction : model.getConcreteModelObjects<model::Construction>()) {
         if ((construction.numLayers() == 1) && (construction.isModelPartition())) {
           model::MaterialVector layers = construction.layers();
           OS_ASSERT(layers.size() == 1u);
-          if (layers[0].optionalCast<model::AirWallMaterial>()){
+          if (layers[0].optionalCast<model::AirWallMaterial>()) {
             airWall = construction;
             break;
           }
         }
       }
-      if (!airWall){
+      if (!airWall) {
         airWall = model::Construction(model);
         model::AirWallMaterial airWallMaterial(model);
         airWall->setLayer(airWallMaterial);
       }
       subSurface.setConstruction(*airWall);
 
-    } else{
+    } else {
 
       // translate construction
-      QString constructionIdRef = element.attribute("constructionIdRef");
-      if (constructionIdRef.isEmpty()){
-        constructionIdRef = element.attribute("windowTypeIdRef");
+      std::string constructionIdRef = element.attribute("constructionIdRef").value();
+      if (constructionIdRef.empty()) {
+        constructionIdRef = element.attribute("windowTypeIdRef").value();
       }
       auto constructionIt = m_idToObjectMap.find(constructionIdRef);
-      if (constructionIt != m_idToObjectMap.end()){
+      if (constructionIt != m_idToObjectMap.end()) {
         boost::optional<model::ConstructionBase> construction = constructionIt->second.optionalCast<model::ConstructionBase>();
-        if (construction){
+        if (construction) {
           subSurface.setConstruction(*construction);
         }
       }
@@ -1028,31 +1050,31 @@ namespace gbxml {
     // todo: translate "interiorShadeType", "exteriorShadeType", and other properties of the opening
 
     // import CADObjectId
-    QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
-    if (cadObjectIdElements.size() >= 1){
+    for (auto &cadObjectId : element.children("CADObjectId")) {
       // TODO: import multiple CADObjectIds
-      translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, subSurface);
+      translateCADObjectId(cadObjectId, subSurface);
 
       boost::optional<openstudio::model::SubSurface> otherSubSurface = subSurface.adjacentSubSurface();
       if (otherSubSurface) {
-        translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *otherSubSurface);
+        translateCADObjectId(cadObjectId, *otherSubSurface);
       }
+      break; // TODO: import multiple CADObjectIds
     }
 
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCADObjectId(const QDomElement& element, const QDomDocument& doc, openstudio::model::ModelObject& modelObject)
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCADObjectId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject)
   {
     model::AdditionalProperties result = modelObject.additionalProperties();
 
-    QString cadObjectId = element.text();
-    if (!cadObjectId.isEmpty()) {
-      result.setFeature("CADObjectId", cadObjectId.toStdString());
+    auto cadObjectId = element.text();
+    if (!cadObjectId.empty()) {
+      result.setFeature("CADObjectId", cadObjectId.as_string());
 
-      QString programIdRef = element.attribute("programIdRef");
-      if (!programIdRef.isEmpty()) {
-        result.setFeature("programIdRef", programIdRef.toStdString());
+      auto programIdRef = element.attribute("programIdRef");
+      if (programIdRef) {
+        result.setFeature("programIdRef", programIdRef.value());
       }
     }
 

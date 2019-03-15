@@ -60,7 +60,8 @@ endmacro()
 # Add google tests macro
 macro(ADD_GOOGLE_TESTS executable)
   if(MSVC)
-    file(TO_NATIVE_PATH "${QT_INSTALL_DIR}/bin/" QT_BIN_PATH)
+    # QT-Separation-Move
+    file(TO_NATIVE_PATH "${QT_INSTALL_DIR}/bin/" QT_BIN_PATH) # DLM: 
     file(TO_NATIVE_PATH "${OPENSSL_ROOT_DIR}/bin/" OPENSSL_BIN_PATH)
     string(REGEX REPLACE "([^\\]);" "\\1\\\\;" CURRENT_ENV "$ENV{PATH}")  
     set(NEWPATH "${QT_BIN_PATH};${OPENSSL_BIN_PATH};${CURRENT_ENV}")
@@ -195,7 +196,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   endforeach()
 
   set(Prereq_Dirs
-      "${QT_LIBRARY_DIR}"
+      "${QT_LIBRARY_DIR}" # QT-Separation-Move
       "${CMAKE_BINARY_DIR}/Products/"
       "${CMAKE_BINARY_DIR}/Products/Release"
       "${CMAKE_BINARY_DIR}/Products/Debug"
@@ -279,9 +280,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   ##
   ## Finish requirements gathering
   ##
-
-
-
 
   include_directories(${RUBY_INCLUDE_DIRS})
 
@@ -413,7 +411,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   target_link_libraries(${swig_target} ${PARENT_TARGET})
   add_dependencies(${swig_target} ${PARENT_TARGET} ${DEPENDS})
 
-  target_include_directories(${swig_target} PUBLIC ${QT_STATIC_INCLUDES})
+  # QT-Separation-Move
+  target_include_directories(${swig_target} PUBLIC ${QT_INCLUDES})
   target_compile_definitions(${swig_target} PUBLIC ${QT_DEFS})
 
   ####Remove binding install related stuff. At least for now. Might need some of this to support sketchup
@@ -986,6 +985,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
           endif()
         endforeach()
         if(APPLE)
+          # QT-Separation-Move
           file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\"
             DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${V8_TYPE}/openstudio/Resources/\"
           )

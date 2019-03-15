@@ -87,8 +87,9 @@ if(RUBY_EXECUTABLE  AND NOT  RUBY_VERSION_MAJOR)
       execute_process(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "print Config::CONFIG['${RBVAR}']"
         RESULT_VARIABLE _RUBY_SUCCESS
         OUTPUT_VARIABLE _RUBY_OUTPUT
-        ERROR_QUIET)
+	ERROR_QUIET)
     endif()
+	message(STATUS "Ruby exec: ${RUBY_EXECUTABLE} var: '${RBVAR}' value: '${_RUBY_OUTPUT}'")
     set(${OUTVAR} "${_RUBY_OUTPUT}" PARENT_SCOPE)
   endfunction()
 
@@ -305,6 +306,11 @@ if(WIN32)
    endif()
 
    list(APPEND _RUBY_POSSIBLE_LIB_NAMES
+               "${_RUBY_ARCH_PREFIX}vcruntime${_RUBY_MSVC_RUNTIME}-ruby${_RUBY_VERSION_SHORT_NODOT}0"
+               "${_RUBY_ARCH_PREFIX}vcruntime${_RUBY_MSVC_RUNTIME}-ruby${_RUBY_NODOT_VERSION}"
+               "${_RUBY_ARCH_PREFIX}vcruntime${_RUBY_MSVC_RUNTIME}-ruby${_RUBY_NODOT_VERSION}-static"
+               "${_RUBY_ARCH_PREFIX}vcruntime-ruby${_RUBY_NODOT_VERSION}"
+               "${_RUBY_ARCH_PREFIX}vcruntime-ruby${_RUBY_NODOT_VERSION}-static"
                "${_RUBY_ARCH_PREFIX}msvcr${_RUBY_MSVC_RUNTIME}-ruby${_RUBY_NODOT_VERSION}"
                "${_RUBY_ARCH_PREFIX}msvcr${_RUBY_MSVC_RUNTIME}-ruby${_RUBY_NODOT_VERSION}-static"
                "${_RUBY_ARCH_PREFIX}msvcrt-ruby${_RUBY_NODOT_VERSION}"
