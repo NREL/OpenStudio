@@ -879,7 +879,6 @@ boost::optional<double> AirTerminalSingleDuctVAVReheat::constantMinimumAirFlowFr
 {
   if( VersionString( openStudioVersion() ) < VersionString("2.8.0") ) {
     // TODO: remove in 2 versions
-    LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, it now returns an Optional double");
   } else {
     // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
     LOG(Debug, "Please go tell a developper to remove the warning in AirTerminalSingleDuctVAVReheat::constantMinimumAirFlowFraction");
