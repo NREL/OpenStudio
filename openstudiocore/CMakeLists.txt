@@ -1069,6 +1069,7 @@ if(BUILD_OS_APP)
   find_file(qweb_resources_200 NAMES qtwebengine_resources_200p.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
 
   # DLM: why do we have QT_WEB_LIBS separate from QT_LIBS?  can we combine these?
+  # DLM: now the distincton should be between Qt libs linked by openstudio_modeleditor.so and the OS App
   list(APPEND QT_WEB_LIBS Qt5::Core)
   list(APPEND QT_WEB_LIBS Qt5::Gui)
   list(APPEND QT_WEB_LIBS Qt5::WebEngine)
@@ -1101,7 +1102,14 @@ if(BUILD_OS_APP)
       list(APPEND QT_WEB_LIBS Qt5::DBus)
 
       # there does not appear to be a normal qt finder for this
-      find_library(Qt5XcbQpaLib NAMES libQt5XcbQpa.so.5 PATHS ${QT_INSTALL_DIR}/lib NO_DEFAULT_PATH)
+      # DLM: actually there is, it is a plugin associated with Qt5::Gui
+      #message( Qt5Gui_PLUGINS = ${Qt5Gui_PLUGINS})
+      #get_target_property(Qt5QXcbIntegrationPlugin_LOCATION Qt5::QXcbIntegrationPlugin LOCATION)
+      #get_target_property(Qt5QXcbIntegrationPlugin_TYPE Qt5::QXcbIntegrationPlugin TYPE)
+      #message("Qt5::QXcbIntegrationPlugin Location = ${Qt5QXcbIntegrationPlugin_LOCATION}")
+      #message("Qt5::QXcbIntegrationPlugin Type = ${Qt5QXcbIntegrationPlugin_TYPE}")
+      list(APPEND QT_WEB_LIBS Qt5::QXcbIntegrationPlugin)
+      list(APPEND QT_WEB_LIBS Qt5::QXcbGlxIntegrationPlugin)
     endif()
   endif()
 

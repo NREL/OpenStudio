@@ -734,8 +734,10 @@ set(depends
   openstudio_sdd_static
   openstudio_gbxml_static
   ${QT_LIBS}
-  qtwinmigrate_static
 )
+if(WIN32)
+  list(APPEND ${target_name}_depends qtwinmigrate_static)
+endif()
 
 target_link_libraries(${target_name} ${depends})
 

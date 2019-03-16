@@ -104,44 +104,49 @@ elseif( UNIX )
   #  VERBATIM
   #)
 
-  add_custom_command(TARGET ${target_name}
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/
-  )
+  #add_custom_command(TARGET ${target_name}
+  #  POST_BUILD
+  #  COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/
+  #)
 
-  add_custom_command(TARGET ${target_name}
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QXcbIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QXcbGlxIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5XcbQpaLib} $<TARGET_FILE_DIR:${target_name}>/
-    COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/platforms/$<TARGET_FILE_NAME:Qt5::QXcbIntegrationPlugin>
-    COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/$<TARGET_FILE_NAME:Qt5::QXcbGlxIntegrationPlugin>
-    #COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::GLTFSceneParserPlugin>
-    #COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::AssimpParserPlugin>
-    VERBATIM
-    )
+  #add_custom_command(TARGET ${target_name}
+  #  POST_BUILD
+  #  COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QXcbIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/platforms/
+  #  COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::QXcbGlxIntegrationPlugin> $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/
+  #  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5XcbQpaLib} $<TARGET_FILE_DIR:${target_name}>/
+  #  COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/platforms/$<TARGET_FILE_NAME:Qt5::QXcbIntegrationPlugin>
+  #  COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/$<TARGET_FILE_NAME:Qt5::QXcbGlxIntegrationPlugin>
+  #  #COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::GLTFSceneParserPlugin>
+  #  #COMMAND chrpath -r "$ORIGIN/.." $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::AssimpParserPlugin>
+  #  VERBATIM
+  #  )
 
   foreach(LIB ${QT_LIBS})
+    get_property(LIB_LOCATION TARGET ${LIB} PROPERTY LOCATION)
     add_custom_command(TARGET ${target_name}
       POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_SONAME_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ )
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LIB_LOCATION} $<TARGET_FILE_DIR:${target_name}>/
+      COMMAND patchelf --set-rpath "$ORIGIN/." $<TARGET_FILE_DIR:${target_name}>/$<TARGET_FILE_NAME:${LIB}>
+      VERBATIM
+    )
   endforeach()
 
   foreach(LIB ${QT_WEB_LIBS})
+    get_property(LIB_LOCATION TARGET ${LIB} PROPERTY LOCATION)
     add_custom_command(TARGET ${target_name}
       POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_SONAME_FILE:${LIB}> $<TARGET_FILE_DIR:${target_name}>/ )
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LIB_LOCATION} $<TARGET_FILE_DIR:${target_name}>/ 
+      COMMAND patchelf --set-rpath "$ORIGIN/." $<TARGET_FILE_DIR:${target_name}>/$<TARGET_FILE_NAME:${LIB}>
+      VERBATIM
+    )
   endforeach()
-
-  add_custom_command(TARGET ${target_name}
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::WebEngine> $<TARGET_FILE_DIR:${target_name}>/ )
 
   add_custom_command(TARGET ${target_name}
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QtWebEngineProcess} $<TARGET_FILE_DIR:${target_name}>/
     COMMAND chrpath -r "$ORIGIN/." $<TARGET_FILE_DIR:${target_name}>/QtWebEngineProcess
-    VERBATIM)
+    VERBATIM
+  )
 
 elseif( WIN32 )
   add_custom_command(TARGET ${target_name}
@@ -266,18 +271,18 @@ if( NOT APPLE )
     #install(PROGRAMS $<TARGET_FILE:Qt5::AssimpParserPlugin> DESTINATION bin/sceneparsers/ COMPONENT OpenStudioApp)
   elseif(UNIX)
     install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/QtWebEngineProcess DESTINATION bin/ COMPONENT OpenStudioApp)
-    install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/platforms/$<TARGET_FILE_NAME:Qt5::QXcbIntegrationPlugin> DESTINATION bin/platforms/ COMPONENT OpenStudioApp)
-    install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/$<TARGET_FILE_NAME:Qt5::QXcbGlxIntegrationPlugin> DESTINATION bin/xcbglintegrations/ COMPONENT OpenStudioApp)
+    #install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/platforms/$<TARGET_FILE_NAME:Qt5::QXcbIntegrationPlugin> DESTINATION bin/platforms/ COMPONENT OpenStudioApp)
+    #install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/xcbglintegrations/$<TARGET_FILE_NAME:Qt5::QXcbGlxIntegrationPlugin> DESTINATION bin/xcbglintegrations/ COMPONENT OpenStudioApp)
     #install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::GLTFSceneParserPlugin> DESTINATION bin/sceneparsers/ COMPONENT OpenStudioApp)
     #install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/sceneparsers/$<TARGET_FILE_NAME:Qt5::AssimpParserPlugin> DESTINATION bin/sceneparsers/ COMPONENT OpenStudioApp)
-    install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/libQt5XcbQpa.so.5 DESTINATION bin/ COMPONENT OpenStudioApp)
+    #install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/libQt5XcbQpa.so.5 DESTINATION bin/ COMPONENT OpenStudioApp)
 
     foreach(LIB ${QT_LIBS})
-      install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/$<TARGET_SONAME_FILE_NAME:${LIB}> DESTINATION bin/ COMPONENT OpenStudioApp)
+      install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/$<TARGET_FILE_NAME:${LIB}> DESTINATION bin/ COMPONENT OpenStudioApp)
     endforeach()
 
     foreach(LIB ${QT_WEB_LIBS})
-      install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/$<TARGET_SONAME_FILE_NAME:${LIB}> DESTINATION bin/ COMPONENT OpenStudioApp)
+      install(PROGRAMS $<TARGET_FILE_DIR:${target_name}>/$<TARGET_FILE_NAME:${LIB}> DESTINATION bin/ COMPONENT OpenStudioApp)
     endforeach()
   endif()
 endif()

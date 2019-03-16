@@ -29,9 +29,11 @@ set(${target_name}_depends
   openstudio_model_static
   openstudio_energyplus_static
   openstudio_osversion_static
-  ${QT_LIBS}
-  qtwinmigrate_static  
+  ${QT_LIBS}  
 )
+if(WIN32)
+  list(APPEND ${target_name}_depends qtwinmigrate_static)
+endif()
 
 add_library(${target_name} ${${target_name}_src})
 target_link_libraries(${target_name} ${${target_name}_depends})
