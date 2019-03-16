@@ -516,6 +516,7 @@ set(${target_name}_static_depends
   CONAN_PKG::sqlite3
   CONAN_PKG::jsoncpp
   CONAN_PKG::zlib
+  CONAN_PKG::fmt
   CONAN_PKG::pugixml
   CONAN_PKG::boost_filesystem 
   CONAN_PKG::boost_crc 
@@ -529,7 +530,7 @@ set(${target_name}_static_depends
   CONAN_PKG::boost_geometry
   CONAN_PKG::cpprestsdk
   CONAN_PKG::OpenSSL
-  GeographicLib_STATIC
+  CONAN_PKG::geographiclib
 )
 
 if(WIN32)

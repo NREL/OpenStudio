@@ -38,33 +38,30 @@ conan_check(VERSION 1.0.0 REQUIRED)
 
 conan_add_remote(NAME bincrafters
   URL https://api.bintray.com/conan/bincrafters/public-conan)
-
-if(UNIX AND NOT APPLE)
-conan_cmake_run(REQUIRES 
-  OpenSSL/1.1.0g@conan/stable
-  boost_asio/1.69.0@bincrafters/stable
-  boost_program_options/1.69.0@bincrafters/stable
-  boost_regex/1.69.0@bincrafters/stable
-  boost_filesystem/1.69.0@bincrafters/stable
-  boost_crc/1.69.0@bincrafters/stable
-  boost_algorithm/1.69.0@bincrafters/stable
-  boost_uuid/1.69.0@bincrafters/stable
-  boost_log/1.69.0@bincrafters/stable
-  boost_numeric_ublas/1.69.0@bincrafters/stable
-  boost_functional/1.69.0@bincrafters/stable
-  boost_geometry/1.69.0@bincrafters/stable
-  pugixml/1.9@bincrafters/stable
-  jsoncpp/1.8.4@theirix/stable
-  zlib/1.2.11@conan/stable
-  sqlite3/3.27.2@bincrafters/stable
-  cpprestsdk/2.10.10@bincrafters/stable
-  websocketpp/0.8.1@bincrafters/stable
-  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
-  OPTIONS zlib:minizip=True jsoncpp:use_pic=True
-  BUILD missing boost_asio websocketpp
-  )
+  
+if (MSVC)
+  set(CONAN_OPENSSL "")
+  set(CONAN_BOOST_ASIO "")
+  set(CONAN_WEBSOCKETPP "")
+  set(CONAN_OPTIONS "zlib:minizip=True")
+  set(CONAN_BUILD "missing")
+elseif (APPLE)
+  set(CONAN_OPENSSL "")
+  set(CONAN_BOOST_ASIO "")
+  set(CONAN_WEBSOCKETPP "")
+  set(CONAN_OPTIONS "zlib:minizip=True")
+  set(CONAN_BUILD "missing")
 else()
+  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
+  set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
+  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
+  set(CONAN_OPTIONS "zlib:minizip=True jsoncpp:use_pic=True")
+  set(CONAN_BUILD "missing boost_asio websocketpp")
+endif()
+
 conan_cmake_run(REQUIRES 
+  ${CONAN_OPENSSL}
+  ${CONAN_BOOST_ASIO}
   boost_program_options/1.69.0@bincrafters/stable
   boost_regex/1.69.0@bincrafters/stable
   boost_filesystem/1.69.0@bincrafters/stable
@@ -78,14 +75,15 @@ conan_cmake_run(REQUIRES
   pugixml/1.9@bincrafters/stable
   jsoncpp/1.8.4@theirix/stable
   zlib/1.2.11@conan/stable
+  fmt/5.2.1@bincrafters/stable
   sqlite3/3.27.2@bincrafters/stable
   cpprestsdk/2.10.10@bincrafters/stable
+  ${CONAN_WEBSOCKETPP}
+  geographiclib/1.49@bincrafters/stable
   BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
-  OPTIONS zlib:minizip=True
-  BUILD missing
-  )
-
-endif()
+  OPTIONS ${CONAN_OPTIONS}
+  BUILD ${CONAN_BUILD}
+)
 
 message("DONE RUNNING CONAN")
 
@@ -979,15 +977,6 @@ if(BUILD_TESTING)
   set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
 endif()
 
-# GeographicLib
-set(GEOGRAPHICLIB_LIB_TYPE "STATIC" CACHE INTERNAL "Build Static Lib")
-set(GEOGRAPHICLIB_STATIC_LIB ON CACHE INTERNAL "Build Static Lib")
-set(GEOGRAPHICLIB_SHARED_LIB OFF CACHE INTERNAL "Build Shared Lib")
-set(GEOGRAPHICLIB_DOCUMENTATION OFF CACHE INTERNAL "Build Documentation")
-set(BUILD_NETGEOGRAPHICLIB OFF CACHE INTERNAL "Build .NET")
-set(GEOGRAPHICLIB_PRECISION "2" CACHE INTERNAL "Precision")
-include_directories(SYSTEM src/geographic_lib/include)
-add_subdirectory(src/geographic_lib)
 
 if(BUILD_OS_APP)
   # Qt
@@ -1351,11 +1340,9 @@ endif()
 # Project source directory
 include_directories("${CMAKE_HOME_DIRECTORY}/src/")
 
-# fmtlib
-include_directories("${CMAKE_HOME_DIRECTORY}/src/fmtlib/include")
-
 # Project binary directory
 include_directories("${CMAKE_BINARY_DIR}/src/")
+ 
 ###############################################################################
 
 ###############################################################################
