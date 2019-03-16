@@ -21,72 +21,6 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     "MinSizeRel" "RelWithDebInfo")
 endif()
 
-# conan
-
-# Download automatically, you can also just copy the conan.cmake file
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
-    "${CMAKE_BINARY_DIR}/conan.cmake")
-endif()
-
-include(${CMAKE_BINARY_DIR}/conan.cmake)
-
-message("RUNNING CONAN")
-
-conan_check(VERSION 1.0.0 REQUIRED)
-
-conan_add_remote(NAME bincrafters
-  URL https://api.bintray.com/conan/bincrafters/public-conan)
-  
-if (MSVC)
-  set(CONAN_OPENSSL "")
-  set(CONAN_BOOST_ASIO "")
-  set(CONAN_WEBSOCKETPP "")
-  set(CONAN_OPTIONS "zlib:minizip=True")
-  set(CONAN_BUILD "missing")
-elseif (APPLE)
-  set(CONAN_OPENSSL "")
-  set(CONAN_BOOST_ASIO "")
-  set(CONAN_WEBSOCKETPP "")
-  set(CONAN_OPTIONS "zlib:minizip=True")
-  set(CONAN_BUILD "missing")
-else()
-  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
-  set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
-  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
-  set(CONAN_OPTIONS "zlib:minizip=True jsoncpp:use_pic=True")
-  set(CONAN_BUILD "missing boost_asio websocketpp")
-endif()
-
-conan_cmake_run(REQUIRES 
-  ${CONAN_OPENSSL}
-  ${CONAN_BOOST_ASIO}
-  boost_program_options/1.69.0@bincrafters/stable
-  boost_regex/1.69.0@bincrafters/stable
-  boost_filesystem/1.69.0@bincrafters/stable
-  boost_crc/1.69.0@bincrafters/stable
-  boost_algorithm/1.69.0@bincrafters/stable
-  boost_uuid/1.69.0@bincrafters/stable
-  boost_log/1.69.0@bincrafters/stable
-  boost_numeric_ublas/1.69.0@bincrafters/stable
-  boost_functional/1.69.0@bincrafters/stable
-  boost_geometry/1.69.0@bincrafters/stable
-  pugixml/1.9@bincrafters/stable
-  jsoncpp/1.8.4@theirix/stable
-  zlib/1.2.11@conan/stable
-  fmt/5.2.1@bincrafters/stable
-  sqlite3/3.27.2@bincrafters/stable
-  cpprestsdk/2.10.10@bincrafters/stable
-  ${CONAN_WEBSOCKETPP}
-  geographiclib/1.49@bincrafters/stable
-  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
-  OPTIONS ${CONAN_OPTIONS}
-  BUILD ${CONAN_BUILD}
-)
-
-message("DONE RUNNING CONAN")
-
 if ( APPLE )
   find_library(SECURITY_FRAMEWORK Security)
 endif()
@@ -316,6 +250,83 @@ if(MSVC)
   mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
 endif()
 
+###############################################################################
+
+###############################################################################
+# Conan
+
+# Download automatically, you can also just copy the conan.cmake file
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
+    "${CMAKE_BINARY_DIR}/conan.cmake")
+endif()
+
+include(${CMAKE_BINARY_DIR}/conan.cmake)
+
+message("RUNNING CONAN")
+
+conan_check(VERSION 1.0.0 REQUIRED)
+
+conan_add_remote(NAME bincrafters
+  URL https://api.bintray.com/conan/bincrafters/public-conan)
+  
+if (MSVC)
+  set(CONAN_OPENSSL "")
+  set(CONAN_BOOST_ASIO "")
+  set(CONAN_WEBSOCKETPP "")
+  set(CONAN_OPTIONS "zlib:minizip=True")
+  set(CONAN_BUILD "missing")
+elseif (APPLE)
+  set(CONAN_OPENSSL "")
+  set(CONAN_BOOST_ASIO "")
+  set(CONAN_WEBSOCKETPP "")
+  set(CONAN_OPTIONS "zlib:minizip=True")
+  set(CONAN_BUILD "missing")
+else()
+  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
+  set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
+  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
+  set(CONAN_OPTIONS "zlib:minizip=True jsoncpp:use_pic=True")
+  set(CONAN_BUILD "missing boost_asio websocketpp")
+endif()
+
+if (BUILD_TESTING)
+  set(CONAN_GTEST "gtest/1.8.1@bincrafters/stable")
+else()
+  set(CONAN_GTEST "")
+endif()
+
+
+conan_cmake_run(REQUIRES 
+  ${CONAN_OPENSSL}
+  ${CONAN_BOOST_ASIO}
+  boost_program_options/1.69.0@bincrafters/stable
+  boost_regex/1.69.0@bincrafters/stable
+  boost_filesystem/1.69.0@bincrafters/stable
+  boost_crc/1.69.0@bincrafters/stable
+  boost_algorithm/1.69.0@bincrafters/stable
+  boost_uuid/1.69.0@bincrafters/stable
+  boost_log/1.69.0@bincrafters/stable
+  boost_numeric_ublas/1.69.0@bincrafters/stable
+  boost_functional/1.69.0@bincrafters/stable
+  boost_geometry/1.69.0@bincrafters/stable
+  pugixml/1.9@bincrafters/stable
+  jsoncpp/1.8.4@theirix/stable
+  zlib/1.2.11@conan/stable
+  fmt/5.2.1@bincrafters/stable
+  sqlite3/3.27.2@bincrafters/stable
+  cpprestsdk/2.10.10@bincrafters/stable
+  ${CONAN_WEBSOCKETPP}
+  geographiclib/1.49@bincrafters/stable
+  ${CONAN_GTEST}
+  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
+  OPTIONS ${CONAN_OPTIONS}
+  BUILD ${CONAN_BUILD}
+)
+
+message("CONAN_TARGETS = ${CONAN_TARGETS}")
+message("DONE RUNNING CONAN")
 ###############################################################################
 
 ###############################################################################
@@ -959,23 +970,23 @@ endif()
 # make sure zconf.h can be found
 # include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 
-if(BUILD_TESTING)
-  # force gtest to build as a static library no matter what, otherwise we get error about undefined death test symbols when building shared libs
-  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
-  set(BUILD_SHARED_LIBS OFF)
-
-  # Google test library
-  set(gtest_force_shared_crt ON CACHE BOOL "gtest_force_shared_crt" FORCE) # in case we are linking with shared or static os libraries
-  set(gtest_build_tests OFF CACHE BOOL "gtest_build_tests" FORCE)
-  set(gtest_build_samples OFF CACHE BOOL "gtest_build_samples" FORCE)
-  set(gtest_disable_pthreads OFF CACHE BOOL "gtest_disable_pthreads" FORCE)
-  add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
-  include_directories(SYSTEM src/google_test/include)
-  add_subdirectory(src/google_test)
-
-  # restore BUILD_SHARED_LIBS
-  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
-endif()
+#if(BUILD_TESTING)
+#  # force gtest to build as a static library no matter what, otherwise we get error about undefined death test symbols when building shared libs
+#  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+#  set(BUILD_SHARED_LIBS OFF)
+#
+#  # Google test library
+#  set(gtest_force_shared_crt ON CACHE BOOL "gtest_force_shared_crt" FORCE) # in case we are linking with shared or static os libraries
+#  set(gtest_build_tests OFF CACHE BOOL "gtest_build_tests" FORCE)
+#  set(gtest_build_samples OFF CACHE BOOL "gtest_build_samples" FORCE)
+#  set(gtest_disable_pthreads OFF CACHE BOOL "gtest_disable_pthreads" FORCE)
+#  add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
+#  include_directories(SYSTEM src/google_test/include)
+#  add_subdirectory(src/google_test)
+#
+#  # restore BUILD_SHARED_LIBS
+#  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
+#endif()
 
 
 if(BUILD_OS_APP)
