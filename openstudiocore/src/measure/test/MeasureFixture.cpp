@@ -32,7 +32,7 @@
 
 #include "../../utilities/core/Path.hpp"
 #include "../../utilities/core/FileLogSink.hpp"
-#include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../../utilities/core/ApplicationPathHelpers.hpp"
 
 #include "../../utilities/idd/IddEnums.hpp"
 

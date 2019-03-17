@@ -29,7 +29,7 @@
 
 #include "OpenStudioLibFixture.hpp"
 
-#include "../model_editor/Application.hpp"
+#include "../../model_editor/Application.hpp"
 
 #include <utilities/core/Path.hpp>
 

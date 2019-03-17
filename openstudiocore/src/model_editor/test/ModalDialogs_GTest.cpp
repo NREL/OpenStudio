@@ -34,16 +34,16 @@
 #include "../ModalDialogs.hpp"
 #include "../TestButton.hpp"
 
-#include "../model/Model.hpp"
-#include "../model/ModelObject.hpp"
-#include "../model/Building.hpp"
-#include "../model/Building_Impl.hpp"
-#include "../model/Space.hpp"
-#include "../model/Space_Impl.hpp"
-#include "../model/Lights.hpp"
-#include "../model/Lights_Impl.hpp"
-#include "../model/LightsDefinition.hpp"
-#include "../model/LightsDefinition_Impl.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/ModelObject.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/Lights.hpp"
+#include "../../model/Lights_Impl.hpp"
+#include "../../model/LightsDefinition.hpp"
+#include "../../model/LightsDefinition_Impl.hpp"
 
 #include <utilities/idd/OS_Lights_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

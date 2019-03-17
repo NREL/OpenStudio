@@ -50,7 +50,7 @@
 
 #include <utilities/idd/OS_AdditionalProperties_FieldEnums.hxx>
 
-#include "../utilities/geometry/Geometry.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
