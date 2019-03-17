@@ -272,25 +272,28 @@ conan_add_remote(NAME bincrafters
   URL https://api.bintray.com/conan/bincrafters/public-conan)
  
 set(CONAN_OPTIONS "")
+set(CONAN_BUILD "")
 if (MSVC)
   set(CONAN_OPENSSL "")
   set(CONAN_BOOST_ASIO "")
   set(CONAN_WEBSOCKETPP "")
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  set(CONAN_BUILD "missing")
+  list(APPEND CONAN_BUILD "missing")
 elseif (APPLE)
   set(CONAN_OPENSSL "")
   set(CONAN_BOOST_ASIO "")
   set(CONAN_WEBSOCKETPP "")
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  set(CONAN_BUILD "missing")
+  list(APPEND CONAN_BUILD "missing")
 else()
   set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
   set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
   set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
   list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
-  set(CONAN_BUILD "missing boost_asio websocketpp")
+  list(APPEND CONAN_BUILD "missing")
+  list(APPEND CONAN_BUILD "boost_asio")
+  list(APPEND CONAN_BUILD "websocketpp")
 endif()
 
 if (BUILD_TESTING)
@@ -327,7 +330,7 @@ conan_cmake_run(REQUIRES
   BUILD ${CONAN_BUILD}
 )
 
-message("CONAN_TARGETS = ${CONAN_TARGETS}")
+#message("CONAN_TARGETS = ${CONAN_TARGETS}")
 message("DONE RUNNING CONAN")
 ###############################################################################
 
