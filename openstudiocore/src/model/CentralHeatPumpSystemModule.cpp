@@ -38,8 +38,8 @@
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Model.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_CentralHeatPumpSystem_Module_FieldEnums.hxx>
