@@ -159,3 +159,28 @@ TEST_F(IddFixture,IddObject_nameField) {
   ASSERT_TRUE(i);
   ASSERT_EQ(0u,i.get());
 }
+
+
+// E+ no longer allows non-unique names, so we need to check that we enforce a strict naming policy
+// To do so, we we attribute a \reference to all objects that aren't part of a reference group
+// cf: https://github.com/NREL/OpenStudio/issues/3079
+TEST_F(IddFixture, IddObject_uniqueNames) {
+
+  std::vector<IddFileType> fts = {
+    IddFileType(IddFileType::OpenStudio),
+    IddFileType(IddFileType::EnergyPlus)
+  };
+
+  for (const auto& ft: fts) {
+    std::vector<IddObject> objects = IddFactory::instance().getObjects(ft);
+    for (const auto& obj: objects) {
+      if (obj.hasNameField()) {
+        std::stringstream ss;
+        for (const auto& s: obj.references()) {
+          ss << s << ",";
+        }
+        EXPECT_GE(obj.references().size(), 1) << "Failed for " << obj.name() << ", it has the following references: " << ss.str();
+      }
+    }
+  }
+}
