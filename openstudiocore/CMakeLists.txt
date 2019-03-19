@@ -1349,7 +1349,7 @@ if(BUILD_DOCUMENTATION)
   endforeach()
 
   # Set up dependencies after all targets have been created
-  add_dependencies(openstudio_utilities_static
+  add_dependencies(openstudio_utilities
     CreateEmbeddedSource
   )
   add_dependencies(openstudio_utilities_doc
@@ -1401,16 +1401,16 @@ endif()
 set(TARGETS_FILE ${CMAKE_BINARY_DIR}/OpenStudioTargets.cmake)
 
 set(all_lib_targets
-  openstudio_osversion_static
-  openstudio_model_static
-  openstudio_utilities_static
-  openstudio_energyplus_static
-  openstudio_measure_static
-  openstudio_radiance_static
-  openstudio_gbxml_static
-  openstudio_isomodel_static
-  openstudio_sdd_static
-  openstudio_airflow_static
+  openstudio_osversion
+  openstudio_model
+  openstudio_utilities
+  openstudio_energyplus
+  openstudio_measure
+  openstudio_radiance
+  openstudio_gbxml
+  openstudio_isomodel
+  openstudio_sdd
+  openstudio_airflow
   ${ALL_RUBY_BINDING_TARGETS}
 )
 

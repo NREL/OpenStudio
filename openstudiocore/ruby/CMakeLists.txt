@@ -133,21 +133,21 @@ endforeach()
 
 target_link_libraries(openstudio_rb
   init_openstudio
-  openstudio_airflow_static
-  openstudio_model_static
-  openstudio_energyplus_static
-  openstudio_measure_static
-  openstudio_osversion_static
-  openstudio_sdd_static
-  openstudio_isomodel_static
-  openstudio_gbxml_static 
-  openstudio_radiance_static
+  openstudio_airflow
+  openstudio_model
+  openstudio_energyplus
+  openstudio_measure
+  openstudio_osversion
+  openstudio_sdd
+  openstudio_isomodel
+  openstudio_gbxml
+  openstudio_radiance
 )
 
 if(BUILD_OS_APP)
   target_link_libraries(openstudio_modeleditor_rb
     ruby_OpenStudioModelEditor
-    openstudio_modeleditor_static
+    openstudio_modeleditor
     ${QT_LIBS} 
   )
 
