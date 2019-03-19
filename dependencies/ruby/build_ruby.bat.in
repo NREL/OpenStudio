@@ -1,3 +1,11 @@
+REM IMPORTANT NOTE ABOUT WINDOWS SYSTEM VARIABLES
+REM set x = 2 defines a system variable called "x " with a value of " 2"
+REM set x= 2 defines a system variable called "x" with a value of " 2"
+REM set x=2 defines a system variable called "x" with a value of "2"
+REM set x =2 defines a system variable called "x " with a value of "2"
+REM In other words, whitespace is critically important with system variables on Windows
+
+
 REM Install http://gnuwin32.sourceforge.net/packages/bison.htm and http://gnuwin32.sourceforge.net/packages/sed.htm to a location with no spaces in the path and add to path
 
 PATH=C:\Ruby25-x64\bin\;${CMAKE_BINARY_DIR}/OpenSSL-Win64/bin;%PATH%
