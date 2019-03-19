@@ -144,31 +144,11 @@ endif()
 add_dependencies(${target_name} ${${target_name}_depends})
 target_link_libraries(${target_name} ${${target_name}_depends})
 
-# make the static library
-add_library(${target_name}
-  ${${target_name}_src}
-  ${${target_name}_moc}
-  ${${target_name}_mocs}
-  ${${target_name}_qrc}
-  ${${target_name}_qrcs}
-  ${${target_name}_ui}
-  ${${target_name}_uis}
-)
-
-# lib dependencies
-set(${target_name}_depends
-  openstudio_energyplus
-  openstudio_model
-  ${QT_LIBS}
-)
-if(WIN32)
-  list(APPEND ${target_name}_depends qtwinmigrate)
+if(BUILD_SHARED_LIBS)
+  #target_compile_definitions(${target_name} PUBLIC model_editor_EXPORTS)
+else()
+  target_compile_definitions(${target_name} PUBLIC model_editor_EXPORTS)
 endif()
-
-target_link_libraries(${target_name} ${${target_name}_depends})
-
-target_compile_definitions(${target_name} PUBLIC model_editor_EXPORTS)
-target_compile_definitions(${target_name} PUBLIC model_editor_EXPORTS)
 
 #if(NOT APPLE)
 #  install(TARGETS ${target_name}
