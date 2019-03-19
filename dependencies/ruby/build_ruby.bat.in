@@ -15,8 +15,8 @@ echo "***** Building Ruby Release Build"
 echo "****"
 
 cd ..\Ruby-release
-set CL = /MP
-set CFLAGS = MD -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600 
+set CL=/MP
+set CFLAGS=-MD -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600 
 call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-dir="${CMAKE_BINARY_DIR}/OpenSSL-Win64/" --with-libffi-dir="${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/Release/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release" --target=x64-mswin64
 set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstatic.lib" "${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/Release/lib/libffi.lib"
 nmake /K libenc
@@ -45,8 +45,8 @@ echo "***** Building Ruby Debug Build"
 echo "****"
 
 cd ..\Ruby-debug
-set CL = /MP
-set CFLAGS = MDd -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600
+set CL=/MP
+set CFLAGS=-MDd -Zi -W2 -wd4996 -we4028 -we4142 -Od -Zm600
 call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-dir="${CMAKE_BINARY_DIR}/OpenSSL-Win64/" --with-libffi-dir="${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/Debug/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug" --target=x64-mswin64
 REM call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/"  --without-openssl --with-libffi-dir="${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug" --target=x64-mswin64
 set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstaticd.lib" "${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/Debug/lib/libffi.lib"
