@@ -165,15 +165,15 @@ option(BUILD_PACKAGE "Build package" OFF)
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
 
 # Build shared OS libraries
-option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
-
-# Build the OpenStudio Application
-# This option will require shared libs
-option(BUILD_OS_APP "Build OS App" OFF)
+option(BUILD_SHARED_LIBS "Build OS libs as shared libraries.  Currently not tested." OFF)
 
 if(BUILD_SHARED_LIBS)
   add_definitions("-DSHARED_OS_LIBS")
 endif()
+
+# Build the OpenStudio Application
+# This option will require shared libs
+option(BUILD_OS_APP "Build OS App" OFF)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
@@ -301,6 +301,8 @@ if (BUILD_TESTING)
 else()
   set(CONAN_GTEST "")
 endif()
+
+# DLM: add option for shared libs if we are building shared?
 
 
 conan_cmake_run(REQUIRES 
@@ -1155,199 +1157,6 @@ if(BUILD_OS_APP)
 
   set(CMAKE_AUTOMOC OFF)
 
-  # # download qt static
-  # if(WIN32)
-    # if(CMAKE_CL_64)
-      # set(QT_STATIC_ZIP_FILENAME "qt_5_11_msvc2017_64_static.zip")
-      # set(QT_STATIC_ZIP_EXPECTED_MD5 "1826e3b83c7103a2a82f463490630ab1")
-    # else()
-      # set(QT_STATIC_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_msvc2017_32_static.zip")
-      # set(QT_STATIC_ZIP_EXPECTED_MD5 "d03d2fae40cba06f8b4887c8dce64a07")
-    # endif()
-  # elseif(APPLE)
-    # set(QT_STATIC_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_osx_static.tar.gz")
-    # set(QT_STATIC_ZIP_EXPECTED_MD5 "d24756746d2fe07212070f675871cf93")
-  # elseif(EXISTS "/etc/redhat-release")
-    # set(QT_STATIC_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_redhat_static.tar.gz")
-    # set(QT_STATIC_ZIP_EXPECTED_MD5 "f5d9406349d1688e99db012862c22072")
-  # else()
-    # if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
-      # set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static.tar.gz")
-      # set(QT_STATIC_ZIP_EXPECTED_MD5 "fb9298e6d74c207742ab5ab50e18b8e2")
-    # else()
-      # # 16.04
-      # set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static_xenial_harfbuzz.tar.gz")
-      # set(QT_STATIC_ZIP_EXPECTED_MD5 "e6969f05b84a20d4610b1d35170a2329")
-    # endif()
-  # endif()
-
-  # set(QT_STATIC_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_STATIC_ZIP_FILENAME}")
-  # if(EXISTS "${QT_STATIC_ZIP_LOCAL_PATH}")
-    # file(MD5 "${QT_STATIC_ZIP_LOCAL_PATH}" QT_STATIC_ZIP_MD5)
-  # endif()
-
-  # if(NOT QT_STATIC_ZIP_MD5 STREQUAL QT_STATIC_ZIP_EXPECTED_MD5)
-    # file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_STATIC_ZIP_FILENAME}"
-      # ${QT_STATIC_ZIP_LOCAL_PATH}
-      # INACTIVITY_TIMEOUT 120
-      # SHOW_PROGRESS
-      # EXPECTED_MD5 ${QT_STATIC_ZIP_EXPECTED_MD5})
-      # execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_STATIC_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  # endif()
-
-  # set(QT_STATIC_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-static-install/" CACHE PATH "QT Static Path")
-
-  # set(QT_DEFS -DQT_STATIC)
-
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/")
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtCore")
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtWidgets")
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtXml")
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtNetwork")
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtGui")
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtGui/5.11.2/QtGui")
-
-  # FIND_QT_STATIC_LIB("QtCore;Qt5Core" "${QT_STATIC_INSTALL_DIR}/lib/")
-  # FIND_QT_STATIC_LIB("QtWidgets;Qt5Widgets" "${QT_STATIC_INSTALL_DIR}/lib/")
-  # FIND_QT_STATIC_LIB("QtXml;Qt5Xml" "${QT_STATIC_INSTALL_DIR}/lib/")
-  # FIND_QT_STATIC_LIB("QtNetwork;Qt5Network" "${QT_STATIC_INSTALL_DIR}/lib/")
-  # FIND_QT_STATIC_LIB("Qt5Gui;Qt5Gui" "${QT_STATIC_INSTALL_DIR}/lib/")
-  # FIND_QT_STATIC_LIB("QtPrintSupport;Qt5PrintSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-
-  # if(WIN32)
-    # FIND_QT_STATIC_LIB("Qt5WinExtras" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtmain" "${QT_STATIC_INSTALL_DIR}/lib/")
-  # endif()
-
-  # if(UNIX)
-    # FIND_QT_STATIC_LIB("QtDBus;Qt5DBus" "${QT_STATIC_INSTALL_DIR}/lib/")
-
-    # find_package(OpenGL REQUIRED)
-    # list(APPEND QT_STATIC_LIBS "${OPENGL_LIBRARIES}")
-    # list(APPEND QT_STATIC_LIBS_D "${OPENGL_LIBRARIES}")
-  # endif()
-
-  # if(UNIX AND NOT APPLE)
-    # # http://doc.qt.io/qt-5/linux-requirements.html
-    # # DLM: the order of linking for static archives matter because symbols will only be included if they are needed by previous libraries
-    # # in some cases we may need to relink libraries a second time
-    # #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/platforms/libqxcb.a")
-
-    # FIND_QT_STATIC_LIB("qxcb" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
-
-    # FIND_QT_STATIC_LIB("qtpcre2" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtharfbuzz" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5XcbQpa" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5ServiceSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5PlatformCompositorSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5Gui" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5DBus" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5Core" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("xcb-static" "${QT_STATIC_INSTALL_DIR}/lib/")
-
-    # FIND_QT_STATIC_LIB("expat" "*")
-
-    # FIND_QT_STATIC_LIB("png" "*")
-    # FIND_QT_STATIC_LIB("libjpeg;libjpeg.so;libjpeg.so.8" "*")
-    # FIND_QT_STATIC_LIB("freetype" "*")
-
-    # FIND_QT_STATIC_LIB("libdbus-1.so" "*")
-    # FIND_QT_STATIC_LIB("dbus-glib-1;libdbus-glib-1.so.2" "*")
-
-    # FIND_QT_STATIC_LIB("glib-2.0" "*")
-    # FIND_QT_STATIC_LIB("X11.so" "*")
-    # FIND_QT_STATIC_LIB("xcb.so" "*")
-    # FIND_QT_STATIC_LIB("X11-xcb.so" "*")
-    # FIND_QT_STATIC_LIB("Xext.so" "*")
-    # FIND_QT_STATIC_LIB("crypto.so" "*")
-
-    # FIND_QT_STATIC_LIB("icui18n" "*")
-    # FIND_QT_STATIC_LIB("icuuc" "*")
-
-    # if(EXISTS "/etc/redhat-release")
-      # FIND_QT_STATIC_LIB("rt" "*")
-
-      # FIND_QT_STATIC_LIB("gthread-2.0" "*")
-      # FIND_QT_STATIC_LIB("dbus-glib-1;libdbus-glib-1.so.2" "*")
-      # FIND_QT_STATIC_LIB("gobject-2.0" "*")
-      # FIND_QT_STATIC_LIB("db" "*")
-      # FIND_QT_STATIC_LIB("icui18n" "*")
-      # FIND_QT_STATIC_LIB("icuuc" "*")
-      # FIND_QT_STATIC_LIB("z.so" "*")
-    # else()
-      # FIND_QT_STATIC_LIB("fontconfig.so" "*")
-      # FIND_QT_STATIC_LIB("SM.so" "*")
-      # FIND_QT_STATIC_LIB("ICE.so" "*")
-      # FIND_QT_STATIC_LIB("Xi.so" "*")
-      # FIND_QT_STATIC_LIB("z.so" "*")
-    # endif()
-  # endif()
-
-  # if(APPLE)
-    # # DLM: the order of linking for static archives matter because symbols will only be included if they are needed by previous libraries
-    # # in some cases we may need to relink libraries a second time
-
-    # FIND_QT_STATIC_LIB("CoreFoundation" "*")
-    # FIND_QT_STATIC_LIB("CFNetwork" "*")
-    # FIND_QT_STATIC_LIB("CoreGraphics" "*")
-    # FIND_QT_STATIC_LIB("Carbon" "*")
-    # FIND_QT_STATIC_LIB("AppKit" "*")
-    # FIND_QT_STATIC_LIB("SystemConfiguration" "*")
-    # FIND_QT_STATIC_LIB("Security" "*")
-
-    # FIND_QT_STATIC_LIB("qtpcre" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qcocoa" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
-    # FIND_QT_STATIC_LIB("qtfreetype" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("poly2tri" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtharfbuzz" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5PlatformCompositorSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtpcre2" "${QT_STATIC_INSTALL_DIR}/lib/")
-
-    # FIND_QT_STATIC_LIB("CoreFoundation" "*")
-    # FIND_QT_STATIC_LIB("CFNetwork" "*")
-    # FIND_QT_STATIC_LIB("CoreGraphics" "*")
-    # FIND_QT_STATIC_LIB("Carbon" "*")
-    # FIND_QT_STATIC_LIB("AppKit" "*")
-    # FIND_QT_STATIC_LIB("SystemConfiguration" "*")
-    # FIND_QT_STATIC_LIB("Security" "*")
-    # FIND_QT_STATIC_LIB("IOKit" "*")
-    # FIND_QT_STATIC_LIB("cups" "*")
-  # endif()
-
-  # if(WIN32)
-    # FIND_QT_STATIC_LIB("Qt5FontDatabaseSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5PlatformCompositorSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5WindowsUIAutomationSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5ThemeSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5EventDispatcherSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtfreetype" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtharfbuzz" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtpcre2" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtlibpng" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qwindows" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
-
-    # FIND_QT_STATIC_LIB("Crypt32" "*")
-    # FIND_QT_STATIC_LIB("imm32" "*")
-    # FIND_QT_STATIC_LIB("winmm" "*")
-    # FIND_QT_STATIC_LIB("Gdi32" "*")
-    # FIND_QT_STATIC_LIB("wsock32" "*")
-    # FIND_QT_STATIC_LIB("ws2_32" "*")
-    # FIND_QT_STATIC_LIB("iphlpapi" "*")
-    # FIND_QT_STATIC_LIB("dbghelp" "*")
-    # FIND_QT_STATIC_LIB("Shlwapi" "*")
-    # FIND_QT_STATIC_LIB("Netapi32" "*")
-    # FIND_QT_STATIC_LIB("version" "*")
-    # FIND_QT_STATIC_LIB("Userenv" "*")
-    # FIND_QT_STATIC_LIB("Dwmapi" "*")
-    # FIND_QT_STATIC_LIB("legacy_stdio_definitions" "*")
-
-
-    # if(BUILD_WITH_OPENSSL)
-      # FIND_QT_STATIC_LIB("libcrypto" "${OPENSSL_ROOT_DIR}/lib/")
-      # FIND_QT_STATIC_LIB("libssl" "${OPENSSL_ROOT_DIR}/lib/")
-    # endif()
-  # endif()
-
 endif()
 
 ###############################################################################
@@ -1367,6 +1176,8 @@ include_directories("${CMAKE_BINARY_DIR}/src/")
 if(MSVC)
   # treat warnings as errors
   add_definitions(/WX)
+elseif()
+  add_definitions(-Werror)
 endif()
 
 include("embedded/EmbedFiles.cmake")

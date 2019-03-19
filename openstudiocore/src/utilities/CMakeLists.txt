@@ -187,86 +187,9 @@ set(bcl_src
   bcl/RemoteBCL.cpp
 )
 
-#set(cloud_src
-#  cloud/AWSProvider.hpp
-#  cloud/AWSProvider_Impl.hpp
-#  cloud/AWSProvider.cpp
-#  cloud/CloudProvider.hpp
-#  cloud/CloudProvider_Impl.hpp
-#  cloud/CloudProvider.cpp
-#  cloud/OSServer.hpp
-#  cloud/OSServer_Impl.hpp
-#  cloud/OSServer.cpp
-#  cloud/VagrantProvider.hpp
-#  cloud/VagrantProvider_Impl.hpp
-#  cloud/VagrantProvider.cpp
-#)
-
 set(documentation_src
   mainpage.hpp
 )
-
-#if(WIN32)
-#  list(APPEND ${target_name}_depends qtwinmigrate)
-#  list(APPEND ${target_name}_depends mpr)
-#endif()
-
-#set(cloud_moc
-#  cloud/AWSProvider_Impl.hpp
-#  cloud/CloudProvider_Impl.hpp
-#  cloud/OSServer_Impl.hpp
-#  cloud/VagrantProvider_Impl.hpp
-#)
-
-#set(core_moc
-#  core/UpdateManager.hpp
-#)
-
-#set(idf_moc
-#  idf/IdfObject_Impl.hpp
-#  idf/IdfObjectWatcher.hpp
-#  idf/WorkspaceObjectWatcher.hpp
-#  idf/WorkspaceObject_Impl.hpp
-#  idf/Workspace_Impl.hpp
-#  idf/WorkspaceWatcher.hpp
-#)
-
-#set(data_moc
-#  data/Attribute_Impl.hpp
-#)
-
-###############################################################################
-# idf_moc files include generated source code.  It is important that these
-# generated files are generated before moc runs.
-# The following commands make sure that happens.
-# This could be done by simply touching the moc'ed files in the source tree
-# but in the spirit of keeping the source tree clean, we copy them into the
-# build directory instead.
-#
-# DLM: This is no longer needed as GenerateIddFactoryRun will run before anything in utilities is built
-#
-###############################################################################
-#foreach(f IN LISTS idf_moc)
-#  string(REGEX REPLACE hpp$ hxx fxx ${f})
-#  list(APPEND idfxx_moc ${CMAKE_CURRENT_BINARY_DIR}/${fxx})
-#  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${fxx}
-#    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/${f} ${CMAKE_CURRENT_BINARY_DIR}/${fxx}
-#    DEPENDS
-#    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddEnums.hxx
-#    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFieldEnums.hxx
-#    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.hxx
-#    ${CMAKE_CURRENT_BINARY_DIR}/idd/IddFactory.cxx
-#    ${CMAKE_CURRENT_SOURCE_DIR}/${f}
-#  )
-#endforeach()
-###############################################################################
-
-## Qt MOC generation
-#qt5_wrap_cpp_minimally(cloud_moc_src ${cloud_moc})
-#qt5_wrap_cpp_minimally(core_moc_src ${core_moc}) # RM
-#qt5_wrap_cpp_minimally(idf_moc_src ${idfxx_moc})
-#qt5_wrap_cpp_minimally(data_moc_src ${data_moc}) # RM
-
 
 # embedded files, bump again to update common files
 file(GLOB_RECURSE BCL_TEMPLATES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/bcl/templates/**/*.*")
@@ -288,7 +211,6 @@ embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudio)
 
 # set up groups of source files for Visual Studio
 source_group(bcl FILES ${bcl_src})
-#source_group(cloud FILES ${cloud_src})
 source_group(core FILES ${core_src})
 source_group(data FILES ${data_src})
 source_group(filetypes FILES ${filetypes_src})
@@ -309,7 +231,6 @@ else()
   set(SWIG_DEPENDS "")
 endif()
 
-
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
   COMMAND "${SWIG_EXECUTABLE}"
@@ -322,18 +243,12 @@ set(${target_name}_src
   UtilitiesAPI.hpp
   "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx" # referenced here to make sure it is generated when and where we expect
   ${bcl_src}
-#  ${bcl_moc_src}
-#  ${cloud_src}
-#  ${cloud_moc_src}
   ${core_src}
-#  ${core_moc_src}
   ${data_src}
-#  ${data_moc_src}
   ${documentation_src}
   ${filetypes_src}
   ${idd_src}
   ${idf_src}
-#  ${idf_moc_src}
   ${sql_src}
   ${geometry_src}
   ${math_src}
@@ -346,11 +261,7 @@ set(${target_name}_src
 set(${target_name}_test_src
   ${idd_test_src}
   ${idf_test_src}
-#  ${idf_test_moc_src}
   ${sql_test_src}
-
-#  cloud/test/AWSProvider_GTest.cpp
-#  cloud/test/VagrantProvider_GTest.cpp
 
   core/test/CoreFixture.hpp
   core/test/CoreFixture.cpp
@@ -448,7 +359,6 @@ set(${target_name}_swig_src
   core/Exception.i
   core/Logger.i
   core/Path.i
-#  core/Qt.i
   core/Singleton.i
   core/System.i
   core/UpdateManager.i
@@ -458,7 +368,6 @@ set(${target_name}_swig_src
   core/ruby/LanguageSpecific.i
   core/python/LanguageSpecific.i
   core/csharp/LanguageSpecific.i
-#  cloud/Cloud.i
   filetypes/Filetypes.i
   geometry/Geometry.i
   time/Time.i
@@ -488,31 +397,7 @@ set(${target_name}_swig_src
 #include subdir for pch
 add_subdirectory(pch)
 
-#add_library(${target_name}
-#  ${${target_name}_src}
-#)
-#add_dependencies("${target_name}" GenerateIddFactoryRun)
-
-#if(UNIX)
-#  add_dependencies("${target_name}" SWIG)
-#endif()
-
-#AddPCH(${target_name})
-
-# No need to install static lib
-#if(NOT APPLE)
-#  install(TARGETS ${target_name}
-#    RUNTIME DESTINATION bin
-#    LIBRARY DESTINATION lib
-#  )
-#endif()
-
-#target_link_libraries(${target_name} PUBLIC ${${target_name}_depends} GeographicLib_STATIC cpprestsdk::cpprest)
-
-#CREATE_SRC_GROUPS("${${target_name}_test_src}")
-#CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
-
-set(${target_name}_static_depends
+set(${target_name}_depends
   CONAN_PKG::sqlite3
   CONAN_PKG::jsoncpp
   CONAN_PKG::zlib
@@ -534,43 +419,25 @@ set(${target_name}_static_depends
 )
 
 if(WIN32)
-  list(APPEND ${target_name}_static_depends mpr)
+  list(APPEND ${target_name}_depends mpr)
 elseif(APPLE)
-  list(APPEND ${target_name}_static_depends ${SECURITY_FRAMEWORK})
+  list(APPEND ${target_name}_depends ${SECURITY_FRAMEWORK})
 endif()
 
-add_library(${target_name}_static
+add_library(${target_name}
   ${${target_name}_src}
 )
-add_dependencies("${target_name}_static" GenerateIddFactoryRun)
+add_dependencies("${target_name}" GenerateIddFactoryRun)
 
-target_link_libraries(${target_name}_static ${${target_name}_static_depends})
+target_link_libraries(${target_name} ${${target_name}_depends})
 
-#target_link_libraries(${target_name}_static ${${target_name}_static_depends})
-
-#target_include_directories(${target_name}_static PUBLIC ${QT_STATIC_INCLUDES})
-
-#list(LENGTH QT_STATIC_LIBS QT_STATIC_LIBS_LENGTH)
-#list(LENGTH QT_STATIC_LIBS_D QT_STATIC_LIBS_D_LENGTH)
-#if (NOT ${QT_STATIC_LIBS_LENGTH} EQUAL ${QT_STATIC_LIBS_D_LENGTH})
-#  message(FATAL_ERROR "Mismatched sizes QT_STATIC_LIBS ${QT_STATIC_LIBS_LENGTH} != QT_STATIC_LIBS_D #{QT_STATIC_LIBS_D_LENGTH}")
-#endif()
-
-#math(EXPR N "${QT_STATIC_LIBS_LENGTH} - 1")
-#foreach(i RANGE ${N})
-#  list(GET QT_STATIC_LIBS ${i} lib_)
-#  list(GET QT_STATIC_LIBS_D ${i} libd)
-#  target_link_libraries(${target_name}_static optimized ${lib_} debug ${libd})
-#endforeach()
-
-#target_compile_definitions(${target_name}_static PUBLIC ${QT_DEFS})
-
-if(NOT BUILD_SHARED_LIBS)
+if(BUILD_SHARED_LIBS)
   #target_compile_definitions(${target_name} PUBLIC openstudio_utilities_EXPORTS)
-  target_compile_definitions(${target_name}_static PUBLIC openstudio_utilities_EXPORTS)
+else()
+  target_compile_definitions(${target_name} PUBLIC openstudio_utilities_EXPORTS)
 endif()
 
-#install(TARGETS ${target_name}_static
+#install(TARGETS ${target_name}
 #  EXPORT openstudio
 #  RUNTIME DESTINATION bin
 #  LIBRARY DESTINATION lib
@@ -578,13 +445,13 @@ endif()
 #)
 
 if(BUILD_TESTING)
-  CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends}")
-  add_dependencies("${target_name}_static_tests" openstudio_energyplus_resources)
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+  add_dependencies("${target_name}_tests" openstudio_energyplus_resources)
 endif()
 
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
-set(swig_target_name ${target_name}_static)
+set(swig_target_name ${target_name})
 
 MAKE_SWIG_TARGET(OpenStudioUtilitiesCore utilitiescore "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesCore.i" "${${target_name}_swig_src}" ${swig_target_name} "")
 

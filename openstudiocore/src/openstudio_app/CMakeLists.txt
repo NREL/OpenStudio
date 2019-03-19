@@ -190,12 +190,12 @@ endif()
 
 set(depends
   openstudio_lib
-  openstudio_osversion_static
-  openstudio_model_static
-  openstudio_energyplus_static
-  openstudio_modeleditor_static
-  openstudio_sdd_static
-  openstudio_gbxml_static
+  openstudio_osversion
+  openstudio_model
+  openstudio_energyplus
+  openstudio_modeleditor
+  openstudio_sdd
+  openstudio_gbxml
   openstudio_bimserver
   ${QT_WEB_LIBS}
   #${QT_PLUGIN_LIBS}

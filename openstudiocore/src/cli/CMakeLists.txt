@@ -276,17 +276,18 @@ else()
 endif()
 
 target_link_libraries(openstudio
- openstudio_airflow_static
- openstudio_model_static
- openstudio_energyplus_static
- openstudio_measure_static
- openstudio_osversion_static
- openstudio_sdd_static
- openstudio_isomodel_static
- openstudio_gbxml_static 
- openstudio_radiance_static
+ openstudio_airflow
+ openstudio_model
+ openstudio_energyplus
+ openstudio_measure
+ openstudio_osversion
+ openstudio_sdd
+ openstudio_isomodel
+ openstudio_gbxml 
+ openstudio_radiance
 )
 
+# link CLI with ruby static library, ruby bindings (openstudio.so) are linked to dynamic ruby 
 if (UNIX AND NOT APPLE)
   target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt)
   target_link_libraries(openstudio "icui18n" "icuuc" "gmp")

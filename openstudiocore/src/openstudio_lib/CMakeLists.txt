@@ -701,12 +701,6 @@ set(${target_name}_moc
 
 )
 
-#if(${Qt5Widgets_VERSION} VERSION_LESS "5.4.0")
-#  list(APPEND ${target_name}_moc ResultsWebView.hpp)
-#else()
-#  list(APPEND ${target_name}_moc ResultsWebEngineView.hpp)
-#endif()
-
 # resource files
 set(${target_name}_qrc
   openstudio.qrc
@@ -727,16 +721,16 @@ add_library(${target_name}
 )
 
 set(depends
-  openstudio_model_static
-  openstudio_energyplus_static
-  openstudio_modeleditor_static
-  openstudio_measure_static
-  openstudio_sdd_static
-  openstudio_gbxml_static
+  openstudio_model
+  openstudio_energyplus
+  openstudio_modeleditor
+  openstudio_measure
+  openstudio_sdd
+  openstudio_gbxml
   ${QT_LIBS}
 )
 if(WIN32)
-  list(APPEND ${target_name}_depends qtwinmigrate_static)
+  list(APPEND ${target_name}_depends qtwinmigrate)
 endif()
 
 target_link_libraries(${target_name} ${depends})

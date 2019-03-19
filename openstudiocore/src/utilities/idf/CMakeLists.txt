@@ -63,12 +63,6 @@ set(idf_test_src
   idf/Test/Validity_GTest.cpp
 )
 
-#set(idf_test_moc
-#  idf/Test/IdfTestQObjects.hpp
-#)
-
-#qt5_wrap_cpp_minimally(idf_test_moc_src ${idf_test_moc})
-
 SET(idf_swig_src
   idf/Idf.i
 )

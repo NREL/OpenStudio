@@ -4,7 +4,6 @@ include_directories(${CMAKE_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(${target_name}_src
-
   mainpage.hpp
   ModelAPI.hpp
   Model.hpp
@@ -1606,17 +1605,13 @@ set(${target_name}_swig_src
   ModelZoneHVAC.i
 )
 
-#qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
-
-#set(${target_name}_depends
-#  openstudio_utilities
-#)
-
 # Embed resource files
 # Glob all files inside model/Resources
 file(GLOB_RECURSE embedded_files "${CMAKE_CURRENT_SOURCE_DIR}/Resources/**/*.*")
+
 # Exclude rb scripts (helpers to generate JSON files)
 list(FILTER embedded_files EXCLUDE REGEX ".*\.rb")
+
 # We compute a relative path, so that they end up in :/Resources/
 foreach( _FILE ${embedded_files} )
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
@@ -1634,32 +1629,20 @@ embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiomodel)
 # set up groups of source files for Visual Studio
 source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
-
-#add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
-#target_link_libraries(${target_name} "${${target_name}_depends}")
-#AddPCH(${target_name})
-
-set(${target_name}_static_depends
-  openstudio_utilities_static
+set(${target_name}_depends
+  openstudio_utilities
 )
 
-add_library(${target_name}_static ${${target_name}_src} ${EMBEDDED_OUTPUT})
+add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
 
-target_link_libraries(${target_name}_static "${${target_name}_static_depends}")
+target_link_libraries(${target_name} "${${target_name}_depends}")
 
-# No need to install static lib
-#if(NOT APPLE)
-#  install(TARGETS ${target_name}
-#    RUNTIME DESTINATION bin
-#    LIBRARY DESTINATION lib
-#  )
-#endif()
-
-
-# Compiler and system specific options
-if(UNIX OR MINGW)
-  # treat warnings as errors
-  #set_target_properties("${target_name}" PROPERTIES "COMPILE_FLAGS" "-Werror")
+if(BUILD_SHARED_LIBS)
+  install(TARGETS ${target_name}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+  )
 endif()
 
 set(${target_name}_test_src
@@ -2045,16 +2028,16 @@ set(${target_name}_test_src
 )
 
 set(${target_name}_test_depends
-  ${${target_name}_static_depends}
+  ${${target_name}_depends}
 )
 
 CREATE_SRC_GROUPS("${${target_name}_test_src}")
 
 if(BUILD_TESTING)
 
-  CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_test_depends}")
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 
-  add_dependencies("${target_name}_static_tests"
+  add_dependencies("${target_name}_tests"
     openstudio_model_resources
     openstudio_utilities_resources
   )
@@ -2066,7 +2049,7 @@ if(BUILD_TESTING)
   endif()
 endif()
 
-set(swig_target_name ${target_name}_static)
+set(swig_target_name ${target_name})
 
 MAKE_SWIG_TARGET(OpenStudioModelCore model "${CMAKE_CURRENT_SOURCE_DIR}/ModelCore.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilities)
 list(APPEND OpenStudioModelSwigs OpenStudioModelCore)
@@ -2074,7 +2057,7 @@ list(APPEND OpenStudioModelSwigs OpenStudioModelCore)
 MAKE_SWIG_TARGET(OpenStudioModelSimulation model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSimulation.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelCore)
 list(APPEND OpenStudioModelSwigs OpenStudioModelSimulation)
 
-MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelSimulation)
+MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i"   "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelSimulation)
 list(APPEND OpenStudioModelSwigs OpenStudioModelResources)
 
 MAKE_SWIG_TARGET(OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGeometry.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelResources)
