@@ -47,7 +47,6 @@ echo "****"
 cd ..\Ruby-debug
 set CL=/MP
 set CFLAGS=-MDd -Zi -W2 -wd4996 -we4028 -we4142 -Od -Zm600
-set LDFLAGS=/NODEFAULTLIB:MSVCRT
 call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-dir="${CMAKE_BINARY_DIR}/OpenSSL-Win64/" --with-libffi-dir="${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/Debug/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug" --target=x64-mswin64
 REM call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/"  --without-openssl --with-libffi-dir="${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug" --target=x64-mswin64
 set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstaticd.lib" "${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/Debug/lib/libffi.lib"
