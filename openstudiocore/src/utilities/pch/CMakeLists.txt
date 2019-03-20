@@ -91,7 +91,7 @@ macro(AddPCH TARGET_NAME)
       if(CMAKE_OSX_ARCHITECTURES)
         set(PROPSTRING "")
         foreach(arch ${CMAKE_OSX_ARCHITECTURES})
-          set(PROPSTRING "${PROPSTRING} -Xarch_${arch} -include${CMAKE_BINARY_DIR}/src/utilities/pch/${arch}/PCH.hpp")
+          set(PROPSTRING "${PROPSTRING} -Xarch_${arch} -include${PROJECT_BINARY_DIR}/src/utilities/pch/${arch}/PCH.hpp")
           add_dependencies(${TARGET_NAME} BUILD_PCH_${arch})
         endforeach()
         set_target_properties(${TARGET_NAME}
@@ -100,7 +100,7 @@ macro(AddPCH TARGET_NAME)
       else()
         if (add_pch_include)
           set_target_properties(${TARGET_NAME}
-            PROPERTIES COMPILE_FLAGS "-include ${CMAKE_BINARY_DIR}/src/utilities/pch/PCH.hpp"
+            PROPERTIES COMPILE_FLAGS "-include ${PROJECT_BINARY_DIR}/src/utilities/pch/PCH.hpp"
             )
           add_dependencies(${TARGET_NAME} BUILD_PCH)
         endif()
@@ -126,7 +126,7 @@ macro(AddPCH TARGET_NAME)
       if(num_files LESS 10)
         message(STATUS "Not enabling PCH for ${TARGET_NAME} for MSVC because the target contains fewer than 10 source files: ${target_files}")
       else()
-        set(PCH_OUTPUT "${CMAKE_BINARY_DIR}/${TARGET_NAME}-$(ConfigurationName).hpp.pch")
+        set(PCH_OUTPUT "${PROJECT_BINARY_DIR}/${TARGET_NAME}-$(ConfigurationName).hpp.pch")
 
         set_target_properties(${TARGET_NAME}
           PROPERTIES COMPILE_FLAGS "/FIutilities/pch/PCH.hpp /Yuutilities/pch/PCH.hpp /Fp${PCH_OUTPUT}"

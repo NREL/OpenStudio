@@ -32,7 +32,7 @@ function(embed_files FILES EMBEDDED_LOCATIONS CXX_OUTPUT_FILES)
     # EMBED_SOURCE_FILE is the fully qualified path to a cxx file with the embedded data
     set(EMBED_SOURCE_FILE "${CMAKE_CURRENT_BINARY_DIR}/embedded_files/${BASE_PATH}/${BASE_FILENAME}${EXTENSION}.cxx")
     set(EMBED_SOURCE_PATH "${CMAKE_CURRENT_BINARY_DIR}/embedded_files/${BASE_PATH}")
-    file(RELATIVE_PATH EMBED_SOURCE_FILE_REL_PATH ${CMAKE_BINARY_DIR} ${EMBED_SOURCE_FILE})
+    file(RELATIVE_PATH EMBED_SOURCE_FILE_REL_PATH ${PROJECT_BINARY_DIR} ${EMBED_SOURCE_FILE})
     list(APPEND EMBED_SOURCE_FILES ${EMBED_SOURCE_FILE})
 
     # Fixup the name. We want to make sure it starts with :/
@@ -93,10 +93,10 @@ function(embed_files FILES EMBEDDED_LOCATIONS CXX_OUTPUT_FILES)
     set(END_NAMESPACE "}")
   endif()
 
-  configure_file("${CMAKE_SOURCE_DIR}/embedded/embedded_files.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.hxx")
+  configure_file("${PROJECT_SOURCE_DIR}/embedded/embedded_files.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.hxx")
   list(APPEND EMBED_SOURCE_FILES "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.hxx")
 
-  configure_file("${CMAKE_SOURCE_DIR}/embedded/embedded_files.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.cxx")
+  configure_file("${PROJECT_SOURCE_DIR}/embedded/embedded_files.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.cxx")
   list(APPEND EMBED_SOURCE_FILES "${CMAKE_CURRENT_BINARY_DIR}/embedded_files.cxx")
 
   set(${CXX_OUTPUT_FILES} ${EMBED_SOURCE_FILES} PARENT_SCOPE)

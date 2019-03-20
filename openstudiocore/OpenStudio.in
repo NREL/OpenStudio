@@ -38,15 +38,15 @@ inline std::string energyPlusBuildSHA()
 
 inline std::string rubyLibDir()
 {
-  return "${CMAKE_SOURCE_DIR}/ruby/";
+  return "${PROJECT_SOURCE_DIR}/ruby/";
 }
 
 inline std::string rubyOpenStudioDir()
 {
   #ifdef WIN32
-    return "${CMAKE_BINARY_DIR}/ruby/" + std::string(CMAKE_INTDIR) + "/";
+    return "${PROJECT_BINARY_DIR}/ruby/" + std::string(CMAKE_INTDIR) + "/";
   #else
-    return "${CMAKE_BINARY_DIR}/ruby/";
+    return "${PROJECT_BINARY_DIR}/ruby/";
   #endif
 }
 

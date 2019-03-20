@@ -69,11 +69,11 @@
 namespace openstudio {
 
   openstudio::path getApplicationSourceDirectory() {
-    return openstudio::toPath("${CMAKE_SOURCE_DIR}");
+    return openstudio::toPath("${PROJECT_SOURCE_DIR}");
   }
 
   openstudio::path getApplicationBuildDirectory() {
-    return openstudio::toPath("${CMAKE_BINARY_DIR}");
+    return openstudio::toPath("${PROJECT_BINARY_DIR}");
   }
 
   openstudio::path getApplicationPath() {

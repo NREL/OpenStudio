@@ -43,7 +43,7 @@
 # (To distributed this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
-file(GLOB ENERGYPLUS_POSSIBLE_PATHS "${CMAKE_BINARY_DIR}/[eE]nergy[pP]lus-*")
+file(GLOB ENERGYPLUS_POSSIBLE_PATHS "${PROJECT_BINARY_DIR}/[eE]nergy[pP]lus-*")
 #if(WIN32)
 #  file(GLOB ENERGYPLUS_POSSIBLE_PATHS "C:/[eE]nergy[pP]lus?*")
 #elseif(APPLE)

@@ -2,7 +2,7 @@
 
 set(target_name openstudio_utilities)
 
-include_directories(${CMAKE_BINARY_DIR})
+include_directories(${PROJECT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/idd)
 
@@ -206,7 +206,7 @@ foreach(_FILE ${IDD_FILES})
   list(APPEND E_PATHS ${LOCATION})
 endforeach()
 
-include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudio)
 
 # set up groups of source files for Visual Studio
@@ -346,7 +346,7 @@ set(${target_name}_test_src
 
 set(${target_name}_swig_src
   #  Utilities.i
-  ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx
+  ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx
   ${idd_swig_src}
   ${idf_swig_src}
   ${sql_swig_src}

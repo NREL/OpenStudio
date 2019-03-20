@@ -1,4 +1,4 @@
-include_directories(${CMAKE_BINARY_DIR})
+include_directories(${PROJECT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(target_name openstudio_airflow)
@@ -35,7 +35,7 @@ set(${target_name}_src
 )
 
 # resource files
-include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 # EMBEDDED_OUTPUT stores the list of cxx files that we need to link later
 file(GLOB_RECURSE IDD_FILES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/templates/*.prj")
 foreach( _FILE ${IDD_FILES} )
@@ -44,7 +44,7 @@ foreach( _FILE ${IDD_FILES} )
   list(APPEND E_PATHS ${LOCATION})
 endforeach()
 
-include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiocontam)
 # message("EMBEDDED_OUTPUT: ${EMBEDDED_OUTPUT}")
 

@@ -51,14 +51,14 @@ PROJECT_BRIEF          =
 # and the maximum width should not exceed 200 pixels. Doxygen will copy the logo
 # to the output directory.
 
-PROJECT_LOGO           = "${CMAKE_SOURCE_DIR}/icons/os_128.png"
+PROJECT_LOGO           = "${PROJECT_SOURCE_DIR}/icons/os_128.png"
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is
 # entered, it will be relative to the location where doxygen was started. If
 # left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = "${CMAKE_BINARY_DIR}/doc/${DOC_NAME}"
+OUTPUT_DIRECTORY       = "${PROJECT_BINARY_DIR}/doc/${DOC_NAME}"
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create 4096 sub-
 # directories (in 2 levels) under the output directory of each output format and
@@ -672,7 +672,7 @@ FILE_VERSION_FILTER    =
 # DoxygenLayout.xml, doxygen will parse it automatically even if the LAYOUT_FILE
 # tag is left empty.
 
-LAYOUT_FILE            = "${CMAKE_SOURCE_DIR}/doc/xml/DoxygenLayout.xml"
+LAYOUT_FILE            = "${PROJECT_SOURCE_DIR}/doc/xml/DoxygenLayout.xml"
 
 # The CITE_BIB_FILES tag can be used to specify one or more bib files containing
 # the reference definitions. This must be a list of .bib files. The .bib
@@ -852,7 +852,7 @@ EXAMPLE_RECURSIVE      = NO
 # that contain images that are to be included in the documentation (see the
 # \image command).
 
-IMAGE_PATH             = "${CMAKE_SOURCE_DIR}/doc/images/"
+IMAGE_PATH             = "${PROJECT_SOURCE_DIR}/doc/images/"
 
 # The INPUT_FILTER tag can be used to specify a program that doxygen should
 # invoke to filter for each input file. Doxygen will invoke the filter program
@@ -1075,7 +1075,7 @@ HTML_FILE_EXTENSION    = .html
 # of the possible markers and block names see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_HEADER            = "${CMAKE_SOURCE_DIR}/doc/html/header.html"
+HTML_HEADER            = "${PROJECT_SOURCE_DIR}/doc/html/header.html"
 
 # The HTML_FOOTER tag can be used to specify a user-defined HTML footer for each
 # generated HTML page. If the tag is left blank doxygen will generate a standard
@@ -1085,7 +1085,7 @@ HTML_HEADER            = "${CMAKE_SOURCE_DIR}/doc/html/header.html"
 # that doxygen normally uses.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_FOOTER            = "${CMAKE_SOURCE_DIR}/doc/html/footer.html"
+HTML_FOOTER            = "${PROJECT_SOURCE_DIR}/doc/html/footer.html"
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading style
 # sheet that is used by each HTML page. It can be used to fine-tune the look of
@@ -1097,7 +1097,7 @@ HTML_FOOTER            = "${CMAKE_SOURCE_DIR}/doc/html/footer.html"
 # obsolete.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_STYLESHEET        = "${CMAKE_SOURCE_DIR}/doc/css/customdoxygen.css"
+HTML_STYLESHEET        = "${PROJECT_SOURCE_DIR}/doc/css/customdoxygen.css"
 
 # The HTML_EXTRA_STYLESHEET tag can be used to specify an additional user-
 # defined cascading style sheet that is included after the standard style sheets

@@ -242,17 +242,17 @@ endif()
 set(DIRS "${QT_INSTALL_DIR}/bin" "${QT_INSTALL_DIR}/lib" "${RUBY_INSTALL_DIR}/bin")
 
 if(APPLE)
-  install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
+  install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/openstudio_app/Resources/
           DESTINATION OpenStudioApp.app/Contents/Resources
           COMPONENT "Resources"
   )
 elseif(WIN32)
-  install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
+  install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/openstudio_app/Resources/
     DESTINATION Resources
     COMPONENT "Resources"
   )
 else()
-  install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/openstudio_app/Resources/
+  install(DIRECTORY ${PROJECT_SOURCE_DIR}/src/openstudio_app/Resources/
 	  DESTINATION Resources
     COMPONENT "Resources"
   )
@@ -298,7 +298,7 @@ endif()
 if(WIN32 OR APPLE)
   install(CODE "
     include(BundleUtilities)
-    include(\"${CMAKE_SOURCE_DIR}/CMake/FixupBundleOverrides.cmake\")
+    include(\"${PROJECT_SOURCE_DIR}/CMake/FixupBundleOverrides.cmake\")
     fixup_bundle(\"${APPS}\" \"${QTPLUGINS}\" \"${DIRS}\")
     " COMPONENT "OpenStudioApp" )
 endif()
