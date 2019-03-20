@@ -44,7 +44,7 @@
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
 
-#include "../utilities/geometry/Geometry.hpp"
+#include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/units/Unit.hpp"
 
 using namespace openstudio;

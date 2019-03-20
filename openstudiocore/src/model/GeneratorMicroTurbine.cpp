@@ -52,8 +52,8 @@
 
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 // TODO: Add DataTables if added later to OS?
 //#include "DataTables.hpp" // UniVariateTables and BiVariateTables

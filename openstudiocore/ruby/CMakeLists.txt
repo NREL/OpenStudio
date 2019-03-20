@@ -7,7 +7,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} --unresolved-symbols=ignore-all")
 endif()
 
-#add_definitions(-DQT_NO_VERSION_TAGGING)
 
 include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
@@ -63,9 +62,6 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioModel
  ruby_OpenStudioModelResources
  ruby_OpenStudioUtilitiesIdf
- #openstudio_utilities
- #${Boost_LIBRARIES}
- #${QT_STATIC_LIBS}
 )
 
 # openstudio ruby bindings to load into normal ruby
@@ -137,21 +133,21 @@ endforeach()
 
 target_link_libraries(openstudio_rb
   init_openstudio
-  openstudio_airflow_static
-  openstudio_model_static
-  openstudio_energyplus_static
-  openstudio_measure_static
-  openstudio_osversion_static
-  openstudio_sdd_static
-  openstudio_isomodel_static
-  openstudio_gbxml_static 
-  openstudio_radiance_static
+  openstudio_airflow
+  openstudio_model
+  openstudio_energyplus
+  openstudio_measure
+  openstudio_osversion
+  openstudio_sdd
+  openstudio_isomodel
+  openstudio_gbxml
+  openstudio_radiance
 )
 
 if(BUILD_OS_APP)
   target_link_libraries(openstudio_modeleditor_rb
     ruby_OpenStudioModelEditor
-    openstudio_modeleditor_static
+    openstudio_modeleditor
     ${QT_LIBS} 
   )
 

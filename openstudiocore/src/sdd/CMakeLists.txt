@@ -26,29 +26,15 @@ set(${target_name}_swig_src
   SDD.i
 )
 
-#set(${target_name}_depends
-#  ${Boost_LIBRARIES}
-#  ${CMAKE_THREAD_LIBS}
-#  openstudio_utilities
-#  openstudio_model
-#  openstudio_energyplus
-#  openstudio_osversion
-#  #zkexpat
-#)
-
-#add_library(${target_name} ${${target_name}_src})
-#target_link_libraries(${target_name} ${${target_name}_depends})
-#AddPCH(${target_name})
-
-set(${target_name}_static_depends
-  openstudio_model_static
-  openstudio_energyplus_static
-  openstudio_osversion_static
+set(${target_name}_depends
+  openstudio_model
+  openstudio_energyplus
+  openstudio_osversion
 )
 
-add_library(${target_name}_static ${${target_name}_src})
+add_library(${target_name} ${${target_name}_src})
 
-target_link_libraries(${target_name}_static ${${target_name}_static_depends})
+target_link_libraries(${target_name} ${${target_name}_depends})
 
 # No need to install static library
 #if(NOT APPLE)
@@ -63,8 +49,8 @@ CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
 if(BUILD_TESTING)
-  CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends}")
-  add_dependencies(${target_name}_static_tests openstudio_sdd_resources)
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+  add_dependencies(${target_name}_tests openstudio_sdd_resources)
 endif()
 
-MAKE_SWIG_TARGET(OpenStudioSDD SDD "${CMAKE_CURRENT_SOURCE_DIR}/SDD.i" "${${target_name}_swig_src}" ${target_name}_static "OpenStudioEnergyPlus;OpenStudioOSVersion")
+MAKE_SWIG_TARGET(OpenStudioSDD SDD "${CMAKE_CURRENT_SOURCE_DIR}/SDD.i" "${${target_name}_swig_src}" ${target_name} "OpenStudioEnergyPlus;OpenStudioOSVersion")

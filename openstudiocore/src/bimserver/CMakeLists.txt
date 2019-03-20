@@ -25,14 +25,14 @@ set(${target_name}_swig_src
 set(${target_name}_depends
   ${Boost_LIBRARIES}
   ${CMAKE_THREAD_LIBS}
-  openstudio_utilities_static
-  openstudio_model_static
-  openstudio_energyplus_static
-  openstudio_osversion_static
+  openstudio_utilities
+  openstudio_model
+  openstudio_energyplus
+  openstudio_osversion
   ${QT_LIBS}  
 )
 if(WIN32)
-  list(APPEND ${target_name}_depends qtwinmigrate_static)
+  list(APPEND ${target_name}_depends qtwinmigrate)
 endif()
 
 add_library(${target_name} ${${target_name}_src})

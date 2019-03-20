@@ -52,7 +52,6 @@ embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiocontam)
 source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
 
-
 set(${target_name}_test_src
   Test/AirflowFixture.hpp
   Test/AirflowFixture.cpp
@@ -67,53 +66,23 @@ set(${target_name}_swig_src
   Airflow.i
 )
 
-# Someone should make sure these are all really needed
-#set(${target_name}_depends
-#  ${Boost_LIBRARIES}
-#  ${CMAKE_THREAD_LIBS}
-#  openstudio_utilities
-#  openstudio_model
-#  openstudio_osversion
-#)
-
-#add_library(${target_name}
-#  ${${target_name}_src}
-#  ${EMBEDDED_OUTPUT}
-#)
-
-#target_link_libraries(${target_name} ${${target_name}_depends})
-
-#AddPCH(${target_name})
-
-# No need to install static library
-#if(NOT APPLE)
-#install(TARGETS ${target_name}
-#  RUNTIME DESTINATION bin
-#  LIBRARY DESTINATION lib
-#)
-#endif()
-
-#CREATE_SRC_GROUPS("${${target_name}_src}")
-#CREATE_SRC_GROUPS("${${target_name}_test_src}")
-#CREATE_SRC_GROUPS("${${target_name}_swig_src}")
-
-set(${target_name}_static_depends
+set(${target_name}_depends
   ${Boost_LIBRARIES}
   ${CMAKE_THREAD_LIBS}
-  openstudio_utilities_static
-  openstudio_model_static
-  openstudio_osversion_static
+  openstudio_utilities
+  openstudio_model
+  openstudio_osversion
 )
 
-add_library(${target_name}_static
+add_library(${target_name}
   ${${target_name}_src}
   ${EMBEDDED_OUTPUT}
 )
-target_link_libraries(${target_name}_static ${${target_name}_static_depends})
+target_link_libraries(${target_name} ${${target_name}_depends})
 
 if(BUILD_TESTING)
-  CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends}")
-  add_dependencies(${target_name}_static_tests openstudio_airflow_resources)
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+  add_dependencies(${target_name}_tests openstudio_airflow_resources)
 endif()
 
-MAKE_SWIG_TARGET(OpenStudioAirflow Airflow "${CMAKE_CURRENT_SOURCE_DIR}/Airflow.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioEnergyPlus)
+MAKE_SWIG_TARGET(OpenStudioAirflow Airflow "${CMAKE_CURRENT_SOURCE_DIR}/Airflow.i" "${${target_name}_swig_src}" ${target_name} OpenStudioEnergyPlus)

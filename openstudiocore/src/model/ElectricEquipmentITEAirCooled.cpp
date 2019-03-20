@@ -42,8 +42,8 @@
 #include "DefaultScheduleSet_Impl.hpp"
 #include "LifeCycleCost.hpp"
 #include "Model.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ElectricEquipment_ITE_AirCooled_FieldEnums.hxx>

@@ -21,74 +21,6 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     "MinSizeRel" "RelWithDebInfo")
 endif()
 
-# conan
-
-# Download automatically, you can also just copy the conan.cmake file
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
-    "${CMAKE_BINARY_DIR}/conan.cmake")
-endif()
-
-include(${CMAKE_BINARY_DIR}/conan.cmake)
-
-message("RUNNING CONAN")
-
-conan_check(VERSION 1.0.0 REQUIRED)
-
-conan_add_remote(NAME bincrafters
-  URL https://api.bintray.com/conan/bincrafters/public-conan)
-
-if(UNIX AND NOT APPLE)
-conan_cmake_run(REQUIRES 
-  OpenSSL/1.1.0g@conan/stable
-  boost_asio/1.69.0@bincrafters/stable
-  boost_program_options/1.69.0@bincrafters/stable
-  boost_regex/1.69.0@bincrafters/stable
-  boost_filesystem/1.69.0@bincrafters/stable
-  boost_crc/1.69.0@bincrafters/stable
-  boost_algorithm/1.69.0@bincrafters/stable
-  boost_uuid/1.69.0@bincrafters/stable
-  boost_log/1.69.0@bincrafters/stable
-  boost_numeric_ublas/1.69.0@bincrafters/stable
-  boost_functional/1.69.0@bincrafters/stable
-  boost_geometry/1.69.0@bincrafters/stable
-  pugixml/1.9@bincrafters/stable
-  jsoncpp/1.8.4@theirix/stable
-  zlib/1.2.11@conan/stable
-  sqlite3/3.27.2@bincrafters/stable
-  cpprestsdk/2.10.10@bincrafters/stable
-  websocketpp/0.8.1@bincrafters/stable
-  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
-  OPTIONS zlib:minizip=True jsoncpp:use_pic=True
-  BUILD missing boost_asio websocketpp
-  )
-else()
-conan_cmake_run(REQUIRES 
-  boost_program_options/1.69.0@bincrafters/stable
-  boost_regex/1.69.0@bincrafters/stable
-  boost_filesystem/1.69.0@bincrafters/stable
-  boost_crc/1.69.0@bincrafters/stable
-  boost_algorithm/1.69.0@bincrafters/stable
-  boost_uuid/1.69.0@bincrafters/stable
-  boost_log/1.69.0@bincrafters/stable
-  boost_numeric_ublas/1.69.0@bincrafters/stable
-  boost_functional/1.69.0@bincrafters/stable
-  boost_geometry/1.69.0@bincrafters/stable
-  pugixml/1.9@bincrafters/stable
-  jsoncpp/1.8.4@theirix/stable
-  zlib/1.2.11@conan/stable
-  sqlite3/3.27.2@bincrafters/stable
-  cpprestsdk/2.10.10@bincrafters/stable
-  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
-  OPTIONS zlib:minizip=True
-  BUILD missing
-  )
-
-endif()
-
-message("DONE RUNNING CONAN")
-
 if ( APPLE )
   find_library(SECURITY_FRAMEWORK Security)
 endif()
@@ -233,15 +165,15 @@ option(BUILD_PACKAGE "Build package" OFF)
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
 
 # Build shared OS libraries
-option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
-
-# Build the OpenStudio Application
-# This option will require shared libs
-option(BUILD_OS_APP "Build OS App" OFF)
+option(BUILD_SHARED_LIBS "Build OS libs as shared libraries.  Currently not tested." OFF)
 
 if(BUILD_SHARED_LIBS)
   add_definitions("-DSHARED_OS_LIBS")
 endif()
+
+# Build the OpenStudio Application
+# This option will require shared libs
+option(BUILD_OS_APP "Build OS App" OFF)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
@@ -318,6 +250,90 @@ if(MSVC)
   mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
 endif()
 
+###############################################################################
+
+###############################################################################
+# Conan
+
+# Download automatically, you can also just copy the conan.cmake file
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
+    "${CMAKE_BINARY_DIR}/conan.cmake")
+endif()
+
+include(${CMAKE_BINARY_DIR}/conan.cmake)
+
+message("RUNNING CONAN")
+
+conan_check(VERSION 1.0.0 REQUIRED)
+
+conan_add_remote(NAME bincrafters
+  URL https://api.bintray.com/conan/bincrafters/public-conan)
+ 
+set(CONAN_OPTIONS "")
+set(CONAN_BUILD "")
+if (MSVC)
+  set(CONAN_OPENSSL "")
+  set(CONAN_BOOST_ASIO "")
+  set(CONAN_WEBSOCKETPP "")
+  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
+  list(APPEND CONAN_BUILD "missing")
+elseif (APPLE)
+  set(CONAN_OPENSSL "")
+  set(CONAN_BOOST_ASIO "")
+  set(CONAN_WEBSOCKETPP "")
+  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
+  list(APPEND CONAN_BUILD "missing")
+else()
+  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
+  set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
+  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
+  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
+  list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
+  list(APPEND CONAN_BUILD "missing")
+  list(APPEND CONAN_BUILD "boost_asio")
+  list(APPEND CONAN_BUILD "websocketpp")
+endif()
+
+if (BUILD_TESTING)
+  set(CONAN_GTEST "gtest/1.8.1@bincrafters/stable")
+else()
+  set(CONAN_GTEST "")
+endif()
+
+# DLM: add option for shared libs if we are building shared?
+
+
+conan_cmake_run(REQUIRES 
+  ${CONAN_OPENSSL}
+  ${CONAN_BOOST_ASIO}
+  boost_program_options/1.69.0@bincrafters/stable
+  boost_regex/1.69.0@bincrafters/stable
+  boost_filesystem/1.69.0@bincrafters/stable
+  boost_crc/1.69.0@bincrafters/stable
+  boost_algorithm/1.69.0@bincrafters/stable
+  boost_uuid/1.69.0@bincrafters/stable
+  boost_log/1.69.0@bincrafters/stable
+  boost_numeric_ublas/1.69.0@bincrafters/stable
+  boost_functional/1.69.0@bincrafters/stable
+  boost_geometry/1.69.0@bincrafters/stable
+  pugixml/1.9@bincrafters/stable
+  jsoncpp/1.8.4@theirix/stable
+  zlib/1.2.11@conan/stable
+  fmt/5.2.1@bincrafters/stable
+  sqlite3/3.27.2@bincrafters/stable
+  cpprestsdk/2.10.10@bincrafters/stable
+  ${CONAN_WEBSOCKETPP}
+  geographiclib/1.49@bincrafters/stable
+  ${CONAN_GTEST}
+  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
+  OPTIONS ${CONAN_OPTIONS}
+  BUILD ${CONAN_BUILD}
+)
+
+#message("CONAN_TARGETS = ${CONAN_TARGETS}")
+message("DONE RUNNING CONAN")
 ###############################################################################
 
 ###############################################################################
@@ -961,33 +977,24 @@ endif()
 # make sure zconf.h can be found
 # include_directories(${CMAKE_BINARY_DIR}/src/zlib)
 
-if(BUILD_TESTING)
-  # force gtest to build as a static library no matter what, otherwise we get error about undefined death test symbols when building shared libs
-  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
-  set(BUILD_SHARED_LIBS OFF)
+#if(BUILD_TESTING)
+#  # force gtest to build as a static library no matter what, otherwise we get error about undefined death test symbols when building shared libs
+#  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
+#  set(BUILD_SHARED_LIBS OFF)
+#
+#  # Google test library
+#  set(gtest_force_shared_crt ON CACHE BOOL "gtest_force_shared_crt" FORCE) # in case we are linking with shared or static os libraries
+#  set(gtest_build_tests OFF CACHE BOOL "gtest_build_tests" FORCE)
+#  set(gtest_build_samples OFF CACHE BOOL "gtest_build_samples" FORCE)
+#  set(gtest_disable_pthreads OFF CACHE BOOL "gtest_disable_pthreads" FORCE)
+#  add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
+#  include_directories(SYSTEM src/google_test/include)
+#  add_subdirectory(src/google_test)
+#
+#  # restore BUILD_SHARED_LIBS
+#  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
+#endif()
 
-  # Google test library
-  set(gtest_force_shared_crt ON CACHE BOOL "gtest_force_shared_crt" FORCE) # in case we are linking with shared or static os libraries
-  set(gtest_build_tests OFF CACHE BOOL "gtest_build_tests" FORCE)
-  set(gtest_build_samples OFF CACHE BOOL "gtest_build_samples" FORCE)
-  set(gtest_disable_pthreads OFF CACHE BOOL "gtest_disable_pthreads" FORCE)
-  add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
-  include_directories(SYSTEM src/google_test/include)
-  add_subdirectory(src/google_test)
-
-  # restore BUILD_SHARED_LIBS
-  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
-endif()
-
-# GeographicLib
-set(GEOGRAPHICLIB_LIB_TYPE "STATIC" CACHE INTERNAL "Build Static Lib")
-set(GEOGRAPHICLIB_STATIC_LIB ON CACHE INTERNAL "Build Static Lib")
-set(GEOGRAPHICLIB_SHARED_LIB OFF CACHE INTERNAL "Build Shared Lib")
-set(GEOGRAPHICLIB_DOCUMENTATION OFF CACHE INTERNAL "Build Documentation")
-set(BUILD_NETGEOGRAPHICLIB OFF CACHE INTERNAL "Build .NET")
-set(GEOGRAPHICLIB_PRECISION "2" CACHE INTERNAL "Precision")
-include_directories(SYSTEM src/geographic_lib/include)
-add_subdirectory(src/geographic_lib)
 
 if(BUILD_OS_APP)
   # Qt
@@ -1150,199 +1157,6 @@ if(BUILD_OS_APP)
 
   set(CMAKE_AUTOMOC OFF)
 
-  # # download qt static
-  # if(WIN32)
-    # if(CMAKE_CL_64)
-      # set(QT_STATIC_ZIP_FILENAME "qt_5_11_msvc2017_64_static.zip")
-      # set(QT_STATIC_ZIP_EXPECTED_MD5 "1826e3b83c7103a2a82f463490630ab1")
-    # else()
-      # set(QT_STATIC_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_msvc2017_32_static.zip")
-      # set(QT_STATIC_ZIP_EXPECTED_MD5 "d03d2fae40cba06f8b4887c8dce64a07")
-    # endif()
-  # elseif(APPLE)
-    # set(QT_STATIC_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_osx_static.tar.gz")
-    # set(QT_STATIC_ZIP_EXPECTED_MD5 "d24756746d2fe07212070f675871cf93")
-  # elseif(EXISTS "/etc/redhat-release")
-    # set(QT_STATIC_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_redhat_static.tar.gz")
-    # set(QT_STATIC_ZIP_EXPECTED_MD5 "f5d9406349d1688e99db012862c22072")
-  # else()
-    # if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
-      # set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static.tar.gz")
-      # set(QT_STATIC_ZIP_EXPECTED_MD5 "fb9298e6d74c207742ab5ab50e18b8e2")
-    # else()
-      # # 16.04
-      # set(QT_STATIC_ZIP_FILENAME "qt_5_11_linux_static_xenial_harfbuzz.tar.gz")
-      # set(QT_STATIC_ZIP_EXPECTED_MD5 "e6969f05b84a20d4610b1d35170a2329")
-    # endif()
-  # endif()
-
-  # set(QT_STATIC_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_STATIC_ZIP_FILENAME}")
-  # if(EXISTS "${QT_STATIC_ZIP_LOCAL_PATH}")
-    # file(MD5 "${QT_STATIC_ZIP_LOCAL_PATH}" QT_STATIC_ZIP_MD5)
-  # endif()
-
-  # if(NOT QT_STATIC_ZIP_MD5 STREQUAL QT_STATIC_ZIP_EXPECTED_MD5)
-    # file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_STATIC_ZIP_FILENAME}"
-      # ${QT_STATIC_ZIP_LOCAL_PATH}
-      # INACTIVITY_TIMEOUT 120
-      # SHOW_PROGRESS
-      # EXPECTED_MD5 ${QT_STATIC_ZIP_EXPECTED_MD5})
-      # execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_STATIC_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  # endif()
-
-  # set(QT_STATIC_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-static-install/" CACHE PATH "QT Static Path")
-
-  # set(QT_DEFS -DQT_STATIC)
-
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/")
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtCore")
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtWidgets")
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtXml")
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtNetwork")
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtGui")
-  # list(APPEND QT_STATIC_INCLUDES "${QT_STATIC_INSTALL_DIR}/include/QtGui/5.11.2/QtGui")
-
-  # FIND_QT_STATIC_LIB("QtCore;Qt5Core" "${QT_STATIC_INSTALL_DIR}/lib/")
-  # FIND_QT_STATIC_LIB("QtWidgets;Qt5Widgets" "${QT_STATIC_INSTALL_DIR}/lib/")
-  # FIND_QT_STATIC_LIB("QtXml;Qt5Xml" "${QT_STATIC_INSTALL_DIR}/lib/")
-  # FIND_QT_STATIC_LIB("QtNetwork;Qt5Network" "${QT_STATIC_INSTALL_DIR}/lib/")
-  # FIND_QT_STATIC_LIB("Qt5Gui;Qt5Gui" "${QT_STATIC_INSTALL_DIR}/lib/")
-  # FIND_QT_STATIC_LIB("QtPrintSupport;Qt5PrintSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-
-  # if(WIN32)
-    # FIND_QT_STATIC_LIB("Qt5WinExtras" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtmain" "${QT_STATIC_INSTALL_DIR}/lib/")
-  # endif()
-
-  # if(UNIX)
-    # FIND_QT_STATIC_LIB("QtDBus;Qt5DBus" "${QT_STATIC_INSTALL_DIR}/lib/")
-
-    # find_package(OpenGL REQUIRED)
-    # list(APPEND QT_STATIC_LIBS "${OPENGL_LIBRARIES}")
-    # list(APPEND QT_STATIC_LIBS_D "${OPENGL_LIBRARIES}")
-  # endif()
-
-  # if(UNIX AND NOT APPLE)
-    # # http://doc.qt.io/qt-5/linux-requirements.html
-    # # DLM: the order of linking for static archives matter because symbols will only be included if they are needed by previous libraries
-    # # in some cases we may need to relink libraries a second time
-    # #list(APPEND QT_STATIC_LIBS "${QT_STATIC_INSTALL_DIR}/plugins/platforms/libqxcb.a")
-
-    # FIND_QT_STATIC_LIB("qxcb" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
-
-    # FIND_QT_STATIC_LIB("qtpcre2" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtharfbuzz" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5XcbQpa" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5ServiceSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5PlatformCompositorSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5Gui" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5DBus" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5Core" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("xcb-static" "${QT_STATIC_INSTALL_DIR}/lib/")
-
-    # FIND_QT_STATIC_LIB("expat" "*")
-
-    # FIND_QT_STATIC_LIB("png" "*")
-    # FIND_QT_STATIC_LIB("libjpeg;libjpeg.so;libjpeg.so.8" "*")
-    # FIND_QT_STATIC_LIB("freetype" "*")
-
-    # FIND_QT_STATIC_LIB("libdbus-1.so" "*")
-    # FIND_QT_STATIC_LIB("dbus-glib-1;libdbus-glib-1.so.2" "*")
-
-    # FIND_QT_STATIC_LIB("glib-2.0" "*")
-    # FIND_QT_STATIC_LIB("X11.so" "*")
-    # FIND_QT_STATIC_LIB("xcb.so" "*")
-    # FIND_QT_STATIC_LIB("X11-xcb.so" "*")
-    # FIND_QT_STATIC_LIB("Xext.so" "*")
-    # FIND_QT_STATIC_LIB("crypto.so" "*")
-
-    # FIND_QT_STATIC_LIB("icui18n" "*")
-    # FIND_QT_STATIC_LIB("icuuc" "*")
-
-    # if(EXISTS "/etc/redhat-release")
-      # FIND_QT_STATIC_LIB("rt" "*")
-
-      # FIND_QT_STATIC_LIB("gthread-2.0" "*")
-      # FIND_QT_STATIC_LIB("dbus-glib-1;libdbus-glib-1.so.2" "*")
-      # FIND_QT_STATIC_LIB("gobject-2.0" "*")
-      # FIND_QT_STATIC_LIB("db" "*")
-      # FIND_QT_STATIC_LIB("icui18n" "*")
-      # FIND_QT_STATIC_LIB("icuuc" "*")
-      # FIND_QT_STATIC_LIB("z.so" "*")
-    # else()
-      # FIND_QT_STATIC_LIB("fontconfig.so" "*")
-      # FIND_QT_STATIC_LIB("SM.so" "*")
-      # FIND_QT_STATIC_LIB("ICE.so" "*")
-      # FIND_QT_STATIC_LIB("Xi.so" "*")
-      # FIND_QT_STATIC_LIB("z.so" "*")
-    # endif()
-  # endif()
-
-  # if(APPLE)
-    # # DLM: the order of linking for static archives matter because symbols will only be included if they are needed by previous libraries
-    # # in some cases we may need to relink libraries a second time
-
-    # FIND_QT_STATIC_LIB("CoreFoundation" "*")
-    # FIND_QT_STATIC_LIB("CFNetwork" "*")
-    # FIND_QT_STATIC_LIB("CoreGraphics" "*")
-    # FIND_QT_STATIC_LIB("Carbon" "*")
-    # FIND_QT_STATIC_LIB("AppKit" "*")
-    # FIND_QT_STATIC_LIB("SystemConfiguration" "*")
-    # FIND_QT_STATIC_LIB("Security" "*")
-
-    # FIND_QT_STATIC_LIB("qtpcre" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qcocoa" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
-    # FIND_QT_STATIC_LIB("qtfreetype" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("poly2tri" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtharfbuzz" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5PlatformCompositorSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtpcre2" "${QT_STATIC_INSTALL_DIR}/lib/")
-
-    # FIND_QT_STATIC_LIB("CoreFoundation" "*")
-    # FIND_QT_STATIC_LIB("CFNetwork" "*")
-    # FIND_QT_STATIC_LIB("CoreGraphics" "*")
-    # FIND_QT_STATIC_LIB("Carbon" "*")
-    # FIND_QT_STATIC_LIB("AppKit" "*")
-    # FIND_QT_STATIC_LIB("SystemConfiguration" "*")
-    # FIND_QT_STATIC_LIB("Security" "*")
-    # FIND_QT_STATIC_LIB("IOKit" "*")
-    # FIND_QT_STATIC_LIB("cups" "*")
-  # endif()
-
-  # if(WIN32)
-    # FIND_QT_STATIC_LIB("Qt5FontDatabaseSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5PlatformCompositorSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5WindowsUIAutomationSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5ThemeSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("Qt5EventDispatcherSupport" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtfreetype" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtharfbuzz" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtpcre2" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qtlibpng" "${QT_STATIC_INSTALL_DIR}/lib/")
-    # FIND_QT_STATIC_LIB("qwindows" "${QT_STATIC_INSTALL_DIR}/plugins/platforms/")
-
-    # FIND_QT_STATIC_LIB("Crypt32" "*")
-    # FIND_QT_STATIC_LIB("imm32" "*")
-    # FIND_QT_STATIC_LIB("winmm" "*")
-    # FIND_QT_STATIC_LIB("Gdi32" "*")
-    # FIND_QT_STATIC_LIB("wsock32" "*")
-    # FIND_QT_STATIC_LIB("ws2_32" "*")
-    # FIND_QT_STATIC_LIB("iphlpapi" "*")
-    # FIND_QT_STATIC_LIB("dbghelp" "*")
-    # FIND_QT_STATIC_LIB("Shlwapi" "*")
-    # FIND_QT_STATIC_LIB("Netapi32" "*")
-    # FIND_QT_STATIC_LIB("version" "*")
-    # FIND_QT_STATIC_LIB("Userenv" "*")
-    # FIND_QT_STATIC_LIB("Dwmapi" "*")
-    # FIND_QT_STATIC_LIB("legacy_stdio_definitions" "*")
-
-
-    # if(BUILD_WITH_OPENSSL)
-      # FIND_QT_STATIC_LIB("libcrypto" "${OPENSSL_ROOT_DIR}/lib/")
-      # FIND_QT_STATIC_LIB("libssl" "${OPENSSL_ROOT_DIR}/lib/")
-    # endif()
-  # endif()
-
 endif()
 
 ###############################################################################
@@ -1351,11 +1165,9 @@ endif()
 # Project source directory
 include_directories("${CMAKE_HOME_DIRECTORY}/src/")
 
-# fmtlib
-include_directories("${CMAKE_HOME_DIRECTORY}/src/fmtlib/include")
-
 # Project binary directory
 include_directories("${CMAKE_BINARY_DIR}/src/")
+ 
 ###############################################################################
 
 ###############################################################################
@@ -1364,6 +1176,8 @@ include_directories("${CMAKE_BINARY_DIR}/src/")
 if(MSVC)
   # treat warnings as errors
   add_definitions(/WX)
+elseif()
+  add_definitions(-Werror)
 endif()
 
 include("embedded/EmbedFiles.cmake")
@@ -1535,7 +1349,7 @@ if(BUILD_DOCUMENTATION)
   endforeach()
 
   # Set up dependencies after all targets have been created
-  add_dependencies(openstudio_utilities_static
+  add_dependencies(openstudio_utilities
     CreateEmbeddedSource
   )
   add_dependencies(openstudio_utilities_doc
@@ -1587,16 +1401,16 @@ endif()
 set(TARGETS_FILE ${CMAKE_BINARY_DIR}/OpenStudioTargets.cmake)
 
 set(all_lib_targets
-  openstudio_osversion_static
-  openstudio_model_static
-  openstudio_utilities_static
-  openstudio_energyplus_static
-  openstudio_measure_static
-  openstudio_radiance_static
-  openstudio_gbxml_static
-  openstudio_isomodel_static
-  openstudio_sdd_static
-  openstudio_airflow_static
+  openstudio_osversion
+  openstudio_model
+  openstudio_utilities
+  openstudio_energyplus
+  openstudio_measure
+  openstudio_radiance
+  openstudio_gbxml
+  openstudio_isomodel
+  openstudio_sdd
+  openstudio_airflow
   ${ALL_RUBY_BINDING_TARGETS}
 )
 

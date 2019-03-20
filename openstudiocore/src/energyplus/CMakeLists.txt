@@ -614,14 +614,6 @@ set(${target_name}_swig_src
   EnergyPlus.i
 )
 
-### resource files
-#set(${target_name}_qrc
-#  EnergyPlus.qrc
-#)
-#
-## generate rules for building source files from the resources
-##qt5_add_resources(${target_name}_qrcs ${${target_name}_qrc})
-
 set(${target_name}_depends
   openstudio_model
 )
@@ -659,17 +651,13 @@ set(EMBEDDED_PATHS
 include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${FILES}" "${EMBEDDED_PATHS}" OUTPUT energyplus)
 
-#add_library(${target_name} ${${target_name}_src} ${OUTPUT})
-#target_link_libraries(${target_name} ${${target_name}_depends})
-#AddPCH(${target_name})
-
-set(${target_name}_static_depends
-  openstudio_model_static
+set(${target_name}_depends
+  openstudio_model
 )
 
-add_library(${target_name}_static ${${target_name}_src} ${OUTPUT})
+add_library(${target_name} ${${target_name}_src} ${OUTPUT})
 
-target_link_libraries(${target_name}_static ${${target_name}_static_depends})
+target_link_libraries(${target_name} ${${target_name}_depends})
 
 # No need to install static lib
 #if(NOT APPLE)
@@ -683,17 +671,16 @@ CREATE_SRC_GROUPS("${${target_name}_src}")
 #CREATE_SRC_GROUPS("${${target_name}_test_src}")
 #CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
-
 if(BUILD_TESTING)
 
-  CREATE_TEST_TARGETS(${target_name}_static "${${target_name}_test_src}" "${${target_name}_static_depends}")
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
   
-  add_dependencies(${target_name}_static_tests
+  add_dependencies(${target_name}_tests
     ResultsViewer_resources
     openstudio_energyplus_resources
   )
 
 endif()
 
-MAKE_SWIG_TARGET(OpenStudioEnergyPlus EnergyPlus "${CMAKE_CURRENT_SOURCE_DIR}/EnergyPlus.i" "${${target_name}_swig_src}" ${target_name}_static OpenStudioModel)
+MAKE_SWIG_TARGET(OpenStudioEnergyPlus EnergyPlus "${CMAKE_CURRENT_SOURCE_DIR}/EnergyPlus.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)
 

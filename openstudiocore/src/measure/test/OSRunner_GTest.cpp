@@ -34,11 +34,11 @@
 #include "../OSMeasure.hpp"
 #include "../ModelMeasure.hpp"
 
-#include "../model/Model.hpp"
+#include "../../model/Model.hpp"
 
-#include "../utilities/filetypes/WorkflowJSON.hpp"
-#include "../utilities/filetypes/WorkflowStep.hpp"
-#include "../utilities/filetypes/WorkflowStepResult.hpp"
+#include "../../utilities/filetypes/WorkflowJSON.hpp"
+#include "../../utilities/filetypes/WorkflowStep.hpp"
+#include "../../utilities/filetypes/WorkflowStepResult.hpp"
 
 #include <vector>
 #include <map>

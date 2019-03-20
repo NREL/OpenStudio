@@ -39,8 +39,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include "ElectricLoadCenterDistribution.hpp"
 #include "ElectricLoadCenterDistribution_Impl.hpp"

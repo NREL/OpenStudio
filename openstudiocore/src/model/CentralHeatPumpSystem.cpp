@@ -36,8 +36,8 @@
 #include "ModelObjectList_Impl.hpp"
 #include "CentralHeatPumpSystemModule.hpp"
 #include "CentralHeatPumpSystemModule_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include "PlantLoop.hpp"
 #include "PlantLoop_Impl.hpp"

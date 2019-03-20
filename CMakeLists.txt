@@ -416,14 +416,17 @@ if( BUILD_RUBY )
     # patch config.h to allow for multiple _MSC_VER values: 
     #   #if !(_MSC_VER == 1915 || _MSC_VER == 1916 || _MSC_VER == 1917 || _MSC_VER == 1918 || _MSC_VER == 1919)
     # tar -zcvf ruby_2_5_1_msvc2017_static.tar.gz Ruby-install    
+
+    # Note 2.5.2 is required to fix bug with Windows 10 and Ruby
     ExternalProject_Add(Ruby
       DEPENDS ZLib FFI
-      URL https://codeload.github.com/ruby/ruby/tar.gz/v2_5_1
-      URL_MD5 98b550a05fec0f7a43a22d6c37404fd4
+      URL https://codeload.github.com/ruby/ruby/tar.gz/v2_5_5
+      URL_HASH SHA256=A3BA7160C7E0CE03865CDABA9B7C26974A8A0FC23FC953269E0463C5ACAFB7A1
       BUILD_IN_SOURCE 1
       # DLM: ruby_2_5_1_msvc2017_static_v3.tar.gz on s3 was built with experimental Ruby.win.wopen.patch patch from ruby_patches branch, not using it for now
       #PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.wopen.patch
       PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.patch && ${PATCH_EXE} 
+
       CONFIGURE_COMMAND ""
       BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat" "$<CONFIG>"
       INSTALL_COMMAND ""
