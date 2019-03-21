@@ -127,8 +127,9 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDesuperheater(
       }
 
       if (objectType.empty() || objectName.empty()) {
+        // We log an error but let E+ fail eventually
         LOG(Error, "Something went wrong in the translation of " << modelObject.briefDescription() << ", couldn't retrieve the coil");
-        OS_ASSERT(false);
+        // OS_ASSERT(false);
       } else {
         object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceObjectType, objectType);
         object.setString(Coil_Heating_DesuperheaterFields::HeatingSourceName, objectName);
