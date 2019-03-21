@@ -69,7 +69,11 @@ class EditRubyMeasureView : public QWidget
   EditRubyMeasureView(bool applyMeasureNow);
   virtual ~EditRubyMeasureView() {}
 
+  // Editable name, maps to OSW 'name'
   QLineEdit * nameLineEdit;
+
+  // Non Editable name, maps to OSW 'measure_dir_name'
+  QLineEdit * nameNonEditableLineEdit;
 
   QTextEdit * descriptionTextEdit;
 
