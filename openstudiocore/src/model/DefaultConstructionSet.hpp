@@ -85,6 +85,8 @@ class MODEL_API DefaultConstructionSet : public ResourceObject {
 
   boost::optional<ConstructionBase> siteShadingConstruction() const;
 
+  boost::optional<ConstructionBase> adiabaticSurfaceConstruction() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -124,6 +126,10 @@ class MODEL_API DefaultConstructionSet : public ResourceObject {
   bool setSiteShadingConstruction(const ConstructionBase& construction);
 
   void resetSiteShadingConstruction();
+
+  bool setAdiabaticSurfaceConstruction(const ConstructionBase& construction);
+
+  void resetAdiabaticSurfaceConstruction();
 
   //@}
 

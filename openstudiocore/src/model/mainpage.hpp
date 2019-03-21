@@ -130,8 +130,8 @@ namespace model {
  *
  *  \subsection economics_classes Economics
  *
- *  This subsection of the model is not fully developed. Classes like ComponentCost_LineItem,
- *  and UtilityCost_Tariff are available, but we expect to do a full refactor of this area of
+ *  This subsection of the model is not fully developed. Classes like ComponentCost_LineItem
+ *  are available, but we expect to do a full refactor of this area of
  *  the model as time allows.
  *
  *  \subsection standards_classes Standards
@@ -920,15 +920,6 @@ namespace model {
  *    <li> LifeCycleCost_Parameters (ParentObject)
  *    <li> ComponentCost_Adjustments (ParentObject)
  *    <li> ComponentCost_Reference (ParentObject)
- *    <li> UtilityCost_Tariff (ParentObject)
- *      <ul>
- *        <li> UtilityCost_Qualify (ParentObject)
- *        <li> UtilityCost_Charge_Simple (ParentObject)
- *        <li> UtilityCost_Charge_Block (ParentObject)
- *        <li> UtilityCost_Ratchet (ParentObject)
- *        <li> UtilityCost_Variable (ParentObject)
- *        <li> UtilityCost_Computation (ParentObject)
- *      </ul>
  *  </ul>
  *
  *  Special Cases that can be Parented by many \link ModelObject ModelObjects \endlink

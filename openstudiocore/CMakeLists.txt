@@ -602,11 +602,10 @@ endif()
 
 # openstudio gems
 
-# to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
-# next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
+# build and release openstudio gems at https://github.com/NREL/OpenStudio-gems
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20190225.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "bf6d28d85aa2daf4b05282790d706a16")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20190307.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "1a00d0ee45731c0cce4ca7b73a438005")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -1323,7 +1322,9 @@ add_subdirectory(resources)
 
 add_subdirectory(ruby)
 
-add_subdirectory(sketchup_plugin)
+if(BUILD_OS_APP)
+  add_subdirectory(sketchup_plugin)
+endif()
 
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
@@ -1689,6 +1690,7 @@ endif()
 
 install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
 install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
+install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
 
 get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 file(GLOB ENERGYPLUS_FILES "${ENERGYPLUS_DIR}/energyplus*")
@@ -1747,11 +1749,6 @@ endif()
 include(CPack)
 include(CPackIFW)
 
-cpack_add_component(SketchUpPlugin
-  DISPLAY_NAME "SketchUp Plugin"
-  DESCRIPTION "SketchUp Plugin"
-)
-
 cpack_add_component(CLI
   DISPLAY_NAME "Command Line Interface"
   DESCRIPTION "Command Line Interface"
@@ -1760,26 +1757,6 @@ cpack_add_component(CLI
 cpack_add_component(RubyAPI
   DISPLAY_NAME "Ruby API"
   DESCRIPTION "Ruby API"
-)
-
-cpack_add_component(CSharpAPI
-  DISPLAY_NAME "C# API"
-  DESCRIPTION "C# API"
-)
-
-cpack_add_component(PAT
-  DISPLAY_NAME "Parametric Analysis Tool"
-  DESCRIPTION "Parametric Analysis Tool"
-)
-
-cpack_add_component(OpenStudioApp
-  DISPLAY_NAME "OpenStudio Application"
-  DESCRIPTION "OpenStudio Application"
-)
-
-cpack_add_component(DView
-  DISPLAY_NAME "DView"
-  DESCRIPTION "DView Application for viewing results"
 )
 
 cpack_add_component(EnergyPlus
@@ -1792,43 +1769,12 @@ cpack_add_component(Radiance
   DESCRIPTION "Full Radiance installation"
 )
 
-cpack_add_component(Resources
-  DISPLAY_NAME "Application Resources"
-  DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
-)
-
-cpack_ifw_configure_component(SketchUpPlugin
-  DEPENDS Resources
-  SCRIPT sketchup_plugin/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
 cpack_ifw_configure_component(CLI
   SCRIPT src/cli/install_operations.qs
   REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(RubyAPI
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(CSharpAPI
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(PAT
-  DEPENDS CLI RubyAPI
-  SCRIPT pat/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(OpenStudioApp
-  DEPENDS Resources CLI
-  SCRIPT src/openstudio_app/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(DView
   REQUIRES_ADMIN_RIGHTS
 )
 
@@ -1840,14 +1786,79 @@ cpack_ifw_configure_component(Radiance
   REQUIRES_ADMIN_RIGHTS
 )
 
-cpack_ifw_configure_component(Resources
-  REQUIRES_ADMIN_RIGHTS
-)
-
 cpack_ifw_configure_component(Unspecified
   SCRIPT src/install_utility/install_operations.qs
   REQUIRES_ADMIN_RIGHTS
 )
+
+if(BUILD_CSHARP_BINDINGS)
+  cpack_add_component(CSharpAPI
+    DISPLAY_NAME "C# API"
+    DESCRIPTION "C# API"
+  )
+
+  cpack_ifw_configure_component(CSharpAPI
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_OS_APP)
+  
+  cpack_add_component(Resources
+    DISPLAY_NAME "Application Resources"
+    DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
+  )
+  
+  cpack_add_component(SketchUpPlugin
+    DISPLAY_NAME "SketchUp Plugin"
+    DESCRIPTION "SketchUp Plugin"
+  )
+
+  cpack_add_component(OpenStudioApp
+    DISPLAY_NAME "OpenStudio Application"
+    DESCRIPTION "OpenStudio Application"
+  )
+
+  cpack_ifw_configure_component(Resources
+    REQUIRES_ADMIN_RIGHTS
+  )
+  
+  cpack_ifw_configure_component(SketchUpPlugin
+    DEPENDS Resources
+    SCRIPT sketchup_plugin/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+  
+  cpack_ifw_configure_component(OpenStudioApp
+    DEPENDS Resources CLI
+    SCRIPT src/openstudio_app/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_PAT)
+  cpack_add_component(PAT
+    DISPLAY_NAME "Parametric Analysis Tool"
+    DESCRIPTION "Parametric Analysis Tool"
+  )
+
+  cpack_ifw_configure_component(PAT
+    DEPENDS CLI RubyAPI
+    SCRIPT pat/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_DVIEW)
+  cpack_add_component(DView
+    DISPLAY_NAME "DView"
+    DESCRIPTION "DView Application for viewing results"
+  )
+
+  cpack_ifw_configure_component(DView
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
 
 if( BUILD_NUGET_PACKAGE )
   configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )
