@@ -82,6 +82,8 @@ namespace detail {
 
     virtual bool addToNode(Node & node) override;
 
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
     virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
     virtual std::vector<ModelObject> children() const override;
@@ -187,7 +189,6 @@ namespace detail {
 
     bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
   };
 
 } // detail

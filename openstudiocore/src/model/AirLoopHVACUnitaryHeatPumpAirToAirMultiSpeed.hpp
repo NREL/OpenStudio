@@ -55,8 +55,8 @@ class MODEL_API AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : public StraightCo
   explicit AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed(const Model& model,
     const HVACComponent& fan,
     const HVACComponent& heatingCoil,
-    const HVACComponent& supplementalHeatingCoil,
-    const HVACComponent& coolingCoil);
+    const HVACComponent& coolingCoil,
+    const HVACComponent& supplementalHeatingCoil);
 
   virtual ~AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed() {}
 
