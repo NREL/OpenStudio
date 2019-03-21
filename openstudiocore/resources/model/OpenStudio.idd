@@ -15432,7 +15432,8 @@ OS:CoilSystem:Cooling:DX:HeatExchangerAssisted,
   A6 ; \field Cooling Coil
        \required-field
        \type object-list
-       \object-list CoolingCoilsDXBypassFactorEmpirical
+       \object-list CoolingCoilsDXSingleSpeed
+       \object-list CoolingCoilsDXVariableSpeed
 
 OS:Coil:Cooling:DX:VariableRefrigerantFlow,
   A1, \field Handle

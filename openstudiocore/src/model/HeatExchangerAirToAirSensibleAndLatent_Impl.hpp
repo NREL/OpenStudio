@@ -78,6 +78,14 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    // Returns an eventual CoilSystemCooling Water/DX HeatExchangerAssisted
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    /* Override disallows addToNode when part of a CoilSystemCooling Water/DX HeatExchangerAssisted
+     * otherwise calls parent AirToAirComponent_Impl::addToNode
+     */
+    virtual bool addToNode(Node & node) override;
+
     virtual void autosize() override;
 
     virtual void applySizingValues() override;
