@@ -17,6 +17,8 @@ set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/openstudiocore")
 # We will use BINARY_DIR instead of CMAKE_BINARY_DIR to allow this to be built as a submodule
 set(PROJECT_BINARY_DIR "${CMAKE_BINARY_DIR}")
 
+#MESSAGE(FATAL_ERROR "CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}, BINARY_DIR=${BINARY_DIR}, PROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}, CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}, CMAKE_BINARY_DIR=${CMAKE_BINARY_DIR}")
+
 # Set a default build type if none was specified
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Setting build type to 'Release' as none was specified.")
@@ -352,7 +354,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
 set(LIBRARY_SEARCH_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Release" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug")
 
 # Include project specific macros
-include(ProjectMacros.cmake)
+include("${PROJECT_SOURCE_DIR}/ProjectMacros.cmake")
 
 # Search first in the binary dir, where conan will install finders, then
 # search for modules in the root dir to override cmake ones
@@ -1168,11 +1170,11 @@ endif()
 # Add to include path
 
 # Project source directory
-include_directories("${CMAKE_HOME_DIRECTORY}/src/")
+include_directories("${PROJECT_SOURCE_DIR}/src/")
 
 # Project binary directory
 include_directories("${PROJECT_BINARY_DIR}/src/")
- 
+
 ###############################################################################
 
 ###############################################################################
@@ -1185,10 +1187,10 @@ elseif()
   add_definitions(-Werror)
 endif()
 
-include("embedded/EmbedFiles.cmake")
-add_subdirectory("embedded")
+include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+add_subdirectory("${PROJECT_SOURCE_DIR}/embedded")
 if(BUILD_PAT)
-  add_subdirectory("pat")
+  add_subdirectory("${PROJECT_SOURCE_DIR}/pat")
 endif()
 
 # Each subfolder of src is a major sub-project
@@ -1210,7 +1212,7 @@ set(project_directories
 
 if(BUILD_OS_APP)
   if(WIN32)
-    include_directories("${CMAKE_HOME_DIRECTORY}/src/qtwinmigrate")
+    include_directories("${PROJECT_SOURCE_DIR}/src/qtwinmigrate")
     list(APPEND project_directories "qtwinmigrate")
   endif()
   list(APPEND project_directories "model_editor")
@@ -1220,36 +1222,36 @@ if(BUILD_OS_APP)
 endif()
 
 # Include the resources, should happen after find EnergyPlus
-add_subdirectory(resources)
+add_subdirectory("${PROJECT_SOURCE_DIR}/resources")
 
-add_subdirectory(ruby)
+add_subdirectory("${PROJECT_SOURCE_DIR}/ruby")
 
 if(BUILD_OS_APP)
-  add_subdirectory(sketchup_plugin)
+  add_subdirectory("${PROJECT_SOURCE_DIR}/sketchup_plugin)
 endif()
 
 foreach(D ${project_directories})
-  add_subdirectory(src/${D})
+  add_subdirectory(${PROJECT_SOURCE_DIR}/src/${D})
 endforeach()
 
 # csharp, after loading projects
 if(BUILD_CSHARP_BINDINGS)
-  add_subdirectory(csharp)
+  add_subdirectory("${PROJECT_SOURCE_DIR}/csharp")
 endif()
 
 # java, after loading projects
 if(BUILD_JAVA_BINDINGS)
-  add_subdirectory(java)
+  add_subdirectory("${PROJECT_SOURCE_DIR}/java")
 endif()
 
 # python, after loading projects
 if(BUILD_PYTHON_BINDINGS)
-  add_subdirectory(python)
+  add_subdirectory("${PROJECT_SOURCE_DIR}/python")
 endif()
 
 # v8-node
 if(BUILD_NODE_MODULES)
-  add_subdirectory(v8-node)
+  add_subdirectory("${PROJECT_SOURCE_DIR}/v8-node")
 endif()
 
 ###############################################################################
