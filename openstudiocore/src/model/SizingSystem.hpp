@@ -282,14 +282,6 @@ class MODEL_API SizingSystem : public ModelObject
   void autosizeCentralHeatingMaximumSystemAirFlowRatio();
 
 
-  /** Deprecated, forwards to centralHeatingMaximumSystemAirFlowRatio
-   * In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Central Heating Maximum System Air Flow Ratio"
-   * Prior to 2.6.2, this was returning a double (no autosize possible) */
-  OS_DEPRECATED boost::optional<double> minimumSystemAirFlowRatio() const;
-  /* Deprecated, forwards to setCentralHeatingMaximumSystemAirFlowRatio */
-  OS_DEPRECATED bool setMinimumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
-
-
   boost::optional<double> autosizedDesignOutdoorAirFlowRate() const;
   boost::optional<double> autosizedCentralHeatingMaximumSystemAirFlowRatio() const;
   boost::optional<double> autosizedCoolingDesignCapacity() const;
