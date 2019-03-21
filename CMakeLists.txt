@@ -411,11 +411,10 @@ if( BUILD_RUBY )
     # @$(WIN32DIR:/=\)\rtname conftest.exe >>$(MAKEFILE) is used to determine which MSCV Runtime is linked
     
     # Post Build:
-    # rename libs to : x64-msvcr140-ruby251.lib and x64-msvcr140-ruby251-static.lib 
-    # copy OpenSSL dlls into release and debug bin directories
+    # rename libs to : x64-msvcr140-ruby255.lib and x64-msvcr140-ruby255-static.lib, do not rename dll in bin dir
     # patch config.h to allow for multiple _MSC_VER values: 
     #   #if !(_MSC_VER == 1915 || _MSC_VER == 1916 || _MSC_VER == 1917 || _MSC_VER == 1918 || _MSC_VER == 1919)
-    # tar -zcvf ruby_2_5_1_msvc2017_static.tar.gz Ruby-install    
+    # tar -zcvf ruby_2_5_5_msvc2017_static.tar.gz Ruby-install    
 
     # Note 2.5.2 is required to fix bug with Windows 10 and Ruby
     ExternalProject_Add(Ruby

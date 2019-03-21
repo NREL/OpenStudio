@@ -644,10 +644,8 @@ mark_as_advanced(RUBY_INSTALL_DIR)
 if(NOT EXISTS ${RUBY_INSTALL_DIR})
   if(WIN32)
     if(CMAKE_CL_64)
-      # DLM: ruby_2_5_1_msvc2017_static_v3.tar.gz on s3 was built with
-      # experimental patch from ruby_patches branch, not using it for now
-      set(RUBY_ZIP_FILENAME "ruby_2_5_1_msvc2017_static_v4.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "5a3937cb811e75dd1f8360f5ac0d5d2d")
+      set(RUBY_ZIP_FILENAME "ruby_2_5_5_msvc2017_static.tar.gz")
+      set(RUBY_ZIP_EXPECTED_MD5 "032bbf7ca9163a3d66ab3c41c6d9bb82")
     else()
       set(RUBY_ZIP_FILENAME "DOES_NOT_EXIST_ruby_2_2_4_msvc2013_32_static.tar.gz")
       set(RUBY_ZIP_EXPECTED_MD5 "4c2055305b105b0c8210697aaa596419")
@@ -1218,10 +1216,6 @@ add_subdirectory(resources)
 
 add_subdirectory(ruby)
 
-if(BUILD_OS_APP)
-  add_subdirectory(sketchup_plugin)
-endif()
-
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
 endforeach()
@@ -1699,26 +1693,15 @@ if(BUILD_OS_APP)
   
   cpack_add_component(Resources
     DISPLAY_NAME "Application Resources"
-    DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
+    DESCRIPTION "Resource Files used by the OpenStudio Application"
   )
   
-  cpack_add_component(SketchUpPlugin
-    DISPLAY_NAME "SketchUp Plugin"
-    DESCRIPTION "SketchUp Plugin"
-  )
-
   cpack_add_component(OpenStudioApp
     DISPLAY_NAME "OpenStudio Application"
     DESCRIPTION "OpenStudio Application"
   )
 
   cpack_ifw_configure_component(Resources
-    REQUIRES_ADMIN_RIGHTS
-  )
-  
-  cpack_ifw_configure_component(SketchUpPlugin
-    DEPENDS Resources
-    SCRIPT sketchup_plugin/install_operations.qs
     REQUIRES_ADMIN_RIGHTS
   )
   
