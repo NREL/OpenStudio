@@ -277,6 +277,13 @@ target_link_libraries(openstudio
   openstudio_radiance_static
 )
 
+if (APPLE)
+  target_link_libraries(openstudio
+    ${OPENSSL_CRYPTO_LIBRARY} 
+    ${OPENSSL_SSL_LIBRARY}
+  ) 
+endif()
+
 if (UNIX AND NOT APPLE)
   target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY}  "dl" "crypt" "ssl")
   target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
