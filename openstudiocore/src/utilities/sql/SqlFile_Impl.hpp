@@ -795,6 +795,8 @@ namespace openstudio{
 
       bool isSupportedVersion() const;
 
+      bool hasYear() const;
+
     private:
 
       void init();
@@ -833,6 +835,8 @@ namespace openstudio{
       std::string m_sqliteFilename;
 
       bool m_supportedVersion;
+
+      bool m_hasYear;
 
       REGISTER_LOGGER("openstudio.energyplus.SqlFile");
     };
