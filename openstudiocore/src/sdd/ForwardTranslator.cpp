@@ -121,13 +121,16 @@
 #include "../model/DesignDay.hpp"
 #include "../model/WeatherFileConditionType.hpp"
 #include "../model/WeatherFileDays.hpp"
-#include "../model/UtilityCost_Charge_Block.hpp"
-#include "../model/UtilityCost_Charge_Simple.hpp"
-#include "../model/UtilityCost_Computation.hpp"
-#include "../model/UtilityCost_Qualify.hpp"
-#include "../model/UtilityCost_Ratchet.hpp"
-#include "../model/UtilityCost_Tariff.hpp"
-#include "../model/UtilityCost_Variable.hpp"
+
+// TODO: once UtilityCost objects are wrapped
+// #include "../model/UtilityCost_Charge_Block.hpp"
+// #include "../model/UtilityCost_Charge_Simple.hpp"
+// #include "../model/UtilityCost_Computation.hpp"
+// #include "../model/UtilityCost_Qualify.hpp"
+// #include "../model/UtilityCost_Ratchet.hpp"
+// #include "../model/UtilityCost_Tariff.hpp"
+// #include "../model/UtilityCost_Variable.hpp"
+
 #include "../model/ProgramControl.hpp"
 #include "../model/RadianceParameters.hpp"
 #include "../model/ShadowCalculation.hpp"
@@ -553,13 +556,6 @@ namespace sdd {
     m_ignoreTypes.push_back(model::TableMultiVariableLookup::iddObjectType());
     m_ignoreTypes.push_back(model::Timestep::iddObjectType());
     m_ignoreTypes.push_back(model::UtilityBill::iddObjectType());
-    m_ignoreTypes.push_back(model::UtilityCost_Charge_Block::iddObjectType());
-    m_ignoreTypes.push_back(model::UtilityCost_Charge_Simple::iddObjectType());
-    m_ignoreTypes.push_back(model::UtilityCost_Computation::iddObjectType());
-    m_ignoreTypes.push_back(model::UtilityCost_Qualify::iddObjectType());
-    m_ignoreTypes.push_back(model::UtilityCost_Ratchet::iddObjectType());
-    m_ignoreTypes.push_back(model::UtilityCost_Tariff::iddObjectType());
-    m_ignoreTypes.push_back(model::UtilityCost_Variable::iddObjectType());
     m_ignoreTypes.push_back(model::Version::iddObjectType());
     m_ignoreTypes.push_back(model::WeatherFile::iddObjectType());
     m_ignoreTypes.push_back(model::WeatherFileConditionType::iddObjectType());
@@ -569,6 +565,15 @@ namespace sdd {
     m_ignoreTypes.push_back(model::ZoneAirHeatBalanceAlgorithm::iddObjectType());
     m_ignoreTypes.push_back(model::ZoneCapacitanceMultiplierResearchSpecial::iddObjectType());
     m_ignoreTypes.push_back(model::ZoneHVACEquipmentList::iddObjectType());
+
+    // TODO: once UtilityCost objects are wrapped
+    //m_ignoreTypes.push_back(model::UtilityCost_Charge_Block::iddObjectType());
+    //m_ignoreTypes.push_back(model::UtilityCost_Charge_Simple::iddObjectType());
+    //m_ignoreTypes.push_back(model::UtilityCost_Computation::iddObjectType());
+    //m_ignoreTypes.push_back(model::UtilityCost_Qualify::iddObjectType());
+    //m_ignoreTypes.push_back(model::UtilityCost_Ratchet::iddObjectType());
+    //m_ignoreTypes.push_back(model::UtilityCost_Tariff::iddObjectType());
+    //m_ignoreTypes.push_back(model::UtilityCost_Variable::iddObjectType());
 
     return doc;
   }
