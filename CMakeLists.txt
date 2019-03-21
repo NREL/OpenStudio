@@ -271,13 +271,13 @@ endif()
 
 include(${PROJECT_BINARY_DIR}/conan.cmake)
 
-message("RUNNING CONAN")
+message(STATUS "RUNNING CONAN")
 
 conan_check(VERSION 1.0.0 REQUIRED)
 
 conan_add_remote(NAME bincrafters
   URL https://api.bintray.com/conan/bincrafters/public-conan)
- 
+
 set(CONAN_OPTIONS "")
 set(CONAN_BUILD "")
 if (MSVC)
@@ -312,7 +312,7 @@ endif()
 # DLM: add option for shared libs if we are building shared?
 
 
-conan_cmake_run(REQUIRES 
+conan_cmake_run(REQUIRES
   ${CONAN_OPENSSL}
   ${CONAN_BOOST_ASIO}
   boost_program_options/1.69.0@bincrafters/stable
@@ -340,7 +340,7 @@ conan_cmake_run(REQUIRES
 )
 
 #message("CONAN_TARGETS = ${CONAN_TARGETS}")
-message("DONE RUNNING CONAN")
+message(STATUS "DONE RUNNING CONAN")
 ###############################################################################
 
 ###############################################################################
