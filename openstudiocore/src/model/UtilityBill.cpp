@@ -1199,19 +1199,10 @@ Vector BillingPeriod::modelConsumptionValues() const
     Date endDate = this->endDate();
     while (date <= endDate){
 
-      boost::optional<DateTime> dateTime;
+      // Since E+ v8.9.0, sql has year field
+      DateTime dateTime(date, Time(1));
 
-      // Do not include year in date for query, trap for case of leap year
-      if ((date.monthOfYear() == MonthOfYear::Feb) && (date.dayOfMonth()==29)){
-        Date tmp(MonthOfYear::Feb, 28);
-        dateTime = DateTime(tmp, Time(1));
-      }else{
-        Date tmp(date.monthOfYear(), date.dayOfMonth());
-        dateTime = DateTime(tmp, Time(1));
-      }
-      OS_ASSERT(dateTime);
-
-      double value = timeseries->value(*dateTime);
+      double value = timeseries->value(dateTime);
       if (value == outOfRangeValue){
         LOG(Debug, "Could not find value of timeseries at dateTime " << dateTime);
         return Vector();
@@ -1285,12 +1276,12 @@ boost::optional<double> BillingPeriod::modelPeakDemand() const
     Date startDate = this->startDate();
     Date endDate = this->endDate();
 
-    // intentionally leave out calendar year
-    Date runPeriodStartDate = Date(startDate.monthOfYear(), startDate.dayOfMonth());
-    Date runPeriodEndDate = Date(endDate.monthOfYear(), endDate.dayOfMonth());
+    // Note JM 2019-03-18: Since E+ v8.9.0, Sql has a Year field, so no need to intentionally leave out calendar year
+    //Date runPeriodStartDate = Date(startDate.monthOfYear(), startDate.dayOfMonth());
+    //Date runPeriodEndDate = Date(endDate.monthOfYear(), endDate.dayOfMonth());
 
-    DateTime runPeriodStartDateTime = DateTime(runPeriodStartDate, Time(0,1,0,0));
-    DateTime runPeriodEndDateTime = DateTime(runPeriodEndDate, Time(0,24,0,0));
+    DateTime runPeriodStartDateTime = DateTime(startDate, Time(0,1,0,0));
+    DateTime runPeriodEndDateTime = DateTime(endDate, Time(0,24,0,0));
 
     Vector values = timeseries->values(runPeriodStartDateTime, runPeriodEndDateTime);
     unsigned numValues = values.size();

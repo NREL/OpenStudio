@@ -754,13 +754,38 @@ AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::AirLoopHVACUnitaryHeatPumpAirToAir
 {
   OS_ASSERT(getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl>());
 
-  setSupplyAirFan(fan);
+  bool ok = setSupplyAirFan(fan);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s supply fan to "
+                  << fan.briefDescription() << ".");
+  }
+
+  ok = setHeatingCoil( heatingCoil );
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s heating coil to "
+                  << heatingCoil.briefDescription() << ".");
+  }
+
+  ok = setCoolingCoil( coolingCoil );
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s cooling coil to "
+                  << coolingCoil.briefDescription() << ".");
+  }
+
+  ok = setSupplementalHeatingCoil( supplementalHeatingCoil );
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s supplemental heating coil to "
+                  << supplementalHeatingCoil.briefDescription() << ".");
+  }
+
   setSupplyAirFanPlacement("DrawThrough");
-  setHeatingCoil(heatingCoil);
-  setSupplementalHeatingCoil(supplementalHeatingCoil);
   setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-8.0);
   setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
-  setCoolingCoil(coolingCoil);
+
   autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
   setAuxiliaryOnCycleElectricPower(0.0);
   setAuxiliaryOffCycleElectricPower(0.0);
