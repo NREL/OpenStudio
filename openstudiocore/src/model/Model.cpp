@@ -3016,13 +3016,16 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(Timestep);
   REGISTER_CONSTRUCTOR(UnitarySystemPerformanceMultispeed);
   REGISTER_CONSTRUCTOR(UtilityBill);
-  REGISTER_CONSTRUCTOR(UtilityCost_Charge_Block);
-  REGISTER_CONSTRUCTOR(UtilityCost_Charge_Simple);
-  REGISTER_CONSTRUCTOR(UtilityCost_Computation);
-  REGISTER_CONSTRUCTOR(UtilityCost_Qualify);
-  REGISTER_CONSTRUCTOR(UtilityCost_Ratchet);
-  REGISTER_CONSTRUCTOR(UtilityCost_Tariff);
-  REGISTER_CONSTRUCTOR(UtilityCost_Variable);
+
+  // TODO: once UtilityCost objects are wrapped
+  // REGISTER_CONSTRUCTOR(UtilityCost_Charge_Block);
+  // REGISTER_CONSTRUCTOR(UtilityCost_Charge_Simple);
+  // REGISTER_CONSTRUCTOR(UtilityCost_Computation);
+  // REGISTER_CONSTRUCTOR(UtilityCost_Qualify);
+  // REGISTER_CONSTRUCTOR(UtilityCost_Ratchet);
+  // REGISTER_CONSTRUCTOR(UtilityCost_Tariff);
+  // REGISTER_CONSTRUCTOR(UtilityCost_Variable);
+
   REGISTER_CONSTRUCTOR(Version);
   REGISTER_CONSTRUCTOR(WaterHeaterMixed);
   REGISTER_CONSTRUCTOR(WaterHeaterHeatPump);
@@ -3497,13 +3500,16 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(Timestep);
   REGISTER_COPYCONSTRUCTORS(UnitarySystemPerformanceMultispeed);
   REGISTER_COPYCONSTRUCTORS(UtilityBill);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Block);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Simple);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Computation);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Qualify);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Ratchet);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Tariff);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Variable);
+
+  // TODO: once UtilityCost objects are wrapped
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Block);
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Simple);
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Computation);
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Qualify);
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Ratchet);
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Tariff);
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Variable);
+
   REGISTER_COPYCONSTRUCTORS(Version);
   REGISTER_COPYCONSTRUCTORS(WaterHeaterMixed);
   REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPump);
