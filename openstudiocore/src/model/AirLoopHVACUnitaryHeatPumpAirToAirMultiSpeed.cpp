@@ -761,21 +761,21 @@ AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed::AirLoopHVACUnitaryHeatPumpAirToAir
                   << fan.briefDescription() << ".");
   }
 
-  setHeatingCoil( heatingCoil );
+  ok = setHeatingCoil( heatingCoil );
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s heating coil to "
                   << heatingCoil.briefDescription() << ".");
   }
 
-  setCoolingCoil( coolingCoil );
+  ok = setCoolingCoil( coolingCoil );
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s cooling coil to "
                   << coolingCoil.briefDescription() << ".");
   }
 
-  setSupplementalHeatingCoil( supplementalHeatingCoil );
+  ok = setSupplementalHeatingCoil( supplementalHeatingCoil );
   if (!ok) {
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s supplemental heating coil to "
