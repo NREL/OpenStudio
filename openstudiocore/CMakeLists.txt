@@ -604,8 +604,8 @@ endif()
 
 # build and release openstudio gems at https://github.com/NREL/OpenStudio-gems
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20190307.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "1a00d0ee45731c0cce4ca7b73a438005")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20190321.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e600f9cd8f3673c7f6bff3d1bee8565e")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
