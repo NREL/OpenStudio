@@ -12,8 +12,8 @@ endif()
 
 project(OpenStudio VERSION 2.7.2)
 
-# The PROJECT_SOURCE_DIR here is OpenStudio/openstudiocore, which we will use instead of using CMAKE_SOURCE_DIR
-set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/openstudiocore")
+# The PROJECT_SOURCE_DIR here is OpenStudio/, which we will use instead of using CMAKE_SOURCE_DIR
+set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 # We will use BINARY_DIR instead of CMAKE_BINARY_DIR to allow this to be built as a submodule
 set(PROJECT_BINARY_DIR "${CMAKE_BINARY_DIR}")
 
@@ -637,7 +637,7 @@ endif()
 
 # Perl
 if(NOT UNIX)
-  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_SOURCE_DIR}/dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
     RESULT_VARIABLE rv)
   set(PERL_EXE "${PROJECT_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin/perl.exe")
@@ -889,7 +889,7 @@ if(UNIX)
   ExternalProject_Add(SWIG
     URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.12.tar.gz
     URL_MD5 a7d384966974ed79455a455b517ad83d
-    PATCH_COMMAND cp ${PROJECT_SOURCE_DIR}/../dependencies/pcre-8.31.tar.bz2 ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
+    PATCH_COMMAND cp ${PROJECT_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
     CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG-install
     BUILD_COMMAND ${MAKE}
     INSTALL_COMMAND ${MAKE} install
@@ -1187,10 +1187,10 @@ elseif()
   add_definitions(-Werror)
 endif()
 
-include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
-add_subdirectory("${PROJECT_SOURCE_DIR}/embedded")
+include("embedded/EmbedFiles.cmake")
+add_subdirectory("embedded")
 if(BUILD_PAT)
-  add_subdirectory("${PROJECT_SOURCE_DIR}/pat")
+  add_subdirectory("pat")
 endif()
 
 # Each subfolder of src is a major sub-project
@@ -1222,36 +1222,36 @@ if(BUILD_OS_APP)
 endif()
 
 # Include the resources, should happen after find EnergyPlus
-add_subdirectory("${PROJECT_SOURCE_DIR}/resources")
+add_subdirectory(resources)
 
-add_subdirectory("${PROJECT_SOURCE_DIR}/ruby")
+add_subdirectory(ruby)
 
 if(BUILD_OS_APP)
-  add_subdirectory("${PROJECT_SOURCE_DIR}/sketchup_plugin)
+  add_subdirectory(sketchup_plugin)
 endif()
 
 foreach(D ${project_directories})
-  add_subdirectory(${PROJECT_SOURCE_DIR}/src/${D})
+  add_subdirectory(src/${D})
 endforeach()
 
 # csharp, after loading projects
 if(BUILD_CSHARP_BINDINGS)
-  add_subdirectory("${PROJECT_SOURCE_DIR}/csharp")
+  add_subdirectory(csharp)
 endif()
 
 # java, after loading projects
 if(BUILD_JAVA_BINDINGS)
-  add_subdirectory("${PROJECT_SOURCE_DIR}/java")
+  add_subdirectory(java)
 endif()
 
 # python, after loading projects
 if(BUILD_PYTHON_BINDINGS)
-  add_subdirectory("${PROJECT_SOURCE_DIR}/python")
+  add_subdirectory(python)
 endif()
 
 # v8-node
 if(BUILD_NODE_MODULES)
-  add_subdirectory("${PROJECT_SOURCE_DIR}/v8-node")
+  add_subdirectory(v8-node)
 endif()
 
 ###############################################################################
