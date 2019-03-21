@@ -109,11 +109,7 @@ path setFileExtension(const path& p,
 {
   path result(p);
   path wext = toPath(ext);
-  std::string pext = openstudio::filesystem::extension(p);
-  if (!pext.empty()) {
-    // remove '.' from pext
-    pext = std::string(++pext.begin(),pext.end());
-  }
+  std::string pext = getFileExtension(p);
   if (!pext.empty()) {
     if (pext != wext.string()) {
       if (warnOnMismatch) {
