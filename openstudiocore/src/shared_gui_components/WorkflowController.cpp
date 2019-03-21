@@ -308,7 +308,6 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
   //  measureStep.setTaxonomy(tags[0]);
   //}
   measureStep.setName(name);
-  //measureStep.setDisplayName(name); // DLM: TODO
   measureStep.setDescription(projectMeasure->description());
   measureStep.setModelerDescription(projectMeasure->modelerDescription());
 
@@ -403,15 +402,17 @@ QString MeasureStepItem::name() const
   return result;
 }
 
-//QString MeasureStepItem::displayName() const
-//{
-//  // DLM: TODO, add display name
-//  QString result;
-//  if (boost::optional<std::string> name = m_step.name()){
-//    return result = QString::fromStdString(*name);
-//  }
-//  return result;
-//}
+QString MeasureStepItem::measureDirectory() const {
+  QString result;
+  // TODO: JM 2019-03-21 Should I ensure that I get just the measure directory NAME and not a path?
+  // Within OS App there's no risk since the measure_dir_name doesn't include "../../" or absolute path
+  // (QFileInfo.fileName)
+  if (boost::optional<std::string> name = m_step.measureDirName()){
+    return result = QString::fromStdString(*name);
+  }
+  return result;
+}
+
 
 MeasureType MeasureStepItem::measureType() const
 {

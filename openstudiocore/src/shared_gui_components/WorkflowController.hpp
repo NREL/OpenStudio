@@ -213,6 +213,9 @@ class MeasureStepItem : public OSListItem
   // arguments includes the full list of arguments calculated for the given model along with any values specified in the OSW
   std::vector<measure::OSArgument> arguments() const;
 
+  // Returns the name of the measure directory in question (not a path, just the last level)
+  QString measureDirectory() const;
+
   bool hasIncompleteArguments() const;
 
   std::vector<measure::OSArgument> incompleteArguments() const;
