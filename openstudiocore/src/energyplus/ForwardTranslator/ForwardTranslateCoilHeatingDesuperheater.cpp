@@ -101,7 +101,10 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDesuperheater(
   boost::optional<ModelObject> heatingSource = modelObject.heatingSource();
 
   if ( heatingSource ) {
-    if (boost::optional<IdfObject> _heatingSource = translateAndMapModelObject(*heatingSource)) {
+
+    boost::optional<IdfObject> _heatingSource = translateAndMapModelObject(*heatingSource);
+
+    if (_heatingSource) {
 
       // Note JM 2019-03-14:
       // If the coil in question is a DX coil (CoilCoolingDXSingleSpeed, CoilCoolingDXTwoSpeed, CoilCoolingDXTwoStageWithHumidityControlMode)
