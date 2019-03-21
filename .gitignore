@@ -19,6 +19,7 @@ build_profile/
 build-profile/
 core-build/
 super-build/
+super-build-release/
 /super-build-shared/
 /super-build-static/
 

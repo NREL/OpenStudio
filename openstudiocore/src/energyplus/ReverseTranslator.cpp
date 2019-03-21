@@ -929,14 +929,37 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateTimestep(workspaceObject);
       break;
     }
-  case openstudio::IddObjectType::UtilityCost_Charge_Simple :
-    {
-      break; // no-op
-    }
-  case openstudio::IddObjectType::UtilityCost_Qualify :
-    {
-      break; // no-op
-    }
+
+   // TODO: once UtilityCost objects are wrapped (and ReverseTranslated)
+  //case openstudio::IddObjectType::OS_UtilityCost_Charge_Block:
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Charge_Simple :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Computation :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Qualify :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Ratchet :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Tariff :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Variable :
+    //{
+      //break; // no-op
+    //}
+
   case openstudio::IddObjectType::Version :
    {
      modelObject = translateVersion(workspaceObject );

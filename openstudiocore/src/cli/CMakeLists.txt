@@ -252,7 +252,7 @@ endif()
 
 
 # -Wno-deprecated-declaration, /wd4996: suppresses deprecated warning
-# -Wno-register, /wd5033: ISO C++1z does not allow â€˜registerâ€™ storage class specifier
+# -Wno-register, /wd5033: ISO C++1z does not allow ‘register’ storage class specifier
 if(MSVC)
   set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
   set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
@@ -288,6 +288,13 @@ target_link_libraries(openstudio
 )
 
 # link CLI with ruby static library, ruby bindings (openstudio.so) are linked to dynamic ruby 
+if (APPLE)
+  target_link_libraries(openstudio
+    ${OPENSSL_CRYPTO_LIBRARY} 
+    ${OPENSSL_SSL_LIBRARY}
+  ) 
+endif()
+
 if (UNIX AND NOT APPLE)
   target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt)
   target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
