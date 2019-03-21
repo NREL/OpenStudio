@@ -134,10 +134,12 @@ EditRubyMeasureView::EditRubyMeasureView(bool applyMeasureNow)
 
   if(applyMeasureNow){
     nameLineEdit->setReadOnly(true);
-    nameNonEditableLineEdit->setVisible(false);
     descriptionTextEdit->setReadOnly(true);
+
     nameLineEdit->setDisabled(true);
     descriptionTextEdit->setDisabled(true);
+    nameNonEditableLineEdit->setDisabled(true);
+    modelerDescriptionTextEdit->setDisabled(true);
   }
 }
 

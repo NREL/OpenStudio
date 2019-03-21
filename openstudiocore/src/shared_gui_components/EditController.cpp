@@ -75,7 +75,6 @@ void EditController::setMeasureStepItem(measuretab::MeasureStepItem * measureSte
   editView->setView(editRubyMeasureView);
 
   // Ruby Measure Name
-
   editRubyMeasureView->nameLineEdit->setText(m_measureStepItem->name());
   connect(editRubyMeasureView->nameLineEdit, &QLineEdit::textEdited, m_measureStepItem.data(), &measuretab::MeasureStepItem::setName);
 
@@ -83,13 +82,10 @@ void EditController::setMeasureStepItem(measuretab::MeasureStepItem * measureSte
   editRubyMeasureView->nameNonEditableLineEdit->setText(m_measureStepItem->measureDirectory());
 
   // Measure Description
-
   editRubyMeasureView->descriptionTextEdit->setText(m_measureStepItem->description());
-
   connect(editRubyMeasureView->descriptionTextEdit, &QTextEdit::textChanged, this, &EditController::updateDescription);
 
   // Measure Modeler Description
-
   editRubyMeasureView->modelerDescriptionTextEdit->setText(m_measureStepItem->modelerDescription());
 
   // Inputs
