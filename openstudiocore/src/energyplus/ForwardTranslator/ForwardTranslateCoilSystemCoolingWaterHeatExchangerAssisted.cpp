@@ -120,6 +120,9 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilSystemCoolingWaterHea
       // Add IddObjectType::Coil_Cooling_Water_DetailedGeometry if implemented
       } else {
         // Shouldn't happen, accepts only Coil:Cooling:Water or Coil:Cooling:Water:DetailedGeometry
+        // Shouldn't happen, accepts only Coil:Cooling:DX:SingleSpeed or Coil:Cooling:DX:VariableSpeed
+        LOG(Fatal, modelObject.briefDescription() << " appears to have a cooling coil that shouldn't have been accepted: "
+            << coolingCoil.briefDescription());
         OS_ASSERT(false);
       }
     }

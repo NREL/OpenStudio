@@ -112,6 +112,8 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilSystemCoolingDXHeatEx
         idf->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName,hxExhaustAirInletNodeName);
       } else {
         // Shouldn't happen, accepts only Coil:Cooling:DX:SingleSpeed or Coil:Cooling:DX:VariableSpeed
+        LOG(Fatal, modelObject.briefDescription() << " appears to have a cooling coil that shouldn't have been accepted: "
+            << coolingCoil.briefDescription());
         OS_ASSERT(false);
       }
     }
