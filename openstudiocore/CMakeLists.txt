@@ -950,8 +950,8 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       set(QT_ZIP_EXPECTED_MD5 "25abd383e7db2dfd971b4a4ef145002b")
     endif()
   elseif( APPLE )
-      set(QT_ZIP_FILENAME "qt_5_6_osx_shared.tar.gz")
-      set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
+      set(QT_ZIP_FILENAME "qt_5_6_1_osx_shared_openssl_linked_1.0.2q.tar.gz")
+      set(QT_ZIP_EXPECTED_MD5 "27adab1b7517a9544acd5f69cbee3928")
   elseif(EXISTS "/etc/redhat-release")
     set(QT_ZIP_FILENAME "qt_5_6_redhat_shared.tar.gz")
     set(QT_ZIP_EXPECTED_MD5 "12576637037b8d5428e2d63a5e298131")
@@ -1083,8 +1083,8 @@ if( WIN32 )
     set(QT_STATIC_ZIP_EXPECTED_MD5 "d03d2fae40cba06f8b4887c8dce64a07")
   endif()
 elseif( APPLE )
-  set(QT_STATIC_ZIP_FILENAME "qt_5_6_osx_static.tar.gz")
-  set(QT_STATIC_ZIP_EXPECTED_MD5 "d24756746d2fe07212070f675871cf93")
+  set(QT_STATIC_ZIP_FILENAME "qt_5_6_1_osx_static_openssl_linked_1.0.2q.tar.gz")
+  set(QT_STATIC_ZIP_EXPECTED_MD5 "3fd24225db9a26cef48cca8d87859d0f")
 elseif(EXISTS "/etc/redhat-release")
   set(QT_STATIC_ZIP_FILENAME "qt_5_6_redhat_64_static.tar.gz")
   set(QT_STATIC_ZIP_EXPECTED_MD5 "52159660cbdd95a41ab84a2c43140f11")
@@ -1803,12 +1803,12 @@ if(BUILD_CSHARP_BINDINGS)
 endif()
 
 if(BUILD_OS_APP)
-  
+
   cpack_add_component(Resources
     DISPLAY_NAME "Application Resources"
     DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
   )
-  
+
   cpack_add_component(SketchUpPlugin
     DISPLAY_NAME "SketchUp Plugin"
     DESCRIPTION "SketchUp Plugin"
@@ -1822,13 +1822,13 @@ if(BUILD_OS_APP)
   cpack_ifw_configure_component(Resources
     REQUIRES_ADMIN_RIGHTS
   )
-  
+
   cpack_ifw_configure_component(SketchUpPlugin
     DEPENDS Resources
     SCRIPT sketchup_plugin/install_operations.qs
     REQUIRES_ADMIN_RIGHTS
   )
-  
+
   cpack_ifw_configure_component(OpenStudioApp
     DEPENDS Resources CLI
     SCRIPT src/openstudio_app/install_operations.qs
