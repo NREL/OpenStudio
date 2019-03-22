@@ -1524,6 +1524,18 @@ SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
     return getImpl<detail::SizingSystem_Impl>()->autosizedCentralHeatingMaximumSystemAirFlowRatio();
   }
 
+
+
+  // DEPRECATED: TODO REMOVE as soon as standards > 0.29.0 is relased
+  boost::optional<double> SizingSystem::minimumSystemAirFlowRatio() const {
+    return getImpl<detail::SizingSystem_Impl>()->centralHeatingMaximumSystemAirFlowRatio();
+  }
+  // DEPRECATED: TODO REMOVE as soon as standards > 0.29.0 is relased
+  bool SizingSystem::setMinimumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio) {
+    return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingMaximumSystemAirFlowRatio(centralHeatingMaximumSystemAirFlowRatio);
+  }
+
+
 } // model
 
 } // openstudio

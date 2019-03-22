@@ -32,7 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
-#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -281,6 +280,13 @@ class MODEL_API SizingSystem : public ModelObject
   bool setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
   void autosizeCentralHeatingMaximumSystemAirFlowRatio();
 
+  // DEPRECATED: TODO REMOVE as soon as standards > 0.29.0 is relased
+  /** Deprecated, forwards to centralHeatingMaximumSystemAirFlowRatio
+   * In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Central Heating Maximum System Air Flow Ratio"
+   * Prior to 2.6.2, this was returning a double (no autosize possible) */
+  boost::optional<double> minimumSystemAirFlowRatio() const;
+  /* Deprecated, forwards to setCentralHeatingMaximumSystemAirFlowRatio */
+  bool setMinimumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
 
   boost::optional<double> autosizedDesignOutdoorAirFlowRate() const;
   boost::optional<double> autosizedCentralHeatingMaximumSystemAirFlowRatio() const;
