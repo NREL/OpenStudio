@@ -3435,9 +3435,11 @@ namespace openstudio{
       std::vector< std::pair<int, DateTime> > reportIndicesDates;
       std::stringstream s;
       s << "select HourlyReportIndex, ";
-      if (hasYear()) {
-        s << "Year, ";
-      }
+      // TODO: Uncomment once E+ actually reports Year for DaylightMapHourlyReports
+      // cf https://github.com/NREL/EnergyPlus/issues/7225
+      // if (hasYear()) {
+      //   s << "Year, ";
+      // }
       s << "Month, DayOfMonth, Hour from daylightmaphourlyreports where MapNumber=" << mapIndex;
 
       sqlite3_stmt* sqlStmtPtr;
@@ -3450,10 +3452,12 @@ namespace openstudio{
         int b = 0;
         pair.first = sqlite3_column_int(sqlStmtPtr, b++);
 
+        // TODO: Uncomment once E+ actually reports Year for DaylightMapHourlyReports
+        // cf https://github.com/NREL/EnergyPlus/issues/7225
         boost::optional<unsigned> year;
-        if (hasYear()) {
-          year = sqlite3_column_int(sqlStmtPtr, b++);
-        }
+        // if (hasYear()) {
+        //   year = sqlite3_column_int(sqlStmtPtr, b++);
+        // }
 
         unsigned month = sqlite3_column_int(sqlStmtPtr, b++);
         unsigned day = sqlite3_column_int(sqlStmtPtr, b++);
