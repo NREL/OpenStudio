@@ -36,6 +36,9 @@
 #include "../CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../CoilCoolingDXTwoSpeed.hpp"
 #include "../CoilCoolingDXVariableSpeed.hpp"
+#include "../CoilHeatingGasMultiStage.hpp"
+#include "../CoilCoolingDXMultiSpeed.hpp"
+
 #include "../HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "../HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
@@ -243,11 +246,12 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_containingComponen
   // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed: shouldn't accept it
   {
     FanConstantVolume supplyFan(m);
-    CoilHeatingElectric coilHeatingElectric(m);
-    CoilCoolingDXSingleSpeed coilCoolingDX(m);
+    // CC and HC have to be multispeed ones
+    CoilHeatingGasMultiStage coilHeatingGasMulti(m);
+    CoilCoolingDXMultiSpeed coilCoolingDXMulti(m);
     CoilHeatingElectric supplementalHeatingCoil(m);
 
-    AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed unitary(m, supplyFan, coilHeatingElectric, coilCoolingDX, supplementalHeatingCoil);
+    AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed unitary(m, supplyFan, coilHeatingGasMulti, coilCoolingDXMulti, supplementalHeatingCoil);
 
     CoilSystemCoolingDXHeatExchangerAssisted coilSystem(m);
     EXPECT_FALSE(unitary.setCoolingCoil(coilSystem));
