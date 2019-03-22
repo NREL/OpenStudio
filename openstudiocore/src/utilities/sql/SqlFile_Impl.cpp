@@ -239,6 +239,9 @@ namespace openstudio{
       sqlite3_stmt *m_statement;
       bool m_transaction;
 
+      PreparedStatement & operator=(const PreparedStatement&) = delete;
+      PreparedStatement(const PreparedStatement&) = delete;
+
       PreparedStatement(const std::string &t_stmt, sqlite3 *t_db, bool t_transaction = false)
         : m_db(t_db), m_statement(nullptr), m_transaction(t_transaction)
       {
@@ -305,12 +308,11 @@ namespace openstudio{
 
 
     void SqlFile_Impl::addSimulation(const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
-        const openstudio::Calendar &t_calendar)
-    {
+      const openstudio::Calendar &t_calendar) {
       int nextSimulationIndex = getNextIndex("simulations", "SimulationIndex");
 
       std::stringstream timeStamp;
-      timeStamp << t_simulationTime.date().year() << "." << t_simulationTime.date().monthOfYear().value() << "." <<  t_simulationTime.date().dayOfMonth() << " " << t_simulationTime.time().toString();
+      timeStamp << t_simulationTime.date().year() << "." << t_simulationTime.date().monthOfYear().value() << "." << t_simulationTime.date().dayOfMonth() << " " << t_simulationTime.time().toString();
 
       std::stringstream insertSimulation;
 
@@ -332,12 +334,12 @@ namespace openstudio{
       int nextTimeIndex = getNextIndex("time", "TimeIndex");
 
 
-      PreparedStatement stmt = hasYear() ?
-
-        PreparedStatement("insert into time (TimeIndex, Year, Month, Day, Hour, Minute, Dst, Interval, IntervalType, SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag) values (?, ?, ?, ?, ?, 0, 0, 60, 1, ?, ?, ?, null)", m_db, true)
-      :
-        PreparedStatement("insert into time (TimeIndex, Month, Day, Hour, Minute, Dst, Interval, IntervalType, SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag) values (?, ?, ?, ?, 0, 0, 60, 1, ?, ?, ?, null)", m_db, true);
-
+      std::shared_ptr<PreparedStatement> stmt;
+      if (hasYear()) {
+        stmt = std::make_shared<PreparedStatement>("insert into time (TimeIndex, Year, Month, Day, Hour, Minute, Dst, Interval, IntervalType, SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag) values (?, ?, ?, ?, ?, 0, 0, 60, 1, ?, ?, ?, null)", m_db, true);
+      } else {
+        stmt = std::make_shared<PreparedStatement>("insert into time (TimeIndex, Month, Day, Hour, Minute, Dst, Interval, IntervalType, SimulationDays, DayType, EnvironmentPeriodIndex, WarmupFlag) values (?, ?, ?, ?, 0, 0, 60, 1, ?, ?, ?, null)", m_db, true);
+      }
 
       int simulationDay = 1;
       for (openstudio::Date d = t_calendar.startDate();
@@ -347,25 +349,25 @@ namespace openstudio{
         for (int i = 1; i <= 24; ++i)
         {
           int b = 0;
-          stmt.bind(++b, nextTimeIndex);
+          stmt->bind(++b, nextTimeIndex);
           if (hasYear()) {
-            stmt.bind(++b, d.year());
+            stmt->bind(++b, d.year());
           }
-          stmt.bind(++b, d.monthOfYear().value());
-          stmt.bind(++b, d.dayOfMonth());
-          stmt.bind(++b, i);
-          stmt.bind(++b, simulationDay);
+          stmt->bind(++b, d.monthOfYear().value());
+          stmt->bind(++b, d.dayOfMonth());
+          stmt->bind(++b, i);
+          stmt->bind(++b, simulationDay);
 
           if (t_calendar.isHoliday(d))
           {
-            stmt.bind(++b, "Holiday");
+            stmt->bind(++b, "Holiday");
           } else {
-            stmt.bind(++b, d.dayOfWeek().valueName());
+            stmt->bind(++b, d.dayOfWeek().valueName());
           }
 
-          stmt.bind(++b, nextEnvironmentPeriodIndex);
+          stmt->bind(++b, nextEnvironmentPeriodIndex);
 
-          stmt.execute();
+          stmt->execute();
 
           ++nextTimeIndex;
         }
@@ -598,6 +600,7 @@ namespace openstudio{
       // TODO: E+ doesn't have a Year field here: cf https://github.com/NREL/EnergyPlus/issues/7225
       // PreparedStatement stmt1("insert into daylightmaphourlyreports (HourlyReportIndex, MapNumber, Year, Month, DayOfMonth, Hour) values (?, ?, ?, ?, ?, ?)", m_db, true);
        // we'll let stmt1 have the transaction
+      // DLM: when implementing option for hasYear, use pointer to statement, assignment of PreparedStatement does not work
       PreparedStatement stmt1("insert into daylightmaphourlyreports (HourlyReportIndex, MapNumber, Month, DayOfMonth, Hour) values (?, ?, ?, ?, ?)", m_db, true);
 
       for (size_t dateidx = 0; dateidx < t_times.size(); ++dateidx)
@@ -646,6 +649,7 @@ namespace openstudio{
           for (size_t yidx = 0; yidx < t_ys.size(); ++yidx)
           {
             // we are already inside of a transaction from stmt1, so not creating a new one here
+            // DLM: when implementing option for hasYear, use pointer to statement, assignment of PreparedStatement does not work
             PreparedStatement stmt2("insert into daylightmaphourlydata (HourlyReportIndex, X, Y, Illuminance) values (?, ?, ?, ?)", m_db, false);
 
             stmt2.bind(1, hourlyReportIndex);
@@ -703,12 +707,13 @@ namespace openstudio{
 
       openstudio::DateTime firstdate = t_timeSeries.firstReportDateTime();
 
-      PreparedStatement stmt = hasYear() ?
+      std::shared_ptr<PreparedStatement> stmt;
+      if (hasYear()) {
         // we'll let stmt1 have the transaction
-        PreparedStatement("insert into reportdata (ReportDataIndex, TimeIndex, ReportDataDictionaryIndex, Value) values ( ?, (select TimeIndex from time where Year=? and Month=? and Day=? and Hour=? and Minute=? limit 1), ?, ?);", m_db, true)
-      :
-        PreparedStatement("insert into reportdata (ReportDataIndex, TimeIndex, ReportDataDictionaryIndex, Value) values ( ?, (select TimeIndex from time where Month=? and Day=? and Hour=? and Minute=? limit 1), ?, ?);", m_db, true);
-
+        stmt = std::make_shared<PreparedStatement>("insert into reportdata (ReportDataIndex, TimeIndex, ReportDataDictionaryIndex, Value) values ( ?, (select TimeIndex from time where Year=? and Month=? and Day=? and Hour=? and Minute=? limit 1), ?, ?);", m_db, true);
+      } else {
+        stmt = std::make_shared<PreparedStatement>("insert into reportdata (ReportDataIndex, TimeIndex, ReportDataDictionaryIndex, Value) values ( ?, (select TimeIndex from time where Month=? and Day=? and Hour=? and Minute=? limit 1), ?, ?);", m_db, true);
+      }
 
       for (size_t i = 0; i < values.size(); ++i)
       {
@@ -737,18 +742,18 @@ namespace openstudio{
 
         int reportdataindex = getNextIndex("reportdata", "ReportDataIndex");
         int b = 0;
-        stmt.bind(++b, reportdataindex);
+        stmt->bind(++b, reportdataindex);
         if (hasYear()) {
-          stmt.bind(++b, year);
+          stmt->bind(++b, year);
         }
-        stmt.bind(++b, month);
-        stmt.bind(++b, day);
-        stmt.bind(++b, hour);
-        stmt.bind(++b, minute);
-        stmt.bind(++b, datadicindex);
-        stmt.bind(++b, value);
+        stmt->bind(++b, month);
+        stmt->bind(++b, day);
+        stmt->bind(++b, hour);
+        stmt->bind(++b, minute);
+        stmt->bind(++b, datadicindex);
+        stmt->bind(++b, value);
 
-        stmt.execute();
+        stmt->execute();
       }
     }
 
