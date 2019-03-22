@@ -53,7 +53,7 @@ else
 end
 
 # require openstudio
-require 'openstudio'
+require_relative 'openstudio'
 
 # require openstudio_modeleditor.so
 require_relative 'openstudio_modeleditor.so'
