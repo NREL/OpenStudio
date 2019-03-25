@@ -268,8 +268,9 @@ message("RUNNING CONAN")
 
 conan_check(VERSION 1.0.0 REQUIRED)
 
-conan_add_remote(NAME bincrafters
-  URL https://api.bintray.com/conan/bincrafters/public-conan)
+conan_add_remote(
+  NAME bincrafters URL https://api.bintray.com/conan/bincrafters/public-conan
+  NAME lefticus URL https://api.bintray.com/conan/lefticus/nrel)
  
 set(CONAN_OPTIONS "")
 set(CONAN_BUILD "")
@@ -308,6 +309,7 @@ endif()
 conan_cmake_run(REQUIRES 
   ${CONAN_OPENSSL}
   ${CONAN_BOOST_ASIO}
+  openstudio-ruby/2.5.5@lefticus/testing
   boost_program_options/1.69.0@bincrafters/stable
   boost_regex/1.69.0@bincrafters/stable
   boost_filesystem/1.69.0@bincrafters/stable
@@ -636,84 +638,7 @@ if(NOT UNIX)
   set(PERL_EXE "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin/perl.exe")
 endif()
 
-# Ruby
 
-set(RUBY_INSTALL_DIR "" CACHE PATH "Path to Ruby Install")
-mark_as_advanced(RUBY_INSTALL_DIR)
-
-if(NOT EXISTS ${RUBY_INSTALL_DIR})
-  if(WIN32)
-    if(CMAKE_CL_64)
-      set(RUBY_ZIP_FILENAME "ruby_2_5_5_msvc2017_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "032bbf7ca9163a3d66ab3c41c6d9bb82")
-    else()
-      set(RUBY_ZIP_FILENAME "DOES_NOT_EXIST_ruby_2_2_4_msvc2013_32_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "4c2055305b105b0c8210697aaa596419")
-    endif()
-  elseif(APPLE)
-    set(RUBY_ZIP_FILENAME "ruby_2_5_1_osx_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "84abcea1411929c113f4030a3b2bd3ee")
-  elseif(EXISTS "/etc/redhat-release")
-    set(RUBY_ZIP_FILENAME "DOES_NOT_EXIST_ruby_2_2_4_redhat_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "d130a17b23cc532975665ee4e9095c8d")
-  else()
-    if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
-      # ubuntu 18.04
-      # This should work with 16.04 and 14.04 too.
-      set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "ea5e957ed189b8b2a854e4504d1ba1fa")
-    else()
-      # 16.04
-      set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static_xenial.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "832a185b0086941780c4f54489c7f465")
-    endif()
-  endif()
-
-  set(RUBY_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_ZIP_FILENAME}")
-  if(EXISTS "${RUBY_ZIP_LOCAL_PATH}")
-    file(MD5 "${RUBY_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
-  endif()
-
-  if(NOT RUBY_ZIP_MD5 STREQUAL RUBY_ZIP_EXPECTED_MD5)
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_ZIP_FILENAME}"
-      ${RUBY_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${RUBY_ZIP_EXPECTED_MD5})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-
-  if(WIN32)
-    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/release")
-  else()
-    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/")
-  endif()
-endif()
-
-message(STATUS "ruby_install_dir ${RUBY_INSTALL_DIR}")
-
-list(INSERT CMAKE_PREFIX_PATH 0 "${RUBY_INSTALL_DIR}")
-if(WIN32)
-  find_package(Ruby 2.5 REQUIRED)
-  get_filename_component(RUBY_LIBRARY_NAME_WE ${RUBY_LIBRARY} NAME_WE)
-  get_filename_component(RUBY_LIBRARY_DIRECTORY ${RUBY_LIBRARY} DIRECTORY)
-  get_filename_component(RUBY_LIBRARY_EXT ${RUBY_LIBRARY} EXT)
-  set(RUBY_STATIC_LIBRARY "${RUBY_LIBRARY_DIRECTORY}/${RUBY_LIBRARY_NAME_WE}-static${CMAKE_STATIC_LIBRARY_SUFFIX}")
-  set(RUBY_STATIC_LIBRARY_DEBUG "${RUBY_LIBRARY_DIRECTORY}/../../debug/lib/${RUBY_LIBRARY_NAME_WE}-static${CMAKE_STATIC_LIBRARY_SUFFIX}")
-  set(RUBY_LIBRARY_DEBUG "${RUBY_LIBRARY_DIRECTORY}/../../debug/lib/${RUBY_LIBRARY_NAME_WE}${CMAKE_STATIC_LIBRARY_SUFFIX}")
-else()
-  if(APPLE)
-    set(RUBY_STATIC_LIBRARY "${RUBY_INSTALL_DIR}/lib/libruby.2.5.1-static.a")
-  else()
-    set(RUBY_STATIC_LIBRARY "${RUBY_INSTALL_DIR}/lib/libruby-static.a")
-  endif()
-  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.5.0")
-  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.5.0/x86_64-linux")
-  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.5.0/x86_64-darwin16")
-  set(RUBY_INCLUDE_DIR "${RUBY_INSTALL_DIR}/include/ruby-2.5.0")
-  set(RUBY_EXECUTABLE "${RUBY_INSTALL_DIR}/bin/ruby")
-  set(RUBY_POSSIBLE_LIB_DIR "${RUBY_INSTALL_DIR}/lib")
-endif()
 
 # Mingw based ruby lib (only the dll stub library) from Ruby Installer
 # We need this for stand alone ruby bindings
@@ -839,7 +764,7 @@ if(BUILD_DVIEW)
 
     set(DVIEW_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
     if(EXISTS "${DVIEW_ZIP_LOCAL_PATH}")
-      file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
+      file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" DVIEW_ZIP_MD5)
     endif()
 
     if(NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)

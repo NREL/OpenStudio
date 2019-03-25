@@ -8,7 +8,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 
-include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
 # common library for openstudio.so and openstudio.exe
 
@@ -62,6 +62,7 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioModel
  ruby_OpenStudioModelResources
  ruby_OpenStudioUtilitiesIdf
+ CONAN_PKG::Ruby
 )
 
 # openstudio ruby bindings to load into normal ruby
