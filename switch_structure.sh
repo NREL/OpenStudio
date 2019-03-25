@@ -32,6 +32,9 @@ declare -a DEFAULT_OS_STRUCT=(
 OS_STRUCT_BAK=.oscore_struct.bak
 OS_STRUCT_FILE=.current_structure
 
+# Read the variable from the file
+source $OS_STRUCT_FILE
+
 if [ "$STRUCTURE" = "NEW" ]; then
 
   echo "Going from 3.x structure to historical structure"
