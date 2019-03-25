@@ -664,9 +664,9 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
       set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static.tar.gz")
       set(RUBY_ZIP_EXPECTED_MD5 "ea5e957ed189b8b2a854e4504d1ba1fa")
     else()
-      # 16.04
+      # 16.04, built against openssl 1.1.0g
       set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static_xenial.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "832a185b0086941780c4f54489c7f465")
+      set(RUBY_ZIP_EXPECTED_MD5 "acfa24444c1040d0aadefe91d26a48a3")
     endif()
   endif()
 
@@ -1165,7 +1165,7 @@ include_directories("${CMAKE_HOME_DIRECTORY}/src/")
 
 # Project binary directory
 include_directories("${CMAKE_BINARY_DIR}/src/")
- 
+
 ###############################################################################
 
 ###############################################################################
@@ -1691,12 +1691,12 @@ if(BUILD_CSHARP_BINDINGS)
 endif()
 
 if(BUILD_OS_APP)
-  
+
   cpack_add_component(Resources
     DISPLAY_NAME "Application Resources"
     DESCRIPTION "Resource Files used by the OpenStudio Application"
   )
-  
+
   cpack_add_component(OpenStudioApp
     DISPLAY_NAME "OpenStudio Application"
     DESCRIPTION "OpenStudio Application"
@@ -1705,7 +1705,7 @@ if(BUILD_OS_APP)
   cpack_ifw_configure_component(Resources
     REQUIRES_ADMIN_RIGHTS
   )
-  
+
   cpack_ifw_configure_component(OpenStudioApp
     DEPENDS Resources CLI
     SCRIPT src/openstudio_app/install_operations.qs
