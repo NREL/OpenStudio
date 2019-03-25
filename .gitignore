@@ -32,4 +32,4 @@ developer/msvc/Visualizers/all_concat.natvis
 .vs/
 *.cache
 
-.oscore_struct.bak
+# .oscore_struct.bak
