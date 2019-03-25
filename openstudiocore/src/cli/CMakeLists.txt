@@ -2,18 +2,6 @@ if (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 endif (APPLE)
 
-if( UNIX )
-  file(GLOB EXTENSION_LIBS "${RUBY_INSTALL_DIR}/lib/ext/*.a")
-
-  file(GLOB ENC_LIBS "${RUBY_INSTALL_DIR}/lib/enc/*.a")
-else()
-  file(GLOB EXTENSION_LIBS_RELEASE "${RUBY_INSTALL_DIR}/lib/ext/*.lib")
-  file(GLOB EXTENSION_LIBS_DEBUG "${RUBY_INSTALL_DIR}/../debug/lib/ext/*.lib")
-
-  file(GLOB ENC_LIBS_RELEASE "${RUBY_INSTALL_DIR}/lib/enc/*.lib")
-  file(GLOB ENC_LIBS_DEBUG "${RUBY_INSTALL_DIR}/../debug/lib/enc/*.lib")
-endif()
-
 set(INIT_CALLS "")
 set(INIT_DECLARATIONS "")
 foreach(LIB ${EXTENSION_LIBS_LIST})
@@ -265,14 +253,26 @@ endif()
 
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
-target_link_libraries(openstudio init_openstudio)
+# We are setting up a set of artificial dependencies here so that
+# cmake knows how to order the libraries properly
+#
+# Better: properly specifying these libs in the conan recipe
+# At the moment this is not possible due to some of them coming from the OS and some
+# being built by this project
+# TODO: Continue to make the conan deps more robust and get this sorted out
+add_library(additional_ruby_libs empty.cpp)
 
-if( UNIX )
- target_link_libraries(openstudio ${EXTENSION_LIBS} ${ENC_LIBS} ${ADDITIONAL_RUBY_LIBS})
+add_library(ruby_libs empty.cpp)
+target_link_libraries(ruby_libs PUBLIC CONAN_PKG::openstudio-ruby)
+target_link_libraries(ruby_libs PUBLIC additional_ruby_libs)
+
+
+target_link_libraries(openstudio init_openstudio ruby_libs)
+
+if( NOT UNIX )
+  LINK_DEBUG_AND_RELEASE(additional_ruby_libs "${ADDITIONAL_RUBY_LIBS_DEBUG}" "${ADDITIONAL_RUBY_LIBS_RELEASE}")
 else()
- LINK_DEBUG_AND_RELEASE(openstudio "${EXTENSION_LIBS_DEBUG}" "${EXTENSION_LIBS_RELEASE}")
- LINK_DEBUG_AND_RELEASE(openstudio "${ENC_LIBS_DEBUG}" "${ENC_LIBS_RELEASE}")
- LINK_DEBUG_AND_RELEASE(openstudio "${ADDITIONAL_RUBY_LIBS_DEBUG}" "${ADDITIONAL_RUBY_LIBS_RELEASE}")
+  target_link_libraries(additional_ruby_libs ${ADDITIONAL_RUBY_LIBS})
 endif()
 
 target_link_libraries(openstudio
@@ -296,19 +296,18 @@ if (APPLE)
 endif()
 
 if (UNIX AND NOT APPLE)
-  target_link_libraries(openstudio CONAN_PKG::openstudio-ruby ${EXTENSION_LIBS} dl crypt)
+  target_link_libraries(additional_ruby_libs dl crypt)
   target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
 elseif(WIN32)
-  target_link_libraries(openstudio CONAN_PKG::openstudio-ruby)
   target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi)
   set_target_properties(openstudio PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
-  target_link_libraries(openstudio CONAN_PKG::openstudio-ruby)
 endif()
 
 if( APPLE )
   target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY})
 endif()
+
 
 install(TARGETS openstudio DESTINATION bin COMPONENT "CLI")
 

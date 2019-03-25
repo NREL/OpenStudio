@@ -338,6 +338,11 @@ conan_cmake_run(REQUIRES
 message("DONE RUNNING CONAN")
 ###############################################################################
 
+get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio-ruby INTERFACE_INCLUDE_DIRECTORIES)
+
+message("Ruby include: ${RUBY_INCLUDE_DIRS}")
+
+
 ###############################################################################
 # CMake control
 
@@ -716,6 +721,9 @@ else()
   set(ADDITIONAL_RUBY_LIBS_RELEASE ${FFI} Iphlpapi)
   set(ADDITIONAL_RUBY_LIBS_DEBUG ${FFID} Iphlpapi)
 endif()
+
+
+
 
 # openstudio gems
 

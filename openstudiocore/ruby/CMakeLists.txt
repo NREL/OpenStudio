@@ -16,6 +16,7 @@ add_library( init_openstudio STATIC
   init_openstudio.cpp
   RubyAPI.hpp
 )
+target_include_directories(init_openstudio PRIVATE ${RUBY_INCLUDE_DIRS})
 
 if(MSVC)
   # TODO: JM 2019-01-04: @macumber it seems like all three targets use the same COMPILE_FLAGS,
@@ -62,7 +63,6 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioModel
  ruby_OpenStudioModelResources
  ruby_OpenStudioUtilitiesIdf
- CONAN_PKG::openstudio-ruby
 )
 
 # openstudio ruby bindings to load into normal ruby
@@ -73,6 +73,7 @@ add_library(openstudio_rb MODULE
 )
 set_target_properties(openstudio_rb PROPERTIES PREFIX "")
 set_target_properties(openstudio_rb PROPERTIES OUTPUT_NAME openstudio)
+target_include_directories(openstudio_rb PRIVATE ${RUBY_INCLUDE_DIRS})
 
 if(BUILD_OS_APP)
   add_library(openstudio_modeleditor_rb MODULE
