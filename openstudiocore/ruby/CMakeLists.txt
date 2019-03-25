@@ -62,7 +62,7 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioModel
  ruby_OpenStudioModelResources
  ruby_OpenStudioUtilitiesIdf
- CONAN_PKG::Ruby
+ CONAN_PKG::openstudio-ruby
 )
 
 # openstudio ruby bindings to load into normal ruby

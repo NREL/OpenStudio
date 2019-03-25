@@ -28,10 +28,10 @@ endforeach()
 
 CONFIGURE_FILE_WITH_CHECKSUM("InitMacros.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/InitMacros.hxx")
 
-file(GLOB_RECURSE  EXTENSION_RB  FOLLOW_SYMLINKS "${RUBY_POSSIBLE_LIB_DIR}/**/*.rb")
+file(GLOB_RECURSE  EXTENSION_RB  FOLLOW_SYMLINKS "${CONAN_LIB_DIRS_OPENSTUDIO-RUBY}/**/*.rb")
 
 foreach( _FILE ${EXTENSION_RB} )
-  file(RELATIVE_PATH LOCATION ${RUBY_POSSIBLE_LIB_DIR} ${_FILE})
+  file(RELATIVE_PATH LOCATION ${CONAN_LIB_DIRS_OPENSTUDIO-RUBY} ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
@@ -195,7 +195,7 @@ set_source_files_properties(EmbeddedScripting.i
   PROPERTIES CPLUSPLUS true
 )
 
-include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
@@ -296,14 +296,14 @@ if (APPLE)
 endif()
 
 if (UNIX AND NOT APPLE)
-  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY} ${EXTENSION_LIBS} dl crypt)
+  target_link_libraries(openstudio CONAN_PKG::openstudio-ruby ${EXTENSION_LIBS} dl crypt)
   target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
 elseif(WIN32)
-  target_link_libraries(openstudio debug ${RUBY_STATIC_LIBRARY_DEBUG} optimized ${RUBY_STATIC_LIBRARY})
+  target_link_libraries(openstudio CONAN_PKG::openstudio-ruby)
   target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi)
   set_target_properties(openstudio PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
-  target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY})
+  target_link_libraries(openstudio CONAN_PKG::openstudio-ruby)
 endif()
 
 if( APPLE )
