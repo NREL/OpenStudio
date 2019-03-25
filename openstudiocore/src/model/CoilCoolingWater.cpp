@@ -341,21 +341,31 @@ namespace detail {
 
   bool CoilCoolingWater_Impl::addToNode(Node & node)
   {
-    bool success;
+    bool success(false);
 
-    success =  WaterToAirComponent_Impl::addToNode( node );
-    auto t_containingZoneHVACComponent = containingZoneHVACComponent();
+    auto t_containingHVACComponent = containingHVACComponent();
+    auto t_airLoop = node.airLoopHVAC();
 
-    if( success && (! t_containingZoneHVACComponent) ) {
-      if( auto t_waterInletModelObject = waterInletModelObject() ) {
-        if( auto oldController = controllerWaterCoil() ) {
-          oldController->remove();
+    if (t_airLoop &&
+        t_containingHVACComponent &&
+        t_containingHVACComponent->optionalCast<CoilSystemCoolingWaterHeatExchangerAssisted>()) {
+      LOG(Warn, this->briefDescription() << " cannot be connected directly to an AirLoopHVAC when it's part of a parent CoilSystemCoolingWaterHeatExchangerAssisted. Please call CoilSystemCoolingWaterHeatExchangerAssisted::addToNode instead");
+    } else {
+
+      success =  WaterToAirComponent_Impl::addToNode( node );
+      auto t_containingZoneHVACComponent = containingZoneHVACComponent();
+
+      if( success && (! t_containingZoneHVACComponent) ) {
+        if( auto t_waterInletModelObject = waterInletModelObject() ) {
+          if( auto oldController = controllerWaterCoil() ) {
+            oldController->remove();
+          }
+
+          Model t_model = model();
+          ControllerWaterCoil controller(t_model);
+          controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(getObject<HVACComponent>());
+          controller.setAction("Reverse");
         }
-
-        Model t_model = model();
-        ControllerWaterCoil controller(t_model);
-        controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(getObject<HVACComponent>());
-        controller.setAction("Reverse");
       }
     }
 

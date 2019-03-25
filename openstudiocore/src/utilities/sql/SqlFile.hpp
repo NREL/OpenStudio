@@ -104,6 +104,9 @@ class UTILITIES_API SqlFile {
   /// \returns true if the sqlfile is of a version that's in our supported range
   bool supportedVersion() const;
 
+  // Check if the SQLFile contains the 'Year' field (E+ >= 8.9.0)
+  bool hasYear() const;
+
   /// close the file
   bool close();
 

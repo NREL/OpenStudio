@@ -574,8 +574,9 @@ namespace detail {
   {
     bool isAllowedType = false;
 
-    if( hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed )
-    {
+    if((hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed) ||
+       (hvacComponent.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted)
+      ) {
       isAllowedType = true;
     }
 

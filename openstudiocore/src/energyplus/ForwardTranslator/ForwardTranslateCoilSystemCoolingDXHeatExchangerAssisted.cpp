@@ -41,10 +41,6 @@
 #include <utilities/idd/CoilSystem_Cooling_DX_HeatExchangerAssisted_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_DX_SingleSpeed_ThermalStorage_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_DX_MultiSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
-#include <utilities/idd/Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -111,21 +107,14 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilSystemCoolingDXHeatEx
       if( idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed ) {
         idf->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,hxSupplyAirOutletNodeName);
         idf->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName,hxExhaustAirInletNodeName);
-      } else if( idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_MultiSpeed ) {
-        idf->setString(Coil_Cooling_DX_MultiSpeedFields::AirInletNodeName,hxSupplyAirOutletNodeName);
-        idf->setString(Coil_Cooling_DX_MultiSpeedFields::AirOutletNodeName,hxExhaustAirInletNodeName);
-      } else if( idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_SingleSpeed_ThermalStorage ) {
-        idf->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirInletNodeName,hxSupplyAirOutletNodeName);
-        idf->setString(Coil_Cooling_DX_SingleSpeed_ThermalStorageFields::CondenserAirOutletNodeName,hxExhaustAirInletNodeName);
-      } else if( idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_TwoSpeed ) {
-        idf->setString(Coil_Cooling_DX_TwoSpeedFields::AirInletNodeName,hxSupplyAirOutletNodeName);
-        idf->setString(Coil_Cooling_DX_TwoSpeedFields::AirOutletNodeName,hxExhaustAirInletNodeName);
-      } else if( idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode ) {
-        idf->setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirInletNodeName,hxSupplyAirOutletNodeName);
-        idf->setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirOutletNodeName,hxExhaustAirInletNodeName);
       } else if( idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed ) {
         idf->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName,hxSupplyAirOutletNodeName);
         idf->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName,hxExhaustAirInletNodeName);
+      } else {
+        // Shouldn't happen, accepts only Coil:Cooling:DX:SingleSpeed or Coil:Cooling:DX:VariableSpeed
+        LOG(Fatal, modelObject.briefDescription() << " appears to have a cooling coil that shouldn't have been accepted: "
+            << coolingCoil.briefDescription());
+        OS_ASSERT(false);
       }
     }
   }

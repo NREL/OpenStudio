@@ -42,6 +42,8 @@
 #include "CoilHeatingDXSingleSpeed_Impl.hpp"
 #include "CoilCoolingDXSingleSpeed.hpp"
 #include "CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "CoilHeatingElectric.hpp"
 #include "CoilHeatingElectric_Impl.hpp"
 #include "CoilHeatingGas.hpp"
@@ -416,7 +418,11 @@ namespace detail {
 
   bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setCoolingCoil( HVACComponent & hvacComponent )
   {
-    if( ! hvacComponent.optionalCast<CoilCoolingDXSingleSpeed>() ) { return false; };
+    if( !( hvacComponent.optionalCast<CoilCoolingDXSingleSpeed>() ||
+           hvacComponent.optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>() )
+        ) {
+      return false;
+    };
 
     return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::CoolingCoilName,hvacComponent.handle());;
   }
@@ -698,16 +704,43 @@ AirLoopHVACUnitaryHeatPumpAirToAir::AirLoopHVACUnitaryHeatPumpAirToAir( const Mo
 {
   OS_ASSERT(getImpl<detail::AirLoopHVACUnitaryHeatPumpAirToAir_Impl>());
 
-  setAvailabilitySchedule( availabilitySchedule );
-  setSupplyAirFan( supplyFan );
-  setHeatingCoil( heatingCoil );
-  setCoolingCoil( coolingCoil );
-  setSupplementalHeatingCoil( supplementalHeatingCoil );
+  bool ok = setAvailabilitySchedule( availabilitySchedule );
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s availability schedule to "
+                  << availabilitySchedule.briefDescription() << ".");
+  }
+
+  ok = setSupplyAirFan(supplyFan);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s supply fan to "
+                  << supplyFan.briefDescription() << ".");
+  }
+
+  ok = setHeatingCoil( heatingCoil );
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s heating coil to "
+                  << heatingCoil.briefDescription() << ".");
+  }
+
+  ok = setCoolingCoil( coolingCoil );
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s cooling coil to "
+                  << coolingCoil.briefDescription() << ".");
+  }
+
+  ok = setSupplementalHeatingCoil( supplementalHeatingCoil );
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s supplemental heating coil to "
+                  << supplementalHeatingCoil.briefDescription() << ".");
+  }
 
   autosizeSupplyAirFlowRateDuringCoolingOperation();
-
   autosizeSupplyAirFlowRateDuringHeatingOperation();
-
   autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 }
 

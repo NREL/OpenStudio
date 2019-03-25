@@ -84,7 +84,7 @@ namespace detail {
 
     virtual ModelObject clone(Model model) const override;
 
-    // TODO: virtual std::vector<IdfObject> remove() override;
+    virtual std::vector<IdfObject> remove() override;
 
     virtual bool isRemovable() const override;
 

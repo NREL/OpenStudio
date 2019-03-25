@@ -698,6 +698,8 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
       }
 
       if (versionOnly && isVersion) {
+        // Increment objectNum to avoid triggering the warning below and return false
+        ++objectNum;
         break;
       }
 
