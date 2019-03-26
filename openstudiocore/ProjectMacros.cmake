@@ -358,7 +358,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   # run rdoc
   if(BUILD_DOCUMENTATION)
     add_custom_target(${swig_target}_rdoc
-      ${CMAKE_COMMAND} -E chdir "${CMAKE_BINARY_DIR}/ruby/${CMAKE_CFG_INTDIR}" "${CONAN_BIN_DIRS_OPENSTUDIO-RUBY}/ruby" "${CMAKE_SOURCE_DIR}/../developer/ruby/SwigWrapToRDoc.rb" "${CMAKE_BINARY_DIR}/" "${SWIG_WRAPPER_FULL_PATH}" "${NAME}"
+      ${CMAKE_COMMAND} -E chdir "${CMAKE_BINARY_DIR}/ruby/${CMAKE_CFG_INTDIR}" "${CONAN_BIN_DIRS_OPENSTUDIO_RUBY}/ruby" "${CMAKE_SOURCE_DIR}/../developer/ruby/SwigWrapToRDoc.rb" "${CMAKE_BINARY_DIR}/" "${SWIG_WRAPPER_FULL_PATH}" "${NAME}"
       DEPENDS ${SWIG_WRAPPER}
     )
 

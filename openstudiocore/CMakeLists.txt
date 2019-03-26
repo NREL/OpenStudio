@@ -309,7 +309,7 @@ endif()
 conan_cmake_run(REQUIRES 
   ${CONAN_OPENSSL}
   ${CONAN_BOOST_ASIO}
-  openstudio-ruby/2.5.5@lefticus/testing
+  openstudio_ruby/2.5.5@lefticus/testing
   boost_program_options/1.69.0@bincrafters/stable
   boost_regex/1.69.0@bincrafters/stable
   boost_filesystem/1.69.0@bincrafters/stable
@@ -338,7 +338,7 @@ conan_cmake_run(REQUIRES
 message("DONE RUNNING CONAN")
 ###############################################################################
 
-get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio-ruby INTERFACE_INCLUDE_DIRECTORIES)
+get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
 
 message("Ruby include: ${RUBY_INCLUDE_DIRS}")
 

@@ -16,9 +16,9 @@ endforeach()
 
 CONFIGURE_FILE_WITH_CHECKSUM("InitMacros.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/InitMacros.hxx")
 
-set(MODULE_ROOT "${CONAN_OPENSTUDIO-RUBY_ROOT}")
+set(MODULE_ROOT "${CONAN_OPENSTUDIO_RUBY_ROOT}")
 if ("${MODULE_ROOT}" STREQUAL "")
-  set(MODULE_ROOT "${CONAN_OPENSTUDIO-RUBY_ROOT_DEBUG}")
+  set(MODULE_ROOT "${CONAN_OPENSTUDIO_RUBY_ROOT_DEBUG}")
 endif()
 
 message("Searching for ruby modules in '${MODULE_ROOT}/lib/**/*.rb'")
@@ -270,7 +270,7 @@ add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 add_library(additional_ruby_libs empty.cpp)
 
 add_library(ruby_libs empty.cpp)
-target_link_libraries(ruby_libs PUBLIC CONAN_PKG::openstudio-ruby)
+target_link_libraries(ruby_libs PUBLIC CONAN_PKG::openstudio_ruby)
 target_link_libraries(ruby_libs PUBLIC additional_ruby_libs)
 
 
