@@ -74,6 +74,8 @@
 #include "AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeBeam.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl.hpp"
 #include "AvailabilityManagerAssignmentList.hpp"
 #include "AvailabilityManagerAssignmentList_Impl.hpp"
 #include "AvailabilityManager.hpp"
@@ -407,7 +409,7 @@ namespace detail {
 
       // Reconnect the cloned terminal to the plant loop(s)
 
-      // TODO: (Temporary?) Ugly hack for FourPipeInduction for now, which has both a cooling and heating plantLoop
+      // Special case for FourPipeInduction for now, which has both a cooling and heating plantLoop
       if ( lastAirTerminal->iddObjectType() == IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction ) {
 
         // Safe to directly cast
@@ -421,14 +423,41 @@ namespace detail {
 
         // If the original ATU has a cooling coil, if it's a CoilCoolingWater, and the cooling coil has a plantLoop, reconnect it here
         if (lastAtuFourPipe.coolingCoil()) {
-          if (boost::optional<CoilCoolingWater> _lastCC = lastAtuFourPipe.coolingCoil()->cast<CoilCoolingWater>() ) {
+          if (boost::optional<CoilCoolingWater> _lastCC = lastAtuFourPipe.coolingCoil()->optionalCast<CoilCoolingWater>() ) {
             if (boost::optional<PlantLoop> _coolingPl = _lastCC->plantLoop()) {
               _coolingPl->addDemandBranchForComponent(newAtuFourPipe.coolingCoil().get());
             }
           }
         }
 
-        // TODO: Another ugly hack for CooledBeam, which isn't a HVAComponent but a StraightComponent
+      // Special case for FourPipeInduction, which has both optional cooling and heating coils, that can or cannot be linked to some PlantLoops
+      } else if ( lastAirTerminal->iddObjectType() == IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeam ) {
+
+        // Safe to directly cast (checked iddObjectType already)
+        AirTerminalSingleDuctConstantVolumeFourPipeBeam lastAtuFourPipeBeam = lastAirTerminal->cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+        AirTerminalSingleDuctConstantVolumeFourPipeBeam newAtuFourPipeBeam = airTerminal.cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+
+        boost::optional<PlantLoop> _loop;
+
+        // If the original ATU has a cooling coil, and the cooling coil has a plantLoop, reconnect it here
+        boost::optional<HVACComponent> _hc = lastAtuFourPipeBeam.heatingCoil();
+        if ( _hc && (_loop = _hc->plantLoop()) ) {
+          boost::optional<HVACComponent> _hcClone = newAtuFourPipeBeam.heatingCoil();
+          // FourPipeBeam::clone should clone and re-set the coils, so it should have worked
+          OS_ASSERT(_hcClone);
+          _loop->addDemandBranchForComponent(*_hcClone);
+        }
+
+        // If the original ATU has a cooling coil, and the cooling coil has a plantLoop, reconnect it here
+        boost::optional<HVACComponent> _cc = lastAtuFourPipeBeam.coolingCoil();
+        if ( _cc && (_loop = _cc->plantLoop()) ) {
+          boost::optional<HVACComponent> _ccClone = newAtuFourPipeBeam.coolingCoil();
+          // FourPipeBeam::clone should clone and re-set the coils, so it should have worked
+          OS_ASSERT(_ccClone);
+          _loop->addDemandBranchForComponent(*_ccClone);
+        }
+
+        // Special case for CooledBeam, which isn't a HVAComponent but a StraightComponent
       } else if (lastAirTerminal->iddObjectType() == IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam) {
 
         // Safe to directly cast
@@ -992,6 +1021,7 @@ namespace detail {
     return result;
   }
 
+  // TODO: REMOVE!
   //bool AirLoopHVAC_Impl::addBranchForZoneImpl(ThermalZone & thermalZone, OptionalStraightComponent & airTerminal)
   //{
   //  boost::optional<HVACComponent> comp;

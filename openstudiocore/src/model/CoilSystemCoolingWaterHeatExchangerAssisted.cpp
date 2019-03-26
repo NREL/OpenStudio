@@ -45,6 +45,14 @@
 #include "AirLoopHVAC_Impl.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "ZoneHVACFourPipeFanCoil.hpp"
+#include "ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "ZoneHVACUnitVentilator.hpp"
+#include "ZoneHVACUnitVentilator_Impl.hpp"
+
 #include <utilities/idd/OS_CoilSystem_Cooling_Water_HeatExchangerAssisted_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include "../utilities/core/Assert.hpp"
@@ -85,6 +93,93 @@ namespace detail {
 
   IddObjectType CoilSystemCoolingWaterHeatExchangerAssisted_Impl::iddObjectType() const {
     return CoilSystemCoolingWaterHeatExchangerAssisted::iddObjectType();
+  }
+
+  std::vector<ModelObject> CoilSystemCoolingWaterHeatExchangerAssisted_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    result.push_back(coolingCoil());
+    result.push_back(heatExchanger());
+
+    return result;
+  }
+
+  ModelObject CoilSystemCoolingWaterHeatExchangerAssisted_Impl::clone(Model model) const
+  {
+    auto newCoilSystem = StraightComponent_Impl::clone(model).cast<CoilSystemCoolingWaterHeatExchangerAssisted>();
+
+    {
+      auto mo = coolingCoil().clone(model).cast<WaterToAirComponent>();
+      newCoilSystem.setCoolingCoil(mo);
+    }
+
+    {
+      auto mo = heatExchanger().clone(model).cast<AirToAirComponent>();
+      newCoilSystem.setHeatExchanger(mo);
+    }
+
+    return newCoilSystem;
+  }
+
+    boost::optional<HVACComponent> CoilSystemCoolingWaterHeatExchangerAssisted_Impl::containingHVACComponent() const
+  {
+     // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return airLoopHVACUnitarySystem;
+        }
+      }
+    }
+
+
+    return boost::none;
+  }
+
+  boost::optional<ZoneHVACComponent> CoilSystemCoolingWaterHeatExchangerAssisted_Impl::containingZoneHVACComponent() const
+  {
+
+    // ZoneHVACFourPipeFanCoil
+    std::vector<ZoneHVACFourPipeFanCoil> zoneHVACFourPipeFanCoils;
+
+    zoneHVACFourPipeFanCoils = this->model().getConcreteModelObjects<ZoneHVACFourPipeFanCoil>();
+
+    for( const auto & zoneHVACFourPipeFanCoil : zoneHVACFourPipeFanCoils )
+    {
+      if( boost::optional<HVACComponent> coil = zoneHVACFourPipeFanCoil.coolingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return zoneHVACFourPipeFanCoil;
+        }
+      }
+    }
+
+    // ZoneHVACUnitVentilator
+    std::vector<ZoneHVACUnitVentilator> zoneHVACUnitVentilators;
+
+    zoneHVACUnitVentilators = this->model().getConcreteModelObjects<ZoneHVACUnitVentilator>();
+
+    for( const auto & zoneHVACUnitVentilator : zoneHVACUnitVentilators )
+    {
+      if( boost::optional<HVACComponent> coil = zoneHVACUnitVentilator.coolingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return zoneHVACUnitVentilator;
+        }
+      }
+    }
+
+    // ZoneHVAC:WindowAirConditioner not wrapped
+
+    return boost::none;
   }
 
   AirToAirComponent CoilSystemCoolingWaterHeatExchangerAssisted_Impl::heatExchanger() const {
@@ -205,4 +300,5 @@ CoilSystemCoolingWaterHeatExchangerAssisted::CoilSystemCoolingWaterHeatExchanger
 
 } // model
 } // openstudio
+
 

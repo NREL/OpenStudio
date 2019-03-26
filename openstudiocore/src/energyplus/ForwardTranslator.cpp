@@ -4518,6 +4518,9 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
     }
   }
 
+  // TODO: JM 2019-03-22 I am not sure you need this one
+  // But I temporarily removed the \reference FluidAndGlycolNames from FluidProperties_GlycolConcentration to avoid problems of having two objects of
+  // the same reference group bearing the same name (FluidProperties:Name also has the same reference group)
   IdfObject fluidPropName(openstudio::IddObjectType::FluidProperties_Name);
   fluidPropName.setString(FluidProperties_NameFields::FluidName, glycolName);
   fluidPropName.setString(FluidProperties_NameFields::FluidType, "Glycol");

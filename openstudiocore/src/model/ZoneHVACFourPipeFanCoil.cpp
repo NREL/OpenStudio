@@ -30,7 +30,6 @@
 #include "ZoneHVACFourPipeFanCoil.hpp"
 #include "ZoneHVACFourPipeFanCoil_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -500,8 +499,10 @@ namespace detail {
   {
     bool isAllowedType = false;
 
-    if( coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_Water )
-    {
+    // Note JM 2019-03-13: Technically the idd \object-list should enforce that to begin with no? @kbenne
+    if((coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_Water) ||
+       (coolingCoil.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_Water_HeatExchangerAssisted)
+      ) {
       isAllowedType = true;
     }
 
@@ -1221,3 +1222,4 @@ ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(std::shared_ptr<detail::ZoneHVA
 
 } // model
 } // openstudio
+

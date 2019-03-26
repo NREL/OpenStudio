@@ -44,9 +44,6 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 
-// TODO: only needed for API warning
-#include <OpenStudio.hxx>
-
 namespace openstudio {
 
 namespace model {
@@ -1527,29 +1524,17 @@ SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
     return getImpl<detail::SizingSystem_Impl>()->autosizedCentralHeatingMaximumSystemAirFlowRatio();
   }
 
-  // DEPRECATED: TODO REMOVED in 2.6.2, REMOVE FROM API In the FUTURE
-  boost::optional<double> SizingSystem::minimumSystemAirFlowRatio() const {
-    LOG(Warn, "SizingSystem::minimumSystemAirFlowRatio has been deprecated and will be removed in a future release, please use SizingSystem::centralHeatingMaximumSystemAirFlowRatio");
-    LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, now it returns an Optional double");
-    if( VersionString( openStudioVersion() ) >= VersionString("2.8.0") ) {
-      // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
-      LOG(Debug, "Please go tell a developper to remove SizingSystem::minimumSystemAirFlowRatio");
-      OS_ASSERT(false);
-    }
 
+
+  // DEPRECATED: TODO REMOVE as soon as standards > 0.29.0 is relased
+  boost::optional<double> SizingSystem::minimumSystemAirFlowRatio() const {
     return getImpl<detail::SizingSystem_Impl>()->centralHeatingMaximumSystemAirFlowRatio();
   }
-
-  // DEPRECATED: TODO REMOVED in 2.6.2, REMOVE FROM API In the FUTURE
+  // DEPRECATED: TODO REMOVE as soon as standards > 0.29.0 is relased
   bool SizingSystem::setMinimumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio) {
-    LOG(Warn, "SizingSystem::setMinimumSystemAirFlowRatio has been deprecated and will be removed in a future release, please use SizingSystem::setCentralHeatingMaximumSystemAirFlowRatio");
-    if( VersionString( openStudioVersion() ) >= VersionString("2.8.0") ) {
-      // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
-      LOG(Debug, "Please go tell a developper to remove SizingSystem::minimumSystemAirFlowRatio");
-      OS_ASSERT(false);
-    }
     return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingMaximumSystemAirFlowRatio(centralHeatingMaximumSystemAirFlowRatio);
   }
+
 
 } // model
 
