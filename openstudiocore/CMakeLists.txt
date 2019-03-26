@@ -664,9 +664,9 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
       set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static.tar.gz")
       set(RUBY_ZIP_EXPECTED_MD5 "ea5e957ed189b8b2a854e4504d1ba1fa")
     else()
-      # 16.04
+      # 16.04, built against openssl 1.1.0g
       set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static_xenial.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "832a185b0086941780c4f54489c7f465")
+      set(RUBY_ZIP_EXPECTED_MD5 "acfa24444c1040d0aadefe91d26a48a3")
     endif()
   endif()
 
@@ -797,9 +797,8 @@ endif()
 
 # build and release openstudio gems at https://github.com/NREL/OpenStudio-gems
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20190321.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e600f9cd8f3673c7f6bff3d1bee8565e")
-
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20190307.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "3dcc9690c1a9969e0824d6e2780df56c")
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
   file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
@@ -1025,7 +1024,6 @@ if(BUILD_OS_APP)
       endif()
     endif()
 
-
     set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_ZIP_FILENAME}")
     if(EXISTS "${QT_ZIP_LOCAL_PATH}")
       file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
@@ -1133,7 +1131,6 @@ if(BUILD_OS_APP)
     find_library(QT_MAIN_LIB NAMES qtmain PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
     find_library(QT_MAIN_LIB_D NAMES qtmaind PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
   endif()
-
 
   list(APPEND QT_INCLUDES ${Qt5Core_INCLUDE_DIRS})
   list(APPEND QT_INCLUDES ${Qt5Concurrent_INCLUDE_DIRS})

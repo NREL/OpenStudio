@@ -1202,7 +1202,7 @@ Vector BillingPeriod::modelConsumptionValues() const
 
       double value = timeseries->value(dateTime);
       if (value == outOfRangeValue){
-        LOG(Debug, "Could not find value of timeseries at dateTime " << *dateTime);
+        LOG(Debug, "Could not find value of timeseries at dateTime " << dateTime);
         return Vector();
       }else{
         result[i] = value;

@@ -41,6 +41,7 @@
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/Schedule.hpp"
 
+#include <utilities/idd/IddObject.hpp>
 #include <utilities/idd/Coil_WaterHeating_Desuperheater_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

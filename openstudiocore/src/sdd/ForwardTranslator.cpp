@@ -550,7 +550,7 @@ namespace sdd {
     //m_ignoreTypes.push_back(model::UtilityCost_Tariff::iddObjectType());
     //m_ignoreTypes.push_back(model::UtilityCost_Variable::iddObjectType());
 
-    return doc;
+    return true;
   }
 
   void ForwardTranslator::logUntranslatedObjects(const model::Model& model)

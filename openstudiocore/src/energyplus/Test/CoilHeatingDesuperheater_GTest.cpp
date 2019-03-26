@@ -38,6 +38,7 @@
 #include "../../model/CoilCoolingDXTwoSpeed.hpp"
 #include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
 
+#include <utilities/idd/IddObject.hpp>
 #include <utilities/idd/Coil_Heating_Desuperheater_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
