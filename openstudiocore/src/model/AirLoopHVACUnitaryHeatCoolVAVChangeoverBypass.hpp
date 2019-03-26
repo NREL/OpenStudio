@@ -51,7 +51,11 @@ class MODEL_API AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass : public StraightC
   /** @name Constructors and Destructors */
   //@{
 
-  explicit AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(const Model& model, const HVACComponent& fan, const HVACComponent& coolingCoil, const HVACComponent& heatingCoil);
+  explicit AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(
+      const Model& model,
+      const HVACComponent& fan,
+      const HVACComponent& coolingCoil,
+      const HVACComponent& heatingCoil);
 
   virtual ~AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass() {}
 

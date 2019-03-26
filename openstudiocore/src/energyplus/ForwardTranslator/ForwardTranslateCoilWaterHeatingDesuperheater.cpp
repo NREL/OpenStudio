@@ -29,19 +29,17 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
+#include "../../model/CoilWaterHeatingDesuperheater.hpp"
+
 #include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/CurveBiquadratic.hpp"
-#include "../../model/CurveBiquadratic_Impl.hpp"
-#include "../../model/HVACComponent.hpp"
-#include "../../model/HVACComponent_Impl.hpp"
-#include "../../model/CoilWaterHeatingDesuperheater.hpp"
-#include "../../model/CoilWaterHeatingDesuperheater_Impl.hpp"
+
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/Coil_WaterHeating_Desuperheater_FieldEnums.hxx>
+#include <utilities/idd/CoilSystem_Cooling_DX_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -164,14 +162,40 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingDesuperhe
 
 // HeatingSourceObjectType
 // HeatingSourceName
-  if( boost::optional<ModelObject> heatingSource = modelObject.heatingSource() )
-  {
-    boost::optional<IdfObject> _heatingSource = translateAndMapModelObject(heatingSource.get());
+  if( boost::optional<ModelObject> heatingSource = modelObject.heatingSource() ) {
 
-    if( _heatingSource && _heatingSource->name() )
-    {
-      idfObject.setString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceObjectType,_heatingSource->iddObject().name());
-      idfObject.setString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceName,_heatingSource->name().get());
+    boost::optional<IdfObject> _heatingSource = translateAndMapModelObject(*heatingSource);
+
+    if (_heatingSource) {
+
+      // Note JM 2019-03-14:
+      // If the coil in question is a DX coil (CoilCoolingDXSingleSpeed, CoilCoolingDXTwoSpeed, CoilCoolingDXTwoStageWithHumidityControlMode)
+      // and this DX coil isn't already wrapped in a Unitary, then the FT will wrap it into a CoilSystem:Cooling:DX object and return that, but we
+      // need the DX coil here and not the wrapper.
+      //
+      // Note: Other accepted types are Refrigeration objects and don't suffer the same problem
+      // (Refrigeration:Condenser:AirCooled, Refrigeration:Condenser:EvaporativeCooled, Refrigeration:Condenser:WaterCooled)
+
+      std::string objectType;
+      std::string objectName;
+
+      if (_heatingSource->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX) {
+        // We have retrieve the coil itself, not the wrapper
+        objectType = _heatingSource->getString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType).get();
+        objectName = _heatingSource->getString(CoilSystem_Cooling_DXFields::CoolingCoilName).get();
+      } else {
+        objectType = _heatingSource->iddObject().name();
+        objectName = _heatingSource->name().get();
+      }
+
+      if (objectType.empty() || objectName.empty()) {
+        // We log an error but let E+ fail eventually
+        LOG(Error, "Something went wrong in the translation of " << modelObject.briefDescription() << ", couldn't retrieve the coil");
+        // OS_ASSERT(false);
+      } else {
+        idfObject.setString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceObjectType, objectType);
+        idfObject.setString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceName, objectName);
+      }
     }
   }
 

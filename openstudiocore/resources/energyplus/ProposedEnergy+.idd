@@ -57818,7 +57818,8 @@ FluidProperties:GlycolConcentration,
        \memo glycol and what concentration it is
   A1,  \field Name
        \required-field
-       \reference FluidAndGlycolNames
+       \note In EnergyPlus IDD 9.1.0, reference FluidAndGlycolNames is added but causing problems because we expect both
+       \note FluidProperties:Name and FluidProperties:GlycolConcentration to have the same name
   A2,  \field Glycol Type
        \required-field
        \type choice

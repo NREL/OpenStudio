@@ -62,12 +62,12 @@ TEST_F(ModelFixture,AirLoopHVACUnitaryHeatPumpAirToAir_AirLoopHVACUnitaryHeatPum
     CurveQuadratic  cenergyInputRatioFunctionofFlowFractionCurve(m);
     CurveQuadratic  cpartLoadFractionCorrelationCurve(m);
 
-    CoilHeatingDXSingleSpeed coolingCoil(m, s,
-                                        ctotalHeatingCapacityFunctionofTemperatureCurve,
-                                        ctotalHeatingCapacityFunctionofFlowFractionCurve,
-                                        cenergyInputRatioFunctionofTemperatureCurve,
-                                        cenergyInputRatioFunctionofFlowFractionCurve,
-                                        cpartLoadFractionCorrelationCurve );
+    CoilCoolingDXSingleSpeed coolingCoil(m, s,
+                                         ctotalHeatingCapacityFunctionofTemperatureCurve,
+                                         ctotalHeatingCapacityFunctionofFlowFractionCurve,
+                                         cenergyInputRatioFunctionofTemperatureCurve,
+                                         cenergyInputRatioFunctionofFlowFractionCurve,
+                                         cpartLoadFractionCorrelationCurve );
 
     CurveBiquadratic  totalHeatingCapacityFunctionofTemperatureCurve(m);
     CurveQuadratic  totalHeatingCapacityFunctionofFlowFractionCurve(m);

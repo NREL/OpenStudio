@@ -27,82 +27,53 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_COILSYSTEMCOOLINGWATERHEATEXCHANGERASSISTED_HPP
-#define MODEL_COILSYSTEMCOOLINGWATERHEATEXCHANGERASSISTED_HPP
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
 
-#include "ModelAPI.hpp"
-#include "StraightComponent.hpp"
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/CoilWaterHeatingDesuperheater.hpp"
+#include "../../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../../model/CoilHeatingElectric.hpp"
+#include "../../model/FanConstantVolume.hpp"
 
-namespace openstudio {
-namespace model {
+#include "../../model/ScheduleConstant.hpp"
 
-class AirToAirComponent;
-class WaterToAirComponent;
+#include <utilities/idd/ZoneHVAC_PackagedTerminalAirConditioner_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
-namespace detail {
+using namespace openstudio::energyplus;
+using namespace openstudio::model;
+using namespace openstudio;
 
-  class CoilSystemCoolingWaterHeatExchangerAssisted_Impl;
+TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalAirConditioner) {
 
-} // detail
+  Model m;
 
-/** CoilSystemCoolingWaterHeatExchangerAssisted is a StraightComponent that wraps the OpenStudio IDD object 'OS:CoilSystem:Cooling:Water:HeatExchangerAssisted'. */
-class MODEL_API CoilSystemCoolingWaterHeatExchangerAssisted : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  Schedule sch = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(m);
+  CoilCoolingDXSingleSpeed cc(m);
+  CoilHeatingElectric hc(m);
 
-  // This constructor will also create the underlying objects CoilCoolingWater and HeatExchangerAirToAirSensibleAndLatent
-  explicit CoilSystemCoolingWaterHeatExchangerAssisted(const Model& model);
+  ZoneHVACPackagedTerminalAirConditioner ptac(m, sch, fan, hc, cc);
 
-  virtual ~CoilSystemCoolingWaterHeatExchangerAssisted() {}
+  // Need to be in a thermal zone to be translated
+  ThermalZone z(m);
+  ptac.addToThermalZone(z);
 
-  //@}
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(m);
 
-  static IddObjectType iddObjectType();
+  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ZoneHVAC_PackagedTerminalAirConditioner));
+  ASSERT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_ptac(idfObjs[0]);
 
-  /** @name Getters */
-  //@{
+  // Check that the DX coil ends up directly onto the object, and NOT a CoilSystem:Cooling:DX wrapper
+  EXPECT_EQ("Coil:Cooling:DX:SingleSpeed", idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilObjectType).get());
+  EXPECT_EQ(cc.nameString(), idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName).get());
 
-  AirToAirComponent heatExchanger() const;
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
 
-  WaterToAirComponent coolingCoil() const;
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  bool setHeatExchanger(const AirToAirComponent& heatExchanger);
-
-  bool setCoolingCoil(const WaterToAirComponent& coolingCoil);
-
-  //@}
-  /** @name Other */
-  //@{
-
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl ImplType;
-
-  explicit CoilSystemCoolingWaterHeatExchangerAssisted(std::shared_ptr<detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl> impl);
-
-  friend class detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilSystemCoolingWaterHeatExchangerAssisted");
-};
-
-/** \relates CoilSystemCoolingWaterHeatExchangerAssisted*/
-typedef boost::optional<CoilSystemCoolingWaterHeatExchangerAssisted> OptionalCoilSystemCoolingWaterHeatExchangerAssisted;
-
-/** \relates CoilSystemCoolingWaterHeatExchangerAssisted*/
-typedef std::vector<CoilSystemCoolingWaterHeatExchangerAssisted> CoilSystemCoolingWaterHeatExchangerAssistedVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILSYSTEMCOOLINGWATERHEATEXCHANGERASSISTED_HPP
-
+}
