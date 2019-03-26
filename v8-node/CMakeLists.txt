@@ -15,7 +15,7 @@ IF(BUILD_TESTING)
 
     set_property(TEST V8NodeTest_${FileName}
       PROPERTY ENVIRONMENT
-      "NODE_PATH=${CMAKE_BINARY_DIR}/Products/v8"
+      "NODE_PATH=${PROJECT_BINARY_DIR}/Products/v8"
     )
   endforeach()
 
@@ -31,7 +31,7 @@ IF(BUILD_TESTING)
 
     set_property(TEST V8JasmineTest_${FileName}
       PROPERTY ENVIRONMENT
-      "NODE_PATH=${CMAKE_BINARY_DIR}/Products/v8"
+      "NODE_PATH=${PROJECT_BINARY_DIR}/Products/v8"
       "PATH=${NODE_BIN_DIR}:$ENV{PATH}"
     )
   endforeach()

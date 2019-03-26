@@ -1,7 +1,7 @@
   set(JAVA_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/java")
 
-  file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/java_wrapper/generated_sources")
-  file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources")
+  file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/java_wrapper/generated_sources")
+  file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/java_wrapper/merged_sources")
 
   # the main OpenStudio jar file
   if(MSVC)
@@ -23,22 +23,22 @@
   # custom command to make OPENSTUDIO_JAVA_JAR
   add_custom_command(
     OUTPUT "${OPENSTUDIO_JAVA_JAR}"
-    COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources"
-    COMMAND "${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources"
+    COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_BINARY_DIR}/java_wrapper/merged_sources"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${PROJECT_BINARY_DIR}/java_wrapper/merged_sources"
     DEPENDS ${ALL_JAVA_BINDING_TARGETS}
   )
 
   foreach(D ${ALL_JAVA_SRC_DIRECTORIES})
     add_custom_command(
       OUTPUT "${OPENSTUDIO_JAVA_JAR}"
-      COMMAND "${CMAKE_COMMAND}" -E copy_directory "${D}" "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources"
+      COMMAND "${CMAKE_COMMAND}" -E copy_directory "${D}" "${PROJECT_BINARY_DIR}/java_wrapper/merged_sources"
       APPEND
     )
   endforeach()
 
   if(MSVC)
-    file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/*.java" NATIVE_JAVA_SOURCE_LIST)
-    file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/filelist" NATIVE_JAVA_SOURCE_FILELIST)
+    file(TO_NATIVE_PATH "${PROJECT_BINARY_DIR}/java_wrapper/merged_sources/*.java" NATIVE_JAVA_SOURCE_LIST)
+    file(TO_NATIVE_PATH "${PROJECT_BINARY_DIR}/java_wrapper/merged_sources/filelist" NATIVE_JAVA_SOURCE_FILELIST)
     add_custom_command(
       OUTPUT "${OPENSTUDIO_JAVA_JAR}"
       COMMAND cmd /C dir /s /B "${NATIVE_JAVA_SOURCE_LIST}" > "${NATIVE_JAVA_SOURCE_FILELIST}"
@@ -47,17 +47,17 @@
   else()
     add_custom_command(
       OUTPUT "${OPENSTUDIO_JAVA_JAR}"
-      COMMAND find "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/" -name "\"*.java\"" > "${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/filelist"
+      COMMAND find "${PROJECT_BINARY_DIR}/java_wrapper/merged_sources/" -name "\"*.java\"" > "${PROJECT_BINARY_DIR}/java_wrapper/merged_sources/filelist"
       APPEND
     )
   endif()
 
   add_custom_command(
     OUTPUT "${OPENSTUDIO_JAVA_JAR}"
-    COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CMAKE_BINARY_DIR}/java_wrapper/build/"
-    COMMAND "${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/java_wrapper/build/"
-    COMMAND "${Java_JAVAC_EXECUTABLE}" -target 1.6 -source 1.6 -d "${CMAKE_BINARY_DIR}/java_wrapper/build/" "@${CMAKE_BINARY_DIR}/java_wrapper/merged_sources/filelist"
-    COMMAND "${Java_JAR_EXECUTABLE}"  -cvf "${OPENSTUDIO_JAVA_JAR}" -C "${CMAKE_BINARY_DIR}/java_wrapper/build/" gov
+    COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_BINARY_DIR}/java_wrapper/build/"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${PROJECT_BINARY_DIR}/java_wrapper/build/"
+    COMMAND "${Java_JAVAC_EXECUTABLE}" -target 1.6 -source 1.6 -d "${PROJECT_BINARY_DIR}/java_wrapper/build/" "@${PROJECT_BINARY_DIR}/java_wrapper/merged_sources/filelist"
+    COMMAND "${Java_JAR_EXECUTABLE}"  -cvf "${OPENSTUDIO_JAVA_JAR}" -C "${PROJECT_BINARY_DIR}/java_wrapper/build/" gov
     APPEND
   )
 
@@ -82,22 +82,22 @@
   #  jason@ubuntu12:~/OpenStudio-main/openstudiocore/java$ LD_LIBRARY_PATH=~/openstudio-main-build/OSCore-prefix/src/OSCore-build/Products/java /usr/lib/jvm/java-1.7.0-openjdk-amd64/bin/java -classpath ~/openstudio-main-build/OSCore-prefix/src/OSCore-build/Products/java/OpenStudio.jar:.  TestOpenStudio
 
   add_custom_command(
-    OUTPUT "${CMAKE_BINARY_DIR}/TestOpenStudio.class"
-    COMMAND "${Java_JAVAC_EXECUTABLE}" -d "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}/java/TestOpenStudio.java" -classpath "${OPENSTUDIO_JAVA_JAR}"
+    OUTPUT "${PROJECT_BINARY_DIR}/TestOpenStudio.class"
+    COMMAND "${Java_JAVAC_EXECUTABLE}" -d "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/java/TestOpenStudio.java" -classpath "${OPENSTUDIO_JAVA_JAR}"
     DEPENDS "${OPENSTUDIO_JAVA_JAR}"
     )
 
   add_custom_target(java_tests ALL
-    DEPENDS "${CMAKE_BINARY_DIR}/TestOpenStudio.class"
+    DEPENDS "${PROJECT_BINARY_DIR}/TestOpenStudio.class"
    )
 
   if (MSVC)
     add_test(NAME "JavaSanityCheck"
-      COMMAND "${Java_JAVA_EXECUTABLE}"  -classpath "${CMAKE_BINARY_DIR}/Products/java/$<CONFIGURATION>/OpenStudio.jar;${CMAKE_BINARY_DIR}" TestOpenStudio
-	  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Products/java/$<CONFIGURATION>"
+      COMMAND "${Java_JAVA_EXECUTABLE}"  -classpath "${PROJECT_BINARY_DIR}/Products/java/$<CONFIGURATION>/OpenStudio.jar;${PROJECT_BINARY_DIR}" TestOpenStudio
+	  WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/Products/java/$<CONFIGURATION>"
       )
   else()
     add_test(NAME "JavaSanityCheck"
-      COMMAND "${Java_JAVA_EXECUTABLE}"  "-Djava.library.path=${OPENSTUDIO_JAVA_BIN_DIR}" -classpath "${OPENSTUDIO_JAVA_JAR}:${CMAKE_BINARY_DIR}" TestOpenStudio
+      COMMAND "${Java_JAVA_EXECUTABLE}"  "-Djava.library.path=${OPENSTUDIO_JAVA_BIN_DIR}" -classpath "${OPENSTUDIO_JAVA_JAR}:${PROJECT_BINARY_DIR}" TestOpenStudio
       )
   endif()

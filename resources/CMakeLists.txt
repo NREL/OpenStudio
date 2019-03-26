@@ -1,8 +1,8 @@
 # Configure a header file to point to the resources directory
-configure_file("resources.in" "${CMAKE_BINARY_DIR}/src/resources.hxx")
+configure_file("resources.in" "${PROJECT_BINARY_DIR}/src/resources.hxx")
 
 # Configure a lst file for use in transitioning between EnergyPlus versions
-configure_file("IdfFilesToTransition.lst.in" "${CMAKE_BINARY_DIR}/resources/IdfFilesToTransition.lst")
+configure_file("IdfFilesToTransition.lst.in" "${PROJECT_BINARY_DIR}/resources/IdfFilesToTransition.lst")
 
 ########################################################
 # utilities resources

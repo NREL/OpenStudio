@@ -1,6 +1,6 @@
 set(target_name openstudio_model)
 
-include_directories(${CMAKE_BINARY_DIR})
+include_directories(${PROJECT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(${target_name}_src
@@ -1624,7 +1624,7 @@ endforeach()
 # message("E_FILES: ${E_FILES}")
 # message("E_PATHS: ${E_PATHS}")
 
-include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 # EMBEDDED_OUTPUT stores the lsit of cxx files that we need to link later
 embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiomodel)
 # message("EMBEDDED_OUTPUT: ${EMBEDDED_OUTPUT}")

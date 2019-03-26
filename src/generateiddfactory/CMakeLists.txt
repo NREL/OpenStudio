@@ -43,11 +43,11 @@ add_custom_command(
   "${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd/IddFactory_EnergyPlus.cxx"
   "${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd/IddFactory_OpenStudio.cxx"
   "${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd/IddFieldEnums.ixx"
-  COMMAND GenerateIddFactory "--outdir=${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd" "EnergyPlus,${CMAKE_SOURCE_DIR}/resources/energyplus/ProposedEnergy+.idd" "${CMAKE_SOURCE_DIR}/resources/model/OpenStudio.idd"
+  COMMAND GenerateIddFactory "--outdir=${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd" "EnergyPlus,${PROJECT_SOURCE_DIR}/resources/energyplus/ProposedEnergy+.idd" "${PROJECT_SOURCE_DIR}/resources/model/OpenStudio.idd"
   DEPENDS
   GenerateIddFactory
-  "${CMAKE_SOURCE_DIR}/resources/energyplus/ProposedEnergy+.idd"
-  "${CMAKE_SOURCE_DIR}/resources/model/OpenStudio.idd"
+  "${PROJECT_SOURCE_DIR}/resources/energyplus/ProposedEnergy+.idd"
+  "${PROJECT_SOURCE_DIR}/resources/model/OpenStudio.idd"
 )
 
 add_custom_target("GenerateIddFactoryRun"

@@ -1,6 +1,6 @@
 set(target_name openstudio_energyplus)
 
-include_directories(${CMAKE_BINARY_DIR})
+include_directories(${PROJECT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(${target_name}_src
@@ -560,8 +560,6 @@ set(${target_name}_test_src
 
   Test/CoilHeatingGas_GTest.cpp
   Test/CoilCoolingDXMultiSpeed_GTest.cpp
-  Test/CoilWaterHeatingDesuperheater_GTest.cpp
-  Test/CoilHeatingDesuperheater_GTest.cpp
   Test/Construction_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
@@ -650,7 +648,7 @@ set(EMBEDDED_PATHS
   Resources/R744_FluidPropertiesDataSet.idf
 )
 
-include("${CMAKE_SOURCE_DIR}/embedded/EmbedFiles.cmake")
+include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${FILES}" "${EMBEDDED_PATHS}" OUTPUT energyplus)
 
 set(${target_name}_depends

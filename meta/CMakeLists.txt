@@ -51,7 +51,7 @@ option(NIGHTLY_BUILD "Use configurations for Nightly Build" OFF)
 set(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
 
 # Search for modules in the openstudiocore dir first to override cmake ones
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" "${CMAKE_SOURCE_DIR}")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake" "${CMAKE_SOURCE_DIR}")
 
 # Build C++ documentation using Doxygen
 # Requires: doxygen
@@ -82,7 +82,7 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 option(BUILD_TESTING "Build testing targets" OFF)
 
 # Build the actual openstudiocore project
-option(BUILD_OSCORE "Build openstudiocore" ON)
+option(BUILD_OSCORE "Build openstudiocore" OFF)
 
 # Build package
 # Requires: EnergyPlus
@@ -247,6 +247,55 @@ if(BUILD_WITH_MULTIPLE_PROCESSES)
   add_definitions(/MP)
 endif()
 
+###############################################################################
+
+###############################################################################
+# Conan
+
+# Download automatically, you can also just copy the conan.cmake file
+if(NOT EXISTS "${PROJECT_BINARY_DIR}/conan.cmake")
+  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
+    "${PROJECT_BINARY_DIR}/conan.cmake")
+endif()
+
+include(${PROJECT_BINARY_DIR}/conan.cmake)
+
+message(STATUS "RUNNING CONAN")
+
+conan_check(VERSION 1.0.0 REQUIRED)
+
+conan_add_remote(NAME bincrafters
+  URL https://api.bintray.com/conan/bincrafters/public-conan)
+
+set(CONAN_OPTIONS "")
+set(CONAN_BUILD "")
+if (MSVC)
+  set(CONAN_OPENSSL "")
+elseif (APPLE)
+  set(CONAN_OPENSSL "")
+else()
+  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
+endif()
+
+# DLM: add option for shared libs if we are building shared?
+
+conan_cmake_run(REQUIRES
+  ${CONAN_OPENSSL}
+  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
+  OPTIONS ${CONAN_OPTIONS}
+  BUILD ${CONAN_BUILD}
+)
+
+#message("CONAN_TARGETS = ${CONAN_TARGETS}")
+message(STATUS "DONE RUNNING CONAN")
+
+if(UNIX)
+  if (NOT APPLE)
+    set(OPENSSL_ROOT_DIR ${CONAN_OPENSSL_ROOT})
+  endif()
+endif()
+
 # OpenSSL is required to build Qt
 # to determine the version of OpenSSL used by Ruby:
 #   ruby.exe -ropenssl -e 'puts OpenSSL::OPENSSL_VERSION'
@@ -263,6 +312,9 @@ if(UNIX)
       SSL_EAY_RELEASE
     )
   endif()
+
+  MESSAGE(STATUS "OPENSSL_ROOT_DIR = ${OPENSSL_ROOT_DIR}")
+
 elseif(WIN32)
 
   option(BUILD_OPENSSL "Build OpenSSL From Source" OFF)
@@ -270,7 +322,7 @@ elseif(WIN32)
 
   set(OPENSSL_VERSION "1.0.2q")
   set(OPENSSL_SOURCE_URL "https://github.com/openssl/openssl/archive/OpenSSL_1_0_2q.zip")
-  
+
   set(OPENSSL_SOURCE_HASH ffeaa3eadabfeb7170f85ecca14fb0d9)
   if(CMAKE_CL_64)
     set(OPENSSL_ARCH 64)
@@ -287,7 +339,7 @@ elseif(WIN32)
     # requires perl (http://strawberryperl.com/) and NASM (https://www.nasm.us/) in the path
     # http://p-nand-q.com/programming/windows/building_openssl_with_visual_studio_2013.html
     # http://developer.covenanteyes.com/building-openssl-for-visual-studio/
-    configure_file("${CMAKE_SOURCE_DIR}/dependencies/build_openssl.bat.in" "${CMAKE_BINARY_DIR}/build_openssl.bat")
+    configure_file("${CMAKE_SOURCE_DIR}/../dependencies/build_openssl.bat.in" "${CMAKE_BINARY_DIR}/build_openssl.bat")
     ExternalProject_Add(OpenSSL
       URL "${OPENSSL_SOURCE_URL}"
       URL_MD5 "${OPENSSL_SOURCE_HASH}"
@@ -343,13 +395,16 @@ if( BUILD_RUBY )
 
   if( UNIX )
     set(RUBY_EXT_CONFIG "")
-    #if (NOT APPLE)
+    if (NOT APPLE)
     #  # DLM: still missing: curses, dbm, gdbm
     #  # gbdm: libgbdm3 for Up to 16.04, libgbdm5 for 18.04
     #  # sudo apt-get -y install ruby autoconf automake libtool bison libgdbm-dev zlib1g-dev libffi-dev libssl-dev
     #  # sudo apt-get -y install build-essential libssl-dev libreadline-dev zlib1g-dev
-    #  set(RUBY_EXT_CONFIG "--with-openssl-dir=/usr --with-readline-dir=/usr --with-zlib-dir=/usr")
-    #endif()
+
+      # TODO: build against the same OpenSSL that the core project uses
+      set(RUBY_EXT_CONFIG "--with-openssl-dir=${OPENSSL_ROOT_DIR}")
+      message(STATUS "RUBY_EXT_CONFIG = '${RUBY_EXT_CONFIG}'")
+    endif()
 
     # KSB: For Mac, you may need to install some things...
     # brew install homebrew/dupes/zlib
@@ -360,7 +415,7 @@ if( BUILD_RUBY )
       URL https://codeload.github.com/ruby/ruby/tar.gz/v2_5_1
       URL_MD5 98b550a05fec0f7a43a22d6c37404fd4
       BUILD_IN_SOURCE 1
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/../dependencies/ruby/Ruby.patch
       CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext ${RUBY_EXT_CONFIG} --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
       BUILD_COMMAND ${MAKE} # cd ext/openssl && ../../ruby extconf.rb && cd ../readline && ../../ruby extconf.rb && cd ../../ && ${MAKE}
       INSTALL_COMMAND ${MAKE} install && sh -c "cp ./rbconfig.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ruby/2.5.0/." && sh -c "rm -rf ./ext/-test-" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc" && sh -c "find ./ext -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext/" && sh -c "find ./enc -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc"
@@ -385,36 +440,36 @@ if( BUILD_RUBY )
         -DINSTALL_MAN_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/share/man/
         -DINSTALL_PKGCONFIG_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/share/pkgconfig/
     )
-    
+
     # DLM: can't figure out a good way to copy pdb for debug only, just do manually for now
     ExternalProject_Add(FFI
       URL_HASH SHA256=bf6813045c0d470aedc3c69f9ec11fe351c2d7360c7d5396dc9a6ddc4830033c
       URL https://github.com/winlibs/libffi/archive/libffi-3.2.1.zip
       CONFIGURE_COMMAND ""
-      BUILD_COMMAND devenv /upgrade ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/libffi-msvc.sln 
+      BUILD_COMMAND devenv /upgrade ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/libffi-msvc.sln
         COMMAND msbuild ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/libffi-msvc.sln /p:Configuration=$<CONFIG> /p:DefineConstants="FFI_BUILDING" "/p:Platform=${CMAKE_VS_PLATFORM_NAME}" "/p:WindowsTargetPlatformVersion=${CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION}"
       INSTALL_COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/include ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/include
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/fficonfig.h ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/include/fficonfig.h         
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/src/x86/ffitarget.h ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/include/ffitarget.h                 
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/fficonfig.h ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/include/fficonfig.h
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/src/x86/ffitarget.h ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/include/ffitarget.h
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/lib
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/x64/$<CONFIG>/libffi.lib ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/lib/libffi.lib 
-        #COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/x64/$<CONFIG>/libffi.pdb ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/lib/libffi.pdb 
+        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/x64/$<CONFIG>/libffi.lib ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/lib/libffi.lib
+        #COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI/win32/vc14_x64/x64/$<CONFIG>/libffi.pdb ${CMAKE_BINARY_DIR}/FFI-prefix/src/FFI-install/$<CONFIG>/lib/libffi.pdb
     )
 
-    configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.bat.in" "${CMAKE_BINARY_DIR}/build_ruby.bat")
+    configure_file("${CMAKE_SOURCE_DIR}/../dependencies/ruby/build_ruby.bat.in" "${CMAKE_BINARY_DIR}/build_ruby.bat")
     # This will require bison, sed, and at least ruby 1.8 in your path
     # Please install DevKit even though the build will be done by msvc the ruby build system uses some traditionally unix tools
-    
+
     # DLM notes:
     # @$(WIN32DIR:/=\)\rtname conftest.exe >>$(MAKEFILE) is used to determine which MSCV Runtime is linked
-    
+
     # Post Build:
     # rename libs to : x64-msvcr140-ruby255.lib and x64-msvcr140-ruby255-static.lib, do not rename dll in bin dir
-    # patch config.h to allow for multiple _MSC_VER values: 
+    # patch config.h to allow for multiple _MSC_VER values:
     #   #if !(_MSC_VER == 1915 || _MSC_VER == 1916 || _MSC_VER == 1917 || _MSC_VER == 1918 || _MSC_VER == 1919)
-    # tar -zcvf ruby_2_5_5_msvc2017_static.tar.gz Ruby-install    
+    # tar -zcvf ruby_2_5_5_msvc2017_static.tar.gz Ruby-install
 
     # Note 2.5.2 is required to fix bug with Windows 10 and Ruby
     ExternalProject_Add(Ruby
@@ -423,8 +478,8 @@ if( BUILD_RUBY )
       URL_HASH SHA256=A3BA7160C7E0CE03865CDABA9B7C26974A8A0FC23FC953269E0463C5ACAFB7A1
       BUILD_IN_SOURCE 1
       # DLM: ruby_2_5_1_msvc2017_static_v3.tar.gz on s3 was built with experimental Ruby.win.wopen.patch patch from ruby_patches branch, not using it for now
-      #PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.wopen.patch
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.patch && ${PATCH_EXE} 
+      #PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/../dependencies/ruby/Ruby.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.win.wopen.patch
+      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/../dependencies/ruby/Ruby.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/../dependencies/ruby/Ruby.win.patch && ${PATCH_EXE}
 
       CONFIGURE_COMMAND ""
       BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat" "$<CONFIG>"
@@ -547,8 +602,8 @@ if(BUILD_QT)
     # I reccomend using the official one, will make it easier to update in the future
     # Static Qt libraries are built by NREL using script below
 
-    configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_static_qt.bat.in" "${CMAKE_BINARY_DIR}/build_static_qt.bat")
-    configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_shared_qt.bat.in" "${CMAKE_BINARY_DIR}/build_shared_qt.bat")
+    configure_file("${CMAKE_SOURCE_DIR}/../dependencies/qt/build_static_qt.bat.in" "${CMAKE_BINARY_DIR}/build_static_qt.bat")
+    configure_file("${CMAKE_SOURCE_DIR}/../dependencies/qt/build_shared_qt.bat.in" "${CMAKE_BINARY_DIR}/build_shared_qt.bat")
     if( Qt5Static )
       set(QT_BUILD_SCRIPT "build_static_qt.bat")
     else()
@@ -736,8 +791,8 @@ if (BUILD_OSCORE)
 
   set(OPENSTUDIOCORE_BUILD_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
   set(OPENSTUDIOCORE_LIB_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products)
-  set(OPENSTUDIOCORE_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore/src)
-  set(OPENSTUDIOCORE_ROOT_DIR ${CMAKE_SOURCE_DIR}/openstudiocore/)
+  set(OPENSTUDIOCORE_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/src)
+  set(OPENSTUDIOCORE_ROOT_DIR ${CMAKE_SOURCE_DIR}/)
 
   ###############################################################################
   # Use CPack
