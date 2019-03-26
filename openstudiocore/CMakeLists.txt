@@ -268,9 +268,8 @@ message("RUNNING CONAN")
 
 conan_check(VERSION 1.0.0 REQUIRED)
 
-conan_add_remote(
-  NAME bincrafters URL https://api.bintray.com/conan/bincrafters/public-conan
-  NAME lefticus URL https://api.bintray.com/conan/lefticus/nrel)
+conan_add_remote(NAME bincrafters URL https://api.bintray.com/conan/bincrafters/public-conan)
+conan_add_remote(NAME lefticus URL https://api.bintray.com/conan/lefticus/nrel)
  
 set(CONAN_OPTIONS "")
 set(CONAN_BUILD "")
