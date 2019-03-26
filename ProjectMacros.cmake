@@ -196,9 +196,9 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
   set(Prereq_Dirs
       "${QT_LIBRARY_DIR}" # QT-Separation-Move
-      "${CMAKE_BINARY_DIR}/Products/"
-      "${CMAKE_BINARY_DIR}/Products/Release"
-      "${CMAKE_BINARY_DIR}/Products/Debug"
+      "${PROJECT_BINARY_DIR}/Products/"
+      "${PROJECT_BINARY_DIR}/Products/Release"
+      "${PROJECT_BINARY_DIR}/Products/Debug"
       "${LIBRARY_SEARCH_DIRECTORY}"
   )
 
@@ -256,14 +256,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   if(NOT TARGET ${PARENT_TARGET}_GeneratedHeaders)
     # Add a command to generate the generated headers discovered at this point.
     add_custom_command(
-      OUTPUT "${CMAKE_BINARY_DIR}/${PARENT_TARGET}_HeadersGenerated_done.stamp"
-      COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_BINARY_DIR}/${PARENT_TARGET}_HeadersGenerated_done.stamp"
+      OUTPUT "${PROJECT_BINARY_DIR}/${PARENT_TARGET}_HeadersGenerated_done.stamp"
+      COMMAND ${CMAKE_COMMAND} -E touch "${PROJECT_BINARY_DIR}/${PARENT_TARGET}_HeadersGenerated_done.stamp"
       DEPENDS ${GeneratedHeaders}
     )
 
     # And a target that calls the above command
     add_custom_target(${PARENT_TARGET}_GeneratedHeaders
-      SOURCES "${CMAKE_BINARY_DIR}/${PARENT_TARGET}_HeadersGenerated_done.stamp"
+      SOURCES "${PROJECT_BINARY_DIR}/${PARENT_TARGET}_HeadersGenerated_done.stamp"
     )
 
     # Now we say that our PARENT_TARGET depends on this new GeneratedHeaders
@@ -332,9 +332,9 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   add_custom_command(
     OUTPUT "${SWIG_WRAPPER}"
     COMMAND "${SWIG_EXECUTABLE}"
-            "-ruby" "-c++" "-fvirtual" "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src" "${extra_includes}" "${extra_includes2}" ${RUBY_AUTODOC}
+            "-ruby" "-c++" "-fvirtual" "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src" "${extra_includes}" "${extra_includes2}" ${RUBY_AUTODOC}
             -module "${MODULE}" -initname "${LOWER_NAME}"
-            "-I${CMAKE_SOURCE_DIR}/ruby"
+            "-I${PROJECT_SOURCE_DIR}/ruby"
             -o "${SWIG_WRAPPER_FULL_PATH}"
             "${SWIG_DEFINES}" ${SWIG_COMMON} "${KEY_I_FILE}"
     DEPENDS ${this_depends}
@@ -347,7 +347,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
   endif()
 
-  include_directories(${CMAKE_SOURCE_DIR})
+  include_directories(${PROJECT_SOURCE_DIR})
 
   add_library(
     ${swig_target} STATIC
@@ -359,7 +359,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   # run rdoc
   if(BUILD_DOCUMENTATION)
     add_custom_target(${swig_target}_rdoc
-      ${CMAKE_COMMAND} -E chdir "${CMAKE_BINARY_DIR}/ruby/${CMAKE_CFG_INTDIR}" "${RUBY_EXECUTABLE}" "${CMAKE_SOURCE_DIR}/../developer/ruby/SwigWrapToRDoc.rb" "${CMAKE_BINARY_DIR}/" "${SWIG_WRAPPER_FULL_PATH}" "${NAME}"
+      ${CMAKE_COMMAND} -E chdir "${PROJECT_BINARY_DIR}/ruby/${CMAKE_CFG_INTDIR}" "${RUBY_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/../developer/ruby/SwigWrapToRDoc.rb" "${PROJECT_BINARY_DIR}/" "${SWIG_WRAPPER_FULL_PATH}" "${NAME}"
       DEPENDS ${SWIG_WRAPPER}
     )
 
@@ -418,7 +418,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   ####if(APPLE)
   ####  set(_NAME "${LOWER_NAME}.bundle")
   ####  # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
-  ####  add_custom_command(TARGET ${swig_target} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${CMAKE_SOURCE_DIR}/SketchUpInstallName.rb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/${_NAME}")
+  ####  add_custom_command(TARGET ${swig_target} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${PROJECT_SOURCE_DIR}/SketchUpInstallName.rb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/${_NAME}")
   ####elseif(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
   ####  set(_NAME "${LOWER_NAME}.so")
   ####else()
@@ -518,7 +518,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set(SWIG_WRAPPER "python_${NAME}_wrap.cxx")
     set(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}")
 
-    set(PYTHON_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/python_wrapper/generated_sources/")
+    set(PYTHON_GENERATED_SRC_DIR "${PROJECT_BINARY_DIR}/python_wrapper/generated_sources/")
     file(MAKE_DIRECTORY ${PYTHON_GENERATED_SRC_DIR})
 
     set(PYTHON_GENERATED_SRC "${PYTHON_GENERATED_SRC_DIR}/${LOWER_NAME}.py")
@@ -546,7 +546,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       OUTPUT "${SWIG_WRAPPER_FULL_PATH}"
       COMMAND "${SWIG_EXECUTABLE}"
               "-python" ${SWIG_PYTHON_3_FLAG} "-c++" ${PYTHON_AUTODOC}
-              -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
+              -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src"
               -module "${MODULE}"
               -o "${SWIG_WRAPPER_FULL_PATH}"
               "${SWIG_DEFINES}" ${SWIG_COMMON} ${KEY_I_FILE}
@@ -662,7 +662,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       endif()
     endif()
 
-    set(CSHARP_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/csharp_wrapper/generated_sources/${NAME}")
+    set(CSHARP_GENERATED_SRC_DIR "${PROJECT_BINARY_DIR}/csharp_wrapper/generated_sources/${NAME}")
     file(MAKE_DIRECTORY ${CSHARP_GENERATED_SRC_DIR})
 
     set(CSHARP_AUTODOC "")
@@ -676,7 +676,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       COMMAND "${CMAKE_COMMAND}" -E make_directory "${CSHARP_GENERATED_SRC_DIR}"
       COMMAND "${SWIG_EXECUTABLE}"
               "-csharp" "-c++" -namespace ${NAMESPACE} ${CSHARP_AUTODOC}
-              -outdir "${CSHARP_GENERATED_SRC_DIR}"  "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
+              -outdir "${CSHARP_GENERATED_SRC_DIR}"  "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src"
               -module "${MODULE}"
               -o "${SWIG_WRAPPER_FULL_PATH}"
               -dllimport "${CSHARP_OUTPUT_NAME}"
@@ -760,7 +760,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}")
 
     set(JAVA_OUTPUT_NAME "${NAME}_java")
-    set(JAVA_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/java_wrapper/generated_sources/${NAME}")
+    set(JAVA_GENERATED_SRC_DIR "${PROJECT_BINARY_DIR}/java_wrapper/generated_sources/${NAME}")
     file(MAKE_DIRECTORY ${JAVA_GENERATED_SRC_DIR})
 
     add_custom_command(
@@ -771,7 +771,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
               "-java" "-c++"
               -package ${NAMESPACE}
               #-features autodoc=1
-              -outdir "${JAVA_GENERATED_SRC_DIR}"  "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
+              -outdir "${JAVA_GENERATED_SRC_DIR}"  "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src"
               -module "${MODULE}"
               -o "${SWIG_WRAPPER_FULL_PATH}"
               #-dllimport "${JAVA_OUTPUT_NAME}"
@@ -874,7 +874,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}")
 
     set(v8_OUTPUT_NAME "${NAME}")
-    #set(CSHARP_GENERATED_SRC_DIR "${CMAKE_BINARY_DIR}/csharp_wrapper/generated_sources/${NAME}")
+    #set(CSHARP_GENERATED_SRC_DIR "${PROJECT_BINARY_DIR}/csharp_wrapper/generated_sources/${NAME}")
     #file(MAKE_DIRECTORY ${CSHARP_GENERATED_SRC_DIR})
 
     if(BUILD_NODE_MODULES)
@@ -892,7 +892,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
               #-namespace ${NAMESPACE}
               #-features autodoc=1
               #-outdir "${CSHARP_GENERATED_SRC_DIR}"
-              "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
+              "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src"
               -module "${MODULE}"
               -o "${SWIG_WRAPPER_FULL_PATH}"
               "${SWIG_DEFINES}" ${V8_DEFINES} ${SWIG_COMMON} ${KEY_I_FILE}
@@ -1081,7 +1081,7 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
           list(REMOVE_ITEM _inc_DIRS "${_current}")
         endif()
       endforeach()
-      set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/src;${CMAKE_BINARY_DIR}/src;${_inc_DIRS}")
+      set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/src;${PROJECT_BINARY_DIR}/src;${_inc_DIRS}")
     endif()
   elseif(UNIX)
     foreach(_current ${_inc_DIRS})
@@ -1089,7 +1089,7 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
         list(REMOVE_ITEM _inc_DIRS "${_current}")
       endif()
     endforeach()
-    set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/src;${CMAKE_BINARY_DIR}/src;${_inc_DIRS}")
+    set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/src;${PROJECT_BINARY_DIR}/src;${_inc_DIRS}")
   else()
     foreach(_current ${_inc_DIRS})
       if("${_current}" MATCHES "[Bb][Oo][Oo][Ss][Tt]")

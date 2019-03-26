@@ -13,18 +13,18 @@ set(OpenStudioCore_VERSION "${OpenStudioCore_VERSION_MAJOR}.${OpenStudioCore_VER
 
 set(OpenStudioCore_INCLUDE_DIRS "${OpenStudioCore_INSTALL_PREFIX}/../src"
                                 "${OpenStudioCore_INSTALL_PREFIX}/../src/boost-log"
-                                "@CMAKE_SOURCE_DIR@/src"
-                                "@CMAKE_SOURCE_DIR@/src/boost-log"
-                                "@CMAKE_SOURCE_DIR@/src/gtest/include"
-                                "@CMAKE_BINARY_DIR@/src"
+                                "@PROJECT_SOURCE_DIR@/src"
+                                "@PROJECT_SOURCE_DIR@/src/boost-log"
+                                "@PROJECT_SOURCE_DIR@/src/gtest/include"
+                                "@PROJECT_BINARY_DIR@/src"
                                 "@BoostLog_INCLUDE_DIRS@"
                                 "@QJSON_INCLUDE_DIR@"
                                 "@GTEST_INCLUDE_DIR@"
                                 "@GEOGRAPHIC_INCLUDE_DIR@"
 )
 set(OpenStudioCore_LIBRARY_DIRS  "${OpenStudioCore_INSTALL_PREFIX}/Products" "@GTEST_LIB_DIR@" "@QJSON_LIBRARY_DIRS@")
-set(OpenStudioCore_CMAKE_DIR "@CMAKE_SOURCE_DIR@")
-set(OpenStudioCore_SWIG_INCLUDE_DIR "@CMAKE_SOURCE_DIR@/src")
+set(OpenStudioCore_CMAKE_DIR "@PROJECT_SOURCE_DIR@")
+set(OpenStudioCore_SWIG_INCLUDE_DIR "@PROJECT_SOURCE_DIR@/src")
 
 # Only include the exported targets once
 if(NOT TARGET openstudio_model)

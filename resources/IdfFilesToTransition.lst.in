@@ -1,62 +1,62 @@
-${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_roof_1/Large Office TSD_Nonresidential_3A_Roof_Attic and Other.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_roof_2/CEC Title 24-2008_Nonresidential_9_Roof_Insulation Entirely Above Deck.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_designday_1/Annual_Humidification_99_6.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_roof_3/ASHRAE Std189_Residential_5B_Roof_Attic and Other.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_designday_2/Annual_Heating_Wind_99.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_roof_4/ASHRAE 90.1-2007_Residential_7A_Roof_Metal Building.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_designday_3/Annual_Cooling_DP_MDB_2.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_roof_5/ASHRAE 90.1-1999_Residential_B-14_Roof_Insulation Entirely Above Deck.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_designday_4/Annual_Cooling_WB_MDB_1.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_designday_5/Annual_Heating_Wind_99.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/Daylighting_Office/in.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/Daylighting_School/in.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/HospitalBaseline/in.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/SimpleSurfaces/SimpleSurfaces_Reference.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/SimpleSurfaces/SimpleSurfaces_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/TranslatorV2_Tests/Simple_Construction.idf
-${CMAKE_SOURCE_DIR}/resources/energyplus/NewFileTemplate.idf
-${CMAKE_SOURCE_DIR}/resources/project/buildings/SmallOffice.idf
-${CMAKE_SOURCE_DIR}/resources/project/results/MetricsOfInterest.idf
-${CMAKE_SOURCE_DIR}/resources/project/results/ReportVariableRequests.idf
-${CMAKE_SOURCE_DIR}/resources/resultsviewer/1ZoneEvapCooler/in.idf
-${CMAKE_SOURCE_DIR}/resources/resultsviewer/1ZoneUncontrolled/in.idf
-${CMAKE_SOURCE_DIR}/resources/resultsviewer/DaylightingDeviceShelf/in.idf
-${CMAKE_SOURCE_DIR}/resources/resultsviewer/QkSvcRest/in.idf
-${CMAKE_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffice.idf
-${CMAKE_SOURCE_DIR}/resources/resultsviewer/SolarCollectorFlatPlateWater/in.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/examples/GeometryTest.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/examples/HShapeOffice.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/examples/HVACTemplate-5ZoneFanCoil.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/examples/PassiveSolarDormitory.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/examples/PhilipMerrillEnvironmentalCenter.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/examples/SurfaceTest.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/4ZoneWithShading_Simple_1.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/4ZoneWithShading_Simple_2.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/5ZoneAirCooled_SurfaceMatching.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_Absolute_Absolute_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_Absolute_Relative_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_BuildingRotated_Absolute_Absolute_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_BuildingRotated_Absolute_Relative_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_BuildingRotated_Relative_Absolute_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_BuildingRotated_Relative_Relative_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_Relative_Absolute_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_Relative_Relative_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneAndBuildingRotated_Absolute_Absolute_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneAndBuildingRotated_Absolute_Relative_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneAndBuildingRotated_Relative_Absolute_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneAndBuildingRotated_Relative_Relative_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneRotated_Absolute_Absolute_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneRotated_Absolute_Relative_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneRotated_Relative_Absolute_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneRotated_Relative_Relative_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/SimpleSubsurfaces_DetailedBaseSurfaces_Relative_Relative_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/SimpleSurfaces_Absolute.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/SimpleSurfaces_Reference.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/SimpleSurfaces_Relative.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/PurchAirWithDaylighting.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0100 man-altered  wds.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0200 su-alt wds rotate.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0300 multiple windows.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0400 offset window error.idf
-${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0500 window split into two gap.idf
-${CMAKE_SOURCE_DIR}/resources/standardsinterface/CEC_Buildings/SmallOffice.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_roof_1/Large Office TSD_Nonresidential_3A_Roof_Attic and Other.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_roof_2/CEC Title 24-2008_Nonresidential_9_Roof_Insulation Entirely Above Deck.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_designday_1/Annual_Humidification_99_6.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_roof_3/ASHRAE Std189_Residential_5B_Roof_Attic and Other.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_designday_2/Annual_Heating_Wind_99.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_roof_4/ASHRAE 90.1-2007_Residential_7A_Roof_Metal Building.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_designday_3/Annual_Cooling_DP_MDB_2.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_roof_5/ASHRAE 90.1-1999_Residential_B-14_Roof_Insulation Entirely Above Deck.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_designday_4/Annual_Cooling_WB_MDB_1.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_designday_5/Annual_Heating_Wind_99.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/Daylighting_Office/in.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/Daylighting_School/in.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/HospitalBaseline/in.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/SimpleSurfaces/SimpleSurfaces_Reference.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/SimpleSurfaces/SimpleSurfaces_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/TranslatorV2_Tests/Simple_Construction.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/NewFileTemplate.idf
+${PROJECT_SOURCE_DIR}/resources/project/buildings/SmallOffice.idf
+${PROJECT_SOURCE_DIR}/resources/project/results/MetricsOfInterest.idf
+${PROJECT_SOURCE_DIR}/resources/project/results/ReportVariableRequests.idf
+${PROJECT_SOURCE_DIR}/resources/resultsviewer/1ZoneEvapCooler/in.idf
+${PROJECT_SOURCE_DIR}/resources/resultsviewer/1ZoneUncontrolled/in.idf
+${PROJECT_SOURCE_DIR}/resources/resultsviewer/DaylightingDeviceShelf/in.idf
+${PROJECT_SOURCE_DIR}/resources/resultsviewer/QkSvcRest/in.idf
+${PROJECT_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffice.idf
+${PROJECT_SOURCE_DIR}/resources/resultsviewer/SolarCollectorFlatPlateWater/in.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/examples/GeometryTest.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/examples/HShapeOffice.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/examples/HVACTemplate-5ZoneFanCoil.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/examples/PassiveSolarDormitory.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/examples/PhilipMerrillEnvironmentalCenter.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/examples/SurfaceTest.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/4ZoneWithShading_Simple_1.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/4ZoneWithShading_Simple_2.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/5ZoneAirCooled_SurfaceMatching.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_Absolute_Absolute_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_Absolute_Relative_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_BuildingRotated_Absolute_Absolute_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_BuildingRotated_Absolute_Relative_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_BuildingRotated_Relative_Absolute_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_BuildingRotated_Relative_Relative_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_Relative_Absolute_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_Relative_Relative_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneAndBuildingRotated_Absolute_Absolute_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneAndBuildingRotated_Absolute_Relative_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneAndBuildingRotated_Relative_Absolute_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneAndBuildingRotated_Relative_Relative_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneRotated_Absolute_Absolute_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneRotated_Absolute_Relative_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneRotated_Relative_Absolute_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/BasicZone_ZoneRotated_Relative_Relative_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/SimpleSubsurfaces_DetailedBaseSurfaces_Relative_Relative_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/SimpleSurfaces_Absolute.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/SimpleSurfaces_Reference.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/SimpleSurfaces_Relative.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/PurchAirWithDaylighting.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0100 man-altered  wds.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0200 su-alt wds rotate.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0300 multiple windows.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0400 offset window error.idf
+${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0500 window split into two gap.idf
+${PROJECT_SOURCE_DIR}/resources/standardsinterface/CEC_Buildings/SmallOffice.idf
