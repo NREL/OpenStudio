@@ -70,11 +70,11 @@ set(ENERGYPLUS_VERSION_MINOR 1)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "61912d3695")
+set(ENERGYPLUS_BUILD_SHA "08d2e308bb")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.1.0-RC1")
+set(ENERGYPLUS_RELEASE_NAME "v9.1.0")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -381,14 +381,14 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH dd564aa6fa5a61fa474468697455d288)
+    set(ENERGYPLUS_EXPECTED_HASH fff82687c676c9270f08624c4dd231be)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH 42b2fe2ef5df1d4cfef2160e46529a2f)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 86a5854985e80d9627d0f07bd38e90fd)
+    set(ENERGYPLUS_EXPECTED_HASH c2f57b0124b3557080112f7eed814f78)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -522,7 +522,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     else()
       set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_32_static.tar.gz")
       set(RUBY_ZIP_EXPECTED_MD5 "4c2055305b105b0c8210697aaa596419")
-	  endif()
+    endif()
   elseif( APPLE )
     set(RUBY_ZIP_FILENAME "ruby_2_2_4_osx_static.tar.gz")
     set(RUBY_ZIP_EXPECTED_MD5 "7ac16f5791d210d425aef268d97bf734")
