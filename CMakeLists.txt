@@ -691,7 +691,23 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
   endif()
 endif()
 
-message(STATUS "ruby_install_dir ${RUBY_INSTALL_DIR}")
+message(STATUS "RUBY_INSTALL_DIR = ${RUBY_INSTALL_DIR}")
+
+# Check that the Ruby OpenSSL version is the right one
+set(EXPECTED_RUBY_OPENSSL_VERSION "1.1.0g")
+
+execute_process(COMMAND ${RUBY_INSTALL_DIR}/bin/ruby -r openssl -e "print OpenSSL::OPENSSL_VERSION[/\\d+\\.\\d+\\.\\d+[a-z]/]"
+  OUTPUT_VARIABLE RUBY_OPENSSL_VERSION
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+# Only keep the version: not needed; we do it in ruby above
+#STRING(REGEX REPLACE "^OpenSSL +([0-9]+\\.[0-9]+\\.[0-9]+[a-z]) +.*" "\\1" RUBY_OPENSSL_VERSION "${RUBY_OPENSSL_VERSION}")
+
+if(RUBY_OPENSSL_VERSION VERSION_GREATER_EQUAL EXPECTED_RUBY_OPENSSL_VERSION)
+  message(STATUS "Checking Ruby OpenSSL version: OK, ruby is built against the right OpenSSL version '${RUBY_OPENSSL_VERSION}' (expected >= '${EXPECTED_RUBY_OPENSSL_VERSION}')")
+else()
+  message(WARNING "Ruby doesn't appear to be built against the right OpenSSL version, built against '${RUBY_OPENSSL_VERSION}' while we expected >= '${EXPECTED_RUBY_OPENSSL_VERSION}'")
+endif()
 
 list(INSERT CMAKE_PREFIX_PATH 0 "${RUBY_INSTALL_DIR}")
 if(WIN32)
