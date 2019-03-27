@@ -12,6 +12,13 @@ endif()
 
 project(OpenStudio VERSION 2.7.2)
 
+# The PROJECT_SOURCE_DIR here is OpenStudio/, which we will use instead of using CMAKE_SOURCE_DIR
+set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+# We will use BINARY_DIR instead of CMAKE_BINARY_DIR to allow this to be built as a submodule
+set(PROJECT_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+
+#MESSAGE(FATAL_ERROR "CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}, BINARY_DIR=${BINARY_DIR}, PROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}, CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}, CMAKE_BINARY_DIR=${CMAKE_BINARY_DIR}")
+
 # Set a default build type if none was specified
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Setting build type to 'Release' as none was specified.")
@@ -59,7 +66,7 @@ endif()
 
 if(GIT_FOUND)
   execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--short=10" "HEAD"
-                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
                   TIMEOUT 10
                   RESULT_VARIABLE RESULT
                   OUTPUT_VARIABLE GIT_VERSION
@@ -100,7 +107,7 @@ set(ENERGYPLUS_RELEASE_NAME "v9.1.0-RC1")
 set(RADIANCE_VERSION "5.0.a.12")
 
 # configure file with version information
-configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStudio.hxx)
+configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
 
 # universal configuration for mac plists
 if(APPLE)
@@ -256,15 +263,15 @@ endif()
 # Conan
 
 # Download automatically, you can also just copy the conan.cmake file
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+if(NOT EXISTS "${PROJECT_BINARY_DIR}/conan.cmake")
   message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
   file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
-    "${CMAKE_BINARY_DIR}/conan.cmake")
+    "${PROJECT_BINARY_DIR}/conan.cmake")
 endif()
 
-include(${CMAKE_BINARY_DIR}/conan.cmake)
+include(${PROJECT_BINARY_DIR}/conan.cmake)
 
-message("RUNNING CONAN")
+message(STATUS "RUNNING CONAN")
 
 conan_check(VERSION 1.0.0 REQUIRED)
 
@@ -304,7 +311,6 @@ endif()
 
 # DLM: add option for shared libs if we are building shared?
 
-
 conan_cmake_run(REQUIRES
   ${CONAN_OPENSSL}
   ${CONAN_BOOST_ASIO}
@@ -333,25 +339,25 @@ conan_cmake_run(REQUIRES
 )
 
 #message("CONAN_TARGETS = ${CONAN_TARGETS}")
-message("DONE RUNNING CONAN")
+message(STATUS "DONE RUNNING CONAN")
 ###############################################################################
 
 ###############################################################################
 # CMake control
 
 # High level project configuration
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Products")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Products")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Products")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
 
 set(LIBRARY_SEARCH_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Release" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug")
 
 # Include project specific macros
-include(ProjectMacros.cmake)
+include("${PROJECT_SOURCE_DIR}/ProjectMacros.cmake")
 
 # Search first in the binary dir, where conan will install finders, then
 # search for modules in the root dir to override cmake ones
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_SOURCE_DIR}/CMake")
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/CMake")
 
 # Use CTest
 set(ALL_TESTING_TARGETS "") # global list
@@ -520,30 +526,30 @@ if(UNIX)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz")
-    file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" ENERGYPLUS_HASH)
+  if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz")
+    file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" ENERGYPLUS_HASH)
   endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
+  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
     unset(ENERGYPLUS_FOUND CACHE)
     unset(ENERGYPLUS_EXE CACHE)
     unset(ENERGYPLUS_IDD CACHE)
     unset(ENERGYPLUS_WEATHER_DIR CACHE)
     if(EXISTS "/etc/redhat-release")
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     else()
-      file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+      file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     endif()
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
 
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+  endif()
   # Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
   if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
-    set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+    set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
   else()
     # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
-    set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+    set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
   endif()
 
 elseif(WIN32)
@@ -557,20 +563,20 @@ elseif(WIN32)
     ## TODO: update md5 hash, but not present on GitHub as .zip, only .exe for now at least
     set(ENERGYPLUS_EXPECTED_HASH a2cbd995acd1928a7baa18407bb8e949)
   endif()
-  if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
-    file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
+  if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
+    file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
   endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
+  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
     unset(ENERGYPLUS_FOUND CACHE)
     unset(ENERGYPLUS_EXE CACHE)
     unset(ENERGYPLUS_IDD CACHE)
     unset(ENERGYPLUS_WEATHER_DIR CACHE)
-    file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
   endif()
-  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+  set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
 endif()
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
@@ -588,21 +594,21 @@ if(UNIX)
     set(RADIANCE_PLATFORM "Linux")
   endif()
   set(RADIANCE_PATH "radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz")
-    file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" RADIANCE_HASH)
+  if(EXISTS "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz")
+    file(MD5 "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" RADIANCE_HASH)
   endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
+  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
   message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
   if(EXISTS "/etc/redhat-release")
     message("http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
   else()
-    file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+    file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
   endif()
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
   endif()
-  set(RADIANCE_LOCATION "${CMAKE_BINARY_DIR}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}/usr/local/radiance")
+  set(RADIANCE_LOCATION "${PROJECT_BINARY_DIR}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}/usr/local/radiance")
 elseif(WIN32)
   if(CMAKE_CL_64)
     set(RADIANCE_ARCH 64)
@@ -617,24 +623,24 @@ elseif(WIN32)
   endif()
   set(RADIANCE_PATH "radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}")
   set(RADIANCE_PLATFORM "win${RADIANCE_ARCH}")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip")
-    file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" RADIANCE_HASH)
+  if(EXISTS "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip")
+    file(MD5 "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip" RADIANCE_HASH)
   endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
+  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
     message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_ARCH}-bit)")
-    file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}.zip" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}.zip" "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
   endif()
-  set(RADIANCE_LOCATION "${CMAKE_BINARY_DIR}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}/")
+  set(RADIANCE_LOCATION "${PROJECT_BINARY_DIR}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}/")
 endif()
 
 # Perl
 if(NOT UNIX)
-  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_SOURCE_DIR}/../dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_SOURCE_DIR}/dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
     RESULT_VARIABLE rv)
-  set(PERL_EXE "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin/perl.exe")
+  set(PERL_EXE "${PROJECT_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin/perl.exe")
 endif()
 
 # Ruby
@@ -670,7 +676,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     endif()
   endif()
 
-  set(RUBY_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_ZIP_FILENAME}")
+  set(RUBY_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${RUBY_ZIP_FILENAME}")
   if(EXISTS "${RUBY_ZIP_LOCAL_PATH}")
     file(MD5 "${RUBY_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
   endif()
@@ -681,13 +687,13 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
       INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${RUBY_ZIP_EXPECTED_MD5})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
   endif()
 
   if(WIN32)
-    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/release")
+    set(RUBY_INSTALL_DIR "${PROJECT_BINARY_DIR}/Ruby-install/release")
   else()
-    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-install/")
+    set(RUBY_INSTALL_DIR "${PROJECT_BINARY_DIR}/Ruby-install")
   endif()
 endif()
 
@@ -706,7 +712,7 @@ execute_process(COMMAND ${RUBY_INSTALL_DIR}/bin/ruby -r openssl -e "print OpenSS
 if(RUBY_OPENSSL_VERSION VERSION_GREATER_EQUAL EXPECTED_RUBY_OPENSSL_VERSION)
   message(STATUS "Checking Ruby OpenSSL version: OK, ruby is built against the right OpenSSL version '${RUBY_OPENSSL_VERSION}' (expected >= '${EXPECTED_RUBY_OPENSSL_VERSION}')")
 else()
-  message(WARNING "Ruby doesn't appear to be built against the right OpenSSL version, built against '${RUBY_OPENSSL_VERSION}' while we expected >= '${EXPECTED_RUBY_OPENSSL_VERSION}'")
+  message(FATAL_ERROR "Ruby doesn't appear to be built against the right OpenSSL version, built against '${RUBY_OPENSSL_VERSION}' while we expected >= '${EXPECTED_RUBY_OPENSSL_VERSION}'")
 endif()
 
 list(INSERT CMAKE_PREFIX_PATH 0 "${RUBY_INSTALL_DIR}")
@@ -741,7 +747,7 @@ if(WIN32)
     set(RUBY_MINGW_LIB_ZIP_FILENAME "Ruby250-mingw-install.tar.gz")
     set(RUBY_MINGW_LIB_ZIP_EXPECTED_MD5 "ce454cfe886b32f7fe829385bc06af1c")
 
-    set(RUBY_MINGW_LIB_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${RUBY_MINGW_LIB_ZIP_FILENAME}")
+    set(RUBY_MINGW_LIB_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${RUBY_MINGW_LIB_ZIP_FILENAME}")
     if(EXISTS "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}")
       file(MD5 "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}" RUBY_MINGW_LIB_ZIP_MD5)
     endif()
@@ -753,10 +759,10 @@ if(WIN32)
         SHOW_PROGRESS
         EXPECTED_MD5 ${RUBY_MINGW_LIB_ZIP_EXPECTED_MD5})
 
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
     endif()
 
-    set(RUBY_MINGW_STUB_LIB "${CMAKE_BINARY_DIR}/Ruby-mingw-install/libx64-msvcrt-ruby250.dll.a")
+    set(RUBY_MINGW_STUB_LIB "${PROJECT_BINARY_DIR}/Ruby-mingw-install/libx64-msvcrt-ruby250.dll.a")
   endif()
 endif()
 
@@ -785,7 +791,7 @@ if(UNIX)
 else()
   set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017_v2.zip")
   set(FFI_ZIP_EXPECTED_MD5 "9d43417932447eb5830a389273954a75")
-  set(FFI_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${FFI_ZIP_FILENAME}")
+  set(FFI_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${FFI_ZIP_FILENAME}")
   if(EXISTS "${FFI_ZIP_LOCAL_PATH}")
     file(MD5 "${FFI_ZIP_LOCAL_PATH}" FFI_ZIP_MD5)
   endif()
@@ -799,12 +805,12 @@ else()
       SHOW_PROGRESS
       EXPECTED_MD5 ${FFI_ZIP_EXPECTED_MD5})
 
-    file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/FFI-install")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${FFI_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/FFI-install")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${FFI_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
   endif()
 
-  find_library(FFI libffi.lib PATHS "${CMAKE_BINARY_DIR}/FFI-install/Release/lib")
-  find_library(FFID libffi.lib PATHS "${CMAKE_BINARY_DIR}/FFI-install/Debug/lib")
+  find_library(FFI libffi.lib PATHS "${PROJECT_BINARY_DIR}/FFI-install/Release/lib")
+  find_library(FFID libffi.lib PATHS "${PROJECT_BINARY_DIR}/FFI-install/Debug/lib")
   set(ADDITIONAL_RUBY_LIBS_RELEASE ${FFI} Iphlpapi)
   set(ADDITIONAL_RUBY_LIBS_DEBUG ${FFID} Iphlpapi)
 endif()
@@ -815,7 +821,7 @@ endif()
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
 set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20190307.tar.gz")
 set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "3dcc9690c1a9969e0824d6e2780df56c")
-set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
+set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
   file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
 endif()
@@ -827,10 +833,10 @@ if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
     SHOW_PROGRESS
     EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
 
-  file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/openstudio-gems")
-  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/openstudio-gems")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
 
-  file(REMOVE_RECURSE "${CMAKE_BINARY_DIR}/src/cli/embedded_files")
+  file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/src/cli/embedded_files")
 endif()
 
 # DView
@@ -852,7 +858,7 @@ if(BUILD_DVIEW)
       set(DVIEW_ZIP_EXPECTED_MD5 "c1d3fb6e736668eb4bdf0a5af2b4506c")
     endif()
 
-    set(DVIEW_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
+    set(DVIEW_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
     if(EXISTS "${DVIEW_ZIP_LOCAL_PATH}")
       file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
     endif()
@@ -863,10 +869,10 @@ if(BUILD_DVIEW)
         INACTIVITY_TIMEOUT 120
         SHOW_PROGRESS
         EXPECTED_MD5 ${DVIEW_ZIP_EXPECTED_MD5})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${DVIEW_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${DVIEW_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
     endif()
 
-    set(DVIEW_INSTALL_DIR "${CMAKE_BINARY_DIR}/DView-install")
+    set(DVIEW_INSTALL_DIR "${PROJECT_BINARY_DIR}/DView-install")
   endif()
 
   if(WIN32)
@@ -894,29 +900,29 @@ if(UNIX)
   ExternalProject_Add(SWIG
     URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.12.tar.gz
     URL_MD5 a7d384966974ed79455a455b517ad83d
-    PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/../dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
-    CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
+    PATCH_COMMAND cp ${PROJECT_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
+    CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG-install
     BUILD_COMMAND ${MAKE}
     INSTALL_COMMAND ${MAKE} install
     BUILD_IN_SOURCE 1
   )
-  set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
+  set(SWIG_EXECUTABLE ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
 else()
   # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
   set(SWIG_ZIP "swigwin-3.0.12.zip")
   set(SWIG_DIR "swigwin-3.0.12")
   set(SWIG_EXPECTED_HASH "8ee412d1278ba3cac22e58f26a842918")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${SWIG_ZIP}")
-    file(MD5 "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" SWIG_HASH)
+  if(EXISTS "${PROJECT_BINARY_DIR}/${SWIG_ZIP}")
+    file(MD5 "${PROJECT_BINARY_DIR}/${SWIG_ZIP}" SWIG_HASH)
   endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" OR NOT EXISTS "${CMAKE_BINARY_DIR}/${SWIG_DIR}" OR NOT "${SWIG_HASH}" MATCHES "${SWIG_EXPECTED_HASH}")
+  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${SWIG_ZIP}" OR NOT EXISTS "${PROJECT_BINARY_DIR}/${SWIG_DIR}" OR NOT "${SWIG_HASH}" MATCHES "${SWIG_EXPECTED_HASH}")
     message(STATUS "Downloading SWIG)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${SWIG_ZIP}" "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${SWIG_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${SWIG_DIR}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${SWIG_ZIP}" "${PROJECT_BINARY_DIR}/${SWIG_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${SWIG_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${SWIG_DIR}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${SWIG_ZIP}" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
   endif()
 
-  set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/${SWIG_DIR}/swig.exe)
+  set(SWIG_EXECUTABLE ${PROJECT_BINARY_DIR}/${SWIG_DIR}/swig.exe)
 endif()
 
 
@@ -987,7 +993,7 @@ endif()
 # include_directories(SYSTEM src/zlib)
 # add_subdirectory(src/zlib)
 # make sure zconf.h can be found
-# include_directories(${CMAKE_BINARY_DIR}/src/zlib)
+# include_directories(${PROJECT_BINARY_DIR}/src/zlib)
 
 #if(BUILD_TESTING)
 #  # force gtest to build as a static library no matter what, otherwise we get error about undefined death test symbols when building shared libs
@@ -1040,7 +1046,7 @@ if(BUILD_OS_APP)
       endif()
     endif()
 
-    set(QT_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${QT_ZIP_FILENAME}")
+    set(QT_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${QT_ZIP_FILENAME}")
     if(EXISTS "${QT_ZIP_LOCAL_PATH}")
       file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
     endif()
@@ -1051,11 +1057,11 @@ if(BUILD_OS_APP)
         INACTIVITY_TIMEOUT 120
         SHOW_PROGRESS
         EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
     endif()
   endif()
 
-  set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-install/")
+  set(QT_INSTALL_DIR "${PROJECT_BINARY_DIR}/Qt-install/")
 
   find_package(Qt5Core 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
   find_package(Qt5Widgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
@@ -1175,10 +1181,10 @@ endif()
 # Add to include path
 
 # Project source directory
-include_directories("${CMAKE_HOME_DIRECTORY}/src/")
+include_directories("${PROJECT_SOURCE_DIR}/src/")
 
 # Project binary directory
-include_directories("${CMAKE_BINARY_DIR}/src/")
+include_directories("${PROJECT_BINARY_DIR}/src/")
 
 ###############################################################################
 
@@ -1217,7 +1223,7 @@ set(project_directories
 
 if(BUILD_OS_APP)
   if(WIN32)
-    include_directories("${CMAKE_HOME_DIRECTORY}/src/qtwinmigrate")
+    include_directories("${PROJECT_SOURCE_DIR}/src/qtwinmigrate")
     list(APPEND project_directories "qtwinmigrate")
   endif()
   list(APPEND project_directories "model_editor")
@@ -1302,7 +1308,7 @@ if(BUILD_DOCUMENTATION)
 
   #endif()
 
-  configure_file(${CMAKE_SOURCE_DIR}/doc/index.html ${CMAKE_BINARY_DIR}/doc/index.html COPYONLY)
+  configure_file(${PROJECT_SOURCE_DIR}/doc/index.html ${PROJECT_BINARY_DIR}/doc/index.html COPYONLY)
 
   set(doxygen_directories ${project_directories})
   # Add the idd files to the documentation list as a separate entry, along with shared_gui_components
@@ -1312,16 +1318,16 @@ if(BUILD_DOCUMENTATION)
   list(REMOVE_ITEM doxygen_directories generateiddfactory)
 
   add_custom_target(openstudio_doc_resources
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/css" "css"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/fonts" "fonts"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/js" "js"
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/doc/css" "css"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/doc/fonts" "fonts"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/doc/js" "js"
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc
   )
 
   foreach(D ${doxygen_directories})
     string(REPLACE "/" "_" DOC_NAME ${D})
 
-    set(DOXY_INPUT_DIR "\"${CMAKE_SOURCE_DIR}/src/${D}\"")
+    set(DOXY_INPUT_DIR "\"${PROJECT_SOURCE_DIR}/src/${D}\"")
     set(DOXY_ADDITIONAL_DIR "")
     set(DOXY_EXCLUDE_DIR "")
     set(DOXY_TAGFILES "")
@@ -1330,24 +1336,24 @@ if(BUILD_DOCUMENTATION)
     # Specific settings
     if(${D} STREQUAL "utilities/idd")
       # We want to build the idd documentation separately because of the generated files
-      set(DOXY_ADDITIONAL_DIR "\"${CMAKE_BINARY_DIR}/src/${D}\"")
+      set(DOXY_ADDITIONAL_DIR "\"${PROJECT_BINARY_DIR}/src/${D}\"")
     elseif(${D} STREQUAL "utilities")
       # Exclude the idd directory when building the utilities documentation
-      set(DOXY_EXCLUDE_DIR "\"${CMAKE_SOURCE_DIR}/src/utilities/idd\"")
+      set(DOXY_EXCLUDE_DIR "\"${PROJECT_SOURCE_DIR}/src/utilities/idd\"")
       set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html")
     elseif(${D} STREQUAL "model")
       set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html utilities/utilities.tag=../../utilities/html")
     endif()
-    configure_file(${CMAKE_SOURCE_DIR}/Doxyfile.in ${CMAKE_BINARY_DIR}/doc/${DOC_NAME}.cfg)
+    configure_file(${PROJECT_SOURCE_DIR}/Doxyfile.in ${PROJECT_BINARY_DIR}/doc/${DOC_NAME}.cfg)
 
     add_custom_target(openstudio_${DOC_NAME}_doc
       COMMAND ${CMAKE_COMMAND} -E remove_directory "${DOC_NAME}"
       COMMAND ${CMAKE_COMMAND} -E make_directory "${DOC_NAME}"
       COMMAND ${DOXYGEN_EXECUTABLE} ${DOC_NAME}.cfg
-      COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/doc/search" "${DOC_NAME}/html/search"
-      COMMAND ${PATCH_EXE} "${DOC_NAME}/html/search/search.js" < "${CMAKE_SOURCE_DIR}/doc/patch/search.js.patch"
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/doc/search" "${DOC_NAME}/html/search"
+      COMMAND ${PATCH_EXE} "${DOC_NAME}/html/search/search.js" < "${PROJECT_SOURCE_DIR}/doc/patch/search.js.patch"
       DEPENDS openstudio_doc_resources
-      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc
     )
 
     set(ALL_CPP_DOC_TARGETS ${ALL_CPP_DOC_TARGETS}
@@ -1381,22 +1387,22 @@ if(BUILD_DOCUMENTATION)
 
   # Zip documentation
   if(WIN32)
-    if(NOT EXISTS "${CMAKE_BINARY_DIR}/7za.exe")
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/7za.zip" "${CMAKE_BINARY_DIR}/7za.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 EXPECTED_MD5 860077d3f314e939abab680218a3febe)
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/7za.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+    if(NOT EXISTS "${PROJECT_BINARY_DIR}/7za.exe")
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/7za.zip" "${PROJECT_BINARY_DIR}/7za.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 EXPECTED_MD5 860077d3f314e939abab680218a3febe)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/7za.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
     endif()
     add_custom_command(TARGET ALL_DOXYGEN
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OPENSTUDIO_VERSION}-doc.zip
-      COMMAND ${CMAKE_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-doc.zip * -r -x!*.cfg -x!*.tag -x!*.map -x!*.md5
-      COMMAND ${CMAKE_BINARY_DIR}/7za d OpenStudio-${OPENSTUDIO_VERSION}-doc.zip index.html
-      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
+      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-doc.zip * -r -x!*.cfg -x!*.tag -x!*.map -x!*.md5
+      COMMAND ${PROJECT_BINARY_DIR}/7za d OpenStudio-${OPENSTUDIO_VERSION}-doc.zip index.html
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc
     )
     add_custom_command(TARGET ALL_RDOC
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip
-      COMMAND ${CMAKE_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip * -r
-      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/rdoc
+      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip * -r
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/rdoc
     )
   endif()
 
@@ -1406,7 +1412,7 @@ endif()
 ###############################################################################
 # Export targets and generate OpenStudioCoreConfig.cmake
 
-set(TARGETS_FILE ${CMAKE_BINARY_DIR}/OpenStudioTargets.cmake)
+set(TARGETS_FILE ${PROJECT_BINARY_DIR}/OpenStudioTargets.cmake)
 
 set(all_lib_targets
   openstudio_osversion
@@ -1447,8 +1453,8 @@ if(UNIX AND NOT APPLE)
   endforeach()
 endif()
 
-configure_file("${CMAKE_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
-  "${CMAKE_BINARY_DIR}/OpenStudioCoreConfig.cmake" @ONLY)
+configure_file("${PROJECT_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
+  "${PROJECT_BINARY_DIR}/OpenStudioCoreConfig.cmake" @ONLY)
 
 
 if(UNIX AND NOT APPLE)
@@ -1458,15 +1464,15 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_7_0_20181012.pdf" DESTINATION .)
-install(FILES "${CMAKE_SOURCE_DIR}/../LICENSE.md" DESTINATION .)
-install(FILES "${CMAKE_SOURCE_DIR}/../CHANGELOG.md" DESTINATION .)
-install(FILES "${CMAKE_SOURCE_DIR}/../copyright.txt" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_7_0_20181012.pdf" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/../LICENSE.md" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/../CHANGELOG.md" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/../copyright.txt" DESTINATION .)
 
 ###############################################################################
 
 if(NOT UNIX)
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl" DESTINATION ./Perl/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
+  install(DIRECTORY "${PROJECT_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl" DESTINATION ./Perl/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
 
   #set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
   include(InstallRequiredSystemLibraries)
@@ -1507,37 +1513,37 @@ elseif(UNIX)
   # Plus a versioned one
   execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio openstudio-${OpenStudio_VERSION})
   # Have this link be installed with the .deb package in /usr/local/bin
-  install(FILES ${CMAKE_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
-  install(FILES ${CMAKE_BINARY_DIR}/openstudio-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
+  install(FILES ${PROJECT_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
+  install(FILES ${PROJECT_BINARY_DIR}/openstudio-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
 
   # Same for OpenStudioApp
   execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/OpenStudioApp OpenStudioApp)
   execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/OpenStudioApp OpenStudioApp-${OpenStudio_VERSION})
 
   # Have this link be installed with the .deb package in /usr/local/bin
-  install(FILES ${CMAKE_BINARY_DIR}/OpenStudioApp DESTINATION /usr/local/bin COMPONENT CLI)
-  install(FILES ${CMAKE_BINARY_DIR}/OpenStudioApp-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
+  install(FILES ${PROJECT_BINARY_DIR}/OpenStudioApp DESTINATION /usr/local/bin COMPONENT CLI)
+  install(FILES ${PROJECT_BINARY_DIR}/OpenStudioApp-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
 
 
   # Create a proper App with file associations
 
   # Install the .desktop manifest (allows the App to be seen in the Dash and adding to the dock, and to map it a mimetype)
-  install(FILES "${CMAKE_SOURCE_DIR}/openstudioapp.desktop" DESTINATION /usr/share/applications)
+  install(FILES "${PROJECT_SOURCE_DIR}/openstudioapp.desktop" DESTINATION /usr/share/applications)
   # Install the XML mime info
-  install(FILES "${CMAKE_SOURCE_DIR}/x-openstudio.xml" DESTINATION /usr/share/mime/application)
+  install(FILES "${PROJECT_SOURCE_DIR}/x-openstudio.xml" DESTINATION /usr/share/mime/application)
 
   # Copy the icons
   # Cf. http://standards.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
   foreach(_size 16 32 48 64 128 256)
     # Copy OS App icons
     install(
-      FILES "${CMAKE_SOURCE_DIR}/icons/os_${_size}.png"
+      FILES "${PROJECT_SOURCE_DIR}/icons/os_${_size}.png"
       DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/apps"
       RENAME openstudioapp.png
     )
     # Install OSM mimetypes icons
     install(
-      FILES "${CMAKE_SOURCE_DIR}/icons/osm_${_size}.png"
+      FILES "${PROJECT_SOURCE_DIR}/icons/osm_${_size}.png"
       DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/mimetypes"
       RENAME application-x-openstudio.png
     )
@@ -1547,7 +1553,7 @@ elseif(UNIX)
   foreach(_size 512 1024)
     # Copy OS App icons
     install(
-      FILES "${CMAKE_SOURCE_DIR}/icons/os_${_size}.png"
+      FILES "${PROJECT_SOURCE_DIR}/icons/os_${_size}.png"
       DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/apps"
       RENAME openstudioapp.png
     )
@@ -1590,9 +1596,9 @@ if(WIN32)
   set(CPACK_BINARY_NSIS OFF CACHE BOOL "Enable to build NSIS packages")
 endif()
 
-install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
-install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
-install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
+install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
+install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
+install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
 
 get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 file(GLOB ENERGYPLUS_FILES "${ENERGYPLUS_DIR}/energyplus*")
@@ -1632,10 +1638,10 @@ else()
 endif()
 
 if(WIN32)
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
+  install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
 else()
   string(REPLACE "-Redhat" "-Linux" RADIANCE_PATH ${RADIANCE_PATH})
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
+  install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
 endif()
 
 if(BUILD_PAT AND APPLE)
@@ -1645,7 +1651,7 @@ if(BUILD_PAT AND APPLE)
   install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.3.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
-  install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
+  install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
 endif()
 
 include(CPack)
@@ -1755,9 +1761,9 @@ if( BUILD_NUGET_PACKAGE )
   configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )
 
   add_custom_target(nuget_package
-    COMMAND NuGet pack OpenStudio.nuspec -BasePath "${CMAKE_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
+    COMMAND NuGet pack OpenStudio.nuspec -BasePath "${PROJECT_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
     DEPENDS csharp_sdk
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
   )
 endif()
 
