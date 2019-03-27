@@ -1,0 +1,154 @@
+# Add PCH support
+
+macro(GCCConfigurePCHFile ARCH)
+  CONFIGURE_FILE_WITH_CHECKSUM("${CMAKE_CURRENT_SOURCE_DIR}/PCH.hpp.gcc.in" "${CMAKE_CURRENT_BINARY_DIR}/${ARCH}/PCH.hpp")
+  CONFIGURE_FILE_WITH_CHECKSUM("${CMAKE_CURRENT_SOURCE_DIR}/PCH.hpp.gcc.in" "${CMAKE_CURRENT_BINARY_DIR}/${ARCH}/PCH.cpp")
+endmacro()
+
+macro(GCCAddPCHTarget ARCH)
+  if("${ARCH}" STREQUAL "")
+    set(ARCHNAME "")
+    set(PCH_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/PCH.cpp")
+    set(PCH_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/PCH.hpp.gch")
+  else()
+    set(ARCHNAME "_${ARCH}")
+    set(PCH_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/${ARCH}/PCH.cpp")
+    set(PCH_OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${ARCH}/PCH.hpp.gch")
+  endif()
+
+  add_library(pchlib${ARCHNAME} STATIC
+    ${PCH_SOURCES}
+  )
+
+  if(NOT "${ARCH}" STREQUAL "")
+    set_target_properties(pchlib${ARCHNAME}
+      PROPERTIES OSX_ARCHITECTURES "${arch}"
+    )
+  endif()
+
+  set_source_files_properties(${PCH_SOURCES}
+    PROPERTIES COMPILE_FLAGS "-x c++-header"
+  )
+
+
+  set_property(SOURCE ${PCH_SOURCES} APPEND PROPERTY COMPILE_DEFINITIONS_RELEASE QT_NO_DEBUG)
+  set_property(SOURCE ${PCH_SOURCES} APPEND PROPERTY COMPILE_DEFINITIONS_RELWITHDEBINFO QT_NO_DEBUG)
+  set_property(SOURCE ${PCH_SOURCES} APPEND PROPERTY COMPILE_DEFINITIONS_MINSIZEREL QT_NO_DEBUG)
+
+  add_custom_command(OUTPUT ${PCH_OUTPUT}
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/pchlib${ARCHNAME}.dir/${arch}/PCH.cpp.o ${PCH_OUTPUT}
+    DEPENDS pchlib${ARCHNAME}
+  )
+
+  add_custom_target(BUILD_PCH${ARCHNAME}
+    DEPENDS ${PCH_OUTPUT}
+  )
+endmacro()
+
+if(USE_PCH)
+  if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    if(CMAKE_OSX_ARCHITECTURES)
+      foreach(arch ${CMAKE_OSX_ARCHITECTURES})
+        GCCConfigurePCHFile(${arch})
+      endforeach()
+    else()
+      GCCConfigurePCHFile("")
+    endif()
+  elseif(MSVC)
+    CONFIGURE_FILE_WITH_CHECKSUM("${CMAKE_CURRENT_SOURCE_DIR}/PCH.hpp.msvc.in" "${CMAKE_CURRENT_BINARY_DIR}/PCH.hpp")
+  endif()
+
+  if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    if(CMAKE_OSX_ARCHITECTURES)
+      foreach(arch ${CMAKE_OSX_ARCHITECTURES})
+        GCCAddPCHTarget(${arch})
+      endforeach()
+    else()
+      GCCAddPCHTarget("")
+    endif()
+  endif()
+endif()
+
+macro(AddPCH TARGET_NAME)
+  if(USE_PCH)
+    get_target_property(target_files ${TARGET_NAME} SOURCES)
+    if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+
+      if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        get_target_property(target_type ${TARGET_NAME} TYPE)
+
+        if(target_type STREQUAL "EXECUTABLE")
+          # The point of this if block is to not add PCH to executables when compiling on Clang
+          # to avoid an error with PIE vs PIR compiler flags
+          set(add_pch_include FALSE)
+        else()
+          set(add_pch_include TRUE)
+        endif()
+      else()
+        set(add_pch_include TRUE)
+      endif()
+
+      if(CMAKE_OSX_ARCHITECTURES)
+        set(PROPSTRING "")
+        foreach(arch ${CMAKE_OSX_ARCHITECTURES})
+          set(PROPSTRING "${PROPSTRING} -Xarch_${arch} -include${PROJECT_BINARY_DIR}/src/utilities/pch/${arch}/PCH.hpp")
+          add_dependencies(${TARGET_NAME} BUILD_PCH_${arch})
+        endforeach()
+        set_target_properties(${TARGET_NAME}
+          PROPERTIES COMPILE_FLAGS "${PROPSTRING}"
+        )
+      else()
+        if (add_pch_include)
+          set_target_properties(${TARGET_NAME}
+            PROPERTIES COMPILE_FLAGS "-include ${PROJECT_BINARY_DIR}/src/utilities/pch/PCH.hpp"
+            )
+          add_dependencies(${TARGET_NAME} BUILD_PCH)
+        endif()
+      endif()
+    elseif(MSVC)
+
+      set(num_files "0")
+
+      set(cpp_first FALSE)
+      set(hpp_first FALSE)
+
+      foreach(f ${target_files})
+        get_source_file_property(p "${f}" LOCATION)
+
+        get_filename_component(extension "${p}" EXT)
+
+        if("${extension}" STREQUAL ".cpp" OR "${extension}" STREQUAL ".cxx")
+          math(EXPR num_files "${num_files} + 1")
+        endif()
+      endforeach()
+
+
+      if(num_files LESS 10)
+        message(STATUS "Not enabling PCH for ${TARGET_NAME} for MSVC because the target contains fewer than 10 source files: ${target_files}")
+      else()
+        set(PCH_OUTPUT "${PROJECT_BINARY_DIR}/${TARGET_NAME}-$(ConfigurationName).hpp.pch")
+
+        set_target_properties(${TARGET_NAME}
+          PROPERTIES COMPILE_FLAGS "/FIutilities/pch/PCH.hpp /Yuutilities/pch/PCH.hpp /Fp${PCH_OUTPUT}"
+        )
+
+        foreach(f ${target_files})
+          get_source_file_property(p "${f}" LOCATION)
+          get_filename_component(extension "${p}" EXT)
+          if("${extension}" STREQUAL ".cpp" OR "${extension}" STREQUAL ".cxx")
+            message(STATUS "Setting /Yc flag on: ${p}")
+            set_source_files_properties("${f}"
+              PROPERTIES COMPILE_FLAGS "/Ycutilities/pch/PCH.hpp /FIutilities/pch/PCH.hpp"
+            )
+
+            break()
+          endif()
+        endforeach()
+      endif()
+
+    endif()
+  endif()
+endmacro()
+
+
+# end of pch support
