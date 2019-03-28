@@ -178,9 +178,6 @@ if(BUILD_SHARED_LIBS)
   add_definitions("-DSHARED_OS_LIBS")
 endif()
 
-# Build the OpenStudio Application
-# This option will require shared libs
-option(BUILD_OS_APP "Build OS App" OFF)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
@@ -1025,169 +1022,6 @@ endif()
 #endif()
 
 
-if(BUILD_OS_APP)
-  # Qt
-  set(QT_INSTALL_DIR "" CACHE PATH "Path to Qt Install")
-  mark_as_advanced(QT_INSTALL_DIR)
-
-  if(NOT EXISTS ${QT_INSTALL_DIR})
-    # download qt
-    if(WIN32)
-      if(CMAKE_CL_64)
-        set(QT_ZIP_FILENAME "qt_5_11_msvc2017_64_shared.zip")
-        set(QT_ZIP_EXPECTED_MD5 "82f44a8decf101ca7cb7efafd899e8ee")
-      else()
-        set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_msvc2017_32_shared.zip")
-        set(QT_ZIP_EXPECTED_MD5 "25abd383e7db2dfd971b4a4ef145002b")
-      endif()
-    elseif(APPLE)
-        set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_osx_shared.tar.gz")
-        set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
-    elseif(EXISTS "/etc/redhat-release")
-      set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_redhat_shared.tar.gz")
-      set(QT_ZIP_EXPECTED_MD5 "b0610716854ed91a003347c455b22eb8")
-    else()
-      if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
-        set(QT_ZIP_FILENAME "qt_5_11_linux_shared.tar.gz")
-        set(QT_ZIP_EXPECTED_MD5 "33c5a562935612625ec5e41fe4b75e17")
-      else()
-        # 16.04
-        set(QT_ZIP_FILENAME "qt_5_11_linux_shared_xenial.tar.gz")
-        set(QT_ZIP_EXPECTED_MD5 "9b0e89433cf1a79c84f84f85c8fef168")
-      endif()
-    endif()
-
-    set(QT_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${QT_ZIP_FILENAME}")
-    if(EXISTS "${QT_ZIP_LOCAL_PATH}")
-      file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
-    endif()
-
-    if(NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
-        ${QT_ZIP_LOCAL_PATH}
-        INACTIVITY_TIMEOUT 120
-        SHOW_PROGRESS
-        EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
-    endif()
-  endif()
-
-  set(QT_INSTALL_DIR "${PROJECT_BINARY_DIR}/Qt-install/")
-
-  find_package(Qt5Core 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Widgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Sql 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Network 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Xml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Concurrent 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5PrintSupport 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Gui 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Quick 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5QuickWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Qml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5WebChannel 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Positioning 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-
-  find_package(Qt5WebEngine 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5WebEngineWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  #find_package(Qt53DCore 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  #find_package(Qt53DInput 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  #find_package(Qt53DRender 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-
-  if(APPLE)
-    set(QtWebEngineProcess "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers/QtWebEngineProcess.app" CACHE PATH "Path to the QtWebEngineProcess")
-  else()
-    find_program(QtWebEngineProcess NAMES QtWebEngineProcess PATHS "${QT_INSTALL_DIR}/bin/" "${QT_INSTALL_DIR}/libexec/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers" NO_DEFAULT_PATH)
-  endif()
-  find_file(icudtl NAMES icudtl.dat PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
-  find_file(qweb_resources NAMES qtwebengine_resources.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
-  find_file(qweb_resources_100 NAMES qtwebengine_resources_100p.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
-  find_file(qweb_resources_200 NAMES qtwebengine_resources_200p.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
-
-  # DLM: why do we have QT_WEB_LIBS separate from QT_LIBS?  can we combine these?
-  # DLM: now the distincton should be between Qt libs linked by openstudio_modeleditor.so and the OS App
-  list(APPEND QT_WEB_LIBS Qt5::Core)
-  list(APPEND QT_WEB_LIBS Qt5::Gui)
-  list(APPEND QT_WEB_LIBS Qt5::WebEngine)
-  list(APPEND QT_WEB_LIBS Qt5::WebEngineCore)
-  list(APPEND QT_WEB_LIBS Qt5::WebEngineWidgets)
-  #list(APPEND QT_WEB_LIBS Qt5::3DCore)
-  #list(APPEND QT_WEB_LIBS Qt5::3DInput)
-  #list(APPEND QT_WEB_LIBS Qt5::3DRender)
-  set_target_properties(${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "")
-
-  if(NOT APPLE)
-
-    find_package(Qt5WebChannel 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_WEB_LIBS Qt5::WebChannel)
-
-    find_package(Qt5Quick 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_WEB_LIBS Qt5::Quick)
-
-    find_package(Qt5QuickWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_WEB_LIBS Qt5::QuickWidgets)
-
-    find_package(Qt5Qml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_WEB_LIBS Qt5::Qml)
-
-    find_package(Qt5Positioning 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_WEB_LIBS Qt5::Positioning)
-
-    if(UNIX)
-      find_package(Qt5DBus 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-      list(APPEND QT_WEB_LIBS Qt5::DBus)
-
-      # there does not appear to be a normal qt finder for this
-      # DLM: actually there is, it is a plugin associated with Qt5::Gui
-      #message( Qt5Gui_PLUGINS = ${Qt5Gui_PLUGINS})
-      #get_target_property(Qt5QXcbIntegrationPlugin_LOCATION Qt5::QXcbIntegrationPlugin LOCATION)
-      #get_target_property(Qt5QXcbIntegrationPlugin_TYPE Qt5::QXcbIntegrationPlugin TYPE)
-      #message("Qt5::QXcbIntegrationPlugin Location = ${Qt5QXcbIntegrationPlugin_LOCATION}")
-      #message("Qt5::QXcbIntegrationPlugin Type = ${Qt5QXcbIntegrationPlugin_TYPE}")
-      list(APPEND QT_WEB_LIBS Qt5::QXcbIntegrationPlugin)
-      list(APPEND QT_WEB_LIBS Qt5::QXcbGlxIntegrationPlugin)
-    endif()
-  endif()
-
-  list(APPEND QT_LIBS Qt5::Core)
-  list(APPEND QT_LIBS Qt5::Widgets)
-  list(APPEND QT_LIBS Qt5::Network)
-  list(APPEND QT_LIBS Qt5::Xml)
-  list(APPEND QT_LIBS Qt5::Concurrent)
-  list(APPEND QT_LIBS Qt5::PrintSupport)
-  list(APPEND QT_LIBS Qt5::Gui)
-
-  if(WIN32)
-    find_package(Qt5WinExtras 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_LIBS Qt5::WinExtras)
-
-    find_library(QT_MAIN_LIB NAMES qtmain PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-    find_library(QT_MAIN_LIB_D NAMES qtmaind PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-  endif()
-
-  list(APPEND QT_INCLUDES ${Qt5Core_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5Concurrent_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5Widgets_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5Xml_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5Gui_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES "${QT_INSTALL_DIR}/include/QtGui/5.11.2/QtGui") # needed by qtwinmigrate
-  list(APPEND QT_INCLUDES ${Qt5PrintSupport_INCLUDE_DIRS})
-
-  # DLM: added this, but seems to conflict with idea of a separate set of Qt Web dependencies?
-  list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5WebEngine_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5WebEngineCore_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5WebEngineWidgets_INCLUDE_DIRS})
-
-  if(UNIX)
-    list(APPEND QT_INCLUDES ${Qt5XcbQpa_INCLUDE_DIRS})
-  endif()
-
-  set(CMAKE_AUTOMOC OFF)
-
-endif()
-
 ###############################################################################
 # Add to include path
 
@@ -1231,17 +1065,6 @@ set(project_directories
   cli
   install_utility
 )
-
-if(BUILD_OS_APP)
-  if(WIN32)
-    include_directories("${PROJECT_SOURCE_DIR}/src/qtwinmigrate")
-    list(APPEND project_directories "qtwinmigrate")
-  endif()
-  list(APPEND project_directories "model_editor")
-  list(APPEND project_directories "bimserver")
-  list(APPEND project_directories "openstudio_lib")
-  list(APPEND project_directories "openstudio_app")
-endif()
 
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
@@ -1440,24 +1263,11 @@ set(all_lib_targets
   ${ALL_RUBY_BINDING_TARGETS}
 )
 
-if(BUILD_OS_APP)
-  if(WIN32)
-    list(APPEND all_lib_targets "qtwinmigrate")
-  endif()
-  list(APPEND all_lib_targets "openstudio_modeleditor")
-  list(APPEND all_lib_targets "openstudio_bimserver")
-  list(APPEND all_lib_targets "openstudio_lib")
-endif()
-
 set(all_exe_targets
   GenerateIddFactory
   #gbXMLToIdf
   openstudio
 )
-
-if(BUILD_OS_APP)
-  list(APPEND all_exe_targets "OpenStudioApp")
-endif()
 
 if(UNIX AND NOT APPLE)
   foreach(targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
@@ -1718,29 +1528,6 @@ if(BUILD_CSHARP_BINDINGS)
   )
 
   cpack_ifw_configure_component(CSharpAPI
-    REQUIRES_ADMIN_RIGHTS
-  )
-endif()
-
-if(BUILD_OS_APP)
-
-  cpack_add_component(Resources
-    DISPLAY_NAME "Application Resources"
-    DESCRIPTION "Resource Files used by the OpenStudio Application"
-  )
-
-  cpack_add_component(OpenStudioApp
-    DISPLAY_NAME "OpenStudio Application"
-    DESCRIPTION "OpenStudio Application"
-  )
-
-  cpack_ifw_configure_component(Resources
-    REQUIRES_ADMIN_RIGHTS
-  )
-
-  cpack_ifw_configure_component(OpenStudioApp
-    DEPENDS Resources CLI
-    SCRIPT src/openstudio_app/install_operations.qs
     REQUIRES_ADMIN_RIGHTS
   )
 endif()
