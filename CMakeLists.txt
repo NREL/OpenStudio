@@ -135,6 +135,7 @@ if(UNIX AND NOT APPLE)
   set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 endif()
 
+# TODO: should this be only in OpenStudioApplication?
 option(BUILD_PAT "Build PAT" OFF)
 
 # Build C++ documentation using Doxygen
@@ -166,6 +167,7 @@ option(BUILD_TESTING "Build testing targets" OFF)
 # Build package
 # Requires: EnergyPlus, Radiance
 # TODO: this option is actually unused...
+# TODO: In any case, should core still produce a package or only in OpenStudioApplication?
 option(BUILD_PACKAGE "Build package" OFF)
 
 # Build with OpenSSL support
@@ -260,13 +262,14 @@ endif()
 # Conan
 
 # Download automatically, you can also just copy the conan.cmake file
-if(NOT EXISTS "${PROJECT_BINARY_DIR}/conan.cmake")
+# Put it in CMAKE_BINARY_DIR so we don't end up with two when building OpenStudioApplication
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
   message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
   file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
-    "${PROJECT_BINARY_DIR}/conan.cmake")
+    "${CMAKE_BINARY_DIR}/conan.cmake")
 endif()
 
-include(${PROJECT_BINARY_DIR}/conan.cmake)
+include(${CMAKE_BINARY_DIR}/conan.cmake)
 
 message(STATUS "RUNNING CONAN")
 
@@ -343,18 +346,22 @@ message(STATUS "DONE RUNNING CONAN")
 # CMake control
 
 # High level project configuration
+# TODO: Do we actually want everything to go to CMAKE_BINARY_DIR/Products,
+# so that when you build OpenStudioApplication you get both OpenStudio (core) and Application in the same place?
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
 
 set(LIBRARY_SEARCH_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Release" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug")
 
+# TODO: move App macros to a local ProjectMacros.cmake
 # Include project specific macros
 include("${PROJECT_SOURCE_DIR}/ProjectMacros.cmake")
 
 # Search first in the binary dir, where conan will install finders, then
 # search for modules in the root dir to override cmake ones
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/CMake")
+# Start with ROOT, then PROJECT_BINARY_DIR
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR} ${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/CMake")
 
 # Use CTest
 set(ALL_TESTING_TARGETS "") # global list
@@ -778,6 +785,7 @@ if(WIN32)
   endif()
 endif()
 
+# TODO: **Some** of these are for Qt, remove them
 if(UNIX)
   if(APPLE)
     find_library(GDBM libgdbm.a PATHS /usr/local/opt/gdbm/lib)
@@ -853,6 +861,7 @@ if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
   file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/src/cli/embedded_files")
 endif()
 
+# TODO: I think we want that only in OpenStudioApplication
 # DView
 option(BUILD_DVIEW "Build DView" OFF)
 
