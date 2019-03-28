@@ -1826,8 +1826,18 @@ namespace sdd {
       }
 
       model::OutputControlReportingTolerances rt = result->getUniqueModelObject<model::OutputControlReportingTolerances>();
-      rt.setToleranceforTimeCoolingSetpointNotMet(0.56);
-      rt.setToleranceforTimeHeatingSetpointNotMet(0.56);
+
+      auto element = projectElement.firstChildElement("HtgUnmetLdHrTol");
+      auto value = element.text().toDouble(&ok);
+      if (ok) {
+        rt.setToleranceforTimeHeatingSetpointNotMet(value * 5.0 / 9.0);
+      }
+
+      element = projectElement.firstChildElement("ClgUnmetLdHrTol");
+      value = element.text().toDouble(&ok);
+      if (ok) {
+        rt.setToleranceforTimeCoolingSetpointNotMet(value * 5.0 / 9.0);
+      }
     }
 
     return result;
