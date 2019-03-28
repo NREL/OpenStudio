@@ -59,6 +59,7 @@
 #include "../model/CoilHeatingGas.hpp"
 #include "../model/CoilHeatingGas_Impl.hpp"
 #include "../model/CoilHeatingElectric.hpp"
+#include "../model/CoilHeatingElectric_Impl.hpp"
 #include "../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../model/CoilWaterHeatingAirToWaterHeatPump.hpp"
 #include "../model/CoilWaterHeatingAirToWaterHeatPump_Impl.hpp"
@@ -8568,7 +8569,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     {
       model::Schedule alwaysOnDiscreteSchedule = model.alwaysOnDiscreteSchedule();
       suppHeatingCoil = model::CoilHeatingElectric(model,alwaysOnDiscreteSchedule);
-      LOG(Warn,name << " creating a default supplementary heating coil");
+      auto offSchedule = model.alwaysOffDiscreteSchedule();
+      suppHeatingCoil->cast<model::CoilHeatingElectric>().setAvailabilitySchedule(offSchedule);
+      suppHeatingCoil->cast<model::CoilHeatingElectric>().setNominalCapacity(0.0);
+      LOG(Warn,name << " creating a default supplementary heating coil, with no capacity");
     }
 
     if( ! heatingCoil )
