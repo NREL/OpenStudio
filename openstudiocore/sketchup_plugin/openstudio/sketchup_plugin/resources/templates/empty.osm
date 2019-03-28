@@ -1,7 +1,7 @@
 
 OS:Version,
-  {5d7030c7-4067-4057-9b7b-49950632ccb8}, !- Handle
-  2.7.0;                                  !- Version Identifier
+  {0f623a03-183e-4caf-87b1-a3dbe9172c54}, !- Handle
+  2.8.0;                                  !- Version Identifier
 
 OS:ClimateZones,
   {8a3ac41c-57d4-48e4-a48e-1f232e262211}, !- Handle
