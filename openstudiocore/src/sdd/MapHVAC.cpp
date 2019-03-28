@@ -133,6 +133,8 @@
 #include "../model/SetpointManagerWarmestTemperatureFlow_Impl.hpp"
 #include "../model/SetpointManagerOutdoorAirReset.hpp"
 #include "../model/SetpointManagerOutdoorAirReset_Impl.hpp"
+#include "../model/SetpointManagerScheduledDualSetpoint.hpp"
+#include "../model/SetpointManagerScheduledDualSetpoint_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
 #include "../model/ThermalStorageChilledWaterStratified.hpp"
@@ -6265,7 +6267,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     model::ScheduleDay heatingScheduleDay = heatingSchedule.defaultDaySchedule();
     heatingScheduleDay.addValue(Time(1.0),htgFixedSupTemp);
 
-    model::SetpointManagerScheduled spm(model,schedule);
+    model::SetpointManagerScheduledDualSetpoint spm(model);
+    spm.setHighSetpointSchedule(heatingSchedule);
+    spm.setLowSetpointSchedule(schedule);
     spm.setName(plantLoop.name().get() + " Supply Outlet SPM");
     spm.addToNode(supplyOutletNode);
 
