@@ -148,6 +148,8 @@
 #include "../model/AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
 #include "../model/AirTerminalSingleDuctSeriesPIUReheat.hpp"
 #include "../model/AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
+#include "../model/AirTerminalSingleDuctInletSideMixer.hpp"
+#include "../model/AirTerminalSingleDuctInletSideMixer_Impl.hpp"
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
 #include "../model/ThermostatSetpointDualSetpoint_Impl.hpp"
 #include "../model/Schedule.hpp"
@@ -4772,6 +4774,44 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   }
   for( auto & sysInfo : simSysInfo ) {
     translateSystemForZone(sysInfo);
+  }
+
+  auto createInletSideMixerForZoneSys = [&](const SysInfo & sysInfo) {
+    if( sysInfo.ModelObject ) {
+    	auto elements = thermalZoneElement.elementsByTagName("VentByPriAirCondgSys");
+    	for (int i = 0; i < elements.count(); i++) {
+    	  const auto & element = elements.at(i).toElement();
+    	  bool ok = false;
+    	  auto index = element.attribute("index").toInt(&ok);
+    	  if( ok ) {
+    	    if( index == sysInfo.Index ) {
+    	      auto flag = element.text().toInt(&ok);
+            if (flag == 1) {
+              auto zoneHVAC = sysInfo.ModelObject->optionalCast<model::ZoneHVACComponent>();
+              if (zoneHVAC) {
+                auto tz = zoneHVAC->thermalZone();
+                if (tz) {
+                  auto loop = tz->airLoopHVAC();
+                  if (loop) {
+                    zoneHVAC->removeFromThermalZone();
+                    loop->removeBranchForZone(tz.get());
+                    model::AirTerminalSingleDuctInletSideMixer inletSideMixer(model);
+                    loop->addBranchForZone(tz.get(), inletSideMixer);
+                    auto node = inletSideMixer.outletModelObject()->cast<model::Node>();
+                    zoneHVAC->addToNode(node);
+                    break;
+                  }
+                }
+              }
+            }
+    	    }
+    	  }
+    	}
+    }
+  };
+
+  for( auto & sysInfo : priAirCondInfo ) {
+    createInletSideMixerForZoneSys(sysInfo);
   }
 
   // Set priority
