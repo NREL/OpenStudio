@@ -765,6 +765,14 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
       vrf.setDefrostStrategy("ReverseCycle");
     } else if( istringEqual("Electric",value) ) {
       vrf.setDefrostStrategy("Resistive");
+      auto element = vrfSysElement.firstChildElement("DefHtrCap");
+      bool ok;
+      auto value = element.text().toDouble(&ok);
+      if( ok ) {
+        vrf.setResistiveDefrostHeaterCapacity(value);
+      } else {
+        vrf.autosizeResistiveDefrostHeaterCapacity();
+      }
     }
   }
 
@@ -783,16 +791,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     auto value = element.text().toDouble(&ok);
     if( ok ) {
       vrf.setDefrostTimePeriodFraction(value);
-    }
-  }
-
-  if( ! autosize() ) {
-    auto element = vrfSysElement.firstChildElement("DefHtrCap");
-    bool ok;
-    auto value = element.text().toDouble(&ok);
-    if( ok ) {
-      value = unitToUnit(value,"Btu/h","W").get();
-      vrf.setResistiveDefrostHeaterCapacity(value);
     }
   }
 
