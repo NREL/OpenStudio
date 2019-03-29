@@ -725,6 +725,9 @@ else()
   set(RUBY_POSSIBLE_LIB_DIR "${RUBY_INSTALL_DIR}/lib")
 endif()
 
+# Export to Parent
+set(RUBY_INCLUDE_DIRS "${RUBY_INCLUDE_DIRS}" PARENT_SCOPE)
+
 # Mingw based ruby lib (only the dll stub library) from Ruby Installer
 # We need this for stand alone ruby bindings
 # target to use with typical ruby installations (those that are not msvc)
@@ -911,6 +914,8 @@ else()
   set(SWIG_EXECUTABLE ${PROJECT_BINARY_DIR}/${SWIG_DIR}/swig.exe)
 endif()
 
+# Export SWIG to parent scope
+set(SWIG_EXECUTABLE "${SWIG_EXECUTABLE}" PARENT_SCOPE)
 
 set(ALL_RUBY_BINDING_TARGETS "") # global list
 
