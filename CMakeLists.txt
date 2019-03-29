@@ -263,13 +263,13 @@ endif()
 
 # Download automatically, you can also just copy the conan.cmake file
 # Put it in CMAKE_BINARY_DIR so we don't end up with two when building OpenStudioApplication
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+if(NOT EXISTS "${PROJECT_BINARY_DIR}/conan.cmake")
   message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
   file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
-    "${CMAKE_BINARY_DIR}/conan.cmake")
+    "${PROJECT_BINARY_DIR}/conan.cmake")
 endif()
 
-include(${CMAKE_BINARY_DIR}/conan.cmake)
+include(${PROJECT_BINARY_DIR}/conan.cmake)
 
 message(STATUS "RUNNING CONAN")
 
