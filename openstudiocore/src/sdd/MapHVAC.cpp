@@ -8361,17 +8361,56 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
     }
   }
 
-  // HtgDsgnSupAirTemp
-
   boost::optional<double> htgDsgnSupAirTemp;
-
-  if( ! autosize() )
-  {
+  if( ! autosize() ) {
     QDomElement htgDsgnSupAirTempElement = element.firstChildElement("HtgDsgnSupAirTemp");
-
     value = htgDsgnSupAirTempElement.text().toDouble(&ok);
-
     htgDsgnSupAirTemp = unitToUnit(value,"F","C").get();
+  }
+
+  boost::optional<model::Schedule> fanOperModeSch;
+  boost::optional<double> clgSupFanCapSim;
+  boost::optional<double> htgSupFanCapSim;
+  boost::optional<double> noClgSupFanCapSim;
+  boost::optional<double> noHtgSupFanCapSim;
+  boost::optional<double> noClgHtgSupFanCapSim;
+  boost::optional<double> clgOAFlowCapSim;
+  boost::optional<double> htgOAFlowCapSim;
+  boost::optional<double> noClgHtgOAFlowCapSim;
+
+  auto text = element.firstChildElement("FanOperModeSchRef").text().toStdString();
+  fanOperModeSch = model.getModelObjectByName<model::Schedule>(text);
+  value = element.firstChildElement("ClgSupFanCapSim").text().toDouble(&ok);
+  if (ok) {
+    clgSupFanCapSim = unitToUnit(value,"cfm","m^3/s").get();
+  }
+  value = element.firstChildElement("HtgSupFanCapSim").text().toDouble(&ok);
+  if (ok) {
+    htgSupFanCapSim = unitToUnit(value,"cfm","m^3/s").get();
+  }
+  value = element.firstChildElement("NoClgHtgSupFanCapSim").text().toDouble(&ok);
+  if (ok) {
+    noClgHtgSupFanCapSim = unitToUnit(value,"cfm","m^3/s").get();
+  }
+  value = element.firstChildElement("NoClgSupFanCapSim").text().toDouble(&ok);
+  if (ok) {
+    noClgHtgOAFlowCapSim = unitToUnit(value,"cfm","m^3/s").get();
+  }
+  value = element.firstChildElement("NoHtgSupFanCapSim").text().toDouble(&ok);
+  if (ok) {
+    noHtgSupFanCapSim = unitToUnit(value,"cfm","m^3/s").get();
+  }
+  value = element.firstChildElement("ClgOAFlowCapSim").text().toDouble(&ok);
+  if (ok) {
+    clgOAFlowCapSim = unitToUnit(value,"cfm","m^3/s").get();
+  }
+  value = element.firstChildElement("HtgOAFlowCapSim").text().toDouble(&ok);
+  if (ok) {
+    htgOAFlowCapSim = unitToUnit(value,"cfm","m^3/s").get();
+  }
+  value = element.firstChildElement("NoClgHtgOAFlowCapSim").text().toDouble(&ok);
+  if (ok) {
+    noClgHtgOAFlowCapSim = unitToUnit(value,"cfm","m^3/s").get();
   }
 
   if( istringEqual(type,"PTAC") || istringEqual(type,"SZAC") )
@@ -8430,6 +8469,28 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       {
         model::Schedule schedule = model.alwaysOnDiscreteSchedule();
         ptac.setSupplyAirFanOperatingModeSchedule(schedule);
+      }
+
+      if (fanOperModeSch) {
+        ptac.setSupplyAirFanOperatingModeSchedule(fanOperModeSch.get());
+      }
+      if (clgSupFanCapSim) {
+        ptac.setSupplyAirFlowRateDuringCoolingOperation(clgSupFanCapSim.get());
+      }
+      if (htgSupFanCapSim) {
+        ptac.setSupplyAirFlowRateDuringHeatingOperation(htgSupFanCapSim.get());
+      }
+      if (noClgHtgSupFanCapSim) {
+        ptac.setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(noClgHtgSupFanCapSim.get());
+      }
+      if (clgOAFlowCapSim) {
+        ptac.setOutdoorAirFlowRateDuringCoolingOperation(clgOAFlowCapSim.get());
+      }
+      if (htgOAFlowCapSim) {
+        ptac.setOutdoorAirFlowRateDuringHeatingOperation(htgOAFlowCapSim.get());
+      }
+      if (noClgHtgOAFlowCapSim) {
+        ptac.setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(noClgHtgOAFlowCapSim.get());
       }
 
       result = ptac;
@@ -8563,6 +8624,28 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
         model::Schedule schedule = model.alwaysOnDiscreteSchedule();
         wshp->setSupplyAirFanOperatingModeSchedule(schedule);
       }
+    }
+
+    if (fanOperModeSch) {
+      wshp->setSupplyAirFanOperatingModeSchedule(fanOperModeSch.get());
+    }
+    if (clgSupFanCapSim) {
+      wshp->setSupplyAirFlowRateDuringCoolingOperation(clgSupFanCapSim.get());
+    }
+    if (htgSupFanCapSim) {
+      wshp->setSupplyAirFlowRateDuringHeatingOperation(htgSupFanCapSim.get());
+    }
+    if (noClgHtgSupFanCapSim) {
+      wshp->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(noClgHtgSupFanCapSim.get());
+    }
+    if (clgOAFlowCapSim) {
+      wshp->setOutdoorAirFlowRateDuringCoolingOperation(clgOAFlowCapSim.get());
+    }
+    if (htgOAFlowCapSim) {
+      wshp->setOutdoorAirFlowRateDuringHeatingOperation(htgOAFlowCapSim.get());
+    }
+    if (noClgHtgOAFlowCapSim) {
+      wshp->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(noClgHtgOAFlowCapSim.get());
     }
   }
   else if( istringEqual(type,"PTHP") || istringEqual(type,"SZHP") )
@@ -8736,6 +8819,28 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       if( htgDsgnSupAirTemp )
       {
         pthp->setMaximumSupplyAirTemperaturefromSupplementalHeater(htgDsgnSupAirTemp.get());
+      }
+
+      if (fanOperModeSch) {
+        pthp->setSupplyAirFanOperatingModeSchedule(fanOperModeSch.get());
+      }
+      if (clgSupFanCapSim) {
+        pthp->setSupplyAirFlowRateDuringCoolingOperation(clgSupFanCapSim.get());
+      }
+      if (htgSupFanCapSim) {
+        pthp->setSupplyAirFlowRateDuringHeatingOperation(htgSupFanCapSim.get());
+      }
+      if (noClgHtgSupFanCapSim) {
+        pthp->setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(noClgHtgSupFanCapSim.get());
+      }
+      if (clgOAFlowCapSim) {
+        pthp->setOutdoorAirFlowRateDuringCoolingOperation(clgOAFlowCapSim.get());
+      }
+      if (htgOAFlowCapSim) {
+        pthp->setOutdoorAirFlowRateDuringHeatingOperation(htgOAFlowCapSim.get());
+      }
+      if (noClgHtgOAFlowCapSim) {
+        pthp->setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(noClgHtgOAFlowCapSim.get());
       }
     }
   }
