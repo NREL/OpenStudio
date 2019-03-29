@@ -263,83 +263,52 @@ endif()
 
 # Download automatically, you can also just copy the conan.cmake file
 # Put it in CMAKE_BINARY_DIR so we don't end up with two when building OpenStudioApplication
-if(NOT EXISTS "${PROJECT_BINARY_DIR}/conan.cmake")
-  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+  message(STATUS "openstudio: Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
   file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
-    "${PROJECT_BINARY_DIR}/conan.cmake")
+    "${CMAKE_BINARY_DIR}/conan.cmake")
+else()
+  message(STATUS "openstudio: using existing conan.cmake")
 endif()
 
-include(${PROJECT_BINARY_DIR}/conan.cmake)
-
-message(STATUS "RUNNING CONAN")
-
+include(${CMAKE_BINARY_DIR}/conan.cmake)
 conan_check(VERSION 1.0.0 REQUIRED)
 
-conan_add_remote(NAME bincrafters
-  URL https://api.bintray.com/conan/bincrafters/public-conan)
+set(CONAN_INSTALL_FILE "${PROJECT_SOURCE_DIR}/ConanInstall.cmake")
+file(SHA256 ${CONAN_INSTALL_FILE} CONAN_INSTALL_FILE_NEW_HASH)
+set(CONAN_BUILD_INFO "${PROJECT_BINARY_DIR}/conanbuildinfo.cmake")
 
-set(CONAN_OPTIONS "")
-set(CONAN_BUILD "")
-if (MSVC)
-  set(CONAN_OPENSSL "")
-  set(CONAN_BOOST_ASIO "")
-  set(CONAN_WEBSOCKETPP "")
-  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_BUILD "missing")
-elseif (APPLE)
-  set(CONAN_OPENSSL "")
-  set(CONAN_BOOST_ASIO "")
-  set(CONAN_WEBSOCKETPP "")
-  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_BUILD "missing")
-else()
-  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
-  set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
-  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
-  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
-  list(APPEND CONAN_BUILD "missing")
-  list(APPEND CONAN_BUILD "boost_asio")
-  list(APPEND CONAN_BUILD "websocketpp")
+set(RUN_CONAN FALSE)
+
+# We re-run conan only:
+# If we don't have a cached hash
+if(NOT DEFINED CONAN_INSTALL_FILE_CACHED_HASH)
+  message("openstudio: Running Conan for the first time.")
+  set(RUN_CONAN TRUE)
+# Or if it's outdated,
+elseif( NOT (CONAN_INSTALL_FILE_NEW_HASH STREQUAL CONAN_INSTALL_FILE_CACHED_HASH) )
+  message("openstudio: ${CONAN_INSTALL_FILE} has been updated, re-running Conan.")
+  message("CONAN_INSTALL_FILE_CACHED_HASH = ${CONAN_INSTALL_FILE_CACHED_HASH}")
+  message("CONAN_INSTALL_FILE_NEW_HASH    = ${CONAN_INSTALL_FILE_NEW_HASH}")
+  set(RUN_CONAN TRUE)
+# Or we don't have a conanbuildinfo.cmake (shouldn't happen, but let's be safe).
+elseif((NOT EXISTS "${CONAN_BUILD_INFO}") )
+  message("openstudio: ${CONAN_BUILD_INFO} doesn't exist. Running Conan.")
+  set(RUN_CONAN TRUE)
 endif()
 
-if (BUILD_TESTING)
-  set(CONAN_GTEST "gtest/1.8.1@bincrafters/stable")
+if(RUN_CONAN)
+  include("${CONAN_INSTALL_FILE}")
+  # Store the hash for next comparison
+  set(CONAN_INSTALL_FILE_CACHED_HASH "${CONAN_INSTALL_FILE_NEW_HASH}" CACHE INTERNAL "SHA256 hash of the ${CONAN_INSTALL_FILE} to check if need to rerun" FORCE)
 else()
-  set(CONAN_GTEST "")
+  # Otherwise it's good to go, we just reload the info
+  message(STATUS "openstudio: Reloading ${PROJECT_BINARY_DIR}/conanbuildinfo.cmake")
+  include(${PROJECT_BINARY_DIR}/conanbuildinfo.cmake)
+  conan_basic_setup(TARGETS)
+  # message("CONAN_TARGETS = ${CONAN_TARGETS}")
 endif()
 
-# DLM: add option for shared libs if we are building shared?
-
-conan_cmake_run(REQUIRES
-  ${CONAN_OPENSSL}
-  ${CONAN_BOOST_ASIO}
-  boost_program_options/1.69.0@bincrafters/stable
-  boost_regex/1.69.0@bincrafters/stable
-  boost_filesystem/1.69.0@bincrafters/stable
-  boost_crc/1.69.0@bincrafters/stable
-  boost_algorithm/1.69.0@bincrafters/stable
-  boost_uuid/1.69.0@bincrafters/stable
-  boost_log/1.69.0@bincrafters/stable
-  boost_numeric_ublas/1.69.0@bincrafters/stable
-  boost_functional/1.69.0@bincrafters/stable
-  boost_geometry/1.69.0@bincrafters/stable
-  pugixml/1.9@bincrafters/stable
-  jsoncpp/1.8.4@theirix/stable
-  zlib/1.2.11@conan/stable
-  fmt/5.2.1@bincrafters/stable
-  sqlite3/3.27.2@bincrafters/stable
-  cpprestsdk/2.10.10@bincrafters/stable
-  ${CONAN_WEBSOCKETPP}
-  geographiclib/1.49@bincrafters/stable
-  ${CONAN_GTEST}
-  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
-  OPTIONS ${CONAN_OPTIONS}
-  BUILD ${CONAN_BUILD}
-)
-
-#message("CONAN_TARGETS = ${CONAN_TARGETS}")
-message(STATUS "DONE RUNNING CONAN")
 ###############################################################################
 
 ###############################################################################
