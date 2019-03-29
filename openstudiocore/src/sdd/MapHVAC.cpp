@@ -5092,7 +5092,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     // OperableWinOAFlow
     auto operableWinOAFlow = thermalZoneElement.firstChildElement("OperableWinOAFlow").text().toDouble(&ok);
     if( ok ) {
-      zoneVent.setDesignFlowRateCalculationMethod("Flow/Zone");
       operableWinOAFlow = unitToUnit(operableWinOAFlow,"cfm","m^3/s").get();
       zoneVent.setDesignFlowRate(operableWinOAFlow);
     }
