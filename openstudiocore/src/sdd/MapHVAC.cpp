@@ -4225,6 +4225,32 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     sizingZone.setHeatingMaximumAirFlowFraction(htgDsgnMaxFlowFrac);
   }
 
+  auto intValue = thermalZoneElement.firstChildElement("SizeForDOAS").text().toInt(&ok);
+  if (ok) {
+    if (intValue == 0) {
+      sizingZone.setAccountforDedicatedOutdoorAirSystem(false);
+    } else {
+      sizingZone.setAccountforDedicatedOutdoorAirSystem(true);
+    }
+  }
+
+  auto text = thermalZoneElement.firstChildElement("SizeForDOASCtrl").text().toStdString();
+  if (text.empty()) {
+    sizingZone.setDedicatedOutdoorAirSystemControlStrategy("Neutral");
+  } else {
+    sizingZone.setDedicatedOutdoorAirSystemControlStrategy(text);
+  }
+
+  value = thermalZoneElement.firstChildElement("SizeForDOASTempLow").text().toDouble(&ok);
+  if (ok) {
+    sizingZone.setDedicatedOutdoorAirLowSetpointTemperatureforDesign(unitToUnit(value,"F","C").get());
+  }
+
+  value = thermalZoneElement.firstChildElement("SizeForDOASTempHi").text().toDouble(&ok);
+  if (ok) {
+    sizingZone.setDedicatedOutdoorAirHighSetpointTemperatureforDesign(unitToUnit(value,"F","C").get());
+  }
+
   // Ventilation
 
   double ventPerPersonSim = 0.0;
