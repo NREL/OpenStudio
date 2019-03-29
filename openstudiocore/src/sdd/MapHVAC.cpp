@@ -1120,6 +1120,26 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     {
       airLoopHVAC.setNightCycleControlType("CycleOnAnyZoneFansOnly");
     }
+    else if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleOnAnyCooling") )
+    {
+      airLoopHVAC.setNightCycleControlType("CycleOnAnyCoolingZone");
+    }
+    else if( istringEqual(nightCycleFanCtrlElement.text().toStdString(),"CycleOnAnyHeating") )
+    {
+      airLoopHVAC.setNightCycleControlType("CycleOnAnyHeatingZone");
+    }
+
+    auto ncms = subsetCastVector<model::AvailabilityManagerNightCycle>(airLoopHVAC.availabilityManagers());
+    if (!ncms.empty()) {
+      auto ncm = ncms.front();
+      ncm.setCyclingRunTimeControlType("ThermostatWithMinimumRunTime");
+      ncm.setCyclingRunTime(300.0);
+
+      auto cycleTime = airSystemElement.firstChildElement("NightCycleRunTime").text().toInt(&ok);
+      if (ok) {
+        ncm.setCyclingRunTime(cycleTime);
+      }
+    }
 
     if( ! airLoopHVAC.availabilityManagers().empty() ) {
       auto avm = airLoopHVAC.availabilityManagers().front();
