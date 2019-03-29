@@ -403,12 +403,12 @@ set(${target_name}_depends
   CONAN_PKG::zlib
   CONAN_PKG::fmt
   CONAN_PKG::pugixml
-  CONAN_PKG::boost_filesystem 
-  CONAN_PKG::boost_crc 
-  CONAN_PKG::boost_regex 
-  CONAN_PKG::boost_algorithm 
-  CONAN_PKG::boost_uuid 
-  CONAN_PKG::boost_log 
+  CONAN_PKG::boost_filesystem
+  CONAN_PKG::boost_crc
+  CONAN_PKG::boost_regex
+  CONAN_PKG::boost_algorithm
+  CONAN_PKG::boost_uuid
+  CONAN_PKG::boost_log
   CONAN_PKG::boost_program_options
   CONAN_PKG::boost_numeric_ublas
   CONAN_PKG::boost_functional

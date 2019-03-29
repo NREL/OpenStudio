@@ -304,6 +304,8 @@ if(RUN_CONAN)
 else()
   # Otherwise it's good to go, we just reload the info
   message(STATUS "openstudio: Reloading ${PROJECT_BINARY_DIR}/conanbuildinfo.cmake")
+  # Silence this part
+  set(CONAN_CMAKE_SILENT_OUTPUT TRUE)
   include(${PROJECT_BINARY_DIR}/conanbuildinfo.cmake)
   conan_basic_setup(TARGETS)
   # message("CONAN_TARGETS = ${CONAN_TARGETS}")
@@ -446,7 +448,7 @@ if("Ninja" STREQUAL ${CMAKE_GENERATOR})
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # For some reason it doesn't say its supported, but it works...
     # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
-    message(STATUS "Forcing -fdiagnostics-color=always")
+    message(STATUS "Ninja: Forcing -fdiagnostics-color=always")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
   endif()
 endif()
@@ -683,8 +685,6 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     set(RUBY_INSTALL_DIR "${PROJECT_BINARY_DIR}/Ruby-install")
   endif()
 endif()
-
-message(STATUS "RUBY_INSTALL_DIR = ${RUBY_INSTALL_DIR}")
 
 # Check that the Ruby OpenSSL version is the right one
 set(EXPECTED_RUBY_OPENSSL_VERSION "1.1.0g")
