@@ -1,7 +1,7 @@
 
 OS:Version,
-  {44cc528e-fe67-4182-af77-73d4656b8cee}, !- Handle
-  2.7.0;                                  !- Version Identifier
+  {13086a89-4d13-4d17-aab6-54f6ec2d8a53}, !- Handle
+  2.8.0;                                  !- Version Identifier
 
 OS:SpaceType,
   {e0526529-4fdb-4700-9395-efccd411628b}, !- Handle
@@ -6445,7 +6445,8 @@ OS:DefaultConstructionSet,
   {b9ac6245-26b5-4f64-93ef-6f6c00c376f5}, !- Interior Partition Construction Name
   ,                                       !- Space Shading Construction Name
   ,                                       !- Building Shading Construction Name
-  ;                                       !- Site Shading Construction Name
+  ,                                       !- Site Shading Construction Name
+  ;                                       !- Adiabatic Surface Construction Name
 
 OS:DefaultSurfaceConstructions,
   {47c9a601-105b-47ab-aff7-fa0032269a4b}, !- Handle
@@ -6993,7 +6994,8 @@ OS:DefaultConstructionSet,
   {b9ac6245-26b5-4f64-93ef-6f6c00c376f5}, !- Interior Partition Construction Name
   ,                                       !- Space Shading Construction Name
   ,                                       !- Building Shading Construction Name
-  ;                                       !- Site Shading Construction Name
+  ,                                       !- Site Shading Construction Name
+  ;                                       !- Adiabatic Surface Construction Name
 
 OS:DefaultSurfaceConstructions,
   {482afdb1-0c2e-4032-880c-35b1a7d9ffa6}, !- Handle
@@ -7159,7 +7161,8 @@ OS:DefaultConstructionSet,
   {b9ac6245-26b5-4f64-93ef-6f6c00c376f5}, !- Interior Partition Construction Name
   ,                                       !- Space Shading Construction Name
   ,                                       !- Building Shading Construction Name
-  ;                                       !- Site Shading Construction Name
+  ,                                       !- Site Shading Construction Name
+  ;                                       !- Adiabatic Surface Construction Name
 
 OS:DefaultSurfaceConstructions,
   {d6af2b3b-28db-4bf2-a9dc-1c4fd0f824dd}, !- Handle
@@ -7291,7 +7294,8 @@ OS:DefaultConstructionSet,
   {b9ac6245-26b5-4f64-93ef-6f6c00c376f5}, !- Interior Partition Construction Name
   ,                                       !- Space Shading Construction Name
   ,                                       !- Building Shading Construction Name
-  ;                                       !- Site Shading Construction Name
+  ,                                       !- Site Shading Construction Name
+  ;                                       !- Adiabatic Surface Construction Name
 
 OS:DefaultSurfaceConstructions,
   {c592de20-015b-46b7-9ed9-9a7c6492d96b}, !- Handle
@@ -7423,7 +7427,8 @@ OS:DefaultConstructionSet,
   {b9ac6245-26b5-4f64-93ef-6f6c00c376f5}, !- Interior Partition Construction Name
   ,                                       !- Space Shading Construction Name
   ,                                       !- Building Shading Construction Name
-  ;                                       !- Site Shading Construction Name
+  ,                                       !- Site Shading Construction Name
+  ;                                       !- Adiabatic Surface Construction Name
 
 OS:DefaultSurfaceConstructions,
   {5087102c-c07c-40d4-acaf-15aea71334e6}, !- Handle
@@ -7516,7 +7521,8 @@ OS:DefaultConstructionSet,
   {b9ac6245-26b5-4f64-93ef-6f6c00c376f5}, !- Interior Partition Construction Name
   ,                                       !- Space Shading Construction Name
   ,                                       !- Building Shading Construction Name
-  ;                                       !- Site Shading Construction Name
+  ,                                       !- Site Shading Construction Name
+  ;                                       !- Adiabatic Surface Construction Name
 
 OS:DefaultSurfaceConstructions,
   {376d4f07-37bd-46e5-a15e-aae6bc33d029}, !- Handle
@@ -7698,7 +7704,8 @@ OS:DefaultConstructionSet,
   {b9ac6245-26b5-4f64-93ef-6f6c00c376f5}, !- Interior Partition Construction Name
   ,                                       !- Space Shading Construction Name
   ,                                       !- Building Shading Construction Name
-  ;                                       !- Site Shading Construction Name
+  ,                                       !- Site Shading Construction Name
+  ;                                       !- Adiabatic Surface Construction Name
 
 OS:DefaultSurfaceConstructions,
   {7785fac6-0917-4b78-a353-f104f131e302}, !- Handle

@@ -1,7 +1,7 @@
 
 OS:Version,
-  {3944b8bd-ed06-4f19-9d5c-f74bb26838f7}, !- Handle
-  2.7.0;                                  !- Version Identifier
+  {79a8a48c-b08c-47ff-bc43-0f82dc654301}, !- Handle
+  2.8.0;                                  !- Version Identifier
 
 ! Always OnOff Discrete Schedule Type Limits
 OS:ScheduleTypeLimits,
@@ -667,7 +667,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   {8d3b17e0-88c9-4d17-9de4-0b9dd0481b36}, !- Handle
   Direct Evap Cooler,                     !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
-  1,                                      !- Cooler Effectiveness
+  1,                                      !- Cooler Design Effectiveness
   0,                                      !- Recirculating Water Pump Power Consumption {W}
   Autosize,                               !- Primary Air Design Flow Rate {m3/s}
   ,                                       !- Air Inlet Node Name
@@ -11943,10 +11943,6 @@ OS:Schedule:Day,
   24,                                     !- Hour 1
   0,                                      !- Minute 1
   0.05;                                   !- Value Until Time 1
-
-
-
-
 
 ! TO DELETE ?
 

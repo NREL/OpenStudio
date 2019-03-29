@@ -397,25 +397,16 @@ if(UNIX)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
-    unset(ENERGYPLUS_FOUND CACHE)
-    unset(ENERGYPLUS_EXE CACHE)
-    unset(ENERGYPLUS_IDD CACHE)
-    unset(ENERGYPLUS_WEATHER_DIR CACHE)
+
     if(EXISTS "/etc/redhat-release")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     else()
       file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     endif()
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
 
-  # Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
-  if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
-    set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
-  else()
-    # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
-    set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+    # Remove the old extracted dir if exists
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+
   endif()
 
 elseif(WIN32)
@@ -434,16 +425,38 @@ elseif(WIN32)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
-    unset(ENERGYPLUS_FOUND CACHE)
-    unset(ENERGYPLUS_EXE CACHE)
-    unset(ENERGYPLUS_IDD CACHE)
-    unset(ENERGYPLUS_WEATHER_DIR CACHE)
+
     file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+
+    # Remove the old extracted dir if exists
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+
+  endif()
+
+endif()
+
+# Allows placing the archive manually in the build dir too
+if (NOT EXISTS "${ENERGYPLUS_PATH}")
+  unset(ENERGYPLUS_FOUND CACHE)
+  unset(ENERGYPLUS_EXE CACHE)
+  unset(ENERGYPLUS_IDD CACHE)
+  unset(ENERGYPLUS_WEATHER_DIR CACHE)
+  if (UNIX)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  else()
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
-  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
 endif()
+
+# Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
+if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
+  set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+else()
+  # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
+  set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+endif()
+
+# Find EnergyPlus, which will set the ENERGYPLUS_XXX variables and cache them
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Radiance
@@ -540,6 +553,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
   endif()
 
   if( NOT RUBY_ZIP_MD5 STREQUAL RUBY_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading Ruby: ${RUBY_ZIP_FILENAME}")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_ZIP_FILENAME}"
       ${RUBY_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -589,6 +603,7 @@ if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
   endif()
 
   if( NOT RUBY_MINGW_LIB_ZIP_MD5 STREQUAL RUBY_MINGW_LIB_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading Ruby Mingw Lib: ${RUBY_MINGW_LIB_ZIP_FILENAME}")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_MINGW_LIB_ZIP_FILENAME}"
       ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -614,6 +629,7 @@ if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
 endif()
 
 if( NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
+  message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
   file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
     ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
     INACTIVITY_TIMEOUT 120
@@ -697,6 +713,7 @@ if( BUILD_DVIEW )
     endif()
 
     if( NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
+      message(STATUS "Downloading DView: ${DVIEW_ZIP_FILENAME}")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${DVIEW_ZIP_FILENAME}"
         ${DVIEW_ZIP_LOCAL_PATH}
         INACTIVITY_TIMEOUT 120
@@ -900,6 +917,7 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
   endif()
 
   if( NOT BOOST_ZIP_MD5 STREQUAL BOOST_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading Boost: ${BOOST_ZIP_FILENAME}")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${BOOST_ZIP_FILENAME}"
       ${BOOST_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -967,6 +985,7 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
   endif()
 
   if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading Qt: ${QT_ZIP_FILENAME}")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
       ${QT_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -1100,6 +1119,7 @@ if(EXISTS "${QT_STATIC_ZIP_LOCAL_PATH}")
 endif()
 
 if( NOT QT_STATIC_ZIP_MD5 STREQUAL QT_STATIC_ZIP_EXPECTED_MD5)
+  message(STATUS "Downloading Qt Static: ${QT_STATIC_ZIP_FILENAME}")
   file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_STATIC_ZIP_FILENAME}"
     ${QT_STATIC_ZIP_LOCAL_PATH}
     INACTIVITY_TIMEOUT 120
@@ -1477,6 +1497,7 @@ if(BUILD_DOCUMENTATION)
   # Zip documentation
   if(WIN32)
     if(NOT EXISTS "${CMAKE_BINARY_DIR}/7za.exe")
+      message(STATUS "Downloading 7za.zip")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/7za.zip" "${CMAKE_BINARY_DIR}/7za.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 EXPECTED_MD5 860077d3f314e939abab680218a3febe)
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/7za.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
     endif()
