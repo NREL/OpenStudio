@@ -664,7 +664,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
     else()
       # 16.04, built against openssl 1.1.0g
       set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static_xenial.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "acfa24444c1040d0aadefe91d26a48a3")
+      set(RUBY_ZIP_EXPECTED_MD5 "8bd019d08935ee04705b3bb0470b34b9")
     endif()
   endif()
 
