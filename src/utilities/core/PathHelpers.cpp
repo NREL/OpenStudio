@@ -59,6 +59,25 @@ std::string rulesetFileExtension() {
   return std::string("osr");
 }
 
+bool pathBeginsWith(const openstudio::path &t_shorter, const openstudio::path &t_longer)
+{
+  openstudio::path::const_iterator begin1 = t_shorter.begin();
+  openstudio::path::const_iterator end1 = t_shorter.end();
+
+  openstudio::path::const_iterator begin2 = t_longer.begin();
+  openstudio::path::const_iterator end2 = t_longer.end();
+
+  if (std::distance(begin1, end1) > std::distance(begin2, end2))
+  {
+    return false; // the run dir has fewer elements than the build dir - cannot be running from builddir
+  }
+
+  // if the rundir begins with the builddir, we know it's running from the builddir
+  return std::equal(begin1, end1, begin2);
+
+}
+
+
 path completePathToFile(const path& p,const path& base,const std::string& ext,bool warnOnMismatch)
 {
   path result(p);
