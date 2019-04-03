@@ -95,6 +95,8 @@ namespace openstudio{
     m_standardErrLogger.setLogLevel(Warn);
     //this->addSink(m_standardErrLogger.sink());
 
+    // TODO: @macumber
+    // Note JM 2019-04-03: qInstallMsgHandler is done in openstudio_app/main.cpp, doesn't that suffice?
     // register Qt message handler
     //qInstallMsgHandler(logQtMessage);
   }
