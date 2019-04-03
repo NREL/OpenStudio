@@ -1,5 +1,5 @@
 # Configure a header file to point to the resources directory
-configure_file("resources.in" "${PROJECT_BINARY_DIR}/src/resources.hxx")
+configure_file("resources.hxx.in" "${PROJECT_BINARY_DIR}/src/resources.hxx")
 
 # Configure a lst file for use in transitioning between EnergyPlus versions
 configure_file("IdfFilesToTransition.lst.in" "${PROJECT_BINARY_DIR}/resources/IdfFilesToTransition.lst")
@@ -48,7 +48,7 @@ set(utilities_resources_src
   utilities/Geometry/floorplan.json
   utilities/Geometry/floorplan_colors.json
   utilities/Geometry/floorplan_doors.json
-  utilities/Geometry/floorplan_differing_num_vertices.json 
+  utilities/Geometry/floorplan_differing_num_vertices.json
   utilities/Geometry/floorplan-paper.json
   utilities/Geometry/floorplan_school.json
   utilities/Geometry/floorplan_shading.json
