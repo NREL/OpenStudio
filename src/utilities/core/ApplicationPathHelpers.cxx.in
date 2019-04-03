@@ -175,6 +175,7 @@ namespace openstudio {
     openstudio::path cliPath;
     #if defined _WIN32
 
+      // Windows
       // . ( build )
       // ├── Products
       // │   ├── ruby
@@ -183,11 +184,9 @@ namespace openstudio {
       // │   │   └── Release
       // │   │       └── openstudio.lib
       // │   ├── Debug
-      // │   │   ├── OpenStudioApp
-      // │   │   └── openstudio *
+      // │   │   └── openstudio.exe *
       // │   ├── Release
-      // │   │   ├── OpenStudioApp
-      // │   │   └── openstudio *
+      // │   │   └── openstudio.exe *
 
       cliPath = getOpenStudioModuleDirectory() / toPath("openstudio.exe");
       if (!openstudio::filesystem::exists(cliPath)) {
@@ -200,11 +199,11 @@ namespace openstudio {
       }
     #else
 
+      // Unix
       // . ( build )
       // ├── Products
       // │   ├── ruby
       // │   │   ├── openstudio.so
-      // │   ├── OpenStudioApp
       // │   └── openstudio *
 
       cliPath = getOpenStudioModuleDirectory() / toPath("openstudio");
@@ -220,12 +219,9 @@ namespace openstudio {
       return completeAndNormalize(cliPath);
     }
 
-
-
     // Regardless of platform, this is the installed structure
-    // .
+    // . (installed)
     // ├── bin
-    // │   ├── OpenStudioApp
     // │   ├── openstudio
     // ├── Ruby
     // │   └── openstudio.so
