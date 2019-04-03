@@ -174,8 +174,24 @@ namespace openstudio {
   openstudio::path getOpenStudioCLI(){
     openstudio::path cliPath;
     #if defined _WIN32
+
+      // . ( build )
+      // ├── Products
+      // │   ├── ruby
+      // │   │   ├── Debug
+      // │   │   │   └── openstudio.lib
+      // │   │   └── Release
+      // │   │       └── openstudio.lib
+      // │   ├── Debug
+      // │   │   ├── OpenStudioApp
+      // │   │   └── openstudio *
+      // │   ├── Release
+      // │   │   ├── OpenStudioApp
+      // │   │   └── openstudio *
+
       cliPath = getOpenStudioModuleDirectory() / toPath("openstudio.exe");
-      if (!openstudio::filesystem::exists(cliPath)){
+      if (!openstudio::filesystem::exists(cliPath)) {
+        // Assume it's the ruby one
         #if _DEBUG
           cliPath = getOpenStudioModuleDirectory() / toPath("../../Debug/openstudio.exe");
         #else
@@ -183,6 +199,14 @@ namespace openstudio {
         #endif
       }
     #else
+
+      // . ( build )
+      // ├── Products
+      // │   ├── ruby
+      // │   │   ├── openstudio.so
+      // │   ├── OpenStudioApp
+      // │   └── openstudio *
+
       cliPath = getOpenStudioModuleDirectory() / toPath("openstudio");
       // If it doesn't exist or it's a directory, try one level above
       if (!openstudio::filesystem::exists(cliPath) || openstudio::filesystem::is_directory(cliPath)) {
@@ -196,6 +220,17 @@ namespace openstudio {
       return completeAndNormalize(cliPath);
     }
 
+
+
+    // Regardless of platform, this is the installed structure
+    // .
+    // ├── bin
+    // │   ├── OpenStudioApp
+    // │   ├── openstudio
+    // ├── Ruby
+    // │   └── openstudio.so
+
+    // If at this point we still haven't found it, assume it's the installed ruby that's used
     #if defined _WIN32
       cliPath = getOpenStudioModuleDirectory() / toPath("../bin/openstudio.exe");
     #else
