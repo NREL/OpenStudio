@@ -1013,6 +1013,24 @@ macro(CONFIGURE_RESOURCES SRCS)
   endforeach()
 endmacro()
 
+# link target with debug and release libs
+function(LINK_DEBUG_AND_RELEASE this_target debug_libs release_libs)
+  list(LENGTH debug_libs len1)
+  list(LENGTH release_libs len2)
+
+  if (NOT len1 EQUAL len2)
+    message(SEND_ERROR "Unequal lists passed to LINK_DEBUG_AND_RELEASE")
+  endif()
+
+  math(EXPR len "${len1} - 1")
+
+  foreach(i RANGE ${len})
+    list(GET debug_libs ${i} debug_lib)
+    list(GET release_libs ${i} release_lib)
+    target_link_libraries(${this_target} debug ${debug_lib} optimized ${release_lib})
+  endforeach()
+
+endfunction()
 
 # adds custom command to update a resource via configure
 macro(CONFIGURE_FILE_WITH_CHECKSUM INPUT_FILE OUTPUT_FILE)
