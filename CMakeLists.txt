@@ -761,7 +761,7 @@ if(WIN32)
   endif()
 endif()
 
-# TODO: **Some** of these are for Qt, remove them
+# Ruby related dependencies
 if(UNIX)
   if(APPLE)
     find_library(GDBM libgdbm.a PATHS /usr/local/opt/gdbm/lib)

@@ -1371,7 +1371,7 @@ class ENERGYPLUS_API ForwardTranslator {
    *  AirLoopHVAC */
   bool isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) const;
 
-  /** Takes the path to a Qt resource file, loads the IdfFile from the qrc, and returns the
+  /** Looks up in embedded_files to locate the path to IdfFile that is supplied, and returns the
    *  IdfFile if successful. */
   boost::optional<IdfFile> findIdfFile(const std::string& path);
 

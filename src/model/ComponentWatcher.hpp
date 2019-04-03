@@ -45,7 +45,7 @@ namespace detail {
   class ComponentWatcher_Impl;
 }
 
-/** ComponentWatcher uses Qt signals and slots to monitor the data associated with a Component.
+/** ComponentWatcher uses signals and slots to monitor the data associated with a Component.
  *  \link ComponentWatcher ComponentWatchers \endlink are constructed by \link Model Models
  *  \endlink and \link Component Components\endlink. They are not for general (public) use.
  *  If data changes, ComponentWatcher calls componentData.createVersionUUID. The Component is

@@ -38,7 +38,7 @@ target_link_libraries(init_openstudio
  ruby_OpenStudioOSVersion
  ruby_OpenStudioUtilitiesData
  ruby_OpenStudioUtilitiesSql
- ruby_OpenStudioGBXML 
+ ruby_OpenStudioGBXML
  ruby_OpenStudioModelGenerators
  ruby_OpenStudioRadiance
  ruby_OpenStudioUtilitiesTime
@@ -144,11 +144,12 @@ target_link_libraries(openstudio_rb
   openstudio_radiance
 )
 
+# TODO: QT-Separation move?
 if(BUILD_OS_APP)
   target_link_libraries(openstudio_modeleditor_rb
     ruby_OpenStudioModelEditor
     openstudio_modeleditor
-    ${QT_LIBS} 
+    ${QT_LIBS}
   )
 
   if( UNIX AND NOT APPLE )

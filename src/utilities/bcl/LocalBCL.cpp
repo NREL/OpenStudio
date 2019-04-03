@@ -46,7 +46,7 @@ namespace openstudio{
     m_dbVersion("1.3"),
     m_connectionOpen(false)
   {
-    //TODO: QT - Separation - Move
+    //TODO: QT-Separation-Move
     //Make sure a QApplication exists
     //openstudio::Application::instance().application(false);
 
