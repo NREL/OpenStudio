@@ -36,13 +36,13 @@ For help with common installation problems please visit, [http://nrel.github.io/
 An important announcement related to future development of the OpenStudio Application is available at: [https://www.openstudio.net/new-future-for-openstudio-application](https://www.openstudio.net/new-future-for-openstudio-application). Please read this announcement carefully to understand changes coming for the OpenStudio Application over future releases.  Please send any questions, comments, or concerns to [OpenStudio@nrel.gov](mailto:OpenStudio@nrel.gov?subject=OpenStudio%20Application%20Transition) and we will try our best to address them.
 
 ## OpenStudio SDK:
-The 2.8.0 release updates OpenStudio to use EnergyPlus 9.1.  This update includes several new features, performance improvements, and bug fixes.  LBNL contributed new OpenStudio ModelObjects ElectricEquipmentITEAirCooledDefinition and ElectricEquipmentITEAirCooled which can be used to model air-cooled electric information technology equipment (ITE) with variable power consumption as a function of loading and temperature. The DefaultConstructionSet now has an Adiabatic Surface Construction. End-Use Subcategory fields were added for pumps. 
+The 2.8.0 release updates OpenStudio to use EnergyPlus 9.1.  This update includes several new features, performance improvements, and bug fixes.  LBNL contributed new OpenStudio ModelObjects ElectricEquipmentITEAirCooledDefinition and ElectricEquipmentITEAirCooled which can be used to model air-cooled electric information technology equipment (ITE) with variable power consumption as a function of loading and temperature. Users can now set sequential load heating/cooling fractions for equipment on the ZoneHVACEquipmentList object. The DefaultConstructionSet now has an Adiabatic Surface Construction. End-Use Subcategory fields were added for pumps. 
 
 *Other changes*:
  
 - Remove 'file://' prefix for file paths listed in OSM files.  External files are now referenced by filename only with search path specified in OSW.  Affects WeatherFile and ScheduleFile.
 - Sql methods now make use of the Year field that was added in E+ 8.9.0 to avoid problems with leap years (#3453).
-- Force unique names to match new E+ convention following re-factor of E+’s Input Processor. For example, LifeCyleCost objects can longer bear the same name (#3458).
+- Force unique names to match new E+ convention following re-factor of E+’s Input Processor. For example, LifeCycleCost objects can no longer bear the same name (#3458).
 - Show Measure Directory Name in OpenStudio Application (#3465). This should make it easier to understand which measure is used even after the user has changed the editable name.
 - Remove non-implemented UtilityCost_* objects from API documentation (#3462)
 - Fix an error in AirTerminalSingleDuctConstantVolumeFourPipeBeam::remove() method that was making the OpenStudio Application crash (#3440)
