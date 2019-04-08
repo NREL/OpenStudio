@@ -1620,7 +1620,8 @@ TEST_F(DataFixture, TimeSeries_values_WrapAround_NoHardcode) {
   // Start Year passed, end year defaulted but after start
   {
     DateTime startDateTime(Date(MonthOfYear::Jan, 1, year), startTime);
-    DateTime endDateTime(Date(MonthOfYear::Feb, 28), startTime);
+    // Expect this to default to Feb 28, year
+    DateTime endDateTime(Date(MonthOfYear::Feb, 28), endTime);
 
     Vector vals = timeSeries.values(startDateTime, endDateTime);
 
@@ -1639,13 +1640,13 @@ TEST_F(DataFixture, TimeSeries_values_WrapAround_NoHardcode) {
 
   // Start Year passed, end year defaulted but before start in terms of Month/Day combo
   {
-    DateTime startDateTime(Date(MonthOfYear::Dec, 31, year), startTime);
+    DateTime startDateTime(Date(MonthOfYear::Dec, 1, year), startTime);
     // Will default to Jan 31 year+1
-    DateTime endDateTime(Date(MonthOfYear::Jan, 31), startTime);
+    DateTime endDateTime(Date(MonthOfYear::Jan, 31), endTime);
 
     Vector vals = timeSeries.values(startDateTime, endDateTime);
 
-    int dayStart = 1;
+    int dayStart = 335;
     int ndays = 31 + 31;
     int dayEnd = ndays + dayStart - 1;
 
@@ -1662,7 +1663,7 @@ TEST_F(DataFixture, TimeSeries_values_WrapAround_NoHardcode) {
   {
     // Will default to Jan 1, year
     DateTime startDateTime(Date(MonthOfYear::Jan, 1), startTime);
-    DateTime endDateTime(Date(MonthOfYear::Jan, 31, year), startTime);
+    DateTime endDateTime(Date(MonthOfYear::Jan, 31, year), endTime);
 
     Vector vals = timeSeries.values(startDateTime, endDateTime);
 
@@ -1683,7 +1684,7 @@ TEST_F(DataFixture, TimeSeries_values_WrapAround_NoHardcode) {
   {
     // Will default to Feb 1, year
     DateTime startDateTime(Date(MonthOfYear::Feb, 1), startTime);
-    DateTime endDateTime(Date(MonthOfYear::Jan, 1, year), startTime);
+    DateTime endDateTime(Date(MonthOfYear::Jan, 1, year), endTime);
 
     Vector vals = timeSeries.values(startDateTime, endDateTime);
 

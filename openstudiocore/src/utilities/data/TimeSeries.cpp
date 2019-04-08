@@ -615,18 +615,6 @@ Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& en
 {
   boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
 
-  // If our timeseries has no hard assigned year, but out requested start/end do, we remove them
-  // There's also the case when endDateTime has no year but represents the 31 Dec 24:00 timestamp
-  DateTime startDateTimeCompare = startDateTime;
-  if (!calendarYear && startDateTime.date().baseYear()) {
-    startDateTimeCompare = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth()), startDateTime.time());
-  }
-
-  DateTime endDateTimeCompare = endDateTime;
-  if (!calendarYear && endDateTime.date().baseYear()) {
-    endDateTimeCompare = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth()), endDateTime.time());
-  }
-
   // If our timeseries doesn't have a year, we force it to the assumed one
   DateTime firstReportDateTimeWithYear = m_firstReportDateTime;
   int timeSeriesYear = m_firstReportDateTime.date().year();
@@ -643,11 +631,16 @@ Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& en
   // Then if our end doesn't have an assigned year, we default it based on the start one
   DateTime endDateTimeWithYear = endDateTime;
   if (!endDateTime.date().baseYear()) {
+
+    // Compare on a Month/Day basis only
+    DateTime startDateTimeCompare = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth()), startDateTime.time());
+    DateTime endDateTimeCompare = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth()), endDateTime.time());
+
     if (endDateTimeCompare <= startDateTimeCompare) {
-      endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), timeSeriesYear + 1),
+      endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), startDateTimeWithYear.date().year() + 1),
                                      endDateTime.time());
     } else {
-      double totalSeconds = (endDateTime - startDateTime).totalSeconds();
+      double totalSeconds = (endDateTimeCompare - startDateTimeCompare).totalSeconds();
       endDateTimeWithYear = startDateTimeWithYear + Time(0, 0, 0, totalSeconds);
       // endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), timeSeriesYear), endDateTime.time());
     }
