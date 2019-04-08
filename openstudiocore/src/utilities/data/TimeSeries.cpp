@@ -616,6 +616,7 @@ Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& en
   boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
 
   // If our timeseries has no hard assigned year, but out requested start/end do, we remove them
+  // There's also the case when endDateTime has no year but represents the 31 Dec 24:00 timestamp
   DateTime startDateTimeCompare = startDateTime;
   if (!calendarYear && startDateTime.date().baseYear()) {
     startDateTimeCompare = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth()), startDateTime.time());
@@ -633,24 +634,34 @@ Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& en
     firstReportDateTimeWithYear = DateTime(Date(m_firstReportDateTime.date().monthOfYear(), m_firstReportDateTime.date().dayOfMonth(), timeSeriesYear), m_firstReportDateTime.time());
   }
 
-  // If our requested start/end don't have an assigned year, we default to the one of the **TimeSeries** (whether hard assigned or not)
+  // If our requested start doen't have an assigned year, we default to the one of the **TimeSeries** (whether hard assigned or not)
   DateTime startDateTimeWithYear = startDateTime;
   if (!startDateTime.date().baseYear()) {
     startDateTimeWithYear = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth(), timeSeriesYear), startDateTime.time());
   }
 
+  // Then if our end doesn't have an assigned year, we default it based on the start one
   DateTime endDateTimeWithYear = endDateTime;
   if (!endDateTime.date().baseYear()) {
-    if (m_wrapAround) {
-      if (endDateTimeCompare < startDateTimeCompare) {
-        endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), timeSeriesYear + 1), endDateTime.time());
-      } else {
-        endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), timeSeriesYear), endDateTime.time());
-      }
+    if (endDateTimeCompare <= startDateTimeCompare) {
+      endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), timeSeriesYear + 1),
+                                     endDateTime.time());
     } else {
-      endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), timeSeriesYear), endDateTime.time());
+      double totalSeconds = (endDateTime - startDateTime).totalSeconds();
+      endDateTimeWithYear = startDateTimeWithYear + Time(0, 0, 0, totalSeconds);
+      // endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), timeSeriesYear), endDateTime.time());
     }
   }
+
+  // After our thing, we ensure that we do end up with dates that make sense
+  if (endDateTimeWithYear < startDateTimeWithYear) {
+    LOG(Warn, "Incorrect DateTimes passed, ensure that the start and end dates are coherent");
+  }
+
+  LOG(Debug, "Initial: startDateTime=" << startDateTime << ", endDateTime=" << endDateTime <<
+      ", m_firstReportDateTime=" << m_firstReportDateTime);
+  LOG(Debug, "Querying with startDateTimeWithYear=" << startDateTimeWithYear << ", endDateTimeWithYear=" << endDateTimeWithYear
+      <<  ", firstReportDateTimeWithYear=" << firstReportDateTimeWithYear);
 
   double startSecondsFromFirstReport = (startDateTimeWithYear - firstReportDateTimeWithYear).totalSeconds();
   double endSecondsFromFirstReport = (endDateTimeWithYear - firstReportDateTimeWithYear).totalSeconds();
@@ -669,6 +680,10 @@ Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& en
   }
 
   result.resize(resultSize, true);
+  // Warn if empty
+  if (resultSize == 0) {
+    LOG(Warn, "The combination of start and end DateTimes you passed resulted in zero values");
+  }
 
   return result;
 }
