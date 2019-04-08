@@ -615,6 +615,7 @@ Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& en
 {
   boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
 
+  // If our timeseries has no hard assigned year, but out requested start/end do, we remove them
   DateTime startDateTimeCompare = startDateTime;
   if (!calendarYear && startDateTime.date().baseYear()) {
     startDateTimeCompare = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth()), startDateTime.time());
@@ -625,26 +626,29 @@ Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& en
     endDateTimeCompare = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth()), endDateTime.time());
   }
 
+  // If our timeseries doesn't have a year, we force it to the assumed one
   DateTime firstReportDateTimeWithYear = m_firstReportDateTime;
+  int timeSeriesYear = m_firstReportDateTime.date().year();
   if (!calendarYear) {
-    firstReportDateTimeWithYear = DateTime(Date(m_firstReportDateTime.date().monthOfYear(), m_firstReportDateTime.date().dayOfMonth(), m_firstReportDateTime.date().year()), m_firstReportDateTime.time());
+    firstReportDateTimeWithYear = DateTime(Date(m_firstReportDateTime.date().monthOfYear(), m_firstReportDateTime.date().dayOfMonth(), timeSeriesYear), m_firstReportDateTime.time());
   }
 
+  // If our requested start/end don't have an assigned year, we default to the one of the **TimeSeries** (whether hard assigned or not)
   DateTime startDateTimeWithYear = startDateTime;
   if (!startDateTime.date().baseYear()) {
-    startDateTimeWithYear = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth(), startDateTime.date().year()), startDateTime.time());
+    startDateTimeWithYear = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth(), timeSeriesYear), startDateTime.time());
   }
 
   DateTime endDateTimeWithYear = endDateTime;
   if (!endDateTime.date().baseYear()) {
     if (m_wrapAround) {
       if (endDateTimeCompare < startDateTimeCompare) {
-        endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), endDateTime.date().year() + 1), endDateTime.time());
+        endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), timeSeriesYear + 1), endDateTime.time());
       } else {
-        endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), endDateTime.date().year()), endDateTime.time());
+        endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), timeSeriesYear), endDateTime.time());
       }
     } else {
-      endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), endDateTime.date().year()), endDateTime.time());
+      endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), timeSeriesYear), endDateTime.time());
     }
   }
 
