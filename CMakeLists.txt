@@ -285,7 +285,16 @@ conan_check(VERSION 1.0.0 REQUIRED)
 
 set(CONAN_INSTALL_FILE "${PROJECT_SOURCE_DIR}/ConanInstall.cmake")
 file(SHA256 ${CONAN_INSTALL_FILE} CONAN_INSTALL_FILE_NEW_HASH)
+
 set(CONAN_BUILD_INFO "${PROJECT_BINARY_DIR}/conanbuildinfo.cmake")
+
+# By default check the single configuration file (which exists also in the multi)
+set(CONAN_BUILD_INFO_MULTI "${PROJECT_BINARY_DIR}/conanbuildinfo_multi.cmake")
+set(CONAN_BUILD_INFO_FILE "${PROJECT_BINARY_DIR}/conanbuildinfo.cmake")
+# If the multi exists (MSVC), then use that one
+if(EXISTS ${CONAN_BUILD_INFO_MULTI})
+  set(CONAN_BUILD_INFO_FILE "${CONAN_BUILD_INFO_MULTI}")
+endif()
 
 set(RUN_CONAN FALSE)
 
@@ -301,8 +310,8 @@ elseif( NOT (CONAN_INSTALL_FILE_NEW_HASH STREQUAL CONAN_INSTALL_FILE_CACHED_HASH
   message("CONAN_INSTALL_FILE_NEW_HASH    = ${CONAN_INSTALL_FILE_NEW_HASH}")
   set(RUN_CONAN TRUE)
 # Or we don't have a conanbuildinfo.cmake (shouldn't happen, but let's be safe).
-elseif((NOT EXISTS "${CONAN_BUILD_INFO}") )
-  message("openstudio: ${CONAN_BUILD_INFO} doesn't exist. Running Conan.")
+elseif((NOT EXISTS "${CONAN_BUILD_INFO_FILE}") )
+  message("openstudio: ${CONAN_BUILD_INFO_FILE} doesn't exist. Running Conan.")
   set(RUN_CONAN TRUE)
 endif()
 
@@ -312,10 +321,10 @@ if(RUN_CONAN)
   set(CONAN_INSTALL_FILE_CACHED_HASH "${CONAN_INSTALL_FILE_NEW_HASH}" CACHE INTERNAL "SHA256 hash of the ${CONAN_INSTALL_FILE} to check if need to rerun" FORCE)
 else()
   # Otherwise it's good to go, we just reload the info
-  message(STATUS "openstudio: Reloading ${PROJECT_BINARY_DIR}/conanbuildinfo.cmake")
+  message(STATUS "openstudio: Reloading ${CONAN_BUILD_INFO_FILE}")
   # Silence this part
   set(CONAN_CMAKE_SILENT_OUTPUT TRUE)
-  include(${PROJECT_BINARY_DIR}/conanbuildinfo.cmake)
+  include(${CONAN_BUILD_INFO_FILE})
   # Make sure to pass NO_OUTPUT_DIRS to not override CMAKE_RUNTIME_OUTPUT_DIR etc
   conan_basic_setup(TARGETS NO_OUTPUT_DIRS)
   # message("CONAN_TARGETS = ${CONAN_TARGETS}")
