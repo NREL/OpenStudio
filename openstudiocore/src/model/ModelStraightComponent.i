@@ -18,7 +18,7 @@
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelStraightComponent
 
-  // ignore airflow objects for now, add back in with partial classes in ModelAirflow.i
+  // ignore airflow objects for now, add back in with partial classes in ModelAirflow.i (swigged after us)
   // TODO: haven't added them to ModelAirflow.i but I don't see any other that are indeed implemented...
   %ignore openstudio::model::AirTerminalSingleDuctConstantVolumeReheat::getAirflowNetworkEquivalentDuct;
   %ignore openstudio::model::AirTerminalSingleDuctConstantVolumeReheat::airflowNetworkEquivalentDuct;
@@ -48,36 +48,26 @@
   %ignore openstudio::model::FanVariableVolume::getAirflowNetworkFan;
   %ignore openstudio::model::FanVariableVolume::airflowNetworkFan;
 
-  // ignore generator objects for now, add back in with partial classes in ModelGenerators.i
+  // ignore generator objects for now, add back in with partial classes in ModelGenerators.i (swigged after us)
   %ignore openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic;
   %ignore openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal::setGeneratorPhotovoltaic;
-
-  // Ignore zonehvac objects for now, add back in with partial classes in ModelZoneHVAC.i
-  // Actually ZoneHVAC.i is swigged before us, so we can just import it no?
-  //%ignore openstudio::model::AirConditionerVariableRefrigerantFlow::addTerminal;
-  //%ignore openstudio::model::AirConditionerVariableRefrigerantFlow::removeTerminal;
-  //%ignore openstudio::model::AirConditionerVariableRefrigerantFlow::terminals;
 
 #endif
 
 namespace openstudio {
   namespace model {
 
-  // forward declarations
-  // For ATUs
-  %feature("valuewrapper") AirflowNetworkEquivalentDuct;
-  // For Fans
-  %feature("valuewrapper") AirflowNetworkFan;
+    // forward declarations
+    // For ATUs
+    %feature("valuewrapper") AirflowNetworkEquivalentDuct;
+    // For Fans
+    %feature("valuewrapper") AirflowNetworkFan;
+    // For SolarCollectorFlatPlatePhotovoltaicThermal
+    %feature("valuewrapper") GeneratorPhotovoltaic;
 
-  // For SolarCollectorFlatPlatePhotovoltaicThermal
-  %feature("valuewrapper") GeneratorPhotovoltaic;
-  // For AirConditionerVariableRefrigerantFlow
-  // %feature("valuewrapper") ZoneHVACTerminalUnitVariableRefrigerantFlow;
-
-  class AirflowNetworkEquivalentDuct;
-  class AirflowNetworkFan;
-  class GeneratorPhotovoltaic;
-  // class ZoneHVACTerminalUnitVariableRefrigerantFlow;
+    class AirflowNetworkEquivalentDuct;
+    class AirflowNetworkFan;
+    class GeneratorPhotovoltaic;
 
   }
 }
