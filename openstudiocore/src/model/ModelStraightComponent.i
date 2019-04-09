@@ -245,4 +245,32 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
   %}
 #endif
 
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
+  %inline {
+    namespace openstudio {
+      namespace model {
+        OptionalWaterUseConnections waterUseConnections(const openstudio::model::WaterUseEquipment& weq){
+          return weq.waterUseConnections();
+        }
+      }
+    }
+  }
+#endif
+
+#if defined(SWIGCSHARP)
+  //%pragma(csharp) imclassimports=%{
+  %pragma(csharp) moduleimports=%{
+
+    using System;
+    using System.Runtime.InteropServices;
+
+    public partial class WaterUseEquipment : public SpaceLoadInstance
+    {
+      public OptionalWaterUseConnections waterUseConnections() {
+        return OpenStudio.OpenStudioModelStraightComponent.waterUseConnections(this);
+      }
+    }
+
+  %}
+#endif
 #endif

@@ -42,7 +42,15 @@
   %ignore openstudio::model::ThermalZone::getAirflowNetworkZone;
   %ignore openstudio::model::ThermalZone::airflowNetworkZone;
 
+  // PlantLoop has some methods that actually live in ModelPlantEquipmentOperationScheme.i (which depends on ModelHVAC.i)
+  // So we ignore for now, and reimplment later in the PlantEq.i file with partial classes
+  %ignore openstudio::model::PlantLoop::plantEquipmentOperationHeatingLoad;
+  %ignore openstudio::model::PlantLoop::setPlantEquipmentOperationHeatingLoad;
+  %ignore openstudio::model::PlantLoop::plantEquipmentOperationCoolingLoad;
+  %ignore openstudio::model::PlantLoop::setPlantEquipmentOperationCoolingLoad;
 
+  // WaterUseConnections is defined in ModelStraightComponent.i (which depends on this file)
+  %ignore openstudio::model::WaterUseEquipment::waterUseConnections;
 
 #endif
 
