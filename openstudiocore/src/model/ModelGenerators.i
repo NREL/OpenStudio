@@ -143,7 +143,7 @@ SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
           return collector.generatorPhotovoltaic();
         }
 
-        bool setGeneratorPhotovoltaic(const openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal& collector,
+        bool setGeneratorPhotovoltaic(openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal& collector,
                                       const openstudio::model::GeneratorPhotovoltaic& pv)
         {
           return collector.setGeneratorPhotovoltaic(pv);
@@ -174,7 +174,7 @@ SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
         return OpenStudio.OpenStudioModelGenerators.getGeneratorPhotovoltaic(this);
       }
 
-      public bool setGeneratorPhotovoltaic(OpenStudio.GeneratorPhotovoltaic pv) {
+      public bool setGeneratorPhotovoltaic(const OpenStudio.GeneratorPhotovoltaic pv) {
         return OpenStudio.OpenStudioModelGenerators.setGeneratorPhotovoltaic(this, pv);
       }
     }
