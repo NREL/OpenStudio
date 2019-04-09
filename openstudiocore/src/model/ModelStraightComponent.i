@@ -12,6 +12,7 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+%import <model/ModelZoneHVAC.i>
 
 #if defined SWIGCSHARP
   #undef _csharp_module_name
@@ -52,10 +53,10 @@
   %ignore openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal::setGeneratorPhotovoltaic;
 
   // Ignore zonehvac objects for now, add back in with partial classes in ModelZoneHVAC.i
-  // TODO!
-  %ignore openstudio::model::AirConditionerVariableRefrigerantFlow::addTerminal;
-  %ignore openstudio::model::AirConditionerVariableRefrigerantFlow::removeTerminal;
-  %ignore openstudio::model::AirConditionerVariableRefrigerantFlow::terminals;
+  // Actually ZoneHVAC.i is swigged before us, so we can just import it no?
+  //%ignore openstudio::model::AirConditionerVariableRefrigerantFlow::addTerminal;
+  //%ignore openstudio::model::AirConditionerVariableRefrigerantFlow::removeTerminal;
+  //%ignore openstudio::model::AirConditionerVariableRefrigerantFlow::terminals;
 
 #endif
 
@@ -71,12 +72,12 @@ namespace openstudio {
   // For SolarCollectorFlatPlatePhotovoltaicThermal
   %feature("valuewrapper") GeneratorPhotovoltaic;
   // For AirConditionerVariableRefrigerantFlow
-  %feature("valuewrapper") ZoneHVACTerminalUnitVariableRefrigerantFlow;
+  // %feature("valuewrapper") ZoneHVACTerminalUnitVariableRefrigerantFlow;
 
   class AirflowNetworkEquivalentDuct;
   class AirflowNetworkFan;
   class GeneratorPhotovoltaic;
-  class ZoneHVACTerminalUnitVariableRefrigerantFlow;
+  // class ZoneHVACTerminalUnitVariableRefrigerantFlow;
 
   }
 }
