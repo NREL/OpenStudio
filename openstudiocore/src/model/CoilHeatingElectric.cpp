@@ -230,24 +230,12 @@ namespace detail {
     {
       if( ! airLoop->demandComponent(node.handle()) )
       {
-        if( StraightComponent_Impl::addToNode( node ) )
-        {
-          if( boost::optional<Node> node = outletModelObject()->optionalCast<Node>() )
-          {
-            setTemperatureSetpointNode(node.get());
-          }
-          return true;
-        }
+        return StraightComponent_Impl::addToNode( node );
       }
     }
 
     if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
-      if ( StraightComponent_Impl::addToNode( node ) ) {
-        if ( auto _node = outletModelObject()->optionalCast<Node>() ) {
-          setTemperatureSetpointNode(_node.get());
-        }
-        return true;
-      }
+      return StraightComponent_Impl::addToNode( node );
     }
 
     return false;
