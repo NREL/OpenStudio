@@ -138,6 +138,17 @@ SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
         std::vector<openstudio::model::GeneratorPhotovoltaic> getGeneratorPhotovoltaics(const openstudio::model::PlanarSurface& surface){
           return surface.generatorPhotovoltaics();
         }
+
+        OptionalGeneratorPhotovoltaic getGeneratorPhotovoltaic(const openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal& collector) {
+          return collector.generatorPhotovoltaic();
+        }
+
+        bool setGeneratorPhotovoltaic(const openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal& collector,
+                                      const openstudio::model::GeneratorPhotovoltaic& pv)
+        {
+          return collector.setGeneratorPhotovoltaic(pv);
+        }
+
       }
     }
   }
@@ -154,6 +165,17 @@ SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
       public GeneratorPhotovoltaicVector generatorPhotovoltaics()
       {
         return OpenStudio.OpenStudioModelGenerators.getGeneratorPhotovoltaics(this);
+      }
+    }
+
+    public partial class SolarCollectorFlatPlatePhotovoltaicThermal : StraightComponent
+    {
+      public OptionalGeneratorPhotovoltaic generatorPhotovoltaic() {
+        return OpenStudio.OpenStudioModelGenerators.getGeneratorPhotovoltaic(this);
+      }
+
+      public bool setGeneratorPhotovoltaic(OpenStudio.GeneratorPhotovoltaic pv) {
+        return OpenStudio.OpenStudioModelGenerators.setGeneratorPhotovoltaic(this, pv);
       }
     }
 
