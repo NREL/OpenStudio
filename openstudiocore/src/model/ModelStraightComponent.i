@@ -12,6 +12,7 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+%import <model/ModelZoneHVAC.i>
 
 #if defined SWIGCSHARP
   #undef _csharp_module_name

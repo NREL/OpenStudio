@@ -2080,7 +2080,7 @@ list(APPEND OpenStudioModelSwigs OpenStudioModelAvailabilityManager)
 MAKE_SWIG_TARGET(OpenStudioModelPlantEquipmentOperationScheme model "${CMAKE_CURRENT_SOURCE_DIR}/ModelPlantEquipmentOperationScheme.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelPlantEquipmentOperationScheme)
 
-MAKE_SWIG_TARGET(OpenStudioModelStraightComponent model "${CMAKE_CURRENT_SOURCE_DIR}/ModelStraightComponent.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+MAKE_SWIG_TARGET(OpenStudioModelStraightComponent model "${CMAKE_CURRENT_SOURCE_DIR}/ModelStraightComponent.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelZoneHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelStraightComponent)
 
 MAKE_SWIG_TARGET(OpenStudioModelAirflow model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAirflow.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
