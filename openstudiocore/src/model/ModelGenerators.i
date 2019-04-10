@@ -40,7 +40,7 @@
 %include <model/ModelMerger.hpp>
 
 // TODO: ignore specific overload of ThreeJSForwardTranslator::modelToThreeJS to avoid dealing with updatePercentage
-%ignore openstudio::model::ThreeJSForwardTranslator::modelToThreeJS(const Model&, bool, std::function<void(double)>);
+%ignore openstudio::model::ThreeJSForwardTranslator::modelToThreeJS(const openstudio::model::Model&, bool, std::function<void(double)>);
 
 #if defined SWIGCSHARP
 
