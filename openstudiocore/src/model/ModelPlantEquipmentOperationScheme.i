@@ -43,22 +43,22 @@ SWIG_MODELOBJECT(PlantEquipmentOperationOutdoorDewpointDifference,1);
   %inline {
     namespace openstudio {
       namespace model {
-        OptionalPlantEquipmentOperationHeatingLoad plantEquipmentOperationHeatingLoad(const openstudio::model::PlantLoop& plantLoop){
+        boost::optional<PlantEquipmentOperationHeatingLoad> plantEquipmentOperationHeatingLoad(const openstudio::model::PlantLoop& plantLoop){
           return plantLoop.plantEquipmentOperationHeatingLoad();
         }
 
-        bool setPlantEquipmentOperationHeatingLoad(openstudio::model::PlantLoop& plantLoop,
-                                                   const openstudio::model::PlantEquipmentOperationHeatingLoad& eq)
+        bool setPlantEquipmentOperationHeatingLoad(openstudio::model::PlantLoop plantLoop,
+                                                   openstudio::model::PlantEquipmentOperationHeatingLoad eq)
         {
           return plantLoop.setPlantEquipmentOperationHeatingLoad(eq);
         }
 
-        OptionalPlantEquipmentOperationCoolingLoad plantEquipmentOperationCoolingLoad(const openstudio::model::PlantLoop& plantLoop){
+        boost::optional<PlantEquipmentOperationCoolingLoad> plantEquipmentOperationCoolingLoad(const openstudio::model::PlantLoop& plantLoop){
           return plantLoop.plantEquipmentOperationCoolingLoad();
         }
 
-        bool setPlantEquipmentOperationCoolingLoad(openstudio::model::PlantLoop& plantLoop,
-                                                   const openstudio::model::PlantEquipmentOperationCoolingLoad& eq)
+        bool setPlantEquipmentOperationCoolingLoad(openstudio::model::PlantLoop plantLoop,
+                                                   openstudio::model::PlantEquipmentOperationCoolingLoad eq)
         {
           return plantLoop.setPlantEquipmentOperationCoolingLoad(eq);
         }
@@ -81,7 +81,7 @@ SWIG_MODELOBJECT(PlantEquipmentOperationOutdoorDewpointDifference,1);
         return OpenStudio.OpenStudioModelPlantEquipmentOperationScheme.plantEquipmentOperationHeatingLoad(this);
       }
 
-      public bool setPlantEquipmentOperationHeatingLoad(const OpenStudio.PlantEquipmentOperationHeatingLoad eq) {
+      public bool setPlantEquipmentOperationHeatingLoad(OpenStudio.PlantEquipmentOperationHeatingLoad eq) {
         return OpenStudio.OpenStudioModelPlantEquipmentOperationScheme.setPlantEquipmentOperationHeatingLoad(this, eq);
       }
 
@@ -89,7 +89,7 @@ SWIG_MODELOBJECT(PlantEquipmentOperationOutdoorDewpointDifference,1);
         return OpenStudio.OpenStudioModelPlantEquipmentOperationScheme.plantEquipmentOperationCoolingLoad(this);
       }
 
-      public bool setPlantEquipmentOperationCoolingLoad(const OpenStudio.PlantEquipmentOperationCoolingLoad eq) {
+      public bool setPlantEquipmentOperationCoolingLoad(OpenStudio.PlantEquipmentOperationCoolingLoad eq) {
         return OpenStudio.OpenStudioModelPlantEquipmentOperationScheme.setPlantEquipmentOperationCoolingLoad(this, eq);
       }
     }
