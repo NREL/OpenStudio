@@ -26,9 +26,11 @@
   %ignore openstudio::model::SpaceType::spaces;
   %ignore openstudio::model::SpaceLoadDefinition::instances;
   %ignore openstudio::model::ExteriorLoadDefinition::instances;
+  %ignore openstudio::model::ShadingControl::subSurfaces;
 
+  // TODO: why?
   // ignore schedule type
-  %ignore openstudio::model::ScheduleType;
+  // %ignore openstudio::model::ScheduleType;
 
 #endif
 
@@ -61,6 +63,7 @@ class ShadingControl;
   }
 };
 
+MODELOBJECT_TEMPLATES(ScheduleType)
 MODELOBJECT_TEMPLATES(ScheduleInterval);
 MODELOBJECT_TEMPLATES(ScheduleFixedInterval);
 MODELOBJECT_TEMPLATES(ExternalFile);
@@ -69,6 +72,7 @@ MODELOBJECT_TEMPLATES(ScheduleVariableInterval);
 MODELOBJECT_TEMPLATES(ScheduleCompact);
 MODELOBJECT_TEMPLATES(ScheduleConstant);
 MODELOBJECT_TEMPLATES(DefaultScheduleSet);
+MODELOBJECT_TEMPLATES(SpectralDataField); // Helper class defined in MaterialPropertyGlazingSpectralData
 MODELOBJECT_TEMPLATES(MaterialPropertyGlazingSpectralData);
 MODELOBJECT_TEMPLATES(MaterialPropertyMoisturePenetrationDepthSettings);
 MODELOBJECT_TEMPLATES(Material);

@@ -234,6 +234,10 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
         std::vector<openstudio::model::Space> getSpaces(const openstudio::model::SpaceType& spaceType){
           return spaceType.spaces();
         }
+
+        std::vector<openstudio::model::SubSurface> getSubSurfaces(const openstudio::model::ShadingControl& sc) {
+          return sc.subSurfaces();
+        }
       }
     }
   }
@@ -260,6 +264,13 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
         return OpenStudio.OpenStudioModelGeometry.getSpaces(this);
       }
     }
+
+    public partial class ShadingControl : ResourceObject {
+      public SubSurfaceVector subSurfaces() {
+        return OpenStudio.OpenStudioModelGeometry.getSubSurfaces(this);
+      }
+    }
+
   %}
 #endif
 
