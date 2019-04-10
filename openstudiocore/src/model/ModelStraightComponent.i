@@ -264,7 +264,7 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
     using System;
     using System.Runtime.InteropServices;
 
-    public partial class WaterUseEquipment : public SpaceLoadInstance
+    public partial class WaterUseEquipment : SpaceLoadInstance
     {
       public OptionalWaterUseConnections waterUseConnections() {
         return OpenStudio.OpenStudioModelStraightComponent.waterUseConnections(this);
