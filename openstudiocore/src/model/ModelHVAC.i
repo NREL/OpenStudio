@@ -64,12 +64,18 @@ namespace model {
 %feature("valuewrapper") AirflowNetworkFan;
 %feature("valuewrapper") AirflowNetworkOutdoorAirflow;
 %feature("valuewrapper") AirflowNetworkZoneExhaustFan;
+%feature("valuewrapper") PlantEquipmentOperationHeatingLoad;
+%feature("valuewrapper") PlantEquipmentOperationCoolingLoad;
+%feature("valuewrapper") WaterUseConnections;
 class AirflowNetworkDistributionNode;
 class AirflowNetworkZone;
 class AirflowNetworkEquivalentDuct;
 class AirflowNetworkFan;
 class AirflowNetworkOutdoorAirflow;
 class AirflowNetworkZoneExhaustFan;
+class PlantEquipmentOperationHeatingLoad;
+class PlantEquipmentOperationCoolingLoad;
+class WaterUseConnections;
 
 }
 }
