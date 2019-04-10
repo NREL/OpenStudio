@@ -76,6 +76,7 @@ class BuildingUnit;
 class ShadingSurfaceGroup;
 class InteriorPartitionSurfaceGroup;
 class PlanarSurface;
+class SurfaceIntersection;
 class Surface;
 class InternalMass;
 class People;
@@ -115,6 +116,16 @@ class ExteriorLoadInstance;
 }
 }
 
+// extend classes
+%extend openstudio::model::SurfaceIntersection {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 UNIQUEMODELOBJECT_TEMPLATES(Site);
 UNIQUEMODELOBJECT_TEMPLATES(Facility);
 UNIQUEMODELOBJECT_TEMPLATES(Building);
@@ -129,6 +140,7 @@ MODELOBJECT_TEMPLATES(Lights);
 MODELOBJECT_TEMPLATES(PlanarSurface);
 MODELOBJECT_TEMPLATES(DefaultConstructionSet);
 MODELOBJECT_TEMPLATES(Surface);
+MODELOBJECT_TEMPLATES(SurfaceIntersection); // Defined in Surface.hpp
 MODELOBJECT_TEMPLATES(SubSurface);
 MODELOBJECT_TEMPLATES(ShadingSurfaceGroup);
 MODELOBJECT_TEMPLATES(ShadingSurface);
