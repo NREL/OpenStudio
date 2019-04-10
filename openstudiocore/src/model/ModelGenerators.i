@@ -12,6 +12,8 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+// Needed to reimplement SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic
+%import <model/ModelStraightComponent.i>
 
 // All base classes for PV, Generators, inverters and Electrical Storage
 %{

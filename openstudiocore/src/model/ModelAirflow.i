@@ -12,6 +12,9 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+// Needed for Fans
+%import <model/ModelStraightComponent.i>
+
 
 #if defined SWIGCSHARP
 

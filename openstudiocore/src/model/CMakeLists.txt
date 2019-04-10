@@ -2085,13 +2085,14 @@ list(APPEND OpenStudioModelSwigs OpenStudioModelPlantEquipmentOperationScheme)
 MAKE_SWIG_TARGET(OpenStudioModelStraightComponent model "${CMAKE_CURRENT_SOURCE_DIR}/ModelStraightComponent.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelPlantEquipmentOperationScheme)
 list(APPEND OpenStudioModelSwigs OpenStudioModelStraightComponent)
 
+# Minimum: needs ModelStraightComponent.i because of Fans
 MAKE_SWIG_TARGET(OpenStudioModelAirflow model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAirflow.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelStraightComponent)
 list(APPEND OpenStudioModelSwigs OpenStudioModelAirflow)
 
 MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelAirflow)
 list(APPEND OpenStudioModelSwigs OpenStudioModelRefrigeration)
 
-# At the very least, needs ModelStraightComponent.i because of SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic(+setter)
+# Minimum: needs ModelStraightComponent.i because of SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic(+setter)
 MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelRefrigeration)
 list(APPEND OpenStudioModelSwigs OpenStudioModelGenerators)
 
