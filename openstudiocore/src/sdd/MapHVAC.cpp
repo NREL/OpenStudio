@@ -7675,7 +7675,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
 
     chiller.setOptimumPartLoadRatio(1.0);
 
-    chiller.setChillerFlowMode("NotModulated");
+    auto flowMode = chillerElement.firstChildElement("FlowMode").text().toStdString();
+    if (istringEqual(flowMode,"Constant")) {
+      chiller.setChillerFlowMode("ConstantFlow");
+    } else {
+      chiller.setChillerFlowMode("LeavingSetpointModulated");
+    }
 
     if( chiller.tertiaryPlantLoop() ) {
       chiller.setGeneratorHeatSourceType("HotWater");
@@ -7807,6 +7812,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChil
 
     // Name
     chiller.setName(name);
+
+    auto flowMode = chillerElement.firstChildElement("FlowMode").text().toStdString();
+    if (istringEqual(flowMode,"Constant")) {
+      chiller.setChillerFlowMode("ConstantFlow");
+    } else {
+      chiller.setChillerFlowMode("LeavingSetpointModulated");
+    }
 
     // CndsrInRef
     QDomElement cndsrInRefElement = chillerElement.firstChildElement("CndsrFluidSegInRef");
