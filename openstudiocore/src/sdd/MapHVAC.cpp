@@ -9047,8 +9047,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       result = fpfc;
 
       // pull the max air flow rate from the fan and set in the fpfc
-      if( flowCap )
-      {
+      if (clgSupFanCapSim && htgSupFanCapSim) {
+        fpfc.setMaximumSupplyAirFlowRate(std::max(clgSupFanCapSim.get(),htgSupFanCapSim.get()));
+      } else if( flowCap ) {
         fpfc.setMaximumSupplyAirFlowRate(flowCap.get());
       }
 
@@ -9083,11 +9084,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
         flowMinRatio = flowMin.get() / flowCap.get();
       }
 
-      // FanCtrl
+      if (clgSupFanCapSim && htgSupFanCapSim && fpfc.maximumSupplyAirFlowRate()) {
+        double value = std::max(clgSupFanCapSim.get(), htgSupFanCapSim.get()) / fpfc.maximumSupplyAirFlowRate().get();
+        fpfc.setLowSpeedSupplyAirFlowRatio(value);
+        fpfc.setMediumSpeedSupplyAirFlowRatio(value);
+      } else {
+        fpfc.setLowSpeedSupplyAirFlowRatio(1.0);
+        fpfc.setMediumSpeedSupplyAirFlowRatio(1.0);
+      }
 
-      fpfc.setLowSpeedSupplyAirFlowRatio(1.0);
-
-      fpfc.setMediumSpeedSupplyAirFlowRatio(1.0);
+      if (clgOAFlowCapSim && htgOAFlowCapSim) {
+        fpfc.setMaximumOutdoorAirFlowRate(std::max(clgOAFlowCapSim.get(),htgOAFlowCapSim.get()));
+      }
 
       QDomElement fanCtrlElement = element.firstChildElement("FanCtrl");
 
@@ -9127,6 +9135,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
           fpfc.setCapacityControlMethod("CyclingFan");
         }
       }
+
+      // Explicit control for capacity control method was added after the above logic
+      auto capCtrlMthd = element.firstChildElement("CapCtrlMthd").text().toStdString();
+      if (! capCtrlMthd.empty()) {
+        fpfc.setCapacityControlMethod(capCtrlMthd);
+      }
+
       // Name
       fpfc.setName(name);
     }
