@@ -6352,8 +6352,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     heatingScheduleDay.addValue(Time(1.0),htgFixedSupTemp);
 
     model::SetpointManagerScheduledDualSetpoint spm(model);
-    spm.setHighSetpointSchedule(heatingSchedule);
-    spm.setLowSetpointSchedule(schedule);
+    spm.setHighSetpointSchedule(schedule);
+    spm.setLowSetpointSchedule(heatingSchedule);
     spm.setName(plantLoop.name().get() + " Supply Outlet SPM");
     spm.addToNode(supplyOutletNode);
 
