@@ -5589,6 +5589,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
   QDomElement typeElement = fluidSysElement.firstChildElement("Type");
 
+  auto sizingOption = fluidSysElement.firstChildElement("SizingOption").text().toStdString();
+  if (! sizingOption.empty()) {
+    sizingPlant.setSizingOption(sizingOption);
+  } else {
+    sizingPlant.setSizingOption("Coincident");
+  }
+
   // DsgnSupWtrTemp
   QDomElement dsgnSupWtrTempElement = fluidSysElement.firstChildElement("DsgnSupWtrTemp");
   value = dsgnSupWtrTempElement.text().toDouble(&ok);
