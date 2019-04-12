@@ -548,14 +548,15 @@ boost::optional<IdfObject> ForwardTranslator::translatePlantLoop( PlantLoop & pl
   }
 
   //  PlantLoopDemandCalculationScheme
-  {
-    auto spms = plantLoop.supplyOutletNode().setpointManagers();
-    if( subsetCastVector<model::SetpointManagerScheduledDualSetpoint>(spms).empty() ) {
-      idfObject.setString(PlantLoopFields::PlantLoopDemandCalculationScheme,"SingleSetpoint");
-    } else {
-      idfObject.setString(PlantLoopFields::PlantLoopDemandCalculationScheme,"DualSetpointDeadband");
-    }
-  }
+  //{
+  //  auto spms = plantLoop.supplyOutletNode().setpointManagers();
+  //  if( subsetCastVector<model::SetpointManagerScheduledDualSetpoint>(spms).empty() ) {
+  //    idfObject.setString(PlantLoopFields::PlantLoopDemandCalculationScheme,"SingleSetpoint");
+  //  } else {
+  //    idfObject.setString(PlantLoopFields::PlantLoopDemandCalculationScheme,"DualSetpointDeadband");
+  //  }
+  //}
+  idfObject.setString(PlantLoopFields::PlantLoopDemandCalculationScheme,"SingleSetpoint");
 
   // Plant Loop Volume
 
