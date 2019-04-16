@@ -20,9 +20,9 @@
   #define _csharp_module_name OpenStudioModelSimulation
 
   // Conflicts with class name in utilities
+  // Note JM 2019-04-16: Will completely ignore it below if C# actually. Note that there are convenience functions in Model.hpp such as Model::setCalendarYear to act upon YearDescription
+  // indirectly.
   //%rename(ModelYearDescription) openstudio::model::YearDescription;
-  %ignore openstudio::model::YearDescription;
-  %ignore openstudio::model::OptionalYearDescription;
 
   // Note JM 2019-04-16: Ignoring Site-related methods and reimplementing them in ModelGeometry.i using partial classes
   %ignore openstudio::model::WeatherFile::site;
@@ -41,7 +41,11 @@ namespace model {
 }
 }
 
-UNIQUEMODELOBJECT_TEMPLATES(RunPeriod);
+// Note JM 2019-04-16: This is a special case, technically it should be UNIQUEMODELOBJET_TEMPLATES(RunPeriod) since it IS unique right now
+// Nevertheless, there is a `std::vector<RunPeriod> SimulationControl::runPeriods()` (a reservation for when we allow multiple RunPeriods)
+// UNIQUEMODELOBJECT_TEMPLATES(RunPeriod);
+MODELOBJECT_TEMPLATES(RunPeriod);
+
 UNIQUEMODELOBJECT_TEMPLATES(SimulationControl);
 UNIQUEMODELOBJECT_TEMPLATES(LightingSimulationControl);
 UNIQUEMODELOBJECT_TEMPLATES(SizingParameters);
@@ -74,7 +78,10 @@ MODELOBJECT_TEMPLATES(SiteGroundTemperatureDeep);
 MODELOBJECT_TEMPLATES(SiteGroundTemperatureShallow);
 MODELOBJECT_TEMPLATES(SiteGroundTemperatureFCfactorMethod);
 MODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
-UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
+#ifndef SWIGCSHARP
+  // Ignored for Csharp, use Model::setCalendarYear etc
+  UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
+#endif
 MODELOBJECT_TEMPLATES(FoundationKivaSettings);
 
 SWIG_UNIQUEMODELOBJECT(RunPeriod);
@@ -110,7 +117,9 @@ SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureDeep);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureShallow);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureFCfactorMethod);
 SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);
-SWIG_UNIQUEMODELOBJECT(YearDescription);
+#ifndef SWIGCSHARP
+  SWIG_UNIQUEMODELOBJECT(YearDescription);
+#endif
 SWIG_UNIQUEMODELOBJECT(FoundationKivaSettings);
 
 #endif
