@@ -248,6 +248,14 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
         bool setConstructionForEMS(openstudio::model::EnergyManagementSystemConstructionIndexVariable ems_cons, openstudio::model::ModelObject construction) {
           return ems_cons.setConstructionObject(construction);
         }
+
+        boost::optional<Site> siteForWeatherFile(const openstudio::model::WeatherFile& weatherFile) {
+          return weatherFile.site();
+        }
+        boost::optional<Site> siteForClimateZones(const openstudio::model::ClimateZones& climateZones) {
+          return climateZones.site();
+        }
+
       }
     }
   }
@@ -299,13 +307,25 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
       }
 
       // Overloaded Ctor, calling basic constructor
-      public EnergyManagementSystemConstructionIndexVariable(ModelObject modelObject, OpenStudio.Construction construction)
-        : this(modelObject) {
+      public EnergyManagementSystemConstructionIndexVariable(Model model, OpenStudio.Construction construction)
+        : this(model) {
         this.setConstructionObject(construction);
       }
     }
 
-    setConstructionForEMS
+    public partial class WeatherFile : ModelObject {
+      public OptionalSite site()
+      {
+        return OpenStudio.OpenStudioModelGeometry.siteForWeatherFile(this);
+      }
+    }
+
+    public partial class ClimateZones : ModelObject {
+      public OptionalSite site()
+      {
+        return OpenStudio.OpenStudioModelGeometry.siteForClimateZones(this);
+      }
+    }
 
   %}
 #endif

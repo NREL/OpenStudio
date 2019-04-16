@@ -22,10 +22,11 @@
   // Conflicts with class name in utilities
   //%rename(ModelYearDescription) openstudio::model::YearDescription;
   %ignore openstudio::model::YearDescription;
+  %ignore openstudio::model::OptionalYearDescription;
 
-  // site is being imported from weather file
-  // schedule day is being imported from design day
-  // might want to move both of those to geometry so they can import resources and site
+  // Note JM 2019-04-16: Ignoring Site-related methods and reimplementing them in ModelGeometry.i using partial classes
+  %ignore openstudio::model::WeatherFile::site;
+  %ignore openstudio::model::ClimateZones::site;
 
 #endif
 
@@ -40,6 +41,7 @@ namespace model {
 }
 }
 
+UNIQUEMODELOBJECT_TEMPLATES(RunPeriod);
 UNIQUEMODELOBJECT_TEMPLATES(SimulationControl);
 UNIQUEMODELOBJECT_TEMPLATES(LightingSimulationControl);
 UNIQUEMODELOBJECT_TEMPLATES(SizingParameters);
@@ -58,7 +60,6 @@ UNIQUEMODELOBJECT_TEMPLATES(InsideSurfaceConvectionAlgorithm);
 UNIQUEMODELOBJECT_TEMPLATES(OutputControlReportingTolerances);
 UNIQUEMODELOBJECT_TEMPLATES(OutsideSurfaceConvectionAlgorithm);
 MODELOBJECT_TEMPLATES(SurfacePropertyConvectionCoefficientsMultipleSurface);
-UNIQUEMODELOBJECT_TEMPLATES(RunPeriod);
 UNIQUEMODELOBJECT_TEMPLATES(ShadowCalculation);
 MODELOBJECT_TEMPLATES(RunPeriodControlSpecialDays);
 UNIQUEMODELOBJECT_TEMPLATES(Timestep);
@@ -76,6 +77,7 @@ MODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
 UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
 MODELOBJECT_TEMPLATES(FoundationKivaSettings);
 
+SWIG_UNIQUEMODELOBJECT(RunPeriod);
 SWIG_UNIQUEMODELOBJECT(SimulationControl);
 SWIG_UNIQUEMODELOBJECT(LightingSimulationControl);
 SWIG_UNIQUEMODELOBJECT(SizingParameters);
@@ -94,7 +96,6 @@ SWIG_UNIQUEMODELOBJECT(InsideSurfaceConvectionAlgorithm);
 SWIG_UNIQUEMODELOBJECT(OutputControlReportingTolerances);
 SWIG_UNIQUEMODELOBJECT(OutsideSurfaceConvectionAlgorithm);
 SWIG_MODELOBJECT(SurfacePropertyConvectionCoefficientsMultipleSurface, 1);
-SWIG_UNIQUEMODELOBJECT(RunPeriod);
 SWIG_UNIQUEMODELOBJECT(ShadowCalculation);
 SWIG_MODELOBJECT(RunPeriodControlSpecialDays, 1);
 SWIG_UNIQUEMODELOBJECT(Timestep);

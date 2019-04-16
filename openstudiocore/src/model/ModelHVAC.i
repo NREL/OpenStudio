@@ -368,7 +368,7 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
 
     public partial class EnergyManagementSystemActuator : ModelObject {
       public bool setThermalZone(OpenStudio.ThermalZone thermalZone) {
-        return OpenStudio.OpenStudioModelGeometry.setThermalZoneForEMSActuator(this, thermalZone);
+        return OpenStudio.OpenStudioModelHVAC.setThermalZoneForEMSActuator(this, thermalZone);
       }
 
       // Overloaded Ctor, calling Ctor that doesn't use ThermalZone

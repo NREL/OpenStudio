@@ -259,12 +259,12 @@ SWIG_MODELOBJECT(DesignSpecificationOutdoorAir, 1);
 
     public partial class EnergyManagementSystemCurveOrTableIndexVariable : ModelObject {
       public bool setCurveOrTableObject(OpenStudio.Curve curve) {
-        return OpenStudio.OpenStudioModelGeometry.setCurveForEMS(this, curve);
+        return OpenStudio.OpenStudioModelResources.setCurveForEMS(this, curve);
       }
 
       // Overloaded Ctor, calling Ctor that doesn't use Curve
-      public EnergyManagementSystemCurveOrTableIndexVariable(ModelObject modelObject, OpenStudio.Curve curve)
-        : this(modelObject) {
+      public EnergyManagementSystemCurveOrTableIndexVariable(Model model, OpenStudio.Curve curve)
+        : this(model) {
         this.setCurveOrTableObject(curve);
       }
     }
