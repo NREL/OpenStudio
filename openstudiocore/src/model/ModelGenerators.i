@@ -15,6 +15,9 @@
 // Needed to reimplement SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic
 %import <model/ModelStraightComponent.i>
 
+// ignore specific overload of ThreeJSForwardTranslator::modelToThreeJS to avoid dealing with std::function<void(double)>updatePercentage
+%ignore openstudio::model::ThreeJSForwardTranslator::modelToThreeJS(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage);
+
 // All base classes for PV, Generators, inverters and Electrical Storage
 %{
   #include <model/PhotovoltaicPerformance.hpp>
@@ -39,8 +42,7 @@
 %include <model/ThreeJSReverseTranslator.hpp>
 %include <model/ModelMerger.hpp>
 
-// TODO: ignore specific overload of ThreeJSForwardTranslator::modelToThreeJS to avoid dealing with updatePercentage
-%ignore openstudio::model::ThreeJSForwardTranslator::modelToThreeJS(const openstudio::model::Model&, bool, std::function<void(double)>);
+
 
 #if defined SWIGCSHARP
 
