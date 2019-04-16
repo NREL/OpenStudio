@@ -21,6 +21,9 @@
 %import(module="openstudiomodel") <model/ModelObject.hpp>
 #endif
 
+%template(RefactoredObjectPair) std::pair<openstudio::IdfObject, openstudio::IdfObject>;
+%template(RefactoredObjectPairVector) std::vector< std::pair<openstudio::IdfObject, openstudio::IdfObject> >;
+
 %{
   #include <osversion/VersionTranslator.hpp>
 

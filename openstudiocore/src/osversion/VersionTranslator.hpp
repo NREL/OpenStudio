@@ -148,7 +148,7 @@ class OSVERSION_API VersionTranslator {
    *  version of OpenStudio. */
   std::vector<IdfObject> newObjects() const;
 
-  /** Returns an original object, new object pair for objects that have been significantly
+  /** Returns an (original object, new object) pair for objects that have been significantly
    *  refactored. */
   std::vector< std::pair<IdfObject,IdfObject> > refactoredObjects() const;
 
