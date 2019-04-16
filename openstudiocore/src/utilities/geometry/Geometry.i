@@ -1,6 +1,13 @@
 #ifndef UTILITIES_GEOMETRY_GEOMETRY_I
 #define UTILITIES_GEOMETRY_GEOMETRY_I
 
+#if defined(SWIGCSHARP)
+
+  // Avoid triggering a SWIG warning: 'object' is a C# keyword
+  %rename(threeSceneObject) openstudio::ThreeScene::object;
+
+#endif
+
 %{
   namespace openstudio{}
   using namespace openstudio;

@@ -1,6 +1,14 @@
 #ifndef UTILITIES_CORE_LOGGER_I
 #define UTILITIES_CORE_LOGGER_I
 
+#if defined(SWIGCSHARP)
+
+  // Avoid triggering a SWIG warning: 'string' is a C# keyword
+  %rename(toString) openstudio::StringStreamLogSink::string;
+
+#endif
+
+
 %{
   #include <utilities/core/LogMessage.hpp>
   #include <utilities/core/LogSink.hpp>

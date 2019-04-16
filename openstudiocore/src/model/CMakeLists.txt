@@ -2075,6 +2075,7 @@ list(APPEND OpenStudioModelSwigs OpenStudioModelHVAC)
 MAKE_SWIG_TARGET(OpenStudioModelZoneHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelZoneHVAC.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelZoneHVAC)
 
+# Note: really ModelHVAC.i is enough right now, but it's only a matter of time before we actually enable AvailabilityManagers for ZoneHVACComponents
 MAKE_SWIG_TARGET(OpenStudioModelAvailabilityManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAvailabilityManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelZoneHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelAvailabilityManager)
 
