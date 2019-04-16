@@ -235,6 +235,41 @@ SWIG_MODELOBJECT(DesignSpecificationOutdoorAir, 1);
 
 %include <model/ScheduleTypeRegistry.hpp>
 
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
+  %inline {
+    namespace openstudio {
+      namespace model {
+
+        // EMS Curve setter  (reimplemented from ModelCore.i)
+        bool setCurveForEMS(openstudio::model::EnergyManagementSystemCurveOrTableIndexVariable ems_curve, openstudio::model::Curve curve) {
+          return ems_curve.setCurveOrTableObject(curve);
+        }
+
+      }
+    }
+  }
+#endif
+
+#if defined(SWIGCSHARP)
+  //%pragma(csharp) imclassimports=%{
+  %pragma(csharp) moduleimports=%{
+
+    using System;
+    using System.Runtime.InteropServices;
+
+    public partial class EnergyManagementSystemCurveOrTableIndexVariable : ModelObject {
+      public bool setCurveOrTableObject(OpenStudio.Curve curve) {
+        return OpenStudio.OpenStudioModelGeometry.setCurveForEMS(this, curve);
+      }
+
+      // Overloaded Ctor, calling Ctor that doesn't use Curve
+      public EnergyManagementSystemCurveOrTableIndexVariable(ModelObject modelObject, OpenStudio.Curve curve)
+        : this(modelObject) {
+        this.setCurveOrTableObject(curve);
+      }
+    }
+  %}
+#endif
 #endif
 
 

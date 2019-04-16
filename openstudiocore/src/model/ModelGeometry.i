@@ -238,6 +238,16 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
         std::vector<openstudio::model::SubSurface> getSubSurfaces(const openstudio::model::ShadingControl& sc) {
           return sc.subSurfaces();
         }
+
+        // EMS Actuator setter for Space (reimplemented from ModelCore.i)
+        bool setSpaceForEMSActuator(openstudio::model::EnergyManagementSystemActuator actuator, openstudio::model::Space space) {
+          return actuator.setSpace(space);
+        }
+
+        // EMS Construction setter  (reimplemented from ModelCore.i)
+        bool setConstructionForEMS(openstudio::model::EnergyManagementSystemConstructionIndexVariable ems_cons, openstudio::model::ModelObject construction) {
+          return ems_cons.setConstructionObject(construction);
+        }
       }
     }
   }
@@ -270,6 +280,32 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
         return OpenStudio.OpenStudioModelGeometry.getSubSurfaces(this);
       }
     }
+
+    public partial class EnergyManagementSystemActuator : ModelObject {
+      public bool setSpace(OpenStudio.Space space) {
+        return OpenStudio.OpenStudioModelGeometry.setSpaceForEMSActuator(this, space);
+      }
+
+      // Overloaded Ctor, calling Ctor that doesn't use Space
+      public EnergyManagementSystemActuator(ModelObject modelObject, string actuatedComponentType, string actuatedComponentControlType, OpenStudio.Space space)
+        : this(modelObject, actuatedComponentType, actuatedComponentControlType) {
+        this.setSpace(space);
+      }
+    }
+
+    public partial class EnergyManagementSystemConstructionIndexVariable : ModelObject {
+      public bool setConstructionObject(OpenStudio.Construction construction) {
+        return OpenStudio.OpenStudioModelGeometry.setConstructionForEMS(this, construction);
+      }
+
+      // Overloaded Ctor, calling basic constructor
+      public EnergyManagementSystemConstructionIndexVariable(ModelObject modelObject, OpenStudio.Construction construction)
+        : this(modelObject) {
+        this.setConstructionObject(construction);
+      }
+    }
+
+    setConstructionForEMS
 
   %}
 #endif

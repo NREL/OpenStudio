@@ -323,6 +323,12 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
         bool setThermalZone(openstudio::model::Space space, openstudio::model::ThermalZone thermalZone){
           return space.setThermalZone(thermalZone);
         }
+
+        // EMS Actuator setter for ThermalZone (reimplemented from ModelCore.i)
+        bool setThermalZoneForEMSActuator(openstudio::model::EnergyManagementSystemActuator actuator, openstudio::model::ThermalZone thermalZone) {
+          return actuator.setThermalZone(thermalZone);
+        }
+
       }
     }
   }
@@ -357,6 +363,18 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
       public bool setThermalZone(OpenStudio.ThermalZone thermalZone)
       {
         return OpenStudio.OpenStudioModelHVAC.setThermalZone(this, thermalZone);
+      }
+    }
+
+    public partial class EnergyManagementSystemActuator : ModelObject {
+      public bool setThermalZone(OpenStudio.ThermalZone thermalZone) {
+        return OpenStudio.OpenStudioModelGeometry.setThermalZoneForEMSActuator(this, thermalZone);
+      }
+
+      // Overloaded Ctor, calling Ctor that doesn't use ThermalZone
+      public EnergyManagementSystemActuator(ModelObject modelObject, string actuatedComponentType, string actuatedComponentControlType, OpenStudio.ThermalZone thermalZone)
+        : this(modelObject, actuatedComponentType, actuatedComponentControlType) {
+        this.setThermalZone(thermalZone);
       }
     }
   %}
