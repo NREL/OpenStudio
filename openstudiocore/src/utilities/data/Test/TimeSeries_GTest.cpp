@@ -1319,7 +1319,7 @@ TEST_F(DataFixture, TimeSeries_values_NonLeap_FullYear) {
   TimeSeries timeSeries(startDate, openstudio::Time(0,1), openstudio::createVector(values), "lux");
 
   Time startTime(0, 1, 0, 0);
-  Time endTime(0, 24, 1, 0);
+  Time endTime(0, 24, 0, 0);
 
   std::vector<std::pair<openstudio::MonthOfYear, int>> daysInMonth = {
     {MonthOfYear::Jan, 31},
@@ -1404,7 +1404,7 @@ TEST_F(DataFixture, TimeSeries_values_WrapAround_Hardcode) {
   TimeSeries timeSeries(startDate, openstudio::Time(0,1), openstudio::createVector(values), "lux");
 
   Time startTime(0, 1, 0, 0);
-  Time endTime(0, 24, 1, 0);
+  Time endTime(0, 24, 0, 0);
 
   std::vector<std::pair<openstudio::MonthOfYear, int>> daysInMonth = {
     {MonthOfYear::Jan, 31},
@@ -1520,7 +1520,7 @@ TEST_F(DataFixture, TimeSeries_values_WrapAround_NoHardcode) {
   TimeSeries timeSeries(startDate, openstudio::Time(0,1), openstudio::createVector(values), "lux");
 
   Time startTime(0, 1, 0, 0);
-  Time endTime(0, 24, 1, 0);
+  Time endTime(0, 24, 0, 0);
 
   std::vector<std::pair<openstudio::MonthOfYear, int>> daysInMonth = {
     {MonthOfYear::Jan, 31},
@@ -1691,6 +1691,136 @@ TEST_F(DataFixture, TimeSeries_values_WrapAround_NoHardcode) {
     EXPECT_EQ(0, vals.size())
         << " Failed between " << startDateTime << " and " << endDateTime;
 
+  }
+
+}
+
+
+
+TEST_F(DataFixture, TimeSeries_value_DateTime) {
+
+  // picking 2011 because it's a not a Leap Year but 2012 is
+  int year = 2011;
+
+  // Simulate having a SQL timeseries for  full years, one non leap and one leap, hourly
+
+  // Each day has the same value corresponding to the day number counted from January 1, 2011 (eg 1 for Jan 1, 2 for Jan 2, etc) for all timesteps
+  // (eg January 1, 2012 is 366)
+  Date jan1(MonthOfYear(MonthOfYear::Jan), 1, year);
+  Date startDate(MonthOfYear(MonthOfYear::Jun), 1, year);
+  Date endDate(MonthOfYear(MonthOfYear::Dec), 31, year+1);
+
+  int day_start = (startDate-jan1).totalDays();
+  EXPECT_EQ(day_start, 151);
+  int n_days = (endDate-startDate).totalDays() + 1;
+  EXPECT_EQ((365 - day_start)+366, n_days);
+  int n_vals = n_days * 24;
+  std::vector<double> values;
+  values.resize(n_vals);
+  for (int i=0; i < n_vals; ++i) {
+    values[i] = ((i + (day_start*24))/ 24) + 1;
+  }
+
+  // E+ follows an end-of-timestep convention
+
+  Time startTime(0, 1, 0, 0);
+  Time endTime(0, 24, 0, 0);
+
+  TimeSeries timeSeries(startDate, startTime, openstudio::createVector(values), "lux");
+
+  // E+ follows an end-of-timestep convention
+
+
+  // Try supplying the year, first one, before start (should fail)
+  {
+    Date reportForDate(MonthOfYear(MonthOfYear::May), 12, year);
+    ASSERT_TRUE(reportForDate < timeSeries.firstReportDateTime().date());
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(0, timeSeries.value(reportForDateTime));
+    }
+  }
+
+  // Try Supplying a year, but way after
+  {
+    Date reportForDate(MonthOfYear(MonthOfYear::May), 12, year + 3);
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(0, timeSeries.value(reportForDateTime));
+    }
+  }
+
+
+  // Try supplying the year, first one, after start
+  {
+    Date reportForDate(MonthOfYear(MonthOfYear::Jul), 12, year);
+    int n_days = (reportForDate - jan1).totalDays() + 1;
+    EXPECT_EQ(193, n_days);
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(n_days, timeSeries.value(reportForDateTime));
+    }
+  }
+
+  // Try supplying the year, second one, before start month (should work)
+  {
+    Date reportForDate(MonthOfYear(MonthOfYear::Mar), 12, year+1);
+    int n_days = (reportForDate - jan1).totalDays() + 1;
+    EXPECT_EQ(437, n_days);
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(n_days, timeSeries.value(reportForDateTime));
+    }
+  }
+
+  // Try supplying the year, second one, after start
+  {
+    Date reportForDate(MonthOfYear(MonthOfYear::Jul), 12, year+1);
+    int n_days = (reportForDate - jan1).totalDays() + 1;
+    EXPECT_EQ(559, n_days);
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(n_days, timeSeries.value(reportForDateTime));
+    }
+  }
+
+
+  // Try without supplying a year, after start month, we expect to return in same year
+  {
+    Date expectedReportForDate(MonthOfYear(MonthOfYear::Jul), 12, year);
+    int n_days = (expectedReportForDate - jan1).totalDays() + 1;
+    EXPECT_EQ(193, n_days);
+
+    // No year
+    Date reportForDate(MonthOfYear(MonthOfYear::Jul), 12);
+
+
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(n_days, timeSeries.value(reportForDateTime));
+    }
+  }
+
+  // Try without supplying a year, before start month, we expect to return in following year
+  {
+    Date expectedReportForDate(MonthOfYear(MonthOfYear::Mar), 12, year + 1);
+    int n_days = (expectedReportForDate - jan1).totalDays() + 1;
+    EXPECT_EQ(437, n_days);
+
+    // No year
+    Date reportForDate(MonthOfYear(MonthOfYear::Mar), 12);
+
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(n_days, timeSeries.value(reportForDateTime));
+    }
   }
 
 }
