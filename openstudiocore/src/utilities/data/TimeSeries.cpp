@@ -597,7 +597,14 @@ double TimeSeries_Impl::value(const DateTime& dateTime) const
     // Even if it doesn't really wrap-around, it'll just return nothing so it's fine
     // (and valueAtSecondsFromFirstReport will also add Debug message)
     dateTimeWithYear = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth(), timeSeriesYear), dateTime.time());
-    if (dateTimeWithYear < firstReportDateTimeWithYear) {
+
+    int secondsFromFirstReport = (dateTimeWithYear - firstReportDateTimeWithYear).totalSeconds();
+
+    // If it's negative, then: if m_intervalLength exist we check that it's even bigger than intervalLength,
+    // in which case we do shift to next year, otherwise we do nothing
+    // This allows passing "2005-01-01 00:01:00" to report at "2005-01-01 01:00:00" (historical behavior)
+    // cf valueAtSecondsFromFirstReport which will allow it
+    if (secondsFromFirstReport < 0 && (!m_intervalLength || secondsFromFirstReport <= -m_intervalLength->totalSeconds())) {
       dateTimeWithYear = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth(), timeSeriesYear + 1), dateTime.time());
     }
   }
