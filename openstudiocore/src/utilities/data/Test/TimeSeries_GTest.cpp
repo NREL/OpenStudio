@@ -99,7 +99,10 @@ TEST_F(DataFixture,TimeSeries_IntervalConstructor)
   timeSeries2.setOutOfRangeValue(-99);
   EXPECT_EQ(-99, timeSeries1.value(firstDateTime + Time(0, 0, -61, 0))); // out of range
   EXPECT_EQ(-99, timeSeries1.value(firstDateTime + Time(0, 0, -60, 0))); // out of range
-  EXPECT_EQ(0, timeSeries1.value(firstDateTime + Time(0, 0, -59, 0))); // in range
+
+  // Note JM 2019-04-17: in range, though an edge case: it's before the firstDateTime, but less than 1 interval, so we allow it to pass
+  EXPECT_EQ(0, timeSeries1.value(firstDateTime + Time(0, 0, -59, 0)));
+
   EXPECT_EQ(0, timeSeries1.value(firstDateTime)); // in range
   EXPECT_EQ(1, timeSeries1.value(firstDateTime + Time(0, 0, 59, 0))); // in range
   EXPECT_EQ(1, timeSeries1.value(firstDateTime + Time(0, 0, 60, 0))); // in range
