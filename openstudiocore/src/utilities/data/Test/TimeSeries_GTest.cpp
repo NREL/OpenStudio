@@ -1258,6 +1258,7 @@ TEST_F(DataFixture, TimeSeries_values_Leap_FullYear) {
   }
 
   TimeSeries timeSeries(startDate, openstudio::Time(0,1), openstudio::createVector(values), "lux");
+  ASSERT_TRUE(timeSeries.firstReportDateTime().date().baseYear());
 
   Time startTime(0, 0, 1, 0);
   Time endTime(0, 24, 0, 0);
@@ -1320,6 +1321,7 @@ TEST_F(DataFixture, TimeSeries_values_NonLeap_FullYear) {
   }
 
   TimeSeries timeSeries(startDate, openstudio::Time(0,1), openstudio::createVector(values), "lux");
+  ASSERT_TRUE(timeSeries.firstReportDateTime().date().baseYear());
 
   Time startTime(0, 1, 0, 0);
   Time endTime(0, 24, 0, 0);
@@ -1405,6 +1407,7 @@ TEST_F(DataFixture, TimeSeries_values_WrapAround_Hardcode) {
   }
 
   TimeSeries timeSeries(startDate, openstudio::Time(0,1), openstudio::createVector(values), "lux");
+  ASSERT_TRUE(timeSeries.firstReportDateTime().date().baseYear());
 
   Time startTime(0, 1, 0, 0);
   Time endTime(0, 24, 0, 0);
@@ -1521,6 +1524,7 @@ TEST_F(DataFixture, TimeSeries_values_WrapAround_NoHardcode) {
   }
 
   TimeSeries timeSeries(startDate, openstudio::Time(0,1), openstudio::createVector(values), "lux");
+  ASSERT_TRUE(timeSeries.firstReportDateTime().date().baseYear());
 
   Time startTime(0, 1, 0, 0);
   Time endTime(0, 24, 0, 0);
@@ -1705,7 +1709,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime) {
   // picking 2011 because it's a not a Leap Year but 2012 is
   int year = 2011;
 
-  // Simulate having a SQL timeseries for  full years, one non leap and one leap, hourly
+  // Simulate having a SQL timeseries for one partial + one full leap year, hourly
 
   // Each day has the same value corresponding to the day number counted from January 1, 2011 (eg 1 for Jan 1, 2 for Jan 2, etc) for all timesteps
   // (eg January 1, 2012 is 366)
@@ -1730,6 +1734,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime) {
   Time endTime(0, 24, 0, 0);
 
   TimeSeries timeSeries(startDate, startTime, openstudio::createVector(values), "lux");
+  ASSERT_TRUE(timeSeries.firstReportDateTime().date().baseYear());
 
   // E+ follows an end-of-timestep convention
 
@@ -1815,6 +1820,528 @@ TEST_F(DataFixture, TimeSeries_value_DateTime) {
     Date expectedReportForDate(MonthOfYear(MonthOfYear::Mar), 12, year + 1);
     int n_days = (expectedReportForDate - jan1).totalDays() + 1;
     EXPECT_EQ(437, n_days);
+
+    // No year
+    Date reportForDate(MonthOfYear(MonthOfYear::Mar), 12);
+
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(n_days, timeSeries.value(reportForDateTime));
+    }
+  }
+
+}
+
+
+/*******************************************************************************************************************
+*                                       C H E C K    L E G A C Y                                                   *
+********************************************************************************************************************/
+// Note JM 2019-04-17:  This tests exactly the same thing as above, BUT with a TimeSeries that internally doesn't have a Year.
+// It's more or less "legacy" because the primary use case for TimeSeries is from the E+ Sql file, which now includes the year, but we want to support
+// reading old SQL files
+
+// Note that we can't test leap year due to assumed year (2009)
+
+TEST_F(DataFixture, TimeSeries_values_NonLeap_FullYear_NoYear) {
+
+  // Simulate having a SQL timeseries for a full year, hourly, with no harcoded year
+  Date startDate(MonthOfYear(MonthOfYear::Jan), 1);
+  int year = startDate.year();
+  EXPECT_EQ(2009, year);
+
+  // Each day has the same value corresponding to the day number (eg 1 for Jan 1, 2 for Jan 2, etc) for all timesteps
+  int n_vals = 365 * 24;
+  std::vector<double> values;
+  values.resize(n_vals);
+  for (int i=0; i < n_vals; ++i) {
+    values[i] = (i / 24) + 1;
+  }
+
+  // A TimeSeries without hardcoded year
+  TimeSeries timeSeries(startDate, openstudio::Time(0,1), openstudio::createVector(values), "lux");
+  ASSERT_FALSE(timeSeries.firstReportDateTime().date().baseYear());
+
+  Time startTime(0, 1, 0, 0);
+  Time endTime(0, 24, 0, 0);
+
+  std::vector<std::pair<openstudio::MonthOfYear, int>> daysInMonth = {
+    {MonthOfYear::Jan, 31},
+    {MonthOfYear::Feb, 28},
+    {MonthOfYear::Mar, 31},
+    {MonthOfYear::Apr, 30},
+    {MonthOfYear::May, 31},
+    {MonthOfYear::Jun, 30},
+    {MonthOfYear::Jul, 31},
+    {MonthOfYear::Aug, 31},
+    {MonthOfYear::Sep, 30},
+    {MonthOfYear::Oct, 31},
+    {MonthOfYear::Nov, 30},
+    {MonthOfYear::Dec, 31},
+  };
+
+  // Hardcode years
+  {
+    int dayStart = 1;
+    for (const auto& monthEntry: daysInMonth) {
+      const MonthOfYear& month = monthEntry.first;
+      const int& ndays= monthEntry.second;
+
+
+      DateTime startDateTime(Date(month, 1, year), startTime);
+      DateTime endDateTime(Date(month, ndays, year), endTime);
+      Vector vals = timeSeries.values(startDateTime, endDateTime);
+      EXPECT_EQ(ndays * 24, vals.size())
+        << " Failed between " << startDateTime << " and " << endDateTime;
+
+      int dayEnd = ndays + dayStart - 1;
+      // Calculate the Sum and compare it to the values we actually retrieved to ensure we sliced correctly
+      EXPECT_EQ(calculate_sum(dayStart, dayEnd), openstudio::sum(vals))
+         << " Failed between " << startDateTime << " and " << endDateTime;
+
+      dayStart += ndays;
+
+    }
+  }
+
+  // Don't hardcode years
+  {
+    int dayStart = 1;
+    for (const auto& monthEntry: daysInMonth) {
+      const MonthOfYear& month = monthEntry.first;
+      const int& ndays= monthEntry.second;
+
+      DateTime startDateTime(Date(month, 1), startTime);
+      DateTime endDateTime(Date(month, ndays), endTime);
+      Vector vals = timeSeries.values(startDateTime, endDateTime);
+      EXPECT_EQ(ndays * 24, vals.size())
+        << " Failed between " << startDateTime << " and " << endDateTime;
+
+      int dayEnd = ndays + dayStart - 1;
+      // Calculate the Sum and compare it to the values we actually retrieved to ensure we sliced correctly
+      EXPECT_EQ(calculate_sum(dayStart, dayEnd), openstudio::sum(vals))
+        << " Failed between " << startDateTime << " and " << endDateTime;
+
+      dayStart += ndays;
+
+    }
+  }
+
+}
+
+TEST_F(DataFixture, TimeSeries_values_WrapAround_Hardcode_NoYear) {
+
+  // Simulate having a SQL timeseries for two full years, hourly, with no harcoded year
+  Date startDate(MonthOfYear(MonthOfYear::Jan), 1);
+  int year = startDate.year();
+  EXPECT_EQ(2009, year);
+
+  // Each day has the same value corresponding to the day number (eg 1 for Jan 1, 2 for Jan 2, etc) for all timesteps
+  int n_vals = (365 + 365) * 24; // Can't have Leap
+  std::vector<double> values;
+  values.resize(n_vals);
+  for (int i=0; i < n_vals; ++i) {
+    values[i] = (i / 24) + 1;
+  }
+
+  TimeSeries timeSeries(startDate, openstudio::Time(0,1), openstudio::createVector(values), "lux");
+  ASSERT_FALSE(timeSeries.firstReportDateTime().date().baseYear());
+
+  Time startTime(0, 1, 0, 0);
+  Time endTime(0, 24, 0, 0);
+
+  std::vector<std::pair<openstudio::MonthOfYear, int>> daysInMonth = {
+    {MonthOfYear::Jan, 31},
+    {MonthOfYear::Feb, 28},
+    {MonthOfYear::Mar, 31},
+    {MonthOfYear::Apr, 30},
+    {MonthOfYear::May, 31},
+    {MonthOfYear::Jun, 30},
+    {MonthOfYear::Jul, 31},
+    {MonthOfYear::Aug, 31},
+    {MonthOfYear::Sep, 30},
+    {MonthOfYear::Oct, 31},
+    {MonthOfYear::Nov, 30},
+    {MonthOfYear::Dec, 31},
+
+    {MonthOfYear::Jan, 31},
+    {MonthOfYear::Feb, 28}, // Can't be Leap
+    {MonthOfYear::Mar, 31},
+    {MonthOfYear::Apr, 30},
+    {MonthOfYear::May, 31},
+    {MonthOfYear::Jun, 30},
+    {MonthOfYear::Jul, 31},
+    {MonthOfYear::Aug, 31},
+    {MonthOfYear::Sep, 30},
+    {MonthOfYear::Oct, 31},
+    {MonthOfYear::Nov, 30},
+    {MonthOfYear::Dec, 31},
+  };
+
+  // Hardcode years
+  {
+    int n = 0;
+    int dayStart = 1;
+    for (const auto& monthEntry: daysInMonth) {
+      ++n;
+      int thisYear = year;
+      if (n > 12) {
+        thisYear = year + 1;
+      }
+      const MonthOfYear& month = monthEntry.first;
+      const int& ndays= monthEntry.second;
+
+      DateTime startDateTime(Date(month, 1, thisYear), startTime);
+      DateTime endDateTime(Date(month, ndays, thisYear), endTime);
+      Vector vals = timeSeries.values(startDateTime, endDateTime);
+      EXPECT_EQ(ndays * 24, vals.size())
+        << " Failed between " << startDateTime << " and " << endDateTime;
+
+      int dayEnd = ndays + dayStart - 1;
+      // Calculate the Sum and compare it to the values we actually retrieved to ensure we sliced correctly
+      EXPECT_EQ(calculate_sum(dayStart, dayEnd), openstudio::sum(vals))
+         << " Failed between " << startDateTime << " and " << endDateTime;
+
+      dayStart += ndays;
+
+    }
+  }
+
+  // Try weird stuff now
+  {
+    DateTime startDateTime(Date(MonthOfYear::Dec, 1, year), startTime);
+    DateTime endDateTime(Date(MonthOfYear::Jan, 31, year + 1), endTime);
+    Vector vals = timeSeries.values(startDateTime, endDateTime);
+
+    int dayStart = 335;
+    int ndays = 31 + 31;
+    int dayEnd = ndays + dayStart - 1;
+
+    EXPECT_EQ(ndays * 24, vals.size())
+        << " Failed between " << startDateTime << " and " << endDateTime;
+
+
+    EXPECT_EQ(calculate_sum(dayStart, dayEnd), openstudio::sum(vals))
+         << " Failed between " << startDateTime << " and " << endDateTime;
+  }
+
+  {
+    DateTime startDateTime(Date(MonthOfYear::Dec, 1, year), startTime);
+    DateTime endDateTime(Date(MonthOfYear::Mar, 31, year + 1), endTime);
+    Vector vals = timeSeries.values(startDateTime, endDateTime);
+
+    int dayStart = 335;
+    int ndays = 31 + 31 + 28 + 31; // 28 for feb, can't be leap
+    int dayEnd = ndays + dayStart - 1;
+
+    EXPECT_EQ(ndays * 24, vals.size())
+        << " Failed between " << startDateTime << " and " << endDateTime;
+
+
+    EXPECT_EQ(calculate_sum(dayStart, dayEnd), openstudio::sum(vals))
+         << " Failed between " << startDateTime << " and " << endDateTime;
+  }
+
+}
+
+
+TEST_F(DataFixture, TimeSeries_values_WrapAround_NoHardcode_NoYear) {
+
+  // Simulate having a SQL timeseries for two full years, hourly, no hardcoded years
+  Date startDate(MonthOfYear(MonthOfYear::Jan), 1);
+  int year = startDate.year();
+  EXPECT_EQ(2009, year);
+
+  // Each day has the same value corresponding to the day number (eg 1 for Jan 1, 2 for Jan 2, etc) for all timesteps
+  int n_vals = (365 + 365) * 24; // Can't have leap
+  std::vector<double> values;
+  values.resize(n_vals);
+  for (int i=0; i < n_vals; ++i) {
+    values[i] = (i / 24) + 1;
+  }
+
+  TimeSeries timeSeries(startDate, openstudio::Time(0,1), openstudio::createVector(values), "lux");
+  ASSERT_FALSE(timeSeries.firstReportDateTime().date().baseYear());
+
+  Time startTime(0, 1, 0, 0);
+  Time endTime(0, 24, 0, 0);
+
+  std::vector<std::pair<openstudio::MonthOfYear, int>> daysInMonth = {
+    {MonthOfYear::Jan, 31},
+    {MonthOfYear::Feb, 28},
+    {MonthOfYear::Mar, 31},
+    {MonthOfYear::Apr, 30},
+    {MonthOfYear::May, 31},
+    {MonthOfYear::Jun, 30},
+    {MonthOfYear::Jul, 31},
+    {MonthOfYear::Aug, 31},
+    {MonthOfYear::Sep, 30},
+    {MonthOfYear::Oct, 31},
+    {MonthOfYear::Nov, 30},
+    {MonthOfYear::Dec, 31},
+
+    {MonthOfYear::Jan, 31},
+    {MonthOfYear::Feb, 28}, // Can't be Leap
+    {MonthOfYear::Mar, 31},
+    {MonthOfYear::Apr, 30},
+    {MonthOfYear::May, 31},
+    {MonthOfYear::Jun, 30},
+    {MonthOfYear::Jul, 31},
+    {MonthOfYear::Aug, 31},
+    {MonthOfYear::Sep, 30},
+    {MonthOfYear::Oct, 31},
+    {MonthOfYear::Nov, 30},
+    {MonthOfYear::Dec, 31},
+  };
+
+  // Don't Hardcode years: can only retrieve months of first years
+  {
+    int n = 0;
+    int dayStart = 1;
+    for (const auto& monthEntry: daysInMonth) {
+      ++n;
+      int thisYear = year;
+      if (n > 12) {
+        break;
+      }
+      const MonthOfYear& month = monthEntry.first;
+      const int& ndays= monthEntry.second;
+
+      DateTime startDateTime(Date(month, 1, thisYear), startTime);
+      DateTime endDateTime(Date(month, ndays, thisYear), endTime);
+      Vector vals = timeSeries.values(startDateTime, endDateTime);
+      EXPECT_EQ(ndays * 24, vals.size())
+        << " Failed between " << startDateTime << " and " << endDateTime;
+
+      int dayEnd = ndays + dayStart - 1;
+      // Calculate the Sum and compare it to the values we actually retrieved to ensure we sliced correctly
+      EXPECT_EQ(calculate_sum(dayStart, dayEnd), openstudio::sum(vals))
+         << " Failed between " << startDateTime << " and " << endDateTime;
+
+      dayStart += ndays;
+
+    }
+  }
+
+  // Try some stuff now
+
+  // No years passed, no leap, end < start
+  {
+    DateTime startDateTime(Date(MonthOfYear::Dec, 1), startTime);
+    DateTime endDateTime(Date(MonthOfYear::Jan, 31), endTime);
+    Vector vals = timeSeries.values(startDateTime, endDateTime);
+
+    int dayStart = 335;
+    int ndays = 31 + 31;
+    int dayEnd = ndays + dayStart - 1;
+
+    EXPECT_EQ(ndays * 24, vals.size())
+        << " Failed between " << startDateTime << " and " << endDateTime;
+
+
+    EXPECT_EQ(calculate_sum(dayStart, dayEnd), openstudio::sum(vals))
+         << " Failed between " << startDateTime << " and " << endDateTime;
+  }
+
+  // Start Year passed, end year defaulted but after start
+  {
+    DateTime startDateTime(Date(MonthOfYear::Jan, 1, year), startTime);
+    // Expect this to default to Feb 28, year
+    DateTime endDateTime(Date(MonthOfYear::Feb, 28), endTime);
+
+    Vector vals = timeSeries.values(startDateTime, endDateTime);
+
+    int dayStart = 1;
+    int ndays = 31 + 28;
+    int dayEnd = ndays + dayStart - 1;
+
+    EXPECT_EQ(ndays * 24, vals.size())
+        << " Failed between " << startDateTime << " and " << endDateTime;
+
+
+    EXPECT_EQ(calculate_sum(dayStart, dayEnd), openstudio::sum(vals))
+         << " Failed between " << startDateTime << " and " << endDateTime;
+
+  }
+
+  // Start Year passed, end year defaulted but before start in terms of Month/Day combo
+  {
+    DateTime startDateTime(Date(MonthOfYear::Dec, 1, year), startTime);
+    // Will default to Jan 31 year+1
+    DateTime endDateTime(Date(MonthOfYear::Jan, 31), endTime);
+
+    Vector vals = timeSeries.values(startDateTime, endDateTime);
+
+    int dayStart = 335;
+    int ndays = 31 + 31;
+    int dayEnd = ndays + dayStart - 1;
+
+    EXPECT_EQ(ndays * 24, vals.size())
+        << " Failed between " << startDateTime << " and " << endDateTime;
+
+
+    EXPECT_EQ(calculate_sum(dayStart, dayEnd), openstudio::sum(vals))
+         << " Failed between " << startDateTime << " and " << endDateTime;
+
+  }
+
+  // Start Year not passed, end year hard assigned
+  {
+    // Will default to Jan 1, year
+    DateTime startDateTime(Date(MonthOfYear::Jan, 1), startTime);
+    DateTime endDateTime(Date(MonthOfYear::Jan, 31, year), endTime);
+
+    Vector vals = timeSeries.values(startDateTime, endDateTime);
+
+    int dayStart = 1;
+    int ndays = 31;
+    int dayEnd = ndays + dayStart - 1;
+
+    EXPECT_EQ(ndays * 24, vals.size())
+        << " Failed between " << startDateTime << " and " << endDateTime;
+
+
+    EXPECT_EQ(calculate_sum(dayStart, dayEnd), openstudio::sum(vals))
+         << " Failed between " << startDateTime << " and " << endDateTime;
+
+  }
+
+  // Start Year not passed, end year hard assigned but incoherent (before start)
+  {
+    // Will default to Feb 1, year
+    DateTime startDateTime(Date(MonthOfYear::Feb, 1), startTime);
+    DateTime endDateTime(Date(MonthOfYear::Jan, 1, year), endTime);
+
+    Vector vals = timeSeries.values(startDateTime, endDateTime);
+
+    EXPECT_EQ(0, vals.size())
+        << " Failed between " << startDateTime << " and " << endDateTime;
+
+  }
+
+}
+
+
+
+TEST_F(DataFixture, TimeSeries_value_DateTime_NoYear) {
+
+  // Simulate having a SQL timeseries for one partial + one full year, hourly
+
+  // Each day has the same value corresponding to the day number counted from January 1, 2011 (eg 1 for Jan 1, 2 for Jan 2, etc) for all timesteps
+  // (eg January 1, 2012 is 366)
+
+  Date startDate(MonthOfYear(MonthOfYear::Jun), 1);
+  int year = startDate.year();
+  EXPECT_EQ(2009, year);
+
+  Date jan1(MonthOfYear(MonthOfYear::Jan), 1, year);
+  Date endDate(MonthOfYear(MonthOfYear::Dec), 31, year + 1);
+
+  int day_start = (startDate-jan1).totalDays();
+  EXPECT_EQ(day_start, 151);
+  int n_days = (endDate-startDate).totalDays() + 1;
+  EXPECT_EQ((365 - day_start) + 365, n_days); // Can't be a leap year due to assumedBaseYear which is 2009
+  int n_vals = n_days * 24;
+  std::vector<double> values;
+  values.resize(n_vals);
+  for (int i=0; i < n_vals; ++i) {
+    values[i] = ((i + (day_start*24))/ 24) + 1;
+  }
+
+  // E+ follows an end-of-timestep convention
+
+  Time startTime(0, 1, 0, 0);
+  Time endTime(0, 24, 0, 0);
+
+  // A TimeSeries with no hardcoded year
+  TimeSeries timeSeries(startDate, startTime, openstudio::createVector(values), "lux");
+  ASSERT_FALSE(timeSeries.firstReportDateTime().date().baseYear());
+
+
+  // E+ follows an end-of-timestep convention
+
+
+  // Try supplying the year, first one, before start (should fail)
+  {
+    Date reportForDate(MonthOfYear(MonthOfYear::May), 12, year);
+    ASSERT_TRUE(reportForDate < timeSeries.firstReportDateTime().date());
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(0, timeSeries.value(reportForDateTime));
+    }
+  }
+
+  // Try Supplying a year, but way after
+  {
+    Date reportForDate(MonthOfYear(MonthOfYear::May), 12, year + 3);
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(0, timeSeries.value(reportForDateTime));
+    }
+  }
+
+
+  // Try supplying the year, first one, after start
+  {
+    Date reportForDate(MonthOfYear(MonthOfYear::Jul), 12, year);
+    int n_days = (reportForDate - jan1).totalDays() + 1;
+    EXPECT_EQ(193, n_days);
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(n_days, timeSeries.value(reportForDateTime));
+    }
+  }
+
+  // Try supplying the year, second one, before start month (should work)
+  {
+    Date reportForDate(MonthOfYear(MonthOfYear::Mar), 12, year+1);
+    int n_days = (reportForDate - jan1).totalDays() + 1;
+    EXPECT_EQ(436, n_days); // No Leap possible
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(n_days, timeSeries.value(reportForDateTime));
+    }
+  }
+
+  // Try supplying the year, second one, after start
+  {
+    Date reportForDate(MonthOfYear(MonthOfYear::Jul), 12, year+1);
+    int n_days = (reportForDate - jan1).totalDays() + 1;
+    EXPECT_EQ(558, n_days); // No Leap possible
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(n_days, timeSeries.value(reportForDateTime));
+    }
+  }
+
+
+  // Try without supplying a year, after start month, we expect to return in same year
+  {
+    Date expectedReportForDate(MonthOfYear(MonthOfYear::Jul), 12, year);
+    int n_days = (expectedReportForDate - jan1).totalDays() + 1;
+    EXPECT_EQ(193, n_days);
+
+    // No year
+    Date reportForDate(MonthOfYear(MonthOfYear::Jul), 12);
+
+
+    for (int i = 1; i <= 24; ++i) {
+      Time reportForTime(0, i, 0, 0);
+      DateTime reportForDateTime(reportForDate, reportForTime);
+      EXPECT_EQ(n_days, timeSeries.value(reportForDateTime));
+    }
+  }
+
+  // Try without supplying a year, before start month, we expect to return in following year
+  {
+    Date expectedReportForDate(MonthOfYear(MonthOfYear::Mar), 12, year + 1);
+    int n_days = (expectedReportForDate - jan1).totalDays() + 1;
+    EXPECT_EQ(436, n_days); // No Leap Possible
 
     // No year
     Date reportForDate(MonthOfYear(MonthOfYear::Mar), 12);
