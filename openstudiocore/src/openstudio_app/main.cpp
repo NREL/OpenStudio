@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
   }
 
   // Output content of argc/argv
-  LOG_FREE(Debug, "OpenStudioApp.main", "main received argc=" << argc << "arguments")
+  LOG_FREE(Debug, "OpenStudioApp.main", "main received argc=" << argc << " arguments")
   for (int i=0; i < argc; ++i) {
     LOG_FREE(Debug, "OpenStudioApp.main", "Argument " << i << "=" << argv[i]);
   }
