@@ -150,7 +150,7 @@ TEST(ApplicationPathHelpers, completeAndNormalizeMultipleSymlinks) {
   EXPECT_EQ(toString(ori_path), toString(foundPath));
 
   for (const auto& p: toClean) {
-    // boost::filesystem::remove(p);
+    boost::filesystem::remove(p);
   }
 
 
