@@ -31,7 +31,9 @@
 
 #include "../ApplicationPathHelpers.hpp"
 #include "../PathHelpers.hpp"
+#include "../Logger.hpp"
 #include <stdlib.h>
+#include <thread>
 
 using namespace openstudio;
 
@@ -86,3 +88,132 @@ TEST(ApplicationPathHelpers, findInSystemPath) {
   boost::filesystem::remove(dummy_file_path);
 
 }
+
+#if !defined(_WIN32)
+// From PathHelpers too. Ensure that completeAndNormalize keeps resolving symlinks until found
+TEST(ApplicationPathHelpers, completeAndNormalizeMultipleSymlinks) {
+
+  std::vector<openstudio::path> toClean;
+  openstudio::path path_dir = getApplicationBuildDirectory() / toPath("Testing/Temporary");
+  openstudio::path path_subdir = path_dir / toPath("SubDir");
+
+  openstudio::filesystem::create_directories(path_subdir);
+
+  openstudio::path ori_path = path_dir / "completeAndNormalize_oriFile";
+  toClean.push_back(ori_path);
+
+  // 'touch'
+  boost::filesystem::ofstream outfile(ori_path);
+  outfile.close();
+
+  openstudio::path prev_path = ori_path;
+
+  // First one, same directory, absolute
+  openstudio::path symlink_path = path_dir / toPath("1.symlink_absolute_same_dir");
+  openstudio::path pointsTo = prev_path;
+  boost::filesystem::create_symlink(pointsTo, symlink_path);
+  prev_path = symlink_path;
+  toClean.push_back(symlink_path);
+
+  // Subdir, absolute
+  symlink_path = path_subdir / toPath("2.symlink_absolute_subdir");
+  pointsTo = prev_path;
+  boost::filesystem::create_symlink(pointsTo, symlink_path);
+  prev_path = symlink_path;
+  toClean.push_back(symlink_path);
+
+  // Same subdir, relative
+  symlink_path = path_subdir / toPath("3.symlink_relative_same_subdir");
+  pointsTo = prev_path.filename();
+  boost::filesystem::create_symlink(pointsTo, symlink_path);
+  prev_path = symlink_path;
+  toClean.push_back(symlink_path);
+
+  // Parent dir, relative
+  symlink_path = path_dir / toPath("4.symlink_relative_pardir");
+  // Just for fun, adding an uncessary "dir/../dir/" portion
+  pointsTo = path_subdir.filename() / toPath("..") / path_subdir.filename() / prev_path.filename();
+  boost::filesystem::create_symlink(pointsTo, symlink_path);
+  prev_path = symlink_path;
+  toClean.push_back(symlink_path);
+
+  // Subdir, relative
+  symlink_path = path_subdir / toPath("5.symlink_relative_pardir");
+  pointsTo = toPath("..") / prev_path.filename();
+  boost::filesystem::create_symlink(pointsTo, symlink_path);
+  prev_path = symlink_path;
+  toClean.push_back(symlink_path);
+
+
+  openstudio::path foundPath = completeAndNormalize(symlink_path);
+  EXPECT_TRUE(exists(foundPath));
+  EXPECT_EQ(toString(ori_path), toString(foundPath));
+
+  for (const auto& p: toClean) {
+    // boost::filesystem::remove(p);
+  }
+
+
+}
+
+void launch_another_instance_from_symlink(const path& symlink_path) {
+  std::string cmd = toString(symlink_path.filename()) + " --gtest_filter=*PathWhenSymlinkInPathUnixOnly_Run*";
+  std::system(cmd.c_str());
+}
+
+TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Setup) {
+
+  openstudio::path symlink_path_dir = getApplicationBuildDirectory() / toPath("Testing/Temporary");
+  openstudio::path symlink_path = symlink_path_dir / "openstudio_utilities_tests_symlink";
+  openstudio::filesystem::create_directories(symlink_path_dir);
+
+  openstudio::path openstudioUtilitiesTestPath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
+  if (exists(symlink_path)) {
+    boost::filesystem::remove(symlink_path);
+  }
+  boost::filesystem::create_symlink(openstudioUtilitiesTestPath, symlink_path);
+
+  auto current_path = std::getenv("PATH");
+  std::string new_path = toString(symlink_path_dir) + ":" + current_path;
+
+  setenv("PATH", new_path.c_str(), 1);
+  setenv("PathWhenSymlinkInPathUnixOnly_Setup", "true", 1);
+
+  // We run a system call to the symlink name (not its path), with a gtest_filter set to PathWhenSymlinkInPathUnixOnly_Run
+  // and we ensure we actually can get the right executable
+  std::thread t(launch_another_instance_from_symlink, symlink_path);
+  t.join();
+
+  unsetenv("PathWhenSymlinkInPathUnixOnly_Setup");
+  setenv("PATH", current_path, 1);
+}
+
+TEST(ApplicationPathHelpers, Dumb_test) {
+    path openstudioModulePath = getOpenStudioModule();
+    EXPECT_TRUE(exists(openstudioModulePath));
+    // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
+    expectedOpenstudioModulePath = completeAndNormalize(expectedOpenstudioModulePath);
+    EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
+}
+
+TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Run) {
+
+  openstudio::Logger::instance().standardOutLogger().enable();
+  openstudio::Logger::instance().standardOutLogger().setLogLevel(Trace);
+
+  //EXPECT_TRUE(false) << std::getenv("PATH");
+  //EXPECT_TRUE(false) << std::getenv("PathWhenSymlinkInPathUnixOnly_Setup");
+  if (std::getenv("PathWhenSymlinkInPathUnixOnly_Setup")) {
+    path openstudioModulePath = getOpenStudioModule();
+    EXPECT_TRUE(exists(openstudioModulePath));
+     // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
+    expectedOpenstudioModulePath = completeAndNormalize(expectedOpenstudioModulePath);
+    EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
+  }
+
+  openstudio::Logger::instance().standardOutLogger().disable();
+
+}
+#endif
