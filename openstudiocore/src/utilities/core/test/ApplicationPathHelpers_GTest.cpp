@@ -156,6 +156,16 @@ TEST(ApplicationPathHelpers, completeAndNormalizeMultipleSymlinks) {
 
 }
 
+// Want to make sure what getOpenStudioModule actually returns
+TEST(ApplicationPathHelpers, Simple_test_forThisModule) {
+    path openstudioModulePath = getOpenStudioModule();
+    EXPECT_TRUE(exists(openstudioModulePath));
+    // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
+    expectedOpenstudioModulePath = completeAndNormalize(expectedOpenstudioModulePath);
+    EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
+}
+
 void launch_another_instance_from_symlink(const path& symlink_path) {
   std::string cmd = toString(symlink_path.filename()) + " --gtest_filter=*PathWhenSymlinkInPathUnixOnly_Run*";
   std::system(cmd.c_str());
@@ -186,15 +196,6 @@ TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Setup) {
 
   unsetenv("PathWhenSymlinkInPathUnixOnly_Setup");
   setenv("PATH", current_path, 1);
-}
-
-TEST(ApplicationPathHelpers, Dumb_test) {
-    path openstudioModulePath = getOpenStudioModule();
-    EXPECT_TRUE(exists(openstudioModulePath));
-    // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
-    expectedOpenstudioModulePath = completeAndNormalize(expectedOpenstudioModulePath);
-    EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
 }
 
 TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Run) {
