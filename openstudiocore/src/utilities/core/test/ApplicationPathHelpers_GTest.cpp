@@ -30,6 +30,8 @@
 #include <gtest/gtest.h>
 
 #include "../ApplicationPathHelpers.hpp"
+#include "../PathHelpers.hpp"
+#include <stdlib.h>
 
 using namespace openstudio;
 
@@ -50,4 +52,37 @@ TEST(ApplicationPathHelpers, Strings)
   EXPECT_TRUE(exists(openstudioCLI));
   EXPECT_TRUE(exists(energyplusDirectory));
   EXPECT_TRUE(exists(energyplusExecutable));
+}
+
+
+
+// This is really in PathHelpers but used by ApplicationPathHelpers
+TEST(ApplicationPathHelpers, findInSystemPath) {
+
+  openstudio::path dummy_dir = getApplicationBuildDirectory() / toPath("Testing/Temporary");
+  openstudio::filesystem::create_directories(dummy_dir);
+  openstudio::path dummy_file_path = dummy_dir / "dummy_file";
+
+  boost::filesystem::ofstream outfile(dummy_file_path);
+  outfile.close();
+
+  // This should fail
+  openstudio::path absolute_path_to_dummy = findInSystemPath(dummy_file_path.filename());
+  EXPECT_FALSE(exists(absolute_path_to_dummy));
+
+  // Append the containing dir to the PATH
+  auto current_path = std::getenv("PATH");
+  std::string new_path = toString(dummy_dir) + ":" + current_path;
+  setenv("PATH", new_path.c_str(), 1);
+  setenv("PathWhenSymlinkInPathUnixOnly_Setup", "true", 1);
+
+  // Locate the file with only its name
+  absolute_path_to_dummy = findInSystemPath(dummy_file_path.filename());
+  EXPECT_TRUE(exists(absolute_path_to_dummy));
+  EXPECT_EQ(dummy_file_path, absolute_path_to_dummy);
+
+  // Put it back
+  setenv("PATH", current_path, 1);
+  boost::filesystem::remove(dummy_file_path);
+
 }

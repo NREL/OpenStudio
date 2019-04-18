@@ -202,21 +202,80 @@ path relativePath(const path& p,const path& base) {
   return result;
 }
 
+path findInSystemPath(const path& p) {
+
+#if defined _WIN32
+  const char delimiter = ';';
+#else
+  const char delimiter = ':';
+#endif
+
+  path result;
+  // Ensure that this is just a name and not a path
+  if ( p.parent_path().empty() ) {
+    std::istringstream pathstream( getenv("PATH") );
+    LOG_FREE(Debug, "PathHelpers", "findInSystemPath, searching for '" << p << "' in PATH'");
+
+    std::string pathstring;
+    while ( std::getline(pathstream, pathstring, delimiter) ) {
+      LOG_FREE(Trace, "PathHelpers", "findInSystemPath, searching for '" << p << "' in '" << pathstring << "'");
+
+      auto maybepath = toPath(pathstring) / p;
+      if( openstudio::filesystem::exists( maybepath ) && !openstudio::filesystem::is_directory( maybepath ) ) {
+        LOG_FREE(Debug, "PathHelpers", "findInSystemPath, found '" << p << "' in PATH: '" << pathstring);
+        result = maybepath;
+        break;
+      }
+    }
+    if (result.empty()) {
+      LOG_FREE(Debug, "PathHelpers", "findInSystemPath, p wasn't found in PATH, leaving as is");
+      result = p;
+    }
+
+  } else {
+    LOG_FREE(Debug, "PathHelpers", "findInSystemPath, p isn't just a name, leaving as is");
+    result = p;
+  }
+
+
+  return result;
+
+}
+
 path completeAndNormalize(const path& p) {
+
   path temp = openstudio::filesystem::system_complete(p);
-  if ( openstudio::filesystem::is_symlink(temp) ) {
+
+  LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: looking for p = " << p);
+  LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp = " << temp);
+
+  // TODO: is there a point continuing if temp doesn't exist?
+  if( !openstudio::filesystem::exists( temp )) { // || openstudio::filesystem::is_directory( temp ) ) {
+    LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp doesn't exists");
+  }
+
+  while ( openstudio::filesystem::is_symlink(temp) ) {
     auto linkpath = openstudio::filesystem::read_symlink(temp);
+    LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: It's a symlink, linkpath = " << linkpath);
+
     if ( linkpath.is_absolute() ) {
       temp = linkpath;
+      LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: Absolute temp = linkpath");
+
     } else {
       temp = temp.parent_path() / linkpath;
+      LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: Relative temp = " << temp);
+
     }
   }
+  // TODO: can this actually happen?
   if (temp.empty() && !p.empty()) {
+    LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp is empty, reseting to p");
     temp = p;
   }
   path result;
 
+  // TODO: what is this? Looks like it's trying to resolve it manually...
   for(openstudio::path::iterator it=temp.begin(); it!=temp.end(); ++it) {
     if (*it == toPath("..")) {
       if (openstudio::filesystem::is_symlink(result) || (result.filename() == toPath(".."))) {
@@ -230,6 +289,8 @@ path completeAndNormalize(const path& p) {
       result /= *it;
     }
   }
+
+  LOG_FREE(Debug, "PathHelpers", "completeAndNormalize: result = " << result);
 
   return result;
 }
