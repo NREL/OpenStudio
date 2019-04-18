@@ -34,6 +34,7 @@
 #include "../Logger.hpp"
 #include <stdlib.h>
 #include <thread>
+#include <future>
 
 using namespace openstudio;
 
@@ -166,9 +167,9 @@ TEST(ApplicationPathHelpers, Simple_test_forThisModule) {
     EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
 }
 
-void launch_another_instance_from_symlink(const path& symlink_path) {
+int launch_another_instance_from_symlink(const path& symlink_path) {
   std::string cmd = toString(symlink_path.filename()) + " --gtest_filter=*PathWhenSymlinkInPathUnixOnly_Run*";
-  std::system(cmd.c_str());
+  return std::system(cmd.c_str());
 }
 
 TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Setup) {
@@ -190,9 +191,10 @@ TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Setup) {
   setenv("PathWhenSymlinkInPathUnixOnly_Setup", "true", 1);
 
   // We run a system call to the symlink name (not its path), with a gtest_filter set to PathWhenSymlinkInPathUnixOnly_Run
-  // and we ensure we actually can get the right executable
-  std::thread t(launch_another_instance_from_symlink, symlink_path);
-  t.join();
+  // and we ensure we actually can get the right executable. We check the return code to make sure it worked (in case it can't find the symlink for
+  // eg)
+  auto future = std::async(launch_another_instance_from_symlink, symlink_path);
+  EXPECT_EQ(0, future.get());
 
   unsetenv("PathWhenSymlinkInPathUnixOnly_Setup");
   setenv("PATH", current_path, 1);
@@ -200,8 +202,9 @@ TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Setup) {
 
 TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Run) {
 
-  openstudio::Logger::instance().standardOutLogger().enable();
-  openstudio::Logger::instance().standardOutLogger().setLogLevel(Trace);
+  // If you want to see more info, uncomment the logger lines
+  // openstudio::Logger::instance().standardOutLogger().enable();
+  // openstudio::Logger::instance().standardOutLogger().setLogLevel(Trace);
 
   //EXPECT_TRUE(false) << std::getenv("PATH");
   //EXPECT_TRUE(false) << std::getenv("PathWhenSymlinkInPathUnixOnly_Setup");
@@ -214,7 +217,7 @@ TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Run) {
     EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
   }
 
-  openstudio::Logger::instance().standardOutLogger().disable();
+  // openstudio::Logger::instance().standardOutLogger().disable();
 
 }
 #endif
