@@ -640,7 +640,7 @@ Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& en
       endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), startDateTimeWithYear.date().year() + 1),
                                      endDateTime.time());
     } else {
-      double totalSeconds = (endDateTimeCompare - startDateTimeCompare).totalSeconds();
+      int totalSeconds = (endDateTimeCompare - startDateTimeCompare).totalSeconds();
       endDateTimeWithYear = startDateTimeWithYear + Time(0, 0, 0, totalSeconds);
       // endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), timeSeriesYear), endDateTime.time());
     }
