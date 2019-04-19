@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.10.2)
 project(OpenStudioMeta)
 
 set(CMAKE_VERSION_MAJOR 2)
-set(CMAKE_VERSION_MINOR 7)
-set(CMAKE_VERSION_PATCH 2)
+set(CMAKE_VERSION_MINOR 8)
+set(CMAKE_VERSION_PATCH 0)
 
 # Use ccache is available, has to be before "project()"
 find_program(CCACHE_PROGRAM ccache)
