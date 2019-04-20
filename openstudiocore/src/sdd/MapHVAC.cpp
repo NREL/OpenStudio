@@ -9091,8 +9091,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
         flowMinRatio = flowMin.get() / flowCap.get();
       }
 
-      if (clgSupFanCapSim && htgSupFanCapSim && fpfc.maximumSupplyAirFlowRate()) {
-        double value = std::max(clgSupFanCapSim.get(), htgSupFanCapSim.get()) / fpfc.maximumSupplyAirFlowRate().get();
+      if (noClgSupFanCapSim && noHtgSupFanCapSim && fpfc.maximumSupplyAirFlowRate()) {
+        double value = std::max(noClgSupFanCapSim.get(), noHtgSupFanCapSim.get()) / fpfc.maximumSupplyAirFlowRate().get();
         fpfc.setLowSpeedSupplyAirFlowRatio(value);
         fpfc.setMediumSpeedSupplyAirFlowRatio(value);
       } else {
