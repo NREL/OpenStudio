@@ -7011,9 +7011,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         tower.setHighFanSpeedFanPower(value * 745.7);
       }
 
-      //tower.autosizeUFactorTimesAreaValue();
-
-      value = htRejElement.firstChildElement("LowSpdAirFlowRatSim").text().toDouble(&ok);
+      value = htRejElement.firstChildElement("LowSpdAirFlowCapSim").text().toDouble(&ok);
       if ( ok ) {
         value = unitToUnit(value,"cfm","m^3/s").get();
         tower.setLowFanSpeedAirFlowRate(value);
@@ -7024,8 +7022,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         tower.setLowFanSpeedFanPower(value * 745.7);
       }
 
-      tower.autosizeLowFanSpeedUFactorTimesAreaValue();
-
       tower.setPerformanceInputMethod("NominalCapacity");
 
       value = htRejElement.firstChildElement("CapRtdSim").text().toDouble(&ok);
@@ -7033,6 +7029,22 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         value = unitToUnit(value,"Btu/h","W").get();
         tower.setHighSpeedNominalCapacity(value);
       }
+
+      value = htRejElement.firstChildElement("LowSpdCapRtdSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"Btu/h","W").get();
+        tower.setLowSpeedNominalCapacity(value);
+      }
+
+      value = htRejElement.firstChildElement("FreeConvCapRtdSim").text().toDouble(&ok);
+      if ( ok ) {
+        value = unitToUnit(value,"Btu/h","W").get();
+        tower.setFreeConvectionNominalCapacity(value);
+      }
+
+      tower.resetLowFanSpeedUFactorTimesAreaValue();
+      tower.resetHighFanSpeedUFactorTimesAreaValue();
+      tower.autosizeFreeConvectionRegimeAirFlowRate();
 
       result = tower;
     }
