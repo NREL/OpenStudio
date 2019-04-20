@@ -1736,11 +1736,25 @@ namespace sdd {
         for( auto & plant : plants ) {
           auto nodes = subsetCastVector<model::Node>(plant.supplyComponents());
           for (auto & node : nodes) {
-            var = model::OutputVariable("System Node Mass Flow Rate",*result);
+            var = model::OutputVariable("System Node Temperature",*result);
             var.setReportingFrequency(interval);
             var.setKeyValue(node.name().get());
+          }
 
-            var = model::OutputVariable("System Node Temperature",*result);
+          auto straightComponents = subsetCastVector<model::StraightComponent>(plant.supplyComponents());
+          for (auto & comp : straightComponents) {
+            if (! comp.optionalCast<model::Node>()) {
+              auto node = comp.inletModelObject()->cast<model::Node>();
+              var = model::OutputVariable("System Node Mass Flow Rate",*result);
+              var.setReportingFrequency(interval);
+              var.setKeyValue(node.name().get());
+            }
+          }
+
+          auto waterToWaterComponents = subsetCastVector<model::WaterToWaterComponent>(plant.supplyComponents());
+          for (auto & comp : waterToWaterComponents) {
+            auto node = comp.supplyInletModelObject()->cast<model::Node>();
+            var = model::OutputVariable("System Node Mass Flow Rate",*result);
             var.setReportingFrequency(interval);
             var.setKeyValue(node.name().get());
           }
