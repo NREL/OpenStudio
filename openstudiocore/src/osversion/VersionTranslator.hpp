@@ -54,6 +54,19 @@ namespace model {
 }
 namespace osversion {
 
+  /** Helper class meant to replace std::pair<IdfObject, IdfObject> that maps objects that have been significantly refactor (old, new) */
+  class RefactoredObjectData {
+   public:
+    RefactoredObjectData(const IdfObject& old, const IdfObject& newObject);
+
+    IdfObject oldObject() const;
+    IdfObject newObject() const;
+
+   private:
+    IdfObject m_oldObject;
+    IdfObject m_newObject;
+  };
+
 /** This class updates OpenStudio Models and Components to the latest version of OpenStudio. It
  *  must be maintained to keep everything working. The developer who is wrapping up the current
  *  release and starting the next one should:
@@ -148,9 +161,9 @@ class OSVERSION_API VersionTranslator {
    *  version of OpenStudio. */
   std::vector<IdfObject> newObjects() const;
 
-  /** Returns an original object, new object pair for objects that have been significantly
+  /** Returns an (original object, new object) pair for objects that have been significantly
    *  refactored. */
-  std::vector< std::pair<IdfObject,IdfObject> > refactoredObjects() const;
+  std::vector<RefactoredObjectData> refactoredObjects() const;
 
   /** Returns true if loading newer versions is allowable. Defaults to true. */
   bool allowNewerVersions() const;
@@ -171,7 +184,7 @@ class OSVERSION_API VersionTranslator {
   std::map<VersionString, IdfFile> m_map;
   StringStreamLogSink m_logSink;
   std::vector<IdfObject> m_deprecated, m_untranslated, m_new;
-  std::vector< std::pair<IdfObject,IdfObject> > m_refactored;
+  std::vector<RefactoredObjectData> m_refactored;
   int m_nObjectsStart;
   int m_nObjectsFinalIdf;
   int m_nObjectsFinalModel;

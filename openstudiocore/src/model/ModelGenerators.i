@@ -12,6 +12,11 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+// Needed to reimplement SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic
+%import <model/ModelStraightComponent.i>
+
+// ignore specific overload of ThreeJSForwardTranslator::modelToThreeJS to avoid dealing with std::function<void(double)>updatePercentage
+%ignore openstudio::model::ThreeJSForwardTranslator::modelToThreeJS(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage);
 
 // All base classes for PV, Generators, inverters and Electrical Storage
 %{
@@ -36,6 +41,7 @@
 %include <model/ThreeJSForwardTranslator.hpp>
 %include <model/ThreeJSReverseTranslator.hpp>
 %include <model/ModelMerger.hpp>
+
 
 
 #if defined SWIGCSHARP
@@ -138,6 +144,17 @@ SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
         std::vector<openstudio::model::GeneratorPhotovoltaic> getGeneratorPhotovoltaics(const openstudio::model::PlanarSurface& surface){
           return surface.generatorPhotovoltaics();
         }
+
+        boost::optional<GeneratorPhotovoltaic> getOptionalGeneratorPhotovoltaic(const openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal& collector) {
+          return collector.generatorPhotovoltaic();
+        }
+
+        bool setGeneratorPhotovoltaic(openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal collector,
+                                      openstudio::model::GeneratorPhotovoltaic pv)
+        {
+          return collector.setGeneratorPhotovoltaic(pv);
+        }
+
       }
     }
   }
@@ -154,6 +171,17 @@ SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
       public GeneratorPhotovoltaicVector generatorPhotovoltaics()
       {
         return OpenStudio.OpenStudioModelGenerators.getGeneratorPhotovoltaics(this);
+      }
+    }
+
+    public partial class SolarCollectorFlatPlatePhotovoltaicThermal : StraightComponent
+    {
+      public OptionalGeneratorPhotovoltaic generatorPhotovoltaic() {
+        return OpenStudio.OpenStudioModelGenerators.getOptionalGeneratorPhotovoltaic(this);
+      }
+
+      public bool setGeneratorPhotovoltaic(OpenStudio.GeneratorPhotovoltaic pv) {
+        return OpenStudio.OpenStudioModelGenerators.setGeneratorPhotovoltaic(this, pv);
       }
     }
 
