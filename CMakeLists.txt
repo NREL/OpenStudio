@@ -10,7 +10,7 @@ if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-project(OpenStudio VERSION 2.7.2)
+project(OpenStudio VERSION 2.8.0)
 
 # The PROJECT_SOURCE_DIR here is OpenStudio/, which we will use instead of using CMAKE_SOURCE_DIR
 set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -114,6 +114,7 @@ if(APPLE)
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
   set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION_BUILD}")
   set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.")
+  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.11" CACHE STRING "Minimum OS X deployment version")
 endif()
 
 # compiler id for about boxes
@@ -531,10 +532,7 @@ if(UNIX)
   endif()
   if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
-    unset(ENERGYPLUS_FOUND CACHE)
-    unset(ENERGYPLUS_EXE CACHE)
-    unset(ENERGYPLUS_IDD CACHE)
-    unset(ENERGYPLUS_WEATHER_DIR CACHE)
+
     if(EXISTS "/etc/redhat-release")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     else()
@@ -568,16 +566,23 @@ elseif(WIN32)
   endif()
   if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
-    unset(ENERGYPLUS_FOUND CACHE)
-    unset(ENERGYPLUS_EXE CACHE)
-    unset(ENERGYPLUS_IDD CACHE)
-    unset(ENERGYPLUS_WEATHER_DIR CACHE)
+
     file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
   endif()
   set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
 endif()
+
+# Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
+if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
+  set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+else()
+  # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
+  set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+endif()
+
+# Find EnergyPlus, which will set the ENERGYPLUS_XXX variables and cache them
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Radiance
@@ -682,6 +687,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
   endif()
 
   if(NOT RUBY_ZIP_MD5 STREQUAL RUBY_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading Ruby: ${RUBY_ZIP_FILENAME}")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_ZIP_FILENAME}"
       ${RUBY_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -766,41 +772,10 @@ if(WIN32)
   endif()
 endif()
 
-if(UNIX)
-  if(APPLE)
-    find_library(GDBM libgdbm.a PATHS /usr/local/opt/gdbm/lib)
-    find_library(GMP libgmp.a PATHS /usr/local/opt/gmp/lib)
-    find_library(EDIT libedit.dylib)
-    find_library(UTIL libutil.dylib)
-    find_library(CURSES libncurses.dylib)
-    find_library(Z libz.dylib)
-    find_library(FFI libffi.dylib)
-    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${GMP} ${EDIT} ${UTIL} ${CURSES} ${Z} ${FFI})
-  else()
-    find_library(GDBM libgdbm.a)
-    # libqdbm-dev
-    find_library(QDBM libqdbm.a)
-    find_library(GMP libgmp.a)
-    find_library(FFI libffi.a)
-    find_library(READLINE libreadline.a)
-    find_library(TERMCAP libtermcap.a)
-    find_library(YAML libyaml.a)
-    #    find_library(CRYPTO libcrypto.a)
-    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} CONAN_PKG::OpenSSL)
-  endif()
-else()
-  set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017_v2.zip")
-  set(FFI_ZIP_EXPECTED_MD5 "9d43417932447eb5830a389273954a75")
-  set(FFI_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${FFI_ZIP_FILENAME}")
-  if(EXISTS "${FFI_ZIP_LOCAL_PATH}")
-    file(MD5 "${FFI_ZIP_LOCAL_PATH}" FFI_ZIP_MD5)
-  endif()
-
-  if(NOT FFI_ZIP_MD5 STREQUAL FFI_ZIP_EXPECTED_MD5)
-    unset(FFI CACHE)
-    unset(FFID CACHE)
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${FFI_ZIP_FILENAME}"
-      ${FFI_ZIP_LOCAL_PATH}
+  if( NOT RUBY_MINGW_LIB_ZIP_MD5 STREQUAL RUBY_MINGW_LIB_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading Ruby Mingw Lib: ${RUBY_MINGW_LIB_ZIP_FILENAME}")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_MINGW_LIB_ZIP_FILENAME}"
+      ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${FFI_ZIP_EXPECTED_MD5})
@@ -827,6 +802,7 @@ if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
 endif()
 
 if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
+  message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
   file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
     ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
     INACTIVITY_TIMEOUT 120
@@ -864,6 +840,7 @@ if(BUILD_DVIEW)
     endif()
 
     if(NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
+      message(STATUS "Downloading DView: ${DVIEW_ZIP_FILENAME}")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${DVIEW_ZIP_FILENAME}"
         ${DVIEW_ZIP_LOCAL_PATH}
         INACTIVITY_TIMEOUT 120
@@ -1051,31 +1028,71 @@ if(BUILD_OS_APP)
       file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
     endif()
 
-    if(NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
-        ${QT_ZIP_LOCAL_PATH}
-        INACTIVITY_TIMEOUT 120
-        SHOW_PROGRESS
-        EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+  if( NOT BOOST_ZIP_MD5 STREQUAL BOOST_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading Boost: ${BOOST_ZIP_FILENAME}")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${BOOST_ZIP_FILENAME}"
+      ${BOOST_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${BOOST_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${BOOST_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
+  set(BOOST_INSTALL_DIR "${CMAKE_BINARY_DIR}/Boost-install/")
+endif()
+set(BOOST_ROOT "${BOOST_INSTALL_DIR}")
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
+include_directories(SYSTEM ${Boost_INCLUDE_DIR})
+mark_as_advanced(
+  Boost_DIR
+  BOOST_THREAD_LIBRARY
+)
+
+# require these run time checks
+add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
+add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
+add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
+
+if(UNIX AND NOT APPLE)
+  add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
+endif()
+
+# use chrono as a header only library
+add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
+
+# do not autolink with serialization
+add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
+
+# SQLite definitions, used in sqlite and litesql
+add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
+
+# Qt
+set(QT_INSTALL_DIR "" CACHE PATH "Path to Qt Install")
+mark_as_advanced(QT_INSTALL_DIR)
+
+if(NOT EXISTS ${QT_INSTALL_DIR})
+  # download qt
+  if( WIN32 )
+    if(CMAKE_CL_64)
+      set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_shared_temp.zip")
+      set(QT_ZIP_EXPECTED_MD5 "2ac0ed2909710350f1c6acd5f38a8b33")
+    else()
+      set(QT_ZIP_FILENAME "qt_5_6_msvc2013_32_shared_temp.zip")
+      set(QT_ZIP_EXPECTED_MD5 "25abd383e7db2dfd971b4a4ef145002b")
     endif()
   endif()
 
   set(QT_INSTALL_DIR "${PROJECT_BINARY_DIR}/Qt-install/")
 
-  find_package(Qt5Core 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Widgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Sql 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Network 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Xml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Concurrent 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5PrintSupport 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Gui 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Quick 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5QuickWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Qml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5WebChannel 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Positioning 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading Qt: ${QT_ZIP_FILENAME}")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
+      ${QT_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 120
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  endif()
 
   find_package(Qt5WebEngine 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
   find_package(Qt5WebEngineWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
@@ -1163,11 +1180,15 @@ if(BUILD_OS_APP)
   list(APPEND QT_INCLUDES "${QT_INSTALL_DIR}/include/QtGui/5.11.2/QtGui") # needed by qtwinmigrate
   list(APPEND QT_INCLUDES ${Qt5PrintSupport_INCLUDE_DIRS})
 
-  # DLM: added this, but seems to conflict with idea of a separate set of Qt Web dependencies?
-  list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5WebEngine_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5WebEngineCore_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5WebEngineWidgets_INCLUDE_DIRS})
+if( NOT QT_STATIC_ZIP_MD5 STREQUAL QT_STATIC_ZIP_EXPECTED_MD5)
+  message(STATUS "Downloading Qt Static: ${QT_STATIC_ZIP_FILENAME}")
+  file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_STATIC_ZIP_FILENAME}"
+    ${QT_STATIC_ZIP_LOCAL_PATH}
+    INACTIVITY_TIMEOUT 120
+    SHOW_PROGRESS
+    EXPECTED_MD5 ${QT_STATIC_ZIP_EXPECTED_MD5})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_STATIC_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+endif()
 
   if(UNIX)
     list(APPEND QT_INCLUDES ${Qt5XcbQpa_INCLUDE_DIRS})

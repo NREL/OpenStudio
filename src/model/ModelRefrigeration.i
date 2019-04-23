@@ -21,6 +21,14 @@
 
 #endif
 
+namespace openstudio {
+  namespace model {
+
+    // forward declarations
+    class RefrigerationSystem;
+  }
+}
+
 MODELOBJECT_TEMPLATES(RefrigerationAirChiller);
 MODELOBJECT_TEMPLATES(RefrigerationCase);
 MODELOBJECT_TEMPLATES(RefrigerationCompressor);

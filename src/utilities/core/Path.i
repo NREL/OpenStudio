@@ -9,6 +9,13 @@
 %template(PathPair) std::pair<openstudio::path, openstudio::path>;
 %template(PathPairVector) std::vector<std::pair<openstudio::path, openstudio::path> >;
 
+#if defined(SWIGCSHARP)
+
+  // Avoid triggering a SWIG warning: 'string' is a C# keyword
+  %rename(toString) openstudio::path::string;
+
+#endif
+
 %{
   #include <utilities/core/Path.hpp>
   #include <utilities/core/PathHelpers.hpp>
@@ -100,6 +107,7 @@ namespace openstudio {
     //PathStringType file_string() const;
     //PathStringType directory_string() const;
     //PathStringType external_file_string() const;
+    // TODO: this generates a CSHARP SWIG warning: 'string' is a C# keyword
     path string() const;
 
     path root_path() const;

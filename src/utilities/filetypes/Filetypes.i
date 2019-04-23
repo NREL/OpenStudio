@@ -1,6 +1,19 @@
 #ifndef UTILITIES_FILETYPES_I
 #define UTILITIES_FILETYPES_I
 
+
+#if defined(SWIGCSHARP)
+
+  // Avoid triggering a SWIG warning: 'string' is a C# keyword
+  %rename(toString) openstudio::RunOptions::string;
+  %rename(toString) openstudio::WorkflowStepValue::string;
+  %rename(toString) openstudio::WorkflowStepResult::string;
+  %rename(toString) openstudio::WorkflowStep::string;
+  %rename(toString) openstudio::WorkflowJSON::string;
+
+#endif
+
+
 %{
   namespace openstudio{}
   using namespace openstudio;

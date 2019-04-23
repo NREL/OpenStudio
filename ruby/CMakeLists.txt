@@ -163,6 +163,14 @@ if( WIN32 )
   endif()
 endif()
 
+if (APPLE)
+  target_link_libraries(openstudio_rb
+    ${OPENSSL_CRYPTO_LIBRARY}
+    ${OPENSSL_SSL_LIBRARY}
+  )
+endif()
+
+
 install(TARGETS openstudio_rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES openstudio.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(DIRECTORY openstudio DESTINATION Ruby COMPONENT "RubyAPI")

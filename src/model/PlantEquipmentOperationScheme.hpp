@@ -44,28 +44,27 @@ namespace detail{
 
 class MODEL_API PlantEquipmentOperationScheme : public ModelObject {
 
-  public:
+ public:
 
   PlantEquipmentOperationScheme(IddObjectType type,const Model& model);
 
   virtual ~PlantEquipmentOperationScheme() {}
 
-  friend class openstudio::IdfObject;
-
   boost::optional<PlantLoop> plantLoop() const;
 
+ protected:
   /// @cond
-
   typedef detail::PlantEquipmentOperationScheme_Impl ImplType;
 
   explicit PlantEquipmentOperationScheme(std::shared_ptr<detail::PlantEquipmentOperationScheme_Impl> impl);
 
-  private:
-
-  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationScheme");
-
+  friend class detail::PlantEquipmentOperationScheme_Impl;
+  friend class Model;
+  friend class IdfObject;
+  friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
-
+ private:
+  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationScheme");
 };
 
 typedef boost::optional<PlantEquipmentOperationScheme> OptionalPlantEquipmentOperationScheme;
