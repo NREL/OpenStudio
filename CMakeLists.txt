@@ -772,10 +772,41 @@ if(WIN32)
   endif()
 endif()
 
-  if( NOT RUBY_MINGW_LIB_ZIP_MD5 STREQUAL RUBY_MINGW_LIB_ZIP_EXPECTED_MD5)
-    message(STATUS "Downloading Ruby Mingw Lib: ${RUBY_MINGW_LIB_ZIP_FILENAME}")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_MINGW_LIB_ZIP_FILENAME}"
-      ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}
+if(UNIX)
+  if(APPLE)
+    find_library(GDBM libgdbm.a PATHS /usr/local/opt/gdbm/lib)
+    find_library(GMP libgmp.a PATHS /usr/local/opt/gmp/lib)
+    find_library(EDIT libedit.dylib)
+    find_library(UTIL libutil.dylib)
+    find_library(CURSES libncurses.dylib)
+    find_library(Z libz.dylib)
+    find_library(FFI libffi.dylib)
+    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${GMP} ${EDIT} ${UTIL} ${CURSES} ${Z} ${FFI})
+  else()
+    find_library(GDBM libgdbm.a)
+    # libqdbm-dev
+    find_library(QDBM libqdbm.a)
+    find_library(GMP libgmp.a)
+    find_library(FFI libffi.a)
+    find_library(READLINE libreadline.a)
+    find_library(TERMCAP libtermcap.a)
+    find_library(YAML libyaml.a)
+    #    find_library(CRYPTO libcrypto.a)
+    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} CONAN_PKG::OpenSSL)
+  endif()
+else()
+  set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017_v2.zip")
+  set(FFI_ZIP_EXPECTED_MD5 "9d43417932447eb5830a389273954a75")
+  set(FFI_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${FFI_ZIP_FILENAME}")
+  if(EXISTS "${FFI_ZIP_LOCAL_PATH}")
+    file(MD5 "${FFI_ZIP_LOCAL_PATH}" FFI_ZIP_MD5)
+  endif()
+
+  if(NOT FFI_ZIP_MD5 STREQUAL FFI_ZIP_EXPECTED_MD5)
+    unset(FFI CACHE)
+    unset(FFID CACHE)
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${FFI_ZIP_FILENAME}"
+      ${FFI_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${FFI_ZIP_EXPECTED_MD5})
@@ -1028,62 +1059,6 @@ if(BUILD_OS_APP)
       file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
     endif()
 
-  if( NOT BOOST_ZIP_MD5 STREQUAL BOOST_ZIP_EXPECTED_MD5)
-    message(STATUS "Downloading Boost: ${BOOST_ZIP_FILENAME}")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${BOOST_ZIP_FILENAME}"
-      ${BOOST_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${BOOST_ZIP_EXPECTED_MD5})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${BOOST_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-  set(BOOST_INSTALL_DIR "${CMAKE_BINARY_DIR}/Boost-install/")
-endif()
-set(BOOST_ROOT "${BOOST_INSTALL_DIR}")
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost 1.55.0 REQUIRED COMPONENTS filesystem regex program_options system thread date_time log)
-include_directories(SYSTEM ${Boost_INCLUDE_DIR})
-mark_as_advanced(
-  Boost_DIR
-  BOOST_THREAD_LIBRARY
-)
-
-# require these run time checks
-add_definitions(-DBOOST_UBLAS_CHECK_ENABLE)
-add_definitions(-DBOOST_UBLAS_TYPE_CHECK)
-add_definitions(-DBOOST_UBLAS_NO_STD_CERR)
-
-if(UNIX AND NOT APPLE)
-  add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
-endif()
-
-# use chrono as a header only library
-add_definitions(-DBOOST_CHRONO_HEADER_ONLY)
-
-# do not autolink with serialization
-add_definitions(-DBOOST_SERIALIZATION_NO_LIB)
-
-# SQLite definitions, used in sqlite and litesql
-add_definitions(-DSQLITE_THREADSAFE=1) # 1 is default, serial access
-
-# Qt
-set(QT_INSTALL_DIR "" CACHE PATH "Path to Qt Install")
-mark_as_advanced(QT_INSTALL_DIR)
-
-if(NOT EXISTS ${QT_INSTALL_DIR})
-  # download qt
-  if( WIN32 )
-    if(CMAKE_CL_64)
-      set(QT_ZIP_FILENAME "qt_5_6_msvc2013_64_shared_temp.zip")
-      set(QT_ZIP_EXPECTED_MD5 "2ac0ed2909710350f1c6acd5f38a8b33")
-    else()
-      set(QT_ZIP_FILENAME "qt_5_6_msvc2013_32_shared_temp.zip")
-      set(QT_ZIP_EXPECTED_MD5 "25abd383e7db2dfd971b4a4ef145002b")
-    endif()
-  endif()
-
-  set(QT_INSTALL_DIR "${PROJECT_BINARY_DIR}/Qt-install/")
-
   if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
     message(STATUS "Downloading Qt: ${QT_ZIP_FILENAME}")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
@@ -1091,8 +1066,25 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       INACTIVITY_TIMEOUT 120
       SHOW_PROGRESS
       EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+    endif()
   endif()
+
+  set(QT_INSTALL_DIR "${PROJECT_BINARY_DIR}/Qt-install/")
+
+  find_package(Qt5Core 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Widgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Sql 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Network 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Xml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Concurrent 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5PrintSupport 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Gui 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Quick 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5QuickWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Qml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5WebChannel 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
+  find_package(Qt5Positioning 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
 
   find_package(Qt5WebEngine 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
   find_package(Qt5WebEngineWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
@@ -1180,15 +1172,11 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
   list(APPEND QT_INCLUDES "${QT_INSTALL_DIR}/include/QtGui/5.11.2/QtGui") # needed by qtwinmigrate
   list(APPEND QT_INCLUDES ${Qt5PrintSupport_INCLUDE_DIRS})
 
-if( NOT QT_STATIC_ZIP_MD5 STREQUAL QT_STATIC_ZIP_EXPECTED_MD5)
-  message(STATUS "Downloading Qt Static: ${QT_STATIC_ZIP_FILENAME}")
-  file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_STATIC_ZIP_FILENAME}"
-    ${QT_STATIC_ZIP_LOCAL_PATH}
-    INACTIVITY_TIMEOUT 120
-    SHOW_PROGRESS
-    EXPECTED_MD5 ${QT_STATIC_ZIP_EXPECTED_MD5})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_STATIC_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-endif()
+  # DLM: added this, but seems to conflict with idea of a separate set of Qt Web dependencies?
+  list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
+  list(APPEND QT_INCLUDES ${Qt5WebEngine_INCLUDE_DIRS})
+  list(APPEND QT_INCLUDES ${Qt5WebEngineCore_INCLUDE_DIRS})
+  list(APPEND QT_INCLUDES ${Qt5WebEngineWidgets_INCLUDE_DIRS})
 
   if(UNIX)
     list(APPEND QT_INCLUDES ${Qt5XcbQpa_INCLUDE_DIRS})
