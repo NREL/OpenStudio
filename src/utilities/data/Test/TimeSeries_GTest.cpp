@@ -1717,9 +1717,9 @@ TEST_F(DataFixture, TimeSeries_value_DateTime) {
   Date startDate(MonthOfYear(MonthOfYear::Jun), 1, year);
   Date endDate(MonthOfYear(MonthOfYear::Dec), 31, year+1);
 
-  int day_start = (startDate-jan1).totalDays();
+  int day_start = (startDate-jan1).days();
   EXPECT_EQ(day_start, 151);
-  int n_days = (endDate-startDate).totalDays() + 1;
+  int n_days = (endDate-startDate).days() + 1;
   EXPECT_EQ((365 - day_start)+366, n_days);
   int n_vals = n_days * 24;
   std::vector<double> values;
@@ -1764,7 +1764,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime) {
   // Try supplying the year, first one, after start
   {
     Date reportForDate(MonthOfYear(MonthOfYear::Jul), 12, year);
-    int n_days = (reportForDate - jan1).totalDays() + 1;
+    int n_days = (reportForDate - jan1).days() + 1;
     EXPECT_EQ(193, n_days);
     for (int i = 1; i <= 24; ++i) {
       Time reportForTime(0, i, 0, 0);
@@ -1776,7 +1776,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime) {
   // Try supplying the year, second one, before start month (should work)
   {
     Date reportForDate(MonthOfYear(MonthOfYear::Mar), 12, year+1);
-    int n_days = (reportForDate - jan1).totalDays() + 1;
+    int n_days = (reportForDate - jan1).days() + 1;
     EXPECT_EQ(437, n_days);
     for (int i = 1; i <= 24; ++i) {
       Time reportForTime(0, i, 0, 0);
@@ -1788,7 +1788,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime) {
   // Try supplying the year, second one, after start
   {
     Date reportForDate(MonthOfYear(MonthOfYear::Jul), 12, year+1);
-    int n_days = (reportForDate - jan1).totalDays() + 1;
+    int n_days = (reportForDate - jan1).days() + 1;
     EXPECT_EQ(559, n_days);
     for (int i = 1; i <= 24; ++i) {
       Time reportForTime(0, i, 0, 0);
@@ -1801,7 +1801,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime) {
   // Try without supplying a year, after start month, we expect to return in same year
   {
     Date expectedReportForDate(MonthOfYear(MonthOfYear::Jul), 12, year);
-    int n_days = (expectedReportForDate - jan1).totalDays() + 1;
+    int n_days = (expectedReportForDate - jan1).days() + 1;
     EXPECT_EQ(193, n_days);
 
     // No year
@@ -1818,7 +1818,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime) {
   // Try without supplying a year, before start month, we expect to return in following year
   {
     Date expectedReportForDate(MonthOfYear(MonthOfYear::Mar), 12, year + 1);
-    int n_days = (expectedReportForDate - jan1).totalDays() + 1;
+    int n_days = (expectedReportForDate - jan1).days() + 1;
     EXPECT_EQ(437, n_days);
 
     // No year
@@ -2237,9 +2237,9 @@ TEST_F(DataFixture, TimeSeries_value_DateTime_NoYear) {
   Date jan1(MonthOfYear(MonthOfYear::Jan), 1, year);
   Date endDate(MonthOfYear(MonthOfYear::Dec), 31, year + 1);
 
-  int day_start = (startDate-jan1).totalDays();
+  int day_start = (startDate-jan1).days();
   EXPECT_EQ(day_start, 151);
-  int n_days = (endDate-startDate).totalDays() + 1;
+  int n_days = (endDate-startDate).days() + 1;
   EXPECT_EQ((365 - day_start) + 365, n_days); // Can't be a leap year due to assumedBaseYear which is 2009
   int n_vals = n_days * 24;
   std::vector<double> values;
@@ -2286,7 +2286,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime_NoYear) {
   // Try supplying the year, first one, after start
   {
     Date reportForDate(MonthOfYear(MonthOfYear::Jul), 12, year);
-    int n_days = (reportForDate - jan1).totalDays() + 1;
+    int n_days = (reportForDate - jan1).days() + 1;
     EXPECT_EQ(193, n_days);
     for (int i = 1; i <= 24; ++i) {
       Time reportForTime(0, i, 0, 0);
@@ -2298,7 +2298,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime_NoYear) {
   // Try supplying the year, second one, before start month (should work)
   {
     Date reportForDate(MonthOfYear(MonthOfYear::Mar), 12, year+1);
-    int n_days = (reportForDate - jan1).totalDays() + 1;
+    int n_days = (reportForDate - jan1).days() + 1;
     EXPECT_EQ(436, n_days); // No Leap possible
     for (int i = 1; i <= 24; ++i) {
       Time reportForTime(0, i, 0, 0);
@@ -2310,7 +2310,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime_NoYear) {
   // Try supplying the year, second one, after start
   {
     Date reportForDate(MonthOfYear(MonthOfYear::Jul), 12, year+1);
-    int n_days = (reportForDate - jan1).totalDays() + 1;
+    int n_days = (reportForDate - jan1).days() + 1;
     EXPECT_EQ(558, n_days); // No Leap possible
     for (int i = 1; i <= 24; ++i) {
       Time reportForTime(0, i, 0, 0);
@@ -2323,7 +2323,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime_NoYear) {
   // Try without supplying a year, after start month, we expect to return in same year
   {
     Date expectedReportForDate(MonthOfYear(MonthOfYear::Jul), 12, year);
-    int n_days = (expectedReportForDate - jan1).totalDays() + 1;
+    int n_days = (expectedReportForDate - jan1).days() + 1;
     EXPECT_EQ(193, n_days);
 
     // No year
@@ -2340,7 +2340,7 @@ TEST_F(DataFixture, TimeSeries_value_DateTime_NoYear) {
   // Try without supplying a year, before start month, we expect to return in following year
   {
     Date expectedReportForDate(MonthOfYear(MonthOfYear::Mar), 12, year + 1);
-    int n_days = (expectedReportForDate - jan1).totalDays() + 1;
+    int n_days = (expectedReportForDate - jan1).days() + 1;
     EXPECT_EQ(436, n_days); // No Leap Possible
 
     // No year
