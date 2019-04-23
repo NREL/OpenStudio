@@ -19,8 +19,11 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   conan_add_remote(NAME bincrafters
     URL https://api.bintray.com/conan/bincrafters/public-conan)
+  # TODO: eventually replace with the official NREL one (and update ruby in conan_cmake_run below)
   conan_add_remote(NAME lefticus
     URL https://api.bintray.com/conan/lefticus/nrel)
+  conan_add_remote(NAME jmarrec
+    URL https://api.bintray.com/conan/jmarrec/testing)
 
   set(CONAN_OPTIONS "")
   set(CONAN_BUILD "")
@@ -59,7 +62,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_cmake_run(REQUIRES
     ${CONAN_OPENSSL}
     ${CONAN_BOOST_ASIO}
-    openstudio_ruby/2.5.5@lefticus/testing
+    openstudio_ruby/2.5.5@jmarrec/testing
     boost_program_options/1.69.0@bincrafters/stable
     boost_regex/1.69.0@bincrafters/stable
     boost_filesystem/1.69.0@bincrafters/stable
