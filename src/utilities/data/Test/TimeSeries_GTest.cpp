@@ -1717,9 +1717,9 @@ TEST_F(DataFixture, TimeSeries_value_DateTime) {
   Date startDate(MonthOfYear(MonthOfYear::Jun), 1, year);
   Date endDate(MonthOfYear(MonthOfYear::Dec), 31, year+1);
 
-  int day_start = (startDate-jan1).totalDays();
+  int day_start = (startDate-jan1).days();
   EXPECT_EQ(day_start, 151);
-  int n_days = (endDate-startDate).totalDays() + 1;
+  int n_days = (endDate-startDate).days() + 1;
   EXPECT_EQ((365 - day_start)+366, n_days);
   int n_vals = n_days * 24;
   std::vector<double> values;
