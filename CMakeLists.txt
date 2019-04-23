@@ -292,7 +292,7 @@ conan_add_remote(NAME lefticus
 set(CONAN_OPTIONS "")
 set(CONAN_BUILD "")
 if (MSVC)
-  set(CONAN_OPENSSL "")
+  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
   set(CONAN_BOOST_ASIO "")
   set(CONAN_WEBSOCKETPP "")
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
