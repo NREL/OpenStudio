@@ -20,7 +20,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_add_remote(NAME bincrafters
     URL https://api.bintray.com/conan/bincrafters/public-conan)
   conan_add_remote(NAME lefticus
-  URL https://api.bintray.com/conan/lefticus/nrel)
+    URL https://api.bintray.com/conan/lefticus/nrel)
 
   set(CONAN_OPTIONS "")
   set(CONAN_BUILD "")
