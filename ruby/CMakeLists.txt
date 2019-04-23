@@ -8,7 +8,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 
-include_directories(${RUBY_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
 # common library for openstudio.so and openstudio.exe
 
@@ -16,6 +16,7 @@ add_library( init_openstudio STATIC
   init_openstudio.cpp
   RubyAPI.hpp
 )
+target_include_directories(init_openstudio PRIVATE ${RUBY_INCLUDE_DIRS})
 
 if(MSVC)
   # TODO: JM 2019-01-04: @macumber it seems like all three targets use the same COMPILE_FLAGS,
@@ -72,6 +73,7 @@ add_library(openstudio_rb MODULE
 )
 set_target_properties(openstudio_rb PROPERTIES PREFIX "")
 set_target_properties(openstudio_rb PROPERTIES OUTPUT_NAME openstudio)
+target_include_directories(openstudio_rb PRIVATE ${RUBY_INCLUDE_DIRS})
 
 if(BUILD_OS_APP)
   add_library(openstudio_modeleditor_rb MODULE

@@ -295,24 +295,33 @@ set(CONAN_BUILD_INFO_FILE "${PROJECT_BINARY_DIR}/conanbuildinfo.cmake")
 if(EXISTS ${CONAN_BUILD_INFO_MULTI})
   set(CONAN_BUILD_INFO_FILE "${CONAN_BUILD_INFO_MULTI}")
 endif()
+conan_add_remote(NAME lefticus
+  URL https://api.bintray.com/conan/lefticus/nrel)
 
-set(RUN_CONAN FALSE)
 
-# We re-run conan only:
-# If we don't have a cached hash
-if(NOT DEFINED CONAN_INSTALL_FILE_CACHED_HASH)
-  message("openstudio: Running Conan for the first time.")
-  set(RUN_CONAN TRUE)
-# Or if it's outdated,
-elseif( NOT (CONAN_INSTALL_FILE_NEW_HASH STREQUAL CONAN_INSTALL_FILE_CACHED_HASH) )
-  message("openstudio: ${CONAN_INSTALL_FILE} has been updated, re-running Conan.")
-  message("CONAN_INSTALL_FILE_CACHED_HASH = ${CONAN_INSTALL_FILE_CACHED_HASH}")
-  message("CONAN_INSTALL_FILE_NEW_HASH    = ${CONAN_INSTALL_FILE_NEW_HASH}")
-  set(RUN_CONAN TRUE)
-# Or we don't have a conanbuildinfo.cmake (shouldn't happen, but let's be safe).
-elseif((NOT EXISTS "${CONAN_BUILD_INFO_FILE}") )
-  message("openstudio: ${CONAN_BUILD_INFO_FILE} doesn't exist. Running Conan.")
-  set(RUN_CONAN TRUE)
+set(CONAN_OPTIONS "")
+set(CONAN_BUILD "")
+if (MSVC)
+  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
+  set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
+  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
+  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
+  list(APPEND CONAN_BUILD "missing")
+elseif (APPLE)
+  set(CONAN_OPENSSL "")
+  set(CONAN_BOOST_ASIO "")
+  set(CONAN_WEBSOCKETPP "")
+  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
+  list(APPEND CONAN_BUILD "missing")
+else()
+  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
+  set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
+  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
+  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
+  list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
+  list(APPEND CONAN_BUILD "missing")
+  list(APPEND CONAN_BUILD "boost_asio")
+  list(APPEND CONAN_BUILD "websocketpp")
 endif()
 
 if(RUN_CONAN)
@@ -330,7 +339,43 @@ else()
   # message("CONAN_TARGETS = ${CONAN_TARGETS}")
 endif()
 
+# DLM: add option for shared libs if we are building shared?
+
+conan_cmake_run(REQUIRES
+  ${CONAN_OPENSSL}
+  ${CONAN_BOOST_ASIO}
+  openstudio_ruby/2.5.5@lefticus/testing
+  boost_program_options/1.69.0@bincrafters/stable
+  boost_regex/1.69.0@bincrafters/stable
+  boost_filesystem/1.69.0@bincrafters/stable
+  boost_crc/1.69.0@bincrafters/stable
+  boost_algorithm/1.69.0@bincrafters/stable
+  boost_uuid/1.69.0@bincrafters/stable
+  boost_log/1.69.0@bincrafters/stable
+  boost_numeric_ublas/1.69.0@bincrafters/stable
+  boost_functional/1.69.0@bincrafters/stable
+  boost_geometry/1.69.0@bincrafters/stable
+  pugixml/1.9@bincrafters/stable
+  jsoncpp/1.8.4@theirix/stable
+  zlib/1.2.11@conan/stable
+  fmt/5.2.1@bincrafters/stable
+  sqlite3/3.27.2@bincrafters/stable
+  cpprestsdk/2.10.10@bincrafters/stable
+  ${CONAN_WEBSOCKETPP}
+  geographiclib/1.49@bincrafters/stable
+  ${CONAN_GTEST}
+  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
+  OPTIONS ${CONAN_OPTIONS}
+  BUILD ${CONAN_BUILD}
+)
+
+#message("CONAN_TARGETS = ${CONAN_TARGETS}")
+message(STATUS "DONE RUNNING CONAN")
 ###############################################################################
+
+get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
+
+
 
 ###############################################################################
 # CMake control
@@ -650,61 +695,6 @@ if(NOT UNIX)
   set(PERL_EXE "${PROJECT_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin/perl.exe")
 endif()
 
-# Ruby
-
-set(RUBY_INSTALL_DIR "" CACHE PATH "Path to Ruby Install")
-mark_as_advanced(RUBY_INSTALL_DIR)
-
-if(NOT EXISTS ${RUBY_INSTALL_DIR})
-  if(WIN32)
-    if(CMAKE_CL_64)
-      set(RUBY_ZIP_FILENAME "ruby_2_5_5_msvc2017_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "032bbf7ca9163a3d66ab3c41c6d9bb82")
-    else()
-      set(RUBY_ZIP_FILENAME "DOES_NOT_EXIST_ruby_2_2_4_msvc2013_32_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "4c2055305b105b0c8210697aaa596419")
-    endif()
-  elseif(APPLE)
-    set(RUBY_ZIP_FILENAME "ruby_2_5_1_osx_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "84abcea1411929c113f4030a3b2bd3ee")
-  elseif(EXISTS "/etc/redhat-release")
-    set(RUBY_ZIP_FILENAME "DOES_NOT_EXIST_ruby_2_2_4_redhat_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "d130a17b23cc532975665ee4e9095c8d")
-  else()
-    if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
-      # ubuntu 18.04
-      # This should work with 16.04 and 14.04 too.
-      set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "ea5e957ed189b8b2a854e4504d1ba1fa")
-    else()
-      # 16.04, built against openssl 1.1.0g
-      set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static_xenial.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "8bd019d08935ee04705b3bb0470b34b9")
-    endif()
-  endif()
-
-  set(RUBY_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${RUBY_ZIP_FILENAME}")
-  if(EXISTS "${RUBY_ZIP_LOCAL_PATH}")
-    file(MD5 "${RUBY_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
-  endif()
-
-  if(NOT RUBY_ZIP_MD5 STREQUAL RUBY_ZIP_EXPECTED_MD5)
-    message(STATUS "Downloading Ruby: ${RUBY_ZIP_FILENAME}")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_ZIP_FILENAME}"
-      ${RUBY_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${RUBY_ZIP_EXPECTED_MD5})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
-  endif()
-
-  if(WIN32)
-    set(RUBY_INSTALL_DIR "${PROJECT_BINARY_DIR}/Ruby-install/release")
-  else()
-    set(RUBY_INSTALL_DIR "${PROJECT_BINARY_DIR}/Ruby-install")
-  endif()
-endif()
-
 # Check that the Ruby OpenSSL version is the right one
 set(EXPECTED_RUBY_OPENSSL_VERSION "1.1.0g")
 
@@ -876,7 +866,7 @@ if(BUILD_DVIEW)
 
     set(DVIEW_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
     if(EXISTS "${DVIEW_ZIP_LOCAL_PATH}")
-      file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
+      file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" DVIEW_ZIP_MD5)
     endif()
 
     if(NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)

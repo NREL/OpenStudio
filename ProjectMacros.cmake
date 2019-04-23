@@ -228,8 +228,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   ## Finish requirements gathering
   ##
 
-  include_directories(${RUBY_INCLUDE_DIRS})
-
   if(WIN32)
     set(SWIG_DEFINES "-D_WINDOWS")
     set(SWIG_COMMON "-Fmicrosoft")
@@ -302,12 +300,13 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     ${SWIG_WRAPPER}
   )
 
+
   AddPCH(${swig_target})
 
   # run rdoc
   if(BUILD_DOCUMENTATION)
     add_custom_target(${swig_target}_rdoc
-      ${CMAKE_COMMAND} -E chdir "${PROJECT_BINARY_DIR}/ruby/${CMAKE_CFG_INTDIR}" "${RUBY_EXECUTABLE}" "${PROJECT_SOURCE_DIR}/../developer/ruby/SwigWrapToRDoc.rb" "${PROJECT_BINARY_DIR}/" "${SWIG_WRAPPER_FULL_PATH}" "${NAME}"
+      ${CMAKE_COMMAND} -E chdir "${PROJECT_BINARY_DIR}/ruby/${CMAKE_CFG_INTDIR}" "${CONAN_BIN_DIRS_OPENSTUDIO_RUBY}/ruby" "${PROJECT_SOURCE_DIR}/../developer/ruby/SwigWrapToRDoc.rb" "${PROJECT_BINARY_DIR}/" "${SWIG_WRAPPER_FULL_PATH}" "${NAME}"
       DEPENDS ${SWIG_WRAPPER}
     )
 
@@ -356,6 +355,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
   set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
   target_link_libraries(${swig_target} ${PARENT_TARGET})
+  target_include_directories(${swig_target} PRIVATE ${RUBY_INCLUDE_DIRS})
   add_dependencies(${swig_target} ${PARENT_TARGET} ${DEPENDS})
 
   # QT-Separation-Move
