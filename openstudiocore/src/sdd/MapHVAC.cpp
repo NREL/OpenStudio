@@ -6806,7 +6806,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         tower.setNumberofCells(cellCnt);
       }
 
-      tower.autosizeUFactorTimesAreaValueatDesignAirFlowRate();
+      tower.resetUFactorTimesAreaValueatFreeConvectionAirFlowRate();
+      tower.resetUFactorTimesAreaValueatDesignAirFlowRate();
       
       if( ! autosize() )
       {
