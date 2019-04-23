@@ -271,107 +271,10 @@ endif()
 ###############################################################################
 # Conan
 
-# Download automatically, you can also just copy the conan.cmake file
-# Put it in CMAKE_BINARY_DIR so we don't end up with two when building OpenStudioApplication
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-  message(STATUS "openstudio: Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
-    "${CMAKE_BINARY_DIR}/conan.cmake")
-else()
-  message(STATUS "openstudio: using existing conan.cmake")
-endif()
-
-include(${CMAKE_BINARY_DIR}/conan.cmake)
-conan_check(VERSION 1.0.0 REQUIRED)
-
+# Attempt to run, it'll do the right thing if the calling cmake script already ran it
 set(CONAN_INSTALL_FILE "${PROJECT_SOURCE_DIR}/ConanInstall.cmake")
-file(SHA256 ${CONAN_INSTALL_FILE} CONAN_INSTALL_FILE_NEW_HASH)
+include("${CONAN_INSTALL_FILE}")
 
-set(CONAN_BUILD_INFO "${PROJECT_BINARY_DIR}/conanbuildinfo.cmake")
-
-# By default check the single configuration file (which exists also in the multi)
-set(CONAN_BUILD_INFO_MULTI "${PROJECT_BINARY_DIR}/conanbuildinfo_multi.cmake")
-set(CONAN_BUILD_INFO_FILE "${PROJECT_BINARY_DIR}/conanbuildinfo.cmake")
-# If the multi exists (MSVC), then use that one
-if(EXISTS ${CONAN_BUILD_INFO_MULTI})
-  set(CONAN_BUILD_INFO_FILE "${CONAN_BUILD_INFO_MULTI}")
-endif()
-conan_add_remote(NAME lefticus
-  URL https://api.bintray.com/conan/lefticus/nrel)
-
-
-set(CONAN_OPTIONS "")
-set(CONAN_BUILD "")
-if (MSVC)
-  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
-  set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
-  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
-  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_BUILD "missing")
-elseif (APPLE)
-  set(CONAN_OPENSSL "")
-  set(CONAN_BOOST_ASIO "")
-  set(CONAN_WEBSOCKETPP "")
-  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_BUILD "missing")
-else()
-  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
-  set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
-  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
-  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
-  list(APPEND CONAN_BUILD "missing")
-  list(APPEND CONAN_BUILD "boost_asio")
-  list(APPEND CONAN_BUILD "websocketpp")
-endif()
-
-if(RUN_CONAN)
-  include("${CONAN_INSTALL_FILE}")
-  # Store the hash for next comparison
-  set(CONAN_INSTALL_FILE_CACHED_HASH "${CONAN_INSTALL_FILE_NEW_HASH}" CACHE INTERNAL "SHA256 hash of the ${CONAN_INSTALL_FILE} to check if need to rerun" FORCE)
-else()
-  # Otherwise it's good to go, we just reload the info
-  message(STATUS "openstudio: Reloading ${CONAN_BUILD_INFO_FILE}")
-  # Silence this part
-  set(CONAN_CMAKE_SILENT_OUTPUT TRUE)
-  include(${CONAN_BUILD_INFO_FILE})
-  # Make sure to pass NO_OUTPUT_DIRS to not override CMAKE_RUNTIME_OUTPUT_DIR etc
-  conan_basic_setup(TARGETS NO_OUTPUT_DIRS)
-  # message("CONAN_TARGETS = ${CONAN_TARGETS}")
-endif()
-
-# DLM: add option for shared libs if we are building shared?
-
-conan_cmake_run(REQUIRES
-  ${CONAN_OPENSSL}
-  ${CONAN_BOOST_ASIO}
-  openstudio_ruby/2.5.5@lefticus/testing
-  boost_program_options/1.69.0@bincrafters/stable
-  boost_regex/1.69.0@bincrafters/stable
-  boost_filesystem/1.69.0@bincrafters/stable
-  boost_crc/1.69.0@bincrafters/stable
-  boost_algorithm/1.69.0@bincrafters/stable
-  boost_uuid/1.69.0@bincrafters/stable
-  boost_log/1.69.0@bincrafters/stable
-  boost_numeric_ublas/1.69.0@bincrafters/stable
-  boost_functional/1.69.0@bincrafters/stable
-  boost_geometry/1.69.0@bincrafters/stable
-  pugixml/1.9@bincrafters/stable
-  jsoncpp/1.8.4@theirix/stable
-  zlib/1.2.11@conan/stable
-  fmt/5.2.1@bincrafters/stable
-  sqlite3/3.27.2@bincrafters/stable
-  cpprestsdk/2.10.10@bincrafters/stable
-  ${CONAN_WEBSOCKETPP}
-  geographiclib/1.49@bincrafters/stable
-  ${CONAN_GTEST}
-  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
-  OPTIONS ${CONAN_OPTIONS}
-  BUILD ${CONAN_BUILD}
-)
-
-#message("CONAN_TARGETS = ${CONAN_TARGETS}")
-message(STATUS "DONE RUNNING CONAN")
 ###############################################################################
 
 get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
