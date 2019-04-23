@@ -19,13 +19,18 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   conan_add_remote(NAME bincrafters
     URL https://api.bintray.com/conan/bincrafters/public-conan)
+  # TODO: eventually replace with the official NREL one (and update ruby in conan_cmake_run below)
+  conan_add_remote(NAME lefticus
+    URL https://api.bintray.com/conan/lefticus/nrel)
+  conan_add_remote(NAME jmarrec
+    URL https://api.bintray.com/conan/jmarrec/testing)
 
   set(CONAN_OPTIONS "")
   set(CONAN_BUILD "")
   if (MSVC)
-    set(CONAN_OPENSSL "")
-    set(CONAN_BOOST_ASIO "")
-    set(CONAN_WEBSOCKETPP "")
+    set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
+    set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
+    set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
     list(APPEND CONAN_OPTIONS "zlib:minizip=True")
     list(APPEND CONAN_BUILD "missing")
   elseif (APPLE)
@@ -57,6 +62,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_cmake_run(REQUIRES
     ${CONAN_OPENSSL}
     ${CONAN_BOOST_ASIO}
+    openstudio_ruby/2.5.5@jmarrec/testing
     boost_program_options/1.69.0@bincrafters/stable
     boost_regex/1.69.0@bincrafters/stable
     boost_filesystem/1.69.0@bincrafters/stable

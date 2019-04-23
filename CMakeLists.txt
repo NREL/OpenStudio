@@ -271,87 +271,10 @@ endif()
 ###############################################################################
 # Conan
 
-# Download automatically, you can also just copy the conan.cmake file
-if(NOT EXISTS "${PROJECT_BINARY_DIR}/conan.cmake")
-  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
-    "${PROJECT_BINARY_DIR}/conan.cmake")
-endif()
+# Attempt to run, it'll do the right thing if the calling cmake script already ran it
+set(CONAN_INSTALL_FILE "${PROJECT_SOURCE_DIR}/ConanInstall.cmake")
+include("${CONAN_INSTALL_FILE}")
 
-include(${PROJECT_BINARY_DIR}/conan.cmake)
-
-message(STATUS "RUNNING CONAN")
-
-conan_check(VERSION 1.0.0 REQUIRED)
-
-conan_add_remote(NAME bincrafters
-  URL https://api.bintray.com/conan/bincrafters/public-conan)
-conan_add_remote(NAME lefticus
-  URL https://api.bintray.com/conan/lefticus/nrel)
-
-set(CONAN_OPTIONS "")
-set(CONAN_BUILD "")
-if (MSVC)
-  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
-  set(CONAN_BOOST_ASIO "")
-  set(CONAN_WEBSOCKETPP "")
-  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_BUILD "missing")
-elseif (APPLE)
-  set(CONAN_OPENSSL "")
-  set(CONAN_BOOST_ASIO "")
-  set(CONAN_WEBSOCKETPP "")
-  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_BUILD "missing")
-else()
-  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
-  set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
-  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
-  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
-  list(APPEND CONAN_BUILD "missing")
-  list(APPEND CONAN_BUILD "boost_asio")
-  list(APPEND CONAN_BUILD "websocketpp")
-endif()
-
-if (BUILD_TESTING)
-  set(CONAN_GTEST "gtest/1.8.1@bincrafters/stable")
-else()
-  set(CONAN_GTEST "")
-endif()
-
-# DLM: add option for shared libs if we are building shared?
-
-conan_cmake_run(REQUIRES
-  ${CONAN_OPENSSL}
-  ${CONAN_BOOST_ASIO}
-  openstudio_ruby/2.5.5@lefticus/testing
-  boost_program_options/1.69.0@bincrafters/stable
-  boost_regex/1.69.0@bincrafters/stable
-  boost_filesystem/1.69.0@bincrafters/stable
-  boost_crc/1.69.0@bincrafters/stable
-  boost_algorithm/1.69.0@bincrafters/stable
-  boost_uuid/1.69.0@bincrafters/stable
-  boost_log/1.69.0@bincrafters/stable
-  boost_numeric_ublas/1.69.0@bincrafters/stable
-  boost_functional/1.69.0@bincrafters/stable
-  boost_geometry/1.69.0@bincrafters/stable
-  pugixml/1.9@bincrafters/stable
-  jsoncpp/1.8.4@theirix/stable
-  zlib/1.2.11@conan/stable
-  fmt/5.2.1@bincrafters/stable
-  sqlite3/3.27.2@bincrafters/stable
-  cpprestsdk/2.10.10@bincrafters/stable
-  ${CONAN_WEBSOCKETPP}
-  geographiclib/1.49@bincrafters/stable
-  ${CONAN_GTEST}
-  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
-  OPTIONS ${CONAN_OPTIONS}
-  BUILD ${CONAN_BUILD}
-)
-
-#message("CONAN_TARGETS = ${CONAN_TARGETS}")
-message(STATUS "DONE RUNNING CONAN")
 ###############################################################################
 
 get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
@@ -684,22 +607,8 @@ if(NOT UNIX)
   set(PERL_EXE "${PROJECT_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin/perl.exe")
 endif()
 
-# Check that the Ruby OpenSSL version is the right one
-set(EXPECTED_RUBY_OPENSSL_VERSION "1.1.0g")
-
-execute_process(COMMAND ${RUBY_INSTALL_DIR}/bin/ruby -r openssl -e "print OpenSSL::OPENSSL_VERSION[/\\d+\\.\\d+\\.\\d+[a-z]/]"
-  OUTPUT_VARIABLE RUBY_OPENSSL_VERSION
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-# Only keep the version: not needed; we do it in ruby above
-#STRING(REGEX REPLACE "^OpenSSL +([0-9]+\\.[0-9]+\\.[0-9]+[a-z]) +.*" "\\1" RUBY_OPENSSL_VERSION "${RUBY_OPENSSL_VERSION}")
-
-if(RUBY_OPENSSL_VERSION VERSION_GREATER_EQUAL EXPECTED_RUBY_OPENSSL_VERSION)
-  message(STATUS "Checking Ruby OpenSSL version: OK, ruby is built against the right OpenSSL version '${RUBY_OPENSSL_VERSION}' (expected >= '${EXPECTED_RUBY_OPENSSL_VERSION}')")
-else()
-  message(WARNING "Ruby doesn't appear to be built against the right OpenSSL version, built against '${RUBY_OPENSSL_VERSION}' while we expected >= '${EXPECTED_RUBY_OPENSSL_VERSION}'")
-endif()
-
+# TODO: is this still needed? @lefticus
+message("RUBY_INSTALL_DIR=${RUBY_INSTALL_DIR}") # <= empty
 list(INSERT CMAKE_PREFIX_PATH 0 "${RUBY_INSTALL_DIR}")
 if(WIN32)
   find_package(Ruby 2.5 REQUIRED)
