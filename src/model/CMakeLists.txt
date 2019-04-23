@@ -2054,6 +2054,7 @@ endif()
 
 set(swig_target_name ${target_name})
 
+# Dependency tree: All the SWIG targets depends on the minimum required dependency
 MAKE_SWIG_TARGET(OpenStudioModelCore model "${CMAKE_CURRENT_SOURCE_DIR}/ModelCore.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilities)
 list(APPEND OpenStudioModelSwigs OpenStudioModelCore)
 
@@ -2072,22 +2073,28 @@ list(APPEND OpenStudioModelSwigs OpenStudioModelHVAC)
 MAKE_SWIG_TARGET(OpenStudioModelZoneHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelZoneHVAC.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelZoneHVAC)
 
+# Note: really ModelHVAC.i is enough right now, but it's only a matter of time before we actually enable AvailabilityManagers for ZoneHVACComponents (TODO: will need OpenStudioModelZoneHVAC)
 MAKE_SWIG_TARGET(OpenStudioModelAvailabilityManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAvailabilityManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelAvailabilityManager)
 
+# Minimum: ModelHVAC.i because PlantLoop::plantEquipmentOperationHeatingLoad (+ setters, + cooling version)
 MAKE_SWIG_TARGET(OpenStudioModelPlantEquipmentOperationScheme model "${CMAKE_CURRENT_SOURCE_DIR}/ModelPlantEquipmentOperationScheme.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelPlantEquipmentOperationScheme)
 
-MAKE_SWIG_TARGET(OpenStudioModelStraightComponent model "${CMAKE_CURRENT_SOURCE_DIR}/ModelStraightComponent.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+# Minimum: OpenStudioModelZoneHVAC.i
+MAKE_SWIG_TARGET(OpenStudioModelStraightComponent model "${CMAKE_CURRENT_SOURCE_DIR}/ModelStraightComponent.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelZoneHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelStraightComponent)
 
-MAKE_SWIG_TARGET(OpenStudioModelAirflow model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAirflow.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+# Minimum: needs ModelStraightComponent.i because of Fans
+MAKE_SWIG_TARGET(OpenStudioModelAirflow model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAirflow.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelStraightComponent)
 list(APPEND OpenStudioModelSwigs OpenStudioModelAirflow)
 
-MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelZoneHVAC)
+# Mininum: ModelStraightComponent because RefrigerationCondenserWaterCooled is a StraightComponent
+MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelStraightComponent)
 list(APPEND OpenStudioModelSwigs OpenStudioModelRefrigeration)
 
-MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+# Minimum: needs ModelStraightComponent.i because of SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic(+setter)
+MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelStraightComponent)
 list(APPEND OpenStudioModelSwigs OpenStudioModelGenerators)
 
 MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${swig_target_name} "${OpenStudioModelSwigs}")

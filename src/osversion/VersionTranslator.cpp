@@ -71,6 +71,18 @@
 namespace openstudio {
 namespace osversion {
 
+// Helper class
+RefactoredObjectData::RefactoredObjectData(const IdfObject& oldObject, const IdfObject& newObject)
+  : m_oldObject(oldObject), m_newObject(newObject) {}
+
+IdfObject RefactoredObjectData::oldObject() const {
+  return m_oldObject;
+}
+
+IdfObject RefactoredObjectData::newObject() const {
+  return m_newObject;
+}
+
 VersionTranslator::VersionTranslator()
   : m_originalVersion("0.0.0"),
     m_allowNewerVersions(true)
@@ -126,7 +138,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.7.0")] = &VersionTranslator::update_2_6_2_to_2_7_0;
   m_updateMethods[VersionString("2.7.1")] = &VersionTranslator::update_2_7_0_to_2_7_1;
   m_updateMethods[VersionString("2.7.2")] = &VersionTranslator::update_2_7_1_to_2_7_2;
-  //m_updateMethods[VersionString("2.7.3")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("2.8.0")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -272,6 +284,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.6.2"));
   m_startVersions.push_back(VersionString("2.7.0"));
   m_startVersions.push_back(VersionString("2.7.1"));
+  m_startVersions.push_back(VersionString("2.7.2"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm,
@@ -371,7 +384,7 @@ std::vector<IdfObject> VersionTranslator::newObjects() const {
   return m_new;
 }
 
-std::vector< std::pair<IdfObject,IdfObject> > VersionTranslator::refactoredObjects() const {
+std::vector<RefactoredObjectData> VersionTranslator::refactoredObjects() const {
   return m_refactored;
 }
 
@@ -903,7 +916,7 @@ std::string VersionTranslator::update_0_7_3_to_0_7_4(const IdfFile& idf_0_7_3, c
           componentDataIdf.printField(objectSS,i);
         }
       }
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,componentDataIdf) );
+      m_refactored.push_back( RefactoredObjectData(object, componentDataIdf) );
     }
     else
     {
@@ -1201,7 +1214,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
         }
       } // for keys
     } // for users
-    m_refactored.push_back(std::pair<IdfObject,IdfObject>(originalSchedule,schedule.idfObject()));
+    m_refactored.push_back(RefactoredObjectData(originalSchedule, schedule.idfObject()));
     for (const auto & candidate : candidates) {
       model::ModelObjectVector wholeCandidate = getRecursiveChildren(candidate);
       m_new.push_back(candidate.idfObject());
@@ -1344,7 +1357,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
                                                       schedulesToFixup->originalUsers.end(),
                                                       std::bind(handleEquals<IdfObject,Handle>,std::placeholders::_1,user.handle()));
     OS_ASSERT(it != schedulesToFixup->originalUsers.end());
-    m_refactored.push_back(std::pair<IdfObject,IdfObject>(*it,user.idfObject()));
+    m_refactored.push_back( RefactoredObjectData(*it, user.idfObject()) );
   }
 
 }
@@ -1676,7 +1689,7 @@ std::stringstream ss;
       } else {
         IdfObject newParameters = object.clone(true);
         newParameters.setString(14, "");
-        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newParameters) );
+        m_refactored.push_back( RefactoredObjectData(object,  newParameters) );
 
         ss << newParameters;
       }
@@ -2200,7 +2213,7 @@ std::string VersionTranslator::update_0_11_5_to_0_11_6(const IdfFile& idf_0_11_5
 
               }
 
-              m_refactored.push_back( std::pair<IdfObject,IdfObject>(object2,newPortList) );
+              m_refactored.push_back( RefactoredObjectData(object2, newPortList) );
 
               ss << newPortList;
 
@@ -2249,7 +2262,7 @@ std::string VersionTranslator::update_1_0_1_to_1_0_2(const IdfFile& idf_1_0_1, c
 
         newBoiler.setString(15,"LeavingSetpointModulated");
 
-        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newBoiler) );
+        m_refactored.push_back( RefactoredObjectData(object, newBoiler) );
 
         ss << newBoiler;
 
@@ -2267,7 +2280,7 @@ std::string VersionTranslator::update_1_0_1_to_1_0_2(const IdfFile& idf_1_0_1, c
 
         newChiller.setString(15,"LeavingSetpointModulated");
 
-        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newChiller) );
+        m_refactored.push_back( RefactoredObjectData(object, newChiller) );
 
         ss << newChiller;
 
@@ -2314,7 +2327,7 @@ std::string VersionTranslator::update_1_0_2_to_1_0_3(const IdfFile& idf_1_0_2, c
           newParameters.setString(14, "2306");
         }
 
-        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newParameters) );
+        m_refactored.push_back( RefactoredObjectData(object,  newParameters) );
 
         ss << newParameters;
       } else {
@@ -2355,7 +2368,7 @@ std::string VersionTranslator::update_1_2_2_to_1_2_3(const IdfFile& idf_1_2_2, c
         }else {
           newObject.setString(2, "ExteriorFloor");
         }
-        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
+        m_refactored.push_back( RefactoredObjectData(object,  newObject) );
         ss << newObject;
       } else {
         ss << object;
@@ -2462,7 +2475,7 @@ std::string VersionTranslator::update_1_2_2_to_1_2_3(const IdfFile& idf_1_2_2, c
       OS_ASSERT(test);
     }
 
-    m_refactored.push_back( std::pair<IdfObject,IdfObject>(*buildingObject, newBuildingObject) );
+    m_refactored.push_back( RefactoredObjectData(*buildingObject, newBuildingObject) );
     ss << newBuildingObject;
   }
 
@@ -2493,7 +2506,7 @@ std::string VersionTranslator::update_1_3_4_to_1_3_5(const IdfFile& idf_1_3_4, c
         OS_ASSERT(test);
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newWalkin) );
+      m_refactored.push_back( RefactoredObjectData(object, newWalkin) );
 
       ss << newWalkin;
 
@@ -2559,7 +2572,7 @@ std::string VersionTranslator::update_1_7_1_to_1_7_2(const IdfFile& idf_1_7_1, c
       }
       newObject.setDouble(11,0.1);
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if (object.iddObject().name() == "OS:EvaporativeCooler:Indirect:ResearchSpecial") {
       auto iddObject = idd_1_7_2.getObject("OS:EvaporativeCooler:Indirect:ResearchSpecial");
@@ -2579,7 +2592,7 @@ std::string VersionTranslator::update_1_7_1_to_1_7_2(const IdfFile& idf_1_7_1, c
       newObject.setDouble(22,0.1);
       newObject.setDouble(24,1.0);
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -2629,7 +2642,7 @@ std::string VersionTranslator::update_1_7_4_to_1_7_5(const IdfFile& idf_1_7_4, c
       newObject.setDouble(36,1.0);
       newObject.setString(37,"OnOff");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if(object.iddObject().name() == "OS:Sizing:Plant") {
       auto iddObject = idd_1_7_5.getObject("OS:Sizing:Plant");
@@ -2646,7 +2659,7 @@ std::string VersionTranslator::update_1_7_4_to_1_7_5(const IdfFile& idf_1_7_4, c
       newObject.setInt(6,1);
       newObject.setString(7,"None");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if(object.iddObject().name() == "OS:DistrictCooling") {
       IdfObject newObject = object.clone(true);
@@ -2655,7 +2668,7 @@ std::string VersionTranslator::update_1_7_4_to_1_7_5(const IdfFile& idf_1_7_4, c
         newObject.setString(4,"Autosize");
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if(object.iddObject().name() == "OS:DistrictHeating") {
       IdfObject newObject = object.clone(true);
@@ -2664,7 +2677,7 @@ std::string VersionTranslator::update_1_7_4_to_1_7_5(const IdfFile& idf_1_7_4, c
         newObject.setString(4,"Autosize");
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if(object.iddObject().name() == "OS:Humidifier:Steam:Electric") {
       IdfObject newObject = object.clone(true);
@@ -2673,7 +2686,7 @@ std::string VersionTranslator::update_1_7_4_to_1_7_5(const IdfFile& idf_1_7_4, c
         newObject.setString(4,"Autosize");
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -2712,7 +2725,7 @@ std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, c
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if (iddname == "OS:AirLoopHVAC") {
       auto iddObject = idd_1_8_4.getObject("OS:AirLoopHVAC");
@@ -2770,7 +2783,7 @@ std::string VersionTranslator::update_1_8_3_to_1_8_4(const IdfFile& idf_1_8_3, c
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if(iddname == "OS:AvailabilityManager:Scheduled") {
       m_deprecated.push_back(object);
@@ -2871,7 +2884,7 @@ std::string VersionTranslator::update_1_8_5_to_1_9_0(const IdfFile& idf_1_8_5, c
           newObject.setString(i,s.get());
         }
       }
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -2915,7 +2928,7 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
         }
       }
       ss << newObject;
-      m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newObject));
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
 
     }else if (iddname == "OS:ZoneAirMassFlowConservation") {
       auto iddObject = idd_1_9_3.getObject("OS:ZoneAirMassFlowConservation");
@@ -2938,7 +2951,7 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
       }
       // new field Infiltration Balancing Zones is defaulted to MixingSourceZonesOnly
       ss << newObject;
-      m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newObject));
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
     }else if (iddname == "OS:AirTerminal:SingleDuct:VAV:Reheat") {
       auto iddObject = idd_1_9_3.getObject("OS:AirTerminal:SingleDuct:VAV:Reheat");
       OS_ASSERT(iddObject);
@@ -2952,7 +2965,7 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
 
       newObject.setString(18,"No");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if (iddname == "OS:AirTerminal:SingleDuct:VAV:NoReheat") {
       auto iddObject = idd_1_9_3.getObject("OS:AirTerminal:SingleDuct:VAV:NoReheat");
@@ -2967,7 +2980,7 @@ std::string VersionTranslator::update_1_9_2_to_1_9_3(const IdfFile& idf_1_9_2, c
 
       newObject.setString(10,"No");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -3037,7 +3050,7 @@ std::string VersionTranslator::update_1_9_4_to_1_9_5(const IdfFile& idf_1_9_4, c
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -3080,7 +3093,7 @@ std::string VersionTranslator::update_1_9_5_to_1_10_0(const IdfFile& idf_1_9_5, 
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if (iddname == "OS:AirTerminal:SingleDuct:VAV:NoReheat") {
       auto iddObject = idd_1_10_0.getObject("OS:AirTerminal:SingleDuct:VAV:NoReheat");
@@ -3103,7 +3116,7 @@ std::string VersionTranslator::update_1_9_5_to_1_10_0(const IdfFile& idf_1_9_5, 
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -3187,7 +3200,7 @@ std::string VersionTranslator::update_1_10_1_to_1_10_2(const IdfFile& idf_1_10_1
       newObject.setString(26,"Autosize");
       newObject.setString(27,"Autosize");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -3251,7 +3264,7 @@ std::string VersionTranslator::update_1_10_5_to_1_10_6(const IdfFile& idf_1_10_5
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -3293,7 +3306,7 @@ std::string VersionTranslator::update_1_11_3_to_1_11_4(const IdfFile& idf_1_11_3
       newObject.setDouble(4,0.0);
       newObject.setDouble(5,0.8);
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -3336,7 +3349,7 @@ std::string VersionTranslator::update_1_11_4_to_1_11_5(const IdfFile& idf_1_11_4
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -3370,7 +3383,7 @@ std::string VersionTranslator::update_1_12_0_to_1_12_1(const IdfFile& idf_1_12_0
         ++newi;
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -3408,7 +3421,7 @@ std::string VersionTranslator::update_1_12_3_to_1_12_4(const IdfFile& idf_1_12_3
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -3444,7 +3457,7 @@ std::string VersionTranslator::update_2_1_0_to_2_1_1(const IdfFile& idf_2_1_0, c
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Heating") {
       auto iddObject = idd_2_1_1.getObject("OS:HeatPump:WaterToWater:EquationFit:Heating");
@@ -3459,7 +3472,7 @@ std::string VersionTranslator::update_2_1_0_to_2_1_1(const IdfFile& idf_2_1_0, c
       newObject.setDouble(21,1.0);
       newObject.setString(22,"");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if (iddname == "OS:HeatPump:WaterToWater:EquationFit:Cooling") {
       auto iddObject = idd_2_1_1.getObject("OS:HeatPump:WaterToWater:EquationFit:Cooling");
@@ -3474,7 +3487,7 @@ std::string VersionTranslator::update_2_1_0_to_2_1_1(const IdfFile& idf_2_1_0, c
       newObject.setDouble(21,1.0);
       newObject.setString(22,"");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -3511,7 +3524,7 @@ std::string VersionTranslator::update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, c
         ++newi;
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if (iddname == "OS:ZoneHVAC:FourPipeFanCoil") {
       auto iddObject = idd_2_1_2.getObject("OS:ZoneHVAC:FourPipeFanCoil");
@@ -3527,7 +3540,7 @@ std::string VersionTranslator::update_2_1_1_to_2_1_2(const IdfFile& idf_2_1_1, c
       newObject.setString(23,"Autosize");
       newObject.setString(24,"Autosize");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else {
       ss << object;
@@ -3563,7 +3576,7 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
       newObject.setString(17,"348701.1");
       newObject.setString(18,"1.282051282");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if (iddname == "OS:Pump:VariableSpeed") {
       auto iddObject = idd_2_3_1.getObject("OS:Pump:VariableSpeed");
@@ -3581,7 +3594,7 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
       newObject.setString(28,"1.282051282");
       newObject.setString(29,"0.0");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if (iddname == "OS:CoolingTower:SingleSpeed") {
       auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:SingleSpeed");
@@ -3603,7 +3616,7 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
       newObject.setString(36,"Autosize");
       newObject.setString(37,"General");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if (iddname == "OS:CoolingTower:TwoSpeed") {
       auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:TwoSpeed");
@@ -3621,7 +3634,7 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
       newObject.setString(44,"Autosize");
       newObject.setString(45,"General");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if (iddname == "OS:CoolingTower:VariableSpeed") {
       auto iddObject = idd_2_3_1.getObject("OS:CoolingTower:VariableSpeed");
@@ -3635,7 +3648,7 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
 
       newObject.setString(31,"General");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
 
     } else if (iddname == "OS:Chiller:Electric:EIR") {
@@ -3654,7 +3667,7 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
         newObject.setString(19,"AirCooled");
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
     } else if (iddname == "OS:AirLoopHVAC") {
       auto iddObject = idd_2_3_1.getObject("OS:AirLoopHVAC");
@@ -3690,7 +3703,7 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
       // Assign AVM list to loop
       newObject.setString(4,avmHandle);
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       m_new.push_back(avmList);
 
       ss << newObject;
@@ -3726,7 +3739,7 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
       // Assign AVM list to loop
       newObject.setString(22,avmHandle);
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       m_new.push_back(avmList);
 
       ss << newObject;
@@ -3805,7 +3818,7 @@ std::string VersionTranslator::update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, c
       newObject.setString(11, heatingZoneFansOnlyThermalZoneListHandle);
 
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       m_new.push_back(controlThermalZoneList);
       m_new.push_back(coolingControlThermalZoneList);
       m_new.push_back(heatingControlThermalZoneList);
@@ -3848,7 +3861,7 @@ std::string VersionTranslator::update_2_4_1_to_2_4_2(const IdfFile& idf_2_4_1, c
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
 
       iddObject = idd_2_4_2.getObject("OS:AdditionalProperties");
@@ -3877,7 +3890,7 @@ std::string VersionTranslator::update_2_4_1_to_2_4_2(const IdfFile& idf_2_4_1, c
       }
       newObject.setString(18,"General");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
 
     } else if (iddname == "OS:Boiler:Steam") {
@@ -3891,7 +3904,7 @@ std::string VersionTranslator::update_2_4_1_to_2_4_2(const IdfFile& idf_2_4_1, c
       }
       newObject.setString(16,"General");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
 
     } else if (iddname == "OS:WaterHeater:Mixed") {
@@ -3912,7 +3925,7 @@ std::string VersionTranslator::update_2_4_1_to_2_4_2(const IdfFile& idf_2_4_1, c
       // End Use Subcategory
       newObject.setString(42,"General");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
 
     } else if (iddname == "OS:Chiller:Electric:EIR") {
@@ -3938,7 +3951,7 @@ std::string VersionTranslator::update_2_4_1_to_2_4_2(const IdfFile& idf_2_4_1, c
       // endUseSubcategory
       newObject.setString(34,"General");
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
 
     // Default case
@@ -3996,7 +4009,7 @@ std::string VersionTranslator::update_2_4_3_to_2_5_0(const IdfFile& idf_2_4_3, c
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
 
     // Default case
@@ -4065,7 +4078,7 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       m_new.push_back(newReturnPortList);
       ss << newObject;
       ss << newReturnPortList;
@@ -4085,7 +4098,7 @@ std::string VersionTranslator::update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, c
         // it needs to specify a port on the PortList instead of the ThermalZone now
         newConnection.setString(2, c->second.newPortListHandle);
         newConnection.setUnsigned(3, 3);
-        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newConnection) );
+        m_refactored.push_back( RefactoredObjectData(object, newConnection) );
         ss << newConnection;
       } else {
         ss << object;
@@ -4136,7 +4149,7 @@ std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, c
         newObject.setDouble(16, 99);
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
 
     } else if (iddname == "OS:ZoneHVAC:EquipmentList") {
@@ -4157,7 +4170,7 @@ std::string VersionTranslator::update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, c
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
 
     } else {
@@ -4267,7 +4280,7 @@ std::string VersionTranslator::update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, c
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object,newObject) );
+      m_refactored.push_back( RefactoredObjectData(object, newObject) );
       ss << newObject;
 
     } else if ( iddname == "OS:Connection" ) {
@@ -4299,7 +4312,7 @@ std::string VersionTranslator::update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, c
 
       // Field is optional string, so leave it empty
 
-      m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newObject));
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
     } else if (iddname == "OS:SpaceType") {
@@ -4322,7 +4335,7 @@ std::string VersionTranslator::update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, c
 
       // Field is optional string, so leave it empty
 
-      m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newObject));
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
     } else {
@@ -4353,7 +4366,7 @@ std::string VersionTranslator::update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, c
         // And it connects to the "Inlet Port" of the name (field 2 of the node)
         newConnection.setString(4, c->second.newNodeHandle);
         newConnection.setUnsigned(5, 2);
-        m_refactored.push_back(std::pair<IdfObject, IdfObject>(object, newConnection));
+        m_refactored.push_back(RefactoredObjectData(object, newConnection));
         ss << newConnection;
       }
     }
@@ -4387,7 +4400,7 @@ std::string VersionTranslator::update_2_7_0_to_2_7_1(const IdfFile& idf_2_7_0, c
                << "It was replaced by 'Total' instead for object with handle '"
                << newObject.getString(0).get() << "'. Please review carefully.");
 
-        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
+        m_refactored.push_back( RefactoredObjectData(object,  newObject) );
         ss << newObject;
       } else {
         // Nothing to do here
@@ -4420,7 +4433,7 @@ std::string VersionTranslator::update_2_7_1_to_2_7_2(const IdfFile& idf_2_7_1, c
       if( value && (value.get().rfind("file://", 0) == 0)) {
         IdfObject newObject = object.clone(true);
         newObject.setString(10, value.get().substr(7));
-        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
+        m_refactored.push_back( RefactoredObjectData(object,  newObject) );
         ss << newObject;
       } else {
         // Nothing to do here
@@ -4435,7 +4448,7 @@ std::string VersionTranslator::update_2_7_1_to_2_7_2(const IdfFile& idf_2_7_1, c
       if( value && (value.get().rfind("file://", 0) == 0)) {
         IdfObject newObject = object.clone(true);
         newObject.setString(2, value.get().substr(7));
-        m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
+        m_refactored.push_back( RefactoredObjectData(object,  newObject) );
         ss << newObject;
       } else {
         // Nothing to do here
@@ -4462,7 +4475,7 @@ std::string VersionTranslator::update_2_7_1_to_2_7_2(const IdfFile& idf_2_7_1, c
         }
       }
 
-      m_refactored.push_back( std::pair<IdfObject,IdfObject>(object, newObject) );
+      m_refactored.push_back( RefactoredObjectData(object,  newObject) );
       ss << newObject;
 
     // No-op
