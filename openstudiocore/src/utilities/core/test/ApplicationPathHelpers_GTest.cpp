@@ -36,6 +36,56 @@
 #include <thread>
 #include <future>
 
+#if defined(_WIN32)
+#include <Windows.h>
+
+// A wrapper to implement setenv on Windows like on Unix, using _putenv internally
+int setenv(const char *name, const char *value, int overwrite)
+{
+    int errcode = 0;
+    if(!overwrite) {
+        size_t envsize = 0;
+        errcode = getenv_s(&envsize, NULL, 0, name);
+        if(errcode || envsize) return errcode;
+    }
+    return _putenv_s(name, value);
+}
+
+void unsetenv(const char *name) {
+  _putenv_s(name, "");
+}
+
+BOOL IsElevated() {
+    BOOL fRet = FALSE;
+    HANDLE hToken = NULL;
+    if( OpenProcessToken( GetCurrentProcess( ),TOKEN_QUERY,&hToken ) ) {
+        TOKEN_ELEVATION Elevation;
+        DWORD cbSize = sizeof( TOKEN_ELEVATION );
+        if( GetTokenInformation( hToken, TokenElevation, &Elevation, sizeof( Elevation ), &cbSize ) ) {
+            fRet = Elevation.TokenIsElevated;
+        }
+    }
+    if( hToken ) {
+        CloseHandle( hToken );
+    }
+    return fRet;
+}
+#else
+bool IsElevated() {
+  return 1;
+}
+#endif
+
+const char getPlatformDelimiterForPath() {
+  #if defined _WIN32
+    const char delimiter = ';';
+  #else
+    const char delimiter = ':';
+  #endif
+  return delimiter;
+}
+
+
 using namespace openstudio;
 
 TEST(ApplicationPathHelpers, Strings)
@@ -75,13 +125,13 @@ TEST(ApplicationPathHelpers, findInSystemPath) {
 
   // Append the containing dir to the PATH
   auto current_path = std::getenv("PATH");
-  std::string new_path = toString(dummy_dir) + ":" + current_path;
+  std::string new_path = toString(dummy_dir) + getPlatformDelimiterForPath() + current_path;
   setenv("PATH", new_path.c_str(), 1);
   setenv("PathWhenSymlinkInPathUnixOnly_Setup", "true", 1);
 
   // Locate the file with only its name
   absolute_path_to_dummy = findInSystemPath(dummy_file_path.filename());
-  EXPECT_TRUE(exists(absolute_path_to_dummy));
+  EXPECT_TRUE(exists(absolute_path_to_dummy)) << "Tried to find " << dummy_file_path.filename() << "in path: " << current_path;
   EXPECT_EQ(dummy_file_path, absolute_path_to_dummy);
 
   // Put it back
@@ -90,9 +140,12 @@ TEST(ApplicationPathHelpers, findInSystemPath) {
 
 }
 
-#if !defined(_WIN32)
 // From PathHelpers too. Ensure that completeAndNormalize keeps resolving symlinks until found
 TEST(ApplicationPathHelpers, completeAndNormalizeMultipleSymlinks) {
+
+  if (!IsElevated()) {
+    FAIL() << "This test can only be run with administrator rights on windows (elevated cmd.exe)";
+  }
 
   std::vector<openstudio::path> toClean;
   openstudio::path path_dir = getApplicationBuildDirectory() / toPath("Testing/Temporary");
@@ -162,7 +215,15 @@ TEST(ApplicationPathHelpers, Simple_test_forThisModule) {
     path openstudioModulePath = getOpenStudioModule();
     EXPECT_TRUE(exists(openstudioModulePath));
     // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
+#if defined(_WIN32)
+  #if _DEBUG
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/openstudio_utilities_tests.exe");
+  #else
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/openstudio_utilities_tests.exe");
+  #endif
+#else
     openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
+#endif
     expectedOpenstudioModulePath = completeAndNormalize(expectedOpenstudioModulePath);
     EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
 }
@@ -174,18 +235,35 @@ int launch_another_instance_from_symlink(const path& symlink_path) {
 
 TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Setup) {
 
+  if (!IsElevated()) {
+    FAIL() << "This test can only be run with administrator rights on windows (elevated cmd.exe)";
+  }
+
   openstudio::path symlink_path_dir = getApplicationBuildDirectory() / toPath("Testing/Temporary");
+#if defined(_WIN32)
+  openstudio::path symlink_path = symlink_path_dir / "openstudio_utilities_tests_symlink.exe";
+#else
   openstudio::path symlink_path = symlink_path_dir / "openstudio_utilities_tests_symlink";
+#endif
   openstudio::filesystem::create_directories(symlink_path_dir);
 
-  openstudio::path openstudioUtilitiesTestPath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
+#if defined(_WIN32)
+  #if _DEBUG
+    openstudio::path openstudioUtilitiesTestPath = getApplicationBuildDirectory() / toPath("Products/Debug/openstudio_utilities_tests.exe");
+  #else
+    openstudio::path openstudioUtilitiesTestPath = getApplicationBuildDirectory() / toPath("Products/Release/openstudio_utilities_tests.exe");
+  #endif
+#else
+    openstudio::path openstudioUtilitiesTestPath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
+#endif
+
   if (exists(symlink_path)) {
     boost::filesystem::remove(symlink_path);
   }
   boost::filesystem::create_symlink(openstudioUtilitiesTestPath, symlink_path);
 
   auto current_path = std::getenv("PATH");
-  std::string new_path = toString(symlink_path_dir) + ":" + current_path;
+  std::string new_path = toString(symlink_path_dir) + getPlatformDelimiterForPath() + current_path;
 
   setenv("PATH", new_path.c_str(), 1);
   setenv("PathWhenSymlinkInPathUnixOnly_Setup", "true", 1);
@@ -212,7 +290,16 @@ TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Run) {
     path openstudioModulePath = getOpenStudioModule();
     EXPECT_TRUE(exists(openstudioModulePath));
      // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
+#if defined(_WIN32)
+  #if _DEBUG
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/openstudio_utilities_tests.exe");
+  #else
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/openstudio_utilities_tests.exe");
+  #endif
+#else
     openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
+#endif
+
     expectedOpenstudioModulePath = completeAndNormalize(expectedOpenstudioModulePath);
     EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
   }
@@ -220,4 +307,3 @@ TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Run) {
   // openstudio::Logger::instance().standardOutLogger().disable();
 
 }
-#endif
