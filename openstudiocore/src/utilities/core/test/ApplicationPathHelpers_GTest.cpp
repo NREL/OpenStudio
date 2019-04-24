@@ -36,6 +36,13 @@
 #include <thread>
 #include <future>
 
+// TODO: GTEST 1.9 should have a GTEST_SKIP macro we could use
+#define SKIP(TEST_NAME) \
+do{\
+   std::cout << "[  SKIPPED ] " << #TEST_NAME << ": smylink tests can only be run with administrator rights on windows (elevated cmd.exe)" << std::endl;\
+   return;\
+} while(0)
+
 #if defined(_WIN32)
 #include <Windows.h>
 
@@ -144,7 +151,7 @@ TEST(ApplicationPathHelpers, findInSystemPath) {
 TEST(ApplicationPathHelpers, completeAndNormalizeMultipleSymlinks) {
 
   if (!IsElevated()) {
-    FAIL() << "This test can only be run with administrator rights on windows (elevated cmd.exe)";
+   SKIP(completeAndNormalizeMultipleSymlinks);
   }
 
   std::vector<openstudio::path> toClean;
@@ -236,7 +243,7 @@ int launch_another_instance_from_symlink(const path& symlink_path) {
 TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Setup) {
 
   if (!IsElevated()) {
-    FAIL() << "This test can only be run with administrator rights on windows (elevated cmd.exe)";
+    SKIP(completeAndNormalizeMultipleSymlinks);
   }
 
   openstudio::path symlink_path_dir = getApplicationBuildDirectory() / toPath("Testing/Temporary");
