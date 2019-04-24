@@ -92,9 +92,24 @@ namespace openstudio {
         path = toPath(info.dli_fname);
       }
     #endif
-    // TODO: JM 2019-04-18 Another option is to always start by calling findInSystemPath and modify the findInSystemPath to prepend the PATH list with '.'
+
+    // Note JM 2019-04-24:
+    // Let's call assume the GetModuleFileName (windows, though that doesn't really happen)
+    // or (more likely) dladdr (Unix) returns just 'OpenStudioApplicationSymlink' (and not '/path/to/OpenStudioApplicationSymlink' or './OpenStudioApplicationSymlink')
+    // You first try to locate that OpenStudioApplicationSymlink in the current directory
+
+    // (Another option would be to always start by calling findInSystemPath and modify the findInSystemPath to prepend the PATH list with '.')
+
     openstudio::path applicationPath = completeAndNormalize(path);
     if( !openstudio::filesystem::exists( applicationPath ) || openstudio::filesystem::is_directory( applicationPath ) ) {
+        // It that didn't work, it means it's in the system PATH. So you have to look for it in your PATH by calling findInSystemPath
+        // There's no way around it IMHO.
+        // Note: This wouldn't be a concern unless you are launching a symlink that lives in your PATH, and outside the directory where the symlink is
+        // * ./OpenStudioApplicationSymlink will work
+        // * /home/OpenStudioApplicationSymlink will work
+        // * OpenStudioApplicationSymlink itself will not work (if you aren't in the same folder as the symlink)
+
+
         LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath failed as is, trying in to locate in systemPath");
         path = findInSystemPath(path);
         applicationPath = completeAndNormalize(path);
