@@ -112,18 +112,19 @@ class MODEL_API PlantEquipmentOperationRangeBasedScheme : public PlantEquipmentO
   /** Remove all load ranges except the default range. All equipment will be removed. */
   void clearLoadRanges();
 
+ protected:
   /// @cond
-
   typedef detail::PlantEquipmentOperationRangeBasedScheme_Impl ImplType;
 
   explicit PlantEquipmentOperationRangeBasedScheme(std::shared_ptr<detail::PlantEquipmentOperationRangeBasedScheme_Impl> impl);
 
-  private:
-
-  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationRangeBasedScheme");
-
+  friend class detail::PlantEquipmentOperationRangeBasedScheme_Impl;
+  friend class Model;
+  friend class IdfObject;
+  friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
-
+ private:
+  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationRangeBasedScheme");
 };
 
 typedef boost::optional<PlantEquipmentOperationRangeBasedScheme> OptionalPlantEquipmentOperationRangeBasedScheme;

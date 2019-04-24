@@ -42,7 +42,15 @@
   %ignore openstudio::model::ThermalZone::getAirflowNetworkZone;
   %ignore openstudio::model::ThermalZone::airflowNetworkZone;
 
+  // PlantLoop has some methods that actually live in ModelPlantEquipmentOperationScheme.i (which depends on ModelHVAC.i)
+  // So we ignore for now, and reimplment later in the PlantEq.i file with partial classes
+  %ignore openstudio::model::PlantLoop::plantEquipmentOperationHeatingLoad;
+  %ignore openstudio::model::PlantLoop::setPlantEquipmentOperationHeatingLoad;
+  %ignore openstudio::model::PlantLoop::plantEquipmentOperationCoolingLoad;
+  %ignore openstudio::model::PlantLoop::setPlantEquipmentOperationCoolingLoad;
 
+  // WaterUseConnections is defined in ModelStraightComponent.i (which depends on this file)
+  %ignore openstudio::model::WaterUseEquipment::waterUseConnections;
 
 #endif
 
@@ -56,12 +64,18 @@ namespace model {
 %feature("valuewrapper") AirflowNetworkFan;
 %feature("valuewrapper") AirflowNetworkOutdoorAirflow;
 %feature("valuewrapper") AirflowNetworkZoneExhaustFan;
+%feature("valuewrapper") PlantEquipmentOperationHeatingLoad;
+%feature("valuewrapper") PlantEquipmentOperationCoolingLoad;
+%feature("valuewrapper") WaterUseConnections;
 class AirflowNetworkDistributionNode;
 class AirflowNetworkZone;
 class AirflowNetworkEquivalentDuct;
 class AirflowNetworkFan;
 class AirflowNetworkOutdoorAirflow;
 class AirflowNetworkZoneExhaustFan;
+class PlantEquipmentOperationHeatingLoad;
+class PlantEquipmentOperationCoolingLoad;
+class WaterUseConnections;
 
 }
 }
@@ -309,6 +323,12 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
         bool setThermalZone(openstudio::model::Space space, openstudio::model::ThermalZone thermalZone){
           return space.setThermalZone(thermalZone);
         }
+
+        // EMS Actuator setter for ThermalZone (reimplemented from ModelCore.i)
+        bool setThermalZoneForEMSActuator(openstudio::model::EnergyManagementSystemActuator actuator, openstudio::model::ThermalZone thermalZone) {
+          return actuator.setThermalZone(thermalZone);
+        }
+
       }
     }
   }
@@ -343,6 +363,18 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
       public bool setThermalZone(OpenStudio.ThermalZone thermalZone)
       {
         return OpenStudio.OpenStudioModelHVAC.setThermalZone(this, thermalZone);
+      }
+    }
+
+    public partial class EnergyManagementSystemActuator : ModelObject {
+      public bool setThermalZone(OpenStudio.ThermalZone thermalZone) {
+        return OpenStudio.OpenStudioModelHVAC.setThermalZoneForEMSActuator(this, thermalZone);
+      }
+
+      // Overloaded Ctor, calling Ctor that doesn't use ThermalZone
+      public EnergyManagementSystemActuator(ModelObject modelObject, string actuatedComponentType, string actuatedComponentControlType, OpenStudio.ThermalZone thermalZone)
+        : this(modelObject, actuatedComponentType, actuatedComponentControlType) {
+        this.setThermalZone(thermalZone);
       }
     }
   %}

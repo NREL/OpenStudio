@@ -544,6 +544,8 @@ namespace openstudio{
     boost::optional<ThreeGeometry> getGeometry(const std::string& geometryId) const;
     std::vector<ThreeMaterial> materials() const;
     boost::optional<ThreeMaterial> getMaterial(const std::string& materialId) const;
+
+    /** This method is renamed to 'threeSceneObject()' in C# */
     ThreeSceneObject object() const;
 
   private:
