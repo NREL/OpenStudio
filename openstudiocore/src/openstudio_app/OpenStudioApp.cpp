@@ -1390,7 +1390,6 @@ std::vector<openstudio::path> OpenStudioApp::libraryPaths() const {
   QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
   openstudio::path resPath = resourcesPath();
-  std::cout << "resourcesPath = " << resPath << std::endl;
   int size = settings.beginReadArray("library");
   for (int i = 0; i < size; ++i) {
     settings.setArrayIndex(i);

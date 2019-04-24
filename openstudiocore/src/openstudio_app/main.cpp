@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
       // If can't convert to int (such as when you pass true), use a default
       n_seconds = 60;
     }
-    std::cout << "Will sleep for " << n_seconds << " seconds now" << std::endl;
+    LOG_FREE(Warn, "Will sleep for " << n_seconds << " seconds now");
     std::this_thread::sleep_for(std::chrono::seconds(n_seconds));
   }
 #else
