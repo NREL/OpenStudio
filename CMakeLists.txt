@@ -279,6 +279,11 @@ include("${CONAN_INSTALL_FILE}")
 
 get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
 
+# Export to Parent
+if(hasParent)
+  set(RUBY_INCLUDE_DIRS "${RUBY_INCLUDE_DIRS}" PARENT_SCOPE)
+endif()
+
 
 
 ###############################################################################
@@ -605,36 +610,6 @@ if(NOT UNIX)
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
     RESULT_VARIABLE rv)
   set(PERL_EXE "${PROJECT_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin/perl.exe")
-endif()
-
-# TODO: is this still needed? @lefticus
-message("RUBY_INSTALL_DIR=${RUBY_INSTALL_DIR}") # <= empty
-list(INSERT CMAKE_PREFIX_PATH 0 "${RUBY_INSTALL_DIR}")
-if(WIN32)
-  find_package(Ruby 2.5 REQUIRED)
-  get_filename_component(RUBY_LIBRARY_NAME_WE ${RUBY_LIBRARY} NAME_WE)
-  get_filename_component(RUBY_LIBRARY_DIRECTORY ${RUBY_LIBRARY} DIRECTORY)
-  get_filename_component(RUBY_LIBRARY_EXT ${RUBY_LIBRARY} EXT)
-  set(RUBY_STATIC_LIBRARY "${RUBY_LIBRARY_DIRECTORY}/${RUBY_LIBRARY_NAME_WE}-static${CMAKE_STATIC_LIBRARY_SUFFIX}")
-  set(RUBY_STATIC_LIBRARY_DEBUG "${RUBY_LIBRARY_DIRECTORY}/../../debug/lib/${RUBY_LIBRARY_NAME_WE}-static${CMAKE_STATIC_LIBRARY_SUFFIX}")
-  set(RUBY_LIBRARY_DEBUG "${RUBY_LIBRARY_DIRECTORY}/../../debug/lib/${RUBY_LIBRARY_NAME_WE}${CMAKE_STATIC_LIBRARY_SUFFIX}")
-else()
-  if(APPLE)
-    set(RUBY_STATIC_LIBRARY "${RUBY_INSTALL_DIR}/lib/libruby.2.5.1-static.a")
-  else()
-    set(RUBY_STATIC_LIBRARY "${RUBY_INSTALL_DIR}/lib/libruby-static.a")
-  endif()
-  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.5.0")
-  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.5.0/x86_64-linux")
-  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.5.0/x86_64-darwin16")
-  set(RUBY_INCLUDE_DIR "${RUBY_INSTALL_DIR}/include/ruby-2.5.0")
-  set(RUBY_EXECUTABLE "${RUBY_INSTALL_DIR}/bin/ruby")
-  set(RUBY_POSSIBLE_LIB_DIR "${RUBY_INSTALL_DIR}/lib")
-endif()
-
-# Export to Parent
-if(hasParent)
-  set(RUBY_INCLUDE_DIRS "${RUBY_INCLUDE_DIRS}" PARENT_SCOPE)
 endif()
 
 # Mingw based ruby lib (only the dll stub library) from Ruby Installer
