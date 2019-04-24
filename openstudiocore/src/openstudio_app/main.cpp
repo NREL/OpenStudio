@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
       // If can't convert to int (such as when you pass true), use a default
       n_seconds = 60;
     }
-	LOG_FREE(Warn, "OpenStudioApp.main", "Will sleep for " << n_seconds << " seconds now");
+    LOG_FREE(Warn, "OpenStudioApp.main", "Will sleep for " << n_seconds << " seconds now");
     std::this_thread::sleep_for(std::chrono::seconds(n_seconds));
   }
 #else
