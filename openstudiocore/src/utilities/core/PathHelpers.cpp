@@ -263,7 +263,13 @@ path completeAndNormalize(const path& p) {
       LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp is an absolute symlink (= linkpath)");
 
     } else {
+      // Note JM 2019-04-24: temp will end up absolute but not canonical yet
+      // eg:
+      // temp="/home/a_folder/a_symlink"
+      // linkpath="../another_folder/a_file"
       temp = temp.parent_path() / linkpath;
+      // eg: temp ="/home/a_folder/../another_folder/a_file"
+
       LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp is a relative symlink, pointing to = " << temp);
 
     }
@@ -276,7 +282,7 @@ path completeAndNormalize(const path& p) {
   path result;
 
   // TODO: In develop3, which has boost 1.68, we can replace it with boost::filesystem::weakly_canonical
-  // temp right now is absolute, but it isn't canonical.
+  // Note JM 2019-04-24: temp right now is absolute, but it isn't necessarilly canonical.
   // This block resolves a canonical path, even if it doesn't exist (yet?) on disk.
   for(openstudio::path::iterator it=temp.begin(); it!=temp.end(); ++it) {
     if (*it == toPath("..")) {
