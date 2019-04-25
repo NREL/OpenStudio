@@ -271,6 +271,17 @@ endif()
 ###############################################################################
 # Conan
 
+# Note JM 2019-04-24: Another option is to globally set "print_run_commands = True" in ~/.conan/conan.conf
+option(CONAN_PRINT_RUN_COMMANDS "Log every conan self.run command" OFF)
+mark_as_advanced(CONAN_PRINT_RUN_COMMANDS)
+if(CONAN_PRINT_RUN_COMMANDS)
+  set(ENV{CONAN_PRINT_RUN_COMMANDS} "1")
+  message("Setting CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
+else()
+  unset(ENV{CONAN_PRINT_RUN_COMMANDS})
+  message("CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
+endif()
+
 # Attempt to run, it'll do the right thing if the calling cmake script already ran it
 set(CONAN_INSTALL_FILE "${PROJECT_SOURCE_DIR}/ConanInstall.cmake")
 include("${CONAN_INSTALL_FILE}")

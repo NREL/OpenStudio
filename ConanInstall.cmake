@@ -7,7 +7,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     # message(STATUS "openstudio: Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
     # file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
     #   "${CMAKE_BINARY_DIR}/conan.cmake")
-      
+
     message(STATUS "openstudio: DOwnloading conan.cmake from https://github.com/jmarrec/cmake-conan")
     file(DOWNLOAD "https://raw.githubusercontent.com/jmarrec/cmake-conan/openstudio/conan.cmake"
       "${CMAKE_BINARY_DIR}/conan.cmake")
