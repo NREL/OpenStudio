@@ -4,11 +4,11 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # Download automatically, you can also just copy the conan.cmake file
   # Put it in CMAKE_BINARY_DIR so we don't end up with two when building OpenStudioApplication
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+    # TODO: temporarily use my fork of conan.cmake (Output in stdout/stderr in real time + support MSVC 2019 in prevision)
     # message(STATUS "openstudio: Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
     # file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
     #   "${CMAKE_BINARY_DIR}/conan.cmake")
-
-    message(STATUS "openstudio: DOwnloading conan.cmake from https://github.com/jmarrec/cmake-conan")
+    message(STATUS "openstudio: Downloading conan.cmake from https://github.com/jmarrec/cmake-conan")
     file(DOWNLOAD "https://raw.githubusercontent.com/jmarrec/cmake-conan/openstudio/conan.cmake"
       "${CMAKE_BINARY_DIR}/conan.cmake")
   else()
