@@ -6751,6 +6751,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBoil
     }
   }
 
+  auto mode = boilerElement.firstChildElement("FlowMode").text().toStdString();
+  if (istringEqual(mode, "Constant")) {
+    boiler.setBoilerFlowMode("ConstantFlow");
+  } else if (istringEqual(mode, "Variable")) {
+    boiler.setBoilerFlowMode("LeavingSetpointModulated");
+  }
+
   return boiler;
 }
 
