@@ -484,46 +484,46 @@ TEST_F(CoreFixture, LastLevelDirectoryWithDot) {
 
 
 TEST_F(CoreFixture, Path_WithSpecialChars) {
-	// We want to make sure that we don't end up with "A measure with 90" (test for #3249)
-	std::wstring ws(L"AfolderwithspécialCHar#%ù/test.osm");
-	openstudio::path pwide;
-	EXPECT_NO_THROW(pwide = path(ws));
+  // Use a wide string to make sure it's ok when creating and for ulterior comparison with the narrow one
+  std::wstring ws(L"AfolderwithspécialCHar#%ù/test.osm");
+  openstudio::path pwide;
+  EXPECT_NO_THROW(pwide = path(ws));
 
-	// Make the folder, and touch the test file
-	openstudio::path outfolder = resourcesPath() / toPath("..") / toPath("Testing");
-	openstudio::path pwide_full = outfolder / pwide;
-	makeParentFolder(pwide_full, path(), true);
-	boost::filesystem::ofstream outfile(pwide_full);
-	outfile.close();
-	// Ensure that worked
-	EXPECT_TRUE(openstudio::filesystem::exists(pwide_full));
-	
-
-	// Alright, now we try with a regular string with special chars
-	std::string s("AfolderwithspécialCHar#%ù/test.osm");
-	openstudio::path p;
-	EXPECT_NO_THROW(p = toPath(s));
-	openstudio::path pfull = outfolder / p;
+  // Make the folder, and touch the test file
+  openstudio::path outfolder = resourcesPath() / toPath("..") / toPath("Testing");
+  openstudio::path pwide_full = outfolder / pwide;
+  makeParentFolder(pwide_full, path(), true);
+  boost::filesystem::ofstream outfile(pwide_full);
+  outfile.close();
+  // Ensure that worked
+  EXPECT_TRUE(openstudio::filesystem::exists(pwide_full));
 
 
-	// The real test is that the internal paths should be the same
-	EXPECT_TRUE(openstudio::filesystem::exists(pfull));
-	EXPECT_EQ(p, pwide);
+  // Alright, now we try with a regular string with special chars
+  std::string s("AfolderwithspécialCHar#%ù/test.osm");
+  openstudio::path p;
+  EXPECT_NO_THROW(p = toPath(s));
+  openstudio::path pfull = outfolder / p;
 
-	// Test some strings
-	std::string converted_s = toString(p);
-	std::string converted_swide = toString(pwide);
-	EXPECT_EQ(converted_s, converted_swide);
-	
-	// This doesn't work
-	//EXPECT_EQ(s, converted_s);
-	//EXPECT_EQ(s, converted_swide);
-	//EXPECT_EQ(s.length(), converted_s.length());
-	//for (size_t i = 0; i < s.length(); ++i) {
-	//	EXPECT_EQ(s[i], converted_s[i]) << "s[i]=" << s[i] << ", converted_s[i]=" << converted_s[i];
-	//}
 
-	// Clean up after yourself!
-	boost::filesystem::remove_all(pwide_full);
+  // The real test is that the internal paths should be the same
+  EXPECT_TRUE(openstudio::filesystem::exists(pfull));
+  EXPECT_EQ(p, pwide);
+
+  // Test some strings
+  std::string converted_s = toString(p);
+  std::string converted_swide = toString(pwide);
+  EXPECT_EQ(converted_s, converted_swide);
+
+  // This doesn't work
+  //EXPECT_EQ(s, converted_s);
+  //EXPECT_EQ(s, converted_swide);
+  //EXPECT_EQ(s.length(), converted_s.length());
+  //for (size_t i = 0; i < s.length(); ++i) {
+  //  EXPECT_EQ(s[i], converted_s[i]) << "s[i]=" << s[i] << ", converted_s[i]=" << converted_s[i];
+  //}
+
+  // Clean up after yourself!
+  boost::filesystem::remove_all(pwide_full);
 
 }
