@@ -35,7 +35,7 @@ nmake /K
 nmake install
 "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/OpenSSL-Win64/bin/ssleay32.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/bin"
 "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/OpenSSL-Win64/bin/libeay32.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/bin"
-"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}//ZLib-prefix/src/ZLib-install/bin/.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/bin"
+"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/bin/zlib.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/bin"
 "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/encinit.c" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/include/"
 "${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/ext/"
 for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/ext/" %%f in (*.lib) do (
@@ -66,6 +66,7 @@ nmake /K
 nmake install
 "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/OpenSSL-Win64/bin/ssleay32.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/bin"
 "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/OpenSSL-Win64/bin/libeay32.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/bin"
+"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/bin/zlibd.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/bin"
 "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/enc/encinit.c" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/include/"
 "${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/ext/"
 for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/ext/" %%f in (*.lib) do (
