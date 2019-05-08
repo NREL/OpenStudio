@@ -152,6 +152,7 @@ extern "C" {
   void Init_socket(void);
   void Init_stringio(void);
   void Init_strscan(void);
+  void Init_thread(void);
   void Init_wait(void);
   void Init_zlib(void);
 
@@ -206,26 +207,6 @@ int main(int argc, char *argv[])
     swig::GC_VALUE::rshift_id = rb_intern(">>");
 
     INIT_CALLS;
-
-    // in case any further init methods try to require files, init this first
-    Init_EmbeddedScripting();
-
-    // Need embedded_help for requiring files out of the embedded system
-    auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
-
-    try {
-      rubyInterpreter.evalString(embedded_extensions_string);
-    }
-    catch (const std::exception& e) {
-      rubyInterpreter.evalString(R"(STDOUT.flush)");
-      std::cout << "Exception in embedded_help: " << e.what() << std::endl; // endl will flush
-      return ruby_cleanup(1);
-    }
-    catch (...) {
-      rubyInterpreter.evalString(R"(STDOUT.flush)");
-      std::cout << "Unknown Exception in embedded_help" << std::endl; // endl will flush
-      return ruby_cleanup(1);
-    }
 
     //// encodings
     Init_encdb();
@@ -377,6 +358,24 @@ int main(int argc, char *argv[])
     Init_trans_utf_16_32();
     rb_provide("enc/trans/utf_16_32.o");
 
+    // in case any further init methods try to require files, init this first
+    Init_EmbeddedScripting();
+
+    // Need embedded_help for requiring files out of the embedded system
+    auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
+
+    try {
+      rubyInterpreter.evalString(embedded_extensions_string);
+    } catch (const std::exception& e) {
+      rubyInterpreter.evalString(R"(STDOUT.flush)");
+      std::cout << "Exception in embedded_help: " << e.what() << std::endl; // endl will flush
+      return ruby_cleanup(1);
+    } catch (...) {
+      rubyInterpreter.evalString(R"(STDOUT.flush)");
+      std::cout << "Unknown Exception in embedded_help" << std::endl; // endl will flush
+      return ruby_cleanup(1);
+    }
+
     Init_bigdecimal();
     rb_provide("bigdecimal");
     rb_provide("bigdecimal.so");
@@ -496,6 +495,10 @@ int main(int argc, char *argv[])
     Init_strscan();
     rb_provide("strscan");
     rb_provide("strscan.so");
+
+    Init_thread();
+    rb_provide("thread");
+    rb_provide("thread.so");
 
     #ifndef _MSC_VER
       Init_wait();
