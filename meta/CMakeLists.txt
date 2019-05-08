@@ -336,6 +336,9 @@ if( BUILD_RUBY )
       INSTALL_COMMAND ""
     )
     set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/$<CONFIG>")
+    
+    # tar -zcvf ruby_2_2_4_msvc2013_static.tar.gz Ruby-install
+    
   endif()
 endif()
 
