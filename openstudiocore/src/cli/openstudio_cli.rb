@@ -1305,7 +1305,12 @@ class Measure
       #end
       
       runner = OpenStudioMeasureTester::Runner.new(directory)
-      runner.run_all(Dir.pwd) 
+      result = runner.run_all(Dir.pwd) 
+      
+      if result != 0
+        $logger.error("Measure tester returned errors")
+        return 1
+      end
     
     elsif options[:start_server]
 
