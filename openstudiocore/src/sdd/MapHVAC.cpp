@@ -599,7 +599,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
   }
 
   if( ! autosize() ) {
-    auto element = vrfSysElement.firstChildElement("ClgCapGrossRtd");
+    auto element = vrfSysElement.firstChildElement("ClgCapGrossRtdSim");
     bool ok;
     auto value = element.text().toDouble(&ok);
     if( ok ) {
@@ -618,7 +618,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
   }
 
   if( ! autosize() ) {
-    auto element = vrfSysElement.firstChildElement("HtgCapGrossRtd");
+    auto element = vrfSysElement.firstChildElement("HtgCapGrossRtdSim");
     bool ok;
     auto value = element.text().toDouble(&ok);
     if( ok ) {
@@ -767,7 +767,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
       vrf.setDefrostStrategy("ReverseCycle");
     } else if( istringEqual("Electric",value) ) {
       vrf.setDefrostStrategy("Resistive");
-      auto element = vrfSysElement.firstChildElement("DefHtrCap");
+      auto element = vrfSysElement.firstChildElement("DefHtrCapSim");
       bool ok;
       auto value = element.text().toDouble(&ok);
       if( ok ) {
@@ -807,7 +807,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
 
   if( ! autosize() ) {
     bool ok;
-    auto value = vrfSysElement.firstChildElement("CprsrCrankcaseHtrCap").text().toDouble(&ok);
+    auto value = vrfSysElement.firstChildElement("CprsrCrankcaseHtrCapSim").text().toDouble(&ok);
     if( ok ) {
       value = unitToUnit(value,"Btu/h","W").get();
       vrf.setCrankcaseHeaterPowerperCompressor(value);
