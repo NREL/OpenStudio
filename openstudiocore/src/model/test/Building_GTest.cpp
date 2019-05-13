@@ -489,7 +489,7 @@ TEST_F(ModelFixture, Building_remove) {
   EXPECT_EQ(0, m.getModelObjects<PortList>().size());
   EXPECT_EQ(0, m.getModelObjects<ThermalZone>().size());
 
-  // TODO: JM 2019-05-13 Once HVAC is handled, we should adjust this portion.
+  // TODO: JM 2019-05-13 Once HVAC is handled (#2449), we should adjust this portion.
   // For now this tests that at least we don't end up with bad connections
   ASSERT_EQ(1, m.getModelObjects<AirLoopHVAC>().size());
   EXPECT_NO_THROW(m.getModelObjects<AirLoopHVAC>()[0].components());
@@ -523,7 +523,7 @@ TEST_F(ModelFixture, Building_remove_exampleModel) {
   EXPECT_EQ(0, m.getModelObjects<BuildingStory>().size());
   EXPECT_EQ(ori_meters, m.getModelObjects<OutputMeter>().size());
 
-  // TODO: JM 2019-05-13 Once HVAC is handled, we should adjust this portion.
+  // TODO: JM 2019-05-13 Once HVAC is handled (#2449), we should adjust this portion.
   // For now this tests that at least we don't end up with bad connections
   ASSERT_EQ(1, m.getModelObjects<AirLoopHVAC>().size());
   EXPECT_NO_THROW(m.getModelObjects<AirLoopHVAC>()[0].components());

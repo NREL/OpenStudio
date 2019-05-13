@@ -126,6 +126,12 @@ namespace detail {
     SpaceVector spaces = this->spaces();
     result.insert(result.end(), spaces.begin(), spaces.end());
 
+    // TODO: JM 2019-05-13: handle HVAC (#2449)
+    // AirLoopHVACs should be considered de facto part of the building
+    // PlantLoops may merit more attention:
+    // if a PlantLoop doesn't serve an AirLoopHVAC or a ThermalZone, should it be considered part of the Building?
+    // eg: a PlantLoop serving only a LoadProfile:Plant?
+
     return result;
   }
 
