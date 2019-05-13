@@ -168,6 +168,9 @@ namespace detail {
       result.insert(result.end(), tmp.begin(), tmp.end());
     }
 
+    tmp = ParentObject_Impl::remove();
+    result.insert(result.end(), tmp.begin(), tmp.end());
+
     return result;
   }
 
