@@ -43,6 +43,7 @@ namespace model {
 
 class Facility;
 class OutputMeter;
+class BuildingStory;
 class ShadingSurfaceGroup;
 class Surface;
 class Space;
@@ -171,6 +172,8 @@ namespace detail {
 
     std::vector<OutputMeter> meters() const;
 
+    std::vector<BuildingStory> buildingStories() const;
+
     boost::optional<Facility> facility() const;
 
     std::vector<Space> spaces() const;
@@ -247,6 +250,7 @@ namespace detail {
     boost::optional<ModelObject> defaultConstructionSetAsModelObject() const;
     boost::optional<ModelObject> defaultScheduleSetAsModelObject() const;
     std::vector<ModelObject> metersAsModelObjects() const;
+    std::vector<ModelObject> buildingStoriesAsModelObjects() const;
     boost::optional<ModelObject> facilityAsModelObject() const;
     std::vector<ModelObject> spacesAsModelObjects() const;
     std::vector<ModelObject> shadingSurfaceGroupsAsModelObjects() const;

@@ -574,6 +574,12 @@ namespace detail {
     return result;
   }
 
+  BuildingStoryVector Building_Impl::buildingStories() const
+  {
+    // all Building Stories in workspace implicitly belong to building
+    return this->model().getConcreteModelObjects<BuildingStory>();
+  }
+
   OptionalFacility Building_Impl::facility() const
   {
     return this->model().getOptionalUniqueModelObject<Facility>();
@@ -994,6 +1000,11 @@ namespace detail {
     return result;
   }
 
+  std::vector<ModelObject> Building_Impl::buildingStoriesAsModelObjects() const {
+    ModelObjectVector result = castVector<ModelObject>(buildingStories());
+    return result;
+  }
+
   boost::optional<ModelObject> Building_Impl::facilityAsModelObject() const {
     OptionalModelObject result;
     OptionalFacility intermediate = facility();
@@ -1260,6 +1271,11 @@ void Building::resetDefaultScheduleSet()
 OutputMeterVector Building::meters() const
 {
   return getImpl<detail::Building_Impl>()->meters();
+}
+
+BuildingStoryVector Building::buildingStories() const
+{
+  return getImpl<detail::Building_Impl>()->buildingStories();
 }
 
 OptionalFacility Building::facility() const

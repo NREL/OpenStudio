@@ -42,6 +42,7 @@ namespace model {
 
 class Facility;
 class OutputMeter;
+class BuildingStory;
 class ShadingSurfaceGroup;
 class Surface;
 class Space;
@@ -190,6 +191,9 @@ class MODEL_API Building : public ParentObject {
 
   /// Returns all OutputMeter objects at the Building level.
   std::vector<OutputMeter> meters() const;
+
+    /// Returns all \link BuildingStory BuildingStories\endlink objects in the Building
+  std::vector<BuildingStory> buildingStories() const;
 
   /// Returns the parent Facility object if it exists.
   boost::optional<Facility> facility() const;
