@@ -458,3 +458,27 @@ TEST_F(ModelFixture, Building_Rotations)
   EXPECT_NEAR(cos(degToRad(degrees)), spaceGroup.siteTransformation().matrix()(0, 0), 0.0001);
 
 }
+
+TEST_F(ModelFixture, Building_remove) {
+
+  Model m;
+  ThermalZone z(m);
+  AirLoopHVAC a(m);
+
+  a.addBranchForZone(z);
+  // 4 basic AirLoopHVAC nodes (supply/demand inlet/outlet Nodes)
+  // One AirLoopHVAC branch node before and one after ThermalZones
+  // 1 Zone Air Node
+  EXPECT_EQ(7u, m.getModelObjects<Node>().size());
+  // Zone Inlet Port List, Zone Return Air Port List, Zone Air Exhaust Port List
+  EXPECT_EQ(3u, m.getModelObjects<PortList>().size());
+  EXPECT_EQ(1u, m.getModelObjects<ThermalZone>().size());
+
+  m.getUniqueModelObject<Building>().remove();
+  // 4 basic airLoopHVAC Nodes plus the Drop node between demand splitter and mixer
+  EXPECT_EQ(5u, m.getModelObjects<Node>().size());
+  // Zone Inlet Port List, Zone Return Air Port List, Zone Air Exhaust Port List
+  EXPECT_EQ(0u, m.getModelObjects<PortList>().size());
+  EXPECT_EQ(0u, m.getModelObjects<ThermalZone>().size());
+
+}
