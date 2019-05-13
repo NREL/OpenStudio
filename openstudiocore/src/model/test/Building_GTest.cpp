@@ -59,6 +59,10 @@
 #include "../PeopleDefinition.hpp"
 #include "../Schedule.hpp"
 #include "../LifeCycleCost.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../PortList.hpp"
+#include "../PortList_Impl.hpp"
 
 #include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/geometry/Geometry.hpp"
@@ -469,16 +473,16 @@ TEST_F(ModelFixture, Building_remove) {
   // 4 basic AirLoopHVAC nodes (supply/demand inlet/outlet Nodes)
   // One AirLoopHVAC branch node before and one after ThermalZones
   // 1 Zone Air Node
-  EXPECT_EQ(7u, m.getModelObjects<Node>().size());
+  EXPECT_EQ(7, m.getModelObjects<Node>().size());
   // Zone Inlet Port List, Zone Return Air Port List, Zone Air Exhaust Port List
-  EXPECT_EQ(3u, m.getModelObjects<PortList>().size());
-  EXPECT_EQ(1u, m.getModelObjects<ThermalZone>().size());
+  EXPECT_EQ(3, m.getModelObjects<PortList>().size());
+  EXPECT_EQ(1, m.getModelObjects<ThermalZone>().size());
 
   m.getUniqueModelObject<Building>().remove();
   // 4 basic airLoopHVAC Nodes plus the Drop node between demand splitter and mixer
-  EXPECT_EQ(5u, m.getModelObjects<Node>().size());
+  EXPECT_EQ(5, m.getModelObjects<Node>().size());
   // Zone Inlet Port List, Zone Return Air Port List, Zone Air Exhaust Port List
-  EXPECT_EQ(0u, m.getModelObjects<PortList>().size());
-  EXPECT_EQ(0u, m.getModelObjects<ThermalZone>().size());
+  EXPECT_EQ(0, m.getModelObjects<PortList>().size());
+  EXPECT_EQ(0, m.getModelObjects<ThermalZone>().size());
 
 }
