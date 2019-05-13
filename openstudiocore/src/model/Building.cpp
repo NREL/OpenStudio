@@ -129,6 +129,18 @@ namespace detail {
     return result;
   }
 
+  // TODO: this is far from perfect, currently this is just trying to address a known issue #3524
+  // Ideally all corner cases would be handled correctly, and HVAC too
+  std::vector<IdfObject> Building_Impl::remove() {
+
+    // thermal zones
+    for (ThermalZone& z: this->thermalZones()) {
+      z.remove();
+    }
+
+    return ParentObject_Impl::remove();
+  }
+
   ModelObject Building_Impl::clone(Model t_model) const
   {
     boost::optional<Building> result;

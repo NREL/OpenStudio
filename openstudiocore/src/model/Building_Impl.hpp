@@ -77,6 +77,8 @@ namespace detail {
 
     virtual boost::optional<ParentObject> parent() const override;
 
+    virtual std::vector<IdfObject> remove() override;
+
     virtual std::vector<ModelObject> children() const override;
 
     virtual ModelObject clone(Model model) const override;
