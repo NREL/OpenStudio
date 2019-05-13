@@ -133,12 +133,42 @@ namespace detail {
   // Ideally all corner cases would be handled correctly, and HVAC too
   std::vector<IdfObject> Building_Impl::remove() {
 
-    // thermal zones
-    for (ThermalZone& z: this->thermalZones()) {
-      z.remove();
+    // A result vector, and a temporary vector to insert into the result one
+    std::vector<IdfObject> result;
+    std::vector<IdfObject> tmp;
+
+    // Spaces
+    for (auto& s: this->spaces()) {
+      tmp = s.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
     }
 
-    return ParentObject_Impl::remove();
+    // thermal zones
+    for (auto& z: this->thermalZones()) {
+      tmp = z.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+    }
+
+    // exterior shading groups
+    for (auto& sg: this->shadingSurfaceGroups()) {
+      tmp = sg.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+
+    }
+
+    // building stories
+    for (auto& bs: this->buildingStories()) {
+      tmp = bs.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+    }
+
+    // meters
+    for (auto& m: this->meters()) {
+      tmp = m.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+    }
+
+    return result;
   }
 
   ModelObject Building_Impl::clone(Model t_model) const
