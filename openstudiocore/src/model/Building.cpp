@@ -111,7 +111,7 @@ namespace detail {
     result.insert(result.end(),meters.begin(),meters.end());
 
     // building stories
-    BuildingStoryVector stories = model().getConcreteModelObjects<BuildingStory>();
+    BuildingStoryVector stories = this->buildingStories();
     result.insert(result.end(),stories.begin(),stories.end());
 
     // exterior shading groups
@@ -179,7 +179,7 @@ namespace detail {
       }
 
       // BuildingStory instances
-      auto t_stories = model().getConcreteModelObjects<BuildingStory>();
+      auto t_stories = buildingStories();
       // Map of the source model story handle to the target model story "cloned" ModelObject
       std::map<Handle,BuildingStory> m_storyMap;
 
