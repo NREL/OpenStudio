@@ -29,19 +29,13 @@ path = File.join(File.dirname(__FILE__), '../../openstudiocore/**/*.osm')
 start_time = Time.now
 
 files = Dir.glob(path)
+files = files.grep(/openstudio_app\/Resources|sketchup_plugin\/resources\/templates|sketchup_plugin\/user_scripts/)
 
 Parallel.map(files,
              in_threads: nproc,
              progress: "Updating Libraries") do |model_path|
 
   puts "Starting for '#{model_path}'"
-  if /sketchup_plugin\/resources\/templates/.match(model_path)
-    # do this
-  elsif /openstudio_app\/Resources/.match(model_path)
-    # do this
-  else
-    next
-  end
 
   model_path = OpenStudio::Path.new(model_path)
   #model_path = OpenStudio::Path.new('hvac_library.osm')
@@ -57,7 +51,7 @@ Parallel.map(files,
       model = model.get
     end
   else
-    puts "The model couldn't be found"
+    puts "The model couldn't be found for #{model_path}"
     exit
   end
 
