@@ -10,6 +10,11 @@ require 'pathname'
 
 ROOT_DIR = File.absolute_path(File.join(File.dirname(__FILE__), "../../"))
 
+
+# Custom error class
+class VersionError < StandardError
+end
+
 # Parse the CMakeLists.txt for the current version
 # It greps for 'project(OpenStudio VERSION X.Y.Z)
 # It will raise if something goes wrong
@@ -93,5 +98,5 @@ all_osms.each do |fpath|
 end
 
 if has_mismatch
-  raise "Some of the library/resources OSMs have not been updated to #{os_version_str}"
+  raise VersionError, "Some of the library/resources OSMs have not been updated to #{os_version_str}"
 end
