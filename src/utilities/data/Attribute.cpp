@@ -423,6 +423,8 @@ namespace detail {
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Boolean.");
     }
+    // Note JM 2019-05-17: This is functionally equivalent to `std::get<bool>(m_value)` except it doesn't risk throwing
+    // std::bad_variant_access which isn't available on mac prior to 10.14
     return *(std::get_if<bool>(&m_value));
   }
 
