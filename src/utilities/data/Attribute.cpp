@@ -423,7 +423,7 @@ namespace detail {
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Boolean.");
     }
-    return std::get<bool>(m_value);
+    return *(std::get_if<bool>(&m_value));
   }
 
   void Attribute_Impl::setValue(bool value) {
@@ -441,7 +441,7 @@ namespace detail {
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Integer.");
     }
-    return std::get<int>(m_value);
+    return *(std::get_if<int>(&m_value));
   }
 
   void Attribute_Impl::setValue(int value) {
@@ -459,7 +459,7 @@ namespace detail {
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Unsigned.");
     }
-    return std::get<unsigned>(m_value);
+    return *(std::get_if<unsigned>(&m_value));
   }
 
   void Attribute_Impl::setValue(unsigned value) {
@@ -477,7 +477,7 @@ namespace detail {
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to Double.");
     }
-    return std::get<double>(m_value);
+    return *(std::get_if<double>(&m_value));
   }
 
   void Attribute_Impl::setValue(double value) {
@@ -495,7 +495,7 @@ namespace detail {
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to String.");
     }
-    return std::get<std::string>(m_value);
+    return *(std::get_if<std::string>(&m_value));
   }
 
   void Attribute_Impl::setValue(const char* value) {
@@ -522,7 +522,7 @@ namespace detail {
       LOG_AND_THROW("Cannot convert attribute '" << name() << "' of type "
                     << valueType().valueDescription() << " to AttributeVector.");
     }
-    return std::get<std::vector<Attribute> >(m_value);
+    return *(std::get_if<std::vector<Attribute> >(&m_value));
   }
 
   void Attribute_Impl::setValue(const std::vector<Attribute>& value) {

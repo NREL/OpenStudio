@@ -169,7 +169,7 @@ bool OSArgument::valueAsBool() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
   }
 
-  return std::get<bool>(m_value);
+  return *(std::get_if<bool>(&m_value));
 }
 
 double OSArgument::valueAsDouble() const
@@ -183,9 +183,9 @@ double OSArgument::valueAsDouble() const
 
   double result;
   if (type() == OSArgumentType::Double) {
-    result = std::get<double>(m_value);
+    result = *(std::get_if<double>(&m_value));
   } else {
-    result = std::get<int>(m_value);
+    result = *(std::get_if<int>(&m_value));
     LOG(Warn, "This argument is of type 'Integer' but returning as a Double as requested. You should consider using valueAsInteger instead");
   }
 
@@ -201,7 +201,7 @@ int OSArgument::valueAsInteger() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
   }
 
-  return std::get<int>(m_value);
+  return *(std::get_if<int>(&m_value));
 }
 
 std::string OSArgument::valueAsString() const
@@ -222,7 +222,7 @@ openstudio::path OSArgument::valueAsPath() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
   }
 
-  return std::get<openstudio::path>(m_value);
+  return *(std::get_if<openstudio::path>(&m_value));
 }
 
 bool OSArgument::hasDefaultValue() const {
@@ -238,7 +238,7 @@ bool OSArgument::defaultValueAsBool() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
   }
 
-  return std::get<bool>(m_defaultValue);
+  return *(std::get_if<bool>(&m_defaultValue));
 }
 
 double OSArgument::defaultValueAsDouble() const
@@ -250,7 +250,7 @@ double OSArgument::defaultValueAsDouble() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
   }
 
-  return std::get<double>(m_defaultValue);
+  return *(std::get_if<double>(&m_defaultValue));
 }
 
 int OSArgument::defaultValueAsInteger() const
@@ -262,7 +262,7 @@ int OSArgument::defaultValueAsInteger() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
   }
 
-  return std::get<int>(m_defaultValue);
+  return *(std::get_if<int>(&m_defaultValue));
 }
 
 std::string OSArgument::defaultValueAsString() const
@@ -283,7 +283,7 @@ openstudio::path OSArgument::defaultValueAsPath() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
   }
 
-  return std::get<openstudio::path>(m_defaultValue);
+  return *(std::get_if<openstudio::path>(&m_defaultValue));
 }
 
 bool OSArgument::hasDomain() const {
@@ -305,7 +305,7 @@ std::vector<bool> OSArgument::domainAsBool() const {
   std::vector<bool> result;
 
   for (const OSArgumentVariant& value: m_domain) {
-    result.push_back(std::get<bool>(value));
+    result.push_back(*(std::get_if<bool>(&value)));
   }
   return result;
 }
@@ -322,14 +322,14 @@ std::vector<double> OSArgument::domainAsDouble() const {
 
   if (type() == OSArgumentType::Double) {
     for (const OSArgumentVariant& value: m_domain) {
-      result.push_back(std::get<double>(value));
+      result.push_back(*(std::get_if<double>(&value)));
     }
   } else {
     // It's an int
     LOG(Warn, "This argument is of type 'Integer' but returning Domain as a Double as requested. "
               "You should consider using domainAsInteger instead");
     for (const OSArgumentVariant& value: m_domain) {
-      result.push_back(std::get<int>(value));
+      result.push_back(*(std::get_if<int>(&value)));
     }
   }
   return result;
@@ -346,7 +346,7 @@ std::vector<int> OSArgument::domainAsInteger() const {
   std::vector<int> result;
 
   for (const OSArgumentVariant& value: m_domain) {
-    result.push_back(std::get<int>(value));
+    result.push_back(*(std::get_if<int>(&value)));
   }
   return result;
 }
@@ -362,7 +362,7 @@ std::vector<openstudio::path> OSArgument::domainAsPath() const {
   std::vector<openstudio::path> result;
 
   for (const OSArgumentVariant& value: m_domain) {
-    result.push_back(std::get<openstudio::path>(value));
+    result.push_back(*(std::get_if<openstudio::path>(&value)));
   }
   return result;
 }
