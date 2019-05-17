@@ -1000,15 +1000,30 @@ std::ostream& operator<<(std::ostream& os, const OSArgument& arg) {
 std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg) {
   // We use std::visit, filtering out the case where it's monostate
   // Aside from monostate, every possible type is streamable
-  std::visit(
-      [&os](const auto& val){
-      //Needed to properly compare the types
-      using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
-        if constexpr (!std::is_same_v<T, std::monostate>) {
-          os << val;
-        }
-      },
-      arg);
+  //std::visit(
+      //[&os](const auto& val){
+      ////Needed to properly compare the types
+      //using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
+        //if constexpr (!std::is_same_v<T, std::monostate>) {
+          //os << val;
+        //}
+      //},
+      //arg);
+
+  // Note JM 2019-05-17: std::visit is problematic on mac below 10.14, because it might throw std::bad_variant_access
+  // So we don't use it here. Same with std::get, so we use get_if instead
+  if (auto * p = std::get_if<bool>(&arg)) {
+    os << std::boolalpha << *p;
+  } else if (auto * p = std::get_if<double>(&arg)) {
+    os << *p;
+  } else if (auto * p = std::get_if<int>(&arg)) {
+    os << *p;
+  } else if (auto * p = std::get_if<std::string>(&arg)) {
+    os << *p;
+  } else if (auto * p = std::get_if<openstudio::path>(&arg)) {
+    os << *p;
+  }
+
 
   return os;
 }

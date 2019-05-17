@@ -579,23 +579,40 @@ namespace detail {
     // We use std::visit, filtering out the case where it's monostate
     // Aside from monostate, every possible type is streamable
     // expect AttributeVector that needs a special treatment
-    std::visit(
-        [this, &ss](const auto& val) {
-          // Needed to properly compare the types
-          using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
+    //std::visit(
+        //[this, &ss](const auto& val) {
+          //// Needed to properly compare the types
+          //using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
 
-          // If it's a vector of attributes
-          if constexpr (std::is_same_v<T, openstudio::Attribute>) {
-            // Call toXml() and save to the stringstream
-            this->toXml().save(ss, "  ");
+          //// If it's a vector of attributes
+          //if constexpr (std::is_same_v<T, openstudio::Attribute>) {
+            //// Call toXml() and save to the stringstream
+            //this->toXml().save(ss, "  ");
 
-          // Otherwise, if anything else but monostate, it's a simple type
-          // and we print the value as is
-          } else if constexpr (!std::is_same_v<T, std::monostate>) {
-            ss << std::boolalpha << val;
-          }
-        },
-        this->m_value);
+          //// Otherwise, if anything else but monostate, it's a simple type
+          //// and we print the value as is
+          //} else if constexpr (!std::is_same_v<T, std::monostate>) {
+            //ss << std::boolalpha << val;
+          //}
+        //},
+        //this->m_value);
+
+    // Note JM 2019-05-17: std::visit is problematic on mac below 10.14, because it might throw std::bad_variant_access
+    // So we don't use it here. Same with std::get, so we use get_if instead
+    if (auto * p = std::get_if<bool>(&m_value)) {
+      ss << std::boolalpha << *p;
+    } else if (auto * p = std::get_if<double>(&m_value)) {
+      ss << *p;
+    } else if (auto * p = std::get_if<int>(&m_value)) {
+      ss << *p;
+    } else if (auto * p = std::get_if<unsigned>(&m_value)) {
+      ss << *p;
+    }  else if (auto * p = std::get_if<std::string>(&m_value)) {
+      ss << *p;
+    } else if (auto * p = std::get_if<std::vector<Attribute>>(&m_value)) {
+      // Call toXml() and save to the stringstream
+      this->toXml().save(ss, "  ");
+    }
 
     return ss.str();
 
