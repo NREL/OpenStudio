@@ -169,6 +169,9 @@ bool OSArgument::valueAsBool() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
   }
 
+  // Note JM 2019-05-17: This is functionally equivalent to `std::get<bool>(m_value)` except it doesn't risk throwing
+  // std::bad_variant_access which isn't available on mac prior to 10.14
+  // No need to check if get_if succeeds because we checked the type above
   return *(std::get_if<bool>(&m_value));
 }
 
