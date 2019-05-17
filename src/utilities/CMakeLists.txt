@@ -422,6 +422,8 @@ if(WIN32)
   list(APPEND ${target_name}_depends mpr)
 elseif(APPLE)
   list(APPEND ${target_name}_depends ${SECURITY_FRAMEWORK})
+  # For cpprest
+  list(APPEND ${target_name}_depends ${COREFOUNDATION_LIBRARY})
 endif()
 
 add_library(${target_name}
