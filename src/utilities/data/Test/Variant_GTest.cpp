@@ -52,19 +52,19 @@ TEST_F(DataFixture, Variant)
   EXPECT_EQ(1.0, doubleVariant.valueAsDouble());
   EXPECT_EQ("1", stringVariant.valueAsString());
 
-  EXPECT_THROW(boolVariant.valueAsInteger(), std::bad_variant_access);
-  EXPECT_THROW(boolVariant.valueAsDouble(), std::bad_variant_access);
-  EXPECT_THROW(boolVariant.valueAsString(), std::bad_variant_access);
+  EXPECT_THROW(boolVariant.valueAsInteger(), openstudio::Exception);
+  EXPECT_THROW(boolVariant.valueAsDouble(), openstudio::Exception);
+  EXPECT_THROW(boolVariant.valueAsString(), openstudio::Exception);
 
-  EXPECT_THROW(intVariant.valueAsBoolean(), std::bad_variant_access);
-  //EXPECT_THROW(intVariant.valueAsDouble(), std::bad_variant_access); // DLM: allowed this since double values in OSW might appear to be ints
-  EXPECT_THROW(intVariant.valueAsString(), std::bad_variant_access);
+  EXPECT_THROW(intVariant.valueAsBoolean(), openstudio::Exception);
+  //EXPECT_THROW(intVariant.valueAsDouble(), openstudio::Exception); // DLM: allowed this since double values in OSW might appear to be ints
+  EXPECT_THROW(intVariant.valueAsString(), openstudio::Exception);
 
-  EXPECT_THROW(doubleVariant.valueAsBoolean(), std::bad_variant_access);
-  EXPECT_THROW(doubleVariant.valueAsInteger(), std::bad_variant_access);
-  EXPECT_THROW(doubleVariant.valueAsString(), std::bad_variant_access);
+  EXPECT_THROW(doubleVariant.valueAsBoolean(), openstudio::Exception);
+  EXPECT_THROW(doubleVariant.valueAsInteger(), openstudio::Exception);
+  EXPECT_THROW(doubleVariant.valueAsString(), openstudio::Exception);
 
-  EXPECT_THROW(stringVariant.valueAsBoolean(), std::bad_variant_access);
-  EXPECT_THROW(stringVariant.valueAsInteger(), std::bad_variant_access);
-  EXPECT_THROW(stringVariant.valueAsDouble(), std::bad_variant_access);
+  EXPECT_THROW(stringVariant.valueAsBoolean(), openstudio::Exception);
+  EXPECT_THROW(stringVariant.valueAsInteger(), openstudio::Exception);
+  EXPECT_THROW(stringVariant.valueAsDouble(), openstudio::Exception);
 }
