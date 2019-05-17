@@ -69,12 +69,14 @@ namespace openstudio {
 
   bool Variant::valueAsBoolean() const
   {
-    return std::get<bool>(m_value);
+    // Note JM 2019-05-17: This is functionally equivalent to `std::get<bool>(m_value)` except it doesn't risk throwing
+    // std::bad_variant_access which isn't available on mac prior to 10.14
+    return *(std::get_if<bool>(&m_value));
   }
 
   int Variant::valueAsInteger() const
   {
-    return std::get<int>(m_value);
+    return *(std::get_if<int>(&m_value));
   }
 
   double Variant::valueAsDouble() const
@@ -82,12 +84,12 @@ namespace openstudio {
     if (m_type == VariantType::Integer){
       return (double)valueAsInteger();
     }
-    return std::get<double>(m_value);
+    return *(std::get_if<double>(&m_value));
   }
 
   std::string Variant::valueAsString() const
   {
-    return std::get<std::string>(m_value);
+    return *(std::get_if<std::string>(&m_value));
   }
 
   std::ostream& operator<<(std::ostream& os, const Variant& variant)
