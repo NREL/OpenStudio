@@ -750,21 +750,38 @@ std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attributeVa
     // We use std::visit, filtering out the case where it's monostate
     // Aside from monostate, every possible type is streamable
     // expect AttributeVector that needs a special treatment
-    std::visit(
-        [&os](const auto& val) {
-          // Needed to properly compare the types
-          using T = std::remove_cv_t<std::remove_reference_t<decltype(val)> >;
+    //std::visit(
+        //[&os](const auto& val) {
+          //// Needed to properly compare the types
+          //using T = std::remove_cv_t<std::remove_reference_t<decltype(val)> >;
 
-          // If it's a vector of attributes
-          if constexpr (std::is_same_v<T, openstudio::Attribute>) {
-            // Will end up calling toXml
-            os << val;
-          // Otherwise, if anything else but monostate
-          } else if constexpr (!std::is_same_v<T, std::monostate>) {
-            os << std::boolalpha << val;
-          }
-        },
-        attributeVariant);
+          //// If it's a vector of attributes
+          //if constexpr (std::is_same_v<T, std::vector<openstudio::Attribute>>) {
+            //// Will end up calling toXml
+            //os << val;
+          //// Otherwise, if anything else but monostate
+          //} else if constexpr (!std::is_same_v<T, std::monostate>) {
+            //os << std::boolalpha << val;
+          //}
+        //},
+        //attributeVariant);
+
+    // Note JM 2019-05-17: std::visit is problematic on mac below 10.14, because it might throw std::bad_variant_access
+    // So we don't use it here. Same with std::get, so we use get_if instead
+    if (auto * p = std::get_if<bool>(&attributeVariant)) {
+      os << std::boolalpha << *p;
+    } else if (auto * p = std::get_if<double>(&attributeVariant)) {
+      os << *p;
+    } else if (auto * p = std::get_if<int>(&attributeVariant)) {
+      os << *p;
+    } else if (auto * p = std::get_if<unsigned>(&attributeVariant)) {
+      os << *p;
+    }  else if (auto * p = std::get_if<std::string>(&attributeVariant)) {
+      os << *p;
+    } else if (auto * p = std::get_if<std::vector<Attribute>>(&attributeVariant)) {
+      // Call toXml() and save to the stringstream
+      this->toXml().save(os, "  ");
+    }
 
   return os;
 }
