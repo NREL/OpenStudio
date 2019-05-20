@@ -290,16 +290,16 @@ target_link_libraries(openstudio
  openstudio_osversion
  openstudio_sdd
  openstudio_isomodel
- openstudio_gbxml 
+ openstudio_gbxml
  openstudio_radiance
 )
 
-# link CLI with ruby static library, ruby bindings (openstudio.so) are linked to dynamic ruby 
+# link CLI with ruby static library, ruby bindings (openstudio.so) are linked to dynamic ruby
 if (APPLE)
   target_link_libraries(openstudio
-    ${OPENSSL_CRYPTO_LIBRARY} 
+    ${OPENSSL_CRYPTO_LIBRARY}
     ${OPENSSL_SSL_LIBRARY}
-  ) 
+  )
 endif()
 
 if (UNIX AND NOT APPLE)
