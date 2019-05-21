@@ -94,6 +94,7 @@ TEST_F(CoreFixture, Path_CompletePathToFile)
 
 TEST_F(CoreFixture, Path_toString)
 {
+#ifdef _WINDOWS
   EXPECT_EQ("energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("energyplus/5ZoneAirCooled/eplusout.sql")));
   EXPECT_EQ("energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("energyplus\\5ZoneAirCooled\\eplusout.sql")));
   EXPECT_EQ("/energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("/energyplus/5ZoneAirCooled/eplusout.sql")));
@@ -106,6 +107,20 @@ TEST_F(CoreFixture, Path_toString)
   EXPECT_EQ("energyplus/5ZoneAirCooled", toString(toPath("energyplus\\5ZoneAirCooled")));
   EXPECT_EQ("/energyplus/5ZoneAirCooled", toString(toPath("/energyplus/5ZoneAirCooled")));
   EXPECT_EQ("/energyplus/5ZoneAirCooled", toString(toPath("\\energyplus\\5ZoneAirCooled")));
+#else
+  EXPECT_EQ("energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("energyplus/5ZoneAirCooled/eplusout.sql")));
+  EXPECT_EQ("energyplus\\5ZoneAirCooled\\eplusout.sql", toString(toPath("energyplus\\5ZoneAirCooled\\eplusout.sql")));
+  EXPECT_EQ("/energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("/energyplus/5ZoneAirCooled/eplusout.sql")));
+  EXPECT_EQ("/energyplus\\5ZoneAirCooled\\eplusout.sql", toString(toPath("/energyplus\\5ZoneAirCooled\\eplusout.sql")));
+  EXPECT_EQ("energyplus/5ZoneAirCooled/", toString(toPath("energyplus/5ZoneAirCooled/")));
+  EXPECT_EQ("energyplus\\5ZoneAirCooled\\", toString(toPath("energyplus\\5ZoneAirCooled\\")));
+  EXPECT_EQ("/energyplus/5ZoneAirCooled/", toString(toPath("/energyplus/5ZoneAirCooled/")));
+  EXPECT_EQ("\\energyplus\\5ZoneAirCooled\\", toString(toPath("\\energyplus\\5ZoneAirCooled\\")));
+  EXPECT_EQ("energyplus/5ZoneAirCooled", toString(toPath("energyplus/5ZoneAirCooled")));
+  EXPECT_EQ("energyplus\\5ZoneAirCooled", toString(toPath("energyplus\\5ZoneAirCooled")));
+  EXPECT_EQ("/energyplus/5ZoneAirCooled", toString(toPath("/energyplus/5ZoneAirCooled")));
+  EXPECT_EQ("\\energyplus\\5ZoneAirCooled", toString(toPath("\\energyplus\\5ZoneAirCooled")));
+#endif
 }
 
 TEST_F(CoreFixture, Path_RelativePathToFile)
@@ -358,10 +373,12 @@ TEST_F(CoreFixture, IsNetworkPath)
   EXPECT_FALSE(isNetworkPath(path));
   EXPECT_FALSE(isNetworkPathAvailable(path));
 
+#ifdef _WINDOWS
   path = toPath("\\\\server\\folder");
   EXPECT_TRUE(path.is_absolute());
   EXPECT_TRUE(isNetworkPath(path));
   EXPECT_FALSE(isNetworkPathAvailable(path));
+#endif
 
   // DLM: below you can use for manual testing, don't check in
   // on windows you can type 'net use' to see network drives and their status
