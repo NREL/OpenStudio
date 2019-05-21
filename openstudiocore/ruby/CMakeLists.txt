@@ -195,6 +195,7 @@ find_program(SYSTEM_RUBY_EXECUTABLE NAMES ${_RUBY_POSSIBLE_EXECUTABLE_NAMES}
     "$ENV{HOME}/.rvm/rubies/ruby-2.2.10/bin/"
     "$ENV{HOME}/.rvm/rubies/ruby-2.2.11/bin/"
     "C:/Ruby22-x64/bin/"
+    "C:/ruby-2.2.4-x64-mingw32/bin/"
   NO_DEFAULT_PATH)
 
 if(NOT SYSTEM_RUBY_EXECUTABLE)
