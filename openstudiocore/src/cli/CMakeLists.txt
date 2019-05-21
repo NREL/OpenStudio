@@ -319,10 +319,14 @@ endif()
 #                        T E S T I N G:   C T E S T S                         #
 ###############################################################################
 
-# find all CLI test
-file(GLOB RUBY_TEST_SRC "test/test*.rb")
-# Also Run the ruby tests with the cli
-file(GLOB RUBY_TEST_SRC "../../ruby/test/*.rb")
+file(GLOB RUBY_TEST_SRC
+  # find all CLI test
+  "test/test*.rb"
+
+  # Also Run the ruby tests with the cli
+  "../../ruby/test/*.rb"
+)
+
 # message("CLI: RUBY_TEST_SRC=${RUBY_TEST_SRC}")
 
 # add a test for each unit test
