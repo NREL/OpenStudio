@@ -234,7 +234,7 @@ int launch_another_instance_from_symlink(const path& symlink_path) {
 TEST(ApplicationPathHelpers, PathWhenSymlinkInPath_Setup) {
 
   if (!IsElevated()) {
-    SKIP(completeAndNormalizeMultipleSymlinks);
+    SKIP(PathWhenSymlinkInPath_Setup);
   }
 
   openstudio::path symlink_path_dir = getApplicationBuildDirectory() / toPath("Testing/Temporary");
