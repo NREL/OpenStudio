@@ -485,7 +485,7 @@ TEST_F(CoreFixture, LastLevelDirectoryWithDot) {
 
 TEST_F(CoreFixture, Path_WithSpecialChars) {
   // Use a wide string to make sure it's ok when creating and for ulterior comparison with the narrow one
-  std::wstring ws(L"AfolderwithspécialCHar#%ù/test.osm");
+  std::wstring ws(L"AfolderwithspÃ©cialCHar#%Ã¹/test.osm");
   openstudio::path pwide;
   EXPECT_NO_THROW(pwide = path(ws));
 
@@ -500,7 +500,7 @@ TEST_F(CoreFixture, Path_WithSpecialChars) {
 
 
   // Alright, now we try with a regular string with special chars
-  std::string s("AfolderwithspécialCHar#%ù/test.osm");
+  std::string s("AfolderwithspÃ©cialCHar#%Ã¹/test.osm");
   openstudio::path p;
   EXPECT_NO_THROW(p = toPath(s));
   openstudio::path pfull = outfolder / p;
