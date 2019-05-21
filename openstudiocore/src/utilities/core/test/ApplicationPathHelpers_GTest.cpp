@@ -39,7 +39,7 @@
 // TODO: GTEST 1.9 should have a GTEST_SKIP macro we could use
 #define SKIP(TEST_NAME) \
 do{\
-   std::cout << "[  SKIPPED ] " << #TEST_NAME << ": smylink tests can only be run with administrator rights on windows (elevated cmd.exe)" << std::endl;\
+   std::cout << "[  SKIPPED ] " << #TEST_NAME << ": symlink tests can only be run with administrator rights on windows (elevated cmd.exe)" << std::endl;\
    return;\
 } while(0)
 
