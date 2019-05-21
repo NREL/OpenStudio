@@ -386,7 +386,7 @@ if(UNIX)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH 42b2fe2ef5df1d4cfef2160e46529a2f)
+    set(ENERGYPLUS_EXPECTED_HASH 02ed618aab65bf46c96bf1faf2e1905b)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
     set(ENERGYPLUS_EXPECTED_HASH c2f57b0124b3557080112f7eed814f78)
