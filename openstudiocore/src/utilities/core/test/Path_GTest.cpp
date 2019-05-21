@@ -552,7 +552,8 @@ TEST_F(CoreFixture, Path_WithSpecialChars) {
  // TODO: Add clang? #pragma clang diagnostic ignored "-W…"
 #endif
 
-  const char windows_1252_str[] = {65, 102, 111, 108, 100, 101, 114, 119, 105, 116, 104, 115, 112, 233, 99, 105, 97, 108, 67, 72, 97, 114, 35, 37, 249, 47, 116, 101, 115, 116, 46, 111, 115, 109, 0};
+  //const char windows_1252_str[] = {65, 102, 111, 108, 100, 101, 114, 119, 105, 116, 104, 115, 112, 233, 99, 105, 97, 108, 67, 72, 97, 114, 35, 37, 249, 47, 116, 101, 115, 116, 46, 111, 115, 109, 0};
+  const char windows_1252_str[] = {65, 102, 111, 108, 100, 101, 114, 119, 105, 116, 104, 115, 112, 99, 105, 97, 108, 67, 72, 97, 114, 35, 37, 47, 116, 101, 115, 116, 46, 111, 115, 109, 0};
   // std::string s3("Afolderwithsp\xe9cialCHar#%\xf9/test.osm");
   std::string s2(windows_1252_str);
   openstudio::path p2;
