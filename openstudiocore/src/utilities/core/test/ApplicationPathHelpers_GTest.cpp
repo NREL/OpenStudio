@@ -83,15 +83,6 @@ bool IsElevated() {
 }
 #endif
 
-const char getPlatformDelimiterForPath() {
-  #if defined _WIN32
-    const char delimiter = ';';
-  #else
-    const char delimiter = ':';
-  #endif
-  return delimiter;
-}
-
 
 using namespace openstudio;
 
@@ -132,7 +123,7 @@ TEST(ApplicationPathHelpers, findInSystemPath) {
 
   // Append the containing dir to the PATH
   auto current_path = std::getenv("PATH");
-  std::string new_path = toString(dummy_dir) + getPlatformDelimiterForPath() + current_path;
+  std::string new_path = toString(dummy_dir) + openstudio::pathDelimiter() + current_path;
   setenv("PATH", new_path.c_str(), 1);
   setenv("PathWhenSymlinkInPathUnixOnly_Setup", "true", 1);
 
@@ -270,7 +261,7 @@ TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Setup) {
   boost::filesystem::create_symlink(openstudioUtilitiesTestPath, symlink_path);
 
   auto current_path = std::getenv("PATH");
-  std::string new_path = toString(symlink_path_dir) + getPlatformDelimiterForPath() + current_path;
+  std::string new_path = toString(symlink_path_dir) + openstudio::pathDelimiter() + current_path;
 
   setenv("PATH", new_path.c_str(), 1);
   setenv("PathWhenSymlinkInPathUnixOnly_Setup", "true", 1);
