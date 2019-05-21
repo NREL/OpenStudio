@@ -523,7 +523,40 @@ TEST_F(CoreFixture, Path_WithSpecialChars) {
   //  EXPECT_EQ(s[i], converted_s[i]) << "s[i]=" << s[i] << ", converted_s[i]=" << converted_s[i];
   //}
 
+
+  // Alright, now we try with a regular string that is encoded as Windows-1252
+  // "Afolderwithsp\xe9cialCHar#%\xf9/test.osm"
+#if defined(_MSC_VER)
+  #pragma warning( push )
+  #pragma warning( disable : 4838 )
+#else
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wnarrowing"
+ // TODO: Add clang? #pragma clang diagnostic ignored "-W…"
+#endif
+
+  const char windows_1252_str[] = {65, 102, 111, 108, 100, 101, 114, 119, 105, 116, 104, 115, 112, 233, 99, 105, 97, 108, 67, 72, 97, 114, 35, 37, 249, 47, 116, 101, 115, 116, 46, 111, 115, 109, 0};
+  // std::string s3("Afolderwithsp\xe9cialCHar#%\xf9/test.osm");
+  std::string s2(windows_1252_str);
+  openstudio::path p2;
+  EXPECT_NO_THROW(p2 = toPath(s2));
+  openstudio::path pfull2 = outfolder / p2;
+
+  // The real test is that the internal paths should be the same
+  EXPECT_TRUE(openstudio::filesystem::exists(pfull2));
+  EXPECT_EQ(p2, pwide);
+
+  // Test some strings
+  std::string converted_s2 = toString(p2);
+  EXPECT_EQ(converted_s2, converted_swide);
+
   // Clean up after yourself!
   boost::filesystem::remove_all(pwide_full);
+
+#if defined(_MSC_VER)
+  #pragma warning( pop )
+#else
+  #pragma GCC diagnostic pop
+#endif
 
 }
