@@ -202,13 +202,16 @@ path relativePath(const path& p,const path& base) {
   return result;
 }
 
-path findInSystemPath(const path& p) {
+const char pathDelimiter() {
+  #if defined _WIN32
+    const char delimiter = ';';
+  #else
+    const char delimiter = ':';
+  #endif
+  return delimiter;
+}
 
-#if defined _WIN32
-  const char delimiter = ';';
-#else
-  const char delimiter = ':';
-#endif
+path findInSystemPath(const path& p) {
 
   path result;
   // Ensure that this is just a name and not a path
@@ -217,7 +220,7 @@ path findInSystemPath(const path& p) {
     LOG_FREE(Debug, "PathHelpers", "findInSystemPath, searching for '" << p << "' in PATH'");
 
     std::string pathstring;
-    while ( std::getline(pathstream, pathstring, delimiter) ) {
+    while ( std::getline(pathstream, pathstring, pathDelimiter()) ) {
       LOG_FREE(Trace, "PathHelpers", "findInSystemPath, searching for '" << p << "' in '" << pathstring << "'");
 
       auto maybepath = toPath(pathstring) / p;

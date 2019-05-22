@@ -124,6 +124,9 @@ UTILITIES_API bool isNetworkPathAvailable(const path& p);
 /** Tries to locate a file in your PATH, returning unchanged if p isn't just a filename (has a parent_path) or if not found */
 UTILITIES_API path findInSystemPath(const path& p);
 
+/** Returns the delimiter for the $PATH env variable. Basically ";" on windows, ":" otherwise */
+UTILITIES_API const char pathDelimiter();
+
 } // openstudio
 
 #endif //UTILITIES_CORE_PATHHELPERS_HPP
