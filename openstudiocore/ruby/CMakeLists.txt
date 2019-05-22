@@ -219,7 +219,7 @@ else()
         # Call with Ruby itself
         add_test(NAME "RubyTest-${FILE_NAME}-${TEST_NAME}"
           COMMAND "${CMAKE_COMMAND}" -E chdir "${CMAKE_CURRENT_BINARY_DIR}"
-          "${SYSTEM_RUBY_EXECUTABLE}" "-I $<TARGET_FILE_DIR:openstudio_rb>/openstudio.so" "${f}" "--name=test_${TEST_NAME}"
+          "${SYSTEM_RUBY_EXECUTABLE}" "-I $<TARGET_FILE_DIR:openstudio_rb>" "${f}" "--name=test_${TEST_NAME}"
         )
 
         set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES TIMEOUT 660 )
