@@ -60,7 +60,7 @@ class UUID_Test < MiniTest::Unit::TestCase
     nGroup = 10
 
     (0...nGroup).each do |group|
-      assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/utilities/test/UUID_BigSet_Aux.rb' '#{n}'"))
+      assert(system("'#{OpenStudio::getOpenStudioCLI}' '#{File.join(File.dirname(__FILE__), 'UUID_BigSet_Aux.rb')}' '#{n}'"))
     end
 
     File.delete("UUIDSet.txt")

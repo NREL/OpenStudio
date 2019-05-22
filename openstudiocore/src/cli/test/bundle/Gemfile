@@ -1,4 +1,5 @@
 source 'http://rubygems.org'
 
+gem 'json_pure'
 gem 'openstudio-standards', '0.2.0'
 gem 'tilt', '2.0.8'
