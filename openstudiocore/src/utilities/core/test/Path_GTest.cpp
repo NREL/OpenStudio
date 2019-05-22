@@ -486,6 +486,7 @@ TEST_F(CoreFixture, LastLevelDirectoryWithDot) {
 TEST_F(CoreFixture, Path_WithSpecialChars) {
 
   // TODO: we should perhaps include Boost.Locale (which requires compilation...)
+  // or even better use ICU...
 
   // Note JM 2019-05-22: MSVC 2013 doesn't support unicode string literals...
   // https://docs.microsoft.com/en-us/previous-versions/hh567368(v=vs.140)
@@ -493,11 +494,12 @@ TEST_F(CoreFixture, Path_WithSpecialChars) {
   // "AfolderwithspécialCHar#%ù/test.osm"
   #if defined(_MSC_VER)
     // On Windows, assume Windows-1252
-    std::string windows_1252_str("Afolderwithsp" "\xe9" "cialCHar#%" "\xf9");
+    std::string windows_1252_str("Afolderwithsp" "\xe9" "cialCHar#%" "\xf9" "/test.osm");
     openstudio::path p_native(windows_1252_str);
   #else
     // We're going to rely on boost::filesystem::path passing a wide string with unicode code points, as it will correctly interpret this as unicode
-    openstudio::path p_native{L"Afolderwithsp\u00E9cialCHar\u0023\u0025\u00F9/test.osm"};
+    std::wstring unicode_w_str(L"Afolderwithsp\u00E9cialCHar\u0023\u0025\u00F9/test.osm");
+    openstudio::path p_native(unicode_w_str);
   #endif
 
   // é = \xc3\xa9
@@ -509,6 +511,8 @@ TEST_F(CoreFixture, Path_WithSpecialChars) {
   // é and ù are part of the Latin-1 Supplement
   // Here I have breaking between normal chars and the escape codes otherwise it tries to read whatever normal char is after an \x until the next \x
   std::string c("Afolderwithsp" "\xc3\xa9" "cialCHar" "\x23\x25\xc3\xb9\x2f" "test.osm");
+  // Perhaps ill-named now (because before I was just using L"Afolderwithsp\u00E9cialCHar\u0023\u0025\u00F9/test.osm")
+  // But we are comparing this and the p_native so it should be ok
   openstudio::path pwide;
   EXPECT_NO_THROW(pwide = toPath(c));
   EXPECT_EQ(pwide, p_native);
@@ -525,6 +529,13 @@ TEST_F(CoreFixture, Path_WithSpecialChars) {
 
   // Alright, now we try with a regular string with special chars
   std::string s("AfolderwithspécialCHar#%ù/test.osm");
+  #if defined(_MSC_VER)
+    EXPECT_NE(s, windows_1252_str);
+  #else
+    // s = "Afolderwithsp\xC3\xA9" "cialCHar#%\xC3\xB9/test.osm"
+    // the string representation of unicode_w_str is "Afolderwithsp\xE9" "cialCHar#%\xF9/test.osm"
+    EXPECT_NE(s, std::string(unicode_w_str.begin(), unicode_w_str.end()));
+  #endif
   openstudio::path p;
   EXPECT_NO_THROW(p = toPath(s));
   openstudio::path pfull = outfolder / p;
@@ -556,14 +567,16 @@ TEST_F(CoreFixture, Path_WithSpecialChars) {
   #pragma warning( disable : 4309 )
   // MSVC 2017/19 would issue this one instead
   #pragma warning( disable : 4838 )
-#else
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wnarrowing"
-#endif
 
-  const char windows_1252_chr[] = {65, 102, 111, 108, 100, 101, 114, 119, 105, 116, 104, 115, 112, 233, 99, 105, 97, 108, 67, 72, 97, 114, 35, 37, 249, 47, 116, 101, 115, 116, 46, 111, 115, 109, 0};
+// Commented out because we don't want to run that on Unix
+//#else
+//  #pragma GCC diagnostic push
+//  #pragma GCC diagnostic ignored "-Wnarrowing"
+//#endif
+
+  const char windows_1252_chr[] = {65, 102, 111, 108, 100, 101, 114, 119, 105, 116, 104, 115, 112, 233, 99, 105, 97, 108, 67, 72, 97, 114, 35,
+                                   37, 249, 47, 116, 101, 115, 116, 46, 111, 115, 109, 0};
   // std::string s3("Afolderwithsp\xe9cialCHar#%\xf9/test.osm");
-  // std::string s2(exec("echo 'AfolderwithspécialCHar#%ù/test.osm'"));
   std::string s2(windows_1252_chr);
   openstudio::path p2;
   EXPECT_NO_THROW(p2 = toPath(s2));
@@ -581,10 +594,9 @@ TEST_F(CoreFixture, Path_WithSpecialChars) {
   // Clean up after yourself!
   boost::filesystem::remove_all(pwide_full);
 
-#if defined(_MSC_VER)
+// #if defined(_MSC_VER)
   #pragma warning( pop )
-#else
-  #pragma GCC diagnostic pop
+// #else
+//  #pragma GCC diagnostic pop
 #endif
-
 }
