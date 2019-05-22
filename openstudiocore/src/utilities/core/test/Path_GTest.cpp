@@ -484,10 +484,9 @@ TEST_F(CoreFixture, LastLevelDirectoryWithDot) {
 
 
 TEST_F(CoreFixture, Path_WithSpecialChars) {
-  // Use a wide string to make sure it's ok when creating and for ulterior comparison with the narrow one
-  std::wstring ws(L"AfolderwithspécialCHar#%ù/test.osm");
-  openstudio::path pwide;
-  EXPECT_NO_THROW(pwide = path(ws));
+  // We're going to rely on boost::filesystem::path passing a wide string with unicode code points, as it will correctly interpret this as unicode
+  // "AfolderwithspécialCHar#%ù/test.osm"
+  openstudio::path pwide{L"Afolderwithsp\u00E9cialCHar\u0023\u0025\u00F9/test.osm"};
 
   // Make the folder, and touch the test file
   openstudio::path outfolder = resourcesPath() / toPath("..") / toPath("Testing");
@@ -528,11 +527,13 @@ TEST_F(CoreFixture, Path_WithSpecialChars) {
   // "Afolderwithsp\xe9cialCHar#%\xf9/test.osm"
 #if defined(_MSC_VER)
   #pragma warning( push )
+  // MSVC 2013 appears to raise this warning
+  #pragma warning( disable : 4309 )
+  // MSVC 2017/19 would issue this one instead
   #pragma warning( disable : 4838 )
 #else
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wnarrowing"
- // TODO: Add clang? #pragma clang diagnostic ignored "-W…"
 #endif
 
   const char windows_1252_str[] = {65, 102, 111, 108, 100, 101, 114, 119, 105, 116, 104, 115, 112, 233, 99, 105, 97, 108, 67, 72, 97, 114, 35, 37, 249, 47, 116, 101, 115, 116, 46, 111, 115, 109, 0};
@@ -543,6 +544,7 @@ TEST_F(CoreFixture, Path_WithSpecialChars) {
   openstudio::path pfull2 = outfolder / p2;
 
   // The real test is that the internal paths should be the same
+  ASSERT_NO_THROW(openstudio::filesystem::exists(pfull2));
   EXPECT_TRUE(openstudio::filesystem::exists(pfull2));
   EXPECT_EQ(p2, pwide);
 
