@@ -484,13 +484,38 @@ TEST_F(CoreFixture, LastLevelDirectoryWithDot) {
 
 
 TEST_F(CoreFixture, Path_WithSpecialChars) {
-  // We're going to rely on boost::filesystem::path passing a wide string with unicode code points, as it will correctly interpret this as unicode
+
+  // TODO: we should perhaps include Boost.Locale (which requires compilation...)
+
+  // Note JM 2019-05-22: MSVC 2013 doesn't support unicode string literals...
+  // https://docs.microsoft.com/en-us/previous-versions/hh567368(v=vs.140)
+
   // "AfolderwithspécialCHar#%ù/test.osm"
-  openstudio::path pwide{L"Afolderwithsp\u00E9cialCHar\u0023\u0025\u00F9/test.osm"};
+  #if defined(_MSC_VER)
+    // On Windows, assume Windows-1252
+    std::string windows_1252_str("Afolderwithsp" "\xe9" "cialCHar#%" "\xf9");
+    openstudio::path p_native(windows_1252_str);
+  #else
+    // We're going to rely on boost::filesystem::path passing a wide string with unicode code points, as it will correctly interpret this as unicode
+    openstudio::path p_native{L"Afolderwithsp\u00E9cialCHar\u0023\u0025\u00F9/test.osm"};
+  #endif
+
+  // é = \xc3\xa9
+  // # = \x23 (but classic)
+  // % = \x25 (but classic)
+  // ù = \xc3\xb9
+  // / = \x2f (but classic)
+  // By classic I mean part of the Latin Classic table
+  // é and ù are part of the Latin-1 Supplement
+  // Here I have breaking between normal chars and the escape codes otherwise it tries to read whatever normal char is after an \x until the next \x
+  std::string c("Afolderwithsp" "\xc3\xa9" "cialCHar" "\x23\x25\xc3\xb9\x2f" "test.osm");
+  openstudio::path pwide;
+  EXPECT_NO_THROW(pwide = toPath(c));
+  EXPECT_EQ(pwide, p_native);
 
   // Make the folder, and touch the test file
   openstudio::path outfolder = resourcesPath() / toPath("..") / toPath("Testing");
-  openstudio::path pwide_full = outfolder / pwide;
+  openstudio::path pwide_full = outfolder / p_native;
   makeParentFolder(pwide_full, path(), true);
   boost::filesystem::ofstream outfile(pwide_full);
   outfile.close();
