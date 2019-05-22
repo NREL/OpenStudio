@@ -578,6 +578,12 @@ TEST_F(CoreFixture, Path_WithSpecialChars) {
                                    37, 249, 47, 116, 101, 115, 116, 46, 111, 115, 109, 0};
   // std::string s3("Afolderwithsp\xe9cialCHar#%\xf9/test.osm");
   std::string s2(windows_1252_chr);
+  // This really ends up the same as the windows_1252_str string defined above
+  EXPECT_EQ(s2, windows_1252_str);
+  // But it isn't indeed the same as the string we used to create the folder and file
+  EXPECT_NE(s2, c);
+
+
   openstudio::path p2;
   EXPECT_NO_THROW(p2 = toPath(s2));
   openstudio::path pfull2 = outfolder / p2;
