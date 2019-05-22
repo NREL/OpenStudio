@@ -39,7 +39,7 @@
 // TODO: GTEST 1.9 should have a GTEST_SKIP macro we could use
 #define SKIP(TEST_NAME) \
 do{\
-   std::cout << "[  SKIPPED ] " << #TEST_NAME << ": smylink tests can only be run with administrator rights on windows (elevated cmd.exe)" << std::endl;\
+   std::cout << "[  SKIPPED ] " << #TEST_NAME << ": symlink tests can only be run with administrator rights on windows (elevated cmd.exe)" << std::endl;\
    return;\
 } while(0)
 
@@ -83,15 +83,6 @@ bool IsElevated() {
 }
 #endif
 
-const char getPlatformDelimiterForPath() {
-  #if defined _WIN32
-    const char delimiter = ';';
-  #else
-    const char delimiter = ':';
-  #endif
-  return delimiter;
-}
-
 
 using namespace openstudio;
 
@@ -132,9 +123,9 @@ TEST(ApplicationPathHelpers, findInSystemPath) {
 
   // Append the containing dir to the PATH
   auto current_path = std::getenv("PATH");
-  std::string new_path = toString(dummy_dir) + getPlatformDelimiterForPath() + current_path;
+  std::string new_path = toString(dummy_dir) + openstudio::pathDelimiter() + current_path;
   setenv("PATH", new_path.c_str(), 1);
-  setenv("PathWhenSymlinkInPathUnixOnly_Setup", "true", 1);
+  setenv("PathWhenSymlinkInPath_Setup", "true", 1);
 
   // Locate the file with only its name
   absolute_path_to_dummy = findInSystemPath(dummy_file_path.filename());
@@ -236,14 +227,14 @@ TEST(ApplicationPathHelpers, Simple_test_forThisModule) {
 }
 
 int launch_another_instance_from_symlink(const path& symlink_path) {
-  std::string cmd = toString(symlink_path.filename()) + " --gtest_filter=*PathWhenSymlinkInPathUnixOnly_Run*";
+  std::string cmd = toString(symlink_path.filename()) + " --gtest_filter=*PathWhenSymlinkInPath_Run*";
   return std::system(cmd.c_str());
 }
 
-TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Setup) {
+TEST(ApplicationPathHelpers, PathWhenSymlinkInPath_Setup) {
 
   if (!IsElevated()) {
-    SKIP(completeAndNormalizeMultipleSymlinks);
+    SKIP(PathWhenSymlinkInPath_Setup);
   }
 
   openstudio::path symlink_path_dir = getApplicationBuildDirectory() / toPath("Testing/Temporary");
@@ -270,30 +261,30 @@ TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Setup) {
   boost::filesystem::create_symlink(openstudioUtilitiesTestPath, symlink_path);
 
   auto current_path = std::getenv("PATH");
-  std::string new_path = toString(symlink_path_dir) + getPlatformDelimiterForPath() + current_path;
+  std::string new_path = toString(symlink_path_dir) + openstudio::pathDelimiter() + current_path;
 
   setenv("PATH", new_path.c_str(), 1);
-  setenv("PathWhenSymlinkInPathUnixOnly_Setup", "true", 1);
+  setenv("PathWhenSymlinkInPath_Setup", "true", 1);
 
-  // We run a system call to the symlink name (not its path), with a gtest_filter set to PathWhenSymlinkInPathUnixOnly_Run
+  // We run a system call to the symlink name (not its path), with a gtest_filter set to PathWhenSymlinkInPath_Run
   // and we ensure we actually can get the right executable. We check the return code to make sure it worked (in case it can't find the symlink for
   // eg)
   auto future = std::async(launch_another_instance_from_symlink, symlink_path);
   EXPECT_EQ(0, future.get());
 
-  unsetenv("PathWhenSymlinkInPathUnixOnly_Setup");
+  unsetenv("PathWhenSymlinkInPath_Setup");
   setenv("PATH", current_path, 1);
 }
 
-TEST(ApplicationPathHelpers, PathWhenSymlinkInPathUnixOnly_Run) {
+TEST(ApplicationPathHelpers, PathWhenSymlinkInPath_Run) {
 
   // If you want to see more info, uncomment the logger lines
   // openstudio::Logger::instance().standardOutLogger().enable();
   // openstudio::Logger::instance().standardOutLogger().setLogLevel(Trace);
 
   //EXPECT_TRUE(false) << std::getenv("PATH");
-  //EXPECT_TRUE(false) << std::getenv("PathWhenSymlinkInPathUnixOnly_Setup");
-  if (std::getenv("PathWhenSymlinkInPathUnixOnly_Setup")) {
+  //EXPECT_TRUE(false) << std::getenv("PathWhenSymlinkInPath_Setup");
+  if (std::getenv("PathWhenSymlinkInPath_Setup")) {
     path openstudioModulePath = getOpenStudioModule();
     EXPECT_TRUE(exists(openstudioModulePath));
      // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
