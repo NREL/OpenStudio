@@ -561,9 +561,10 @@ TEST_F(CoreFixture, Path_WithSpecialChars) {
   #pragma GCC diagnostic ignored "-Wnarrowing"
 #endif
 
-  const char windows_1252_str[] = {65, 102, 111, 108, 100, 101, 114, 119, 105, 116, 104, 115, 112, 233, 99, 105, 97, 108, 67, 72, 97, 114, 35, 37, 249, 47, 116, 101, 115, 116, 46, 111, 115, 109, 0};
+  const char windows_1252_chr[] = {65, 102, 111, 108, 100, 101, 114, 119, 105, 116, 104, 115, 112, 233, 99, 105, 97, 108, 67, 72, 97, 114, 35, 37, 249, 47, 116, 101, 115, 116, 46, 111, 115, 109, 0};
   // std::string s3("Afolderwithsp\xe9cialCHar#%\xf9/test.osm");
-  std::string s2(windows_1252_str);
+  // std::string s2(exec("echo 'AfolderwithspécialCHar#%ù/test.osm'"));
+  std::string s2(windows_1252_chr);
   openstudio::path p2;
   EXPECT_NO_THROW(p2 = toPath(s2));
   openstudio::path pfull2 = outfolder / p2;
