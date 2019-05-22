@@ -39,11 +39,6 @@ class Facility_Test < MiniTest::Unit::TestCase
 
     facility = model.getFacility
     assert(facility.totalSiteEnergy.empty?)
-    assert((not facility.isSettableAttribute("totalSiteEnergy")))
-    assert(facility.isOptionalAttribute("totalSiteEnergy"))
-    assert(facility.getAttribute("totalSiteEnergy").empty?)
-    assert((not facility.isSettableAttribute("endUses")))
-    assert(facility.getAttribute("endUses").empty?)
   end
 
 end
