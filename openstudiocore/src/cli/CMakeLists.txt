@@ -286,7 +286,7 @@ endif()
 
 if (UNIX AND NOT APPLE)
   target_link_libraries(openstudio ${RUBY_STATIC_LIBRARY}  "dl" "crypt" "ssl")
-  target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
+  target_link_libraries(openstudio "icui18n" "icuuc" "gmp" "gdbm" "gdbm_compat" "readline")
 elseif(WIN32)
   target_link_libraries(openstudio debug ${RUBY_STATIC_LIBRARY_DEBUG} optimized ${RUBY_STATIC_LIBRARY})
   target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi)
