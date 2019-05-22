@@ -56,8 +56,8 @@ class UUID_Test < MiniTest::Unit::TestCase
   end
 
   def test_uuid_big_set
-    n = 10000
-    nGroup = 10
+    n = 1000
+    nGroup = 3
 
     (0...nGroup).each do |group|
       assert(system("'#{OpenStudio::getOpenStudioCLI}' '#{File.join(File.dirname(__FILE__), 'UUID_BigSet_Aux.rb')}' '#{n}'"))
