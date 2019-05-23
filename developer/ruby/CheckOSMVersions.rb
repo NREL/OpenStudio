@@ -84,6 +84,7 @@ puts "CMakeLists has OpenStudio at version #{os_version_str}"
 all_osms = find_resource_osms()
 
 has_mismatch = false
+n_mismatch = 0
 all_osms.each do |fpath|
 
   # Path from project root, for reporting
@@ -93,10 +94,11 @@ all_osms.each do |fpath|
 
   if osm_version_str != os_version_str
     puts "Version mistmatch for #{frelpath}, found: #{osm_version_str}, expected #{os_version_str}"
+    n_mismatch += 1
     has_mismatch = true
   end
 end
 
 if has_mismatch
-  raise VersionError, "Some of the library/resources OSMs have not been updated to #{os_version_str}"
+  raise VersionError, "#{n_mismatch} library/resources OSM(s) have not been updated to #{os_version_str}"
 end
