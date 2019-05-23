@@ -2,6 +2,13 @@
 #
 # openstudio.exe UpdateHVACLibrary.rb
 
+# TODO: Julien Marrec 2019-05-23
+# Note: this takes a rather long time to run (due to the size of the standards
+# files like ASHRAE and DEER), about 2h on my 8 core machine. So yo should
+# probably take a look at the VersionTranslator.cpp to see if there's VT that's
+# going to happen for your version, otherwise just bump the version string
+# itself without calling VT.
+
 require 'openstudio'
 require 'etc'
 # gem install parallel

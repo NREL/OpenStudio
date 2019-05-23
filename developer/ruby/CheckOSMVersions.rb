@@ -101,4 +101,6 @@ end
 
 if has_mismatch
   raise VersionError, "#{n_mismatch} library/resources OSM(s) have not been updated to #{os_version_str}"
+else
+  puts "OK: all #{all_osms.size} OSMs are correctly at #{os_version_str}."
 end
