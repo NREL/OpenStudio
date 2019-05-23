@@ -90,6 +90,7 @@ class Bundle_Test < Minitest::Test
     original_dir = Dir.pwd
     Dir.chdir(File.join(File.dirname(__FILE__), 'no_bundle'))
 
+    puts "'#{OpenStudio::getOpenStudioCLI}' --verbose test.rb"
     assert(system("'#{OpenStudio::getOpenStudioCLI}' --verbose test.rb"))
     
   ensure
