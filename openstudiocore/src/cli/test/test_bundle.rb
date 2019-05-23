@@ -9,7 +9,7 @@ class Bundle_Test < Minitest::Test
   def rm_if_exist(p)
     if File.exist?(p)
       # comment out if you want to test without rebundling
-      #FileUtils.rm_rf(p)
+      FileUtils.rm_rf(p)
     end
   end
 
