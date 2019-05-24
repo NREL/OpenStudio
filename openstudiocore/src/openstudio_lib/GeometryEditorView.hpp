@@ -55,7 +55,13 @@ class OSWebEnginePage : public QWebEnginePage
 public:
   OSWebEnginePage(QObject* parent = 0) : QWebEnginePage(parent) {}
 
-  bool acceptNavigationRequest(const QUrl & url, QWebEnginePage::NavigationType type, bool isMainFrame);
+ protected:
+  virtual bool certificateError(const QWebEngineCertificateError &certificateError) override;
+  virtual bool acceptNavigationRequest(const QUrl & url, QWebEnginePage::NavigationType type, bool isMainFrame) override;
+
+ private:
+  REGISTER_LOGGER("openstudio::OSWebEnginePage");
+
 };
 
 class GeometryEditorView : public QWidget
@@ -114,9 +120,9 @@ class BaseEditor : public QObject
     virtual void checkForUpdate() = 0;
 
     virtual void onChanged();
-  
+
   signals:
-    
+
     bool changed();
 
   protected:

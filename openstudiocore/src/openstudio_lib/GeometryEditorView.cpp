@@ -89,6 +89,7 @@
 #include <QSettings>
 #include <QProcessEnvironment>
 #include <QDesktopServices>
+#include <QWebEngineCertificateError>
 
 int CHECKFORUPDATEMSEC = 5000;
 
@@ -116,6 +117,12 @@ bool OSWebEnginePage::acceptNavigationRequest(const QUrl & url, QWebEnginePage::
     QDesktopServices::openUrl(url);
     return false;
   }
+  return true;
+}
+
+bool OSWebEnginePage::certificateError(const QWebEngineCertificateError &certificateError) {
+  // Ignore error
+  LOG(Warn, "SSL error: " << toString(certificateError.errorDescription()));
   return true;
 }
 
@@ -206,7 +213,7 @@ std::map<UUID, UUID> BaseEditor::exportModelHandleMapping() const
 }
 
 void BaseEditor::onChanged()
-{  
+{
   emit changed();
   //m_document->markAsModified();
 }
@@ -1143,7 +1150,7 @@ EditorWebView::~EditorWebView()
     QString mergeWarnKeyName("geometryMergeWarn");
     bool settingsMergeWarn = settings.value(mergeWarnKeyName, true).toBool();
     if (settingsMergeWarn){
-      QMessageBox msg(QMessageBox::Question, "Unmerged Changes", "Your geometry may include unmerged changes.  Merge with Current OSM now?  Choose Ignore to skip this message in the future.", 
+      QMessageBox msg(QMessageBox::Question, "Unmerged Changes", "Your geometry may include unmerged changes.  Merge with Current OSM now?  Choose Ignore to skip this message in the future.",
         QMessageBox::Yes | QMessageBox::No | QMessageBox::Ignore, this, Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
       msg.setDefaultButton(QMessageBox::No);
       msg.setEscapeButton(QMessageBox::No);
