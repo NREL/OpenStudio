@@ -142,6 +142,9 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   QCoreApplication::setOrganizationDomain("nrel.gov");
   setApplicationName("OpenStudioApp");
 
+  QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar, true);
+  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
   readSettings();
 
   QFile f(":/library/OpenStudioPolicy.xml");
