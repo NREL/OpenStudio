@@ -76,7 +76,6 @@ QCoreApplication* ApplicationSingleton::application(bool gui)
 
       QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar, true);
       QCoreApplication::setAttribute(Qt::AA_MacPluginApplication, true);
-      QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
       // dir containing the current module, can be openstudio.so or openstudio.exe
       openstudio::path openstudioDirPath = getOpenStudioModuleDirectory();
