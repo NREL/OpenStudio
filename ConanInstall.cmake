@@ -1,5 +1,9 @@
 # This file lists and installs the Conan packages needed
 
+# TODO: DO NOT DO `set(CONAN_OPTIONS "")` since some higher level stuff is added via OpenStudioApplication
+# CONAN_QT is added by OpenStudioApplication
+
+
 if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # Download automatically, you can also just copy the conan.cmake file
   # Put it in CMAKE_BINARY_DIR so we don't end up with two when building OpenStudioApplication
@@ -28,30 +32,21 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # Convenience variable to set a consistent version for individual boost packages
   set(BOOST_VERSION "1.69.0")
 
-  # TODO: simplify once definitive (do not repeat same stuff)
-  set(CONAN_OPTIONS "")
-  set(CONAN_BUILD "")
+  set(CONAN_OPENSSL "OpenSSL/1.1.1b@conan/stable")
+  set(CONAN_BOOST_ASIO "boost_asio/${BOOST_VERSION}@bincrafters/stable")
+  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
+  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
+  list(APPEND CONAN_BUILD "missing")
+
   if (MSVC)
-    set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
-    set(CONAN_BOOST_ASIO "boost_asio/${BOOST_VERSION}@bincrafters/stable")
-    set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
-    list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-    list(APPEND CONAN_BUILD "missing")
+    # No-op
   elseif (APPLE)
-    set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
-    set(CONAN_BOOST_ASIO "boost_asio/${BOOST_VERSION}@bincrafters/stable")
-    set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
-    list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-    list(APPEND CONAN_BUILD "missing")
+    # Do we really need to force build these?
     list(APPEND CONAN_BUILD "boost_asio")
     list(APPEND CONAN_BUILD "websocketpp")
   else()
-    set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
-    set(CONAN_BOOST_ASIO "boost_asio/${BOOST_VERSION}@bincrafters/stable")
-    set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
-    list(APPEND CONAN_OPTIONS "zlib:minizip=True")
+
     list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
-    list(APPEND CONAN_BUILD "missing")
     list(APPEND CONAN_BUILD "boost_asio")
     list(APPEND CONAN_BUILD "websocketpp")
   endif()
@@ -66,6 +61,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   # This will create the conanbuildinfo.cmake in the current binary dir, not the cmake_binary_dir
   conan_cmake_run(REQUIRES
+    ${CONAN_QT}
     ${CONAN_OPENSSL}
     ${CONAN_BOOST_ASIO}
     openstudio_ruby/2.5.5@jmarrec/testing
