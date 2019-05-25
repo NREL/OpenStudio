@@ -93,7 +93,6 @@ OSQuantityEdit2::OSQuantityEdit2(const std::string& modelUnits, const std::strin
 
 OSQuantityEdit2::~OSQuantityEdit2()
 {
-  unbind();
 }
 
 void OSQuantityEdit2::bind(bool isIP,

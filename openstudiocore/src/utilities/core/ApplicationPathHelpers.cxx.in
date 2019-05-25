@@ -78,22 +78,49 @@ namespace openstudio {
   }
 
   openstudio::path getApplicationPath() {
-
+    openstudio::path path;
     #if defined _WIN32
       TCHAR szPath[MAX_PATH];
       if( GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
         LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, szPath = '" << szPath << "'");
-        return completeAndNormalize(toPath(szPath));
+        path = toPath(szPath);
       }
     #else
       Dl_info info;
       if (dladdr("main", &info)) {
         LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, info.dli_fname = '" << info.dli_fname << "'");
-        return completeAndNormalize(toPath(info.dli_fname));
+        path = toPath(info.dli_fname);
       }
     #endif
 
-    return openstudio::path();
+    // Note JM 2019-04-24:
+    // Let's call assume the GetModuleFileName (windows, though that doesn't really happen)
+    // or (more likely) dladdr (Unix) returns just 'OpenStudioApplicationSymlink' (and not '/path/to/OpenStudioApplicationSymlink' or './OpenStudioApplicationSymlink')
+    // You first try to locate that OpenStudioApplicationSymlink in the current directory
+
+    // (Another option would be to always start by calling findInSystemPath and modify the findInSystemPath to prepend the PATH list with '.')
+
+    openstudio::path applicationPath = completeAndNormalize(path);
+    if( !openstudio::filesystem::exists( applicationPath ) || openstudio::filesystem::is_directory( applicationPath ) ) {
+        // It that didn't work, it means it's in the system PATH. So you have to look for it in your PATH by calling findInSystemPath
+        // There's no way around it IMHO.
+        // Note: This wouldn't be a concern unless you are launching a symlink that lives in your PATH, and outside the directory where the symlink is
+        // * ./OpenStudioApplicationSymlink will work
+        // * /home/OpenStudioApplicationSymlink will work
+        // * OpenStudioApplicationSymlink itself will not work (if you aren't in the same folder as the symlink)
+
+
+        LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath failed as is, trying in to locate in systemPath");
+        path = findInSystemPath(path);
+        applicationPath = completeAndNormalize(path);
+    }
+    if( !openstudio::filesystem::exists( applicationPath ) || openstudio::filesystem::is_directory( applicationPath ) ) {
+        LOG_FREE_AND_THROW("ApplicationPathHelpers", "getApplicationPath failed!");
+    }
+
+    LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, found '" << applicationPath << "'");
+
+    return applicationPath;
   }
 
   openstudio::path getApplicationDirectory() {
@@ -141,36 +168,32 @@ namespace openstudio {
 
   openstudio::path getOpenStudioModule()
   {
-    openstudio::path openstudioDirPath;
+    openstudio::path path;
     #if defined _WIN32
       TCHAR szPath[MAX_PATH];
       if( GetModuleFileName( GetCurrentModule(), szPath, MAX_PATH ) ) {
         LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, szPath = '" << szPath << "'");
-        openstudioDirPath = completeAndNormalize(toPath(szPath));
+        path = toPath(szPath);
       }
     #else
       Dl_info info;
       if (dladdr("GetCurrentModule", &info)) {
         LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, info.dli_fname = '" << info.dli_fname << "'");
-        auto path = toPath(info.dli_fname);
-        if ( path.parent_path().empty() ) {
-          std::istringstream pathstream( getenv("PATH") );
-          std::string pathstring;
-          while ( std::getline(pathstream, pathstring, ':') ) {
-            LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, searching for '" << path << "' in '" << pathstring << "'");
-            auto maybepath = toPath(pathstring) / path;
-            if( openstudio::filesystem::exists( maybepath ) && !openstudio::filesystem::is_directory( maybepath ) ) {
-              openstudioDirPath = completeAndNormalize(maybepath);
-              break;
-            }
-          }
-        } else {
-            openstudioDirPath = completeAndNormalize(path);
-        }
+        path = toPath(info.dli_fname);
       }
     #endif
-    LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, found '" << openstudioDirPath << "'");
-    return openstudioDirPath;
+    openstudio::path openstudioPath = completeAndNormalize(path);
+    if( !openstudio::filesystem::exists( openstudioPath ) || openstudio::filesystem::is_directory( openstudioPath ) ) {
+        LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule failed as is, trying in to locate in systemPath");
+        path = findInSystemPath(path);
+        openstudioPath = completeAndNormalize(path);
+    }
+    if( !openstudio::filesystem::exists( openstudioPath ) || openstudio::filesystem::is_directory( openstudioPath ) ) {
+        LOG_FREE_AND_THROW("ApplicationPathHelpers", "getOpenStudioModule failed!");
+    }
+
+    LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, found '" << openstudioPath << "'");
+    return openstudioPath;
   }
 
   openstudio::path getOpenStudioModuleDirectory()

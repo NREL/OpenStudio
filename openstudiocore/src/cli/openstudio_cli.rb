@@ -42,6 +42,7 @@ OpenStudio::Application::instance().application(false)
 require 'logger'
 require 'optparse'
 require 'stringio'
+require 'rbconfig'
 
 #include OpenStudio::Workflow::Util::IO
 
@@ -56,9 +57,21 @@ $logger.level = Logger::WARN
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
+original_arch = nil
+if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
+  # assume that system ruby of 'x64-mingw32' architecture was used to create bundle
+  original_arch = RbConfig::CONFIG['arch']
+  RbConfig::CONFIG['arch'] = 'x64-mingw32'
+end
+
 # load embedded ruby gems
 require 'rubygems'
 require 'rubygems/version'
+Gem::Platform.local
+
+if original_arch
+  RbConfig::CONFIG['arch'] = original_arch
+end
 
 module Gem
 class Specification < BasicSpecification
@@ -409,6 +422,26 @@ def parse_main_args(main_args)
     
     $logger.info "Setting BUNDLE_PATH to ':/ruby/2.2.0/'"
     ENV['BUNDLE_PATH'] = ':/ruby/2.2.0/'
+ 
+  end  
+  
+  if main_args.include? '--bundle_without'
+    option_index = main_args.index '--bundle_without'
+    path_index = option_index + 1
+    bundle_without = main_args[path_index]
+    main_args.slice! path_index
+    main_args.slice! main_args.index '--bundle_without'
+
+    $logger.info "Setting BUNDLE_WITHOUT to #{bundle_without}"
+    ENV['BUNDLE_WITHOUT'] = bundle_without
+  
+  elsif ENV['BUNDLE_WITHOUT']
+    # no argument but env var is set
+    $logger.info "ENV['BUNDLE_WITHOUT'] set to '#{ENV['BUNDLE_WITHOUT']}'"
+  
+  elsif use_bundler
+    # bundle was requested but bundle_path was not provided
+    $logger.warn "Bundle activated but ENV['BUNDLE_WITHOUT'] is not set"
     
     # match configuration in build_openstudio_gems
     $logger.info "Setting BUNDLE_WITHOUT to 'test'"
@@ -418,7 +451,6 @@ def parse_main_args(main_args)
     #DLM: this would be correct if the bundle was created here
     #it would not be correct if the bundle was transfered from another computer
     #ENV['BUNDLE_IGNORE_CONFIG'] = 'true'
-  
   end  
   
   Gem.paths.path << ':/ruby/2.2.0/gems/'
@@ -480,11 +512,14 @@ def parse_main_args(main_args)
     
     original_arch = nil
     if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
+      # assume that system ruby of 'x64-mingw32' architecture was used to create bundle
       original_arch = RbConfig::CONFIG['arch']
       $logger.info "Temporarily replacing arch '#{original_arch}' with 'x64-mingw32' for Bundle"
       RbConfig::CONFIG['arch'] = 'x64-mingw32'
     end
-  
+    
+   
+   
     # require bundler
     # have to do some forward declaration and pre-require to get around autoload cycles
     require 'bundler/errors'
@@ -513,13 +548,15 @@ def parse_main_args(main_args)
       
       groups = Bundler.definition.groups
       keep_groups = []
+      without_groups = ENV['BUNDLE_WITHOUT']
+      $logger.info "without_groups = #{without_groups}"
       groups.each do |g| 
-        # DLM: can include in the future but need to be able to override
-        #if (g == :test) || (g == :development)  || (g == :openstudio_no_cli)
-        #  $logger.info "Bundling without group #{g}"
-        #else
+        $logger.info "g = #{g}"
+        if without_groups.include?(g.to_s)
+          $logger.info "Bundling without group '#{g}'"
+        else
           keep_groups << g
-        #end
+        end
       end
       
       $logger.info "Bundling with groups [#{keep_groups.join(',')}]"
@@ -542,7 +579,7 @@ def parse_main_args(main_args)
     
       if original_arch
         $logger.info "Restoring arch '#{original_arch}'"
-        RbConfig::CONFIG['arch'] = 'x64-mingw32'
+        RbConfig::CONFIG['arch'] = original_arch
       end
     
       Dir.chdir(current_dir)
@@ -748,7 +785,7 @@ class CLI
                   '--no-ssl',
                   '-i', '--include',
                   '-e', '--execute',
-                  '--gem_path', '--gem_home', '--bundle', '--bundle_path']
+                  '--gem_path', '--gem_home', '--bundle', '--bundle_path', '--bundle_without']
       command_list.each do |key, data|
         # Skip non-primary commands. These only show up in extended
         # help output.
@@ -770,6 +807,7 @@ class CLI
         o.on('--gem_home DIR', 'Set GEM_HOME environment variable')
         o.on('--bundle GEMFILE', 'Use bundler for GEMFILE')
         o.on('--bundle_path BUNDLE_PATH', 'Use bundler installed gems in BUNDLE_PATH')
+        o.on('--bundle_without WITHOUT_GROUPS', 'Space separated list of groups for bundler to exclude in WITHOUT_GROUPS.  Surround multiple groups with quotes like "test development".')
         o.separator ''
         o.separator 'Common commands:'
 
@@ -1305,7 +1343,12 @@ class Measure
       #end
       
       runner = OpenStudioMeasureTester::Runner.new(directory)
-      runner.run_all(Dir.pwd) 
+      result = runner.run_all(Dir.pwd) 
+      
+      if result != 0
+        $logger.error("Measure tester returned errors")
+        return 1
+      end
     
     elsif options[:start_server]
 

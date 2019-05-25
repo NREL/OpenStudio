@@ -58,7 +58,6 @@ OSUnsignedEdit2::OSUnsignedEdit2( QWidget * parent )
 
 OSUnsignedEdit2::~OSUnsignedEdit2()
 {
-  unbind();
 }
 
 void OSUnsignedEdit2::bind(model::ModelObject& modelObject,

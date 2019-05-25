@@ -277,6 +277,7 @@ deploy_latest_master:windows:
   dependencies:
     - build_deploy_all_others:windows
   script:
+    - developer/ruby/CheckOSMVersions.rb # Ensure Library/Resources OSMs are at the right version
     - aws s3 cp ./ s3://openstudio-builds/master/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Windows.exe"
 
 deploy_latest_master:mac:
@@ -288,6 +289,7 @@ deploy_latest_master:mac:
   dependencies:
     - build_deploy_all_others:mac
   script:
+    - developer/ruby/CheckOSMVersions.rb
     - aws s3 cp ./ s3://openstudio-builds/master/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Darwin.zip"
 
 deploy_latest_master:ubuntu:
@@ -299,6 +301,7 @@ deploy_latest_master:ubuntu:
   dependencies:
     - build_deploy_all_others:ubuntu
   script:
+    - developer/ruby/CheckOSMVersions.rb
     - aws s3 cp ./ s3://openstudio-builds/master/latest/ --recursive --exclude "*" --include "OpenStudio-2.*-Linux.deb"
 
 testCTest_develop:windows:

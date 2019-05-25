@@ -2,6 +2,13 @@
 #
 # openstudio.exe UpdateHVACLibrary.rb
 
+# TODO: Julien Marrec 2019-05-23
+# Note: this takes a rather long time to run (due to the size of the standards
+# files like ASHRAE and DEER), about 2h on my 8 core machine. So yo should
+# probably take a look at the VersionTranslator.cpp to see if there's VT that's
+# going to happen for your version, otherwise just bump the version string
+# itself without calling VT.
+
 require 'openstudio'
 require 'etc'
 # gem install parallel
@@ -29,19 +36,13 @@ path = File.join(File.dirname(__FILE__), '../../openstudiocore/**/*.osm')
 start_time = Time.now
 
 files = Dir.glob(path)
+files = files.grep(/openstudio_app\/Resources|sketchup_plugin\/resources\/templates|sketchup_plugin\/user_scripts/)
 
 Parallel.map(files,
              in_threads: nproc,
              progress: "Updating Libraries") do |model_path|
 
   puts "Starting for '#{model_path}'"
-  if /sketchup_plugin\/resources\/templates/.match(model_path)
-    # do this
-  elsif /openstudio_app\/Resources/.match(model_path)
-    # do this
-  else
-    next
-  end
 
   model_path = OpenStudio::Path.new(model_path)
   #model_path = OpenStudio::Path.new('hvac_library.osm')
@@ -57,7 +58,7 @@ Parallel.map(files,
       model = model.get
     end
   else
-    puts "The model couldn't be found"
+    puts "The model couldn't be found for #{model_path}"
     exit
   end
 

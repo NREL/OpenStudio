@@ -8,7 +8,7 @@ if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-project(OpenStudio VERSION 2.8.0)
+project(OpenStudio VERSION 2.8.1)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -70,11 +70,11 @@ set(ENERGYPLUS_VERSION_MINOR 1)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "08d2e308bb")
-
+set(ENERGYPLUS_BUILD_SHA "fafb9d5652")
+                          
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.1.0")
+set(ENERGYPLUS_RELEASE_NAME "v91AndBugFix4")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -382,14 +382,14 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH fff82687c676c9270f08624c4dd231be)
+    set(ENERGYPLUS_EXPECTED_HASH f53690207c3bce9761be4ac4ff367db4)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH 02ed618aab65bf46c96bf1faf2e1905b)
+    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH c2f57b0124b3557080112f7eed814f78)
+    set(ENERGYPLUS_EXPECTED_HASH 1dbbe3249e3b8ee2e0cf6a3d99e9c206)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -414,12 +414,12 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH e51817d2d540e9bf2eecbca3405feae2)
+    set(ENERGYPLUS_EXPECTED_HASH 8216b9434e4eff89d061883753aa1617)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
     ## TODO: update md5 hash, but not present on GitHub as .zip, only .exe for now at least
-    set(ENERGYPLUS_EXPECTED_HASH a2cbd995acd1928a7baa18407bb8e949)
+    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_a2cbd995acd1928a7baa18407bb8e949)
   endif()
   if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -531,11 +531,11 @@ mark_as_advanced(RUBY_INSTALL_DIR)
 if(NOT EXISTS ${RUBY_INSTALL_DIR})
   if( WIN32 )
     if(CMAKE_CL_64)
-      set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "f55c2ced4dab19c910fa6f828df5d97e")
+      set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_static_2.tar.gz")
+      set(RUBY_ZIP_EXPECTED_MD5 "74cc63d6f997097b8e650999a1da717f")
     else()
-      set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_32_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "4c2055305b105b0c8210697aaa596419")
+      set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_32_static_2.tar.gz")
+      set(RUBY_ZIP_EXPECTED_MD5 "DOES_NOT_EXIST_4c2055305b105b0c8210697aaa596419")
     endif()
   elseif( APPLE )
     set(RUBY_ZIP_FILENAME "ruby_2_2_4_osx_static.tar.gz")
@@ -621,8 +621,8 @@ endif()
 
 # build and release openstudio gems at https://github.com/NREL/OpenStudio-gems
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20190321.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e600f9cd8f3673c7f6bff3d1bee8565e")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20190523.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "bc092376f7bda6ad9b5944c4c7a330e5")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
