@@ -139,7 +139,6 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
     m_measureManagerProcess(nullptr)
 {
   setOrganizationName("NREL");
-  QCoreApplication::setOrganizationDomain("nrel.gov");
   setApplicationName("OpenStudioApp");
 
   readSettings();
