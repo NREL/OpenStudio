@@ -32,6 +32,7 @@
 
 #include "ModelObjectInspectorView.hpp"
 #include "ModelSubTabView.hpp"
+#include "OSWebEnginePage.hpp"
 
 #include "../model/Model.hpp"
 
@@ -39,30 +40,14 @@
 
 #include <QWidget>
 #include <QDialog>
-#include <QWebEngineView>
 #include <QProgressBar>
+#include <QWebEngineView>
 
 class QComboBox;
 class QPushButton;
 class QTimer;
 
 namespace openstudio {
-
-class OSWebEnginePage : public QWebEnginePage
-{
-  Q_OBJECT
-
-public:
-  OSWebEnginePage(QObject* parent = 0) : QWebEnginePage(parent) {}
-
- protected:
-  virtual bool certificateError(const QWebEngineCertificateError &certificateError) override;
-  virtual bool acceptNavigationRequest(const QUrl & url, QWebEnginePage::NavigationType type, bool isMainFrame) override;
-
- private:
-  REGISTER_LOGGER("openstudio::OSWebEnginePage");
-
-};
 
 class GeometryEditorView : public QWidget
 {

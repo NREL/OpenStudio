@@ -27,81 +27,32 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef OPENSTUDIO_GEOMETRYPREVIEWVIEW_HPP
-#define OPENSTUDIO_GEOMETRYPREVIEWVIEW_HPP
+#ifndef OPENSTUDIO_OSWEBENGINEPAGE_HPP
+#define OPENSTUDIO_OSWEBENGINEPAGE_HPP
 
-#include "ModelObjectInspectorView.hpp"
-#include "ModelSubTabView.hpp"
-#include "OSWebEnginePage.hpp"
+#include <QWebEnginePage>
 
-#include "../model/Model.hpp"
-
-#include <QWidget>
-#include <QWebEngineView>
-#include <QProgressBar>
-
-class QComboBox;
-class QPushButton;
+#include "../utilities/core/Logger.hpp"
 
 namespace openstudio {
 
-class OSDocument;
-
-class GeometryPreviewView : public QWidget
+class OSWebEnginePage : public QWebEnginePage
 {
   Q_OBJECT
 
-  public:
+public:
+  OSWebEnginePage(QObject* parent = 0) : QWebEnginePage(parent) {}
 
-    GeometryPreviewView(bool isIP,
-                      const openstudio::model::Model& model,
-                      QWidget * parent = nullptr);
+ protected:
+  virtual bool certificateError(const QWebEngineCertificateError &certificateError) override;
+  virtual bool acceptNavigationRequest(const QUrl & url, QWebEnginePage::NavigationType type, bool isMainFrame) override;
 
-    virtual ~GeometryPreviewView();
+ private:
+  REGISTER_LOGGER("openstudio::OSWebEnginePage");
 
-  private:
-
-};
-
-// main widget
-
-class PreviewWebView : public QWidget
-{
-  Q_OBJECT;
-
-  public:
-    PreviewWebView(bool isIP, const openstudio::model::Model& model, QWidget *t_parent = nullptr);
-    virtual ~PreviewWebView();
-
-  public slots:
-    void onUnitSystemChange(bool t_isIP);
-
-  private slots:
-    void refreshClicked();
-
-    // DLM: for debugging
-    void 	onLoadFinished(bool ok);
-    //void 	onLoadProgress(int progress);
-    //void 	onLoadStarted();
-    void 	onTranslateProgress(double percentage);
-    void 	onJavaScriptFinished(const QVariant &v);
-    void 	onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode);
-  private:
-    REGISTER_LOGGER("openstudio::PreviewWebView");
-
-    bool m_isIP;
-    model::Model m_model;
-
-    QProgressBar * m_progressBar;
-    QPushButton * m_refreshBtn;
-
-    QWebEngineView * m_view;
-    OSWebEnginePage * m_page;
-    std::shared_ptr<OSDocument> m_document;
-
-    QString m_json;
 };
 
 } // openstudio
 
-#endif // OPENSTUDIO_GEOMETRYPREVIEWVIEW_HPP
+#endif // OPENSTUDIO_OSWEBENGINEPAGE_HPP
+
