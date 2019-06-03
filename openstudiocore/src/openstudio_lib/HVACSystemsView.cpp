@@ -267,6 +267,7 @@ HVACGraphicsView::HVACGraphicsView( QWidget * parent )
   : QGraphicsView(parent)
 {
   setAcceptDrops(true);
+  setAttribute(Qt::WA_AcceptTouchEvents, false);
 
   resetZoom();
 
