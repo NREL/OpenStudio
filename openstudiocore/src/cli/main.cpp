@@ -165,11 +165,17 @@ extern "C" {
   #ifndef _WIN32
     void Init_console(void);
     void Init_dbm(void);
-    void Init_gdbm(void);
     void Init_pty(void);
-    void Init_readline(void);
     void Init_syslog(void);
   #endif
+
+// Currently only work on linux
+ #ifdef __linux__ 
+    void Init_gdbm(void);
+    void Init_readline(void);
+ #endif 
+
+
 }
 
 std::vector<std::string> paths;
@@ -531,22 +537,28 @@ int main(int argc, char *argv[])
      rb_provide("dbm");
      rb_provide("dbm.so");
 
-     Init_gdbm();
-     rb_provide("gdbm");
-     rb_provide("gdbm.so");
-
      Init_pty();
      rb_provide("pty");
      rb_provide("pty.so");
-
-     Init_readline();
-     rb_provide("readline");
-     rb_provide("readline.so");
 
      Init_syslog();
      rb_provide("syslog");
      rb_provide("syslog.so");
     #endif
+
+
+   // linux only
+   #ifdef __linux__
+ 
+      Init_gdbm();
+      rb_provide("gdbm");
+      rb_provide("gdbm.so");
+
+      Init_readline();
+      rb_provide("readline");
+      rb_provide("readline.so");
+
+   #endif
 
     // openstudio
      init_openstudio_internal();
