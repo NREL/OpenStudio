@@ -5,11 +5,17 @@
 
 
 if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
-  # Download automatically, you can also just copy the conan.cmake file
-  # Put it in CMAKE_BINARY_DIR so we don't end up with two when building OpenStudioApplication
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-    message(STATUS "openstudio: Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-    file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.14/conan.cmake"
+
+  set(CMAKE_CONAN_EXPECTED_HASH 709180234748692a642f9e5c4d80d328)
+  set(CMAKE_CONAN_VERSION "v0.14")
+
+  if(EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+    file(MD5 "${CMAKE_BINARY_DIR}/conan.cmake" CMAKE_CONAN_HASH)
+  endif()
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake" OR NOT "${CMAKE_CONAN_HASH}" MATCHES "${CMAKE_CONAN_EXPECTED_HASH}")
+    # Put it in CMAKE_BINARY_DIR so we don't end up with two when building OpenStudioApplication
+    message(STATUS "openstudio: Downloading conan.cmake ${CMAKE_CONAN_VERSION} from https://github.com/conan-io/cmake-conan")
+    file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/${CMAKE_CONAN_VERSION}/conan.cmake"
        "${CMAKE_BINARY_DIR}/conan.cmake")
   else()
     message(STATUS "openstudio: using existing conan.cmake")
