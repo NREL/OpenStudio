@@ -71,7 +71,7 @@ set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
 set(ENERGYPLUS_BUILD_SHA "fafb9d5652")
-                          
+
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
 set(ENERGYPLUS_RELEASE_NAME "v91AndBugFix4")
@@ -414,7 +414,7 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 8216b9434e4eff89d061883753aa1617)
+    set(ENERGYPLUS_EXPECTED_HASH 3ce2ca516612544056e4ee6357310f6e)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
