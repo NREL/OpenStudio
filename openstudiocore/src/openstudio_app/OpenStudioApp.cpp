@@ -134,12 +134,26 @@ using namespace openstudio::model;
 
 namespace openstudio {
 
+bool TouchEater::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::TouchBegin) {
+        return true;
+    } else {
+        // standard event processing
+        return QObject::eventFilter(obj, event);
+    }
+}
+
 OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   : OSAppBase(argc, argv, QSharedPointer<MeasureManager>(new MeasureManager(this))),
     m_measureManagerProcess(nullptr)
 {
   setOrganizationName("NREL");
+  QCoreApplication::setOrganizationDomain("nrel.gov");
   setApplicationName("OpenStudioApp");
+
+  auto eater = new TouchEater();
+  installEventFilter(eater);
 
   readSettings();
 
