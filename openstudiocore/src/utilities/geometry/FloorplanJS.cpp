@@ -767,10 +767,10 @@ namespace openstudio{
                 Point3d window2 = windowCenterVertices[windowIdx] + widthVector;
 
                 Point3dVector windowVertices;
-                windowVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
-                windowVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight));
-                windowVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight));
-                windowVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
+                windowVertices.push_back(Point3d(window1.x(), window1.y(), minZ + sillHeight + height));
+                windowVertices.push_back(Point3d(window1.x(), window1.y(), minZ + sillHeight));
+                windowVertices.push_back(Point3d(window2.x(), window2.y(), minZ + sillHeight));
+                windowVertices.push_back(Point3d(window2.x(), window2.y(), minZ + sillHeight + height));
 
                 size_t parentSubSurfaceIndex = allFinalWindowVertices.size();
                 allFinalWindowVertices.push_back(windowVertices);
@@ -786,10 +786,10 @@ namespace openstudio{
                     Point3d window4 = window2 + outVector;
 
                     Point3dVector shadeVertices;
-                    shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
-                    shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight + height));
-                    shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight + height));
-                    shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window1.x(), window1.y(), minZ + sillHeight + height));
+                    shadeVertices.push_back(Point3d(window3.x(), window3.y(), minZ + sillHeight + height));
+                    shadeVertices.push_back(Point3d(window4.x(), window4.y(), minZ + sillHeight + height));
+                    shadeVertices.push_back(Point3d(window2.x(), window2.y(), minZ + sillHeight + height));
 
                     allFinalShadeVertices.push_back(shadeVertices);
                     allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
@@ -807,19 +807,19 @@ namespace openstudio{
                     Point3d window4 = window2 + outVector;
 
                     Point3dVector shadeVertices;
-                    shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight + height));
-                    shadeVertices.push_back(Point3d(window1.x(), window1.y(), sillHeight));
-                    shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight));
-                    shadeVertices.push_back(Point3d(window3.x(), window3.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window1.x(), window1.y(), minZ + sillHeight + height));
+                    shadeVertices.push_back(Point3d(window1.x(), window1.y(), minZ + sillHeight));
+                    shadeVertices.push_back(Point3d(window3.x(), window3.y(), minZ + sillHeight));
+                    shadeVertices.push_back(Point3d(window3.x(), window3.y(), minZ + sillHeight + height));
 
                     allFinalShadeVertices.push_back(shadeVertices);
                     allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
 
                     shadeVertices.clear();
-                    shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight + height));
-                    shadeVertices.push_back(Point3d(window4.x(), window4.y(), sillHeight));
-                    shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight));
-                    shadeVertices.push_back(Point3d(window2.x(), window2.y(), sillHeight + height));
+                    shadeVertices.push_back(Point3d(window4.x(), window4.y(), minZ + sillHeight + height));
+                    shadeVertices.push_back(Point3d(window4.x(), window4.y(), minZ + sillHeight));
+                    shadeVertices.push_back(Point3d(window2.x(), window2.y(), minZ + sillHeight));
+                    shadeVertices.push_back(Point3d(window2.x(), window2.y(), minZ + sillHeight + height));
 
                     allFinalShadeVertices.push_back(shadeVertices);
                     allFinalShadeParentSubSurfaceIndices.push_back(parentSubSurfaceIndex);
@@ -906,10 +906,10 @@ namespace openstudio{
               Point3d doorw2 = doorCenterVertices[doorIdx] + widthVector;
 
               Point3dVector doorVertices;
-              doorVertices.push_back(Point3d(door1.x(), door1.y(), height));
-              doorVertices.push_back(Point3d(door1.x(), door1.y(), 0.0));
-              doorVertices.push_back(Point3d(doorw2.x(), doorw2.y(), 0.0));
-              doorVertices.push_back(Point3d(doorw2.x(), doorw2.y(), height));
+              doorVertices.push_back(Point3d(door1.x(), door1.y(), minZ + height));
+              doorVertices.push_back(Point3d(door1.x(), door1.y(), minZ + 0.0));
+              doorVertices.push_back(Point3d(doorw2.x(), doorw2.y(), minZ + 0.0));
+              doorVertices.push_back(Point3d(doorw2.x(), doorw2.y(), minZ + height));
 
               size_t parentSubSurfaceIndex = allFinalDoorVertices.size();
               allFinalDoorVertices.push_back(doorVertices);
@@ -1003,10 +1003,10 @@ namespace openstudio{
           double illuminanceSetpoint = daylightingControlDefinition->get("illuminance_setpoint", 0.0).asDouble(); // DLM: TODO put in unit conversion
 
           Point3dVector dcVertices;
-          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() - 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() + 0.1, height));
-          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() + 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() + 0.1, height));
-          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() + 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, height));
-          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() - 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, height));
+          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() - 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() + 0.1, minZ + height));
+          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() + 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() + 0.1, minZ + height));
+          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() + 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, minZ + height));
+          dcVertices.push_back(Point3d(lengthToMeters * vertex->get("x", 0.0).asDouble() - 0.1, lengthToMeters * vertex->get("y", 0.0).asDouble() - 0.1, minZ + height));
 
           makeSurface(story, spaceOrShading, "", "", belowFloorPlenum, aboveCeilingPlenum, "DaylightingControl", Point3dVectorVector(1,dcVertices), wallFaceFormat, geometries, sceneChildren, illuminanceSetpoint, false);
         }
