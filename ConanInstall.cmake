@@ -38,7 +38,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # Convenience variable to set a consistent version for individual boost packages
   set(BOOST_VERSION "1.69.0")
 
-  set(CONAN_OPENSSL "OpenSSL/1.1.1b@conan/stable")
+  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
   set(CONAN_BOOST_ASIO "boost_asio/${BOOST_VERSION}@bincrafters/stable")
   set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
