@@ -35,6 +35,8 @@
 #include "../RefrigerationCondenserAirCooled_Impl.hpp"
 #include "../WaterHeaterMixed.hpp"
 #include "../WaterHeaterMixed_Impl.hpp"
+#include "../WaterHeaterStratified.hpp"
+#include "../WaterHeaterStratified_Impl.hpp"
 #include "../ScheduleCompact.hpp"
 #include "../ScheduleCompact_Impl.hpp"
 #include "../CurveBiquadratic.hpp"
@@ -71,6 +73,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove)
     CoilWaterHeatingDesuperheater testObject = CoilWaterHeatingDesuperheater(model, schedule);
     RefrigerationCondenserAirCooled condenser = RefrigerationCondenserAirCooled(model);
     WaterHeaterMixed heatRejection = WaterHeaterMixed(model);
+    WaterHeaterStratified = WaterHeaterStratified(model);
     CurveBiquadratic curve = CurveBiquadratic(model);
     testObject.setHeatingSource(condenser);
     testObject.addToHeatRejectionTarget(heatRejection);
@@ -82,8 +85,11 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove)
     std::vector<RefrigerationCondenserAirCooled> refrigerationCondensers = model.getModelObjects<RefrigerationCondenserAirCooled>();
     EXPECT_EQ(1, refrigerationCondensers.size());
 
-    std::vector<WaterHeaterMixed> heatRejectionTargets = model.getModelObjects<WaterHeaterMixed>();
-    EXPECT_EQ(1, heatRejectionTargets.size());
+    std::vector<WaterHeaterMixed> heatRejectionTargetsWaterHeaterMixed = model.getModelObjects<WaterHeaterMixed>();
+    EXPECT_EQ(1, heatRejectionTargetsWaterHeaterMixed.size());
+
+    std::vector<WaterHeaterMixed> heatRejectionTargetsWaterHeaterStratified = model.getModelObjects<WaterHeaterStratified>();
+    EXPECT_EQ(1, heatRejectionTargetsWaterHeaterStratified.size());
 
     std::vector<CurveBiquadratic> curves = model.getModelObjects<CurveBiquadratic>();
     EXPECT_EQ(1, curves.size());
@@ -99,8 +105,11 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove)
     refrigerationCondensers = model.getModelObjects<RefrigerationCondenserAirCooled>();
     EXPECT_EQ(1, refrigerationCondensers.size());
 
-    heatRejectionTargets = model.getModelObjects<WaterHeaterMixed>();
-    EXPECT_EQ(1, heatRejectionTargets.size());
+    heatRejectionTargetsWaterHeaterMixed = model.getModelObjects<WaterHeaterMixed>();
+    EXPECT_EQ(1, heatRejectionTargetsWaterHeaterMixed.size());
+
+    heatRejectionTargetsWaterHeaterStratified = model.getModelObjects<WaterHeaterStratified>();
+    EXPECT_EQ(1, heatRejectionTargetsWaterHeaterStratified.size());
 
     curves = model.getModelObjects<CurveBiquadratic>();
     EXPECT_EQ(1, curves.size());
@@ -191,7 +200,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneModelWithDefaultData)
     EXPECT_DOUBLE_EQ(0.0, testObjectClone.offCycleParasiticElectricLoad());
 }
 
-TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneModelWithCustomData)
+TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneModelWithCustomData1)
 {
     Model model;
     ScheduleCompact schedule = ScheduleCompact(model);
@@ -211,6 +220,47 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneModelWithCustomData)
     testObject.setOnCycleParasiticElectricLoad(999.0);
     testObject.setOffCycleParasiticElectricLoad(999.0);
     testObject.setHeatingSource(condenser);
+    testObject.addToHeatRejectionTarget(heatRejection);
+    testObject.setHeatReclaimEfficiencyFunctionofTemperatureCurve(curve);
+
+    CoilWaterHeatingDesuperheater testObjectClone = testObject.clone(model).cast<CoilWaterHeatingDesuperheater>();
+
+    EXPECT_DOUBLE_EQ(20.0, testObjectClone.deadBandTemperatureDifference());
+    EXPECT_DOUBLE_EQ(0.99, testObjectClone.ratedHeatReclaimRecoveryEfficiency().get());
+    EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedInletWaterTemperature());
+    EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedOutdoorAirTemperature());
+    EXPECT_DOUBLE_EQ(999.0, testObjectClone.maximumInletWaterTemperatureforHeatReclaim());
+    EXPECT_DOUBLE_EQ(999.0, testObjectClone.waterFlowRate());
+    EXPECT_DOUBLE_EQ(999.0, testObjectClone.waterPumpPower());
+    EXPECT_DOUBLE_EQ(0.99, testObjectClone.fractionofPumpHeattoWater());
+    EXPECT_DOUBLE_EQ(999.0, testObjectClone.onCycleParasiticElectricLoad());
+    EXPECT_DOUBLE_EQ(999.0, testObjectClone.offCycleParasiticElectricLoad());
+    EXPECT_FALSE(testObjectClone.heatingSource());
+    EXPECT_FALSE(testObjectClone.heatRejectionTarget());
+    ASSERT_TRUE(testObjectClone.heatReclaimEfficiencyFunctionofTemperatureCurve());
+    EXPECT_EQ(curve, testObjectClone.heatReclaimEfficiencyFunctionofTemperatureCurve().get());
+}
+
+TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneModelWithCustomData2)
+{
+    Model model;
+    ScheduleCompact schedule = ScheduleCompact(model);
+    CoilWaterHeatingDesuperheater testObject = CoilWaterHeatingDesuperheater(model, schedule);
+    CoilCoolingWaterToAirHeatPumpEquationFit coil = CoilCoolingWaterToAirHeatPumpEquationFit(model);
+    WaterHeaterStratified heatRejection = WaterHeaterStratified(model);
+    CurveBiquadratic curve = CurveBiquadratic(model);
+
+    testObject.setDeadBandTemperatureDifference(20.0);
+    testObject.setRatedHeatReclaimRecoveryEfficiency(0.99);
+    testObject.setRatedInletWaterTemperature(999.0);
+    testObject.setRatedOutdoorAirTemperature(999.0);
+    testObject.setMaximumInletWaterTemperatureforHeatReclaim(999.0);
+    testObject.setWaterFlowRate(999.0);
+    testObject.setWaterPumpPower(999.0);
+    testObject.setFractionofPumpHeattoWater(0.99);
+    testObject.setOnCycleParasiticElectricLoad(999.0);
+    testObject.setOffCycleParasiticElectricLoad(999.0);
+    testObject.setHeatingSource(coil);
     testObject.addToHeatRejectionTarget(heatRejection);
     testObject.setHeatReclaimEfficiencyFunctionofTemperatureCurve(curve);
 
