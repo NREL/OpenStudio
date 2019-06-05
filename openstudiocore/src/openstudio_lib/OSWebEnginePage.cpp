@@ -27,81 +27,32 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef OPENSTUDIO_GEOMETRYPREVIEWVIEW_HPP
-#define OPENSTUDIO_GEOMETRYPREVIEWVIEW_HPP
-
-#include "ModelObjectInspectorView.hpp"
-#include "ModelSubTabView.hpp"
 #include "OSWebEnginePage.hpp"
 
-#include "../model/Model.hpp"
+#include "../utilities/core/Assert.hpp"
 
-#include <QWidget>
-#include <QWebEngineView>
-#include <QProgressBar>
-
-class QComboBox;
-class QPushButton;
+#include <QDesktopServices>
+#include <QWebEngineCertificateError>
 
 namespace openstudio {
 
-class OSDocument;
-
-class GeometryPreviewView : public QWidget
+bool OSWebEnginePage::acceptNavigationRequest(const QUrl & url, QWebEnginePage::NavigationType type, bool isMainFrame)
 {
-  Q_OBJECT
+  if (type == QWebEnginePage::NavigationTypeLinkClicked)
+  {
+    QString s = url.toString();
+    // open links in system browser rather than embedded view
+    QDesktopServices::openUrl(url);
+    return false;
+  }
+  return true;
+}
 
-  public:
-
-    GeometryPreviewView(bool isIP,
-                      const openstudio::model::Model& model,
-                      QWidget * parent = nullptr);
-
-    virtual ~GeometryPreviewView();
-
-  private:
-
-};
-
-// main widget
-
-class PreviewWebView : public QWidget
-{
-  Q_OBJECT;
-
-  public:
-    PreviewWebView(bool isIP, const openstudio::model::Model& model, QWidget *t_parent = nullptr);
-    virtual ~PreviewWebView();
-
-  public slots:
-    void onUnitSystemChange(bool t_isIP);
-
-  private slots:
-    void refreshClicked();
-
-    // DLM: for debugging
-    void 	onLoadFinished(bool ok);
-    //void 	onLoadProgress(int progress);
-    //void 	onLoadStarted();
-    void 	onTranslateProgress(double percentage);
-    void 	onJavaScriptFinished(const QVariant &v);
-    void 	onRenderProcessTerminated(QWebEnginePage::RenderProcessTerminationStatus terminationStatus, int exitCode);
-  private:
-    REGISTER_LOGGER("openstudio::PreviewWebView");
-
-    bool m_isIP;
-    model::Model m_model;
-
-    QProgressBar * m_progressBar;
-    QPushButton * m_refreshBtn;
-
-    QWebEngineView * m_view;
-    OSWebEnginePage * m_page;
-    std::shared_ptr<OSDocument> m_document;
-
-    QString m_json;
-};
+bool OSWebEnginePage::certificateError(const QWebEngineCertificateError &certificateError) {
+  // Ignore error
+  LOG(Warn, "SSL error: " << toString(certificateError.errorDescription()));
+  return true;
+}
 
 } // openstudio
 
-#endif // OPENSTUDIO_GEOMETRYPREVIEWVIEW_HPP
