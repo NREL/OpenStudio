@@ -69,6 +69,7 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
 
       Valid input: \n
       \ref WaterHeaterMixed
+      \ref WaterHeaterStratified
   */
   bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
 
@@ -154,6 +155,7 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
       Valid inputs: \n
       \ref CoilCoolingDXSingleSpeed \n
       \ref CoilCoolingDXTwoSpeed \n
+      \ref CoilCoolingWaterToAirHeatPumpEquationFit \n
       \ref RefrigerationCondenserAirCooled \n
       \ref RefrigerationCondenserEvaporativeCooled \n
       \ref RefrigerationCondenserWaterCooled \n

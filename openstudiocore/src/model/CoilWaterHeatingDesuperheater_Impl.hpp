@@ -40,6 +40,7 @@ class Schedule;
 class CurveBiquadratic;
 class HVACComponent;
 class WaterHeaterMixed;
+class WaterHeaterStratified;
 
 namespace detail {
 

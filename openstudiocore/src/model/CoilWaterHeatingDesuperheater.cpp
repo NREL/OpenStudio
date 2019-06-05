@@ -38,6 +38,8 @@
 #include "HVACComponent_Impl.hpp"
 #include "WaterHeaterMixed.hpp"
 #include "WaterHeaterMixed_Impl.hpp"
+#include "WaterHeaterStratified.hpp"
+#include "WaterHeaterStratified_Impl.hpp"
 #include "WaterToWaterComponent.hpp"
 #include "WaterToWaterComponent_Impl.hpp"
 #include "Node.hpp"
@@ -198,7 +200,7 @@ namespace detail {
   bool CoilWaterHeatingDesuperheater_Impl::addToHeatRejectionTarget(const ModelObject& heatRejectionTarget)
   {
     bool validChoice = false;
-    if( heatRejectionTarget.iddObjectType() == openstudio::IddObjectType::OS_WaterHeater_Mixed )
+    if( (heatRejectionTarget.iddObjectType() == openstudio::IddObjectType::OS_WaterHeater_Mixed) || (heatRejectionTarget.iddObjectType() == openstudio::IddObjectType::OS_WaterHeater_Stratified) )
     {
       validChoice = true;
     }
