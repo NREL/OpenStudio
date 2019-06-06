@@ -15696,6 +15696,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \required-field
        \reference CoolingCoilsWaterToAirHP
        \reference ConnectionObject
+       \reference DesuperHeatingCoilSources
   A3,  \field Water Inlet Node Name
        \type object-list
        \required-field
