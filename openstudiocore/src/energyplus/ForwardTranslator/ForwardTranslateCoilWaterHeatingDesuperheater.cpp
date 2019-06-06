@@ -173,8 +173,8 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingDesuperhe
       // and this DX coil isn't already wrapped in a Unitary, then the FT will wrap it into a CoilSystem:Cooling:DX object and return that, but we
       // need the DX coil here and not the wrapper.
       //
-      // Note: Other accepted types are Refrigeration objects and don't suffer the same problem
-      // (Refrigeration:Condenser:AirCooled, Refrigeration:Condenser:EvaporativeCooled, Refrigeration:Condenser:WaterCooled)
+      // Note: Other accepted types are objects and don't suffer the same problem
+      // (Refrigeration:Condenser:AirCooled, Refrigeration:Condenser:EvaporativeCooled, Refrigeration:Condenser:WaterCooled, Coil:Cooling:WaterToAirHeatPump:EquationFit)
 
       std::string objectType;
       std::string objectName;
