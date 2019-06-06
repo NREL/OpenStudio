@@ -42,7 +42,10 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   set(CONAN_BOOST_ASIO "boost_asio/${BOOST_VERSION}@bincrafters/stable")
   set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_BUILD "missing")
+  # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
+  # bump the actual package version when we make changes
+  # 'outdated' also acts like 'missing': if no binary, will build them.
+  list(APPEND CONAN_BUILD "outdated")
 
   if (MSVC)
     # No-op
