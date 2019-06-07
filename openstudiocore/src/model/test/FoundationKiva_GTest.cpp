@@ -251,3 +251,43 @@ TEST_F(ModelFixture, FoundationKiva_Remove) {
   EXPECT_FALSE(kiva.remove().empty());
   EXPECT_EQ(size, model.modelObjects().size());
 }
+
+// check custom blocks
+TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
+  Model model;
+  FoundationKiva kiva(model);
+  StandardOpaqueMaterial material(model);
+  
+  kiva.removeAllCustomBlocks();
+  
+  EXPECT_EQ(0, kiva.numberofCustomBlocks().get());
+  ASSERT_TRUE(kiva.addCustomBlock(material, 0.5, 1, -1));
+  EXPECT_EQ(1, kiva.numberofCustomBlocks().get());
+  ASSERT_TRUE(kiva.addCustomBlock(material, 1, 2, -2));
+  EXPECT_EQ(2, kiva.numberofCustomBlocks().get());
+  ASSERT_TRUE(kiva.addCustomBlock(material, 1.5, 3.5, -3));
+  EXPECT_EQ(3, kiva.numberofCustomBlocks().get());
+  ASSERT_TRUE(kiva.addCustomBlock(material, 2.5, 4.7, -4.5555));
+  EXPECT_EQ(4, kiva.numberofCustomBlocks().get());
+  ASSERT_TRUE(kiva.addCustomBlock(material, 3.5, -7, 5.67));
+  EXPECT_EQ(5, kiva.numberofCustomBlocks().get());
+  ASSERT_TRUE(kiva.addCustomBlock(material, 4, 0.0001, 7.0));
+  EXPECT_EQ(6, kiva.numberofCustomBlocks().get());
+  ASSERT_TRUE(kiva.addCustomBlock(material, 10, 10, 100));
+  EXPECT_EQ(7, kiva.numberofCustomBlocks().get());
+  ASSERT_TRUE(kiva.addCustomBlock(material, 20, 10, 200.0001));
+  EXPECT_EQ(8, kiva.numberofCustomBlocks().get());
+  ASSERT_TRUE(kiva.addCustomBlock(material, 25.000001, -30, 150.1));
+  EXPECT_EQ(9, kiva.numberofCustomBlocks().get());
+  ASSERT_TRUE(kiva.addCustomBlock(material, 99.99999, -45.9999, 0));
+  EXPECT_EQ(10, kiva.numberofCustomBlocks().get());
+  
+  //should fail since only 10 allowed
+  ASSERT_FALSE(kiva.addCustomBlock(material, 1, 1, 1));
+  kiva.removeCustomBlock(9);
+  EXPECT_EQ(9, kiva.numberofCustomBlocks().get());
+  kiva.removeAllCustomBlocks();
+  EXPECT_EQ(0, kiva.numberofCustomBlocks().get());
+  kiva.removeCustomBlock(0);
+  EXPECT_EQ(0, kiva.numberofCustomBlocks().get());
+}
