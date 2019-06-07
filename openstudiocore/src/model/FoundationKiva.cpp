@@ -48,6 +48,30 @@
 namespace openstudio {
 namespace model {
 
+CustomBlock::CustomBlock(const Material& material, double depth, double xPosition, double zPosition)
+  : m_material(material), m_depth(depth), m_xPosition(xPosition), m_xPosition(zPosition) {
+    
+  if (m_depth < 0) {
+    LOG_AND_THROW("Unable to create custom block '" << m_name << "', depth of " << m_depth << " less than 0");
+  }
+}
+
+Material CustomBlock::material() const {
+  return m_material;
+}
+
+double CustomBlock::depth() const {
+  return m_depth;
+}
+
+double CustomBlock::xPosition() const {
+  return m_xPosition;
+}
+
+double CustomBlock::zPosition() const {
+  return m_zPosition;
+}
+
 namespace detail {
 
   FoundationKiva_Impl::FoundationKiva_Impl(const IdfObject& idfObject,
@@ -308,6 +332,96 @@ namespace detail {
   SurfaceVector FoundationKiva_Impl::surfaces() const {
     return getObject<ModelObject>().getModelObjectSources<Surface>(Surface::iddObjectType());
   }
+  
+  // TODO: this field shouldn't even exist in the IDD
+  unsigned int FoundationKiva_Impl::numberofCustomBlocks() const {
+    return numExtensibleGroups();
+  }
+
+  // TODO: this field shouldn't even exist in the IDD
+  bool FoundationKiva_Impl::setNumberofCustomBlocks(unsigned int numberofCustomBlocks) {
+    bool result = setInt(OS_Foundation_KivaFields::NumberofCustomBlocks, numberofCustomBlocks);
+    return result;
+  }
+
+  // TODO: this field shouldn't even exist in the IDD
+  void FoundationKiva_Impl::resetNumberofCustomBlocks() {
+    bool result = setInt(OS_Foundation_KivaFields::NumberofCustomBlocks, 0);
+    OS_ASSERT(result);
+  }
+  
+  bool FoundationKiva_Impl::addCustomBlock(const CustomBlock& customBlock) {
+    bool result;
+   
+    unsigned int num = numberofCustomBlocks();
+    // Max number of custom blocks is 10
+    if (num >= 10) {
+      LOG(Warn, briefDescription() << " already has 10 custom blocks which is the limit");
+      result = false;
+    } else {
+      // Push an extensible group
+      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      bool material = eg.setString();
+      bool depth = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockDepth, customBlock.depth());
+      bool xPosition = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockXPosition, customBlock.xPosition());
+      bool zPosition = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockZPosition, customBlock.zPosition());
+      if (material && depth && xPosition && zPosition) {
+        setNumberofCustomBlocks(num + 1);
+        result = true;
+      } else {
+        // Something went wrong
+        // So erase the new extensible group
+        getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+        result = false;
+      }
+    }    
+    return result;
+  }
+  
+  bool FoundationKiva_Impl::addCustomBlock(const Material& material, double depth, double xPosition, double zPosition) {
+    // Make a custom block, and then call the above function
+    CustomBlock customBlock(material, depth, xPosition, zPosition);
+    return addCustomBlock(customBlock);
+  }
+  
+  bool FoundationKiva_Impl::removeCustomBlock(unsigned groupIndex) {
+    bool result;
+    
+    unsigned int num = numberofCustomBlocks();
+    if (groupIndex < num) {
+      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+      setNumberofCustomBlocks(num - 1);
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }
+  
+  void FoundationKiva_Impl::removeAllCustomBlocks() {
+    getObject<ModelObject>().clearExtensibleGroups();
+    resetNumberofCustomBlocks();
+  }
+  
+  std::vector<CustomBlock> FoundationKiva_Impl::customBlocks() const {
+    std::vector<CustomBlock> result;
+    
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+    
+    for (const auto & group : groups) {
+      std::string name = group.cast<WorkspaceExtensibleGroup>().getString()
+      double depth = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockDepth);
+      double xPosition = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockXPosition);
+      double zPosition = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockZPosition);
+      
+      if (name && depth && xPosition && zPosition) {
+        CustomBlock customBlock(name, depth, xPosition, zPosition);
+        result.push_back(customBlock);
+      }
+    }
+    
+    return result;
+  }
 
 } // detail
 
@@ -505,6 +619,27 @@ void FoundationKiva::resetFootingDepth() {
 
 std::vector<Surface> FoundationKiva::surfaces() const {
   return getImpl<detail::FoundationKiva_Impl>()->surfaces();
+}
+
+boost::optional<unsigned int> FoundationKiva_Impl::numberofCustomBlocks() const {
+  return getImpl<detail::FoundationKiva_Impl>()->numberofCustomBlocks();
+}
+
+bool FoundationKiva::addCustomBlock(const CustomBlock& customBlock) {
+  return getImpl<detail::FoundationKiva_Impl>()->addCustomBlock(customBlock);
+}
+
+// TODO: change to bool
+void FoundationKiva::removeCustomBlock(int groupIndex) {
+  rgetImpl<detail::FoundationKiva_Impl>()->removeCustomBlock(groupIndex);
+}
+
+void FoundationKiva::removeAllCustomBlocks() {
+  return getImpl<detail::FoundationKiva_Impl>()->removeAllCustomBlocks();
+}
+
+std::vector<CustomBlock> FoundationKiva::customBlocks() const {
+  return getImpl<detail::FoundationKiva_Impl>()->customBlocks();
 }
 
 /// @cond

@@ -54,6 +54,28 @@ namespace detail {
 
 } // detail
 
+
+/** This class implements a custom block */
+class CustomBlock {
+  public:
+    CustomBlock(const Material& material, double depth, double xPosition, double zPosition);
+    
+    Material material() const;
+    double depth() const;
+    double xPosition() const;
+    double zPosition() const;
+    
+  private:
+    //material;
+    double m_depth;
+    double m_xPosition;
+    double m_zPosition;
+    REGISTER_LOGGER("openstudio.model.CustomBlock");
+};
+
+// Overload operator<<
+std::ostream& operator<< (std::ostream& out, const openstudio::model::CustomBlock& customBlock);
+
 /** FoundationKiva is a ModelObject that wraps the OpenStudio IDD object 'OS:Foundation:Kiva'. */
 class MODEL_API FoundationKiva : public ModelObject {
  public:
@@ -67,6 +89,19 @@ class MODEL_API FoundationKiva : public ModelObject {
   //@}
 
   static IddObjectType iddObjectType();
+  
+  //extensible fields
+  
+  bool addCustomBlock(const CustomBlock& customBlock);
+  // Convenience function to add a constituent without explicitly creating a FuelSupplyConstituent
+  bool addCustomBlock(const Material& material, double depth, double xPosition, double zPosition);
+  
+  // TODO: this should return bool (to indicate whether groupIndex is valid...)
+  void removeCustomBlock(int groupIndex);
+  
+  void removeAllCustomBlocks();
+  
+  std::vector<CustomBlock> customBlocks() const;
 
   /** @name Getters */
   //@{
@@ -112,6 +147,9 @@ class MODEL_API FoundationKiva : public ModelObject {
   bool isFootingDepthDefaulted() const;
 
   std::vector<Surface> surfaces() const;
+  
+  // TODO: this should be non optional
+  boost::optional<unsigned int> numberofCustomBlocks() const;
 
   //@}
   /** @name Setters */

@@ -40,6 +40,7 @@ namespace model {
 class Material;
 class ConstructionBase;
 class Surface;
+class CustomBlock;
 
 namespace detail {
 
@@ -72,6 +73,15 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
+    
+    //extensible fields
+    bool addCustomBlock(const CustomBlock& customBlock);
+    bool addCustomBlock(material, double depth, double xPosition, double zPosition);
+    
+    bool removeCustomBlock(unsigned groupIndex);
+    void removeAllCustomBlocks();
+    
+    std::vector<CustomBlock> customBlocks() const;
     
     //@}
     /** @name Getters */
@@ -117,7 +127,9 @@ namespace detail {
 
     bool isFootingDepthDefaulted() const;
 
-    std::vector<Surface> surfaces() const; 
+    std::vector<Surface> surfaces() const;
+    
+    unsigned int numberofCustomBlocks() const;
 
     //@}
     /** @name Setters */
@@ -183,6 +195,9 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.FoundationKiva");
+    // Not to be exposed publicly, automatically handled by addCustomBlock, removeCustomBlock
+    bool setNumberofCustomBlocks(unsigned int numberofCustomBlocks);
+    void resetNumberofCustomBlocks();
   };
 
 } // detail
