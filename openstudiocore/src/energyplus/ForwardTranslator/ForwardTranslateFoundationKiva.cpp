@@ -115,6 +115,21 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKiva( Foundatio
   }
 
   idfObject.setDouble(Foundation_KivaFields::FootingDepth, modelObject.footingDepth());
+  
+  //UserDefinedCustomBlocks
+  std::vector<CustomBlock> customBlocks = modelObject.customBlocks();
+  if (!customBlocks.empty()) {
+    for (const CustomBlock& customBlock : customBlocks) {
+      auto eg = idfObject.pushExtensibleGroup();
+      eg.setString(material);
+      eg.setDouble(Foundation_KivaExtensibleFields::CustomBlockDepth, customBlock.depth());
+      eg.setDouble(Foundation_KivaExtensibleFields::CustomBlockXPosition, customBlock.xPosition());
+      eg.setDouble(Foundation_KivaExtensibleFields::CustomBlockZPosition, customBlock.zPosition());
+    }
+  }
+  
+  //NumberofUserDefinedCustomBlocks
+  idfObject.setInt(Foundation_KivaFields::NumberofCustomBlocks, customBlocks.size());
 
   return boost::optional<IdfObject>(idfObject);
 }
