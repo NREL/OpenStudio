@@ -257,8 +257,8 @@ namespace detail {
       }
     }
 
-    model().disconnect(getObject<ModelObject>(),inletPort());
-    model().disconnect(getObject<ModelObject>(),outletPort());
+    model().disconnect(thisObject, inletPort());
+    model().disconnect(thisObject, outletPort());
 
     if( _coolingCoil && ( loop = _coolingCoil->plantLoop() ) )
     {

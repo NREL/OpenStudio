@@ -111,7 +111,7 @@ namespace detail {
     result.insert(result.end(),meters.begin(),meters.end());
 
     // building stories
-    BuildingStoryVector stories = model().getConcreteModelObjects<BuildingStory>();
+    BuildingStoryVector stories = this->buildingStories();
     result.insert(result.end(),stories.begin(),stories.end());
 
     // exterior shading groups
@@ -125,6 +125,57 @@ namespace detail {
     // spaces
     SpaceVector spaces = this->spaces();
     result.insert(result.end(), spaces.begin(), spaces.end());
+
+    // TODO: JM 2019-05-13: handle HVAC (#2449)
+    // AirLoopHVACs should be considered de facto part of the building
+    // PlantLoops may merit more attention:
+    // if a PlantLoop doesn't serve an AirLoopHVAC or a ThermalZone, should it be considered part of the Building?
+    // eg: a PlantLoop serving only a LoadProfile:Plant?
+
+    return result;
+  }
+
+  // TODO: this is far from perfect, currently this is just trying to address a known issue #3524
+  // Ideally all corner cases would be handled correctly, and HVAC too
+  std::vector<IdfObject> Building_Impl::remove() {
+
+    // A result vector, and a temporary vector to insert into the result one
+    std::vector<IdfObject> result;
+    std::vector<IdfObject> tmp;
+
+    // Spaces
+    for (auto& s: this->spaces()) {
+      tmp = s.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+    }
+
+    // thermal zones
+    for (auto& z: this->thermalZones()) {
+      tmp = z.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+    }
+
+    // exterior shading groups
+    for (auto& sg: this->shadingSurfaceGroups()) {
+      tmp = sg.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+
+    }
+
+    // building stories
+    for (auto& bs: this->buildingStories()) {
+      tmp = bs.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+    }
+
+    // meters
+    for (auto& m: this->meters()) {
+      tmp = m.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+    }
+
+    tmp = ParentObject_Impl::remove();
+    result.insert(result.end(), tmp.begin(), tmp.end());
 
     return result;
   }
@@ -167,7 +218,7 @@ namespace detail {
       }
 
       // BuildingStory instances
-      auto t_stories = model().getConcreteModelObjects<BuildingStory>();
+      auto t_stories = buildingStories();
       // Map of the source model story handle to the target model story "cloned" ModelObject
       std::map<Handle,BuildingStory> m_storyMap;
 
@@ -560,6 +611,12 @@ namespace detail {
       }
     }
     return result;
+  }
+
+  BuildingStoryVector Building_Impl::buildingStories() const
+  {
+    // all Building Stories in workspace implicitly belong to building
+    return this->model().getConcreteModelObjects<BuildingStory>();
   }
 
   OptionalFacility Building_Impl::facility() const
@@ -982,6 +1039,11 @@ namespace detail {
     return result;
   }
 
+  std::vector<ModelObject> Building_Impl::buildingStoriesAsModelObjects() const {
+    ModelObjectVector result = castVector<ModelObject>(buildingStories());
+    return result;
+  }
+
   boost::optional<ModelObject> Building_Impl::facilityAsModelObject() const {
     OptionalModelObject result;
     OptionalFacility intermediate = facility();
@@ -1248,6 +1310,11 @@ void Building::resetDefaultScheduleSet()
 OutputMeterVector Building::meters() const
 {
   return getImpl<detail::Building_Impl>()->meters();
+}
+
+BuildingStoryVector Building::buildingStories() const
+{
+  return getImpl<detail::Building_Impl>()->buildingStories();
 }
 
 OptionalFacility Building::facility() const

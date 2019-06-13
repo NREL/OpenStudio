@@ -560,6 +560,8 @@ set(${target_name}_test_src
 
   Test/CoilHeatingGas_GTest.cpp
   Test/CoilCoolingDXMultiSpeed_GTest.cpp
+  Test/CoilWaterHeatingDesuperheater_GTest.cpp
+  Test/CoilHeatingDesuperheater_GTest.cpp
   Test/Construction_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp

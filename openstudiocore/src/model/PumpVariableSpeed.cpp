@@ -1174,6 +1174,16 @@ namespace detail {
     return types;
   }
 
+  std::string PumpVariableSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_Pump_VariableSpeedFields::EndUseSubcategory, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool PumpVariableSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_Pump_VariableSpeedFields::EndUseSubcategory, endUseSubcategory);
+  }
+
 } // detail
 
 PumpVariableSpeed::PumpVariableSpeed(const Model& model)
@@ -1188,6 +1198,8 @@ PumpVariableSpeed::PumpVariableSpeed(const Model& model)
   setDesignElectricPowerPerUnitFlowRate(348701.1);
   setDesignShaftPowerPerUnitFlowRatePerUnitHead(1.282051282);
   setDesignMinimumFlowRateFraction(0.0);
+
+  setEndUseSubcategory("General");
 }
 
 IddObjectType PumpVariableSpeed::iddObjectType() {
@@ -1652,6 +1664,14 @@ double PumpVariableSpeed::designMinimumFlowRateFraction() const {
 
 bool PumpVariableSpeed::setDesignMinimumFlowRateFraction(double designMinimumFlowRateFraction) {
   return getImpl<detail::PumpVariableSpeed_Impl>()->setDesignMinimumFlowRateFraction(designMinimumFlowRateFraction);
+}
+
+std::string PumpVariableSpeed::endUseSubcategory() const {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->endUseSubcategory();
+}
+
+bool PumpVariableSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 /// @cond

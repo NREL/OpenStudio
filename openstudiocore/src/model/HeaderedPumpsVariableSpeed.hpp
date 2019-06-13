@@ -106,6 +106,8 @@ class MODEL_API HeaderedPumpsVariableSpeed : public StraightComponent {
 
   double skinLossRadiativeFraction() const;
 
+  std::string endUseSubcategory() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -149,6 +151,8 @@ class MODEL_API HeaderedPumpsVariableSpeed : public StraightComponent {
   void resetThermalZone();
 
   bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
+
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
   //@}
   /** @name Other */

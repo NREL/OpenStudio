@@ -38,12 +38,20 @@
 #include "../../model/CoilCoolingWater_Impl.hpp"
 #include "../../model/ControllerWaterCoil.hpp"
 #include "../../model/ControllerWaterCoil_Impl.hpp"
+
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/FanVariableVolume.hpp"
+#include "../../model/FanVariableVolume_Impl.hpp"
+#include "../../model/FanConstantVolume.hpp"
+#include "../../model/FanConstantVolume_Impl.hpp"
+
 #include "../../model/Model.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/CoilSystem_Cooling_Water_HeatExchangerAssisted_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_Water_FieldEnums.hxx>
 #include <utilities/idd/Controller_WaterCoil_FieldEnums.hxx>
+#include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -109,6 +117,13 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilSystemCoolingWaterHea
       if( idf->iddObject().type() == IddObjectType::Coil_Cooling_Water ) {
         idf->setString(Coil_Cooling_WaterFields::AirInletNodeName,hxSupplyAirOutletNodeName);
         idf->setString(Coil_Cooling_WaterFields::AirOutletNodeName,hxExhaustAirInletNodeName);
+      // Add IddObjectType::Coil_Cooling_Water_DetailedGeometry if implemented
+      } else {
+        // Shouldn't happen, accepts only Coil:Cooling:Water or Coil:Cooling:Water:DetailedGeometry
+        // Shouldn't happen, accepts only Coil:Cooling:DX:SingleSpeed or Coil:Cooling:DX:VariableSpeed
+        LOG(Fatal, modelObject.briefDescription() << " appears to have a cooling coil that shouldn't have been accepted: "
+            << coolingCoil.briefDescription());
+        OS_ASSERT(false);
       }
     }
     if( auto coilCoolingWater = coolingCoil.optionalCast<CoilCoolingWater>() ) {
@@ -118,6 +133,53 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilSystemCoolingWaterHea
         }
       }
     }
+
+    // Need a SPM:MixedAir on the Coil:Cooling:Water outlet node (that we **created** just above in IDF directly, so it won't get picked up by the
+    // ForwardTranslateAirLoopHVAC method)
+    if( boost::optional<AirLoopHVAC> _airLoop = modelObject.airLoopHVAC() ) {
+      std::vector<StraightComponent> fans;
+      std::vector<ModelObject> supplyComponents = _airLoop->supplyComponents();
+
+      for( auto it = supplyComponents.begin();
+           it != supplyComponents.end();
+           ++it )
+      {
+        if( boost::optional<FanVariableVolume> variableFan = it->optionalCast<FanVariableVolume>() ) {
+          fans.insert(fans.begin(), *variableFan);
+        }
+        else if( boost::optional<FanConstantVolume> constantFan = it->optionalCast<FanConstantVolume>() ) {
+          fans.insert(fans.begin(), *constantFan);
+        }
+      }
+
+      if( !fans.empty() ) {
+        // Fan closest to the supply outlet node
+        StraightComponent fan = fans.front();
+        OptionalNode inletNode = fan.inletModelObject()->optionalCast<Node>();
+        OptionalNode outletNode = fan.outletModelObject()->optionalCast<Node>();
+
+        // No reason this wouldn't be ok at this point really...
+        // TODO: change to OS_ASSERT?
+        if( inletNode && outletNode ) {
+
+          IdfObject idf_spm(IddObjectType::SetpointManager_MixedAir);
+          idf_spm.setString(SetpointManager_MixedAirFields::Name, hxExhaustAirInletNodeName + " OS Default SPM");
+          idf_spm.setString(SetpointManager_MixedAirFields::ControlVariable,"Temperature");
+
+          Node supplyOutletNode = _airLoop->supplyOutletNode();
+          idf_spm.setString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName, supplyOutletNode.name().get());
+
+          idf_spm.setString(SetpointManager_MixedAirFields::FanInletNodeName, inletNode->name().get());
+          idf_spm.setString(SetpointManager_MixedAirFields::FanOutletNodeName, outletNode->name().get());
+
+          idf_spm.setString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName, hxExhaustAirInletNodeName);
+
+          m_idfObjects.push_back(idf_spm);
+
+        }
+      }
+    }
+
   }
 
   return idfObject;

@@ -27,73 +27,57 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_UTILITYCOST_CHARGE_SIMPLE_IMPL_HPP
-#define MODEL_UTILITYCOST_CHARGE_SIMPLE_IMPL_HPP
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
 
-#include "ParentObject_Impl.hpp"
-#include "UtilityCost_Charge_Simple.hpp"
-#include "../utilities/core/Optional.hpp"
+#include "../ForwardTranslator.hpp"
 
-namespace openstudio {
-namespace model {
-namespace detail {
+#include "../../model/Model.hpp"
+#include "../../model/CoilWaterHeatingDesuperheater.hpp"
+#include "../../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../../model/CoilCoolingDXTwoSpeed.hpp"
+#include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
 
-class MODEL_API UtilityCost_Charge_Simple_Impl : public ParentObject_Impl{
+#include "../../model/ScheduleConstant.hpp"
+#include "../../model/Schedule.hpp"
 
-public:
-  // constructor
-  UtilityCost_Charge_Simple_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+#include <utilities/idd/Coil_WaterHeating_Desuperheater_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
 
-  // construct from workspace
-  UtilityCost_Charge_Simple_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                 Model_Impl* model,
-                 bool keepHandle);
+using namespace openstudio::energyplus;
+using namespace openstudio::model;
+using namespace openstudio;
 
-  // clone copy constructor
-  UtilityCost_Charge_Simple_Impl(const UtilityCost_Charge_Simple_Impl& other,Model_Impl* model,bool keepHandle);
+TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater) {
+  Model m;
 
-  // virtual destructor
-  virtual ~UtilityCost_Charge_Simple_Impl(){}
+  ScheduleConstant temperatureSetpointSchedule(m);
+  CoilWaterHeatingDesuperheater desuperheater(m, temperatureSetpointSchedule);
 
-  OptionalString tariffName() const;
-  bool setTariffName(const std::string& str);
+  std::vector<HVACComponent> testCoils = {
+    CoilCoolingDXSingleSpeed(m),
+    CoilCoolingDXTwoSpeed(m),
+    CoilCoolingDXTwoStageWithHumidityControlMode(m)
+  };
 
-  OptionalString sourceVariable() const;
-  bool setSourceVariable(const std::string& str);
+  ForwardTranslator forwardTranslator;
 
-  OptionalString season() const;
-  bool setSeason(const std::string& str);
+  for (const auto& dxCoil: testCoils) {
 
-  OptionalString categoryVariableName() const;
-  bool setCategoryVariableName(const std::string& str);
+    desuperheater.setHeatingSource(dxCoil);
 
-  OptionalString costPerUnitValueOrVariableName() const;
-  bool setCostPerUnitValueOrVariableName(const std::string& str);
+    Workspace workspace = forwardTranslator.translateModel(m);
 
-  // return the parent object in the hierarchy
-  virtual boost::optional<ParentObject> parent() const override;
+    WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::Coil_WaterHeating_Desuperheater));
+    ASSERT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_desuperheater(idfObjs[0]);
 
-  // set the parent, child may have to call methods on the parent
-  virtual bool setParent(ParentObject& newParent) override;
+    std::string ep_idd_name = dxCoil.iddObject().name().substr(3);
 
-  // return any children objects in the hierarchy
-  virtual std::vector<ModelObject> children() const override;
+    // Check that the DX coil ends up directly onto the object, and NOT a CoilSystem:Cooling:DX wrapper
+    EXPECT_EQ(ep_idd_name, idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceObjectType).get());
+    EXPECT_EQ(dxCoil.nameString(), idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceName).get());
 
-  /// get a vector of allowable children types
-  virtual std::vector<IddObjectType> allowableChildTypes() const override;
+  }
 
-  // Get all output variable names that could be associated with this object.
-  virtual const std::vector<std::string>& outputVariableNames() const override;
-
-  virtual IddObjectType iddObjectType() const override {return UtilityCost_Charge_Simple::iddObjectType();}
-
-private:
-  REGISTER_LOGGER("openstudio.model.UtilityCost_Charge_Simple");
-
-};
-
-} // detail
-} // model
-} // openstudio
-
-#endif // MODEL_UTILITYCOST_CHARGE_SIMPLE_IMPL_HPP
+}

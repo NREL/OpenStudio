@@ -1,5 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'xml-simple'
-gem 'openstudio-standards', github: 'nrel/openstudio-standards', branch: 'ambient-loop'
+gem 'json_pure'
+gem 'openstudio-extension', github: 'nrel/openstudio-extension-gem', tag: 'v0.1.1'
 gem 'tilt', github: 'rtomayko/tilt', ref: 'abe77eaf1b5f8da0a7e46135f'
+gem 'simplecov', github: 'NREL/simplecov'

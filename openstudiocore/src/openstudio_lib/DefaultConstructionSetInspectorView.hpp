@@ -266,6 +266,21 @@ protected:
   virtual void onDrop(const OSItemId& itemId) override;
 };
 
+class AdiabaticSurfaceVC : public ModelObjectVectorController
+{
+  Q_OBJECT
+
+public:
+  virtual ~AdiabaticSurfaceVC() {}
+
+protected:
+  virtual void onChangeRelationship(const model::ModelObject& modelObject, int index, Handle newHandle, Handle oldHandle) override;
+  virtual std::vector<OSItemId> makeVector() override;
+  virtual void onRemoveItem(OSItem* item) override;
+  virtual void onReplaceItem(OSItem * currentItem, const OSItemId& replacementItemId) override;
+  virtual void onDrop(const OSItemId& itemId) override;
+};
+
 class DefaultConstructionSetInspectorView : public ModelObjectInspectorView
 {
   Q_OBJECT
@@ -311,6 +326,7 @@ class DefaultConstructionSetInspectorView : public ModelObjectInspectorView
     OSDropZone * m_spaceShadingDZ;
     OSDropZone * m_buildingShadingDZ;
     OSDropZone * m_siteShadingDZ;
+    OSDropZone * m_adiabaticSurfaceDZ;
 
     WallConstructionVC * m_exteriorWallConstructionVC;
     FloorConstructionVC * m_exteriorFloorConstructionVC;
@@ -336,6 +352,7 @@ class DefaultConstructionSetInspectorView : public ModelObjectInspectorView
     SpaceShadingVC * m_spaceShadingVC;
     BuildingShadingVC * m_buildingShadingVC;
     SiteShadingVC * m_siteShadingVC;
+    AdiabaticSurfaceVC * m_adiabaticSurfaceVC;
 
     std::vector<ModelObjectVectorController *> m_vectorControllers;
     std::vector<OSDropZone *> m_dropZones;

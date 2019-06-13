@@ -952,7 +952,13 @@ namespace detail{
     {
       if( ! airLoop->demandComponent(node.handle()) )
       {
-        return StraightComponent_Impl::addToNode( node );
+        // TODO: JM 2019-03-12 I'm not sure we shouldn't just restrict to ANY containingHVACComponent (disallow if part of a UnitarySystem)
+        auto t_containingHVACComponent = containingHVACComponent();
+        if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
+          LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemCoolingDXHeatExchangerAssisted. Please call CoilSystemCoolingDXHeatExchangerAssisted::addToNode instead");
+        } else {
+          return StraightComponent_Impl::addToNode( node );
+        }
       }
     }
 

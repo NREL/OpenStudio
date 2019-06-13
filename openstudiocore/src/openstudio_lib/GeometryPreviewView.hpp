@@ -32,6 +32,7 @@
 
 #include "ModelObjectInspectorView.hpp"
 #include "ModelSubTabView.hpp"
+#include "OSWebEnginePage.hpp"
 
 #include "../model/Model.hpp"
 
@@ -95,6 +96,7 @@ class PreviewWebView : public QWidget
     QPushButton * m_refreshBtn;
 
     QWebEngineView * m_view;
+    OSWebEnginePage * m_page;
     std::shared_ptr<OSDocument> m_document;
 
     QString m_json;

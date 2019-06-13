@@ -88,7 +88,7 @@
 #include <QProcess>
 #include <QSettings>
 #include <QProcessEnvironment>
-#include <QDesktopServices>
+
 
 int CHECKFORUPDATEMSEC = 5000;
 
@@ -107,17 +107,6 @@ QUrl getEmbeddedFileUrl(const QString& filename)
   return result;
 }
 
-bool OSWebEnginePage::acceptNavigationRequest(const QUrl & url, QWebEnginePage::NavigationType type, bool isMainFrame)
-{
-  if (type == QWebEnginePage::NavigationTypeLinkClicked)
-  {
-    QString s = url.toString();
-    // open links in system browser rather than embedded view
-    QDesktopServices::openUrl(url);
-    return false;
-  }
-  return true;
-}
 
 GeometryEditorView::GeometryEditorView(bool isIP,
                                      const openstudio::model::Model& model,
@@ -206,7 +195,7 @@ std::map<UUID, UUID> BaseEditor::exportModelHandleMapping() const
 }
 
 void BaseEditor::onChanged()
-{  
+{
   emit changed();
   //m_document->markAsModified();
 }
@@ -1143,7 +1132,7 @@ EditorWebView::~EditorWebView()
     QString mergeWarnKeyName("geometryMergeWarn");
     bool settingsMergeWarn = settings.value(mergeWarnKeyName, true).toBool();
     if (settingsMergeWarn){
-      QMessageBox msg(QMessageBox::Question, "Unmerged Changes", "Your geometry may include unmerged changes.  Merge with Current OSM now?  Choose Ignore to skip this message in the future.", 
+      QMessageBox msg(QMessageBox::Question, "Unmerged Changes", "Your geometry may include unmerged changes.  Merge with Current OSM now?  Choose Ignore to skip this message in the future.",
         QMessageBox::Yes | QMessageBox::No | QMessageBox::Ignore, this, Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
       msg.setDefaultButton(QMessageBox::No);
       msg.setEscapeButton(QMessageBox::No);

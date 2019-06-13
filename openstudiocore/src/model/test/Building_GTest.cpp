@@ -59,6 +59,14 @@
 #include "../PeopleDefinition.hpp"
 #include "../Schedule.hpp"
 #include "../LifeCycleCost.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../PortList.hpp"
+#include "../PortList_Impl.hpp"
+#include "../OutputMeter.hpp"
+#include "../OutputMeter_Impl.hpp"
 
 #include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/geometry/Geometry.hpp"
@@ -457,4 +465,66 @@ TEST_F(ModelFixture, Building_Rotations)
   EXPECT_NEAR(1, spaceGroup.buildingTransformation().matrix()(0, 0), 0.0001);
   EXPECT_NEAR(cos(degToRad(degrees)), spaceGroup.siteTransformation().matrix()(0, 0), 0.0001);
 
+}
+
+TEST_F(ModelFixture, Building_remove) {
+
+  Model m;
+  ThermalZone z(m);
+  AirLoopHVAC a(m);
+
+  a.addBranchForZone(z);
+  // 4 basic AirLoopHVAC nodes (supply/demand inlet/outlet Nodes)
+  // One AirLoopHVAC branch node before and one after ThermalZones
+  // 1 Zone Air Node
+  EXPECT_EQ(7, m.getModelObjects<Node>().size());
+  // Zone Inlet Port List, Zone Return Air Port List, Zone Air Exhaust Port List
+  EXPECT_EQ(3, m.getModelObjects<PortList>().size());
+  EXPECT_EQ(1, m.getModelObjects<ThermalZone>().size());
+
+  m.getUniqueModelObject<Building>().remove();
+  // 4 basic airLoopHVAC Nodes plus the Drop node between demand splitter and mixer
+  EXPECT_EQ(5, m.getModelObjects<Node>().size());
+  // Zone Inlet Port List, Zone Return Air Port List, Zone Air Exhaust Port List
+  EXPECT_EQ(0, m.getModelObjects<PortList>().size());
+  EXPECT_EQ(0, m.getModelObjects<ThermalZone>().size());
+
+  // TODO: JM 2019-05-13 Once HVAC is handled (#2449), we should adjust this portion.
+  // For now this tests that at least we don't end up with bad connections
+  ASSERT_EQ(1, m.getModelObjects<AirLoopHVAC>().size());
+  EXPECT_NO_THROW(m.getModelObjects<AirLoopHVAC>()[0].components());
+
+}
+
+TEST_F(ModelFixture, Building_remove_exampleModel) {
+
+  Model m = exampleModel();
+
+  EXPECT_NE(0, m.getModelObjects<Space>().size());
+  EXPECT_NE(0, m.getModelObjects<ThermalZone>().size());
+  EXPECT_NE(0, m.getModelObjects<ShadingSurfaceGroup>().size());
+  EXPECT_NE(0, m.getModelObjects<BuildingStory>().size());
+
+  // Creates three meters, but facility-level ones only
+  unsigned ori_meters = m.getModelObjects<OutputMeter>().size();
+  // Add one Building level one
+  OutputMeter meter(m);
+  meter.setName("Electricity:Building");
+  EXPECT_EQ(InstallLocationType::Building, meter.installLocationType().get().value());
+
+  EXPECT_NO_THROW(m.getUniqueModelObject<Building>().remove());
+
+  EXPECT_EQ(0, m.getModelObjects<Space>().size());
+  EXPECT_EQ(0, m.getModelObjects<ThermalZone>().size());
+
+  // There is one Site Shading group that should be left untouched
+  // The other two are Space and Building level, so should be removed
+  EXPECT_EQ(1, m.getModelObjects<ShadingSurfaceGroup>().size());
+  EXPECT_EQ(0, m.getModelObjects<BuildingStory>().size());
+  EXPECT_EQ(ori_meters, m.getModelObjects<OutputMeter>().size());
+
+  // TODO: JM 2019-05-13 Once HVAC is handled (#2449), we should adjust this portion.
+  // For now this tests that at least we don't end up with bad connections
+  ASSERT_EQ(1, m.getModelObjects<AirLoopHVAC>().size());
+  EXPECT_NO_THROW(m.getModelObjects<AirLoopHVAC>()[0].components());
 }

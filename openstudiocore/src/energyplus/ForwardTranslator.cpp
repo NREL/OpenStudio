@@ -266,10 +266,10 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
-  // Energyplus only allows single zone input for ITE object. If space type is assigned in OS, 
+  // Energyplus only allows single zone input for ITE object. If space type is assigned in OS,
   // will translate to multiple ITE objects assigned to each zone under the same space type.
   // then delete the one that pointed to a spacetype.
-  // By doing this, we can solve the potential problem that if this load is applied to a space type, 
+  // By doing this, we can solve the potential problem that if this load is applied to a space type,
   // the load gets copied to each space of the space type, which may cause conflict of supply air node.
   std::vector<ElectricEquipmentITEAirCooled> iTEAirCooledEquipments = model.getConcreteModelObjects<ElectricEquipmentITEAirCooled>();
   for (ElectricEquipmentITEAirCooled iTequipment : iTEAirCooledEquipments) {
@@ -3000,41 +3000,44 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
-  case openstudio::IddObjectType::OS_UtilityCost_Charge_Block:
-    {
-      LOG(Warn, "OS_UtilityCost_Charge_Block is not currently translated");
-      break;
-    }
-  case openstudio::IddObjectType::OS_UtilityCost_Charge_Simple:
-    {
-      LOG(Warn, "OS_UtilityCost_Charge_Simple is not currently translated");
-      break;
-    }
-  case openstudio::IddObjectType::OS_UtilityCost_Computation:
-    {
-      LOG(Warn, "OS_UtilityCost_Computation is not currently translated");
-      break;
-    }
-  case openstudio::IddObjectType::OS_UtilityCost_Qualify:
-    {
-      LOG(Warn, "OS_UtilityCost_Qualify is not currently translated");
-      break;
-    }
-  case openstudio::IddObjectType::OS_UtilityCost_Ratchet:
-    {
-      LOG(Warn, "OS_UtilityCost_Ratchet is not currently translated");
-      break;
-    }
-  case openstudio::IddObjectType::OS_UtilityCost_Tariff:
-    {
-      LOG(Warn, "OS_UtilityCost_Tariff is not currently translated");
-      break;
-    }
-  case openstudio::IddObjectType::OS_UtilityCost_Variable:
-    {
-      LOG(Warn, "OS_UtilityCost_Variable is not currently translated");
-      break;
-    }
+
+  // TODO: once UtilityCost objects are wrapped
+  //case openstudio::IddObjectType::OS_UtilityCost_Charge_Block:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Charge_Block is not currently translated");
+      //break;
+    //}
+  //case openstudio::IddObjectType::OS_UtilityCost_Charge_Simple:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Charge_Simple is not currently translated");
+      //break;
+    //}
+  //case openstudio::IddObjectType::OS_UtilityCost_Computation:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Computation is not currently translated");
+      //break;
+    //}
+  //case openstudio::IddObjectType::OS_UtilityCost_Qualify:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Qualify is not currently translated");
+      //break;
+    //}
+  //case openstudio::IddObjectType::OS_UtilityCost_Ratchet:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Ratchet is not currently translated");
+      //break;
+    //}
+  //case openstudio::IddObjectType::OS_UtilityCost_Tariff:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Tariff is not currently translated");
+      //break;
+    //}
+  //case openstudio::IddObjectType::OS_UtilityCost_Variable:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Variable is not currently translated");
+      //break;
+    //}
+
   case openstudio::IddObjectType::OS_Version :
     {
       model::Version version = modelObject.cast<Version>();
@@ -3389,13 +3392,14 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Foundation_Kiva);
   result.push_back(IddObjectType::OS_Foundation_Kiva_Settings);
 
-  result.push_back(IddObjectType::OS_UtilityCost_Charge_Block);
-  result.push_back(IddObjectType::OS_UtilityCost_Charge_Simple);
-  result.push_back(IddObjectType::OS_UtilityCost_Computation);
-  result.push_back(IddObjectType::OS_UtilityCost_Qualify);
-  result.push_back(IddObjectType::OS_UtilityCost_Ratchet);
-  result.push_back(IddObjectType::OS_UtilityCost_Tariff);
-  result.push_back(IddObjectType::OS_UtilityCost_Variable);
+  // TODO: once UtilityCost objects are wrapped
+  // result.push_back(IddObjectType::OS_UtilityCost_Charge_Block);
+  // result.push_back(IddObjectType::OS_UtilityCost_Charge_Simple);
+  // result.push_back(IddObjectType::OS_UtilityCost_Computation);
+  // result.push_back(IddObjectType::OS_UtilityCost_Qualify);
+  // result.push_back(IddObjectType::OS_UtilityCost_Ratchet);
+  // result.push_back(IddObjectType::OS_UtilityCost_Tariff);
+  // result.push_back(IddObjectType::OS_UtilityCost_Variable);
 
   result.push_back(IddObjectType::OS_WeatherFile);
   result.push_back(IddObjectType::OS_WeatherProperty_SkyTemperature);
@@ -4515,6 +4519,9 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
     }
   }
 
+  // TODO: JM 2019-03-22 I am not sure you need this one
+  // But I temporarily removed the \reference FluidAndGlycolNames from FluidProperties_GlycolConcentration to avoid problems of having two objects of
+  // the same reference group bearing the same name (FluidProperties:Name also has the same reference group)
   IdfObject fluidPropName(openstudio::IddObjectType::FluidProperties_Name);
   fluidPropName.setString(FluidProperties_NameFields::FluidName, glycolName);
   fluidPropName.setString(FluidProperties_NameFields::FluidType, "Glycol");

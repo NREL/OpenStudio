@@ -27,95 +27,32 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_UTILITYCOST_CHARGE_SIMPLE_HPP
-#define MODEL_UTILITYCOST_CHARGE_SIMPLE_HPP
+#include "OSWebEnginePage.hpp"
 
-#include "ModelAPI.hpp"
-#include "ParentObject.hpp"
-#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/Assert.hpp"
 
-namespace openstudio{
-namespace model{
+#include <QDesktopServices>
+#include <QWebEngineCertificateError>
 
-namespace detail{
-  class UtilityCost_Charge_Simple_Impl;
+namespace openstudio {
+
+bool OSWebEnginePage::acceptNavigationRequest(const QUrl & url, QWebEnginePage::NavigationType type, bool isMainFrame)
+{
+  if (type == QWebEnginePage::NavigationTypeLinkClicked)
+  {
+    QString s = url.toString();
+    // open links in system browser rather than embedded view
+    QDesktopServices::openUrl(url);
+    return false;
+  }
+  return true;
 }
 
-/** UtilityCost_Charge_Simple derives from ParentObject and is an interface to the OpenStudio IDD object named "OS:UtilityCost:Charge:Simple".
- *
- *  UtilityCost_Charge_Simple is used to compute flat charges such as taxes and fees related to a utility bill.
- */
-class MODEL_API UtilityCost_Charge_Simple : public ParentObject{
+bool OSWebEnginePage::certificateError(const QWebEngineCertificateError &certificateError) {
+  // Ignore error
+  LOG(Warn, "SSL error: " << toString(certificateError.errorDescription()));
+  return true;
+}
 
-public:
-
-  /** @name Constructors and Destructors */
-  //@{
-
-  /// Constructs a new UtilityCost_Charge_Simple object in the model.
-  explicit UtilityCost_Charge_Simple(const Model& model);
-
-  virtual ~UtilityCost_Charge_Simple() {}
-
-  //@}
-  /** @name Getters */
-  //@{
-
-  boost::optional<std::string> tariffName() const;
-
-  boost::optional<std::string> sourceVariable() const;
-
-  boost::optional<std::string> season() const;
-
-  boost::optional<std::string> categoryVariableName() const;
-
-  boost::optional<std::string> costPerUnitValueOrVariableName() const;
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  bool setTariffName(const std::string& tariffName);
-
-  bool setSourceVariable(const std::string& sourceVariable);
-
-  bool setSeason(const std::string& season);
-
-  bool setCategoryVariableName(const std::string& categoryVariableName);
-
-  bool setCostPerUnitValueOrVariableName(const std::string& costPerUnitValueOrVariableName);
-
-  //@}
-
-  /// Returns the IddObjectType.
-  static IddObjectType iddObjectType();
-
-protected:
-
-  /// @cond
-
-  typedef detail::UtilityCost_Charge_Simple_Impl ImplType;
-
-  friend class Model;
-  friend class IdfObject;
-
-  // constructor
-  explicit UtilityCost_Charge_Simple(std::shared_ptr<detail::UtilityCost_Charge_Simple_Impl> impl);
-
-private:
-  REGISTER_LOGGER("openstudio.model.UtilityCost_Charge_Simple");
-
-  /// @endcond
-
-};
-
-/** \relates UtilityCost_Charge_Simple */
-typedef boost::optional<UtilityCost_Charge_Simple> OptionalUtilityCost_Charge_Simple;
-
-/** \relates UtilityCost_Charge_Simple */
-typedef std::vector<UtilityCost_Charge_Simple> UtilityCost_Charge_SimpleVector;
-
-} // model
 } // openstudio
 
-#endif // MODEL_UTILITYCOST_CHARGE_SIMPLE_HPP

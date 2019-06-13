@@ -86,11 +86,7 @@ TEST_F(IdfFixture, IdfFile_BasicTests_LoadedFile)
 }
 
 TEST_F(IdfFixture, IdfFile_Header) {
-  std::stringstream ss;
-  OptionalIdfFile oFile = IdfFile::load(ss,IddFileType(IddFileType::EnergyPlus));
-  ss.clear();
-  ASSERT_TRUE(oFile);
-  IdfFile file = *oFile;
+  IdfFile file(IddFileType::EnergyPlus);
   std::string header = "! A one-line header. ";
   file.setHeader(header);
   EXPECT_EQ(header,file.header());
@@ -98,6 +94,7 @@ TEST_F(IdfFixture, IdfFile_Header) {
   header = "Not actually a header, should get ! pre-pended.";
   file.setHeader(header);
   EXPECT_NE(header,file.header());
+  std::stringstream ss;
   ss << "! " << header;
   EXPECT_EQ(ss.str(),file.header());
 

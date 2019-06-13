@@ -71,7 +71,7 @@ boost::optional<IdfObject> ForwardTranslator::translateEvaporativeCoolerDirectRe
   idfObject.setString(EvaporativeCooler_Direct_ResearchSpecialFields::AvailabilityScheduleName,sched.name().get());
 
   // CoolerEffectiveness
-  value = modelObject.coolerEffectiveness();
+  value = modelObject.coolerDesignEffectiveness();
   idfObject.setDouble(EvaporativeCooler_Direct_ResearchSpecialFields::CoolerDesignEffectiveness,value);
 
   // RecirculatingWaterPumpPowerConsumption

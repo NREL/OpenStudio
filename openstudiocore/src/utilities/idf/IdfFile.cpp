@@ -381,9 +381,21 @@ OptionalIdfFile IdfFile::load(const path& p,
   path wp(p);
 
   if (iddFileType == IddFileType::OpenStudio) {
+
     // can be Model or Component
+    std::string ext = getFileExtension(p);
+    if (! ( openstudio::istringEqual(ext, "osm") ||
+            openstudio::istringEqual(ext, "osc")) ) {
+      LOG_FREE(Warn,"openstudio.setFileExtension","Path p, '" << toString(p)
+                 << "', has an unexpected file extension. Was expecting 'osm' or 'osc'.");
+    }
+
+    // This isn't issuing warnings because we pass false (we have to, since it can be either osm or osc)
+    // hence why we do check above
     wp = completePathToFile(wp,path(),modelFileExtension(),false);
-    if (wp.empty()) { wp = completePathToFile(wp,path(),componentFileExtension(),false); }
+    if (wp.empty()) {
+      wp = completePathToFile(wp,path(),componentFileExtension(),false);
+    }
   }
   else {
     wp = completePathToFile(wp,path(),"idf",true);
@@ -612,9 +624,6 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
     else{
 
       bool foundEndLine(false);
-
-      // a valid Idf object to parse
-      ++objectNum;
       firstBlock = false;
       bool isVersion = false;
 
@@ -670,26 +679,40 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
       }
 
       // construct the object
-      if (!versionOnly || isVersion) {
+      if (foundEndLine && (!versionOnly || isVersion)) {
         OptionalIdfObject object = IdfObject::load(text,*iddObject);
         if (!object) {
           LOG(Error,"Unable to construct IdfObject from text: " << std::endl << text
               << std::endl << "Throwing this object out and parsing the remainder of the file.");
           continue;
+        } else {
+          // a valid Idf object to parse
+          if (object->iddObject().type() != IddObjectType::Catchall) {
+            ++objectNum;
+          }
+
+          // put it in the object list
+          addObject(*object);
         }
 
-        // put it in the object list
-        addObject(*object);
       }
 
       if (versionOnly && isVersion) {
+        // Increment objectNum to avoid triggering the warning below and return false
+        ++objectNum;
         break;
       }
 
     }
   }
 
-  return true;
+  // If we sucessfully parsed at least one object, we return true, otherwise false
+  if (objectNum > 0) {
+    return true;
+  } else {
+    LOG(Error, "Could not parse a single valid object in file.");
+    return false;
+  }
 }
 
 IddFileAndFactoryWrapper IdfFile::iddFileAndFactoryWrapper() const {

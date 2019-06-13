@@ -41,10 +41,14 @@ class TestPathWatcher < OpenStudio::PathWatcher
   end
 
   def onPathChanged
+	#puts 'onPathChanged'
+	#STDOUT.flush
     @changed = true
   end
 
   def onPathRemoved
+	#puts 'onPathRemoved'
+	#STDOUT.flush
     @changed = true
   end
 
@@ -52,8 +56,9 @@ end
 
 class PathWatcher_Test < MiniTest::Unit::TestCase
 
-  # def setup
-  # end
+  def setup
+    OpenStudio::Application::instance().application(false)
+  end
 
   # def teardown
   # end
@@ -67,6 +72,11 @@ class PathWatcher_Test < MiniTest::Unit::TestCase
 
     File.open(p.to_s, 'w') do |f|
       f << "test 1"
+	  begin
+	    f.fsync
+	  rescue
+	    f.flush
+	  end
     end
     assert(OpenStudio::exists(p))
 
@@ -74,10 +84,18 @@ class PathWatcher_Test < MiniTest::Unit::TestCase
     assert((not watcher.changed))
 
     # write to the file
-    system("echo 'test 2' > #{p.to_s}")
+    File.open(p.to_s, 'w') do |f|
+      f << "test 2"
+	  begin
+	    f.fsync
+	  rescue
+	    f.flush
+	  end
+    end
 
     # calls processEvents
-    OpenStudio::System::msleep(1000)
+    OpenStudio::System::msleep(10000)
+    OpenStudio::Application::instance().processEvents(10000)
 
     assert(watcher.changed)
     watcher.changed = false
@@ -87,11 +105,10 @@ class PathWatcher_Test < MiniTest::Unit::TestCase
     assert((not OpenStudio::exists(p)))
 
     # calls processEvents
-    OpenStudio::System::msleep(1000)
+    OpenStudio::System::msleep(10000)
+    OpenStudio::Application::instance().processEvents(10000)
 
     assert(watcher.changed)
-
-
   end
 
   def test_watchDir
@@ -110,11 +127,17 @@ class PathWatcher_Test < MiniTest::Unit::TestCase
     filePath = OpenStudio::Path.new("./path_watcher_dir")
     File.open(filePath.to_s, 'w') do |f|
       f << "test 1"
+	  begin
+		f.fsync
+	  rescue
+	    f.flush
+	  end
     end
     assert(OpenStudio::exists(filePath))
 
     # calls processEvents
-    OpenStudio::System::msleep(1000)
+    OpenStudio::System::msleep(10000)
+    OpenStudio::Application::instance().processEvents(10000)
 
     assert(watcher.changed)
     watcher.changed = false
@@ -124,7 +147,8 @@ class PathWatcher_Test < MiniTest::Unit::TestCase
     assert((not OpenStudio::exists(filePath)))
 
     # calls processEvents
-    OpenStudio::System::msleep(1000)
+    OpenStudio::System::msleep(10000)
+    OpenStudio::Application::instance().processEvents(10000)
 
     assert(watcher.changed)
 

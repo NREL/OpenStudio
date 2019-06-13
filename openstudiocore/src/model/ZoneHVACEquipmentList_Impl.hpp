@@ -70,7 +70,7 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
 
   std::vector<ModelObject> equipmentInCoolingOrder() const;
 
-  WorkspaceExtensibleGroup getGroupForModelObject(const ModelObject & modelObject);
+  boost::optional<WorkspaceExtensibleGroup> getGroupForModelObject(const ModelObject & modelObject) const;
 
   virtual ~ZoneHVACEquipmentList_Impl() {}
 
@@ -87,6 +87,12 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
   unsigned heatingPriority(const ModelObject & equipment) const;
 
   unsigned coolingPriority(const ModelObject & equipment) const;
+
+  boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+  bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+
+  boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+  bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
 
   protected:
 

@@ -785,6 +785,16 @@ namespace detail {
     return types;
   }
 
+  std::string PumpConstantSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_Pump_ConstantSpeedFields::EndUseSubcategory, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool PumpConstantSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_Pump_ConstantSpeedFields::EndUseSubcategory, endUseSubcategory);
+  }
+
 } // detail
 
 PumpConstantSpeed::PumpConstantSpeed(const Model& model)
@@ -808,6 +818,8 @@ PumpConstantSpeed::PumpConstantSpeed(const Model& model)
   setString(OS_Pump_ConstantSpeedFields::RotationalSpeed,"");
   setString(OS_Pump_ConstantSpeedFields::Zone,"");
   setString(OS_Pump_ConstantSpeedFields::SkinLossRadiativeFraction,"");
+
+  setEndUseSubcategory("General");
 }
 
 IddObjectType PumpConstantSpeed::iddObjectType() {
@@ -1086,6 +1098,14 @@ double PumpConstantSpeed::designShaftPowerPerUnitFlowRatePerUnitHead() const {
 
 bool PumpConstantSpeed::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead) {
   return getImpl<detail::PumpConstantSpeed_Impl>()->setDesignShaftPowerPerUnitFlowRatePerUnitHead(designShaftPowerPerUnitFlowRatePerUnitHead);
+}
+
+std::string PumpConstantSpeed::endUseSubcategory() const {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->endUseSubcategory();
+}
+
+bool PumpConstantSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 /// @cond

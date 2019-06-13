@@ -134,6 +134,16 @@ using namespace openstudio::model;
 
 namespace openstudio {
 
+bool TouchEater::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::TouchBegin) {
+        return true;
+    } else {
+        // standard event processing
+        return QObject::eventFilter(obj, event);
+    }
+}
+
 OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   : OSAppBase(argc, argv, QSharedPointer<MeasureManager>(new MeasureManager(this))),
     m_measureManagerProcess(nullptr)
@@ -141,6 +151,9 @@ OpenStudioApp::OpenStudioApp( int & argc, char ** argv)
   setOrganizationName("NREL");
   QCoreApplication::setOrganizationDomain("nrel.gov");
   setApplicationName("OpenStudioApp");
+
+  auto eater = new TouchEater();
+  installEventFilter(eater);
 
   readSettings();
 
@@ -345,7 +358,7 @@ std::vector<std::string> OpenStudioApp::buildCompLibraries()
   // Get the first Qlabel waitDialog (0 = stretch, 1 = "Loading model", 2 = "This may take a minute...", 3=hidden lable,   = stretch)
   waitDialog()->m_firstLine->setText("Loading Library Files");
   waitDialog()->m_secondLine->setText("(Manage library files in Preferences->Change default libraries)");
- 
+
   // DLM: this was causing a crash because waitDialog is created on the main thread but this is called on the wait thread.
   // Because this is just the wait dialog let's just keep the line always visible.
   // Make it visible
@@ -1390,7 +1403,6 @@ std::vector<openstudio::path> OpenStudioApp::libraryPaths() const {
   QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
   openstudio::path resPath = resourcesPath();
-
   int size = settings.beginReadArray("library");
   for (int i = 0; i < size; ++i) {
     settings.setArrayIndex(i);

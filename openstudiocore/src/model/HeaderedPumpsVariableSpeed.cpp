@@ -395,6 +395,17 @@ namespace detail {
     std::vector<std::string> types{"Pump Maximum Mass Flow Rate"};
     return types;
   }
+
+  std::string HeaderedPumpsVariableSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_HeaderedPumps_VariableSpeedFields::EndUseSubcategory, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool HeaderedPumpsVariableSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_HeaderedPumps_VariableSpeedFields::EndUseSubcategory, endUseSubcategory);
+  }
+
 } // detail
 
 HeaderedPumpsVariableSpeed::HeaderedPumpsVariableSpeed(const Model& model)
@@ -416,6 +427,8 @@ HeaderedPumpsVariableSpeed::HeaderedPumpsVariableSpeed(const Model& model)
   setMinimumFlowRateFraction(0.0);
   setPumpControlType("Continuous");
   setSkinLossRadiativeFraction(0.1);
+
+  setEndUseSubcategory("General");
 }
 
 IddObjectType HeaderedPumpsVariableSpeed::iddObjectType() {
@@ -582,6 +595,14 @@ void HeaderedPumpsVariableSpeed::resetThermalZone() {
 
 bool HeaderedPumpsVariableSpeed::setSkinLossRadiativeFraction(double skinLossRadiativeFraction) {
   return getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->setSkinLossRadiativeFraction(skinLossRadiativeFraction);
+}
+
+std::string HeaderedPumpsVariableSpeed::endUseSubcategory() const {
+  return getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->endUseSubcategory();
+}
+
+bool HeaderedPumpsVariableSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::HeaderedPumpsVariableSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 /// @cond

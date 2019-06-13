@@ -65,7 +65,6 @@ OSLineEdit2::OSLineEdit2( QWidget * parent )
 
 OSLineEdit2::~OSLineEdit2()
 {
-  unbind();
 }
 
 void OSLineEdit2::bind(model::ModelObject& modelObject,

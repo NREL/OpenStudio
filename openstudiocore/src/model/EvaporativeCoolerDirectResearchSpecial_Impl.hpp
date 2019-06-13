@@ -84,9 +84,9 @@ namespace detail {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    double coolerEffectiveness() const;
+    double coolerDesignEffectiveness() const;
 
-    bool setCoolerEffectiveness( double value );
+    bool setCoolerDesignEffectiveness( double value );
 
     boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
 

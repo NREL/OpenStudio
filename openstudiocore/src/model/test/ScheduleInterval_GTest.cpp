@@ -276,7 +276,7 @@ TEST_F(ModelFixture, ScheduleFile)
   EXPECT_EQ(0u, externalfile->scheduleFiles().size());
   EXPECT_EQ(openstudio::toString(p.filename()), externalfile->fileName());
   //EXPECT_TRUE(externalfile.isColumnSeparatorDefaulted());
-  EXPECT_EQ(expectedDestDir / externalfile->fileName(), externalfile->filePath());
+  EXPECT_TRUE(equivalent(expectedDestDir / externalfile->fileName(), externalfile->filePath()));
   EXPECT_TRUE(exists(externalfile->filePath()));
   EXPECT_NE(p, externalfile->filePath());
 

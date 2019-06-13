@@ -82,48 +82,53 @@ TEST_F(SqlFileFixture, TimeSeriesValues)
   //EXPECT_EQ("Chicago Ohare Intl Ap IL USA TMY3 WMO#=725300", availableEnvPeriods[0]);
   EXPECT_EQ("RUNPERIOD 1", availableEnvPeriods[0]);
 
+  // Since v8.9.0, E+ includes the Year into the SQL. 5ZoneAirCooled has 2013
+  unsigned year = 2013;
+  Date jan1 = Date(MonthOfYear::Jan, 1, year);
+  Date dec31 = Date(MonthOfYear::Dec, 31, year);
+
   openstudio::OptionalTimeSeries ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "Site Outdoor Air Drybulb Temperature",  "Environment");
   ASSERT_TRUE(ts);
 //  ASSERT_EQ(static_cast<unsigned>(8760), ts->dateTimes().size());
   ASSERT_EQ(static_cast<unsigned>(8760), ts->daysFromFirstReport().size());
   ASSERT_EQ(static_cast<unsigned>(8760), ts->values().size());
-//  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0,1,0,0)), ts->dateTimes().front());
-  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0,1,0,0)), ts->firstReportDateTime());
+//  EXPECT_EQ(DateTime(jan1, Time(0,1,0,0)), ts->dateTimes().front());
+  EXPECT_EQ(DateTime(jan1, Time(0,1,0,0)), ts->firstReportDateTime());
   EXPECT_DOUBLE_EQ(-8.2625, ts->values()[0]);
-  EXPECT_DOUBLE_EQ(ts->outOfRangeValue(), ts->value(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,0,0))));
+  EXPECT_DOUBLE_EQ(ts->outOfRangeValue(), ts->value(DateTime(jan1, Time(0,0,0,0))));
   // DLM: there is commented out code in openstudio::OptionalTime SqlFile_Impl::timeSeriesInterval(const DataDictionaryItem& dataDictionary)
   // that does not recognize hourly as an interval type, so the following line is not expected to work
-  //EXPECT_DOUBLE_EQ(-8.2625, ts->value(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,0,1))));
-  EXPECT_DOUBLE_EQ(-8.2625, ts->value(DateTime(Date(MonthOfYear::Jan, 1), Time(0,1,0,0))));
-  EXPECT_DOUBLE_EQ(-11.8875, ts->value(DateTime(Date(MonthOfYear::Jan, 1), Time(0,1,0,1))));
-//  EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(0,24,0,0)), ts->dateTimes().back());
-  EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(0,24,0,0)), ts->firstReportDateTime()+Time(ts->daysFromFirstReport(ts->daysFromFirstReport().size()-1)));
+  //EXPECT_DOUBLE_EQ(-8.2625, ts->value(DateTime(jan1, Time(0,0,0,1))));
+  EXPECT_DOUBLE_EQ(-8.2625, ts->value(DateTime(jan1, Time(0,1,0,0))));
+  EXPECT_DOUBLE_EQ(-11.8875, ts->value(DateTime(jan1, Time(0,1,0,1))));
+//  EXPECT_EQ(DateTime(dec31, Time(0,24,0,0)), ts->dateTimes().back());
+  EXPECT_EQ(DateTime(dec31, Time(0,24,0,0)), ts->firstReportDateTime()+Time(ts->daysFromFirstReport(ts->daysFromFirstReport().size()-1)));
   EXPECT_DOUBLE_EQ(-5.6875, ts->values()[8759]);
-  EXPECT_DOUBLE_EQ(-4.775, ts->value(DateTime(Date(MonthOfYear::Dec, 31), Time(0,22,59,59))));
-  EXPECT_DOUBLE_EQ(-4.775, ts->value(DateTime(Date(MonthOfYear::Dec, 31), Time(0,23,0,0))));
-  EXPECT_DOUBLE_EQ(-5.6875, ts->value(DateTime(Date(MonthOfYear::Dec, 31), Time(0,23,0,1))));
-  EXPECT_DOUBLE_EQ(-5.6875, ts->value(DateTime(Date(MonthOfYear::Dec, 31), Time(0,24,0,0))));
-  EXPECT_DOUBLE_EQ(ts->outOfRangeValue(), ts->value(DateTime(Date(MonthOfYear::Dec, 31), Time(0,24,0,1))));
+  EXPECT_DOUBLE_EQ(-4.775, ts->value(DateTime(dec31, Time(0,22,59,59))));
+  EXPECT_DOUBLE_EQ(-4.775, ts->value(DateTime(dec31, Time(0,23,0,0))));
+  EXPECT_DOUBLE_EQ(-5.6875, ts->value(DateTime(dec31, Time(0,23,0,1))));
+  EXPECT_DOUBLE_EQ(-5.6875, ts->value(DateTime(dec31, Time(0,24,0,0))));
+  EXPECT_DOUBLE_EQ(ts->outOfRangeValue(), ts->value(DateTime(dec31, Time(0,24,0,1))));
 
   ts = sqlFile.timeSeries(availableEnvPeriods[0], "HVAC System Timestep", "Site Outdoor Air Drybulb Temperature",  "Environment");
   ASSERT_TRUE(ts);
-//  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,15,0)), ts->dateTimes().front());
-  EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,15,0)), ts->firstReportDateTime());
-  EXPECT_DOUBLE_EQ(ts->outOfRangeValue(), ts->value(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,0,0))));
-  EXPECT_DOUBLE_EQ(ts->outOfRangeValue(), ts->value(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,0,1))));
-  EXPECT_DOUBLE_EQ(ts->outOfRangeValue(), ts->value(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,0,14))));
-  EXPECT_DOUBLE_EQ(-4.325, ts->value(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,15,0))));
-  EXPECT_DOUBLE_EQ(-6.95, ts->value(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,15,1))));
-  EXPECT_DOUBLE_EQ(-6.95, ts->value(DateTime(Date(MonthOfYear::Jan, 1), Time(0,0,30,0))));
-  EXPECT_DOUBLE_EQ(-12.2 , ts->value(DateTime(Date(MonthOfYear::Jan, 1), Time(0,1,0,0))));
-//  EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(0,24,0,0)), ts->dateTimes().back());
-  EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(0,24,0,0)), ts->firstReportDateTime()+Time(ts->daysFromFirstReport(ts->daysFromFirstReport().size()-1)));
-  EXPECT_DOUBLE_EQ(-5.0  , ts->value(DateTime(Date(MonthOfYear::Dec, 31), Time(0,22,59,59))));
-  EXPECT_DOUBLE_EQ(-5.0  , ts->value(DateTime(Date(MonthOfYear::Dec, 31), Time(0,23,0,0))));
-  EXPECT_DOUBLE_EQ(-5.275, ts->value(DateTime(Date(MonthOfYear::Dec, 31), Time(0,23,0,1))));
-  EXPECT_DOUBLE_EQ(-5.275, ts->value(DateTime(Date(MonthOfYear::Dec, 31), Time(0,23,15,0))));
-  EXPECT_DOUBLE_EQ(-6.1  , ts->value(DateTime(Date(MonthOfYear::Dec, 31), Time(0,24,0,0))));
-  EXPECT_DOUBLE_EQ(ts->outOfRangeValue(), ts->value(DateTime(Date(MonthOfYear::Dec, 31), Time(0,24,0,1))));
+//  EXPECT_EQ(DateTime(jan1, Time(0,0,15,0)), ts->dateTimes().front());
+  EXPECT_EQ(DateTime(jan1, Time(0,0,15,0)), ts->firstReportDateTime());
+  EXPECT_DOUBLE_EQ(ts->outOfRangeValue(), ts->value(DateTime(jan1, Time(0,0,0,0))));
+  EXPECT_DOUBLE_EQ(ts->outOfRangeValue(), ts->value(DateTime(jan1, Time(0,0,0,1))));
+  EXPECT_DOUBLE_EQ(ts->outOfRangeValue(), ts->value(DateTime(jan1, Time(0,0,0,14))));
+  EXPECT_DOUBLE_EQ(-4.325, ts->value(DateTime(jan1, Time(0,0,15,0))));
+  EXPECT_DOUBLE_EQ(-6.95, ts->value(DateTime(jan1, Time(0,0,15,1))));
+  EXPECT_DOUBLE_EQ(-6.95, ts->value(DateTime(jan1, Time(0,0,30,0))));
+  EXPECT_DOUBLE_EQ(-12.2 , ts->value(DateTime(jan1, Time(0,1,0,0))));
+//  EXPECT_EQ(DateTime(dec31, Time(0,24,0,0)), ts->dateTimes().back());
+  EXPECT_EQ(DateTime(dec31, Time(0,24,0,0)), ts->firstReportDateTime()+Time(ts->daysFromFirstReport(ts->daysFromFirstReport().size()-1)));
+  EXPECT_DOUBLE_EQ(-5.0  , ts->value(DateTime(dec31, Time(0,22,59,59))));
+  EXPECT_DOUBLE_EQ(-5.0  , ts->value(DateTime(dec31, Time(0,23,0,0))));
+  EXPECT_DOUBLE_EQ(-5.275, ts->value(DateTime(dec31, Time(0,23,0,1))));
+  EXPECT_DOUBLE_EQ(-5.275, ts->value(DateTime(dec31, Time(0,23,15,0))));
+  EXPECT_DOUBLE_EQ(-6.1  , ts->value(DateTime(dec31, Time(0,24,0,0))));
+  EXPECT_DOUBLE_EQ(ts->outOfRangeValue(), ts->value(DateTime(dec31, Time(0,24,0,1))));
 }
 
 TEST_F(SqlFileFixture, TimeSeriesCount)
@@ -300,15 +305,15 @@ TEST_F(SqlFileFixture, CreateSqlFile)
 TEST_F(SqlFileFixture, AnnualTotalCosts) {
 
   // Total annual costs for all fuel types
-  EXPECT_NEAR(195053867.4, *(sqlFile2.annualTotalUtilityCost()), 0.1);
+  EXPECT_NEAR(195052539.91, *(sqlFile2.annualTotalUtilityCost()), 1000);
 
   // Costs by fuel type
   EXPECT_NEAR(27600.69, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
   EXPECT_NEAR(427.17, *(sqlFile2.annualTotalCost(FuelType::Gas)), 0.1);
   EXPECT_NEAR(324.04, *(sqlFile2.annualTotalCost(FuelType::DistrictCooling)), 0.1);
   EXPECT_NEAR(782.87, *(sqlFile2.annualTotalCost(FuelType::DistrictHeating)), 0.1);
-  EXPECT_NEAR(3256732.66, *(sqlFile2.annualTotalCost(FuelType::Water)), 0.1);
-  EXPECT_NEAR(191768000, *(sqlFile2.annualTotalCost(FuelType::FuelOil_1)), 100);
+  EXPECT_NEAR(3256405.15, *(sqlFile2.annualTotalCost(FuelType::Water)), 0.1);
+  EXPECT_NEAR(191767000, *(sqlFile2.annualTotalCost(FuelType::FuelOil_1)), 1000);
 
   // Costs by total building area by fuel type
   EXPECT_NEAR(11.50, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1);
@@ -355,6 +360,13 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   ASSERT_FALSE(availableEnvPeriods.empty());
   EXPECT_EQ(static_cast<unsigned>(3), availableEnvPeriods.size());
 
+   // Since v8.9.0, E+ includes the Year into the SQL. 5ZoneAirCooled has 2013
+  unsigned year = 2013;
+  Date jan1 = sqlFile->hasYear() ? Date(MonthOfYear::Jan, 1, year) : Date(MonthOfYear::Jan, 1);
+  Date dec31 = sqlFile->hasYear() ? Date(MonthOfYear::Dec, 31, year) : Date(MonthOfYear::Dec, 31);
+  Date jan31 = sqlFile->hasYear() ? Date(MonthOfYear::Jan, 31, year) : Date(MonthOfYear::Jan, 31);
+
+
   { // Detailed
     openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Detailed", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
@@ -371,11 +383,11 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     ASSERT_EQ(N, ts->values().size());
     EXPECT_GE(N, 8760u*6u);
     // DLM: can't expect these to always be at timestep
-    //EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 0, 10, 0)), ts->firstReportDateTime());
-    //EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 0, 10, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    //EXPECT_EQ(DateTime(jan1, Time(0, 0, 10, 0)), ts->firstReportDateTime());
+    //EXPECT_EQ(DateTime(jan1, Time(0, 0, 10, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
     // DLM: some sort of rounding error is occurring here
-    //EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(0, 23, 59, 59)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+    //EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+    EXPECT_EQ(DateTime(dec31, Time(0, 23, 59, 59)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
 
   { // Timestep
@@ -393,11 +405,11 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     ASSERT_GT(N, 0u);
     ASSERT_EQ(N, ts->values().size());
     EXPECT_EQ(N, 8760u * 6u);
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 0, 10, 0)), ts->firstReportDateTime());
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 0, 10, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(jan1, Time(0, 0, 10, 0)), ts->firstReportDateTime());
+    EXPECT_EQ(DateTime(jan1, Time(0, 0, 10, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
     // DLM: some sort of rounding error is occurring here
-    //EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(0, 23, 59, 59)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+    //EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+    EXPECT_EQ(DateTime(dec31, Time(0, 23, 59, 59)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
 
   { // Hourly
@@ -411,9 +423,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     ASSERT_GT(N, 0u);
     ASSERT_EQ(N, ts->values().size());
     EXPECT_EQ(N, 8760u);
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 1, 0, 0)), ts->firstReportDateTime());
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(0, 1, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+    EXPECT_EQ(DateTime(jan1, Time(0, 1, 0, 0)), ts->firstReportDateTime());
+    EXPECT_EQ(DateTime(jan1, Time(0, 1, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
     EXPECT_DOUBLE_EQ(firstVal, ts->values()[0]) << name;
     EXPECT_DOUBLE_EQ(lastVal, ts->values()[N-1]) << name;
   }
@@ -429,9 +441,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     ASSERT_GT(N, 0u);
     ASSERT_EQ(N, ts->values().size());
     EXPECT_EQ(N, 365u);
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(1, 0, 0, 0)), ts->firstReportDateTime());
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 1), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+    EXPECT_EQ(DateTime(jan1, Time(1, 0, 0, 0)), ts->firstReportDateTime());
+    EXPECT_EQ(DateTime(jan1, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
 
   { // Monthly
@@ -445,9 +457,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     ASSERT_GT(N, 0u);
     ASSERT_EQ(N, ts->values().size());
     EXPECT_EQ(N, 12u);
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime());
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Jan, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+    EXPECT_EQ(DateTime(jan31, Time(1, 0, 0, 0)), ts->firstReportDateTime());
+    EXPECT_EQ(DateTime(jan31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
 
   { // RunPeriod - synonymous with Environment and Annual
@@ -473,9 +485,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     ASSERT_GT(N, 0u);
     ASSERT_EQ(N, ts->values().size());
     EXPECT_EQ(N, 1u);
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime());
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
-    EXPECT_EQ(DateTime(Date(MonthOfYear::Dec, 31), Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+    EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime());
+    EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
 
   { // Bad key name
@@ -497,4 +509,69 @@ TEST_F(SqlFileFixture, Regressions) {
   regressionTestSqlFile("1ZoneEvapCooler-V8-2-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V8-3-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V8-4-0.sql", 43.28, 20, 20);
+}
+
+TEST_F(SqlFileFixture, SqlFile_LeapYear)
+{
+  openstudio::path outfile = openstudio::tempDir() / openstudio::toPath("OpenStudioSqlFileTestLeapYear.sql");
+  if (openstudio::filesystem::exists(outfile))
+  {
+    openstudio::filesystem::remove(outfile);
+  }
+
+  // picking 2012 because it's a Leap Year
+  int year = 2012;
+
+  openstudio::Calendar c(year);
+  c.standardHolidays();
+
+  // 31 days in january, 29 in feb
+  int n_vals = 24*(31+29);
+  std::vector<double> values;
+  values.resize(n_vals, 100);
+
+  TimeSeries timeSeries(c.startDate(), openstudio::Time(0,1), openstudio::createVector(values), "lux");
+
+  // Inject this timeseries into the sql
+  {
+    openstudio::SqlFile sql(outfile,
+        openstudio::EpwFile(resourcesPath() / toPath("utilities/Filetypes/leapday-test.epw")),
+        openstudio::DateTime::now(),
+        c);
+
+    EXPECT_TRUE(sql.connectionOpen());
+
+    sql.insertTimeSeriesData("Sum", "Zone", "Zone", "DAYLIGHTING WINDOW", "Daylight Luminance", openstudio::ReportingFrequency::Hourly,
+        boost::optional<std::string>(), "lux", timeSeries);
+
+  }
+
+
+  // Retrieve and check
+  {
+    openstudio::SqlFile sql(outfile);
+    EXPECT_TRUE(sql.connectionOpen());
+    std::vector<std::string> envPeriods = sql.availableEnvPeriods();
+    ASSERT_EQ(envPeriods.size(), 1u);
+    std::vector<std::string> reportingFrequencies = sql.availableReportingFrequencies(envPeriods[0]);
+    ASSERT_EQ(reportingFrequencies.size(), 1u);
+    std::vector<std::string> timeSeriesNames = sql.availableTimeSeries();
+    ASSERT_EQ(reportingFrequencies.size(), 1u);
+    std::vector<std::string> keyValues = sql.availableKeyValues(envPeriods[0], reportingFrequencies[0], timeSeriesNames[0]);
+    ASSERT_EQ(keyValues.size(), 1u);
+
+    boost::optional<TimeSeries> ts = sql.timeSeries(envPeriods[0], reportingFrequencies[0], timeSeriesNames[0], keyValues[0]);
+    ASSERT_TRUE(ts);
+
+    EXPECT_EQ(openstudio::toStandardVector(ts->values()), openstudio::toStandardVector(timeSeries.values()));
+    // That's the key part!
+    EXPECT_EQ(year, ts->firstReportDateTime().date().year());
+
+    std::vector<DateTime> original_datetimes = ts->dateTimes();
+    std::vector<DateTime> reloaded_datetimes = timeSeries.dateTimes();
+
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Feb, 29, year), Time(0, 24, 0, 0)), reloaded_datetimes.end()[-1]);
+    EXPECT_EQ(DateTime(Date(MonthOfYear::Feb, 29, year), Time(0, 23, 0, 0)), reloaded_datetimes.end()[-2]);
+    EXPECT_EQ(original_datetimes, reloaded_datetimes);
+  }
 }

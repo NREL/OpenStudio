@@ -73,13 +73,17 @@ TEST(ProgressBar, BasicTest)
     Application::instance().application(true);
   }
   if (Application::instance().hasGUI()){
-    ProgressBar pb;
-    for (int i = 0; i <= 100; ++i){
-      pb.setValue(i);
-      EXPECT_EQ(i, pb.value());
-      System::msleep(10);
+	{
+      ProgressBar pb;
+      for (int i = 0; i <= 100; ++i){
+        pb.setValue(i);
+        EXPECT_EQ(i, pb.value());
+        System::msleep(10);
+      }
     }
+    System::msleep(10);
   }
+  
 }
 
 TEST(ProgressBar, AdvancedTest)
@@ -88,16 +92,19 @@ TEST(ProgressBar, AdvancedTest)
     Application::instance().application(true);
   }
   if (Application::instance().hasGUI()){
-    ProgressBar pb1;
-    ProgressBar pb2;
-    ProgressBar pb3;
+    {
+      ProgressBar pb1;
+      ProgressBar pb2;
+      ProgressBar pb3;
 
-    for (unsigned i = 0; i <= 100; ++i){
-      pb1.setValue(i);
-      pb2.setValue(100 - i);
-      pb3.setValue((10 * i) % 100);
-      System::msleep(10);
+      for (unsigned i = 0; i <= 100; ++i){
+        pb1.setValue(i);
+        pb2.setValue(100 - i);
+        pb3.setValue((10 * i) % 100);
+        System::msleep(10);
+      }
     }
+    System::msleep(10);
   }
 }
 
