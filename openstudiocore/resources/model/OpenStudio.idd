@@ -29598,11 +29598,16 @@ OS:EnergyManagementSystem:GlobalVariable,
   A1, \field Handle
        \type handle
        \required-field
-  A2; \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \reference ErlVariableNames
        \note no spaces allowed in name
+  A3; \field Export To BCVTB
+       \type choice
+       \default False
+       \key True
+       \key False
 
 OS:EnergyManagementSystem:OutputVariable,
        \memo This object sets up an EnergyPlus output variable from an Erl variable

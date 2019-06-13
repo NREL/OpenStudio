@@ -56,6 +56,14 @@ class MODEL_API EnergyManagementSystemGlobalVariable : public ModelObject {
 
   static IddObjectType iddObjectType();
 
+  bool exportToBCVTB() const;
+
+  bool isExportToBCVTBDefaulted() const;
+
+  bool setExportToBCVTB(bool exportToBCVTB);
+
+  void resetExportToBCVTB();
+
   /** @name Getters */
   //@{
 
