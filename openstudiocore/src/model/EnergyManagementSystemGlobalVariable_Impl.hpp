@@ -66,6 +66,14 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    bool exportToBCVTB() const;
+
+    bool isExportToBCVTBDefaulted() const;
+
+    bool setExportToBCVTB(bool exportToBCVTB);
+
+    void resetExportToBCVTB();
+
     //@}
     /** @name Getters */
     //@{
