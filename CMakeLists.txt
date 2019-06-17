@@ -1349,7 +1349,10 @@ if(BUILD_PAT AND APPLE)
   install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
 endif()
 
-include(CPack)
+if (NOT DELAY_INCLUDE_CPACK)
+  include(CPack)
+endif()
+
 include(CPackIFW)
 
 cpack_add_component(CLI
