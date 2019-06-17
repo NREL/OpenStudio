@@ -35,6 +35,8 @@
 #include "../RefrigerationCondenserAirCooled_Impl.hpp"
 #include "../CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
 #include "../CoilCoolingWaterToAirHeatPumpEquationFit_Impl.hpp"
+#include "../CoilCoolingDXMultiSpeed.hpp"
+#include "../CoilCoolingDXMultiSpeed_Impl.hpp"
 #include "../WaterHeaterMixed.hpp"
 #include "../WaterHeaterMixed_Impl.hpp"
 #include "../WaterHeaterStratified.hpp"
@@ -133,8 +135,8 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove2)
     std::vector<CoilWaterHeatingDesuperheater> coilWaterHeatingDesuperheaters = model.getModelObjects<CoilWaterHeatingDesuperheater>();
     EXPECT_EQ(1, coilWaterHeatingDesuperheaters.size());
 
-    std::vector<RefrigerationCondenserAirCooled> refrigerationCondensers = model.getModelObjects<RefrigerationCondenserAirCooled>();
-    EXPECT_EQ(1, refrigerationCondensers.size());
+    std::vector<CoilCoolingWaterToAirHeatPumpEquationFit> coilEquationFits = model.getModelObjects<CoilCoolingWaterToAirHeatPumpEquationFit>();
+    EXPECT_EQ(1, coilEquationFits.size());
 
     std::vector<WaterHeaterStratified> heatRejectionTargets = model.getModelObjects<WaterHeaterStratified>();
     EXPECT_EQ(1, heatRejectionTargets.size());
@@ -155,13 +157,71 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove2)
     coilWaterHeatingDesuperheaters = model.getModelObjects<CoilWaterHeatingDesuperheater>();
     EXPECT_EQ(0, coilWaterHeatingDesuperheaters.size());
 
-    refrigerationCondensers = model.getModelObjects<RefrigerationCondenserAirCooled>();
-    EXPECT_EQ(1, refrigerationCondensers.size());
+    coilEquationFits = model.getModelObjects<CoilCoolingWaterToAirHeatPumpEquationFit>();
+    EXPECT_EQ(1, coilEquationFits.size());
 
     heatRejectionTargets = model.getModelObjects<WaterHeaterStratified>();
     EXPECT_EQ(1, heatRejectionTargets.size());
 
     heatingSources = model.getModelObjects<CoilCoolingWaterToAirHeatPumpEquationFit>();
+    EXPECT_EQ(1, heatingSources.size());
+
+    curves = model.getModelObjects<CurveBiquadratic>();
+    EXPECT_EQ(1, curves.size());
+
+    nodes = model.getModelObjects<Node>();
+    EXPECT_EQ(0, nodes.size());
+
+    EXPECT_FALSE(heatRejection.demandInletModelObject());
+    EXPECT_FALSE(heatRejection.demandOutletModelObject());
+}
+
+TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove3)
+{
+    Model model;
+    ScheduleCompact schedule = ScheduleCompact(model);
+    CoilWaterHeatingDesuperheater testObject = CoilWaterHeatingDesuperheater(model, schedule);
+    RefrigerationCondenserAirCooled condenser = RefrigerationCondenserAirCooled(model);
+    WaterHeaterStratified heatRejection = WaterHeaterStratified(model);
+    CoilCoolingDXMultiSpeed heatingSource = CoilCoolingDXMultiSpeed(model);
+    CurveBiquadratic curve = CurveBiquadratic(model);
+    testObject.setHeatingSource(condenser);
+    testObject.addToHeatRejectionTarget(heatRejection);
+    testObject.setHeatingSource(heatingSource);
+    testObject.setHeatReclaimEfficiencyFunctionofTemperatureCurve(curve);
+
+    std::vector<CoilWaterHeatingDesuperheater> coilWaterHeatingDesuperheaters = model.getModelObjects<CoilWaterHeatingDesuperheater>();
+    EXPECT_EQ(1, coilWaterHeatingDesuperheaters.size());
+
+    std::vector<CoilCoolingDXMultiSpeed> coilMultiSpeeds = model.getModelObjects<CoilCoolingDXMultiSpeed>();
+    EXPECT_EQ(1, coilMultiSpeeds.size());
+
+    std::vector<WaterHeaterStratified> heatRejectionTargets = model.getModelObjects<WaterHeaterStratified>();
+    EXPECT_EQ(1, heatRejectionTargets.size());
+    ASSERT_TRUE(testObject.heatRejectionTarget());
+
+    std::vector<CoilCoolingDXMultiSpeed> heatingSources = model.getModelObjects<CoilCoolingDXMultiSpeed>();
+    EXPECT_EQ(1, heatingSources.size());
+    ASSERT_TRUE(testObject.heatingSource());
+
+    std::vector<CurveBiquadratic> curves = model.getModelObjects<CurveBiquadratic>();
+    EXPECT_EQ(1, curves.size());
+
+    std::vector<Node> nodes = model.getModelObjects<Node>();
+    EXPECT_EQ(2, nodes.size());
+
+    testObject.remove();
+
+    coilWaterHeatingDesuperheaters = model.getModelObjects<CoilWaterHeatingDesuperheater>();
+    EXPECT_EQ(0, coilWaterHeatingDesuperheaters.size());
+
+    coilMultiSpeeds = model.getModelObjects<CoilCoolingDXMultiSpeed>();
+    EXPECT_EQ(1, coilMultiSpeeds.size());
+
+    heatRejectionTargets = model.getModelObjects<WaterHeaterStratified>();
+    EXPECT_EQ(1, heatRejectionTargets.size());
+
+    heatingSources = model.getModelObjects<CoilCoolingDXMultiSpeed>();
     EXPECT_EQ(1, heatingSources.size());
 
     curves = model.getModelObjects<CurveBiquadratic>();
