@@ -169,7 +169,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilWaterHeatingDesuperhe
     if (_heatingSource) {
 
       // Note JM 2019-03-14:
-      // If the coil in question is a DX coil (CoilCoolingDXSingleSpeed, CoilCoolingDXTwoSpeed, CoilCoolingDXTwoStageWithHumidityControlMode)
+      // If the coil in question is a DX coil (CoilCoolingDXSingleSpeed, CoilCoolingDXTwoSpeed, CoilCoolingDXTwoStageWithHumidityControlMode, CoilCoolingDXVariableSpeed, CoilCoolingDXMultiSpeed)
       // and this DX coil isn't already wrapped in a Unitary, then the FT will wrap it into a CoilSystem:Cooling:DX object and return that, but we
       // need the DX coil here and not the wrapper.
       //

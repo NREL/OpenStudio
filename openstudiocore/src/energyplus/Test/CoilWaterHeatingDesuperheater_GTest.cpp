@@ -37,6 +37,8 @@
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXTwoSpeed.hpp"
 #include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilCoolingDXMultiSpeed.hpp"
 
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/Schedule.hpp"
@@ -57,7 +59,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater) {
   std::vector<HVACComponent> testCoils = {
     CoilCoolingDXSingleSpeed(m),
     CoilCoolingDXTwoSpeed(m),
-    CoilCoolingDXTwoStageWithHumidityControlMode(m)
+    CoilCoolingDXTwoStageWithHumidityControlMode(m),
+    CoilCoolingDXVariableSpeed(m),
+    CoilCoolingDXMultiSpeed(m)
   };
 
   ForwardTranslator forwardTranslator;
