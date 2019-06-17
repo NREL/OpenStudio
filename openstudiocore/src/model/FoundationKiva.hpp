@@ -66,7 +66,7 @@ class CustomBlock {
     double zPosition() const;
     
   private:
-    //material;
+    Material m_material;
     double m_depth;
     double m_xPosition;
     double m_zPosition;

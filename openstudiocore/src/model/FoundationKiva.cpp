@@ -49,7 +49,7 @@ namespace openstudio {
 namespace model {
 
 CustomBlock::CustomBlock(const Material& material, double depth, double xPosition, double zPosition)
-  : m_material(material), m_depth(depth), m_xPosition(xPosition), m_xPosition(zPosition) {
+  : m_material(material), m_depth(depth), m_xPosition(xPosition), m_zPosition(zPosition) {
     
   if (m_depth < 0) {
     LOG_AND_THROW("Unable to create custom block '" << m_name << "', depth of " << m_depth << " less than 0");
@@ -361,7 +361,7 @@ namespace detail {
     } else {
       // Push an extensible group
       WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-      bool material = eg.setString();
+      bool material = eg.setPointer(OS_Foundation_KivaExtensibleFields::CustomBlockMaterialName, customBlock.material().handle());
       bool depth = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockDepth, customBlock.depth());
       bool xPosition = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockXPosition, customBlock.xPosition());
       bool zPosition = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockZPosition, customBlock.zPosition());
@@ -409,13 +409,13 @@ namespace detail {
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
     
     for (const auto & group : groups) {
-      std::string name = group.cast<WorkspaceExtensibleGroup>().getString()
+      boost::optional<WorkspaceObject> material = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Foundation_KivaExtensibleFields::CustomBlockMaterialName);
       double depth = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockDepth);
       double xPosition = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockXPosition);
       double zPosition = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockZPosition);
       
-      if (name && depth && xPosition && zPosition) {
-        CustomBlock customBlock(name, depth, xPosition, zPosition);
+      if (material && depth && xPosition && zPosition) {
+        CustomBlock customBlock(material->cast<Material>, depth, xPosition, zPosition);
         result.push_back(customBlock);
       }
     }
@@ -631,7 +631,7 @@ bool FoundationKiva::addCustomBlock(const CustomBlock& customBlock) {
 
 // TODO: change to bool
 void FoundationKiva::removeCustomBlock(int groupIndex) {
-  rgetImpl<detail::FoundationKiva_Impl>()->removeCustomBlock(groupIndex);
+  getImpl<detail::FoundationKiva_Impl>()->removeCustomBlock(groupIndex);
 }
 
 void FoundationKiva::removeAllCustomBlocks() {

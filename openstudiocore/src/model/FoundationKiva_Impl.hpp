@@ -76,7 +76,7 @@ namespace detail {
     
     //extensible fields
     bool addCustomBlock(const CustomBlock& customBlock);
-    bool addCustomBlock(material, double depth, double xPosition, double zPosition);
+    bool addCustomBlock(const Material& material, double depth, double xPosition, double zPosition);
     
     bool removeCustomBlock(unsigned groupIndex);
     void removeAllCustomBlocks();

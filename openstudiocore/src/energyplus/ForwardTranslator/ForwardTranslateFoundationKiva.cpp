@@ -121,7 +121,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKiva( Foundatio
   if (!customBlocks.empty()) {
     for (const CustomBlock& customBlock : customBlocks) {
       auto eg = idfObject.pushExtensibleGroup();
-      eg.setString(material);
+      eg.setString(Foundation_KivaExtensibleFields::CustomBlockMaterialName, customBlock.material().name().get());
       eg.setDouble(Foundation_KivaExtensibleFields::CustomBlockDepth, customBlock.depth());
       eg.setDouble(Foundation_KivaExtensibleFields::CustomBlockXPosition, customBlock.xPosition());
       eg.setDouble(Foundation_KivaExtensibleFields::CustomBlockZPosition, customBlock.zPosition());
