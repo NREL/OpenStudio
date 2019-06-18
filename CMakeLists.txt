@@ -667,7 +667,10 @@ if(UNIX)
     find_library(CURSES libncurses.dylib)
     find_library(Z libz.dylib)
     find_library(FFI libffi.dylib)
-    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${GMP} ${EDIT} ${UTIL} ${CURSES} ${Z} ${FFI})
+    find_library(YAML libyaml.a)
+    find_library(READLINE libreadline.a PATHS /usr/local/opt/readline/lib)
+    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${GMP} ${EDIT} ${UTIL} ${CURSES} ${Z} ${FFI} ${READLINE} ${YAML} CONAN_PKG::OpenSSL)
+    message("ADDITIONAL_RUBY_LIBS=${ADDITIONAL_RUBY_LIBS}")
   else()
     find_library(GDBM libgdbm.a)
     # libqdbm-dev
@@ -1346,7 +1349,10 @@ if(BUILD_PAT AND APPLE)
   install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
 endif()
 
-include(CPack)
+if (NOT DELAY_INCLUDE_CPACK)
+  include(CPack)
+endif()
+
 include(CPackIFW)
 
 cpack_add_component(CLI
