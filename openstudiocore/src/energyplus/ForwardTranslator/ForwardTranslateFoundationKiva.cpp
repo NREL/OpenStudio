@@ -37,6 +37,8 @@
 #include "../../model/ConstructionBase.hpp"
 #include "../../model/ConstructionBase_Impl.hpp"
 
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
 #include <utilities/idd/Foundation_Kiva_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
