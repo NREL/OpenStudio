@@ -290,4 +290,8 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   EXPECT_EQ(0, kiva.numberofCustomBlocks().get());
   kiva.removeCustomBlock(0);
   EXPECT_EQ(0, kiva.numberofCustomBlocks().get());
+
+  CustomBlock customBlock(material, 0.5, 1, -1);
+  ASSERT_TRUE(kiva.addCustomBlock(customBlock));
+  EXPECT_EQ(1, kiva.numberofCustomBlocks().get());
 }

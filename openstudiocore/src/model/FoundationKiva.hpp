@@ -93,7 +93,7 @@ class MODEL_API FoundationKiva : public ModelObject {
   //extensible fields
   
   bool addCustomBlock(const CustomBlock& customBlock);
-  // Convenience function to add a constituent without explicitly creating a FuelSupplyConstituent
+  // Convenience function to add a custom block without explicitly creating a CustomBlock
   bool addCustomBlock(const Material& material, double depth, double xPosition, double zPosition);
   
   // TODO: this should return bool (to indicate whether groupIndex is valid...)
@@ -206,6 +206,10 @@ class MODEL_API FoundationKiva : public ModelObject {
   bool setFootingDepth(double footingDepth);
 
   void resetFootingDepth();
+  
+  // Automatically handled by addCustomBlock, removeCustomBlock
+  // bool setNumberofCustomBlocks(unsigned int numberofCustomBlocks);
+  // void resetNumberofCustomBlocks();
 
   //@}
   /** @name Other */

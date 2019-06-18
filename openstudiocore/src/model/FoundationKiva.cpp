@@ -40,6 +40,8 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Foundation_Kiva_FieldEnums.hxx>
 
@@ -52,7 +54,7 @@ CustomBlock::CustomBlock(const Material& material, double depth, double xPositio
   : m_material(material), m_depth(depth), m_xPosition(xPosition), m_zPosition(zPosition) {
     
   if (m_depth < 0) {
-    LOG_AND_THROW("Unable to create custom block '" << m_name << "', depth of " << m_depth << " less than 0");
+    LOG_AND_THROW("Unable to create custom block, depth of " << m_depth << " less than 0");
   }
 }
 
@@ -409,13 +411,14 @@ namespace detail {
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
     
     for (const auto & group : groups) {
-      boost::optional<WorkspaceObject> material = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Foundation_KivaExtensibleFields::CustomBlockMaterialName);
-      double depth = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockDepth);
-      double xPosition = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockXPosition);
-      double zPosition = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockZPosition);
+      boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Foundation_KivaExtensibleFields::CustomBlockMaterialName);
+      boost::optional<Material> material = wo->optionalCast<Material>();
+      boost::optional<double> depth = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockDepth);
+      boost::optional<double> xPosition = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockXPosition);
+      boost::optional<double> zPosition = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockZPosition);
       
       if (material && depth && xPosition && zPosition) {
-        CustomBlock customBlock(material->cast<Material>, depth, xPosition, zPosition);
+        CustomBlock customBlock(material.get(), depth.get(), xPosition.get(), zPosition.get());
         result.push_back(customBlock);
       }
     }
@@ -621,12 +624,16 @@ std::vector<Surface> FoundationKiva::surfaces() const {
   return getImpl<detail::FoundationKiva_Impl>()->surfaces();
 }
 
-boost::optional<unsigned int> FoundationKiva_Impl::numberofCustomBlocks() const {
+boost::optional<unsigned int> FoundationKiva::numberofCustomBlocks() const {
   return getImpl<detail::FoundationKiva_Impl>()->numberofCustomBlocks();
 }
 
 bool FoundationKiva::addCustomBlock(const CustomBlock& customBlock) {
   return getImpl<detail::FoundationKiva_Impl>()->addCustomBlock(customBlock);
+}
+
+bool FoundationKiva::addCustomBlock(const Material& material, double depth, double xPosition, double zPosition) {
+  return getImpl<detail::FoundationKiva_Impl>()->addCustomBlock(material, depth, xPosition, zPosition);
 }
 
 // TODO: change to bool
