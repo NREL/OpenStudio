@@ -63,11 +63,10 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKiva( Foundatio
   boost::optional<Material> interiorHorizontalInsulationMaterial = modelObject.interiorHorizontalInsulationMaterial();
   if( interiorHorizontalInsulationMaterial ) {
     idfObject.setString(Foundation_KivaFields::InteriorHorizontalInsulationMaterialName, interiorHorizontalInsulationMaterial->name().get());
+    idfObject.setDouble(Foundation_KivaFields::InteriorHorizontalInsulationDepth, modelObject.interiorHorizontalInsulationDepth());
   }
 
-  boost::optional<double> value;
-
-  idfObject.setDouble(Foundation_KivaFields::InteriorHorizontalInsulationDepth, modelObject.interiorHorizontalInsulationDepth());
+  boost::optional<double> value;  
 
   if( (value = modelObject.interiorHorizontalInsulationWidth()) ) {
     idfObject.setDouble(Foundation_KivaFields::InteriorHorizontalInsulationWidth, value.get());
@@ -85,13 +84,12 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKiva( Foundatio
   boost::optional<Material> exteriorHorizontalInsulationMaterial = modelObject.exteriorHorizontalInsulationMaterial();
   if( exteriorHorizontalInsulationMaterial ) {
     idfObject.setString(Foundation_KivaFields::ExteriorHorizontalInsulationMaterialName, exteriorHorizontalInsulationMaterial->name().get());
+    idfObject.setDouble(Foundation_KivaFields::ExteriorHorizontalInsulationWidth, modelObject.exteriorHorizontalInsulationWidth());
   }
 
   if( (value = modelObject.exteriorHorizontalInsulationDepth()) ) {
     idfObject.setDouble(Foundation_KivaFields::ExteriorHorizontalInsulationDepth, value.get());
-  }
-
-  idfObject.setDouble(Foundation_KivaFields::ExteriorHorizontalInsulationWidth, modelObject.exteriorHorizontalInsulationWidth());
+  } 
 
   boost::optional<Material> exteriorVerticalInsulationMaterial = modelObject.exteriorVerticalInsulationMaterial();
   if( exteriorVerticalInsulationMaterial ) {
@@ -114,9 +112,8 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKiva( Foundatio
   boost::optional<Material> footingMaterial = modelObject.footingMaterial();
   if( footingMaterial ) {
     idfObject.setString(Foundation_KivaFields::FootingMaterialName, footingMaterial->name().get());
-  }
-
-  idfObject.setDouble(Foundation_KivaFields::FootingDepth, modelObject.footingDepth());
+    idfObject.setDouble(Foundation_KivaFields::FootingDepth, modelObject.footingDepth());
+  }  
   
   //UserDefinedCustomBlocks
   std::vector<CustomBlock> customBlocks = modelObject.customBlocks();
@@ -129,9 +126,6 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKiva( Foundatio
       eg.setDouble(Foundation_KivaExtensibleFields::CustomBlockZPosition, customBlock.zPosition());
     }
   }
-  
-  //NumberofUserDefinedCustomBlocks
-  idfObject.setInt(Foundation_KivaFields::NumberofCustomBlocks, customBlocks.size());
 
   return boost::optional<IdfObject>(idfObject);
 }
