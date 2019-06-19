@@ -74,6 +74,11 @@ double CustomBlock::zPosition() const {
   return m_zPosition;
 }
 
+std::ostream& operator<< (std::ostream& out, const openstudio::model::CustomBlock& customBlock) {
+  out << "material name=" << customBlock.material().name().get() << ", depth=" << customBlock.depth() << ", x position=" << customBlock.xPosition() << ", z position=" << customBlock.zPosition();
+  return out;
+}
+
 namespace detail {
 
   FoundationKiva_Impl::FoundationKiva_Impl(const IdfObject& idfObject,
@@ -334,19 +339,16 @@ namespace detail {
   SurfaceVector FoundationKiva_Impl::surfaces() const {
     return getObject<ModelObject>().getModelObjectSources<Surface>(Surface::iddObjectType());
   }
-  
-  // TODO: this field shouldn't even exist in the IDD
+
   unsigned int FoundationKiva_Impl::numberofCustomBlocks() const {
     return numExtensibleGroups();
   }
 
-  // TODO: this field shouldn't even exist in the IDD
   bool FoundationKiva_Impl::setNumberofCustomBlocks(unsigned int numberofCustomBlocks) {
     bool result = setInt(OS_Foundation_KivaFields::NumberofCustomBlocks, numberofCustomBlocks);
     return result;
   }
 
-  // TODO: this field shouldn't even exist in the IDD
   void FoundationKiva_Impl::resetNumberofCustomBlocks() {
     bool result = setInt(OS_Foundation_KivaFields::NumberofCustomBlocks, 0);
     OS_ASSERT(result);
