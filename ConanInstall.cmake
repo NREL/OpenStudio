@@ -29,7 +29,10 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   conan_add_remote(NAME bincrafters
     URL https://api.bintray.com/conan/bincrafters/public-conan)
-  # TODO: eventually replace with the official NREL one (and update ruby in conan_cmake_run below)
+  conan_add_remote(NAME nrel
+    URL https://api.bintray.com/conan/commercialbuilding/nrel)
+
+  # TODO: eventually delete and replace with the official NREL one (and update ruby in conan_cmake_run below)
   conan_add_remote(NAME lefticus
     URL https://api.bintray.com/conan/lefticus/nrel)
   conan_add_remote(NAME jmarrec
@@ -54,7 +57,6 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     list(APPEND CONAN_BUILD "boost_asio")
     list(APPEND CONAN_BUILD "websocketpp")
   else()
-
     list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
     list(APPEND CONAN_BUILD "boost_asio")
     list(APPEND CONAN_BUILD "websocketpp")
@@ -73,7 +75,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     ${CONAN_QT}
     ${CONAN_OPENSSL}
     ${CONAN_BOOST_ASIO}
-    openstudio_ruby/2.5.5@jmarrec/testing
+    openstudio_ruby/2.5.5@jmarrec/testing # Replace with NREL when stable
     boost_program_options/${BOOST_VERSION}@bincrafters/stable
     boost_regex/${BOOST_VERSION}@bincrafters/stable
     boost_filesystem/${BOOST_VERSION}@bincrafters/stable
