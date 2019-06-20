@@ -13,9 +13,9 @@ include_directories(${OpenStudioCore_INCLUDE_DIRS})
 
 # copy dlls at configuration time
 if(MSVC)
-  file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Debug")
-  file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/Release")
-  file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/RelWithDebInfo")
+  file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/Debug")
+  file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/Release")
+  file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/RelWithDebInfo")
   list(APPEND CMAKE_LIBRARY_PATH ${OPENSTUDIO_LIB_DIR})
 
   file(GLOB DEBUG_DLLS "${OPENSTUDIO_BUILD_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug/*.dll")
@@ -26,10 +26,10 @@ if(MSVC)
   list(APPEND ALL_DLLS ${RELEASE_DLLS})
   list(APPEND ALL_DLLS ${RELDBG_DLLS})
   list(LENGTH ALL_DLLS NUM_DLLS)
-  message("Copying ${NUM_DLLS} DLLs under ${OPENSTUDIO_BUILD_DIR} to ${CMAKE_BINARY_DIR}")
-  file(COPY ${DEBUG_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Debug/")
-  file(COPY ${RELEASE_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/Release/")
-  file(COPY ${RELDBG_DLLS} DESTINATION "${CMAKE_BINARY_DIR}/RelWithDebInfo/")
+  message("Copying ${NUM_DLLS} DLLs under ${OPENSTUDIO_BUILD_DIR} to ${PROJECT_BINARY_DIR}")
+  file(COPY ${DEBUG_DLLS} DESTINATION "${PROJECT_BINARY_DIR}/Debug/")
+  file(COPY ${RELEASE_DLLS} DESTINATION "${PROJECT_BINARY_DIR}/Release/")
+  file(COPY ${RELDBG_DLLS} DESTINATION "${PROJECT_BINARY_DIR}/RelWithDebInfo/")
 endif()
 
 link_directories(${OpenStudioCore_LIBRARY_DIRS})
@@ -98,7 +98,7 @@ mark_as_advanced(
 # Sample target
 
 add_executable(Test
-  ${CMAKE_SOURCE_DIR}/Test.cpp
+  ${PROJECT_SOURCE_DIR}/Test.cpp
 )
 
 target_link_libraries(${target_name}

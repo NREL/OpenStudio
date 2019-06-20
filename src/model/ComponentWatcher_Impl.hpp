@@ -36,8 +36,7 @@
 
 #include "../utilities/core/Logger.hpp"
 
-// Signals/Slots QT Replacement
-#include "../nano/nano_signal_slot.hpp"
+#include "../nano/nano_signal_slot.hpp" // Signal-Slot replacement
 
 
 namespace openstudio {

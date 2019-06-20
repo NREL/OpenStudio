@@ -169,7 +169,10 @@ bool OSArgument::valueAsBool() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
   }
 
-  return std::get<bool>(m_value);
+  // Note JM 2019-05-17: This is functionally equivalent to `std::get<bool>(m_value)` except it doesn't risk throwing
+  // std::bad_variant_access which isn't available on mac prior to 10.14
+  // No need to check if get_if succeeds because we checked the type above
+  return *(std::get_if<bool>(&m_value));
 }
 
 double OSArgument::valueAsDouble() const
@@ -183,9 +186,9 @@ double OSArgument::valueAsDouble() const
 
   double result;
   if (type() == OSArgumentType::Double) {
-    result = std::get<double>(m_value);
+    result = *(std::get_if<double>(&m_value));
   } else {
-    result = std::get<int>(m_value);
+    result = *(std::get_if<int>(&m_value));
     LOG(Warn, "This argument is of type 'Integer' but returning as a Double as requested. You should consider using valueAsInteger instead");
   }
 
@@ -201,7 +204,7 @@ int OSArgument::valueAsInteger() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
   }
 
-  return std::get<int>(m_value);
+  return *(std::get_if<int>(&m_value));
 }
 
 std::string OSArgument::valueAsString() const
@@ -222,7 +225,7 @@ openstudio::path OSArgument::valueAsPath() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
   }
 
-  return std::get<openstudio::path>(m_value);
+  return *(std::get_if<openstudio::path>(&m_value));
 }
 
 bool OSArgument::hasDefaultValue() const {
@@ -238,7 +241,7 @@ bool OSArgument::defaultValueAsBool() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Bool.");
   }
 
-  return std::get<bool>(m_defaultValue);
+  return *(std::get_if<bool>(&m_defaultValue));
 }
 
 double OSArgument::defaultValueAsDouble() const
@@ -250,7 +253,7 @@ double OSArgument::defaultValueAsDouble() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Double.");
   }
 
-  return std::get<double>(m_defaultValue);
+  return *(std::get_if<double>(&m_defaultValue));
 }
 
 int OSArgument::defaultValueAsInteger() const
@@ -262,7 +265,7 @@ int OSArgument::defaultValueAsInteger() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Integer.");
   }
 
-  return std::get<int>(m_defaultValue);
+  return *(std::get_if<int>(&m_defaultValue));
 }
 
 std::string OSArgument::defaultValueAsString() const
@@ -283,7 +286,7 @@ openstudio::path OSArgument::defaultValueAsPath() const
     LOG_AND_THROW("This argument is of type " << type().valueName() << ", not of type Path.");
   }
 
-  return std::get<openstudio::path>(m_defaultValue);
+  return *(std::get_if<openstudio::path>(&m_defaultValue));
 }
 
 bool OSArgument::hasDomain() const {
@@ -305,7 +308,7 @@ std::vector<bool> OSArgument::domainAsBool() const {
   std::vector<bool> result;
 
   for (const OSArgumentVariant& value: m_domain) {
-    result.push_back(std::get<bool>(value));
+    result.push_back(*(std::get_if<bool>(&value)));
   }
   return result;
 }
@@ -322,14 +325,14 @@ std::vector<double> OSArgument::domainAsDouble() const {
 
   if (type() == OSArgumentType::Double) {
     for (const OSArgumentVariant& value: m_domain) {
-      result.push_back(std::get<double>(value));
+      result.push_back(*(std::get_if<double>(&value)));
     }
   } else {
     // It's an int
     LOG(Warn, "This argument is of type 'Integer' but returning Domain as a Double as requested. "
               "You should consider using domainAsInteger instead");
     for (const OSArgumentVariant& value: m_domain) {
-      result.push_back(std::get<int>(value));
+      result.push_back(*(std::get_if<int>(&value)));
     }
   }
   return result;
@@ -346,7 +349,7 @@ std::vector<int> OSArgument::domainAsInteger() const {
   std::vector<int> result;
 
   for (const OSArgumentVariant& value: m_domain) {
-    result.push_back(std::get<int>(value));
+    result.push_back(*(std::get_if<int>(&value)));
   }
   return result;
 }
@@ -362,7 +365,7 @@ std::vector<openstudio::path> OSArgument::domainAsPath() const {
   std::vector<openstudio::path> result;
 
   for (const OSArgumentVariant& value: m_domain) {
-    result.push_back(std::get<openstudio::path>(value));
+    result.push_back(*(std::get_if<openstudio::path>(&value)));
   }
   return result;
 }
@@ -1000,15 +1003,30 @@ std::ostream& operator<<(std::ostream& os, const OSArgument& arg) {
 std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg) {
   // We use std::visit, filtering out the case where it's monostate
   // Aside from monostate, every possible type is streamable
-  std::visit(
-      [&os](const auto& val){
-      //Needed to properly compare the types
-      using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
-        if constexpr (!std::is_same_v<T, std::monostate>) {
-          os << val;
-        }
-      },
-      arg);
+  //std::visit(
+      //[&os](const auto& val){
+      ////Needed to properly compare the types
+      //using T = std::remove_cv_t<std::remove_reference_t<decltype(val)>>;
+        //if constexpr (!std::is_same_v<T, std::monostate>) {
+          //os << val;
+        //}
+      //},
+      //arg);
+
+  // Note JM 2019-05-17: std::visit is problematic on mac below 10.14, because it might throw std::bad_variant_access
+  // So we don't use it here. Same with std::get, so we use get_if instead
+  if (auto * p = std::get_if<bool>(&arg)) {
+    os << std::boolalpha << *p;
+  } else if (auto * p = std::get_if<double>(&arg)) {
+    os << *p;
+  } else if (auto * p = std::get_if<int>(&arg)) {
+    os << *p;
+  } else if (auto * p = std::get_if<std::string>(&arg)) {
+    os << *p;
+  } else if (auto * p = std::get_if<openstudio::path>(&arg)) {
+    os << *p;
+  }
+
 
   return os;
 }

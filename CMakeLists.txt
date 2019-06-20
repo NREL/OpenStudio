@@ -87,9 +87,18 @@ if(PATCH_EXE_NOTFOUND)
   message(SEND_ERROR "Required program patch not found")
 endif()
 
+# Check if scope has a parent
+get_directory_property(hasParent PARENT_DIRECTORY)
+
+
 # OpenStudio version
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_BUILD}")
+# Export to parent scope
+if(hasParent)
+  set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}" PARENT_SCOPE)
+  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_BUILD}" PARENT_SCOPE)
+endif()
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 9)
@@ -136,6 +145,7 @@ if(UNIX AND NOT APPLE)
   set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 endif()
 
+# TODO: should this be only in OpenStudioApplication?
 option(BUILD_PAT "Build PAT" OFF)
 
 # Build C++ documentation using Doxygen
@@ -167,6 +177,7 @@ option(BUILD_TESTING "Build testing targets" OFF)
 # Build package
 # Requires: EnergyPlus, Radiance
 # TODO: this option is actually unused...
+# TODO: In any case, should core still produce a package or only in OpenStudioApplication?
 option(BUILD_PACKAGE "Build package" OFF)
 
 # Build with OpenSSL support
@@ -179,9 +190,6 @@ if(BUILD_SHARED_LIBS)
   add_definitions("-DSHARED_OS_LIBS")
 endif()
 
-# Build the OpenStudio Application
-# This option will require shared libs
-option(BUILD_OS_APP "Build OS App" OFF)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
@@ -263,102 +271,52 @@ endif()
 ###############################################################################
 # Conan
 
-# Download automatically, you can also just copy the conan.cmake file
-if(NOT EXISTS "${PROJECT_BINARY_DIR}/conan.cmake")
-  message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-  file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/v0.13/conan.cmake"
-    "${PROJECT_BINARY_DIR}/conan.cmake")
-endif()
-
-include(${PROJECT_BINARY_DIR}/conan.cmake)
-
-message(STATUS "RUNNING CONAN")
-
-conan_check(VERSION 1.0.0 REQUIRED)
-
-conan_add_remote(NAME bincrafters
-  URL https://api.bintray.com/conan/bincrafters/public-conan)
-
-set(CONAN_OPTIONS "")
-set(CONAN_BUILD "")
-if (MSVC)
-  set(CONAN_OPENSSL "")
-  set(CONAN_BOOST_ASIO "")
-  set(CONAN_WEBSOCKETPP "")
-  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_BUILD "missing")
-elseif (APPLE)
-  set(CONAN_OPENSSL "")
-  set(CONAN_BOOST_ASIO "")
-  set(CONAN_WEBSOCKETPP "")
-  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_BUILD "missing")
+# Note JM 2019-04-24: Another option is to globally set "print_run_commands = True" in ~/.conan/conan.conf
+option(CONAN_PRINT_RUN_COMMANDS "Log every conan self.run command" OFF)
+mark_as_advanced(CONAN_PRINT_RUN_COMMANDS)
+if(CONAN_PRINT_RUN_COMMANDS)
+  set(ENV{CONAN_PRINT_RUN_COMMANDS} "1")
+  message("Setting CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
 else()
-  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
-  set(CONAN_BOOST_ASIO "boost_asio/1.69.0@bincrafters/stable")
-  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
-  list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
-  list(APPEND CONAN_BUILD "missing")
-  list(APPEND CONAN_BUILD "boost_asio")
-  list(APPEND CONAN_BUILD "websocketpp")
+  unset(ENV{CONAN_PRINT_RUN_COMMANDS})
+  message("CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
 endif()
 
-if (BUILD_TESTING)
-  set(CONAN_GTEST "gtest/1.8.1@bincrafters/stable")
-else()
-  set(CONAN_GTEST "")
-endif()
+# Attempt to run, it'll do the right thing if the calling cmake script already ran it
+set(CONAN_INSTALL_FILE "${PROJECT_SOURCE_DIR}/ConanInstall.cmake")
+include("${CONAN_INSTALL_FILE}")
 
-# DLM: add option for shared libs if we are building shared?
-
-conan_cmake_run(REQUIRES
-  ${CONAN_OPENSSL}
-  ${CONAN_BOOST_ASIO}
-  boost_program_options/1.69.0@bincrafters/stable
-  boost_regex/1.69.0@bincrafters/stable
-  boost_filesystem/1.69.0@bincrafters/stable
-  boost_crc/1.69.0@bincrafters/stable
-  boost_algorithm/1.69.0@bincrafters/stable
-  boost_uuid/1.69.0@bincrafters/stable
-  boost_log/1.69.0@bincrafters/stable
-  boost_numeric_ublas/1.69.0@bincrafters/stable
-  boost_functional/1.69.0@bincrafters/stable
-  boost_geometry/1.69.0@bincrafters/stable
-  pugixml/1.9@bincrafters/stable
-  jsoncpp/1.8.4@theirix/stable
-  zlib/1.2.11@conan/stable
-  fmt/5.2.1@bincrafters/stable
-  sqlite3/3.27.2@bincrafters/stable
-  cpprestsdk/2.10.10@bincrafters/stable
-  ${CONAN_WEBSOCKETPP}
-  geographiclib/1.49@bincrafters/stable
-  ${CONAN_GTEST}
-  BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
-  OPTIONS ${CONAN_OPTIONS}
-  BUILD ${CONAN_BUILD}
-)
-
-#message("CONAN_TARGETS = ${CONAN_TARGETS}")
-message(STATUS "DONE RUNNING CONAN")
 ###############################################################################
+
+get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
+
+# Export to Parent
+if(hasParent)
+  set(RUBY_INCLUDE_DIRS "${RUBY_INCLUDE_DIRS}" PARENT_SCOPE)
+endif()
+
+
 
 ###############################################################################
 # CMake control
 
 # High level project configuration
+# TODO: Do we actually want everything to go to CMAKE_BINARY_DIR/Products,
+# so that when you build OpenStudioApplication you get both OpenStudio (core) and Application in the same place?
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
 
 set(LIBRARY_SEARCH_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Release" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug")
 
+# TODO: move App macros to a local ProjectMacros.cmake
 # Include project specific macros
 include("${PROJECT_SOURCE_DIR}/ProjectMacros.cmake")
 
 # Search first in the binary dir, where conan will install finders, then
 # search for modules in the root dir to override cmake ones
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/CMake")
+# Start with ROOT, then PROJECT_BINARY_DIR
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR} ${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/CMake")
 
 # Use CTest
 set(ALL_TESTING_TARGETS "") # global list
@@ -474,7 +432,7 @@ if("Ninja" STREQUAL ${CMAKE_GENERATOR})
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # For some reason it doesn't say its supported, but it works...
     # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
-    message(STATUS "Forcing -fdiagnostics-color=always")
+    message(STATUS "Ninja: Forcing -fdiagnostics-color=always")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
   endif()
 endif()
@@ -539,15 +497,9 @@ if(UNIX)
       file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     endif()
 
+    # Remove the old extracted dir if exists
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
-  endif()
-  # Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
-  if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
-    set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
-  else()
-    # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
-    set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+
   endif()
 
 elseif(WIN32)
@@ -568,10 +520,33 @@ elseif(WIN32)
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
 
     file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+
+    # Remove the old extracted dir if exists
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+
+  endif()
+
+endif()
+
+# Allows placing the archive manually in the build dir too
+if (NOT EXISTS "${ENERGYPLUS_PATH}")
+  unset(ENERGYPLUS_FOUND CACHE)
+  unset(ENERGYPLUS_EXE CACHE)
+  unset(ENERGYPLUS_IDD CACHE)
+  unset(ENERGYPLUS_WEATHER_DIR CACHE)
+  if (UNIX)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+  else()
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
   endif()
+endif()
+
+# Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
+if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
   set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+else()
+  # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
+  set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 endif()
 
 # Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
@@ -648,102 +623,6 @@ if(NOT UNIX)
   set(PERL_EXE "${PROJECT_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin/perl.exe")
 endif()
 
-# Ruby
-
-set(RUBY_INSTALL_DIR "" CACHE PATH "Path to Ruby Install")
-mark_as_advanced(RUBY_INSTALL_DIR)
-
-if(NOT EXISTS ${RUBY_INSTALL_DIR})
-  if(WIN32)
-    if(CMAKE_CL_64)
-      set(RUBY_ZIP_FILENAME "ruby_2_5_5_msvc2017_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "032bbf7ca9163a3d66ab3c41c6d9bb82")
-    else()
-      set(RUBY_ZIP_FILENAME "DOES_NOT_EXIST_ruby_2_2_4_msvc2013_32_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "4c2055305b105b0c8210697aaa596419")
-    endif()
-  elseif(APPLE)
-    set(RUBY_ZIP_FILENAME "ruby_2_5_1_osx_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "84abcea1411929c113f4030a3b2bd3ee")
-  elseif(EXISTS "/etc/redhat-release")
-    set(RUBY_ZIP_FILENAME "DOES_NOT_EXIST_ruby_2_2_4_redhat_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "d130a17b23cc532975665ee4e9095c8d")
-  else()
-    if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
-      # ubuntu 18.04
-      # This should work with 16.04 and 14.04 too.
-      set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "ea5e957ed189b8b2a854e4504d1ba1fa")
-    else()
-      # 16.04, built against openssl 1.1.0g
-      set(RUBY_ZIP_FILENAME "ruby_2_5_1_linux_static_xenial.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "acfa24444c1040d0aadefe91d26a48a3")
-    endif()
-  endif()
-
-  set(RUBY_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${RUBY_ZIP_FILENAME}")
-  if(EXISTS "${RUBY_ZIP_LOCAL_PATH}")
-    file(MD5 "${RUBY_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
-  endif()
-
-  if(NOT RUBY_ZIP_MD5 STREQUAL RUBY_ZIP_EXPECTED_MD5)
-    message(STATUS "Downloading Ruby: ${RUBY_ZIP_FILENAME}")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_ZIP_FILENAME}"
-      ${RUBY_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${RUBY_ZIP_EXPECTED_MD5})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
-  endif()
-
-  if(WIN32)
-    set(RUBY_INSTALL_DIR "${PROJECT_BINARY_DIR}/Ruby-install/release")
-  else()
-    set(RUBY_INSTALL_DIR "${PROJECT_BINARY_DIR}/Ruby-install")
-  endif()
-endif()
-
-message(STATUS "RUBY_INSTALL_DIR = ${RUBY_INSTALL_DIR}")
-
-# Check that the Ruby OpenSSL version is the right one
-set(EXPECTED_RUBY_OPENSSL_VERSION "1.1.0g")
-
-execute_process(COMMAND ${RUBY_INSTALL_DIR}/bin/ruby -r openssl -e "print OpenSSL::OPENSSL_VERSION[/\\d+\\.\\d+\\.\\d+[a-z]/]"
-  OUTPUT_VARIABLE RUBY_OPENSSL_VERSION
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-# Only keep the version: not needed; we do it in ruby above
-#STRING(REGEX REPLACE "^OpenSSL +([0-9]+\\.[0-9]+\\.[0-9]+[a-z]) +.*" "\\1" RUBY_OPENSSL_VERSION "${RUBY_OPENSSL_VERSION}")
-
-if(RUBY_OPENSSL_VERSION VERSION_GREATER_EQUAL EXPECTED_RUBY_OPENSSL_VERSION)
-  message(STATUS "Checking Ruby OpenSSL version: OK, ruby is built against the right OpenSSL version '${RUBY_OPENSSL_VERSION}' (expected >= '${EXPECTED_RUBY_OPENSSL_VERSION}')")
-else()
-  message(WARNING "Ruby doesn't appear to be built against the right OpenSSL version, built against '${RUBY_OPENSSL_VERSION}' while we expected >= '${EXPECTED_RUBY_OPENSSL_VERSION}'")
-endif()
-
-list(INSERT CMAKE_PREFIX_PATH 0 "${RUBY_INSTALL_DIR}")
-if(WIN32)
-  find_package(Ruby 2.5 REQUIRED)
-  get_filename_component(RUBY_LIBRARY_NAME_WE ${RUBY_LIBRARY} NAME_WE)
-  get_filename_component(RUBY_LIBRARY_DIRECTORY ${RUBY_LIBRARY} DIRECTORY)
-  get_filename_component(RUBY_LIBRARY_EXT ${RUBY_LIBRARY} EXT)
-  set(RUBY_STATIC_LIBRARY "${RUBY_LIBRARY_DIRECTORY}/${RUBY_LIBRARY_NAME_WE}-static${CMAKE_STATIC_LIBRARY_SUFFIX}")
-  set(RUBY_STATIC_LIBRARY_DEBUG "${RUBY_LIBRARY_DIRECTORY}/../../debug/lib/${RUBY_LIBRARY_NAME_WE}-static${CMAKE_STATIC_LIBRARY_SUFFIX}")
-  set(RUBY_LIBRARY_DEBUG "${RUBY_LIBRARY_DIRECTORY}/../../debug/lib/${RUBY_LIBRARY_NAME_WE}${CMAKE_STATIC_LIBRARY_SUFFIX}")
-else()
-  if(APPLE)
-    set(RUBY_STATIC_LIBRARY "${RUBY_INSTALL_DIR}/lib/libruby.2.5.1-static.a")
-  else()
-    set(RUBY_STATIC_LIBRARY "${RUBY_INSTALL_DIR}/lib/libruby-static.a")
-  endif()
-  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.5.0")
-  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.5.0/x86_64-linux")
-  list(APPEND RUBY_INCLUDE_DIRS "${RUBY_INSTALL_DIR}/include/ruby-2.5.0/x86_64-darwin16")
-  set(RUBY_INCLUDE_DIR "${RUBY_INSTALL_DIR}/include/ruby-2.5.0")
-  set(RUBY_EXECUTABLE "${RUBY_INSTALL_DIR}/bin/ruby")
-  set(RUBY_POSSIBLE_LIB_DIR "${RUBY_INSTALL_DIR}/lib")
-endif()
-
 # Mingw based ruby lib (only the dll stub library) from Ruby Installer
 # We need this for stand alone ruby bindings
 # target to use with typical ruby installations (those that are not msvc)
@@ -759,6 +638,7 @@ if(WIN32)
     endif()
 
     if(NOT RUBY_MINGW_LIB_ZIP_MD5 STREQUAL RUBY_MINGW_LIB_ZIP_EXPECTED_MD5)
+      message(STATUS "Downloading Ruby Mingw Lib: ${RUBY_MINGW_LIB_ZIP_FILENAME}")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_MINGW_LIB_ZIP_FILENAME}"
         ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}
         INACTIVITY_TIMEOUT 120
@@ -772,29 +652,38 @@ if(WIN32)
   endif()
 endif()
 
+# Ruby related dependencies
 if(UNIX)
   if(APPLE)
-    find_library(GDBM libgdbm.a PATHS /usr/local/opt/gdbm/lib)
-    find_library(GMP libgmp.a PATHS /usr/local/opt/gmp/lib)
-    find_library(EDIT libedit.dylib)
-    find_library(UTIL libutil.dylib)
-    find_library(CURSES libncurses.dylib)
-    find_library(Z libz.dylib)
-    find_library(FFI libffi.dylib)
-    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${GMP} ${EDIT} ${UTIL} ${CURSES} ${Z} ${FFI})
+    # TODO: JM 2019-06-20 Remove when properly tested
+    #find_library(GMP libgmp.a PATHS /usr/local/opt/gmp/lib)
+    #find_library(EDIT libedit.dylib)
+    #find_library(UTIL libutil.dylib)
+    #find_library(CURSES libncurses.dylib)
+    #find_library(Z libz.dylib)
+    #find_library(FFI libffi.dylib)
+    #find_library(YAML libyaml.a)
+    #find_library(READLINE libreadline.a PATHS /usr/local/opt/readline/lib)
+    #set(ADDITIONAL_RUBY_LIBS ${GDBM} ${GMP} ${EDIT} ${UTIL} ${CURSES} ${Z} ${FFI} ${READLINE} ${YAML} CONAN_PKG::OpenSSL)
+    set(ADDITIONAL_RUBY_LIBS "")
+    message("ADDITIONAL_RUBY_LIBS=${ADDITIONAL_RUBY_LIBS}")
   else()
-    find_library(GDBM libgdbm.a)
+    # TODO: JM 2019-06-20 Remove when properly tested
+    #find_library(GMP libgmp.a)
+    #find_library(GDBM libgdbm.a)
     # libqdbm-dev
     find_library(QDBM libqdbm.a)
-    find_library(GMP libgmp.a)
-    find_library(FFI libffi.a)
-    find_library(READLINE libreadline.a)
-    find_library(TERMCAP libtermcap.a)
-    find_library(YAML libyaml.a)
-    #    find_library(CRYPTO libcrypto.a)
-    set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} CONAN_PKG::OpenSSL)
+    #find_library(FFI libffi.a)
+    #find_library(READLINE libreadline.a)
+    #find_library(TERMCAP libtermcap.a)
+    #find_library(YAML libyaml.a)
+    #find_library(CRYPTO libcrypto.a)
+    #set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} CONAN_PKG::OpenSSL)
+    set(ADDITIONAL_RUBY_LIBS "${QDBM}")
+    message("ADDITIONAL_RUBY_LIBS=${ADDITIONAL_RUBY_LIBS}")
   endif()
 else()
+  # TODO: if we can make conan-libffi to work, remove this.
   set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017_v2.zip")
   set(FFI_ZIP_EXPECTED_MD5 "9d43417932447eb5830a389273954a75")
   set(FFI_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${FFI_ZIP_FILENAME}")
@@ -805,6 +694,7 @@ else()
   if(NOT FFI_ZIP_MD5 STREQUAL FFI_ZIP_EXPECTED_MD5)
     unset(FFI CACHE)
     unset(FFID CACHE)
+    message(STATUS "Downloading FFI: ${FFI_ZIP_FILENAME}")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${FFI_ZIP_FILENAME}"
       ${FFI_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -846,6 +736,7 @@ if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
   file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/src/cli/embedded_files")
 endif()
 
+# TODO: I think we want that only in OpenStudioApplication
 # DView
 option(BUILD_DVIEW "Build DView" OFF)
 
@@ -867,7 +758,7 @@ if(BUILD_DVIEW)
 
     set(DVIEW_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
     if(EXISTS "${DVIEW_ZIP_LOCAL_PATH}")
-      file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" RUBY_ZIP_MD5)
+      file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" DVIEW_ZIP_MD5)
     endif()
 
     if(NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
@@ -894,13 +785,6 @@ if(BUILD_DVIEW)
 endif()
 
 # SWIG
-
-# Xcode/Ninja generators undefined MAKE
-if(CMAKE_GENERATOR MATCHES "Make")
-  set(MAKE "$(MAKE)")
-else()
-  set(MAKE make)
-endif()
 
 # using forked version of SWIG at https://github.com/macumber/swig/tree/openstudio_swig_3_0_12
 if(UNIX)
@@ -933,6 +817,10 @@ else()
   set(SWIG_EXECUTABLE ${PROJECT_BINARY_DIR}/${SWIG_DIR}/swig.exe)
 endif()
 
+# Export SWIG to parent scope
+if(hasParent)
+  set(SWIG_EXECUTABLE "${SWIG_EXECUTABLE}" PARENT_SCOPE)
+endif()
 
 set(ALL_RUBY_BINDING_TARGETS "") # global list
 
@@ -1022,170 +910,6 @@ endif()
 #endif()
 
 
-if(BUILD_OS_APP)
-  # Qt
-  set(QT_INSTALL_DIR "" CACHE PATH "Path to Qt Install")
-  mark_as_advanced(QT_INSTALL_DIR)
-
-  if(NOT EXISTS ${QT_INSTALL_DIR})
-    # download qt
-    if(WIN32)
-      if(CMAKE_CL_64)
-        set(QT_ZIP_FILENAME "qt_5_11_msvc2017_64_shared.zip")
-        set(QT_ZIP_EXPECTED_MD5 "82f44a8decf101ca7cb7efafd899e8ee")
-      else()
-        set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_msvc2017_32_shared.zip")
-        set(QT_ZIP_EXPECTED_MD5 "25abd383e7db2dfd971b4a4ef145002b")
-      endif()
-    elseif(APPLE)
-        set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_osx_shared.tar.gz")
-        set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
-    elseif(EXISTS "/etc/redhat-release")
-      set(QT_ZIP_FILENAME "DOES_NOT_EXIST_qt_5_11_redhat_shared.tar.gz")
-      set(QT_ZIP_EXPECTED_MD5 "b0610716854ed91a003347c455b22eb8")
-    else()
-      if(LSB_RELEASE_ID_SHORT MATCHES "18.04")
-        set(QT_ZIP_FILENAME "qt_5_11_linux_shared.tar.gz")
-        set(QT_ZIP_EXPECTED_MD5 "33c5a562935612625ec5e41fe4b75e17")
-      else()
-        # 16.04
-        set(QT_ZIP_FILENAME "qt_5_11_linux_shared_xenial.tar.gz")
-        set(QT_ZIP_EXPECTED_MD5 "9b0e89433cf1a79c84f84f85c8fef168")
-      endif()
-    endif()
-
-    set(QT_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${QT_ZIP_FILENAME}")
-    if(EXISTS "${QT_ZIP_LOCAL_PATH}")
-      file(MD5 "${QT_ZIP_LOCAL_PATH}" QT_ZIP_MD5)
-    endif()
-
-  if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
-    message(STATUS "Downloading Qt: ${QT_ZIP_FILENAME}")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
-      ${QT_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${QT_ZIP_EXPECTED_MD5})
-        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${QT_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
-    endif()
-  endif()
-
-  set(QT_INSTALL_DIR "${PROJECT_BINARY_DIR}/Qt-install/")
-
-  find_package(Qt5Core 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Widgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Sql 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Network 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Xml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Concurrent 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5PrintSupport 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Gui 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Quick 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5QuickWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Qml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5WebChannel 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5Positioning 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-
-  find_package(Qt5WebEngine 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  find_package(Qt5WebEngineWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  #find_package(Qt53DCore 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  #find_package(Qt53DInput 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-  #find_package(Qt53DRender 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-
-  if(APPLE)
-    set(QtWebEngineProcess "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers/QtWebEngineProcess.app" CACHE PATH "Path to the QtWebEngineProcess")
-  else()
-    find_program(QtWebEngineProcess NAMES QtWebEngineProcess PATHS "${QT_INSTALL_DIR}/bin/" "${QT_INSTALL_DIR}/libexec/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Helpers" NO_DEFAULT_PATH)
-  endif()
-  find_file(icudtl NAMES icudtl.dat PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
-  find_file(qweb_resources NAMES qtwebengine_resources.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
-  find_file(qweb_resources_100 NAMES qtwebengine_resources_100p.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
-  find_file(qweb_resources_200 NAMES qtwebengine_resources_200p.pak PATHS "${QT_INSTALL_DIR}/resources/" "${QT_INSTALL_DIR}/lib/QtWebEngineCore.framework/Resources" NO_DEFAULT_PATH)
-
-  # DLM: why do we have QT_WEB_LIBS separate from QT_LIBS?  can we combine these?
-  # DLM: now the distincton should be between Qt libs linked by openstudio_modeleditor.so and the OS App
-  list(APPEND QT_WEB_LIBS Qt5::Core)
-  list(APPEND QT_WEB_LIBS Qt5::Gui)
-  list(APPEND QT_WEB_LIBS Qt5::WebEngine)
-  list(APPEND QT_WEB_LIBS Qt5::WebEngineCore)
-  list(APPEND QT_WEB_LIBS Qt5::WebEngineWidgets)
-  #list(APPEND QT_WEB_LIBS Qt5::3DCore)
-  #list(APPEND QT_WEB_LIBS Qt5::3DInput)
-  #list(APPEND QT_WEB_LIBS Qt5::3DRender)
-  set_target_properties(${QT_WEB_LIBS} PROPERTIES INTERFACE_LINK_LIBRARIES "")
-
-  if(NOT APPLE)
-
-    find_package(Qt5WebChannel 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_WEB_LIBS Qt5::WebChannel)
-
-    find_package(Qt5Quick 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_WEB_LIBS Qt5::Quick)
-
-    find_package(Qt5QuickWidgets 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_WEB_LIBS Qt5::QuickWidgets)
-
-    find_package(Qt5Qml 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_WEB_LIBS Qt5::Qml)
-
-    find_package(Qt5Positioning 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_WEB_LIBS Qt5::Positioning)
-
-    if(UNIX)
-      find_package(Qt5DBus 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-      list(APPEND QT_WEB_LIBS Qt5::DBus)
-
-      # there does not appear to be a normal qt finder for this
-      # DLM: actually there is, it is a plugin associated with Qt5::Gui
-      #message( Qt5Gui_PLUGINS = ${Qt5Gui_PLUGINS})
-      #get_target_property(Qt5QXcbIntegrationPlugin_LOCATION Qt5::QXcbIntegrationPlugin LOCATION)
-      #get_target_property(Qt5QXcbIntegrationPlugin_TYPE Qt5::QXcbIntegrationPlugin TYPE)
-      #message("Qt5::QXcbIntegrationPlugin Location = ${Qt5QXcbIntegrationPlugin_LOCATION}")
-      #message("Qt5::QXcbIntegrationPlugin Type = ${Qt5QXcbIntegrationPlugin_TYPE}")
-      list(APPEND QT_WEB_LIBS Qt5::QXcbIntegrationPlugin)
-      list(APPEND QT_WEB_LIBS Qt5::QXcbGlxIntegrationPlugin)
-    endif()
-  endif()
-
-  list(APPEND QT_LIBS Qt5::Core)
-  list(APPEND QT_LIBS Qt5::Widgets)
-  list(APPEND QT_LIBS Qt5::Network)
-  list(APPEND QT_LIBS Qt5::Xml)
-  list(APPEND QT_LIBS Qt5::Concurrent)
-  list(APPEND QT_LIBS Qt5::PrintSupport)
-  list(APPEND QT_LIBS Qt5::Gui)
-
-  if(WIN32)
-    find_package(Qt5WinExtras 5.11.2 REQUIRED PATHS ${QT_INSTALL_DIR} NO_DEFAULT_PATH)
-    list(APPEND QT_LIBS Qt5::WinExtras)
-
-    find_library(QT_MAIN_LIB NAMES qtmain PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-    find_library(QT_MAIN_LIB_D NAMES qtmaind PATHS "${QT_INSTALL_DIR}/lib" NO_DEFAULT_PATH)
-  endif()
-
-  list(APPEND QT_INCLUDES ${Qt5Core_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5Concurrent_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5Widgets_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5Xml_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5Gui_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES "${QT_INSTALL_DIR}/include/QtGui/5.11.2/QtGui") # needed by qtwinmigrate
-  list(APPEND QT_INCLUDES ${Qt5PrintSupport_INCLUDE_DIRS})
-
-  # DLM: added this, but seems to conflict with idea of a separate set of Qt Web dependencies?
-  list(APPEND QT_INCLUDES ${Qt5Network_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5WebEngine_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5WebEngineCore_INCLUDE_DIRS})
-  list(APPEND QT_INCLUDES ${Qt5WebEngineWidgets_INCLUDE_DIRS})
-
-  if(UNIX)
-    list(APPEND QT_INCLUDES ${Qt5XcbQpa_INCLUDE_DIRS})
-  endif()
-
-  set(CMAKE_AUTOMOC OFF)
-
-endif()
-
 ###############################################################################
 # Add to include path
 
@@ -1229,17 +953,6 @@ set(project_directories
   cli
   install_utility
 )
-
-if(BUILD_OS_APP)
-  if(WIN32)
-    include_directories("${PROJECT_SOURCE_DIR}/src/qtwinmigrate")
-    list(APPEND project_directories "qtwinmigrate")
-  endif()
-  list(APPEND project_directories "model_editor")
-  list(APPEND project_directories "bimserver")
-  list(APPEND project_directories "openstudio_lib")
-  list(APPEND project_directories "openstudio_app")
-endif()
 
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
@@ -1397,6 +1110,7 @@ if(BUILD_DOCUMENTATION)
   # Zip documentation
   if(WIN32)
     if(NOT EXISTS "${PROJECT_BINARY_DIR}/7za.exe")
+      message(STATUS "Downloading 7za.zip")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/7za.zip" "${PROJECT_BINARY_DIR}/7za.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 EXPECTED_MD5 860077d3f314e939abab680218a3febe)
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/7za.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
     endif()
@@ -1437,24 +1151,11 @@ set(all_lib_targets
   ${ALL_RUBY_BINDING_TARGETS}
 )
 
-if(BUILD_OS_APP)
-  if(WIN32)
-    list(APPEND all_lib_targets "qtwinmigrate")
-  endif()
-  list(APPEND all_lib_targets "openstudio_modeleditor")
-  list(APPEND all_lib_targets "openstudio_bimserver")
-  list(APPEND all_lib_targets "openstudio_lib")
-endif()
-
 set(all_exe_targets
   GenerateIddFactory
   #gbXMLToIdf
   openstudio
 )
-
-if(BUILD_OS_APP)
-  list(APPEND all_exe_targets "OpenStudioApp")
-endif()
 
 if(UNIX AND NOT APPLE)
   foreach(targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
@@ -1518,28 +1219,13 @@ elseif(UNIX)
   set(CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/)
   # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio
   # Add an arbitrary link (broken) at build/openstudio (if build/ is your build folder) that already points to the **future** /usr/local/openstudio-x.y.z/bin/openstudio
-  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio openstudio)
+  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio ${CMAKE_CURRENT_BINARY_DIR}/openstudio)
   # Plus a versioned one
-  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio openstudio-${OpenStudio_VERSION})
+  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION})
   # Have this link be installed with the .deb package in /usr/local/bin
-  install(FILES ${PROJECT_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
-  install(FILES ${PROJECT_BINARY_DIR}/openstudio-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
+  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
 
-  # Same for OpenStudioApp
-  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/OpenStudioApp OpenStudioApp)
-  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/OpenStudioApp OpenStudioApp-${OpenStudio_VERSION})
-
-  # Have this link be installed with the .deb package in /usr/local/bin
-  install(FILES ${PROJECT_BINARY_DIR}/OpenStudioApp DESTINATION /usr/local/bin COMPONENT CLI)
-  install(FILES ${PROJECT_BINARY_DIR}/OpenStudioApp-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
-
-
-  # Create a proper App with file associations
-
-  # Install the .desktop manifest (allows the App to be seen in the Dash and adding to the dock, and to map it a mimetype)
-  install(FILES "${PROJECT_SOURCE_DIR}/openstudioapp.desktop" DESTINATION /usr/share/applications)
-  # Install the XML mime info
-  install(FILES "${PROJECT_SOURCE_DIR}/x-openstudio.xml" DESTINATION /usr/share/mime/application)
 
   # Copy the icons
   # Cf. http://standards.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
@@ -1663,7 +1349,10 @@ if(BUILD_PAT AND APPLE)
   install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
 endif()
 
-include(CPack)
+if (NOT DELAY_INCLUDE_CPACK)
+  include(CPack)
+endif()
+
 include(CPackIFW)
 
 cpack_add_component(CLI
@@ -1715,29 +1404,6 @@ if(BUILD_CSHARP_BINDINGS)
   )
 
   cpack_ifw_configure_component(CSharpAPI
-    REQUIRES_ADMIN_RIGHTS
-  )
-endif()
-
-if(BUILD_OS_APP)
-
-  cpack_add_component(Resources
-    DISPLAY_NAME "Application Resources"
-    DESCRIPTION "Resource Files used by the OpenStudio Application"
-  )
-
-  cpack_add_component(OpenStudioApp
-    DISPLAY_NAME "OpenStudio Application"
-    DESCRIPTION "OpenStudio Application"
-  )
-
-  cpack_ifw_configure_component(Resources
-    REQUIRES_ADMIN_RIGHTS
-  )
-
-  cpack_ifw_configure_component(OpenStudioApp
-    DEPENDS Resources CLI
-    SCRIPT src/openstudio_app/install_operations.qs
     REQUIRES_ADMIN_RIGHTS
   )
 endif()

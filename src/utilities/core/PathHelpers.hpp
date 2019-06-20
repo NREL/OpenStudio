@@ -121,6 +121,9 @@ UTILITIES_API bool isNetworkPath(const path& p);
   * Currently only implemented for Windows, returns false on other platforms. */
 UTILITIES_API bool isNetworkPathAvailable(const path& p);
 
+/** Helper to determine if a path begins with another path */
+UTILITIES_API bool pathBeginsWith(const openstudio::path &t_shorter, const openstudio::path &t_longer);
+
 } // openstudio
 
 #endif //UTILITIES_CORE_PATHHELPERS_HPP

@@ -147,9 +147,7 @@ extern "C" {
   void Init_wait(void);
   void Init_zlib(void);
 
-  #ifndef __APPLE__
-    void Init_openssl(void);
-  #endif
+  void Init_openssl(void);
 
   void Init_nonblock(void);
 
@@ -422,7 +420,7 @@ int main(int argc, char *argv[])
     rb_provide("digest/md5");
     rb_provide("md5.so");
     rb_provide("digest/md5.so");
-    
+
     Init_nkf();
     rb_provide("nkf");
     rb_provide("nkf.so");
@@ -456,7 +454,7 @@ int main(int argc, char *argv[])
     rb_provide("digest/rmd160");
     rb_provide("rmd160.so");
     rb_provide("digest/rmd160.so");
-    
+
     Init_sdbm();
     rb_provide("sdbm");
     rb_provide("sdbm.so");
@@ -466,13 +464,13 @@ int main(int argc, char *argv[])
     rb_provide("digest/sha1");
     rb_provide("sha1.so");
     rb_provide("digest/sha1.so");
-    
+
     Init_sha2();
     rb_provide("sha2");
     rb_provide("digest/sha2");
     rb_provide("sha2.so");
     rb_provide("digest/sha2.so");
-    
+
     Init_sizeof();
     rb_provide("sizeof");
     rb_provide("sizeof.so");
@@ -499,11 +497,9 @@ int main(int argc, char *argv[])
     rb_provide("zlib");
     rb_provide("zlib.so");
 
-    #ifndef __APPLE__
-      Init_openssl();
-      rb_provide("openssl");
-      rb_provide("openssl.so");
-    #endif
+    Init_openssl();
+    rb_provide("openssl");
+    rb_provide("openssl.so");
 
     Init_nonblock();
     rb_provide("io/nonblock");

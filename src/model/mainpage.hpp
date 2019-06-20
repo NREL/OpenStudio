@@ -1140,7 +1140,7 @@ namespace model {
  *
  *  The pointer to the implementation is managed by a reference counting pointer, so the
  *  implementation object is destroyed when the last wrapper class goes out of scope. Because the
- *  implementation is shared between copies of the public class, Qt signal and slot connections will
+ *  implementation is shared between copies of the public class, signal and slot connections will
  *  remain active after the public object is destroyed provided that another object still references
  *  the same implementation. Note that at the very least this other object is typically the Model
  *  of which the ModelObject is a member, as Model (actually Workspace) maintains a map of all of its

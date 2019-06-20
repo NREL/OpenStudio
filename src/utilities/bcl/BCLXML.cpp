@@ -329,7 +329,7 @@ namespace openstudio{
 
   std::string BCLXML::escapeString(const std::string& txt)
   {
-    // seems that Qt's built in parser does this already
+    // seems that we don't need to do this anymore
     return txt;
 
     // http://stackoverflow.com/questions/2083754/why-shouldnt-apos-be-used-to-escape-single-quotes
@@ -341,7 +341,7 @@ namespace openstudio{
 
   std::string BCLXML::decodeString(const std::string& txt)
   {
-    // seems that Qt's built in parser does this already
+    // seems that we don't need to do this anymore
     // only thing that can't be in the text node on disk are '<' (should be '&lt;') and '&' (should be '&amp;')
     return txt;
 

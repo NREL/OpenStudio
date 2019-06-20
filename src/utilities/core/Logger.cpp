@@ -38,39 +38,6 @@ namespace sinks = boost::log::sinks;
 namespace keywords = boost::log::keywords;
 
 namespace openstudio{
-  /*
-  // TODO: QT-Separation-Move
-  // handle Qt messages
-  void logQtMessage(QtMsgType type, const char *msg)
-  {
-    switch (type) {
-      case QtDebugMsg:
-        logFree(Debug, "Qt", msg);
-        break;
-#if QT_VERSION >= 0x050500
-      case QtInfoMsg:
-        logFree(Info, "Qt", msg);
-        break;
-#endif
-      case QtWarningMsg:
-        logFree(Warn, "Qt", msg);
-        break;
-      case QtCriticalMsg:
-        logFree(Error, "Qt", msg);
-        break;
-      case QtFatalMsg:
-        logFree(Fatal, "Qt", msg);
-        break;
-    }
-  }
-
-  // TODO: QT-Separation-Move
-  // handle Qt messages after logger is destroyed
-  void consoleLogQtMessage(QtMsgType type, const char *msg)
-  {
-    std::cout << "[Qt] <" << type << "> " << msg << std::endl;
-  }
-  */
 
   /// convenience function for SWIG, prefer macros in C++
   void logFree(LogLevel level, const std::string& channel, const std::string& message)
@@ -95,8 +62,6 @@ namespace openstudio{
     m_standardErrLogger.setLogLevel(Warn);
     //this->addSink(m_standardErrLogger.sink());
 
-    // register Qt message handler
-    //qInstallMsgHandler(logQtMessage);
   }
 
   LoggerSingleton::~LoggerSingleton()

@@ -31,7 +31,6 @@
 %ignore openstudio::applicationIsRunningFromBuildDirectory();
 %ignore openstudio::moduleIsRunningFromBuildDirectory();
 
-%include <utilities/core/Qt.i>
 %include <utilities/core/Enum.i>
 //%include <utilities/core/Exception.i> // moved ahead in include order in CommonInclude
 %include <utilities/core/Path.i>
