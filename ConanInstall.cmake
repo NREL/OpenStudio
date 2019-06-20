@@ -56,6 +56,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     # Do we really need to force build these?
     list(APPEND CONAN_BUILD "boost_asio")
     list(APPEND CONAN_BUILD "websocketpp")
+    # This one we need to force build when building openstudio_ruby (because static isn't supported on Mac, and it'll create linking problems when
+    # building gdbm that depends on it).
+    list(APPEND CONAN_BUILD "readline")
   else()
     list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
     list(APPEND CONAN_BUILD "boost_asio")
