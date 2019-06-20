@@ -74,6 +74,32 @@ namespace detail {
     return EnergyManagementSystemGlobalVariable::iddObjectType();
   }
 
+  bool EnergyManagementSystemGlobalVariable_Impl::exportToBCVTB() const {
+    boost::optional<std::string> value = getString(OS_EnergyManagementSystem_GlobalVariableFields::ExportToBCVTB, true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "True");
+  }
+
+  bool EnergyManagementSystemGlobalVariable_Impl::isExportToBCVTBDefaulted() const {
+    return isEmpty(OS_EnergyManagementSystem_GlobalVariableFields::ExportToBCVTB);
+  }
+
+  bool EnergyManagementSystemGlobalVariable_Impl::setExportToBCVTB(bool exportToBCVTB) {
+    bool result = false;
+    if (exportToBCVTB) {
+      result = setString(OS_EnergyManagementSystem_GlobalVariableFields::ExportToBCVTB, "True");
+    } else {
+      result = setString(OS_EnergyManagementSystem_GlobalVariableFields::ExportToBCVTB, "False");
+    }
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void EnergyManagementSystemGlobalVariable_Impl::resetExportToBCVTB() {
+    bool result = setString(OS_EnergyManagementSystem_GlobalVariableFields::ExportToBCVTB, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 EnergyManagementSystemGlobalVariable::EnergyManagementSystemGlobalVariable(const Model& model, const std::string& variableName)
@@ -89,6 +115,22 @@ EnergyManagementSystemGlobalVariable::EnergyManagementSystemGlobalVariable(const
 
 IddObjectType EnergyManagementSystemGlobalVariable::iddObjectType() {
   return IddObjectType(IddObjectType::OS_EnergyManagementSystem_GlobalVariable);
+}
+
+bool EnergyManagementSystemGlobalVariable::exportToBCVTB() const {
+  return getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->exportToBCVTB();
+}
+
+bool EnergyManagementSystemGlobalVariable::isExportToBCVTBDefaulted() const {
+  return getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->isExportToBCVTBDefaulted();
+}
+
+bool EnergyManagementSystemGlobalVariable::setExportToBCVTB(bool exportToBCVTB) {
+  return getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->setExportToBCVTB(exportToBCVTB);
+}
+
+void EnergyManagementSystemGlobalVariable::resetExportToBCVTB() {
+  getImpl<detail::EnergyManagementSystemGlobalVariable_Impl>()->resetExportToBCVTB();
 }
 
 /// @cond

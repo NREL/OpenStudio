@@ -1,4 +1,4 @@
-!IDD_Version 2.8.1
+!IDD_Version 2.8.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -29598,16 +29598,11 @@ OS:EnergyManagementSystem:GlobalVariable,
   A1, \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2; \field Name
        \required-field
        \type alpha
        \reference ErlVariableNames
        \note no spaces allowed in name
-  A3; \field Export To BCVTB
-       \type choice
-       \default False
-       \key True
-       \key False
 
 OS:EnergyManagementSystem:OutputVariable,
        \memo This object sets up an EnergyPlus output variable from an Erl variable

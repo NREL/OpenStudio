@@ -42,12 +42,8 @@ class Space_Test < MiniTest::Unit::TestCase
 
     # test name attributes
     space.setName("Space")
-    attribute = space.getAttribute("name")
-    assert((not attribute.empty?))
-    assert_equal("Space", attribute.get.valueAsString)
-    space.setAttribute("name", "Space 2")
     assert(space.name)
-    assert_equal("Space 2", space.name.get)
+    assert_equal("Space", space.name.get)
   end
 
 end
