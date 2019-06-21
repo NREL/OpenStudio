@@ -305,7 +305,7 @@ target_link_libraries(openstudio
 
 if (UNIX AND NOT APPLE)
   target_link_libraries(additional_ruby_libs dl crypt)
-  target_link_libraries(openstudio "icui18n" "icuuc" "gmp" "gdbm" "gdbm_compat" "readline")
+  target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
 elseif(WIN32)
   target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi)
   set_target_properties(openstudio PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
