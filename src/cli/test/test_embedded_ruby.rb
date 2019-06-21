@@ -73,16 +73,23 @@ class EmbeddedRuby_Test < Minitest::Test
     assert(true)
   end
   
-  def test_fiddle
-    require 'fiddle'
-    Fiddle::ALIGN_CHAR
-    assert(true)
-  end
+  #def test_fiddle
+  #  require 'fiddle'
+  #  Fiddle::ALIGN_CHAR
+  #  assert(true)
+  #end
   
   def test_generator
     g = Enumerator::Generator.new(Proc.new { 1 })
     g.to_a
     assert(true)
+  end
+  
+  def test_json
+    require 'json'
+    require 'json/pure'
+    my_hash = JSON.parse('{"hello": "goodbye"}')
+    JSON.generate(my_hash)
   end
   
   def test_md5
@@ -199,5 +206,14 @@ class EmbeddedRuby_Test < Minitest::Test
     assert(true)
   end
   
+  def test_embedded_gems
+    require 'openstudio-standards'
+    require 'openstudio-workflow'
+    v = OpenstudioStandards::VERSION
+    #puts v
+    v = OpenStudio::Workflow::VERSION
+    #puts v
+    assert(true)
+  end
   
 end

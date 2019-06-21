@@ -42,6 +42,8 @@
 #include "../BuildingStory_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
+#include "../SubSurface.hpp"
+#include "../SubSurface_Impl.hpp"
 #include "../SpaceType.hpp"
 #include "../SpaceType_Impl.hpp"
 #include "../ThermalZone.hpp"
@@ -432,4 +434,112 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Colors) {
   ASSERT_TRUE(model.getConcreteModelObjectByName<SpaceType>("Green Type")->renderingColor());
   EXPECT_EQ("#00FF00", model.getConcreteModelObjectByName<SpaceType>("Green Type")->renderingColor()->colorString());
 
+}
+
+TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue3267) {
+  std::string json("{\"application\":{\"currentSelections\":{\"story\":null,\"story_id\":\"1\",\"subselection_ids\":{\"1\":\"3\",\"14\":\"16\"},\"component_id\":null,\"component_definition_id\":\"27\",\"component_instance_id\":null,\"space_property_id\":null,\"tool\":\"Place Component\",\"mode\":\"spaces\",\"snapMode\":\"grid-strict\",\"modeTab\":\"components\",\"subselectionType\":\"window_definitions\"},\"modes\":[\"spaces\",\"shading\",\"building_units\",\"thermal_zones\",\"pitched_roofs\",\"space_types\",\"images\"],\"tools\":[\"Pan\",\"Drag\",\"Rectangle\",\"Polygon\",\"Eraser\",\"Select\",\"Map\",\"Fill\",\"Place Component\",\"Image\",\"Apply Property\"],\"scale\":{\"x\":{\"pixels\":1576,\"rwuRange\":[-275.84597432905485,275.84597432905485]},\"y\":{\"pixels\":857,\"rwuRange\":[-150,150]}}},\"project\":{\"config\":{\"units\":\"ip\",\"unitsEditable\":true,\"language\":\"EN-US\"},\"north_axis\":0,\"ground\":{\"floor_offset\":0,\"azimuth_angle\":0,\"tilt_slope\":0},\"grid\":{\"visible\":true,\"spacing\":5},\"view\":{\"min_x\":-276.19603267211204,\"min_y\":-150.70011668611437,\"max_x\":275.49591598599767,\"max_y\":149.29988331388566},\"map\":{\"initialized\":false,\"enabled\":false,\"visible\":true,\"latitude\":39.7653,\"longitude\":-104.9863,\"zoom\":4.5,\"rotation\":0,\"elevation\":0},\"previous_story\":{\"visible\":true},\"show_import_export\":true},\"stories\":[{\"id\":\"1\",\"handle\":null,\"name\":\"Story 1\",\"image_visible\":true,\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":8,\"above_ceiling_plenum_height\":0,\"multiplier\":1,\"color\":\"#88ccee\",\"geometry\":{\"id\":\"2\",\"vertices\":[{\"id\":\"5\",\"x\":-105,\"y\":85,\"edge_ids\":[\"9\",\"12\"]},{\"id\":\"6\",\"x\":-5,\"y\":85,\"edge_ids\":[\"9\",\"10\"]},{\"id\":\"7\",\"x\":-5,\"y\":-15,\"edge_ids\":[\"10\",\"11\"]},{\"id\":\"8\",\"x\":-105,\"y\":-15,\"edge_ids\":[\"11\",\"12\"]}],\"edges\":[{\"id\":\"9\",\"vertex_ids\":[\"5\",\"6\"],\"face_ids\":[\"13\"]},{\"id\":\"10\",\"vertex_ids\":[\"6\",\"7\"],\"face_ids\":[\"13\"]},{\"id\":\"11\",\"vertex_ids\":[\"7\",\"8\"],\"face_ids\":[\"13\"]},{\"id\":\"12\",\"vertex_ids\":[\"8\",\"5\"],\"face_ids\":[\"13\"]}],\"faces\":[{\"id\":\"13\",\"edge_ids\":[\"9\",\"10\",\"11\",\"12\"],\"edge_order\":[1,1,1,1]}]},\"images\":[],\"spaces\":[{\"id\":\"3\",\"handle\":null,\"name\":\"Space 1 - 1\",\"face_id\":\"13\",\"building_unit_id\":null,\"thermal_zone_id\":null,\"space_type_id\":null,\"construction_set_id\":null,\"pitched_roof_id\":null,\"daylighting_controls\":[],\"below_floor_plenum_height\":null,\"floor_to_ceiling_height\":null,\"above_ceiling_plenum_height\":null,\"floor_offset\":null,\"open_to_below\":null,\"color\":\"#88ccee\",\"type\":\"space\"}],\"shading\":[{\"id\":\"4\",\"handle\":null,\"name\":\"Shading 1 - 1\",\"face_id\":null,\"color\":\"#E8E3E5\"}],\"windows\":[{\"window_definition_id\":\"27\",\"edge_id\":\"11\",\"alpha\":0.5,\"id\":\"32\",\"name\":\"Window 1 - 2\"}],\"doors\":[{\"door_definition_id\":\"29\",\"edge_id\":\"11\",\"alpha\":0.45,\"id\":\"31\",\"name\":\"\"}]},{\"id\":\"14\",\"handle\":null,\"name\":\"Story 2\",\"image_visible\":true,\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":8,\"above_ceiling_plenum_height\":0,\"multiplier\":1,\"color\":\"#332288\",\"geometry\":{\"id\":\"15\",\"vertices\":[{\"id\":\"18\",\"x\":-105,\"y\":85,\"edge_ids\":[\"22\",\"25\"]},{\"id\":\"19\",\"x\":-5,\"y\":85,\"edge_ids\":[\"22\",\"23\"]},{\"id\":\"20\",\"x\":-5,\"y\":-15,\"edge_ids\":[\"23\",\"24\"]},{\"id\":\"21\",\"x\":-105,\"y\":-15,\"edge_ids\":[\"24\",\"25\"]}],\"edges\":[{\"id\":\"22\",\"vertex_ids\":[\"18\",\"19\"],\"face_ids\":[\"26\"]},{\"id\":\"23\",\"vertex_ids\":[\"19\",\"20\"],\"face_ids\":[\"26\"]},{\"id\":\"24\",\"vertex_ids\":[\"20\",\"21\"],\"face_ids\":[\"26\"]},{\"id\":\"25\",\"vertex_ids\":[\"21\",\"18\"],\"face_ids\":[\"26\"]}],\"faces\":[{\"id\":\"26\",\"edge_ids\":[\"22\",\"23\",\"24\",\"25\"],\"edge_order\":[1,1,1,1]}]},\"images\":[],\"spaces\":[{\"id\":\"16\",\"handle\":null,\"name\":\"Space 2 - 1\",\"face_id\":\"26\",\"building_unit_id\":null,\"thermal_zone_id\":null,\"space_type_id\":null,\"construction_set_id\":null,\"pitched_roof_id\":null,\"daylighting_controls\":[],\"below_floor_plenum_height\":null,\"floor_to_ceiling_height\":null,\"above_ceiling_plenum_height\":null,\"floor_offset\":null,\"open_to_below\":null,\"color\":\"#332288\",\"type\":\"space\"}],\"shading\":[{\"id\":\"17\",\"handle\":null,\"name\":\"Shading 2 - 1\",\"face_id\":null,\"color\":\"#E8E3E5\"}],\"windows\":[{\"window_definition_id\":\"27\",\"edge_id\":\"24\",\"alpha\":0.5,\"id\":\"28\",\"name\":\"Window 1 - 1\"}],\"doors\":[{\"door_definition_id\":\"29\",\"edge_id\":\"24\",\"alpha\":0.45,\"id\":\"30\",\"name\":\"\"}]}],\"building_units\":[],\"thermal_zones\":[],\"space_types\":[],\"construction_sets\":[],\"window_definitions\":[{\"id\":\"27\",\"name\":\"Window 1\",\"window_definition_mode\":\"Single Window\",\"wwr\":null,\"sill_height\":3,\"window_spacing\":null,\"height\":4,\"width\":2,\"window_type\":\"Fixed\",\"overhang_projection_factor\":null,\"fin_projection_factor\":null,\"texture\":\"circles-5\"}],\"daylighting_control_definitions\":[],\"pitched_roofs\":[],\"door_definitions\":[{\"id\":\"29\",\"name\":\"Door 1\",\"height\":6.67,\"width\":3,\"door_type\":\"Door\",\"texture\":\"circles-5\"}],\"version\":\"0.7.0\"}");
+  boost::optional<FloorplanJS> floorplan = FloorplanJS::load(json);
+  ASSERT_TRUE(floorplan);
+
+  Json::Reader reader;
+  Json::Value value;
+  ASSERT_TRUE(reader.parse(json, value));
+  ASSERT_TRUE(value.isMember("stories"));
+  ASSERT_TRUE(value["stories"].isArray());
+  ASSERT_EQ(2u, value["stories"].size());
+  EXPECT_EQ("Story 1", value["stories"][0].get("name", "").asString());
+  EXPECT_EQ("Story 2", value["stories"][1].get("name", "").asString());
+
+  ASSERT_TRUE(value["stories"][0].isMember("spaces"));
+  ASSERT_TRUE(value["stories"][0]["spaces"].isArray());
+  ASSERT_EQ(1u, value["stories"][0]["spaces"].size());
+  EXPECT_EQ("Space 1 - 1", value["stories"][0]["spaces"][0].get("name", "").asString());
+
+  // translate the floorplan to a model
+  boost::optional<Model> model;
+  {
+    ThreeScene threeScene = floorplan->toThreeScene(true);
+    ThreeJSReverseTranslator rt;
+    model = rt.modelFromThreeJS(threeScene);
+  }
+  ASSERT_TRUE(model);
+  model->save("FloorplanJSForwardTranslator_Issue3267.osm", true);
+
+  // check the model
+  ASSERT_EQ(2u, model->getConcreteModelObjects<Space>().size());
+  boost::optional<Space> space1 = model->getConcreteModelObjectByName<Space>("Space 1 - 1");
+  ASSERT_TRUE(space1);
+  boost::optional<Space> space2 = model->getConcreteModelObjectByName<Space>("Space 2 - 1");
+  ASSERT_TRUE(space2);
+
+  ASSERT_EQ(2u, model->getConcreteModelObjects<BuildingStory>().size());
+  boost::optional<BuildingStory> story1 = model->getConcreteModelObjectByName<BuildingStory>("Story 1");
+  ASSERT_TRUE(story1);
+  boost::optional<BuildingStory> story2 = model->getConcreteModelObjectByName<BuildingStory>("Story 2");
+  ASSERT_TRUE(story2);
+
+  ASSERT_EQ(12u, model->getConcreteModelObjects<Surface>().size());
+  ASSERT_EQ(4u, model->getConcreteModelObjects<SubSurface>().size());
+
+  ASSERT_TRUE(space1->buildingStory());
+  ASSERT_TRUE(space2->buildingStory());
+  EXPECT_EQ(space1->buildingStory()->handle(), story1->handle());
+  EXPECT_EQ(space2->buildingStory()->handle(), story2->handle());
+
+  unsigned story1Windows = 0;
+  unsigned story1Doors = 0;
+  double story1MinZ = std::numeric_limits<double>::max();
+  double story1MaxZ = std::numeric_limits<double>::min();
+  for (const auto surface : space1->surfaces()) {
+    for (const auto vertex : surface.vertices()) {
+      story1MinZ = std::min(story1MinZ, vertex.z());
+      story1MaxZ = std::max(story1MaxZ, vertex.z());
+    }
+  }
+  for (const auto surface : space1->surfaces()) {
+    for (const auto subSurface : surface.subSurfaces()) {
+      for (const auto vertex : subSurface.vertices()) {
+        EXPECT_GE(vertex.z(), story1MinZ);
+        EXPECT_LT(vertex.z(), story1MaxZ);
+      }
+      if (istringEqual(subSurface.subSurfaceType(), "FixedWindow")) {
+        story1Windows += 1;
+      } else if (istringEqual(subSurface.subSurfaceType(), "Door")) {
+        story1Doors += 1;
+      } else {
+        EXPECT_TRUE(false) << "Unexpected surface type '" << subSurface.subSurfaceType() << "'";
+      }
+    }
+  }
+  EXPECT_EQ(1u, story1Windows);
+  EXPECT_EQ(1u, story1Doors);
+
+  unsigned story2Windows = 0;
+  unsigned story2Doors = 0;
+  double story2MinZ = std::numeric_limits<double>::max();
+  double story2MaxZ = std::numeric_limits<double>::min();
+  for (const auto surface : space2->surfaces()) {
+    for (const auto vertex : surface.vertices()) {
+      story2MinZ = std::min(story2MinZ, vertex.z());
+      story2MaxZ = std::max(story2MaxZ, vertex.z());
+    }
+  }
+
+  for (const auto surface : space2->surfaces()) {
+    for (const auto subSurface : surface.subSurfaces()) {
+      for (const auto vertex : subSurface.vertices()) {
+        EXPECT_GE(vertex.z(), story2MinZ);
+        EXPECT_LT(vertex.z(), story2MaxZ);
+      }
+      if (istringEqual(subSurface.subSurfaceType(), "FixedWindow")) {
+        story2Windows += 1;
+      }else if (istringEqual(subSurface.subSurfaceType(), "Door")) {
+        story2Doors += 1;
+      } else {
+        EXPECT_TRUE(false) << "Unexpected surface type '" << subSurface.subSurfaceType() << "'";
+      }
+    }
+  }
+  EXPECT_EQ(1u, story2Windows);
+  EXPECT_EQ(1u, story2Doors);
 }

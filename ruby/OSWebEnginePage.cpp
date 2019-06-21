@@ -27,78 +27,32 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_ENERGYMANAGEMENTSYSTEMGLOBALVARIABLE_HPP
-#define MODEL_ENERGYMANAGEMENTSYSTEMGLOBALVARIABLE_HPP
+#include "OSWebEnginePage.hpp"
 
-#include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include "../utilities/core/Assert.hpp"
+
+#include <QDesktopServices>
+#include <QWebEngineCertificateError>
 
 namespace openstudio {
-namespace model {
 
-namespace detail {
+bool OSWebEnginePage::acceptNavigationRequest(const QUrl & url, QWebEnginePage::NavigationType type, bool isMainFrame)
+{
+  if (type == QWebEnginePage::NavigationTypeLinkClicked)
+  {
+    QString s = url.toString();
+    // open links in system browser rather than embedded view
+    QDesktopServices::openUrl(url);
+    return false;
+  }
+  return true;
+}
 
-  class EnergyManagementSystemGlobalVariable_Impl;
+bool OSWebEnginePage::certificateError(const QWebEngineCertificateError &certificateError) {
+  // Ignore error
+  LOG(Warn, "SSL error: " << toString(certificateError.errorDescription()));
+  return true;
+}
 
-} // detail
-
-/** EnergyManagementSystemGlobalVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:GlobalVariable'. */
-class MODEL_API EnergyManagementSystemGlobalVariable : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
-
-  explicit EnergyManagementSystemGlobalVariable(const Model& model, const std::string& variableName);
-
-  virtual ~EnergyManagementSystemGlobalVariable() {}
-
-  //@}
-
-  static IddObjectType iddObjectType();
-
-  bool exportToBCVTB() const;
-
-  bool isExportToBCVTBDefaulted() const;
-
-  bool setExportToBCVTB(bool exportToBCVTB);
-
-  void resetExportToBCVTB();
-
-  /** @name Getters */
-  //@{
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  //@}
-  /** @name Other */
-  //@{
-
-  //@}
- protected:
-  /// @cond
-  typedef detail::EnergyManagementSystemGlobalVariable_Impl ImplType;
-
-  explicit EnergyManagementSystemGlobalVariable(std::shared_ptr<detail::EnergyManagementSystemGlobalVariable_Impl> impl);
-
-  friend class detail::EnergyManagementSystemGlobalVariable_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.EnergyManagementSystemGlobalVariable");
-};
-
-/** \relates EnergyManagementSystemGlobalVariable*/
-typedef boost::optional<EnergyManagementSystemGlobalVariable> OptionalEnergyManagementSystemGlobalVariable;
-
-/** \relates EnergyManagementSystemGlobalVariable*/
-typedef std::vector<EnergyManagementSystemGlobalVariable> EnergyManagementSystemGlobalVariableVector;
-
-} // model
 } // openstudio
-
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMGLOBALVARIABLE_HPP
 
