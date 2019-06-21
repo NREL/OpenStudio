@@ -141,34 +141,27 @@ file(GLOB RUBY_TEST_SRC "test/*.rb")
 
 set(_RUBY_POSSIBLE_EXECUTABLE_NAMES
   ruby
-  ruby2.2
-  ruby2.2.4
-  ruby22
-  ruby224)
+  ruby2.5
+  ruby2.5.1
+  ruby25
+  ruby251)
 
 # TODO: this isn't great but I haven't found a better way to locate the system ruby (and avoid the one in build/Ruby-install/)
 find_program(SYSTEM_RUBY_EXECUTABLE NAMES ${_RUBY_POSSIBLE_EXECUTABLE_NAMES}
   HINTS
     "/usr"
     "/usr/local"
-    "/usr/share/rvm/rubies/ruby-2.2.4/bin/"
-    "/usr/share/rvm/rubies/ruby-2.2.5/bin/"
-    "/usr/share/rvm/rubies/ruby-2.2.6/bin/"
-    "/usr/share/rvm/rubies/ruby-2.2.7/bin/"
-    "/usr/share/rvm/rubies/ruby-2.2.8/bin/"
-    "/usr/share/rvm/rubies/ruby-2.2.9/bin/"
-    "/usr/share/rvm/rubies/ruby-2.2.10/bin/"
-    "/usr/share/rvm/rubies/ruby-2.2.11/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.2.4/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.2.5/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.2.6/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.2.7/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.2.8/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.2.9/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.2.10/bin/"
-    "$ENV{HOME}/.rvm/rubies/ruby-2.2.11/bin/"
-    "C:/Ruby22-x64/bin/"
-    "C:/ruby-2.2.4-x64-mingw32/bin/"
+    "/usr/share/rvm/rubies/ruby-2.5.1/bin/"
+    "/usr/share/rvm/rubies/ruby-2.5.2/bin/"
+    "/usr/share/rvm/rubies/ruby-2.5.3/bin/"
+    "/usr/share/rvm/rubies/ruby-2.5.4/bin/"
+    "/usr/share/rvm/rubies/ruby-2.5.5/bin/"
+    "$ENV{HOME}/.rvm/rubies/ruby-2.5.1/bin/"
+    "$ENV{HOME}/.rvm/rubies/ruby-2.5.2/bin/"
+    "$ENV{HOME}/.rvm/rubies/ruby-2.5.3/bin/"
+    "$ENV{HOME}/.rvm/rubies/ruby-2.5.4/bin/"
+    "$ENV{HOME}/.rvm/rubies/ruby-2.5.5/bin/"
+    "C:/Ruby25-x64/bin/"
   NO_DEFAULT_PATH)
 
 if(NOT SYSTEM_RUBY_EXECUTABLE)
