@@ -164,12 +164,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
 
       // Only translate the Sequential Load Fractions if appropriate (model checks for Load Distribution = SequentialLoad, and has heating/cooling
       // Priority that isn't zero)
-      if (boost::optional<double> _frac = modelObject.sequentialCoolingFraction(elem)) {
-        eg.setDouble(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFraction, _frac.get());
+      if (boost::optional<Schedule> _schedule = modelObject.sequentialCoolingFractionSchedule(elem)) {
+        eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFraction, _schedule.get().name().get());
       }
 
-      if (boost::optional<double> _frac = modelObject.sequentialHeatingFraction(elem)) {
-        eg.setDouble(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFraction, _frac.get());
+      if (boost::optional<Schedule> _schedule = modelObject.sequentialHeatingFractionSchedule(elem)) {
+        eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFraction, _schedule.get().name().get());
       }
 
     }
