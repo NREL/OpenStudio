@@ -85,7 +85,7 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
   /** Set heating or no-load priority of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
-  bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+  bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
 
   /** Return all equipment.  Order is undetermined. */
   std::vector<ModelObject> equipment() const;
@@ -115,26 +115,48 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
    *  or the loadDistributionScheme isn't 'Sequential'
    */
   boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+  
+  /** Return the Sequential Cooling Fraction Schedule of equipment.
+   *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
 
   /** Return the Sequential Heating Fraction of equipment.
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
   boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+  
+  /** Return the Sequential Heating Fraction Schedule of equipment.
+   *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
 
-  /** Set the Sequential Cooling Fraction of equipment.
+  /** Set the Sequential Cooling Fraction Schedule Constant of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
   bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+  
+  /** Set the Sequential Cooling Fraction Schedule of equipment.
+   *  Returns false when equipement is not in the ZoneHVACEquipmentList, its cooling priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  bool setSequentialCoolingFraction(const ModelObject& equipment, const Schedule& schedule);
 
-  /** Set the Sequential Heating Fraction of equipment.
+  /** Set the Sequential Heating Fraction Schedule Constant of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
   bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
 
-
+  /** Set the Sequential Heating Fraction Schedule of equipment.
+   *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  bool setSequentialHeatingFraction(const ModelObject& equipment, const Schedule& schedule);
 
   protected:
 
