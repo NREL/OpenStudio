@@ -15697,7 +15697,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \required-field
        \reference CoolingCoilsWaterToAirHP
        \reference ConnectionObject
-       \reference DesuperHeatingCoilSources
+       \reference DesuperHeatingWaterOnlySources
   A3,  \field Water Inlet Node Name
        \type object-list
        \required-field
@@ -16315,6 +16315,7 @@ OS:Coil:WaterHeating:Desuperheater,
        \required-field
        \type object-list
        \object-list DesuperHeatingCoilSources
+       \object-list DesuperHeatingWaterOnlySources
        \note The name of the DX system used for heat reclaim.
   N6,  \field Water Flow Rate
        \required-field
