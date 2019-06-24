@@ -34,6 +34,7 @@
 #include "ModelFixture.hpp"
 #include "../ThermalZone.hpp"
 #include "../ZoneHVACBaseboardConvectiveElectric.hpp"
+#include "../ScheduleConstant.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -106,6 +107,15 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
   EXPECT_TRUE(z.setSequentialCoolingFraction(b2, 0.7));
   ASSERT_TRUE(z.sequentialCoolingFraction(b2));
   EXPECT_EQ(0.7, z.sequentialCoolingFraction(b2).get());
+  
+  ScheduleConstant schedule(model);
+  schedule.setValue(0.9);
+  EXPECT_TRUE(z.setSequentialCoolingFraction(b2, schedule));
+  ASSERT_TRUE(z.sequentialCoolingFraction(b2));
+  ASSERT_TRUE(z.sequentialCoolingFractionSchedule(b2));
+  EXPECT_TRUE(z.setSequentialHeatingFraction(b2, schedule));
+  ASSERT_TRUE(z.sequentialHeatingFraction(b2));
+  ASSERT_TRUE(z.sequentialHeatingFractionSchedule(b2));
 
 
   // Setting a priority to zero should reset the corresponding Sequential Fraction
