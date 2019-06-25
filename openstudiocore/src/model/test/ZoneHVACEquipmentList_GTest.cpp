@@ -108,13 +108,15 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
   ASSERT_TRUE(z.sequentialCoolingFraction(b2));
   EXPECT_EQ(0.7, z.sequentialCoolingFraction(b2).get());
   
-  ScheduleConstant schedule(model);
-  schedule.setValue(0.9);
+  ScheduleConstant schedule(m);
+  EXPECT_TRUE(schedule.setValue(0.9));
   EXPECT_TRUE(z.setSequentialCoolingFraction(b2, schedule));
   ASSERT_TRUE(z.sequentialCoolingFraction(b2));
+  EXPECT_EQ(0.9, z.sequentialCoolingFraction(b2));
   ASSERT_TRUE(z.sequentialCoolingFractionSchedule(b2));
   EXPECT_TRUE(z.setSequentialHeatingFraction(b2, schedule));
   ASSERT_TRUE(z.sequentialHeatingFraction(b2));
+  EXPECT_EQ(0.9, z.sequentialHeatingFraction(b2));
   ASSERT_TRUE(z.sequentialHeatingFractionSchedule(b2));
 
 
@@ -134,8 +136,12 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
   // Setting the Load Distribution Scheme to something else should reset all sequential fractions
   EXPECT_TRUE(z.setLoadDistributionScheme("UniformLoad"));
   EXPECT_FALSE(z.sequentialCoolingFraction(b1));
+  EXPECT_FALSE(z.sequentialCoolingFractionSchedule(b1));
   EXPECT_FALSE(z.sequentialCoolingFraction(b2));
+  EXPECT_FALSE(z.sequentialCoolingFractionSchedule(b2));
   EXPECT_FALSE(z.sequentialHeatingFraction(b1));
+  EXPECT_FALSE(z.sequentialHeatingFractionSchedule(b1));
   EXPECT_FALSE(z.sequentialHeatingFraction(b2));
+  EXPECT_FALSE(z.sequentialHeatingFractionSchedule(b2));
 
 }
