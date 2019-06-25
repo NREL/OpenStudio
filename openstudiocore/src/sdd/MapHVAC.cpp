@@ -2501,6 +2501,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         unitary = model::AirLoopHVACUnitarySystem(model);
         unitary->setName(nameElement.text().toStdString() + " Unitary");
         unitary->getImpl<model::detail::AirLoopHVACUnitarySystem_Impl>()->setControlType("SetPoint");
+        unitary->setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("SupplyAirFlowRate");
+        unitary->setSupplyAirFlowRateMethodDuringHeatingOperation("SupplyAirFlowRate");
+        unitary->setSupplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate");
         unitary->setHeatingCoil(coil);
         result = unitary.get();
       }
@@ -3477,6 +3480,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCoil
         unitary->setName(nameElement.text().toStdString() + " Unitary");
         unitary->getImpl<model::detail::AirLoopHVACUnitarySystem_Impl>()->setControlType("SetPoint");
         unitary->setCoolingCoil(coil);
+        unitary->setSupplyAirFlowRateMethodWhenNoCoolingorHeatingisRequired("SupplyAirFlowRate");
+        unitary->setSupplyAirFlowRateMethodDuringHeatingOperation("SupplyAirFlowRate");
+        unitary->setSupplyAirFlowRateMethodDuringCoolingOperation("SupplyAirFlowRate");
         result = unitary.get();
       }
 
