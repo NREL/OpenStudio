@@ -56,12 +56,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     # Do we really need to force build these?
     list(APPEND CONAN_BUILD "boost_asio")
     list(APPEND CONAN_BUILD "websocketpp")
-    # This one we need on mac only
-    # 1) Need to force build when building openstudio_ruby (because static isn't supported on Mac, and it'll create linking problems when
-    # building gdbm that depends on it).list(APPEND CONAN_BUILD "readline") would be enough for this point, but:
-    # 2) My fork does chmod +w on the resulting dylibs with is needed for use with fixup_bundle when building the App package
-    # cf https://github.com/bincrafters/conan-readline/pull/4
-    set(CONAN_READLINE "readline/7.0@jmarrec/testing")
+    #  On mac Need to force build when building openstudio_ruby (because static isn't supported on Mac, and it'll create linking problems when
+    # building gdbm that depends on it).
+    set(CONAN_READLINE "readline/7.0@bincrafters/stable")
     list(APPEND CONAN_BUILD "readline")
   else()
     list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
