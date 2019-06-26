@@ -62,6 +62,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     # 2) My fork does chmod +w on the resulting dylibs with is needed for use with fixup_bundle when building the App package
     # cf https://github.com/bincrafters/conan-readline/pull/4
     set(CONAN_READLINE "readline/7.0@jmarrec/testing")
+    list(APPEND CONAN_BUILD "readline")
   else()
     list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
     list(APPEND CONAN_BUILD "boost_asio")
