@@ -108,15 +108,18 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
   ASSERT_TRUE(z.sequentialCoolingFraction(b2));
   EXPECT_EQ(0.7, z.sequentialCoolingFraction(b2).get());
   
-  ScheduleConstant schedule(m);
-  EXPECT_TRUE(schedule.setValue(0.9));
-  EXPECT_TRUE(z.setSequentialCoolingFraction(b2, schedule));
+  ScheduleConstant scheduleCooling(m);
+  EXPECT_TRUE(scheduleCooling.setValue(0.9));
+  EXPECT_TRUE(z.setSequentialCoolingFraction(b2, scheduleCooling));
   ASSERT_TRUE(z.sequentialCoolingFraction(b2));
   EXPECT_EQ(0.9, z.sequentialCoolingFraction(b2));
   ASSERT_TRUE(z.sequentialCoolingFractionSchedule(b2));
-  EXPECT_TRUE(z.setSequentialHeatingFraction(b2, schedule));
+  
+  ScheduleConstant scheduleHeating(m);
+  EXPECT_TRUE(scheduleHeating.setValue(0.33));
+  EXPECT_TRUE(z.setSequentialHeatingFraction(b2, scheduleHeating));
   ASSERT_TRUE(z.sequentialHeatingFraction(b2));
-  EXPECT_EQ(0.9, z.sequentialHeatingFraction(b2));
+  EXPECT_EQ(0.33, z.sequentialHeatingFraction(b2));
   ASSERT_TRUE(z.sequentialHeatingFractionSchedule(b2));
 
 

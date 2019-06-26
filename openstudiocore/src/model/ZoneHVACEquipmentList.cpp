@@ -446,15 +446,17 @@ boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialCoolingFraction(co
       if (wo->handle() == equipment.handle()) {
         boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName);
         schedule = wo->optionalCast<ScheduleConstant>();
-        break;
+        break; 
       }
     }
   }
   
   if (schedule) {
     result = boost::optional<double>(schedule.get().value());
+  } else {
+    result = boost::none;
   }
-
+  
   return result;
 
 }
@@ -501,7 +503,7 @@ boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialHeatingFraction(co
       OS_ASSERT(wo);
 
       if (wo->handle() == equipment.handle()) {
-        boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName);
+        boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName);
         schedule = wo->optionalCast<ScheduleConstant>();
         break;
       }
@@ -510,6 +512,8 @@ boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialHeatingFraction(co
   
   if (schedule) {
     result = boost::optional<double>(schedule.get().value());
+  } else {
+    result = boost::none;
   }
 
   return result;
@@ -560,9 +564,8 @@ bool ZoneHVACEquipmentList_Impl::setSequentialCoolingFraction(const ModelObject&
     return false;
   }
   
-  Model _model = model();
-
-  ScheduleConstant schedule(_model);
+  Model model = this->model();
+  ScheduleConstant schedule(model);
   schedule.setValue(fraction);
 
   return eg->setPointer(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName, schedule.handle());
@@ -607,9 +610,8 @@ bool ZoneHVACEquipmentList_Impl::setSequentialHeatingFraction(const ModelObject&
     return false;
   }
   
-  Model _model = model();
-  
-  ScheduleConstant schedule(_model);
+  Model model = this->model();  
+  ScheduleConstant schedule(model);
   schedule.setValue(fraction);
 
   return eg->setPointer(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName, schedule.handle());
