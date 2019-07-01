@@ -75,13 +75,18 @@ namespace detail {
     virtual IddObjectType iddObjectType() const override;
     
     //extensible fields
+
     bool addCustomBlock(const CustomBlock& customBlock);
+
     bool addCustomBlock(const Material& material, double depth, double xPosition, double zPosition);
     
     bool removeCustomBlock(unsigned groupIndex);
+
     void removeAllCustomBlocks();
     
     std::vector<CustomBlock> customBlocks() const;
+
+    bool addCustomBlocks(const std::vector<CustomBlock> customBlocks);
     
     //@}
     /** @name Getters */
@@ -195,9 +200,6 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.FoundationKiva");
-    // Not to be exposed publicly, automatically handled by addCustomBlock, removeCustomBlock
-    bool setNumberofCustomBlocks(unsigned int numberofCustomBlocks);
-    void resetNumberofCustomBlocks();
   };
 
 } // detail

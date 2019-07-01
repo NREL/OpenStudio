@@ -93,15 +93,16 @@ class MODEL_API FoundationKiva : public ModelObject {
   //extensible fields
   
   bool addCustomBlock(const CustomBlock& customBlock);
-  // Convenience function to add a custom block without explicitly creating a CustomBlock
+
   bool addCustomBlock(const Material& material, double depth, double xPosition, double zPosition);
   
-  // TODO: this should return bool (to indicate whether groupIndex is valid...)
   void removeCustomBlock(int groupIndex);
   
   void removeAllCustomBlocks();
   
   std::vector<CustomBlock> customBlocks() const;
+  
+  bool addCustomBlocks(const std::vector<CustomBlock> customBlocks);
 
   /** @name Getters */
   //@{
@@ -148,8 +149,7 @@ class MODEL_API FoundationKiva : public ModelObject {
 
   std::vector<Surface> surfaces() const;
   
-  // TODO: this should be non optional
-  boost::optional<unsigned int> numberofCustomBlocks() const;
+  unsigned int numberofCustomBlocks() const;
 
   //@}
   /** @name Setters */
@@ -206,10 +206,6 @@ class MODEL_API FoundationKiva : public ModelObject {
   bool setFootingDepth(double footingDepth);
 
   void resetFootingDepth();
-  
-  // Automatically handled by addCustomBlock, removeCustomBlock
-  // bool setNumberofCustomBlocks(unsigned int numberofCustomBlocks);
-  // void resetNumberofCustomBlocks();
 
   //@}
   /** @name Other */

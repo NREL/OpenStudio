@@ -343,16 +343,6 @@ namespace detail {
   unsigned int FoundationKiva_Impl::numberofCustomBlocks() const {
     return numExtensibleGroups();
   }
-
-  bool FoundationKiva_Impl::setNumberofCustomBlocks(unsigned int numberofCustomBlocks) {
-    bool result = setInt(OS_Foundation_KivaFields::NumberofCustomBlocks, numberofCustomBlocks);
-    return result;
-  }
-
-  void FoundationKiva_Impl::resetNumberofCustomBlocks() {
-    bool result = setInt(OS_Foundation_KivaFields::NumberofCustomBlocks, 0);
-    OS_ASSERT(result);
-  }
   
   bool FoundationKiva_Impl::addCustomBlock(const CustomBlock& customBlock) {
     bool result;
@@ -370,7 +360,6 @@ namespace detail {
       bool xPosition = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockXPosition, customBlock.xPosition());
       bool zPosition = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockZPosition, customBlock.zPosition());
       if (material && depth && xPosition && zPosition) {
-        setNumberofCustomBlocks(num + 1);
         result = true;
       } else {
         // Something went wrong
@@ -378,6 +367,7 @@ namespace detail {
         getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
         result = false;
       }
+      result = true;
     }    
     return result;
   }
@@ -394,7 +384,6 @@ namespace detail {
     unsigned int num = numberofCustomBlocks();
     if (groupIndex < num) {
       getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
-      setNumberofCustomBlocks(num - 1);
       result = true;
     } else {
       result = false;
@@ -404,7 +393,6 @@ namespace detail {
   
   void FoundationKiva_Impl::removeAllCustomBlocks() {
     getObject<ModelObject>().clearExtensibleGroups();
-    resetNumberofCustomBlocks();
   }
   
   std::vector<CustomBlock> FoundationKiva_Impl::customBlocks() const {
@@ -426,6 +414,20 @@ namespace detail {
     }
     
     return result;
+  }
+  
+  bool addCustomBlocks(const std::vector<CustomBlock> &customBlocks) {
+    unsigned int num = numberofCustomBlocks();
+    if ((num + customBlocks.size()) > 10) {
+      LOG(Warn, briefDescription() << " would have more than the 10 maximum custom blocks");
+      return false;
+    } else {
+      for (const CustomBlock& customBlock : customBlocks) {}
+        addCustomBlock(customBlock);
+      }
+      return true;
+    }
+    
   }
 
 } // detail
@@ -626,7 +628,7 @@ std::vector<Surface> FoundationKiva::surfaces() const {
   return getImpl<detail::FoundationKiva_Impl>()->surfaces();
 }
 
-boost::optional<unsigned int> FoundationKiva::numberofCustomBlocks() const {
+unsigned int FoundationKiva::numberofCustomBlocks() const {
   return getImpl<detail::FoundationKiva_Impl>()->numberofCustomBlocks();
 }
 
@@ -638,7 +640,6 @@ bool FoundationKiva::addCustomBlock(const Material& material, double depth, doub
   return getImpl<detail::FoundationKiva_Impl>()->addCustomBlock(material, depth, xPosition, zPosition);
 }
 
-// TODO: change to bool
 void FoundationKiva::removeCustomBlock(int groupIndex) {
   getImpl<detail::FoundationKiva_Impl>()->removeCustomBlock(groupIndex);
 }
@@ -649,6 +650,10 @@ void FoundationKiva::removeAllCustomBlocks() {
 
 std::vector<CustomBlock> FoundationKiva::customBlocks() const {
   return getImpl<detail::FoundationKiva_Impl>()->customBlocks();
+}
+
+bool FoundationKiva::addCustomBlocks(const std::vector<CustomBlock> &customBlocks) {
+  return getImpl<detail::FoundationKiva_Impl>()->addCustomBlocks(customBlocks);
 }
 
 /// @cond
