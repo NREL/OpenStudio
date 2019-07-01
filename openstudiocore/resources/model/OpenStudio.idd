@@ -6255,8 +6255,8 @@ OS:Foundation:Kiva,
        \memo inform two-dimensional heat transfer calculated using the Kiva
        \memo ground heat transfer methodology.
        \extensible:4
-       \min-fields 18
-       \max-fields 58
+       \min-fields 17
+       \max-fields 57
   A1, \field Handle
        \type handle
        \required-field
@@ -6340,24 +6340,21 @@ OS:Foundation:Kiva,
        \type real
        \minimum> 0.0
        \default 0.3
-  N10, \field Number of Custom Blocks
-       \minimum 0.0
-       \maximum 10.0
   A9,  \field Custom Block Material Name 1
        \begin-extensible
        \type object-list
        \object-list MaterialNames
-  N11, \field Custom Block Depth 1
+  N10, \field Custom Block Depth 1
        \note Top-to-bottom dimension of the block downward.
        \units m
        \type real
        \minimum> 0.0
-  N12, \field Custom Block X Position 1
+  N11, \field Custom Block X Position 1
        \note Position outward (+) or inward (-) relative to the foundation wall
        \note interior
        \units m
        \type real
-  N13; \field Custom Block Z Position 1
+  N12; \field Custom Block Z Position 1
        \note Position downward (+) relative to the foundation wall top
        \units m
        \type real
