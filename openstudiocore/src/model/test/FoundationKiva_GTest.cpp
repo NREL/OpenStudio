@@ -293,11 +293,11 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   EXPECT_EQ(0.5, customBlocks[0].depth());
   EXPECT_EQ(1, customBlocks[1].depth());
   EXPECT_EQ(1.5, customBlocks[2].depth());
-  EXPECT_EQ(3.5, customBlocks[4].depth());
-  EXPECT_EQ(4, customBlocks[5].depth());
-  EXPECT_EQ(10, customBlocks[6].depth());
-  EXPECT_EQ(20, customBlocks[7].depth());
-  EXPECT_EQ(99.99999, customBlocks[8].depth());
+  EXPECT_EQ(3.5, customBlocks[3].depth());
+  EXPECT_EQ(4, customBlocks[4].depth());
+  EXPECT_EQ(10, customBlocks[5].depth());
+  EXPECT_EQ(20, customBlocks[6].depth());
+  EXPECT_EQ(99.99999, customBlocks[7].depth());
   
   // more remove checking
   kiva.removeAllCustomBlocks();
@@ -311,35 +311,35 @@ TEST_F(ModelFixture, FoundationKiva_CustomBlocks) {
   EXPECT_EQ(1, kiva.numberofCustomBlocks());
   
   // check bulk-adding custom blocks
-  std::vector<CustomBlock> customBlocks;
+  std::vector<CustomBlock> customBlocksToAdd;
   CustomBlock customBlock1(material, 3.5, 4, -9);
-  customBlocks.push_back(customBlock1);
+  customBlocksToAdd.push_back(customBlock1);
   CustomBlock customBlock2(material, 6.4, 5, -10);
-  customBlocks.push_back(customBlock2);
-  ASSERT_TRUE(kiva.addCustomBlocks(customBlocks));
-  EXPECT_EQ(2, kiva.numberofCustomBlocks());
-  EXPECT_EQ(2, kiva.customBlocks().size());
+  customBlocksToAdd.push_back(customBlock2);
+  ASSERT_TRUE(kiva.addCustomBlocks(customBlocksToAdd));
+  EXPECT_EQ(3, kiva.numberofCustomBlocks());
+  EXPECT_EQ(3, kiva.customBlocks().size());
   
   // check bulk-adding too many custom blocks
   CustomBlock customBlock3(material, 3.5, 4, -9);
-  customBlocks.push_back(customBlock1);
+  customBlocksToAdd.push_back(customBlock1);
   CustomBlock customBlock4(material, 8.4, 5, -10);
-  customBlocks.push_back(customBlock2);
+  customBlocksToAdd.push_back(customBlock2);
   CustomBlock customBlock5(material, 9.5, 4, -9);
-  customBlocks.push_back(customBlock1);
+  customBlocksToAdd.push_back(customBlock1);
   CustomBlock customBlock6(material, 2.4, 5, -10);
-  customBlocks.push_back(customBlock2);
+  customBlocksToAdd.push_back(customBlock2);
   CustomBlock customBlock7(material, 3.5, 4, -9);
-  customBlocks.push_back(customBlock1);
+  customBlocksToAdd.push_back(customBlock1);
   CustomBlock customBlock8(material, 6.4, 5, -10);
-  customBlocks.push_back(customBlock2);
+  customBlocksToAdd.push_back(customBlock2);
   CustomBlock customBlock9(material, 7.5, 4, -9);
-  customBlocks.push_back(customBlock1);
+  customBlocksToAdd.push_back(customBlock1);
   CustomBlock customBlock10(material, 5.4, 5, -10);
-  customBlocks.push_back(customBlock2);
+  customBlocksToAdd.push_back(customBlock2);
   CustomBlock customBlock11(material, 6.4, 5, -10);
-  customBlocks.push_back(customBlock2);
-  ASSERT_FALSE(kiva.addCustomBlocks(customBlocks));
-  EXPECT_EQ(2, kiva.numberofCustomBlocks());
-  EXPECT_EQ(2, kiva.customBlocks().size());
+  customBlocksToAdd.push_back(customBlock2);
+  ASSERT_FALSE(kiva.addCustomBlocks(customBlocksToAdd));
+  EXPECT_EQ(3, kiva.numberofCustomBlocks());
+  EXPECT_EQ(3, kiva.customBlocks().size());
 }
