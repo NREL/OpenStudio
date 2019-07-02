@@ -102,7 +102,7 @@ class MODEL_API FoundationKiva : public ModelObject {
   
   std::vector<CustomBlock> customBlocks() const;
   
-  bool addCustomBlocks(const std::vector<CustomBlock> customBlocks);
+  bool addCustomBlocks(const std::vector<CustomBlock> &customBlocks);
 
   /** @name Getters */
   //@{

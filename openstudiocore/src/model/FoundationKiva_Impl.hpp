@@ -86,7 +86,7 @@ namespace detail {
     
     std::vector<CustomBlock> customBlocks() const;
 
-    bool addCustomBlocks(const std::vector<CustomBlock> customBlocks);
+    bool addCustomBlocks(const std::vector<CustomBlock> &customBlocks);
     
     //@}
     /** @name Getters */

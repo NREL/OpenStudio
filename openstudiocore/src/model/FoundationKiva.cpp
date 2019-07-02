@@ -416,13 +416,13 @@ namespace detail {
     return result;
   }
   
-  bool addCustomBlocks(const std::vector<CustomBlock> &customBlocks) {
+  bool FoundationKiva_Impl::addCustomBlocks(const std::vector<CustomBlock> &customBlocks) {
     unsigned int num = numberofCustomBlocks();
     if ((num + customBlocks.size()) > 10) {
       LOG(Warn, briefDescription() << " would have more than the 10 maximum custom blocks");
       return false;
     } else {
-      for (const CustomBlock& customBlock : customBlocks) {}
+      for (const CustomBlock& customBlock : customBlocks) {
         addCustomBlock(customBlock);
       }
       return true;
