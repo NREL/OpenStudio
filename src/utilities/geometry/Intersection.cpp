@@ -359,7 +359,7 @@ namespace openstudio{
 
   // struct used to sort polygons in descending order by area
   struct BoostPolygonAreaGreater{
-    bool operator()(const BoostPolygon& left, const BoostPolygon& right){
+    bool operator()(const BoostPolygon& left, const BoostPolygon& right) const {
       boost::optional<double> leftA = boost::geometry::area(left);
       if (!leftA){
         leftA = 0;
@@ -402,7 +402,7 @@ namespace openstudio{
     return m_newPolygons2;
   }
 
-  double IntersectionResult::area1() const 
+  double IntersectionResult::area1() const
   {
     double result = 0;
     boost::optional<double> d;
@@ -421,11 +421,11 @@ namespace openstudio{
         LOG_FREE(Warn, "utilities.geometry.IntersectionResult", "Cannot calculate area for polygon in polygons1");
       }
     }
-    
+
     return result;
   }
 
-  double IntersectionResult::area2() const 
+  double IntersectionResult::area2() const
   {
     double result = 0;
     boost::optional<double> d;

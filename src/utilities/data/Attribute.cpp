@@ -542,7 +542,7 @@ namespace detail {
       : m_name(name)
     {}
 
-    bool operator()(const Attribute& attribute)
+    bool operator()(const Attribute& attribute) const
     {
       return m_name == attribute.name();
     }

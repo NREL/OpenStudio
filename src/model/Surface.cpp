@@ -1641,7 +1641,7 @@ namespace detail {
   }
 
   struct PolygonAreaGreater{
-    bool operator()(const Point3dVector& left, const Point3dVector& right){
+    bool operator()(const Point3dVector& left, const Point3dVector& right) const {
       boost::optional<double> leftA = getArea(left);
       if (!leftA){
         leftA = 0;
