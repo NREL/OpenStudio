@@ -156,7 +156,7 @@ namespace openstudio{
     return m_files;
   }
 
-  std::vector<std::string> BCLComponent::files(std::string filetype) const
+  std::vector<std::string> BCLComponent::files(const std::string& filetype) const
   {
     std::vector<std::string> matches;
     for (unsigned i=0; i< m_filetypes.size(); i++)

@@ -315,7 +315,7 @@ std::vector <std::string> splitString(const std::string &string, char delimiter)
   return results;
 }
 
-std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string delimiters) {
+std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string& delimiters) {
 
   // Split line to get 'tokens' and look for ModelObject names
   // Note: JM 2018-08-16: Really this parser should match the E+ one, so probably split on operators, handle parenthesis, etc
@@ -485,7 +485,7 @@ namespace string_conversions {
 
   std::string number(const double value, const FloatFormat format, const int precision)
   {
-    return number_formatter(value, format, precision); 
+    return number_formatter(value, format, precision);
   }
 
 }

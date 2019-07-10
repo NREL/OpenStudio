@@ -69,7 +69,8 @@ namespace openstudio{
   UTILITIES_API std::string getSurfaceTypeThreeMaterialName(const std::string& surfaceType);
 
   /// Create a ThreeMaterial
-  UTILITIES_API ThreeMaterial makeThreeMaterial(const std::string& name, unsigned color, double opacity, unsigned side, unsigned shininess = 50, const std::string type = "MeshPhongMaterial");
+  UTILITIES_API ThreeMaterial makeThreeMaterial(const std::string& name, unsigned color, double opacity, unsigned side, unsigned shininess = 50,
+                                                const std::string& type = "MeshPhongMaterial");
 
   /// Add a ThreeMaterial to a list of materials and map of material name to material
   UTILITIES_API void addThreeMaterial(std::vector<ThreeMaterial>& materials, std::map<std::string, std::string>& materialMap, const ThreeMaterial& material);

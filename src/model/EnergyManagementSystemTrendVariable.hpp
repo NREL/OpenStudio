@@ -59,7 +59,7 @@ class MODEL_API EnergyManagementSystemTrendVariable : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
-  explicit EnergyManagementSystemTrendVariable(const Model& model, const std::string eMSVariableName);
+  explicit EnergyManagementSystemTrendVariable(const Model& model, const std::string& eMSVariableName);
 
   explicit EnergyManagementSystemTrendVariable(const Model& model, const EnergyManagementSystemActuator& object);
 
