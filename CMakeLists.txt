@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.10.2)
 cmake_policy(SET CMP0048 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Do not enable compiler specific extensions, for eg on GCC use -std=c++1z (=c++17) and not -std=gnu++17
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Use ccache is available, has to be before "project()"
 find_program(CCACHE_PROGRAM ccache)
@@ -348,13 +351,12 @@ if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized")
   endif()
 
-  # Note: CMAKE_CXX_STANDARD set to 17 should already take care of adding -std=c++17 or equivalent
+  # Note: CMAKE_CXX_STANDARD (with no extensions) already sets -std=c++17 (or std=c++1z).
   if(APPLE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -stdlib=libc++")
-  else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
   endif()
 endif()
+
 if(MINGW)
   # all warnings
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
@@ -367,6 +369,7 @@ if(MINGW)
   #add_definitions(-DBOOST_LOG_USE_CHAR)
   #add_definitions(-DBOOST_LOG_NO_COMPILER_TLS)
 endif()
+
 if(MSVC)
   # warning level 3
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
