@@ -2386,7 +2386,9 @@ bool IdfObjectNameLess::operator()(const IdfObject& left, const IdfObject& right
 
 /** Function object for sorting by impl. */
 bool IdfObjectImplLess::operator()(const IdfObject& left, const IdfObject& right) const {
-  return (left.getImpl<detail::IdfObject_Impl>() < right.getImpl<detail::IdfObject_Impl>());
+  std::shared_ptr<detail::IdfObject_Impl> left_ptr = left.getImpl<detail::IdfObject_Impl>();
+  std::shared_ptr<detail::IdfObject_Impl> right_ptr = right.getImpl<detail::IdfObject_Impl>();
+  return (left_ptr < right_ptr);
 }
 
 /** Function object for sorting by IddObjectType. */
