@@ -587,13 +587,18 @@ namespace openstudio{
               std::string windowDefinitionId = window.get("window_definition_id", "").asString();
 
               std::vector<double> alphas;
-              if (checkKeyAndType(window, "alpha", Json::realValue)){
-                alphas.push_back(window.get("alpha", 0.0).asDouble());
-              } else if (checkKeyAndType(window, "alpha", Json::arrayValue)){
-                Json::Value temp = window.get("alpha", Json::arrayValue);
-                Json::ArrayIndex tempN = temp.size();
-                for (Json::ArrayIndex tempIdx = 0; tempIdx < tempN; ++tempIdx){
-                  alphas.push_back(temp[tempIdx].asDouble());
+              // do an extra check here to avoid a warning message
+              if (window.isMember("alpha") && window["alpha"].isConvertibleTo(Json::realValue)) {
+                if (checkKeyAndType(window, "alpha", Json::realValue)) {
+                  alphas.push_back(window.get("alpha", 0.0).asDouble());
+                }
+              } else {
+                if (checkKeyAndType(window, "alpha", Json::arrayValue)) {
+                  Json::Value temp = window.get("alpha", Json::arrayValue);
+                  Json::ArrayIndex tempN = temp.size();
+                  for (Json::ArrayIndex tempIdx = 0; tempIdx < tempN; ++tempIdx) {
+                    alphas.push_back(temp[tempIdx].asDouble());
+                  }
                 }
               }
 
