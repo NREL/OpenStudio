@@ -54,6 +54,7 @@ class DataError;
 class StrictnessLevel;
 class Quantity;
 class OSOptionalQuantity;
+struct IdfObjectImplLess;
 
 namespace detail{
   class IdfObject_Impl;
@@ -187,7 +188,7 @@ class UTILITIES_API IdfObject {
    *  value for non-existent (non-extensible) fields and fields with empty data, if an
    *  int default exists. */
   boost::optional<int> getInt(unsigned index, bool returnDefault=false) const;
-  
+
   /** Returns the IdfExtensibleGroup at groupIndex, if it exists. Otherwise, return value will be
    *  .empty(). */
   IdfExtensibleGroup getExtensibleGroup(unsigned groupIndex) const;
