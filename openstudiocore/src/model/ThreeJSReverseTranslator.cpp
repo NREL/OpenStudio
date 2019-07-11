@@ -38,6 +38,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "SpaceType.hpp"
 #include "SpaceType_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
 #include "BuildingStory.hpp"
 #include "BuildingStory_Impl.hpp"
 #include "BuildingUnit.hpp"
@@ -269,6 +271,9 @@ namespace openstudio
       // create all the objects we will need
       ThreeSceneMetadata metadata = scene.metadata();
       std::vector<ThreeModelObjectMetadata> modelObjectMetadata = metadata.modelObjectMetadata();
+
+      // set the model's north axis, opposite of the floorspace and threejs convention
+      model.getUniqueModelObject<Building>().setNorthAxis(-metadata.northAxis());
 
       // sort object types so we make spaces first, etc
       std::sort(modelObjectMetadata.begin(), modelObjectMetadata.end(), sortModelObjectMetadata);

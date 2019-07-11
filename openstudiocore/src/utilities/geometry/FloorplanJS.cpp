@@ -1416,7 +1416,7 @@ namespace openstudio{
                                  m_boundingBox.maxX().get(),m_boundingBox.maxY().get(),m_boundingBox.maxZ().get(),
                                  lookAtX, lookAtY, lookAtZ, lookAtR);
 
-    ThreeSceneMetadata metadata(buildingStoryNames, boundingBox, modelObjectMetadata);
+    ThreeSceneMetadata metadata(buildingStoryNames, boundingBox, northAxis(), modelObjectMetadata);
 
     ThreeSceneObject sceneObject("", children);
 
