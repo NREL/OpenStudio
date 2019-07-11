@@ -1197,8 +1197,8 @@ set(CPACK_PACKAGE_VENDOR "National Renewable Energy Laboratory")
 set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
-# Trusty (14.04) uses 3.0-0, all other including Xenial (16.04) use 3.0-0v5
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-0v5 (>= 3.0.0) | libwxgtk3.0-0 (>=3.0.0)")
+# set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+
 # Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
 set(CPACK_DEBIAN_PACKAGE_NAME "openstudio-${OpenStudio_VERSION}")
 # CPACK_DEBIAN_PACKAGE_DESCRIPTION defaults to this one too. dpkg-deb -I xxx.deb will show this description
@@ -1230,7 +1230,7 @@ elseif(UNIX)
   # Copy the icons
   # Cf. http://standards.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
   foreach(_size 16 32 48 64 128 256)
-    # Copy OS App icons
+    # Copy OS App icons: TODO probably move them to OS App repo
     install(
       FILES "${PROJECT_SOURCE_DIR}/icons/os_${_size}.png"
       DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/apps"
@@ -1244,6 +1244,7 @@ elseif(UNIX)
     )
   endforeach()
 
+  # TODO: probably move to OS App repo
   # OS App has a 512 and 1024 too
   foreach(_size 512 1024)
     # Copy OS App icons
