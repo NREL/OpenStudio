@@ -1175,34 +1175,19 @@ elseif(UNIX)
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
 
+  # TODO: for now since Mac and Windows installers aren't doing it for core, not doing it for Unix either.
+  ## Copy the icons
+  # set(ICON_FOLDER "${PROJECT_SOURCE_DIR}/icons")
+  ## Cf. http://standards.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
+  #foreach(_size 16 32 48 64 128 256)
 
-  # Copy the icons
-  # Cf. http://standards.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
-  foreach(_size 16 32 48 64 128 256)
-    # Copy OS App icons: TODO probably move them to OS App repo
-    install(
-      FILES "${PROJECT_SOURCE_DIR}/icons/os_${_size}.png"
-      DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/apps"
-      RENAME openstudioapp.png
-    )
-    # Install OSM mimetypes icons
-    install(
-      FILES "${PROJECT_SOURCE_DIR}/icons/osm_${_size}.png"
-      DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/mimetypes"
-      RENAME application-x-openstudio.png
-    )
-  endforeach()
-
-  # TODO: probably move to OS App repo
-  # OS App has a 512 and 1024 too
-  foreach(_size 512 1024)
-    # Copy OS App icons
-    install(
-      FILES "${PROJECT_SOURCE_DIR}/icons/os_${_size}.png"
-      DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/apps"
-      RENAME openstudioapp.png
-    )
-  endforeach()
+  #  # Install OSM mimetypes icons
+  #  install(
+  #    FILES "${ICON_FOLDER}/osm_${_size}.png"
+  #    DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/mimetypes"
+  #    RENAME application-x-openstudio.png
+  #  )
+  #endforeach()
 
 endif()
 
