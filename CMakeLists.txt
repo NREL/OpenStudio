@@ -1204,34 +1204,6 @@ elseif(UNIX)
     )
   endforeach()
 
-  ## try to set up the menu system
-  #find_program(XDG-MIME_EXECUTABLE xdg-mime)
-  #find_program(XDG-DESKTOP-MENU_EXECUTABLE xdg-desktop-menu)
-  #find_program(UPDATE-MIME-DATABASE-EXECUTABLE update-mime-database)
-  #find_program(GTK-UPDATE-ICON-CACHE-EXECUTABLE gtk-update-icon-cache)
-
-
-  ## Install the Desktop Menu
-  ## xdg-desktop-menu install --novendor /usr/share/applications/openstudioapp.desktop
-  #install(CODE "execute_process(COMMAND ${XDG-DESKTOP-MENU_EXECUTABLE} install --novendor --mode system /usr/share/applications/openstudioapp.desktop)")
-
-  ## Register the mime description: this places it in /usr/share/mime/packages/
-  ## sudo xdg-mime install --novendor --mode system x-openstudio.xml
-  #install(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} install --novendor --mode system /usr/share/mime/application/x-openstudio.xml)")
-  #install(CODE "execute_process(COMMAND echo COUCOU)")
-
-  ## Register the application launcher with the registered mimetype
-  ## sudo xdg-mime default openstudio.desktop application/x-openstudio
-  #install(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} default /usr/share/applications/openstudio.desktop application/x-openstudio)")
-
-
-  ## Update the mime cache and icon cache
-  ## sudo update-mime-database /usr/share/mime
-  #install(CODE "execute_process(COMMAND ${UPDATE-MIME-DATABASE-EXECUTABLE} /usr/share/mime)")
-  ## sudo gtk-update-icon-cache /usr/share/icons/hicolor/ -f
-  #install(CODE "execute_process(COMMAND ${GTK-UPDATE-ICON-CACHE-EXECUTABLE} /usr/share/icons/hicolor/ -f)")
-
-
 endif()
 
 if(WIN32)
