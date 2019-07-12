@@ -46,7 +46,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
   # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
-  # bump the actual package version when we make changes
+  # bump the actual package version when we make changes) than the binaries were built with
   # 'outdated' also acts like 'missing': if no binary, will build them.
   list(APPEND CONAN_BUILD "outdated")
 
@@ -103,6 +103,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
     OPTIONS ${CONAN_OPTIONS}
     BUILD ${CONAN_BUILD}
+    # Passes `-u, --update`    to conan install: Check updates exist from upstream remotes
+    # That and build=outdated should ensure we track the right
+    UPDATE
   )
 
   set(CONAN_OPENSTUDIO_ALREADY_RUN TRUE)
