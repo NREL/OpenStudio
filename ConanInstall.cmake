@@ -32,11 +32,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_add_remote(NAME nrel
     URL https://api.bintray.com/conan/commercialbuilding/nrel)
 
-  # TODO: eventually delete and replace with the official NREL one (and update ruby in conan_cmake_run below)
-  conan_add_remote(NAME lefticus
-    URL https://api.bintray.com/conan/lefticus/nrel)
-  conan_add_remote(NAME jmarrec
-    URL https://api.bintray.com/conan/jmarrec/testing)
+  #conan_add_remote(NAME jmarrec
+  #  URL https://api.bintray.com/conan/jmarrec/testing)
 
   # Convenience variable to set a consistent version for individual boost packages
   set(BOOST_VERSION "1.69.0")
@@ -80,7 +77,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     ${CONAN_QT}
     ${CONAN_OPENSSL}
     ${CONAN_BOOST_ASIO}
-    openstudio_ruby/2.5.5@jmarrec/testing # Replace with NREL when stable
+    openstudio_ruby/2.5.5@nrel/stable # Replace with NREL when stable
     boost_program_options/${BOOST_VERSION}@bincrafters/stable
     boost_regex/${BOOST_VERSION}@bincrafters/stable
     boost_filesystem/${BOOST_VERSION}@bincrafters/stable
