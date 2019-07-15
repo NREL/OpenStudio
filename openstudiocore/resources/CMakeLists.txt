@@ -52,6 +52,7 @@ set(utilities_resources_src
   utilities/Geometry/floorplan-paper.json
   utilities/Geometry/floorplan_school.json
   utilities/Geometry/floorplan_shading.json
+  utilities/Geometry/multistory_shading_rotation.json
   utilities/Geometry/open_to_below.json
   utilities/Geometry/split_level.json
   utilities/Geometry/story_multipliers.json
