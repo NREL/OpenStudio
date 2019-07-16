@@ -77,7 +77,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     ${CONAN_QT}
     ${CONAN_OPENSSL}
     ${CONAN_BOOST_ASIO}
-    openstudio_ruby/2.5.5@commercialbuilding/stable # TODO: Replace `commercialbuilding` with `nrel` when CI is configured correctly
+    # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
+    openstudio_ruby/2.5.5@nrel/stable
     boost_program_options/${BOOST_VERSION}@bincrafters/stable
     boost_regex/${BOOST_VERSION}@bincrafters/stable
     boost_filesystem/${BOOST_VERSION}@bincrafters/stable
