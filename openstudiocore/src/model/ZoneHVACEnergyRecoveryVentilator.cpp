@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -350,11 +350,23 @@ namespace detail {
   }
 
   boost::optional<double> ZoneHVACEnergyRecoveryVentilator_Impl::autosizedSupplyAirFlowRate() const {
-    return getAutosizedValue("Design Size Supply Air Flow Rate", "m3/s");
+    boost::optional<double> result;
+    result = getAutosizedValue("Design Size Supply Air Flow Rate", "m3/s");
+    // E+ 9.0.0 wrongly returns as User-Specified
+    if (!result) {
+      result = getAutosizedValue("User-Specified Supply Air Flow Rate", "m3/s");
+    }
+    return result;
   }
 
   boost::optional<double> ZoneHVACEnergyRecoveryVentilator_Impl::autosizedExhaustAirFlowRate() const {
-    return getAutosizedValue("Design Size Exhaust Air Flow Rate", "m3/s");
+    boost::optional<double> result;
+    result = getAutosizedValue("Design Size Exhaust Air Flow Rate", "m3/s");
+    // E+ 9.0.0 wrongly returns as User-Specified
+    if (!result) {
+      result = getAutosizedValue("User-Specified Exhaust Air Flow Rate", "m3/s");
+    }
+    return result;
   }
 
   void ZoneHVACEnergyRecoveryVentilator_Impl::autosize() {

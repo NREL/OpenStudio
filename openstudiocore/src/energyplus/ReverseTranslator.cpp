@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -329,9 +329,17 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateAirTerminalSingleDuctConstantVolumeReheat(workspaceObject );
       break;
     }
+
   case openstudio::IddObjectType::AirTerminal_SingleDuct_Uncontrolled :
     {
-      //modelObject = translateAirTerminalSingleDuctUncontrolled(workspaceObject );
+      // We map this to ATU:CV:NoReheat which is the new name
+      modelObject = translateAirTerminalSingleDuctConstantVolumeNoReheat(workspaceObject );
+      break;
+    }
+
+  case openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat :
+    {
+      modelObject = translateAirTerminalSingleDuctConstantVolumeNoReheat(workspaceObject );
       break;
     }
   case openstudio::IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat :
@@ -791,6 +799,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateScheduleDayHourly(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::Schedule_File:
+    {
+    modelObject = translateScheduleFile(workspaceObject);
+    break;
+    }
   case openstudio::IddObjectType::Schedule_Day_Interval :
     {
       modelObject = translateScheduleDayInterval(workspaceObject);
@@ -916,14 +929,37 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateTimestep(workspaceObject);
       break;
     }
-  case openstudio::IddObjectType::UtilityCost_Charge_Simple :
-    {
-      break; // no-op
-    }
-  case openstudio::IddObjectType::UtilityCost_Qualify :
-    {
-      break; // no-op
-    }
+
+   // TODO: once UtilityCost objects are wrapped (and ReverseTranslated)
+  //case openstudio::IddObjectType::OS_UtilityCost_Charge_Block:
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Charge_Simple :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Computation :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Qualify :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Ratchet :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Tariff :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Variable :
+    //{
+      //break; // no-op
+    //}
+
   case openstudio::IddObjectType::Version :
    {
      modelObject = translateVersion(workspaceObject );

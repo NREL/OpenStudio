@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -281,11 +281,11 @@ namespace detail {
     return result;
   }
 
-  unsigned HeaderedPumpsConstantSpeed_Impl::inletPort() {
+  unsigned HeaderedPumpsConstantSpeed_Impl::inletPort() const {
     return OS_HeaderedPumps_ConstantSpeedFields::InletNodeName;
   }
 
-  unsigned HeaderedPumpsConstantSpeed_Impl::outletPort() {
+  unsigned HeaderedPumpsConstantSpeed_Impl::outletPort() const {
     return OS_HeaderedPumps_ConstantSpeedFields::OutletNodeName;
   }
 
@@ -336,6 +336,16 @@ namespace detail {
     return types;
   }
 
+  std::string HeaderedPumpsConstantSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_HeaderedPumps_ConstantSpeedFields::EndUseSubcategory, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool HeaderedPumpsConstantSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_HeaderedPumps_ConstantSpeedFields::EndUseSubcategory, endUseSubcategory);
+  }
+
 } // detail
 
 HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(const Model& model)
@@ -352,6 +362,8 @@ HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(const Model& model)
   setFractionofMotorInefficienciestoFluidStream(0.0);
   setPumpControlType("Continuous");
   setSkinLossRadiativeFraction(0.1);
+
+  setEndUseSubcategory("General");
 }
 
 IddObjectType HeaderedPumpsConstantSpeed::iddObjectType() {
@@ -480,6 +492,15 @@ bool HeaderedPumpsConstantSpeed::setSkinLossRadiativeFraction(double skinLossRad
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setSkinLossRadiativeFraction(skinLossRadiativeFraction);
 }
 
+
+std::string HeaderedPumpsConstantSpeed::endUseSubcategory() const {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->endUseSubcategory();
+}
+
+bool HeaderedPumpsConstantSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
+}
+
 /// @cond
 HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(std::shared_ptr<detail::HeaderedPumpsConstantSpeed_Impl> impl)
   : StraightComponent(std::move(impl))
@@ -495,4 +516,4 @@ HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(std::shared_ptr<detail::H
   }
 
 } // model
-} // openstudio
+} // openstudio

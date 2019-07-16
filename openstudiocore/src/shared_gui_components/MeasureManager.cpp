@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -340,7 +340,9 @@ std::pair<bool,std::string> MeasureManager::updateMeasure(const BCLMeasure &t_me
     boost::optional<BCLMeasure> measure = workflowJSON.addMeasure(t_measure);
 
     if (measure){
-      result = std::pair<bool, std::string>(true, toString(measure->directory().stem()));
+      // Since we set the measure_paths, we only neeed to reference the name of the directory (=last level directory name)
+      // eg: /path/to/measure_folder => measure_folder
+      result = std::pair<bool, std::string>(true, toString( getLastLevelDirectoryName( measure->directory() ) ));
     } else{
       std::stringstream ss;
       ss << "An error occurred while adding measure '" << t_measure.displayName() << "' to the project.";

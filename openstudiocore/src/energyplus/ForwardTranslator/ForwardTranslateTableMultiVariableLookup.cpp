@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -300,16 +300,14 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   }
   else
   {
-    std::vector<std::pair<std::vector<double>,double> > points = modelObject.points();
+    std::vector<TableMultiVariableLookupPoint> points = modelObject.points();
 
     // Slice the first and second x values off the coordinates
     std::vector<std::vector<double> > slices;
-    for(std::vector<std::pair<std::vector<double>,double> >::const_iterator it = points.begin();
-        it != points.end();
-        ++it)
-    {
-      OS_ASSERT(it->first.size() == t_numberofIndependentVariables);
-      std::vector<double> slice(it->first.begin() + 2,it->first.begin() + t_numberofIndependentVariables);
+    for (const TableMultiVariableLookupPoint pt: points) {
+      std::vector<double> xValues = pt.x();
+      OS_ASSERT(xValues.size() == t_numberofIndependentVariables);
+      std::vector<double> slice(xValues.begin() + 2, xValues.begin() + t_numberofIndependentVariables);
       slices.push_back(slice);
     }
 

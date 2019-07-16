@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,28 +44,27 @@ namespace detail{
 
 class MODEL_API AvailabilityManager : public ModelObject {
 
-  public:
+ public:
 
   AvailabilityManager(IddObjectType type,const Model& model);
 
   virtual ~AvailabilityManager() {}
 
-  friend class openstudio::IdfObject;
-
   boost::optional<Loop> loop() const;
 
+ protected:
   /// @cond
-
   typedef detail::AvailabilityManager_Impl ImplType;
 
   explicit AvailabilityManager(std::shared_ptr<detail::AvailabilityManager_Impl> impl);
 
-  private:
-
-  REGISTER_LOGGER("openstudio.model.AvailabilityManager");
-
+  friend class detail::AvailabilityManager_Impl;
+  friend class Model;
+  friend class IdfObject;
+  friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
-
+ private:
+  REGISTER_LOGGER("openstudio.model.AvailabilityManager");
 };
 
 typedef boost::optional<AvailabilityManager> OptionalAvailabilityManager;

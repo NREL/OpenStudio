@@ -8,6 +8,7 @@
 
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
+%import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
@@ -15,8 +16,26 @@
 #if defined SWIGCSHARP
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelZoneHVAC
+
+  // ignore airflow objects for now, add back in with partial classes in ModelAirflow.i (swigged after us)
+  // TODO: haven't added them to ModelAirflow.i but I don't see any other that are indeed implemented...
+  %ignore openstudio::model::FanZoneExhaust::getAirflowNetworkZoneExhaustFan;
+  %ignore openstudio::model::FanZoneExhaust::airflowNetworkZoneExhaustFan;
+
 #endif
 
+namespace openstudio {
+  namespace model {
+
+    // forward declarations
+    // For FanZoneExhaust
+    %feature("valuewrapper") AirflowNetworkCrack ;
+    %feature("valuewrapper") AirflowNetworkFan;
+    class AirflowNetworkEquivalentDuct;
+    class AirflowNetworkFan;
+
+  }
+}
 MODELOBJECT_TEMPLATES(AirLoopHVACUnitarySystem);
 MODELOBJECT_TEMPLATES(FanZoneExhaust);
 MODELOBJECT_TEMPLATES(WaterHeaterHeatPump);

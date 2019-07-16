@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -136,6 +136,10 @@ LoopLibraryDialog::LoopLibraryDialog(QWidget * parent)
   newItem( ADDTOMODEL_PLANTLOOP,
            QString("Empty Plant Loop"),
            QPixmap(":/images/plant_loop_icon.png") );
+
+  newItem( ADDTOMODEL_SHWLOOP,
+           QString("Service Hot Water Plant Loop"),
+           QPixmap(":/images/shw_loop_icon.png") );
 }
 
 void LoopLibraryDialog::paintEvent ( QPaintEvent * event )

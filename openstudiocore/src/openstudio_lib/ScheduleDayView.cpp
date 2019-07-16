@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1884,66 +1884,71 @@ void DaySchedulePlotArea::keyPressEvent(QKeyEvent * event)
   {
     if (CalendarSegmentItem * calendarItem = dynamic_cast<CalendarSegmentItem *>(m_currentHoverItem))
     {
-      if (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
-      {
-        bool ok;
-        double value = m_keyboardInputValue.toDouble(&ok);
-        if (ok){
+      // Only allow entering numbers if you're not already dragging with the mouse...
+      // Fix for https://github.com/NREL/OpenStudio/issues/2357
+      if( !calendarItem->isMouseDown() ) {
+        if ( (event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return)
+            && !calendarItem->isMouseDown() )
+        {
+          bool ok;
+          double value = m_keyboardInputValue.toDouble(&ok);
+          if (ok){
 
-          ScheduleDayView * scheduleDayView = scene()->scheduleDayView();
+            ScheduleDayView * scheduleDayView = scene()->scheduleDayView();
 
-          double upperLimit = scheduleDayView->upperViewLimit();
-          double lowerLimit = scheduleDayView->lowerViewLimit();
+            double upperLimit = scheduleDayView->upperViewLimit();
+            double lowerLimit = scheduleDayView->lowerViewLimit();
 
-          double scaledValue = (value - lowerLimit) / (upperLimit - lowerLimit);
+            double scaledValue = (value - lowerLimit) / (upperLimit - lowerLimit);
 
-          calendarItem->setValue(scaledValue);
+            calendarItem->setValue(scaledValue);
 
-          calendarItem->setHovering(false);
+            calendarItem->setHovering(false);
 
-          m_currentHoverItem = nullptr;
-          m_keyboardInputValue.clear();
+            m_currentHoverItem = nullptr;
+            m_keyboardInputValue.clear();
+            updateKeyboardPrompt();
+
+            emit dayScheduleSceneChanged(scene(), lowerLimit, upperLimit);
+          }
+
+        }
+        else if (event->key() == Qt::Key_Minus)
+        {
+
+          m_keyboardInputValue = event->text();
           updateKeyboardPrompt();
 
-          emit dayScheduleSceneChanged(scene(), lowerLimit, upperLimit);
         }
+        else if (event->key() == Qt::Key_Backspace)
+        {
+          m_keyboardInputValue.chop(1);
+          updateKeyboardPrompt();
 
-      }
-      else if (event->key() == Qt::Key_Minus)
-      {
+        }
+        else if (event->key() == Qt::Key_0 ||
+                 event->key() == Qt::Key_1 ||
+                 event->key() == Qt::Key_2 ||
+                 event->key() == Qt::Key_3 ||
+                 event->key() == Qt::Key_4 ||
+                 event->key() == Qt::Key_5 ||
+                 event->key() == Qt::Key_6 ||
+                 event->key() == Qt::Key_7 ||
+                 event->key() == Qt::Key_8 ||
+                 event->key() == Qt::Key_9
+               )
+        {
 
-        m_keyboardInputValue = event->text();
-        updateKeyboardPrompt();
-
-      }
-      else if (event->key() == Qt::Key_Backspace)
-      {
-        m_keyboardInputValue.chop(1);
-        updateKeyboardPrompt();
-
-      }
-      else if (event->key() == Qt::Key_0 ||
-               event->key() == Qt::Key_1 ||
-               event->key() == Qt::Key_2 ||
-               event->key() == Qt::Key_3 ||
-               event->key() == Qt::Key_4 ||
-               event->key() == Qt::Key_5 ||
-               event->key() == Qt::Key_6 ||
-               event->key() == Qt::Key_7 ||
-               event->key() == Qt::Key_8 ||
-               event->key() == Qt::Key_9
-             )
-      {
-
-        m_keyboardInputValue.append(event->text());
-        updateKeyboardPrompt();
-
-      }
-      else if (event->key() == Qt::Key_Period)
-      {
-        if (!m_keyboardInputValue.contains(".")){
           m_keyboardInputValue.append(event->text());
           updateKeyboardPrompt();
+
+        }
+        else if (event->key() == Qt::Key_Period)
+        {
+          if (!m_keyboardInputValue.contains(".")){
+            m_keyboardInputValue.append(event->text());
+            updateKeyboardPrompt();
+          }
         }
       }
     }

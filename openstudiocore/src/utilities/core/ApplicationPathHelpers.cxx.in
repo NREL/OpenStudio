@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include <utilities/core/ApplicationPathHelpers.hpp>
 #include <utilities/core/PathHelpers.hpp>
@@ -77,22 +78,49 @@ namespace openstudio {
   }
 
   openstudio::path getApplicationPath() {
-
+    openstudio::path path;
     #if defined _WIN32
       TCHAR szPath[MAX_PATH];
       if( GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
         LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, szPath = '" << szPath << "'");
-        return completeAndNormalize(toPath(szPath));
+        path = toPath(szPath);
       }
     #else
       Dl_info info;
       if (dladdr("main", &info)) {
         LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, info.dli_fname = '" << info.dli_fname << "'");
-        return completeAndNormalize(toPath(info.dli_fname));
+        path = toPath(info.dli_fname);
       }
     #endif
 
-    return openstudio::path();
+    // Note JM 2019-04-24:
+    // Let's call assume the GetModuleFileName (windows, though that doesn't really happen)
+    // or (more likely) dladdr (Unix) returns just 'OpenStudioApplicationSymlink' (and not '/path/to/OpenStudioApplicationSymlink' or './OpenStudioApplicationSymlink')
+    // You first try to locate that OpenStudioApplicationSymlink in the current directory
+
+    // (Another option would be to always start by calling findInSystemPath and modify the findInSystemPath to prepend the PATH list with '.')
+
+    openstudio::path applicationPath = completeAndNormalize(path);
+    if( !openstudio::filesystem::exists( applicationPath ) || openstudio::filesystem::is_directory( applicationPath ) ) {
+        // It that didn't work, it means it's in the system PATH. So you have to look for it in your PATH by calling findInSystemPath
+        // There's no way around it IMHO.
+        // Note: This wouldn't be a concern unless you are launching a symlink that lives in your PATH, and outside the directory where the symlink is
+        // * ./OpenStudioApplicationSymlink will work
+        // * /home/OpenStudioApplicationSymlink will work
+        // * OpenStudioApplicationSymlink itself will not work (if you aren't in the same folder as the symlink)
+
+
+        LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath failed as is, trying in to locate in systemPath");
+        path = findInSystemPath(path);
+        applicationPath = completeAndNormalize(path);
+    }
+    if( !openstudio::filesystem::exists( applicationPath ) || openstudio::filesystem::is_directory( applicationPath ) ) {
+        LOG_FREE_AND_THROW("ApplicationPathHelpers", "getApplicationPath failed!");
+    }
+
+    LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, found '" << applicationPath << "'");
+
+    return applicationPath;
   }
 
   openstudio::path getApplicationDirectory() {
@@ -140,36 +168,32 @@ namespace openstudio {
 
   openstudio::path getOpenStudioModule()
   {
-    openstudio::path openstudioDirPath;
+    openstudio::path path;
     #if defined _WIN32
       TCHAR szPath[MAX_PATH];
       if( GetModuleFileName( GetCurrentModule(), szPath, MAX_PATH ) ) {
         LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, szPath = '" << szPath << "'");
-        openstudioDirPath = completeAndNormalize(toPath(szPath));
+        path = toPath(szPath);
       }
     #else
       Dl_info info;
       if (dladdr("GetCurrentModule", &info)) {
         LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, info.dli_fname = '" << info.dli_fname << "'");
-        auto path = toPath(info.dli_fname);
-        if ( path.parent_path().empty() ) {
-          std::istringstream pathstream( getenv("PATH") );
-          std::string pathstring;
-          while ( std::getline(pathstream, pathstring, ':') ) {
-            LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, searching for '" << path << "' in '" << pathstring << "'");
-            auto maybepath = toPath(pathstring) / path;
-            if( openstudio::filesystem::exists( maybepath ) && !openstudio::filesystem::is_directory( maybepath ) ) {
-              openstudioDirPath = completeAndNormalize(maybepath);
-              break;
-            }
-          }
-        } else {
-            openstudioDirPath = completeAndNormalize(path);
-        }
+        path = toPath(info.dli_fname);
       }
     #endif
-    LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, found '" << openstudioDirPath << "'");
-    return openstudioDirPath;
+    openstudio::path openstudioPath = completeAndNormalize(path);
+    if( !openstudio::filesystem::exists( openstudioPath ) || openstudio::filesystem::is_directory( openstudioPath ) ) {
+        LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule failed as is, trying in to locate in systemPath");
+        path = findInSystemPath(path);
+        openstudioPath = completeAndNormalize(path);
+    }
+    if( !openstudio::filesystem::exists( openstudioPath ) || openstudio::filesystem::is_directory( openstudioPath ) ) {
+        LOG_FREE_AND_THROW("ApplicationPathHelpers", "getOpenStudioModule failed!");
+    }
+
+    LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, found '" << openstudioPath << "'");
+    return openstudioPath;
   }
 
   openstudio::path getOpenStudioModuleDirectory()
@@ -203,7 +227,8 @@ namespace openstudio {
       }
     #else
       cliPath = getOpenStudioModuleDirectory() / toPath("openstudio");
-      if (!openstudio::filesystem::exists(cliPath)){
+      // If it doesn't exist or it's a directory, try one level above
+      if (!openstudio::filesystem::exists(cliPath) || openstudio::filesystem::is_directory(cliPath)) {
         cliPath = getOpenStudioModuleDirectory() / toPath("../openstudio");
       }
     #endif

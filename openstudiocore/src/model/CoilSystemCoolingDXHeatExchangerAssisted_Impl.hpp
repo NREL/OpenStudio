@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -68,6 +68,27 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual unsigned inletPort() const override;
+    virtual unsigned outletPort() const override;
+
+    /**
+     * Note JM 2019-03-13: At this point in time
+     * CoilSystemCoolingDXHeatExchangerAssisted is **NOT** allowed on a Branch directly and should be placed inside one of the Unitary systems
+     * cf https://github.com/NREL/EnergyPlus/issues/7222
+     * This method returns false and does nothing as a result
+     */
+    virtual bool addToNode(Node & node) override;
+
+    // will return the coolingCoil and heatExchanger
+    virtual std::vector<ModelObject> children() const override;
+
+    // Will also clone the coolingCoil and heatExchanger
+    virtual ModelObject clone(Model model) const override;
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -88,12 +109,6 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort() override;
-    unsigned outletPort() override;
-
-    bool addToNode(Node & node) override;
-    std::vector<ModelObject> children() const override;
-    ModelObject clone(Model model) const override;
 
     //@}
    protected:

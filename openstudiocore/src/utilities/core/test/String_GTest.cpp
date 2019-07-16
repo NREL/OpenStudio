@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -389,5 +389,24 @@ TEST(String, StringSplit)
   ASSERT_EQ(1, results.size());
   EXPECT_EQ("This is not the string you are looking for", results[0]);
 
+}
+
+
+TEST(String, SplitEMSLineToTokens)
+{
+  // Very simple case
+  std::vector<std::string> tokens = splitEMSLineToTokens("SET Var1 = 10");
+  ASSERT_EQ(2, tokens.size());
+  EXPECT_EQ("Var1", tokens[0]);
+  EXPECT_EQ("10", tokens[1]);
+
+  // More complicated: Set is a statement keyword, Hour is an ERL dynamic variable
+  // and @TrendValue is a function.
+  tokens = splitEMSLineToTokens("Set  Var1 =(Hour  *(@TrendValue Var1   2)) /(Var2)");
+  ASSERT_EQ(4, tokens.size());
+  EXPECT_EQ("Var1", tokens[0]);
+  EXPECT_EQ("Var1", tokens[1]);
+  EXPECT_EQ("2", tokens[2]);
+  EXPECT_EQ("Var2", tokens[3]);
 }
 

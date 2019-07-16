@@ -8,10 +8,10 @@
 
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
+%import <model/ModelSimulation.i>
 
 %{
   #include <model/ScheduleTypeRegistry.hpp>
-
   #include <QColor>
   #include <utilities/data/TimeSeries.hpp>
   #include <utilities/sql/SqlFile.hpp>
@@ -26,9 +26,11 @@
   %ignore openstudio::model::SpaceType::spaces;
   %ignore openstudio::model::SpaceLoadDefinition::instances;
   %ignore openstudio::model::ExteriorLoadDefinition::instances;
+  %ignore openstudio::model::ShadingControl::subSurfaces;
 
+  // TODO: why?
   // ignore schedule type
-  %ignore openstudio::model::ScheduleType;
+  // %ignore openstudio::model::ScheduleType;
 
 #endif
 
@@ -50,12 +52,27 @@ class ShadingControl;
 }
 }
 
+// extend classes
+%extend openstudio::model::TableMultiVariableLookupPoint {
+  // Use the overloaded operator<< for string representation
+  // puts point will return something like "(x1, x2) = (10.5, 0.75)"
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
+MODELOBJECT_TEMPLATES(ScheduleType)
 MODELOBJECT_TEMPLATES(ScheduleInterval);
 MODELOBJECT_TEMPLATES(ScheduleFixedInterval);
+MODELOBJECT_TEMPLATES(ExternalFile);
+MODELOBJECT_TEMPLATES(ScheduleFile);
 MODELOBJECT_TEMPLATES(ScheduleVariableInterval);
 MODELOBJECT_TEMPLATES(ScheduleCompact);
 MODELOBJECT_TEMPLATES(ScheduleConstant);
 MODELOBJECT_TEMPLATES(DefaultScheduleSet);
+MODELOBJECT_TEMPLATES(SpectralDataField); // Helper class defined in MaterialPropertyGlazingSpectralData
 MODELOBJECT_TEMPLATES(MaterialPropertyGlazingSpectralData);
 MODELOBJECT_TEMPLATES(MaterialPropertyMoisturePenetrationDepthSettings);
 MODELOBJECT_TEMPLATES(Material);
@@ -112,12 +129,14 @@ MODELOBJECT_TEMPLATES(CurveRectangularHyperbola1);
 MODELOBJECT_TEMPLATES(CurveRectangularHyperbola2);
 MODELOBJECT_TEMPLATES(CurveSigmoid);
 MODELOBJECT_TEMPLATES(CurveTriquadratic);
+MODELOBJECT_TEMPLATES(TableMultiVariableLookupPoint);
 MODELOBJECT_TEMPLATES(TableMultiVariableLookup);
 MODELOBJECT_TEMPLATES(SpaceLoadDefinition);
 MODELOBJECT_TEMPLATES(PeopleDefinition);
 MODELOBJECT_TEMPLATES(LightsDefinition);
 MODELOBJECT_TEMPLATES(LuminaireDefinition);
 MODELOBJECT_TEMPLATES(ElectricEquipmentDefinition);
+MODELOBJECT_TEMPLATES(ElectricEquipmentITEAirCooledDefinition);
 MODELOBJECT_TEMPLATES(GasEquipmentDefinition);
 MODELOBJECT_TEMPLATES(HotWaterEquipmentDefinition);
 MODELOBJECT_TEMPLATES(SteamEquipmentDefinition);
@@ -132,6 +151,8 @@ MODELOBJECT_TEMPLATES(RenderingColor);
 MODELOBJECT_TEMPLATES(DesignSpecificationOutdoorAir);
 
 SWIG_MODELOBJECT(ScheduleInterval, 0);
+SWIG_MODELOBJECT(ScheduleFile, 1);
+SWIG_MODELOBJECT(ExternalFile, 1);
 SWIG_MODELOBJECT(ScheduleFixedInterval, 1);
 SWIG_MODELOBJECT(ScheduleVariableInterval, 1);
 SWIG_MODELOBJECT(ScheduleCompact, 1);
@@ -199,6 +220,7 @@ SWIG_MODELOBJECT(PeopleDefinition, 1);
 SWIG_MODELOBJECT(LightsDefinition, 1);
 SWIG_MODELOBJECT(LuminaireDefinition, 1);
 SWIG_MODELOBJECT(ElectricEquipmentDefinition, 1);
+SWIG_MODELOBJECT(ElectricEquipmentITEAirCooledDefinition, 1);
 SWIG_MODELOBJECT(GasEquipmentDefinition, 1);
 SWIG_MODELOBJECT(HotWaterEquipmentDefinition, 1);
 SWIG_MODELOBJECT(SteamEquipmentDefinition, 1);
@@ -213,6 +235,41 @@ SWIG_MODELOBJECT(DesignSpecificationOutdoorAir, 1);
 
 %include <model/ScheduleTypeRegistry.hpp>
 
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
+  %inline {
+    namespace openstudio {
+      namespace model {
+
+        // EMS Curve setter  (reimplemented from ModelCore.i)
+        bool setCurveForEMS(openstudio::model::EnergyManagementSystemCurveOrTableIndexVariable ems_curve, openstudio::model::Curve curve) {
+          return ems_curve.setCurveOrTableObject(curve);
+        }
+
+      }
+    }
+  }
+#endif
+
+#if defined(SWIGCSHARP)
+  //%pragma(csharp) imclassimports=%{
+  %pragma(csharp) moduleimports=%{
+
+    using System;
+    using System.Runtime.InteropServices;
+
+    public partial class EnergyManagementSystemCurveOrTableIndexVariable : ModelObject {
+      public bool setCurveOrTableObject(OpenStudio.Curve curve) {
+        return OpenStudio.OpenStudioModelResources.setCurveForEMS(this, curve);
+      }
+
+      // Overloaded Ctor, calling Ctor that doesn't use Curve
+      public EnergyManagementSystemCurveOrTableIndexVariable(Model model, OpenStudio.Curve curve)
+        : this(model) {
+        this.setCurveOrTableObject(curve);
+      }
+    }
+  %}
+#endif
 #endif
 
 

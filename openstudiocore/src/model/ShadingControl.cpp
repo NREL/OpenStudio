@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,6 +43,8 @@
 #include "Shade_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
@@ -203,6 +205,11 @@ namespace detail {
   {
     bool test = setString(OS_ShadingControlFields::Setpoint, "");
     OS_ASSERT(test);
+  }
+
+  std::vector<SubSurface> ShadingControl_Impl::subSurfaces() const
+  {
+    return getObject<ShadingControl>().getModelObjectSources<SubSurface>();
   }
 
 } // detail
@@ -369,6 +376,10 @@ bool ShadingControl::setSetpoint(double setpoint){
 
 void ShadingControl::resetSetpoint(){
   getImpl<detail::ShadingControl_Impl>()->resetSetpoint();
+}
+
+std::vector<SubSurface> ShadingControl::subSurfaces() const {
+  return getImpl<detail::ShadingControl_Impl>()->subSurfaces();
 }
 
 /// @cond

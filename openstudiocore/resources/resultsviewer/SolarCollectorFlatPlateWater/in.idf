@@ -21,7 +21,7 @@
 !           2 WATER HEATER:MIXED objects serve as storage tank and instantaneous water heater.
 !           1 VALVE:TEMPERING object to temper the hot storage water.
 
-  Version,8.9;
+  Version,9.1;
 
 !***SIMULATION CONTROL***
 
@@ -66,27 +66,33 @@
     ,                        !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     1,                       !- End Month
     7,                       !- End Day of Month
+    ,                        !- End Year
     TUESDAY,                 !- Day of Week for Start Day
     YES,                     !- Use Weather File Holidays and Special Days
     YES,                     !- Use Weather File Daylight Saving Period
     NO,                      !- Apply Weekend Holiday Rule
     YES,                     !- Use Weather File Rain Indicators
-    YES;                     !- Use Weather File Snow Indicators
+    YES,                     !- Use Weather File Snow Indicators
+    No;                      !- Treat Weather as Actual
 
   RunPeriod,
     ,                        !- Name
     7,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     7,                       !- End Month
     7,                       !- End Day of Month
+    ,                        !- End Year
     TUESDAY,                 !- Day of Week for Start Day
     YES,                     !- Use Weather File Holidays and Special Days
     YES,                     !- Use Weather File Daylight Saving Period
     NO,                      !- Apply Weekend Holiday Rule
     YES,                     !- Use Weather File Rain Indicators
-    YES;                     !- Use Weather File Snow Indicators
+    YES,                     !- Use Weather File Snow Indicators
+    No;                      !- Treat Weather as Actual
 
   ! CHICAGO_IL_USA Annual Heating 99%, MaxDB=-17.3°C
 

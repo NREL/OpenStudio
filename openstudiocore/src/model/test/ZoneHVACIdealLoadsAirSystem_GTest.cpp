@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,6 +33,10 @@
 
 #include "../ZoneHVACIdealLoadsAirSystem.hpp"
 #include "../ZoneHVACIdealLoadsAirSystem_Impl.hpp"
+#include "../AirLoopHVACReturnPlenum.hpp"
+#include "../AirLoopHVACReturnPlenum_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 
 #include "../../utilities/units/Quantity.hpp"
 #include "../../utilities/units/Unit.hpp"
@@ -42,27 +46,27 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumHeatingSupplyAirTemperature_Quantity) {
   Model model;
-  // TODO: Check constructor.
   ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
 
   Unit units = zoneHVACIdealLoadsAirSystem.getMaximumHeatingSupplyAirTemperature(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
+
+  // We assign a Maximum Supply temp of 80F
+  double value(80.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setMaximumHeatingSupplyAirTemperature(testQ));
+  // We get it as IP units
   Quantity q = zoneHVACIdealLoadsAirSystem.getMaximumHeatingSupplyAirTemperature(true);
+  // Value should match
   EXPECT_NEAR(value,q.value(),1.0E-8);
   EXPECT_EQ(units.standardString(),q.units().standardString());
 }
 
 TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MinimumCoolingSupplyAirTemperature_Quantity) {
   Model model;
-  // TODO: Check constructor.
   ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
 
   Unit units = zoneHVACIdealLoadsAirSystem.getMinimumCoolingSupplyAirTemperature(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
-  double value(1.0);
+  double value(55.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setMinimumCoolingSupplyAirTemperature(testQ));
   Quantity q = zoneHVACIdealLoadsAirSystem.getMinimumCoolingSupplyAirTemperature(true);
@@ -72,11 +76,9 @@ TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MinimumCoolingSupplyAirTemperatu
 
 TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumHeatingSupplyAirHumidityRatio_Quantity) {
   Model model;
-  // TODO: Check constructor.
   ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
 
   Unit units = zoneHVACIdealLoadsAirSystem.getMaximumHeatingSupplyAirHumidityRatio(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
   double value(1.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setMaximumHeatingSupplyAirHumidityRatio(testQ));
@@ -87,11 +89,9 @@ TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumHeatingSupplyAirHumidityR
 
 TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MinimumCoolingSupplyAirHumidityRatio_Quantity) {
   Model model;
-  // TODO: Check constructor.
   ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
 
   Unit units = zoneHVACIdealLoadsAirSystem.getMinimumCoolingSupplyAirHumidityRatio(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
   double value(1.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setMinimumCoolingSupplyAirHumidityRatio(testQ));
@@ -102,11 +102,9 @@ TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MinimumCoolingSupplyAirHumidityR
 
 TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumHeatingAirFlowRate_Quantity) {
   Model model;
-  // TODO: Check constructor.
   ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
 
   Unit units = zoneHVACIdealLoadsAirSystem.getMaximumHeatingAirFlowRate(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
   double value(1.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setMaximumHeatingAirFlowRate(testQ));
@@ -118,11 +116,9 @@ TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumHeatingAirFlowRate_Quanti
 
 TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumSensibleHeatingCapacity_Quantity) {
   Model model;
-  // TODO: Check constructor.
   ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
 
   Unit units = zoneHVACIdealLoadsAirSystem.getMaximumSensibleHeatingCapacity(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
   double value(1.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setMaximumSensibleHeatingCapacity(testQ));
@@ -134,11 +130,9 @@ TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumSensibleHeatingCapacity_Q
 
 TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumCoolingAirFlowRate_Quantity) {
   Model model;
-  // TODO: Check constructor.
   ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
 
   Unit units = zoneHVACIdealLoadsAirSystem.getMaximumCoolingAirFlowRate(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
   double value(1.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setMaximumCoolingAirFlowRate(testQ));
@@ -150,11 +144,9 @@ TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumCoolingAirFlowRate_Quanti
 
 TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumTotalCoolingCapacity_Quantity) {
   Model model;
-  // TODO: Check constructor.
   ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
 
   Unit units = zoneHVACIdealLoadsAirSystem.getMaximumTotalCoolingCapacity(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
   double value(1.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setMaximumTotalCoolingCapacity(testQ));
@@ -166,11 +158,9 @@ TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_MaximumTotalCoolingCapacity_Quan
 
 TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_CoolingSensibleHeatRatio_Quantity) {
   Model model;
-  // TODO: Check constructor.
   ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
 
   Unit units = zoneHVACIdealLoadsAirSystem.getCoolingSensibleHeatRatio(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
   double value(1.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setCoolingSensibleHeatRatio(testQ));
@@ -181,11 +171,9 @@ TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_CoolingSensibleHeatRatio_Quantit
 
 TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_SensibleHeatRecoveryEffectiveness_Quantity) {
   Model model;
-  // TODO: Check constructor.
   ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
 
   Unit units = zoneHVACIdealLoadsAirSystem.getSensibleHeatRecoveryEffectiveness(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
   double value(1.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setSensibleHeatRecoveryEffectiveness(testQ));
@@ -196,16 +184,35 @@ TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_SensibleHeatRecoveryEffectivenes
 
 TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_LatentHeatRecoveryEffectiveness_Quantity) {
   Model model;
-  // TODO: Check constructor.
   ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
 
   Unit units = zoneHVACIdealLoadsAirSystem.getLatentHeatRecoveryEffectiveness(true).units(); // Get IP units.
-  // TODO: Check that value is appropriate (within bounds)
   double value(1.0);
   Quantity testQ(value,units);
   EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setLatentHeatRecoveryEffectiveness(testQ));
   Quantity q = zoneHVACIdealLoadsAirSystem.getLatentHeatRecoveryEffectiveness(true);
   EXPECT_NEAR(value,q.value(),1.0E-8);
   EXPECT_EQ(units.standardString(),q.units().standardString());
+}
+
+TEST_F(ModelFixture,ZoneHVACIdealLoadsAirSystem_ReturnPlenum) {
+  Model model;
+  ZoneHVACIdealLoadsAirSystem zoneHVACIdealLoadsAirSystem(model);
+
+  ThermalZone zone(model);
+  ThermalZone plenumzone(model);
+
+  EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.addToThermalZone(zone));
+  auto z = zoneHVACIdealLoadsAirSystem.thermalZone();
+  ASSERT_TRUE(z);
+  EXPECT_EQ(z.get(), zone);
+
+  EXPECT_TRUE(zoneHVACIdealLoadsAirSystem.setReturnPlenum(plenumzone));
+  auto p = zoneHVACIdealLoadsAirSystem.returnPlenum();
+  ASSERT_TRUE(p);
+
+  auto pz = p->thermalZone();
+  ASSERT_TRUE(pz);
+  EXPECT_EQ(pz.get(), plenumzone);
 }
 

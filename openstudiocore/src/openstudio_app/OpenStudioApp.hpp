@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,7 +34,7 @@
 #include "../openstudio_lib/OSAppBase.hpp"
 
 #include "../model/Model.hpp"
-#include "../model/AirTerminalSingleDuctUncontrolled.hpp"
+#include "../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../model/AirTerminalSingleDuctVAVReheat.hpp"
 #include "../model/FanConstantVolume.hpp"
 #include "../model/CurveQuadratic.hpp"
@@ -84,6 +84,14 @@ class OSDocument;
 
 class StartupMenu;
 
+class TouchEater : public QObject
+{
+    Q_OBJECT
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
+};
+
 class OpenStudioApp : public OSAppBase
 {
 
@@ -103,6 +111,7 @@ class OpenStudioApp : public OSAppBase
 
   openstudio::model::Model hvacComponentLibrary() const;
 
+  /** Returns an absolute, canonical path to the resource folder, whether it's launched from the build directory or the OS App **/
   openstudio::path resourcesPath() const;
 
   openstudio::path openstudioCLIPath() const;
@@ -114,6 +123,7 @@ class OpenStudioApp : public OSAppBase
   virtual bool event(QEvent * e) override;
 
   virtual void childEvent(QChildEvent * e) override;
+
 
  signals:
 
@@ -131,8 +141,6 @@ class OpenStudioApp : public OSAppBase
 
   void open();
 
-  void loadLibrary();
-
   void newModel();
 
   void showHelp();
@@ -143,12 +151,22 @@ class OpenStudioApp : public OSAppBase
 
   void revertToSaved();
 
+  // Loads the selected file (File > Load Library), and adds it to the user settings if not already there, by calling writeLibraryPaths
+  void loadLibrary();
+
+  // Checks what happened in the LibraryDialog preference panes, and calls writeLibraryPaths to set the user settings
   void changeDefaultLibraries();
 
  private slots:
 
+  // Returns default/hvac_library.osm and default/hvac_library.osm
   std::vector<openstudio::path> defaultLibraryPaths() const;
 
+  /**
+   * Returns the current list of libraryPaths by reading the user settings
+   * In the process, it convers any path marked "is_resource" to an absolute path
+   * (This function is the reciprocal of writeLibraryPaths)
+   */
   std::vector<openstudio::path> libraryPaths() const;
 
   // Build the component libraries and return a vector of paths that failed to load
@@ -206,7 +224,15 @@ class OpenStudioApp : public OSAppBase
 
   void connectOSDocumentSignals();
 
+  // Removes the given path from the list of library settings (and calls writeLibraryPaths)
   void removeLibraryFromsSettings( const openstudio::path & path );
+
+  /** Helper function that will write the library paths to the Settings indicating if it's a file within the resources/ folder or not
+   * This will ensure that even if the user has selected 'resources/90_1_2013.osm' as a library, it'll keep on working with different versions
+   * of OpenStudio (it wouldn't if we stored that as an absolute path)
+   */
+  void writeLibraryPaths(std::vector<openstudio::path> paths);
+
 
   QProcess* m_measureManagerProcess;
 

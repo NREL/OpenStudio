@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -78,11 +78,16 @@ class MODEL_API EvaporativeCoolerDirectResearchSpecial : public StraightComponen
   /** \deprecated */
   bool setAvailableSchedule(Schedule& schedule);
 
-  /** Returns the value of the CoolerEffectiveness field. **/
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooler Design Effectiveness" **/
+  /** Returns the value of the CoolerDesignEffectiveness field. **/
+  double coolerDesignEffectiveness() const;
+
+  /** Deprecated: In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooler Design Effectiveness" **/
   double coolerEffectiveness() const;
 
-  /** Sets the value of the CoolerEffectiveness field. **/
+  /** Sets the value of the CoolerDesignEffectiveness field. **/
+  bool setCoolerDesignEffectiveness( double value );
+
+  /** Deprecated: In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooler Design Effectiveness" **/
   bool setCoolerEffectiveness( double value );
 
   /** Returns the value of the RecirculatingWaterPumpPowerConsumption field. **/

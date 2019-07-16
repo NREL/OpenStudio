@@ -37,7 +37,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctParallelPIUReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctSeriesPIUReheat.cpp
-  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctUncontrolled.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctInletSideMixer.cpp
@@ -131,6 +131,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateDistrictHeating.cpp
   ForwardTranslator/ForwardTranslateDuct.cpp
   ForwardTranslator/ForwardTranslateElectricEquipment.cpp
+  ForwardTranslator/ForwardTranslateElectricEquipmentITEAirCooled.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterDistribution.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
@@ -274,6 +275,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateScheduleCompact.cpp
   ForwardTranslator/ForwardTranslateScheduleConstant.cpp
   ForwardTranslator/ForwardTranslateScheduleDay.cpp
+  ForwardTranslator/ForwardTranslateScheduleFile.cpp
   ForwardTranslator/ForwardTranslateScheduleFixedInterval.cpp
   ForwardTranslator/ForwardTranslateScheduleRuleset.cpp
   ForwardTranslator/ForwardTranslateScheduleTypeLimits.cpp
@@ -396,7 +398,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateAirLoopHVAC.cpp
   ReverseTranslator/ReverseTranslateAirLoopHVACOutdoorAirSystem.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
-  ReverseTranslator/ReverseTranslateAirTerminalSingleDuctUncontrolled.cpp
+  ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeNoReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVNoReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVReheat.cpp
   ReverseTranslator/ReverseTranslateBuilding.cpp
@@ -478,6 +480,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateScheduleConstant.cpp
   ReverseTranslator/ReverseTranslateScheduleDayHourly.cpp
   ReverseTranslator/ReverseTranslateScheduleDayInterval.cpp
+  ReverseTranslator/ReverseTranslateScheduleFile.cpp
   ReverseTranslator/ReverseTranslateScheduleTypeLimits.cpp
   ReverseTranslator/ReverseTranslateScheduleWeekDaily.cpp
   ReverseTranslator/ReverseTranslateScheduleYear.cpp
@@ -550,17 +553,21 @@ set(${target_name}_test_src
   Test/AvailabilityManagerLowTemperatureTurnOn_GTest.cpp
   Test/AvailabilityManagerLowTemperatureTurnOff_GTest.cpp
   Test/AvailabilityManagerNightCycle_GTest.cpp
+  Test/AvailabilityManagerHybridVentilation_GTest
   Test/Building_GTest.cpp
 
   Test/CentralHeatPumpSystem_GTest.cpp
 
   Test/CoilHeatingGas_GTest.cpp
   Test/CoilCoolingDXMultiSpeed_GTest.cpp
+  Test/CoilWaterHeatingDesuperheater_GTest.cpp
+  Test/CoilHeatingDesuperheater_GTest.cpp
   Test/Construction_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
+  Test/ElectricEquipmentITEAirCooled_GTest.cpp
   Test/ElectricLoadCenterTransformer_GTest.cpp
   Test/EMS_GTest.cpp
   Test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
@@ -568,6 +575,8 @@ set(${target_name}_test_src
   Test/ExteriorFuelEquipment_GTest.cpp
   Test/ExteriorWaterEquipment_GTest.cpp
   Test/ExternalInterfaceFT_GTest.cpp
+  Test/FanConstantVolume_GTest.cpp
+  Test/FanVariableVolume_GTest.cpp
   Test/FuelCell_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
@@ -583,6 +592,7 @@ set(${target_name}_test_src
   Test/People_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp
+  Test/RunPeriod_GTest.cpp
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp

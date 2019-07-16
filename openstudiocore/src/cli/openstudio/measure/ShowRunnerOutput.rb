@@ -1,3 +1,31 @@
+########################################################################################################################
+#  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+#  following conditions are met:
+#
+#  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+#  disclaimer.
+#
+#  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+#  disclaimer in the documentation and/or other materials provided with the distribution.
+#
+#  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+#  derived from this software without specific prior written permission from the respective party.
+#
+#  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+#  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+#  written permission from Alliance for Sustainable Energy, LLC.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+#  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+#  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+#  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+#  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+#  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+########################################################################################################################
 
 def show_output(result)
 
@@ -12,40 +40,44 @@ def show_output(result)
   end
 
   puts '**INITIAL CONDITION**'
-  if result.initialCondition.empty?
+  if result.stepInitialCondition.empty?
     #do nothing
   else
-    puts result.initialCondition.get.logMessage
+    puts result.stepInitialCondition.get
   end
 
   puts '**FINAL CONDITION**'
-  if result.finalCondition.empty?
+  if result.stepFinalCondition.empty?
     #do nothing
   else
-    puts result.finalCondition.get.logMessage
+    puts result.stepFinalCondition.get
   end
 
   puts '**INFO MESSAGES**'
-  result.info.each do |info_msg|
-    puts "#{info_msg.logMessage}"
+  result.stepInfo.each do |info_msg|
+    puts "#{info_msg}"
   end
 
   puts '**WARNING MESSAGES**'
-  result.warnings.each do |info_msg|
-    puts "#{info_msg.logMessage}"
+  result.stepWarnings.each do |info_msg|
+    puts "#{info_msg}"
   end
 
   puts '**ERROR MESSAGES**'
-  result.errors.each do |info_msg|
-    puts "#{info_msg.logMessage}"
+  result.stepErrors.each do |info_msg|
+    puts "#{info_msg}"
   end
 
-  os_version = OpenStudio::VersionString.new(OpenStudio.openStudioVersion())
-  min_version_registerValue = OpenStudio::VersionString.new('1.2.2')
+  puts '***Machine-Readable Attributes**'
+  values = []
+  result.stepValues.each do |value|
+    values << value.string
+  end
+  puts "[\n#{values.join(',').strip}\n]"
 
-  if os_version >= min_version_registerValue
-    puts '***Machine-Readable Attributes**'
-    puts OpenStudio.toJSON(result.attributes) if not result.attributes.empty?
+  puts '***Files Generated**'
+  result.stepFiles.each do |file|
+    puts "#{file}"
   end
 
   puts '' #space between measures for readability in output

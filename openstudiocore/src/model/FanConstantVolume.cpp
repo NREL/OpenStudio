@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,10 +43,14 @@
 #include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
 #include "ZoneHVACUnitHeater.hpp"
 #include "ZoneHVACUnitHeater_Impl.hpp"
+#include "ZoneHVACUnitVentilator.hpp"
+#include "ZoneHVACUnitVentilator_Impl.hpp"
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
@@ -118,12 +122,12 @@ namespace detail {
     return result;
   }
 
-  unsigned FanConstantVolume_Impl::inletPort()
+  unsigned FanConstantVolume_Impl::inletPort() const
   {
     return OS_Fan_ConstantVolumeFields::AirInletNodeName;
   }
 
-  unsigned FanConstantVolume_Impl::outletPort()
+  unsigned FanConstantVolume_Impl::outletPort() const
   {
     return OS_Fan_ConstantVolumeFields::AirOutletNodeName;
   }
@@ -204,25 +208,15 @@ namespace detail {
 
   bool FanConstantVolume_Impl::addToNode(Node & node)
   {
-    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
-    {
-      boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoop->airLoopHVACOutdoorAirSystem();
-      if( airLoop->supplyComponent(node.handle()) || (oaSystem && oaSystem->component(node.handle())) )
-      {
-        unsigned fanCount = airLoop->supplyComponents(IddObjectType::OS_Fan_ConstantVolume).size();
-        fanCount += airLoop->supplyComponents(IddObjectType::OS_Fan_VariableVolume).size();
+    auto oaSystem = node.airLoopHVACOutdoorAirSystem();
+    auto airLoop = node.airLoopHVAC();
 
-        if( oaSystem )
-        {
-          fanCount += subsetCastVector<FanConstantVolume>(oaSystem->components()).size();
-          fanCount += subsetCastVector<FanVariableVolume>(oaSystem->components()).size();
-        }
-
-        if( StraightComponent_Impl::addToNode(node) )
-        {
+    if( (airLoop && airLoop->supplyComponent(node.handle())) || (oaSystem && oaSystem->component(node.handle())) ) {
+      if( StraightComponent_Impl::addToNode(node) ) {
+        if ( airLoop ) {
           SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
-          return true;
         }
+        return true;
       }
     }
 
@@ -308,6 +302,23 @@ namespace detail {
       }
     }
 
+    // AirTerminalSingleDuctSeriesPIUReheat
+
+    std::vector<AirTerminalSingleDuctSeriesPIUReheat> airTerminalSingleDuctSeriesPIUReheatObjects;
+
+    airTerminalSingleDuctSeriesPIUReheatObjects = this->model().getConcreteModelObjects<AirTerminalSingleDuctSeriesPIUReheat>();
+
+    for( const auto & airTerminalSingleDuctSeriesPIUReheatObject : airTerminalSingleDuctSeriesPIUReheatObjects )
+    {
+      if( boost::optional<HVACComponent> fan = airTerminalSingleDuctSeriesPIUReheatObject.fan() )
+      {
+        if( fan->handle() == this->handle() )
+        {
+          return airTerminalSingleDuctSeriesPIUReheatObject;
+        }
+      }
+    }
+
     // AirLoopHVACUnitaryHeatPumpAirToAir
 
     std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs;
@@ -338,9 +349,9 @@ namespace detail {
 
     for( const auto & zoneHVACFourPipeFanCoil : zoneHVACFourPipeFanCoils )
     {
-      if( boost::optional<HVACComponent> coil = zoneHVACFourPipeFanCoil.supplyAirFan() )
+      if( boost::optional<HVACComponent> fan = zoneHVACFourPipeFanCoil.supplyAirFan() )
       {
-        if( coil->handle() == this->handle() )
+        if( fan->handle() == this->handle() )
         {
           return zoneHVACFourPipeFanCoil;
         }
@@ -355,9 +366,9 @@ namespace detail {
 
     for( const auto & zoneHVACPackagedTerminalAirConditioner : zoneHVACPackagedTerminalAirConditioners )
     {
-      if( boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalAirConditioner.supplyAirFan() )
+      if( boost::optional<HVACComponent> fan = zoneHVACPackagedTerminalAirConditioner.supplyAirFan() )
       {
-        if( coil->handle() == this->handle() )
+        if( fan->handle() == this->handle() )
         {
           return zoneHVACPackagedTerminalAirConditioner;
         }
@@ -372,9 +383,9 @@ namespace detail {
 
     for( const auto & zoneHVACPackagedTerminalHeatPump : zoneHVACPackagedTerminalHeatPumps )
     {
-      if( boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalHeatPump.supplyAirFan() )
+      if( boost::optional<HVACComponent> fan = zoneHVACPackagedTerminalHeatPump.supplyAirFan() )
       {
-        if( coil->handle() == this->handle() )
+        if( fan->handle() == this->handle() )
         {
           return zoneHVACPackagedTerminalHeatPump;
         }
@@ -389,9 +400,26 @@ namespace detail {
 
     for( const auto & elem : zoneHVACUnitHeater )
     {
-      if( boost::optional<HVACComponent> coil = elem.supplyAirFan() )
+      if( boost::optional<HVACComponent> fan = elem.supplyAirFan() )
       {
-        if( coil->handle() == this->handle() )
+        if( fan->handle() == this->handle() )
+        {
+          return elem;
+        }
+      }
+    }
+
+    // ZoneHVACUnitVentilator
+
+    std::vector<ZoneHVACUnitVentilator> zoneHVACUnitVentilator;
+
+    zoneHVACUnitVentilator = this->model().getConcreteModelObjects<ZoneHVACUnitVentilator>();
+
+    for( const auto & elem : zoneHVACUnitVentilator )
+    {
+      if( boost::optional<HVACComponent> fan = elem.supplyAirFan() )
+      {
+        if( fan->handle() == this->handle() )
         {
           return elem;
         }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -831,6 +831,8 @@ namespace gbxml {
           result.setAttribute("surfaceType", "InteriorWall");
         } else if (surface.isGroundSurface()){
           result.setAttribute("surfaceType", "UndergroundWall");
+        } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
+          result.setAttribute("surfaceType", "InteriorWall");
         }
       } else if (istringEqual("RoofCeiling", surfaceType)){
         if (istringEqual("Outdoors", outsideBoundaryCondition)){
@@ -839,6 +841,8 @@ namespace gbxml {
           result.setAttribute("surfaceType", "Ceiling");
         } else if (surface.isGroundSurface()){
           result.setAttribute("surfaceType", "UndergroundCeiling");
+        } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
+          result.setAttribute("surfaceType", "InteriorWall");
         }
       } else if (istringEqual("Floor", surfaceType)){
         if (istringEqual("Outdoors", outsideBoundaryCondition)){
@@ -848,6 +852,8 @@ namespace gbxml {
           result.setAttribute("surfaceType", "UndergroundSlab"); // might be SlabOnGrade, check vertices later
         } else if (istringEqual("Surface", outsideBoundaryCondition)){
           result.setAttribute("surfaceType", "InteriorFloor");
+        } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
+          result.setAttribute("surfaceType", "InteriorWall");
         }
       }
     }
@@ -1228,15 +1234,22 @@ namespace gbxml {
     Transformation transformation;
     boost::optional<model::Space> space = shadingSurface.space();
     if (space){
-      transformation = space->siteTransformation();
+      boost::optional<model::ShadingSurfaceGroup> shadingSurfaceGroup = shadingSurface.shadingSurfaceGroup();
+      if (shadingSurfaceGroup) {
+        transformation = shadingSurfaceGroup->siteTransformation();
+      } else {
+        transformation = space->siteTransformation();
+      }
 
       std::string spaceName = space->name().get();
       QDomElement adjacentSpaceIdElement = doc.createElement("AdjacentSpaceId");
       result.appendChild(adjacentSpaceIdElement);
       adjacentSpaceIdElement.setAttribute("spaceIdRef", escapeName(spaceName));
-    } else{
+    } else {
       boost::optional<model::ShadingSurfaceGroup> shadingSurfaceGroup = shadingSurface.shadingSurfaceGroup();
       if (shadingSurfaceGroup){
+        transformation = shadingSurfaceGroup->siteTransformation();
+
         std::string spaceName = shadingSurfaceGroup->name().get();
         QDomElement adjacentSpaceIdElement = doc.createElement("AdjacentSpaceId");
         result.appendChild(adjacentSpaceIdElement);

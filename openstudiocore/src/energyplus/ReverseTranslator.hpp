@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -85,7 +85,7 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateAirTerminalSingleDuctConstantVolumeReheat(const WorkspaceObject& workspaceObject);
 
-  boost::optional<model::ModelObject> translateAirTerminalSingleDuctUncontrolled(const WorkspaceObject& workspaceObject);
+  boost::optional<model::ModelObject> translateAirTerminalSingleDuctConstantVolumeNoReheat(const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translateAirTerminalSingleDuctVAVNoReheat(const WorkspaceObject& workspaceObject);
 
@@ -250,6 +250,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateScheduleDayHourly(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateScheduleDayInterval(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateScheduleFile(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateScheduleTypeLimits(const WorkspaceObject & workspaceObject);
 

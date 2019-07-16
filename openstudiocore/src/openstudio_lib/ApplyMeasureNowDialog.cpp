@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -90,6 +90,7 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   m_showAdvancedOutput(nullptr),
   m_advancedOutput(QString()),
   m_workingDir(openstudio::path()),
+  m_workingFilesDir(openstudio::path()),
   m_advancedOutputDialog(nullptr)
 {
   setWindowTitle("Apply Measure Now");
@@ -105,6 +106,8 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   //m_workingDir = toPath("E:/test/ApplyMeasureNow");
   m_workingDir = openstudio::toPath(app->currentDocument()->modelTempDir()) / openstudio::toPath("ApplyMeasureNow");
 
+  m_workingFilesDir = m_workingDir / openstudio::toPath("WorkingFiles");
+
   // save the model's workflow JSON
   m_modelWorkflowJSON = app->currentModel()->workflowJSON();
 
@@ -119,6 +122,9 @@ ApplyMeasureNowDialog::ApplyMeasureNowDialog(QWidget* parent)
   if (weatherFile){
     m_tempWorkflowJSON.setWeatherFile(*weatherFile);
   }
+
+  // add the WorkingFiles directory as files files path, measures writing output files should be written here
+  m_tempWorkflowJSON.addFilePath(m_workingFilesDir);
 
   // add file paths from current workflow so we can find weather file
   for (const auto& absoluteFilePath : m_modelWorkflowJSON.absoluteFilePaths()){
@@ -314,7 +320,9 @@ void ApplyMeasureNowDialog::displayMeasure()
     m_tempWorkflowJSON.resetMeasurePaths();
     m_tempWorkflowJSON.addMeasurePath(m_bclMeasure->directory().parent_path());
 
-    MeasureStep step(toString(m_bclMeasure->directory().stem()));
+    // Since we set the measure_paths, we only neeed to reference the name of the directory (=last level directory name)
+    // eg: /path/to/measure_folder => measure_folder
+    MeasureStep step(toString( getLastLevelDirectoryName( m_bclMeasure->directory() ) ));
     std::vector<WorkflowStep> steps;
     steps.push_back(step);
     m_tempWorkflowJSON.setWorkflowSteps(steps);
@@ -357,6 +365,8 @@ void ApplyMeasureNowDialog::runMeasure()
   // openstudio::OSAppBase * app = OSAppBase::instance();
 
   removeWorkingDir();
+
+  createWorkingDir();
 
   m_tempWorkflowJSON.save();
 
@@ -454,7 +464,16 @@ void ApplyMeasureNowDialog::displayResults()
 
 void ApplyMeasureNowDialog::removeWorkingDir()
 {
-  removeDirectory(m_workingDir);
+  bool test = removeDirectory(m_workingDir);
+  OS_ASSERT(test);
+}
+
+void ApplyMeasureNowDialog::createWorkingDir() {
+  // DLM: makeParentFolder only makes the parent folder, add '.' to force creation of the parent
+  bool test = makeParentFolder(m_workingDir / toPath("."), path(), true);
+  OS_ASSERT(test);
+  test = makeParentFolder(m_workingFilesDir / toPath("."), path(), true);
+  OS_ASSERT(test);
 }
 
 DataPointJobHeaderView::DataPointJobHeaderView()
@@ -715,7 +734,7 @@ void DataPointJobItemView::update(const BCLMeasure & bclMeasure, const boost::op
     }
 
     std::vector<std::string> infos = result->stepInfo();
-    m_dataPointJobHeaderView->setNumWarnings(infos.size());
+    // m_dataPointJobHeaderView->setNumInfos(infos.size());
     for (const std::string& info : infos){
       m_dataPointJobContentView->addInfoMessage(info);
     }
@@ -790,6 +809,12 @@ void ApplyMeasureNowDialog::on_okButton(bool checked)
 
 void ApplyMeasureNowDialog::requestReload()
 {
+  // copy any files created in m_workingFilesDir
+  std::vector<path> filePaths = m_modelWorkflowJSON.absoluteFilePaths();
+  if (!filePaths.empty()) {
+    copyDirectory(m_workingFilesDir, filePaths[0]);
+  }
+
   // todo: do this in memory without reloading from disk
   OS_ASSERT(m_reloadPath);
   QString fileToLoad = toQString(*m_reloadPath);

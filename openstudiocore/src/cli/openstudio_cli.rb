@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -9,23 +9,24 @@
 #  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
 #  disclaimer.
 #
-#  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-#  following disclaimer in the documentation and/or other materials provided with the distribution.
+#  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+#  disclaimer in the documentation and/or other materials provided with the distribution.
 #
-#  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
-#  products derived from this software without specific prior written permission from the respective party.
+#  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+#  derived from this software without specific prior written permission from the respective party.
 #
-#  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
-#  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
-#  specific prior written permission from Alliance for Sustainable Energy, LLC.
+#  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+#  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+#  written permission from Alliance for Sustainable Energy, LLC.
 #
-#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 #  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
-#  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
-#  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+#  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+#  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+#  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+#  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
 require 'openstudio'
@@ -41,6 +42,7 @@ OpenStudio::Application::instance().application(false)
 require 'logger'
 require 'optparse'
 require 'stringio'
+require 'rbconfig'
 
 #include OpenStudio::Workflow::Util::IO
 
@@ -55,9 +57,21 @@ $logger.level = Logger::WARN
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
+original_arch = nil
+if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
+  # assume that system ruby of 'x64-mingw32' architecture was used to create bundle
+  original_arch = RbConfig::CONFIG['arch']
+  RbConfig::CONFIG['arch'] = 'x64-mingw32'
+end
+
 # load embedded ruby gems
 require 'rubygems'
 require 'rubygems/version'
+Gem::Platform.local
+
+if original_arch
+  RbConfig::CONFIG['arch'] = original_arch
+end
 
 module Gem
 class Specification < BasicSpecification
@@ -380,6 +394,12 @@ def parse_main_args(main_args)
     $logger.info "Setting BUNDLE_GEMFILE to #{gemfile}"
     ENV['BUNDLE_GEMFILE'] = gemfile
     use_bundler = true
+    
+  elsif ENV['BUNDLE_GEMFILE']
+    # no argument but env var is set
+    $logger.info "ENV['BUNDLE_GEMFILE'] set to '#{ENV['BUNDLE_GEMFILE']}'"
+    use_bundler = true
+  
   end  
   
   if main_args.include? '--bundle_path'
@@ -391,6 +411,46 @@ def parse_main_args(main_args)
 
     $logger.info "Setting BUNDLE_PATH to #{bundle_path}"
     ENV['BUNDLE_PATH'] = bundle_path
+  
+  elsif ENV['BUNDLE_PATH']
+    # no argument but env var is set
+    $logger.info "ENV['BUNDLE_PATH'] set to '#{ENV['BUNDLE_PATH']}'"
+  
+  elsif use_bundler
+    # bundle was requested but bundle_path was not provided
+    $logger.warn "Bundle activated but ENV['BUNDLE_PATH'] is not set"
+    
+    $logger.info "Setting BUNDLE_PATH to ':/ruby/2.2.0/'"
+    ENV['BUNDLE_PATH'] = ':/ruby/2.2.0/'
+ 
+  end  
+  
+  if main_args.include? '--bundle_without'
+    option_index = main_args.index '--bundle_without'
+    path_index = option_index + 1
+    bundle_without = main_args[path_index]
+    main_args.slice! path_index
+    main_args.slice! main_args.index '--bundle_without'
+
+    $logger.info "Setting BUNDLE_WITHOUT to #{bundle_without}"
+    ENV['BUNDLE_WITHOUT'] = bundle_without
+  
+  elsif ENV['BUNDLE_WITHOUT']
+    # no argument but env var is set
+    $logger.info "ENV['BUNDLE_WITHOUT'] set to '#{ENV['BUNDLE_WITHOUT']}'"
+  
+  elsif use_bundler
+    # bundle was requested but bundle_path was not provided
+    $logger.warn "Bundle activated but ENV['BUNDLE_WITHOUT'] is not set"
+    
+    # match configuration in build_openstudio_gems
+    $logger.info "Setting BUNDLE_WITHOUT to 'test'"
+    ENV['BUNDLE_WITHOUT'] = 'test'
+    
+    # ignore any local config on disk
+    #DLM: this would be correct if the bundle was created here
+    #it would not be correct if the bundle was transfered from another computer
+    #ENV['BUNDLE_IGNORE_CONFIG'] = 'true'
   end  
   
   Gem.paths.path << ':/ruby/2.2.0/gems/'
@@ -448,6 +508,18 @@ def parse_main_args(main_args)
   
   if use_bundler
   
+    current_dir = Dir.pwd
+    
+    original_arch = nil
+    if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
+      # assume that system ruby of 'x64-mingw32' architecture was used to create bundle
+      original_arch = RbConfig::CONFIG['arch']
+      $logger.info "Temporarily replacing arch '#{original_arch}' with 'x64-mingw32' for Bundle"
+      RbConfig::CONFIG['arch'] = 'x64-mingw32'
+    end
+    
+   
+   
     # require bundler
     # have to do some forward declaration and pre-require to get around autoload cycles
     require 'bundler/errors'
@@ -464,29 +536,53 @@ def parse_main_args(main_args)
     require 'bundler/source'
     require 'bundler/definition'
     require 'bundler/dsl'
+    require 'bundler/uri_credentials_filter'
     require 'bundler'
-
+    
     begin
       # activate bundled gems
       # bundler will look in:
       # 1) ENV["BUNDLE_GEMFILE"]
       # 2) find_file("Gemfile", "gems.rb")
       #require 'bundler/setup'
+      
+      groups = Bundler.definition.groups
+      keep_groups = []
+      without_groups = ENV['BUNDLE_WITHOUT']
+      $logger.info "without_groups = #{without_groups}"
+      groups.each do |g| 
+        $logger.info "g = #{g}"
+        if without_groups.include?(g.to_s)
+          $logger.info "Bundling without group '#{g}'"
+        else
+          keep_groups << g
+        end
+      end
+      
+      $logger.info "Bundling with groups [#{keep_groups.join(',')}]"
+      
+      remaining_specs = []
+      Bundler.definition.specs_for(keep_groups).each {|s| remaining_specs << s.name}
+      
+      $logger.info "Specs to be included [#{remaining_specs.join(',')}]"
+        
+      Bundler.setup(*keep_groups) 
+      #Bundler.require(*keep_groups)
+      
+    #rescue Bundler::BundlerError => e
+    
+      #$logger.info e.backtrace.join("\n")
+      #$logger.error "Bundler #{e.class}: Use `bundle install` to install missing gems"
+      #exit e.status_code
 
-      Bundler.setup
-      #Bundler.require
-    rescue Bundler::BundlerError => e
-      puts "#{e.message}"
-      #puts e.backtrace.join("\n")
-      if e.is_a?(Bundler::GemNotFound)
-        puts "GemNotFound, Run `bundle install` to install missing gems."
-        exit e.status_code
-      elsif e.is_a?(Bundler::ProductionError)
-        puts "ProductionError, Run `bundle install` to install missing gems."
-        exit e.status_code
-      else
-        # no Gemfile,
-      end    
+    ensure
+    
+      if original_arch
+        $logger.info "Restoring arch '#{original_arch}'"
+        RbConfig::CONFIG['arch'] = original_arch
+      end
+    
+      Dir.chdir(current_dir)
     end
 
   else 
@@ -499,42 +595,26 @@ def parse_main_args(main_args)
     #  end
     #end
 
-    # find final set of embedded gems that are also found on disk with equal or higher version but compatible major version
-    final_embedded_gems = original_embedded_gems.clone
-    Gem::Specification.each do |spec|
-      current_embedded_gem = final_embedded_gems[spec.name]
-      
-      # not an embedded gem
-      next if current_embedded_gem.nil?
-      
-      if spec.version > current_embedded_gem.version
-        # only allow higher versions with compatible major version
-        if spec.version.to_s.split('.').first == current_embedded_gem.version.to_s.split('.').first
-          $logger.debug "Found system gem #{spec.name} #{spec.version}, overrides embedded gem"
-          final_embedded_gems[spec.name] = spec
-        end
-      end
-    end
-    
-    # get a list of all the embedded gems and their dependencies 
+    # get a list of all the embedded gems
     dependencies = []
-    final_embedded_gems.each_value do |spec|
-      #$logger.debug "Accumulating dependencies for #{spec.name} #{spec.version}"
-      dependencies << Gem::Dependency.new(spec.name)
-      dependencies.concat(spec.runtime_dependencies)
+    original_embedded_gems.each_value do |spec|
+      $logger.debug "Adding dependency on #{spec.name} '~> #{spec.version}'"
+      dependencies << Gem::Dependency.new(spec.name, "~> #{spec.version}")
     end
-    #dependencies.each {|d| $logger.debug "Found dependency #{d}"}
+    #dependencies.each {|d| $logger.debug "Added dependency #{d}"}
 
     # resolve dependencies
     activation_errors = false
     original_load_path = $:.clone
     resolver = Gem::Resolver.for_current_gems(dependencies)
-    resolver.resolve.each do |request|
+    activation_requests = resolver.resolve
+    $logger.debug "Processing #{activation_requests.size} activation requests"
+    activation_requests.each do |request|
       do_activate = true
       spec = request.spec
 
       # check if this is one of our embedded gems
-      if final_embedded_gems[spec.name]
+      if original_embedded_gems[spec.name]
 
         # check if gem can be loaded from RUBYLIB, this supports developer use case
         original_load_path.each do |lp|
@@ -705,7 +785,7 @@ class CLI
                   '--no-ssl',
                   '-i', '--include',
                   '-e', '--execute',
-                  '--gem_path', '--gem_home', '--bundle', '--bundle_path']
+                  '--gem_path', '--gem_home', '--bundle', '--bundle_path', '--bundle_without']
       command_list.each do |key, data|
         # Skip non-primary commands. These only show up in extended
         # help output.
@@ -727,6 +807,7 @@ class CLI
         o.on('--gem_home DIR', 'Set GEM_HOME environment variable')
         o.on('--bundle GEMFILE', 'Use bundler for GEMFILE')
         o.on('--bundle_path BUNDLE_PATH', 'Use bundler installed gems in BUNDLE_PATH')
+        o.on('--bundle_without WITHOUT_GROUPS', 'Space separated list of groups for bundler to exclude in WITHOUT_GROUPS.  Surround multiple groups with quotes like "test development".')
         o.separator ''
         o.separator 'Common commands:'
 
@@ -1262,7 +1343,12 @@ class Measure
       #end
       
       runner = OpenStudioMeasureTester::Runner.new(directory)
-      runner.run_all(Dir.pwd) 
+      result = runner.run_all(Dir.pwd) 
+      
+      if result != 0
+        $logger.error("Measure tester returned errors")
+        return 1
+      end
     
     elsif options[:start_server]
 

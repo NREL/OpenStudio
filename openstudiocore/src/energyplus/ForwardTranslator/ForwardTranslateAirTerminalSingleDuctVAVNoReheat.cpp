@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -166,13 +166,19 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVN
     idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::ZoneMinimumAirFlowInputMethod,s.get());
   }
 
-  // ConstantMinimumAirFlowFraction
-  value = modelObject.constantMinimumAirFlowFraction();
-  idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction,value.get());
+  // ConstantMinimumAirFlowFraction: autosizable
+  if( modelObject.isConstantMinimumAirFlowFractionAutosized() ) {
+    idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, "Autosize");
+  } else if( (value = modelObject.constantMinimumAirFlowFraction()) ) {
+    idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, value.get());
+  }
 
-  // FixedMinimumAirFlowRate
-  value = modelObject.fixedMinimumAirFlowRate();
-  idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate,value.get());
+  // FixedMinimumAirFlowRate: autosizable
+  if( modelObject.isFixedMinimumAirFlowRateAutosized() ) {
+    idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate, "Autosize");
+  } else if( (value = modelObject.fixedMinimumAirFlowRate()) ) {
+    idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate, value.get());
+  }
 
   // MinimumAirFlowFractionScheduleName
   boost::optional<Schedule> minAirFlowFractionSchedule = modelObject.minimumAirFlowFractionSchedule();

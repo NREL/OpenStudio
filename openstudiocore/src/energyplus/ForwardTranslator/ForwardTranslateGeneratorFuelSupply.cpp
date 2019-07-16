@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -69,92 +69,94 @@ boost::optional<IdfObject> ForwardTranslator::translateGeneratorFuelSupply(Gener
   boost::optional<Node> node;
   boost::optional<Schedule> schedule;
   boost::optional<CurveCubic> curve;
-  std::vector< std::pair<std::string, double> > constituents;
 
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelSupply, modelObject);
+  IdfObject idf_fS = createAndRegisterIdfObject(openstudio::IddObjectType::Generator_FuelSupply, modelObject);
   //Name
   s = modelObject.name();
   if (s) {
-    pcm.setName(*s);
+    idf_fS.setName(*s);
   }
 
   //fuelTemperatureModelingMode
   s = modelObject.fuelTemperatureModelingMode();
   if (s) {
-    pcm.setString(Generator_FuelSupplyFields::FuelTemperatureModelingMode, s.get());
+    idf_fS.setString(Generator_FuelSupplyFields::FuelTemperatureModelingMode, s.get());
   }
 
   //FuelTemperatureReferenceNodeName
   node = modelObject.fuelTemperatureReferenceNode();
   if (node) {
-    pcm.setString(Generator_FuelSupplyFields::FuelTemperatureReferenceNodeName, node.get().nameString());
+    idf_fS.setString(Generator_FuelSupplyFields::FuelTemperatureReferenceNodeName, node.get().nameString());
   }
 
   //FuelTemperatureScheduleName
   schedule = modelObject.fuelTemperatureSchedule();
   if (schedule) {
-    pcm.setString(Generator_FuelSupplyFields::FuelTemperatureScheduleName, schedule.get().nameString());
+    idf_fS.setString(Generator_FuelSupplyFields::FuelTemperatureScheduleName, schedule.get().nameString());
   }
 
   //CompressorPowerMultiplierFunctionofFuelRateCurveName
   curve = modelObject.compressorPowerMultiplierFunctionofFuelRateCurve();
   if (curve) {
-    pcm.setString(Generator_FuelSupplyFields::CompressorPowerMultiplierFunctionofFuelRateCurveName, curve.get().nameString());
+    idf_fS.setString(Generator_FuelSupplyFields::CompressorPowerMultiplierFunctionofFuelRateCurveName, curve.get().nameString());
   }
 
   //CompressorHeatLossFactor
   d = modelObject.compressorHeatLossFactor();
   if (d) {
-    pcm.setDouble(Generator_FuelSupplyFields::CompressorHeatLossFactor, d.get());
+    idf_fS.setDouble(Generator_FuelSupplyFields::CompressorHeatLossFactor, d.get());
   }
 
   //FuelType
   s = modelObject.fuelType();
   if (s) {
-    pcm.setString(Generator_FuelSupplyFields::FuelType, s.get());
+    idf_fS.setString(Generator_FuelSupplyFields::FuelType, s.get());
   }
 
   //LiquidGenericFuelLowerHeatingValue
   d = modelObject.liquidGenericFuelLowerHeatingValue();
   if (d) {
-    pcm.setDouble(Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, d.get());
+    idf_fS.setDouble(Generator_FuelSupplyFields::LiquidGenericFuelLowerHeatingValue, d.get());
   }
 
   //LiquidGenericFuelHigherHeatingValue
   d = modelObject.liquidGenericFuelHigherHeatingValue();
   if (d) {
-    pcm.setDouble(Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, d.get());
+    idf_fS.setDouble(Generator_FuelSupplyFields::LiquidGenericFuelHigherHeatingValue, d.get());
   }
 
   //LiquidGenericFuelMolecularWeight
   d = modelObject.liquidGenericFuelMolecularWeight();
   if (d) {
-    pcm.setDouble(Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, d.get());
+    idf_fS.setDouble(Generator_FuelSupplyFields::LiquidGenericFuelMolecularWeight, d.get());
   }
 
   //LiquidGenericFuelCO2EmissionFactor
   d = modelObject.liquidGenericFuelCO2EmissionFactor();
   if (d) {
-    pcm.setDouble(Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, d.get());
+    idf_fS.setDouble(Generator_FuelSupplyFields::LiquidGenericFuelCO2EmissionFactor, d.get());
   }
 
   //UserDefinedConstituents
-  constituents = modelObject.constituents();
+  std::vector<FuelSupplyConstituent> constituents = modelObject.constituents();
   if (!constituents.empty()) {
-    for (auto constituent : constituents) {
-      auto eg = pcm.pushExtensibleGroup();
-      eg.setString(Generator_FuelSupplyExtensibleFields::ConstituentName, constituent.first);
-      eg.setDouble(Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, constituent.second);
+    // E+ expects the sum of the molar fractions to be 1
+    double sumFractions = modelObject.sumofConstituentsMolarFractions();
+    if ((sumFractions < 0.98) || (sumFractions > 1.02)) {
+      LOG(Warn, "For " << modelObject.briefDescription()
+          << ", the sum of molar fractions of the constituent isn't equal to 1, but " << sumFractions << ".");
+    }
+    for (const FuelSupplyConstituent& constituent : constituents) {
+      auto eg = idf_fS.pushExtensibleGroup();
+      eg.setString(Generator_FuelSupplyExtensibleFields::ConstituentName, constituent.constituentName());
+      eg.setDouble(Generator_FuelSupplyExtensibleFields::ConstituentMolarFraction, constituent.molarFraction());
     }
   }
 
   //NumberofUserDefinedConstituents
-  i = constituents.size();
-  if (i) {
-    pcm.setDouble(Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, i.get());
-  }
+  idf_fS.setInt(Generator_FuelSupplyFields::NumberofConstituentsinGaseousConstituentFuelSupply, constituents.size());
 
-  return pcm;
+  return idf_fS;
 
 }
 

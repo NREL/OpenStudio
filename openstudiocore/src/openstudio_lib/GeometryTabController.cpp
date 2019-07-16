@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,7 +49,7 @@ GeometryTabController::GeometryTabController(bool isIP, const model::Model& mode
   m_model(model),
   m_isIP(isIP)
 {
-  this->mainContentWidget()->addSubTab("Preview", PREVIEW);
+  this->mainContentWidget()->addSubTab("3D View", VIEW);
 
   // DLM: remove once editor is always enabled
   //if (QProcessEnvironment::systemEnvironment().value("OPENSTUDIO_GEOMETRY_EDITOR") == QString("1")){
@@ -79,7 +79,7 @@ void GeometryTabController::setSubTab(int index)
   }
 
   switch (index){
-  case PREVIEW:
+  case VIEW:
   {
     auto previewController = new GeometryPreviewController(m_isIP, m_model);
     //connect(this, &ConstructionsTabController::toggleUnitsClicked, static_cast<ModelSubTabView*>(defaultConstructionSetsController->subTabView()), &ModelSubTabView::toggleUnitsClicked);

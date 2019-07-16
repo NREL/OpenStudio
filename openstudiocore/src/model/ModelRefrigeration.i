@@ -8,6 +8,7 @@
 
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
+%import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
@@ -19,6 +20,14 @@
   #define _csharp_module_name OpenStudioModelRefrigeration
 
 #endif
+
+namespace openstudio {
+  namespace model {
+
+    // forward declarations
+    class RefrigerationSystem;
+  }
+}
 
 MODELOBJECT_TEMPLATES(RefrigerationAirChiller);
 MODELOBJECT_TEMPLATES(RefrigerationCase);

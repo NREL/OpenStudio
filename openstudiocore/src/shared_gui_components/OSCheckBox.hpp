@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,6 +38,10 @@
 #include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include <QPushButton>
 
+// Forward declaration
+class QFocusEvent;
+
+
 namespace openstudio {
 
   class OSCheckBox3 : public QCheckBox, public Nano::Observer {
@@ -48,6 +52,10 @@ namespace openstudio {
     OSCheckBox3(QWidget * parent = nullptr);
 
     virtual ~OSCheckBox3();
+
+    // This method will be called to enable the Checkbox to accept focus
+    // (typically by the OSGridController depending on whether the underlying BaseConcept allows it)
+    void enableClickFocus() { this->setFocusPolicy(Qt::ClickFocus); }
 
     void bind(model::ModelObject & modelObject,
       BoolGetter get,
@@ -63,7 +71,16 @@ namespace openstudio {
 
     void unbind();
 
-    private slots:
+  signals:
+
+    void inFocus(bool inFocus, bool hasData);
+
+  protected:
+    // We override these methods to emit inFocus as appropriate to enable/disable the header button
+    virtual void focusInEvent(QFocusEvent * e) override;
+    virtual void focusOutEvent(QFocusEvent * e) override;
+
+  private slots:
 
     void onToggled(bool checked);
 

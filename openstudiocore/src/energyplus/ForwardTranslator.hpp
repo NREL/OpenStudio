@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -86,7 +86,7 @@ class AirTerminalSingleDuctConstantVolumeFourPipeBeam;
 class AirTerminalSingleDuctConstantVolumeReheat;
 class AirTerminalSingleDuctParallelPIUReheat;
 class AirTerminalSingleDuctSeriesPIUReheat;
-class AirTerminalSingleDuctUncontrolled;
+class AirTerminalSingleDuctConstantVolumeNoReheat;
 class AirTerminalSingleDuctVAVNoReheat;
 class AirTerminalSingleDuctVAVReheat;
 class AirTerminalSingleDuctInletSideMixer;
@@ -182,6 +182,7 @@ class DistrictCooling;
 class DistrictHeating;
 class Duct;
 class ElectricEquipment;
+class ElectricEquipmentITEAirCooled;
 class ElectricLoadCenterDistribution;
 class ElectricLoadCenterInverterLookUpTable;
 class ElectricLoadCenterInverterSimple;
@@ -364,6 +365,7 @@ class SimpleGlazing;
 class ScheduleCompact;
 class ScheduleConstant;
 class ScheduleDay;
+class ScheduleFile;
 class ScheduleFixedInterval;
 class ScheduleRuleset;
 class ScheduleTypeLimits;
@@ -448,7 +450,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "8.9"
+#define ENERGYPLUS_VERSION "9.1"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -594,7 +596,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctSeriesPIUReheat( model::AirTerminalSingleDuctSeriesPIUReheat & modelObject );
 
-  boost::optional<IdfObject> translateAirTerminalSingleDuctUncontrolled( model::AirTerminalSingleDuctUncontrolled & modelObject );
+  boost::optional<IdfObject> translateAirTerminalSingleDuctConstantVolumeNoReheat( model::AirTerminalSingleDuctConstantVolumeNoReheat & modelObject );
 
   boost::optional<IdfObject> translateAirTerminalSingleDuctVAVNoReheat( model::AirTerminalSingleDuctVAVNoReheat & modelObject );
 
@@ -793,6 +795,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateDuct(model::Duct & modelObject);
 
   boost::optional<IdfObject> translateElectricEquipment( model::ElectricEquipment & modelObject );
+
+  boost::optional<IdfObject> translateElectricEquipmentITEAirCooled(model::ElectricEquipmentITEAirCooled & modelObject);
 
   boost::optional<IdfObject> translateElectricLoadCenterDistribution( model::ElectricLoadCenterDistribution & modelObject );
 
@@ -1070,6 +1074,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateScheduleDay( model::ScheduleDay & modelObject );
 
   boost::optional<IdfObject> translateScheduleFixedInterval( model::ScheduleFixedInterval & modelObject );
+
+  boost::optional<IdfObject> translateScheduleFile( model::ScheduleFile & modelObject );
 
   boost::optional<IdfObject> translateScheduleRuleset( model::ScheduleRuleset & modelObject );
 

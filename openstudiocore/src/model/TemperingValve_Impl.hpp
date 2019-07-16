@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -98,11 +98,11 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
-    bool addToNode(Node & node) override;
+    virtual bool addToNode(Node & node) override;
 
     // Set pumpOutletNode, temperatureSetpointNode, and stream2SourceNode to reasonable values if they are not set
     bool setControlNodes();

@@ -55,12 +55,12 @@ endmacro()
 # Add google tests macro
 macro(ADD_GOOGLE_TESTS executable)
   if(MSVC)
-    file(TO_NATIVE_PATH "${QT_LIBRARY_DIR}" QT_LIB_PATH)
-    set(NEWPATH "${QT_LIB_PATH};$ENV{PATH}")
+    file(TO_NATIVE_PATH "${QT_INSTALL_DIR}/bin" QT_BIN_PATH)
+    set(NEWPATH "${QT_BIN_PATH};$ENV{PATH}")
   else()
     set(NEWPATH $ENV{PATH})
   endif()
-
+  
   foreach(source ${ARGN})
     if(NOT "${source}" MATCHES "/moc_.*cxx")
       string(REGEX MATCH .*cpp source "${source}")
@@ -1118,3 +1118,19 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
   # Restore include directories
   set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${_orig_DIRS}")
 endfunction()
+
+# adds custom command to update a resource via configure
+macro(CONFIGURE_FILE_WITH_CHECKSUM INPUT_FILE OUTPUT_FILE)
+  SET(TMP_OUTPUT_FILE "${OUTPUT_FILE}.tmp")
+  
+  if(NOT EXISTS "${OUTPUT_FILE}")
+    configure_file( "${INPUT_FILE}" "${OUTPUT_FILE}" )
+  else()
+    configure_file( "${INPUT_FILE}" "${TMP_OUTPUT_FILE}" )
+    file(MD5 "${OUTPUT_FILE}" EXISTING_HASH)
+    file(MD5 "${TMP_OUTPUT_FILE}" NEW_HASH)
+    if (NOT "${EXISTING_HASH}" MATCHES "${NEW_HASH}")
+      configure_file( "${INPUT_FILE}" "${OUTPUT_FILE}" )
+    endif()
+  endif()
+endmacro()

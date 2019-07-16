@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,10 +32,12 @@
 
 #include <QDir>
 
-#include <iostream>
-#include <string>
+
+#ifdef Q_OS_WIN
 #include <locale>
 #include <codecvt>
+#include "Logger.hpp"
+#endif
 
 namespace openstudio {
 
@@ -128,14 +130,46 @@ path toPath(const char* s)
 path toPath(const std::string& s)
 {
   #ifdef Q_OS_WIN
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>,wchar_t> converter;
+  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+  try {
     std::wstring wstr = converter.from_bytes(s);
     return path(wstr);
+  } catch (std::range_error& e) {
+    // Fallback to basically decoding latin-1
+    // Masking with 0xFF reduces any negative values into the range 0-255.
+    // TODO: another option is to write a codecvt_latin1 class
+    // cf: https://stackoverflow.com/questions/49669048/why-mask-a-char-with-0xff-when-converting-narrow-string-to-wide-string#49669048
+    size_t length = s.length();
+    std::wstring wstr;
+    wstr.reserve(length);
+    for (size_t i = 0; i < length; ++i) {
+      wstr.push_back(s[i] & 0xFF);
+    }
+    LOG_FREE(Debug, "Path", "An error occurred trying to convert the input to a wide string."
+      << "\n  Reason: " << e.what()
+      << "\n  Input =" << s
+      << "\n  Result=" << wstr);
+    return path(wstr);
+  }
   #endif
 
   // else
   return path(s);
 }
+
+#ifdef WIN32
+/** UTF-16 encoded std::wstring for opening fstreams*/
+std::wstring toSystemFilename(const path& p)
+{
+  return p.wstring();
+}
+#else
+/** UTF-8 encoded std::string for opening fstreams*/
+std::string toSystemFilename(const path& p)
+{
+  return p.string();
+}
+#endif
 
 } // openstudio
 

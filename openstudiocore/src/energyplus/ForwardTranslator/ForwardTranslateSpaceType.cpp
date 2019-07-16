@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,6 +56,10 @@
 #include "../../model/ElectricEquipment_Impl.hpp"
 #include "../../model/ElectricEquipmentDefinition.hpp"
 #include "../../model/ElectricEquipmentDefinition_Impl.hpp"
+#include "../../model/ElectricEquipmentITEAirCooled.hpp"
+#include "../../model/ElectricEquipmentITEAirCooled_Impl.hpp"
+#include "../../model/ElectricEquipmentITEAirCooledDefinition.hpp"
+#include "../../model/ElectricEquipmentITEAirCooledDefinition_Impl.hpp"
 #include "../../model/GasEquipment.hpp"
 #include "../../model/GasEquipment_Impl.hpp"
 #include "../../model/GasEquipmentDefinition.hpp"
@@ -153,6 +157,13 @@ boost::optional<IdfObject> ForwardTranslator::translateSpaceType( SpaceType & mo
   std::sort(electricEquipment.begin(), electricEquipment.end(), WorkspaceObjectNameLess());
   for (ElectricEquipment& equipment : electricEquipment){
     translateAndMapModelObject(equipment);
+  }
+
+  // translate IT electric equipment
+  ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = modelObject.electricEquipmentITEAirCooled();
+  std::sort(electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end(), WorkspaceObjectNameLess());
+  for (ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled) {
+    translateAndMapModelObject(iTequipment);
   }
 
   // translate gas equipment

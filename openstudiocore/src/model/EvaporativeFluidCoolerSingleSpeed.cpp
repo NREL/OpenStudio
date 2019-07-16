@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -125,12 +125,12 @@ namespace detail {
     return result;
   }
 
-    unsigned EvaporativeFluidCoolerSingleSpeed_Impl::inletPort()
+    unsigned EvaporativeFluidCoolerSingleSpeed_Impl::inletPort() const
   {
     return OS_EvaporativeFluidCooler_SingleSpeedFields::WaterInletNodeName;
   }
 
-  unsigned EvaporativeFluidCoolerSingleSpeed_Impl::outletPort()
+  unsigned EvaporativeFluidCoolerSingleSpeed_Impl::outletPort() const
   {
     return OS_EvaporativeFluidCooler_SingleSpeedFields::WaterOutletNodeName;
   }
@@ -1003,4 +1003,4 @@ EvaporativeFluidCoolerSingleSpeed::EvaporativeFluidCoolerSingleSpeed(std::shared
   }
 
 } // model
-} // openstudio
+} // openstudio

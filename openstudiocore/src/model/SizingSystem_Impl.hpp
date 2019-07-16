@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -63,6 +63,9 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   virtual IddObjectType iddObjectType() const override;
 
+  virtual bool setParent(ParentObject& newParent) override;
+
+
   std::string typeofLoadtoSizeOn() const;
 
   bool isTypeofLoadtoSizeOnDefaulted() const;
@@ -72,8 +75,6 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
   bool isDesignOutdoorAirFlowRateDefaulted() const;
 
   bool isDesignOutdoorAirFlowRateAutosized() const;
-
-  double minimumSystemAirFlowRatio() const;
 
   double preheatDesignTemperature() const;
 
@@ -175,8 +176,6 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   void autosizeDesignOutdoorAirFlowRate();
 
-  bool setMinimumSystemAirFlowRatio(double minimumSystemAirFlowRatio);
-
   bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
   bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
@@ -271,7 +270,15 @@ class MODEL_API SizingSystem_Impl : public ModelObject_Impl
 
   bool setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC);
 
+
+  boost::optional<double> centralHeatingMaximumSystemAirFlowRatio() const;
+  bool isCentralHeatingMaximumSystemAirFlowRatioAutosized() const;
+  bool setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
+  void autosizeCentralHeatingMaximumSystemAirFlowRatio();
+
   boost::optional<double> autosizedDesignOutdoorAirFlowRate() const ;
+
+  boost::optional<double> autosizedCentralHeatingMaximumSystemAirFlowRatio() const;
 
   boost::optional<double> autosizedCoolingDesignCapacity() const ;
 

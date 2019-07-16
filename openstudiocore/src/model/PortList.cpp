@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -136,7 +136,7 @@ std::vector<openstudio::IdfObject> PortList_Impl::remove()
   return ModelObject_Impl::remove();
 }
 
-unsigned PortList_Impl::port(unsigned portIndex)
+unsigned PortList_Impl::port(unsigned portIndex) const
 {
   unsigned result;
   result = numNonextensibleFields();
@@ -144,7 +144,7 @@ unsigned PortList_Impl::port(unsigned portIndex)
   return result;
 }
 
-unsigned PortList_Impl::portIndex(unsigned port)
+unsigned PortList_Impl::portIndex(unsigned port) const
 {
   unsigned result;
   result = numNonextensibleFields();
@@ -152,12 +152,12 @@ unsigned PortList_Impl::portIndex(unsigned port)
   return result;
 }
 
-unsigned PortList_Impl::nextPort()
+unsigned PortList_Impl::nextPort() const
 {
   return port( nextPortIndex() );
 }
 
-boost::optional<ModelObject> PortList_Impl::modelObject(unsigned portIndex)
+boost::optional<ModelObject> PortList_Impl::modelObject(unsigned portIndex) const
 {
   return connectedObject( port( portIndex ) );
 }
@@ -175,7 +175,7 @@ boost::optional<ModelObject> PortList_Impl::lastModelObject()
   }
 }
 
-std::vector<ModelObject> PortList_Impl::modelObjects()
+std::vector<ModelObject> PortList_Impl::modelObjects() const
 {
   std::vector<ModelObject> result;
   for( int i = 0; i <= int(nextPortIndex()) - 1; i++ )
@@ -203,7 +203,7 @@ unsigned PortList_Impl::newPortAfterIndex(unsigned portIndex)
   return this->port(portIndex++);
 }
 
-unsigned PortList_Impl::portIndexForModelObject( ModelObject & modelObject, bool * ok )
+unsigned PortList_Impl::portIndexForModelObject( ModelObject & modelObject, bool * ok ) const
 {
   for(unsigned i = 0; i < nextPortIndex(); i++)
   {
@@ -217,7 +217,7 @@ unsigned PortList_Impl::portIndexForModelObject( ModelObject & modelObject, bool
   return 0;
 }
 
-unsigned PortList_Impl::nextPortIndex()
+unsigned PortList_Impl::nextPortIndex() const
 {
   unsigned i = 0;
   OptionalModelObject modelObject;
@@ -259,16 +259,29 @@ void PortList_Impl::removePort(unsigned port)
   eraseExtensibleGroup(port - numNonextensibleFields());
 }
 
-unsigned PortList_Impl::airLoopHVACPortIndex()
+std::vector<unsigned> PortList_Impl::airLoopHVACPortIndexes() const
+{
+  std::vector<unsigned> result;
+
+  std::vector<ModelObject> objects = modelObjects();
+  for( const auto & elem : objects ) {
+    if( boost::optional<HVACComponent> hvacComponent = elem.optionalCast<HVACComponent>() ) {
+      if( hvacComponent->airLoopHVAC() ) {
+        result.push_back(portIndexForModelObject(hvacComponent.get()));
+      }
+    }
+  }
+
+  return result;
+}
+
+unsigned PortList_Impl::airLoopHVACPortIndex() const
 {
   std::vector<ModelObject> objects = modelObjects();
 
-  for( const auto & elem : objects )
-  {
-    if( boost::optional<HVACComponent> hvacComponent = elem.optionalCast<HVACComponent>() )
-    {
-      if( hvacComponent->airLoopHVAC() )
-      {
+  for( const auto & elem : objects ) {
+    if( boost::optional<HVACComponent> hvacComponent = elem.optionalCast<HVACComponent>() ) {
+      if( hvacComponent->airLoopHVAC() ) {
         return portIndexForModelObject(hvacComponent.get());
       }
     }
@@ -277,26 +290,50 @@ unsigned PortList_Impl::airLoopHVACPortIndex()
   return nextPortIndex();
 }
 
-unsigned PortList_Impl::airLoopHVACPort()
+unsigned PortList_Impl::airLoopHVACPort() const
 {
   unsigned portIndex = airLoopHVACPortIndex();
 
   return port(portIndex);
 }
 
-boost::optional<ModelObject> PortList_Impl::airLoopHVACModelObject()
+std::vector<unsigned> PortList_Impl::airLoopHVACPorts() const
+{
+  std::vector<unsigned> result;
+
+  auto indexes = airLoopHVACPortIndexes();
+  for ( auto index : indexes ) {
+    result.push_back(port(index));
+  }
+
+  return result;
+}
+
+boost::optional<ModelObject> PortList_Impl::airLoopHVACModelObject() const
 {
   boost::optional<ModelObject> result;
 
   std::vector<ModelObject> objects = modelObjects();
-
-  for( const auto & elem : objects )
-  {
-    if( boost::optional<HVACComponent> hvacComponent = elem.optionalCast<HVACComponent>() )
-    {
-      if( hvacComponent->airLoopHVAC() )
-      {
+  for( const auto & elem : objects ) {
+    if( boost::optional<HVACComponent> hvacComponent = elem.optionalCast<HVACComponent>() ) {
+      if( hvacComponent->airLoopHVAC() ) {
         result = hvacComponent;
+      }
+    }
+  }
+
+  return result;
+}
+
+std::vector<ModelObject> PortList_Impl::airLoopHVACModelObjects() const
+{
+  std::vector<ModelObject> result;
+
+  std::vector<ModelObject> objects = modelObjects();
+  for( const auto & elem : objects ) {
+    if( boost::optional<HVACComponent> hvacComponent = elem.optionalCast<HVACComponent>() ) {
+      if( hvacComponent->airLoopHVAC() ) {
+        result.push_back(hvacComponent.get());
       }
     }
   }
@@ -334,22 +371,22 @@ IddObjectType PortList::iddObjectType() {
   return IddObjectType(IddObjectType::OS_PortList);
 }
 
-unsigned PortList::port(unsigned portIndex)
+unsigned PortList::port(unsigned portIndex) const
 {
   return getImpl<detail::PortList_Impl>()->port(portIndex);
 }
 
-unsigned PortList::portIndex(unsigned port)
+unsigned PortList::portIndex(unsigned port) const
 {
   return getImpl<detail::PortList_Impl>()->portIndex(port);
 }
 
-unsigned PortList::nextPort()
+unsigned PortList::nextPort() const
 {
   return getImpl<detail::PortList_Impl>()->nextPort();
 }
 
-boost::optional<ModelObject> PortList::modelObject(unsigned portIndex)
+boost::optional<ModelObject> PortList::modelObject(unsigned portIndex) const
 {
   return getImpl<detail::PortList_Impl>()->modelObject(portIndex);
 }
@@ -359,17 +396,17 @@ boost::optional<ModelObject> PortList::lastModelObject()
   return getImpl<detail::PortList_Impl>()->lastModelObject();
 }
 
-std::vector<ModelObject> PortList::modelObjects()
+std::vector<ModelObject> PortList::modelObjects() const
 {
   return getImpl<detail::PortList_Impl>()->modelObjects();
 }
 
-unsigned PortList::portIndexForModelObject( ModelObject & modelObject )
+unsigned PortList::portIndexForModelObject( ModelObject & modelObject ) const
 {
   return getImpl<detail::PortList_Impl>()->portIndexForModelObject(modelObject);
 }
 
-unsigned PortList::nextPortIndex()
+unsigned PortList::nextPortIndex() const
 {
   return getImpl<detail::PortList_Impl>()->nextPortIndex();
 }
@@ -379,18 +416,34 @@ ThermalZone PortList::thermalZone() const
   return getImpl<detail::PortList_Impl>()->thermalZone();
 }
 
-unsigned PortList::airLoopHVACPort()
+unsigned PortList::airLoopHVACPort() const
 {
   return getImpl<detail::PortList_Impl>()->airLoopHVACPort();
 }
-unsigned PortList::airLoopHVACPortIndex()
+
+std::vector<unsigned> PortList::airLoopHVACPorts() const
+{
+  return getImpl<detail::PortList_Impl>()->airLoopHVACPorts();
+}
+
+unsigned PortList::airLoopHVACPortIndex() const
 {
   return getImpl<detail::PortList_Impl>()->airLoopHVACPortIndex();
 }
 
-boost::optional<ModelObject> PortList::airLoopHVACModelObject()
+std::vector<unsigned> PortList::airLoopHVACPortIndexes() const
+{
+  return getImpl<detail::PortList_Impl>()->airLoopHVACPortIndexes();
+}
+
+boost::optional<ModelObject> PortList::airLoopHVACModelObject() const
 {
   return getImpl<detail::PortList_Impl>()->airLoopHVACModelObject();
+}
+
+std::vector<ModelObject> PortList::airLoopHVACModelObjects() const
+{
+  return getImpl<detail::PortList_Impl>()->airLoopHVACModelObjects();
 }
 
 /// @cond

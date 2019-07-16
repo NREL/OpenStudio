@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -129,17 +129,17 @@ TEST_F(ModelFixture,CoilHeatingDesuperheater_addToNode) {
   CoilHeatingDesuperheater testObject2(m);
 
   if( boost::optional<Node> OANode = outdoorAirSystem.outboardOANode() ) {
-    EXPECT_FALSE(testObject2.addToNode(*OANode));
+    EXPECT_TRUE(testObject2.addToNode(*OANode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)1, outdoorAirSystem.oaComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.oaComponents().size() );
   }
 
   CoilHeatingDesuperheater testObject3(m);
 
   if( boost::optional<Node> reliefNode = outdoorAirSystem.outboardReliefNode() ) {
-    EXPECT_FALSE(testObject3.addToNode(*reliefNode));
+    EXPECT_TRUE(testObject3.addToNode(*reliefNode));
     EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
-    EXPECT_EQ( (unsigned)1, outdoorAirSystem.reliefComponents().size() );
+    EXPECT_EQ( (unsigned)3, outdoorAirSystem.reliefComponents().size() );
   }
 
   CoilHeatingDesuperheater testObjectClone = testObject.clone(m).cast<CoilHeatingDesuperheater>();

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,6 +42,7 @@ namespace model {
 
 class Facility;
 class OutputMeter;
+class BuildingStory;
 class ShadingSurfaceGroup;
 class Surface;
 class Space;
@@ -91,13 +92,28 @@ class MODEL_API Building : public ParentObject {
 
   boost::optional<double> nominalFloortoCeilingHeight() const;
 
+  /// Returns the standards Template. This is a freeform field used to identify the energy standard template for standards.
+  /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+  /// More information can be found at https://github.com/NREL/openstudio-standards.
+  boost::optional<std::string> standardsTemplate() const;
+
+  /**
+   * Returns a list of suggestions from the openstudio-standards JSON data.
+   * If standardsTemplate is not empty, and not already present in the suggestions,
+   * it is added to the list of suggestion
+   */
+  std::vector<std::string> suggestedStandardsTemplates() const;
+
   /// Returns the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
   /// More information can be found at https://github.com/NREL/openstudio-standards.
   boost::optional<std::string> standardsBuildingType() const;
 
-  /// If standardsBuildingType is empty, returns a list of suggestions.  If standardsBuildingType is not empty,
-  /// returns standardsBuildingType.
+  /**
+   * Returns a list of suggestions from the openstudio-standards JSON data.
+   * If standardsBuildingType is not empty, and not already present in the suggestions,
+   * it is added to the list of suggestion
+   */
   std::vector<std::string> suggestedStandardsBuildingTypes() const;
 
   bool relocatable() const;
@@ -124,6 +140,12 @@ class MODEL_API Building : public ParentObject {
 
   bool setNominalFloortoCeilingHeight(double nominalFloortoCeilingHeight);
   void resetNominalFloortoCeilingHeight();
+
+  /// Sets the standards Template. This is a freeform field used to identify the energy standard template for standards.
+  /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+  /// More information can be found at https://github.com/NREL/openstudio-standards.
+  bool setStandardsTemplate(const std::string& standardsTemplate);
+  void resetStandardsTemplate();
 
   /// Sets the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
@@ -169,6 +191,9 @@ class MODEL_API Building : public ParentObject {
 
   /// Returns all OutputMeter objects at the Building level.
   std::vector<OutputMeter> meters() const;
+
+    /// Returns all \link BuildingStory BuildingStories\endlink objects in the Building
+  std::vector<BuildingStory> buildingStories() const;
 
   /// Returns the parent Facility object if it exists.
   boost::optional<Facility> facility() const;

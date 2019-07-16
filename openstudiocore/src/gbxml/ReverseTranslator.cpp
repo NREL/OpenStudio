@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -86,7 +86,7 @@ namespace gbxml {
   }
 
   ReverseTranslator::ReverseTranslator()
-    : m_lengthMultiplier(1.0)
+    : m_nonBaseMultiplier(1.0), m_lengthMultiplier(1.0)
   {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ReverseTranslator"));
@@ -192,17 +192,21 @@ namespace gbxml {
     // TODO: still need some help with some units
     QString lengthUnit = element.attribute("lengthUnit");
     if (lengthUnit.contains("Kilometers", Qt::CaseInsensitive)){
-      //m_lengthUnit = UnitFactory::instance().createUnit("F").get();
+      m_nonBaseMultiplier = 1000.0;
+      m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }else if (lengthUnit.contains("Centimeters", Qt::CaseInsensitive)){
-      //m_lengthUnit = UnitFactory::instance().createUnit("C").get();
+      m_nonBaseMultiplier = 1.0e-2;
+      m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }else if (lengthUnit.contains("Millimeters", Qt::CaseInsensitive)){
-      //m_lengthUnit = UnitFactory::instance().createUnit("K").get();
+      m_nonBaseMultiplier = 1.0e-3;
+      m_lengthUnit = UnitFactory::instance().createUnit("K").get();
     }else if (lengthUnit.contains("Meters", Qt::CaseInsensitive)){
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }else if (lengthUnit.contains("Miles", Qt::CaseInsensitive)){
       m_lengthUnit = UnitFactory::instance().createUnit("mi").get();
     }else if (lengthUnit.contains("Yards", Qt::CaseInsensitive)){
-      //m_lengthUnit = UnitFactory::instance().createUnit("m").get();
+      m_nonBaseMultiplier = 3.0;
+      m_lengthUnit = UnitFactory::instance().createUnit("ft").get();
     }else if (lengthUnit.contains("Feet", Qt::CaseInsensitive)){
       m_lengthUnit = UnitFactory::instance().createUnit("ft").get();
     }else if (lengthUnit.contains("Inches", Qt::CaseInsensitive)){
@@ -212,7 +216,7 @@ namespace gbxml {
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
     }
 
-    Quantity unitLength(1.0, m_lengthUnit);
+    Quantity unitLength(m_nonBaseMultiplier, m_lengthUnit);
     Unit targetUnit = UnitFactory::instance().createUnit("m").get();
     m_lengthMultiplier = QuantityConverter::instance().convert(unitLength, targetUnit)->value();
 
@@ -671,11 +675,19 @@ namespace gbxml {
         surface.setOutsideBoundaryCondition("Outdoors");
         surface.setSunExposure("SunExposed");
         surface.setWindExposure("WindExposed");
-      }else if (surfaceType.contains("InteriorWall")){
+      }else if (surfaceType.contains("Interior")){
         surface.setOutsideBoundaryCondition("Adiabatic");
         surface.setSunExposure("NoSun");
         surface.setWindExposure("NoWind");
-      }else if (surfaceType.contains("SlabOnGrade")){
+      } else if (surfaceType.contains("Ceiling")) {
+        surface.setOutsideBoundaryCondition("Adiabatic");
+        surface.setSunExposure("NoSun");
+        surface.setWindExposure("NoWind");
+      } else if (surfaceType.contains("SlabOnGrade")) {
+        surface.setOutsideBoundaryCondition("Ground");
+        surface.setSunExposure("NoSun");
+        surface.setWindExposure("NoWind");
+      } else if (surfaceType.contains("Underground")) {
         surface.setOutsideBoundaryCondition("Ground");
         surface.setSunExposure("NoSun");
         surface.setWindExposure("NoWind");
@@ -747,25 +759,165 @@ namespace gbxml {
 
       if (space && adjacentSpaceElements.size() == 2){
 
+        // From the GbXML Schema (v6.01):
+        //
+        // First AdjacentSpaceId entered will determine how the referenced construction layers are ordered with the first construction layer 
+        // being in contact with the outside or 2nd space listed and the last layer in contact with the first space listed. 
+        //
+        // References the ID of a Space that is bounded by this surface. First AdjacentSpaceId entered will determine how the referenced construction 
+        // layers are ordered with the first construction layer being in contact with the outside or 2nd space listed and the last layer in contact with 
+        // the first space listed. The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element, 
+        // is always pointing away from the first AdjacentSpaceID listed.
+        //
+        // With interior horizontal surfaces, this attribute can distinguish between ceiling and floor surfaces to avoid double-counting of floor areas, etc. 
+        // If not present, the surface type can be assumed based on the description of the surface type enums. When the surfaceTypeEnum is provided and the 
+        // surface attributes (i.e. adjacency, tilt angle) do not match the enumeration's description, the enumeration should have precedence.
+
         QString adjacentSpaceId = adjacentSpaceElements.at(1).toElement().attribute("spaceIdRef");
         auto adjacentSpaceIt = m_idToObjectMap.find(adjacentSpaceId);
-        if (adjacentSpaceIt != m_idToObjectMap.end()){
+        if (adjacentSpaceIt != m_idToObjectMap.end()) {
           boost::optional<model::Space> adjacentSpace = adjacentSpaceIt->second.optionalCast<openstudio::model::Space>();
-          if (adjacentSpace){
+          if (adjacentSpace) {
+
             // DLM: we have issues if interior ceilings/floors are mislabeled, override surface type for adjacent surfaces
             // http://code.google.com/p/cbecc/issues/detail?id=471
-            std::string currentSurfaceType = surface.surfaceType();
+
+            // the surfaceType at this point has been set based on the surfaceType attribute of the surface
+            // if there are two spaces, we do not know which copy of the surface should go into which space
+            // in the case of a floor/ceiling pair, this can lead to putting the floor in the bottom space and the ceiling in the top space rather than vice versa
+            // in the case of interior walls, this can lead to incorrect surface normals (e.g. wall with right-pointing normal placed in the right space instead of left)
+            // we can try to use the adjacent space attribute surfaceType to put floors and ceilings in the right space
+            // we cannot ensure that wall normals are handled correctly, that will require a convention that vertices are not reversed in the first space listed or additional attribute
+            std::string gbXMLSurfaceType = surface.surfaceType();
+
+            // we now assign the default surface type based on outward normal
+            // this is needed in case floor vertices (i.e. normal down) are provided for a surface labeled ceiling
             surface.assignDefaultSurfaceType();
-            if (currentSurfaceType != surface.surfaceType()){
-              LOG(Warn, "Changing surface type from '" << currentSurfaceType << "' to '" << surface.surfaceType() << "' for surface '" << surface.name().get() << "'");
+
+            // currentSurfaceType is the surface type assigned by vertices
+            std::string currentSurfaceType = surface.surfaceType();
+
+            // spaceSurfaceType is the surfaceType that should be in the first space
+            QString spaceSurfaceType = adjacentSpaceElements.at(0).toElement().attribute("surfaceType");
+
+            // spaceSurfaceType is the surfaceType that should be in the second space
+            QString adjacentSpaceSurfaceType = adjacentSpaceElements.at(1).toElement().attribute("surfaceType");
+
+            // we will mark figuredOut as true if we are sure of our assignment, otherwise we will log a warning
+            bool figuredOut = false;
+
+            // set reverseConstruction if construction should be applied to the surface created in adjacent space
+            bool reverseConstruction = false;
+            
+            if (spaceSurfaceType.isEmpty() && adjacentSpaceSurfaceType.isEmpty()) {
+              // this is ok but gives us no new information, no warning issued
+
+            } else if (spaceSurfaceType.isEmpty() && !adjacentSpaceSurfaceType.isEmpty()) {
+
+              // if one adjacent space surfaceType is given then the other should be too
+              LOG(Warn, "Only one adjacent surfaceType listed for '" << surface.name().get() << "'");
+
+            } else if (!spaceSurfaceType.isEmpty() && adjacentSpaceSurfaceType.isEmpty()) {
+
+              // if one adjacent surfaceType is given then the other should be too
+              LOG(Warn, "Only one adjacent surfaceType listed for '" << surface.name().get() << "'");
+
+            } else {
+
+              // have both spaceSurfaceType and adjacentSpaceSurfaceType
+
+              if (currentSurfaceType == "RoofCeiling" || currentSurfaceType == "Floor") {
+
+                // both the spaceSurfaceType and adjacentSpaceSurfaceType should be either Ceiling or InteriorFloor
+                if (!((spaceSurfaceType == "InteriorFloor" || spaceSurfaceType == "Ceiling") && (adjacentSpaceSurfaceType == "InteriorFloor" || adjacentSpaceSurfaceType == "Ceiling"))) {
+
+                  // one of the spaces lists this as a wall or some other surfaceType
+                  // we could try to reapply the surfaceType from the gbXML back here, but then we would be in the same problem as before
+                  // at least now we have a surface type that matches the vertex outward normal
+                  LOG(Warn, "Adjacent surfaceTypes '" << toString(spaceSurfaceType) << "' and  '" << toString(adjacentSpaceSurfaceType) << "' listed for '" << surface.name().get() << "' do not match vertices");
+
+                } else if (spaceSurfaceType == adjacentSpaceSurfaceType) {
+
+                  // both spaceSurfaceType and adjacentSpaceSurfaceType are either InteriorFloor or Ceiling, not allowed
+                  LOG(Warn, "Duplicate surfaceType '" << toString(spaceSurfaceType) << "' listed for '" << surface.name().get() << "'");
+
+                } else {
+
+                  if (currentSurfaceType == "Floor") {
+                    // vertices indicate floor, outward normal is down
+                    if (spaceSurfaceType == "InteriorFloor") {
+                      // No changes, floor should go into first space
+                      figuredOut = true;
+                    } else if (spaceSurfaceType == "Ceiling") {
+                      // Swap roles of space and adjacentSpace, floor should go into second space
+                      surface.setSpace(*adjacentSpace);
+                      auto temp = space;
+                      space = adjacentSpace;
+                      adjacentSpace = temp;
+                      figuredOut = true;
+
+                      // Schema says, "The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element, 
+                      // is always pointing away from the first AdjacentSpaceID listed." but this does not match surfaceType in the first AdjacentSpaceID
+                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType '" << toString(spaceSurfaceType) << "' attribute of first AdjacentSpaceID");
+
+                      // construction listed in order for first space which is now the adjacent space
+                      reverseConstruction = true;
+            }
+                  } else if (currentSurfaceType == "RoofCeiling") {
+                    // vertices indicate ceiling, outward normal is up
+                    if (spaceSurfaceType == "Ceiling") {
+                      // No changes, ceiling should go into first space
+                      figuredOut = true;
+                    } else if (spaceSurfaceType == "InteriorFloor") {
+                      // Swap roles of space and adjacentSpace, ceiling should go into second space
+                      surface.setSpace(*adjacentSpace);
+                      auto temp = space;
+                      space = adjacentSpace;
+                      adjacentSpace = temp;
+                      figuredOut = true;
+
+                      // Schema says, "The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element, 
+                      // is always pointing away from the first AdjacentSpaceID listed." but this does not match surfaceType in the first AdjacentSpaceID
+                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType attribute '" << toString(spaceSurfaceType) << "' of first AdjacentSpaceID");
+
+                      // construction listed in order for first space which is now the adjacent space
+                      reverseConstruction = true;
+                    }
+                  }
+                }
+              } else {
+
+                // currentSurfaceType is Wall, we can't be sure it is in correct space (with normal pointing out) but don't issue warning
+                // need to have either 1) convention that vertices are not reversed in first space, 2) some new attribute (e.g. 'reversed=true/false'), or 3) heuristic checking outward normal
+                // if doing a hueristic, best to run at the end after all other geometry is created so you can tell which way is out of the space (all surfaces should point out of the space)
+              }
+            }
+                
+            // if we changed surface type and didn't figure out if that is ok, issue warning
+            if (!figuredOut) {
+              if (currentSurfaceType != gbXMLSurfaceType) {
+                LOG(Warn, "Changing surface type from '" << gbXMLSurfaceType << "' to '" << currentSurfaceType << "' for surface '" << surface.name().get() << "'");
+              }
             }
 
             // clone the surface and sub surfaces and reverse vertices
             boost::optional<openstudio::model::Surface> otherSurface = surface.createAdjacentSurface(*adjacentSpace);
-            if (!otherSurface) {
+            if (otherSurface) {
+              if (reverseConstruction) {
+                boost::optional<openstudio::model::ConstructionBase> construction = surface.construction();
+                if (construction) {
+                  otherSurface->setConstruction(*construction);
+                  surface.resetConstruction(); // will be inherited from the adjacent surface
+                }
+              }
+            }else{
               LOG(Error, "Could not create adjacent surface in adjacent space '" << adjacentSpace->name().get() << "' for surface '" << surface.name().get() << "' in space '" << space->name().get() << "'");
             }
+
+
           }
+        } else {
+          LOG(Error, "Could not find adjacent space '" << adjacentSpaceId.toStdString() << "' for surface '" << surface.name().get() << "'");
         }
       }
     }

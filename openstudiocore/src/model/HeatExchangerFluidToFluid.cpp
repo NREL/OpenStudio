@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -412,22 +412,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned HeatExchangerFluidToFluid_Impl::supplyInletPort()
+  unsigned HeatExchangerFluidToFluid_Impl::supplyInletPort() const
   {
     return OS_HeatExchanger_FluidToFluidFields::LoopSupplySideInletNode;
   }
 
-  unsigned HeatExchangerFluidToFluid_Impl::supplyOutletPort()
+  unsigned HeatExchangerFluidToFluid_Impl::supplyOutletPort() const
   {
     return OS_HeatExchanger_FluidToFluidFields::LoopSupplySideOutletNode;
   }
 
-  unsigned HeatExchangerFluidToFluid_Impl::demandInletPort()
+  unsigned HeatExchangerFluidToFluid_Impl::demandInletPort() const
   {
     return OS_HeatExchanger_FluidToFluidFields::LoopDemandSideInletNode;
   }
 
-  unsigned HeatExchangerFluidToFluid_Impl::demandOutletPort()
+  unsigned HeatExchangerFluidToFluid_Impl::demandOutletPort() const
   {
     return OS_HeatExchanger_FluidToFluidFields::LoopDemandSideOutletNode;
   }

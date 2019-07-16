@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -63,23 +63,23 @@ class MODEL_API PortList_Impl : public ModelObject_Impl {
 
   virtual ~PortList_Impl() {}
 
-  unsigned port(unsigned portIndex);
+  unsigned port(unsigned portIndex) const;
 
-  unsigned portIndex(unsigned port);
+  unsigned portIndex(unsigned port) const;
 
-  unsigned nextPort();
+  unsigned nextPort() const;
 
-  boost::optional<ModelObject> modelObject(unsigned portIndex);
+  boost::optional<ModelObject> modelObject(unsigned portIndex) const;
 
   boost::optional<ModelObject> lastModelObject();
 
-  std::vector<ModelObject> modelObjects();
+  std::vector<ModelObject> modelObjects() const;
 
   unsigned newPortAfterIndex(unsigned portIndex);
 
-  unsigned portIndexForModelObject( ModelObject & modelObject, bool * ok = nullptr );
+  unsigned portIndexForModelObject( ModelObject & modelObject, bool * ok = nullptr ) const;
 
-  unsigned nextPortIndex();
+  unsigned nextPortIndex() const;
 
   void removePort(unsigned port);
 
@@ -91,11 +91,17 @@ class MODEL_API PortList_Impl : public ModelObject_Impl {
 
   std::vector<openstudio::IdfObject> remove() override;
 
-  unsigned airLoopHVACPort();
+  unsigned airLoopHVACPort() const;
 
-  unsigned airLoopHVACPortIndex();
+  std::vector<unsigned> airLoopHVACPorts() const;
 
-  boost::optional<ModelObject> airLoopHVACModelObject();
+  unsigned airLoopHVACPortIndex() const;
+
+  std::vector<unsigned> airLoopHVACPortIndexes() const;
+
+  boost::optional<ModelObject> airLoopHVACModelObject() const;
+
+  std::vector<ModelObject> airLoopHVACModelObjects() const;
 
   // Return the HVACComponent that the port list is associated with.
   HVACComponent hvacComponent() const;

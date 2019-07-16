@@ -1,0 +1,228 @@
+Program Version,Conversion 9.0 => 9.1
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    336   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    341     ,                        !- Outside Boundary Condition Object
+   *************    342     ,                        !- View Factor to Ground
+   *************    343     ,                        !- Shading Control Name
+   *************    344     ,                        !- Frame and Divider Name
+   *************    345     ,                        !- Multiplier
+   *************    346     4,                       !- Number of Vertices
+   *************    347     9.144000,3.048000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    348     9.144000,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    349     9.753600,2.438400,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    350     9.753600,3.048000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~350 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->4.572000<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    352   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    357     ,                        !- Outside Boundary Condition Object
+   *************    358     ,                        !- View Factor to Ground
+   *************    359     ,                        !- Shading Control Name
+   *************    360     ,                        !- Frame and Divider Name
+   *************    361     ,                        !- Multiplier
+   *************    362     4,                       !- Number of Vertices
+   *************    363     8.991600,1.324,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    364     8.991600,1.324,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    365     9.753600,1.724,0.609600,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    366     9.753600,1.724,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~366 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->2.133600<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    368   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    373     ,                        !- Outside Boundary Condition Object
+   *************    374     ,                        !- View Factor to Ground
+   *************    375     ,                        !- Shading Control Name
+   *************    376     ,                        !- Frame and Divider Name
+   *************    377     ,                        !- Multiplier
+   *************    378     4,                       !- Number of Vertices
+   *************    379     2.438400,1.524000,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    380     2.438400,1.524000,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    381     3.200400,1.524000,0.609600,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    382     3.200400,1.524000,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~382 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->2.133600<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    384   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    389     ,                        !- Outside Boundary Condition Object
+   *************    390     ,                        !- View Factor to Ground
+   *************    391     ,                        !- Shading Control Name
+   *************    392     ,                        !- Frame and Divider Name
+   *************    393     ,                        !- Multiplier
+   *************    394     4,                       !- Number of Vertices
+   *************    395     4.6228,1.324,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    396     4.622800,1.324,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    397     5.384800,1.324,0.609600,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    398     5.384800,1.514,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~398 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->2.133600<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    400   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    405     ,                        !- Outside Boundary Condition Object
+   *************    406     ,                        !- View Factor to Ground
+   *************    407     ,                        !- Shading Control Name
+   *************    408     ,                        !- Frame and Divider Name
+   *************    409     ,                        !- Multiplier
+   *************    410     4,                       !- Number of Vertices
+   *************    411     6.807200,1.724,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    412     6.807200,1.724,0.609600,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    413     7.569200,1.724,0.609600,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    414     7.569200,1.724,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~414 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->2.133600<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    416   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    421     ,                        !- Outside Boundary Condition Object
+   *************    422     ,                        !- View Factor to Ground
+   *************    423     ,                        !- Shading Control Name
+   *************    424     ,                        !- Frame and Divider Name
+   *************    425     ,                        !- Multiplier
+   *************    426     4,                       !- Number of Vertices
+   *************    427     4.755340,3.048000,4.772000,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    428     4.755340,2.438400,4.772000,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    429     5.364940,2.438400,4.772000,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    430     5.364940,3.048000,4.772000;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~430 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->4.772000<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    432   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    437     ,                        !- Outside Boundary Condition Object
+   *************    438     ,                        !- View Factor to Ground
+   *************    439     ,                        !- Shading Control Name
+   *************    440     ,                        !- Frame and Divider Name
+   *************    441     ,                        !- Multiplier
+   *************    442     4,                       !- Number of Vertices
+   *************    443     2.561010,3.048000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    444     2.561010,2.438400,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    445     3.170610,2.438400,4.572000,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    446     3.170610,3.048000,4.572000;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~446 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->4.572000<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    448   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    453     ,                        !- Outside Boundary Condition Object
+   *************    454     ,                        !- View Factor to Ground
+   *************    455     ,                        !- Shading Control Name
+   *************    456     ,                        !- Frame and Divider Name
+   *************    457     ,                        !- Multiplier
+   *************    458     4,                       !- Number of Vertices
+   *************    459     6.949670,3.048000,4.372000,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    460     6.949670,2.438400,4.372000,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    461     7.559270,2.438400,4.372000,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    462     7.559270,3.048000,4.372000;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~462 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->4.372000<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    464   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    469     ,                        !- Outside Boundary Condition Object
+   *************    470     ,                        !- View Factor to Ground
+   *************    471     ,                        !- Shading Control Name
+   *************    472     ,                        !- Frame and Divider Name
+   *************    473     ,                        !- Multiplier
+   *************    474     4,                       !- Number of Vertices
+   *************    475     9.144000,3.048000,4.772000,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    476     9.144000,2.438400,4.772000,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    477     9.753600,2.438400,4.372000,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    478     9.753600,3.048000,4.372000;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~478 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->4.372000<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    480   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    485     ,                        !- Outside Boundary Condition Object
+   *************    486     ,                        !- View Factor to Ground
+   *************    487     ,                        !- Shading Control Name
+   *************    488     ,                        !- Frame and Divider Name
+   *************    489     ,                        !- Multiplier
+   *************    490     4,                       !- Number of Vertices
+   *************    491     10.668000,8.839200,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    492     10.668000,8.839200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    493     10.668000,9.753600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    494     10.668000,9.753600,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~494 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->2.133600<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    496   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    501     ,                        !- Outside Boundary Condition Object
+   *************    502     ,                        !- View Factor to Ground
+   *************    503     ,                        !- Shading Control Name
+   *************    504     ,                        !- Frame and Divider Name
+   *************    505     ,                        !- Multiplier
+   *************    506     4,                       !- Number of Vertices
+   *************    507     10.868000,8.839200,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    508     10.468000,8.839200,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    509     10.468000,9.753600,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    510     10.868000,9.753600,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~510 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->2.133600<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    512   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    517     ,                        !- Outside Boundary Condition Object
+   *************    518     ,                        !- View Factor to Ground
+   *************    519     ,                        !- Shading Control Name
+   *************    520     ,                        !- Frame and Divider Name
+   *************    521     ,                        !- Multiplier
+   *************    522     4,                       !- Number of Vertices
+   *************    523     10.668000,2.438400,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    524     10.668000,2.438400,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    525     10.668000,3.352800,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    526     10.668000,3.352800,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~526 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->2.133600<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    528   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    533     ,                        !- Outside Boundary Condition Object
+   *************    534     ,                        !- View Factor to Ground
+   *************    535     ,                        !- Shading Control Name
+   *************    536     ,                        !- Frame and Divider Name
+   *************    537     ,                        !- Multiplier
+   *************    538     4,                       !- Number of Vertices
+   *************    539     10.868000,4.572000,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    540     10.868000,4.572000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    541     10.868000,5.486400,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    542     10.868000,5.486400,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~542 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->2.133600<-
+   ************* IDF Context for following error/warning message:
+   ************* Note -- lines truncated at 300 characters, if necessary...
+   *************    544   FenestrationSurface:Detailed,
+   ************* Only last 10 lines before error line shown.....
+   *************    549     ,                        !- Outside Boundary Condition Object
+   *************    550     ,                        !- View Factor to Ground
+   *************    551     ,                        !- Shading Control Name
+   *************    552     ,                        !- Frame and Divider Name
+   *************    553     ,                        !- Multiplier
+   *************    554     4,                       !- Number of Vertices
+   *************    555     10.468000,6.705600,2.133600,  !- X,Y,Z ==> Vertex 1 {m}
+   *************    556     10.468000,6.705600,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
+   *************    557     10.468000,7.620000,0.000000,  !- X,Y,Z ==> Vertex 3 {m}
+   *************    558     10.468000,7.620000,2.133600;  !- X,Y,Z ==> Vertex 4 {m}
+   ** Severe  ** IP: IDF line~558 Error detected for Object=FenestrationSurface:Detailed
+   **   ~~~   **  Maximum arguments reached for this object, trying to process ->2.133600<-
+   ** Severe  ** Possible incorrect IDD File
+   **   ~~~   ** Possible Invalid Numerics or other problems
+   ************* Conversion Completed Successfully-- 0 Warning; 15 Severe Errors

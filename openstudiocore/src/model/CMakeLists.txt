@@ -184,9 +184,9 @@ set(${target_name}_src
   AirTerminalSingleDuctSeriesPIUReheat.hpp
   AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp
   AirTerminalSingleDuctSeriesPIUReheat.cpp
-  AirTerminalSingleDuctUncontrolled.hpp
-  AirTerminalSingleDuctUncontrolled_Impl.hpp
-  AirTerminalSingleDuctUncontrolled.cpp
+  AirTerminalSingleDuctConstantVolumeNoReheat.hpp
+  AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp
+  AirTerminalSingleDuctConstantVolumeNoReheat.cpp
   AirTerminalSingleDuctVAVNoReheat.hpp
   AirTerminalSingleDuctVAVNoReheat_Impl.hpp
   AirTerminalSingleDuctVAVNoReheat.cpp
@@ -572,6 +572,12 @@ set(${target_name}_src
   ElectricEquipmentDefinition.hpp
   ElectricEquipmentDefinition_Impl.hpp
   ElectricEquipmentDefinition.cpp
+  ElectricEquipmentITEAirCooled.hpp
+  ElectricEquipmentITEAirCooled_Impl.hpp
+  ElectricEquipmentITEAirCooled.cpp
+  ElectricEquipmentITEAirCooledDefinition.hpp
+  ElectricEquipmentITEAirCooledDefinition_Impl.hpp
+  ElectricEquipmentITEAirCooledDefinition.cpp
   ElectricLoadCenterDistribution.hpp
   ElectricLoadCenterDistribution_Impl.hpp
   ElectricLoadCenterDistribution.cpp
@@ -704,6 +710,9 @@ set(${target_name}_src
   ExternalInterfaceVariable.hpp
   ExternalInterfaceVariable_Impl.hpp
   ExternalInterfaceVariable.cpp
+  ExternalFile.hpp
+  ExternalFile_Impl.hpp
+  ExternalFile.cpp
   Facility.hpp
   Facility_Impl.hpp
   Facility.cpp
@@ -1135,6 +1144,9 @@ set(${target_name}_src
   ScheduleDay.hpp
   ScheduleDay_Impl.hpp
   ScheduleDay.cpp
+  ScheduleFile.hpp
+  ScheduleFile_Impl.hpp
+  ScheduleFile.cpp
   ScheduleFixedInterval.hpp
   ScheduleFixedInterval_Impl.hpp
   ScheduleFixedInterval.cpp
@@ -1429,27 +1441,30 @@ set(${target_name}_src
   UtilityBill.hpp
   UtilityBill_Impl.hpp
   UtilityBill.cpp
-  UtilityCost_Charge_Block.hpp
-  UtilityCost_Charge_Block_Impl.hpp
-  UtilityCost_Charge_Block.cpp
-  UtilityCost_Charge_Simple.hpp
-  UtilityCost_Charge_Simple_Impl.hpp
-  UtilityCost_Charge_Simple.cpp
-  UtilityCost_Computation.hpp
-  UtilityCost_Computation_Impl.hpp
-  UtilityCost_Computation.cpp
-  UtilityCost_Qualify.hpp
-  UtilityCost_Qualify_Impl.hpp
-  UtilityCost_Qualify.cpp
-  UtilityCost_Ratchet.hpp
-  UtilityCost_Ratchet_Impl.hpp
-  UtilityCost_Ratchet.cpp
-  UtilityCost_Tariff.hpp
-  UtilityCost_Tariff_Impl.hpp
-  UtilityCost_Tariff.cpp
-  UtilityCost_Variable.hpp
-  UtilityCost_Variable_Impl.hpp
-  UtilityCost_Variable.cpp
+
+  # TODO: once UtilityCost objects are wrapped
+  # UtilityCost_Charge_Block.hpp
+  # UtilityCost_Charge_Block_Impl.hpp
+  # UtilityCost_Charge_Block.cpp
+  # UtilityCost_Charge_Simple.hpp
+  # UtilityCost_Charge_Simple_Impl.hpp
+  # UtilityCost_Charge_Simple.cpp
+  # UtilityCost_Computation.hpp
+  # UtilityCost_Computation_Impl.hpp
+  # UtilityCost_Computation.cpp
+  # UtilityCost_Qualify.hpp
+  # UtilityCost_Qualify_Impl.hpp
+  # UtilityCost_Qualify.cpp
+  # UtilityCost_Ratchet.hpp
+  # UtilityCost_Ratchet_Impl.hpp
+  # UtilityCost_Ratchet.cpp
+  # UtilityCost_Tariff.hpp
+  # UtilityCost_Tariff_Impl.hpp
+  # UtilityCost_Tariff.cpp
+  # UtilityCost_Variable.hpp
+  # UtilityCost_Variable_Impl.hpp
+  # UtilityCost_Variable.cpp
+
   WaterHeaterMixed.hpp
   WaterHeaterMixed_Impl.hpp
   WaterHeaterMixed.cpp
@@ -1581,14 +1596,18 @@ set(${target_name}_src
 set(${target_name}_swig_src
   Model_Common_Include.i
   Model.i
+  ModelAirflow.i
+  ModelAvailabilityManager.i
   ModelCore.i
-  ModelSimulation.i
-  ModelResources.i
+  ModelGenerators.i
   ModelGeometry.i
   ModelHVAC.i
-  ModelAirflow.i
+  ModelPlantEquipmentOperationScheme.i
   ModelRefrigeration.i
-  ModelGenerators.i
+  ModelResources.i
+  ModelSimulation.i
+  ModelStraightComponent.i
+  ModelZoneHVAC.i
 )
 
 qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
@@ -1666,7 +1685,7 @@ set(${target_name}_test_src
   test/AirTerminalSingleDuctConstantVolumeReheat_GTest.cpp
   test/AirTerminalSingleDuctParallelPIUReheat_GTest.cpp
   test/AirTerminalSingleDuctSeriesPIUReheat_GTest.cpp
-  test/AirTerminalSingleDuctUncontrolled_GTest.cpp
+  test/AirTerminalSingleDuctConstantVolumeNoReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVReheat_GTest.cpp
   test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
@@ -1758,6 +1777,7 @@ set(${target_name}_test_src
   test/DistrictHeating_GTest.cpp
   test/Duct_GTest.cpp
   test/ElectricEquipment_GTest.cpp
+  test/ElectricEquipmentITEAirCooled_GTest.cpp
   test/ElectricLoadCenterDistribution_GTest.cpp
   test/ElectricLoadCenterInverterSimple_GTest.cpp
   test/ElectricLoadCenterInverterPVWatts_GTest.cpp
@@ -1845,6 +1865,7 @@ set(${target_name}_test_src
   test/LightingSimulationControl_GTest.cpp
   test/LightingSimulationZone_GTest.cpp
   test/Lights_GTest.cpp
+  test/Loop_GTest.cpp
   test/Luminaire_GTest.cpp
   test/MasslessOpaqueMaterial_GTest.cpp
   test/Material_GTest.cpp
@@ -1997,6 +2018,7 @@ set(${target_name}_test_src
   test/ZoneHVACDehumidifierDX_GTest.cpp
   test/ZoneHVACEnergyRecoveryVentilator_GTest.cpp
   test/ZoneHVACEnergyRecoveryVentilatorController_GTest.cpp
+  test/ZoneHVACEquipmentList_GTest.cpp
   test/ZoneHVACFourPipeFanCoil_GTest.cpp
   test/ZoneHVACHighTemperatureRadiant_GTest.cpp
   test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
@@ -2007,6 +2029,7 @@ set(${target_name}_test_src
   test/ZoneHVACUnitHeater_GTest.cpp
   test/ZoneHVACUnitVentilator_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
+  test/ZoneHVACIdealLoadsAirSystem_GTest.cpp
   test/ZoneMixing_GTest.cpp
   test/ZoneVentilationDesignFlowRate_GTest.cpp
 )
@@ -2033,13 +2056,14 @@ endif()
 
 set(swig_target_name ${target_name}_static)
 
+# Dependency tree: All the SWIG targets depends on the minimum required dependency
 MAKE_SWIG_TARGET(OpenStudioModelCore model "${CMAKE_CURRENT_SOURCE_DIR}/ModelCore.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilities)
 list(APPEND OpenStudioModelSwigs OpenStudioModelCore)
 
 MAKE_SWIG_TARGET(OpenStudioModelSimulation model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSimulation.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelCore)
 list(APPEND OpenStudioModelSwigs OpenStudioModelSimulation)
 
-MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelCore)
+MAKE_SWIG_TARGET(OpenStudioModelResources model "${CMAKE_CURRENT_SOURCE_DIR}/ModelResources.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelSimulation)
 list(APPEND OpenStudioModelSwigs OpenStudioModelResources)
 
 MAKE_SWIG_TARGET(OpenStudioModelGeometry model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGeometry.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelResources)
@@ -2051,25 +2075,28 @@ list(APPEND OpenStudioModelSwigs OpenStudioModelHVAC)
 MAKE_SWIG_TARGET(OpenStudioModelZoneHVAC model "${CMAKE_CURRENT_SOURCE_DIR}/ModelZoneHVAC.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelZoneHVAC)
 
-MAKE_SWIG_TARGET(OpenStudioModelSetpointManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelSetpointManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
-list(APPEND OpenStudioModelSwigs OpenStudioModelSetpointManager)
-
+# Note: really ModelHVAC.i is enough right now, but it's only a matter of time before we actually enable AvailabilityManagers for ZoneHVACComponents (TODO: will need OpenStudioModelZoneHVAC)
 MAKE_SWIG_TARGET(OpenStudioModelAvailabilityManager model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAvailabilityManager.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelAvailabilityManager)
 
+# Minimum: ModelHVAC.i because PlantLoop::plantEquipmentOperationHeatingLoad (+ setters, + cooling version)
 MAKE_SWIG_TARGET(OpenStudioModelPlantEquipmentOperationScheme model "${CMAKE_CURRENT_SOURCE_DIR}/ModelPlantEquipmentOperationScheme.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelPlantEquipmentOperationScheme)
 
-MAKE_SWIG_TARGET(OpenStudioModelStraightComponent model "${CMAKE_CURRENT_SOURCE_DIR}/ModelStraightComponent.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+# Minimum: OpenStudioModelZoneHVAC.i
+MAKE_SWIG_TARGET(OpenStudioModelStraightComponent model "${CMAKE_CURRENT_SOURCE_DIR}/ModelStraightComponent.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelZoneHVAC)
 list(APPEND OpenStudioModelSwigs OpenStudioModelStraightComponent)
 
-MAKE_SWIG_TARGET(OpenStudioModelAirflow model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAirflow.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+# Minimum: needs ModelStraightComponent.i because of Fans
+MAKE_SWIG_TARGET(OpenStudioModelAirflow model "${CMAKE_CURRENT_SOURCE_DIR}/ModelAirflow.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelStraightComponent)
 list(APPEND OpenStudioModelSwigs OpenStudioModelAirflow)
 
-MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelZoneHVAC)
+# Mininum: ModelStraightComponent because RefrigerationCondenserWaterCooled is a StraightComponent
+MAKE_SWIG_TARGET(OpenStudioModelRefrigeration model "${CMAKE_CURRENT_SOURCE_DIR}/ModelRefrigeration.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelStraightComponent)
 list(APPEND OpenStudioModelSwigs OpenStudioModelRefrigeration)
 
-MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelHVAC)
+# Minimum: needs ModelStraightComponent.i because of SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic(+setter)
+MAKE_SWIG_TARGET(OpenStudioModelGenerators model "${CMAKE_CURRENT_SOURCE_DIR}/ModelGenerators.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioModelStraightComponent)
 list(APPEND OpenStudioModelSwigs OpenStudioModelGenerators)
 
 MAKE_SWIG_TARGET(OpenStudioModel model "${CMAKE_CURRENT_SOURCE_DIR}/Model.i" "${${target_name}_swig_src}" ${swig_target_name} "${OpenStudioModelSwigs}")

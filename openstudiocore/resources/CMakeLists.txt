@@ -42,6 +42,7 @@ set(utilities_resources_src
   utilities/Filetypes/USA_CT_New.Haven-Tweed.AP.725045_TMY3.epw
   utilities/Filetypes/TDV_2008_kBtu_CZ13.csv
   utilities/Filetypes/TUN_Tunis.607150_IWEC.epw
+  utilities/Filetypes/leapday-test.epw
   utilities/Filetypes/min.osw
   utilities/Filetypes/full.osw
   utilities/Geometry/floorplan.json
@@ -51,6 +52,7 @@ set(utilities_resources_src
   utilities/Geometry/floorplan-paper.json
   utilities/Geometry/floorplan_school.json
   utilities/Geometry/floorplan_shading.json
+  utilities/Geometry/multistory_shading_rotation.json
   utilities/Geometry/open_to_below.json
   utilities/Geometry/split_level.json
   utilities/Geometry/story_multipliers.json
@@ -94,6 +96,7 @@ set(ENERGYPLUS_OUTPUTS "")
 
 set(model_resources_src
   model/OpenStudio.idd
+  model/schedulefile.csv
 )
 
 
@@ -299,7 +302,10 @@ CREATE_SRC_GROUPS("${ResultsViewer_resources_src}")
 set(ENERGYPLUS_OUTPUTS "")
 
 SET(gbxml_resources_src
+  gbxml/seb.xml
   gbxml/simpleBox_vasari.xml
+  gbxml/TestCube.xml
+  gbxml/TestCubeAlternateUnits.xml
   gbxml/TwoStoryOffice_Trane.xml
   gbxml/ZNETH.xml
 )

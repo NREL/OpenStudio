@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -206,13 +206,17 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** @name Other */
   //@{
 
-  unsigned returnAirPort();
+  // As of OS Version 2.6.1 this method returns the first port on the returnPortList
+  // because multiple return air ports (and AirLoopHVAC instances) are allowed
+  unsigned returnAirPort() const;
 
-  unsigned zoneAirPort();
+  unsigned zoneAirPort() const;
 
-  OptionalModelObject returnAirModelObject();
+  OptionalModelObject returnAirModelObject() const;
 
-  Node zoneAirNode();
+  std::vector<ModelObject> returnAirModelObjects() const;
+
+  Node zoneAirNode() const;
 
   boost::optional<DaylightingControl> primaryDaylightingControl() const;
 
@@ -246,6 +250,8 @@ class MODEL_API ThermalZone : public HVACComponent {
   std::vector<ModelObject> equipment() const;
 
   boost::optional<HVACComponent> airLoopHVACTerminal() const;
+
+  std::vector<HVACComponent> airLoopHVACTerminals() const;
 
   /// returns all spaces in this thermal zone
   std::vector<Space> spaces() const;
@@ -358,6 +364,14 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   bool addToNode(Node & node);
 
+  /** This method is the same as addToNode, except
+   *  existing air loop connections will not be removed.
+   *  This is because EnergyPlus gained the ability to attach multiple air loops.
+   **/
+  bool multiAddToNode(Node & node);
+
+  PortList returnPortList() const;
+
   PortList inletPortList() const;
 
   PortList exhaustPortList() const;
@@ -376,6 +390,10 @@ class MODEL_API ThermalZone : public HVACComponent {
     */
   bool removeEquipment(const ModelObject & equipment);
 
+  std::string loadDistributionScheme() const;
+
+  bool setLoadDistributionScheme(std::string scheme);
+
   /** Set cooling priority of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
@@ -384,13 +402,38 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** Set heating priority of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
-  bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+  bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
 
   /** Return all equipment.  Order is determined by heating priority */
-  std::vector<ModelObject> equipmentInHeatingOrder();
+  std::vector<ModelObject> equipmentInHeatingOrder() const;
 
   /** Return all equipment.  Order is determined by cooling priority */
-  std::vector<ModelObject> equipmentInCoolingOrder();
+  std::vector<ModelObject> equipmentInCoolingOrder() const;
+
+  /** Return the Sequential Cooling Fraction of equipment.
+   *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+
+  /** Return the Sequential Heating Fraction of equipment.
+   *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+
+  /** Set the Sequential Cooling Fraction of equipment.
+   *  Returns false when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+
+  /** Set the Sequential Heating Fraction of equipment.
+   *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
+
 
   /** Return true if the ThermalZone is attached to
   *   an AirLoopHVACSupplyPlenum or AirLoopHVACReturnPlenum
@@ -417,9 +460,17 @@ class MODEL_API ThermalZone : public HVACComponent {
     */
   bool setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex);
 
-  /** Remove any supply plenum serving this zone
+  /** Remove any supply plenum serving this zone,
+   * associated with the AirLoopHVAC returned by
+   * ThermalZone::airLoopHVAC().
   */
   void removeSupplyPlenum();
+
+  /** Remove any supply plenum associated with
+   * the given AirLoopHVAC instance.
+   * This method is important when a zone is connected to multiple AirLoopHVAC instances.
+   */
+  void removeSupplyPlenum(const AirLoopHVAC & airloop);
 
   /** Overload of removeSupplyPlenum()
     * This variation can account for dual duct systems, branchIndex can be 0 or 1
@@ -428,6 +479,15 @@ class MODEL_API ThermalZone : public HVACComponent {
   */
   void removeSupplyPlenum(unsigned branchIndex);
 
+  /** Remove any supply plenum associated with
+   * the given AirLoopHVAC instance, and branchIndex in a dual duct system.
+   *  This method is important when a zone is connected to multiple AirLoopHVAC instances.
+    * This variation can account for dual duct systems, branchIndex can be 0 or 1
+    * indicating which branch of a dual duct system to attach to.
+    * branchIndex 0 corresponds to the branch of demandInletNode(0).
+   */
+  void removeSupplyPlenum(const AirLoopHVAC & airloop, unsigned branchIndex);
+
   /** Establish plenumZone as the return plenum for this ThermalZone.
   *   This ThermalZone must already be attached to AirLoopHVAC.
   *   The plenumZone must not be used as a plenum on another AirLoopHVAC structure.
@@ -435,9 +495,18 @@ class MODEL_API ThermalZone : public HVACComponent {
   */
   bool setReturnPlenum(const ThermalZone & plenumZone);
 
+  /** setReturnPlenum for the specified air loop.
+    * This method is used when there are multiple air loops attached to the zone
+    */
+  bool setReturnPlenum(const ThermalZone & plenumZone, AirLoopHVAC & airLoop);
+
   /** Remove any return plenum serving this zone
   */
   void removeReturnPlenum();
+
+  /** Remove any return plenum serving this zone
+  */
+  void removeReturnPlenum(AirLoopHVAC & airLoop);
 
   /** Returns all ZoneMixing objects associated with this zone, includes supply and exhaust mixing objects */
   std::vector<ZoneMixing> zoneMixing() const;
@@ -453,6 +522,8 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   /** Returns the attached AirflowNetworkZone if there is one */
   boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
+
+  std::vector<AirLoopHVAC> airLoopHVACs() const;
 
   //@}
  protected:

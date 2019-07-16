@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,6 +30,7 @@
 #include <gtest/gtest.h>
 
 #include "ModelFixture.hpp"
+
 #include "../Model.hpp"
 #include "../Model_Impl.hpp"
 #include "../ConstructionWithInternalSource.hpp"
@@ -41,7 +42,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST(ConstructionWithInternalSource, DefaultConstructed)
+TEST_F(ModelFixture, ConstructionWithInternalSource_DefaultConstructed)
 {
   Model model;
 
@@ -54,7 +55,7 @@ TEST(ConstructionWithInternalSource, DefaultConstructed)
   EXPECT_EQ(0.154, construction.tubeSpacing());
 }
 
-TEST(ConstructionWithInternalSource, FromLayers)
+TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers)
 {
   Model model;
 
@@ -148,7 +149,7 @@ TEST(ConstructionWithInternalSource, FromLayers)
   EXPECT_THROW((ConstructionWithInternalSource(layers)), std::exception);
 }
 
-TEST(ConstructionWithInternalSource, ReverseConstructionWithInternalSource_1)
+TEST_F(ModelFixture, ConstructionWithInternalSource_ReverseConstructionWithInternalSource_1)
 {
   Model model;
 
@@ -169,7 +170,7 @@ TEST(ConstructionWithInternalSource, ReverseConstructionWithInternalSource_1)
   EXPECT_EQ(construction.handle(), construction2.handle());
 }
 
-TEST(ConstructionWithInternalSource, ReverseConstructionWithInternalSource_2)
+TEST_F(ModelFixture, ConstructionWithInternalSource_ReverseConstructionWithInternalSource_2)
 {
   Model model;
 

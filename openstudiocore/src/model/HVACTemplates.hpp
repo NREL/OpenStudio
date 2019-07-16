@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,6 +62,9 @@ MODEL_API Loop addSystemType8(Model & model);
 MODEL_API Loop addSystemType9(Model & model);
 
 MODEL_API Loop addSystemType10(Model & model);
+
+/** Add an example Service Hot Water (SHW) Loop */
+MODEL_API Loop addSHWLoop(Model & model);
 
 } // model
 

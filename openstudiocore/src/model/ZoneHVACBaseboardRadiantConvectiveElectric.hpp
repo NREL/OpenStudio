@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -111,7 +111,7 @@ class MODEL_API ZoneHVACBaseboardRadiantConvectiveElectric : public ZoneHVACComp
 
   /** Returns the optional ThermalZone that this ZoneHVACBaseboardRadiantConvectiveElectric is attached to
    **/
-  boost::optional<ThermalZone> thermalZone();
+  boost::optional<ThermalZone> thermalZone() const override;
 
   /** Adds this ZoneHVACBaseboardRadiantConvectiveElectric to the thermal zone.  Returns true if the operation was
    *  successful.

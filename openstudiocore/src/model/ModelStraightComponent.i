@@ -8,14 +8,69 @@
 
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
+%import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+%import <model/ModelZoneHVAC.i>
 
 #if defined SWIGCSHARP
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelStraightComponent
+
+  // ignore airflow objects for now, add back in with partial classes in ModelAirflow.i (swigged after us)
+  // TODO: haven't added them to ModelAirflow.i but I don't see any other that are indeed implemented...
+  %ignore openstudio::model::AirTerminalSingleDuctConstantVolumeReheat::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::AirTerminalSingleDuctConstantVolumeReheat::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::AirTerminalSingleDuctVAVReheat::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::AirTerminalSingleDuctVAVReheat::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilCoolingDXMultiSpeed::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilCoolingDXMultiSpeed::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilCoolingDXSingleSpeed::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilCoolingDXSingleSpeed::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilCoolingDXTwoStageWithHumidityControlMode::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilCoolingDXTwoStageWithHumidityControlMode::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingDesuperheater::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingDesuperheater::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingDXMultiSpeed::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingDXMultiSpeed::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingDXSingleSpeed::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingDXSingleSpeed::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingElectric::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingElectric::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingGas::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingGas::airflowNetworkEquivalentDuct;
+
+  %ignore openstudio::model::FanConstantVolume::getAirflowNetworkFan;
+  %ignore openstudio::model::FanConstantVolume::airflowNetworkFan;
+  %ignore openstudio::model::FanOnOff::getAirflowNetworkFan;
+  %ignore openstudio::model::FanOnOff::airflowNetworkFan;
+  %ignore openstudio::model::FanVariableVolume::getAirflowNetworkFan;
+  %ignore openstudio::model::FanVariableVolume::airflowNetworkFan;
+
+  // ignore generator objects for now, add back in with partial classes in ModelGenerators.i (swigged after us)
+  %ignore openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic;
+  %ignore openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal::setGeneratorPhotovoltaic;
+
 #endif
+
+namespace openstudio {
+  namespace model {
+
+    // forward declarations
+    // For ATUs
+    %feature("valuewrapper") AirflowNetworkEquivalentDuct;
+    // For Fans
+    %feature("valuewrapper") AirflowNetworkFan;
+    // For SolarCollectorFlatPlatePhotovoltaicThermal
+    %feature("valuewrapper") GeneratorPhotovoltaic;
+
+    class AirflowNetworkEquivalentDuct;
+    class AirflowNetworkFan;
+    class GeneratorPhotovoltaic;
+
+  }
+}
 
 %ignore std::vector<openstudio::model::GFunction>::vector(size_type);
 %ignore std::vector<openstudio::model::GFunction>::resize(size_type);
@@ -29,10 +84,11 @@ MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeCooledBeam);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeFourPipeBeam);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeFourPipeInduction);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeReheat);
+// For backward compat, we also provide the old name (AirTerminalSingleDuctUncontrolled) below
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctInletSideMixer);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctParallelPIUReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctSeriesPIUReheat);
-MODELOBJECT_TEMPLATES(AirTerminalSingleDuctUncontrolled);
+MODELOBJECT_TEMPLATES(AirTerminalSingleDuctConstantVolumeNoReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVHeatAndCoolReheat);
 MODELOBJECT_TEMPLATES(AirTerminalSingleDuctVAVNoReheat);
@@ -108,7 +164,7 @@ SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctInletSideMixer,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctParallelPIUReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctSeriesPIUReheat,1);
-SWIG_MODELOBJECT(AirTerminalSingleDuctUncontrolled,1);
+SWIG_MODELOBJECT(AirTerminalSingleDuctConstantVolumeNoReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctVAVHeatAndCoolNoReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctVAVHeatAndCoolReheat,1);
 SWIG_MODELOBJECT(AirTerminalSingleDuctVAVNoReheat,1);
@@ -173,4 +229,48 @@ SWIG_MODELOBJECT(TemperingValve,1);
 SWIG_MODELOBJECT(ThermalStorageIceDetailed,1);
 SWIG_MODELOBJECT(WaterUseConnections,1);
 
+#if defined SWIGRUBY
+
+  // Provide alternative name for backwards compatibility between old=AirTerminalSingleDuctUncontrolled and new=AirTerminalSingleDuctConstantVolumeNoReheat
+  %init %{
+    // Alias class name, which allows instantion of new object
+    rb_eval_string("OpenStudio::Model::AirTerminalSingleDuctUncontrolled = OpenStudio::Model::AirTerminalSingleDuctConstantVolumeNoReheat");
+
+    // Provide get methods
+    rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_AirTerminalSingleDuctUncontrolled) { OpenStudio::Model::toAirTerminalSingleDuctConstantVolumeNoReheat(self); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getAirTerminalSingleDuctUncontrolled) { |handle| OpenStudio::Model::getAirTerminalSingleDuctConstantVolumeNoReheat(self, handle); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getAirTerminalSingleDuctUncontrolleds) { OpenStudio::Model::getAirTerminalSingleDuctConstantVolumeNoReheats(self); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getAirTerminalSingleDuctUncontrolledByName) { |name| OpenStudio::Model::getAirTerminalSingleDuctConstantVolumeNoReheatByName(self, name); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:getAirTerminalSingleDuctUncontrolledsByName) { |name, exactMatch| OpenStudio::Model::getAirTerminalSingleDuctConstantVolumeNoReheatsByName(self, name, exactMatch); } }");
+  %}
+#endif
+
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
+  %inline {
+    namespace openstudio {
+      namespace model {
+        OptionalWaterUseConnections waterUseConnections(const openstudio::model::WaterUseEquipment& weq){
+          return weq.waterUseConnections();
+        }
+      }
+    }
+  }
+#endif
+
+#if defined(SWIGCSHARP)
+  //%pragma(csharp) imclassimports=%{
+  %pragma(csharp) moduleimports=%{
+
+    using System;
+    using System.Runtime.InteropServices;
+
+    public partial class WaterUseEquipment : SpaceLoadInstance
+    {
+      public OptionalWaterUseConnections waterUseConnections() {
+        return OpenStudio.OpenStudioModelStraightComponent.waterUseConnections(this);
+      }
+    }
+
+  %}
+#endif
 #endif

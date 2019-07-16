@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -532,7 +532,7 @@ TEST(Filetypes, WorkflowJSON_Full)
     openstudio::path expectedSeedPath = resourcesPath() / toPath("osversion/1_9_0/example.osm");
     if (!boost::filesystem::exists(expectedSeedPath)){
       boost::filesystem::create_directories(expectedSeedPath.parent_path());
-      std::ofstream outFile(openstudio::toString(expectedSeedPath));
+      std::ofstream outFile(openstudio::toSystemFilename(expectedSeedPath));
       if (outFile) {
         outFile << "OS:Version,\n\
                     {8b3ac8ca-71e7-486e-ac28-74f6e601c3f2}, !- Handle\n\
@@ -937,6 +937,53 @@ TEST(Filetypes, WorkflowStepResult_EscapeCharacters2)
   ASSERT_TRUE(result2->stdErr());
   EXPECT_EQ("\"Standard Error\"", result2->stdErr().get());
 
+}
+
+TEST(Filetypes, WorkflowStepResult_RepeatedKeys) {
+  WorkflowStepResult result;
+
+  result.addStepValue(WorkflowStepValue("key1", 1.1));
+
+  ASSERT_EQ(1u, result.stepValues().size());
+  EXPECT_EQ("key1", result.stepValues()[0].name());
+  EXPECT_EQ(1.1, result.stepValues()[0].valueAsDouble());
+
+  result.addStepValue(WorkflowStepValue("key2", 2.1));
+
+  ASSERT_EQ(2u, result.stepValues().size());
+  EXPECT_EQ("key1", result.stepValues()[0].name());
+  EXPECT_EQ(1.1, result.stepValues()[0].valueAsDouble());
+  EXPECT_EQ("key2", result.stepValues()[1].name());
+  EXPECT_EQ(2.1, result.stepValues()[1].valueAsDouble());
+
+  // adding same key name will remove previous value and add a new one
+  result.addStepValue(WorkflowStepValue("key1", 1.2));
+
+  ASSERT_EQ(2u, result.stepValues().size());
+  EXPECT_EQ("key2", result.stepValues()[0].name());
+  EXPECT_EQ(2.1, result.stepValues()[0].valueAsDouble());
+  EXPECT_EQ("key1", result.stepValues()[1].name());
+  EXPECT_EQ(1.2, result.stepValues()[1].valueAsDouble());
+
+  // adding same key name will remove previous value and add a new one
+  result.addStepValue(WorkflowStepValue("key2", 2.2));
+
+  ASSERT_EQ(2u, result.stepValues().size());
+  EXPECT_EQ("key1", result.stepValues()[0].name());
+  EXPECT_EQ(1.2, result.stepValues()[0].valueAsDouble());
+  EXPECT_EQ("key2", result.stepValues()[1].name());
+  EXPECT_EQ(2.2, result.stepValues()[1].valueAsDouble());
+
+  // key names are case sensitive
+  result.addStepValue(WorkflowStepValue("Key1", 1.3));
+
+  ASSERT_EQ(3u, result.stepValues().size());
+  EXPECT_EQ("key1", result.stepValues()[0].name());
+  EXPECT_EQ(1.2, result.stepValues()[0].valueAsDouble());
+  EXPECT_EQ("key2", result.stepValues()[1].name());
+  EXPECT_EQ(2.2, result.stepValues()[1].valueAsDouble());
+  EXPECT_EQ("Key1", result.stepValues()[2].name());
+  EXPECT_EQ(1.3, result.stepValues()[2].valueAsDouble());
 }
 
 TEST(Filetypes, WorkflowJSON_Setters)

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -122,7 +122,7 @@ void ScriptFolderListView::createEmptyScript(const openstudio::path &t_folder_na
   // Scope for creating and closing file.
   {
     openstudio::filesystem::create_directories(m_rootPath / t_folder_name);
-    std::ofstream ofs(openstudio::toString(filename).c_str());
+    std::ofstream ofs(openstudio::toSystemFilename(filename));
     ofs << "# Empty Script" << std::endl;
   }
 

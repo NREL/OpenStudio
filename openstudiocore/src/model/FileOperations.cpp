@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -338,7 +338,7 @@ QString longPathName(const QString& path)
       }
 
       // Copy all files from existing resources dir into temp dir when opening
-      openstudio::path sourceDir = osmPath.parent_path() / osmPath.stem();
+      openstudio::path sourceDir = getCompanionFolder(osmPath);
       openstudio::path destDir = modelTempDir / toPath("resources");
       if (openstudio::filesystem::exists(sourceDir)){
         LOG_FREE(Debug, "initializeModelTempDir", "Copying '" << toString(sourceDir) << "' to '" << toString(destDir) << "'");
@@ -504,7 +504,8 @@ QString longPathName(const QString& path)
 
       // copy resources
       openstudio::path srcDir = modelTempDir / toPath("resources");
-      openstudio::path dstDir = osmPath.parent_path() / osmPath.stem();
+      // Get the companion directory
+      openstudio::path dstDir = getCompanionFolder(osmPath);
 
       LOG_FREE(Debug, "saveModelTempDir", "Copying " << toString(srcDir) << " to " << toString(dstDir));
 

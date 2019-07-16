@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -148,12 +148,12 @@ namespace detail {
     return result;
   }
 
-  unsigned PumpVariableSpeed_Impl::inletPort()
+  unsigned PumpVariableSpeed_Impl::inletPort() const
   {
     return OS_Pump_VariableSpeedFields::InletNodeName;
   }
 
-  unsigned PumpVariableSpeed_Impl::outletPort()
+  unsigned PumpVariableSpeed_Impl::outletPort() const
   {
     return OS_Pump_VariableSpeedFields::OutletNodeName;
   }
@@ -1174,6 +1174,16 @@ namespace detail {
     return types;
   }
 
+  std::string PumpVariableSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_Pump_VariableSpeedFields::EndUseSubcategory, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool PumpVariableSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_Pump_VariableSpeedFields::EndUseSubcategory, endUseSubcategory);
+  }
+
 } // detail
 
 PumpVariableSpeed::PumpVariableSpeed(const Model& model)
@@ -1188,6 +1198,8 @@ PumpVariableSpeed::PumpVariableSpeed(const Model& model)
   setDesignElectricPowerPerUnitFlowRate(348701.1);
   setDesignShaftPowerPerUnitFlowRatePerUnitHead(1.282051282);
   setDesignMinimumFlowRateFraction(0.0);
+
+  setEndUseSubcategory("General");
 }
 
 IddObjectType PumpVariableSpeed::iddObjectType() {
@@ -1654,6 +1666,14 @@ bool PumpVariableSpeed::setDesignMinimumFlowRateFraction(double designMinimumFlo
   return getImpl<detail::PumpVariableSpeed_Impl>()->setDesignMinimumFlowRateFraction(designMinimumFlowRateFraction);
 }
 
+std::string PumpVariableSpeed::endUseSubcategory() const {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->endUseSubcategory();
+}
+
+bool PumpVariableSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
+}
+
 /// @cond
 PumpVariableSpeed::PumpVariableSpeed(std::shared_ptr<detail::PumpVariableSpeed_Impl> impl)
   : StraightComponent(std::move(impl))
@@ -1670,4 +1690,4 @@ PumpVariableSpeed::PumpVariableSpeed(std::shared_ptr<detail::PumpVariableSpeed_I
   }
 
 } // model
-} // openstudio
+} // openstudio

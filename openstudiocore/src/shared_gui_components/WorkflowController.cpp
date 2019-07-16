@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,7 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Containers.hpp"
 #include "../utilities/core/RubyException.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/filetypes/WorkflowStep_Impl.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
@@ -281,7 +282,9 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
     return;
   }
 
-  MeasureStep measureStep(toString(projectMeasure->directory().stem()));
+  // Since we set the measure_paths, we only neeed to reference the name of the directory (=last level directory name)
+  // eg: /path/to/measure_folder => measure_folder
+  MeasureStep measureStep(toString( getLastLevelDirectoryName( projectMeasure->directory() ) ));
   try{
     std::vector<measure::OSArgument> arguments = m_app->measureManager().getArguments(*projectMeasure);
   } catch ( const RubyException&e ) {
@@ -305,7 +308,6 @@ void MeasureStepController::addItemForDroppedMeasure(QDropEvent *event)
   //  measureStep.setTaxonomy(tags[0]);
   //}
   measureStep.setName(name);
-  //measureStep.setDisplayName(name); // DLM: TODO
   measureStep.setDescription(projectMeasure->description());
   measureStep.setModelerDescription(projectMeasure->modelerDescription());
 
@@ -400,15 +402,17 @@ QString MeasureStepItem::name() const
   return result;
 }
 
-//QString MeasureStepItem::displayName() const
-//{
-//  // DLM: TODO, add display name
-//  QString result;
-//  if (boost::optional<std::string> name = m_step.name()){
-//    return result = QString::fromStdString(*name);
-//  }
-//  return result;
-//}
+QString MeasureStepItem::measureDirectory() const {
+  QString result;
+  // TODO: JM 2019-03-21 Should I ensure that I get just the measure directory NAME and not a path?
+  // Within OS App there's no risk since the measure_dir_name doesn't include "../../" or absolute path
+  // (QFileInfo.fileName)
+  if (boost::optional<std::string> name = m_step.measureDirName()){
+    return result = QString::fromStdString(*name);
+  }
+  return result;
+}
+
 
 MeasureType MeasureStepItem::measureType() const
 {

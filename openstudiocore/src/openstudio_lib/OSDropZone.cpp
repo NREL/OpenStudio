@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,6 +41,9 @@
 
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/Model_Impl.hpp"
+
+#include "../model/Component.hpp"
+#include "../model/ComponentData.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -679,10 +682,36 @@ void OSDropZone2::dropEvent(QDropEvent *event)
 {
   event->accept();
 
+  std::shared_ptr<OSDocument> doc = OSAppBase::instance()->currentDocument();
+
   if((event->proposedAction() == Qt::CopyAction) && m_modelObject && m_set){
 
     OSItemId itemId(event->mimeData());
-    boost::optional<model::ModelObject> modelObject = OSAppBase::instance()->currentDocument()->getModelObject(itemId);
+
+    boost::optional<model::ModelObject> modelObject;
+
+    // component data is only available from BCL components
+    boost::optional<model::Component> component;
+    boost::optional<model::ComponentData> componentData;
+
+    // If what you dragged is from the BCL, then VT it and insert it in model
+    // TODO: should we modify OSDocument::getModelObject instead?
+    // DLM: initially thought so but we also want to keep track of the component data as well
+    if (doc->fromBCL(itemId))
+    {
+      component = doc->getComponent(itemId);
+      if( component ) {
+        if( component->primaryObject().optionalCast<model::ModelObject>() ){
+          componentData = doc->model().insertComponent(*component);
+          if (componentData) {
+            modelObject = componentData->primaryComponentObject();
+          }
+        }
+      }
+    } else {
+      modelObject = doc->getModelObject(itemId);
+    }
+
     m_item = OSItem::makeItem(itemId, OSItemType::ListItem);
     m_item->setParent(this);
 
@@ -693,7 +722,26 @@ void OSDropZone2::dropEvent(QDropEvent *event)
     m_modelObject->getImpl<openstudio::model::detail::ModelObject_Impl>().get()->openstudio::model::detail::ModelObject_Impl::onChange.connect<OSDropZone2, &OSDropZone2::refresh>(this);
 
     if(modelObject){
-      if(OSAppBase::instance()->currentDocument()->fromComponentLibrary(itemId)){
+      if (doc->fromBCL(itemId)) {
+        // model object already cloned above
+        OS_ASSERT(componentData);
+        if (m_set) {
+          bool success = (*m_set)(modelObject.get());
+          if (!success) {
+            std::vector<Handle> handlesToRemove;
+            for (const auto& object: componentData->componentObjects()) {
+              handlesToRemove.push_back(object.handle());
+            }
+            doc->model().removeObjects(handlesToRemove);
+            // removing objects in component will remove component data object via component watcher
+            //componentData->remove();
+            OS_ASSERT(componentData->handle().isNull());
+          }
+        }
+        refresh();
+      }
+      else if (doc->fromComponentLibrary(itemId)) 
+      {
         modelObject = modelObject->clone(m_modelObject->model());
         if (m_set)
         {

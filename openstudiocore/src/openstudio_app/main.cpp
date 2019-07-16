@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -27,6 +27,7 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+// uncomment for Visual Leak Detector
 //#include <vld.h>
 
 #define COMPILING_FROM_OSAPP
@@ -42,6 +43,7 @@
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/String.hpp"
 #include "../utilities/idf/Workspace_Impl.hpp"
+#include "../model/AccessPolicyStore.hpp"
 
 #include <QAbstractButton>
 #include <QApplication>
@@ -57,6 +59,9 @@
 
 #define WSAAPI
 #include "../utilities/core/Path.hpp"
+
+#include <thread>
+#include <chrono>
 
 // OS App is linked to the dynamic plugins
 //Q_IMPORT_PLUGIN(QSQLiteDriverPlugin);
@@ -130,6 +135,19 @@ int main(int argc, char *argv[])
 // DLM: set env var 'QT_FATAL_WARNINGS' to error on qt warnings for debugging
 #if _DEBUG || (__GNUC__ && !NDEBUG)
   bool debugging = true;
+
+  // Give you a chance to attach your debugger to the OS App before it dies out.
+  // Sometimes launching the OSApp via your debugger isn't wanted (eg: it resolves the symlink before actually launching the OSApp)
+  if (qEnvironmentVariableIsSet("OPENSTUDIO_APPLICATION_SLEEP_AT_START") && !qEnvironmentVariableIsEmpty("OPENSTUDIO_APPLICATION_SLEEP_AT_START")) {
+    bool ok;
+    int n_seconds = qEnvironmentVariableIntValue("OPENSTUDIO_APPLICATION_SLEEP_AT_START", &ok);
+    if (!ok) {
+      // If can't convert to int (such as when you pass true), use a default
+      n_seconds = 60;
+    }
+    LOG_FREE(Warn, "OpenStudioApp.main", "Will sleep for " << n_seconds << " seconds now");
+    std::this_thread::sleep_for(std::chrono::seconds(n_seconds));
+  }
 #else
   bool debugging = (qEnvironmentVariableIsSet("OPENSTUDIO_APPLICATION_DEBUG") && !qEnvironmentVariableIsEmpty("OPENSTUDIO_APPLICATION_DEBUG"));
 #endif
@@ -141,6 +159,27 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(qMessageHandler);
     openstudio::Logger::instance().standardOutLogger().setLogLevel(Warn);
   }
+
+  // JM; set this environment variable to log to that path, eg: '/home/julien/OpenStudioApp.log'
+  // Note to *Nix users: don't do it in bash_profile
+  // macOS: see https://stackoverflow.com/questions/25385934/setting-environment-variables-via-launchd-conf-no-longer-works-in-os-x-yosemite
+  // ubuntu: /etc/environment
+  if( qEnvironmentVariableIsSet("OPENSTUDIO_APPLICATION_LOGFILE_PATH") ) {
+    QString logFileQString(qgetenv("OPENSTUDIO_APPLICATION_LOGFILE_PATH"));
+    openstudio::FileLogSink logFile = openstudio::FileLogSink(openstudio::toPath(logFileQString));
+    if( debugging ) {
+      logFile.setLogLevel(Debug);
+    } else {
+      logFile.setLogLevel(Warn);
+    }
+  }
+
+  // Output content of argc/argv
+  LOG_FREE(Debug, "OpenStudioApp.main", "main received argc=" << argc << " arguments")
+  for (int i=0; i < argc; ++i) {
+    LOG_FREE(Debug, "OpenStudioApp.main", "Argument " << i << "=" << argv[i]);
+  }
+
 
   bool cont = true;
   while(cont) {
@@ -174,6 +213,20 @@ int main(int argc, char *argv[])
       qputenv("QTWEBENGINE_REMOTE_DEBUGGING", debugPort.toStdString().c_str());
     }
 
+    // QCoreApplication::setAttribute should really be put here because it's set before we create the App
+    if (!qEnvironmentVariableIsSet("QT_DEVICE_PIXEL_RATIO") &&
+        !qEnvironmentVariableIsSet("QT_AUTO_SCREEN_SCALE_FACTOR") &&
+        !qEnvironmentVariableIsSet("QT_SCALE_FACTOR") &&
+        !qEnvironmentVariableIsSet("QT_SCREEN_SCALE_FACTORS")) {
+        LOG_FREE(Info, "OpenStudioApp.main", "Setting Qt::AA_EnableHighDpiScaling. "
+                    << "Instead, you can also manually set the environment variable 'QT_SCALE_FACTOR'.");
+        QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    }
+
+    // Don't use native menu bar, necessary on Ubuntu 16.04
+    QCoreApplication::setAttribute(Qt::AA_DontUseNativeMenuBar, true);
+    QCoreApplication::setOrganizationDomain("nrel.gov");
+
     openstudio::OpenStudioApp app(argc, argv);
     openstudio::Application::instance().setApplication(&app);
 
@@ -192,7 +245,12 @@ int main(int argc, char *argv[])
 #if !(_DEBUG || (__GNUC__ && !NDEBUG))
     try {
 #endif
-      return app.exec();
+      int result = app.exec();
+
+      // shut down global state
+      openstudio::model::AccessPolicyStore::Instance().clear();
+
+      return result;
 #if !(_DEBUG || (__GNUC__ && !NDEBUG))
     } catch (const std::exception &e) {
       LOG_FREE(Fatal, "OpenStudio", "An unhandled exception has occurred: " << e.what());

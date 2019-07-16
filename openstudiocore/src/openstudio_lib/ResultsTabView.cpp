@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,9 +42,9 @@
 #include <QPushButton>
 #include <QString>
 #include <QRegExp>
-#include <QWebEnginePage>
 #include <QWebEngineSettings>
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 
 namespace openstudio {
 
@@ -59,8 +59,9 @@ ResultsTabView::ResultsTabView(const QString & tabLabel,
 
   auto savePath = OSAppBase::instance()->currentDocument()->savePath();
   if( ! savePath.isEmpty() ) {
-    openstudio::path runPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("run");
-    openstudio::path reportsPath = toPath(savePath).parent_path() / toPath(savePath).stem() / openstudio::toPath("reports");
+    openstudio::path companionFolder = getCompanionFolder( toPath(savePath) );
+    openstudio::path runPath = companionFolder / toPath("run");
+    openstudio::path reportsPath = companionFolder / toPath("reports");
     m_resultsView->searchForExistingResults(runPath, reportsPath);
   }
 }
@@ -117,6 +118,9 @@ ResultsView::ResultsView(QWidget *t_parent)
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::SpatialNavigationEnabled, true);
 
+  m_page = new OSWebEnginePage(this);
+  m_view->setPage(m_page); // note, view does not take ownership of page
+
   connect(m_view, &QWebEngineView::loadFinished, this, &ResultsView::onLoadFinished);
   connect(m_view, &QWebEngineView::loadProgress, this, &ResultsView::onLoadProgress);
   connect(m_view, &QWebEngineView::loadStarted, this, &ResultsView::onLoadStarted);
@@ -136,6 +140,7 @@ ResultsView::ResultsView(QWidget *t_parent)
 ResultsView::~ResultsView()
 {
   delete m_view;
+  delete m_page;
 }
 
 void ResultsView::refreshClicked()
@@ -223,25 +228,31 @@ void ResultsView::searchForExistingResults(const openstudio::path &t_runDir, con
   std::vector<openstudio::path> radout;
   std::vector<openstudio::path> reports;
 
-  for ( openstudio::filesystem::recursive_directory_iterator end, dir(t_runDir);
-        dir != end;
-        ++dir )
-  {
-    openstudio::path p = *dir;
-    if        (openstudio::toString(p.filename()) == "eplusout.sql") {
-      eplusout.push_back(p);
-    } else if (openstudio::toString(p.filename()) == "radout.sql") {
-      radout.push_back(p);
-    } else if (openstudio::toString(p.filename()) == "report.html") {
-      //reports.push_back(p);
-    } else if (openstudio::toString(p.filename()) == "eplustbl.htm") {
-      //reports.push_back(p);
+  // Check that the directory does exists first
+  if (openstudio::filesystem::is_directory(t_runDir) 
+    && openstudio::filesystem::exists(t_runDir)) {
+    for ( openstudio::filesystem::recursive_directory_iterator end, dir(t_runDir);
+          dir != end;
+          ++dir )
+    {
+      openstudio::path p = *dir;
+      if        (openstudio::toString(p.filename()) == "eplusout.sql") {
+        eplusout.push_back(p);
+      } else if (openstudio::toString(p.filename()) == "radout.sql") {
+        radout.push_back(p);
+      } else if (openstudio::toString(p.filename()) == "report.html") {
+        //reports.push_back(p);
+      } else if (openstudio::toString(p.filename()) == "eplustbl.htm") {
+        //reports.push_back(p);
+      }
     }
   }
 
   LOG(Debug, "Looking for existing results in: " << openstudio::toString(t_reportsDir));
 
-  if( openstudio::filesystem::exists(t_reportsDir) ) {
+  // Check that the directory does exists first
+  if (openstudio::filesystem::is_directory(t_reportsDir)
+    && openstudio::filesystem::exists(t_reportsDir)) {
     for ( openstudio::filesystem::directory_iterator end, dir(t_reportsDir);
           dir != end;
           ++dir )

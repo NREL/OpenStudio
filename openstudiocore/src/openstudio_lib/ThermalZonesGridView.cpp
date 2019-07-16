@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,8 @@
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
 #include "../model/Model_Impl.hpp"
+#include "../model/RenderingColor.hpp"
+#include "../model/RenderingColor_Impl.hpp"
 #include "../model/Schedule.hpp"
 #include "../model/Schedule_Impl.hpp"
 #include "../model/SizingZone.hpp"
@@ -75,6 +77,7 @@
 #define SELECTED "All"
 
 //HVAC SYSTEMS
+#define RENDERINGCOLOR "Rendering Color"
 #define IDEALAIRLOADS "Turn On\nIdeal\nAir Loads"
 #define AIRLOOPNAME "Air Loop Name"
 #define ZONEEQUIPMENT "Zone Equipment"
@@ -176,6 +179,7 @@ struct ModelObjectNameSorter{
 
     {
       std::vector<QString> fields;
+      fields.push_back(RENDERINGCOLOR);
       fields.push_back(IDEALAIRLOADS);
       fields.push_back(AIRLOOPNAME);
       fields.push_back(ZONEEQUIPMENT);
@@ -188,37 +192,37 @@ struct ModelObjectNameSorter{
       m_categoriesAndFields.push_back(categoryAndFields);
     }
 
-  {
-    std::vector<QString> fields;
-    fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE);
-    fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO);
-    fields.push_back(ZONECOOLINGSIZINGFACTOR);
-    fields.push_back(COOLINGMINIMUMAIRFLOWPERZONEFLOORAREA);
-    fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE);
-    fields.push_back(COOLINGMINIMUMAIRFLOWFRACTION);
-    fields.push_back(COOLINGDESIGNAIRFLOWMETHOD);
-    fields.push_back(COOLINGDESIGNAIRFLOWRATE);
-    fields.push_back(COOLINGMINIMUMAIRFLOW);
-    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Cooling\nSizing\nParameters"), fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
+    {
+      std::vector<QString> fields;
+      fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE);
+      fields.push_back(ZONECOOLINGDESIGNSUPPLYAIRHUMIDITYRATIO);
+      fields.push_back(ZONECOOLINGSIZINGFACTOR);
+      fields.push_back(COOLINGMINIMUMAIRFLOWPERZONEFLOORAREA);
+      fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINCOOLINGMODE);
+      fields.push_back(COOLINGMINIMUMAIRFLOWFRACTION);
+      fields.push_back(COOLINGDESIGNAIRFLOWMETHOD);
+      fields.push_back(COOLINGDESIGNAIRFLOWRATE);
+      fields.push_back(COOLINGMINIMUMAIRFLOW);
+      std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Cooling\nSizing\nParameters"), fields);
+      m_categoriesAndFields.push_back(categoryAndFields);
+    }
 
-  {
-    std::vector<QString> fields;
-    fields.push_back(ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE);
-    fields.push_back(ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO);
-    fields.push_back(ZONEHEATINGSIZINGFACTOR);
-    fields.push_back(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA);
-    fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE);
-    fields.push_back(HEATINGMAXIMUMAIRFLOWFRACTION);
-    fields.push_back(HEATINGDESIGNAIRFLOWMETHOD);
-    fields.push_back(HEATINGDESIGNAIRFLOWRATE);
-    fields.push_back(HEATINGMAXIMUMAIRFLOW);
-    std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Heating\nSizing\nParameters"), fields);
-    m_categoriesAndFields.push_back(categoryAndFields);
-  }
+    {
+      std::vector<QString> fields;
+      fields.push_back(ZONEHEATINGDESIGNSUPPLYAIRTEMPERATURE);
+      fields.push_back(ZONEHEATINGDESIGNSUPPLYAIRHUMIDITYRATIO);
+      fields.push_back(ZONEHEATINGSIZINGFACTOR);
+      fields.push_back(HEATINGMAXIMUMAIRFLOWPERZONEFLOORAREA);
+      fields.push_back(DESIGNZONEAIRDISTRIBUTIONEFFECTIVENESSINHEATINGMODE);
+      fields.push_back(HEATINGMAXIMUMAIRFLOWFRACTION);
+      fields.push_back(HEATINGDESIGNAIRFLOWMETHOD);
+      fields.push_back(HEATINGDESIGNAIRFLOWRATE);
+      fields.push_back(HEATINGMAXIMUMAIRFLOW);
+      std::pair<QString, std::vector<QString> > categoryAndFields = std::make_pair(QString("Heating\nSizing\nParameters"), fields);
+      m_categoriesAndFields.push_back(categoryAndFields);
+    }
 
-  OSGridController::setCategoriesAndFields();
+    OSGridController::setCategoriesAndFields();
 
   }
 
@@ -231,7 +235,8 @@ struct ModelObjectNameSorter{
 
     Q_FOREACH(QString field, fields){
       if (field == IDEALAIRLOADS){
-        addCheckBoxColumn(Heading(QString(IDEALAIRLOADS), true, false),
+        // We add the "Apply Selected" button to this column by passing 3rd arg, t_showColumnButton=true
+        addCheckBoxColumn(Heading(QString(IDEALAIRLOADS), true, true),
           std::string("Check to enable ideal air loads."),
           NullAdapter(&model::ThermalZone::useIdealAirLoads),
           NullAdapter(&model::ThermalZone::setUseIdealAirLoads));
@@ -243,6 +248,12 @@ struct ModelObjectNameSorter{
         connect(checkbox.data(), &QCheckBox::stateChanged, this->gridView(), &OSGridView::gridRowSelectionChanged);
 
         addSelectColumn(Heading(QString(SELECTED), false, false, checkbox), "Check to select this row");
+      }
+      else if (field == RENDERINGCOLOR){
+        addRenderingColorColumn(Heading(QString(RENDERINGCOLOR), true, false),
+          CastNullAdapter<model::ThermalZone>(&model::ThermalZone::renderingColor),
+          CastNullAdapter<model::ThermalZone>(&model::ThermalZone::setRenderingColor));
+
       }
       else if (field == ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE){
         addQuantityEditColumn(Heading(QString(ZONECOOLINGDESIGNSUPPLYAIRTEMPERATURE)),
@@ -628,7 +639,6 @@ struct ModelObjectNameSorter{
         std::function<boost::optional<model::ModelObject>(model::ThermalZone *)>  getter;
         std::function<bool(model::ThermalZone *, const model::ModelObject &)> setter(
           [](model::ThermalZone *t_z, const model::ModelObject &t_mo) {
-          std::cout << "Setting" << std::endl;
           try {
             if (t_mo.cast<model::ZoneHVACComponent>().thermalZone()) {
               boost::optional<model::ModelObject> clone_mo = t_mo.cast<model::ZoneHVACComponent>().clone(t_mo.model());
@@ -639,7 +649,6 @@ struct ModelObjectNameSorter{
               OS_ASSERT(clone_mo->cast<model::ZoneHVACComponent>().thermalZone());
               return true;
             }
-            std::cout << "Setting 2" << std::endl;
             return t_mo.cast<model::ZoneHVACComponent>().addToThermalZone(*t_z);
           }
           catch (const std::exception &) {
@@ -689,15 +698,25 @@ struct ModelObjectNameSorter{
 
       }
       else if (field == AIRLOOPNAME){
+        std::function<std::vector<model::ModelObject>(const model::ThermalZone &)> airloops(
+          [](model::ThermalZone t) {
+          // we need to pass in a const &, but the function expects non-const, so let's copy the wrapper
+          // object in the param list
+          return subsetCastVector<model::ModelObject>(t.airLoopHVACs());
+        }
+        );
+
         // Notes: this only requires a static_cast because `name` comes from IdfObject
         // we are passing in an empty std::function for the separate parameter because there's no way to set it
         addNameLineEditColumn(Heading(QString(AIRLOOPNAME), true, false),
           false,
           false,
-          ProxyAdapter(static_cast<boost::optional<std::string>(model::AirLoopHVAC::*)(bool) const>(&model::AirLoopHVAC::name),
-          &model::ThermalZone::airLoopHVAC, boost::optional<std::string>("None")),
-          std::function<boost::optional<std::string>(model::HVACComponent*, const std::string &)>(),
-          boost::optional<std::function<void(model::HVACComponent *)>>());
+          CastNullAdapter<model::ModelObject>(&model::ModelObject::name),
+          std::function<boost::optional<std::string>(model::ModelObject*, const std::string &)>(),
+          boost::optional<std::function<void(model::ModelObject *)>>(),
+          // insert DataSourceAdapter
+          DataSource(airloops,true)
+          );
 
       }
       else if (field == MULTIPLIER){

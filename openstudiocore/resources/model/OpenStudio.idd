@@ -1,4 +1,4 @@
-!IDD_Version 2.6.1
+!IDD_Version 2.8.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -1319,6 +1319,7 @@ OS:SizingPeriod:DesignDay,
        \key ZhangHuang
        \key Schedule
        \key ASHRAETau
+       \key ASHRAETau2017
   A9, \field Beam Solar Day Schedule Name
        \note if Solar Model Indicator = Schedule, then beam schedule name (for day)
        \type object-list
@@ -1328,16 +1329,16 @@ OS:SizingPeriod:DesignDay,
        \type object-list
        \object-list DayScheduleNames
   N13, \field ASHRAE Taub
-       \note Required if Solar Model Indicator = ASHRAETau
-       \type real
        \units dimensionless
+       \note Required if Solar Model Indicator = ASHRAETau or ASHRAETau2017
+       \note ASHRAETau2017 solar model can be used with 2013 and 2017 HOF matching taub
        \minimum 0
-       \maximum 1
+       \maximum 1.2
        \default 0
   N14, \field ASHRAE Taud
-       \note Required if Solar Model Indicator = ASHRAETau
-       \type real
        \units dimensionless
+       \note required if solar model indicator = ashraetau or ashraetau2017
+       \note ashraetau2017 solar model can be used with 2013 and 2017 hof matching taud
        \minimum 0
        \maximum 3
        \default 0
@@ -2024,7 +2025,7 @@ OS:BuildingUnit,
        \default Residential
 
 OS:DefaultConstructionSet,
-       \min-fields 11
+       \min-fields 12
   A1, \field Handle
        \type handle
        \required-field
@@ -2056,7 +2057,10 @@ OS:DefaultConstructionSet,
   A10, \field Building Shading Construction Name
        \type object-list
        \object-list ConstructionNames
-  A11; \field Site Shading Construction Name
+  A11, \field Site Shading Construction Name
+       \type object-list
+       \object-list ConstructionNames
+  A12; \field Adiabatic Surface Construction Name
        \type object-list
        \object-list ConstructionNames
 
@@ -2207,12 +2211,17 @@ OS:SpaceType,
   A6, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
-  A7, \field Standards Building Type
+  A7, \field Standards Template
+       \type alpha
+       \note This is a freeform field used to identify the energy standard template for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+  A8, \field Standards Building Type
        \type alpha
        \note This is a freeform field used to identify the building type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
        \note More information can be found at https://github.com/NREL/openstudio-standards.
-  A8; \field Standards Space Type
+  A9; \field Standards Space Type
        \type alpha
        \note This is a freeform field used to identify the space type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
@@ -4003,6 +4012,193 @@ OS:ElectricEquipment:Definition,
        \maximum 1
        \default 0.0
 
+OS:ElectricEquipment:ITE:AirCooled:Definition,
+      \memo This object describes air-cooled electric information technology equipment (ITE) which has
+      \memo variable power consumption as a function of loading and temperature.
+      \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference ElectricEquipmentITEAirCooledDefinitionNames
+       \reference SpaceComponentDefinitionNames
+  A3 , \field Air Flow Calculation Method
+       \note The specified method is used to calculate the IT inlet temperature and zone return
+       \note air temperature. If FlowFromSystem is chosen, the zone is assumed to be well-mixed.
+       \note If FlowControlWithApproachTemperatures is chosen, Supply and Return approach temperature
+       \note should be defined to indicate the temperature difference due to the air distribution. When
+       \note FlowControlWithApproachTemperatures is chosen, the inputs of Air Inlet Connection Type, Design Recirculation Fraction
+       \note and Recirculation Function of Loading and Supply Temperature Curve Name are ignored. For multiple
+       \note ITE objects defined for one zone, the same calculation method should apply.
+       \note The FlowControlWithApproachTemperatures only applies to ITE zones with single duct VAV terminal unit.
+       \note Other return air heat gains from window or lights are not allowed when FlowControlWithApproachTemperatures is chosen.
+       \type choice
+       \key FlowFromSystem
+       \key FlowControlWithApproachTemperatures
+       \default FlowFromSystem
+  A4 , \field Design Power Input Calculation Method
+       \note The entered calculation method is used to specify the design power input
+       \note Watts/Unit => Watts per Unit -- Design Power = Watts per Unit * Number of Units
+       \note Watts/Area => Watts per Zone Floor Area -- Design Power = Watts per Zone Floor Area * Floor Area
+       \type choice
+       \key Watts/Unit
+       \key Watts/Area
+       \default Watts/Unit
+  N1 , \field Watts per Unit
+       \type real
+       \units W
+       \ip-units W
+       \minimum 0
+  N2 , \field Watts per Zone Floor Area
+       \type real
+       \units W/m2
+       \ip-units W/ft2
+       \minimum 0
+  A5 , \field CPU Power Input Function of Loading and Air Temperature Curve Name
+       \note The name of a two-variable curve or table lookup object which modifies the CPU power
+       \note input as a function of CPU loading (x) and air inlet node temperature (y).
+       \note This curve (table) should equal 1.0 at design conditions (CPU loading = 1.0 and
+       \note Design Entering Air Temperature).
+       \note A default curve named “Data Center Servers Power fLoadTemp” is assigned.
+       \type object-list
+       \required-field
+       \object-list BicubicBiquadraticCurves
+       \object-list BiVariateTables
+  N3 , \field Design Fan Power Input Fraction
+       \note The fraction of the total power input at design conditions which is for the cooling fan(s)
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 0.0
+  N4,  \field Design Fan Air Flow Rate per Power Input
+       \note The cooling fan air flow rate per total electric power input at design conditions
+       \type real
+       \required-field
+       \units m3/s-W
+       \ip-units (ft3/min)/(Btu/h)
+       \minimum 0.0
+  A6 , \field Air Flow Function of Loading and Air Temperature Curve Name
+       \note The name of a two-variable curve or table lookup object which modifies the cooling
+       \note air flow rate as a function of CPU loading (x) and air inlet node temperature (y).
+       \note This curve (table) should equal 1.0 at design conditions (CPU loading = 1.0 and
+       \note Design Entering Air Temperature).
+       \note A default curve named “Data Center Servers Power fLoadTemp” is assigned.
+       \type object-list
+       \required-field
+       \object-list BicubicBiquadraticCurves
+       \object-list BiVariateTables
+  A7 , \field Fan Power Input Function of Flow Curve Name
+       \note The name of a single-variable curve or table lookup object which modifies the cooling
+       \note fan power as a function of flow fraction (x).
+       \note This curve (table) should equal 1.0 at a flow fraction of 1.0.
+       \note A default curve named “ECM FanPower fFlow” is assigned.
+       \type object-list
+       \required-field
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
+  N5,  \field Design Entering Air Temperature
+       \note The entering air temperature at design conditions.
+       \type real
+       \units C
+       \ip-units F
+       \default 15.0
+  A8, \field Environmental Class
+       \note Specifies the allowable operating conditions for the air inlet conditions.
+       \note Used for reporting time outside allowable conditions.
+       \type choice
+       \key None
+       \key A1
+       \key A2
+       \key A3
+       \key A4
+       \key B
+       \key C
+       \default None
+  A9, \field Air Inlet Connection Type
+       \note Specifies the type of connection between the zone and the ITE air inlet node.
+       \note AdjustedSupply = ITE inlet temperature will be the current Supply Air Node temperature
+       \note adjusted by the current recirculation fraction.
+       \note All heat output is added to the zone air heat balance as a convective gain.
+       \note ZoneAirNode = ITE air inlet condition is  the average zone condition.
+       \note All heat output is added to the zone air heat balance as a convective gain.
+       \note RoomAirModel = ITE air inlet and outlet are connected to room air model nodes.
+       \note This field is only used when Air Flow Calculation Method is FlowFromSystem.
+       \type choice
+       \key AdjustedSupply
+       \key ZoneAirNode
+       \default AdjustedSupply
+  N6,  \field Design Recirculation Fraction
+       \note The recirculation fraction for this equipment at design conditions. This field is used only
+       \note if the Air Node Connection Type = AdjustedSupply. The default is 0.0 (no recirculation).
+       \note This field is only used when Air Flow Calculation Method is FlowFromSystem.
+       \type real
+       \minimum 0.0
+       \maximum 0.5
+       \default 0.0
+  A10, \field Recirculation Function of Loading and Supply Temperature Curve Name
+       \note The name of a two-variable curve or table lookup object which modifies the recirculation
+       \note fractionas a function of CPU loading (x) and supply air node temperature (y).
+       \note This curve (table) should equal 1.0 at design conditions (CPU loading = 1.0 and
+       \note Design Entering Air Temperature).This field is used only if the
+       \note Air Node Connection Type = AdjustedSupply. If this curve is left blank, then the curve
+       \note is assumed to always equal 1.0.
+       \note This field is only used when Air Flow Calculation Method is FlowFromSystem.
+       \type object-list
+       \object-list BicubicBiquadraticCurves
+       \object-list BiVariateTables
+  N7 , \field Design Electric Power Supply Efficiency
+       \note The efficiency of the power supply system serving this ITE
+       \type real
+       \minimum> 0.0
+       \maximum 1.0
+       \default 1.0
+  A11, \field Electric Power Supply Efficiency Function of Part Load Ratio Curve Name
+       \note The name of a single-variable curve or table lookup object which modifies the electric
+       \note power supply efficiency as a function of part-load ratio (x).
+       \note This curve (table) should equal 1.0 at full load (PLR = 1.0).
+       \note If this curve is left blank, then the curve is assumed to always equal 1.0.
+       \type object-list
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
+  N8 , \field Fraction of Electric Power Supply Losses to Zone
+       \note Fraction of the electric power supply losses which are a heat gain to the zone
+       \note If this field is <1.0, the remainder of the losses are assumed to be lost to the outdoors.
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 1.0
+  N9, \field Supply Temperature Difference
+       \note The difference of the IT inlet temperature from the AHU supply air temperature.
+       \note Either Supply Temperature Difference or Supply Temperature Difference Schedule is required if Air Flow Calculation Method is set to FlowControlWithApproachTemperatures.
+       \note This field is ignored when Air Flow Calculation Method is FlowFromSystem.
+       \type real
+       \units deltaC
+       \ip-units F
+       \default 5.0
+  A12, \field Supply Temperature Difference Schedule
+       \note The difference schedule of the IT inlet temperature from the AHU supply air temperature.
+       \note Either Supply Temperature Difference or Supply Temperature Difference Schedule is required if Air Flow Calculation Method is set to FlowControlWithApproachTemperatures.
+       \note This field is ignored when Air Flow Calculation Method is FlowFromSystem.
+       \type object-list
+       \object-list ScheduleNames
+  N10, \field Return Temperature Difference
+       \note The difference of the the actual AHU return air temperature to the IT equipment outlet temperature.
+       \note Either Return Temperature Difference or Return Temperature Difference Schedule is required if Air Flow Calculation Method is set to FlowControlWithApproachTemperatures.
+       \note This field is ignored when Air Flow Calculation Method is FlowFromSystem.
+       \type real
+       \units deltaC
+       \ip-units F
+       \default 2.0
+  A13; \field Return Temperature Difference Schedule
+       \note The difference schedule of the actual AHU return air temperature to the IT equipment outlet temperature.
+       \note Either Return Temperature Difference or Return Temperature Difference Schedule is required if Air Flow Calculation Method is set to FlowControlWithApproachTemperatures.
+       \note This field is ignored when Air Flow Calculation Method is FlowFromSystem.
+       \type object-list
+       \object-list ScheduleNames
+
+
 OS:GasEquipment:Definition,
        \min-fields 1
   A1, \field Handle
@@ -4726,6 +4922,90 @@ OS:ScheduleTypeLimits,
        \key ControlMode
        \key LinearPowerDensity
 
+OS:External:File,
+       \url-object
+       \min-fields 3
+       \memo An External:File points to a text computer file for use in Schedule:File objects.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ExternalFileNames
+  A3,  \field File Name
+       \required-field
+       \retaincase
+       \type url
+  A4;  \field Column Separator
+       \note Currently unused
+       \type choice
+       \key Comma
+       \key Tab
+       \key Space
+       \key Semicolon
+       \default Comma
+
+OS:Schedule:File,
+       \min-fields 6
+       \memo A Schedule:File points to a text computer file that has 8760-8784 hours of data.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ScheduleNames
+  A3,  \field Schedule Type Limits Name
+       \type object-list
+       \object-list ScheduleTypeLimitsNames
+  A4,  \field External File Name
+       \type object-list
+       \object-list ExternalFileNames
+  N1,  \field Column Number
+       \required-field
+       \type integer
+       \minimum 1
+  N2,  \field Rows to Skip at Top
+       \required-field
+       \type integer
+       \minimum 0
+  N3,  \field Number of Hours of Data
+       \note 8760 hours does not account for leap years, 8784 does.
+       \note should be either 8760 or 8784
+       \default 8760
+       \minimum 8760
+       \maximum 8784
+  A5,  \field Column Separator
+       \type choice
+       \key Comma
+       \key Tab
+       \key Fixed
+       \key Semicolon
+       \default Comma
+  A6,  \field Interpolate to Timestep
+       \note when the interval does not match the user specified timestep a "Yes" choice will average between the intervals request (to
+       \note timestep resolution.  a "No" choice will use the interval value at the simulation timestep without regard to if it matches
+       \note the boundary or not.
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  N4;  \field Minutes per Item
+       \type choice
+       \key 1
+       \key 2
+       \key 3
+       \key 4
+       \key 5
+       \key 6
+       \key 10
+       \key 12
+       \key 15
+       \key 20
+       \key 30
+       \key 60
+
 \group OpenStudio Geometry
 
 OS:Building,
@@ -4772,7 +5052,12 @@ OS:Building,
   N4, \field Standards Number of Above Ground Stories
        \type integer
        \minimum 0
-  A7, \field Standards Building Type
+  A7, \field Standards Template
+       \type alpha
+       \note This is a freeform field used to identify the energy standard template for standards.
+       \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+       \note More information can be found at https://github.com/NREL/openstudio-standards.
+  A8, \field Standards Building Type
        \type alpha
        \note This is a freeform field used to identify the building type for standards.
        \note Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
@@ -4780,7 +5065,7 @@ OS:Building,
   N5, \field Standards Number of Living Units
        \type integer
        \minimum 0
-  A8, \field Relocatable
+  A9, \field Relocatable
        \type choice
        \default False
        \key True
@@ -5167,6 +5452,7 @@ OS:SubSurface,
        \type alpha
        \required-field
        \reference SubSurfNames
+       \reference GlazedExtSubSurfNames
        \reference SurfAndSubSurfNames
        \reference AllHeatTranSurfNames
        \reference OutFaceEnvNames
@@ -6364,6 +6650,52 @@ OS:ElectricEquipment,
        \type alpha
        \retaincase
        \default General
+
+OS:ElectricEquipment:ITE:AirCooled,
+       \min-fields 1
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \type alpha
+       \required-field
+       \reference ElectricEquipmentITEAirCooledNames
+       \reference SpaceItemNames
+       \reference SpaceLoadNames
+       \reference SpaceComponentInstanceNames
+  A3, \field Electric Equipment ITE AirCooled Definition Name
+       \type object-list
+       \required-field
+       \object-list ElectricEquipmentITEAirCooledDefinitionNames
+  A4, \field Space or SpaceType Name
+       \type object-list
+       \object-list SpaceAndSpaceTypeNames
+  A5, \field Design Power Input Schedule Name
+       \note units in schedule should be fraction applied to design level of electric equipment, generally (0.0 - 1.0)
+       \note If left blank, the schedule is assumed to always be 1.0
+       \type object-list
+       \object-list ScheduleNames
+  A6, \field CPU Loading Schedule Name
+       \note units in schedule should be fraction applied to design level of electric equipment, generally (0.0 - 1.0)
+       \note If left blank, the schedule is assumed to always be 1.0
+       \type object-list
+       \object-list ScheduleNames
+  N1, \field Multiplier
+       \type real
+       \minimum 0.0
+       \default 1.0
+  A7, \field CPU End-Use Subcategory
+       \type alpha
+       \retaincase
+       \default ITE-CPU
+  A8, \field Fan End-Use Subcategory
+       \type alpha
+       \retaincase
+       \default ITE-Fans
+  A9; \field Electric Power Supply End-Use Subcategory
+       \type alpha
+       \retaincase
+       \default ITE-UPS
 
 OS:GasEquipment,
        \min-fields 1
@@ -10697,7 +11029,10 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
        \default Autocalculate
 
 OS:AirTerminal:SingleDuct:Uncontrolled,
-       \min-fields 6
+      \memo Central air system terminal unit, single duct, constant volume, no controls other than
+      \memo on/off schedule.
+      \obsolete New=>OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat
+      \min-fields 6
   A1, \field Handle
        \type handle
        \required-field
@@ -10721,6 +11056,41 @@ OS:AirTerminal:SingleDuct:Uncontrolled,
        \autosizable
        \units m3/s
        \minimum 0
+
+OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
+       \memo Central air system terminal unit, single duct, constant volume, without reheat coil
+       \min-fields 6
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \required-field
+       \reference ConnectionObject
+  A3,  \field Availability Schedule Name
+       \type object-list
+       \required-field
+       \object-list ScheduleNames
+  A4,  \field Air Inlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+       \note The air-inlet node name that connects the air splitter to the individual zone air distribution
+       \note unit. This node should also be one of the outlet air node of an AirLoopHVAC:ZoneSplitter or
+       \note AirLoopHVAC:SupplyPlenum component.
+  A5,  \field Air Outlet Node Name
+       \required-field
+       \type object-list
+       \object-list ConnectionNames
+       \note This is an air outlet node from the air distribution unit. This node name should be one of the
+       \note supply air inlet node names of a zone served by this component.
+  N1; \field Maximum Air Flow Rate
+      \type real
+      \required-field
+      \autosizable
+      \units m3/s
+      \minimum 0
+
 
 OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \min-fields 1
@@ -10762,7 +11132,8 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \note is optional; if a value is entered, then it is used for sizing normal-action reheat coils.
        \note If both this field and the following field are entered, the larger result is used.
        \type real
-       \default 0.3
+       \autosizable
+       \default autosize
   N3 , \field Fixed Minimum Air Flow Rate
        \note This field is used if the field Zone Minimum Air Flow Input Method is FixedFlowRate.
        \note If the field Zone Minimum Air Flow Input Method is Scheduled, then this field
@@ -10770,7 +11141,8 @@ OS:AirTerminal:SingleDuct:VAV:NoReheat,
        \note If both this field and the previous field are entered, the larger result is used.
        \type real
        \units m3/s
-       \default 0.0
+       \autosizable
+       \default autosize
   A7 , \field Minimum Air Flow Fraction Schedule Name
        \note This field is used if the field Zone Minimum Air Flow Input Method is Scheduled
        \note Schedule values are fractions, 0.0 to 1.0.
@@ -10822,7 +11194,8 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \note is optional; if a value is entered, then it is used for sizing normal-action reheat coils.
        \note If both this field and the following field are entered, the larger result is used.
        \type real
-       \default 0.3
+       \autosizable
+       \default autosize
   N3, \field Fixed Minimum Air Flow Rate
        \note This field is used if the field Zone Minimum Air Flow Input Method is FixedFlowRate.
        \note If the field Zone Minimum Air Flow Input Method is Scheduled, then this field
@@ -10830,7 +11203,8 @@ OS:AirTerminal:SingleDuct:VAV:Reheat,
        \note If both this field and the previous field are entered, the larger result is used.
        \type real
        \units m3/s
-       \default 0.0
+       \autosizable
+       \default autosize
   A7, \field Minimum Air Flow Fraction Schedule Name
        \note This field is used if the field Zone Minimum Air Flow Input Method is Scheduled
        \note Schedule values are fractions, 0.0 to 1.0.
@@ -15058,7 +15432,8 @@ OS:CoilSystem:Cooling:DX:HeatExchangerAssisted,
   A6 ; \field Cooling Coil
        \required-field
        \type object-list
-       \object-list CoolingCoilsDXBypassFactorEmpirical
+       \object-list CoolingCoilsDXSingleSpeed
+       \object-list CoolingCoilsDXVariableSpeed
 
 OS:Coil:Cooling:DX:VariableRefrigerantFlow,
   A1, \field Handle
@@ -17059,6 +17434,7 @@ OS:Connector:Mixer,
        \type alpha
        \required-field
        \reference ConnectionObject
+       \reference PlantConnectors
   A3, \field Outlet Branch Name
        \type object-list
        \required-field
@@ -17081,6 +17457,7 @@ OS:Connector:Splitter,
        \type alpha
        \required-field
        \reference ConnectionObject
+       \reference PlantConnectors
   A3, \field Inlet Branch Name
        \type object-list
        \required-field
@@ -18539,6 +18916,7 @@ OS:Table:MultiVariableLookup,
        \key Dimensionless
        \key Capacity
        \key Power
+       \key Temperature
        \default Dimensionless
   N15, \field Number of Independent Variables
        \type integer
@@ -18820,6 +19198,9 @@ OS:EvaporativeCooler:Indirect:ResearchSpecial,
        \autosizable
 
 OS:EvaporativeCooler:Direct:ResearchSpecial,
+       \memo Direct evaporative cooler with user-specified effectiveness (can represent rigid pad
+       \memo or similar media), and recirculating water pump, and secondary air fan. This model is
+       \memo controlled to meet the primary air outlet temperature setpoint.
        \min-fields 1
   A1, \field Handle
        \type handle
@@ -18832,7 +19213,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \type object-list
        \required-field
        \object-list ScheduleNames
-  N1, \field Cooler Effectiveness
+  N1, \field Cooler Design Effectiveness
        \note effectiveness with respect to wetbulb depression
        \type real
        \required-field
@@ -18892,15 +19273,20 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
        \note Table:OneIndependentVariable
   N6,  \field Water Pump Power Sizing Factor
        \type real
-       \required-field
        \units W/(m3/s)
+       \ip-units W/(gal/min)
+       \default 90.0
        \note this field is used when the previous field is set to autosize. The pump power is scaled with Primary Air Design Air Flow Rate
+       \note This value was backed out from inputs in energy plus example files. Average Pump Power
+       \note sizing factor was estimated from pump power and primary air design flow rates inputs from energyplus example
+       \note files is about 90.0 [W/(m3/s)] (=90.0 ~ Pump Power / Primary Air Design Flow Rate). The factor ranges from
+       \note 55.0 to 150.0 [W/(m3/s)]. The pump power can be sized to zero by setting this factor to zero.
   A8,  \field Water Pump Power Modifier Curve Name
        \note this curve modifies the pump power in the previous field by multiplying the design power by the result of this curve.
-       \note x = ff = flow fraction on the primary air.  The flow fraction is the secondary air flow rate during current operation divided
+       \note x = ff = flow fraction on the primary air.  The flow fraction is the primary air flow rate during current operation divided
        \note by Primary Air Design Flow Rate
        \type object-list
-       \object-list AllCurves
+       \object-list UniVariateCurves
        \note Any curve or table with one independent variable can be used:
        \note Curve:Linear, Curve:Quadratic, Curve:Cubic, Curve:Quartic, Curve:Exponent,
        \note Curve:ExponentialSkewNormal, Curve:Sigmoid, Curve:RectuangularHyperbola1,
@@ -19544,7 +19930,6 @@ OS:Fan:ZoneExhaust,
        \object-list ScheduleNames
   A10; \field Balanced Exhaust Fraction Schedule Name
        \note Used to control fan's impact on flow at the return air node. Enter the portion of the exhaust that is balanced by simple airflows.
-       \note
        \type object-list
        \object-list ScheduleNames
 
@@ -20424,13 +20809,18 @@ OS:Pump:ConstantSpeed,
        \units W/(m3/s)
        \ip-units W/(gal/min)
        \minimum> 0
-  N10; \field Design Shaft Power per Unit Flow Rate per Unit Head
+  N10, \field Design Shaft Power per Unit Flow Rate per Unit Head
        \required-field
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
        \units W-s/m3-Pa
        \ip-units W-min/gal-ftH2O
        \minimum> 0
+  A10; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:Pump:VariableSpeed,
        \memo This pump model is described in the ASHRAE secondary HVAC toolkit.
@@ -20558,30 +20948,35 @@ OS:Pump:VariableSpeed,
         \minimum 0.0
         \maximum 1.0
   A15,  \field Design Power Sizing Method
-       \required-field
+        \required-field
         \type choice
         \key PowerPerFlow
         \key PowerPerFlowPerPressure
   N13,  \field Design Electric Power per Unit Flow Rate
-       \required-field
+        \required-field
         \type real
         \note Used to size Design Power Consumption from design flow rate
         \units W/(m3/s)
         \ip-units W/(gal/min)
         \minimum> 0
   N14,  \field Design Shaft Power per Unit Flow Rate per Unit Head
-       \required-field
+        \required-field
         \type real
         \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
         \units W-s/m3-Pa
         \ip-units W-min/gal-ftH2O
         \minimum> 0
-  N15;  \field Design Minimum Flow Rate Fraction
-       \required-field
+  N15,  \field Design Minimum Flow Rate Fraction
+        \required-field
         \type real
         \note Used to size Design Minimum Flow Rate
         \minimum 0
         \maximum 1.0
+  A16;  \field End-Use Subcategory
+        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+        \type alpha
+        \retaincase
+        \default General
 
 OS:HeaderedPumps:ConstantSpeed,
        \memo This Headered pump object describes a pump bank with more than 1 pump in parallel
@@ -20671,12 +21066,17 @@ OS:HeaderedPumps:ConstantSpeed,
        \units W/(m3/s)
        \ip-units W/(gal/min)
        \minimum> 0
-  N9; \field Design Shaft Power per Unit Flow Rate per Unit Head
+  N9, \field Design Shaft Power per Unit Flow Rate per Unit Head
        \type real
         \required-field
        \units W-s/m3-Pa
        \ip-units W-min/gal-ftH2O
        \minimum> 0
+  A10; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:HeaderedPumps:VariableSpeed,
        \memo This Headered pump object describes a pump bank with more than 1 pump in parallel
@@ -20778,12 +21178,17 @@ OS:HeaderedPumps:VariableSpeed,
        \units W/(m3/s)
        \ip-units W/(gal/min)
        \minimum> 0
-  N14; \field Design Shaft Power per Unit Flow Rate per Unit Head
+  N14, \field Design Shaft Power per Unit Flow Rate per Unit Head
        \required-field
        \type real
        \units W-s/m3-Pa
        \ip-units W-min/gal-ftH2O
        \minimum> 0
+  A10; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
 
 OS:TemperingValve,
       \memo Temperature-controlled diversion valve used to divert flow around one or more plant
@@ -21666,14 +22071,14 @@ OS:Sizing:System,
        \object-list AirPrimaryLoops
   A3, \field Type of Load to Size On
        \note Specifies the basis for sizing the system supply air flow rate
-       \note Sensible and VentilationRequirement are the only available options
-       \note Sensible uses the zone design air flow rates
+       \note Sensible and Total use the zone design air flow rates to size the system supply air flow rate
+       \note The cooling coil will then be sized at either the peak Sensible or Total flow rate and conditions
+       \note The heating coil is always sized at the peak sensible heating load.
        \note VentilationRequirement uses the system ventilation requirement
        \type choice
        \default Sensible
        \key Sensible
        \key VentilationRequirement
-       \key Latent
        \key Total
   N1, \field Design Outdoor Air Flow Rate
        \type real
@@ -21681,11 +22086,12 @@ OS:Sizing:System,
        \units m3/s
        \minimum 0
        \default autosize
-  N2, \field Minimum System Air Flow Ratio
+  N2, \field Central Heating Maximum System Air Flow Ratio
        \type real
-       \required-field
        \minimum 0
        \maximum 1
+       \autosizable
+       \default autosize
   N3, \field Preheat Design Temperature
        \type real
        \required-field
@@ -22165,10 +22571,10 @@ OS:ThermalZone,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A9, \field Zone Return Air Node Name
+  A9, \field Zone Return Air Port List
        \type object-list
        \required-field
-       \object-list ConnectionNames
+       \object-list PortLists
   A10, \field Primary Daylighting Control Name
        \note For export to EnergyPlus
        \type object-list
@@ -22318,7 +22724,7 @@ OS:ZoneControl:Thermostat:StagedDualSetpoint,
 
 OS:ZoneHVAC:EquipmentList,
        \min-fields 1
-       \extensible:3 Duplicate the three fields Zone Equipment Object Type through Heating Priority
+       \extensible:5 Duplicate the five fields Zone Equipment Object Type through Sequential Heating Fraction
        \memo List equipment in simulation order.  Note that an ZoneHVAC:AirDistributionUnit or
        \memo AirTerminal:SingleDuct:Uncontrolled object must be listed in this statement if there is a forced
        \memo air system serving the zone from the air loop.
@@ -22340,7 +22746,14 @@ OS:ZoneHVAC:EquipmentList,
   A3 , \field Thermal Zone
        \type object-list
        \object-list AllObjects
-  A4 , \field Zone Equipment 1
+  A4, \field Load Distribution Scheme
+       \type choice
+       \key SequentialLoad
+       \key UniformLoad
+       \key UniformPLR
+       \key SequentialUniformPLR
+       \default SequentialLoad
+  A5 , \field Zone Equipment 1
        \required-field
        \type object-list
        \object-list AllObjects
@@ -22348,15 +22761,30 @@ OS:ZoneHVAC:EquipmentList,
   N1 , \field Zone Equipment 1 Cooling Sequence
        \required-field
        \type integer
-       \minimum 1
+       \minimum 0
        \note Specifies the zone equipment simulation order
        \note when the zone thermostat requests cooling
-  N2 ; \field Zone Equipment 1 Heating or No-Load Sequence
+  N2 , \field Zone Equipment 1 Heating or No-Load Sequence
        \required-field
        \type integer
-       \minimum 1
+       \minimum 0
        \note Specifies the zone equipment simulation order
        \note when the zone thermostat requests heating or no load
+  N3 , \field Zone Equipment 1 Sequential Cooling Fraction
+       \note The fraction of the remaining cooling load this equipment will attempt to serve
+       \note if the load distribution scheme is SequentialLoad, otherwise ignored.
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 1.0
+  N4 ; \field Zone Equipment 1 Sequential Heating Fraction
+       \note The fraction of the remaining heating load this equipment will attempt to serve
+       \note if the load distribution scheme is SequentialLoad, otherwise ignored.
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \default 1.0
+
 
 OS:ZoneVentilation:DesignFlowRate,
   A1, \field Handle
@@ -23596,10 +24024,24 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \note cycling fan operation (fan cycles with cooling or heating coil). Schedule values greater
         \note than 0 denote constant fan operation (fan runs continually regardless of coil operation).
         \note The fan operating mode defaults to cycling fan operation if this field is left blank.
-   A14; \field Availability Manager List Name
+   A14, \field Availability Manager List Name
         \note Enter the name of an AvailabilityManagerAssignmentList object.
         \type object-list
         \object-list SystemAvailabilityManagerLists
+   A15, \field Heat Pump Coil Water Flow Mode
+        \type choice
+        \key Constant
+        \key Cycling
+        \key ConstantOnDemand
+        \default Cycling
+        \note used only when the heat pump coils are of the type WaterToAirHeatPump:EquationFit
+        \note Constant results in 100% water flow regardless of compressor PLR
+        \note Cycling results in water flow that matches compressor PLR
+        \note ConstantOnDemand results in 100% water flow whenever the coil is on, but is 0% whenever the coil has no load
+   A26; \field Design Specification ZoneHVAC Sizing Object Name
+        \note Enter the name of a DesignSpecificationZoneHVACSizing object.
+        \type object-list
+        \object-list DesignSpecificationZoneHVACSizingName
 
 OS:ZoneHVAC:UnitHeater,
        \min-fields 10
@@ -25548,6 +25990,100 @@ OS:WaterHeater:Stratified,
        \note This field is only used if the previous is set to IndirectHeatAlternateSetpoint
        \type object-list
        \object-list ScheduleNames
+
+OS:WaterHeater:Sizing,
+       \min-fields 5
+       \memo This input object is used with WaterHeater:Mixed or
+       \memo with WaterHeater:Stratified to autosize tank volume and heater capacity
+       \memo This object is not needed if water heaters are not autosized.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field WaterHeater Name
+       \required-field
+       \type object-list
+       \object-list WaterHeaterNames
+  A3 , \field Design Mode
+       \type choice
+       \key PeakDraw
+       \key ResidentialHUD-FHAMinimum
+       \key PerPerson
+       \key PerFloorArea
+       \key PerUnit
+       \key PerSolarCollectorArea
+  N1 , \field Time Storage Can Meet Peak Draw
+       \type real
+       \units hr
+       \note Only used for Design Mode = PeakDraw
+       \minimum 0.0
+  N2 , \field Time for Tank Recovery
+       \type real
+       \units hr
+       \note Only used for Design Mode = PeakDraw
+       \minimum 0.0
+  N3 , \field Nominal Tank Volume for Autosizing Plant Connections
+       \type real
+       \units m3
+       \ip-units gal
+       \note Only used if Design Mode = PeakDraw and the water heater also
+       \note has autosized flow rates for connections on the demand side of a plant loop
+  N4 , \field Number of Bedrooms
+       \type integer
+       \note Only used for Design Mode = ResidentialHUD-FHAMinimum
+       \minimum 1
+  N5 , \field Number of Bathrooms
+       \type integer
+       \note Only used for Design Mode = ResidentialHUD-FHAMinimum
+       \minimum 1
+  N6 , \field Storage Capacity per Person
+       \type real
+       \units m3/person
+       \ip-units gal/person
+       \note Only used for Design Mode = PerPerson
+       \minimum 0.0
+  N7 , \field Recovery Capacity per Person
+       \type real
+       \units m3/hr-person
+       \ip-units gal/hr-person
+       \note Only used for Design Mode = PerPerson
+       \minimum 0.0
+  N8 , \field Storage Capacity per Floor Area
+       \type real
+       \units m3/m2
+       \ip-units gal/ft2
+       \note Only used for Design Mode = PerFloorArea
+       \minimum 0.0
+  N9 , \field Recovery Capacity per Floor Area
+       \type real
+       \units m3/hr-m2
+       \ip-units gal/hr-ft2
+       \note Only used for Design Mode = PerFloorArea
+       \minimum 0.0
+  N10, \field Number of Units
+       \type real
+       \note Only used for Design Mode = PerUnit
+  N11, \field Storage Capacity per Unit
+       \units m3
+       \ip-units gal
+       \type real
+       \note Only used for Design Mode = PerUnit
+       \minimum 0.0
+  N12, \field Recovery Capacity PerUnit
+       \units m3/hr
+       \ip-units gal/hr
+       \type real
+       \note Only used for Design Mode = PerUnit
+       \minimum 0.0
+  N13, \field Storage Capacity per Collector Area
+       \units m3/m2
+       \ip-units gal/ft2
+       \type real
+       \note Only used for Design Mode = PerSolarCollectorArea
+       \minimum 0.0
+  N14; \field Height Aspect Ratio
+       \type real
+       \note only used if for WaterHeater:Stratified
+       \minimum 0.0
 
 OS:WaterUse:Equipment,
   A1, \field Handle
@@ -28995,6 +29531,8 @@ OS:EnergyManagementSystem:ProgramCallingManager,
        \type choice
        \key BeginNewEnvironment
        \key AfterNewEnvironmentWarmUpIsComplete
+       \key BeginZoneTimestepBeforeInitHeatBalance
+       \key BeginZoneTimestepAfterInitHeatBalance
        \key BeginTimestepBeforePredictor
        \key AfterPredictorBeforeHVACManagers
        \key AfterPredictorAfterHVACManagers
@@ -29060,11 +29598,16 @@ OS:EnergyManagementSystem:GlobalVariable,
   A1, \field Handle
        \type handle
        \required-field
-  A2; \field Name
+  A2, \field Name
        \required-field
        \type alpha
        \reference ErlVariableNames
        \note no spaces allowed in name
+  A3; \field Export To BCVTB
+       \type choice
+       \default False
+       \key True
+       \key False
 
 OS:EnergyManagementSystem:OutputVariable,
        \memo This object sets up an EnergyPlus output variable from an Erl variable

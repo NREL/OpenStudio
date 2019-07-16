@@ -8,6 +8,7 @@
 
 %include <model/Model_Common_Include.i>
 %import <model/ModelCore.i>
+%import <model/ModelSimulation.i>
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 
@@ -20,29 +21,37 @@
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelHVAC
 
-  
+
   // ignore airflow objects for now, add back in with partial classes in ModelAirflow.i
   %ignore openstudio::model::AirLoopHVACOutdoorAirSystem::getAirflowNetworkDistributionNode;
   %ignore openstudio::model::AirLoopHVACOutdoorAirSystem::airflowNetworkDistributionNode;
   %ignore openstudio::model::AirLoopHVACZoneMixer::getAirflowNetworkDistributionNode;
-  %ignore openstudio::model::AirLoopHVACZoneMixer::airflowNetworkDistributionNode;  
+  %ignore openstudio::model::AirLoopHVACZoneMixer::airflowNetworkDistributionNode;
   %ignore openstudio::model::AirLoopHVACZoneSplitter::getAirflowNetworkDistributionNode;
-  %ignore openstudio::model::AirLoopHVACZoneSplitter::airflowNetworkDistributionNode; 
+  %ignore openstudio::model::AirLoopHVACZoneSplitter::airflowNetworkDistributionNode;
   %ignore openstudio::model::CoilCoolingWater::getAirflowNetworkEquivalentDuct;
-  %ignore openstudio::model::CoilCoolingWater::airflowNetworkEquivalentDuct;   
+  %ignore openstudio::model::CoilCoolingWater::airflowNetworkEquivalentDuct;
   %ignore openstudio::model::CoilHeatingWater::getAirflowNetworkEquivalentDuct;
-  %ignore openstudio::model::CoilHeatingWater::airflowNetworkEquivalentDuct;    
+  %ignore openstudio::model::CoilHeatingWater::airflowNetworkEquivalentDuct;
   %ignore openstudio::model::ControllerOutdoorAir::getAirflowNetworkOutdoorAirflow;
-  %ignore openstudio::model::ControllerOutdoorAir::airflowNetworkOutdoorAirflow;  
+  %ignore openstudio::model::ControllerOutdoorAir::airflowNetworkOutdoorAirflow;
   %ignore openstudio::model::HeatExchangerAirToAirSensibleAndLatent::getAirflowNetworkEquivalentDuct;
-  %ignore openstudio::model::HeatExchangerAirToAirSensibleAndLatent::airflowNetworkEquivalentDuct;    
+  %ignore openstudio::model::HeatExchangerAirToAirSensibleAndLatent::airflowNetworkEquivalentDuct;
   %ignore openstudio::model::Node::getAirflowNetworkDistributionNode;
   %ignore openstudio::model::Node::airflowNetworkDistributionNode;
   %ignore openstudio::model::ThermalZone::getAirflowNetworkZone;
   %ignore openstudio::model::ThermalZone::airflowNetworkZone;
-  
-  
-  
+
+  // PlantLoop has some methods that actually live in ModelPlantEquipmentOperationScheme.i (which depends on ModelHVAC.i)
+  // So we ignore for now, and reimplment later in the PlantEq.i file with partial classes
+  %ignore openstudio::model::PlantLoop::plantEquipmentOperationHeatingLoad;
+  %ignore openstudio::model::PlantLoop::setPlantEquipmentOperationHeatingLoad;
+  %ignore openstudio::model::PlantLoop::plantEquipmentOperationCoolingLoad;
+  %ignore openstudio::model::PlantLoop::setPlantEquipmentOperationCoolingLoad;
+
+  // WaterUseConnections is defined in ModelStraightComponent.i (which depends on this file)
+  %ignore openstudio::model::WaterUseEquipment::waterUseConnections;
+
 #endif
 
 namespace openstudio {
@@ -55,12 +64,18 @@ namespace model {
 %feature("valuewrapper") AirflowNetworkFan;
 %feature("valuewrapper") AirflowNetworkOutdoorAirflow;
 %feature("valuewrapper") AirflowNetworkZoneExhaustFan;
+%feature("valuewrapper") PlantEquipmentOperationHeatingLoad;
+%feature("valuewrapper") PlantEquipmentOperationCoolingLoad;
+%feature("valuewrapper") WaterUseConnections;
 class AirflowNetworkDistributionNode;
 class AirflowNetworkZone;
 class AirflowNetworkEquivalentDuct;
 class AirflowNetworkFan;
 class AirflowNetworkOutdoorAirflow;
 class AirflowNetworkZoneExhaustFan;
+class PlantEquipmentOperationHeatingLoad;
+class PlantEquipmentOperationCoolingLoad;
+class WaterUseConnections;
 
 }
 }
@@ -157,6 +172,31 @@ MODELOBJECT_TEMPLATES(SolarCollectorPerformanceFlatPlate);
 MODELOBJECT_TEMPLATES(SolarCollectorPerformanceIntegralCollectorStorage);
 MODELOBJECT_TEMPLATES(SolarCollectorPerformancePhotovoltaicThermalSimple);
 
+MODELOBJECT_TEMPLATES(SetpointManagerFollowOutdoorAirTemperature);
+MODELOBJECT_TEMPLATES(SetpointManagerFollowSystemNodeTemperature);
+MODELOBJECT_TEMPLATES(SetpointManagerMixedAir);
+MODELOBJECT_TEMPLATES(SetpointManagerMultiZoneCoolingAverage);
+MODELOBJECT_TEMPLATES(SetpointManagerMultiZoneHeatingAverage);
+MODELOBJECT_TEMPLATES(SetpointManagerMultiZoneHumidityMaximum);
+MODELOBJECT_TEMPLATES(SetpointManagerMultiZoneHumidityMinimum);
+MODELOBJECT_TEMPLATES(SetpointManagerMultiZoneMaximumHumidityAverage);
+MODELOBJECT_TEMPLATES(SetpointManagerMultiZoneMinimumHumidityAverage);
+MODELOBJECT_TEMPLATES(SetpointManagerOutdoorAirPretreat);
+MODELOBJECT_TEMPLATES(SetpointManagerOutdoorAirReset);
+MODELOBJECT_TEMPLATES(SetpointManagerScheduled);
+MODELOBJECT_TEMPLATES(SetpointManagerScheduledDualSetpoint);
+MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneHumidityMaximum);
+MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneHumidityMinimum);
+MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneOneStageCooling);
+MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneOneStageHeating);
+MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneCooling);
+MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneHeating);
+MODELOBJECT_TEMPLATES(SetpointManagerSingleZoneReheat);
+MODELOBJECT_TEMPLATES(SetpointManagerWarmest);
+MODELOBJECT_TEMPLATES(SetpointManagerWarmestTemperatureFlow);
+MODELOBJECT_TEMPLATES(SetpointManagerColdest);
+MODELOBJECT_TEMPLATES(SetpointManagerFollowGroundTemperature);
+
 SWIG_MODELOBJECT(PortList, 1);
 SWIG_MODELOBJECT(Loop, 0);
 SWIG_MODELOBJECT(HVACComponent, 0);
@@ -241,6 +281,32 @@ SWIG_MODELOBJECT(SolarCollectorPerformanceFlatPlate, 1);
 SWIG_MODELOBJECT(SolarCollectorPerformanceIntegralCollectorStorage, 1);
 SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
 
+
+SWIG_MODELOBJECT(SetpointManagerFollowOutdoorAirTemperature,1);
+SWIG_MODELOBJECT(SetpointManagerFollowSystemNodeTemperature,1);
+SWIG_MODELOBJECT(SetpointManagerMixedAir,1);
+SWIG_MODELOBJECT(SetpointManagerMultiZoneCoolingAverage,1);
+SWIG_MODELOBJECT(SetpointManagerMultiZoneHeatingAverage,1);
+SWIG_MODELOBJECT(SetpointManagerMultiZoneHumidityMaximum,1);
+SWIG_MODELOBJECT(SetpointManagerMultiZoneHumidityMinimum,1);
+SWIG_MODELOBJECT(SetpointManagerMultiZoneMaximumHumidityAverage,1);
+SWIG_MODELOBJECT(SetpointManagerMultiZoneMinimumHumidityAverage,1);
+SWIG_MODELOBJECT(SetpointManagerOutdoorAirPretreat,1);
+SWIG_MODELOBJECT(SetpointManagerOutdoorAirReset,1);
+SWIG_MODELOBJECT(SetpointManagerScheduled,1);
+SWIG_MODELOBJECT(SetpointManagerScheduledDualSetpoint,1);
+SWIG_MODELOBJECT(SetpointManagerSingleZoneHumidityMaximum,1);
+SWIG_MODELOBJECT(SetpointManagerSingleZoneHumidityMinimum,1);
+SWIG_MODELOBJECT(SetpointManagerSingleZoneOneStageCooling,1);
+SWIG_MODELOBJECT(SetpointManagerSingleZoneOneStageHeating,1);
+SWIG_MODELOBJECT(SetpointManagerSingleZoneCooling,1);
+SWIG_MODELOBJECT(SetpointManagerSingleZoneHeating,1);
+SWIG_MODELOBJECT(SetpointManagerSingleZoneReheat,1);
+SWIG_MODELOBJECT(SetpointManagerWarmest,1);
+SWIG_MODELOBJECT(SetpointManagerWarmestTemperatureFlow,1);
+SWIG_MODELOBJECT(SetpointManagerColdest,1);
+SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
+
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
   %inline {
     namespace openstudio {
@@ -257,6 +323,12 @@ SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
         bool setThermalZone(openstudio::model::Space space, openstudio::model::ThermalZone thermalZone){
           return space.setThermalZone(thermalZone);
         }
+
+        // EMS Actuator setter for ThermalZone (reimplemented from ModelCore.i)
+        bool setThermalZoneForEMSActuator(openstudio::model::EnergyManagementSystemActuator actuator, openstudio::model::ThermalZone thermalZone) {
+          return actuator.setThermalZone(thermalZone);
+        }
+
       }
     }
   }
@@ -291,6 +363,18 @@ SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
       public bool setThermalZone(OpenStudio.ThermalZone thermalZone)
       {
         return OpenStudio.OpenStudioModelHVAC.setThermalZone(this, thermalZone);
+      }
+    }
+
+    public partial class EnergyManagementSystemActuator : ModelObject {
+      public bool setThermalZone(OpenStudio.ThermalZone thermalZone) {
+        return OpenStudio.OpenStudioModelHVAC.setThermalZoneForEMSActuator(this, thermalZone);
+      }
+
+      // Overloaded Ctor, calling Ctor that doesn't use ThermalZone
+      public EnergyManagementSystemActuator(ModelObject modelObject, string actuatedComponentType, string actuatedComponentControlType, OpenStudio.ThermalZone thermalZone)
+        : this(modelObject, actuatedComponentType, actuatedComponentControlType) {
+        this.setThermalZone(thermalZone);
       }
     }
   %}

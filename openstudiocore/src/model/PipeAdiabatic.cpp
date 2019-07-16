@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -77,12 +77,12 @@ IddObjectType PipeAdiabatic_Impl::iddObjectType() const {
   return PipeAdiabatic::iddObjectType();
 }
 
-unsigned PipeAdiabatic_Impl::inletPort()
+unsigned PipeAdiabatic_Impl::inletPort() const
 {
   return OS_Pipe_AdiabaticFields::InletNodeName;
 }
 
-unsigned PipeAdiabatic_Impl::outletPort()
+unsigned PipeAdiabatic_Impl::outletPort() const
 {
   return OS_Pipe_AdiabaticFields::OutletNodeName;
 }
@@ -106,12 +106,12 @@ PipeAdiabatic::PipeAdiabatic(const Model& model)
   OS_ASSERT(getImpl<detail::PipeAdiabatic_Impl>());
 }
 
-unsigned PipeAdiabatic::inletPort()
+unsigned PipeAdiabatic::inletPort() const
 {
   return getImpl<detail::PipeAdiabatic_Impl>()->inletPort();
 }
 
-unsigned PipeAdiabatic::outletPort()
+unsigned PipeAdiabatic::outletPort() const
 {
   return getImpl<detail::PipeAdiabatic_Impl>()->outletPort();
 }

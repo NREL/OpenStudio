@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -82,6 +82,8 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   boost::optional<Curve> normalizedBoilerEfficiencyCurve() const;
 
+  /** As of EnergyPlus version 9.0.0 this field is no longer used
+   */
   boost::optional<double> designWaterOutletTemperature() const;
 
   boost::optional<double> designWaterFlowRate() const;
@@ -143,6 +145,8 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   void resetNormalizedBoilerEfficiencyCurve();
 
+  /** As of EnergyPlus version 9.0.0 this field is no longer used
+   */
   bool setDesignWaterOutletTemperature(double designWaterOutletTemperature);
 
   void resetDesignWaterOutletTemperature();
@@ -218,4 +222,4 @@ typedef std::vector<BoilerHotWater> BoilerHotWaterVector;
 } // model
 } // openstudio
 
-#endif // MODEL_BOILERHOTWATER_HPP
+#endif // MODEL_BOILERHOTWATER_HPP

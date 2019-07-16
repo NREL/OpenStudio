@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -310,7 +310,7 @@ TEST_F(ModelFixture, AdditionalProperties_ChildClone) {
 TEST_F(ModelFixture, AdditionalProperties_AdditionalProperties2) {
   Model model;
   EXPECT_EQ(0u, model.getConcreteModelObjects<AdditionalProperties>().size());
-  auto size = model.modelObjects().size();
+  // auto size = model.modelObjects().size();
   StandardOpaqueMaterial material(model);
   AdditionalProperties props = material.additionalProperties();
   EXPECT_EQ(1u, model.getConcreteModelObjects<AdditionalProperties>().size());

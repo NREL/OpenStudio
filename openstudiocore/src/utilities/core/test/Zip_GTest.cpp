@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -84,7 +84,7 @@ TEST_F(CoreFixture, Unzip_ExtractFileTest)
   ASSERT_TRUE(openstudio::filesystem::exists(outfile1));
 
 
-  std::ifstream ifs(openstudio::toString(outfile1).c_str());
+  std::ifstream ifs(openstudio::toSystemFilename(outfile1));
 
   std::string line;
   std::getline(ifs, line);

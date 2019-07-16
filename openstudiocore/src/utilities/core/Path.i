@@ -9,6 +9,13 @@
 %template(PathPair) std::pair<openstudio::path, openstudio::path>;
 %template(PathPairVector) std::vector<std::pair<openstudio::path, openstudio::path> >;
 
+#if defined(SWIGCSHARP)
+
+  // Avoid triggering a SWIG warning: 'string' is a C# keyword
+  %rename(toString) openstudio::path::string;
+
+#endif
+
 %{
   #include <utilities/core/Path.hpp>
   #include <utilities/core/PathHelpers.hpp>
@@ -100,6 +107,7 @@ namespace openstudio {
     //PathStringType file_string() const;
     //PathStringType directory_string() const;
     //PathStringType external_file_string() const;
+    // TODO: this generates a CSHARP SWIG warning: 'string' is a C# keyword
     path string() const;
 
     path root_path() const;
@@ -182,19 +190,24 @@ namespace openstudio {
       return toString(*self);
     }
 
-    // from std::string
-    // ensure that we use conversion from string to path
-    path(const std::string& s) {
-       path* p = new path(toPath(s));
-       return p;
-    }
+    #ifndef SWIGCSHARP
+      // DLM: this generates code that does not compile due to compiler error C2733
+      // I think this may be a SWIG bug, for now users of C# will have to call toPath(string) instead
 
-    // from char*
-    // ensure that we use conversion from string to path
-    path(const char* c) {
-       path* p = new path(toPath(c));
-       return p;
-    }
+      // from char*
+      // ensure that we use conversion from string to path
+      path(const char* c) {
+          path* p = new path(toPath(c));
+          return p;
+      }
+
+      // from std::string
+      // ensure that we use conversion from string to path
+      path(const std::string& s) {
+         path* p = new path(toPath(s));
+         return p;
+      }
+    #endif
 
     #ifdef SWIGJAVASCRIPT
         path append(const path &other) const {

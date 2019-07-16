@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,6 +45,8 @@
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "ZoneHVACUnitHeater.hpp"
 #include "ZoneHVACUnitHeater_Impl.hpp"
+#include "ZoneHVACUnitVentilator.hpp"
+#include "ZoneHVACUnitVentilator_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
@@ -341,22 +343,22 @@ namespace detail{
     return setDouble( openstudio::OS_Coil_Heating_WaterFields::RatedRatioforAirandWaterConvection, value );;
   }
 
-  unsigned CoilHeatingWater_Impl::airInletPort()
+  unsigned CoilHeatingWater_Impl::airInletPort() const
   {
     return OS_Coil_Heating_WaterFields::AirInletNodeName;
   }
 
-  unsigned CoilHeatingWater_Impl::airOutletPort()
+  unsigned CoilHeatingWater_Impl::airOutletPort() const
   {
     return OS_Coil_Heating_WaterFields::AirOutletNodeName;
   }
 
-  unsigned CoilHeatingWater_Impl::waterInletPort()
+  unsigned CoilHeatingWater_Impl::waterInletPort() const
   {
     return OS_Coil_Heating_WaterFields::WaterInletNodeName;
   }
 
-  unsigned CoilHeatingWater_Impl::waterOutletPort()
+  unsigned CoilHeatingWater_Impl::waterOutletPort() const
   {
     return OS_Coil_Heating_WaterFields::WaterOutletNodeName;
   }
@@ -382,7 +384,7 @@ namespace detail{
     // * AirTerminalDualDuctVAV
     // * AirTerminalSingleDuctConstantVolumeCooledBeam
     // * AirTerminalSingleDuctInletSideMixer
-    // * AirTerminalSingleDuctUncontrolled
+    // * AirTerminalSingleDuctConstantVolumeNoReheat (previously named AirTerminalSingleDuctUncontrolled)
     // * AirTerminalSingleDuctVAVHeatAndCoolNoReheat
     // * AirTerminalSingleDuctVAVNoReheat
 
@@ -610,7 +612,25 @@ namespace detail{
           return elem;
         }
       }
-     }
+    }
+
+    // ZoneHVACUnitVentilator
+
+    std::vector<ZoneHVACUnitVentilator> zoneHVACUnitVentilator;
+
+    zoneHVACUnitVentilator = this->model().getConcreteModelObjects<ZoneHVACUnitVentilator>();
+
+    for( const auto & elem : zoneHVACUnitVentilator )
+    {
+      if( boost::optional<HVACComponent> coil = elem.heatingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return elem;
+        }
+      }
+    }
+
 
     return boost::none;
   }
@@ -892,3 +912,4 @@ boost::optional<AirflowNetworkEquivalentDuct> CoilHeatingWater::airflowNetworkEq
 
 } // model
 } // openstudio
+

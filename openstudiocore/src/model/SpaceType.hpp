@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,7 @@ class People;
 class Lights;
 class Luminaire;
 class ElectricEquipment;
+class ElectricEquipmentITEAirCooled;
 class GasEquipment;
 class HotWaterEquipment;
 class SteamEquipment;
@@ -88,13 +89,30 @@ class MODEL_API SpaceType : public ResourceObject {
   /// Returns the rendering color.
   boost::optional<RenderingColor> renderingColor() const;
 
+  /// Returns the standards Template. This is a freeform field used to identify the energy standard template for standards.
+  /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+  /// More information can be found at https://github.com/NREL/openstudio-standards.
+  /// If Not set, tries to inherit from the Building
+  boost::optional<std::string> standardsTemplate() const;
+
+  /**
+   * Returns a list of suggestions from the openstudio-standards JSON data.
+   * If standardsTemplate is not empty, and not already present in the suggestions,
+   * it is added to the list of suggestion
+   */
+  std::vector<std::string> suggestedStandardsTemplates() const;
+
   /// Returns the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
   /// More information can be found at https://github.com/NREL/openstudio-standards.
+  /// If Not set, tries to inherit from the Building
   boost::optional<std::string> standardsBuildingType() const;
 
-  /// If standardsBuildingType is empty, returns a list of suggestions.  If standardsBuildingType is not empty,
-  /// returns standardsBuildingType.
+  /**
+   * Returns a list of suggestions from the openstudio-standards JSON data.
+   * If standardsBuildingType is not empty, and not already present in the suggestions,
+   * it is added to the list of suggestion
+   */
   std::vector<std::string> suggestedStandardsBuildingTypes() const;
 
   /// Returns the standards space type. This is a freeform field used to identify the space type for standards.
@@ -102,9 +120,15 @@ class MODEL_API SpaceType : public ResourceObject {
   /// More information can be found at https://github.com/NREL/openstudio-standards.
   boost::optional<std::string> standardsSpaceType() const;
 
-  /// If standardsSpaceType is empty, returns a list of suggestions based on standardsBuildingType.  If standardsSpaceType is not empty,
-  /// returns standardsSpaceType.
+  /**
+   * Returns a list of suggestions from the openstudio-standards JSON data.
+   * If standardsSpaceType is not empty, and not already present in the suggestions,
+   * it is added to the list of suggestion
+   */
   std::vector<std::string> suggestedStandardsSpaceTypes() const;
+
+
+
 
   //@}
   /** @name Setters */
@@ -127,6 +151,12 @@ class MODEL_API SpaceType : public ResourceObject {
 
   /// Resets the rendering color.
   void resetRenderingColor();
+
+  /// Sets the standards Template. This is a freeform field used to identify the energy standard template for standards.
+  /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
+  /// More information can be found at https://github.com/NREL/openstudio-standards.
+  bool setStandardsTemplate(const std::string& standardsTemplate);
+  void resetStandardsTemplate();
 
   /// Sets the standards building type. This is a freeform field used to identify the building type for standards.
   /// Standards applied to this model will use this field to determine correct levels for lighting, occupancy, etc.
@@ -167,6 +197,9 @@ class MODEL_API SpaceType : public ResourceObject {
 
   /// Returns all ElectricEquipment in this space type.
   std::vector<ElectricEquipment> electricEquipment() const;
+
+  /// Returns all ElectricEquipmentITEAirCooled in this space type.
+  std::vector<ElectricEquipmentITEAirCooled> electricEquipmentITEAirCooled() const;
 
   /// Returns all GasEquipment in this space type.
   std::vector<GasEquipment> gasEquipment() const;
@@ -315,6 +348,11 @@ class MODEL_API SpaceType : public ResourceObject {
   double getElectricEquipmentPowerPerFloorArea(double floorArea, double numPeople) const;
 
   double getElectricEquipmentPowerPerPerson(double floorArea, double numPeople) const;
+
+  /** Returns the total IT equipment power per space floor area, if it can be calculated
+  *  directly from the underlying electricEquipmentITEAirCooled() data (without knowing floorArea and
+  *  numPeople). */
+  boost::optional<double> electricEquipmentITEAirCooledPowerPerFloorArea() const;
 
   /** Returns the total gas equipment power per space floor area, if it can be calculated
    *  directly from the underlying gasEquipment() data (without knowing floorArea and

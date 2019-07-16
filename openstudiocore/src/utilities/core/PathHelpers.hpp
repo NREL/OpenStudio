@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -87,6 +87,14 @@ UTILITIES_API path relocatePath(const path& originalPath,
                                 const path& originalBase,
                                 const path& newBase);
 
+/* Given the path to an OSM file, get the companion folder in which files, measures, etc, are stored
+ * eg if /path/to/model.osm, returns the folder /path/to/model/ */
+UTILITIES_API path getCompanionFolder(const path& osmPath);
+
+/* Given the path to a **directory**, return the name of the last level directory
+ * eg if /path/to/folder, returns 'folder' */
+UTILITIES_API path getLastLevelDirectoryName(const path& directory);
+
 /** Print information about path p available through openstudio::filesystem. */
 UTILITIES_API std::ostream& printPathInformation(std::ostream& os,const path& p);
 
@@ -112,6 +120,12 @@ UTILITIES_API bool isNetworkPath(const path& p);
   * Returns false if path is not absolute or if path is not a network path.
   * Currently only implemented for Windows, returns false on other platforms. */
 UTILITIES_API bool isNetworkPathAvailable(const path& p);
+
+/** Tries to locate a file in your PATH, returning unchanged if p isn't just a filename (has a parent_path) or if not found */
+UTILITIES_API path findInSystemPath(const path& p);
+
+/** Returns the delimiter for the $PATH env variable. Basically ";" on windows, ":" otherwise */
+UTILITIES_API const char pathDelimiter();
 
 } // openstudio
 

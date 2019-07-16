@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -28,11 +28,9 @@
 ***********************************************************************************************************************/
 
 #include "PathHelpers.hpp"
-#include "Logger.hpp"
 #include "Assert.hpp"
 #include "FilesystemHelpers.hpp"
 
-#include <QDir>
 #include <QRegularExpression>
 
 #ifdef Q_OS_WIN
@@ -111,11 +109,7 @@ path setFileExtension(const path& p,
 {
   path result(p);
   path wext = toPath(ext);
-  std::string pext = openstudio::filesystem::extension(p);
-  if (!pext.empty()) {
-    // remove '.' from pext
-    pext = std::string(++pext.begin(),pext.end());
-  }
+  std::string pext = getFileExtension(p);
   if (!pext.empty()) {
     if (pext != wext.string()) {
       if (warnOnMismatch) {
@@ -208,21 +202,91 @@ path relativePath(const path& p,const path& base) {
   return result;
 }
 
+const char pathDelimiter() {
+  #if defined _WIN32
+    const char delimiter = ';';
+  #else
+    const char delimiter = ':';
+  #endif
+  return delimiter;
+}
+
+path findInSystemPath(const path& p) {
+
+  path result;
+  // Ensure that this is just a name and not a path
+  if ( p.parent_path().empty() ) {
+    std::istringstream pathstream( getenv("PATH") );
+    LOG_FREE(Debug, "PathHelpers", "findInSystemPath, searching for '" << p << "' in PATH'");
+
+    std::string pathstring;
+    while ( std::getline(pathstream, pathstring, pathDelimiter()) ) {
+      LOG_FREE(Trace, "PathHelpers", "findInSystemPath, searching for '" << p << "' in '" << pathstring << "'");
+
+      auto maybepath = toPath(pathstring) / p;
+      if( openstudio::filesystem::exists( maybepath ) && !openstudio::filesystem::is_directory( maybepath ) ) {
+        LOG_FREE(Debug, "PathHelpers", "findInSystemPath, found '" << p << "' in PATH: '" << pathstring);
+        result = maybepath;
+        break;
+      }
+    }
+    if (result.empty()) {
+      LOG_FREE(Debug, "PathHelpers", "findInSystemPath, p wasn't found in PATH, leaving as is");
+      result = p;
+    }
+
+  } else {
+    LOG_FREE(Debug, "PathHelpers", "findInSystemPath, p isn't just a name, leaving as is");
+    result = p;
+  }
+
+
+  return result;
+
+}
+
 path completeAndNormalize(const path& p) {
+
   path temp = openstudio::filesystem::system_complete(p);
-  if ( openstudio::filesystem::is_symlink(temp) ) {
+
+  LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: looking for p = " << p);
+  LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp = " << temp);
+
+  // TODO: is there a point continuing if temp doesn't exist?
+  if( !openstudio::filesystem::exists( temp )) { // || openstudio::filesystem::is_directory( temp ) ) {
+    LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp doesn't exists");
+  }
+
+  while ( openstudio::filesystem::is_symlink(temp) ) {
     auto linkpath = openstudio::filesystem::read_symlink(temp);
+    LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: It's a symlink, linkpath = " << linkpath);
+
     if ( linkpath.is_absolute() ) {
       temp = linkpath;
+      LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp is an absolute symlink (= linkpath)");
+
     } else {
+      // Note JM 2019-04-24: temp will end up absolute but not canonical yet
+      // eg:
+      // temp="/home/a_folder/a_symlink"
+      // linkpath="../another_folder/a_file"
       temp = temp.parent_path() / linkpath;
+      // eg: temp ="/home/a_folder/../another_folder/a_file"
+
+      LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp is a relative symlink, pointing to = " << temp);
+
     }
   }
+  // TODO: can this actually happen?
   if (temp.empty() && !p.empty()) {
+    LOG_FREE(Trace, "PathHelpers", "completeAndNormalize: temp is empty, reseting to p");
     temp = p;
   }
   path result;
 
+  // TODO: In develop3, which has boost 1.68, we can replace it with boost::filesystem::weakly_canonical
+  // Note JM 2019-04-24: temp right now is absolute, but it isn't necessarilly canonical.
+  // This block resolves a canonical path, even if it doesn't exist (yet?) on disk.
   for(openstudio::path::iterator it=temp.begin(); it!=temp.end(); ++it) {
     if (*it == toPath("..")) {
       if (openstudio::filesystem::is_symlink(result) || (result.filename() == toPath(".."))) {
@@ -236,6 +300,8 @@ path completeAndNormalize(const path& p) {
       result /= *it;
     }
   }
+
+  LOG_FREE(Debug, "PathHelpers", "completeAndNormalize: result = " << result);
 
   return result;
 }
@@ -253,6 +319,28 @@ path relocatePath(const path& originalPath,
     LOG_FREE(Debug,"openstudio.utilities.core","Relocating path to '" << toString(result) << "'.");
   }
   return result;
+}
+
+path getCompanionFolder(const path& osmPath)
+{
+  // Note: JM 2018-09-05
+  // We could include a variety of checks (verify that we passed a file, that the file exists, that extension is osm)
+  // if( boost::filesystem::is_regular_file(osmPath) && (getFileExtension(osmPath) == "osm") && boost::filesystem::exists(osmPath) )
+  // Not doing it for speed, we assume we do only use this with the path to an OSM, so stem() will do the right thing, that is split on the last "."
+  return osmPath.parent_path() / osmPath.stem();
+}
+
+path getLastLevelDirectoryName(const path& directory)
+{
+  // Note: JM 2018-09-05
+  // We could do a variety of checks here to ensure that we did pass a directory and not a file, not doing it for speed
+  // (boost::filesystem::is_directory and boost::filesystem::exists)
+
+  // We are using filename() (badly named here) and not stem() because we passed a directory, and if there is a "." in the directory name
+  // stem() is going to think the part after the last '.' is the extension.
+  // filename() just strips out the parent_path which is exactly what we need
+  return directory.filename();
+
 }
 
 std::ostream& printPathInformation(std::ostream& os,const path& p) {

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,6 +56,11 @@ class LibraryTabWidget : public QWidget
   void addTab( QWidget * widget,
                const QString & selectedImagePath,
                const QString & unSelectedImagePath );
+
+  /* This method, given a tab widget, will change the currentIndex to be the following if there is one, or zero otherwise
+   * It will hide the tab by hide the corresponding button.
+   * Useful to hide the LoopChooserView for components that don't have a water coil for eg. */
+  void hideTab(QWidget * widget, bool hide = true);
 
   signals:
 

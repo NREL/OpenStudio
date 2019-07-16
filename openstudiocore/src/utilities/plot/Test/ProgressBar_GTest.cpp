@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -73,13 +73,17 @@ TEST(ProgressBar, BasicTest)
     Application::instance().application(true);
   }
   if (Application::instance().hasGUI()){
-    ProgressBar pb;
-    for (int i = 0; i <= 100; ++i){
-      pb.setValue(i);
-      EXPECT_EQ(i, pb.value());
-      System::msleep(10);
+	{
+      ProgressBar pb;
+      for (int i = 0; i <= 100; ++i){
+        pb.setValue(i);
+        EXPECT_EQ(i, pb.value());
+        System::msleep(10);
+      }
     }
+    System::msleep(10);
   }
+  
 }
 
 TEST(ProgressBar, AdvancedTest)
@@ -88,16 +92,19 @@ TEST(ProgressBar, AdvancedTest)
     Application::instance().application(true);
   }
   if (Application::instance().hasGUI()){
-    ProgressBar pb1;
-    ProgressBar pb2;
-    ProgressBar pb3;
+    {
+      ProgressBar pb1;
+      ProgressBar pb2;
+      ProgressBar pb3;
 
-    for (unsigned i = 0; i <= 100; ++i){
-      pb1.setValue(i);
-      pb2.setValue(100 - i);
-      pb3.setValue((10 * i) % 100);
-      System::msleep(10);
+      for (unsigned i = 0; i <= 100; ++i){
+        pb1.setValue(i);
+        pb2.setValue(100 - i);
+        pb3.setValue((10 * i) % 100);
+        System::msleep(10);
+      }
     }
+    System::msleep(10);
   }
 }
 

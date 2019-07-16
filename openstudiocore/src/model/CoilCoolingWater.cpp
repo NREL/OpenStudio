@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,8 @@
 #include "ZoneHVACComponent_Impl.hpp"
 #include "ZoneHVACFourPipeFanCoil.hpp"
 #include "ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "ZoneHVACUnitVentilator.hpp"
+#include "ZoneHVACUnitVentilator_Impl.hpp"
 
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
@@ -339,21 +341,31 @@ namespace detail {
 
   bool CoilCoolingWater_Impl::addToNode(Node & node)
   {
-    bool success;
+    bool success(false);
 
-    success =  WaterToAirComponent_Impl::addToNode( node );
-    auto t_containingZoneHVACComponent = containingZoneHVACComponent();
+    auto t_containingHVACComponent = containingHVACComponent();
+    auto t_airLoop = node.airLoopHVAC();
 
-    if( success && (! t_containingZoneHVACComponent) ) {
-      if( auto t_waterInletModelObject = waterInletModelObject() ) {
-        if( auto oldController = controllerWaterCoil() ) {
-          oldController->remove();
+    if (t_airLoop &&
+        t_containingHVACComponent &&
+        t_containingHVACComponent->optionalCast<CoilSystemCoolingWaterHeatExchangerAssisted>()) {
+      LOG(Warn, this->briefDescription() << " cannot be connected directly to an AirLoopHVAC when it's part of a parent CoilSystemCoolingWaterHeatExchangerAssisted. Please call CoilSystemCoolingWaterHeatExchangerAssisted::addToNode instead");
+    } else {
+
+      success =  WaterToAirComponent_Impl::addToNode( node );
+      auto t_containingZoneHVACComponent = containingZoneHVACComponent();
+
+      if( success && (! t_containingZoneHVACComponent) ) {
+        if( auto t_waterInletModelObject = waterInletModelObject() ) {
+          if( auto oldController = controllerWaterCoil() ) {
+            oldController->remove();
+          }
+
+          Model t_model = model();
+          ControllerWaterCoil controller(t_model);
+          controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(getObject<HVACComponent>());
+          controller.setAction("Reverse");
         }
-
-        Model t_model = model();
-        ControllerWaterCoil controller(t_model);
-        controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(getObject<HVACComponent>());
-        controller.setAction("Reverse");
       }
     }
 
@@ -387,22 +399,22 @@ namespace detail {
     return newCoil;
   }
 
-  unsigned CoilCoolingWater_Impl::airInletPort()
+  unsigned CoilCoolingWater_Impl::airInletPort() const
   {
     return OS_Coil_Cooling_WaterFields::AirInletNodeName;
   }
 
-  unsigned CoilCoolingWater_Impl::airOutletPort()
+  unsigned CoilCoolingWater_Impl::airOutletPort() const
   {
     return OS_Coil_Cooling_WaterFields::AirOutletNodeName;
   }
 
-  unsigned CoilCoolingWater_Impl::waterInletPort()
+  unsigned CoilCoolingWater_Impl::waterInletPort() const
   {
     return OS_Coil_Cooling_WaterFields::WaterInletNodeName;
   }
 
-  unsigned CoilCoolingWater_Impl::waterOutletPort()
+  unsigned CoilCoolingWater_Impl::waterOutletPort() const
   {
     return OS_Coil_Cooling_WaterFields::WaterOutletNodeName;
   }
@@ -471,18 +483,19 @@ namespace detail {
   boost::optional<ZoneHVACComponent> CoilCoolingWater_Impl::containingZoneHVACComponent() const
   {
     // ZoneHVACFourPipeFanCoil
-
-    std::vector<ZoneHVACFourPipeFanCoil> zoneHVACFourPipeFanCoils;
-
-    zoneHVACFourPipeFanCoils = this->model().getConcreteModelObjects<ZoneHVACFourPipeFanCoil>();
-
-    for( const auto & zoneHVACFourPipeFanCoil : zoneHVACFourPipeFanCoils )
-    {
-      if( boost::optional<HVACComponent> coil = zoneHVACFourPipeFanCoil.coolingCoil() )
-      {
-        if( coil->handle() == this->handle() )
-        {
+    for( const auto & zoneHVACFourPipeFanCoil : this->model().getConcreteModelObjects<ZoneHVACFourPipeFanCoil>() ) {
+      if( boost::optional<HVACComponent> coil = zoneHVACFourPipeFanCoil.coolingCoil() ) {
+        if( coil->handle() == this->handle() ) {
           return zoneHVACFourPipeFanCoil;
+        }
+      }
+    }
+
+    // ZoneHVACUnitVentilator
+    for( const auto & zoneHVACUnitVentilator : this->model().getConcreteModelObjects<ZoneHVACUnitVentilator>() ) {
+      if( boost::optional<HVACComponent> coil = zoneHVACUnitVentilator.coolingCoil() ) {
+        if( coil->handle() == this->handle() ) {
+          return zoneHVACUnitVentilator;
         }
       }
     }

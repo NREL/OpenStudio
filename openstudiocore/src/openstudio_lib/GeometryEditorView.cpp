@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,7 +39,6 @@
 #include "../model/ThreeJSReverseTranslator.hpp"
 #include "../model/ThreeJSForwardTranslator.hpp"
 #include "../model/FloorplanJSForwardTranslator.hpp"
-#include "../model/FloorplanJSForwardTranslator.hpp"
 #include "../model/Building.hpp"
 #include "../model/Building_Impl.hpp"
 #include "../model/BuildingStory.hpp"
@@ -74,6 +73,7 @@
 
 #include <QFile>
 #include <QDialog>
+#include <QLabel>
 #include <QTcpServer>
 #include <QComboBox>
 #include <QFileDialog>
@@ -81,17 +81,32 @@
 #include <QTimer>
 #include <QStackedWidget>
 #include <QVBoxLayout>
-#include <QLabel>
 #include <QPushButton>
 #include <QWebEnginePage>
 #include <QWebEngineSettings>
 #include <QTemporaryDir>
 #include <QProcess>
+#include <QSettings>
 #include <QProcessEnvironment>
+
 
 int CHECKFORUPDATEMSEC = 5000;
 
 namespace openstudio {
+
+QUrl getEmbeddedFileUrl(const QString& filename)
+{
+  QUrl result(QString("qrc:///library/") + filename);
+
+  QString appDir = QCoreApplication::applicationDirPath();
+  QFileInfo fileInfo(appDir + QString("/") + filename);
+  if (fileInfo.exists() && fileInfo.isFile()) {
+    result = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
+  }
+
+  return result;
+}
+
 
 GeometryEditorView::GeometryEditorView(bool isIP,
                                      const openstudio::model::Model& model,
@@ -181,7 +196,8 @@ std::map<UUID, UUID> BaseEditor::exportModelHandleMapping() const
 
 void BaseEditor::onChanged()
 {
-  m_document->markAsModified();
+  emit changed();
+  //m_document->markAsModified();
 }
 
 FloorspaceEditor::FloorspaceEditor(const openstudio::path& floorplanPath, bool isIP, const openstudio::model::Model& model, QWebEngineView * view, QWidget *t_parent)
@@ -221,7 +237,7 @@ FloorspaceEditor::FloorspaceEditor(const openstudio::path& floorplanPath, bool i
       //std::string contents2 = m_floorplan->toJSON();
 
       // start loading the editor, will trigger EditorWebView::onLoadFinished when done
-      m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
+      m_view->load(getEmbeddedFileUrl("embeddable_geometry_editor.html"));
     } else {
       m_view->setHtml(QString("Failed to open existing floorplan."));
     }
@@ -229,7 +245,7 @@ FloorspaceEditor::FloorspaceEditor(const openstudio::path& floorplanPath, bool i
   } else {
 
     // new floorplan, will trigger EditorWebView::onLoadFinished when done
-    m_view->load(QUrl("qrc:///library/embeddable_geometry_editor.html"));
+    m_view->load(getEmbeddedFileUrl("embeddable_geometry_editor.html"));
   }
 
   m_document->enable();
@@ -583,7 +599,7 @@ GbXmlEditor::GbXmlEditor(const openstudio::path& gbXmlPath, bool isIP, const ope
   }
 
   // start loading the editor, will trigger EditorWebView::onLoadFinished when done
-  m_view->load(QUrl("qrc:///library/embeddable_gbxml_editor.html"));
+  m_view->load(getEmbeddedFileUrl("embeddable_gbxml_editor.html"));
   //m_view->load(QUrl("file:///E:/openstudio2/openstudiocore/src/openstudio_lib/library/embeddable_gbxml_editor.html"));
 
   m_document->enable();
@@ -748,7 +764,7 @@ IdfEditor::IdfEditor(const openstudio::path& idfPath, bool forceConvert, bool is
   }
 
   // start loading the editor, will trigger EditorWebView::onLoadFinished when done
-  m_view->load(QUrl("qrc:///library/embeddable_idf_editor.html"));
+  m_view->load(getEmbeddedFileUrl("embeddable_idf_editor.html"));
   //m_view->load(QUrl("file:///E:/openstudio2/openstudiocore/src/openstudio_lib/library/embeddable_idf_editor.html"));
 
   m_document->enable();
@@ -878,7 +894,7 @@ OsmEditor::OsmEditor(const openstudio::path& osmPath, bool isIP, const openstudi
   }
 
   // start loading the editor, will trigger EditorWebView::onLoadFinished when done
-  m_view->load(QUrl("qrc:///library/geometry_preview.html"));
+  m_view->load(getEmbeddedFileUrl("geometry_preview.html"));
 
   m_document->enable();
 }
@@ -943,12 +959,13 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     m_model(model),
     m_baseEditor(nullptr),
     m_isIP(isIP),
+    m_mergeWarn(false),
     m_geometrySourceComboBox(new QComboBox()),
     m_newImportGeometry(new QPushButton("New")),
     m_progressBar(new QProgressBar()),
     m_refreshBtn(new QPushButton("Refresh")),
-    m_previewBtn(new QPushButton("Preview")),
-    m_mergeBtn(new QPushButton("Merge")),
+    m_previewBtn(new QPushButton("Preview OSM")),
+    m_mergeBtn(new QPushButton("Merge with Current OSM")),
     m_debugBtn(new QPushButton("Debug"))
 {
   openstudio::OSAppBase * app = OSAppBase::instance();
@@ -973,7 +990,11 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
   auto hLayout = new QHBoxLayout(this);
   mainLayout->addLayout(hLayout);
 
-  m_geometrySourceComboBox->addItem("Floorplan");
+  QLabel* label = new QLabel(this);
+  label->setText("Geometry Type");
+  hLayout->addWidget(label);
+
+  m_geometrySourceComboBox->addItem("FloorspaceJS");
   m_geometrySourceComboBox->addItem("gbXML");
   m_geometrySourceComboBox->addItem("IDF");
   m_geometrySourceComboBox->addItem("OSM");
@@ -991,7 +1012,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
   m_progressBar->setVisible(false); // make visible when load first page
 
   hLayout->addWidget(m_refreshBtn, 0, Qt::AlignVCenter);
-  m_refreshBtn->setVisible(true);
+  m_refreshBtn->setVisible(false); // hide to simplify interface
   m_refreshBtn->setEnabled(false);
 
   hLayout->addWidget(m_previewBtn, 0, Qt::AlignVCenter);
@@ -1007,7 +1028,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     m_debugBtn->setVisible(false);
     m_debugBtn->setEnabled(false);
   } else{
-    m_debugBtn->setVisible(true);
+    m_debugBtn->setVisible(false); // hide to simplify interface
     m_debugBtn->setEnabled(false);
   }
 
@@ -1015,10 +1036,18 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::SpatialNavigationEnabled, true);
 
-  connect(m_view, &QWebEngineView::loadFinished, this, &EditorWebView::onLoadFinished);
-  connect(m_view, &QWebEngineView::loadProgress, this, &EditorWebView::onLoadProgress);
-  connect(m_view, &QWebEngineView::loadStarted, this, &EditorWebView::onLoadStarted);
-  connect(m_view, &QWebEngineView::renderProcessTerminated, this, &EditorWebView::onRenderProcessTerminated);
+  m_page = new OSWebEnginePage(this);
+  m_view->setPage(m_page); // note, view does not take ownership of page
+
+  //connect(m_view, &QWebEngineView::loadFinished, this, &EditorWebView::onLoadFinished);
+  //connect(m_view, &QWebEngineView::loadProgress, this, &EditorWebView::onLoadProgress);
+  //connect(m_view, &QWebEngineView::loadStarted, this, &EditorWebView::onLoadStarted);
+  //connect(m_view, &QWebEngineView::renderProcessTerminated, this, &EditorWebView::onRenderProcessTerminated);
+
+  connect(m_page, &OSWebEnginePage::loadFinished, this, &EditorWebView::onLoadFinished);
+  connect(m_page, &OSWebEnginePage::loadProgress, this, &EditorWebView::onLoadProgress);
+  connect(m_page, &OSWebEnginePage::loadStarted, this, &EditorWebView::onLoadStarted);
+  connect(m_page, &OSWebEnginePage::renderProcessTerminated, this, &EditorWebView::onRenderProcessTerminated);
 
   // Qt 5.8 and higher
   //m_view->setAttribute(QWebEngineSettings::WebAttribute::AllowRunningInsecureContent, true);
@@ -1034,12 +1063,12 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
   // check if floorplan exists
   openstudio::path p = floorplanPath();
   if (exists(p)){
-    m_geometrySourceComboBox->setCurrentText("Floorplan");
+    m_geometrySourceComboBox->setCurrentText("FloorspaceJS");
     m_geometrySourceComboBox->setEnabled(false);
     m_newImportGeometry->setEnabled(false);
 
     m_baseEditor = new FloorspaceEditor(p, m_isIP, m_model, m_view, this);
-
+    connect(m_baseEditor, &BaseEditor::changed, this, &EditorWebView::onChanged);
     // editor will be started when page load finishes
     return;
   }
@@ -1052,7 +1081,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     m_newImportGeometry->setEnabled(true);
 
     m_baseEditor = new GbXmlEditor(p, m_isIP, m_model, m_view, this);
-
+    connect(m_baseEditor, &BaseEditor::changed, this, &EditorWebView::onChanged);
     // editor will be started when page load finishes
     return;
   }
@@ -1065,7 +1094,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     m_newImportGeometry->setEnabled(true);
 
     m_baseEditor = new IdfEditor(p, false, m_isIP, m_model, m_view, this);
-
+    connect(m_baseEditor, &BaseEditor::changed, this, &EditorWebView::onChanged);
     // editor will be started when page load finishes
     return;
   }
@@ -1078,7 +1107,7 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
     m_newImportGeometry->setEnabled(true);
 
     m_baseEditor = new OsmEditor(p, m_isIP, m_model, m_view, this);
-
+    connect(m_baseEditor, &BaseEditor::changed, this, &EditorWebView::onChanged);
     // editor will be started when page load finishes
     return;
   }
@@ -1086,21 +1115,45 @@ EditorWebView::EditorWebView(bool isIP, const openstudio::model::Model& model, Q
   // no files found
   if ((model.getConcreteModelObjects<model::Surface>().size() > 0) || (model.getConcreteModelObjects<model::SubSurface>().size() > 0) || (model.getConcreteModelObjects<model::ShadingSurface>().size() > 0)){
     m_newImportGeometry->setEnabled(false);
-    m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
+    m_view->load(getEmbeddedFileUrl("geometry_editor_start.html"));
   } else{
-    m_view->load(QUrl("qrc:///library/geometry_editor_start.html"));
+    m_view->load(getEmbeddedFileUrl("geometry_editor_start.html"));
   }
 }
 
 EditorWebView::~EditorWebView()
 {
+  if (m_baseEditor && m_baseEditor->editorLoaded()){
+    m_baseEditor->blockUpdateTimerSignals(true);
+    m_baseEditor->checkForUpdate();
+  }
+  if (m_mergeWarn){
+    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+    QString mergeWarnKeyName("geometryMergeWarn");
+    bool settingsMergeWarn = settings.value(mergeWarnKeyName, true).toBool();
+    if (settingsMergeWarn){
+      QMessageBox msg(QMessageBox::Question, "Unmerged Changes", "Your geometry may include unmerged changes.  Merge with Current OSM now?  Choose Ignore to skip this message in the future.",
+        QMessageBox::Yes | QMessageBox::No | QMessageBox::Ignore, this, Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
+      msg.setDefaultButton(QMessageBox::No);
+      msg.setEscapeButton(QMessageBox::No);
+      int result = msg.exec();
+      if (result == QMessageBox::Yes){
+        mergeClicked();
+      } else if (result == QMessageBox::No){
+        // no-op
+      } else if (result == QMessageBox::Ignore){
+        settings.setValue(mergeWarnKeyName, false);
+      }
+    }
+  }
   saveClickedBlocking("");
+  delete m_page;
   delete m_view;
 }
 
 void EditorWebView::geometrySourceChanged(const QString& text)
 {
-  if (text == "Floorplan"){
+  if (text == "FloorspaceJS"){
     m_newImportGeometry->setText("New");
   }else if (text == "gbXML"){
     m_newImportGeometry->setText("Import");
@@ -1117,12 +1170,12 @@ void EditorWebView::newImportClicked()
     delete m_baseEditor;
   }
 
-  if (m_geometrySourceComboBox->currentText() == "Floorplan"){
+  if (m_geometrySourceComboBox->currentText() == "FloorspaceJS"){
     m_geometrySourceComboBox->setEnabled(false);
     m_newImportGeometry->setEnabled(false);
 
     m_baseEditor = new FloorspaceEditor(floorplanPath(), m_isIP, m_model, m_view, this);
-
+    connect(m_baseEditor, &BaseEditor::changed, this, &EditorWebView::onChanged);
     onChanged();
 
     // editor will be started when page load finishes
@@ -1150,7 +1203,7 @@ void EditorWebView::newImportClicked()
     m_newImportGeometry->setEnabled(true);
 
     m_baseEditor = new GbXmlEditor(op, m_isIP, m_model, m_view, this);
-
+    connect(m_baseEditor, &BaseEditor::changed, this, &EditorWebView::onChanged);
     onChanged();
 
     // editor will be started when page load finishes
@@ -1178,7 +1231,7 @@ void EditorWebView::newImportClicked()
     m_newImportGeometry->setEnabled(true);
 
     m_baseEditor = new IdfEditor(op, true, m_isIP, m_model, m_view, this);
-
+    connect(m_baseEditor, &BaseEditor::changed, this, &EditorWebView::onChanged);
     onChanged();
 
     // editor will be started when page load finishes
@@ -1206,7 +1259,7 @@ void EditorWebView::newImportClicked()
     m_newImportGeometry->setEnabled(true);
 
     m_baseEditor = new OsmEditor(op, m_isIP, m_model, m_view, this);
-
+    connect(m_baseEditor, &BaseEditor::changed, this, &EditorWebView::onChanged);
     onChanged();
 
     // editor will be started when page load finishes
@@ -1234,7 +1287,6 @@ void EditorWebView::previewClicked()
     m_baseEditor->doExport();
     previewExport();
   }
-
 }
 
 void EditorWebView::mergeClicked()
@@ -1243,6 +1295,7 @@ void EditorWebView::mergeClicked()
     m_baseEditor->doExport();
     mergeExport();
   }
+  m_mergeWarn = false;
 }
 
 void EditorWebView::debugClicked()
@@ -1350,6 +1403,7 @@ void EditorWebView::mergeExport()
 
 void EditorWebView::onChanged()
 {
+  m_mergeWarn = true;
   m_document->markAsModified();
 }
 

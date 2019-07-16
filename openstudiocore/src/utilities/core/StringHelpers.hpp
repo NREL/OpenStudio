@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -122,6 +122,14 @@ namespace openstudio {
    *  beginning or ending with an empty string, and non-empty strings with no delimiters returns
    *  a vector with the input string as the only element. */
   UTILITIES_API std::vector <std::string> splitString(const std::string & string, char delimiter);
+
+  /** This takes the line of an EMS Program or Subroutine, and will split it into tokens,
+   *  Before returning, it filters out the reserved keywords (IF, WHILE, RETURN, RUN, etc) and any function (starts with '@')
+   *  As a result, what is returned is the only "words" that could be potential objects for UUID substitution.
+   *  Note: JM 2018-08-16: The second parameters defaults to the operators currently accepted as of 8.9.0.
+   *  The reserved keywords are hardcoded per the same 8.9.0 version.
+   */
+  UTILITIES_API std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string delimiters=" +-*/^=<>&|");
 
 }
 

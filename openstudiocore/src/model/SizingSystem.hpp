@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -76,9 +76,6 @@ class MODEL_API SizingSystem : public ModelObject
   bool isDesignOutdoorAirFlowRateDefaulted() const;
 
   bool isDesignOutdoorAirFlowRateAutosized() const;
-
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Central Heating Maximum System Air Flow Ratio" **/
-  double minimumSystemAirFlowRatio() const;
 
   double preheatDesignTemperature() const;
 
@@ -185,8 +182,6 @@ class MODEL_API SizingSystem : public ModelObject
 
   void autosizeDesignOutdoorAirFlowRate();
 
-  bool setMinimumSystemAirFlowRatio(double minimumSystemAirFlowRatio);
-
   bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
   bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
@@ -279,11 +274,24 @@ class MODEL_API SizingSystem : public ModelObject
 
   AirLoopHVAC airLoopHVAC() const;
 
-  boost::optional<double> autosizedDesignOutdoorAirFlowRate() const ;
 
-  boost::optional<double> autosizedCoolingDesignCapacity() const ;
+  boost::optional<double> centralHeatingMaximumSystemAirFlowRatio() const;
+  bool isCentralHeatingMaximumSystemAirFlowRatioAutosized() const;
+  bool setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
+  void autosizeCentralHeatingMaximumSystemAirFlowRatio();
 
-  boost::optional<double> autosizedHeatingDesignCapacity() const ;
+  // DEPRECATED: TODO REMOVE as soon as standards > 0.29.0 is relased
+  /** Deprecated, forwards to centralHeatingMaximumSystemAirFlowRatio
+   * In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Central Heating Maximum System Air Flow Ratio"
+   * Prior to 2.6.2, this was returning a double (no autosize possible) */
+  boost::optional<double> minimumSystemAirFlowRatio() const;
+  /* Deprecated, forwards to setCentralHeatingMaximumSystemAirFlowRatio */
+  bool setMinimumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
+
+  boost::optional<double> autosizedDesignOutdoorAirFlowRate() const;
+  boost::optional<double> autosizedCentralHeatingMaximumSystemAirFlowRatio() const;
+  boost::optional<double> autosizedCoolingDesignCapacity() const;
+  boost::optional<double> autosizedHeatingDesignCapacity() const;
 
   void autosize();
 

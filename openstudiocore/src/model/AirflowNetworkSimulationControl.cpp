@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -27,44 +27,44 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <model/AirflowNetworkSimulationControl.hpp>
-#include <model/AirflowNetworkSimulationControl_Impl.hpp>
+#include "AirflowNetworkSimulationControl.hpp"
+#include "AirflowNetworkSimulationControl_Impl.hpp"
 
-#include <model/Model.hpp>
-#include <model/ConvergenceLimits.hpp>
-#include <model/ConvergenceLimits_Impl.hpp>
-#include <model/HeatBalanceAlgorithm.hpp>
-#include <model/HeatBalanceAlgorithm_Impl.hpp>
-#include <model/InsideSurfaceConvectionAlgorithm.hpp>
-#include <model/InsideSurfaceConvectionAlgorithm_Impl.hpp>
-#include <model/OutsideSurfaceConvectionAlgorithm.hpp>
-#include <model/OutsideSurfaceConvectionAlgorithm_Impl.hpp>
-#include <model/RunPeriod.hpp>
-#include <model/RunPeriod_Impl.hpp>
-#include <model/ShadowCalculation.hpp>
-#include <model/ShadowCalculation_Impl.hpp>
-#include <model/SizingPeriod.hpp>
-#include <model/SizingPeriod_Impl.hpp>
-#include <model/SizingParameters.hpp>
-#include <model/SizingParameters_Impl.hpp>
-#include <model/Timestep.hpp>
-#include <model/Timestep_Impl.hpp>
-#include <model/WeatherFile.hpp>
-#include <model/WeatherFile_Impl.hpp>
-#include <model/ZoneAirContaminantBalance.hpp>
-#include <model/ZoneAirContaminantBalance_Impl.hpp>
-#include <model/ZoneAirHeatBalanceAlgorithm.hpp>
-#include <model/ZoneAirHeatBalanceAlgorithm_Impl.hpp>
-#include <model/ZoneCapacitanceMultiplierResearchSpecial.hpp>
-#include <model/ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp>
+#include "Model.hpp"
+#include "ConvergenceLimits.hpp"
+#include "ConvergenceLimits_Impl.hpp"
+#include "HeatBalanceAlgorithm.hpp"
+#include "HeatBalanceAlgorithm_Impl.hpp"
+#include "InsideSurfaceConvectionAlgorithm.hpp"
+#include "InsideSurfaceConvectionAlgorithm_Impl.hpp"
+#include "OutsideSurfaceConvectionAlgorithm.hpp"
+#include "OutsideSurfaceConvectionAlgorithm_Impl.hpp"
+#include "RunPeriod.hpp"
+#include "RunPeriod_Impl.hpp"
+#include "ShadowCalculation.hpp"
+#include "ShadowCalculation_Impl.hpp"
+#include "SizingPeriod.hpp"
+#include "SizingPeriod_Impl.hpp"
+#include "SizingParameters.hpp"
+#include "SizingParameters_Impl.hpp"
+#include "Timestep.hpp"
+#include "Timestep_Impl.hpp"
+#include "WeatherFile.hpp"
+#include "WeatherFile_Impl.hpp"
+#include "ZoneAirContaminantBalance.hpp"
+#include "ZoneAirContaminantBalance_Impl.hpp"
+#include "ZoneAirHeatBalanceAlgorithm.hpp"
+#include "ZoneAirHeatBalanceAlgorithm_Impl.hpp"
+#include "ZoneCapacitanceMultiplierResearchSpecial.hpp"
+#include "ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_AirflowNetworkSimulationControl_FieldEnums.hxx>
 
-#include <utilities/sql/SqlFile.hpp>
-#include <utilities/core/Assert.hpp>
-#include <utilities/core/Compare.hpp>
-#include <utilities/units/Unit.hpp>
+#include "../utilities/sql/SqlFile.hpp"
+#include "../utilities/core/Assert.hpp"
+#include "../utilities/core/Compare.hpp"
+#include "../utilities/units/Unit.hpp"
 
 #include <boost/bind.hpp>
 

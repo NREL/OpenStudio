@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -58,16 +58,16 @@ class MODEL_API ConnectorSplitter : public Splitter
   virtual ~ConnectorSplitter() {}
 
   /** Returns the inlet port to the splitter. */
-  unsigned inletPort() override;
+  unsigned inletPort() const override;
 
   /** Returns the outlet port for branchIndex.  Branches consequtively
    *  indexed starting from 0.
    */
-  unsigned outletPort(unsigned branchIndex) override;
+  unsigned outletPort(unsigned branchIndex) const override;
 
   /** Returns the next available outlet port.  This will be the first port
    *  with no connected objects */
-  unsigned nextOutletPort() override;
+  unsigned nextOutletPort() const override;
 
   virtual bool addToNode(Node & node);
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,10 +45,18 @@
 #include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "../../model/CoilCoolingDXMultiSpeedStageData.hpp"
 #include "../../model/CoilCoolingDXMultiSpeedStageData_Impl.hpp"
+#include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
+#include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
+#include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
+#include "../../model/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
 #include "../../model/CoilHeatingDXMultiSpeedStageData.hpp"
 #include "../../model/CoilHeatingDXMultiSpeedStageData_Impl.hpp"
 #include "../../model/CoilHeatingDXVariableSpeedSpeedData.hpp"
 #include "../../model/CoilHeatingDXVariableSpeedSpeedData_Impl.hpp"
+#include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit.hpp"
+#include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl.hpp"
+#include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp"
+#include "../../model/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "../../model/CoilSystemCoolingWaterHeatExchangerAssisted.hpp"
@@ -470,20 +478,29 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // }
 
   // Design Specification Multispeed Object Name
-   if( boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject = modelObject.designSpecificationMultispeedObject() )
-   {
-     boost::optional<IdfObject> _unitarySystemPerformance = translateAndMapModelObject(designSpecificationMultispeedObject.get());
+  if( boost::optional<UnitarySystemPerformanceMultispeed> designSpecificationMultispeedObject = modelObject.designSpecificationMultispeedObject() )
+  {
+    boost::optional<IdfObject> _unitarySystemPerformance = translateAndMapModelObject(designSpecificationMultispeedObject.get());
 
-     if( _unitarySystemPerformance && _unitarySystemPerformance->name() )
-     {
-       unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType,_unitarySystemPerformance->iddObject().name());
-       unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName,_unitarySystemPerformance->name().get());
-     }
-   } else if( (coolingCoil && (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType())) ||
-      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingDXMultiSpeed::iddObjectType())) ||
-      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingDXVariableSpeed::iddObjectType())) ||
-      (heatingCoil && (heatingCoil->iddObjectType() == model::CoilHeatingGasMultiStage::iddObjectType())) )
-   {
+    if( _unitarySystemPerformance && _unitarySystemPerformance->name() )
+    {
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectType,_unitarySystemPerformance->iddObject().name());
+      unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::DesignSpecificationMultispeedObjectName,_unitarySystemPerformance->name().get());
+    }
+  // If it doesn't have one hard set, we check if there's at least one coil that should have speeds
+  } else if(
+      (coolingCoil && ( (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType()) ||
+                        (coolingCoil->iddObjectType() == model::CoilCoolingDXMultiSpeed::iddObjectType()) ||
+                        (coolingCoil->iddObjectType() == model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit::iddObjectType()) )
+       ) ||
+      (heatingCoil && ( (heatingCoil->iddObjectType() == model::CoilHeatingDXMultiSpeed::iddObjectType()) ||
+                        (heatingCoil->iddObjectType() == model::CoilHeatingDXVariableSpeed::iddObjectType()) ||
+                        (heatingCoil->iddObjectType() == model::CoilHeatingGasMultiStage::iddObjectType()) ||
+                        (heatingCoil->iddObjectType() == model::CoilHeatingDXVariableSpeed::iddObjectType()) ||
+                        (heatingCoil->iddObjectType() == model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit::iddObjectType()) )
+       )
+      )
+  {
 
     // If not user specified, then generate the UnitarySystemPerformance:Multispeed used for multi speed coils
 
@@ -494,7 +511,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     boost::optional<model::CoilHeatingDXMultiSpeed> multispeedDXHeating;
     boost::optional<model::CoilHeatingDXVariableSpeed> varSpeedDXHeating;
     boost::optional<model::CoilHeatingGasMultiStage> multistageGasHeating;
+    boost::optional<model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit> varSpeedWaterToAirHeating;
     boost::optional<model::CoilCoolingDXMultiSpeed> multispeedDXCooling;
+    boost::optional<model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit> varSpeedWaterToAirCooling;
+
 
     int maxStages = 0;
 
@@ -502,31 +522,40 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
       multispeedDXHeating = heatingCoil->optionalCast<model::CoilHeatingDXMultiSpeed>();
       multistageGasHeating = heatingCoil->optionalCast<model::CoilHeatingGasMultiStage>();
       varSpeedDXHeating = heatingCoil->optionalCast<model::CoilHeatingDXVariableSpeed>();
+      varSpeedWaterToAirHeating = heatingCoil->optionalCast<model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit>();
     }
 
     if( coolingCoil ) {
       multispeedDXCooling = coolingCoil->optionalCast<model::CoilCoolingDXMultiSpeed>();
+      varSpeedWaterToAirCooling = coolingCoil->optionalCast<model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit>();
     }
 
     std::vector<model::CoilHeatingDXMultiSpeedStageData> heatingStages;
     std::vector<model::CoilHeatingDXVariableSpeedSpeedData> varHeatingStages;
     std::vector<model::CoilHeatingGasMultiStageStageData> gasHeatingStages;
+    std::vector<model::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> waterToAirHeatingStages;
+
     std::vector<model::CoilCoolingDXMultiSpeedStageData> coolingStages;
+    std::vector<model::CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData> waterToAirCoolingStages;
 
     if( multispeedDXHeating ) {
       heatingStages = multispeedDXHeating->stages();
       maxStages = heatingStages.size();
-      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,maxStages);
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, maxStages);
     } else if( varSpeedDXHeating ) {
       varHeatingStages = varSpeedDXHeating->speeds();
       maxStages = varHeatingStages.size();
-      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,maxStages);
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, maxStages);
     } else if( multistageGasHeating ) {
       gasHeatingStages = multistageGasHeating->stages();
       maxStages = gasHeatingStages.size();
-      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,maxStages);
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, maxStages);
+    } else if( varSpeedWaterToAirHeating ) {
+      waterToAirHeatingStages = varSpeedWaterToAirHeating->speeds();
+      maxStages = waterToAirHeatingStages.size();
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, maxStages);
     } else {
-      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating,1);
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);
     }
 
     if( multispeedDXCooling ) {
@@ -536,8 +565,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
       if( stages > maxStages ) {
         maxStages = stages;
       }
+    } else if( varSpeedWaterToAirCooling ) {
+      waterToAirCoolingStages = varSpeedWaterToAirCooling->speeds();
+      maxStages = waterToAirCoolingStages.size();
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, maxStages);
     } else {
-      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling,1);
+      _unitarySystemPerformance.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);
     }
 
     _unitarySystemPerformance.setString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation,"No");

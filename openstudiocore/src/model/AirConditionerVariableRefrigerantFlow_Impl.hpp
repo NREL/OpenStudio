@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -69,6 +69,18 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
   virtual IddObjectType iddObjectType() const override;
 
   virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
+  virtual unsigned inletPort() const override;
+
+  virtual unsigned outletPort() const override;
+
+  virtual ModelObject clone(Model model) const override;
+
+  virtual std::vector<openstudio::IdfObject> remove() override;
+
+  virtual bool addToNode(Node & node) override;
+
+  virtual std::vector<ModelObject> children() const override;
 
   Schedule availabilitySchedule() const;
 
@@ -454,10 +466,6 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   bool setHeatRecoveryHeatingEnergyTimeConstant(double heatRecoveryHeatingEnergyTimeConstant);
 
-  unsigned inletPort() override;
-
-  unsigned outletPort() override;
-
   ModelObjectList vrfModelObjectList() const;
 
   bool setVRFModelObjectList(const ModelObjectList & modelObjectList);
@@ -469,14 +477,6 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
   void removeAllTerminals();
 
   std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
-
-  ModelObject clone(Model model) const override;
-
-  std::vector<openstudio::IdfObject> remove() override;
-
-  bool addToNode(Node & node) override;
-
-  std::vector<ModelObject> children() const override;
 
   boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
 
@@ -510,4 +510,4 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 } // model
 } // openstudio
 
-#endif // MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOW_IMPL_HPP
+#endif // MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOW_IMPL_HPP

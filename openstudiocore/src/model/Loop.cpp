@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -155,36 +155,23 @@ namespace detail {
 
   boost::optional<ModelObject> Loop_Impl::demandComponent(openstudio::Handle handle) const
   {
-    auto inletComps = demandInletNodes();
-    auto outletComp = demandOutletNode();
+    auto comps = demandComponents();
 
-    if( handle == outletComp.handle() ) { return outletComp; }
-
-    for( auto const & inletComp : inletComps ) {
-      if( handle == inletComp.handle() ) { return inletComp; }
-      std::vector<HVACComponent> visited { inletComp };
-      if( auto mo = findModelObject(handle, outletComp, visited, true) ) {
-        return mo;
-      }
+    auto it = std::find_if(comps.begin(), comps.end(), [&](const ModelObject & comp) {return (comp.handle() == handle);});
+    if ( it != comps.end() ) {
+      return *it;
     }
 
     return boost::none;
-
   }
 
   boost::optional<ModelObject> Loop_Impl::supplyComponent(openstudio::Handle handle) const
   {
-    auto inletComp = supplyInletNode();
-    auto outletComps = supplyOutletNodes();
+    auto comps = supplyComponents();
 
-    if( handle == inletComp.handle() ) { return inletComp; }
-
-    for( auto const & outletComp : outletComps ) {
-      if( handle == outletComp.handle() ) { return outletComp; }
-      std::vector<HVACComponent> visited { inletComp };
-      if( auto mo = findModelObject(handle, outletComp, visited, false) ) {
-        return mo;
-      }
+    auto it = std::find_if(comps.begin(), comps.end(), [&](const ModelObject & comp) {return (comp.handle() == handle);});
+    if ( it != comps.end() ) {
+      return *it;
     }
 
     return boost::none;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -84,23 +84,27 @@ namespace gbxml {
       return construction;
     }
 
-    QString layerId = layerIdList.at(0).toElement().attribute("layerIdRef");
-
+    // Construction::LayerId (layerIdList) -> Layer (layerElements), Layer::MaterialId -> Material
     std::vector<openstudio::model::Material> materials;
-    for (int i = 0; i < layerElements.count(); i++){
-      QDomElement layerElement = layerElements.at(i).toElement();
-      if (layerId == layerElement.attribute("id")){
-        QDomNodeList materialIdElements = layerElement.elementsByTagName("MaterialId");
-        for (int j = 0; j < materialIdElements.count(); j++){
-          QString materialId = materialIdElements.at(j).toElement().attribute("materialIdRef");
-          auto materialIt = m_idToObjectMap.find(materialId);
-          if (materialIt != m_idToObjectMap.end()){
-            boost::optional<openstudio::model::Material> material = materialIt->second.optionalCast<openstudio::model::Material>();
-            OS_ASSERT(material); // Krishnan, what type of error handling do you want?
-            materials.push_back(*material);
+    for (int layerIdIdx = 0; layerIdIdx < layerIdList.count(); layerIdIdx++) {
+      QString layerId = layerIdList.at(layerIdIdx).toElement().attribute("layerIdRef");
+
+      // find this layerId in all the layers
+      for (int i = 0; i < layerElements.count(); i++) {
+        QDomElement layerElement = layerElements.at(i).toElement();
+        if (layerId == layerElement.attribute("id")) {
+          QDomNodeList materialIdElements = layerElement.elementsByTagName("MaterialId");
+          for (int j = 0; j < materialIdElements.count(); j++) {
+            QString materialId = materialIdElements.at(j).toElement().attribute("materialIdRef");
+            auto materialIt = m_idToObjectMap.find(materialId);
+            if (materialIt != m_idToObjectMap.end()) {
+              boost::optional<openstudio::model::Material> material = materialIt->second.optionalCast<openstudio::model::Material>();
+              OS_ASSERT(material); // Krishnan, what type of error handling do you want?
+              materials.push_back(*material);
+            }
           }
+          break;
         }
-        break;
       }
     }
 

@@ -32,6 +32,10 @@
   using namespace openstudio::osversion;
 %}
 
+%ignore std::vector<openstudio::osversion::RefactoredObjectData>::vector(size_type);
+%ignore std::vector<openstudio::osversion::RefactoredObjectData>::resize(size_type);
+%template(RefactoredObjectDataVector) std::vector<openstudio::osversion::RefactoredObjectData>;
+
 %include <osversion/VersionTranslator.hpp>
 
 #endif // OSVERSION_I

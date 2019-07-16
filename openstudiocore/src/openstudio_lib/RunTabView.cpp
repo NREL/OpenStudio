@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,6 +54,7 @@
 
 #include "../utilities/core/Application.hpp"
 #include "../utilities/core/ApplicationPathHelpers.hpp"
+#include "../utilities/core/PathHelpers.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 #include "../utilities/core/Assert.hpp"
 
@@ -173,7 +174,7 @@ RunView::RunView()
 void RunView::onOpenSimDirClicked()
 {
   std::shared_ptr<OSDocument> osdocument = OSAppBase::instance()->currentDocument();
-  QString url = QString::fromStdString((resourcePath(toPath(osdocument->savePath())) / "run").string());
+  QString url = QString::fromStdString(( getCompanionFolder( toPath(osdocument->savePath()) ) / toPath("run") ).string());
   QUrl qurl = QUrl::fromLocalFile(url);
   if( ! QDesktopServices::openUrl(qurl) ) {
     QMessageBox::critical(this, "Unable to open simulation", "Please save the OpenStudio Model to view the simulation.");
@@ -196,14 +197,6 @@ void RunView::onRunProcessFinished(int exitCode, QProcess::ExitStatus status)
     delete m_runSocket;
   }
   m_runSocket = nullptr;
-}
-
-openstudio::path RunView::resourcePath(const openstudio::path & osmPath) const
-{
-  auto baseName = osmPath.stem();
-  auto parentPath = osmPath.parent_path();
-  auto resourcePath = parentPath / baseName;
-  return resourcePath;
 }
 
 void RunView::playButtonClicked(bool t_checked)
@@ -230,7 +223,7 @@ void RunView::playButtonClicked(bool t_checked)
     auto openstudioExePath = QStandardPaths::findExecutable("openstudio", paths);
 
     // run in save dir
-    //auto basePath = resourcePath(toPath(osdocument->savePath()));
+    //auto basePath = getCompanionFolder( toPath(osdocument->savePath()) );
 
     // run in temp dir
     auto basePath = toPath(osdocument->modelTempDir()) / toPath("resources");

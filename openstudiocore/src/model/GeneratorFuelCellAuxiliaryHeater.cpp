@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -83,21 +83,6 @@ namespace detail {
     return GeneratorFuelCellAuxiliaryHeater::iddObjectType();
   }
 
-  // This will clone both the GeneratorFuelCellAuxiliaryHeater and its linked GeneratorFuelCell
-  // and will return a reference to the GeneratorFuelCellAuxiliaryHeater
-  ModelObject GeneratorFuelCellAuxiliaryHeater_Impl::clone(Model model) const {
-
-    // We call the parent generator's Clone method which will clone both the fuelCell and fuelCellHX
-    GeneratorFuelCell fs = fuelCell();
-    GeneratorFuelCell fsClone = fs.clone(model).cast<GeneratorFuelCell>();
-
-    // We get the clone of the parent generator's GeneratorFuelCellAuxiliaryHeater so we can return that
-    GeneratorFuelCellAuxiliaryHeater hxClone = fsClone.auxiliaryHeater();
-
-
-    return hxClone;
-  }
-
   std::vector<IddObjectType> GeneratorFuelCellAuxiliaryHeater_Impl::allowableChildTypes() const {
     std::vector<IddObjectType> result;
     return result;
@@ -111,18 +96,19 @@ namespace detail {
   }
 
   // Get the parent GeneratorFuelCell
-  GeneratorFuelCell GeneratorFuelCellAuxiliaryHeater_Impl::fuelCell() const {
+  boost::optional<GeneratorFuelCell> GeneratorFuelCellAuxiliaryHeater_Impl::fuelCell() const {
 
-    boost::optional<GeneratorFuelCell> value;
-    for (const GeneratorFuelCell& fc : this->model().getConcreteModelObjects<GeneratorFuelCell>()) {
-      if (boost::optional<GeneratorFuelCellAuxiliaryHeater> fcHX = fc.auxiliaryHeater()) {
-        if (fcHX->handle() == this->handle()) {
-          value = fc;
-        }
+    boost::optional<GeneratorFuelCell> fc;
+    // We use getModelObjectSources to check if more than one
+    std::vector<GeneratorFuelCell> fcs = getObject<ModelObject>().getModelObjectSources<GeneratorFuelCell>(GeneratorFuelCell::iddObjectType());
+
+    if( fcs.size() > 0u) {
+      if( fcs.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one GeneratorFuelCell, returning the first");
       }
+      fc = fcs[0];
     }
-    OS_ASSERT(value);
-    return value.get();
+    return fc;
 
   }
 
@@ -502,7 +488,7 @@ void GeneratorFuelCellAuxiliaryHeater::resetMinimumHeatingCapacityinKmolperSecon
   getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->resetMinimumHeatingCapacityinKmolperSecond();
 }
 
-GeneratorFuelCell GeneratorFuelCellAuxiliaryHeater::fuelCell() const {
+boost::optional<GeneratorFuelCell> GeneratorFuelCellAuxiliaryHeater::fuelCell() const {
   return getImpl<detail::GeneratorFuelCellAuxiliaryHeater_Impl>()->fuelCell();
 }
 
