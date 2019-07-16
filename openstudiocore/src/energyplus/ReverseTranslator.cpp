@@ -616,6 +616,16 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateFenestrationSurfaceDetailed(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::Foundation_Kiva :
+    {
+      modelObject = translateFoundationKiva(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Foundation_Kiva_Settings :
+    {
+      modelObject = translateFoundationKivaSettings(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::Generator_MicroTurbine :
     {
       modelObject = translateGeneratorMicroTurbine(workspaceObject);

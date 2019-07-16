@@ -451,6 +451,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateExteriorWaterEquipment.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
+  ReverseTranslator/ReverseTranslateFoundationKiva.cpp
+  ReverseTranslator/ReverseTranslateFoundationKivaSettings.cpp
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
   ReverseTranslator/ReverseTranslateGeneratorMicroTurbine.cpp
   ReverseTranslator/ReverseTranslateHeatBalanceAlgorithm.cpp
