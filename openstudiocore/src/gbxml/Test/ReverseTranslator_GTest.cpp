@@ -53,7 +53,7 @@
 #include "../../model/ShadingSurface.hpp"
 #include "../../model/ShadingSurface_Impl.hpp"
 #include "../../model/SubSurface.hpp"
-#include "../../model/SubSurface_Impl.hpp""
+#include "../../model/SubSurface_Impl.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
 #include "../../model/StandardOpaqueMaterial_Impl.hpp"
 
