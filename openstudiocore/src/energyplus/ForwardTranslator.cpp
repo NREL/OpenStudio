@@ -3494,9 +3494,14 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_DistrictCooling);
   result.push_back(IddObjectType::OS_DistrictHeating);
   result.push_back(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
-  result.push_back(IddObjectType::OS_Fan_ConstantVolume);
+
+  // Equipments should be responsible for translating their fans
+  // result.push_back(IddObjectType::OS_Fan_Variable);
+  // result.push_back(IddObjectType::OS_Fan_ConstantVolume);
+  // TODO: JM 2019-07-11 These two should also be commented out. Fan_ZoneExhaust will be translated by ZoneHVACEquipmentList
   result.push_back(IddObjectType::OS_Fan_OnOff);
   result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
+
   result.push_back(IddObjectType::OS_Node);
   result.push_back(IddObjectType::OS_PlantLoop);
   result.push_back(IddObjectType::OS_Splitter);

@@ -577,6 +577,8 @@ set(${target_name}_test_src
   Test/ExteriorFuelEquipment_GTest.cpp
   Test/ExteriorWaterEquipment_GTest.cpp
   Test/ExternalInterfaceFT_GTest.cpp
+  Test/FanConstantVolume_GTest.cpp
+  Test/FanVariableVolume_GTest.cpp
   Test/FuelCell_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
