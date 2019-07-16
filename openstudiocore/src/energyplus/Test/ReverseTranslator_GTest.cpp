@@ -65,6 +65,10 @@
 #include "../../model/ScheduleDay_Impl.hpp"
 #include "../../model/OtherEquipment.hpp"
 #include "../../model/OtherEquipment_Impl.hpp"
+#include "../../model/FoundationKivaSettings.hpp"
+#include "../../model/FoundationKivaSettings_Impl.hpp"
+#include "../../model/FoundationKiva.hpp"
+#include "../../model/FoundationKiva_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -79,6 +83,9 @@
 #include <utilities/idd/Version_FieldEnums.hxx>
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/Site_Location_FieldEnums.hxx>
+#include <utilities/idd/Foundation_Kiva_Settings_FieldEnums.hxx>
+#include <utilities/idd/Foundation_Kiva_FieldEnums.hxx>
+#include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include "../../utilities/time/Time.hpp"
 
 #include <resources.hxx>
@@ -474,4 +481,108 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OtherEquipment) {
   ASSERT_EQ(1u, otherEquipments.size());
   EXPECT_EQ(otherEquipments[0].name().get(), "Other Eq 1");
   EXPECT_EQ(otherEquipments[0].endUseSubcategory(), "Category A");
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {  
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject(openstudio::IddObjectType::Foundation_Kiva_Settings);
+  idfObject.setDouble(Foundation_Kiva_SettingsFields::SoilConductivity, 1.731);
+  idfObject.setDouble(Foundation_Kiva_SettingsFields::SoilDensity, 1842.3);
+  idfObject.setDouble(Foundation_Kiva_SettingsFields::SoilSpecificHeat, 418.7);
+  idfObject.setDouble(Foundation_Kiva_SettingsFields::GroundSolarAbsorptivity, 0.9);
+  idfObject.setDouble(Foundation_Kiva_SettingsFields::GroundThermalAbsorptivity, 0.9);
+  idfObject.setDouble(Foundation_Kiva_SettingsFields::GroundSurfaceRoughness, 0.03);
+  idfObject.setDouble(Foundation_Kiva_SettingsFields::FarFieldWidth, 40);
+  idfObject.setString(Foundation_Kiva_SettingsFields::DeepGroundBoundaryCondition, "ZeroFlux");
+  idfObject.setDouble(Foundation_Kiva_SettingsFields::DeepGroundDepth, 40);
+  idfObject.setDouble(Foundation_Kiva_SettingsFields::MinimumCellDimension, 0.02);
+  idfObject.setDouble(Foundation_Kiva_SettingsFields::MaximumCellGrowthCoefficient, 1.5);
+  idfObject.setString(Foundation_Kiva_SettingsFields::SimulationTimestep, "Hourly");
+
+  openstudio::WorkspaceObject epFoundationKivaSettings = workspace.addObject(idfObject).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  ASSERT_TRUE(model.getOptionalUniqueModelObject<openstudio::model::FoundationKivaSettings>());
+
+  openstudio::model::FoundationKivaSettings foundationKivaSettings = model.getUniqueModelObject<openstudio::model::FoundationKivaSettings>();
+
+  EXPECT_EQ(13u, foundationKivaSettings.numFields());
+  EXPECT_EQ(1.731, foundationKivaSettings.soilConductivity());
+  EXPECT_EQ(1842.3, foundationKivaSettings.soilDensity());
+  EXPECT_EQ(418.7, foundationKivaSettings.soilSpecificHeat());
+  EXPECT_EQ(0.9, foundationKivaSettings.groundSolarAbsorptivity());
+  EXPECT_EQ(0.9, foundationKivaSettings.groundThermalAbsorptivity());
+  EXPECT_EQ(0.03, foundationKivaSettings.groundSurfaceRoughness());
+  EXPECT_EQ(40, foundationKivaSettings.farFieldWidth());
+  EXPECT_EQ("ZeroFlux", foundationKivaSettings.deepGroundBoundaryCondition());
+  EXPECT_EQ(40, foundationKivaSettings.deepGroundDepth().get());
+  EXPECT_EQ(0.02, foundationKivaSettings.minimumCellDimension());
+  EXPECT_EQ(1.5, foundationKivaSettings.maximumCellGrowthCoefficient());
+  EXPECT_EQ("Hourly", foundationKivaSettings.simulationTimestep());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {  
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::Foundation_Kiva);
+  idfObject1.setString(Foundation_KivaFields::Name, "Foundation Kiva 1");
+  idfObject1.setString(Foundation_KivaFields::InteriorHorizontalInsulationMaterialName, "");
+  idfObject1.setDouble(Foundation_KivaFields::InteriorHorizontalInsulationDepth, 0);
+  idfObject1.setString(Foundation_KivaFields::InteriorHorizontalInsulationWidth, "");
+  idfObject1.setString(Foundation_KivaFields::InteriorVerticalInsulationMaterialName, "");
+  idfObject1.setString(Foundation_KivaFields::InteriorVerticalInsulationDepth, "");
+  idfObject1.setString(Foundation_KivaFields::ExteriorHorizontalInsulationMaterialName, "");
+  idfObject1.setDouble(Foundation_KivaFields::ExteriorHorizontalInsulationWidth, 0);
+  idfObject1.setString(Foundation_KivaFields::ExteriorHorizontalInsulationDepth, "");
+  idfObject1.setString(Foundation_KivaFields::ExteriorVerticalInsulationMaterialName, "");
+  idfObject1.setString(Foundation_KivaFields::ExteriorVerticalInsulationDepth, "");
+  idfObject1.setDouble(Foundation_KivaFields::WallHeightAboveGrade, 0.2032);
+  idfObject1.setDouble(Foundation_KivaFields::WallDepthBelowSlab, 0.2032);
+  idfObject1.setString(Foundation_KivaFields::FootingWallConstructionName, "");
+  idfObject1.setString(Foundation_KivaFields::FootingMaterialName, "");
+  idfObject1.setDouble(Foundation_KivaFields::FootingDepth, 0.3);
+
+  openstudio::WorkspaceObject epFoundationKiva = workspace.addObject(idfObject1).get();
+
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::BuildingSurface_Detailed);
+  idfObject2.setString(BuildingSurface_DetailedFields::Name, "Surface 1");
+  idfObject2.setString(BuildingSurface_DetailedFields::SurfaceType, "Wall");
+  idfObject2.setString(BuildingSurface_DetailedFields::ConstructionName, "");
+  idfObject2.setString(BuildingSurface_DetailedFields::ZoneName, "");
+  idfObject2.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, "Foundation");
+  idfObject2.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, "Foundation Kiva 1");
+  idfObject2.setString(BuildingSurface_DetailedFields::SunExposure, "SunExposed");
+  idfObject2.setString(BuildingSurface_DetailedFields::WindExposure, "WindExposed");
+  idfObject2.setString(BuildingSurface_DetailedFields::ViewFactortoGround, "");
+  idfObject2.setString(BuildingSurface_DetailedFields::NumberofVertices, "");
+  IdfExtensibleGroup group1 = idfObject2.pushExtensibleGroup();
+  group1.setDouble(0, 13.6310703908387);
+  group1.setDouble(1, 0);
+  group1.setDouble(2, 4.8768);
+  IdfExtensibleGroup group2 = idfObject2.pushExtensibleGroup();
+  group2.setDouble(0, 13.6310703908387);
+  group2.setDouble(1, 0);
+  group2.setDouble(2, 2.4384);
+  IdfExtensibleGroup group3 = idfObject2.pushExtensibleGroup();
+  group3.setDouble(0, 13.6310703908387);
+  group3.setDouble(1, 6.81553519541936);
+  group3.setDouble(2, 2.4384);
+  IdfExtensibleGroup group4 = idfObject2.pushExtensibleGroup();
+  group4.setDouble(0, 13.6310703908387);
+  group4.setDouble(1, 6.81553519541936);
+  group4.setDouble(2, 4.8768);
+
+  openstudio::WorkspaceObject epSurface = workspace.addObject(idfObject2).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<Surface> surfaces = model.getModelObjects<Surface>();
+  ASSERT_EQ(1u, surfaces.size());
+  EXPECT_EQ(surfaces[0].adjacentFoundation().get().name().get(), "Foundation Kiva 1");
 }
