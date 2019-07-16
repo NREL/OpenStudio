@@ -379,6 +379,7 @@ namespace gbxml {
 
     QString id = element.attribute("id");
     m_idToObjectMap.insert(std::make_pair(id, building));
+    building.additionalProperties().setFeature("gbXMLId", toString(id));
 
     QString name = element.firstChildElement("Name").toElement().text();
     building.setName(escapeName(id, name));
@@ -417,6 +418,13 @@ namespace gbxml {
       }
     }
 
+    //// import CADObjectId
+    //QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    //if (cadObjectIdElements.size() >= 1) {
+    //  // TODO: import multiple CADObjectIds
+    //  translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, building);
+    //}
+
     return building;
   }
 
@@ -426,6 +434,7 @@ namespace gbxml {
 
     QString id = element.attribute("id");
     m_idToObjectMap.insert(std::make_pair(id, story));
+    story.additionalProperties().setFeature("gbXMLId", toString(id));
 
     QString name = element.firstChildElement("Name").toElement().text();
     story.setName(escapeName(id, name));
@@ -433,6 +442,13 @@ namespace gbxml {
     // DLM: we need to better support separate name from id in this translator
 
     // DLM: todo, translate Level
+
+    //// import CADObjectId
+    //QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    //if (cadObjectIdElements.size() >= 1) {
+    //  // TODO: import multiple CADObjectIds
+    //  translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, story);
+    //}
 
     return story;
   }
@@ -443,6 +459,7 @@ namespace gbxml {
 
     QString id = element.attribute("id");
     m_idToObjectMap.insert(std::make_pair(id, zone));
+    zone.additionalProperties().setFeature("gbXMLId", toString(id));
 
     QString name = element.firstChildElement("Name").toElement().text();
     zone.setName(escapeName(id, name));
@@ -460,12 +477,14 @@ namespace gbxml {
 
     return zone;
   }
+
   boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const QDomElement& element, const QDomDocument& doc, openstudio::model::Model& model)
   {
     openstudio::model::Space space(model);
 
     QString id = element.attribute("id");
     m_idToObjectMap.insert(std::make_pair(id, space));
+    space.additionalProperties().setFeature("gbXMLId", toString(id));
 
     QString name = element.firstChildElement("Name").toElement().text();
     space.setName(escapeName(id, name));
@@ -566,6 +585,7 @@ namespace gbxml {
 
       QString shadingSurfaceId = element.attribute("id");
       m_idToObjectMap.insert(std::make_pair(shadingSurfaceId, shadingSurface));
+      shadingSurface.additionalProperties().setFeature("gbXMLId", toString(shadingSurfaceId));
 
       QString shadingSurfaceName = element.firstChildElement("Name").toElement().text();
       shadingSurface.setName(escapeName(shadingSurfaceId, shadingSurfaceName));
@@ -609,6 +629,7 @@ namespace gbxml {
 
       QString surfaceId = element.attribute("id");
       m_idToObjectMap.insert(std::make_pair(surfaceId, surface));
+      surface.additionalProperties().setFeature("gbXMLId", toString(surfaceId));
 
       QString surfaceName = element.firstChildElement("Name").toElement().text();
       surface.setName(escapeName(surfaceId, surfaceName));
@@ -741,7 +762,7 @@ namespace gbxml {
 
             // clone the surface and sub surfaces and reverse vertices
             boost::optional<openstudio::model::Surface> otherSurface = surface.createAdjacentSurface(*adjacentSpace);
-            if (!otherSurface){
+            if (!otherSurface) {
               LOG(Error, "Could not create adjacent surface in adjacent space '" << adjacentSpace->name().get() << "' for surface '" << surface.name().get() << "' in space '" << space->name().get() << "'");
             }
           }
@@ -756,14 +777,30 @@ namespace gbxml {
     if (cadObjectIdElements.size() >= 1){
       // TODO: import multiple CADObjectIds
       translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *result);
-
-      if (result->optionalCast<model::Surface>()){
-        boost::optional<openstudio::model::Surface> otherSurface = result->cast<model::Surface>().adjacentSurface();
-        if (otherSurface) {
-          translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *otherSurface);
-        }
-      }
     }
+
+    // merge additional properties for reversed surfaces and sub surfaces
+    if (result->optionalCast<model::Surface>()) {
+   
+      boost::optional<openstudio::model::Surface> otherSurface = result->cast<model::Surface>().adjacentSurface();
+      if (otherSurface) {
+        otherSurface->additionalProperties().merge(result->additionalProperties(), true);
+        otherSurface->additionalProperties().setFeature("gbXMLReversed", true);
+      }
+
+      for (const auto& subSurface : result->cast<model::Surface>().subSurfaces()) {
+        boost::optional<openstudio::model::SubSurface> otherSubSurface = subSurface.adjacentSubSurface();
+        if (otherSubSurface) {
+          otherSubSurface->additionalProperties().merge(subSurface.additionalProperties(), true);
+          otherSubSurface->additionalProperties().setFeature("gbXMLReversed", true);
+        }
+
+        subSurface.additionalProperties().setFeature("gbXMLReversed", false);
+      }
+
+      result->cast<model::Surface>().additionalProperties().setFeature("gbXMLReversed", false);
+    }
+
 
     return result;
   }
@@ -808,6 +845,7 @@ namespace gbxml {
 
     QString id = element.attribute("id");
     m_idToObjectMap.insert(std::make_pair(id, subSurface));
+    subSurface.additionalProperties().setFeature("gbXMLId", toString(id));
 
     QString name = element.firstChildElement("Name").toElement().text();
     subSurface.setName(escapeName(id, name));
@@ -876,11 +914,6 @@ namespace gbxml {
     if (cadObjectIdElements.size() >= 1){
       // TODO: import multiple CADObjectIds
       translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, subSurface);
-
-      boost::optional<openstudio::model::SubSurface> otherSubSurface = subSurface.adjacentSubSurface();
-      if (otherSubSurface) {
-        translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *otherSubSurface);
-      }
     }
 
     return result;
