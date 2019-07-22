@@ -69,6 +69,8 @@
 #include "../../model/FoundationKivaSettings_Impl.hpp"
 #include "../../model/FoundationKiva.hpp"
 #include "../../model/FoundationKiva_Impl.hpp"
+#include "../../model/SurfacePropertyExposedFoundationPerimeter.hpp"
+#include "../../model/SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -86,6 +88,7 @@
 #include <utilities/idd/Foundation_Kiva_Settings_FieldEnums.hxx>
 #include <utilities/idd/Foundation_Kiva_FieldEnums.hxx>
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
+#include <utilities/idd/SurfaceProperty_ExposedFoundationPerimeter_FieldEnums.hxx>
 #include "../../utilities/time/Time.hpp"
 
 #include <resources.hxx>
@@ -568,33 +571,42 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
 
   openstudio::IdfObject idfObject3(openstudio::IddObjectType::BuildingSurface_Detailed);
   idfObject3.setString(BuildingSurface_DetailedFields::Name, "Surface 1");
-  idfObject3.setString(BuildingSurface_DetailedFields::SurfaceType, "Wall");
+  idfObject3.setString(BuildingSurface_DetailedFields::SurfaceType, "Floor");
   idfObject3.setString(BuildingSurface_DetailedFields::ConstructionName, "");
   idfObject3.setString(BuildingSurface_DetailedFields::ZoneName, "");
   idfObject3.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, "Foundation");
   idfObject3.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, "Foundation Kiva 1");
-  idfObject3.setString(BuildingSurface_DetailedFields::SunExposure, "SunExposed");
-  idfObject3.setString(BuildingSurface_DetailedFields::WindExposure, "WindExposed");
+  idfObject3.setString(BuildingSurface_DetailedFields::SunExposure, "NoSun");
+  idfObject3.setString(BuildingSurface_DetailedFields::WindExposure, "NoWind");
   idfObject3.setString(BuildingSurface_DetailedFields::ViewFactortoGround, "");
   idfObject3.setString(BuildingSurface_DetailedFields::NumberofVertices, "");
   IdfExtensibleGroup group2 = idfObject3.pushExtensibleGroup(); // vertex 1
-  group2.setDouble(0, 13.6310703908387);
+  group2.setDouble(0, 0);
   group2.setDouble(1, 0);
-  group2.setDouble(2, 4.8768);
+  group2.setDouble(2, 0);
   IdfExtensibleGroup group3 = idfObject3.pushExtensibleGroup(); // vertex 2
-  group3.setDouble(0, 13.6310703908387);
-  group3.setDouble(1, 0);
-  group3.setDouble(2, 2.4384);
+  group3.setDouble(0, 0);
+  group3.setDouble(1, 6.81553519541936);
+  group3.setDouble(2, 0);
   IdfExtensibleGroup group4 = idfObject3.pushExtensibleGroup(); // vertex 3
   group4.setDouble(0, 13.6310703908387);
   group4.setDouble(1, 6.81553519541936);
-  group4.setDouble(2, 2.4384);
+  group4.setDouble(2, 0);
   IdfExtensibleGroup group5 = idfObject3.pushExtensibleGroup(); // vertex 4
   group5.setDouble(0, 13.6310703908387);
-  group5.setDouble(1, 6.81553519541936);
-  group5.setDouble(2, 4.8768);
+  group5.setDouble(1, 0);
+  group5.setDouble(2, 0);
 
   openstudio::WorkspaceObject epSurface = workspace.addObject(idfObject3).get();
+  
+  openstudio::IdfObject idfObject4(openstudio::IddObjectType::SurfaceProperty_ExposedFoundationPerimeter);
+  
+  idfObject4.setString(SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, "Surface 1");
+  idfObject4.setString(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod, "TotalExposedPerimeter");
+  idfObject4.setDouble(SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, 40.8932111725161);
+  idfObject4.setDouble(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, 1);
+  
+  openstudio::WorkspaceObject epPerimeter = workspace.addObject(idfObject4).get();
 
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
@@ -604,10 +616,15 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
   ASSERT_EQ(1u, foundationKivas.size());
   FoundationKiva foundationKiva = foundationKivas[0];
   EXPECT_EQ(1, foundationKiva.numberofCustomBlocks());
-  std::vector<CustomBlock> customBlocks = kiva.customBlocks();
+  std::vector<CustomBlock> customBlocks = foundationKiva.customBlocks();
   EXPECT_EQ(customBlocks[0].material().name().get(), "Material 1");
 
   std::vector<Surface> surfaces = model.getModelObjects<Surface>();
   ASSERT_EQ(1u, surfaces.size());
-  EXPECT_EQ(surfaces[0].adjacentFoundation().get().name().get(), "Foundation Kiva 1");
+  Surface surface = surfaces[0];
+  EXPECT_EQ(surface.adjacentFoundation().get().name().get(), "Foundation Kiva 1");
+  
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter = surface.surfacePropertyExposedFoundationPerimeter();
+  std::string surfaceName = surfacePropertyExposedFoundationPerimeter.get().surfaceName();
+  EXPECT_EQ(surface.name().get(), surfaceName);
 }
