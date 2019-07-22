@@ -929,6 +929,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       //modelObject = translateSurfaceConvectionAlgorithmOutside(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::SurfaceProperty_ExposedFoundationPerimeter :
+    {
+      modelObject = translateSurfacePropertyExposedFoundationPerimeter(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint :
     {
       modelObject = translateThermostatSetpointDualSetpoint(workspaceObject);

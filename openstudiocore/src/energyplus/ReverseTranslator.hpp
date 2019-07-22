@@ -298,6 +298,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateSurfaceConvectionAlgorithmInside(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateSurfaceConvectionAlgorithmOutside(const WorkspaceObject & workspaceObject);
+  
+  boost::optional<model::ModelObject> translateSurfacePropertyExposedFoundationPerimeter(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateThermostatSetpointDualSetpoint(const WorkspaceObject & workspaceObject);
 
