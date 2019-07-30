@@ -106,11 +106,11 @@ set(ENERGYPLUS_VERSION_MINOR 1)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "08d2e308bb")
+set(ENERGYPLUS_BUILD_SHA "fafb9d5652")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.1.0")
+set(ENERGYPLUS_RELEASE_NAME "v91AndBugFix4")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -118,12 +118,9 @@ set(RADIANCE_VERSION "5.0.a.12")
 # configure file with version information
 configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
 
-# universal configuration for mac plists
+# Deployment target
 if(APPLE)
-  set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
-  set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION_BUILD}")
-  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.")
-  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.11" CACHE STRING "Minimum OS X deployment version")
+  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12" CACHE STRING "Minimum OS X deployment version")
 endif()
 
 # compiler id for about boxes
@@ -474,14 +471,14 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH fff82687c676c9270f08624c4dd231be)
+    set(ENERGYPLUS_EXPECTED_HASH f53690207c3bce9761be4ac4ff367db4)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH 42b2fe2ef5df1d4cfef2160e46529a2f)
+    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH c2f57b0124b3557080112f7eed814f78)
+    set(ENERGYPLUS_EXPECTED_HASH 1dbbe3249e3b8ee2e0cf6a3d99e9c206)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -506,12 +503,12 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH e51817d2d540e9bf2eecbca3405feae2)
+    set(ENERGYPLUS_EXPECTED_HASH 3ce2ca516612544056e4ee6357310f6e)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
     ## TODO: update md5 hash, but not present on GitHub as .zip, only .exe for now at least
-    set(ENERGYPLUS_EXPECTED_HASH a2cbd995acd1928a7baa18407bb8e949)
+    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_a2cbd995acd1928a7baa18407bb8e949)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -734,54 +731,6 @@ if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
   execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
 
   file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/src/cli/embedded_files")
-endif()
-
-# TODO: I think we want that only in OpenStudioApplication
-# DView
-option(BUILD_DVIEW "Build DView" OFF)
-
-if(BUILD_DVIEW)
-  set(DVIEW_INSTALL_DIR "" CACHE PATH "Path to DView Install")
-  mark_as_advanced(DVIEW_INSTALL_DIR)
-
-  if(NOT EXISTS ${DVIEW_INSTALL_DIR})
-    if(WIN32)
-      set(DVIEW_ZIP_FILENAME "DView-windows-20180621.zip")
-      set(DVIEW_ZIP_EXPECTED_MD5 "8443b09cbfcc118943127b006b14dbca")
-    elseif(APPLE)
-      set(DVIEW_ZIP_FILENAME "DView-osx-20180621.tar.gz")
-      set(DVIEW_ZIP_EXPECTED_MD5 "41038cbf7c472522e700d850d9de1133")
-    else()
-      set(DVIEW_ZIP_FILENAME "DView-linux-20180621.tar.gz")
-      set(DVIEW_ZIP_EXPECTED_MD5 "c1d3fb6e736668eb4bdf0a5af2b4506c")
-    endif()
-
-    set(DVIEW_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${DVIEW_ZIP_FILENAME}")
-    if(EXISTS "${DVIEW_ZIP_LOCAL_PATH}")
-      file(MD5 "${DVIEW_ZIP_LOCAL_PATH}" DVIEW_ZIP_MD5)
-    endif()
-
-    if(NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
-      message(STATUS "Downloading DView: ${DVIEW_ZIP_FILENAME}")
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${DVIEW_ZIP_FILENAME}"
-        ${DVIEW_ZIP_LOCAL_PATH}
-        INACTIVITY_TIMEOUT 120
-        SHOW_PROGRESS
-        EXPECTED_MD5 ${DVIEW_ZIP_EXPECTED_MD5})
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${DVIEW_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
-    endif()
-
-    set(DVIEW_INSTALL_DIR "${PROJECT_BINARY_DIR}/DView-install")
-  endif()
-
-  if(WIN32)
-    install(PROGRAMS "${DVIEW_INSTALL_DIR}/DView.exe" DESTINATION ./bin COMPONENT "DView")
-  elseif(APPLE)
-    install(DIRECTORY "${DVIEW_INSTALL_DIR}/DView.app" DESTINATION . USE_SOURCE_PERMISSIONS COMPONENT "DView")
-  else()
-    install(PROGRAMS "${DVIEW_INSTALL_DIR}/DView" DESTINATION ./bin COMPONENT "DView")
-  endif()
-
 endif()
 
 # SWIG
@@ -1197,8 +1146,8 @@ set(CPACK_PACKAGE_VENDOR "National Renewable Energy Laboratory")
 set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
-# Trusty (14.04) uses 3.0-0, all other including Xenial (16.04) use 3.0-0v5
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-0v5 (>= 3.0.0) | libwxgtk3.0-0 (>=3.0.0)")
+# set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+
 # Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
 set(CPACK_DEBIAN_PACKAGE_NAME "openstudio-${OpenStudio_VERSION}")
 # CPACK_DEBIAN_PACKAGE_DESCRIPTION defaults to this one too. dpkg-deb -I xxx.deb will show this description
@@ -1226,61 +1175,19 @@ elseif(UNIX)
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
 
+  # TODO: for now since Mac and Windows installers aren't doing it for core, not doing it for Unix either.
+  ## Copy the icons
+  # set(ICON_FOLDER "${PROJECT_SOURCE_DIR}/icons")
+  ## Cf. http://standards.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
+  #foreach(_size 16 32 48 64 128 256)
 
-  # Copy the icons
-  # Cf. http://standards.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
-  foreach(_size 16 32 48 64 128 256)
-    # Copy OS App icons
-    install(
-      FILES "${PROJECT_SOURCE_DIR}/icons/os_${_size}.png"
-      DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/apps"
-      RENAME openstudioapp.png
-    )
-    # Install OSM mimetypes icons
-    install(
-      FILES "${PROJECT_SOURCE_DIR}/icons/osm_${_size}.png"
-      DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/mimetypes"
-      RENAME application-x-openstudio.png
-    )
-  endforeach()
-
-  # OS App has a 512 and 1024 too
-  foreach(_size 512 1024)
-    # Copy OS App icons
-    install(
-      FILES "${PROJECT_SOURCE_DIR}/icons/os_${_size}.png"
-      DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/apps"
-      RENAME openstudioapp.png
-    )
-  endforeach()
-
-  ## try to set up the menu system
-  #find_program(XDG-MIME_EXECUTABLE xdg-mime)
-  #find_program(XDG-DESKTOP-MENU_EXECUTABLE xdg-desktop-menu)
-  #find_program(UPDATE-MIME-DATABASE-EXECUTABLE update-mime-database)
-  #find_program(GTK-UPDATE-ICON-CACHE-EXECUTABLE gtk-update-icon-cache)
-
-
-  ## Install the Desktop Menu
-  ## xdg-desktop-menu install --novendor /usr/share/applications/openstudioapp.desktop
-  #install(CODE "execute_process(COMMAND ${XDG-DESKTOP-MENU_EXECUTABLE} install --novendor --mode system /usr/share/applications/openstudioapp.desktop)")
-
-  ## Register the mime description: this places it in /usr/share/mime/packages/
-  ## sudo xdg-mime install --novendor --mode system x-openstudio.xml
-  #install(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} install --novendor --mode system /usr/share/mime/application/x-openstudio.xml)")
-  #install(CODE "execute_process(COMMAND echo COUCOU)")
-
-  ## Register the application launcher with the registered mimetype
-  ## sudo xdg-mime default openstudio.desktop application/x-openstudio
-  #install(CODE "execute_process(COMMAND ${MIME_EXECUTABLE} default /usr/share/applications/openstudio.desktop application/x-openstudio)")
-
-
-  ## Update the mime cache and icon cache
-  ## sudo update-mime-database /usr/share/mime
-  #install(CODE "execute_process(COMMAND ${UPDATE-MIME-DATABASE-EXECUTABLE} /usr/share/mime)")
-  ## sudo gtk-update-icon-cache /usr/share/icons/hicolor/ -f
-  #install(CODE "execute_process(COMMAND ${GTK-UPDATE-ICON-CACHE-EXECUTABLE} /usr/share/icons/hicolor/ -f)")
-
+  #  # Install OSM mimetypes icons
+  #  install(
+  #    FILES "${ICON_FOLDER}/osm_${_size}.png"
+  #    DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/mimetypes"
+  #    RENAME application-x-openstudio.png
+  #  )
+  #endforeach()
 
 endif()
 
@@ -1417,17 +1324,6 @@ if(BUILD_PAT)
   cpack_ifw_configure_component(PAT
     DEPENDS CLI RubyAPI
     SCRIPT pat/install_operations.qs
-    REQUIRES_ADMIN_RIGHTS
-  )
-endif()
-
-if(BUILD_DVIEW)
-  cpack_add_component(DView
-    DISPLAY_NAME "DView"
-    DESCRIPTION "DView Application for viewing results"
-  )
-
-  cpack_ifw_configure_component(DView
     REQUIRES_ADMIN_RIGHTS
   )
 endif()
