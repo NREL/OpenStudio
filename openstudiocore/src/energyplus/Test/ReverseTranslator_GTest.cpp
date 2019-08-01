@@ -475,3 +475,18 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OtherEquipment) {
   EXPECT_EQ(otherEquipments[0].name().get(), "Other Eq 1");
   EXPECT_EQ(otherEquipments[0].endUseSubcategory(), "Category A");
 }
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleFile) {
+  openstudio::path idfPath = resourcesPath() / toPath("energyplus/ScheduleFile/in.idf");
+  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
+  ASSERT_TRUE(idfFile);
+  Workspace inWorkspace(*idfFile);
+
+  ReverseTranslator reverseTranslator;
+  Model model = reverseTranslator.translateWorkspace(inWorkspace);
+  model.save( resourcesPath() / toPath("energyplus/ScheduleFile/in.osm"), true);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  workspace.save( resourcesPath() / toPath("energyplus/ScheduleFile/in2.idf"), true);
+}
