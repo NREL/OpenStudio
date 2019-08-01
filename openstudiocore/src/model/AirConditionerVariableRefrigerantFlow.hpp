@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -75,18 +76,20 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   bool setAvailabilitySchedule(Schedule& schedule);
 
 
-  boost::optional<double> ratedTotalCoolingCapacity() const;
+  boost::optional<double> grossRatedTotalCoolingCapacity() const;
+  bool isGrossRatedTotalCoolingCapacityAutosized() const;
+  bool setGrossRatedTotalCoolingCapacity(double grossRatedTotalCoolingCapacity);
+  void autosizeGrossRatedTotalCoolingCapacity();
+  double grossRatedCoolingCOP() const;
+  bool setGrossRatedCoolingCOP(double grossRatedCoolingCOP);
 
-  bool isRatedTotalCoolingCapacityAutosized() const;
-
-  bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
-
-  void autosizeRatedTotalCoolingCapacity();
-
-
-  double ratedCoolingCOP() const;
-
-  bool setRatedCoolingCOP(double ratedCoolingCOP);
+  // Deprecated
+  OS_DEPRECATED boost::optional<double> ratedTotalCoolingCapacity() const;
+  OS_DEPRECATED bool isRatedTotalCoolingCapacityAutosized() const;
+  OS_DEPRECATED bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
+  OS_DEPRECATED void autosizeRatedTotalCoolingCapacity();
+  OS_DEPRECATED double ratedCoolingCOP() const;
+  OS_DEPRECATED bool setRatedCoolingCOP(double ratedCoolingCOP);
 
 
   double minimumOutdoorTemperatureinCoolingMode() const;
@@ -169,18 +172,20 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   void resetCoolingPartLoadFractionCorrelationCurve();
 
 
-  boost::optional<double> ratedTotalHeatingCapacity() const;
+  boost::optional<double> grossRatedHeatingCapacity() const;
+  bool isGrossRatedHeatingCapacityAutosized() const;
+  bool setGrossRatedHeatingCapacity(double grossRatedHeatingCapacity);
+  void autosizeGrossRatedHeatingCapacity();
+  double ratedHeatingCapacitySizingRatio() const;
+  bool setRatedHeatingCapacitySizingRatio(double ratedHeatingCapacitySizingRatio);
 
-  bool isRatedTotalHeatingCapacityAutosized() const;
-
-  bool setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity);
-
-  void autosizeRatedTotalHeatingCapacity();
-
-
-  double ratedTotalHeatingCapacitySizingRatio() const;
-
-  bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
+  // Deprecated
+  OS_DEPRECATED boost::optional<double> ratedTotalHeatingCapacity() const;
+  OS_DEPRECATED bool isRatedTotalHeatingCapacityAutosized() const;
+  OS_DEPRECATED bool setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity);
+  OS_DEPRECATED void autosizeRatedTotalHeatingCapacity();
+  OS_DEPRECATED double ratedTotalHeatingCapacitySizingRatio() const;
+  OS_DEPRECATED bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
 
 
   double ratedHeatingCOP() const;
@@ -397,6 +402,12 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   bool setMaximumOutdoorDrybulbTemperatureforDefrostOperation(double maximumOutdoorDrybulbTemperatureforDefrostOperation);
 
 
+  std::string condenserType() const;
+
+  // Set the condenser type. If VRF is connected to a PlantLoop, will not accept anything. If not connected, will only accept 'AirCooled' or
+  // 'EvaporativelyCooled'. Connecting / Disconnecting from a PlantLoop will switch the Condenser Type to 'Water Cooled' as needed.
+  bool setCondenserType(const std::string& condenserType);
+
   boost::optional<double> waterCondenserVolumeFlowRate() const;
 
   bool isWaterCondenserVolumeFlowRateAutosized() const;
@@ -537,9 +548,13 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
 
   std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
-  boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
 
-  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+  boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const ;
+  boost::optional<double> autosizedGrossRatedHeatingCapacity() const ;
+
+  // Deprecated
+  OS_DEPRECATED boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
+  OS_DEPRECATED boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
 
   boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
 
