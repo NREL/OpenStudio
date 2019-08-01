@@ -220,6 +220,7 @@ set(energyplus_resources_src
   energyplus/ErrorFiles/WarningsAndSevere.err
   energyplus/ErrorFiles/RepeatingWarnings.err
   energyplus/Office_With_Many_HVAC_Types/in.idf
+  energyplus/ScheduleFile/in.idf
   energyplus/SimpleSurfaces/SimpleSurfaces_Reference.idf
   energyplus/SimpleSurfaces/SimpleSurfaces_Relative.idf
   energyplus/SimpleSurfaces/4ZoneWithShading_Simple_2.idf
