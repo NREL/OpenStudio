@@ -9372,7 +9372,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note Enter the ratio of the first stage compressor to total compressor capacity.
        \note All other compressors are assumed to be equally sized. This inputs is used
        \note only for crankcase heater calculations.
-  N19, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater
+  N19, \field Maximum Outdoor Dry-bulb Temperature for Crankcase Heater
        \type real
        \units C
        \required-field
