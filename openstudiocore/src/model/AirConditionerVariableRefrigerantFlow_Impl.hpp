@@ -62,6 +62,9 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
                                              Model_Impl* model,
                                              bool keepHandle);
 
+  /** @name Virtual Methods */
+  //@{
+
   virtual ~AirConditionerVariableRefrigerantFlow_Impl() {}
 
   virtual const std::vector<std::string>& outputVariableNames() const override;
@@ -83,6 +86,16 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
   virtual bool removeFromLoop() override;
 
   virtual std::vector<ModelObject> children() const override;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+  //@}
 
   Schedule availabilitySchedule() const;
 
@@ -495,14 +508,6 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
   boost::optional<double> autosizedEvaporativeCondenserAirFlowRate() const ;
 
   boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const ;
-
-  virtual void autosize() override;
-
-  virtual void applySizingValues() override;
-
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
-
-  virtual std::vector<std::string> emsInternalVariableNames() const override;
 
  private:
 
