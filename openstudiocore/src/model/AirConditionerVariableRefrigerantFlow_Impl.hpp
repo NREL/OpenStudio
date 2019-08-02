@@ -80,9 +80,7 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   virtual bool addToNode(Node & node) override;
 
-  // TODO: Why isn't that Virtual in StraightComponent ?!!??!?!
-  // virtual bool removeFromLoop() override;
-  bool removeFromLoop();
+  virtual bool removeFromLoop() override;
 
   virtual std::vector<ModelObject> children() const override;
 
