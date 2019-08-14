@@ -441,7 +441,6 @@ def parse_main_args(main_args)
     #DLM: this would be correct if the bundle was created here
     #it would not be correct if the bundle was transfered from another computer
     #ENV['BUNDLE_IGNORE_CONFIG'] = 'true'
-  Gem.paths.path << ':/ruby/2.2.0/bundler/gems/'
 
   end
 
