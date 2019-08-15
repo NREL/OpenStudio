@@ -231,3 +231,40 @@ TEST(Filetypes, CSVFile_Load)
   //csvFile = CSVFile::load(p4);
   //EXPECT_FALSE(csvFile);
 }
+
+TEST(Filetypes, CSVFile_AddAndGetColumn)
+{
+  CSVFile csvFile;
+  
+  // dateTimes
+  
+  
+  // std::vector<double>
+  std::vector<double> col1;
+  col1.push_back(1);
+  col1.push_back(2.2);
+  col1.push_back(0.33);
+  csvFile.addColumn(col1);
+  
+  ASSERT_EQ(3, csvFile.numRows());
+  ASSERT_EQ(1, csvFile.numColumns());
+  
+  // std::vector<std::string>
+  std::vector<std::string> col2;
+  col2.push_back("1");
+  col2.push_back("2.2");
+  col2.push_back("0.33");
+  csvFile.addColumn(col2);
+  
+  ASSERT_EQ(3, csvFile.numRows());
+  ASSERT_EQ(2, csvFile.numColumns());
+
+  // getColumnAsDateTimes
+
+
+  // getColumnAsDoubleVector
+  csvFile.
+
+
+  // getColumnAsStringVector
+}
