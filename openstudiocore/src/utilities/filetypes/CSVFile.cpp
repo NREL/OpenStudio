@@ -34,6 +34,7 @@
 #include "../core/PathHelpers.hpp"
 #include "../core/Checksum.hpp"
 #include "../data/Variant.hpp"
+#include "../data/Vector.hpp"
 #include "../time/DateTime.hpp"
 
 #include <iostream>
@@ -55,7 +56,7 @@ namespace detail{
     // will throw on error
     m_rows = parseRows(ss);
       
-    setNumColumns();
+    assignNumColumns();
     padRows();
   }
 
@@ -72,7 +73,7 @@ namespace detail{
     m_rows = parseRows(ifs);
     
     m_path = p;
-    setNumColumns();
+    assignNumColumns();
     padRows();
   }
 
@@ -205,7 +206,7 @@ namespace detail{
   void CSVFile_Impl::setRows(const std::vector<std::vector<Variant> >& rows) 
   {
     m_rows = rows;
-    setNumColumns();
+    assignNumColumns();
   }
 
   void CSVFile_Impl::clear() 
@@ -213,6 +214,160 @@ namespace detail{
     m_rows.clear();
     m_path.reset();
     m_numColumns = 0;
+  }
+
+  unsigned CSVFile_Impl::addColumn(const std::vector<DateTime>& dateTimes) 
+  {
+    unsigned n = dateTimes.size();
+    ensureNumRows(n);
+
+    unsigned numRows = m_rows.size();
+    for (unsigned i = 0; i < numRows; ++i) {
+      if (i < n) {
+        m_rows[i].push_back(Variant(dateTimes[i].toISO8601()));
+      } else {
+        m_rows[i].push_back(Variant(""));
+      }
+    }
+
+    ++m_numColumns;
+    return m_numColumns;
+  }
+
+  unsigned CSVFile_Impl::addColumn(const Vector& values) 
+  {
+    unsigned n = values.size();
+    ensureNumRows(n);
+
+    unsigned numRows = m_rows.size();
+    for (unsigned i = 0; i < numRows; ++i) {
+      if (i < n) {
+        m_rows[i].push_back(Variant(values[i]));
+      } else {
+        m_rows[i].push_back(Variant(""));
+      }
+    }
+
+    ++m_numColumns;
+    return m_numColumns;
+  }
+
+  unsigned CSVFile_Impl::addColumn(const std::vector<double>& values) 
+  {
+    unsigned n = values.size();
+    ensureNumRows(n);
+
+    unsigned numRows = m_rows.size();
+    for (unsigned i = 0; i < numRows; ++i) {
+      if (i < n) {
+        m_rows[i].push_back(Variant(values[i]));
+      } else {
+        m_rows[i].push_back(Variant(""));
+      }
+    }
+
+    ++m_numColumns;
+    return m_numColumns;
+  }
+
+  unsigned CSVFile_Impl::addColumn(const std::vector<std::string>& values) 
+  {
+    unsigned n = values.size();
+    ensureNumRows(n);
+
+    unsigned numRows = m_rows.size();
+    for (unsigned i = 0; i < numRows; ++i) {
+      if (i < n) {
+        m_rows[i].push_back(Variant(values[i]));
+      } else {
+        m_rows[i].push_back(Variant(""));
+      }
+    }
+
+    ++m_numColumns;
+    return m_numColumns;
+  }
+
+  std::vector<DateTime> CSVFile_Impl::getColumnAsDateTimes(unsigned columnIndex) const 
+  {
+    if (columnIndex >= m_numColumns) {
+      LOG(Warn, "Column index " << columnIndex << " invalid for number of columns " << m_numColumns);
+      return std::vector<DateTime>();
+    }
+
+    std::vector<DateTime> result;
+
+    unsigned numRows = m_rows.size();
+    for (unsigned i = 0; i < numRows; ++i) {
+      if (m_rows[i][columnIndex].variantType() != VariantType::String) {
+        LOG(Warn, "Value at row " << i << " and column " << columnIndex << " is not a DateTime string");
+        return std::vector<DateTime>();
+      }
+
+      boost::optional<DateTime> dateTime = DateTime::fromISO8601(m_rows[i][columnIndex].valueAsString());
+      if (!dateTime) {
+        LOG(Warn, "Value at row " << i << " and column " << columnIndex << " is not a DateTime string");
+        return std::vector<DateTime>();
+      }
+      result.push_back(*dateTime);
+    }
+
+    return result;
+  }
+
+  std::vector<double> CSVFile_Impl::getColumnAsDoubleVector(unsigned columnIndex) const {
+    if (columnIndex >= m_numColumns) {
+      LOG(Warn, "Column index " << columnIndex << " invalid for number of columns " << m_numColumns);
+      return std::vector<double>();
+    }
+
+    std::vector<double> result;
+
+    unsigned numRows = m_rows.size();
+    for (unsigned i = 0; i < numRows; ++i) {
+
+      boost::optional<double> value;
+      if (m_rows[i][columnIndex].variantType() == VariantType::Double) {
+        value = m_rows[i][columnIndex].valueAsDouble();
+      } else if (m_rows[i][columnIndex].variantType() == VariantType::Integer) {
+        value = m_rows[i][columnIndex].valueAsInteger();
+      }
+
+      if (!value) {
+        LOG(Warn, "Value at row " << i << " and column " << columnIndex << " is not a numeric value");
+        return std::vector<double>();
+      }
+      result.push_back(*value);
+    }
+
+    return result;
+  }
+
+  std::vector<std::string> CSVFile_Impl::getColumnAsStringVector(unsigned columnIndex) const {
+    if (columnIndex >= m_numColumns) {
+      LOG(Warn, "Column index " << columnIndex << " invalid for number of columns " << m_numColumns);
+      return std::vector<std::string>();
+    }
+
+    std::vector<std::string> result;
+
+    unsigned numRows = m_rows.size();
+    for (unsigned i = 0; i < numRows; ++i) {
+
+      if (m_rows[i][columnIndex].variantType() == VariantType::String) {
+        result.push_back(m_rows[i][columnIndex].valueAsString());
+      }else if (m_rows[i][columnIndex].variantType() == VariantType::Double) {
+        std::stringstream ss;
+        ss << m_rows[i][columnIndex].valueAsDouble();
+        result.push_back(ss.str());
+      } else if (m_rows[i][columnIndex].variantType() == VariantType::Integer) {
+        std::stringstream ss;
+        ss << m_rows[i][columnIndex].valueAsInteger();
+        result.push_back(ss.str());
+      }
+    }
+
+    return result;
   }
 
   // throws on error
@@ -255,12 +410,25 @@ namespace detail{
     return result;
   }
 
-  void CSVFile_Impl::setNumColumns() 
+  void CSVFile_Impl::assignNumColumns() 
   {
     m_numColumns = 0;
     for (const auto& row : m_rows) {
       m_numColumns = std::max<unsigned>(m_numColumns, row.size());
     }
+  }
+
+  void CSVFile_Impl::ensureNumRows(unsigned numRows) 
+  {
+    // add empty cells to existing columns if needed
+    if (numRows > m_rows.size()) {
+      unsigned numRowsToAdd = numRows - m_rows.size();
+      std::vector<Variant> blankRow(m_numColumns, Variant(""));
+      for (unsigned i = 0; i < numRowsToAdd; ++i) {
+        m_rows.push_back(blankRow);
+      }
+    }
+    OS_ASSERT(m_rows.size() >= numRows);
   }
 
   void CSVFile_Impl::padRows() {
@@ -375,6 +543,40 @@ void CSVFile::clear()
   getImpl<detail::CSVFile_Impl>()->clear();
 }
 
+unsigned CSVFile::addColumn(const std::vector<DateTime>& dateTimes)
+{
+  return getImpl<detail::CSVFile_Impl>()->addColumn(dateTimes);
+}
+
+unsigned CSVFile::addColumn(const Vector& values)
+{
+  return getImpl<detail::CSVFile_Impl>()->addColumn(values);
+}
+
+unsigned CSVFile::addColumn(const std::vector<double>& values)
+{
+  return getImpl<detail::CSVFile_Impl>()->addColumn(values);
+}
+
+unsigned CSVFile::addColumn(const std::vector<std::string>& values)
+{
+  return getImpl<detail::CSVFile_Impl>()->addColumn(values);
+}
+
+std::vector<DateTime> CSVFile::getColumnAsDateTimes(unsigned columnIndex) const
+{
+  return getImpl<detail::CSVFile_Impl>()->getColumnAsDateTimes(columnIndex);
+}
+
+std::vector<double> CSVFile::getColumnAsDoubleVector(unsigned columnIndex) const
+{
+  return getImpl<detail::CSVFile_Impl>()->getColumnAsDoubleVector(columnIndex);
+}
+
+std::vector<std::string> CSVFile::getColumnAsStringVector(unsigned columnIndex) const
+{
+  return getImpl<detail::CSVFile_Impl>()->getColumnAsStringVector(columnIndex);
+}
 
 std::ostream& operator<<(std::ostream& os, const CSVFile& CSVFile)
 {

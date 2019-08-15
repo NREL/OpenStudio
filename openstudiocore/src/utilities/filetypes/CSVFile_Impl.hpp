@@ -34,8 +34,7 @@
 
 #include "../core/Logger.hpp"
 #include "../core/Path.hpp"
-
-#include <nano/nano_signal_slot.hpp>
+#include "../data/Vector.hpp"
 
 namespace openstudio{
 
@@ -77,8 +76,26 @@ namespace detail {
 
       void clear();
 
-      // Emitted on any change
-      Nano::Signal<void()> onChange;
+      /** Add a column of std::vector<DateTime>, returns column index (first column is index 0). */
+      unsigned addColumn(const std::vector<DateTime>& dateTimes);
+
+      /** Add a column of values in a Vector, returns column index (first column is index 0). */
+      unsigned addColumn(const Vector& values);
+
+      /** Add a column of values in a std::vector<double>, returns column index (first column is index 0). */
+      unsigned addColumn(const std::vector<double>& values);
+
+      /** Add a column of values in a std::vector<std::string>, returns column index (first column is index 0). */
+      unsigned addColumn(const std::vector<std::string>& values);
+
+      /** Get column of DateTime values (first column is index 0). Empty vector is returned if any cell is not a valid DateTime or if column index is invalid.*/
+      std::vector<DateTime> getColumnAsDateTimes(unsigned columnIndex) const;
+
+      /** Get column as a Vector (first column is index 0). Empty vector is returned if any cell is not a valid number or if column index is invalid.*/
+      std::vector<double> getColumnAsDoubleVector(unsigned columnIndex) const;
+
+      /** Get column as a Vector (first column is index 0). Numeric cells will be converted to strings. Empty vector is returned if column index is invalid.*/
+      std::vector<std::string> getColumnAsStringVector(unsigned columnIndex) const;
 
     private:
 
@@ -87,7 +104,9 @@ namespace detail {
       // throws on error
       std::vector<std::vector<Variant> > parseRows(std::istream& input);
 
-      void setNumColumns();
+      void assignNumColumns();
+
+      void ensureNumRows(unsigned numRows);
 
       void padRows();
 
