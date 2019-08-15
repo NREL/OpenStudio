@@ -38,6 +38,8 @@
 
 #include <iostream>
 
+#include <boost/regex.hpp>
+
 namespace openstudio{
 namespace detail{
 
@@ -54,6 +56,7 @@ namespace detail{
     m_rows = parseRows(ss);
       
     setNumColumns();
+    padRows();
   }
 
   CSVFile_Impl::CSVFile_Impl(const openstudio::path& p)
@@ -70,6 +73,7 @@ namespace detail{
     
     m_path = p;
     setNumColumns();
+    padRows();
   }
 
   CSVFile CSVFile_Impl::clone() const
@@ -84,8 +88,40 @@ namespace detail{
 
   std::string CSVFile_Impl::string() const
   {
-    std::string result;
-    return result;
+    const static boost::regex escapeItRegex(",");
+
+    std::string s;
+    std::stringstream result;
+    for (const auto& row : m_rows) {
+      OS_ASSERT(row.size() == m_numColumns);
+      for (size_t i = 0; i < m_numColumns; ++i) {
+
+        switch (row[i].variantType().value()) {
+        case VariantType::Integer:
+          result << row[i].valueAsInteger();
+          break;
+        case VariantType::Double:
+          result << row[i].valueAsDouble();
+          break;
+        case VariantType::String:
+          s = row[i].valueAsString();
+          if (boost::regex_match(s, escapeItRegex)) {
+            result << "\"" << s << "\"";
+          } else {
+            result << s;
+          }
+          break;
+        default:
+          break;
+        }
+
+        if (i < m_numColumns - 1) {
+          result << ",";
+        }
+      }
+      result << "\n";
+    }
+    return result.str();
   }
 
   bool CSVFile_Impl::save() const
@@ -156,7 +192,14 @@ namespace detail{
   void CSVFile_Impl::addRow(const std::vector<Variant>& row) 
   {
     m_rows.push_back(row);
-    m_numColumns = std::max<unsigned>(m_numColumns, row.size());
+    if (row.size() > m_numColumns) {
+      m_numColumns = row.size();
+      padRows();
+    }
+      
+    while (m_rows[m_rows.size() - 1].size() < m_numColumns){
+      m_rows[m_rows.size() - 1].push_back(Variant(""));
+    }
   }
 
   void CSVFile_Impl::setRows(const std::vector<std::vector<Variant> >& rows) 
@@ -173,9 +216,43 @@ namespace detail{
   }
 
   // throws on error
-  std::vector<std::vector<Variant> > CSVFile_Impl::parseRows(const std::istream& input) 
+  std::vector<std::vector<Variant> > CSVFile_Impl::parseRows(std::istream& input) 
   {
-    return std::vector<std::vector<Variant> >();
+    std::vector<std::vector<Variant> > result;
+
+    // DLM: what conditions should make this throw?
+
+    // Excel formated CSV regex, \A[^,"]*(?=,)|(?:[^",]*"[^"]*"[^",]*)+|[^",]*"[^"]*\Z|(?<=,)[^,]*(?=,)|(?<=,)[^,]*\Z|\A[^,]*\Z
+    const static boost::regex csvRegex("\\A[^,\"]*(?=,)|(?:[^\",]*\"[^\"]*\"[^\",]*)+|[^\",]*\"[^\"]*\\Z|(?<=,)[^,]*(?=,)|(?<=,)[^,]*\\Z|\\A[^,]*\\Z");
+    const static boost::regex intRegex("^[-0-9]+$");
+    const static boost::regex doubleRegex("^[+-]?\\d+\\.?(\\d+)?$");
+    const static boost::regex quoteRegex("^\"(.*)\"$");
+    
+    std::string line;
+    while (std::getline(input, line)) {
+      std::vector<Variant> row;
+      boost::regex_token_iterator<std::string::iterator> it{line.begin(), line.end(), csvRegex, 0};
+      boost::regex_token_iterator<std::string::iterator> end;
+      while (it != end){
+        std::string value = *it;
+        if (boost::regex_match(value, intRegex)) {
+          row.push_back(Variant(std::stoi(value)));
+        } else if (boost::regex_match(value, doubleRegex)) {
+          row.push_back(Variant(std::stod(value)));
+        } else {
+          boost::smatch valueMatch;
+          if (boost::regex_search(value, valueMatch, quoteRegex)) {
+            row.push_back(Variant(valueMatch[1]));
+          } else {
+            row.push_back(Variant(value));
+          }
+        }
+        ++it;
+      }
+      result.push_back(row);
+    }
+
+    return result;
   }
 
   void CSVFile_Impl::setNumColumns() 
@@ -183,6 +260,14 @@ namespace detail{
     m_numColumns = 0;
     for (const auto& row : m_rows) {
       m_numColumns = std::max<unsigned>(m_numColumns, row.size());
+    }
+  }
+
+  void CSVFile_Impl::padRows() {
+    for (auto& row : m_rows) {
+      while (row.size() < m_numColumns) {
+        row.push_back(Variant(""));
+      }
     }
   }
 

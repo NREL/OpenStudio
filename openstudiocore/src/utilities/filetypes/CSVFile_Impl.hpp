@@ -85,9 +85,11 @@ namespace detail {
       REGISTER_LOGGER("openstudio.CSVFile");
 
       // throws on error
-      std::vector<std::vector<Variant> > parseRows(const std::istream& input);
+      std::vector<std::vector<Variant> > parseRows(std::istream& input);
 
       void setNumColumns();
+
+      void padRows();
 
       boost::optional<openstudio::path> m_path;
       unsigned m_numColumns;
