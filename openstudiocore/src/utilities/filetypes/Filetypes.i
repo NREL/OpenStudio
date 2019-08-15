@@ -17,6 +17,7 @@
 %{
   namespace openstudio{}
   using namespace openstudio;
+  #include <utilities/filetypes/CSVFile.hpp>
   #include <utilities/filetypes/EpwFile.hpp>
   #include <utilities/filetypes/RunOptions.hpp>
   #include <utilities/filetypes/RunOptions_Impl.hpp>

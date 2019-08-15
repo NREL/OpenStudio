@@ -45,6 +45,7 @@ set(utilities_resources_src
   utilities/Filetypes/leapday-test.epw
   utilities/Filetypes/min.osw
   utilities/Filetypes/full.osw
+  utilities/Filetypes/test_csv.csv
   utilities/Geometry/floorplan.json
   utilities/Geometry/floorplan_colors.json
   utilities/Geometry/floorplan_doors.json
