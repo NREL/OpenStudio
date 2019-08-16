@@ -31,6 +31,10 @@
 
 #include "../CSVFile.hpp"
 #include "../../data/Variant.hpp"
+#include "../../data/Vector.hpp"
+#include "../../time/Date.hpp"
+#include "../../time/Time.hpp"
+#include "../../time/DateTime.hpp"
 
 #include <resources.hxx>
 
@@ -236,35 +240,63 @@ TEST(Filetypes, CSVFile_AddAndGetColumn)
 {
   CSVFile csvFile;
   
-  // dateTimes
+  // std::vector<DateTime>
+  Date startDate(Date(MonthOfYear(MonthOfYear::Jan), 1));
+  DateTime startDateTime(startDate, Time(0, 1, 0, 0));
+  Date endDate(Date(MonthOfYear(MonthOfYear::Jan), 1));
+  DateTime endDateTime(endDate, Time(0, 3, 0 ,0));
+  Time delta(0, 1, 0, 0);
+  std::vector<DateTime> dateTimes;
+  for(openstudio::DateTime current=startDateTime; current <= endDateTime; current += delta)
+  {
+    dateTimes.push_back(current);
+  }
+  csvFile.addColumn(dateTimes);
   
+  // Vector
+  Vector values = linspace(1, 3, 3);
+  csvFile.addColumn(values);  
   
   // std::vector<double>
-  std::vector<double> col1;
-  col1.push_back(1);
-  col1.push_back(2.2);
-  col1.push_back(0.33);
-  csvFile.addColumn(col1);
+  std::vector<double> col3;
+  col3.push_back(1);
+  col3.push_back(2.2);
+  col3.push_back(0.33);
+  csvFile.addColumn(col3);
   
   ASSERT_EQ(3, csvFile.numRows());
-  ASSERT_EQ(1, csvFile.numColumns());
+  ASSERT_EQ(3, csvFile.numColumns());
   
   // std::vector<std::string>
-  std::vector<std::string> col2;
-  col2.push_back("1");
-  col2.push_back("2.2");
-  col2.push_back("0.33");
-  csvFile.addColumn(col2);
+  std::vector<std::string> col4;
+  col4.push_back("1");
+  col4.push_back("2.2");
+  col4.push_back("0.33");
+  csvFile.addColumn(col4);
   
   ASSERT_EQ(3, csvFile.numRows());
-  ASSERT_EQ(2, csvFile.numColumns());
+  ASSERT_EQ(4, csvFile.numColumns());
 
   // getColumnAsDateTimes
-
+  std::vector<DateTime> getCol1 = csvFile.getColumnAsDateTimes(0);
+  EXPECT_EQ(startDateTime, getCol1[0]);
+  EXPECT_EQ(startDateTime+delta, getCol1[1]);
+  EXPECT_EQ(endDateTime, getCol1[2]);
 
   // getColumnAsDoubleVector
-  csvFile.
+  std::vector<double> getCol2 = csvFile.getColumnAsDoubleVector(1);
+  EXPECT_EQ(1, getCol2[0]);
+  EXPECT_EQ(2, getCol2[1]);
+  EXPECT_EQ(3, getCol2[2]);
 
+  std::vector<double> getCol3 = csvFile.getColumnAsDoubleVector(2);
+  EXPECT_EQ(1, getCol3[0]);
+  EXPECT_EQ(2.2, getCol3[1]);
+  EXPECT_EQ(0.33, getCol3[2]);
 
   // getColumnAsStringVector
+  std::vector<std::string> getCol4 = csvFile.getColumnAsStringVector(3);
+  EXPECT_EQ("1", getCol4[0]);
+  EXPECT_EQ("2.2", getCol4[1]);
+  EXPECT_EQ("0.33", getCol4[2]);
 }
