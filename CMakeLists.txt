@@ -10,7 +10,17 @@ if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-project(OpenStudio VERSION 2.8.1)
+# Project macro can only take digits in the version, it splits these out to specific variables
+project(OpenStudio VERSION 3.0.0)
+
+# The RT Manifest file only supports digits
+string(APPEND PROJECT_VERSION_PATCH_RT_MANIFEST ${PROJECT_VERSION_PATCH})
+
+# Modify the more specific variables as needed to indicate prerelease, etc
+string(APPEND PROJECT_VERSION "-rc1")
+string(APPEND OpenStudio_VERSION "-rc1")
+string(APPEND PROJECT_VERSION_PATCH "-rc1")
+string(APPEND OpenStudio_VERSION_PATCH "-rc1")
 
 # The PROJECT_SOURCE_DIR here is OpenStudio/, which we will use instead of using CMAKE_SOURCE_DIR
 set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
