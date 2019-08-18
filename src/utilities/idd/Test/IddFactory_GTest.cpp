@@ -54,15 +54,12 @@ TEST_F(IddFixture,IddFactory_Version_Header) {
   // OpenStudio always has major, minor, patch
   VersionString osVersion(IddFactory::instance().getVersion(IddFileType::OpenStudio));
   EXPECT_TRUE(osVersion.patch());
-  EXPECT_FALSE(osVersion.build());
   EXPECT_EQ(VersionString(openStudioVersion()),osVersion);
-  EXPECT_TRUE(osVersion.fidelityEqual(VersionString(openStudioVersion())));
 
   // EnergyPlus always has major, minor, patch and build
   VersionString epVersion(IddFactory::instance().getVersion(IddFileType::EnergyPlus));
   EXPECT_TRUE(epVersion.patch());
   EXPECT_EQ(VersionString(energyPlusVersion()),epVersion);
-  EXPECT_TRUE(epVersion.fidelityEqual(VersionString(energyPlusVersion())));
 
   EXPECT_NO_THROW(IddFactory::instance().getHeader(IddFileType::OpenStudio));
   EXPECT_NO_THROW(IddFactory::instance().getHeader(IddFileType::EnergyPlus));

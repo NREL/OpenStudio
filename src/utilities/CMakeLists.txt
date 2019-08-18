@@ -448,6 +448,7 @@ endif()
 
 if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+  add_dependencies("${target_name}_tests" openstudio_model_resources)
   add_dependencies("${target_name}_tests" openstudio_energyplus_resources)
 endif()
 

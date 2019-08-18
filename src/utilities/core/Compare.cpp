@@ -77,9 +77,11 @@ bool IstringPairCompare::operator()(const std::pair<std::string, std::string>& x
 VersionString::VersionString(const std::string& version)
   : m_str(version)
 {
-  boost::regex versionRegex("(\\d+)[\\.-](\\d+)(?:[\\.-](\\d+))?(?:[\\.-](\\d+))?");
+  // regex from https://semver.org/
+  const boost::regex semverRegex("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$");
+  const boost::regex oldRegex("(\\d+)[\\.-](\\d+)(?:[\\.-](\\d+))?(?:[\\.-](\\d+))?");
   boost::smatch m;
-  if (boost::regex_match(version,m,versionRegex)) {
+  if (boost::regex_match(version,m, semverRegex)) {
     m_major = boost::lexical_cast<int>(std::string(m[1].first,m[1].second));
     m_minor = boost::lexical_cast<int>(std::string(m[2].first,m[2].second));
     int n = m.size();
@@ -90,10 +92,25 @@ VersionString::VersionString(const std::string& version)
       }
     }
     if (4 < n) {
-      std::string temp(m[4].first,m[4].second);
+      m_patchString = std::string(m[4].first, m[4].second);
+    }
+    if (5 < n) {
+      m_buildString = std::string(m[5].first, m[5].second);
+    }
+  }
+  else if (boost::regex_match(version, m, oldRegex)) {
+    m_major = boost::lexical_cast<int>(std::string(m[1].first, m[1].second));
+    m_minor = boost::lexical_cast<int>(std::string(m[2].first, m[2].second));
+    int n = m.size();
+    if (3 < n) {
+      std::string temp(m[3].first, m[3].second);
       if (!temp.empty()) {
-        m_build = boost::lexical_cast<int>(temp);
+        m_patch = boost::lexical_cast<int>(temp);
       }
+      // old regex does not support patch string
+    }
+    if (4 < n) {
+      m_buildString = std::string(m[4].first, m[4].second);
     }
   }
   else {
@@ -121,14 +138,26 @@ VersionString::VersionString(int major,int minor,int patch)
   m_str = ss.str();
 }
 
-VersionString::VersionString(int major,int minor,int patch,int build)
+VersionString::VersionString(int major, int minor, int patch, const std::string& patchString)
+  : m_major(major),
+  m_minor(minor),
+  m_patch(patch),
+  m_patchString(patchString)
+{
+  std::stringstream ss;
+  ss << major << "." << minor << "." << patch << "-" << patchString;
+  m_str = ss.str();
+}
+
+VersionString::VersionString(int major,int minor,int patch, const std::string& patchString, const std::string& buildString)
   : m_major(major),
     m_minor(minor),
     m_patch(patch),
-    m_build(build)
+  m_patchString(patchString),
+    m_buildString(buildString)
 {
   std::stringstream ss;
-  ss << major << "." << minor << "." << patch << "." << build;
+  ss << major << "." << minor << "." << patch << "-" << patchString << "+" << buildString;
   m_str = ss.str();
 }
 
@@ -148,8 +177,17 @@ boost::optional<int> VersionString::patch() const {
   return m_patch;
 }
 
-boost::optional<int> VersionString::build() const {
-  return m_build;
+std::string VersionString::patchString() const {
+  return m_patchString;
+}
+
+//boost::optional<int> VersionString::build() const {
+//  LOG_FREE("openstudio.utilities.VersionString", Warn, "VersionString::build is deprecated, use buildString instead.");
+//  return boost::none;
+//}
+
+std::string VersionString::buildString() const {
+  return m_buildString;
 }
 
 bool VersionString::operator<(const VersionString& other) const {
@@ -191,20 +229,6 @@ bool VersionString::operator<(const VersionString& other) const {
 
     OS_ASSERT(meCurrent == otherCurrent);
 
-    if (build() && other.build()) {
-
-      meCurrent = build().get();
-      otherCurrent = other.build().get();
-
-      if (meCurrent < otherCurrent) {
-        return true;
-      }
-      else if (otherCurrent < meCurrent) {
-        return false;
-      }
-
-      OS_ASSERT(meCurrent == otherCurrent);
-    }
   }
 
   return false;
@@ -230,26 +254,11 @@ bool VersionString::operator>=(const VersionString& other) const {
   return (!(*this < other));
 }
 
-bool VersionString::fidelityEqual(const VersionString& other) const {
-  if (patch()) {
-    if (!other.patch()) {
-      return false;
-    }
-    if (build()) {
-      if (!other.build()) {
-        return false;
-      }
-    }
-    else if (other.build()) {
-      return false;
-    }
-  }
-  else if (other.patch()) {
-    return false;
-  }
-
-  return true;
-}
+//bool VersionString::fidelityEqual(const VersionString& other) const
+//{
+//  LOG_FREE("openstudio.utilities.VersionString", Warn, "VersionString::fidelityEqual is deprecated.");
+//  return true;
+//}
 
 bool VersionString::isNextVersion(const VersionString& nextVersionCandidate) const {
   VersionString variantOnThis(str());
@@ -260,29 +269,6 @@ bool VersionString::isNextVersion(const VersionString& nextVersionCandidate) con
   }
 
   // now know nextVersionCandidate > this
-
-  if (build() && fidelityEqual(nextVersionCandidate)) {
-    // true if versions except for build number are equal
-    variantOnThis = VersionString(major(),minor(),patch().get());
-    variantOnCandidate = VersionString(nextVersionCandidate.major(),
-                                       nextVersionCandidate.minor(),
-                                       nextVersionCandidate.patch().get());
-    if (variantOnCandidate == variantOnThis) {
-      return true;
-    }
-  }
-  else {
-    // strip out build numbers as needed, because that is not the level at which the
-    // versions differ
-    if (build()) {
-      variantOnThis = VersionString(major(),minor(),patch().get());
-    }
-    if (nextVersionCandidate.build()) {
-      variantOnCandidate = VersionString(nextVersionCandidate.major(),
-                                         nextVersionCandidate.minor(),
-                                         nextVersionCandidate.patch().get());
-    }
-  }
 
   // now have major.minor or major.minor.patch for both
 
