@@ -16,6 +16,9 @@ project(OpenStudio VERSION 3.0.0)
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
 
+# CPack package version does not support extended patch version
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+
 # Modify the more specific variables as needed to indicate prerelease, etc
 string(APPEND PROJECT_VERSION "-rc1")
 string(APPEND OpenStudio_VERSION "-rc1")
