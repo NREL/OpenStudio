@@ -13,8 +13,8 @@ endif()
 # Project macro can only take digits in the version, it splits these out to specific variables
 project(OpenStudio VERSION 3.0.0)
 
-# The RT Manifest file only supports digits
-string(APPEND PROJECT_VERSION_PATCH_RT_MANIFEST ${PROJECT_VERSION_PATCH})
+# The RT Manifest file and C# SDK only support the digit portion of patch
+string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
 
 # Modify the more specific variables as needed to indicate prerelease, etc
 string(APPEND PROJECT_VERSION "-rc1")
