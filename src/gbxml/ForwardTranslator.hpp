@@ -36,11 +36,9 @@
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
-// This is needed to declare the set that uses IdfObjectImplLess as a comparator, so it's a complete type
+// This is needed to declare the set<Material, IdfObjectImplLess>, so everything is a complete type
 #include "../utilities/idf/IdfObject.hpp"
-#include "../utilities/idf/IdfObject_Impl.hpp"
 #include "../model/Material.hpp"
-#include "../model/Material_Impl.hpp"
 
 #include "../model/ModelObject.hpp"
 
