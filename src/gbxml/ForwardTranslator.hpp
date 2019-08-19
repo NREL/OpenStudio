@@ -36,6 +36,8 @@
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
+// This is needed to declare the set that uses IdfObjectImplLess as a comparator, so it's a complete type
+#include "../utilities/idf/IdfObject.hpp"
 
 #include "../model/ModelObject.hpp"
 
@@ -107,12 +109,7 @@ namespace gbxml {
 
     std::map<openstudio::Handle, pugi::xml_node> m_translatedObjects;
 
-    // This is throwing a weird error on clang: the specified comparator type does not provide a const call operator IdfObjectImplLess::operator() is
-    // const though... Disable that
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wuser-defined-warnings"
     std::set<openstudio::model::Material, openstudio::IdfObjectImplLess> m_materials;
-#pragma clang diagnostic pop
 
     StringStreamLogSink m_logSink;
 
