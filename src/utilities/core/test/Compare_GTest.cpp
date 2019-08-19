@@ -225,12 +225,32 @@ TEST(Compare,VersionString) {
 
   EXPECT_TRUE(VersionString("7.1.0+32891") == VersionString("7.1.0"));
   EXPECT_TRUE(VersionString("7.1.0+32891") == VersionString("7.1.0+32891"));
-  EXPECT_TRUE(VersionString("7.1.0-rc1+32891") == VersionString("7.1.0"));
+  EXPECT_TRUE(VersionString("7.1.0-rc1+32891") < VersionString("7.1.0"));
 
   EXPECT_TRUE(VersionString("0.7.0") <= VersionString("0.7.0"));
   EXPECT_TRUE(VersionString("0.3.1") <= VersionString("0.7.0"));
 
   EXPECT_TRUE(VersionString("1.0.0") >= VersionString("0.9.1"));
+
+  EXPECT_TRUE(VersionString("3.1.0-rc2") >= VersionString("3.1.0-rc1"));
+  EXPECT_TRUE(VersionString("3.1.0-rc2") > VersionString("3.1.0-rc1"));
+  EXPECT_TRUE(VersionString("3.1.0-rc2") < VersionString("3.1.0-rc3"));
+  EXPECT_TRUE(VersionString("3.1.0-rc2") <= VersionString("3.1.0-rc3"));
+  EXPECT_FALSE(VersionString("3.1.0-rc2+build1") < VersionString("3.1.0-rc2+build2"));
+  EXPECT_FALSE(VersionString("3.1.0-rc2+build1") > VersionString("3.1.0-rc2+build2"));
+  EXPECT_TRUE(VersionString("3.1.0-rc2+build1") == VersionString("3.1.0-rc2+build2"));
+
+  EXPECT_TRUE(VersionString("1.0.0") < VersionString("2.0.0"));
+  EXPECT_TRUE(VersionString("2.0.0") < VersionString("2.1.0"));
+  EXPECT_TRUE(VersionString("2.0.0") < VersionString("2.1.1"));
+
+  EXPECT_TRUE(VersionString("1.0.0-alpha") < VersionString("1.0.0-alpha.1"));
+  EXPECT_TRUE(VersionString("1.0.0-alpha.1") < VersionString("1.0.0-alpha.beta"));
+  EXPECT_TRUE(VersionString("1.0.0-alpha.beta") < VersionString("1.0.0-beta"));
+  EXPECT_TRUE(VersionString("1.0.0-beta") < VersionString("1.0.0-beta.2"));
+  //EXPECT_TRUE(VersionString("1.0.0-beta.2") < VersionString("1.0.0-beta.11")); // we aren't supporting the dot separators in patch release yet
+  EXPECT_TRUE(VersionString("1.0.0-beta.11") < VersionString("1.0.0-rc.1"));
+  EXPECT_TRUE(VersionString("1.0.0-rc.1") < VersionString("1.0.0"));
 
   EXPECT_NO_THROW(VersionString v(openStudioVersion()));
   EXPECT_NO_THROW(VersionString vl(openStudioLongVersion()));

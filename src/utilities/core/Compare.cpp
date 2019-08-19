@@ -215,7 +215,7 @@ bool VersionString::operator<(const VersionString& other) const {
   }
 
   OS_ASSERT(meCurrent == otherCurrent);
-
+  
   if (patch() && other.patch()) {
     meCurrent = patch().get();
     otherCurrent = other.patch().get();
@@ -228,8 +228,23 @@ bool VersionString::operator<(const VersionString& other) const {
     }
 
     OS_ASSERT(meCurrent == otherCurrent);
-
   }
+
+  // When major, minor, and patch are equal, a pre-release version has lower precedence than a normal version
+  std::string otherPatchString = other.patchString();
+  if (m_patchString.empty() && otherPatchString.empty()) {
+    return false;
+  } else if (m_patchString.empty() && !otherPatchString.empty()) {
+    return false;
+  } else if (!m_patchString.empty() && otherPatchString.empty()) {
+    return true;
+  } else if (m_patchString < otherPatchString) {
+      return true;
+  } else if (m_patchString > otherPatchString) {
+    return false;
+  }
+
+  OS_ASSERT(m_patchString == otherPatchString);
 
   return false;
 }
