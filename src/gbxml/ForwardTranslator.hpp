@@ -38,6 +38,7 @@
 #include "../utilities/core/StringStreamLogSink.hpp"
 // This is needed to declare the set that uses IdfObjectImplLess as a comparator, so it's a complete type
 #include "../utilities/idf/IdfObject.hpp"
+#include "../utilities/idf/IdfObject_Impl.hpp"
 
 #include "../model/ModelObject.hpp"
 
