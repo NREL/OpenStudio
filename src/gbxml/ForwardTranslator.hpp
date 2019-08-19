@@ -39,6 +39,8 @@
 // This is needed to declare the set that uses IdfObjectImplLess as a comparator, so it's a complete type
 #include "../utilities/idf/IdfObject.hpp"
 #include "../utilities/idf/IdfObject_Impl.hpp"
+#include "../model/Material.hpp"
+#include "../model/Material_Impl.hpp"
 
 #include "../model/ModelObject.hpp"
 
@@ -56,8 +58,6 @@ namespace openstudio {
 
 namespace model {
   class Model;
-  class ModelObject;
-  class Material;
   class ConstructionBase;
   class Facility;
   class Building;
