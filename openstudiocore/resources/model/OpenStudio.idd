@@ -415,6 +415,22 @@ OS:SimulationControl,
        \minimum> 0
        \default 6
 
+OS:PerformancePrecisionTradeoffs,
+       \unique-object
+       \memo This object enables users to choose certain options that speed up EnergyPlus simulation,
+       \memo but may lead to small decreases in accuracy of results.
+       \min-fields 2
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2; \field Use Coil Direct Solutions
+      \note If Yes, an analytical or empirical solution will be used to replace iterations in 
+      \note the coil performance calculations.
+      \type choice
+      \key Yes
+      \key No
+      \default No
+
 OS:Sizing:Parameters,
        \unique-object
        \min-fields 2
