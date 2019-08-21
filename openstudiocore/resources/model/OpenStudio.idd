@@ -323,7 +323,8 @@ OS:ShadowCalculation,
        \type choice
        \key ConvexWeilerAtherton
        \key SutherlandHodgman
-  A3; \field Sky Diffuse Modeling Algorithm
+       \default SutherlandHodgman
+  A3, \field Sky Diffuse Modeling Algorithm
        \note Advanced Feature.  Internal default is SimpleSkyDiffuseModeling
        \note If you have shading elements that change transmittance over the
        \note year, you may wish to choose the detailed method.
@@ -331,7 +332,15 @@ OS:ShadowCalculation,
        \type choice
        \key SimpleSkyDiffuseModeling
        \key DetailedSkyDiffuseModeling
-
+       \default SimpleSkyDiffuseModeling
+  A4; \field Calculation Method
+       \note choose calculation method. note that TimestepFrequency is only needed for certain cases
+       \note and can increase execution time significantly.
+       \type choice
+       \key AverageOverDaysInFrequency
+       \key TimestepFrequency
+       \default AverageOverDaysInFrequency
+       
 OS:SimulationControl,
        \memo Note that the following 3 fields are related to the Sizing:Zone, Sizing:System,
        \memo and Sizing:Plant objects.  Having these fields set to Yes but no corresponding

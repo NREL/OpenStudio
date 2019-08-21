@@ -1965,6 +1965,7 @@ set(${target_name}_test_src
   test/ShadingControl_GTest.cpp
   test/ShadingSurfaceGroup_GTest.cpp
   test/ShadingSurface_GTest.cpp
+  test/ShadowCalculation_GTest.cpp
   test/SimpleGlazing_GTest.cpp
   test/SimulationControl_GTest.cpp
   test/Site_GTest.cpp
