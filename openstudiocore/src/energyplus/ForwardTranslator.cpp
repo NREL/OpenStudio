@@ -2373,6 +2373,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
+  case openstudio::IddObjectType::OS_PerformancePrecisionTradeoffs:
+  {
+    model::PerformancePrecisionTradeoffs performancePrecisionTradeoffs = modelObject.cast<PerformancePrecisionTradeoffs>();
+    retVal = translatePerformancePrecisionTradeoffs(performancePrecisionTradeoffs);
+    break;
+  }
   case openstudio::IddObjectType::OS_Pipe_Adiabatic:
   {
     model::PipeAdiabatic pipe = modelObject.cast<PipeAdiabatic>();
