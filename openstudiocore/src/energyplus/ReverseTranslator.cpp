@@ -759,6 +759,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translatePeople(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::PerformancePrecisionTradeoffs :
+    {
+      modelObject = translatePerformancePrecisionTradeoffs(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::Refrigeration_Case :
     {
       // modelObject = translateRefrigerationCase(workspaceObject);

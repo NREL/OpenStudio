@@ -65,6 +65,8 @@
 #include "../../model/ScheduleDay_Impl.hpp"
 #include "../../model/OtherEquipment.hpp"
 #include "../../model/OtherEquipment_Impl.hpp"
+#include "../../model/PerformancePrecisionTradeoffs.hpp"
+#include "../../model/PerformancePrecisionTradeoffs_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -79,6 +81,7 @@
 #include <utilities/idd/Version_FieldEnums.hxx>
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/Site_Location_FieldEnums.hxx>
+#include <utilities/idd/PerformancePrecisionTradeoffs_FieldEnums.hxx>
 #include "../../utilities/time/Time.hpp"
 
 #include <resources.hxx>
@@ -474,4 +477,22 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OtherEquipment) {
   ASSERT_EQ(1u, otherEquipments.size());
   EXPECT_EQ(otherEquipments[0].name().get(), "Other Eq 1");
   EXPECT_EQ(otherEquipments[0].endUseSubcategory(), "Category A");
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  
+  openstudio::IdfObject idfObject(openstudio::IddObjectType::PerformancePrecisionTradeoffs);
+  idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
+  
+  openstudio::WorkspaceObject epPerformancePrecisionTradeoffs = workspace.addObject(idfObject).get();
+  
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+  
+  ASSERT_TRUE(model.getOptionalUniqueModelObject<openstudio::model::PerformancePrecisionTradeoffs>());
+  
+  openstudio::model::PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<openstudio::model::PerformancePrecisionTradeoffs>();
+  EXPECT_TRUE(performancePrecisionTradeoffs.useCoilDirectSolutions());
 }
