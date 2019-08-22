@@ -1035,7 +1035,7 @@ namespace detail {
     m_cachedWeatherFile.reset();
   }
 
-  void Model_Impl::clearCachedPerformancePrecisionTradeoffs(const Handle& handle)
+  void Model_Impl::clearCachedPerformancePrecisionTradeoffs(const Handle &)
   {
     m_cachedPerformancePrecisionTradeoffs.reset();
   }

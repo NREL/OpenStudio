@@ -77,7 +77,31 @@ namespace detail {
     return PerformancePrecisionTradeoffs::iddObjectType();
   }
 
+  bool PerformancePrecisionTradeoffs_Impl::useCoilDirectSolutions() const {
+    boost::optional<std::string> value = getString(OS_PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions,true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "Yes");
+  }
+  
+  bool PerformancePrecisionTradeoffs_Impl::isUseCoilDirectSolutionsDefaulted() const {
+    return isEmpty(OS_PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions);
+  }
+  
+  bool PerformancePrecisionTradeoffs_Impl::setUseCoilDirectSolutions(bool useCoilDirectSolutions) {
+    bool result = false;
+    if (useCoilDirectSolutions) {
+      result = setString(OS_PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
+    } else {
+      result = setString(OS_PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "No");
+    }
+    OS_ASSERT(result);
+    return result;
+  }
 
+  void PerformancePrecisionTradeoffs_Impl::resetUseCoilDirectSolutions() {
+    bool result = setString(OS_PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "");
+    OS_ASSERT(result);
+  }
 
 } // detail
 
@@ -85,6 +109,21 @@ IddObjectType PerformancePrecisionTradeoffs::iddObjectType() {
   return IddObjectType(IddObjectType::OS_PerformancePrecisionTradeoffs);
 }
 
+bool PerformancePrecisionTradeoffs::useCoilDirectSolutions() const {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->useCoilDirectSolutions();
+}
+
+bool PerformancePrecisionTradeoffs::isUseCoilDirectSolutionsDefaulted() const {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->isUseCoilDirectSolutionsDefaulted();
+}
+
+bool PerformancePrecisionTradeoffs::setUseCoilDirectSolutions(bool useCoilDirectSolutions) {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->setUseCoilDirectSolutions(useCoilDirectSolutions);
+}
+
+void PerformancePrecisionTradeoffs::resetUseCoilDirectSolutions() {
+  getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->resetUseCoilDirectSolutions();
+}
 
 /// @cond
 PerformancePrecisionTradeoffs::PerformancePrecisionTradeoffs(std::shared_ptr<detail::PerformancePrecisionTradeoffs_Impl> impl)

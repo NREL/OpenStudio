@@ -30,6 +30,7 @@
 #ifndef MODEL_PERFORMANCEPRECISIONTRADEOFFS_IMPL_HPP
 #define MODEL_PERFORMANCEPRECISIONTRADEOFFS_IMPL_HPP
 
+#include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
@@ -71,13 +72,17 @@ namespace detail {
     /** @name Getters */
     //@{
 
-
+    bool useCoilDirectSolutions() const;
+    
+    bool isUseCoilDirectSolutionsDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
-
+    bool setUseCoilDirectSolutions(bool useCoilDirectSolutions);
+    
+    void resetUseCoilDirectSolutions();
 
     //@}
     /** @name Other */

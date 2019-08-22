@@ -30,6 +30,7 @@
 #ifndef MODEL_PERFORMANCEPRECISIONTRADEOFFS_HPP
 #define MODEL_PERFORMANCEPRECISIONTRADEOFFS_HPP
 
+#include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
@@ -48,7 +49,7 @@ class MODEL_API PerformancePrecisionTradeoffs : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit PerformancePrecisionTradeoffs(const Model& model);
+  virtual ~PerformancePrecisionTradeoffs() {}
 
   //@}
 
@@ -57,10 +58,17 @@ class MODEL_API PerformancePrecisionTradeoffs : public ModelObject {
   /** @name Getters */
   //@{
 
+  bool useCoilDirectSolutions() const;
+  
+  bool isUseCoilDirectSolutionsDefaulted() const;
 
   //@}
   /** @name Setters */
   //@{
+
+  bool setUseCoilDirectSolutions(bool useCoilDirectSolutions);
+  
+  void resetUseCoilDirectSolutions();
 
 
   //@}

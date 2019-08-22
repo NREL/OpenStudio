@@ -64,7 +64,9 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_PerformancePrecisionTradeoffs
   // create a performance precision tradeoffs object to use
   PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<PerformancePrecisionTradeoffs>();
 
-
+  EXPECT_TRUE(performancePrecisionTradeoffs.isUseCoilDirectSolutionsDefaulted());
+  
+  ASSERT_FALSE(performancePrecisionTradeoffs.useCoilDirectSolutions());
 }
 
 // test setting and getting
@@ -76,12 +78,16 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_SetGetFields) {
   PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<PerformancePrecisionTradeoffs>();
   
   // set the fields
+  performancePrecisionTradeoffs.setUseCoilDirectSolutions(true);
   
   // check the fields
+  ASSERT_FALSE(performancePrecisionTradeoffs.isUseCoilDirectSolutionsDefaulted());
+  ASSERT_TRUE(performancePrecisionTradeoffs.useCoilDirectSolutions());
   
   // reset them one by one
-
-
+  performancePrecisionTradeoffs.resetUseCoilDirectSolutions();
+  
+  EXPECT_TRUE(performancePrecisionTradeoffs.isUseCoilDirectSolutionsDefaulted());
 }
 
 // test cloning it
@@ -94,12 +100,18 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone)
   PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<PerformancePrecisionTradeoffs>();
 
   // change some of the fields
+  performancePrecisionTradeoffs.setUseCoilDirectSolutions(true);
 
   // clone it into the same model
+  PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone = performancePrecisionTradeoffs.clone(model).cast<PerformancePrecisionTradeoffs>();
+  ASSERT_FALSE(performancePrecisionTradeoffsClone.isUseCoilDirectSolutionsDefaulted());
+  ASSERT_TRUE(performancePrecisionTradeoffsClone.useCoilDirectSolutions());
 
   // clone it into a different model
-
-
+  Model model2;
+  PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone2 = performancePrecisionTradeoffs.clone(model2).cast<PerformancePrecisionTradeoffs>();
+  ASSERT_FALSE(performancePrecisionTradeoffsClone2.isUseCoilDirectSolutionsDefaulted());
+  ASSERT_TRUE(performancePrecisionTradeoffsClone2.useCoilDirectSolutions());
 }
 
 // check that remove works
