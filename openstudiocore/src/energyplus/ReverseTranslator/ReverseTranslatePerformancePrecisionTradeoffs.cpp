@@ -33,6 +33,10 @@
 #include "../../model/PerformancePrecisionTradeoffs_Impl.hpp"
 
 #include <utilities/idd/PerformancePrecisionTradeoffs_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/IddEnums.hxx>
+
+#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 
@@ -42,23 +46,25 @@ namespace energyplus {
 
 OptionalModelObject ReverseTranslator::translatePerformancePrecisionTradeoffs( const WorkspaceObject & workspaceObject )
 {
-  OptionalModelObject result;
-  openstudio::model::PerformancePrecisionTradeoffs performancePrecisionTradeoffs = m_model.getUniqueModelObject<model::PerformancePrecisionTradeoffs>();
+  if( workspaceObject.iddObject().type() != IddObjectType::PerformancePrecisionTradeoffs ){
+    LOG(Error, "WorkspaceObject is not IddObjectType: PerformancePrecisionTradeoffs");
+    return boost::none;
+  }
 
-  optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions);
+  PerformancePrecisionTradeoffs performancePrecisionTradeoffs = m_model.getUniqueModelObject<PerformancePrecisionTradeoffs>();
+
+  OptionalString optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions);
   if (optS) {
-    std::string temp=*optS;
+    std::string temp = *optS;
     boost::to_lower(temp);
-    if ( temp == "no" )
-    {
+    if ( temp == "no" ) {
       performancePrecisionTradeoffs.setUseCoilDirectSolutions(false);
     } else {
       performancePrecisionTradeoffs.setUseCoilDirectSolutions(true);
     }
   }
 
-  result = performancePrecisionTradeoffs;
-  return result;
+  return performancePrecisionTradeoffs;
 }
 
 } // energyplus
