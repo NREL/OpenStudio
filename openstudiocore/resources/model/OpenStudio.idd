@@ -6255,8 +6255,8 @@ OS:Foundation:Kiva,
        \memo inform two-dimensional heat transfer calculated using the Kiva
        \memo ground heat transfer methodology.
        \extensible:4
-       \min-fields 17
-       \max-fields 57
+       \min-fields 18
+       \max-fields 58
   A1, \field Handle
        \type handle
        \required-field
@@ -6264,17 +6264,22 @@ OS:Foundation:Kiva,
        \required-field
        \type alpha
        \reference OutFaceEnvNames
+  N1,  \field Initial Indoor Air Temperature
+       \note Indoor air temperature used for Kiva initialization (prior to warmup period)
+       \note If left blank, indoor air temperature will be determined based on zone setpoints
+       \units C
+       \type real
   A3,  \field Interior Horizontal Insulation Material Name
        \type object-list
        \object-list MaterialNames
-  N1,  \field Interior Horizontal Insulation Depth
+  N2,  \field Interior Horizontal Insulation Depth
        \note Distance from the slab bottom to the top of interior horizontal
        \note insulation
        \units m
        \type real
        \minimum 0.0
        \default 0.0
-  N2,  \field Interior Horizontal Insulation Width
+  N3,  \field Interior Horizontal Insulation Width
        \note Extent of insulation as measured from the wall interior
        \units m
        \type real
@@ -6282,7 +6287,7 @@ OS:Foundation:Kiva,
   A4,  \field Interior Vertical Insulation Material Name
        \type object-list
        \object-list MaterialNames
-  N3,  \field Interior Vertical Insulation Depth
+  N4,  \field Interior Vertical Insulation Depth
        \note Extent of insulation as measured from the wall top to the bottom
        \note edge of the interior vertical insulation
        \units m
@@ -6291,13 +6296,13 @@ OS:Foundation:Kiva,
   A5,  \field Exterior Horizontal Insulation Material Name
        \type object-list
        \object-list MaterialNames
-  N4,  \field Exterior Horizontal Insulation Depth
+  N5,  \field Exterior Horizontal Insulation Depth
        \note Distance from the exterior grade to the top of exterior horizontal
        \note insulation
        \units m
        \type real
        \minimum 0.0
-  N5,  \field Exterior Horizontal Insulation Width
+  N6,  \field Exterior Horizontal Insulation Width
        \note Extent of insulation as measured from the wall exterior
        \units m
        \type real
@@ -6306,19 +6311,19 @@ OS:Foundation:Kiva,
   A6,  \field Exterior Vertical Insulation Material Name
        \type object-list
        \object-list MaterialNames
-  N6,  \field Exterior Vertical Insulation Depth
+  N7,  \field Exterior Vertical Insulation Depth
        \note Extent of insulation as measured from the wall top to the bottom
        \note edge of the exterior vertical insulation
        \units m
        \type real
        \minimum> 0.0
-  N7,  \field Wall Height Above Grade
+  N8,  \field Wall Height Above Grade
        \note Distance from the exterior grade to the wall top
        \units m
        \type real
        \minimum 0.0
        \default 0.2
-  N8,  \field Wall Depth Below Slab
+  N9,  \field Wall Depth Below Slab
        \note Distance from the slab bottom to the bottom of the foundation wall
        \units m
        \type real
@@ -6332,7 +6337,7 @@ OS:Foundation:Kiva,
   A8,  \field Footing Material Name
        \type object-list
        \object-list MaterialNames
-  N9,  \field Footing Depth
+  N10, \field Footing Depth
        \note Top-to-bottom dimension of the footing (not to be confused with its
        \note depth in the ground). The width of the footing is defined by the
        \note material's thickness.
@@ -6344,17 +6349,17 @@ OS:Foundation:Kiva,
        \begin-extensible
        \type object-list
        \object-list MaterialNames
-  N10, \field Custom Block Depth 1
+  N11, \field Custom Block Depth 1
        \note Top-to-bottom dimension of the block downward.
        \units m
        \type real
        \minimum> 0.0
-  N11, \field Custom Block X Position 1
+  N12, \field Custom Block X Position 1
        \note Position outward (+) or inward (-) relative to the foundation wall
        \note interior
        \units m
        \type real
-  N12; \field Custom Block Z Position 1
+  N13; \field Custom Block Z Position 1
        \note Position downward (+) relative to the foundation wall top
        \units m
        \type real
