@@ -70,6 +70,7 @@ TEST_F(ModelFixture, FoundationKiva_FoundationKiva) {
   // create a foundation kiva object to use
   FoundationKiva kiva(model);
 
+  EXPECT_FALSE(kiva.initialIndoorAirTemperature());
   EXPECT_TRUE(kiva.isInteriorHorizontalInsulationDepthDefaulted());
   EXPECT_TRUE(kiva.isExteriorHorizontalInsulationWidthDefaulted());
   EXPECT_TRUE(kiva.isWallHeightAboveGradeDefaulted());
@@ -98,6 +99,7 @@ TEST_F(ModelFixture, FoundationKiva_SetGetFields) {
   Construction construction(model);
 
   // set the fields
+  kiva.setInitialIndoorAirTemperature(22.2);
   kiva.setInteriorHorizontalInsulationMaterial(material);
   kiva.setInteriorHorizontalInsulationDepth(1);
   kiva.setInteriorHorizontalInsulationWidth(1);
@@ -115,6 +117,10 @@ TEST_F(ModelFixture, FoundationKiva_SetGetFields) {
   kiva.setFootingDepth(1);
 
   // check the fields
+  boost::optional<double> optinitialindoorairtemperature = kiva.initialIndoorAirTemperature();
+  EXPECT_TRUE(optinitialindoorairtemperature);
+  auto initialindoorairtemperature = optinitialindoorairtemperature.get();
+  ASSERT_EQ(22.2, initialindoorairtemperature);
   boost::optional<Material> optinteriorhorizontalinsulationmaterial = kiva.interiorHorizontalInsulationMaterial();
   EXPECT_TRUE(optinteriorhorizontalinsulationmaterial);
   ASSERT_FALSE(kiva.isInteriorHorizontalInsulationDepthDefaulted());

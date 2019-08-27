@@ -113,6 +113,10 @@ namespace detail {
     return FoundationKiva::iddObjectType();
   }
 
+  boost::optional<double> FoundationKiva_Impl::initialIndoorAirTemperature() {
+    return getDouble(OS_Foundation_KivaFields::InitialIndoorAirTemperature);
+  }
+
   boost::optional<Material> FoundationKiva_Impl::interiorHorizontalInsulationMaterial() const {
     return getObject<ModelObject>().getModelObjectTarget<Material>(OS_Foundation_KivaFields::InteriorHorizontalInsulationMaterialName);
   }
@@ -201,6 +205,12 @@ namespace detail {
 
   bool FoundationKiva_Impl::isFootingDepthDefaulted() const {
     return isEmpty(OS_Foundation_KivaFields::FootingDepth);
+  }
+
+  bool FoundationKiva_Impl::setInitialIndoorAirTemperature(double initialIndoorAirTemperature) {
+    bool result = setDouble(OS_Foundation_KivaFields::InitialIndoorAirTemperature, initialIndoorAirTemperature);
+    OS_ASSERT(result);
+    return result;
   }
 
   bool FoundationKiva_Impl::setInteriorHorizontalInsulationMaterial(const Material& material) {
@@ -440,6 +450,10 @@ IddObjectType FoundationKiva::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Foundation_Kiva);
 }
 
+boost::optional<double> FoundationKiva::initialIndoorAirTemperature() {
+  return getImpl<detail::FoundationKiva_Impl>()->initialIndoorAirTemperature();
+}
+
 boost::optional<Material> FoundationKiva::interiorHorizontalInsulationMaterial() const {
   return getImpl<detail::FoundationKiva_Impl>()->interiorHorizontalInsulationMaterial();
 }
@@ -518,6 +532,10 @@ double FoundationKiva::footingDepth() const {
 
 bool FoundationKiva::isFootingDepthDefaulted() const {
   return getImpl<detail::FoundationKiva_Impl>()->isFootingDepthDefaulted();
+}
+
+bool FoundationKiva::setInitialIndoorAirTemperature(double initialIndoorAirTemperature) {
+  return getImpl<detail::FoundationKiva_Impl>()->setInitialIndoorAirTemperature(initialIndoorAirTemperature);
 }
 
 bool FoundationKiva::setInteriorHorizontalInsulationMaterial(const Material& material) {

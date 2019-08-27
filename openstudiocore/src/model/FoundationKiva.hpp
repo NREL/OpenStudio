@@ -107,6 +107,8 @@ class MODEL_API FoundationKiva : public ModelObject {
   /** @name Getters */
   //@{
 
+  boost::optional<double> initialIndoorAirTemperature();
+
   boost::optional<Material> interiorHorizontalInsulationMaterial() const;
 
   double interiorHorizontalInsulationDepth() const;
@@ -154,6 +156,8 @@ class MODEL_API FoundationKiva : public ModelObject {
   //@}
   /** @name Setters */
   //@{
+
+  bool setInitialIndoorAirTemperature(double initialIndoorAirTemperature);
 
   bool setInteriorHorizontalInsulationMaterial(const Material& material);
 

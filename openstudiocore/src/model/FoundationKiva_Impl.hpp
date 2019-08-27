@@ -92,6 +92,8 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    boost::optional<double> initialIndoorAirTemperature();
+
     boost::optional<Material> interiorHorizontalInsulationMaterial() const;
 
     double interiorHorizontalInsulationDepth() const;
@@ -139,6 +141,8 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
+
+    bool setInitialIndoorAirTemperature(double initialIndoorAirTemperature);
 
     bool setInteriorHorizontalInsulationMaterial(const Material& material);
 
