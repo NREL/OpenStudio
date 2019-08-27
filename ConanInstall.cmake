@@ -38,9 +38,6 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # Convenience variable to set a consistent version for individual boost packages
   set(BOOST_VERSION "1.69.0")
 
-  set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
-  set(CONAN_BOOST_ASIO "boost_asio/${BOOST_VERSION}@bincrafters/stable")
-  set(CONAN_WEBSOCKETPP "websocketpp/0.8.1@bincrafters/stable")
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
   # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
   # bump the actual package version when we make changes) than the binaries were built with
@@ -50,17 +47,12 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   if (MSVC)
     # No-op
   elseif (APPLE)
-    # Do we really need to force build these?
-    list(APPEND CONAN_BUILD "boost_asio")
-    list(APPEND CONAN_BUILD "websocketpp")
     #  On mac Need to force build when building openstudio_ruby (because static isn't supported on Mac, and it'll create linking problems when
     # building gdbm that depends on it).
     set(CONAN_READLINE "readline/7.0@bincrafters/stable")
     list(APPEND CONAN_BUILD "readline")
   else()
     list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
-    list(APPEND CONAN_BUILD "boost_asio")
-    list(APPEND CONAN_BUILD "websocketpp")
   endif()
 
   if (BUILD_TESTING)
@@ -75,10 +67,10 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_cmake_run(REQUIRES
     ${CONAN_READLINE}
     ${CONAN_QT}
-    ${CONAN_OPENSSL}
-    ${CONAN_BOOST_ASIO}
+    OpenSSL/1.1.0g@conan/stable
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
     openstudio_ruby/2.5.5@nrel/stable
+    boost_asio/${BOOST_VERSION}@bincrafters/stable
     boost_program_options/${BOOST_VERSION}@bincrafters/stable
     boost_regex/${BOOST_VERSION}@bincrafters/stable
     boost_filesystem/${BOOST_VERSION}@bincrafters/stable
@@ -95,7 +87,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     fmt/5.2.1@bincrafters/stable
     sqlite3/3.27.2@bincrafters/stable
     cpprestsdk/2.10.13@bincrafters/stable
-    ${CONAN_WEBSOCKETPP}
+    websocketpp/0.8.1@bincrafters/stable
     geographiclib/1.49@bincrafters/stable
     ${CONAN_GTEST}
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
@@ -116,3 +108,4 @@ else()
   message(STATUS "openstudio: CONAN RUN BY CALLING SCRIPT")
 
 endif()
+
