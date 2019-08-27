@@ -60,13 +60,17 @@ boost::optional<IdfObject> ForwardTranslator::translateFoundationKiva( Foundatio
 
   idfObject.setString(Foundation_KivaFields::Name, modelObject.name().get());
 
+  boost::optional<double> value;
+
+  if( (value = modelObject.initialIndoorAirTemperature()) ) {
+    idfObject.setDouble(Foundation_KivaFields::InitialIndoorAirTemperature, value.get());
+  }
+
   boost::optional<Material> interiorHorizontalInsulationMaterial = modelObject.interiorHorizontalInsulationMaterial();
   if( interiorHorizontalInsulationMaterial ) {
     idfObject.setString(Foundation_KivaFields::InteriorHorizontalInsulationMaterialName, interiorHorizontalInsulationMaterial->name().get());
     idfObject.setDouble(Foundation_KivaFields::InteriorHorizontalInsulationDepth, modelObject.interiorHorizontalInsulationDepth());
   }
-
-  boost::optional<double> value;  
 
   if( (value = modelObject.interiorHorizontalInsulationWidth()) ) {
     idfObject.setDouble(Foundation_KivaFields::InteriorHorizontalInsulationWidth, value.get());

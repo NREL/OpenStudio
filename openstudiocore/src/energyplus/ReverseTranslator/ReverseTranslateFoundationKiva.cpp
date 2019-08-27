@@ -68,6 +68,11 @@ OptionalModelObject ReverseTranslator::translateFoundationKiva( const WorkspaceO
     foundationKiva.setName(*s);
   }
 
+  d = workspaceObject.getDouble(Foundation_KivaFields::InitialIndoorAirTemperature);
+  if(d){
+    foundationKiva.setInitialIndoorAirTemperature(*d);
+  }
+
   target = workspaceObject.getTarget(openstudio::Foundation_KivaFields::InteriorHorizontalInsulationMaterialName);
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
