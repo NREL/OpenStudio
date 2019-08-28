@@ -32,8 +32,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_add_remote(NAME nrel
     URL https://api.bintray.com/conan/commercialbuilding/nrel)
 
-  #conan_add_remote(NAME jmarrec
-  #  URL https://api.bintray.com/conan/jmarrec/testing)
+  conan_add_remote(NAME jmarrec
+    URL https://api.bintray.com/conan/jmarrec/testing)
 
   # Convenience variable to set a consistent version for individual boost packages
   set(BOOST_VERSION "1.69.0")
@@ -47,10 +47,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   if (MSVC)
     # No-op
   elseif (APPLE)
-    #  On mac Need to force build when building openstudio_ruby (because static isn't supported on Mac, and it'll create linking problems when
-    # building gdbm that depends on it).
-    set(CONAN_READLINE "readline/7.0@bincrafters/stable")
-    list(APPEND CONAN_BUILD "readline")
+    # No-op
   else()
     list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
   endif()
@@ -69,7 +66,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     ${CONAN_QT}
     OpenSSL/1.1.0g@conan/stable
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    openstudio_ruby/2.5.5@nrel/stable
+    openstudio_ruby/2.5.5@jmarrec/testing   # TODO: Temporary, enables experimental support for static readline on mac
     boost_asio/${BOOST_VERSION}@bincrafters/stable
     boost_program_options/${BOOST_VERSION}@bincrafters/stable
     boost_regex/${BOOST_VERSION}@bincrafters/stable
