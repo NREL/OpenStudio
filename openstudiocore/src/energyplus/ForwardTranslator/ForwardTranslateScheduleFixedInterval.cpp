@@ -39,6 +39,7 @@
 #include "../../model/ExternalFile_Impl.hpp"
 
 #include "../../utilities/data/TimeSeries.hpp"
+#include "../../utilities/filetypes/CSVFile.hpp"
 
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
 
@@ -76,26 +77,41 @@ static unsigned addUntil(IdfObject &idfObject,unsigned fieldIndex,int hours,int 
 
 boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( ScheduleFixedInterval & modelObject )
 {
-  IdfObject idfObject( openstudio::IddObjectType::Schedule_Compact );
-  
   std::string name = modelObject.name().get();
   boost::optional<ScheduleTypeLimits> scheduleTypeLimits;
 
-  if (modelObject.translatetoScheduleFile()) {
+  TimeSeries timeseries = modelObject.timeSeries();
+  // Check that the time series has at least one point
+  if(timeseries.values().size() == 0)
+  {
+    LOG(Error,"Time series in schedule '" << modelObject.name().get() << "' has no values, schedule will not be translated");
+    return boost::optional<IdfObject>();
+  }
 
-    // TODO: create csv file from values using CSVFile class?
+  if (modelObject.translatetoScheduleFile()) { // create a ScheduleFile
 
-    // create External:File object pointing to csv file
-    // TODO: save the csv file where?
-    std::string filePath = "c:/OpenStudio/schedule.csv";
-    boost::optional<ExternalFile> externalFile = ExternalFile::getExternalFile(modelObject.model(), filePath);
+    std::string fileName = name + ".csv";
+    path filePath;
+    std::vector<path> absoluteFilePaths = modelObject.model().workflowJSON().absoluteFilePaths();
+    if (absoluteFilePaths.empty()) {
+      filePath = modelObject.model().workflowJSON().absoluteRootDir() / toPath(fileName);
+    } else {
+      filePath = absoluteFilePaths[0] / toPath(fileName);
+    }
+
+    CSVFile csvFile;
+    csvFile.addColumn(timeseries.dateTimes());
+    csvFile.addColumn(timeseries.values());
+    csvFile.saveAs(filePath);
+
+    boost::optional<ExternalFile> externalFile = ExternalFile::getExternalFile(modelObject.model(), toString(filePath));
     if (!externalFile) {
       LOG(Error,"Cannot find file at '" << filePath << ", schedule will not be translated");
       return boost::optional<IdfObject>();
     }
 
-    // create Schedule:File object pointing to External:File
-    ScheduleFile scheduleFile = ScheduleFile(*externalFile);
+    // create ScheduleFile object pointing to ExternalFile
+    ScheduleFile scheduleFile = ScheduleFile(*externalFile, 2);
     modelObject.setName("object will not be forward translated"); // otherwise you'd have two model objects with the same name
     scheduleFile.setName(name);
     scheduleTypeLimits = modelObject.scheduleTypeLimits();
@@ -104,9 +120,11 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
     }
     scheduleFile.setInterpolatetoTimestep(modelObject.interpolatetoTimestep());
 
-    translateAndMapModelObject(scheduleFile);
+    return translateAndMapModelObject(scheduleFile);
 
-  } else {
+  } else { // create a ScheduleCompact
+    IdfObject idfObject( openstudio::IddObjectType::Schedule_Compact );
+
     m_idfObjects.push_back(idfObject);
 
     idfObject.setName(name);
@@ -119,13 +137,6 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
       }
     }
 
-    TimeSeries timeseries = modelObject.timeSeries();
-    // Check that the time series has at least one point
-    if(timeseries.values().size() == 0)
-    {
-      LOG(Error,"Time series in schedule '" << modelObject.name().get() << "' has no values, schedule will not be translated");
-      return boost::optional<IdfObject>();
-    }
     DateTime firstReportDateTime = timeseries.firstReportDateTime();
     Vector daysFromFirst = timeseries.daysFromFirstReport();
     std::vector<long> secondsFromFirst = timeseries.secondsFromFirstReport();
@@ -214,10 +225,11 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
     // Handle the last point a little differently to make sure that the schedule ends exactly on the end of a day
     unsigned int i = values.size()-1;
     // We'll skip a sanity check here, but it might be a good idea to add one at some point
-    fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);    
+    fieldIndex = addUntil(idfObject,fieldIndex,24,0,values[i]);
+
+    return boost::optional<IdfObject>(idfObject);
   }
   
-  return boost::optional<IdfObject>(idfObject);
 }
 
 } // energyplus
