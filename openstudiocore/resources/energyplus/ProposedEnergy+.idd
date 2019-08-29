@@ -5316,7 +5316,6 @@ Construction:AirBoundary,
        \object-list ScheduleNames
        
 WindowThermalModel:Params,
-
        \memo object is used to select which thermal model should be used in tarcog simulations
   A1 , \field Name
        \required-field
