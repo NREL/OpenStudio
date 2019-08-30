@@ -1,7 +1,7 @@
 ! File to test the import of simple surfaces
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,9.1;
+  Version,9.2;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -29,7 +29,7 @@
     Yes;                     !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    RUNPERIOD 1,             !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
     ,                        !- Begin Year

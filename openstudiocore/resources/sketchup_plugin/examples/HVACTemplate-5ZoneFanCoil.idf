@@ -99,7 +99,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,9.1;
+  Version,9.2;
 
   Building,
     Building,                !- Name
@@ -171,7 +171,7 @@
 !    Yes;                     !- Use WeatherFile Snow Indicators
 
   RunPeriod,
-    ,                        !- Name
+    RUNPERIOD 1,             !- Name
     1,                       !- Begin Month
     14,                      !- Begin Day of Month
     ,                        !- Begin Year
@@ -187,7 +187,7 @@
     No;                      !- Treat Weather as Actual
 
   RunPeriod,
-    ,                        !- Name
+    RUNPERIOD 2,             !- Name
     7,                       !- Begin Month
     7,                       !- Begin Day of Month
     ,                        !- Begin Year

@@ -59,4 +59,3 @@ ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0200 su-alt wds rotate.
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0300 multiple windows.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0400 offset window error.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0500 window split into two gap.idf
-${CMAKE_SOURCE_DIR}/resources/standardsinterface/CEC_Buildings/SmallOffice.idf
