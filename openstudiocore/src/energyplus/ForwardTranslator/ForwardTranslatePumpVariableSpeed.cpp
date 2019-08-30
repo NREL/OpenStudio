@@ -203,7 +203,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePumpVariableSpeed(
   // PumpRPMSchedule
 
   if ((schedule = modelObject.pumpRPMSchedule())) {
-    idfObject.setString(Pump_VariableSpeedFields::PumprpmScheduleName,schedule->name().get());
+    idfObject.setString(Pump_VariableSpeedFields::PumpRPMScheduleName, schedule->name().get());
   }
 
   // MinimumPressureSchedule

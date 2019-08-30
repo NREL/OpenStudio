@@ -36,7 +36,7 @@
 #include "../../model/TableMultiVariableLookup.hpp"
 #include "../../model/TableMultiVariableLookup_Impl.hpp"
 
-#include <utilities/idd/Table_MultiVariableLookup_FieldEnums.hxx>
+//#include <utilities/idd/Table_MultiVariableLookup_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -63,11 +63,14 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
     ForwardTranslator ft;
     Workspace workspace = ft.translateModel(m);
 
-    std::vector<WorkspaceObject> tableObjects = workspace.getObjectsByType(IddObjectType::Table_MultiVariableLookup);
+    std::vector<WorkspaceObject> tableObjects;// = workspace.getObjectsByType(IddObjectType::Table_MultiVariableLookup);
     ASSERT_EQ(1u, tableObjects.size());
 
     WorkspaceObject idfTable = tableObjects.front();
 
+    // TODO: need to fix this for E+ 9.2!
+    ASSERT_TRUE(false);
+    /*
     ASSERT_EQ(idfTable.getString(Table_MultiVariableLookupFields::InterpolationMethod).get(),"LagrangeInterpolationLinearExtrapolation");
     ASSERT_EQ(idfTable.getInt(Table_MultiVariableLookupFields::NumberofInterpolationPoints).get(),3);
     ASSERT_EQ(idfTable.getString(Table_MultiVariableLookupFields::TableDataFormat).get(),"SingleLineIndependentVariableWithMatrix");
@@ -91,6 +94,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(8).getDouble(Table_MultiVariableLookupExtensibleFields::Data).get(),0.5);
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(9).getDouble(Table_MultiVariableLookupExtensibleFields::Data).get(),0.7);
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(10).getDouble(Table_MultiVariableLookupExtensibleFields::Data).get(),0.9);
+    */
   }
 
   {
@@ -136,10 +140,14 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
     ForwardTranslator ft;
     Workspace workspace = ft.translateModel(m);
 
-    std::vector<WorkspaceObject> tableObjects = workspace.getObjectsByType(IddObjectType::Table_MultiVariableLookup);
+    std::vector<WorkspaceObject> tableObjects; // = workspace.getObjectsByType(IddObjectType::Table_MultiVariableLookup);
     ASSERT_EQ(1u, tableObjects.size());
 
     WorkspaceObject idfTable = tableObjects.front();
+
+    // TODO: need to fix this for E+ 9.2!
+    ASSERT_TRUE(false);
+    /*
     ASSERT_EQ(idfTable.getString(Table_MultiVariableLookupFields::InterpolationMethod).get(),"LagrangeInterpolationLinearExtrapolation");
     ASSERT_EQ(idfTable.getInt(Table_MultiVariableLookupFields::NumberofInterpolationPoints).get(),3);
     ASSERT_EQ(idfTable.getString(Table_MultiVariableLookupFields::TableDataFormat).get(),"SingleLineIndependentVariableWithMatrix");
@@ -195,6 +203,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(40).getDouble(Table_MultiVariableLookupExtensibleFields::Data).get(),1);
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(41).getDouble(Table_MultiVariableLookupExtensibleFields::Data).get(),1.2);
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(42).getDouble(Table_MultiVariableLookupExtensibleFields::Data).get(),1.4);
+    */
   }
 
   {
@@ -276,10 +285,13 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
     ForwardTranslator ft;
     Workspace workspace = ft.translateModel(m);
 
-    std::vector<WorkspaceObject> tableObjects = workspace.getObjectsByType(IddObjectType::Table_MultiVariableLookup);
+    std::vector<WorkspaceObject> tableObjects; // = workspace.getObjectsByType(IddObjectType::Table_MultiVariableLookup);
     ASSERT_EQ(1u, tableObjects.size());
 
     WorkspaceObject idfTable = tableObjects.front();
+    // TODO: need to fix this for E+ 9.2!
+    ASSERT_TRUE(false);
+    /*
     ASSERT_EQ(idfTable.getString(Table_MultiVariableLookupFields::InterpolationMethod).get(),"LagrangeInterpolationLinearExtrapolation");
     ASSERT_EQ(idfTable.getInt(Table_MultiVariableLookupFields::NumberofInterpolationPoints).get(),3);
     ASSERT_EQ(idfTable.getString(Table_MultiVariableLookupFields::TableDataFormat).get(),"SingleLineIndependentVariableWithMatrix");
@@ -370,6 +382,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(75).getDouble(Table_MultiVariableLookupExtensibleFields::Data).get(),11);
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(76).getDouble(Table_MultiVariableLookupExtensibleFields::Data).get(),11.2);
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(77).getDouble(Table_MultiVariableLookupExtensibleFields::Data).get(),11.4);
+    */
   }
 }
 

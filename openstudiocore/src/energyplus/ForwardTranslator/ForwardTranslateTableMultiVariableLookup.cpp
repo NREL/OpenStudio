@@ -35,7 +35,7 @@
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../../utilities/core/Logger.hpp"
-#include <utilities/idd/Table_MultiVariableLookup_FieldEnums.hxx>
+//#include <utilities/idd/Table_MultiVariableLookup_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -50,6 +50,12 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   OptionalDouble d;
   OptionalModelObject temp;
   OptionalInt n;
+
+  // TODO: need to fix this for E+ 9.2!
+  throw std::runtime_error("Need to fix Table:MultiVariableLookup translation");
+  return boost::none;
+
+  /*
 
   // Create a new IddObjectType::Table_MultiVariableLookup
   IdfObject idfObject(IddObjectType::Table_MultiVariableLookup);
@@ -360,6 +366,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   }
 
   return idfObject;
+  */
 }
 
 } // energyplus

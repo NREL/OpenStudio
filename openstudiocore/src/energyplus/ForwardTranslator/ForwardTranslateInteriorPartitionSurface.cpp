@@ -88,7 +88,7 @@ boost::optional<IdfObject> ForwardTranslator::translateInteriorPartitionSurface(
     if (space){
       boost::optional<ThermalZone> thermalZone = space->thermalZone();
       if (thermalZone){
-        idfObject.setString(InternalMassFields::ZoneName, thermalZone->name().get());
+        idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->name().get());
       }
     }
   }
