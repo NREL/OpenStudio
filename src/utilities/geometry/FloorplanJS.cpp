@@ -216,10 +216,8 @@ namespace openstudio{
   }
 
   FloorplanJS::FloorplanJS()
-    : m_lastId(0)
-  {
-    m_value = Json::Value(Json::objectValue);
-  }
+    : m_value(Json::Value(Json::objectValue)), m_lastId(0)
+  { }
 
   FloorplanJS::FloorplanJS(const std::string& s)
     : m_lastId(0)

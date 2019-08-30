@@ -335,7 +335,7 @@ namespace detail {
   }
 
   struct ScheduleRuleIndexCompare {
-    bool operator()(const ScheduleRule& left, const ScheduleRule& right){
+    bool operator()(const ScheduleRule& left, const ScheduleRule& right) const {
       return (left.ruleIndex() < right.ruleIndex());
     }
   };

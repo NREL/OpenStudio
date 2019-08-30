@@ -385,7 +385,7 @@ namespace openstudio{
   {}
 
   EpwDataPoint::EpwDataPoint(int year,int month,int day,int hour,int minute,
-      std::string dataSourceandUncertaintyFlags,double dryBulbTemperature,
+      const std::string& dataSourceandUncertaintyFlags,double dryBulbTemperature,
       double dewPointTemperature,double relativeHumidity,
       double atmosphericStationPressure,
       double extraterrestrialHorizontalRadiation,
@@ -506,7 +506,7 @@ namespace openstudio{
     m_extremeN50YearsMaxDryBulb()
   {}
 
-  EpwDesignCondition::EpwDesignCondition(std::string titleOfDesignCondition, int heatingColdestMonth, double heatingDryBulb99pt6, double heatingDryBulb99,
+  EpwDesignCondition::EpwDesignCondition(const std::string& titleOfDesignCondition, int heatingColdestMonth, double heatingDryBulb99pt6, double heatingDryBulb99,
     double heatingHumidificationDewPoint99pt6, double heatingHumidificationHumidityRatio99pt6, double heatingHumidificationMeanCoincidentDryBulb99pt6,
     double heatingHumidificationDewPoint99, double heatingHumidificationHumidityRatio99, double heatingHumidificationMeanCoincidentDryBulb99,
     double heatingColdestMonthWindSpeed0pt4, double heatingColdestMonthMeanCoincidentDryBulb0pt4, double heatingColdestMonthWindSpeed1,
@@ -3189,7 +3189,7 @@ namespace openstudio{
     return m_extremeN50YearsMaxDryBulb;
   }
 
-  void EpwDesignCondition::setTitleOfDesignCondition(std::string titleOfDesignCondition)
+  void EpwDesignCondition::setTitleOfDesignCondition(const std::string &titleOfDesignCondition)
   {
     m_titleOfDesignCondition = titleOfDesignCondition;
   }

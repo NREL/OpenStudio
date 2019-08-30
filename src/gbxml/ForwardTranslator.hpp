@@ -36,6 +36,9 @@
 #include "../utilities/core/Optional.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
+// This is needed to declare the set<Material, IdfObjectImplLess>, so everything is a complete type
+#include "../utilities/idf/IdfObject.hpp"
+#include "../model/Material.hpp"
 
 #include "../model/ModelObject.hpp"
 
@@ -53,8 +56,6 @@ namespace openstudio {
 
 namespace model {
   class Model;
-  class ModelObject;
-  class Material;
   class ConstructionBase;
   class Facility;
   class Building;

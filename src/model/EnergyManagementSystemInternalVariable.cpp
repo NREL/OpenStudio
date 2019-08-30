@@ -102,7 +102,7 @@ namespace detail {
 
 } // detail
 
-EnergyManagementSystemInternalVariable::EnergyManagementSystemInternalVariable(const Model& model, const std::string internalDataType)
+EnergyManagementSystemInternalVariable::EnergyManagementSystemInternalVariable(const Model& model, const std::string& internalDataType)
 : ModelObject(EnergyManagementSystemInternalVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemInternalVariable_Impl>());
   bool ok = setInternalDataType(internalDataType);

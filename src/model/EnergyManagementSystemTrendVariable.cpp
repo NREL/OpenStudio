@@ -181,7 +181,7 @@ namespace detail {
 
 } // detail
 
-EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, const std::string eMSVariableName)
+EnergyManagementSystemTrendVariable::EnergyManagementSystemTrendVariable(const Model& model, const std::string& eMSVariableName)
   : ModelObject(EnergyManagementSystemTrendVariable::iddObjectType(), model) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemTrendVariable_Impl>());
   bool ok = setEMSVariableName(eMSVariableName);

@@ -318,7 +318,7 @@ Quantity& Quantity::operator*=(const Quantity& rQuantity) {
 Quantity& Quantity::operator/=(const Quantity& rQuantity) {
   if (this == &rQuantity) {
     // result = 1
-    m_units /= m_units;
+    m_units /= rQuantity.m_units;
     m_value = 1.0;
   }
   else {

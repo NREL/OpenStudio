@@ -52,7 +52,7 @@ class MODEL_API EnergyManagementSystemInternalVariable : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
-  explicit EnergyManagementSystemInternalVariable(const Model& model, const std::string internalDataType);
+  explicit EnergyManagementSystemInternalVariable(const Model& model, const std::string& internalDataType);
 
   virtual ~EnergyManagementSystemInternalVariable() {}
 

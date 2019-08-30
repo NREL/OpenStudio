@@ -49,7 +49,7 @@ public:
   //@}
   /** @name Getters */
   //@{
-  /** For a rectangular non-pivoted window or door (LVO Type 1), the opening factor corresponds to the fraction of the 
+  /** For a rectangular non-pivoted window or door (LVO Type 1), the opening factor corresponds to the fraction of the
    * window or door that is opened. For rectangular horizontally-pivoted windows (LVO Type 2), the opening factor is
    * the angular fraction that window is open. For example, an opening angle of 45 degrees corresponds to an opening
    * factor of 0.50 since the maximum opening angle is 90 degrees.
@@ -109,7 +109,7 @@ public:
   AirflowNetworkDetailedOpening(const Model& model,
     double massFlowCoefficientWhenOpeningisClosed,
     double massFlowExponentWhenOpeningisClosed,
-    std::string typeofRectangularLargeVerticalOpening,
+    const std::string& typeofRectangularLargeVerticalOpening,
     double extraCrackLengthorHeightofPivotingAxis,
     std::vector<DetailedOpeningFactorData>& openingFactors);
   /** Construct a detailed opening object with defaulted values. */
@@ -154,7 +154,7 @@ public:
   /** Resets the air mass flow exponent when the opening is closed. */
   void resetAirMassFlowExponentWhenOpeningisClosed();
   /** Sets the LVO type. */
-  bool setTypeofRectangularLargeVerticalOpening(std::string typeofRectangularLargeVerticalOpening);
+  bool setTypeofRectangularLargeVerticalOpening(const std::string& typeofRectangularLargeVerticalOpening);
   /** Resets the LVO type. */
   void resetTypeofRectangularLargeVerticalOpening();
   /** Sets the extra crack length or height of pivoting axis. */

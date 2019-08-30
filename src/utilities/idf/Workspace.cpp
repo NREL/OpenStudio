@@ -2612,9 +2612,12 @@ Workspace Workspace::cloneSubset(const std::vector<Handle>& handles,
 }
 
 void Workspace::swap(Workspace& other) {
-  // TODO: warning: expression with side effects will be evaluated despite being used
-  // as an operand to ‘typeid’ [-Wpotentially-evaluated-expression]
-  if (typeid(*(m_impl.get())) != typeid(*(other.m_impl.get()))) {
+  // Can't do typeid(*(m_impl.get())) comparison due to -Wpotentially-evaluated-expression warning with clang
+  // Operator* is equivalent to *get()
+  auto& o1 = *m_impl;
+  auto& o2 = *(other.m_impl);
+
+  if ((typeid(o1)) != typeid(o2)) {
     LOG_AND_THROW("Workspaces can only be swapped if they are both of the same type "
                   << "(both Workspaces, both Models, or both Components).");
   }

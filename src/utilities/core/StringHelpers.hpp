@@ -129,7 +129,7 @@ namespace openstudio {
    *  Note: JM 2018-08-16: The second parameters defaults to the operators currently accepted as of 8.9.0.
    *  The reserved keywords are hardcoded per the same 8.9.0 version.
    */
-  UTILITIES_API std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string delimiters=" +-*/^=<>&|");
+  UTILITIES_API std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string& delimiters=" +-*/^=<>&|");
 
   UTILITIES_API std::string replace(std::string input, const std::string &before, const std::string &after);
 

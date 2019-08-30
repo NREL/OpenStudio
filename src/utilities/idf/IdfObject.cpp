@@ -329,7 +329,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   IdfExtensibleGroup IdfObject_Impl::getExtensibleGroup(unsigned groupIndex) const {
     unsigned n = numFields();
     unsigned i = n;
@@ -1162,7 +1162,7 @@ namespace detail {
       }
 
       // urls
-      // DLM: just treat these as strings 
+      // DLM: just treat these as strings
 //      if (oIddField && (oIddField->properties().type == IddFieldType::URLType)) {
 //        OptionalUrl oMyUrlValue = getURL(i);
 //        OptionalUrl oOtherUrlValue = other.getURL(i);

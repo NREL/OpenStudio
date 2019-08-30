@@ -100,7 +100,7 @@ public:
 
   void resetAirMassFlowExponentWhenOpeningisClosed();
 
-  bool setTypeofRectangularLargeVerticalOpening(std::string typeofRectangularLargeVerticalOpening);
+  bool setTypeofRectangularLargeVerticalOpening(const std::string& typeofRectangularLargeVerticalOpening);
 
   void resetTypeofRectangularLargeVerticalOpening();
 
