@@ -1,4 +1,4 @@
-!IDD_Version 9.1.0
+!IDD_Version 9.2.0
 !IDD_BUILD TBD
 ! **************************************************************************
 ! This file is the Input Data Dictionary (IDD) for EnergyPlus.
@@ -392,7 +392,7 @@ Version,
       \format singleLine
       \min-fields 1
   A1 ; \field Version Identifier
-      \default 9.1
+      \default 9.2
 
 SimulationControl,
       \unique-object
