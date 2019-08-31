@@ -73,6 +73,24 @@ double TableMultiVariableLookupPoint::y() const {
   return m_y;
 }
 
+bool TableMultiVariableLookupPoint::operator<(const TableMultiVariableLookupPoint& other) const {
+  auto n = m_x.size();
+  auto other_x = other.x();
+  if (n != other_x.size()) {
+    LOG_FREE_AND_THROW("TableMultiVariableLookupPoint", "Cannot compare points of different size " << n << " and " << other_x.size());
+  }
+
+  for (size_t i = 0; i < n; ++i) {
+    if (m_x[i] < other_x[i]) {
+      return true;
+    } else if (m_x[i] > other_x[i]) {
+      return false;
+    }
+  }
+
+  return false;
+}
+
 std::ostream& operator<< (std::ostream& out, const openstudio::model::TableMultiVariableLookupPoint& point) {
   std::vector<double> xValues = point.x();
   std::stringstream ss_left, ss_right;
