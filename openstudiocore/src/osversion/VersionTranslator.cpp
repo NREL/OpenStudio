@@ -139,6 +139,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.7.0")] = &VersionTranslator::update_2_6_2_to_2_7_0;
   m_updateMethods[VersionString("2.7.1")] = &VersionTranslator::update_2_7_0_to_2_7_1;
   m_updateMethods[VersionString("2.7.2")] = &VersionTranslator::update_2_7_1_to_2_7_2;
+  m_updateMethods[VersionString("2.8.1")] = &VersionTranslator::update_2_7_2_to_2_8_1;
+  //m_updateMethods[VersionString("2.9.0")] = &VersionTranslator::defaultUpdate;
   m_updateMethods[VersionString("2.8.1")] = &VersionTranslator::update_2_8_0_to_2_8_1;
   // m_updateMethods[VersionString("2.8.1")] = &VersionTranslator::defaultUpdate;
 
@@ -288,6 +290,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.7.1"));
   m_startVersions.push_back(VersionString("2.7.2"));
   m_startVersions.push_back(VersionString("2.8.0"));
+  //m_startVersions.push_back(VersionString("2.8.1"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm,
@@ -4479,6 +4482,46 @@ std::string VersionTranslator::update_2_7_1_to_2_7_2(const IdfFile& idf_2_7_1, c
       }
 
       m_refactored.push_back( RefactoredObjectData(object,  newObject) );
+      ss << newObject;
+
+    // No-op
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+
+}
+
+std::string VersionTranslator::update_2_7_2_to_2_8_1(const IdfFile& idf_2_7_2, const IddFileAndFactoryWrapper& idd_2_8_1) {
+  std::stringstream ss;
+  boost::optional<std::string> value;
+
+  ss << idf_2_7_2.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_8_1.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_2_7_2.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if ( iddname == "OS:Foundation:Kiva" ) {
+      auto iddObject = idd_2_8_1.getObject("OS:Foundation:Kiva");
+      IdfObject newObject(iddObject.get());
+      
+      for( size_t i = 0; i < object.numFields(); ++i ) {
+        if( (value = object.getString(i)) ) {
+          if (i < 2) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i+1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
     // No-op

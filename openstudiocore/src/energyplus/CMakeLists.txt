@@ -452,6 +452,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateExteriorWaterEquipment.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
+  ReverseTranslator/ReverseTranslateFoundationKiva.cpp
+  ReverseTranslator/ReverseTranslateFoundationKivaSettings.cpp
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
   ReverseTranslator/ReverseTranslateGeneratorMicroTurbine.cpp
   ReverseTranslator/ReverseTranslateHeatBalanceAlgorithm.cpp
@@ -505,6 +507,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSteamEquipment.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmInside.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmOutside.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertyExposedFoundationPerimeter.cpp
   ReverseTranslator/ReverseTranslateThermostatSetpointDualSetpoint.cpp
   ReverseTranslator/ReverseTranslateTimestep.cpp
   ReverseTranslator/ReverseTranslateVersion.cpp

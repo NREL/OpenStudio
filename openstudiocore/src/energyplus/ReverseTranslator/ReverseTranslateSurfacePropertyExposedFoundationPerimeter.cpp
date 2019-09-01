@@ -27,51 +27,55 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include "../../model/Model.hpp"
 #include "../../model/SurfacePropertyExposedFoundationPerimeter.hpp"
 #include "../../model/SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/SurfaceProperty_ExposedFoundationPerimeter_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
+#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
-
-using namespace std;
 
 namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyExposedFoundationPerimeter( SurfacePropertyExposedFoundationPerimeter & modelObject )
+OptionalModelObject ReverseTranslator::translateSurfacePropertyExposedFoundationPerimeter( const WorkspaceObject & workspaceObject )
 {
-  IdfObject idfObject(openstudio::IddObjectType::SurfaceProperty_ExposedFoundationPerimeter);
-
-  m_idfObjects.push_back(idfObject);
-
-  idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, modelObject.surfaceName());
-
-  idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod, modelObject.exposedPerimeterCalculationMethod());
-  
-  boost::optional<double> value;
-
-  if( (value = modelObject.totalExposedPerimeter()) )
-  {
-    idfObject.setDouble(SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, value.get());
-    idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, "");
+  if( workspaceObject.iddObject().type() != IddObjectType::SurfaceProperty_ExposedFoundationPerimeter ){
+    LOG(Error, "WorkspaceObject is not IddObjectType: SurfacePropertyExposedFoundationPerimeter");
+    return boost::none;
   }
-  else 
-  {
-    idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, "");
-    idfObject.setDouble(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, modelObject.exposedPerimeterFraction());
-  }  
 
-  return boost::optional<IdfObject>(idfObject);
+  OptionalString s = workspaceObject.getString(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod);
+
+  OptionalDouble d = workspaceObject.getDouble(SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter);
+  
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter;
+
+  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName);
+  if (target){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (modelObject->optionalCast<Surface>()){
+        boost::optional<Surface> surface = modelObject->optionalCast<Surface>();
+        surfacePropertyExposedFoundationPerimeter = surface.get().createSurfacePropertyExposedFoundationPerimeter(*s, *d);
+      }
+    }
+  }
+  
+  return surfacePropertyExposedFoundationPerimeter.get();
 }
 
 } // energyplus
 
 } // openstudio
+

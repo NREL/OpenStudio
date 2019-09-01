@@ -616,6 +616,16 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateFenestrationSurfaceDetailed(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::Foundation_Kiva :
+    {
+      modelObject = translateFoundationKiva(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Foundation_Kiva_Settings :
+    {
+      modelObject = translateFoundationKivaSettings(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::Generator_MicroTurbine :
     {
       modelObject = translateGeneratorMicroTurbine(workspaceObject);
@@ -922,6 +932,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::SurfaceConvectionAlgorithm_Outside :
     {
       //modelObject = translateSurfaceConvectionAlgorithmOutside(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::SurfaceProperty_ExposedFoundationPerimeter :
+    {
+      modelObject = translateSurfacePropertyExposedFoundationPerimeter(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint :
