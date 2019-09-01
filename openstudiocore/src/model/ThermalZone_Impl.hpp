@@ -405,13 +405,20 @@ namespace detail {
     std::vector<ModelObject> equipmentInCoolingOrder() const;
 
     boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+    
+    boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
 
     boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+    
+    boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
 
     bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+    
+    bool setSequentialCoolingFraction(const ModelObject& equipment, const Schedule& schedule);
 
     bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
-
+    
+    bool setSequentialHeatingFraction(const ModelObject& equipment, const Schedule& schedule);
 
     virtual ModelObject clone(Model model) const override;
 

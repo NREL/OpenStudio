@@ -27839,20 +27839,16 @@ ZoneHVAC:EquipmentList,
        \minimum 0
        \note Specifies the zone equipment simulation order
        \note when the zone thermostat requests heating or no load
-  N3 , \field Zone Equipment 1 Sequential Cooling Fraction
+  A5 , \field Zone Equipment 1 Sequential Cooling Fraction Schedule Name
        \note The fraction of the remaining cooling load this equipment will attempt to serve
        \note if the load distribution scheme is SequentialLoad, otherwise ignored.
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-       \default 1.0
-  N4 ; \field Zone Equipment 1 Sequential Heating Fraction
+       \type object-list
+       \object-list ScheduleNames
+  A6 ; \field Zone Equipment 1 Sequential Heating Fraction Schedule Name
        \note The fraction of the remaining heating load this equipment will attempt to serve
        \note if the load distribution scheme is SequentialLoad, otherwise ignored.
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-       \default 1.0
+       \type object-list
+       \object-list ScheduleNames
 
 ZoneHVAC:EquipmentConnections,
        \memo Specifies the HVAC equipment connections for a zone. Node names are specified for the

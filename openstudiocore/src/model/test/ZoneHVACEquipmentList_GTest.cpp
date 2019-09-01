@@ -34,6 +34,7 @@
 #include "ModelFixture.hpp"
 #include "../ThermalZone.hpp"
 #include "../ZoneHVACBaseboardConvectiveElectric.hpp"
+#include "../ScheduleConstant.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -106,6 +107,20 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
   EXPECT_TRUE(z.setSequentialCoolingFraction(b2, 0.7));
   ASSERT_TRUE(z.sequentialCoolingFraction(b2));
   EXPECT_EQ(0.7, z.sequentialCoolingFraction(b2).get());
+  
+  ScheduleConstant scheduleCooling(m);
+  EXPECT_TRUE(scheduleCooling.setValue(0.9));
+  EXPECT_TRUE(z.setSequentialCoolingFraction(b2, scheduleCooling));
+  ASSERT_TRUE(z.sequentialCoolingFraction(b2));
+  EXPECT_EQ(0.9, z.sequentialCoolingFraction(b2));
+  ASSERT_TRUE(z.sequentialCoolingFractionSchedule(b2));
+  
+  ScheduleConstant scheduleHeating(m);
+  EXPECT_TRUE(scheduleHeating.setValue(0.33));
+  EXPECT_TRUE(z.setSequentialHeatingFraction(b2, scheduleHeating));
+  ASSERT_TRUE(z.sequentialHeatingFraction(b2));
+  EXPECT_EQ(0.33, z.sequentialHeatingFraction(b2));
+  ASSERT_TRUE(z.sequentialHeatingFractionSchedule(b2));
 
 
   // Setting a priority to zero should reset the corresponding Sequential Fraction
@@ -124,8 +139,12 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
   // Setting the Load Distribution Scheme to something else should reset all sequential fractions
   EXPECT_TRUE(z.setLoadDistributionScheme("UniformLoad"));
   EXPECT_FALSE(z.sequentialCoolingFraction(b1));
+  EXPECT_FALSE(z.sequentialCoolingFractionSchedule(b1));
   EXPECT_FALSE(z.sequentialCoolingFraction(b2));
+  EXPECT_FALSE(z.sequentialCoolingFractionSchedule(b2));
   EXPECT_FALSE(z.sequentialHeatingFraction(b1));
+  EXPECT_FALSE(z.sequentialHeatingFractionSchedule(b1));
   EXPECT_FALSE(z.sequentialHeatingFraction(b2));
+  EXPECT_FALSE(z.sequentialHeatingFractionSchedule(b2));
 
 }
