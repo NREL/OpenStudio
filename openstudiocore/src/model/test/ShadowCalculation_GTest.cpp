@@ -27,57 +27,47 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ReverseTranslator.hpp"
+#include <gtest/gtest.h>
 
-#include "../../model/ShadowCalculation.hpp"
-#include "../../model/ShadowCalculation_Impl.hpp"
+#include "ModelFixture.hpp"
 
-#include <utilities/idd/ShadowCalculation_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
-#include <utilities/idd/IddEnums.hxx>
+#include "../ShadowCalculation.hpp"
+#include "../ShadowCalculation_Impl.hpp"
 
-#include "../../utilities/core/Assert.hpp"
-#include "../../utilities/core/Optional.hpp"
 
+using namespace openstudio;
 using namespace openstudio::model;
 
-namespace openstudio {
-namespace energyplus {
+TEST_F(ModelFixture,ShadowCalculation) {
+  Model model;
 
-boost::optional<model::ModelObject> ReverseTranslator::translateShadowCalculation(
-    const WorkspaceObject& workspaceObject)
-{
-  OS_ASSERT(workspaceObject.iddObject().type() == IddObjectType::ShadowCalculation);
+  ShadowCalculation sc = model.getUniqueModelObject<ShadowCalculation>();
 
-  ShadowCalculation shadowCalculation = m_model.getUniqueModelObject<ShadowCalculation>();
+  EXPECT_TRUE(sc.isCalculationMethodDefaulted());
+  EXPECT_EQ("AverageOverDaysInFrequency", sc.calculationMethod());
+  EXPECT_FALSE(sc.isCalculationFrequencyDefaulted()); // set in constructor
+  EXPECT_EQ(20, sc.calculationFrequency());
+  EXPECT_FALSE(sc.isMaximumFiguresInShadowOverlapCalculationsDefaulted()); // set in constructor
+  EXPECT_EQ(15000, sc.maximumFiguresInShadowOverlapCalculations());
+  ASSERT_TRUE(sc.polygonClippingAlgorithm());
+  EXPECT_EQ("SutherlandHodgman", sc.polygonClippingAlgorithm().get());
+  ASSERT_TRUE(sc.skyDiffuseModelingAlgorithm());
+  EXPECT_EQ("SimpleSkyDiffuseModeling", sc.skyDiffuseModelingAlgorithm().get());
 
-  OptionalString s = workspaceObject.getString(ShadowCalculationFields::CalculationMethod);
-  if (s) {
-    shadowCalculation.setCalculationMethod(*s);
-  }
+  EXPECT_TRUE(sc.setCalculationMethod("TimestepFrequency"));
+  EXPECT_TRUE(sc.setCalculationFrequency(1));
+  EXPECT_TRUE(sc.setMaximumFiguresInShadowOverlapCalculations(200));
+  EXPECT_TRUE(sc.setPolygonClippingAlgorithm("ConvexWeilerAtherton"));
+  EXPECT_TRUE(sc.setSkyDiffuseModelingAlgorithm("DetailedSkyDiffuseModeling"));
 
-  OptionalInt i = workspaceObject.getInt(ShadowCalculationFields::CalculationFrequency);
-  if (i) {
-    shadowCalculation.setCalculationFrequency(*i);
-  }
-
-  i = workspaceObject.getInt(ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations);
-  if (i) {
-    shadowCalculation.setMaximumFiguresInShadowOverlapCalculations(*i);
-  }
-
-  s = workspaceObject.getString(ShadowCalculationFields::PolygonClippingAlgorithm);
-  if (s && !s->empty()) {
-    shadowCalculation.setPolygonClippingAlgorithm(*s);
-  }
-
-  s = workspaceObject.getString(ShadowCalculationFields::SkyDiffuseModelingAlgorithm);
-  if (s && !s->empty()) {
-    shadowCalculation.setSkyDiffuseModelingAlgorithm(*s);
-  }
-
-  return shadowCalculation.cast<ModelObject>();
+  EXPECT_FALSE(sc.isCalculationMethodDefaulted());
+  EXPECT_EQ("TimestepFrequency", sc.calculationMethod());
+  EXPECT_FALSE(sc.isCalculationFrequencyDefaulted());
+  EXPECT_EQ(1, sc.calculationFrequency());
+  EXPECT_FALSE(sc.isMaximumFiguresInShadowOverlapCalculationsDefaulted());
+  EXPECT_EQ(200, sc.maximumFiguresInShadowOverlapCalculations());
+  ASSERT_TRUE(sc.polygonClippingAlgorithm());
+  EXPECT_EQ("ConvexWeilerAtherton", sc.polygonClippingAlgorithm().get());
+  ASSERT_TRUE(sc.skyDiffuseModelingAlgorithm());
+  EXPECT_EQ("DetailedSkyDiffuseModeling", sc.skyDiffuseModelingAlgorithm().get());
 }
-
-} // energyplus
-} // openstuio
