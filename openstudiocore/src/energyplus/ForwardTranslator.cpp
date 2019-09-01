@@ -2373,6 +2373,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
+  case openstudio::IddObjectType::OS_PerformancePrecisionTradeoffs:
+  {
+    model::PerformancePrecisionTradeoffs performancePrecisionTradeoffs = modelObject.cast<PerformancePrecisionTradeoffs>();
+    retVal = translatePerformancePrecisionTradeoffs(performancePrecisionTradeoffs);
+    break;
+  }
   case openstudio::IddObjectType::OS_Pipe_Adiabatic:
   {
     model::PipeAdiabatic pipe = modelObject.cast<PipeAdiabatic>();
@@ -3377,6 +3383,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneAirMassFlowConservation);
   result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
   result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
+  result.push_back(IddObjectType::OS_PerformancePrecisionTradeoffs);
 
   result.push_back(IddObjectType::OS_Site);
   result.push_back(IddObjectType::OS_Site_GroundReflectance);

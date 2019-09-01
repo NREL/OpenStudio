@@ -230,6 +230,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateOutputVariable( const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translatePeople(const WorkspaceObject & workspaceObject);
+  
+  boost::optional<model::ModelObject> translatePerformancePrecisionTradeoffs(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateSizingPeriodDesignDay(const WorkspaceObject & workspaceObject);
 
