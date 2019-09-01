@@ -394,7 +394,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensor_Meter_EMS) {
   model.save(toPath("./EMS_sensor_meterT.osm"), true);
 
 }
-TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_EMS) {
+TEST_F(EnergyPlusFixture, ForwardReverseTranslatorActuator_EMS) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -416,7 +416,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_EMS) {
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Fan_ConstantVolume).size());
 
   WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
   WorkspaceObject outvar = workspace.getObjectsByType(IddObjectType::Fan_ConstantVolume)[0];
@@ -432,17 +433,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_EMS) {
 
   model.save(toPath("./EMS_example.osm"), true);
   workspace.save(toPath("./EMS_example.idf"), true);
-}
-
-TEST_F(EnergyPlusFixture, ReverseTranslatorActuator_EMS) {
 
   openstudio::path idfPath = toPath("./EMS_example.idf");
   OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
   ASSERT_TRUE(idfFile);
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
-  Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_exampleT.osm"), true);
+  Model modelT = reverseTranslator.translateWorkspace(inWorkspace);
+  modelT.save(toPath("./EMS_exampleT.osm"), true);
 
 }
 
