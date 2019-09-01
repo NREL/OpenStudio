@@ -4788,7 +4788,14 @@ OS:Schedule:FixedInterval,
   A3, \field Schedule Type Limits Name
        \type object-list
        \object-list ScheduleTypeLimitsNames
-  A4, \field Interpolate to Timestep
+  A4, \field Translate to Schedule File
+       \note a Yes choice will create a text computer file from this schedule, forward translate a Schedule:File object, and
+       \note point to this newly created text computer file.
+       \type choice
+       \default No
+       \key Yes
+       \key No
+  A5, \field Interpolate to Timestep
        \note when the interval does not match the user specified timestep a Yes choice will average between the intervals request (to
        \note timestep resolution.  a No choice will use the interval value at the simulation timestep without regard to if it matches
        \note the boundary or not.
