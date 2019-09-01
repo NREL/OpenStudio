@@ -8102,7 +8102,7 @@ Foundation:Kiva,
        \note interior
        \units m
        \type real
-  N13, \field Custom Block 1 Z Position
+  N13; \field Custom Block 1 Z Position
        \note Position downward (+) relative to the foundation wall top
        \units m
        \type real
