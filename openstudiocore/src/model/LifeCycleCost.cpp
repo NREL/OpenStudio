@@ -573,6 +573,9 @@ LifeCycleCost::LifeCycleCost(const ModelObject& modelObject)
   test = this->setCostUnits(validCostUnitsValues[0]);
   OS_ASSERT(test);
 
+  test = this->setStartOfCosts("ServicePeriod");
+  OS_ASSERT(test);
+
 }
 
 // constructor
