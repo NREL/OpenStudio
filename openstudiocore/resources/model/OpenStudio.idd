@@ -340,7 +340,7 @@ OS:ShadowCalculation,
        \key AverageOverDaysInFrequency
        \key TimestepFrequency
        \default AverageOverDaysInFrequency
-       
+
 OS:SimulationControl,
        \memo Note that the following 3 fields are related to the Sizing:Zone, Sizing:System,
        \memo and Sizing:Plant objects.  Having these fields set to Yes but no corresponding
@@ -433,7 +433,7 @@ OS:PerformancePrecisionTradeoffs,
        \type handle
        \required-field
   A2; \field Use Coil Direct Solutions
-      \note If Yes, an analytical or empirical solution will be used to replace iterations in 
+      \note If Yes, an analytical or empirical solution will be used to replace iterations in
       \note the coil performance calculations.
       \type choice
       \key Yes
@@ -26255,13 +26255,27 @@ OS:ThermalStorage:Ice:Detailed,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A6 , \field Discharging Curve
+  A6 , \field Discharging Curve Variable Specifications
+       \required-field
+       \type choice
+       \key FractionChargedLMTD
+       \key FractionDischargedLMTD
+       \key LMTDMassFlow
+       \key LMTDFractionCharged
+  A7 , \field Discharging Curve
        \type object-list
        \required-field
        \object-list QuadraticLinearCurves
        \object-list CubicLinearCurves
        \object-list UniVariateTables
-  A7 , \field Charging Curve
+  A8 , \field Charging Curve Variable Specifications
+       \required-field
+       \type choice
+       \key FractionChargedLMTD
+       \key FractionDischargedLMTD
+       \key LMTDMassFlow
+       \key LMTDFractionCharged
+  A9 , \field Charging Curve
        \type object-list
        \required-field
        \object-list QuadraticLinearCurves
@@ -26287,7 +26301,7 @@ OS:ThermalStorage:Ice:Detailed,
        \note parameters input above is inappropriate and not advised.
        \units C
        \required-field
-  A8 ; \field Thaw Process Indicator
+  A10 ; \field Thaw Process Indicator
        \note This field determines whether the system uses internal or external melt
        \note during discharging.  This will then have an impact on charging performance.
        \type choice

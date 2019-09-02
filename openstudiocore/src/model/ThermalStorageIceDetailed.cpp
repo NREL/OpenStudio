@@ -124,12 +124,34 @@ namespace detail {
     return value.get();
   }
 
+  std::string ThermalStorageIceDetailed_Impl::dischargingCurveVariableSpecifications() const {
+    boost::optional<int> value = getString(OS_ThermalStorage_Ice_DetailedFields::DischargingCurveVariableSpecifications, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ThermalStorageIceDetailed_Impl::setDischargingCurveVariableSpecifications(const std::string& dischargingCurveVariableSpecifications) {
+    bool result = setString(OS_ThermalStorage_Ice_DetailedFields::DischargingCurveVariableSpecifications, dischargingCurveVariableSpecifications);
+    return result;
+  }
+
   Curve ThermalStorageIceDetailed_Impl::dischargingCurve() const {
     auto value = optionalDischargingCurve();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Discharging Curve attached.");
     }
     return value.get();
+  }
+
+  std::string ThermalStorageIceDetailed_Impl::chargingCurveVariableSpecifications() const {
+    boost::optional<int> value = getString(OS_ThermalStorage_Ice_DetailedFields::ChargingCurveVariableSpecifications, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ThermalStorageIceDetailed_Impl::setChargingCurveVariableSpecifications(const std::string& chargingCurveVariableSpecifications) {
+    bool result = setString(OS_ThermalStorage_Ice_DetailedFields::ChargingCurveVariableSpecifications, chargingCurveVariableSpecifications);
+    return result;
   }
 
   Curve ThermalStorageIceDetailed_Impl::chargingCurve() const {
@@ -304,6 +326,7 @@ ThermalStorageIceDetailed::ThermalStorageIceDetailed(const Model& model)
     curve.setMinimumValueofy(0.0);
     curve.setMaximumValueofy(9.9);
 
+    setDischargingCurveVariableSpecifications("FractionDischargedLMTD");
     setDischargingCurve(curve);
   }
 
@@ -320,6 +343,7 @@ ThermalStorageIceDetailed::ThermalStorageIceDetailed(const Model& model)
     curve.setMinimumValueofy(0.0);
     curve.setMaximumValueofy(9.9);
 
+    setChargingCurveVariableSpecifications("FractionChargedLMTD");
     setChargingCurve(curve);
   }
 
@@ -349,8 +373,24 @@ double ThermalStorageIceDetailed::capacity() const {
   return getImpl<detail::ThermalStorageIceDetailed_Impl>()->capacity();
 }
 
+std::string ThermalStorageIceDetailed::dischargingCurveVariableSpecifications() const {
+  return getImpl<detail::ThermalStorageIceDetailed_Impl>()->dischargingCurveVariableSpecifications();
+}
+
+bool ThermalStorageIceDetailed::setDischargingCurveVariableSpecifications(const std::string& dischargingCurveVariableSpecifications) {
+  return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setDischargingCurveVariableSpecifications(dischargingCurveVariableSpecifications);
+}
+
 Curve ThermalStorageIceDetailed::dischargingCurve() const {
   return getImpl<detail::ThermalStorageIceDetailed_Impl>()->dischargingCurve();
+}
+
+bool ThermalStorageIceDetailed::setChargingCurveVariableSpecifications(const std::string& chargingCurveVariableSpecifications) {
+  return getImpl<detail::ThermalStorageIceDetailed_Impl>()->setChargingCurveVariableSpecifications(chargingCurveVariableSpecifications);
+}
+
+std::string ThermalStorageIceDetailed::chargingCurveVariableSpecifications() const {
+  return getImpl<detail::ThermalStorageIceDetailed_Impl>()->chargingCurveVariableSpecifications();
 }
 
 Curve ThermalStorageIceDetailed::chargingCurve() const {
