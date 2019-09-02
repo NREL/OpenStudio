@@ -340,7 +340,7 @@ OS:ShadowCalculation,
        \key AverageOverDaysInFrequency
        \key TimestepFrequency
        \default AverageOverDaysInFrequency
-       
+
 OS:SimulationControl,
        \memo Note that the following 3 fields are related to the Sizing:Zone, Sizing:System,
        \memo and Sizing:Plant objects.  Having these fields set to Yes but no corresponding
@@ -433,7 +433,7 @@ OS:PerformancePrecisionTradeoffs,
        \type handle
        \required-field
   A2; \field Use Coil Direct Solutions
-      \note If Yes, an analytical or empirical solution will be used to replace iterations in 
+      \note If Yes, an analytical or empirical solution will be used to replace iterations in
       \note the coil performance calculations.
       \type choice
       \key Yes
@@ -15011,7 +15011,7 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \required-field
        \type alpha
        \reference CoolingCoilsDXMultiSpeed
-       \reference DesuperHeatingCoilSources
+       \reference DesuperHeatingWaterOnlySources
        \reference AFNCoilNames
        \reference ConnectionObject
   A3 , \field Availability Schedule
