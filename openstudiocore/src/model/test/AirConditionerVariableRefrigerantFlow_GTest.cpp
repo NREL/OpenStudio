@@ -171,7 +171,9 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow_addToNode) {
   EXPECT_EQ("EvaporativelyCooled", vrf.condenserType());
 
   // Disconnect it, shouldn't affect anything
-  EXPECT_TRUE(plantLoop.removeDemandBranchWithComponent(vrf));
+  // Note: do not use removeDemandBranchWithComponent here, it would delete the VRF itself
+  vrf.disconnect();
+  EXPECT_FALSE(vrf.plantLoop());
   EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
   EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
   EXPECT_EQ("EvaporativelyCooled", vrf.condenserType());
