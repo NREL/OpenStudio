@@ -282,6 +282,7 @@ class OutputMeter;
 class OutputVariable;
 class OutputEnergyManagementSystem;
 class People;
+class PerformancePrecisionTradeoffs;
 class PhotovoltaicPerformanceEquivalentOneDiode;
 class PhotovoltaicPerformanceSimple;
 class PipeAdiabatic;
@@ -986,6 +987,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOutputEnergyManagementSystem(model::OutputEnergyManagementSystem & modelObject );
 
   boost::optional<IdfObject> translatePeople( model::People & modelObject );
+  
+  boost::optional<IdfObject> translatePerformancePrecisionTradeoffs( model::PerformancePrecisionTradeoffs & modelObject );
 
   boost::optional<IdfObject> translatePhotovoltaicPerformanceEquivalentOneDiode(model::PhotovoltaicPerformanceEquivalentOneDiode & modelObject);
 

@@ -8,6 +8,7 @@
 %template(OptionalVariant) boost::optional<openstudio::Variant>;
 %template(VariantVector) std::vector<openstudio::Variant>;
 %template(StringVariantMap) std::map<std::string, openstudio::Variant>;
+%template(VariantVectorVector) std::vector<std::vector<openstudio::Variant> >;
 
 %ignore openstudio::Variant::Variant(const char* value);
 

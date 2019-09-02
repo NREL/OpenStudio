@@ -327,6 +327,21 @@ namespace detail {
 
     return m_cachedYearDescription;
   }
+  
+  boost::optional<PerformancePrecisionTradeoffs> Model_Impl::performancePrecisionTradeoffs() const
+  {
+    if (m_cachedPerformancePrecisionTradeoffs){
+      return m_cachedPerformancePrecisionTradeoffs;
+    }
+
+    boost::optional<PerformancePrecisionTradeoffs> result = this->model().getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>();
+    if (result){
+      m_cachedPerformancePrecisionTradeoffs = result;
+      result->getImpl<PerformancePrecisionTradeoffs_Impl>().get()->PerformancePrecisionTradeoffs_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedPerformancePrecisionTradeoffs>(const_cast<openstudio::model::detail::Model_Impl *>(this));
+    }
+
+    return m_cachedPerformancePrecisionTradeoffs;
+  }
 
   boost::optional<int> Model_Impl::calendarYear() const
   {
@@ -987,6 +1002,7 @@ namespace detail {
     clearCachedRunPeriod(dummy);
     clearCachedYearDescription(dummy);
     clearCachedWeatherFile(dummy);
+    clearCachedPerformancePrecisionTradeoffs(dummy);
   }
 
   void Model_Impl::clearCachedBuilding(const Handle &)
@@ -1017,6 +1033,11 @@ namespace detail {
   void Model_Impl::clearCachedWeatherFile(const Handle& handle)
   {
     m_cachedWeatherFile.reset();
+  }
+
+  void Model_Impl::clearCachedPerformancePrecisionTradeoffs(const Handle &)
+  {
+    m_cachedPerformancePrecisionTradeoffs.reset();
   }
 
   void Model_Impl::autosize() {
@@ -1174,6 +1195,11 @@ boost::optional<Building> Model::building() const
 boost::optional<FoundationKivaSettings> Model::foundationKivaSettings() const
 {
   return getImpl<detail::Model_Impl>()->foundationKivaSettings();
+}
+
+boost::optional<PerformancePrecisionTradeoffs> Model::performancePrecisionTradeoffs() const
+{
+  return getImpl<detail::Model_Impl>()->performancePrecisionTradeoffs();
 }
 
 boost::optional<LifeCycleCostParameters> Model::lifeCycleCostParameters() const
@@ -2884,6 +2910,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(OutsideSurfaceConvectionAlgorithm);
   REGISTER_CONSTRUCTOR(People);
   REGISTER_CONSTRUCTOR(PeopleDefinition);
+  REGISTER_CONSTRUCTOR(PerformancePrecisionTradeoffs);
   REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceEquivalentOneDiode);
   REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceSimple);
   REGISTER_CONSTRUCTOR(PipeAdiabatic);
@@ -3368,6 +3395,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(OutsideSurfaceConvectionAlgorithm);
   REGISTER_COPYCONSTRUCTORS(People);
   REGISTER_COPYCONSTRUCTORS(PeopleDefinition);
+  REGISTER_COPYCONSTRUCTORS(PerformancePrecisionTradeoffs);
   REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceEquivalentOneDiode);
   REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceSimple);
   REGISTER_COPYCONSTRUCTORS(PipeAdiabatic);

@@ -139,8 +139,9 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.7.0")] = &VersionTranslator::update_2_6_2_to_2_7_0;
   m_updateMethods[VersionString("2.7.1")] = &VersionTranslator::update_2_7_0_to_2_7_1;
   m_updateMethods[VersionString("2.7.2")] = &VersionTranslator::update_2_7_1_to_2_7_2;
-  m_updateMethods[VersionString("2.8.1")] = &VersionTranslator::defaultUpdate;
-
+  m_updateMethods[VersionString("2.9.0")] = &VersionTranslator::update_2_8_1_to_2_9_0;
+  //m_updateMethods[VersionString("2.9.0")] = &VersionTranslator::defaultUpdate;
+ 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
   //     release).
@@ -287,6 +288,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.7.1"));
   m_startVersions.push_back(VersionString("2.7.2"));
   m_startVersions.push_back(VersionString("2.8.0"));
+  m_startVersions.push_back(VersionString("2.8.1"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm,
@@ -4490,6 +4492,90 @@ std::string VersionTranslator::update_2_7_1_to_2_7_2(const IdfFile& idf_2_7_1, c
 
 }
 
+std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, const IddFileAndFactoryWrapper& idd_2_9_0) {
+  std::stringstream ss;
+  boost::optional<std::string> value;
+
+  ss << idf_2_8_1.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_9_0.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_2_8_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:Foundation:Kiva") {
+      auto iddObject = idd_2_9_0.getObject("OS:Foundation:Kiva");
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 2) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    }else if (iddname == "OS:ZoneHVAC:EquipmentList") {
+        auto iddObject = idd_2_9_0.getObject("OS:ZoneHVAC:EquipmentList");
+        IdfObject newObject(iddObject.get());
+
+        // Copy non extensible fields in place
+        for (size_t i = 0; i < object.numNonextensibleFields(); ++i) {
+          if (value = object.getString(i)) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Copy the eg values 0 through 2 and create ScheduleConstant out of 3 and 4
+        for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
+          IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();
+          for (size_t i = 0; i < 5; ++i) {
+            if (i > 2) {
+              boost::optional<double> fraction;
+              if (fraction = eg.getDouble(i)) {
+                auto iddObject = idd_2_9_0.getObject("OS:Schedule:Constant");
+                IdfObject scheduleConstant(iddObject.get());
+                std::string uuid = toString(createUUID());
+                scheduleConstant.setString(0, uuid);
+                scheduleConstant.setString(1, "Name");
+                for (const IdfObject& object2 : idf_2_8_1.objects()) {
+                  if (object2.getString(0).get() == eg.getString(0).get()) {
+                    scheduleConstant.setString(1, toString(object2.getString(1).get()) + " " + toString(i)); // name of zone equipment plus group index
+                  }
+                }
+                scheduleConstant.setString(2, "");
+                scheduleConstant.setDouble(3, fraction.get());
+
+                m_new.push_back(scheduleConstant);
+                ss << scheduleConstant;
+
+                new_eg.setString(i, uuid);
+              }
+            } else {
+              new_eg.setString(i, eg.getString(i).get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+    // No-op
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+
+}
 
 } // osversion
 } // openstudio

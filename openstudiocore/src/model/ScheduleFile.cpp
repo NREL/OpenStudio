@@ -44,6 +44,7 @@
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/data/TimeSeries.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/filetypes/CSVFile.hpp"
 
 #include <unordered_map>
 
@@ -224,6 +225,56 @@ namespace detail {
     bool result = setString(OS_Schedule_FileFields::MinutesperItem, "");
     OS_ASSERT(result);
   }
+  
+  boost::optional<CSVFile> ScheduleFile_Impl::csvFile() const {
+    boost::optional<CSVFile> csvFile;
+    ExternalFile externalFile = this->externalFile();
+    csvFile = CSVFile::load(externalFile.filePath());
+    return csvFile;
+  }
+
+  /* FIXME!
+  openstudio::TimeSeries ScheduleFile_Impl::timeSeries(unsigned columnIndex) const
+  { 
+    // need to catch integers less than or equal to 0
+    // need to ensure that first column is dateTimes
+    
+    boost::optional<CSVFile> csvFile;
+    ExternalFile externalFile = this->externalFile();
+    csvFile = CSVFile::load(externalFile.filePath());    
+    
+    std::vector<DateTime> dateTimes = csvFile->getColumnAsDateTimes(0);
+    std::vector<double> values = csvFile->getColumnAsDoubleVector(columnIndex);
+    Vector vectorValues(values.size());
+    unsigned i = 0;
+    for (double value : values) {
+      vectorValues[i] = value;
+      ++i;
+    }
+
+    Time delta = dateTimes[1] - dateTimes[0];
+    Time intervalLength(delta.days(), delta.hours(), delta.minutes(), delta.seconds());
+    TimeSeries result(dateTimes[0].date(), intervalLength, vectorValues, "");
+
+    return result;
+  }
+  */
+
+  /* FIXME!
+  unsigned ScheduleFile_Impl::addTimeSeries(const openstudio::TimeSeries& timeSeries)
+  {
+    // need to ensure that first column is dateTimes
+    // need to ensure that length of timeSeries equals length of dateTimes
+
+    boost::optional<CSVFile> csvFile;
+    ExternalFile externalFile = this->externalFile();
+    csvFile = CSVFile::load(externalFile.filePath());
+    unsigned columnIndex = csvFile->addColumn(timeSeries.values());
+    // save?
+
+    return columnIndex;
+  }
+  */
 
   openstudio::TimeSeries ScheduleFile_Impl::timeSeries() const
   {
@@ -231,7 +282,6 @@ namespace detail {
     /* FIXME!
     Date startDate(openstudio::MonthOfYear(this->startMonth()), this->startDay());
     Time intervalLength(0, 0, this->intervalLength());
-
     Vector values(this->numExtensibleGroups());
     unsigned i = 0;
     for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
@@ -240,7 +290,6 @@ namespace detail {
       values[i] = *x;
       ++i;
     }
-
     TimeSeries result(startDate, intervalLength, values, "");
     result.setOutOfRangeValue(this->outOfRangeValue());
     */
@@ -255,28 +304,23 @@ namespace detail {
     if (!intervalTime) {
       return false;
     }
-
     // check the interval
     double intervalLength = intervalTime->totalMinutes();
     if (intervalLength - floor(intervalLength) > 0) {
       return false;
     }
-
     // check the interval
     if (intervalTime->totalDays() > 1) {
       return false;
     }
-
     // check that first report is whole number of intervals from start date
     DateTime firstReportDateTime = timeSeries.firstReportDateTime();
     Date startDate = firstReportDateTime.date();
     Time firstReportTime = firstReportDateTime.time();
-
     double numIntervalsToFirstReport = std::max(1.0, firstReportTime.totalMinutes() / intervalLength);
     if (numIntervalsToFirstReport - floor(numIntervalsToFirstReport) > 0) {
       return false;
     }
-
     // check the values
     openstudio::Vector values = timeSeries.values();
     for (const auto& value : values) {
@@ -291,40 +335,30 @@ namespace detail {
         return false;
       }
     }
-
     // at this point we are going to change the object
     clearExtensibleGroups(false);
-
     // set the interval
     this->setIntervalLength(intervalLength, false);
-
     // set the start date
     this->setStartMonth(startDate.monthOfYear().value(), false);
     this->setStartDay(startDate.dayOfMonth(), false);
-
     // set the out of range value
     double outOfRangeValue = timeSeries.outOfRangeValue();
-
     // add in numIntervalsToFirstReport-1 outOfRangeValues to pad the timeseries
     for (unsigned i = 0; i < numIntervalsToFirstReport - 1; ++i) {
       std::vector<std::string> temp;
       temp.push_back(toString(outOfRangeValue));
-
       ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
       OS_ASSERT(!group.empty());
     }
-
     // set the values
     for (unsigned i = 0; i < values.size(); ++i) {
       std::vector<std::string> temp;
       temp.push_back(toString(values[i]));
-
       ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
       OS_ASSERT(!group.empty());
     }
-
     this->emitChangeSignals();
-
     return true;
     */
     return false;
@@ -416,6 +450,22 @@ boost::optional<std::string> ScheduleFile::minutesperItem() const {
 bool ScheduleFile::isMinutesperItemDefaulted() const {
   return getImpl<detail::ScheduleFile_Impl>()->isMinutesperItemDefaulted();
 }
+
+boost::optional<CSVFile> ScheduleFile::csvFile() const {
+  return getImpl<detail::ScheduleFile_Impl>()->csvFile();
+}
+
+/* FIXME!
+openstudio::TimeSeries ScheduleFile::timeSeries(unsigned columnIndex) const {
+  return getImpl<detail::ScheduleFile_Impl>()->timeSeries(columnIndex);
+}
+*/
+
+/* FIXME!
+unsigned ScheduleFile::addTimeSeries(const openstudio::TimeSeries& timeSeries) {
+  return getImpl<detail::ScheduleFile_Impl>()->addTimeSeries(timeSeries);
+}
+*/
 
 bool ScheduleFile::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
   return getImpl<detail::ScheduleFile_Impl>()->setScheduleTypeLimits(scheduleTypeLimits);

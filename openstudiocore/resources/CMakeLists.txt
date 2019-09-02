@@ -45,6 +45,7 @@ set(utilities_resources_src
   utilities/Filetypes/leapday-test.epw
   utilities/Filetypes/min.osw
   utilities/Filetypes/full.osw
+  utilities/Filetypes/test_csv.csv
   utilities/Geometry/floorplan.json
   utilities/Geometry/floorplan_colors.json
   utilities/Geometry/floorplan_doors.json
@@ -220,6 +221,7 @@ set(energyplus_resources_src
   energyplus/ErrorFiles/WarningsAndSevere.err
   energyplus/ErrorFiles/RepeatingWarnings.err
   energyplus/Office_With_Many_HVAC_Types/in.idf
+  energyplus/ScheduleFile/in.idf
   energyplus/SimpleSurfaces/SimpleSurfaces_Reference.idf
   energyplus/SimpleSurfaces/SimpleSurfaces_Relative.idf
   energyplus/SimpleSurfaces/4ZoneWithShading_Simple_2.idf

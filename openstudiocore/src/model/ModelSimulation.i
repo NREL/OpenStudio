@@ -83,6 +83,7 @@ MODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
   UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
 #endif
 MODELOBJECT_TEMPLATES(FoundationKivaSettings);
+MODELOBJECT_TEMPLATES(PerformancePrecisionTradeoffs);
 
 SWIG_UNIQUEMODELOBJECT(RunPeriod);
 SWIG_UNIQUEMODELOBJECT(SimulationControl);
@@ -121,5 +122,6 @@ SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);
   SWIG_UNIQUEMODELOBJECT(YearDescription);
 #endif
 SWIG_UNIQUEMODELOBJECT(FoundationKivaSettings);
+SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
 
 #endif

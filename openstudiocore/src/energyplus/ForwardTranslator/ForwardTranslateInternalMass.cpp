@@ -125,7 +125,7 @@ boost::optional<IdfObject> ForwardTranslator::translateInternalMass( model::Inte
 
       boost::optional<ThermalZone> thermalZone = space.thermalZone();
       if (thermalZone){
-        idfObject.setString(InternalMassFields::ZoneName, thermalZone->name().get());
+        idfObject.setString(InternalMassFields::ZoneorZoneListName, thermalZone->name().get());
       }
 
       if (construction) {

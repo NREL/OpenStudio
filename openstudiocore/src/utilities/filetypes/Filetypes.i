@@ -17,6 +17,7 @@
 %{
   namespace openstudio{}
   using namespace openstudio;
+  #include <utilities/filetypes/CSVFile.hpp>
   #include <utilities/filetypes/EpwFile.hpp>
   #include <utilities/filetypes/RunOptions.hpp>
   #include <utilities/filetypes/RunOptions_Impl.hpp>
@@ -46,6 +47,11 @@
 
 //%import <utilities/units/Quantity.i>
 %import <utilities/data/Variant.i>
+
+%ignore std::vector<openstudio::CSVFile>::vector(size_type);
+%ignore std::vector<openstudio::CSVFile>::resize(size_type);
+%template(CSVFileVector) std::vector<openstudio::CSVFile>;
+%template(OptionalCSVFile) boost::optional<openstudio::CSVFile>;
 
 %template(EpwDataPointVector) std::vector<openstudio::EpwDataPoint>;
 %template(EpwDesignConditionVector) std::vector<openstudio::EpwDesignCondition>;
@@ -84,6 +90,7 @@
 %template(WorkflowJSONVector) std::vector<openstudio::WorkflowJSON>;
 %template(OptionalWorkflowJSON) boost::optional<openstudio::WorkflowJSON>;
 
+%include <utilities/filetypes/CSVFile.hpp>
 %include <utilities/filetypes/EpwFile.hpp>
 %include <utilities/filetypes/RunOptions.hpp>
 %include <utilities/filetypes/WorkflowStepResult.hpp>

@@ -979,6 +979,9 @@ set(${target_name}_src
   PeopleDefinition.hpp
   PeopleDefinition_Impl.hpp
   PeopleDefinition.cpp
+  PerformancePrecisionTradeoffs.hpp
+  PerformancePrecisionTradeoffs_Impl.hpp
+  PerformancePrecisionTradeoffs.cpp
   PhotovoltaicPerformance.hpp
   PhotovoltaicPerformance_Impl.hpp
   PhotovoltaicPerformance.cpp
@@ -1890,6 +1893,7 @@ set(${target_name}_test_src
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp
   test/PeopleDefinition_GTest.cpp
+  test/PerformancePrecisionTradeoffs_GTest.cpp
   test/PhotovoltaicPerformanceEquivalentOneDiode_GTest.cpp
   test/PhotovoltaicPerformanceSimple_GTest.cpp
   test/PipeAdiabatic_GTest.cpp
@@ -1965,6 +1969,7 @@ set(${target_name}_test_src
   test/ShadingControl_GTest.cpp
   test/ShadingSurfaceGroup_GTest.cpp
   test/ShadingSurface_GTest.cpp
+  test/ShadowCalculation_GTest.cpp
   test/SimpleGlazing_GTest.cpp
   test/SimulationControl_GTest.cpp
   test/Site_GTest.cpp
