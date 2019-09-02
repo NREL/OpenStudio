@@ -4974,6 +4974,7 @@ OS:External:File,
        \type choice
        \key Comma
        \key Tab
+       \key Fixed
        \key Space
        \key Semicolon
        \default Comma
@@ -5013,6 +5014,7 @@ OS:Schedule:File,
        \key Comma
        \key Tab
        \key Fixed
+       \key Space
        \key Semicolon
        \default Comma
   A6,  \field Interpolate to Timestep
