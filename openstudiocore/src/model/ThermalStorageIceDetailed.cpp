@@ -125,7 +125,7 @@ namespace detail {
   }
 
   std::string ThermalStorageIceDetailed_Impl::dischargingCurveVariableSpecifications() const {
-    boost::optional<int> value = getString(OS_ThermalStorage_Ice_DetailedFields::DischargingCurveVariableSpecifications, true);
+    boost::optional<std::string> value = getString(OS_ThermalStorage_Ice_DetailedFields::DischargingCurveVariableSpecifications, true);
     OS_ASSERT(value);
     return value.get();
   }
@@ -144,7 +144,7 @@ namespace detail {
   }
 
   std::string ThermalStorageIceDetailed_Impl::chargingCurveVariableSpecifications() const {
-    boost::optional<int> value = getString(OS_ThermalStorage_Ice_DetailedFields::ChargingCurveVariableSpecifications, true);
+    boost::optional<std::string> value = getString(OS_ThermalStorage_Ice_DetailedFields::ChargingCurveVariableSpecifications, true);
     OS_ASSERT(value);
     return value.get();
   }
