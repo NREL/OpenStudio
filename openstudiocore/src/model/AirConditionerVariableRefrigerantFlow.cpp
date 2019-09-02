@@ -2010,18 +2010,18 @@ namespace detail {
     // * If hardset, return that value
     // * If empty (defaulted), return the default: VRF connected to a PlantLoop => WaterCooled, else AirCooled.
     std::string condenserType;
-    boost::optional<std::string> value = getString(OS_AirConditioner_VariableRefrigerantFlowFields::CondenserType, false);
-    if (value) {
-      condenserType = value.get();
-    } else {
+
+    if (isCondenserTypeDefaulted() ){
       // Default like FT
       if (this->plantLoop()) {
         condenserType = "WaterCooled";
       } else {
         condenserType = "AirCooled";
       }
+    } else {
+      boost::optional<std::string> value = getString(OS_AirConditioner_VariableRefrigerantFlowFields::CondenserType, false);
+      condenserType = value.get();
     }
-
     return condenserType;
   }
 
