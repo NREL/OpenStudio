@@ -148,7 +148,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorAirConditionerVariableRefrigerantFlow_
 
     WorkspaceObject i_vrf = objs[0];
 
-    EXPECT_EQ(i_central_hp.getString(AirConditioner_VariableRefrigerantFlowFields::CondenserType).get(),
+    EXPECT_EQ(i_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CondenserType).get(),
               "AirCooled");
   }
 
@@ -174,7 +174,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorAirConditionerVariableRefrigerantFlow_
 
     WorkspaceObject i_vrf = objs[0];
 
-    EXPECT_EQ(i_central_hp.getString(AirConditioner_VariableRefrigerantFlowFields::CondenserType).get(),
+    EXPECT_EQ(i_vrf.getString(AirConditioner_VariableRefrigerantFlowFields::CondenserType).get(),
               "WaterCooled");
   }
 }
