@@ -2005,32 +2005,53 @@ namespace detail {
 
 
   std::string AirConditionerVariableRefrigerantFlow_Impl::condenserType() const {
-    boost::optional<std::string> value = getString(OS_AirConditioner_VariableRefrigerantFlowFields::CondenserType,true);
-    OS_ASSERT(value);
-    return value.get();
+    // Note JM 2019-09-02: This looks weird / unusual, but it's because it was decided to not put any logic here and move it to FT
+    // In order to preserve backward compat, the return type was left to std::string, so we basically do this:
+    // * If hardset, return that value
+    // * If empty (defaulted), return the default: VRF connected to a PlantLoop => WaterCooled, else AirCooled.
+    std::string condenserType;
+    boost::optional<std::string> value = getString(OS_AirConditioner_VariableRefrigerantFlowFields::CondenserType, false);
+    if (value) {
+      condenserType = value.get();
+    } else {
+      // Default like FT
+      if (this->plantLoop()) {
+        condenserType = "WaterCooled";
+      } else {
+        condenserType = "AirCooled";
+      }
+    }
+
+    return condenserType;
   }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::setCondenserType(const std::string& condenserType) {
-    bool ok = false;
 
+    // If this doesn't agree with the current conditions, we warn...
     if ( ( openstudio::istringEqual("AirCooled", condenserType) || openstudio::istringEqual("EvaporativelyCooled", condenserType) )
          && (this->plantLoop()) )
     {
-      LOG(Warn, briefDescription() << " is connected to a PlantLoop, so its condenser type cannot be changed from 'WaterCooled'."
-            << "Disconnect it from the PlantLoop before calling setCondenserType('AirCooled'|'EvaporativelyCooled').");
-      return false;
+      LOG(Warn, "Setting the Condenser Type to '" << condenserType << "', you should disconnect from its PlantLoop. "
+          << "Occurred for " << briefDescription());
     }
     else if ( istringEqual("WaterCooled", condenserType) && !(this->plantLoop()) )
     {
-      LOG(Warn, "In order to set the Condenser Type to 'WaterCooled', you should connect it to a PlantLoop. "
+      LOG(Warn, "Setting the Condenser Type to 'WaterCooled', you should connect it to a PlantLoop. "
           << "Occurred for " << briefDescription());
-    } else {
-      ok = setString(OS_AirConditioner_VariableRefrigerantFlowFields::CondenserType, condenserType);
     }
 
-    return ok;
+    // ... but we still do it...
+    return setString(OS_AirConditioner_VariableRefrigerantFlowFields::CondenserType, condenserType);
   }
 
+  bool AirConditionerVariableRefrigerantFlow_Impl::isCondenserTypeDefaulted() const {
+    return isEmpty(OS_AirConditioner_VariableRefrigerantFlowFields::CondenserType);
+  }
+
+  void AirConditionerVariableRefrigerantFlow_Impl::resetCondenserType() {
+    bool result = setString(OS_AirConditioner_VariableRefrigerantFlowFields::CondenserType, "");
+    OS_ASSERT(result);
+  }
 
   bool AirConditionerVariableRefrigerantFlow_Impl::addToNode(Node & node)
   {
@@ -3258,6 +3279,13 @@ bool AirConditionerVariableRefrigerantFlow::setCondenserType(const std::string& 
   return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setCondenserType(condenserType);
 }
 
+bool AirConditionerVariableRefrigerantFlow_Impl::isCondenserTypeDefaulted() const {
+  return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->isCondenserTypeDefaulted();
+}
+
+void AirConditionerVariableRefrigerantFlow_Impl::resetCondenserType() {
+  getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->resetCondenserType();
+}
 
 // DEPRECATED
 bool AirConditionerVariableRefrigerantFlow::setRatedTotalCoolingCapacity(double grossRatedTotalCoolingCapacity) {

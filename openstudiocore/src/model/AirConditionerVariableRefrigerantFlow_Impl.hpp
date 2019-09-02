@@ -210,8 +210,10 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
   double maximumOutdoorDrybulbTemperatureforDefrostOperation() const;
 
   std::string condenserType() const;
-
   bool setCondenserType(const std::string& condenserType);
+  bool isCondenserTypeDefaulted() const;
+  void resetCondenserType();
+
 
   boost::optional<double> waterCondenserVolumeFlowRate() const;
 

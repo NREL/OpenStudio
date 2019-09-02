@@ -541,9 +541,34 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
   }
 
   // Condenser Type
-  // The "smart" logic is now handled in model itself
-  // (eg: if you connect the object to a PlantLoop, it switches automatically to "WaterCooled")
-  idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserType,modelObject.condenserType());
+  // It was decided that the "smart" logic shouldn't be in the model itself.
+  // So now, we do two things:
+  // * If condenserType is set, respect that, but issue Errors if it's wrong
+  // * If condenserType is not set, we default it (default is done in the model actually)
+  //     * If VRF connected to a PlantLoop => WaterCooled, else "AirCooled" ("EvaporativelyCooled" is less common and will be reserved for people who
+  //     know what they are doing and are hardsetting it)
+  std::string condenserType = modelObject.condenserType();
+
+  if (modelObject.isCondenserTypeDefaulted()) {
+    // We log an Info anyways, might be useful
+    if (openstudio::istringEqual(condenserType, "EvaporativelyCooled")) {
+      LOG(Info, modelObject.briefDescription() << " is connected to a PlantLoop, defaulting condenserType to 'WaterCooled'.");
+    } else {
+      LOG(Info, modelObject.briefDescription() << " is not connected to a PlantLoop, defaulting condenserType to 'AirCooled'.");
+    }
+  } else {
+    boost::optional<PlantLoop> _plant = modelObject.plantLoop();
+
+    if ( (openstudio::istringEqual(condenserType, "AirCooled") || openstudio::istringEqual(condenserType, "EvaporativelyCooled"))
+        && _plant.is_initialized()) {
+      LOG(Error, modelObject.briefDescription() << " has an hardcoded condenserType '" << condenserType << "' while it is connected to a PlantLoop.");
+    } else if( openstudio::istringEqual(condenserType, "WaterCooled") && !_plant.is_initialized()) {
+      LOG(Error, modelObject.briefDescription() << " has an hardcoded condenserType '" << condenserType
+          << "' while it is NOT connected to a PlantLoop.");
+    }
+  }
+  idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserType, condenserType);
+
 
   // CondenserInletNodeName
   if( boost::optional<ModelObject> mo = modelObject.inletModelObject() )

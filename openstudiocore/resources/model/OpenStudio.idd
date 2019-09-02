@@ -9422,7 +9422,6 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \key AirCooled
        \key EvaporativelyCooled
        \key WaterCooled
-       \required-field
        \note Select either an air-cooled, evaporatively-cooled or water-cooled condenser.
   A36, \field Condenser Inlet Node
        \type object-list

@@ -401,12 +401,16 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
 
   bool setMaximumOutdoorDrybulbTemperatureforDefrostOperation(double maximumOutdoorDrybulbTemperatureforDefrostOperation);
 
-
+  // Returns the hardcoded condenserType, or the defaulted one if not (If PlantLoop => 'WaterCooled', else 'AirCooled')
   std::string condenserType() const;
 
-  // Set the condenser type. If VRF is connected to a PlantLoop, will not accept anything. If not connected, will only accept 'AirCooled' or
-  // 'EvaporativelyCooled'. Connecting / Disconnecting from a PlantLoop will switch the Condenser Type to 'Water Cooled' as needed.
+  // Sets the condenser type explicitly. Note is was decided that not "smart" logic would be implemented in the model api, and it was moved to the FT
+  // If you harcode the condenser type, you are responsible to ensure that you are matching the plant loop connection status (eg: If you set this to
+  // 'AirCooled' or 'EvaporativelyCooled', the object should not be on a PlantLoop. If 'WaterCooled', it should be on a PlantLoop)
   bool setCondenserType(const std::string& condenserType);
+
+  bool isCondenserTypeDefaulted() const;
+  void resetCondenserType();
 
   boost::optional<double> waterCondenserVolumeFlowRate() const;
 
