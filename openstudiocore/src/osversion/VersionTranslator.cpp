@@ -141,7 +141,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.7.2")] = &VersionTranslator::update_2_7_1_to_2_7_2;
   m_updateMethods[VersionString("2.9.0")] = &VersionTranslator::update_2_8_1_to_2_9_0;
   //m_updateMethods[VersionString("2.9.0")] = &VersionTranslator::defaultUpdate;
- 
+
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
   //     release).
@@ -4522,7 +4522,7 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
-    }else if (iddname == "OS:ZoneHVAC:EquipmentList") {
+    } else if (iddname == "OS:ZoneHVAC:EquipmentList") {
         auto iddObject = idd_2_9_0.getObject("OS:ZoneHVAC:EquipmentList");
         IdfObject newObject(iddObject.get());
 
@@ -4568,6 +4568,55 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
         ss << newObject;
 
     // No-op
+    } else if (iddname == "OS:ThermalStorage:Ice:Detailed") {
+      auto iddObject = idd_2_9_0.getObject("OS:ThermalStorage:Ice:Detailed");
+      IdfObject newObject(iddObject.get());
+
+      // Inserting two fields: after position 5 and after position 6
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            // Unchanged
+            newObject.setString(i, value.get());
+          } else if (i < 7) {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          } else {
+            // Shifted by two fields
+            newObject.setString(i + 2, value.get());
+          }
+        }
+      }
+
+      // Now deal with new fields.
+      // if CubicLinear => LMTDMassFlow, otherwise default to PercentDischargedLMTD/PercentChargedLMTD for discharge/charge respectively
+      // (Adapted from https://github.com/NREL/EnergyPlus/pull/7339/commits/941a6703227fe716e9133c5d3c48b06c5f4ce4aa#diff-6bcecd46a03668bc5e9998616e6e8066R476)
+      auto cubicLinearIddObject = idd_2_8_1.getObject("OS:Curve:QuadraticLinear");
+
+      for (std::pair<int, int>& : {{6,6}, {7, 8})
+      auto dischargingCurveHandle = object.getString(6);
+      OS_ASSERT(dischargingCurveHandle);
+      auto dischargingCurve = idf_2_8_1.getObject(toUUID(dischargingCurveHandle.get()));
+      OS_ASSERT(dischargingCurve);
+      if (dischargingCurve->iddObject() == cubicLinearIddObject) {
+        newObject.setString(6, "LMTDMassFlow");
+      } else {
+        newObject.setString(6, "PercentDischargedLMTD");
+      }
+
+      auto chargingCurveHandle = object.getString(6);
+      OS_ASSERT(chargingCurveHandle);
+      auto chargingCurve = idf_2_8_1.getObject(toUUID(chargingCurveHandle.get()));
+      OS_ASSERT(chargingCurve);
+      if (chargingCurve->iddObject() == cubicLinearIddObject) {
+        newObject.setString(8, "LMTDMassFlow");
+      } else {
+        newObject.setString(8, "PercentChargedLMTD");
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     } else {
       ss << object;
     }
