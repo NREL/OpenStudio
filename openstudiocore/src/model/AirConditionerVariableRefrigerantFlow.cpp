@@ -2060,25 +2060,27 @@ namespace detail {
     {
       if( plant->demandComponent(node.handle()) )
       {
-        bool success = StraightComponent_Impl::addToNode(node);
-        if (success) {
-          // If everything went well, then switch the condenser type
-          setCondenserType("WaterCooled");
-          return success;
-        }
+        // bool success = StraightComponent_Impl::addToNode(node);
+        // if (success) {
+        // // If everything went well, then switch the condenser type
+        //   setCondenserType("WaterCooled");
+        //   return success;
+        // }
+        return StraightComponent_Impl::addToNode(node);
       }
     }
 
     return false;
   }
 
+  // This override is rendered moot now.
   bool AirConditionerVariableRefrigerantFlow_Impl::removeFromLoop()
   {
     // Disconnect the component
     bool ok = StraightComponent_Impl::removeFromLoop();
 
-    // Switch the condenser type to "AirCooled"
-    this->setCondenserType("AirCooled");
+    // Don't Switch the condenser type to "AirCooled"
+    // this->setCondenserType("AirCooled");
     return ok;
   }
 
