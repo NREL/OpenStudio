@@ -3279,11 +3279,11 @@ bool AirConditionerVariableRefrigerantFlow::setCondenserType(const std::string& 
   return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setCondenserType(condenserType);
 }
 
-bool AirConditionerVariableRefrigerantFlow_Impl::isCondenserTypeDefaulted() const {
+bool AirConditionerVariableRefrigerantFlow::isCondenserTypeDefaulted() const {
   return getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->isCondenserTypeDefaulted();
 }
 
-void AirConditionerVariableRefrigerantFlow_Impl::resetCondenserType() {
+void AirConditionerVariableRefrigerantFlow::resetCondenserType() {
   getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->resetCondenserType();
 }
 
