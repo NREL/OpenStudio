@@ -79,6 +79,8 @@ class ConstructionsInspectorView : public ModelObjectInspectorView
 
     void showConstructionInspector(const openstudio::model::ModelObject & modelObject);
 
+    void showAirBoundaryInspector(const openstudio::model::ModelObject & modelObject);
+
     void showCfactorUndergroundWallInspector(const openstudio::model::ModelObject & modelObject);
 
     void showFfactorGroundFloorInspector(const openstudio::model::ModelObject & modelObject);

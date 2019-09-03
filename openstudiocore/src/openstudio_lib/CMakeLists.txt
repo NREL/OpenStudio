@@ -27,6 +27,8 @@ set(${target_name}_SRC
   ConstructionFfactorGroundFloorInspectorView.hpp
   ConstructionInspectorView.cpp
   ConstructionInspectorView.hpp
+  ConstructionAirBoundaryInspectorView.cpp
+  ConstructionAirBoundaryInspectorView.hpp
   ConstructionInternalSourceInspectorView.cpp
   ConstructionInternalSourceInspectorView.hpp
   ConstructionObjectVectorController.cpp
@@ -483,6 +485,7 @@ set(${target_name}_moc
   ConstructionCfactorUndergroundWallInspectorView.hpp
   ConstructionFfactorGroundFloorInspectorView.hpp
   ConstructionInspectorView.hpp
+  ConstructionAirBoundaryInspectorView.hpp
   ConstructionInternalSourceInspectorView.hpp
   ConstructionObjectVectorController.hpp
   ConstructionsController.hpp

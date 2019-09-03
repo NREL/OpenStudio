@@ -36,6 +36,7 @@
 #include "../model/ComponentData.hpp"
 #include "../model/ComponentData_Impl.hpp"
 #include "../model/Construction.hpp"
+#include "../model/ConstructionAirBoundary.hpp"
 #include "../model/ConstructionBase.hpp"
 #include "../model/ConstructionBase_Impl.hpp"
 #include "../model/ConstructionWithInternalSource.hpp"
@@ -64,6 +65,9 @@ void ConstructionsController::onAddObject(const openstudio::IddObjectType& iddOb
     case IddObjectType::OS_Construction:
       openstudio::model::Construction(this->model());
       break;
+    case IddObjectType::OS_Construction_AirBoundary:
+      openstudio::model::ConstructionAirBoundary(this->model());
+      break;      
     case IddObjectType::OS_Construction_InternalSource:
       openstudio::model::ConstructionWithInternalSource(this->model());
       break;

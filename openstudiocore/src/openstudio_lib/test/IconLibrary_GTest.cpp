@@ -144,6 +144,7 @@ TEST_F(OpenStudioLibFixture, IconLibrary_MiniIcon)
   iddObjectTypes.push_back(IddObjectType::OS_Coil_Heating_Gas);
   iddObjectTypes.push_back(IddObjectType::OS_Coil_Heating_Water);
   iddObjectTypes.push_back(IddObjectType::OS_Construction);
+  iddObjectTypes.push_back(IddObjectType::OS_Construction_AirBoundary);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_CfactorUndergroundWall);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_FfactorGroundFloor);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_InternalSource);

@@ -218,6 +218,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Building).value()] = new QPixmap(":images/mini_icons/building.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_BuildingStory).value()] = new QPixmap(":images/mini_icons/building_story.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Construction).value()] = new QPixmap(":images/mini_icons/construction.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Construction_AirBoundary).value()] = new QPixmap(":images/mini_icons/construction_air_boundary.png");  
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Construction_CfactorUndergroundWall).value()] = new QPixmap(":images/mini_icons/construction_undergnd.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Construction_FfactorGroundFloor).value()] = new QPixmap(":images/mini_icons/construction_gnd.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Construction_InternalSource).value()] = new QPixmap(":images/mini_icons/construct_inter_source.png");
