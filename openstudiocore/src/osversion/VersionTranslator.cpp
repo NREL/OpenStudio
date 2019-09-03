@@ -4589,33 +4589,46 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
       }
 
       // Now deal with new fields.
-      // if CubicLinear => LMTDMassFlow, otherwise default to FractionDischargedLMTD/FractionChargedLMTD for discharge/charge respectively
-      // (Adapted from https://github.com/NREL/EnergyPlus/pull/7339/files#diff-6bcecd46a03668bc5e9998616e6e8066R476)
+      // From https://github.com/NREL/EnergyPlus/pull/7339/files#diff-6bcecd46a03668bc5e9998616e6e8066R476, E+ transition rules
+      // if QuadraticLinear => FractionDischargedLMTD/FractionChargedLMTD for discharge/charge respectively
+      // if CubicLinear => LMTDMassFlow
+      // else, does something wrong.
+      //
+      // OpenStudio doesn't wrap CubicLinear. I doubt many people were using TableMultiVariableLookup and probably wouldn't more right to set that as
+      // LMTDMassFlow, so let's just do ahead and set everything to Fraction(Dis)ChargedLMTD
+
       // DischargingCurve was in field 6. New object 6 is the Discharging Specifications, 7 is the Discharging Curve
-      boost::optional<std::string> dischargingCurveHandle = object.getString(6);
-      OS_ASSERT(dischargingCurveHandle);
-      boost::optional<IdfObject>  dischargingCurve = idf_2_8_1.getObject(toUUID(dischargingCurveHandle.get()));
-      OS_ASSERT(dischargingCurve);
-      IddObject dischargingCurveIddObject = dischargingCurve->iddObject();
-      std::string dischargingCurveIddObjectName = dischargingCurveIddObject.name();
-      if (openstudio::istringEqual(dischargingCurveIddObjectName, "OS:Curve:CubicLinear")) {
-        newObject.setString(6, "LMTDMassFlow");
-      } else {
-        newObject.setString(6, "FractionDischargedLMTD");
-      }
+      newObject.setString(6, "FractionDischargedLMTD");
+      /*
+       *boost::optional<std::string> dischargingCurveHandle = object.getString(6);
+       *OS_ASSERT(dischargingCurveHandle);
+       *boost::optional<IdfObject>  dischargingCurve = idf_2_8_1.getObject(toUUID(dischargingCurveHandle.get()));
+       *OS_ASSERT(dischargingCurve);
+       *IddObject dischargingCurveIddObject = dischargingCurve->iddObject();
+       *std::string dischargingCurveIddObjectName = dischargingCurveIddObject.name();
+       *if (openstudio::istringEqual(dischargingCurveIddObjectName, "OS:Curve:QuadraticLinear")) {
+       *  newObject.setString(6, "FractionDischargedLMTD");
+       *} else {
+       *  newObject.setString(6, "LMTDMassFlow");
+       *}
+       */
 
       // ChargingCurve was in field 7. New Object 8 is the Charging Specifications, 9 is the Charging Curve
-      boost::optional<std::string> chargingCurveHandle = object.getString(7);
-      OS_ASSERT(chargingCurveHandle);
-      boost::optional<IdfObject>  chargingCurve = idf_2_8_1.getObject(toUUID(chargingCurveHandle.get()));
-      OS_ASSERT(chargingCurve);
-      IddObject chargingCurveIddObject = chargingCurve->iddObject();
-      std::string chargingCurveIddObjectName = chargingCurveIddObject.name();
-      if (openstudio::istringEqual(chargingCurveIddObjectName, "OS:Curve:CubicLinear")) {
-        newObject.setString(8, "LMTDMassFlow");
-      } else {
-        newObject.setString(8, "FractionChargedLMTD");
-      }
+      newObject.setString(8, "FractionChargedLMTD");
+
+      /*
+       *boost::optional<std::string> chargingCurveHandle = object.getString(7);
+       *OS_ASSERT(chargingCurveHandle);
+       *boost::optional<IdfObject>  chargingCurve = idf_2_8_1.getObject(toUUID(chargingCurveHandle.get()));
+       *OS_ASSERT(chargingCurve);
+       *IddObject chargingCurveIddObject = chargingCurve->iddObject();
+       *std::string chargingCurveIddObjectName = chargingCurveIddObject.name();
+       *if (openstudio::istringEqual(chargingCurveIddObjectName, "OS:Curve:QuadraticLinear")) {
+       *  newObject.setString(8, "FractionChargedLMTD");
+       *} else {
+       *  newObject.setString(8, "LMTDMassFlow");
+       *}
+       */
 
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
