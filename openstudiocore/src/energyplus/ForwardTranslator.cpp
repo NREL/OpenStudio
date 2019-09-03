@@ -195,8 +195,8 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   // remove subsurfaces from air walls
   for (Surface surface : model.getConcreteModelObjects<Surface>()) {
     if (surface.isAirWall()) {
-      LOG(Warn, "Removing SubSurfaces from air wall Surface '" << surface.nameString() << "'.");
       for (auto& subSurface : surface.subSurfaces()) {
+        LOG(Warn, "Removing SubSurface '" << subSurface.nameString() << "' from air wall Surface '" << surface.nameString() << "'.");
         subSurface.remove();
       }
     }
