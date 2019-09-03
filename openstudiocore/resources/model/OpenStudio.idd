@@ -20954,7 +20954,7 @@ OS:Pump:VariableSpeed,
        \type choice
        \key ManualControl
        \key PressureSetpointControl
-  A9, \field Pump rpm Schedule Name
+  A9, \field Pump RPM Schedule Name
        \note Modifies the rpm of the pump on a time basis. Default is
        \note that the pump is on and runs according to its other operational requirements
        \note specified above.  The schedule is for special pump operations.
