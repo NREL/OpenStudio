@@ -56,6 +56,8 @@
 #include "../model/ConstructionBase_Impl.hpp"
 #include "../model/Construction.hpp"
 #include "../model/Construction_Impl.hpp"
+#include "../model/ConstructionAirBoundary.hpp"
+#include "../model/ConstructionAirBoundary_Impl.hpp"
 #include "../model/AirWallMaterial.hpp"
 #include "../model/AirWallMaterial_Impl.hpp"
 #include "../model/AdditionalProperties.hpp"
@@ -697,22 +699,14 @@ namespace gbxml {
 
       // if air wall
       if (surfaceType.contains("Air")){
-        boost::optional<model::Construction> airWall;
+        boost::optional<model::ConstructionAirBoundary> airWall;
 
-        for (const auto& construction : model.getConcreteModelObjects<model::Construction>()){
-          if ((construction.numLayers() == 1) && (construction.isModelPartition())) {
-            model::MaterialVector layers = construction.layers();
-            OS_ASSERT(layers.size() == 1u);
-            if (layers[0].optionalCast<model::AirWallMaterial>()){
-              airWall = construction;
-              break;
-            }
-          }
+        for (const auto& construction : model.getConcreteModelObjects<model::ConstructionAirBoundary>()){
+          airWall = construction;
+          break;
         }
         if (!airWall){
-          airWall = model::Construction(model);
-          model::AirWallMaterial airWallMaterial(model);
-          airWall->setLayer(airWallMaterial);
+          airWall = model::ConstructionAirBoundary(model);
         }
         surface.setConstruction(*airWall);
 
@@ -1024,22 +1018,14 @@ namespace gbxml {
 
     // if air wall
     if (openingType.contains("Air")){
-      boost::optional<model::Construction> airWall;
+      boost::optional<model::ConstructionAirBoundary> airWall;
 
-      for (const auto& construction : model.getConcreteModelObjects<model::Construction>()){
-        if ((construction.numLayers() == 1) && (construction.isModelPartition())) {
-          model::MaterialVector layers = construction.layers();
-          OS_ASSERT(layers.size() == 1u);
-          if (layers[0].optionalCast<model::AirWallMaterial>()){
-            airWall = construction;
-            break;
-          }
-        }
+      for (const auto& construction : model.getConcreteModelObjects<model::ConstructionAirBoundary>()) {
+        airWall = construction;
+        break;
       }
       if (!airWall){
-        airWall = model::Construction(model);
-        model::AirWallMaterial airWallMaterial(model);
-        airWall->setLayer(airWallMaterial);
+        airWall = model::ConstructionAirBoundary(model);
       }
       subSurface.setConstruction(*airWall);
 
