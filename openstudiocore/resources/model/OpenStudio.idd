@@ -26232,7 +26232,7 @@ OS:ThermalStorage:Ice:Detailed,
        \memo includes smaller containers filled with water that are placed in a larger
        \memo tank or series of tanks.
        \memo The model uses polynomial equations to describe the system performance.
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
   A2 , \field Name
@@ -26267,7 +26267,7 @@ OS:ThermalStorage:Ice:Detailed,
        \required-field
        \object-list QuadraticLinearCurves
        \object-list CubicLinearCurves
-       \object-list UniVariateTables
+       \object-list BiVariateTables
   A8 , \field Charging Curve Variable Specifications
        \required-field
        \type choice
@@ -26280,7 +26280,7 @@ OS:ThermalStorage:Ice:Detailed,
        \required-field
        \object-list QuadraticLinearCurves
        \object-list CubicLinearCurves
-       \object-list UniVariateTables
+       \object-list BiVariateTables
   N2 , \field Timestep of the Curve Data
        \units hr
        \required-field
