@@ -22458,9 +22458,7 @@ ZoneControl:Thermostat,
    \memo Define the Thermostat settings for a zone or list of zones.
    \memo If you use a ZoneList in the Zone or ZoneList name field then this definition applies
    \memo to all the zones in the ZoneList.
-   \extensible:2
    \min-fields 5
-   \max-fields 11
   A1 , \field Name
        \required-field
        \reference ZoneControlThermostaticNames
@@ -22482,13 +22480,52 @@ ZoneControl:Thermostat,
        \key ThermostatSetpoint:SingleCooling
        \key ThermostatSetpoint:SingleHeatingOrCooling
        \key ThermostatSetpoint:DualSetpoint
-       \begin-extensible
-  A5 ; \field Control 1 Name
+  A5 , \field Control 1 Name
        \note Control names are names of individual control objects (e.g. ThermostatSetpoint:SingleHeating)
        \note Schedule values in these objects list actual setpoint temperatures for the control types
        \required-field
        \type object-list
        \object-list ControlTypeNames
+  A6 , \field Control 2 Object Type
+       \type choice
+       \key ThermostatSetpoint:SingleHeating
+       \key ThermostatSetpoint:SingleCooling
+       \key ThermostatSetpoint:SingleHeatingOrCooling
+       \key ThermostatSetpoint:DualSetpoint
+  A7 , \field Control 2 Name
+       \note Control names are names of individual control objects (e.g. ThermostatSetpoint:SingleHeating)
+       \note Schedule values in these objects list actual setpoint temperatures for the control types
+       \type object-list
+       \object-list ControlTypeNames
+  A8 , \field Control 3 Object Type
+       \type choice
+       \key ThermostatSetpoint:SingleHeating
+       \key ThermostatSetpoint:SingleCooling
+       \key ThermostatSetpoint:SingleHeatingOrCooling
+       \key ThermostatSetpoint:DualSetpoint
+  A9 , \field Control 3 Name
+       \note Control names are names of individual control objects (e.g. ThermostatSetpoint:SingleHeating)
+       \note Schedule values in these objects list actual setpoint temperatures for the control types
+       \type object-list
+       \object-list ControlTypeNames
+  A10, \field Control 4 Object Type
+       \type choice
+       \key ThermostatSetpoint:SingleHeating
+       \key ThermostatSetpoint:SingleCooling
+       \key ThermostatSetpoint:SingleHeatingOrCooling
+       \key ThermostatSetpoint:DualSetpoint
+  A11, \field Control 4 Name
+       \note Control names are names of individual control objects (e.g. ThermostatSetpoint:SingleHeating)
+       \note Schedule values in these objects list actual setpoint temperatures for the control types
+       \type object-list
+       \object-list ControlTypeNames
+  N1 ; \field Temperature Difference Between Cutout And Setpoint
+       \note This optional choice field provides a temperature difference between cut-out temperature and
+       \note setpoint. The difference is used to adjust to heating or cooling setpoint based on control types.
+       \units deltaC
+       \type real
+       \minimum 0.0
+       \default 0.0
 
 ZoneControl:Thermostat:OperativeTemperature,
        \memo This object can be used with the ZoneList option on a thermostat or with one

@@ -623,12 +623,17 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     {
       if( thermostat->iddObjectType() == ZoneControlThermostatStagedDualSetpoint::iddObjectType() )
       {
+        // This one we translate already
         translateAndMapModelObject(thermostat.get());
       } else {
+
+        // This is a OS:ThermostatSetpoint:DualSetpoint as it's the only other choice.
+        ThermostatSetpointDualSetpoint dualSetpoint = thermostat->cast<ThermostatSetpointDualSetpoint>();
+
         auto createZoneControlThermostat = [&]() {
           IdfObject zoneControlThermostat(openstudio::IddObjectType::ZoneControl_Thermostat);
-          zoneControlThermostat.setString(ZoneControl_ThermostatFields::Name,modelObject.name().get() + " Thermostat");
-          zoneControlThermostat.setString(ZoneControl_ThermostatFields::ZoneorZoneListName,modelObject.name().get());
+          zoneControlThermostat.setString(ZoneControl_ThermostatFields::Name, modelObject.name().get() + " Thermostat");
+          zoneControlThermostat.setString(ZoneControl_ThermostatFields::ZoneorZoneListName, modelObject.name().get());
           m_idfObjects.push_back(zoneControlThermostat);
 
           // Need to handle the control type base don thermostat type (1: Single heating, 2: single cooling, 4: Dual setpoint)
@@ -648,31 +653,42 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
           scheduleTypeLimits.setString(2,"4");
           scheduleTypeLimits.setString(3,"DISCRETE");
 
-          zoneControlThermostat.setString(ZoneControl_ThermostatFields::ControlTypeScheduleName,scheduleCompact.name().get());
+          zoneControlThermostat.setString(ZoneControl_ThermostatFields::ControlTypeScheduleName, scheduleCompact.name().get());
 
-          if( boost::optional<IdfObject> idfThermostat = translateAndMapModelObject(thermostat.get()) )
+          if( boost::optional<IdfObject> idfThermostat = translateAndMapModelObject(dualSetpoint) )
           {
-            StringVector values(zoneControlThermostat.iddObject().properties().numExtensible);
-            values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat->iddObject().name();
-            values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat->name().get();
-            IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+            // TODO: JM 2019-09-04 switch back to an extensible object once/if https://github.com/NREL/EnergyPlus/issues/7484 is addressed and the
+            // 'Temperature Difference Between Cutout And Setpoint' field is moved before the extensible fields
+            // For now, we revert to a non extensible object, so we can still write that field
+
+            //StringVector values(zoneControlThermostat.iddObject().properties().numExtensible);
+            //values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat->iddObject().name();
+            //values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat->name().get();
+            //IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+
+            zoneControlThermostat.setString(ZoneControl_ThermostatFields::Control1ObjectType, idfThermostat->iddObject().name());
+            zoneControlThermostat.setString(ZoneControl_ThermostatFields::Control1ObjectName, idfThermostat->name().get());
+
             if (idfThermostat->iddObject().name() == "ThermostatSetpoint:SingleHeating" ) {
               scheduleCompact.setString(5, "1");
             } else if (idfThermostat->iddObject().name() == "ThermostatSetpoint:SingleCooling" ) {
               scheduleCompact.setString(5, "2");
             } else {
+              // DualSetpoint
               scheduleCompact.setString(5, "4");
+            }
+
+            // Thermostat's Temperature Difference Between Cutout And Setpoint is placed here on the ZoneControl:Thermostat
+            if (!dualSetpoint.isTemperatureDifferenceBetweenCutoutAndSetpointDefaulted()) {
+              zoneControlThermostat.setDouble(ZoneControl_ThermostatFields::TemperatureDifferenceBetweenCutoutAndSetpoint,
+                                              dualSetpoint.temperatureDifferenceBetweenCutoutAndSetpoint());
             }
           }
         };
 
         // Only translate ThermostatSetpointDualSetpoint if there is at least one schedule attached
         // The translation to SingleHeating, SingleCooling, or DualSetpoint as appropriate is handled in ForwardTranslateThermostatSetpointDualSetpoint
-        if( auto dualSetpoint = thermostat->optionalCast<ThermostatSetpointDualSetpoint>() ) {
-          if( dualSetpoint->heatingSetpointTemperatureSchedule() || dualSetpoint->coolingSetpointTemperatureSchedule() ) {
-            createZoneControlThermostat();
-          }
-        } else {
+        if( dualSetpoint.heatingSetpointTemperatureSchedule() || dualSetpoint.coolingSetpointTemperatureSchedule() ) {
           createZoneControlThermostat();
         }
       }
