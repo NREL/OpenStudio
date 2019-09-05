@@ -2396,7 +2396,7 @@ namespace detail {
     ScheduleConstant schedule(model);
     schedule.setValue(fraction);
 
-    return setSequentialCoolingFractionSchedule(equipment, schedule);
+    return setSequentialCoolingFraction(equipment, schedule);
   }
 
   bool ThermalZone_Impl::setSequentialCoolingFraction(const ModelObject & equipment, const Schedule& schedule)
