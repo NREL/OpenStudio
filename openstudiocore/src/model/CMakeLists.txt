@@ -434,6 +434,9 @@ set(${target_name}_src
   Construction.hpp
   Construction_Impl.hpp
   Construction.cpp
+  ConstructionAirBoundary.hpp
+  ConstructionAirBoundary_Impl.hpp
+  ConstructionAirBoundary.cpp  
   ConstructionBase.hpp
   ConstructionBase_Impl.hpp
   ConstructionBase.cpp
@@ -1761,6 +1764,7 @@ set(${target_name}_test_src
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
   test/Construction_GTest.cpp
+  test/ConstructionAirBoundary_GTest.cpp
   test/ConstructionWithInternalSource_GTest.cpp
   test/ControllerOutdoorAir_GTest.cpp
   test/ControllerMechanicalVentilation_GTest.cpp
