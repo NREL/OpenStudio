@@ -87,6 +87,7 @@
 #include "DesignSpecificationOutdoorAir_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "ScheduleConstant.hpp"
 #include "AirLoopHVACZoneSplitter.hpp"
 #include "AirLoopHVACZoneSplitter_Impl.hpp"
 #include "AirLoopHVACZoneMixer.hpp"
