@@ -26294,7 +26294,7 @@ OS:ThermalStorage:Ice:Detailed,
        \memo includes smaller containers filled with water that are placed in a larger
        \memo tank or series of tanks.
        \memo The model uses polynomial equations to describe the system performance.
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
   A2 , \field Name
@@ -26317,18 +26317,32 @@ OS:ThermalStorage:Ice:Detailed,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A6 , \field Discharging Curve
+  A6 , \field Discharging Curve Variable Specifications
+       \required-field
+       \type choice
+       \key FractionChargedLMTD
+       \key FractionDischargedLMTD
+       \key LMTDMassFlow
+       \key LMTDFractionCharged
+  A7 , \field Discharging Curve
        \type object-list
        \required-field
        \object-list QuadraticLinearCurves
        \object-list CubicLinearCurves
-       \object-list UniVariateTables
-  A7 , \field Charging Curve
+       \object-list BiVariateTables
+  A8 , \field Charging Curve Variable Specifications
+       \required-field
+       \type choice
+       \key FractionChargedLMTD
+       \key FractionDischargedLMTD
+       \key LMTDMassFlow
+       \key LMTDFractionCharged
+  A9 , \field Charging Curve
        \type object-list
        \required-field
        \object-list QuadraticLinearCurves
        \object-list CubicLinearCurves
-       \object-list UniVariateTables
+       \object-list BiVariateTables
   N2 , \field Timestep of the Curve Data
        \units hr
        \required-field
@@ -26349,7 +26363,7 @@ OS:ThermalStorage:Ice:Detailed,
        \note parameters input above is inappropriate and not advised.
        \units C
        \required-field
-  A8 ; \field Thaw Process Indicator
+  A10 ; \field Thaw Process Indicator
        \note This field determines whether the system uses internal or external melt
        \note during discharging.  This will then have an impact on charging performance.
        \type choice

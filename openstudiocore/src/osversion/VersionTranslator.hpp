@@ -38,6 +38,9 @@
 #include "../utilities/idd/IddFile.hpp"
 #include "../utilities/idd/IddFileAndFactoryWrapper.hpp"
 
+#include "../utilities/idf/IdfObject.hpp"
+#include "../utilities/idd/IddObject.hpp"
+
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
@@ -45,6 +48,9 @@
 #include <boost/functional.hpp>
 
 #include <map>
+#include <istream>
+#include <string>
+#include <set>
 
 namespace openstudio {
   class ProgressBar;
