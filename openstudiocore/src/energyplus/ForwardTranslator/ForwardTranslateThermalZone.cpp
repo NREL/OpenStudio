@@ -667,7 +667,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
             //IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
 
             zoneControlThermostat.setString(ZoneControl_ThermostatFields::Control1ObjectType, idfThermostat->iddObject().name());
-            zoneControlThermostat.setString(ZoneControl_ThermostatFields::Control1ObjectName, idfThermostat->name().get());
+            zoneControlThermostat.setString(ZoneControl_ThermostatFields::Control1Name, idfThermostat->name().get());
 
             if (idfThermostat->iddObject().name() == "ThermostatSetpoint:SingleHeating" ) {
               scheduleCompact.setString(5, "1");

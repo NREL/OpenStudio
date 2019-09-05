@@ -143,6 +143,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneControlThermostatStag
     idfObject.setDouble(ZoneControl_Thermostat_StagedDualSetpointFields::Stage4CoolingTemperatureOffset,value.get());
   }
 
+  // TODO: this is probably not needed anymore
   // This is a workaround for EnergyPlus 8.1 bug
   if( _zone && _heatingSchedule && _coolingSchedule ) {
     std::string baseName = _zone->name().get();
@@ -175,10 +176,17 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneControlThermostatStag
     idfThermostat.setString(ThermostatSetpoint_DualSetpointFields::HeatingSetpointTemperatureScheduleName,_heatingSchedule->name().get());
     idfThermostat.setString(ThermostatSetpoint_DualSetpointFields::CoolingSetpointTemperatureScheduleName,_coolingSchedule->name().get());
 
-    StringVector values(zoneControlThermostat.iddObject().properties().numExtensible);
-    values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat.iddObject().name();
-    values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat.name().get();
-    IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+    // TODO: JM 2019-09-04 switch back to an extensible object once/if https://github.com/NREL/EnergyPlus/issues/7484 is addressed and the
+    // 'Temperature Difference Between Cutout And Setpoint' field is moved before the extensible fields
+    // For now, we revert to a non extensible object, so we can still write that field
+    //StringVector values(zoneControlThermostat.iddObject().properties().numExtensible);
+    //values[ZoneControl_ThermostatExtensibleFields::ControlObjectType] = idfThermostat.iddObject().name();
+    //values[ZoneControl_ThermostatExtensibleFields::ControlName] = idfThermostat.name().get();
+    //IdfExtensibleGroup eg = zoneControlThermostat.pushExtensibleGroup(values);
+
+    zoneControlThermostat.setString(ZoneControl_ThermostatFields::Control1ObjectType, idfThermostat.iddObject().name());
+    zoneControlThermostat.setString(ZoneControl_ThermostatFields::Control1Name, idfThermostat.name().get());
+
   }
 
   return boost::optional<IdfObject>(idfObject);
