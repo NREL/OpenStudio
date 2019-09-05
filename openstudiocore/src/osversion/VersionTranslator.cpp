@@ -4547,7 +4547,7 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
 
         // Copy non extensible fields in place
         for (size_t i = 0; i < object.numNonextensibleFields(); ++i) {
-          if (value = object.getString(i)) {
+          if ((value = object.getString(i))) {
             newObject.setString(i, value.get());
           }
         }
@@ -4558,7 +4558,7 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
           for (size_t i = 0; i < 5; ++i) {
             if (i > 2) {
               boost::optional<double> fraction;
-              if (fraction = eg.getDouble(i)) {
+              if ((fraction = eg.getDouble(i))) {
                 auto iddObject = idd_2_9_0.getObject("OS:Schedule:Constant");
                 IdfObject scheduleConstant(iddObject.get());
                 std::string uuid = toString(createUUID());
@@ -4569,7 +4569,7 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
                 boost::optional<IdfObject> _eq = idf_2_8_1.getObject(toUUID(eg.getString(0).get()));
                 if (_eq) {
                    // name of zone equipment plus group index
-                    scheduleConstant.setString(1, _eq.nameString() + " " + toString(i));
+                    scheduleConstant.setString(1, _eq->nameString() + " " + toString(i));
                 }
 
                 scheduleConstant.setString(2, "");
