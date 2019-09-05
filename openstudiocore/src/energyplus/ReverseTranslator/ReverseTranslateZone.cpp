@@ -175,36 +175,98 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
         }
         if( zoneControlThermostatfound )
         {
-          std::vector<IdfExtensibleGroup> extensibleGroups = _zoneControlThermostat.extensibleGroups();
-          for( const auto & extensibleGroup : extensibleGroups )
-          {
-            boost::optional<std::string> thermostatType = extensibleGroup.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType);
-            boost::optional<std::string> thermostatName = extensibleGroup.getString(ZoneControl_ThermostatExtensibleFields::ControlName);
 
-            if( thermostatName && thermostatType )
-            {
-              boost::optional<WorkspaceObject> _thermostat
-               = workspace.getObjectByTypeAndName(IddObjectType(thermostatType.get()),thermostatName.get());
+          // We only support ThermostatSetpoint:DualSetpoint
 
-              if( _thermostat )
-              {
-                boost::optional<ModelObject> thermostat = translateAndMapWorkspaceObject(_thermostat.get());
-                if( thermostat )
+          // TODO: JM 2019-09-04 switch back to an extensible object once/if https://github.com/NREL/EnergyPlus/issues/7484 is addressed and the
+          // 'Temperature Difference Between Cutout And Setpoint' field is moved before the extensible fields
+          // For now, we revert to a non extensible object, so we can still write that field
+
+/*
+ *          std::vector<IdfExtensibleGroup> extensibleGroups = _zoneControlThermostat.extensibleGroups();
+ *          for( const auto & extensibleGroup : extensibleGroups )
+ *          {
+ *            boost::optional<std::string> thermostatType = extensibleGroup.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType);
+ *            boost::optional<std::string> thermostatName = extensibleGroup.getString(ZoneControl_ThermostatExtensibleFields::ControlName);
+ *
+ *            if( thermostatName && thermostatType )
+ *            {
+ *              boost::optional<WorkspaceObject> _thermostat
+ *               = workspace.getObjectByTypeAndName(IddObjectType(thermostatType.get()),thermostatName.get());
+ *
+ *              if( _thermostat )
+ *              {
+ *                boost::optional<ModelObject> thermostat = translateAndMapWorkspaceObject(_thermostat.get());
+ *                if( thermostat )
+ *                {
+ *                  if( boost::optional<ThermostatSetpointDualSetpoint> thermostatSetpointDualSetpoint
+ *                      = thermostat->optionalCast<ThermostatSetpointDualSetpoint>() )
+ *                  {
+ *                    thermalZone.setThermostatSetpointDualSetpoint(thermostatSetpointDualSetpoint.get());
+ *                  }
+ *                }
+ *              }
+ *            }
+ *          }
+ */
+
+          auto checkIfDualSetpointAndTranslate = [&](boost::optional<std::string>& _thermostatType, boost::optional<std::string>& _thermostatName) {
+            if( _thermostatName && _thermostatType ) {
+              boost::optional<WorkspaceObject> _i_thermostat = workspace.getObjectByTypeAndName(IddObjectType(_thermostatType.get()),
+                                                                                                _thermostatName.get());
+              if (_i_thermostat) {
+                boost::optional<ModelObject> _m_thermostat = translateAndMapWorkspaceObject(_i_thermostat.get());
+                if( _m_thermostat )
                 {
-                  if( boost::optional<ThermostatSetpointDualSetpoint> thermostatSetpointDualSetpoint
-                      = thermostat->optionalCast<ThermostatSetpointDualSetpoint>() )
-                  {
-                    thermalZone.setThermostatSetpointDualSetpoint(thermostatSetpointDualSetpoint.get());
+                  if( boost::optional<ThermostatSetpointDualSetpoint> _thermostatSetpointDualSetpoint
+                      = _m_thermostat->optionalCast<ThermostatSetpointDualSetpoint>() ) {
+                    thermalZone.setThermostatSetpointDualSetpoint(_thermostatSetpointDualSetpoint.get());
+
+                    // Reverse Translate 'Temperature Difference Between Cutout And Setpoint' from ZoneControl:Thermostat
+                    // by placing it on the ThermostatSetpoint:DualSetpoint object
+                    if (boost::optional<double> _cutOutTemp
+                          = _zoneControlThermostat.getDouble(ZoneControl_ThermostatFields::TemperatureDifferenceBetweenCutoutAndSetpoint))
+                    {
+                      _thermostatSetpointDualSetpoint->setTemperatureDifferenceBetweenCutoutAndSetpoint(_cutOutTemp.get());
+                    }
                   }
                 }
               }
             }
+          };
+          // Group 1
+          {
+            boost::optional<std::string> thermostatType = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control1ObjectType);
+            boost::optional<std::string> thermostatName = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control1Name);
+            checkIfDualSetpointAndTranslate(thermostatType, thermostatName);
           }
+
+          // Group 2
+          {
+            boost::optional<std::string> thermostatType = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control2ObjectType);
+            boost::optional<std::string> thermostatName = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control2Name);
+            checkIfDualSetpointAndTranslate(thermostatType, thermostatName);
+          }
+
+          // Group 3
+          {
+            boost::optional<std::string> thermostatType = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control3ObjectType);
+            boost::optional<std::string> thermostatName = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control3Name);
+            checkIfDualSetpointAndTranslate(thermostatType, thermostatName);
+          }
+
+          // Group 4
+          {
+            boost::optional<std::string> thermostatType = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control4ObjectType);
+            boost::optional<std::string> thermostatName = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control4Name);
+            checkIfDualSetpointAndTranslate(thermostatType, thermostatName);
+          }
+
           break;
-        }
-      }
-    }
-  }
+        } // End if zoneControlThermostatFound
+      }  // End if ZoneorZoneListName exists on ZoneControl:Thermostat object
+    } // End Loop on each ZoneControlThermostats
+  } // End if _idfZoneName
 
   // Zone Equipment
 /*
@@ -240,4 +302,3 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
 } // energyplus
 
 } // openstudio
-
