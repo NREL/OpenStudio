@@ -2383,7 +2383,7 @@ namespace detail {
   {
     return zoneHVACEquipmentList().sequentialHeatingFraction(equipment);
   }
-  
+
   boost::optional<Schedule> ThermalZone_Impl::sequentialHeatingFractionSchedule(const ModelObject& equipment) const
   {
     return zoneHVACEquipmentList().sequentialHeatingFractionSchedule(equipment);
@@ -2391,9 +2391,13 @@ namespace detail {
 
   bool ThermalZone_Impl::setSequentialCoolingFraction(const ModelObject & equipment, double fraction)
   {
-    return zoneHVACEquipmentList().setSequentialCoolingFraction(equipment, fraction);
+    Model model = this->model();
+    ScheduleConstant schedule(model);
+    schedule.setValue(fraction);
+
+    return setSequentialCoolingFractionSchedule(equipment, schedule);
   }
-  
+
   bool ThermalZone_Impl::setSequentialCoolingFraction(const ModelObject & equipment, const Schedule& schedule)
   {
     return zoneHVACEquipmentList().setSequentialCoolingFraction(equipment, schedule);
@@ -2401,9 +2405,13 @@ namespace detail {
 
   bool ThermalZone_Impl::setSequentialHeatingFraction(const ModelObject & equipment, double fraction)
   {
-    return zoneHVACEquipmentList().setSequentialHeatingFraction(equipment, fraction);
+    Model model = this->model();
+    ScheduleConstant schedule(model);
+    schedule.setValue(fraction);
+
+    return setSequentialHeatingFraction(equipment, schedule);
   }
-  
+
   bool ThermalZone_Impl::setSequentialHeatingFraction(const ModelObject & equipment, const Schedule& schedule)
   {
     return zoneHVACEquipmentList().setSequentialHeatingFraction(equipment, schedule);

@@ -556,27 +556,11 @@ boost::optional<Schedule> ZoneHVACEquipmentList_Impl::sequentialHeatingFractionS
 
 bool ZoneHVACEquipmentList_Impl::setSequentialCoolingFraction(const ModelObject& equipment, double fraction)
 {
-  boost::optional<WorkspaceExtensibleGroup> eg = getGroupForModelObject(equipment);
-  if (!eg) {
-    LOG(Info, "Cannot set Sequential Cooling Fraction for equipment " << equipment.nameString()
-        << " that isn't part of the ZoneHVACEquipmentList.");
-    return false;
-  }
-  if ( !openstudio::istringEqual(loadDistributionScheme(), "SequentialLoad")) {
-    LOG(Info, "Cannot set Sequential Cooling Fraction for a Load Distribution Scheme other than 'SequentialLoad'");
-    return false;
-  }
-
-  if (coolingPriority(equipment) == 0) {
-    LOG(Info, "Cannot set Sequential Cooling Fraction for an equipment that doesn't have a cooling priority strictly greater than zero.");
-    return false;
-  }
-
   Model model = this->model();
   ScheduleConstant schedule(model);
   schedule.setValue(fraction);
 
-  return eg->setPointer(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName, schedule.handle());
+  return setSequentialCoolingFractionSchedule(equipment, schedule);
 }
 
 bool ZoneHVACEquipmentList_Impl::setSequentialCoolingFraction(const ModelObject& equipment, const Schedule& schedule)
@@ -602,27 +586,11 @@ bool ZoneHVACEquipmentList_Impl::setSequentialCoolingFraction(const ModelObject&
 
 bool ZoneHVACEquipmentList_Impl::setSequentialHeatingFraction(const ModelObject& equipment, double fraction)
 {
-  boost::optional<WorkspaceExtensibleGroup> eg = getGroupForModelObject(equipment);
-  if (!eg) {
-    LOG(Info, "Cannot set Sequential Heating Fraction for equipment " << equipment.nameString()
-        << " that isn't part of the ZoneHVACEquipmentList.");
-    return false;
-  }
-  if ( !openstudio::istringEqual(loadDistributionScheme(), "SequentialLoad")) {
-    LOG(Info, "Cannot set Sequential Heating Fraction for a Load Distribution Scheme other than 'SequentialLoad'");
-    return false;
-  }
-
-  if (heatingPriority(equipment) == 0) {
-    LOG(Info, "Cannot set Sequential Heating Fraction for an equipment that doesn't have a heating priority strictly greater than zero.");
-    return false;
-  }
-
   Model model = this->model();
   ScheduleConstant schedule(model);
   schedule.setValue(fraction);
 
-  return eg->setPointer(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName, schedule.handle());
+  return setSequentialHeatingFraction(equipment, schedule);
 }
 
 bool ZoneHVACEquipmentList_Impl::setSequentialHeatingFraction(const ModelObject& equipment, const Schedule& schedule)
