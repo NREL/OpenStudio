@@ -3595,6 +3595,54 @@ OS:Construction:InternalSource,
        \begin-extensible
        \object-list MaterialNames
 
+OS:Construction:AirBoundary,
+       \memo Indicates an open boundary between two zones. It may be used for base surfaces and fenestration surfaces.
+       \memo When this construction type is used, the Outside Boundary Condition of the surface
+       \memo (or the base surface of a fenestration surface) must be either Surface or Zone.
+       \memo A base surface with OS:Construction:AirBoundary cannot hold any fenestration surfaces.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ConstructionNames
+  A3,  \field Solar and Daylighting Method
+       \note This field controls how the surface is modeled for solar distribution and daylighting calculations.
+       \type choice
+       \key GroupedZones
+       \key InteriorWindow
+       \default GroupedZones
+  A4,  \field Radiant Exchange Method
+       \note This field controls how the surface is modeled for radiant exchange calculations.
+       \type choice
+       \key GroupedZones
+       \key IRTSurface
+       \default GroupedZones
+  A5,  \field Air Exchange Method
+       \note This field controls how air exchange is modeled across this boundary.
+       \type choice
+       \key None
+       \key SimpleMixing
+       \default None
+  N1,  \field Simple Mixing Air Changes per Hour
+       \note If the Air Exchange Method is SimpleMixing then this field specifies the air changes per hour
+       \note using the volume of the smaller zone as the basis.
+       \note If an AirflowNetwork simulation is active this field is ignored.
+       \units 1/hr
+       \type real
+       \minimum 0
+       \default 0.5
+  A6,  \field Simple Mixing Schedule Name
+       \note If the Air Exchange Method is SimpleMixing then this field specifies the air exchange schedule.
+       \note If this field is blank, the schedule is always 1.0.
+       \note If an AirflowNetwork simulation is active this field is ignored.
+       \type object-list
+       \object-list ScheduleNames
+  A7;  \field Surface Rendering Name
+       \type object-list
+       \object-list SurfaceRenderingNames
+
 OS:Construction:WindowDataFile,
        \memo Initiates search of the Window5 data file for a window called Name.
        \url-object
@@ -4974,6 +5022,7 @@ OS:External:File,
        \type choice
        \key Comma
        \key Tab
+       \key Fixed
        \key Space
        \key Semicolon
        \default Comma
@@ -5013,6 +5062,7 @@ OS:Schedule:File,
        \key Comma
        \key Tab
        \key Fixed
+       \key Space
        \key Semicolon
        \default Comma
   A6,  \field Interpolate to Timestep
@@ -15011,6 +15061,7 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \required-field
        \type alpha
        \reference CoolingCoilsDXMultiSpeed
+       \reference DesuperHeatingWaterOnlySources
        \reference AFNCoilNames
        \reference ConnectionObject
   A3 , \field Availability Schedule
@@ -15696,6 +15747,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \required-field
        \reference CoolingCoilsWaterToAirHP
        \reference ConnectionObject
+       \reference DesuperHeatingWaterOnlySources
   A3,  \field Water Inlet Node Name
        \type object-list
        \required-field
@@ -16313,6 +16365,7 @@ OS:Coil:WaterHeating:Desuperheater,
        \required-field
        \type object-list
        \object-list DesuperHeatingCoilSources
+       \object-list DesuperHeatingWaterOnlySources
        \note The name of the DX system used for heat reclaim.
   N6,  \field Water Flow Rate
        \required-field
@@ -17017,6 +17070,7 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \required-field
         \type alpha
         \reference CoolingCoilsDXVariableSpeed
+        \reference DesuperHeatingCoilSources
         \reference ConnectionObject
    A3,  \field Indoor Air Inlet Node Name
         \type object-list
@@ -20954,7 +21008,7 @@ OS:Pump:VariableSpeed,
        \type choice
        \key ManualControl
        \key PressureSetpointControl
-  A9, \field Pump rpm Schedule Name
+  A9, \field Pump RPM Schedule Name
        \note Modifies the rpm of the pump on a time basis. Default is
        \note that the pump is on and runs according to its other operational requirements
        \note specified above.  The schedule is for special pump operations.
@@ -20970,11 +21024,11 @@ OS:Pump:VariableSpeed,
        \object-list ScheduleNames
   A12, \field Minimum RPM Schedule
        \type object-list
-       \units Rotations Per Minute
+       \units rev/min
        \object-list ScheduleNames
   A13, \field Maximum RPM Schedule
        \type object-list
-       \units Rotations Per Minute
+       \units rev/min
        \object-list ScheduleNames
   A14,  \field Zone Name
         \note optional, if used pump losses transfered to zone as internal gains
@@ -22682,9 +22736,17 @@ OS:ThermostatSetpoint:DualSetpoint,
   A3, \field Heating Setpoint Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
-  A4; \field Cooling Setpoint Temperature Schedule Name
+  A4, \field Cooling Setpoint Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
+  A5; \field Temperature Difference Between Cutout And Setpoint
+       \note In EnergyPlus, this field is on the ZoneControl:Thermostat, which will be handled in Forward Translation
+       \note This optional choice field provides a temperature difference between cut-out temperature and
+       \note setpoint. The difference is used to adjust to heating or cooling setpoint based on control types.
+       \units deltaC
+       \type real
+       \minimum 0.0
+       \default 0.0
 
 OS:ZoneControl:Thermostat:StagedDualSetpoint,
   A1, \field Handle

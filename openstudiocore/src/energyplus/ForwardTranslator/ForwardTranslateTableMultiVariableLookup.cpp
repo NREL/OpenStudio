@@ -148,7 +148,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   }
 
   // Independent Variable List Name
-  tableLookup.setString(Table_LookupFields::IndependentVariableListName, s.get());
+  tableLookup.setString(Table_LookupFields::IndependentVariableListName, tableIndependentVariableList.nameString());
 
   // NormalizationReference
   if ((d = modelObject.normalizationReference())) {

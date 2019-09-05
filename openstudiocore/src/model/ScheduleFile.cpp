@@ -131,7 +131,7 @@ namespace detail {
   }
 
   char ScheduleFile_Impl::columnSeparatorChar() const {
-    static std::unordered_map<std::string, char> lookup({ { "Comma", ',' }, { "Tab", '\t' }, { "Fixed", ' ' }, { "Semicolon", ';' } });
+    static std::unordered_map<std::string, char> lookup({ { "Comma", ',' }, { "Tab", '\t' }, {"Fixed", ' ' }, { "Space", ' ' }, { "Semicolon", ';' } });
     boost::optional<std::string> value = getString(OS_Schedule_FileFields::ColumnSeparator, true);
     OS_ASSERT(value);
     auto it = lookup.find(value.get());

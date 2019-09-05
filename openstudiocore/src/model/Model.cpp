@@ -2411,10 +2411,7 @@ void addExampleConstructions(Model& model) {
 
   // Air Wall
 
-  AirWallMaterial airWallMaterial(model);
-  airWallMaterial.setName("Air Wall Material");
-
-  Construction airWall(airWallMaterial);
+  ConstructionAirBoundary airWall(model);
   airWall.setName("Air Wall");
   interiorSurfaceConstructions.setWallConstruction(airWall);
 
@@ -2747,6 +2744,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(ConnectorMixer);
   REGISTER_CONSTRUCTOR(ConnectorSplitter);
   REGISTER_CONSTRUCTOR(Construction);
+  REGISTER_CONSTRUCTOR(ConstructionAirBoundary);
   REGISTER_CONSTRUCTOR(ConstructionWithInternalSource);
   REGISTER_CONSTRUCTOR(ControllerMechanicalVentilation);
   REGISTER_CONSTRUCTOR(ControllerOutdoorAir);
@@ -3232,6 +3230,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(ConnectorMixer);
   REGISTER_COPYCONSTRUCTORS(ConnectorSplitter);
   REGISTER_COPYCONSTRUCTORS(Construction);
+  REGISTER_COPYCONSTRUCTORS(ConstructionAirBoundary);
   REGISTER_COPYCONSTRUCTORS(ConstructionWithInternalSource);
   REGISTER_COPYCONSTRUCTORS(ControllerMechanicalVentilation);
   REGISTER_COPYCONSTRUCTORS(ControllerOutdoorAir);

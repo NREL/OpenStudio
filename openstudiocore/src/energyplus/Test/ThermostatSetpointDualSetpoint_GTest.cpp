@@ -118,11 +118,20 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Two_Schedules)
             cool_sch.name());
 
   IdfObject idf_zone_control = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat)[0];
-  ASSERT_EQ(1u, idf_zone_control.extensibleGroups().size());
-  IdfExtensibleGroup eg = idf_zone_control.extensibleGroups()[0];
-  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(),
+  // TODO: JM 2019-09-04 switch back to an extensible object once/if https://github.com/NREL/EnergyPlus/issues/7484 is addressed and the
+  // 'Temperature Difference Between Cutout And Setpoint' field is moved before the extensible fields
+  /*
+   *ASSERT_EQ(1u, idf_zone_control.extensibleGroups().size());
+   *IdfExtensibleGroup eg = idf_zone_control.extensibleGroups()[0];
+   *ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(),
+   *          idf_tstat.iddObject().name());
+   *ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(),
+   *          idf_tstat.name().get());
+   */
+
+  ASSERT_EQ(idf_zone_control.getString(ZoneControl_ThermostatFields::Control1ObjectType).get(),
             idf_tstat.iddObject().name());
-  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(),
+  ASSERT_EQ(idf_zone_control.getString(ZoneControl_ThermostatFields::Control1Name).get(),
             idf_tstat.name().get());
 
 }
@@ -175,13 +184,21 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Heat_Only)
             heat_sch.name());
 
   IdfObject idf_zone_control = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat)[0];
-  ASSERT_EQ(1u, idf_zone_control.extensibleGroups().size());
-  IdfExtensibleGroup eg = idf_zone_control.extensibleGroups()[0];
-  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(),
-            idf_tstat.iddObject().name() );
-  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(),
-            idf_tstat.name().get() );
+  // TODO: JM 2019-09-04 switch back to an extensible object once/if https://github.com/NREL/EnergyPlus/issues/7484 is addressed and the
+  // 'Temperature Difference Between Cutout And Setpoint' field is moved before the extensible fields
+  /*
+   *ASSERT_EQ(1u, idf_zone_control.extensibleGroups().size());
+   *IdfExtensibleGroup eg = idf_zone_control.extensibleGroups()[0];
+   *ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(),
+   *          idf_tstat.iddObject().name());
+   *ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(),
+   *          idf_tstat.name().get());
+   */
 
+  ASSERT_EQ(idf_zone_control.getString(ZoneControl_ThermostatFields::Control1ObjectType).get(),
+            idf_tstat.iddObject().name());
+  ASSERT_EQ(idf_zone_control.getString(ZoneControl_ThermostatFields::Control1Name).get(),
+            idf_tstat.name().get());
 }
 
 
@@ -232,11 +249,19 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Thermostat_Cool_Only)
             cool_sch.name());
 
   IdfObject idf_zone_control = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat)[0];
-  ASSERT_EQ(1u, idf_zone_control.extensibleGroups().size());
+  // TODO: JM 2019-09-04 switch back to an extensible object once/if https://github.com/NREL/EnergyPlus/issues/7484 is addressed and the
+  // 'Temperature Difference Between Cutout And Setpoint' field is moved before the extensible fields
+  /*
+   *ASSERT_EQ(1u, idf_zone_control.extensibleGroups().size());
+   *IdfExtensibleGroup eg = idf_zone_control.extensibleGroups()[0];
+   *ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(),
+   *          idf_tstat.iddObject().name());
+   *ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(),
+   *          idf_tstat.name().get());
+   */
 
-  IdfExtensibleGroup eg = idf_zone_control.extensibleGroups()[0];
-  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlObjectType).get(),
-            idf_tstat.iddObject().name() );
-  ASSERT_EQ(eg.getString(ZoneControl_ThermostatExtensibleFields::ControlName).get(),
-            idf_tstat.name().get() );
+  ASSERT_EQ(idf_zone_control.getString(ZoneControl_ThermostatFields::Control1ObjectType).get(),
+            idf_tstat.iddObject().name());
+  ASSERT_EQ(idf_zone_control.getString(ZoneControl_ThermostatFields::Control1Name).get(),
+            idf_tstat.name().get());
 }

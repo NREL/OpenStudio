@@ -4522,6 +4522,25 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else if (iddname == "OS:Schedule:FixedInterval") {
+      auto iddObject = idd_2_9_0.getObject("OS:Schedule:FixedInterval");
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 3) {
+            // Schedule Type Limits Name
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     } else if (iddname == "OS:ZoneHVAC:EquipmentList") {
         auto iddObject = idd_2_9_0.getObject("OS:ZoneHVAC:EquipmentList");
         IdfObject newObject(iddObject.get());
