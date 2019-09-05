@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "ScheduleInterval.hpp"
+#include "../utilities/filetypes/CSVFile.hpp"
 
 namespace openstudio {
 
@@ -91,6 +92,10 @@ class MODEL_API ScheduleFile : public ScheduleInterval {
 
   bool isMinutesperItemDefaulted() const;
 
+  /* FIXME! openstudio::TimeSeries timeSeries(unsigned columnIndex) const;*/
+
+  boost::optional<CSVFile> csvFile() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -117,6 +122,8 @@ class MODEL_API ScheduleFile : public ScheduleInterval {
   bool setMinutesperItem(const std::string& minutesperItem);
 
   void resetMinutesperItem();
+
+  /* FIXME! unsigned addTimeSeries(const openstudio::TimeSeries& timeSeries); */
 
   //@}
   /** @name Other */

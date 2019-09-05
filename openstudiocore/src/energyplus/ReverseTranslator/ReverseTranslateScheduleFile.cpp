@@ -79,7 +79,11 @@ OptionalModelObject ReverseTranslator::translateScheduleFile( const WorkspaceObj
   }
 
   if ( OptionalInt oi = workspaceObject.getInt( Schedule_FileFields::NumberofHoursofData ) ) {
-    scheduleFile.setNumberofHoursofData( *oi );
+    scheduleFile.setNumberofHoursofData(*oi);
+  }
+
+  if (OptionalString os = workspaceObject.getString(Schedule_FileFields::ColumnSeparator)) {
+    scheduleFile.setColumnSeparator(*os);
   }
 
   OptionalString os = workspaceObject.getString( Schedule_FileFields::InterpolatetoTimestep );

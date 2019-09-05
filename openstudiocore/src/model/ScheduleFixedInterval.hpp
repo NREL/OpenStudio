@@ -63,6 +63,10 @@ class MODEL_API ScheduleFixedInterval : public ScheduleInterval {
   bool interpolatetoTimestep() const;
 
   bool isInterpolatetoTimestepDefaulted() const;
+  
+  bool translatetoScheduleFile() const;
+  
+  bool isTranslatetoScheduleFileDefaulted() const;
 
   double intervalLength() const;
 
@@ -81,6 +85,10 @@ class MODEL_API ScheduleFixedInterval : public ScheduleInterval {
   bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
   void resetInterpolatetoTimestep();
+  
+  bool setTranslatetoScheduleFile(bool translatetoScheduleFile);
+  
+  void resetTranslatetoScheduleFile();
 
   bool setIntervalLength(double intervalLength);
 

@@ -39,12 +39,6 @@ namespace detail {
 
   class MODEL_API ShadowCalculation_Impl : public ModelObject_Impl {
 
-
-
-
-
-
-
    public:
 
     // constructor
@@ -73,6 +67,10 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    std::string calculationMethod() const;
+
+    bool isCalculationMethodDefaulted() const;
+
     int calculationFrequency() const;
 
     bool isCalculationFrequencyDefaulted() const;
@@ -88,6 +86,10 @@ namespace detail {
     //@}
     /** @name Setters */
     //@{
+
+    bool setCalculationMethod(const std::string& calculationMethod);
+
+    void resetCalculationMethod();
 
     bool setCalculationFrequency(int calculationFrequency);
 

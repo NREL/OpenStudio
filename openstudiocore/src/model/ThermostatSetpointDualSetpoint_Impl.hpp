@@ -79,6 +79,9 @@ namespace detail {
 
     boost::optional<Schedule> coolingSetpointTemperatureSchedule() const;
 
+    double temperatureDifferenceBetweenCutoutAndSetpoint() const;
+    bool isTemperatureDifferenceBetweenCutoutAndSetpointDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -90,6 +93,8 @@ namespace detail {
     bool setCoolingSetpointTemperatureSchedule(Schedule& schedule);
 
     void resetCoolingSetpointTemperatureSchedule();
+
+    bool setTemperatureDifferenceBetweenCutoutAndSetpoint(double deltaT);
 
     //@}
     /** @name Other */

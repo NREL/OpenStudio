@@ -287,7 +287,7 @@ namespace openstudio{
   }
 
   ThreeScene::ThreeScene(const std::string& s)
-    : m_metadata(std::vector<std::string>(), ThreeBoundingBox(0,0,0,0,0,0,0,0,0,0), std::vector<ThreeModelObjectMetadata>()), m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>()))
+    : m_metadata(std::vector<std::string>(), ThreeBoundingBox(0,0,0,0,0,0,0,0,0,0), 0.0, std::vector<ThreeModelObjectMetadata>()), m_sceneObject(ThreeSceneObject("", std::vector<ThreeSceneChild>()))
   {
     Json::Value root;
     Json::Reader reader;
@@ -1712,8 +1712,8 @@ namespace openstudio{
     m_aboveCeilingPlenumHeight.reset();
   }
 
-  ThreeSceneMetadata::ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox, const std::vector<ThreeModelObjectMetadata>& modelObjectMetadata)
-    : m_version("4.3"), m_type("Object"), m_generator("OpenStudio"), m_buildingStoryNames(buildingStoryNames), m_boundingBox(boundingBox), m_modelObjectMetadata(modelObjectMetadata)
+  ThreeSceneMetadata::ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox, double northAxis, const std::vector<ThreeModelObjectMetadata>& modelObjectMetadata)
+    : m_version("4.3"), m_type("Object"), m_generator("OpenStudio"), m_buildingStoryNames(buildingStoryNames), m_boundingBox(boundingBox), m_northAxis(northAxis), m_modelObjectMetadata(modelObjectMetadata)
   {}
 
   ThreeSceneMetadata::ThreeSceneMetadata(const Json::Value& value)
@@ -1724,6 +1724,7 @@ namespace openstudio{
     assertKeyAndType(value, "generator", Json::stringValue);
     assertKeyAndType(value, "buildingStoryNames", Json::arrayValue);
     assertKeyAndType(value, "boundingBox", Json::objectValue);
+    //assertKeyAndType(value, "northAxis", Json::realValue); // not required, support older versions without it
     assertKeyAndType(value, "modelObjectMetadata", Json::arrayValue);
 
     Json::Value version = value.get("version", "");
@@ -1741,6 +1742,12 @@ namespace openstudio{
 
     // DLM: done in initializer
     //boundingBox = ThreeBoundingBox(value.get("boundinmgBox", Json::objectValue));
+
+    if (checkKeyAndType(value, "northAxis", Json::realValue)) {
+      m_northAxis = value.get("northAxis", "").asDouble();
+    } else {
+      m_northAxis = 0.0;
+    }
 
     Json::Value modelObjectMetadata = value.get("modelObjectMetadata", Json::arrayValue);
     n = modelObjectMetadata.size();
@@ -1768,6 +1775,7 @@ namespace openstudio{
     result["generator"] = m_generator;
     result["buildingStoryNames"] = buildingStoryNames;
     result["boundingBox"] = m_boundingBox.toJsonValue();
+    result["northAxis"] = m_northAxis;
     result["modelObjectMetadata"] = modelObjectMetadata;
 
     return result;
@@ -1796,6 +1804,10 @@ namespace openstudio{
   ThreeBoundingBox ThreeSceneMetadata::boundingBox() const
   {
     return m_boundingBox;
+  }
+
+  double ThreeSceneMetadata::northAxis() const {
+    return m_northAxis;
   }
 
   std::vector<ThreeModelObjectMetadata> ThreeSceneMetadata::modelObjectMetadata() const

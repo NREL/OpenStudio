@@ -145,6 +145,7 @@ class CoilWaterHeatingDesuperheater;
 class CoilWaterHeatingAirToWaterHeatPump;
 class CoilWaterHeatingAirToWaterHeatPumpWrapped;
 class Construction;
+class ConstructionAirBoundary;
 class ConstructionWithInternalSource;
 class ControllerOutdoorAir;
 class ControllerMechanicalVentilation;
@@ -282,6 +283,7 @@ class OutputMeter;
 class OutputVariable;
 class OutputEnergyManagementSystem;
 class People;
+class PerformancePrecisionTradeoffs;
 class PhotovoltaicPerformanceEquivalentOneDiode;
 class PhotovoltaicPerformanceSimple;
 class PipeAdiabatic;
@@ -722,6 +724,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateConstruction( model::Construction & modelObject );
 
+  boost::optional<IdfObject> translateConstructionAirBoundary(model::ConstructionAirBoundary & modelObject);
+
   boost::optional<IdfObject> translateConstructionWithInternalSource( model::ConstructionWithInternalSource & modelObject );
 
   boost::optional<IdfObject> translateControllerMechanicalVentilation( model::ControllerMechanicalVentilation & modelObject );
@@ -986,6 +990,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOutputEnergyManagementSystem(model::OutputEnergyManagementSystem & modelObject );
 
   boost::optional<IdfObject> translatePeople( model::People & modelObject );
+  
+  boost::optional<IdfObject> translatePerformancePrecisionTradeoffs( model::PerformancePrecisionTradeoffs & modelObject );
 
   boost::optional<IdfObject> translatePhotovoltaicPerformanceEquivalentOneDiode(model::PhotovoltaicPerformanceEquivalentOneDiode & modelObject);
 

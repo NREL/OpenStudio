@@ -126,6 +126,15 @@ class ExteriorLoadInstance;
   }
 };
 
+%extend openstudio::model::CustomBlock {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 UNIQUEMODELOBJECT_TEMPLATES(Site);
 UNIQUEMODELOBJECT_TEMPLATES(Facility);
 UNIQUEMODELOBJECT_TEMPLATES(Building);
@@ -166,6 +175,7 @@ MODELOBJECT_TEMPLATES(IlluminanceMap);
 MODELOBJECT_TEMPLATES(DaylightingDeviceShelf);
 MODELOBJECT_TEMPLATES(SpaceType);
 MODELOBJECT_TEMPLATES(LightingSimulationZone);
+MODELOBJECT_TEMPLATES(CustomBlock);
 MODELOBJECT_TEMPLATES(FoundationKiva);
 MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
 

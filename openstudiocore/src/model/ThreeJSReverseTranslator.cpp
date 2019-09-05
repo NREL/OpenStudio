@@ -38,12 +38,16 @@
 #include "ThermalZone_Impl.hpp"
 #include "SpaceType.hpp"
 #include "SpaceType_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
 #include "BuildingStory.hpp"
 #include "BuildingStory_Impl.hpp"
 #include "BuildingUnit.hpp"
 #include "BuildingUnit_Impl.hpp"
 #include "Construction.hpp"
 #include "Construction_Impl.hpp"
+#include "ConstructionAirBoundary.hpp"
+#include "ConstructionAirBoundary_Impl.hpp"
 #include "Surface.hpp"
 #include "Surface_Impl.hpp"
 #include "SubSurface.hpp"
@@ -123,13 +127,13 @@ namespace openstudio
       return result;
     }
 
-    Construction ThreeJSReverseTranslator::getAirWallConstruction(Model& model)
+    ConstructionAirBoundary ThreeJSReverseTranslator::getAirWallConstruction(Model& model)
     {
-      boost::optional<Construction> result = model.getConcreteModelObjectByName<Construction>("AirWall");
+      boost::optional<ConstructionAirBoundary> result = model.getConcreteModelObjectByName<ConstructionAirBoundary>("AirWall");
       if (!result){
-        AirWallMaterial airWall(model);
+        ConstructionAirBoundary airWall(model);
         airWall.setName("AirWall");
-        result = Construction(airWall);
+        return airWall;
       }
       OS_ASSERT(result);
       return result.get();
@@ -269,6 +273,9 @@ namespace openstudio
       // create all the objects we will need
       ThreeSceneMetadata metadata = scene.metadata();
       std::vector<ThreeModelObjectMetadata> modelObjectMetadata = metadata.modelObjectMetadata();
+
+      // set the model's north axis, opposite of the floorspace and threejs convention
+      model.getUniqueModelObject<Building>().setNorthAxis(-metadata.northAxis());
 
       // sort object types so we make spaces first, etc
       std::sort(modelObjectMetadata.begin(), modelObjectMetadata.end(), sortModelObjectMetadata);

@@ -5,7 +5,7 @@
 !BESTEST-EX Case L200EX-PH BASE-CASE, developed by NREL
 !Use EnergyPlus IDFEditor to view inputs in IP units
 
-  Version,9.1;
+  Version,9.2;
 
   SimulationControl,
     No,                      !- Do Zone Sizing Calculation
@@ -37,7 +37,7 @@
   Timestep,6;
 
   RunPeriod,
-    ,                        !- Name
+    RUNPERIOD 1,             !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
     ,                        !- Begin Year
@@ -1183,13 +1183,13 @@
   InternalMass,
     INTERIOR WALLS AIR,      !- Name
     INTERIOR WALL AIR,       !- Construction Name
-    ZONE ONE,                !- Zone Name
+    ZONE ONE,                !- Zone or ZoneList Name
     171.222167776412;        !- Surface Area {m2}
 
   InternalMass,
     INTERIOR WALLS FRAMED,   !- Name
     INTERIOR WALL FRAMED,    !- Construction Name
-    ZONE ONE,                !- Zone Name
+    ZONE ONE,                !- Zone or ZoneList Name
     19.0246853084902;        !- Surface Area {m2}
 
   ElectricEquipment,
@@ -1315,8 +1315,8 @@
     ZONE ONE Purchased Air,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
-    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
-    ;                        !- Zone Equipment 1 Sequential Heating Fraction
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:EquipmentConnections,
     ZONE ONE,                !- Zone Name

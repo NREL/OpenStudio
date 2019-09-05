@@ -32,6 +32,8 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
+#include "../model/AdditionalProperties.hpp"
+#include "../model/AdditionalProperties_Impl.hpp"
 #include "../model/ScheduleDay.hpp"
 #include "../model/ScheduleDay_Impl.hpp"
 #include "../model/ScheduleWeek.hpp"
@@ -86,6 +88,7 @@ namespace gbxml {
 
     openstudio::model::ScheduleDay result(model);
     m_idToObjectMap.insert(std::make_pair(id, result));
+    result.additionalProperties().setFeature("gbXMLId", toString(id));
 
     QString name = element.firstChildElement("Name").toElement().text();
     result.setName(escapeName(id, name));
@@ -101,6 +104,13 @@ namespace gbxml {
       result.addValue( dt*(i+1) , value);
     }
 
+    //// import CADObjectId
+    //QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    //if (cadObjectIdElements.size() >= 1) {
+    //  // TODO: import multiple CADObjectIds
+    //  translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, result);
+    //}
+
     return result;
   }
 
@@ -111,6 +121,7 @@ namespace gbxml {
 
     openstudio::model::ScheduleWeek result(model);
     m_idToObjectMap.insert(std::make_pair(id, result));
+    result.additionalProperties().setFeature("gbXMLId", toString(id));
 
     QString name = element.firstChildElement("Name").toElement().text();
     result.setName(escapeName(id, name));
@@ -175,6 +186,13 @@ namespace gbxml {
       }
     }
 
+    //// import CADObjectId
+    //QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    //if (cadObjectIdElements.size() >= 1) {
+    //  // TODO: import multiple CADObjectIds
+    //  translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, result);
+    //}
+
     return result;
   }
 
@@ -185,6 +203,7 @@ namespace gbxml {
 
     openstudio::model::ScheduleYear result(model);
     m_idToObjectMap.insert(std::make_pair(id, result));
+    result.additionalProperties().setFeature("gbXMLId", toString(id));
 
     QString name = element.firstChildElement("Name").toElement().text();
     result.setName(escapeName(id, name));
@@ -238,6 +257,13 @@ namespace gbxml {
         }
       }
     }
+
+    //// import CADObjectId
+    //QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    //if (cadObjectIdElements.size() >= 1) {
+    //  // TODO: import multiple CADObjectIds
+    //  translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, result);
+    //}
 
     return result;
   }

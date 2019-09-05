@@ -43,7 +43,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadowCalculation( Shadow
 {
   IdfObject idfObject( openstudio::IddObjectType::ShadowCalculation);
 
-  idfObject.setString(ShadowCalculationFields::CalculationMethod,"AverageOverDaysInFrequency");
+  idfObject.setString(ShadowCalculationFields::CalculationMethod, modelObject.calculationMethod());
 
   idfObject.setInt(ShadowCalculationFields::CalculationFrequency,modelObject.calculationFrequency());
 

@@ -192,6 +192,48 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   resolveMatchedSurfaceConstructionConflicts(model);
   resolveMatchedSubSurfaceConstructionConflicts(model);
 
+  // remove subsurfaces from air walls
+  for (Surface surface : model.getConcreteModelObjects<Surface>()) {
+    if (surface.isAirWall()) {
+      for (auto& subSurface : surface.subSurfaces()) {
+        LOG(Warn, "Removing SubSurface '" << subSurface.nameString() << "' from air wall Surface '" << surface.nameString() << "'.");
+        subSurface.remove();
+      }
+    }
+  }
+
+  // replace old style air wall Constructions with ConstructionAirBoundary
+  for (LayeredConstruction construction : model.getModelObjects<LayeredConstruction>()) {
+    if (construction.isModelPartition() && (construction.numLayers() == 1)) {
+      MaterialVector layers = construction.layers();
+      OS_ASSERT(layers.size() == 1u);
+      bool isAirWall = layers[0].optionalCast<AirWallMaterial>();
+
+      // if this is an old style air wall
+      if (isAirWall)
+      {
+        ConstructionAirBoundary newConstruction(model);
+        newConstruction.setName(construction.nameString() + "_ConstructionAirBoundary");
+
+        for (WorkspaceObject source : construction.sources()) {
+          for (unsigned index : source.getSourceIndices(construction.handle())) {
+            bool test = source.setPointer(index, newConstruction.handle());
+            OS_ASSERT(test);
+          }
+        }
+
+        LOG(Warn, "Construction '" << construction.nameString() << "' has been converted to ConstructionAirBoundary '" << newConstruction.nameString() << "'.");
+        construction.remove();
+      }
+    }
+  }
+
+  // remove all AirWallMaterial objects
+  for (AirWallMaterial airWall : model.getConcreteModelObjects<AirWallMaterial>()) {
+    LOG(Warn, "Removing AirWallMaterial '" << airWall.nameString() << "'.");
+    airWall.remove();
+  }
+
   // check for spaces not in a thermal zone
   for (Space space : model.getConcreteModelObjects<Space>()){
     if (!space.thermalZone()){
@@ -1243,6 +1285,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateConstruction(construction);
       break;
     }
+  case openstudio::IddObjectType::OS_Construction_AirBoundary:
+  {
+    model::ConstructionAirBoundary constructionAirBoundary = modelObject.cast<ConstructionAirBoundary>();
+    retVal = translateConstructionAirBoundary(constructionAirBoundary);
+    break;
+  }
   case openstudio::IddObjectType::OS_Construction_InternalSource :
     {
       model::ConstructionWithInternalSource constructionIntSource = modelObject.cast<ConstructionWithInternalSource>();
@@ -2373,6 +2421,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
+  case openstudio::IddObjectType::OS_PerformancePrecisionTradeoffs:
+  {
+    model::PerformancePrecisionTradeoffs performancePrecisionTradeoffs = modelObject.cast<PerformancePrecisionTradeoffs>();
+    retVal = translatePerformancePrecisionTradeoffs(performancePrecisionTradeoffs);
+    break;
+  }
   case openstudio::IddObjectType::OS_Pipe_Adiabatic:
   {
     model::PipeAdiabatic pipe = modelObject.cast<PipeAdiabatic>();
@@ -3377,6 +3431,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneAirMassFlowConservation);
   result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
   result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
+  result.push_back(IddObjectType::OS_PerformancePrecisionTradeoffs);
 
   result.push_back(IddObjectType::OS_Site);
   result.push_back(IddObjectType::OS_Site_GroundReflectance);
@@ -3494,9 +3549,14 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_DistrictCooling);
   result.push_back(IddObjectType::OS_DistrictHeating);
   result.push_back(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
-  result.push_back(IddObjectType::OS_Fan_ConstantVolume);
+
+  // Equipments should be responsible for translating their fans
+  // result.push_back(IddObjectType::OS_Fan_Variable);
+  // result.push_back(IddObjectType::OS_Fan_ConstantVolume);
+  // TODO: JM 2019-07-11 These two should also be commented out. Fan_ZoneExhaust will be translated by ZoneHVACEquipmentList
   result.push_back(IddObjectType::OS_Fan_OnOff);
   result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
+
   result.push_back(IddObjectType::OS_Node);
   result.push_back(IddObjectType::OS_PlantLoop);
   result.push_back(IddObjectType::OS_Splitter);
@@ -3601,6 +3661,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_ShadingControl);
 
   iddObjectTypes.push_back(IddObjectType::OS_Construction);
+  iddObjectTypes.push_back(IddObjectType::OS_Construction_AirBoundary);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_CfactorUndergroundWall);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_FfactorGroundFloor);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_InternalSource);

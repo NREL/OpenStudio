@@ -498,12 +498,13 @@ namespace openstudio{
   /// ThreeSceneMetadata includes metadata about an OpenStudio Model Object
   class UTILITIES_API ThreeSceneMetadata{
   public:
-    ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox, const std::vector<ThreeModelObjectMetadata>& modelObjectMetadata);
+    ThreeSceneMetadata(const std::vector<std::string>& buildingStoryNames, const ThreeBoundingBox& boundingBox, double northAxis, const std::vector<ThreeModelObjectMetadata>& modelObjectMetadata);
     std::string version() const;
     std::string type() const;
     std::string generator() const;
     std::vector<std::string> buildingStoryNames() const;
     ThreeBoundingBox boundingBox() const;
+    double northAxis() const;
     std::vector<ThreeModelObjectMetadata> modelObjectMetadata() const;
 
   private:
@@ -516,6 +517,7 @@ namespace openstudio{
     std::string m_generator;
     std::vector<std::string> m_buildingStoryNames;
     ThreeBoundingBox m_boundingBox;
+    double m_northAxis;
     std::vector<ThreeModelObjectMetadata> m_modelObjectMetadata;
   };
 

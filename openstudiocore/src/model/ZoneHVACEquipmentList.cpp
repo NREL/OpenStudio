@@ -444,9 +444,11 @@ boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialCoolingFraction(co
       OS_ASSERT(wo);
 
       if (wo->handle() == equipment.handle()) {
-        boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName);
-        schedule = wo->optionalCast<ScheduleConstant>();
-        break; 
+        boost::optional<WorkspaceObject> wo2 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName);
+        if (wo2) {
+          schedule = wo2->optionalCast<ScheduleConstant>();
+          break;
+        }
       }
     }
   }
@@ -476,9 +478,11 @@ boost::optional<Schedule> ZoneHVACEquipmentList_Impl::sequentialCoolingFractionS
       OS_ASSERT(wo);
 
       if (wo->handle() == equipment.handle()) {
-        boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName);
-        result = wo->optionalCast<Schedule>();
-        break;
+        boost::optional<WorkspaceObject> wo2 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName);
+        if (wo2) {
+          result = wo2->optionalCast<Schedule>();
+          break;
+        }
       }
     }
   }
@@ -503,9 +507,11 @@ boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialHeatingFraction(co
       OS_ASSERT(wo);
 
       if (wo->handle() == equipment.handle()) {
-        boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName);
-        schedule = wo->optionalCast<ScheduleConstant>();
-        break;
+        boost::optional<WorkspaceObject> wo2 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName);
+        if (wo2) {
+          schedule = wo2->optionalCast<ScheduleConstant>();
+          break;
+        }
       }
     }
   }
@@ -535,9 +541,11 @@ boost::optional<Schedule> ZoneHVACEquipmentList_Impl::sequentialHeatingFractionS
       OS_ASSERT(wo);
 
       if (wo->handle() == equipment.handle()) {
-        boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName);
-        result = wo->optionalCast<Schedule>();
-        break;
+        boost::optional<WorkspaceObject> wo2 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName);
+        if (wo2) {
+          result = wo->optionalCast<Schedule>();
+          break;
+        }
       }
     }
   }
