@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -114,8 +115,8 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
-  
+  OS_DEPRECATED boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+
   /** Return the Sequential Cooling Fraction Schedule of equipment.
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
@@ -126,8 +127,8 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
-  
+  OS_DEPRECATED boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+
   /** Return the Sequential Heating Fraction Schedule of equipment.
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
@@ -138,8 +139,8 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
-  
+  OS_DEPRECATED bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+
   /** Set the Sequential Cooling Fraction Schedule of equipment.
    *  Returns false when equipement is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
@@ -150,7 +151,7 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
+  OS_DEPRECATED bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
 
   /** Set the Sequential Heating Fraction Schedule of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,

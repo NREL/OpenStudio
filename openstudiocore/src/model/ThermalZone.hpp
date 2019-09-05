@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "HVACComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -414,7 +415,7 @@ class MODEL_API ThermalZone : public HVACComponent {
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+  OS_DEPRECATED boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
 
   /** Return the Sequential Cooling Fraction Schedule of equipment.
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
@@ -426,7 +427,7 @@ class MODEL_API ThermalZone : public HVACComponent {
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+  OS_DEPRECATED boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
 
   /** Return the Sequential Heating Fraction Schedule of equipment.
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
@@ -434,10 +435,11 @@ class MODEL_API ThermalZone : public HVACComponent {
    */
   boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
 
-  /** Set the Sequential Cooling Fraction of equipment.
+  /** Set the Sequential Cooling Fraction of equipment, creates a ScheduleConstant for your convenience.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
+  // TODO: mark OS_DEPRECATED
   bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
 
   /** Set the Sequential Cooling Fraction Schedule of equipment.
@@ -446,10 +448,11 @@ class MODEL_API ThermalZone : public HVACComponent {
    */
   bool setSequentialCoolingFraction(const ModelObject& equipment, const Schedule& schedule);
 
-  /** Set the Sequential Heating Fraction of equipment.
+  /** Set the Sequential Heating Fraction of equipment, creates a ScheduleConstant for your convenience.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
+  // TODO: mark OS_DEPRECATED
   bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
 
   /** Set the Sequential Heating Fraction Schedule of equipment.

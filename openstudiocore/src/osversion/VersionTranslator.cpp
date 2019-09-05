@@ -4564,11 +4564,14 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
                 std::string uuid = toString(createUUID());
                 scheduleConstant.setString(0, uuid);
                 scheduleConstant.setString(1, "Name");
-                for (const IdfObject& object2 : idf_2_8_1.objects()) {
-                  if (object2.getString(0).get() == eg.getString(0).get()) {
-                    scheduleConstant.setString(1, toString(object2.getString(1).get()) + " " + toString(i)); // name of zone equipment plus group index
-                  }
+                // eg.getString(0) is the equipment handle
+                //
+                boost::optional<IdfObject> _eq = idf_2_8_1.getObject(toUUID(eg.getString(0).get()));
+                if (_eq) {
+                   // name of zone equipment plus group index
+                    scheduleConstant.setString(1, _eq.nameString() + " " + toString(i));
                 }
+
                 scheduleConstant.setString(2, "");
                 scheduleConstant.setDouble(3, fraction.get());
 
