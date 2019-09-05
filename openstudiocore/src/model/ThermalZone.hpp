@@ -411,11 +411,11 @@ class MODEL_API ThermalZone : public HVACComponent {
   /** Return all equipment.  Order is determined by cooling priority */
   std::vector<ModelObject> equipmentInCoolingOrder() const;
 
-  /** Return the Sequential Cooling Fraction of equipment.
+  /** Return the Sequential Cooling Fraction of equipment, if it's a ScheduleConstant.
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  OS_DEPRECATED boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+  boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
 
   /** Return the Sequential Cooling Fraction Schedule of equipment.
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
@@ -423,11 +423,11 @@ class MODEL_API ThermalZone : public HVACComponent {
    */
   boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
 
-  /** Return the Sequential Heating Fraction of equipment.
+  /** Return the Sequential Heating Fraction of equipment, if it's a ScheduleConstant
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  OS_DEPRECATED boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+  boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
 
   /** Return the Sequential Heating Fraction Schedule of equipment.
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
@@ -439,7 +439,6 @@ class MODEL_API ThermalZone : public HVACComponent {
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  // TODO: mark OS_DEPRECATED? Or deem it a valuable convenience method?
   bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
 
   /** Set the Sequential Cooling Fraction Schedule of equipment.
@@ -452,7 +451,6 @@ class MODEL_API ThermalZone : public HVACComponent {
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  // TODO: mark OS_DEPRECATED? Or deem it a valuable convenience method?
   bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
 
   /** Set the Sequential Heating Fraction Schedule of equipment.

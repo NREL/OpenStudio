@@ -412,7 +412,7 @@ namespace detail {
 
     bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
 
-    // Deprecated
+    // Convenience methods
     boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
     boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
 
