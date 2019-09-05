@@ -2396,12 +2396,12 @@ namespace detail {
     ScheduleConstant schedule(model);
     schedule.setValue(fraction);
 
-    return setSequentialCoolingFraction(equipment, schedule);
+    return setSequentialCoolingFractionSchedule(equipment, schedule);
   }
 
-  bool ThermalZone_Impl::setSequentialCoolingFraction(const ModelObject & equipment, const Schedule& schedule)
+  bool ThermalZone_Impl::setSequentialCoolingFractionSchedule(const ModelObject & equipment, const Schedule& schedule)
   {
-    return zoneHVACEquipmentList().setSequentialCoolingFraction(equipment, schedule);
+    return zoneHVACEquipmentList().setSequentialCoolingFractionSchedule(equipment, schedule);
   }
 
   bool ThermalZone_Impl::setSequentialHeatingFraction(const ModelObject & equipment, double fraction)
@@ -2410,12 +2410,12 @@ namespace detail {
     ScheduleConstant schedule(model);
     schedule.setValue(fraction);
 
-    return setSequentialHeatingFraction(equipment, schedule);
+    return setSequentialHeatingFractionSchedule(equipment, schedule);
   }
 
-  bool ThermalZone_Impl::setSequentialHeatingFraction(const ModelObject & equipment, const Schedule& schedule)
+  bool ThermalZone_Impl::setSequentialHeatingFractionSchedule(const ModelObject & equipment, const Schedule& schedule)
   {
-    return zoneHVACEquipmentList().setSequentialHeatingFraction(equipment, schedule);
+    return zoneHVACEquipmentList().setSequentialHeatingFractionSchedule(equipment, schedule);
   }
 
   ModelObject ThermalZone_Impl::clone(Model model) const
@@ -3447,9 +3447,9 @@ bool ThermalZone::setSequentialCoolingFraction(const ModelObject& equipment, dou
   return getImpl<detail::ThermalZone_Impl>()->setSequentialCoolingFraction(equipment, fraction);
 }
 
-bool ThermalZone::setSequentialCoolingFraction(const ModelObject& equipment, const Schedule& schedule)
+bool ThermalZone::setSequentialCoolingFractionSchedule(const ModelObject& equipment, const Schedule& schedule)
 {
-  return getImpl<detail::ThermalZone_Impl>()->setSequentialCoolingFraction(equipment, schedule);
+  return getImpl<detail::ThermalZone_Impl>()->setSequentialCoolingFractionSchedule(equipment, schedule);
 }
 
 boost::optional<double> ThermalZone::sequentialHeatingFraction(const ModelObject& equipment) const {
@@ -3465,9 +3465,9 @@ bool ThermalZone::setSequentialHeatingFraction(const ModelObject& equipment, dou
   return getImpl<detail::ThermalZone_Impl>()->setSequentialHeatingFraction(equipment, fraction);
 }
 
-bool ThermalZone::setSequentialHeatingFraction(const ModelObject& equipment, const Schedule& schedule)
+bool ThermalZone::setSequentialHeatingFractionSchedule(const ModelObject& equipment, const Schedule& schedule)
 {
-  return getImpl<detail::ThermalZone_Impl>()->setSequentialHeatingFraction(equipment, schedule);
+  return getImpl<detail::ThermalZone_Impl>()->setSequentialHeatingFractionSchedule(equipment, schedule);
 }
 
 std::vector<ModelObject> ThermalZone::equipment() const
