@@ -21008,7 +21008,7 @@ OS:Pump:VariableSpeed,
        \type choice
        \key ManualControl
        \key PressureSetpointControl
-  A9, \field Pump rpm Schedule Name
+  A9, \field Pump RPM Schedule Name
        \note Modifies the rpm of the pump on a time basis. Default is
        \note that the pump is on and runs according to its other operational requirements
        \note specified above.  The schedule is for special pump operations.
@@ -21024,11 +21024,11 @@ OS:Pump:VariableSpeed,
        \object-list ScheduleNames
   A12, \field Minimum RPM Schedule
        \type object-list
-       \units Rotations Per Minute
+       \units rev/min
        \object-list ScheduleNames
   A13, \field Maximum RPM Schedule
        \type object-list
-       \units Rotations Per Minute
+       \units rev/min
        \object-list ScheduleNames
   A14,  \field Zone Name
         \note optional, if used pump losses transfered to zone as internal gains
