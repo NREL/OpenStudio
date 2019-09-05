@@ -126,7 +126,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_NonDX)
 
     // Check that the coil ends up directly onto the object (shouldn't be a problem)
     EXPECT_EQ(ep_idd_name, idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceObjectType).get());
-    EXPECT_EQ(dxCoil.nameString(), idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceName).get());
+    EXPECT_EQ(nodxCoil.nameString(), idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceName).get());
 
   }
 
