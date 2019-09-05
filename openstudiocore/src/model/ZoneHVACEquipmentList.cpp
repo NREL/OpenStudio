@@ -543,7 +543,7 @@ boost::optional<Schedule> ZoneHVACEquipmentList_Impl::sequentialHeatingFractionS
       if (wo->handle() == equipment.handle()) {
         boost::optional<WorkspaceObject> wo2 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName);
         if (wo2) {
-          result = wo->optionalCast<Schedule>();
+          result = wo2->optionalCast<Schedule>();
           break;
         }
       }
