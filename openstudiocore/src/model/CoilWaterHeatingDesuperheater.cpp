@@ -200,7 +200,8 @@ namespace detail {
   bool CoilWaterHeatingDesuperheater_Impl::addToHeatRejectionTarget(const ModelObject& heatRejectionTarget)
   {
     bool validChoice = false;
-    if( (heatRejectionTarget.iddObjectType() == openstudio::IddObjectType::OS_WaterHeater_Mixed) || (heatRejectionTarget.iddObjectType() == openstudio::IddObjectType::OS_WaterHeater_Stratified) )
+    if( (heatRejectionTarget.iddObjectType() == openstudio::IddObjectType::OS_WaterHeater_Mixed) ||
+        (heatRejectionTarget.iddObjectType() == openstudio::IddObjectType::OS_WaterHeater_Stratified) )
     {
       validChoice = true;
     }
