@@ -32,8 +32,10 @@
 
 #include "ModelAPI.hpp"
 #include "ScheduleInterval_Impl.hpp"
+#include "../utilities/filetypes/CSVFile.hpp"
 
 namespace openstudio {
+
 namespace model {
 
 // TODO: Check the following class names against object getters and setters.
@@ -109,6 +111,10 @@ namespace detail {
 
     virtual openstudio::TimeSeries timeSeries() const override;
 
+    /* FIXME! openstudio::TimeSeries timeSeries(unsigned columnIndex) const; */
+    
+    boost::optional<CSVFile> csvFile() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -132,6 +138,8 @@ namespace detail {
     void resetMinutesperItem();
 
     virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) override;
+    
+    /* FIXME! unsigned addTimeSeries(const openstudio::TimeSeries& timeSeries); */
 
     // ensure that this object does not contain the date 2/29
     virtual void ensureNoLeapDays() override;

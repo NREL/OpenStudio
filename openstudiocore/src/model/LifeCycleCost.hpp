@@ -71,6 +71,8 @@ public:
 
   static std::vector<std::string> validItemTypeValues();
 
+  static std::vector<std::string> validStartOfCostsValues();
+
   /// Create a LifeCycleCost for the given ModelObject with cost, costUnits, category, and optional repeatPeriodYear.
   /// Will return an empty result if ModelObject type is unknown or if costUnits or category are not valid
   static boost::optional<LifeCycleCost> createLifeCycleCost(const std::string& name, const ModelObject& modelObject, double cost, const std::string& costUnits, const std::string& category, int repeatPeriodYears = 0, int yearsFromStart = 0);
@@ -97,6 +99,10 @@ public:
   /// Returns the cost units
   std::string costUnits() const;
 
+  /// The First Year of Cost is based on the number of years past the Start of Costs. For most maintenance costs the Start of Costs should be Service Period.
+  std::string startOfCosts() const;
+  bool isStartOfCostsDefaulted() const;
+
   /// Years from start is added to months from start to give the time at which the costs start to occur.
   int yearsFromStart() const;
   bool isYearsFromStartDefaulted() const;
@@ -119,6 +125,9 @@ public:
   bool setCost(double cost);
 
   bool setCostUnits(const std::string& costUnits);
+
+  bool setStartOfCosts(const std::string& startOfCosts);
+  void resetStartOfCosts();
 
   bool setYearsFromStart(int yearsFromStart);
   void resetYearsFromStart();

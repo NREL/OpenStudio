@@ -64,6 +64,10 @@ class MODEL_API ThermostatSetpointDualSetpoint : public Thermostat {
 
   boost::optional<Schedule> coolingSetpointTemperatureSchedule() const;
 
+  /** This ends up in the ZoneControl:Thermostat object during ForwardTranslation */
+  double temperatureDifferenceBetweenCutoutAndSetpoint() const;
+  bool isTemperatureDifferenceBetweenCutoutAndSetpointDefaulted() const;
+
   /** \deprecated */
   boost::optional<Schedule> getHeatingSchedule() const;
 
@@ -81,6 +85,8 @@ class MODEL_API ThermostatSetpointDualSetpoint : public Thermostat {
   bool setCoolingSetpointTemperatureSchedule(Schedule& schedule);
 
   void resetCoolingSetpointTemperatureSchedule();
+
+  bool setTemperatureDifferenceBetweenCutoutAndSetpoint(double deltaT);
 
   /** \deprecated */
   bool setHeatingSchedule(Schedule& s );

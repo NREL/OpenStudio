@@ -139,7 +139,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.7.0")] = &VersionTranslator::update_2_6_2_to_2_7_0;
   m_updateMethods[VersionString("2.7.1")] = &VersionTranslator::update_2_7_0_to_2_7_1;
   m_updateMethods[VersionString("2.7.2")] = &VersionTranslator::update_2_7_1_to_2_7_2;
-  m_updateMethods[VersionString("2.8.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("2.9.0")] = &VersionTranslator::update_2_8_1_to_2_9_0;
+  //m_updateMethods[VersionString("2.9.0")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -287,6 +288,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.7.1"));
   m_startVersions.push_back(VersionString("2.7.2"));
   m_startVersions.push_back(VersionString("2.8.0"));
+  m_startVersions.push_back(VersionString("2.8.1"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm,
@@ -4490,6 +4492,177 @@ std::string VersionTranslator::update_2_7_1_to_2_7_2(const IdfFile& idf_2_7_1, c
 
 }
 
+std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, const IddFileAndFactoryWrapper& idd_2_9_0) {
+  std::stringstream ss;
+  boost::optional<std::string> value;
+
+  ss << idf_2_8_1.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_2_9_0.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_2_8_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:Foundation:Kiva") {
+      auto iddObject = idd_2_9_0.getObject("OS:Foundation:Kiva");
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 2) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Schedule:FixedInterval") {
+      auto iddObject = idd_2_9_0.getObject("OS:Schedule:FixedInterval");
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 3) {
+            // Schedule Type Limits Name
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:ZoneHVAC:EquipmentList") {
+        auto iddObject = idd_2_9_0.getObject("OS:ZoneHVAC:EquipmentList");
+        IdfObject newObject(iddObject.get());
+
+        // Copy non extensible fields in place
+        for (size_t i = 0; i < object.numNonextensibleFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Copy the eg values 0 through 2 and create ScheduleConstant out of 3 and 4
+        for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
+          IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();
+          for (size_t i = 0; i < 5; ++i) {
+            if (i > 2) {
+              boost::optional<double> fraction;
+              if ((fraction = eg.getDouble(i))) {
+                auto iddObject = idd_2_9_0.getObject("OS:Schedule:Constant");
+                IdfObject scheduleConstant(iddObject.get());
+                std::string uuid = toString(createUUID());
+                scheduleConstant.setString(0, uuid);
+                scheduleConstant.setString(1, "Name");
+                // eg.getString(0) is the equipment handle
+                //
+                boost::optional<IdfObject> _eq = idf_2_8_1.getObject(toUUID(eg.getString(0).get()));
+                if (_eq) {
+                   // name of zone equipment plus group index
+                    scheduleConstant.setString(1, _eq->nameString() + " " + toString(i));
+                }
+
+                scheduleConstant.setString(2, "");
+                scheduleConstant.setDouble(3, fraction.get());
+
+                m_new.push_back(scheduleConstant);
+                ss << scheduleConstant;
+
+                new_eg.setString(i, uuid);
+              }
+            } else {
+              new_eg.setString(i, eg.getString(i).get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+    // No-op
+    } else if (iddname == "OS:ThermalStorage:Ice:Detailed") {
+      auto iddObject = idd_2_9_0.getObject("OS:ThermalStorage:Ice:Detailed");
+      IdfObject newObject(iddObject.get());
+
+      // Inserting two fields: after position 5 and after position 6
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            // 0-5 Unchanged
+            newObject.setString(i, value.get());
+          } else if (i == 6) {
+            // 6 (Discharge Curve) is Shifted by one field
+            newObject.setString(i + 1, value.get());
+          } else {
+            // 7 (Charge Curve)-End Shifted by two fields
+            newObject.setString(i + 2, value.get());
+          }
+        }
+      }
+
+      // Now deal with new fields.
+      // From https://github.com/NREL/EnergyPlus/pull/7339/files#diff-6bcecd46a03668bc5e9998616e6e8066R476, E+ transition rules
+      // if QuadraticLinear => FractionDischargedLMTD/FractionChargedLMTD for discharge/charge respectively
+      // if CubicLinear => LMTDMassFlow
+      // else, does something wrong.
+      //
+      // OpenStudio doesn't wrap CubicLinear. I doubt many people were using TableMultiVariableLookup and probably wouldn't more right to set that as
+      // LMTDMassFlow, so let's just do ahead and set everything to Fraction(Dis)ChargedLMTD
+
+      // DischargingCurve was in field 6. New object 6 is the Discharging Specifications, 7 is the Discharging Curve
+      newObject.setString(6, "FractionDischargedLMTD");
+      /*
+       *boost::optional<std::string> dischargingCurveHandle = object.getString(6);
+       *OS_ASSERT(dischargingCurveHandle);
+       *boost::optional<IdfObject>  dischargingCurve = idf_2_8_1.getObject(toUUID(dischargingCurveHandle.get()));
+       *OS_ASSERT(dischargingCurve);
+       *IddObject dischargingCurveIddObject = dischargingCurve->iddObject();
+       *std::string dischargingCurveIddObjectName = dischargingCurveIddObject.name();
+       *if (openstudio::istringEqual(dischargingCurveIddObjectName, "OS:Curve:QuadraticLinear")) {
+       *  newObject.setString(6, "FractionDischargedLMTD");
+       *} else {
+       *  newObject.setString(6, "LMTDMassFlow");
+       *}
+       */
+
+      // ChargingCurve was in field 7. New Object 8 is the Charging Specifications, 9 is the Charging Curve
+      newObject.setString(8, "FractionChargedLMTD");
+
+      /*
+       *boost::optional<std::string> chargingCurveHandle = object.getString(7);
+       *OS_ASSERT(chargingCurveHandle);
+       *boost::optional<IdfObject>  chargingCurve = idf_2_8_1.getObject(toUUID(chargingCurveHandle.get()));
+       *OS_ASSERT(chargingCurve);
+       *IddObject chargingCurveIddObject = chargingCurve->iddObject();
+       *std::string chargingCurveIddObjectName = chargingCurveIddObject.name();
+       *if (openstudio::istringEqual(chargingCurveIddObjectName, "OS:Curve:QuadraticLinear")) {
+       *  newObject.setString(8, "FractionChargedLMTD");
+       *} else {
+       *  newObject.setString(8, "LMTDMassFlow");
+       *}
+       */
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+
+}
 
 } // osversion
 } // openstudio

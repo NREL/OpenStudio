@@ -981,6 +981,11 @@ void ReverseVerticalBranchItem::layout()
   setVGridLength( j );
 }
 
+/* Sort the (parallel) branches by:
+ * - ThermalZone name if applicable,
+ * - First component's name after the initial Node if more than one component
+ * - Only component (=a node) otherwise
+ */
 bool sortBranches(std::vector<ModelObject> i, std::vector<ModelObject> j)
 {
   OS_ASSERT(! i.empty());
@@ -1240,7 +1245,15 @@ HorizontalBranchGroupItem::HorizontalBranchGroupItem( model::Splitter & splitter
         }
       }
 
-      std::sort(allBranchComponents.begin(),allBranchComponents.end(),sortBranches);
+      // Note JM 2019-07-16: If this is the demand side, we order it by the thermal zone names (airLoopHVAC),
+      // or the component after the node names,makes it easier to find stuff
+      // If this is the supply side (which only affects PlantLoop in effect, since a single duct doesn't have parallel branches,
+      // and a dual duct uses vertical branches - but might as well not call a sort function that will do nothing for AirLoopHVAC),
+      // we don't want to do it because we want it to display in the same order
+      // that will end up in the PlantEquipmentList after Forward Translatation (affects Load Distribution substantially!)
+      if (!isSupplySide) {
+        std::sort(allBranchComponents.begin(),allBranchComponents.end(),sortBranches);
+      }
       for(auto it = allBranchComponents.begin();
           it != allBranchComponents.end();
           ++it)

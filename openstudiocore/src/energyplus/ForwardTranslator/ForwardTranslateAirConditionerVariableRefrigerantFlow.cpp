@@ -88,18 +88,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
 
   // RatedTotalCoolingCapacity
 
-  if( modelObject.isRatedTotalCoolingCapacityAutosized() )
+  if( modelObject.isGrossRatedTotalCoolingCapacityAutosized() )
   {
     idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::GrossRatedTotalCoolingCapacity,"Autosize");
   }
-  else if( (value = modelObject.ratedTotalCoolingCapacity()) )
+  else if( (value = modelObject.grossRatedTotalCoolingCapacity()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedTotalCoolingCapacity,value.get());
   }
 
   // RatedCoolingCOP
 
-  if( (value = modelObject.ratedCoolingCOP()) )
+  if( (value = modelObject.grossRatedCoolingCOP()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedCoolingCOP,value.get());
   }
@@ -221,18 +221,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
 
   // RatedTotalHeatingCapacity
 
-  if( modelObject.isRatedTotalHeatingCapacityAutosized() )
+  if( modelObject.isGrossRatedHeatingCapacityAutosized() )
   {
     idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::GrossRatedHeatingCapacity,"Autosize");
   }
-  else if( (value = modelObject.ratedTotalHeatingCapacity()) )
+  else if( (value = modelObject.grossRatedHeatingCapacity()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::GrossRatedHeatingCapacity,value.get());
   }
 
   // RatedTotalHeatingCapacitySizingRatio
 
-  if( (value = modelObject.ratedTotalHeatingCapacitySizingRatio()) )
+  if( (value = modelObject.ratedHeatingCapacitySizingRatio()) )
   {
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::RatedHeatingCapacitySizingRatio,value.get());
   }
@@ -540,23 +540,50 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
     idfObject.setDouble(AirConditioner_VariableRefrigerantFlowFields::MaximumOutdoorDrybulbTemperatureforDefrostOperation,value.get());
   }
 
-  // CondenserInletNodeName
+  // Condenser Type
+  // It was decided that the "smart" logic shouldn't be in the model itself.
+  // So now, we do two things:
+  // * If condenserType is set, respect that, but issue Errors if it's wrong
+  // * If condenserType is not set, we default it (default is done in the model actually)
+  //     * If VRF connected to a PlantLoop => WaterCooled, else "AirCooled" ("EvaporativelyCooled" is less common and will be reserved for people who
+  //     know what they are doing and are hardsetting it)
+  std::string condenserType = modelObject.condenserType();
 
-  if( boost::optional<model::ModelObject> mo = modelObject.inletModelObject() )
-  {
-    if( boost::optional<IdfObject> _mo = translateAndMapModelObject(mo.get()) )
-    {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserInletNodeName,_mo->name().get());
+  if (modelObject.isCondenserTypeDefaulted()) {
+    // We log an Info anyways, might be useful
+    if (openstudio::istringEqual(condenserType, "EvaporativelyCooled")) {
+      LOG(Info, modelObject.briefDescription() << " is connected to a PlantLoop, defaulting condenserType to 'WaterCooled'.");
+    } else {
+      LOG(Info, modelObject.briefDescription() << " is not connected to a PlantLoop, defaulting condenserType to 'AirCooled'.");
+    }
+  } else {
+    boost::optional<PlantLoop> _plant = modelObject.plantLoop();
+
+    if ( (openstudio::istringEqual(condenserType, "AirCooled") || openstudio::istringEqual(condenserType, "EvaporativelyCooled"))
+        && _plant.is_initialized()) {
+      LOG(Error, modelObject.briefDescription() << " has an hardcoded condenserType '" << condenserType << "' while it is connected to a PlantLoop.");
+    } else if( openstudio::istringEqual(condenserType, "WaterCooled") && !_plant.is_initialized()) {
+      LOG(Error, modelObject.briefDescription() << " has an hardcoded condenserType '" << condenserType
+          << "' while it is NOT connected to a PlantLoop.");
     }
   }
+  idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserType, condenserType);
 
-  // CondenserOutletNodeName
 
-  if( boost::optional<model::ModelObject> mo = modelObject.outletModelObject() )
+  // CondenserInletNodeName
+  if( boost::optional<ModelObject> mo = modelObject.inletModelObject() )
   {
-    if( boost::optional<IdfObject> _mo = translateAndMapModelObject(mo.get()) )
+    if( boost::optional<Node> node = mo->optionalCast<Node>() )
     {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserOutletNodeName,_mo->name().get());
+      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserInletNodeName,node->name().get());
+    }
+  }
+  // CondenserOutletNodeName
+  if( boost::optional<ModelObject> mo = modelObject.outletModelObject() )
+  {
+    if( boost::optional<Node> node = mo->optionalCast<Node>() )
+    {
+      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserOutletNodeName,node->name().get());
     }
   }
 
@@ -764,43 +791,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRef
     IdfExtensibleGroup eg = _zoneTerminalUnitList.pushExtensibleGroup();
 
     eg.setString(ZoneTerminalUnitListExtensibleFields::ZoneTerminalUnitName,_terminal->name().get());
-  }
-
-  // CondenserType
-
-  if( modelObject.plantLoop() )
-  {
-    idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserType,"WaterCooled");
-  }
-  else
-  {
-    idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserType,"AirCooled");
-  }
-
-  // CondenserInletNodeName
-
-  OptionalModelObject omo = modelObject.inletModelObject();
-  if( omo )
-  {
-    translateAndMapModelObject(*omo);
-    s = omo->name();
-    if(s)
-    {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserInletNodeName,*s );
-    }
-  }
-
-  // CondenserOutletNodeName
-
-  omo = modelObject.outletModelObject();
-  if( omo )
-  {
-    translateAndMapModelObject(*omo);
-    s = omo->name();
-    if(s)
-    {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlowFields::CondenserOutletNodeName,*s );
-    }
   }
 
   // WaterCondenserVolumeFlowRate

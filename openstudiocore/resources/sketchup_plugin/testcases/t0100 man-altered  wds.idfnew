@@ -4,7 +4,7 @@
 !-      Use '!' comments if they need to be retained when using the IDFEditor.
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,9.1;
+  Version,9.2;
 
 !-   ===========  ALL OBJECTS IN CLASS: SIMULATIONCONTROL ===========
 
@@ -230,7 +230,7 @@
     0.0,                     !- X Origin {m}
     0.0,                     !- Y Origin {m}
     0.0,                     !- Z Origin {m}
-    1,                       !- Type
+    ,                        !- Type
     1;                       !- Multiplier
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDINGSURFACE:DETAILED ===========
@@ -260,7 +260,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    Autocalculate,           !- View Factor to Ground
+    ,                        !- View Factor to Ground
     4,                       !- Number of Vertices
     1.524000,10.668000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     1.524000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -276,7 +276,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    Autocalculate,           !- View Factor to Ground
+    ,                        !- View Factor to Ground
     4,                       !- Number of Vertices
     10.668000,10.668000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     10.668000,10.668000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -292,7 +292,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    Autocalculate,           !- View Factor to Ground
+    ,                        !- View Factor to Ground
     4,                       !- Number of Vertices
     10.668000,1.524000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     10.668000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -308,7 +308,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    Autocalculate,           !- View Factor to Ground
+    ,                        !- View Factor to Ground
     4,                       !- Number of Vertices
     1.524000,10.668000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     1.524000,1.524000,4.572000,  !- X,Y,Z ==> Vertex 2 {m}
@@ -324,7 +324,7 @@
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
     WindExposed,             !- Wind Exposure
-    Autocalculate,           !- View Factor to Ground
+    ,                        !- View Factor to Ground
     4,                       !- Number of Vertices
     1.524000,1.524000,4.572000,  !- X,Y,Z ==> Vertex 1 {m}
     1.524000,1.524000,0.000000,  !- X,Y,Z ==> Vertex 2 {m}

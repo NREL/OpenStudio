@@ -40,6 +40,7 @@ namespace model {
 class Material;
 class ConstructionBase;
 class Surface;
+class CustomBlock;
 
 namespace detail {
 
@@ -73,9 +74,25 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
     
+    //extensible fields
+
+    bool addCustomBlock(const CustomBlock& customBlock);
+
+    bool addCustomBlock(const Material& material, double depth, double xPosition, double zPosition);
+    
+    bool removeCustomBlock(unsigned groupIndex);
+
+    void removeAllCustomBlocks();
+    
+    std::vector<CustomBlock> customBlocks() const;
+
+    bool addCustomBlocks(const std::vector<CustomBlock> &customBlocks);
+    
     //@}
     /** @name Getters */
     //@{
+
+    boost::optional<double> initialIndoorAirTemperature();
 
     boost::optional<Material> interiorHorizontalInsulationMaterial() const;
 
@@ -117,11 +134,15 @@ namespace detail {
 
     bool isFootingDepthDefaulted() const;
 
-    std::vector<Surface> surfaces() const; 
+    std::vector<Surface> surfaces() const;
+    
+    unsigned int numberofCustomBlocks() const;
 
     //@}
     /** @name Setters */
     //@{
+
+    bool setInitialIndoorAirTemperature(double initialIndoorAirTemperature);
 
     bool setInteriorHorizontalInsulationMaterial(const Material& material);
 

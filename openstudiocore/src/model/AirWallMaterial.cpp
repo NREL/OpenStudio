@@ -79,6 +79,8 @@ AirWallMaterial::AirWallMaterial(const Model& model)
 {
   OS_ASSERT(getImpl<detail::AirWallMaterial_Impl>());
 
+  LOG(Warn, "AirWallMaterial is deprecated.  Use ConstructionAirBoundary instead.")
+
   // TODO: Appropriately handle the following required object-list fields.
   bool ok = true;
   // ok = setHandle();

@@ -33,7 +33,7 @@
 ! WeatherFileName=USA_CO_Boulder_TMY2.epw
 ! End SimMetaData
 
-  Version,9.1;
+  Version,9.2;
 
   Timestep,6;
 
@@ -45,7 +45,7 @@
     Yes;                     !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    RUNPERIOD 1,             !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
     ,                        !- Begin Year
@@ -1062,7 +1062,7 @@
   InternalMass,
     Classroom Internal Mass, !- Name
     InteriorFurnishings,     !- Construction Name
-    Classroom,               !- Zone Name
+    Classroom,               !- Zone or ZoneList Name
     167.2255;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -1253,8 +1253,8 @@
     Classroom Direct Air,    !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
-    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
-    ;                        !- Zone Equipment 1 Sequential Heating Fraction
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   AirTerminal:SingleDuct:Uncontrolled,
     Classroom Direct Air,    !- Name

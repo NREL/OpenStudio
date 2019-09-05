@@ -34,6 +34,8 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
+#include "../model/AdditionalProperties.hpp"
+#include "../model/AdditionalProperties_Impl.hpp"
 #include "../model/Construction.hpp"
 #include "../model/Construction_Impl.hpp"
 #include "../model/AirGap.hpp"
@@ -64,9 +66,17 @@ namespace gbxml {
     openstudio::model::Construction construction(model);
     QString constructionId = element.attribute("id");
     m_idToObjectMap.insert(std::make_pair(constructionId, construction));
+    construction.additionalProperties().setFeature("gbXMLId", toString(constructionId));
 
     QString constructionName = element.firstChildElement("Name").toElement().text();
     construction.setName(escapeName(constructionId, constructionName));
+
+    //// import CADObjectId
+    //QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    //if (cadObjectIdElements.size() >= 1) {
+    //  // TODO: import multiple CADObjectIds
+    //  translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, construction);
+    //}
 
     QDomNodeList layerIdList = element.elementsByTagName("LayerId");
 
@@ -121,6 +131,7 @@ namespace gbxml {
     openstudio::model::Construction construction(model);
     QString windowTypeId = element.attribute("id");
     m_idToObjectMap.insert(std::make_pair(windowTypeId, construction));
+    construction.additionalProperties().setFeature("gbXMLId", toString(windowTypeId));
 
     QString windowTypeName = element.firstChildElement("Name").toElement().text();
     construction.setName(escapeName(windowTypeId, windowTypeName));
@@ -166,7 +177,13 @@ namespace gbxml {
       layers.push_back(glazing);
       construction.setLayers(layers);
     }
-
+      
+    //// import CADObjectId
+    //QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    //if (cadObjectIdElements.size() >= 1) {
+    //  // TODO: import multiple CADObjectIds
+    //  translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, construction);
+    //}
     return construction;
   }
 
@@ -198,6 +215,7 @@ namespace gbxml {
 
       QString id = element.attribute("id");
       m_idToObjectMap.insert(std::make_pair(id, material));
+      material.additionalProperties().setFeature("gbXMLId", toString(id));
 
       QString name = element.firstChildElement("Name").toElement().text();
       material.setName(escapeName(id, name));
@@ -223,6 +241,7 @@ namespace gbxml {
 
       QString id = element.attribute("id");
       m_idToObjectMap.insert(std::make_pair(id, material));
+      material.additionalProperties().setFeature("gbXMLId", toString(id));
 
       QString name = element.firstChildElement("Name").toElement().text();
       material.setName(escapeName(id, name));
@@ -237,6 +256,7 @@ namespace gbxml {
 
       QString id = element.attribute("id");
       m_idToObjectMap.insert(std::make_pair(id, material));
+      material.additionalProperties().setFeature("gbXMLId", toString(id));
 
       QString name = element.firstChildElement("Name").toElement().text();
       material.setName(escapeName(id, name));
@@ -245,6 +265,15 @@ namespace gbxml {
 
       material.setThermalResistance(.001);
     }
+
+    //// import CADObjectId
+    //QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    //if (cadObjectIdElements.size() >= 1) {
+    //  // TODO: import multiple CADObjectIds
+    //  if (result) {
+    //    translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *result);
+    //  }
+    //}
 
     return result;
   }

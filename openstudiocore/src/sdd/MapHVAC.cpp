@@ -589,7 +589,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     auto value = element.text().toDouble(&ok);
     if( ok ) {
       value = unitToUnit(value,"Btu/h","W").get();
-      vrf.setRatedTotalCoolingCapacity(value);
+      vrf.setGrossRatedTotalCoolingCapacity(value);
     }
   }
 
@@ -598,7 +598,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     bool ok;
     auto value = element.text().toDouble(&ok);
     if( ok ) {
-      vrf.setRatedCoolingCOP(1.0 / value );
+      vrf.setGrossRatedCoolingCOP(1.0 / value );
     }
   }
 
@@ -608,7 +608,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     auto value = element.text().toDouble(&ok);
     if( ok ) {
       value = unitToUnit(value,"Btu/h","W").get();
-      vrf.setRatedTotalHeatingCapacity(value);
+      vrf.setGrossRatedHeatingCapacity(value);
     }
   }
 
@@ -626,7 +626,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     bool ok;
     auto value = element.text().toDouble(&ok);
     if( ok ) {
-      vrf.setRatedTotalHeatingCapacitySizingRatio(value);
+      vrf.setRatedHeatingCapacitySizingRatio(value);
     }
   }
 

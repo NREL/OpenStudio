@@ -82,6 +82,9 @@ public:
 
   std::string costUnits() const;
 
+  std::string startOfCosts() const;
+  bool isStartOfCostsDefaulted() const;
+
   int yearsFromStart() const;
   bool isYearsFromStartDefaulted() const;
   int monthsFromStart() const;
@@ -101,6 +104,9 @@ public:
   bool setCost(double cost);
 
   bool setCostUnits(const std::string& costUnits);
+
+  bool setStartOfCosts(const std::string& startOfCosts);
+  void resetStartOfCosts() ;
 
   bool setYearsFromStart(int yearsFromStart);
   void resetYearsFromStart();

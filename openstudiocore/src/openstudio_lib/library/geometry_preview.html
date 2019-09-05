@@ -2183,7 +2183,14 @@ function init(os_data_in) {
   var zAxisGeometry = new THREE.Geometry();
   zAxisGeometry.vertices.push( new THREE.Vector3(0,0,0), new THREE.Vector3(0,axisSize,0));
   scene.add( new THREE.Line( zAxisGeometry, zAxisMaterial ) );
-
+  
+  if (os_data.metadata.northAxis != 0) {
+    northAxisRad = -os_data.metadata.northAxis * Math.PI / 180.0;
+    var northAxisMaterial = new THREE.LineBasicMaterial({ color: 0xff9933, linewidth: 2 });
+    var northAxisGeometry = new THREE.Geometry();
+    northAxisGeometry.vertices.push( new THREE.Vector3(0,0,0), new THREE.Vector3(-Math.sin(northAxisRad)*axisSize,0,-Math.cos(northAxisRad)*axisSize));
+    scene.add( new THREE.Line( northAxisGeometry, northAxisMaterial ) );
+  }
   // scene
   project = new THREE.Object3D();
   scene.add(project);

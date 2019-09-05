@@ -111,6 +111,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermostatSetpointDualSet
   }
   // No other cases, in ForwardTranslateThermalZone, we have checked that there is at least one schedule
 
+  // Temperature Difference Between Cutout And Setpoint => Handle in ForwardTranslateThermalZone to place on ZoneControlThermostat object
+
   return result;
 
 }

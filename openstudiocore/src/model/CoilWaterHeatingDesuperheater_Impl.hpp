@@ -39,7 +39,6 @@ namespace model {
 class Schedule;
 class CurveBiquadratic;
 class HVACComponent;
-class WaterHeaterMixed;
 
 namespace detail {
 
