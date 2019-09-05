@@ -180,6 +180,26 @@ namespace detail {
     return true;
   }
 
+  double ThermostatSetpointDualSetpoint_Impl::temperatureDifferenceBetweenCutoutAndSetpoint() const {
+    boost::optional<double> value = getDouble(OS_ThermostatSetpoint_DualSetpointFields::TemperatureDifferenceBetweenCutoutAndSetpoint, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ThermostatSetpointDualSetpoint_Impl::setTemperatureDifferenceBetweenCutoutAndSetpoint(double deltaT) {
+    bool result = setDouble(OS_ThermostatSetpoint_DualSetpointFields::TemperatureDifferenceBetweenCutoutAndSetpoint, deltaT);
+    return result;
+  }
+
+  bool ThermostatSetpointDualSetpoint_Impl::isTemperatureDifferenceBetweenCutoutAndSetpointDefaulted() const {
+    return isEmpty(OS_ThermostatSetpoint_DualSetpointFields::TemperatureDifferenceBetweenCutoutAndSetpoint);
+  }
+
+// Move to public side
+
+
+
+
 } // detail
 
 ThermostatSetpointDualSetpoint::ThermostatSetpointDualSetpoint( const Model& model ):
@@ -249,6 +269,18 @@ void ThermostatSetpointDualSetpoint::resetHeatingSchedule()
 void ThermostatSetpointDualSetpoint::resetCoolingSchedule()
 {
   getImpl<detail::ThermostatSetpointDualSetpoint_Impl>()->resetCoolingSetpointTemperatureSchedule();
+}
+
+double ThermostatSetpointDualSetpoint::temperatureDifferenceBetweenCutoutAndSetpoint() const {
+  return getImpl<detail::ThermostatSetpointDualSetpoint_Impl>()->temperatureDifferenceBetweenCutoutAndSetpoint();
+}
+
+bool ThermostatSetpointDualSetpoint::setTemperatureDifferenceBetweenCutoutAndSetpoint(double deltaT) {
+  return getImpl<detail::ThermostatSetpointDualSetpoint_Impl>()->setTemperatureDifferenceBetweenCutoutAndSetpoint(deltaT);
+}
+
+bool ThermostatSetpointDualSetpoint::isTemperatureDifferenceBetweenCutoutAndSetpointDefaulted() const {
+  return getImpl<detail::ThermostatSetpointDualSetpoint_Impl>()->isTemperatureDifferenceBetweenCutoutAndSetpointDefaulted();
 }
 
 } // model

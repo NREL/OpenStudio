@@ -3594,15 +3594,15 @@ OS:Construction:InternalSource,
        \required-field
        \begin-extensible
        \object-list MaterialNames
-       
+
 OS:Construction:AirBoundary,
-       \memo Indicates an open boundary between two zones. It may be used for base surfaces and fenestration surfaces. 
-       \memo When this construction type is used, the Outside Boundary Condition of the surface 
-       \memo (or the base surface of a fenestration surface) must be either Surface or Zone. 
+       \memo Indicates an open boundary between two zones. It may be used for base surfaces and fenestration surfaces.
+       \memo When this construction type is used, the Outside Boundary Condition of the surface
+       \memo (or the base surface of a fenestration surface) must be either Surface or Zone.
        \memo A base surface with OS:Construction:AirBoundary cannot hold any fenestration surfaces.
   A1, \field Handle
        \type handle
-       \required-field       
+       \required-field
   A2,  \field Name
        \required-field
        \type alpha
@@ -3626,7 +3626,7 @@ OS:Construction:AirBoundary,
        \key SimpleMixing
        \default None
   N1,  \field Simple Mixing Air Changes per Hour
-       \note If the Air Exchange Method is SimpleMixing then this field specifies the air changes per hour 
+       \note If the Air Exchange Method is SimpleMixing then this field specifies the air changes per hour
        \note using the volume of the smaller zone as the basis.
        \note If an AirflowNetwork simulation is active this field is ignored.
        \units 1/hr
@@ -3642,7 +3642,7 @@ OS:Construction:AirBoundary,
   A7;  \field Surface Rendering Name
        \type object-list
        \object-list SurfaceRenderingNames
-       
+
 OS:Construction:WindowDataFile,
        \memo Initiates search of the Window5 data file for a window called Name.
        \url-object
@@ -22736,9 +22736,17 @@ OS:ThermostatSetpoint:DualSetpoint,
   A3, \field Heating Setpoint Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
-  A4; \field Cooling Setpoint Temperature Schedule Name
+  A4, \field Cooling Setpoint Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
+  A5; \field Temperature Difference Between Cutout And Setpoint
+       \note In EnergyPlus, this field is on the ZoneControl:Thermostat, which will be handled in Forward Translation
+       \note This optional choice field provides a temperature difference between cut-out temperature and
+       \note setpoint. The difference is used to adjust to heating or cooling setpoint based on control types.
+       \units deltaC
+       \type real
+       \minimum 0.0
+       \default 0.0
 
 OS:ZoneControl:Thermostat:StagedDualSetpoint,
   A1, \field Handle
