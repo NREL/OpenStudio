@@ -94,6 +94,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilWaterHeatingAirToWaterHeatPump.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingAirToWaterHeatPumpWrapped.cpp
   ForwardTranslator/ForwardTranslateConstruction.cpp
+  ForwardTranslator/ForwardTranslateConstructionAirBoundary.cpp
   ForwardTranslator/ForwardTranslateConstructionWithInternalSource.cpp
   ForwardTranslator/ForwardTranslateConvergenceLimits.cpp
   ForwardTranslator/ForwardTranslateControllerMechanicalVentilation.cpp
@@ -409,6 +410,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateCoilHeatingGas.cpp
   ReverseTranslator/ReverseTranslateCoilSystemCoolingDX.cpp
   ReverseTranslator/ReverseTranslateConstruction.cpp
+  ReverseTranslator/ReverseTranslateConstructionAirBoundary.cpp
+ # ReverseTranslator/ReverseTranslateConstructionWithInternalSource.cpp # DLM: todo this is missing
   ReverseTranslator/ReverseTranslateConvergenceLimits.cpp
   ReverseTranslator/ReverseTranslateCurveBicubic.cpp
   ReverseTranslator/ReverseTranslateCurveBiquadratic.cpp

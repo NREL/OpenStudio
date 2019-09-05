@@ -112,7 +112,7 @@ namespace detail {
     {
       result.push_back(ScheduleTypeKey("PumpVariableSpeed","Pump Flow Rate"));
     }
-    if (std::find(b,e,OS_Pump_VariableSpeedFields::PumprpmScheduleName) != e)
+    if (std::find(b,e,OS_Pump_VariableSpeedFields::PumpRPMScheduleName) != e)
     {
       result.push_back(ScheduleTypeKey("PumpVariableSpeed","Pump RPM"));
     }
@@ -370,7 +370,7 @@ namespace detail {
   }
 
   boost::optional<Schedule> PumpVariableSpeed_Impl::pumpRPMSchedule() const {
-    return getObject<PumpVariableSpeed>().getModelObjectTarget<Schedule>(OS_Pump_VariableSpeedFields::PumprpmScheduleName);
+    return getObject<PumpVariableSpeed>().getModelObjectTarget<Schedule>(OS_Pump_VariableSpeedFields::PumpRPMScheduleName);
   }
 
   boost::optional<Schedule> PumpVariableSpeed_Impl::minimumPressureSchedule() const {
@@ -723,7 +723,7 @@ namespace detail {
   }
 
   bool PumpVariableSpeed_Impl::setPumpRPMSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_Pump_VariableSpeedFields::PumprpmScheduleName,
+    bool result = setSchedule(OS_Pump_VariableSpeedFields::PumpRPMScheduleName,
                               "PumpVariableSpeed",
                               "Pump RPM",
                               schedule);
@@ -731,7 +731,7 @@ namespace detail {
   }
 
   void PumpVariableSpeed_Impl::resetPumpRPMSchedule() {
-    bool result = setString(OS_Pump_VariableSpeedFields::PumprpmScheduleName, "");
+    bool result = setString(OS_Pump_VariableSpeedFields::PumpRPMScheduleName, "");
     OS_ASSERT(result);
   }
 

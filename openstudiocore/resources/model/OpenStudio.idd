@@ -340,7 +340,7 @@ OS:ShadowCalculation,
        \key AverageOverDaysInFrequency
        \key TimestepFrequency
        \default AverageOverDaysInFrequency
-       
+
 OS:SimulationControl,
        \memo Note that the following 3 fields are related to the Sizing:Zone, Sizing:System,
        \memo and Sizing:Plant objects.  Having these fields set to Yes but no corresponding
@@ -433,7 +433,7 @@ OS:PerformancePrecisionTradeoffs,
        \type handle
        \required-field
   A2; \field Use Coil Direct Solutions
-      \note If Yes, an analytical or empirical solution will be used to replace iterations in 
+      \note If Yes, an analytical or empirical solution will be used to replace iterations in
       \note the coil performance calculations.
       \type choice
       \key Yes
@@ -3595,6 +3595,54 @@ OS:Construction:InternalSource,
        \begin-extensible
        \object-list MaterialNames
 
+OS:Construction:AirBoundary,
+       \memo Indicates an open boundary between two zones. It may be used for base surfaces and fenestration surfaces.
+       \memo When this construction type is used, the Outside Boundary Condition of the surface
+       \memo (or the base surface of a fenestration surface) must be either Surface or Zone.
+       \memo A base surface with OS:Construction:AirBoundary cannot hold any fenestration surfaces.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ConstructionNames
+  A3,  \field Solar and Daylighting Method
+       \note This field controls how the surface is modeled for solar distribution and daylighting calculations.
+       \type choice
+       \key GroupedZones
+       \key InteriorWindow
+       \default GroupedZones
+  A4,  \field Radiant Exchange Method
+       \note This field controls how the surface is modeled for radiant exchange calculations.
+       \type choice
+       \key GroupedZones
+       \key IRTSurface
+       \default GroupedZones
+  A5,  \field Air Exchange Method
+       \note This field controls how air exchange is modeled across this boundary.
+       \type choice
+       \key None
+       \key SimpleMixing
+       \default None
+  N1,  \field Simple Mixing Air Changes per Hour
+       \note If the Air Exchange Method is SimpleMixing then this field specifies the air changes per hour
+       \note using the volume of the smaller zone as the basis.
+       \note If an AirflowNetwork simulation is active this field is ignored.
+       \units 1/hr
+       \type real
+       \minimum 0
+       \default 0.5
+  A6,  \field Simple Mixing Schedule Name
+       \note If the Air Exchange Method is SimpleMixing then this field specifies the air exchange schedule.
+       \note If this field is blank, the schedule is always 1.0.
+       \note If an AirflowNetwork simulation is active this field is ignored.
+       \type object-list
+       \object-list ScheduleNames
+  A7;  \field Surface Rendering Name
+       \type object-list
+       \object-list SurfaceRenderingNames
+
 OS:Construction:WindowDataFile,
        \memo Initiates search of the Window5 data file for a window called Name.
        \url-object
@@ -4974,6 +5022,7 @@ OS:External:File,
        \type choice
        \key Comma
        \key Tab
+       \key Fixed
        \key Space
        \key Semicolon
        \default Comma
@@ -5013,6 +5062,7 @@ OS:Schedule:File,
        \key Comma
        \key Tab
        \key Fixed
+       \key Space
        \key Semicolon
        \default Comma
   A6,  \field Interpolate to Timestep
@@ -15248,6 +15298,7 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \required-field
        \type alpha
        \reference CoolingCoilsDXMultiSpeed
+       \reference DesuperHeatingWaterOnlySources
        \reference AFNCoilNames
        \reference ConnectionObject
   A3 , \field Availability Schedule
@@ -15933,6 +15984,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \required-field
        \reference CoolingCoilsWaterToAirHP
        \reference ConnectionObject
+       \reference DesuperHeatingWaterOnlySources
   A3,  \field Water Inlet Node Name
        \type object-list
        \required-field
@@ -16550,6 +16602,7 @@ OS:Coil:WaterHeating:Desuperheater,
        \required-field
        \type object-list
        \object-list DesuperHeatingCoilSources
+       \object-list DesuperHeatingWaterOnlySources
        \note The name of the DX system used for heat reclaim.
   N6,  \field Water Flow Rate
        \required-field
@@ -17254,6 +17307,7 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \required-field
         \type alpha
         \reference CoolingCoilsDXVariableSpeed
+        \reference DesuperHeatingCoilSources
         \reference ConnectionObject
    A3,  \field Indoor Air Inlet Node Name
         \type object-list
@@ -21191,7 +21245,7 @@ OS:Pump:VariableSpeed,
        \type choice
        \key ManualControl
        \key PressureSetpointControl
-  A9, \field Pump rpm Schedule Name
+  A9, \field Pump RPM Schedule Name
        \note Modifies the rpm of the pump on a time basis. Default is
        \note that the pump is on and runs according to its other operational requirements
        \note specified above.  The schedule is for special pump operations.
@@ -21207,11 +21261,11 @@ OS:Pump:VariableSpeed,
        \object-list ScheduleNames
   A12, \field Minimum RPM Schedule
        \type object-list
-       \units Rotations Per Minute
+       \units rev/min
        \object-list ScheduleNames
   A13, \field Maximum RPM Schedule
        \type object-list
-       \units Rotations Per Minute
+       \units rev/min
        \object-list ScheduleNames
   A14,  \field Zone Name
         \note optional, if used pump losses transfered to zone as internal gains
@@ -22919,9 +22973,17 @@ OS:ThermostatSetpoint:DualSetpoint,
   A3, \field Heating Setpoint Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
-  A4; \field Cooling Setpoint Temperature Schedule Name
+  A4, \field Cooling Setpoint Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
+  A5; \field Temperature Difference Between Cutout And Setpoint
+       \note In EnergyPlus, this field is on the ZoneControl:Thermostat, which will be handled in Forward Translation
+       \note This optional choice field provides a temperature difference between cut-out temperature and
+       \note setpoint. The difference is used to adjust to heating or cooling setpoint based on control types.
+       \units deltaC
+       \type real
+       \minimum 0.0
+       \default 0.0
 
 OS:ZoneControl:Thermostat:StagedDualSetpoint,
   A1, \field Handle
@@ -26469,7 +26531,7 @@ OS:ThermalStorage:Ice:Detailed,
        \memo includes smaller containers filled with water that are placed in a larger
        \memo tank or series of tanks.
        \memo The model uses polynomial equations to describe the system performance.
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
   A2 , \field Name
@@ -26492,18 +26554,32 @@ OS:ThermalStorage:Ice:Detailed,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A6 , \field Discharging Curve
+  A6 , \field Discharging Curve Variable Specifications
+       \required-field
+       \type choice
+       \key FractionChargedLMTD
+       \key FractionDischargedLMTD
+       \key LMTDMassFlow
+       \key LMTDFractionCharged
+  A7 , \field Discharging Curve
        \type object-list
        \required-field
        \object-list QuadraticLinearCurves
        \object-list CubicLinearCurves
-       \object-list UniVariateTables
-  A7 , \field Charging Curve
+       \object-list BiVariateTables
+  A8 , \field Charging Curve Variable Specifications
+       \required-field
+       \type choice
+       \key FractionChargedLMTD
+       \key FractionDischargedLMTD
+       \key LMTDMassFlow
+       \key LMTDFractionCharged
+  A9 , \field Charging Curve
        \type object-list
        \required-field
        \object-list QuadraticLinearCurves
        \object-list CubicLinearCurves
-       \object-list UniVariateTables
+       \object-list BiVariateTables
   N2 , \field Timestep of the Curve Data
        \units hr
        \required-field
@@ -26524,7 +26600,7 @@ OS:ThermalStorage:Ice:Detailed,
        \note parameters input above is inappropriate and not advised.
        \units C
        \required-field
-  A8 ; \field Thaw Process Indicator
+  A10 ; \field Thaw Process Indicator
        \note This field determines whether the system uses internal or external melt
        \note during discharging.  This will then have an impact on charging performance.
        \type choice

@@ -49,21 +49,9 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateAirWallMaterial( AirWallMaterial& modelObject )
 {
-  IdfObject idfObject(IddObjectType::Material);
-  m_idfObjects.push_back(idfObject);
-
-  // convert to a single layer of gypsum
-  idfObject.setString(MaterialFields::Name, modelObject.name().get());
-  idfObject.setString(MaterialFields::Roughness, "MediumSmooth");
-  idfObject.setDouble(MaterialFields::Thickness, 0.01);
-  idfObject.setDouble(MaterialFields::Conductivity, 0.6);
-  idfObject.setDouble(MaterialFields::Density, 800);
-  idfObject.setDouble(MaterialFields::SpecificHeat, 1000);
-  idfObject.setDouble(MaterialFields::ThermalAbsorptance, 0.95);
-  idfObject.setDouble(MaterialFields::SolarAbsorptance, 0.7);
-  idfObject.setDouble(MaterialFields::VisibleAbsorptance, 0.7);
-
-  return boost::optional<IdfObject>(idfObject);
+  LOG(Error, "Translation of AirWallMaterial has been removed.  Use ConstructionAirBoundary instead.");
+  OS_ASSERT(false);
+  return boost::none;
 }
 
 } // energyplus

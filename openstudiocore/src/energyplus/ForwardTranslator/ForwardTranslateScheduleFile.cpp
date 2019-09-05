@@ -84,7 +84,11 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFile( ScheduleFil
     idfObject.setInt( openstudio::Schedule_FileFields::NumberofHoursofData, modelObject.numberofHoursofData().get() );
   }
 
-  idfObject.setString( openstudio::Schedule_FileFields::ColumnSeparator, modelObject.columnSeparator() );
+  std::string columnSeparator = modelObject.columnSeparator();
+  if (istringEqual("Fixed", columnSeparator)) {
+    columnSeparator = "Space";
+  }
+  idfObject.setString(openstudio::Schedule_FileFields::ColumnSeparator, columnSeparator);
 
   if ( modelObject.interpolatetoTimestep() ) {
     idfObject.setString( openstudio::Schedule_FileFields::InterpolatetoTimestep, "Yes" );

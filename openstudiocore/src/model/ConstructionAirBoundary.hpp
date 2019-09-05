@@ -27,99 +27,118 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_THERMOSTATSETPOINTDUALSETPOINT_HPP
-#define MODEL_THERMOSTATSETPOINTDUALSETPOINT_HPP
+#ifndef MODEL_CONSTRUCTIONAIRBOUNDARY_HPP
+#define MODEL_CONSTRUCTIONAIRBOUNDARY_HPP
 
-#include "Thermostat.hpp"
+#include <model/ModelAPI.hpp>
+#include "ConstructionBase.hpp"
 
 namespace openstudio {
+
 namespace model {
 
-namespace detail
-{
-  class ThermostatSetpointDualSetpoint_Impl;
-}
-
+// TODO: Check the following class names against object getters and setters.
 class Schedule;
 
-/** ThermostatSetpointDualSetpoint is a ModelObject that wraps the OpenStudio IDD object
- *  'OS:ThermostatSetpoint:DualSetpoint'. */
-class MODEL_API ThermostatSetpointDualSetpoint : public Thermostat {
+namespace detail {
+
+  class ConstructionAirBoundary_Impl;
+
+} // detail
+
+/** ConstructionAirBoundary is a ConstructionBase that wraps the OpenStudio IDD object 'OS:Construction:AirBoundary'. */
+class MODEL_API ConstructionAirBoundary : public ConstructionBase {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ThermostatSetpointDualSetpoint(const Model& model);
+  explicit ConstructionAirBoundary(const Model& model);
 
-  virtual ~ThermostatSetpointDualSetpoint() {}
+  virtual ~ConstructionAirBoundary() {}
 
   //@}
 
   static IddObjectType iddObjectType();
 
+  static std::vector<std::string> solarAndDaylightingMethodValues();
+
+  static std::vector<std::string> radiantExchangeMethodValues();
+
+  static std::vector<std::string> airExchangeMethodValues();
+
   /** @name Getters */
   //@{
 
-  boost::optional<Schedule> heatingSetpointTemperatureSchedule() const;
+  std::string solarAndDaylightingMethod() const;
 
-  boost::optional<Schedule> coolingSetpointTemperatureSchedule() const;
+  bool isSolarAndDaylightingMethodDefaulted() const;
 
-  /** This ends up in the ZoneControl:Thermostat object during ForwardTranslation */
-  double temperatureDifferenceBetweenCutoutAndSetpoint() const;
-  bool isTemperatureDifferenceBetweenCutoutAndSetpointDefaulted() const;
+  std::string radiantExchangeMethod() const;
 
-  /** \deprecated */
-  boost::optional<Schedule> getHeatingSchedule() const;
+  bool isRadiantExchangeMethodDefaulted() const;
 
-  /** \deprecated */
-  boost::optional<Schedule> getCoolingSchedule() const;
+  std::string airExchangeMethod() const;
+
+  bool isAirExchangeMethodDefaulted() const;
+
+  double simpleMixingAirChangesPerHour() const;
+
+  bool isSimpleMixingAirChangesPerHourDefaulted() const;
+
+  boost::optional<Schedule> simpleMixingSchedule() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
+  bool setSolarAndDaylightingMethod(const std::string& solarAndDaylightingMethod);
 
-  void resetHeatingSetpointTemperatureSchedule();
+  void resetSolarAndDaylightingMethod();
 
-  bool setCoolingSetpointTemperatureSchedule(Schedule& schedule);
+  bool setRadiantExchangeMethod(const std::string& radiantExchangeMethod);
 
-  void resetCoolingSetpointTemperatureSchedule();
+  void resetRadiantExchangeMethod();
 
-  bool setTemperatureDifferenceBetweenCutoutAndSetpoint(double deltaT);
+  bool setAirExchangeMethod(const std::string& airExchangeMethod);
 
-  /** \deprecated */
-  bool setHeatingSchedule(Schedule& s );
+  void resetAirExchangeMethod();
 
-  /** \deprecated */
-  void resetHeatingSchedule();
+  bool setSimpleMixingAirChangesPerHour(double simpleMixingAirChangesPerHour);
 
-  /** \deprecated */
-  bool setCoolingSchedule(Schedule& s );
+  void resetSimpleMixingAirChangesPerHour();
 
-  /** \deprecated */
-  void resetCoolingSchedule();
+  bool setSimpleMixingSchedule(Schedule& schedule);
+
+  void resetSimpleMixingSchedule();
+
+  //@}
+  /** @name Other */
+  //@{
 
   //@}
  protected:
+  /// @cond
+  typedef detail::ConstructionAirBoundary_Impl ImplType;
 
+  explicit ConstructionAirBoundary(std::shared_ptr<detail::ConstructionAirBoundary_Impl> impl);
+
+  friend class detail::ConstructionAirBoundary_Impl;
   friend class Model;
-
-  friend class openstudio::IdfObject;
-
-  typedef detail::ThermostatSetpointDualSetpoint_Impl ImplType;
-
-  explicit ThermostatSetpointDualSetpoint(std::shared_ptr<detail::ThermostatSetpointDualSetpoint_Impl> impl);
-
+  friend class IdfObject;
+  friend class openstudio::detail::IdfObject_Impl;
+  /// @endcond
  private:
-
-  REGISTER_LOGGER("openstudio.model.ThermostatSetpointDualSetpoint");
-
+  REGISTER_LOGGER("openstudio.model.ConstructionAirBoundary");
 };
 
-typedef boost::optional<ThermostatSetpointDualSetpoint> OptionalThermostatSetpointDualSetpoint;
+/** \relates ConstructionAirBoundary*/
+typedef boost::optional<ConstructionAirBoundary> OptionalConstructionAirBoundary;
+
+/** \relates ConstructionAirBoundary*/
+typedef std::vector<ConstructionAirBoundary> ConstructionAirBoundaryVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_THERMOSTATSETPOINTDUALSETPOINT_HPP
+#endif // MODEL_CONSTRUCTIONAIRBOUNDARY_HPP
+
