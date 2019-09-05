@@ -63,13 +63,13 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
   openstudio::model::Space space( m_model );
   space.setThermalZone(thermalZone);
 
-  boost::optional<std::string> idfZoneName;
+  boost::optional<std::string> _idfZoneName;
 
   OptionalString s = workspaceObject.name();
   if(s){
     space.setName(*s);
     thermalZone.setName(*s + " Thermal Zone");
-    idfZoneName = *s;
+    _idfZoneName = *s;
   }
 
   OptionalDouble d = workspaceObject.getDouble(ZoneFields::DirectionofRelativeNorth);
@@ -137,34 +137,39 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
   // Thermostat
 
   // If the zone in the idf file does not have a name, there is no use in even trying to find a thermostat
-  if( idfZoneName )
+  if( _idfZoneName )
   {
     Workspace workspace = workspaceObject.workspace();
 
+    // Loop on all ZoneControl:Thermostat objects, trying to find the one
     std::vector<WorkspaceObject> _zoneControlThermostats;
     _zoneControlThermostats = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat);
-
     for( const auto & _zoneControlThermostat : _zoneControlThermostats )
     {
       if( boost::optional<std::string> zoneName = _zoneControlThermostat.getString( ZoneControl_ThermostatFields::ZoneorZoneListName ) )
       {
         bool zoneControlThermostatfound = false;
 
-        if( zoneName.get() == idfZoneName )
+        // If it references our zone, then good to go!
+        if( openstudio::istringEqual(zoneName.get(), _idfZoneName.get()) )
         {
           zoneControlThermostatfound = true;
         }
+        // Otherwise, it might be in a ZoneList
         else if( boost::optional<WorkspaceObject> _zoneList = workspace.getObjectByTypeAndName(IddObjectType::ZoneList,zoneName.get()) )
         {
+          // Loop on all entries (=Zone Names) in that ZoneList
           std::vector<IdfExtensibleGroup> zoneListGroup = _zoneList->extensibleGroups();
-
           for( const auto & zoneListElem : zoneListGroup )
           {
             boost::optional<std::string> zoneListZoneName = zoneListElem.getString(ZoneListExtensibleFields::ZoneName);
             if( zoneListZoneName )
             {
-              if( zoneListZoneName.get() == idfZoneName ) { zoneControlThermostatfound = true; }
-              break;
+              if( openstudio::istringEqual(zoneListZoneName.get(), _idfZoneName.get()) ) {
+                // If that's the one, no need to keep processing other Zone Names
+                zoneControlThermostatfound = true;
+                break;
+              }
             }
           }
         }
@@ -203,7 +208,7 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
 
   // Zone Equipment
 /*
-  if( idfZoneName )
+  if( _idfZoneName )
   {
     std::vector<WorkspaceObject> zoneHVACEquipmentConnections;
     zoneHVACEquipmentConnections = workspaceObject.workspace().getObjectsByType(IddObjectType::ZoneHVAC_EquipmentConnections);
@@ -214,7 +219,7 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
     {
       s = it->getString(ZoneHVAC_EquipmentConnectionsFields::ZoneName);
 
-      if( s && istringEqual(s.get(),idfZoneName.get()) )
+      if( s && istringEqual(s.get(),_idfZoneName.get()) )
       {
         boost::optional<WorkspaceObject> _zoneEquipmentList = it->getTarget(ZoneHVAC_EquipmentConnectionsFields::ZoneConditioningEquipmentListName);
 
