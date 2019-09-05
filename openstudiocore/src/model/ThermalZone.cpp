@@ -88,6 +88,7 @@
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleConstant.hpp"
+#include "ScheduleConstant_Impl.hpp"
 #include "AirLoopHVACZoneSplitter.hpp"
 #include "AirLoopHVACZoneSplitter_Impl.hpp"
 #include "AirLoopHVACZoneMixer.hpp"
@@ -2372,7 +2373,20 @@ namespace detail {
 
   boost::optional<double> ThermalZone_Impl::sequentialCoolingFraction(const ModelObject& equipment) const
   {
-    return zoneHVACEquipmentList().sequentialCoolingFraction(equipment);
+
+    boost::optional<double> result;
+
+    if (boost::optional<Schedule> _schedule = sequentialCoolingFractionSchedule(equipment)) {
+      if (boost::optional<ScheduleConstant> _schConstant = _schedule->optionalCast<ScheduleConstant>()) {
+        result = boost::optional<double>(_schConstant->value());
+      } else {
+        LOG(Warn, "This deprecated method cannot return a double when the "
+                  "'Zone Equipment Sequential Cooling Fraction Schedule' isn't a Schedule:Constant, "
+                  "here the schedule is a '" << _schedule->iddObject().name() << ". Occurred for " << briefDescription());
+      }
+    }
+
+    return result;
   }
 
   boost::optional<Schedule> ThermalZone_Impl::sequentialCoolingFractionSchedule(const ModelObject& equipment) const
@@ -2382,7 +2396,19 @@ namespace detail {
 
   boost::optional<double> ThermalZone_Impl::sequentialHeatingFraction(const ModelObject& equipment) const
   {
-    return zoneHVACEquipmentList().sequentialHeatingFraction(equipment);
+    boost::optional<double> result;
+
+    if (boost::optional<Schedule> _schedule = sequentialHeatingFractionSchedule(equipment)) {
+      if (boost::optional<ScheduleConstant> _schConstant = _schedule->optionalCast<ScheduleConstant>()) {
+        result = boost::optional<double>(_schConstant->value());
+      } else {
+        LOG(Warn, "This deprecated method cannot return a double when the "
+                  "'Zone Equipment Sequential Heating Fraction Schedule' isn't a Schedule:Constant, "
+                  "here the schedule is a '" << _schedule->iddObject().name() << ". Occurred for " << briefDescription());
+      }
+    }
+
+    return result;
   }
 
   boost::optional<Schedule> ThermalZone_Impl::sequentialHeatingFractionSchedule(const ModelObject& equipment) const

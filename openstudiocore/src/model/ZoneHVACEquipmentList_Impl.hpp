@@ -88,7 +88,6 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
 
   unsigned coolingPriority(const ModelObject & equipment) const;
 
-
   boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
   bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
 
