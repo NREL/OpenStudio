@@ -1724,7 +1724,7 @@ namespace openstudio{
     assertKeyAndType(value, "generator", Json::stringValue);
     assertKeyAndType(value, "buildingStoryNames", Json::arrayValue);
     assertKeyAndType(value, "boundingBox", Json::objectValue);
-    assertKeyAndType(value, "northAxis", Json::realValue);
+    //assertKeyAndType(value, "northAxis", Json::realValue); // not required, support older versions without it
     assertKeyAndType(value, "modelObjectMetadata", Json::arrayValue);
 
     Json::Value version = value.get("version", "");
@@ -1743,7 +1743,11 @@ namespace openstudio{
     // DLM: done in initializer
     //boundingBox = ThreeBoundingBox(value.get("boundinmgBox", Json::objectValue));
 
-    m_northAxis = value.get("northAxis", "").asDouble();
+    if (checkKeyAndType(value, "northAxis", Json::realValue)) {
+      m_northAxis = value.get("northAxis", "").asDouble();
+    } else {
+      m_northAxis = 0.0;
+    }
 
     Json::Value modelObjectMetadata = value.get("modelObjectMetadata", Json::arrayValue);
     n = modelObjectMetadata.size();

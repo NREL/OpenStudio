@@ -35,6 +35,7 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
+#include "../../model/AirLoopHVAC.hpp"
 #include "../../model/Building.hpp"
 #include "../../model/Building_Impl.hpp"
 #include "../../model/Site.hpp"
@@ -185,6 +186,7 @@
 #include <utilities/idd/OS_Construction_FieldEnums.hxx>
 #include <utilities/idd/OS_Material_FieldEnums.hxx>
 #include <utilities/idd/OS_Material_AirGap_FieldEnums.hxx>
+#include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -405,6 +407,11 @@ TEST_F(EnergyPlusFixture, ForwardReverseTranslatorActuator_EMS) {
   // add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(model, s);
+
+  // Assign it to a loop
+  AirLoopHVAC a(model);
+  Node supplyOutletNode = a.supplyOutletNode();
+  fan.addToNode(supplyOutletNode);
 
   // add actuator
   std::string fanControlType = "Fan Pressure Rise";

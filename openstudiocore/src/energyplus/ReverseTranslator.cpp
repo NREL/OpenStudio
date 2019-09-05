@@ -409,6 +409,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateConstruction(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::Construction_AirBoundary:
+  {
+    modelObject = translateConstructionAirBoundary(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::Controller_OutdoorAir :
     {
       //modelObject = translateControllerOutdoorAir(workspaceObject);
