@@ -15061,6 +15061,7 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \required-field
        \type alpha
        \reference CoolingCoilsDXMultiSpeed
+       \reference DesuperHeatingWaterOnlySources
        \reference AFNCoilNames
        \reference ConnectionObject
   A3 , \field Availability Schedule
@@ -15746,6 +15747,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \required-field
        \reference CoolingCoilsWaterToAirHP
        \reference ConnectionObject
+       \reference DesuperHeatingWaterOnlySources
   A3,  \field Water Inlet Node Name
        \type object-list
        \required-field
@@ -16363,6 +16365,7 @@ OS:Coil:WaterHeating:Desuperheater,
        \required-field
        \type object-list
        \object-list DesuperHeatingCoilSources
+       \object-list DesuperHeatingWaterOnlySources
        \note The name of the DX system used for heat reclaim.
   N6,  \field Water Flow Rate
        \required-field
@@ -17067,6 +17070,7 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \required-field
         \type alpha
         \reference CoolingCoilsDXVariableSpeed
+        \reference DesuperHeatingCoilSources
         \reference ConnectionObject
    A3,  \field Indoor Air Inlet Node Name
         \type object-list
