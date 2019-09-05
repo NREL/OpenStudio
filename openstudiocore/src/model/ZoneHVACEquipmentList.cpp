@@ -447,11 +447,11 @@ boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialCoolingFraction(co
           = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName);
         if (wo2) {
           if (boost::optional<ScheduleConstant> _schedule = wo2->optionalCast<ScheduleConstant>()) {
-            result = boost::optional<double>(schedule.get().value());
+            result = boost::optional<double>(_schedule->value());
           } else {
             LOG(Warn, "This deprecated method cannot return a double when the "
                       "'Zone Equipment Sequential Cooling Fraction Schedule' isn't a Schedule:Constant, "
-                      "here the schedule is a '" << _schedule.iddObject().name() << ". Occurred for " << briefDescription());
+                      "here the schedule is a '" << _schedule->iddObject().name() << ". Occurred for " << briefDescription());
           }
         }
         break;
@@ -510,11 +510,11 @@ boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialHeatingFraction(co
           = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName);
         if (wo2) {
           if (boost::optional<ScheduleConstant> _schedule = wo2->optionalCast<ScheduleConstant>()) {
-            result = boost::optional<double>(schedule.get().value());
+            result = boost::optional<double>(_schedule->value());
           } else {
             LOG(Warn, "This deprecated method cannot return a double when the "
                       "'Zone Equipment Sequential Heating Fraction Schedule' isn't a Schedule:Constant, "
-                      "here the schedule is a '" << _schedule.iddObject().name() << ". Occurred for " << briefDescription());
+                      "here the schedule is a '" << _schedule->iddObject().name() << ". Occurred for " << briefDescription());
           }
         }
         break;
@@ -560,7 +560,7 @@ bool ZoneHVACEquipmentList_Impl::setSequentialCoolingFraction(const ModelObject&
   ScheduleConstant schedule(model);
   schedule.setValue(fraction);
 
-  return setSequentialCoolingFractionSchedule(equipment, schedule);
+  return setSequentialCoolingFraction(equipment, schedule);
 }
 
 bool ZoneHVACEquipmentList_Impl::setSequentialCoolingFraction(const ModelObject& equipment, const Schedule& schedule)
