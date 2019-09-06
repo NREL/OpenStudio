@@ -9671,7 +9671,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \note from cooling only mode to heat recovery mode
   A44, \field Heat Recovery Heating Energy Modifier Curve Name
        \type object-list
-       \object-list BiquadraticCurves3
+       \object-list BiquadraticCurves
        \note Enter the name of a performance curve which represents
        \note the change in heating electric consumption rate when heat recovery is active
        \note A default constant of 1.1 is used if this input is blank
