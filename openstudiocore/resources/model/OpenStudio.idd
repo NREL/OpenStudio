@@ -9690,7 +9690,6 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \required-field
        \note Enter the time constant used to model the transition
        \note from cooling only mode to heat recovery mode
-       \required-field
 
 OS:AirLoopHVAC,
        \memo Defines a central forced air system
