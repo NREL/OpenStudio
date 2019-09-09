@@ -43,6 +43,10 @@
 #include "../Schedule_Impl.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../Node.hpp"
+#include "../AirLoopHVACZoneMixer.hpp"
+#include "../AirLoopHVACReturnPlenum.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveBiquadratic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
@@ -189,4 +193,73 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Clone)
   ASSERT_FALSE(clone.supplyAirFan().handle().isNull());
 }
 
+TEST_F(ModelFixture, AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_PlenumorMixer)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan = FanConstantVolume(m,s);
+  CoilHeatingElectric heatingCoil = CoilHeatingElectric(m,s);
+  CoilCoolingDXSingleSpeed coolingCoil = makeCoolingCoil(m);
 
+  unsigned n_nodes = model.getModelObjects<Node>().size();
+  AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary = AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(m,fan,coolingCoil,heatingCoil);
+  EXPECT_EQ(n_nodes + 1, model.getModelObjects<Node>().size());
+
+  EXPECT_FALSE(unitary.plenumorMixer());
+
+  AirLoopHVAC a(m);
+  ThermalZone z(m);
+  ThermalZone plenumZone(m);
+  EXPECT_TRUE(a.addBranchForZone(z));
+  EXPECT_TRUE(z.setReturnPlenum(plenumZone));
+  AirLoopHVACZoneMixer mixer = a.zoneMixer();
+  EXPECT_EQ(1u, mixer.inletModelObjects().size());
+
+  auto modelObjects = a.demandComponents(a.zoneSplitter(), z);
+  auto plenums = subsetCastVector<AirLoopHVACSupplyPlenum>(modelObjects);
+  ASSERT_EQ(1u, plenums.size());
+  AirLoopHVACReturnPlenum plenum = plenums[0];
+  EXPECT_EQ(1u, plenum.inletModelObjects.size());
+  n_nodes = model.getModelObjects<Node>().size();
+  EXPECT_EQ(9u, n_nodes);
+
+
+  // Shouldn't work until they are both on the same loop
+  EXPECT_FALSE(unitary.setPlenumorMixer(mixer));
+  EXPECT_FALSE(unitary.plenumorMixer());
+  EXPECT_EQ(1u, mixer.inletModelObjects().size());
+  EXPECT_EQ(1u, plenum.inletModelObjects.size());
+
+  EXPECT_FALSE(unitary.setPlenumorMixer(plenum));
+  EXPECT_FALSE(unitary.plenumorMixer());
+  EXPECT_EQ(1u, mixer.inletModelObjects().size());
+  EXPECT_EQ(1u, plenum.inletModelObjects.size());
+
+  Node supplyOutletNode = a.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
+  n_nodes = model.getModelObjects<Node>().size();
+  EXPECT_EQ(9u, n_nodes);
+
+  EXPECT_TRUE(unitary.setPlenumorMixer(mixer));
+  EXPECT_EQ(2u, mixer.inletModelObjects().size());
+  EXPECT_EQ(1u, plenum.inletModelObjects.size());
+  ASSERT_TRUE(unitary.plenumorMixer());
+  EXPECT_EQ(mixer.handle(), unitary.plenumorMixer()->handle());
+
+  // Should disconnect it from the mixer first (remove that branch), then connect to plenum
+  EXPECT_TRUE(unitary.setPlenumorMixer(plenum));
+  EXPECT_EQ(1u, mixer.inletModelObjects().size());
+  EXPECT_EQ(2u, plenum.inletModelObjects.size());
+  ASSERT_TRUE(unitary.plenumorMixer());
+  EXPECT_EQ(plenum.handle(), unitary.plenumorMixer()->handle());
+
+  n_nodes = model.getModelObjects<Node>().size();
+  EXPECT_EQ(9u, n_nodes);
+
+  // Test remove
+  unitary.remove();
+  n_nodes = model.getModelObjects<Node>().size();
+  EXPECT_EQ(9u, n_nodes);
+  EXPECT_EQ(1u, mixer.inletModelObjects().size());
+  EXPECT_EQ(1u, plenum.inletModelObjects.size());
+}

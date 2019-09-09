@@ -31,8 +31,11 @@
 #include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "Mixer.hpp"
+#include "Mixer_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "Node.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/IddFactory.hxx>
@@ -434,6 +437,15 @@ namespace detail {
     unitaryClone.setHeatingCoil(heatingCoilClone);
     unitaryClone.setCoolingCoil(coolingCoilClone);
 
+    // We need this because "connect" is first going to try to disconnect from anything
+    // currently attached.  At this point unitaryClone is left pointing (through a connection) to the old air node,
+    // (because of ModelObject::clone behavior) so connecting to the new node will remove the connection joining
+    // the original unitary and the original node.
+    unitaryClone.setString(this->plenumorMixerAirPort(), "");
+    // Create a node for the Plenum or Mixer Air
+    Node node(model);
+    model.connect(unitaryClone, unitaryClone.plenumorMixerAirPort(), node, node.inletPort());
+
     return unitaryClone;
   }
 
@@ -464,6 +476,14 @@ namespace detail {
       result.insert(result.end(), removedHeatingCoils.begin(), removedHeatingCoils.end());
     }
 
+    // Removes branch on Plenum corresponding to this object
+    resetPlenumorMixer();
+    // delete the node
+    Node mixerNode = plenumorMixerNode();
+    mixerNode.disconnect();
+    std::vector<IdfObject> removedNode = mixerNode.remove();
+    result.insert(result.end(), removedNode.begin(), removedNode.end());
+
     std::vector<IdfObject> removedUnitarySystem = StraightComponent_Impl::remove();
     result.insert(result.end(), removedUnitarySystem.begin(), removedUnitarySystem.end());
 
@@ -485,6 +505,80 @@ namespace detail {
     }
 
     return result;
+  }
+
+  double AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::minimumRuntimeBeforeOperatingModeChange() const {
+    boost::optional<int> value = getDouble(OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::MinimumRuntimeBeforeOperatingModeChange, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::setMinimumRuntimeBeforeOperatingModeChange(double runtime) {
+    bool result = setDouble(OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::MinimumRuntimeBeforeOperatingModeChange, runtime);
+    return result;
+  }
+
+
+  unsigned AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::plenumorMixerAirPort() const
+  {
+    return OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PlenumorMixerInletNodeName;
+  }
+
+  Node AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::plenumorMixerNode() const {
+    return this->connectedObject(this->plenumorMixerAirPort())->cast<Node>();
+    return getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PlenumorMixerObjectName);
+  }
+
+
+  boost::optional<Mixer> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::plenumorMixer() const {
+    boost::optional<Mixer> result;
+
+    if (mo = plenumorMixerNode.outletModelObject()) {
+      result = mo.optionalCast<Mixer>();
+      OS_ASSERT(result);
+    }
+
+    return result;
+  }
+
+  bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::setPlenumorMixer(const Mixer& returnPathComponent) {
+
+    if ((returnPathComponent.iddObjectType() != IddObjectType::OS_AirLoopHVAC_ZoneMixer) &&
+        (returnPathComponent.iddObjectType() != IddObjectType::OS_AirLoopHVAC_ReturnPlenum))
+    {
+      LOG(Error, briefDescription() << " can only be connected to an AirLoopHVACZoneMixer or an AirLoopHVACReturnPlenum.");
+      return false;
+    }
+
+    bool result = false;
+
+    if ((boost::optional<AirLoopHVAC> mixerLoop = returnPathComponent.airLoopHVAC()) && (boost::optional<AirLoopHVAC> thisLoop = this->airLoopHVAC())) {
+      if (mixerLoop == thisLoop) {
+        result = true;
+      }
+    }
+
+
+    if (result) {
+      // Reset any existing plenum or mixer
+      resetPlenumorMixer();
+      Node mixerNode = plenumorMixerNode();
+       _model.connect(mixerNode, mixerNode.outletPort(), returnPathComponent, returnPathComponent.nextInletPort());
+    } else {
+      LOG(Warn, briefDescription() << " cannot be connected with a " << returnPathComponent.briefDescription()
+             << " unless they are both on the same AirLoopHVAC.")
+
+    }
+
+    return result;
+  }
+
+  void AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::resetPlenumorMixer() {
+    Node mixerNode = plenumorMixerNode();
+    if (boost::optional<Mixer> existingMixer = plenumorMixer()) {
+      existingMixer->removePortForBranch(existingMixer->branchIndexForInletModelObject(mixerNode));
+    }
+    this->model().disconnect(mixerNode, mixerNode.outletPort());
   }
 
   boost::optional<double> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::autosizedSystemAirFlowRateDuringCoolingOperation() const {
@@ -605,6 +699,13 @@ AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::AirLoopHVACUnitaryHeatCoolVAVChan
   setMinimumOutletAirTemperatureDuringCoolingOperation(8.0);
   setMaximumOutletAirTemperatureDuringHeatingOperation(50.0);
   setDehumidificationControlType("None");
+  // This field is a bit weird, in the sense that if it's not present in the IDF it's 0, if it's present and blank it's 0.25
+  // In order to try to maintain historical behavior, default to 0
+  setMinimumRuntimeBeforeOperatingModeChange(0);
+
+  // Create a node for the Plenum or Mixer Air
+  Node node(model);
+  model.connect(*this,this->plenumorMixerAirPort(), node, node.inletPort());
 }
 
 IddObjectType AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::iddObjectType() {
@@ -820,6 +921,28 @@ bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setMaximumOutletAirTemperatu
 
 bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setDehumidificationControlType(std::string dehumidificationControlType) {
   return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->setDehumidificationControlType(dehumidificationControlType);
+}
+
+double AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::minimumRuntimeBeforeOperatingModeChange() const {
+  return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->minimumRuntimeBeforeOperatingModeChange();
+}
+bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setMinimumRuntimeBeforeOperatingModeChange(double runtime) {
+  return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->setMinimumRuntimeBeforeOperatingModeChange(runtime);
+}
+
+Node AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::plenumorMixerNode() const {
+  return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->plenumorMixerNode();
+}
+boost::optional<Mixer> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::plenumorMixer() const {
+}
+  return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->plenumorMixer();
+
+bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setPlenumorMixer(const Mixer& returnPathComponent) {
+  return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->setPlenumorMixer(returnPathComponent);
+}
+
+void AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::resetPlenumorMixer() {
+  getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->resetPlenumorMixer();
 }
 
 /// @cond

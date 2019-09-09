@@ -38,6 +38,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class Mixer;
 
 namespace detail {
 
@@ -124,6 +125,15 @@ class MODEL_API AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass : public StraightC
 
   std::string dehumidificationControlType() const;
 
+  double minimumRuntimeBeforeOperatingModeChange() const;
+
+  /** This Node always exists for connecting "Plenum or Mixer Inlet Node", it will be translated only if actually connected to an
+   * AirLoopHVAC:ReturnPlenum or an AirLoopHVAC:ZoneMixer */
+  Node plenumorMixerNode() const;
+
+  /** Convenience method to get the optional linked Mixer object (AirLoopHVAC:ReturnPlenum or AirLoopHVAC:ZoneMixer) */
+  boost::optional<Mixer> plenumorMixer() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -179,6 +189,14 @@ class MODEL_API AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass : public StraightC
   bool setMaximumOutletAirTemperatureDuringHeatingOperation(double maximumOutletAirTemperatureDuringHeatingOperation);
 
   bool setDehumidificationControlType(std::string dehumidificationControlType);
+
+  bool setMinimumRuntimeBeforeOperatingModeChange(double runtime);
+
+  /** Connect the bypass air duct to an AirLoopHVAC:ReturnPlenum or an AirLoopHVAC:ZoneMixer that must
+   * be on the same AirLoopHVAC as this Unitary System */
+  bool setPlenumorMixer(const Mixer& returnPathComponent);
+
+  void resetPlenumorMixer();
 
   boost::optional<double> autosizedSystemAirFlowRateDuringCoolingOperation() const ;
 

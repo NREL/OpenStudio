@@ -10318,6 +10318,7 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
         \key CoolingPriority
         \key HeatingPriority
         \key ZonePriority
+        \key LoadPriority
         \required-field
    N7 , \field Minimum Outlet Air Temperature During Cooling Operation
         \type real
@@ -10335,6 +10336,18 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
         \key Multimode
         \key CoolReheat
         \required-field
+   A17, \field Plenum or Mixer Inlet Node Name
+        \type object-list
+        \reference ConnectionNames
+        \note Enter the name of the bypass duct node connected to a plenum or mixer.
+        \note This field is required when this HVAC System is connected to a plenum or mixer.
+        \note This is a different node name than that entered in the Bypass Duct Splitter Node Name field.
+   N9 ; \field Minimum Runtime Before Operating Mode Change
+        \type real
+        \units hr
+        \minimum 0.0
+        \required-field
+        \note This is the minimum amount of time the unit operates in cooling or heating mode before changing modes.
 
 OS:AirLoopHVAC:UnitarySystem,
        \memo AirloopHVAC:UnitarySystem is a generic HVAC system type that allows any
