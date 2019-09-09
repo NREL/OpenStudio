@@ -6519,6 +6519,31 @@ OS:Foundation:Kiva:Settings,
        \key Timestep
        \default Hourly
 
+OS:ZoneProperty:UserViewFactors:BySurfaceName,
+       \memo View factors for Surface to Surface in a zone.
+       \memo (Number of Surfaces)**2 are expected. Any omitted surface pairs will be assumed to have a view factor of zero.
+       \extensible:3 - copy last three fields, remembering to remove ;
+       \format ViewFactor
+       \min-fields 5
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2,  \field Thermal Zone Name
+       \note View factors may be entered for a single zone or for a group of zones connected by Construction:AirBoundary
+       \type object-list
+       \object-list ThermalZoneNames
+  A3,  \field From Surface Name 1
+       \begin-extensible
+       \type object-list
+       \object-list AllHeatTranSurfNames
+  A4,  \field To Surface Name 1
+       \type object-list
+       \object-list AllHeatTranSurfNames
+  N1;  \field View Factor 1
+       \note This value is the view factor value From Surface => To Surface
+       \type real
+       \maximum 1.0
+
 \group OpenStudio Space Loads
 
 OS:InternalMass,

@@ -505,6 +505,7 @@
 #include "ZoneHVACUnitVentilator.hpp"
 #include "ZoneHVACWaterToAirHeatPump.hpp"
 #include "ZoneMixing.hpp"
+#include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "ZoneVentilationDesignFlowRate.hpp"
 
 // include all concrete ModelObject Impls too
@@ -983,6 +984,7 @@
 #include "ZoneHVACUnitVentilator_Impl.hpp"
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "ZoneMixing_Impl.hpp"
+#include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 #include "ZoneVentilationDesignFlowRate_Impl.hpp"
 
 #endif // MODEL_CONCRETEMODELOBJECTS_HPP
