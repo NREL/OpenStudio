@@ -54,29 +54,19 @@ boost::optional<IdfObject> ForwardTranslator::translateZonePropertyUserViewFacto
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(ZonePropertyUserViewFactorsBySurfaceName::ThermalZoneName, modelObject.thermalZone().name().get());
+  idfObject.setString(ZoneProperty_UserViewFactors_BySurfaceNameFields::ThermalZoneName, modelObject.thermalZone().name().get());
 
-  std::vector<ViewFactor> viewFactors = modelObject.viewFactors();
+  std::vector<ViewFactorData> viewFactors = modelObject.viewFactors();
   if (!viewFactors.empty()) {
-    for (const ViewFactor& viewFactor : viewFactors) {
+    for (const ViewFactorData& viewFactor : viewFactors) {
       auto eg = idfObject.pushExtensibleGroup();
-      if (viewFactor.fromSurface())
-        eg.setString(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurface().get().name().get());
-      } else if (viewFactor.fromSubSurface()) {
-        eg.setString(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSubSurface().get().name().get());
-      } else if (viewFactor.fromInternalMass()) {
-        eg.setString(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromInternalMass().get().name().get());
-      }
-      if (viewFactor.toSurface())
-        eg.setString(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSurface().get().name().get());
-      } else if (viewFactor.toSubSurface()) {
-        eg.setString(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSubSurface().get().name().get());
-      } else if (viewFactor.toInternalMass()) {
-        eg.setString(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toInternalMass().get().name().get());
-      }
+      eg.setString(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurface().name().get());
+      eg.setString(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSurface().name().get());
       eg.setDouble(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor, viewFactor.viewFactor());
     }
   }
+  
+  // TODO: default remaining surface combinations to zero
 
   return boost::optional<IdfObject>(idfObject);
 }

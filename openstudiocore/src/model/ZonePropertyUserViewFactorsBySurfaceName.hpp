@@ -34,20 +34,21 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
-#include "Surface.hpp"
+#include "PlanarSurface.hpp"
+/* #include "Surface.hpp"
 #include "Surface_Impl.hpp"
 #include "SubSurface.hpp"
 #include "SubSurface_Impl.hpp"
 #include "InternalMass.hpp"
-#include "InternalMass_Impl.hpp"
+#include "InternalMass_Impl.hpp" */
 
 namespace openstudio {
 namespace model {
 
 class ThermalZone;
-class Surface;
+/* class Surface;
 class SubSurface;
-class InternalMass;
+class InternalMass; */
 
 namespace detail {
 
@@ -57,36 +58,23 @@ namespace detail {
 
 
 /** This class implements a view factor */
-class ViewFactor {
+class ViewFactorData {
   public:
-    ViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor);
-    ViewFactor(const Surface& fromSurface, const SubSurface& toSubSurface, double viewFactor);
-    ViewFactor(const Surface& fromSurface, const InternalMass& toInternalMass, double viewFactor);
-    ViewFactor(const SubSurface& fromSubSurface, const SubSurface& toSubSurface, double viewFactor);
-    ViewFactor(const SubSurface& fromSubSurface, const Surface& toSurface, double viewFactor);
-    ViewFactor(const SubSurface& fromSubSurface, const InternalMass& toInternalMass, double viewFactor);
-    ViewFactor(const InternalMass& fromInternalMass, const InternalMass& toInternalMass, double viewFactor);
-    ViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double viewFactor);
-    ViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor);    
+    ViewFactorData(const PlanarSurface& fromSurface, const PlanarSurface& toSurface, double viewFactor);  
 
-    boost::optional<Surface> fromSurface() const;
-    boost::optional<Surface> toSurface() const;
-    boost::optional<SubSurface> fromSubSurface() const;
-    boost::optional<SubSurface> toSubSurface() const;
-    boost::optional<InternalMass> fromInternalMass() const;
-    boost::optional<InternalMass> toInternalMass() const;
+    PlanarSurface fromSurface() const;
+    PlanarSurface toSurface() const;
     double viewFactor() const;
 
   private:
-    boost::optional<Surface> m_from_surface;
-    boost::optional<Surface> m_to_surface;
-    boost::optional<SubSurface> m_from_sub_surface;
-    boost::optional<SubSurface> m_to_sub_surface;
-    boost::optional<InternalMass> m_from_internal_mass;
-    boost::optional<InternalMass> m_to_internal_mass;
+    PlanarSurface m_from_surface;
+    PlanarSurface m_to_surface;
     double m_view_factor;
     REGISTER_LOGGER("openstudio.model.ViewFactor");
 };
+
+// Overload operator<<
+std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactorData& viewFactor);
 
 /** ZonePropertyUserViewFactorsBySurfaceName is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneProperty:UserViewFactors:bySurfaceName'. */
 class MODEL_API ZonePropertyUserViewFactorsBySurfaceName : public ModelObject {
@@ -107,7 +95,7 @@ class MODEL_API ZonePropertyUserViewFactorsBySurfaceName : public ModelObject {
 
   ThermalZone thermalZone() const;
 
-  std::vector<ViewFactor> viewFactors() const;
+  std::vector<ViewFactorData> viewFactors() const;
 
   unsigned int numberofViewFactors() const;  
 
@@ -115,27 +103,11 @@ class MODEL_API ZonePropertyUserViewFactorsBySurfaceName : public ModelObject {
   /** @name Setters */
   //@{
 
-  bool addViewFactor(const ViewFactor& viewFactor);
+  bool addViewFactor(const ViewFactorData& viewFactor);
 
-  bool addViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor);
+  bool addViewFactor(const PlanarSurface& fromSurface, const PlanarSurface& toSurface, double viewFactor);
 
-  bool addViewFactor(const Surface& fromSurface, const SubSurface& toSubSurface, double viewFactor);
-
-  bool addViewFactor(const Surface& fromSurface, const InternalMass& toInternalMass, double viewFactor);
-
-  bool addViewFactor(const SubSurface& fromSubSurface, const SubSurface& toSubSurface, double viewFactor);
-
-  bool addViewFactor(const SubSurface& fromSubSurface, const Surface& toSurface, double viewFactor);
-
-  bool addViewFactor(const SubSurface& fromSubSurface, const InternalMass& toInternalMass, double viewFactor);
-
-  bool addViewFactor(const InternalMass& fromInternalMass, const InternalMass& toInernalMass, double viewFactor);
-
-  bool addViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double viewFactor);
-
-  bool addViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor);
-
-  bool addViewFactors(const std::vector<ViewFactor> &viewFactors);
+  bool addViewFactors(const std::vector<ViewFactorData> &viewFactors);
 
   bool removeViewFactor(unsigned groupIndex);
 

@@ -40,12 +40,14 @@
 
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
-#include "Surface.hpp"
-#include "Surface_Impl.hpp"
-#include "SubSurface.hpp"
-#include "SubSurface_Impl.hpp"
-#include "InternalMass.hpp"
-#include "InternalMass_Impl.hpp"
+#include "../Surface.hpp"
+#include "../Surface_Impl.hpp"
+#include "../SubSurface.hpp"
+#include "../SubSurface_Impl.hpp"
+#include "../InternalMass.hpp"
+#include "../InternalMass_Impl.hpp"
+#include "../InternalMassDefinition.hpp"
+#include "../InternalMassDefinition_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -133,26 +135,18 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_AddAndRemove) {
   EXPECT_EQ(8, zoneProp.numberofViewFactors());
 
   // check that remaining blocks moved correctly
-  std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
+  std::vector<ViewFactorData> viewFactors = zoneProp.viewFactors();
 
   EXPECT_TRUE(viewFactors[0].fromSurface());
   EXPECT_TRUE(viewFactors[0].toSurface());
   EXPECT_EQ(fromSurface, viewFactors[0].fromSurface());
   EXPECT_EQ(toSurface, viewFactors[0].toSurface());
-  EXPECT_FALSE(viewFactors[0].fromSubSurface());
-  EXPECT_FALSE(viewFractors[0].fromInternalMass());
-  EXPECT_FALSE(viewFactors[0].toSubSurface());
-  EXPECT_FALSE(viewFractors[0].toInternalMass());
   EXPECT_EQ(0.5, viewFactors[0].viewFactor());
 
-  EXPECT_TRUE(viewFactors[5].fromInternalMass());
-  EXPECT_TRUE(viewFactors[5].toInternalMass());
-  EXPECT_EQ(fromInternalMass, viewFactors[5].fromInternalMass());
-  EXPECT_EQ(toInternalMass, viewFactors[5].toInternalMass());
-  EXPECT_FALSE(viewFactors[5].fromSurface());
-  EXPECT_FALSE(viewFractors[5].fromSubSurface());
-  EXPECT_FALSE(viewFactors[5].toSurface());
-  EXPECT_FALSE(viewFractors[5].toSubSurface());
+  EXPECT_TRUE(viewFactors[5].fromSurface());
+  EXPECT_TRUE(viewFactors[5].toSurface());
+  EXPECT_EQ(fromInternalMass, viewFactors[5].fromSurface());
+  EXPECT_EQ(toInternalMass, viewFactors[5].toSurface());
   EXPECT_EQ(-1, viewFactors[5].viewFactor());
 
   // more remove checking
@@ -167,7 +161,7 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_AddAndRemove) {
   EXPECT_EQ(1, zoneProp.numberofViewFactors());
 
   // check bulk-adding custom blocks
-  std::vector<ViewFactor> viewFactorsToAdd;
+  std::vector<ViewFactorData> viewFactorsToAdd;
   ViewFactor viewFactor1(fromSurface, toSurface, 0.0001);
   viewFactorsToAdd.push_back(viewFactor1);
   ViewFactor viewFactor2(fromSubSurface, toSubSurface, -0.000001);
