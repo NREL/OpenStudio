@@ -36,6 +36,7 @@
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Node.hpp"
+#include "Node_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 #include <utilities/idd/IddFactory.hxx>
@@ -444,7 +445,7 @@ namespace detail {
     unitaryClone.setString(this->plenumorMixerAirPort(), "");
     // Create a node for the Plenum or Mixer Air
     Node node(model);
-    model.connect(unitaryClone, unitaryClone.plenumorMixerAirPort(), node, node.inletPort());
+    model.connect(unitaryClone, this->plenumorMixerAirPort(), node, node.inletPort());
 
     return unitaryClone;
   }
@@ -508,7 +509,7 @@ namespace detail {
   }
 
   double AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::minimumRuntimeBeforeOperatingModeChange() const {
-    boost::optional<int> value = getDouble(OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::MinimumRuntimeBeforeOperatingModeChange, true);
+    boost::optional<double> value = getDouble(OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::MinimumRuntimeBeforeOperatingModeChange, true);
     OS_ASSERT(value);
     return value.get();
   }
@@ -526,15 +527,14 @@ namespace detail {
 
   Node AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::plenumorMixerNode() const {
     return this->connectedObject(this->plenumorMixerAirPort())->cast<Node>();
-    return getObject<ModelObject>().getModelObjectTarget<Mixer>(OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PlenumorMixerObjectName);
   }
 
 
   boost::optional<Mixer> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl::plenumorMixer() const {
     boost::optional<Mixer> result;
 
-    if (mo = plenumorMixerNode.outletModelObject()) {
-      result = mo.optionalCast<Mixer>();
+    if (boost::optional<ModelObject> _mo = plenumorMixerNode().outletModelObject()) {
+      result = _mo->optionalCast<Mixer>();
       OS_ASSERT(result);
     }
 
@@ -552,9 +552,11 @@ namespace detail {
 
     bool result = false;
 
-    if ((boost::optional<AirLoopHVAC> mixerLoop = returnPathComponent.airLoopHVAC()) && (boost::optional<AirLoopHVAC> thisLoop = this->airLoopHVAC())) {
-      if (mixerLoop == thisLoop) {
+    if (boost::optional<AirLoopHVAC> mixerLoop = returnPathComponent.airLoopHVAC()) {
+      if (boost::optional<AirLoopHVAC> thisLoop = this->airLoopHVAC()) {
+        if (mixerLoop == thisLoop) {
         result = true;
+        }
       }
     }
 
@@ -563,7 +565,7 @@ namespace detail {
       // Reset any existing plenum or mixer
       resetPlenumorMixer();
       Node mixerNode = plenumorMixerNode();
-       _model.connect(mixerNode, mixerNode.outletPort(), returnPathComponent, returnPathComponent.nextInletPort());
+       this->model().connect(mixerNode, mixerNode.outletPort(), returnPathComponent, returnPathComponent.nextInletPort());
     } else {
       LOG(Warn, briefDescription() << " cannot be connected with a " << returnPathComponent.briefDescription()
              << " unless they are both on the same AirLoopHVAC.")
@@ -705,7 +707,7 @@ AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::AirLoopHVACUnitaryHeatCoolVAVChan
 
   // Create a node for the Plenum or Mixer Air
   Node node(model);
-  model.connect(*this,this->plenumorMixerAirPort(), node, node.inletPort());
+  model.connect(*this, OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PlenumorMixerInletNodeName, node, node.inletPort());
 }
 
 IddObjectType AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::iddObjectType() {
@@ -933,9 +935,10 @@ bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setMinimumRuntimeBeforeOpera
 Node AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::plenumorMixerNode() const {
   return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->plenumorMixerNode();
 }
+
 boost::optional<Mixer> AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::plenumorMixer() const {
-}
   return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->plenumorMixer();
+}
 
 bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setPlenumorMixer(const Mixer& returnPathComponent) {
   return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->setPlenumorMixer(returnPathComponent);
