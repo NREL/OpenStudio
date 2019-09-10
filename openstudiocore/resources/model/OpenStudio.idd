@@ -10338,7 +10338,8 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
         \required-field
    A17, \field Plenum or Mixer Inlet Node Name
         \type object-list
-        \reference ConnectionNames
+        \required-field
+        \object-list ConnectionNames
         \note Enter the name of the bypass duct node connected to a plenum or mixer.
         \note This field is required when this HVAC System is connected to a plenum or mixer.
         \note This is a different node name than that entered in the Bypass Duct Splitter Node Name field.
