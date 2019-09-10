@@ -703,7 +703,7 @@ AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::AirLoopHVACUnitaryHeatCoolVAVChan
   setDehumidificationControlType("None");
   // This field is a bit weird, in the sense that if it's not present in the IDF it's 0, if it's present and blank it's 0.25
   // In order to try to maintain historical behavior, default to 0
-  setMinimumRuntimeBeforeOperatingModeChange(0);
+  setMinimumRuntimeBeforeOperatingModeChange(0.0);
 
   // Create a node for the Plenum or Mixer Air
   Node node(model);
