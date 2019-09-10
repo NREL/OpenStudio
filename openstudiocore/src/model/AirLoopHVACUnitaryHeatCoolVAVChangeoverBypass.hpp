@@ -127,6 +127,8 @@ class MODEL_API AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass : public StraightC
 
   double minimumRuntimeBeforeOperatingModeChange() const;
 
+  unsigned plenumorMixerAirPort() const;
+
   /** This Node always exists for connecting "Plenum or Mixer Inlet Node", it will be translated only if actually connected to an
    * AirLoopHVAC:ReturnPlenum or an AirLoopHVAC:ZoneMixer */
   Node plenumorMixerNode() const;

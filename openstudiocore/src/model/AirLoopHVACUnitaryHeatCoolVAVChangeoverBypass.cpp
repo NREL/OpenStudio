@@ -707,7 +707,7 @@ AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::AirLoopHVACUnitaryHeatCoolVAVChan
 
   // Create a node for the Plenum or Mixer Air
   Node node(model);
-  model.connect(*this, OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PlenumorMixerInletNodeName, node, node.inletPort());
+  model.connect(*this, this->plenumorMixerAirPort(), node, node.inletPort());
 }
 
 IddObjectType AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::iddObjectType() {
@@ -928,8 +928,14 @@ bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setDehumidificationControlTy
 double AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::minimumRuntimeBeforeOperatingModeChange() const {
   return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->minimumRuntimeBeforeOperatingModeChange();
 }
+
 bool AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::setMinimumRuntimeBeforeOperatingModeChange(double runtime) {
   return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->setMinimumRuntimeBeforeOperatingModeChange(runtime);
+}
+
+unsigned AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::plenumorMixerAirPort() const
+{
+  return getImpl<detail::AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl>()->plenumorMixerAirPort();
 }
 
 Node AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass::plenumorMixerNode() const {
