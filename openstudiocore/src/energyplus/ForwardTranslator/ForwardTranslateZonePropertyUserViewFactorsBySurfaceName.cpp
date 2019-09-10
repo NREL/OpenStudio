@@ -32,10 +32,12 @@
 #include "../../model/Model.hpp"
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
-#include <utilities/idd/ZoneProperty_UserViewFactors_BySurfaceName_FieldEnums.hxx>
+#include <utilities/idd/ZoneProperty_UserViewFactors_bySurfaceName_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -50,23 +52,33 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateZonePropertyUserViewFactorsBySurfaceName( ZonePropertyUserViewFactorsBySurfaceName & modelObject )
 {
-  IdfObject idfObject(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
+  IdfObject idfObject(openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
 
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(ZoneProperty_UserViewFactors_BySurfaceNameFields::ThermalZoneName, modelObject.thermalZone().name().get());
+  idfObject.setString(ZoneProperty_UserViewFactors_bySurfaceNameFields::ZoneorZoneListName, modelObject.thermalZone().name().get());
 
-  std::vector<ViewFactorData> viewFactors = modelObject.viewFactors();
+  std::vector<ViewFactor> viewFactors = modelObject.viewFactors();
   if (!viewFactors.empty()) {
-    for (const ViewFactorData& viewFactor : viewFactors) {
+    for (const ViewFactor& viewFactor : viewFactors) {
       auto eg = idfObject.pushExtensibleGroup();
-      eg.setString(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurface().name().get());
-      eg.setString(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSurface().name().get());
-      eg.setDouble(ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor, viewFactor.viewFactor());
+      if (viewFactor.fromSurface()) {
+        eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSurface().get().name().get());
+      } else if (viewFactor.fromSubSurface()) {
+        eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSubSurface().get().name().get());
+      } else if (viewFactor.fromInternalMass()) {
+        eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromInternalMass().get().name().get());
+      }
+      if (viewFactor.toSurface()) {
+        eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSurface().get().name().get());
+      } else if (viewFactor.toSubSurface()) {
+        eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSubSurface().get().name().get());
+      } else if (viewFactor.toInternalMass()) {
+        eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toInternalMass().get().name().get());
+      }
+      eg.setDouble(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ViewFactor, viewFactor.viewFactor());
     }
   }
-  
-  // TODO: default remaining surface combinations to zero
 
   return boost::optional<IdfObject>(idfObject);
 }

@@ -33,14 +33,12 @@
 #include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include "PlanarSurface.hpp"
-#include "PlanarSurface_Impl.hpp"
-/* #include "Surface.hpp"
+#include "Surface.hpp"
 #include "Surface_Impl.hpp"
 #include "SubSurface.hpp"
 #include "SubSurface_Impl.hpp"
 #include "InternalMass.hpp"
-#include "InternalMass_Impl.hpp" */
+#include "InternalMass_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -55,28 +53,124 @@
 namespace openstudio {
 namespace model {
 
-ViewFactorData::ViewFactorData(const PlanarSurface& fromSurface, const PlanarSurface& toSurface, double viewFactor)
-  : m_from_surface(fromInternalMass), m_to_surface(toSubSurface), m_view_factor(viewFactor) {
+ViewFactor::ViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor)
+  : m_from_surface(fromSurface), m_to_surface(toSurface), m_view_factor(viewFactor) {
     
   if (m_view_factor > 1) {
-    LOG_AND_THROW("Unable to create view factor data, view factor of " << m_view_factor << " more than 1");
+    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
 }
 
-PlanarSurface ViewFactorData::fromSurface() const {
+ViewFactor::ViewFactor(const Surface& fromSurface, const SubSurface& toSubSurface, double viewFactor)
+  : m_from_surface(fromSurface), m_to_sub_surface(toSubSurface), m_view_factor(viewFactor) {
+    
+  if (m_view_factor > 1) {
+    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
+  }
+}
+
+ViewFactor::ViewFactor(const Surface& fromSurface, const InternalMass& toInternalMass, double viewFactor)
+  : m_from_surface(fromSurface), m_to_internal_mass(toInternalMass), m_view_factor(viewFactor) {
+    
+  if (m_view_factor > 1) {
+    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
+  }
+}
+
+ViewFactor::ViewFactor(const SubSurface& fromSubSurface, const SubSurface& toSubSurface, double viewFactor)
+  : m_from_sub_surface(fromSubSurface), m_to_sub_surface(toSubSurface), m_view_factor(viewFactor) {
+    
+  if (m_view_factor > 1) {
+    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
+  }
+}
+
+ViewFactor::ViewFactor(const SubSurface& fromSubSurface, const Surface& toSurface, double viewFactor)
+  : m_from_sub_surface(fromSubSurface), m_to_surface(toSurface), m_view_factor(viewFactor) {
+    
+  if (m_view_factor > 1) {
+    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
+  }
+}
+
+ViewFactor::ViewFactor(const SubSurface& fromSubSurface, const InternalMass& toInternalMass, double viewFactor)
+  : m_from_sub_surface(fromSubSurface), m_to_internal_mass(toInternalMass), m_view_factor(viewFactor) {
+    
+  if (m_view_factor > 1) {
+    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
+  }
+}
+
+ViewFactor::ViewFactor(const InternalMass& fromInternalMass, const InternalMass& toInternalMass, double viewFactor)
+  : m_from_internal_mass(fromInternalMass), m_to_internal_mass(toInternalMass), m_view_factor(viewFactor) {
+    
+  if (m_view_factor > 1) {
+    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
+  }
+}
+
+ViewFactor::ViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double viewFactor)
+  : m_from_internal_mass(fromInternalMass), m_to_surface(toSurface), m_view_factor(viewFactor) {
+    
+  if (m_view_factor > 1) {
+    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
+  }
+}
+
+ViewFactor::ViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor)
+  : m_from_internal_mass(fromInternalMass), m_to_sub_surface(toSubSurface), m_view_factor(viewFactor) {
+    
+  if (m_view_factor > 1) {
+    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
+  }
+}
+
+boost::optional<Surface> ViewFactor::fromSurface() const {
   return m_from_surface;
 }
 
-PlanarSurface ViewFactorData::toSurface() const {
+boost::optional<Surface> ViewFactor::toSurface() const {
   return m_to_surface;
 }
 
-double ViewFactorData::viewFactor() const {
+boost::optional<SubSurface> ViewFactor::fromSubSurface() const {
+  return m_from_sub_surface;
+}
+
+boost::optional<SubSurface> ViewFactor::toSubSurface() const {
+  return m_to_sub_surface;
+}
+
+boost::optional<InternalMass> ViewFactor::fromInternalMass() const {
+  return m_from_internal_mass;
+}
+
+boost::optional<InternalMass> ViewFactor::toInternalMass() const {
+  return m_to_internal_mass;
+}
+
+double ViewFactor::viewFactor() const {
   return m_view_factor;
 }
 
-std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactorData& viewFactor) {
-  out << "(fromSurface " << viewFactor.fromSurface().nameString() << ", " << "toSurface " << viewFactor.toSurface().nameString() << ", " << viewFactor.viewFactor() << ")";
+std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactor& viewFactor) {
+  std::string from;
+  std::string to;
+  if (viewFactor.fromSurface()) {
+    from = viewFactor.fromSurface().get().nameString();
+  } else if (viewFactor.fromSubSurface()) {
+    from = viewFactor.fromSubSurface().get().nameString();
+  } else if (viewFactor.fromInternalMass()) {
+    from = viewFactor.fromInternalMass().get().nameString();
+  }
+  if (viewFactor.toSurface()) {
+    to = viewFactor.toSurface().get().nameString();
+  } else if (viewFactor.toSubSurface()) {
+    to = viewFactor.toSubSurface().get().nameString();
+  } else if (viewFactor.toInternalMass()) {
+    to = viewFactor.toInternalMass().get().nameString();
+  }
+  out << "(from " << from << ", " << "to " << to << ", view factor " << viewFactor.viewFactor() << ")";
   return out;
 }
 
@@ -116,7 +210,7 @@ namespace detail {
 
   ThermalZone ZonePropertyUserViewFactorsBySurfaceName_Impl::thermalZone() const
   {
-    boost::optional<ThermalZone> thermalZone = getObject<ModelObject>.getModelObjectTarget<ThermalZone>(OS_ZoneProperty_UserViewFactors_BySurfaceNameFields::ThermalZoneName);
+    boost::optional<ThermalZone> thermalZone = getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_ZoneProperty_UserViewFactors_BySurfaceNameFields::ThermalZoneName);
     OS_ASSERT(thermalZone);
     return thermalZone.get();
   }
@@ -125,15 +219,29 @@ namespace detail {
     return numExtensibleGroups();
   }
 
-  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const ViewFactorData& viewFactor) {
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const ViewFactor& viewFactor) {
     bool result;
+    bool from;
+    bool to;
     
     // Push an extensible group
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    bool fromSurface = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurface().handle());
-    bool toSurface = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSurface().handle());
+    if (viewFactor.fromSurface()) {
+      from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurface().get().handle());
+    } else if (viewFactor.fromSubSurface()) {
+      from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSubSurface().get().handle());
+    } else if (viewFactor.fromInternalMass()) {
+      from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromInternalMass().get().handle());
+    }
+    if (viewFactor.toSurface()) {
+      to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSurface().get().handle());
+    } else if (viewFactor.toSubSurface()) {
+      to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSubSurface().get().handle());
+    } else if (viewFactor.toInternalMass()) {
+      to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toInternalMass().get().handle());
+    }
     bool value = eg.setDouble(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor, viewFactor.viewFactor());
-    if (fromSurface && toSurface && value) {
+    if (from && to && value) {
       result = true;
     } else {
       // Something went wrong
@@ -144,10 +252,50 @@ namespace detail {
     return result;
   }
   
-  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const PlanarSurface& fromSurface, const PlanarSurface& toSurface, double value) {
-    ViewFactorData viewFactor(fromSurface, toSurface, value);
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const Surface& fromSurface, const Surface& toSurface, double value) {
+    ViewFactor viewFactor(fromSurface, toSurface, value);
     return addViewFactor(viewFactor);
   }
+
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const Surface& fromSurface, const SubSurface& toSubSurface, double value) {
+    ViewFactor viewFactor(fromSurface, toSubSurface, value);
+    return addViewFactor(viewFactor);
+  }
+
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const Surface& fromSurface, const InternalMass& toInternalMass, double value) {
+    ViewFactor viewFactor(fromSurface, toInternalMass, value);
+    return addViewFactor(viewFactor);
+  }
+
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const SubSurface& fromSubSurface, const SubSurface& toSubSurface, double value) {
+    ViewFactor viewFactor(fromSubSurface, toSubSurface, value);
+    return addViewFactor(viewFactor);
+  }
+
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const SubSurface& fromSubSurface, const Surface& toSurface, double value) {
+    ViewFactor viewFactor(fromSubSurface, toSurface, value);
+    return addViewFactor(viewFactor);
+  }
+
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const SubSurface& fromSubSurface, const InternalMass& toInternalMass, double value) {
+    ViewFactor viewFactor(fromSubSurface, toInternalMass, value);
+    return addViewFactor(viewFactor);
+  }
+
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const InternalMass& fromInternalMass, const InternalMass& toSubSurface, double value) {
+    ViewFactor viewFactor(fromInternalMass, toSubSurface, value);
+    return addViewFactor(viewFactor);
+  }
+
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double value) {
+    ViewFactor viewFactor(fromInternalMass, toSurface, value);
+    return addViewFactor(viewFactor);
+  }
+
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double value) {
+    ViewFactor viewFactor(fromInternalMass, toSubSurface, value);
+    return addViewFactor(viewFactor);
+  } 
 
   bool ZonePropertyUserViewFactorsBySurfaceName_Impl::removeViewFactor(unsigned groupIndex) {
     bool result;
@@ -166,8 +314,8 @@ namespace detail {
     getObject<ModelObject>().clearExtensibleGroups();
   }
   
-  std::vector<ViewFactorData> ZonePropertyUserViewFactorsBySurfaceName_Impl::viewFactors() const {
-    std::vector<ViewFactorData> result;
+  std::vector<ViewFactor> ZonePropertyUserViewFactorsBySurfaceName_Impl::viewFactors() const {
+    std::vector<ViewFactor> result;
     
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
     
@@ -175,23 +323,44 @@ namespace detail {
       boost::optional<WorkspaceObject> wo1 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName);
       boost::optional<WorkspaceObject> wo2 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName);
       boost::optional<double> value = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor);
-      if (wo1->optionalCast<PlanarSurface>() && wo2->optionalCast<PlanarSurface>()) {
-        boost::optional<PlanarSurface> fromSurface = wo1->optionalCast<PlanarSurface>();
-        boost::optional<PlanarSurface> toSurface = wo2->optionalCast<PlanarSurface>();
-        if (fromSurface && toSurface && value) {
-          ViewFactorData viewFactor(from.get(), to.get(), value.get());
-          result.push_back(viewFactor);
-        }
+      
+      if (wo1->optionalCast<Surface>() && wo2->optionalCast<Surface>() && value) {
+        ViewFactor viewFactor(wo1->optionalCast<Surface>().get(), wo2->optionalCast<Surface>().get(), *value);
+        result.push_back(viewFactor);
+      } else if (wo1->optionalCast<Surface>() && wo2->optionalCast<SubSurface>() && value) {
+        ViewFactor viewFactor(wo1->optionalCast<Surface>().get(), wo2->optionalCast<SubSurface>().get(), *value);
+        result.push_back(viewFactor);
+      } else if (wo1->optionalCast<Surface>() && wo2->optionalCast<InternalMass>() && value) {
+        ViewFactor viewFactor(wo1->optionalCast<Surface>().get(), wo2->optionalCast<InternalMass>().get(), *value);
+        result.push_back(viewFactor);
+      } else if (wo1->optionalCast<SubSurface>() && wo2->optionalCast<SubSurface>() && value) {
+        ViewFactor viewFactor(wo1->optionalCast<SubSurface>().get(), wo2->optionalCast<SubSurface>().get(), *value);
+        result.push_back(viewFactor);
+      } else if (wo1->optionalCast<SubSurface>() && wo2->optionalCast<Surface>() && value) {
+        ViewFactor viewFactor(wo1->optionalCast<SubSurface>().get(), wo2->optionalCast<Surface>().get(), *value);
+        result.push_back(viewFactor);
+      } else if (wo1->optionalCast<SubSurface>() && wo2->optionalCast<InternalMass>() && value) {
+        ViewFactor viewFactor(wo1->optionalCast<SubSurface>().get(), wo2->optionalCast<InternalMass>().get(), *value);
+        result.push_back(viewFactor);
+      } else if (wo1->optionalCast<InternalMass>() && wo2->optionalCast<InternalMass>() && value) {
+        ViewFactor viewFactor(wo1->optionalCast<InternalMass>().get(), wo2->optionalCast<InternalMass>().get(), *value);
+        result.push_back(viewFactor);
+      } else if (wo1->optionalCast<InternalMass>() && wo2->optionalCast<Surface>() && value) {
+        ViewFactor viewFactor(wo1->optionalCast<InternalMass>().get(), wo2->optionalCast<Surface>().get(), *value);
+        result.push_back(viewFactor);
+      } else if (wo1->optionalCast<InternalMass>() && wo2->optionalCast<SubSurface>() && value) {
+        ViewFactor viewFactor(wo1->optionalCast<InternalMass>().get(), wo2->optionalCast<SubSurface>().get(), *value);
+        result.push_back(viewFactor);
       }
     }
     
     return result;
   }
 
-  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactors(const std::vector<ViewFactorData> &viewFactors) {
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactors(const std::vector<ViewFactor> &viewFactors) {
     unsigned int num = numberofViewFactors();
 
-    for (const ViewFactorData& viewFactor : viewFactors) {
+    for (const ViewFactor& viewFactor : viewFactors) {
       addViewFactor(viewFactor);
     }
     return true;    
@@ -215,7 +384,7 @@ IddObjectType ZonePropertyUserViewFactorsBySurfaceName::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ZoneProperty_UserViewFactors_BySurfaceName);
 }
 
-ThermalZone> ZonePropertyUserViewFactorsBySurfaceName::thermalZone() const {
+ThermalZone ZonePropertyUserViewFactorsBySurfaceName::thermalZone() const {
   return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->thermalZone();
 }
 
@@ -227,8 +396,40 @@ bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const ViewFactor& v
   return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(viewFactor);
 }
 
-bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const PlanarSurface& fromSurface, PlanarSurface& toSurface, double viewFactor) {
+bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor) {
   return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(fromSurface, toSurface, viewFactor);
+}
+
+bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const Surface& fromSurface, const SubSurface& toSubSurface, double viewFactor) {
+  return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(fromSurface, toSubSurface, viewFactor);
+}
+
+bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const Surface& fromSurface, const InternalMass& toInternalMass, double viewFactor) {
+  return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(fromSurface, toInternalMass, viewFactor);
+}
+
+bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const SubSurface& fromSubSurface, const SubSurface& toSubSurface, double viewFactor) {
+  return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(fromSubSurface, toSubSurface, viewFactor);
+}
+
+bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const SubSurface& fromSubSurface, const Surface& toSurface, double viewFactor) {
+  return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(fromSubSurface, toSurface, viewFactor);
+}
+
+bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const SubSurface& fromSubSurface, const InternalMass& toInternalMass, double viewFactor) {
+  return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(fromSubSurface, toInternalMass, viewFactor);
+}
+
+bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const InternalMass& fromInternalMass, const InternalMass& toInternalMass, double viewFactor) {
+  return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(fromInternalMass, toInternalMass, viewFactor);
+}
+
+bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double viewFactor) {
+  return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(fromInternalMass, toSurface, viewFactor);
+}
+
+bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor) {
+  return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(fromInternalMass, toSubSurface, viewFactor);
 }
 
 void ZonePropertyUserViewFactorsBySurfaceName::removeViewFactor(int groupIndex) {
@@ -239,11 +440,11 @@ void ZonePropertyUserViewFactorsBySurfaceName::removeAllViewFactors() {
   return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->removeAllViewFactors();
 }
 
-std::vector<ViewFactorData> ZonePropertyUserViewFactorsBySurfaceName::viewFactors() const {
+std::vector<ViewFactor> ZonePropertyUserViewFactorsBySurfaceName::viewFactors() const {
   return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->viewFactors();
 }
 
-bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactors(const std::vector<ViewFactorData> &viewFactors) {
+bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactors(const std::vector<ViewFactor> &viewFactors) {
   return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactors(viewFactors);
 }
 

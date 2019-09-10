@@ -61,7 +61,7 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_ZonePropertyUserVie
       Model model;
       
       // create a thermal zone object to use
-      ThermalZone thermalZone;
+      ThermalZone thermalZone(model);
 
       exit(0);
     },
@@ -70,29 +70,29 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_ZonePropertyUserVie
   );
     
   // create a model to use
-  Model model;
+  Model model;  
 
   // create a thermal zone object to use
-  ThermalZone thermalZone;
+  ThermalZone thermalZone(model);
+  auto size = model.modelObjects().size();
 
   // new thermal zone will create a zone property user view factors by surface name object
-  EXPECT_EQ(1, model.modelObjects().size());
-  EXPECT_TRUE(thermalZone.getZonePropertyUserViewFactorsBySurfaceName());
-  EXPECT_EQ(2, model.modelObjects().size());
-  EXPECT_TRUE(thermalZone.getZonePropertyUserViewFactorsBySurfaceName());
-  EXPECT_EQ(2, model.modelObjects().size());
+  ZonePropertyUserViewFactorsBySurfaceName zoneProp1 = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
+  EXPECT_EQ(thermalZone.handle(), zoneProp1.thermalZone().handle());  
+  EXPECT_EQ(size+1, model.modelObjects().size());
+  ZonePropertyUserViewFactorsBySurfaceName zoneProp2 = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
+  EXPECT_EQ(size+1, model.modelObjects().size());
+  EXPECT_EQ(zoneProp1, zoneProp2);
 
   // check defaults
-  ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
-  EXPECT_EQ(0, zoneProp.numberofViewFactors());
-  EXPECT_EQ(0, zoneProp.viewFactors().size());
-  EXPECT_TRUE(zoneProp.thermalZone());
-  EXPECT_EQ("Thermal Zone 1", zoneProp.thermalZone().name().get());
+  EXPECT_EQ(0, zoneProp2.numberofViewFactors());
+  EXPECT_EQ(0, zoneProp2.viewFactors().size());
+  EXPECT_EQ("Thermal Zone 1", zoneProp2.thermalZone().name().get());
 }
 
 TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_AddAndRemove) {
   Model model;
-  ThermalZone thermalZone;
+  ThermalZone thermalZone(model);
   ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
 
   zoneProp.removeAllViewFactors();
@@ -135,18 +135,26 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_AddAndRemove) {
   EXPECT_EQ(8, zoneProp.numberofViewFactors());
 
   // check that remaining blocks moved correctly
-  std::vector<ViewFactorData> viewFactors = zoneProp.viewFactors();
+  std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
 
   EXPECT_TRUE(viewFactors[0].fromSurface());
   EXPECT_TRUE(viewFactors[0].toSurface());
   EXPECT_EQ(fromSurface, viewFactors[0].fromSurface());
   EXPECT_EQ(toSurface, viewFactors[0].toSurface());
+  EXPECT_FALSE(viewFactors[0].fromSubSurface());
+  EXPECT_FALSE(viewFactors[0].fromInternalMass());
+  EXPECT_FALSE(viewFactors[0].toSubSurface());
+  EXPECT_FALSE(viewFactors[0].toInternalMass());
   EXPECT_EQ(0.5, viewFactors[0].viewFactor());
 
-  EXPECT_TRUE(viewFactors[5].fromSurface());
-  EXPECT_TRUE(viewFactors[5].toSurface());
-  EXPECT_EQ(fromInternalMass, viewFactors[5].fromSurface());
-  EXPECT_EQ(toInternalMass, viewFactors[5].toSurface());
+  EXPECT_TRUE(viewFactors[5].fromInternalMass());
+  EXPECT_TRUE(viewFactors[5].toInternalMass());
+  EXPECT_EQ(fromInternalMass, viewFactors[5].fromInternalMass());
+  EXPECT_EQ(toInternalMass, viewFactors[5].toInternalMass());
+  EXPECT_FALSE(viewFactors[5].fromSurface());
+  EXPECT_FALSE(viewFactors[5].fromSubSurface());
+  EXPECT_FALSE(viewFactors[5].toSurface());
+  EXPECT_FALSE(viewFactors[5].toSubSurface());
   EXPECT_EQ(-1, viewFactors[5].viewFactor());
 
   // more remove checking
@@ -161,7 +169,7 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_AddAndRemove) {
   EXPECT_EQ(1, zoneProp.numberofViewFactors());
 
   // check bulk-adding custom blocks
-  std::vector<ViewFactorData> viewFactorsToAdd;
+  std::vector<ViewFactor> viewFactorsToAdd;
   ViewFactor viewFactor1(fromSurface, toSurface, 0.0001);
   viewFactorsToAdd.push_back(viewFactor1);
   ViewFactor viewFactor2(fromSubSurface, toSubSurface, -0.000001);

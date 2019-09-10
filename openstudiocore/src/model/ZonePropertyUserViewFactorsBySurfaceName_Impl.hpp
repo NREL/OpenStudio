@@ -38,10 +38,10 @@ namespace openstudio {
 namespace model {
 
 class ThermalZone;
-/* class Surface;
+class Surface;
 class SubSurface;
-class InternalMass; */
-class ViewFactorData;
+class InternalMass;
+class ViewFactor;
 
 namespace detail {
 
@@ -81,7 +81,7 @@ namespace detail {
 
     ThermalZone thermalZone() const;
 
-    std::vector<ViewFactorData> viewFactors() const;
+    std::vector<ViewFactor> viewFactors() const;
 
     unsigned int numberofViewFactors() const;
 
@@ -89,11 +89,27 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    bool addViewFactor(const ViewFactorData& viewFactor);
+    bool addViewFactor(const ViewFactor& viewFactor);
 
-    bool addViewFactor(const PlanarSurface& fromSurface, const PlanarSurface& toSurface, double viewFactor);
+    bool addViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor);
 
-    bool addViewFactors(const std::vector<ViewFactorData> &viewFactors);
+    bool addViewFactor(const Surface& fromSurface, const SubSurface& toSubSurface, double viewFactor);
+
+    bool addViewFactor(const Surface& fromSurface, const InternalMass& toInternalMass, double viewFactor);
+
+    bool addViewFactor(const SubSurface& fromSubSurface, const SubSurface& toSubSurface, double viewFactor);
+
+    bool addViewFactor(const SubSurface& fromSubSurface, const Surface& toSurface, double viewFactor);
+
+    bool addViewFactor(const SubSurface& fromSubSurface, const InternalMass& toInternalMass, double viewFactor);
+
+    bool addViewFactor(const InternalMass& fromInternalMass, const InternalMass& toInernalMass, double viewFactor);
+
+    bool addViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double viewFactor);
+
+    bool addViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor);
+
+    bool addViewFactors(const std::vector<ViewFactor> &viewFactors);
 
     bool removeViewFactor(unsigned groupIndex);
 
