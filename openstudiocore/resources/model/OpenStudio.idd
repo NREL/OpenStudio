@@ -10330,7 +10330,7 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
         \units C
         \minimum> 0.0
         \required-field
-   A16; \field Dehumidification Control Type
+   A16, \field Dehumidification Control Type
         \type choice
         \key None
         \key Multimode
