@@ -33,6 +33,8 @@
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
@@ -55,48 +57,81 @@ OptionalModelObject ReverseTranslator::translateZonePropertyUserViewFactorsBySur
     return boost::none;
   }
 
-  OptionalModelObject result;
+  boost::optional<WorkspaceObject> target = workspaceObject.getTarget(ZoneProperty_UserViewFactors_bySurfaceNameFields::ZoneorZoneListName);
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneProperty_UserViewFactors_bySurfaceNameFields::ZoneorZoneListName);
+  std::vector<ThermalZone> thermalZones;
+
   if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<ThermalZone>()){
-        boost::optional<ThermalZone> thermalZone = modelObject->optionalCast<ThermalZone>();
-        ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.get().getZonePropertyUserViewFactorsBySurfaceName();
 
-        for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
-          WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
-          OptionalWorkspaceObject fromTarget = workspaceGroup.getTarget(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface);
-          OptionalModelObject fromModelObject = translateAndMapWorkspaceObject(*fromTarget);
-          OptionalWorkspaceObject toTarget = workspaceGroup.getTarget(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface);
-          OptionalModelObject toModelObject = translateAndMapWorkspaceObject(*toTarget);
-          OptionalDouble viewFactor = workspaceGroup.getDouble(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ViewFactor);
-          
-          // add the view factor
-          if (fromModelObject->optionalCast<Surface>() && toModelObject->optionalCast<Surface>() && viewFactor) {
-            zoneProp.addViewFactor(fromModelObject->optionalCast<Surface>().get(), toModelObject->optionalCast<Surface>().get(), *viewFactor);
-          } else if (fromModelObject->optionalCast<Surface>() && toModelObject->optionalCast<SubSurface>() && viewFactor) {
-            zoneProp.addViewFactor(fromModelObject->optionalCast<Surface>().get(), toModelObject->optionalCast<SubSurface>().get(), *viewFactor);
-          } else if (fromModelObject->optionalCast<Surface>() && toModelObject->optionalCast<InternalMass>() && viewFactor) {
-            zoneProp.addViewFactor(fromModelObject->optionalCast<Surface>().get(), toModelObject->optionalCast<InternalMass>().get(), *viewFactor);
-          } else if (fromModelObject->optionalCast<SubSurface>() && toModelObject->optionalCast<SubSurface>() && viewFactor) {
-            zoneProp.addViewFactor(fromModelObject->optionalCast<SubSurface>().get(), toModelObject->optionalCast<SubSurface>().get(), *viewFactor);
-          } else if (fromModelObject->optionalCast<SubSurface>() && toModelObject->optionalCast<Surface>() && viewFactor) {
-            zoneProp.addViewFactor(fromModelObject->optionalCast<SubSurface>().get(), toModelObject->optionalCast<Surface>().get(), *viewFactor);
-          } else if (fromModelObject->optionalCast<SubSurface>() && toModelObject->optionalCast<InternalMass>() && viewFactor) {
-            zoneProp.addViewFactor(fromModelObject->optionalCast<SubSurface>().get(), toModelObject->optionalCast<InternalMass>().get(), *viewFactor);
-          } else if (fromModelObject->optionalCast<InternalMass>() && toModelObject->optionalCast<InternalMass>() && viewFactor) {
-            zoneProp.addViewFactor(fromModelObject->optionalCast<InternalMass>().get(), toModelObject->optionalCast<InternalMass>().get(), *viewFactor);
-          } else if (fromModelObject->optionalCast<InternalMass>() && toModelObject->optionalCast<Surface>() && viewFactor) {
-            zoneProp.addViewFactor(fromModelObject->optionalCast<InternalMass>().get(), toModelObject->optionalCast<Surface>().get(), *viewFactor);
-          } else if (fromModelObject->optionalCast<InternalMass>() && toModelObject->optionalCast<SubSurface>() && viewFactor) {
-            zoneProp.addViewFactor(fromModelObject->optionalCast<InternalMass>().get(), toModelObject->optionalCast<SubSurface>().get(), *viewFactor);
+    boost::optional<ModelObject> mo;
+    if (target->iddObject().type() == IddObjectType::Zone){
+      mo = translateAndMapWorkspaceObject(target.get());
+      if( mo ) {
+        if( boost::optional<Space> space = mo->optionalCast<Space>() ) {
+          boost::optional<ThermalZone> thermalZone = space->thermalZone();
+          if (thermalZone){
+            thermalZones.push_back(*thermalZone);
           }
         }
-      
-        result = zoneProp;
       }
+    }
+  }
+
+  if(thermalZones.empty())
+  {
+    LOG(Error, "Error importing object: "
+             << workspaceObject.briefDescription()
+             << " Can't find associated ThermalZone.");
+
+    return boost::none;
+  }
+
+  boost::optional<ModelObject> result;
+  for (ThermalZone thermalZone : thermalZones){
+
+    openstudio::model::ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
+
+    if (!result){
+      result = zoneProp;
+    }
+
+    for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
+      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+
+      boost::optional<WorkspaceObject> fromTarget = workspaceGroup.getTarget(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface);
+      boost::optional<WorkspaceObject> toTarget = workspaceGroup.getTarget(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface);
+
+      boost::optional<ModelObject> toModelObject;
+      boost::optional<ModelObject> fromModelObject = translateAndMapWorkspaceObject(*fromTarget);
+      if (fromTarget != toTarget){
+        toModelObject = translateAndMapWorkspaceObject(*toTarget);
+      } else {
+        toModelObject = fromModelObject;
+      }
+
+      OptionalDouble viewFactor = workspaceGroup.getDouble(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ViewFactor);
+
+      // add the view factor
+      if (fromModelObject->optionalCast<Surface>() && toModelObject->optionalCast<Surface>()) {
+        zoneProp.addViewFactor(fromModelObject->cast<Surface>(), toModelObject->cast<Surface>(), *viewFactor);
+      } else if (fromModelObject->optionalCast<Surface>() && toModelObject->optionalCast<SubSurface>()) {
+        zoneProp.addViewFactor(fromModelObject->cast<Surface>(), toModelObject->cast<SubSurface>(), *viewFactor);
+      } else if (fromModelObject->optionalCast<Surface>() && toModelObject->optionalCast<InternalMass>()) {
+        zoneProp.addViewFactor(fromModelObject->cast<Surface>(), toModelObject->cast<InternalMass>(), *viewFactor);
+      } else if (fromModelObject->optionalCast<SubSurface>() && toModelObject->optionalCast<SubSurface>()) {
+        zoneProp.addViewFactor(fromModelObject->cast<SubSurface>(), toModelObject->cast<SubSurface>(), *viewFactor);
+      } else if (fromModelObject->optionalCast<SubSurface>() && toModelObject->optionalCast<Surface>()) {
+        zoneProp.addViewFactor(fromModelObject->cast<SubSurface>(), toModelObject->cast<Surface>(), *viewFactor);
+      } else if (fromModelObject->optionalCast<SubSurface>() && toModelObject->optionalCast<InternalMass>()) {
+        zoneProp.addViewFactor(fromModelObject->cast<SubSurface>(), toModelObject->cast<InternalMass>(), *viewFactor);
+      } else if (fromModelObject->optionalCast<InternalMass>() && toModelObject->optionalCast<InternalMass>()) {
+        zoneProp.addViewFactor(fromModelObject->cast<InternalMass>(), toModelObject->cast<InternalMass>(), *viewFactor);
+      } else if (fromModelObject->optionalCast<InternalMass>() && toModelObject->optionalCast<Surface>()) {
+        zoneProp.addViewFactor(fromModelObject->cast<InternalMass>(), toModelObject->cast<Surface>(), *viewFactor);
+      } else if (fromModelObject->optionalCast<InternalMass>() && toModelObject->optionalCast<SubSurface>()) {
+        zoneProp.addViewFactor(fromModelObject->cast<InternalMass>(), toModelObject->cast<SubSurface>(), *viewFactor);
+      }
+
     }
   }
 

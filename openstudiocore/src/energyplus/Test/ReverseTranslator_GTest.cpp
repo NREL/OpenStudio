@@ -73,6 +73,8 @@
 #include "../../model/SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
 #include "../../model/PerformancePrecisionTradeoffs.hpp"
 #include "../../model/PerformancePrecisionTradeoffs_Impl.hpp"
+#include "../../model/ZonePropertyUserViewFactorsBySurfaceName.hpp"
+#include "../../model/ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -631,6 +633,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
   std::string surfaceName = surfacePropertyExposedFoundationPerimeter.get().surfaceName();
   EXPECT_EQ(surface.name().get(), surfaceName);
 }
+
 TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleFile) {
   openstudio::path idfPath = resourcesPath() / toPath("energyplus/ScheduleFile/in.idf");
   OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
@@ -664,3 +667,70 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
   EXPECT_TRUE(performancePrecisionTradeoffs.useCoilDirectSolutions());
 }
 
+TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::Zone);
+  idfObject1.setString(0, "Thermal Zone 1"); // Name
+
+  openstudio::WorkspaceObject epZone = workspace.addObject(idfObject1).get();
+
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::BuildingSurface_Detailed);
+  idfObject2.setString(0, "Surface 1"); // Name
+  idfObject2.setString(1, "Wall"); // Surface Type
+  idfObject2.setString(BuildingSurface_DetailedFields::ConstructionName, "");
+  idfObject2.setString(BuildingSurface_DetailedFields::ZoneName, "Thermal Zone 1");
+  idfObject2.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, "Outdoors");
+  idfObject2.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, "");
+  idfObject2.setString(BuildingSurface_DetailedFields::SunExposure, "SunExposed");
+  idfObject2.setString(BuildingSurface_DetailedFields::WindExposure, "WindExposed");
+  idfObject2.setString(BuildingSurface_DetailedFields::ViewFactortoGround, "");
+  idfObject2.setString(BuildingSurface_DetailedFields::NumberofVertices, "");
+  IdfExtensibleGroup group2 = idfObject2.pushExtensibleGroup(); // vertex 1
+  group2.setDouble(0, 0);
+  group2.setDouble(1, 50);
+  group2.setDouble(2, 4);
+  IdfExtensibleGroup group3 = idfObject2.pushExtensibleGroup(); // vertex 2
+  group3.setDouble(0, 0);
+  group3.setDouble(1, 50);
+  group3.setDouble(2, 0);
+  IdfExtensibleGroup group4 = idfObject2.pushExtensibleGroup(); // vertex 3
+  group4.setDouble(0, 0);
+  group4.setDouble(1, 0);
+  group4.setDouble(2, 0);
+  IdfExtensibleGroup group5 = idfObject2.pushExtensibleGroup(); // vertex 4
+  group5.setDouble(0, 0);
+  group5.setDouble(1, 4);
+  group5.setDouble(2, 0);
+
+  openstudio::WorkspaceObject epBuildingSurfaceDetailed = workspace.addObject(idfObject2).get();
+
+  openstudio::IdfObject idfObject3(openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
+  idfObject3.setString(0, "Thermal Zone 1"); // Zone or ZoneList Name
+  idfObject3.setString(1, "Surface 1"); // From Surface 1
+  idfObject3.setString(2, "Surface 1"); // To Surface 1
+  idfObject3.setDouble(3, 0.25); // View Factor 1
+
+  openstudio::WorkspaceObject epZonePropertyUserViewFactorsBySurfaceName = workspace.addObject(idfObject3).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<ThermalZone> thermalZones = model.getModelObjects<ThermalZone>();
+  ASSERT_EQ(1u, thermalZones.size());
+  ThermalZone thermalZone = thermalZones[0];
+  EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1 Thermal Zone");
+  std::vector<Surface> surfaces = model.getModelObjects<Surface>();
+  ASSERT_EQ(1u, surfaces.size());
+  Surface surface = surfaces[0];
+  EXPECT_EQ(surface.name().get(), "Surface 1");  
+  ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
+  EXPECT_EQ(1u, zoneProp.numberofViewFactors());
+  std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
+  ViewFactor viewFactor = viewFactors[0];
+  EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1 Thermal Zone");
+  EXPECT_EQ(viewFactor.fromSurface().get().name().get(), "Surface 1");
+  EXPECT_EQ(viewFactor.toSurface().get().name().get(), "Surface 1");
+  EXPECT_EQ(0.25, viewFactor.viewFactor());
+}
