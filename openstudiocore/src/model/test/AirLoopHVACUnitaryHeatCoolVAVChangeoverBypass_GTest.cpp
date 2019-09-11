@@ -43,10 +43,16 @@
 #include "../Schedule_Impl.hpp"
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVACZoneMixer.hpp"
+#include "../AirLoopHVACReturnPlenum.hpp"
+#include "../AirLoopHVACReturnPlenum_Impl.hpp"
+#include "../ThermalZone.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveBiquadratic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
+#include "../utilities/core/Compare.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -189,4 +195,81 @@ TEST_F(ModelFixture, AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Clone)
   ASSERT_FALSE(clone.supplyAirFan().handle().isNull());
 }
 
+TEST_F(ModelFixture, AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_PlenumorMixer)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan = FanConstantVolume(m,s);
+  CoilHeatingElectric heatingCoil = CoilHeatingElectric(m,s);
+  CoilCoolingDXSingleSpeed coolingCoil = makeCoolingCoil(m);
 
+  unsigned n_nodes = m.getModelObjects<Node>().size();
+  AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary = AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass(m,fan,coolingCoil,heatingCoil);
+  EXPECT_EQ(n_nodes + 1, m.getModelObjects<Node>().size());
+
+  // Test newly added numeric field too
+  EXPECT_EQ(0.0, unitary.minimumRuntimeBeforeOperatingModeChange());
+  // Minimum 0
+  EXPECT_FALSE(unitary.setMinimumRuntimeBeforeOperatingModeChange(-10.0));
+  EXPECT_TRUE(unitary.setMinimumRuntimeBeforeOperatingModeChange(0.25));
+  EXPECT_EQ(0.25, unitary.minimumRuntimeBeforeOperatingModeChange());
+
+
+  AirLoopHVAC a(m);
+  ThermalZone z(m);
+  ThermalZone plenumZone(m);
+  EXPECT_TRUE(a.addBranchForZone(z));
+  EXPECT_TRUE(z.setReturnPlenum(plenumZone));
+  AirLoopHVACZoneMixer mixer = a.zoneMixer();
+  EXPECT_EQ(1u, mixer.inletModelObjects().size());
+
+  auto modelObjects = a.demandComponents(z, mixer);
+  auto plenums = subsetCastVector<AirLoopHVACReturnPlenum>(modelObjects);
+  ASSERT_EQ(1u, plenums.size());
+  AirLoopHVACReturnPlenum plenum = plenums[0];
+  EXPECT_EQ(1u, plenum.inletModelObjects().size());
+  n_nodes = m.getModelObjects<Node>().size();
+  // 7 AirLoopHVAC nodes, 2 ZoneAirNodes, 1 Unitary Node for Plenum Or Mixer
+  EXPECT_EQ(10u, n_nodes);
+
+  EXPECT_FALSE(unitary.plenumorMixer());
+
+  // Shouldn't work until they are both on the same loop
+  EXPECT_FALSE(unitary.setPlenumorMixer(mixer));
+  EXPECT_FALSE(unitary.plenumorMixer());
+  EXPECT_EQ(1u, mixer.inletModelObjects().size());
+  EXPECT_EQ(1u, plenum.inletModelObjects().size());
+
+  EXPECT_FALSE(unitary.setPlenumorMixer(plenum));
+  EXPECT_FALSE(unitary.plenumorMixer());
+  EXPECT_EQ(1u, mixer.inletModelObjects().size());
+  EXPECT_EQ(1u, plenum.inletModelObjects().size());
+
+  Node supplyOutletNode = a.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
+  n_nodes = m.getModelObjects<Node>().size();
+  EXPECT_EQ(10u, n_nodes);
+
+  EXPECT_TRUE(unitary.setPlenumorMixer(mixer));
+  EXPECT_EQ(2u, mixer.inletModelObjects().size());
+  EXPECT_EQ(1u, plenum.inletModelObjects().size());
+  ASSERT_TRUE(unitary.plenumorMixer());
+  EXPECT_EQ(mixer.handle(), unitary.plenumorMixer()->handle());
+
+  // Should disconnect it from the mixer first (remove that branch), then connect to plenum
+  EXPECT_TRUE(unitary.setPlenumorMixer(plenum));
+  EXPECT_EQ(1u, mixer.inletModelObjects().size());
+  EXPECT_EQ(2u, plenum.inletModelObjects().size());
+  ASSERT_TRUE(unitary.plenumorMixer());
+  EXPECT_EQ(plenum, unitary.plenumorMixer().get());
+
+  n_nodes = m.getModelObjects<Node>().size();
+  EXPECT_EQ(10u, n_nodes);
+
+  // Test remove
+  unitary.remove();
+  n_nodes = m.getModelObjects<Node>().size();
+  EXPECT_EQ(9u, n_nodes); // Should remove the Unitary Node
+  EXPECT_EQ(1u, mixer.inletModelObjects().size());
+  EXPECT_EQ(1u, plenum.inletModelObjects().size());
+}
