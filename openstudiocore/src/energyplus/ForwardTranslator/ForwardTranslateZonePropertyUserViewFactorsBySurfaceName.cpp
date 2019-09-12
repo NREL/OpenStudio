@@ -75,19 +75,19 @@ boost::optional<IdfObject> ForwardTranslator::translateZonePropertyUserViewFacto
 
   for (const ViewFactor& viewFactor : viewFactors) {
     auto eg = idfObject.pushExtensibleGroup();
-    if (viewFactor.fromSurface()) {
-      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSurface().get().name().get());
-    } else if (viewFactor.fromSubSurface()) {
-      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSubSurface().get().name().get());
-    } else if (viewFactor.fromInternalMass()) {
-      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromInternalMass().get().name().get());
+    if (viewFactor.fromSurfaceAsSurface()) {
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSurfaceAsSurface().get().name().get());
+    } else if (viewFactor.fromSurfaceAsSubSurface()) {
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSurfaceAsSubSurface().get().name().get());
+    } else if (viewFactor.fromSurfaceAsInternalMass()) {
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSurfaceAsInternalMass().get().name().get());
     }
-    if (viewFactor.toSurface()) {
-      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSurface().get().name().get());
-    } else if (viewFactor.toSubSurface()) {
-      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSubSurface().get().name().get());
-    } else if (viewFactor.toInternalMass()) {
-      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toInternalMass().get().name().get());
+    if (viewFactor.toSurfaceAsSurface()) {
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSurfaceAsSurface().get().name().get());
+    } else if (viewFactor.toSurfaceAsSubSurface()) {
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSurfaceAsSubSurface().get().name().get());
+    } else if (viewFactor.toSurfaceAsInternalMass()) {
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSurfaceAsInternalMass().get().name().get());
     }
     eg.setDouble(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ViewFactor, viewFactor.viewFactor());
   }

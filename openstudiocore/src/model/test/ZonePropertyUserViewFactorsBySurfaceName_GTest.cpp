@@ -149,24 +149,24 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_AddAndRemove) {
   // check that remaining blocks moved correctly
   std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
 
-  EXPECT_TRUE(viewFactors[0].fromSurface());
-  EXPECT_TRUE(viewFactors[0].toSurface());
-  EXPECT_EQ(fromSurface, viewFactors[0].fromSurface());
-  EXPECT_EQ(toSurface, viewFactors[0].toSurface());
-  EXPECT_FALSE(viewFactors[0].fromSubSurface());
-  EXPECT_FALSE(viewFactors[0].fromInternalMass());
-  EXPECT_FALSE(viewFactors[0].toSubSurface());
-  EXPECT_FALSE(viewFactors[0].toInternalMass());
+  EXPECT_TRUE(viewFactors[0].fromSurfaceAsSurface());
+  EXPECT_TRUE(viewFactors[0].toSurfaceAsSurface());
+  EXPECT_EQ(fromSurface, viewFactors[0].fromSurfaceAsSurface());
+  EXPECT_EQ(toSurface, viewFactors[0].toSurfaceAsSurface());
+  EXPECT_FALSE(viewFactors[0].fromSurfaceAsSubSurface());
+  EXPECT_FALSE(viewFactors[0].fromSurfaceAsInternalMass());
+  EXPECT_FALSE(viewFactors[0].toSurfaceAsSubSurface());
+  EXPECT_FALSE(viewFactors[0].toSurfaceAsInternalMass());
   EXPECT_EQ(0.5, viewFactors[0].viewFactor());
 
-  EXPECT_TRUE(viewFactors[5].fromInternalMass());
-  EXPECT_TRUE(viewFactors[5].toInternalMass());
-  EXPECT_EQ(fromInternalMass, viewFactors[5].fromInternalMass());
-  EXPECT_EQ(toInternalMass, viewFactors[5].toInternalMass());
-  EXPECT_FALSE(viewFactors[5].fromSurface());
-  EXPECT_FALSE(viewFactors[5].fromSubSurface());
-  EXPECT_FALSE(viewFactors[5].toSurface());
-  EXPECT_FALSE(viewFactors[5].toSubSurface());
+  EXPECT_TRUE(viewFactors[5].fromSurfaceAsInternalMass());
+  EXPECT_TRUE(viewFactors[5].toSurfaceAsInternalMass());
+  EXPECT_EQ(fromInternalMass, viewFactors[5].fromSurfaceAsInternalMass());
+  EXPECT_EQ(toInternalMass, viewFactors[5].toSurfaceAsInternalMass());
+  EXPECT_FALSE(viewFactors[5].fromSurfaceAsSurface());
+  EXPECT_FALSE(viewFactors[5].fromSurfaceAsSubSurface());
+  EXPECT_FALSE(viewFactors[5].toSurfaceAsSurface());
+  EXPECT_FALSE(viewFactors[5].toSurfaceAsSubSurface());
   EXPECT_EQ(-1, viewFactors[5].viewFactor());
 
   // more remove checking

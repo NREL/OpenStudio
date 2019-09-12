@@ -69,12 +69,12 @@ class ViewFactor {
     ViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double viewFactor);
     ViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor);
 
-    boost::optional<Surface> fromSurface() const;
-    boost::optional<Surface> toSurface() const;
-    boost::optional<SubSurface> fromSubSurface() const;
-    boost::optional<SubSurface> toSubSurface() const;
-    boost::optional<InternalMass> fromInternalMass() const;
-    boost::optional<InternalMass> toInternalMass() const;
+    boost::optional<Surface> fromSurfaceAsSurface() const;
+    boost::optional<Surface> toSurfaceAsSurface() const;
+    boost::optional<SubSurface> fromSurfaceAsSubSurface() const;
+    boost::optional<SubSurface> toSurfaceAsSubSurface() const;
+    boost::optional<InternalMass> fromSurfaceAsInternalMass() const;
+    boost::optional<InternalMass> toSurfaceAsInternalMass() const;
     double viewFactor() const;
 
   private:

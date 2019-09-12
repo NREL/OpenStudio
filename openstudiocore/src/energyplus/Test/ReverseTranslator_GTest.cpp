@@ -730,7 +730,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
   ViewFactor viewFactor = viewFactors[0];
   EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1 Thermal Zone");
-  EXPECT_EQ(viewFactor.fromSurface().get().name().get(), "Surface 1");
-  EXPECT_EQ(viewFactor.toSurface().get().name().get(), "Surface 1");
+  EXPECT_EQ(viewFactor.fromSurfaceAsSurface().get().name().get(), "Surface 1");
+  EXPECT_EQ(viewFactor.toSurfaceAsSurface().get().name().get(), "Surface 1");
   EXPECT_EQ(0.25, viewFactor.viewFactor());
 }
