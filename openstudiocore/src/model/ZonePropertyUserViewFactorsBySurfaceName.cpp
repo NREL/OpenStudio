@@ -43,7 +43,7 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
-#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+#include "ModelExtensibleGroup.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_ZoneProperty_UserViewFactors_BySurfaceName_FieldEnums.hxx>
@@ -242,7 +242,7 @@ namespace detail {
     bool to = false;
 
     // Push an extensible group
-    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>();
     if (viewFactor.fromSurface()) {
       from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurface().get().handle());
     } else if (viewFactor.fromSubSurface()) {
@@ -340,38 +340,51 @@ namespace detail {
   std::vector<ViewFactor> ZonePropertyUserViewFactorsBySurfaceName_Impl::viewFactors() const {
     std::vector<ViewFactor> result;
 
-    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
-    for (const auto & group : groups) {
-      boost::optional<WorkspaceObject> wo1 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName);
-      boost::optional<WorkspaceObject> wo2 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName);
-      boost::optional<double> value = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor);
+    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
 
-      if (wo1->optionalCast<Surface>() && wo2->optionalCast<Surface>() && value) {
+      boost::optional<WorkspaceObject> wo1 = group.getTarget(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName);
+      boost::optional<WorkspaceObject> wo2 = group.getTarget(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName);
+      boost::optional<double> value = group.getDouble(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor);
+
+      if (!wo1) {
+        LOG(Error, "Could not retrieve FromSurfaceName for extensible group " << group.groupIndex() << ".");
+        return std::vector<ViewFactor>();
+      }
+      if (!wo2) {
+        LOG(Error, "Could not retrieve ToSurfaceName for extensible group " << group.groupIndex() << ".");
+        return std::vector<ViewFactor>();
+      }
+      if (!value) {
+        LOG(Error, "Could not retrieve ViewFactor for extensible group " << group.groupIndex() << ".");
+        return std::vector<ViewFactor>();
+      }
+
+      if (wo1->optionalCast<Surface>() && wo2->optionalCast<Surface>()) {
         ViewFactor viewFactor(wo1->optionalCast<Surface>().get(), wo2->optionalCast<Surface>().get(), *value);
         result.push_back(viewFactor);
-      } else if (wo1->optionalCast<Surface>() && wo2->optionalCast<SubSurface>() && value) {
+      } else if (wo1->optionalCast<Surface>() && wo2->optionalCast<SubSurface>()) {
         ViewFactor viewFactor(wo1->optionalCast<Surface>().get(), wo2->optionalCast<SubSurface>().get(), *value);
         result.push_back(viewFactor);
-      } else if (wo1->optionalCast<Surface>() && wo2->optionalCast<InternalMass>() && value) {
+      } else if (wo1->optionalCast<Surface>() && wo2->optionalCast<InternalMass>()) {
         ViewFactor viewFactor(wo1->optionalCast<Surface>().get(), wo2->optionalCast<InternalMass>().get(), *value);
         result.push_back(viewFactor);
-      } else if (wo1->optionalCast<SubSurface>() && wo2->optionalCast<SubSurface>() && value) {
+      } else if (wo1->optionalCast<SubSurface>() && wo2->optionalCast<SubSurface>()) {
         ViewFactor viewFactor(wo1->optionalCast<SubSurface>().get(), wo2->optionalCast<SubSurface>().get(), *value);
         result.push_back(viewFactor);
-      } else if (wo1->optionalCast<SubSurface>() && wo2->optionalCast<Surface>() && value) {
+      } else if (wo1->optionalCast<SubSurface>() && wo2->optionalCast<Surface>()) {
         ViewFactor viewFactor(wo1->optionalCast<SubSurface>().get(), wo2->optionalCast<Surface>().get(), *value);
         result.push_back(viewFactor);
-      } else if (wo1->optionalCast<SubSurface>() && wo2->optionalCast<InternalMass>() && value) {
+      } else if (wo1->optionalCast<SubSurface>() && wo2->optionalCast<InternalMass>()) {
         ViewFactor viewFactor(wo1->optionalCast<SubSurface>().get(), wo2->optionalCast<InternalMass>().get(), *value);
         result.push_back(viewFactor);
-      } else if (wo1->optionalCast<InternalMass>() && wo2->optionalCast<InternalMass>() && value) {
+      } else if (wo1->optionalCast<InternalMass>() && wo2->optionalCast<InternalMass>()) {
         ViewFactor viewFactor(wo1->optionalCast<InternalMass>().get(), wo2->optionalCast<InternalMass>().get(), *value);
         result.push_back(viewFactor);
-      } else if (wo1->optionalCast<InternalMass>() && wo2->optionalCast<Surface>() && value) {
+      } else if (wo1->optionalCast<InternalMass>() && wo2->optionalCast<Surface>()) {
         ViewFactor viewFactor(wo1->optionalCast<InternalMass>().get(), wo2->optionalCast<Surface>().get(), *value);
         result.push_back(viewFactor);
-      } else if (wo1->optionalCast<InternalMass>() && wo2->optionalCast<SubSurface>() && value) {
+      } else if (wo1->optionalCast<InternalMass>() && wo2->optionalCast<SubSurface>()) {
         ViewFactor viewFactor(wo1->optionalCast<InternalMass>().get(), wo2->optionalCast<SubSurface>().get(), *value);
         result.push_back(viewFactor);
       }
