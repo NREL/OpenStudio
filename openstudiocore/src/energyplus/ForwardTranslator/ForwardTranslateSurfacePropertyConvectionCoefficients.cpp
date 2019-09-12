@@ -59,7 +59,12 @@ boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyConvection
   boost::optional<Schedule> convectionCoefficient2Schedule = modelObject.convectionCoefficient2Schedule();
 
   if (!(convectionCoefficientSurface && convectionCoefficient1Location && convectionCoefficient1Type)){
-    LOG(Error, "SurfacePropertyConvectionCoefficients '" << modelObject.name().get() << "' missing required fields, will not be translated");
+    if (convectionCoefficientSurface) {
+      LOG(Error, "SurfacePropertyConvectionCoefficients for Surface '" << convectionCoefficientSurface->nameString()
+            << "' missing required fields, will not be translated");
+    } else {
+      LOG(Error, "SurfacePropertyConvectionCoefficients does not reference a surface, it will not be translated.");
+    }
     return boost::none;
   }
 
