@@ -180,7 +180,7 @@ namespace detail {
 
       if (_space) {
         if (boost::optional<ThermalZone> _zone = _space->thermalZone()) {
-          if (_zone->handle() == this->handle()) {
+          if (_zone->handle() == this->thermalZone().handle()) {
             result = true;
           }
         }

@@ -153,29 +153,8 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   InternalMassDefinition toDefinition(model);
   InternalMass toInternalMass(toDefinition);
 
-  // None of these objects are part of the thermal zone, so it shouldn't work
-  EXPECT_EQ(0, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromSurface, toSurface, 0.5));
-  EXPECT_EQ(0, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromSurface, toSubSurface, 1));
-  EXPECT_EQ(0, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromSurface, toInternalMass, 1.0));
-  EXPECT_EQ(0, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toSubSurface, 0));
-  EXPECT_EQ(0, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toSurface, 0.0));
-  EXPECT_EQ(0, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toInternalMass, -2));
-  EXPECT_EQ(0, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toInternalMass, -1));
-  EXPECT_EQ(0, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toSurface, -1.5));
-  EXPECT_EQ(0, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toSubSurface, -0.25));
-  EXPECT_EQ(0, zoneProp.numberofViewFactors());
 
-
-  // Now make it part of the ThermalZone
+  // Make all of these part of a space, but the space isn't yet part of the thermal zone
   Space space(model);
   fromSurface.setSpace(space);
   toSurface.setSpace(space);
@@ -183,6 +162,31 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   toSubSurface.setSurface(toSurface);
   toInternalMass.setSpace(space);
   fromInternalMass.setSpace(space);
+
+  // None of these objects are part of the thermal zone, so it shouldn't work
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_FALSE(zoneProp.addViewFactor(fromSurface, toSurface, 0.5));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_FALSE(zoneProp.addViewFactor(fromSurface, toSubSurface, 1));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_FALSE(zoneProp.addViewFactor(fromSurface, toInternalMass, 1.0));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_FALSE(zoneProp.addViewFactor(fromSubSurface, toSubSurface, 0));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_FALSE(zoneProp.addViewFactor(fromSubSurface, toSurface, 0.0));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_FALSE(zoneProp.addViewFactor(fromSubSurface, toInternalMass, -2));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_FALSE(zoneProp.addViewFactor(fromInternalMass, toInternalMass, -1));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_FALSE(zoneProp.addViewFactor(fromInternalMass, toSurface, -1.5));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_FALSE(zoneProp.addViewFactor(fromInternalMass, toSubSurface, -0.25));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+
+
+  // Now make it part of the ThermalZone
+  space.setThermalZone(thermalZone);
   EXPECT_EQ(0, zoneProp.numberofViewFactors());
   EXPECT_TRUE(zoneProp.addViewFactor(fromSurface, toSurface, 0.5));
   EXPECT_EQ(1, zoneProp.numberofViewFactors());
