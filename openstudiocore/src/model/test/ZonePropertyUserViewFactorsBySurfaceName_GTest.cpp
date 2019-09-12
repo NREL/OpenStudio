@@ -213,7 +213,7 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
 
   // check that remaining blocks moved correctly
   std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
-
+  EXPECT_EQ(8u, viewFactors.size());
   EXPECT_EQ(fromSurface, viewFactors[0].fromSurface());
   EXPECT_EQ(toSurface, viewFactors[0].toSurface());
   EXPECT_TRUE(viewFactors[0].fromSurface().optionalCast<Surface>());
