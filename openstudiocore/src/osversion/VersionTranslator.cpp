@@ -4589,7 +4589,6 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
-    // No-op
     } else if (iddname == "OS:ThermalStorage:Ice:Detailed") {
       auto iddObject = idd_2_9_0.getObject("OS:ThermalStorage:Ice:Detailed");
       IdfObject newObject(iddObject.get());
@@ -4655,6 +4654,63 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else if (iddname == "OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass") {
+      auto iddObject = idd_2_9_0.getObject("OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass");
+      IdfObject newObject(iddObject.get());
+
+      // We only add two fields at the end, so copy all existing
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+      // At 24, we add a Connection and a Node for the Plenum or Mixer Inlet Node
+      auto nodeIdd = idd_2_9_0.getObject("OS:Node");
+      auto nodeHandle = toString(createUUID());
+      IdfObject newNode(nodeIdd.get());
+      newNode.setString(0, nodeHandle);
+
+      auto connectionIdd = idd_2_9_0.getObject("OS:Connection");
+      // We pass fastname = true, to mimic the normal behavior (a connection gets a handle for name)
+      IdfObject newConnection(connectionIdd.get(), true);
+      auto newConnectionHandle = toString(createUUID());
+      newConnection.setString(0, newConnectionHandle);
+      // Name
+      // Source Object: Unitary
+      newConnection.setString(2, newObject.getString(0).get());
+      // Outlet Port: 24
+      newConnection.setInt(3, 24);
+
+      // Target Object: Node
+      newConnection.setString(4, nodeHandle);
+      // Inlet Port: i=2
+      newConnection.setInt(5, 2);
+
+      // Unitary now refers to the newConnection
+      newObject.setString(24, newConnectionHandle);
+
+
+      newNode.setName(object.nameString() + " Plenum or Mixer Inlet Node");
+      // Node Inlet Port = new connection
+      newNode.setString(2, newConnectionHandle);
+      // Outlet Port stays blank
+
+      // At 25, we add a numeric field Minimum Runtime Before Operating Change, which we want to set to zero to match historical behavior
+      // and what the Ctor now does
+      newObject.setDouble(25, 0.0);
+
+      // Register new objects
+      m_new.push_back(newNode);
+      m_new.push_back(newConnection);
+      ss << newNode;
+      ss << newConnection;
+
+      // Register refactored
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    // No-op
     } else {
       ss << object;
     }

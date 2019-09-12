@@ -90,7 +90,6 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStorageIceDetailed
     auto curve = modelObject.dischargingCurve();
     auto idf = translateAndMapModelObject(curve);
     OS_ASSERT(idf);
-    auto type = idf->iddObject().type();
 
     idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveVariableSpecifications, modelObject.dischargingCurveVariableSpecifications());
     idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveName,idf->name().get());
@@ -102,7 +101,6 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStorageIceDetailed
     auto curve = modelObject.chargingCurve();
     auto idf = translateAndMapModelObject(curve);
     OS_ASSERT(idf);
-    auto type = idf->iddObject().type();
 
     idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveVariableSpecifications, modelObject.chargingCurveVariableSpecifications());
     idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveName,idf->name().get());

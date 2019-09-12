@@ -10,7 +10,7 @@
     <rule IddField="ThermalZone" Access="LOCKED"/>
     <rule IddField="Inlet Node" Access="HIDDEN"/>
     <rule IddField="Outlet Node" Access="HIDDEN"/>
-    <rule IddField="Induced Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Induced Air Outlet Port List" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_CentralHeatPumpSystem">
     <rule IddField="Cooling Loop Inlet Node Name" Access="HIDDEN"/>
@@ -164,6 +164,7 @@
     <rule IddField="Supply Air Fan" Access="HIDDEN"/>
     <rule IddField="Cooling Coil" Access="HIDDEN"/>
     <rule IddField="Heating Coil" Access="HIDDEN"/>
+    <rule IddField="Plenum or Mixer Inlet Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_AirLoopHVAC_UnitaryHeatPump_AirToAir">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>

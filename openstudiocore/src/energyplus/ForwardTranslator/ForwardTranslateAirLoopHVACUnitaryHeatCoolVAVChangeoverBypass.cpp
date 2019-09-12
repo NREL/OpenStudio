@@ -39,6 +39,7 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
+#include "../../model/Mixer.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
@@ -250,6 +251,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatCoo
     unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::DehumidificationControlType,s.get());
   }
 
+  // Minimum Runtime Before Operating Mode Change
+  unitarySystem.setDouble(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::MinimumRuntimeBeforeOperatingModeChange,
+                          modelObject.minimumRuntimeBeforeOperatingModeChange());
+
   if( _fan && _coolingCoil && _heatingCoil )
   {
     std::string fanOutletNodeName;
@@ -361,6 +366,14 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatCoo
     m_idfObjects.push_back(_oaNodeList);
     _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReliefAirStreamNodeName,baseName + " Relief Air Node");
     _outdoorAirMixer.setString(OutdoorAir_MixerFields::ReturnAirStreamNodeName,bypassDuctMixerNodeName);
+
+
+    // Plenum or Mixer
+    if (boost::optional<Mixer> returnPathComponent = modelObject.plenumorMixer()) {
+      // In this case, do translate the node
+      unitarySystem.setString(AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypassFields::PlenumorMixerInletNodeName,
+                              modelObject.plenumorMixerNode().name().get());
+    }
   }
 
   return unitarySystem;

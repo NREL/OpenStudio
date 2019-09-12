@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class Mixer;
 
 namespace detail {
 
@@ -120,6 +121,12 @@ namespace detail {
 
     std::string dehumidificationControlType() const;
 
+    double minimumRuntimeBeforeOperatingModeChange() const;
+
+    unsigned plenumorMixerAirPort() const;
+    Node plenumorMixerNode() const;
+    boost::optional<Mixer> plenumorMixer() const;
+
     boost::optional<double> autosizedSystemAirFlowRateDuringCoolingOperation() const ;
 
     boost::optional<double> autosizedSystemAirFlowRateDuringHeatingOperation() const ;
@@ -196,6 +203,12 @@ namespace detail {
 
     bool setDehumidificationControlType(std::string dehumidificationControlType);
 
+    bool setMinimumRuntimeBeforeOperatingModeChange(double runtime);
+
+    bool setPlenumorMixer(const Mixer& returnPathComponent);
+
+    void resetPlenumorMixer();
+
     //@}
     /** @name Other */
     //@{
@@ -204,11 +217,11 @@ namespace detail {
 
     virtual unsigned outletPort() const override;
 
-    ModelObject clone(Model model) const override;
+    virtual ModelObject clone(Model model) const override;
 
-    std::vector<IdfObject> remove() override;
+    virtual std::vector<IdfObject> remove() override;
 
-    std::vector<ModelObject> children() const override;
+    virtual std::vector<ModelObject> children() const override;
 
     //@}
    protected:
