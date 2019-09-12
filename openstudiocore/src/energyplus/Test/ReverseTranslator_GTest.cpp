@@ -491,7 +491,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OtherEquipment) {
   EXPECT_EQ(otherEquipments[0].endUseSubcategory(), "Category A");
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {  
+TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::Foundation_Kiva_Settings);
@@ -533,7 +533,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {
   EXPECT_EQ("Hourly", foundationKivaSettings.simulationTimestep());
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {  
+TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::Material);
@@ -603,14 +603,14 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
   group5.setDouble(2, 0);
 
   openstudio::WorkspaceObject epSurface = workspace.addObject(idfObject3).get();
-  
+
   openstudio::IdfObject idfObject4(openstudio::IddObjectType::SurfaceProperty_ExposedFoundationPerimeter);
-  
+
   idfObject4.setString(SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, "Surface 1");
   idfObject4.setString(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod, "TotalExposedPerimeter");
   idfObject4.setDouble(SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, 40.8932111725161);
   idfObject4.setDouble(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, 1);
-  
+
   openstudio::WorkspaceObject epPerimeter = workspace.addObject(idfObject4).get();
 
   ReverseTranslator trans;
@@ -628,7 +628,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
   ASSERT_EQ(1u, surfaces.size());
   Surface surface = surfaces[0];
   EXPECT_EQ(surface.adjacentFoundation().get().name().get(), "Foundation Kiva 1");
-  
+
   boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter = surface.surfacePropertyExposedFoundationPerimeter();
   std::string surfaceName = surfacePropertyExposedFoundationPerimeter.get().surfaceName();
   EXPECT_EQ(surface.name().get(), surfaceName);
@@ -651,18 +651,18 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleFile) {
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
-  
+
   openstudio::IdfObject idfObject(openstudio::IddObjectType::PerformancePrecisionTradeoffs);
   idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
-  
+
   openstudio::WorkspaceObject epPerformancePrecisionTradeoffs = workspace.addObject(idfObject).get();
-  
+
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
-  
+
   ASSERT_TRUE(model.getOptionalUniqueModelObject<openstudio::model::PerformancePrecisionTradeoffs>());
-  
+
   openstudio::model::PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<openstudio::model::PerformancePrecisionTradeoffs>();
   EXPECT_TRUE(performancePrecisionTradeoffs.useCoilDirectSolutions());
 }
@@ -724,13 +724,13 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   std::vector<Surface> surfaces = model.getModelObjects<Surface>();
   ASSERT_EQ(1u, surfaces.size());
   Surface surface = surfaces[0];
-  EXPECT_EQ(surface.name().get(), "Surface 1");  
+  EXPECT_EQ(surface.name().get(), "Surface 1");
   ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
   EXPECT_EQ(1u, zoneProp.numberofViewFactors());
   std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
   ViewFactor viewFactor = viewFactors[0];
   EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1 Thermal Zone");
-  EXPECT_EQ(viewFactor.fromSurface().get().name().get(), "Surface 1");
-  EXPECT_EQ(viewFactor.toSurface().get().name().get(), "Surface 1");
+  EXPECT_EQ(viewFactor.fromSurface().name().get(), "Surface 1");
+  EXPECT_EQ(viewFactor.toSurface().name().get(), "Surface 1");
   EXPECT_EQ(0.25, viewFactor.viewFactor());
 }

@@ -39,6 +39,8 @@
 #include "SubSurface_Impl.hpp"
 #include "InternalMass.hpp"
 #include "InternalMass_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -161,15 +163,55 @@ namespace detail {
   bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const ViewFactor& viewFactor) {
     bool result = false;
 
+
+    // This the only place we need to cast, in order to check if the actual to/from stuff is part of our zone
+    // This lambda checks that the InternalMass/Surface/SubSurface is part of this thermalzone
+    auto checkIfInThermalZone = [this](const ModelObject& modelObject) {
+      bool result = false;
+      boost::optional<Space> _space;
+
+      if (boost::optional<Surface> _fromSurfaceAsSurface = modelObject.optionalCast<Surface>()) {
+        _space = _fromSurfaceAsSurface->space();
+      } else if (boost::optional<SubSurface> _fromSurfaceAsSubSurface = modelObject.optionalCast<SubSurface>()) {
+        _space = _fromSurfaceAsSubSurface->space();
+      } else if (boost::optional<InternalMass> _fromSurfaceAsInternalMass = modelObject.optionalCast<InternalMass>()) {
+        _space = _fromSurfaceAsInternalMass->space();
+      }
+
+      if (_space) {
+        if (boost::optional<ThermalZone> _zone = _space->thermalZone()) {
+          if (_zone->handle() == this->handle()) {
+            result = true;
+          }
+        }
+      }
+      return result;
+    };
+
+    ModelObject fromSurface = viewFactor.fromSurface();
+    if (!checkIfInThermalZone(fromSurface)) {
+      LOG(Error, "Cannot add ViewFactor to " << briefDescription() << " because fromSurface=" << fromSurface.briefDescription()
+          << "'is not part of the ThermalZone.");
+      return false;
+    }
+
+    ModelObject toSurface = viewFactor.toSurface();
+    if (!checkIfInThermalZone(toSurface)) {
+      LOG(Error, "Cannot add ViewFactor to " << briefDescription() << " because toSurface=" << toSurface.briefDescription()
+          << "'is not part of the ThermalZone.");
+      return false;
+    }
+
+
     // Push an extensible group
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>();
-    bool from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurface().handle());
+    bool from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, fromSurface.handle());
     if (!from) {
       LOG(Error, "Unable to add View Factor which has an incompatible fromSurface object to " << briefDescription());
       OS_ASSERT(false);
     }
 
-    bool to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.toSurface().handle());
+    bool to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, toSurface.handle());
     if (!to) {
       LOG(Error, "Unable to add View Factor which has an incompatible toSurface object to " << briefDescription());
       OS_ASSERT(false);

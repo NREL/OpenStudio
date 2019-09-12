@@ -52,7 +52,36 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_ZonePropertyUserViewFactorsBySufaceName_Ctor) {
+
+TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ViewFactor) {
+
+  Model m;
+  Point3dVector points;
+  points.clear();
+  points.push_back(Point3d(0, 2, 0));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(1, 0, 0));
+  Surface s(points, m);
+
+  InternalMassDefinition intMassDefn(m);
+  intMassDefn.setSurfaceArea(20);
+  InternalMass intMass(intMassDefn);
+
+  ThermalZone z(m);
+
+  // OK
+  EXPECT_NO_THROW(ViewFactor(s, intMass, 0.9));
+
+  // Wrong double
+  EXPECT_THROW(ViewFactor(s, intMass, 1.2), openstudio::Exception);
+
+  // Wrong type
+  EXPECT_THROW(ViewFactor(s, z, 0.9), openstudio::Exception);
+  EXPECT_THROW(ViewFactor(z, s, 0.9), openstudio::Exception);
+
+
+}
+TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ZonePropertyUserViewFactorsBySufaceName_Ctor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
@@ -72,7 +101,7 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_ZonePropertyUserVie
   );
 }
 
-TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_ZonePropertyUserViewFactorsBySufaceName_Uniqueness) {
+TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ZonePropertyUserViewFactorsBySufaceName_Uniqueness) {
 
   Model model;
   ThermalZone thermalZone(model);
@@ -102,7 +131,7 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_ZonePropertyUserVie
 
 }
 
-TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_AddAndRemove) {
+TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   Model model;
   ThermalZone thermalZone(model);
   ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
@@ -149,24 +178,16 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_AddAndRemove) {
   // check that remaining blocks moved correctly
   std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
 
-  EXPECT_TRUE(viewFactors[0].fromSurface());
-  EXPECT_TRUE(viewFactors[0].toSurface());
   EXPECT_EQ(fromSurface, viewFactors[0].fromSurface());
   EXPECT_EQ(toSurface, viewFactors[0].toSurface());
-  EXPECT_FALSE(viewFactors[0].fromSubSurface());
-  EXPECT_FALSE(viewFactors[0].fromInternalMass());
-  EXPECT_FALSE(viewFactors[0].toSubSurface());
-  EXPECT_FALSE(viewFactors[0].toInternalMass());
+  EXPECT_TRUE(viewFactors[0].fromSurface().optionalCast<Surface>());
+  EXPECT_TRUE(viewFactors[0].toSurface().optionalCast<Surface>());
   EXPECT_EQ(0.5, viewFactors[0].viewFactor());
 
-  EXPECT_TRUE(viewFactors[5].fromInternalMass());
-  EXPECT_TRUE(viewFactors[5].toInternalMass());
-  EXPECT_EQ(fromInternalMass, viewFactors[5].fromInternalMass());
-  EXPECT_EQ(toInternalMass, viewFactors[5].toInternalMass());
-  EXPECT_FALSE(viewFactors[5].fromSurface());
-  EXPECT_FALSE(viewFactors[5].fromSubSurface());
-  EXPECT_FALSE(viewFactors[5].toSurface());
-  EXPECT_FALSE(viewFactors[5].toSubSurface());
+  EXPECT_EQ(fromInternalMass, viewFactors[5].fromSurface());
+  EXPECT_EQ(toInternalMass, viewFactors[5].toSurface());
+  EXPECT_TRUE(viewFactors[5].fromSurface().optionalCast<InternalMass>());
+  EXPECT_TRUE(viewFactors[5].toSurface().optionalCast<InternalMass>());
   EXPECT_EQ(-1, viewFactors[5].viewFactor());
 
   // more remove checking
