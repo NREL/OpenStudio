@@ -165,7 +165,7 @@ namespace detail {
 
 
     // This the only place we need to cast, in order to check if the actual to/from stuff is part of our zone
-    // This lambda checks that the InternalMass/Surface/SubSurface is part of this thermalzone
+    // This lambda checks that the InternalMass/Surface/SubSurface is part of the ThermalZone referenced by this object
     auto checkIfInThermalZone = [this](const ModelObject& modelObject) {
       bool result = false;
       boost::optional<Space> _space;
@@ -176,6 +176,9 @@ namespace detail {
         _space = _fromSurfaceAsSubSurface->space();
       } else if (boost::optional<InternalMass> _fromSurfaceAsInternalMass = modelObject.optionalCast<InternalMass>()) {
         _space = _fromSurfaceAsInternalMass->space();
+      } else {
+        // This can't happen, ViewFactor shouldn't accept anything else
+        OS_ASSERT(false);
       }
 
       if (_space) {
