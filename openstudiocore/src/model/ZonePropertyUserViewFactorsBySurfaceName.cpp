@@ -230,9 +230,9 @@ namespace detail {
   }
 
   bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const ViewFactor& viewFactor) {
-    bool result;
-    bool from;
-    bool to;
+    bool result = false;
+    bool from = false;
+    bool to = false;
 
     // Push an extensible group
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
@@ -242,14 +242,22 @@ namespace detail {
       from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSubSurface().get().handle());
     } else if (viewFactor.fromInternalMass()) {
       from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromInternalMass().get().handle());
+    } else {
+      LOG(Error, "Unable to add View Factor which has an incompatible fromSurface object to " << briefDescription());
+      OS_ASSERT(false);
     }
+
     if (viewFactor.toSurface()) {
       to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSurface().get().handle());
     } else if (viewFactor.toSubSurface()) {
       to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSubSurface().get().handle());
     } else if (viewFactor.toInternalMass()) {
       to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toInternalMass().get().handle());
+    } else {
+      LOG(Error, "Unable to add View Factor which has an incompatible toSurface object to " << briefDescription());
+      OS_ASSERT(false);
     }
+
     bool value = eg.setDouble(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor, viewFactor.viewFactor());
     if (from && to && value) {
       result = true;
@@ -308,14 +316,12 @@ namespace detail {
   }
 
   bool ZonePropertyUserViewFactorsBySurfaceName_Impl::removeViewFactor(unsigned groupIndex) {
-    bool result;
+    bool result = false;
 
     unsigned int num = numberofViewFactors();
     if (groupIndex < num) {
       getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
       result = true;
-    } else {
-      result = false;
     }
     return result;
   }
@@ -368,12 +374,18 @@ namespace detail {
   }
 
   bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactors(const std::vector<ViewFactor> &viewFactors) {
-    unsigned int num = numberofViewFactors();
+    bool result = true;
 
     for (const ViewFactor& viewFactor : viewFactors) {
-      addViewFactor(viewFactor);
+      bool thisResult = addViewFactor(viewFactor);
+      if (!thisResult) {
+        LOG(Error, "Could not add viewFactor " << viewFactor << " to " << briefDescription() << ". Continuing with others.");
+        OS_ASSERT(false);
+        result = false;
+      }
     }
-    return true;
+
+    return result;
   }
 
 } // detail
@@ -383,10 +395,7 @@ ZonePropertyUserViewFactorsBySurfaceName::ZonePropertyUserViewFactorsBySurfaceNa
 {
   OS_ASSERT(getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>());
 
-  bool ok = true;
-  OS_ASSERT(ok);
-
-  ok = setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameFields::ThermalZoneName, thermalZone.handle());
+  bool ok = setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameFields::ThermalZoneName, thermalZone.handle());
   OS_ASSERT(ok);
 }
 
