@@ -101,7 +101,13 @@ class MODEL_API ZonePropertyUserViewFactorsBySurfaceName : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit ZonePropertyUserViewFactorsBySurfaceName(ThermalZone& thermalZone);
+  /*
+   * This constructor shouldn't be used, ThermalZone::getZonePropertyUserViewFactorsBySurfaceName should be prefered
+   * as it will either instantiate a new object or return the existing one.
+   * A ThermalZone should not have more than one ZonePropertyUserViewFactorsBySurfaceName. If you try to instantiate a second one for a given
+   * ThermalZone this constructor will throw
+   */
+  explicit ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
 
   virtual ~ZonePropertyUserViewFactorsBySurfaceName() {}
 

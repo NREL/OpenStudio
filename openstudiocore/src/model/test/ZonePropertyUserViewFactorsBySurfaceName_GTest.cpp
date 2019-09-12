@@ -82,6 +82,7 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_ZonePropertyUserVie
   ZonePropertyUserViewFactorsBySurfaceName zoneProp1 = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
   EXPECT_EQ(thermalZone.handle(), zoneProp1.thermalZone().handle());
   EXPECT_EQ(size+1, model.modelObjects().size());
+  // This should be the same one
   ZonePropertyUserViewFactorsBySurfaceName zoneProp2 = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
   EXPECT_EQ(size+1, model.modelObjects().size());
   EXPECT_EQ(zoneProp1, zoneProp2);
@@ -90,6 +91,15 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_ZonePropertyUserVie
   EXPECT_EQ(0, zoneProp2.numberofViewFactors());
   EXPECT_EQ(0, zoneProp2.viewFactors().size());
   EXPECT_EQ("Thermal Zone 1", zoneProp2.thermalZone().name().get());
+
+  // Direct Ctor should throw since there is already one
+  EXPECT_THROW((ZonePropertyUserViewFactorsBySurfaceName(thermalZone)), openstudio::Exception);
+  EXPECT_EQ(size+1, model.modelObjects().size());
+
+  // Clone is disallowed in all cases
+  EXPECT_THROW(zoneProp1.clone(model), openstudio::Exception);
+  EXPECT_EQ(size+1, model.modelObjects().size());
+
 }
 
 TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_AddAndRemove) {

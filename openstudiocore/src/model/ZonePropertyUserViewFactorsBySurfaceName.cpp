@@ -218,6 +218,13 @@ namespace detail {
     return ZonePropertyUserViewFactorsBySurfaceName::iddObjectType();
   }
 
+  ModelObject ZonePropertyUserViewFactorsBySurfaceName_Impl::clone(Model model) const
+  {
+    LOG_AND_THROW("Cloning isn't allowed for ZonePropertyUserViewFactorsBySurfaceName in order to guarantee that every "
+                  "ZonePropertyUserViewFactorsBySurfaceName has a thermal zone, and"
+                  "that a thermal zone must have only one ZonePropertyUserViewFactorsBySurfaceName.");
+  }
+
   ThermalZone ZonePropertyUserViewFactorsBySurfaceName_Impl::thermalZone() const
   {
     boost::optional<ThermalZone> thermalZone = getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_ZoneProperty_UserViewFactors_BySurfaceNameFields::ThermalZoneName);
@@ -390,9 +397,14 @@ namespace detail {
 
 } // detail
 
-ZonePropertyUserViewFactorsBySurfaceName::ZonePropertyUserViewFactorsBySurfaceName(ThermalZone& thermalZone)
+ZonePropertyUserViewFactorsBySurfaceName::ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone)
   : ModelObject(ZonePropertyUserViewFactorsBySurfaceName::iddObjectType(), thermalZone.model())
 {
+  std::vector<ZonePropertyUserViewFactorsBySurfaceName> zoneProps = thermalZone.getModelObjectSources<ZonePropertyUserViewFactorsBySurfaceName>(ZonePropertyUserViewFactorsBySurfaceName::iddObjectType());
+  if (!zoneProps.empty()) {
+    remove();
+    LOG_AND_THROW(thermalZone.briefDescription() << " already has a ZonePropertyUserViewFactorsBySurfaceName, cannot create a new one. Use ThermalZone::getZonePropertyUserViewFactorsBySurfaceName() instead.");
+  }
   OS_ASSERT(getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>());
 
   bool ok = setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameFields::ThermalZoneName, thermalZone.handle());

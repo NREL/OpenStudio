@@ -2953,6 +2953,8 @@ namespace detail {
     std::vector<ZonePropertyUserViewFactorsBySurfaceName> zoneProps = thisThermalZone.getModelObjectSources<ZonePropertyUserViewFactorsBySurfaceName>(ZonePropertyUserViewFactorsBySurfaceName::iddObjectType());
     if (!zoneProps.empty()) {
       if (zoneProps.size() > 1u) {
+        // This shouldn't happen, ZonePropertyUserViewFactorsBySurfaceName's ctor should throw if a zone already has one
+        OS_ASSERT(false);
         LOG(Error, briefDescription() << " is referenced by more than one ZonePropertyUserViewFactorsBySurfaceName, returning the first");
       }
       return zoneProps[0];

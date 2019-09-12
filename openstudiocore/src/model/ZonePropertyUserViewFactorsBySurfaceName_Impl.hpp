@@ -75,6 +75,9 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    // Disallow cloning
+    virtual ModelObject clone(Model model) const override;
+
     //@}
     /** @name Getters */
     //@{

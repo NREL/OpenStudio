@@ -327,7 +327,7 @@ namespace detail {
 
     return m_cachedYearDescription;
   }
-  
+
   boost::optional<PerformancePrecisionTradeoffs> Model_Impl::performancePrecisionTradeoffs() const
   {
     if (m_cachedPerformancePrecisionTradeoffs){
