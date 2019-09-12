@@ -52,32 +52,44 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateZonePropertyUserViewFactorsBySurfaceName( ZonePropertyUserViewFactorsBySurfaceName & modelObject )
 {
-  IdfObject idfObject(openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
+  ThermalZone zone = modelObject.thermalZone();
+  boost::optional<IdfObject> _zone = translateAndMapModelObject(zone);
+  if (!_zone) {
+    LOG(Error, "ZonePropertyUserViewFactorsBySurfaceName references a zone '" << zone.nameString()
+            << "' that was not translated, so it will not be translated either");
+  }
 
+  // No need to translate it if it doesn't have at least one view factor
+  std::vector<ViewFactor> viewFactors = modelObject.viewFactors();
+  if (viewFactors.empty()) {
+    LOG(Error, "ZonePropertyUserViewFactorsBySurfaceName for zone '" << zone.nameString()
+            << "' doesn't have at least one view factor, it will not be translated.");
+    return boost::none;
+  }
+
+
+  IdfObject idfObject(openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
   m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(ZoneProperty_UserViewFactors_bySurfaceNameFields::ZoneorZoneListName, modelObject.thermalZone().name().get());
+  idfObject.setString(ZoneProperty_UserViewFactors_bySurfaceNameFields::ZoneorZoneListName, _zone->name().get());
 
-  std::vector<ViewFactor> viewFactors = modelObject.viewFactors();
-  if (!viewFactors.empty()) {
-    for (const ViewFactor& viewFactor : viewFactors) {
-      auto eg = idfObject.pushExtensibleGroup();
-      if (viewFactor.fromSurface()) {
-        eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSurface().get().name().get());
-      } else if (viewFactor.fromSubSurface()) {
-        eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSubSurface().get().name().get());
-      } else if (viewFactor.fromInternalMass()) {
-        eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromInternalMass().get().name().get());
-      }
-      if (viewFactor.toSurface()) {
-        eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSurface().get().name().get());
-      } else if (viewFactor.toSubSurface()) {
-        eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSubSurface().get().name().get());
-      } else if (viewFactor.toInternalMass()) {
-        eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toInternalMass().get().name().get());
-      }
-      eg.setDouble(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ViewFactor, viewFactor.viewFactor());
+  for (const ViewFactor& viewFactor : viewFactors) {
+    auto eg = idfObject.pushExtensibleGroup();
+    if (viewFactor.fromSurface()) {
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSurface().get().name().get());
+    } else if (viewFactor.fromSubSurface()) {
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSubSurface().get().name().get());
+    } else if (viewFactor.fromInternalMass()) {
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromInternalMass().get().name().get());
     }
+    if (viewFactor.toSurface()) {
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSurface().get().name().get());
+    } else if (viewFactor.toSubSurface()) {
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSubSurface().get().name().get());
+    } else if (viewFactor.toInternalMass()) {
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toInternalMass().get().name().get());
+    }
+    eg.setDouble(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ViewFactor, viewFactor.viewFactor());
   }
 
   return boost::optional<IdfObject>(idfObject);
