@@ -38,7 +38,7 @@
 
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
-#include <utilities/idd/ZoneProperty_UserViewFactors_BySurfaceName_FieldEnums.hxx>
+#include <utilities/idd/ZoneProperty_UserViewFactors_bySurfaceName_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
