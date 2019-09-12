@@ -301,15 +301,16 @@ namespace detail {
 
       if (!_toSurface) {
         LOG(Error, "Could not retrieve FromSurfaceName for extensible group " << group.groupIndex() << ".");
-        return std::vector<ViewFactor>();
+        // Skip this group, process the rest
+        continue;
       }
       if (!_fromSurface) {
         LOG(Error, "Could not retrieve ToSurfaceName for extensible group " << group.groupIndex() << ".");
-        return std::vector<ViewFactor>();
+        continue;
       }
       if (!value) {
         LOG(Error, "Could not retrieve ViewFactor for extensible group " << group.groupIndex() << ".");
-        return std::vector<ViewFactor>();
+        continue;
       }
 
       result.push_back(ViewFactor(_toSurface.get(), _fromSurface.get(), value.get()));
