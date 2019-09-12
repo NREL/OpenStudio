@@ -2952,9 +2952,12 @@ namespace detail {
     ThermalZone thisThermalZone = getObject<ThermalZone>();
     std::vector<ZonePropertyUserViewFactorsBySurfaceName> zoneProps = thisThermalZone.getModelObjectSources<ZonePropertyUserViewFactorsBySurfaceName>(ZonePropertyUserViewFactorsBySurfaceName::iddObjectType());
     if (!zoneProps.empty()) {
+      if (zoneProps.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one ZonePropertyUserViewFactorsBySurfaceName, returning the first");
+      }
       return zoneProps[0];
     }
-    
+
     ZonePropertyUserViewFactorsBySurfaceName zoneProp(thisThermalZone);
     return zoneProp;
   }
