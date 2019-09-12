@@ -48,6 +48,7 @@
 #include "../InternalMass_Impl.hpp"
 #include "../InternalMassDefinition.hpp"
 #include "../InternalMassDefinition_Impl.hpp"
+#include "../Space.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -152,6 +153,36 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   InternalMassDefinition toDefinition(model);
   InternalMass toInternalMass(toDefinition);
 
+  // None of these objects are part of the thermal zone, so it shouldn't work
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_TRUE(zoneProp.addViewFactor(fromSurface, toSurface, 0.5));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_TRUE(zoneProp.addViewFactor(fromSurface, toSubSurface, 1));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_TRUE(zoneProp.addViewFactor(fromSurface, toInternalMass, 1.0));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toSubSurface, 0));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toSurface, 0.0));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toInternalMass, -2));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toInternalMass, -1));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toSurface, -1.5));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toSubSurface, -0.25));
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+
+
+  // Now make it part of the ThermalZone
+  Space space(model);
+  fromSurface.setSpace(space);
+  toSurface.setSpace(space);
+  fromSubSurface.setSurface(fromSurface);
+  toSubSurface.setSurface(toSurface);
+  toInternalMass.setSpace(space);
+  fromInternalMass.setSpace(space);
   EXPECT_EQ(0, zoneProp.numberofViewFactors());
   EXPECT_TRUE(zoneProp.addViewFactor(fromSurface, toSurface, 0.5));
   EXPECT_EQ(1, zoneProp.numberofViewFactors());
@@ -171,6 +202,7 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   EXPECT_EQ(8, zoneProp.numberofViewFactors());
   EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toSubSurface, -0.25));
   EXPECT_EQ(9, zoneProp.numberofViewFactors());
+
 
   zoneProp.removeViewFactor(3);
   EXPECT_EQ(8, zoneProp.numberofViewFactors());

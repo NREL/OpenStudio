@@ -64,7 +64,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZonePropertyUserViewFactorsBySurface
   InternalMassDefinition intMassDefn(model);
   intMassDefn.setSurfaceArea(20);
   InternalMass intMass(intMassDefn);
-  // Note JM 2019-09-12: Here I am deliberately forgetting to do intMass.setSpace(space) so it will NOT be translated.
+  intMass.setSpace(space);
 
   std::vector<Point3d> vertices;
   vertices.push_back(Point3d());
@@ -78,29 +78,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZonePropertyUserViewFactorsBySurface
   surface.setOutsideBoundaryCondition("Outdoors");
 
   ZonePropertyUserViewFactorsBySurfaceName zoneProp = zone.getZonePropertyUserViewFactorsBySurfaceName();
-  zoneProp.addViewFactor(surface, intMass, 0.5);
-  zoneProp.addViewFactor(intMass, surface, 0.25);
+  EXPECT_TRUE(zoneProp.addViewFactor(surface, intMass, 0.5));
+  EXPECT_TRUE(zoneProp.addViewFactor(intMass, surface, 0.25));
 
   ForwardTranslator ft;
 
-  {
-    Workspace workspace = ft.translateModel(model);
-    std::vector<WorkspaceObject> idf_zoneProps(workspace.getObjectsByType(IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName));
-    EXPECT_EQ(idf_zoneProps.size(), 0);
-  }
+  Workspace workspace = ft.translateModel(model);
 
-  {
-    // Now I set the InternalMass object to a space, so it WILL be translated
-    intMass.setSpace(space);
+  std::vector<WorkspaceObject> idf_zoneProps = workspace.getObjectsByType(IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
+  ASSERT_EQ(idf_zoneProps.size(), 1);
+  WorkspaceObject idf_zoneProp(idf_zoneProps[0]);
 
-    Workspace workspace = ft.translateModel(model);
-
-    std::vector<WorkspaceObject> idf_zoneProps = workspace.getObjectsByType(IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
-    ASSERT_EQ(idf_zoneProps.size(), 1);
-    WorkspaceObject idf_zoneProp(idf_zoneProps[0]);
-
-    EXPECT_EQ(2u, idf_zoneProp.numExtensibleGroups());
-  }
+  EXPECT_EQ(2u, idf_zoneProp.numExtensibleGroups());
 }
 
 
