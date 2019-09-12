@@ -74,22 +74,21 @@ boost::optional<IdfObject> ForwardTranslator::translateZonePropertyUserViewFacto
   idfObject.setString(ZoneProperty_UserViewFactors_bySurfaceNameFields::ZoneorZoneListName, _zone->name().get());
 
   for (const ViewFactor& viewFactor : viewFactors) {
-    auto eg = idfObject.pushExtensibleGroup();
-    if (viewFactor.fromSurface()) {
-      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSurface().get().name().get());
-    } else if (viewFactor.fromSubSurface()) {
-      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromSubSurface().get().name().get());
-    } else if (viewFactor.fromInternalMass()) {
-      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, viewFactor.fromInternalMass().get().name().get());
+
+    ModelObject fromSurface = viewFactor.fromSurface();
+    boost::optional<IdfObject> _fromSurface = translateAndMapModelObject(fromSurface);
+    ModelObject toSurface = viewFactor.toSurface();
+    boost::optional<IdfObject> _toSurface = translateAndMapModelObject(toSurface);
+
+    if (_fromSurface && _toSurface) {
+      // Push group only if ok
+      auto eg = idfObject.pushExtensibleGroup();
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::FromSurface, _fromSurface->name().get());
+      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, _toSurface->name().get());
+      eg.setDouble(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ViewFactor, viewFactor.viewFactor());
+    } else {
+      LOG(Error, "Could not translate a viewFactor group for " << modelObject.briefDescription() << ". Continuing with the rest.");
     }
-    if (viewFactor.toSurface()) {
-      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSurface().get().name().get());
-    } else if (viewFactor.toSubSurface()) {
-      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toSubSurface().get().name().get());
-    } else if (viewFactor.toInternalMass()) {
-      eg.setString(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ToSurface, viewFactor.toInternalMass().get().name().get());
-    }
-    eg.setDouble(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ViewFactor, viewFactor.viewFactor());
   }
 
   return boost::optional<IdfObject>(idfObject);

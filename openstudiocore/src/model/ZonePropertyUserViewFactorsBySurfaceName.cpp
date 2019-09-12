@@ -57,102 +57,38 @@ namespace model {
 /*****************************************************************************************************************************************************
 *                                                      V I E W    F A C T O R    W R A P P E R                                                      *
 *****************************************************************************************************************************************************/
-
-
-ViewFactor::ViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor)
-  : m_from_surface(fromSurface), m_to_surface(toSurface), m_view_factor(viewFactor) {
-
+ViewFactor::ViewFactor(const ModelObject& fromSurface, const ModelObject& toSurface, double viewFactor)
+  : m_from_surface(fromSurface), m_to_surface(toSurface), m_view_factor(viewFactor)
+{
   if (m_view_factor > 1) {
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
-}
 
-ViewFactor::ViewFactor(const Surface& fromSurface, const SubSurface& toSubSurface, double viewFactor)
-  : m_from_surface(fromSurface), m_to_sub_surface(toSubSurface), m_view_factor(viewFactor) {
+  IddObjectType fromIddType = fromSurface.iddObjectType();
 
-  if (m_view_factor > 1) {
-    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
+  if ((fromIddType != IddObjectType::OS_Surface) &&
+      (fromIddType != IddObjectType::OS_SubSurface) &&
+      (fromIddType != IddObjectType::OS_InternalMass) )
+  {
+     LOG_AND_THROW("fromSurface can be only of type Surface, SubSurface or InternalMass, not " << fromIddType.value());
+  }
+
+  IddObjectType toIddType = toSurface.iddObjectType();
+
+  if ((toIddType != IddObjectType::OS_Surface) &&
+      (toIddType != IddObjectType::OS_SubSurface) &&
+      (toIddType != IddObjectType::OS_InternalMass) )
+  {
+     LOG_AND_THROW("toSurface can be only of type Surface, SubSurface or InternalMass, not " << toIddType.value());
   }
 }
 
-ViewFactor::ViewFactor(const Surface& fromSurface, const InternalMass& toInternalMass, double viewFactor)
-  : m_from_surface(fromSurface), m_to_internal_mass(toInternalMass), m_view_factor(viewFactor) {
-
-  if (m_view_factor > 1) {
-    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
-  }
-}
-
-ViewFactor::ViewFactor(const SubSurface& fromSubSurface, const SubSurface& toSubSurface, double viewFactor)
-  : m_from_sub_surface(fromSubSurface), m_to_sub_surface(toSubSurface), m_view_factor(viewFactor) {
-
-  if (m_view_factor > 1) {
-    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
-  }
-}
-
-ViewFactor::ViewFactor(const SubSurface& fromSubSurface, const Surface& toSurface, double viewFactor)
-  : m_from_sub_surface(fromSubSurface), m_to_surface(toSurface), m_view_factor(viewFactor) {
-
-  if (m_view_factor > 1) {
-    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
-  }
-}
-
-ViewFactor::ViewFactor(const SubSurface& fromSubSurface, const InternalMass& toInternalMass, double viewFactor)
-  : m_from_sub_surface(fromSubSurface), m_to_internal_mass(toInternalMass), m_view_factor(viewFactor) {
-
-  if (m_view_factor > 1) {
-    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
-  }
-}
-
-ViewFactor::ViewFactor(const InternalMass& fromInternalMass, const InternalMass& toInternalMass, double viewFactor)
-  : m_from_internal_mass(fromInternalMass), m_to_internal_mass(toInternalMass), m_view_factor(viewFactor) {
-
-  if (m_view_factor > 1) {
-    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
-  }
-}
-
-ViewFactor::ViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double viewFactor)
-  : m_from_internal_mass(fromInternalMass), m_to_surface(toSurface), m_view_factor(viewFactor) {
-
-  if (m_view_factor > 1) {
-    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
-  }
-}
-
-ViewFactor::ViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor)
-  : m_from_internal_mass(fromInternalMass), m_to_sub_surface(toSubSurface), m_view_factor(viewFactor) {
-
-  if (m_view_factor > 1) {
-    LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
-  }
-}
-
-boost::optional<Surface> ViewFactor::fromSurface() const {
+ModelObject ViewFactor::fromSurface() const {
   return m_from_surface;
 }
 
-boost::optional<Surface> ViewFactor::toSurface() const {
+ModelObject ViewFactor::toSurface() const {
   return m_to_surface;
-}
-
-boost::optional<SubSurface> ViewFactor::fromSubSurface() const {
-  return m_from_sub_surface;
-}
-
-boost::optional<SubSurface> ViewFactor::toSubSurface() const {
-  return m_to_sub_surface;
-}
-
-boost::optional<InternalMass> ViewFactor::fromInternalMass() const {
-  return m_from_internal_mass;
-}
-
-boost::optional<InternalMass> ViewFactor::toInternalMass() const {
-  return m_to_internal_mass;
 }
 
 double ViewFactor::viewFactor() const {
@@ -160,23 +96,9 @@ double ViewFactor::viewFactor() const {
 }
 
 std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactor& viewFactor) {
-  std::string from;
-  std::string to;
-  if (viewFactor.fromSurface()) {
-    from = viewFactor.fromSurface().get().nameString();
-  } else if (viewFactor.fromSubSurface()) {
-    from = viewFactor.fromSubSurface().get().nameString();
-  } else if (viewFactor.fromInternalMass()) {
-    from = viewFactor.fromInternalMass().get().nameString();
-  }
-  if (viewFactor.toSurface()) {
-    to = viewFactor.toSurface().get().nameString();
-  } else if (viewFactor.toSubSurface()) {
-    to = viewFactor.toSubSurface().get().nameString();
-  } else if (viewFactor.toInternalMass()) {
-    to = viewFactor.toInternalMass().get().nameString();
-  }
-  out << "(from " << from << ", " << "to " << to << ", view factor " << viewFactor.viewFactor() << ")";
+  out << "(from " << viewFactor.fromSurface().iddObject().name() << "='" << viewFactor.fromSurface().nameString() << "', "
+      <<"to "<<  viewFactor.toSurface().iddObject().name() << "='" << viewFactor.toSurface().nameString() << "', "
+      << "view factor=" << viewFactor.viewFactor() << ")";
   return out;
 }
 
@@ -238,29 +160,17 @@ namespace detail {
 
   bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const ViewFactor& viewFactor) {
     bool result = false;
-    bool from = false;
-    bool to = false;
 
     // Push an extensible group
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>();
-    if (viewFactor.fromSurface()) {
-      from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurface().get().handle());
-    } else if (viewFactor.fromSubSurface()) {
-      from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSubSurface().get().handle());
-    } else if (viewFactor.fromInternalMass()) {
-      from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromInternalMass().get().handle());
-    } else {
+    bool from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurface().handle());
+    if (!from) {
       LOG(Error, "Unable to add View Factor which has an incompatible fromSurface object to " << briefDescription());
       OS_ASSERT(false);
     }
 
-    if (viewFactor.toSurface()) {
-      to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSurface().get().handle());
-    } else if (viewFactor.toSubSurface()) {
-      to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSubSurface().get().handle());
-    } else if (viewFactor.toInternalMass()) {
-      to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toInternalMass().get().handle());
-    } else {
+    bool to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.toSurface().handle());
+    if (!to) {
       LOG(Error, "Unable to add View Factor which has an incompatible toSurface object to " << briefDescription());
       OS_ASSERT(false);
     }
@@ -343,15 +253,15 @@ namespace detail {
 
     for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
 
-      boost::optional<WorkspaceObject> wo1 = group.getTarget(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName);
-      boost::optional<WorkspaceObject> wo2 = group.getTarget(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName);
+      boost::optional<ModelObject> _toSurface = group.getModelObjectTarget<ModelObject>(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName);
+      boost::optional<ModelObject> _fromSurface = group.getModelObjectTarget<ModelObject>(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName);
       boost::optional<double> value = group.getDouble(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor);
 
-      if (!wo1) {
+      if (!_toSurface) {
         LOG(Error, "Could not retrieve FromSurfaceName for extensible group " << group.groupIndex() << ".");
         return std::vector<ViewFactor>();
       }
-      if (!wo2) {
+      if (!_fromSurface) {
         LOG(Error, "Could not retrieve ToSurfaceName for extensible group " << group.groupIndex() << ".");
         return std::vector<ViewFactor>();
       }
@@ -360,34 +270,7 @@ namespace detail {
         return std::vector<ViewFactor>();
       }
 
-      if (wo1->optionalCast<Surface>() && wo2->optionalCast<Surface>()) {
-        ViewFactor viewFactor(wo1->optionalCast<Surface>().get(), wo2->optionalCast<Surface>().get(), *value);
-        result.push_back(viewFactor);
-      } else if (wo1->optionalCast<Surface>() && wo2->optionalCast<SubSurface>()) {
-        ViewFactor viewFactor(wo1->optionalCast<Surface>().get(), wo2->optionalCast<SubSurface>().get(), *value);
-        result.push_back(viewFactor);
-      } else if (wo1->optionalCast<Surface>() && wo2->optionalCast<InternalMass>()) {
-        ViewFactor viewFactor(wo1->optionalCast<Surface>().get(), wo2->optionalCast<InternalMass>().get(), *value);
-        result.push_back(viewFactor);
-      } else if (wo1->optionalCast<SubSurface>() && wo2->optionalCast<SubSurface>()) {
-        ViewFactor viewFactor(wo1->optionalCast<SubSurface>().get(), wo2->optionalCast<SubSurface>().get(), *value);
-        result.push_back(viewFactor);
-      } else if (wo1->optionalCast<SubSurface>() && wo2->optionalCast<Surface>()) {
-        ViewFactor viewFactor(wo1->optionalCast<SubSurface>().get(), wo2->optionalCast<Surface>().get(), *value);
-        result.push_back(viewFactor);
-      } else if (wo1->optionalCast<SubSurface>() && wo2->optionalCast<InternalMass>()) {
-        ViewFactor viewFactor(wo1->optionalCast<SubSurface>().get(), wo2->optionalCast<InternalMass>().get(), *value);
-        result.push_back(viewFactor);
-      } else if (wo1->optionalCast<InternalMass>() && wo2->optionalCast<InternalMass>()) {
-        ViewFactor viewFactor(wo1->optionalCast<InternalMass>().get(), wo2->optionalCast<InternalMass>().get(), *value);
-        result.push_back(viewFactor);
-      } else if (wo1->optionalCast<InternalMass>() && wo2->optionalCast<Surface>()) {
-        ViewFactor viewFactor(wo1->optionalCast<InternalMass>().get(), wo2->optionalCast<Surface>().get(), *value);
-        result.push_back(viewFactor);
-      } else if (wo1->optionalCast<InternalMass>() && wo2->optionalCast<SubSurface>()) {
-        ViewFactor viewFactor(wo1->optionalCast<InternalMass>().get(), wo2->optionalCast<SubSurface>().get(), *value);
-        result.push_back(viewFactor);
-      }
+      result.push_back(ViewFactor(_toSurface.get(), _fromSurface.get(), value.get()));
     }
 
     return result;

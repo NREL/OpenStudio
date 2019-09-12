@@ -59,35 +59,17 @@ namespace detail {
 /** This class implements a view factor */
 class ViewFactor {
   public:
-    ViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor);
-    ViewFactor(const Surface& fromSurface, const SubSurface& toSubSurface, double viewFactor);
-    ViewFactor(const Surface& fromSurface, const InternalMass& toInternalMass, double viewFactor);
-    ViewFactor(const SubSurface& fromSubSurface, const SubSurface& toSubSurface, double viewFactor);
-    ViewFactor(const SubSurface& fromSubSurface, const Surface& toSurface, double viewFactor);
-    ViewFactor(const SubSurface& fromSubSurface, const InternalMass& toInternalMass, double viewFactor);
-    ViewFactor(const InternalMass& fromInternalMass, const InternalMass& toInternalMass, double viewFactor);
-    ViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double viewFactor);
-    ViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor);
+    /* Only accepts ModelObjects that are of type Surface, Subsurface or InternalMass, will throw otherwise */
+    ViewFactor(const ModelObject& fromSurface, const ModelObject& toSurface, double viewFactor);
 
-    boost::optional<Surface> fromSurface() const;
-    boost::optional<Surface> toSurface() const;
-    boost::optional<SubSurface> fromSubSurface() const;
-    boost::optional<SubSurface> toSubSurface() const;
-    boost::optional<InternalMass> fromInternalMass() const;
-    boost::optional<InternalMass> toInternalMass() const;
+    ModelObject fromSurface() const;
+    ModelObject toSurface() const;
     double viewFactor() const;
 
   private:
     // From
-    boost::optional<Surface> m_from_surface;
-    boost::optional<SubSurface> m_from_sub_surface;
-    boost::optional<InternalMass> m_from_internal_mass;
-
-    // To
-    boost::optional<Surface> m_to_surface;
-    boost::optional<SubSurface> m_to_sub_surface;
-    boost::optional<InternalMass> m_to_internal_mass;
-
+    ModelObject m_from_surface;
+    ModelObject m_to_surface;
     double m_view_factor;
     REGISTER_LOGGER("openstudio.model.ViewFactor");
 };
