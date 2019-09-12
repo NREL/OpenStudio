@@ -31,6 +31,8 @@
 #include <string>
 #include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "Surface.hpp"
@@ -221,8 +223,8 @@ namespace detail {
   ModelObject ZonePropertyUserViewFactorsBySurfaceName_Impl::clone(Model model) const
   {
     LOG_AND_THROW("Cloning isn't allowed for ZonePropertyUserViewFactorsBySurfaceName in order to guarantee that every "
-                  "ZonePropertyUserViewFactorsBySurfaceName has a thermal zone, and"
-                  "that a thermal zone must have only one ZonePropertyUserViewFactorsBySurfaceName.");
+                  "ZonePropertyUserViewFactorsBySurfaceName has a thermal zone, and "
+                  "that a thermal zone can have at most one ZonePropertyUserViewFactorsBySurfaceName.");
   }
 
   ThermalZone ZonePropertyUserViewFactorsBySurfaceName_Impl::thermalZone() const
@@ -240,26 +242,128 @@ namespace detail {
     bool result = false;
     bool from = false;
     bool to = false;
+    bool fromExists = false;
+    bool toExists = false;
 
     // Push an extensible group
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>();
     if (viewFactor.fromSurfaceAsSurface()) {
-      from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurfaceAsSurface().get().handle());
+      Surface thisSurface = viewFactor.fromSurfaceAsSurface().get();
+
+      ThermalZone thermalZone = this->thermalZone();
+      std::vector<Space> spaces = thermalZone.spaces();
+      std::vector<Surface> thermalZoneSurfaces;
+      for (Space space : spaces) {
+        std::vector<Surface> surfaces = space.surfaces();
+        for (Surface surface : surfaces) {
+          thermalZoneSurfaces.push_back(surface);
+        }
+      }
+      fromExists = std::find(std::begin(thermalZoneSurfaces), std::end(thermalZoneSurfaces), thisSurface) != std::end(thermalZoneSurfaces);
+      if (fromExists) {
+        from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, thisSurface.handle());
+      } else {
+        LOG(Warn, "From Surface '" << thisSurface.name().get() << "' is not part of thermal zone '" << thermalZone.name().get() << "'.");
+      }
+
     } else if (viewFactor.fromSurfaceAsSubSurface()) {
-      from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurfaceAsSubSurface().get().handle());
+      SubSurface thisSubSurface = viewFactor.fromSurfaceAsSubSurface().get();
+
+      ThermalZone thermalZone = this->thermalZone();
+      std::vector<Space> spaces = thermalZone.spaces();
+      std::vector<SubSurface> thermalZoneSubSurfaces;
+      for (Space space : spaces) {
+        std::vector<Surface> surfaces = space.surfaces();
+        for (Surface surface : surfaces) {
+          std::vector<SubSurface> subSurfaces = surface.subSurfaces();
+          for (SubSurface subSurface : subSurfaces) {
+            thermalZoneSubSurfaces.push_back(subSurface);
+          }
+        }
+      }
+      fromExists = std::find(std::begin(thermalZoneSubSurfaces), std::end(thermalZoneSubSurfaces), thisSubSurface) != std::end(thermalZoneSubSurfaces);
+      if (fromExists) {
+        from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, thisSubSurface.handle());
+      } else {
+        LOG(Warn, "From Surface '" << thisSubSurface.name().get() << "' is not part of thermal zone '" << thermalZone.name().get() << "'.");
+      }
+
     } else if (viewFactor.fromSurfaceAsInternalMass()) {
-      from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurfaceAsInternalMass().get().handle());
+      InternalMass thisInternalMass = viewFactor.fromSurfaceAsInternalMass().get();
+
+      ThermalZone thermalZone = this->thermalZone();
+      std::vector<Space> spaces = thermalZone.spaces();
+      boost::optional<Space> space = thisInternalMass.space();
+      if (space) {
+        fromExists = std::find(std::begin(spaces), std::end(spaces), *space) != std::end(spaces);
+      }
+      if (fromExists) {
+        from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, thisInternalMass.handle());
+      } else {
+        LOG(Warn, "From Surface '" << thisInternalMass.name().get() << "' is not part of thermal zone '" << thermalZone.name().get() << "'.");
+      }
+
     } else {
       LOG(Error, "Unable to add View Factor which has an incompatible fromSurface object to " << briefDescription());
       OS_ASSERT(false);
     }
 
     if (viewFactor.toSurfaceAsSurface()) {
-      to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSurfaceAsSurface().get().handle());
+      Surface thisSurface = viewFactor.toSurfaceAsSurface().get();
+
+      ThermalZone thermalZone = this->thermalZone();
+      std::vector<Space> spaces = thermalZone.spaces();
+      std::vector<Surface> thermalZoneSurfaces;
+      for (Space space : spaces) {
+        std::vector<Surface> surfaces = space.surfaces();
+        for (Surface surface : surfaces) {
+          thermalZoneSurfaces.push_back(surface);
+        }
+      }
+      toExists = std::find(std::begin(thermalZoneSurfaces), std::end(thermalZoneSurfaces), thisSurface) != std::end(thermalZoneSurfaces);
+      if (toExists) {
+        to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, thisSurface.handle());
+      } else {
+        LOG(Warn, "To Surface '" << thisSurface.name().get() << "' is not part of thermal zone '" << thermalZone.name().get() << "'.");
+      }
+
     } else if (viewFactor.toSurfaceAsSubSurface()) {
-      to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSurfaceAsSubSurface().get().handle());
+      SubSurface thisSubSurface = viewFactor.toSurfaceAsSubSurface().get();
+
+      ThermalZone thermalZone = this->thermalZone();
+      std::vector<Space> spaces = thermalZone.spaces();
+      std::vector<SubSurface> thermalZoneSubSurfaces;
+      for (Space space : spaces) {
+        std::vector<Surface> surfaces = space.surfaces();
+        for (Surface surface : surfaces) {
+          std::vector<SubSurface> subSurfaces = surface.subSurfaces();
+          for (SubSurface subSurface : subSurfaces) {
+            thermalZoneSubSurfaces.push_back(subSurface);
+          }
+        }
+      }
+      toExists = std::find(std::begin(thermalZoneSubSurfaces), std::end(thermalZoneSubSurfaces), thisSubSurface) != std::end(thermalZoneSubSurfaces);
+      if (toExists) {
+        to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, thisSubSurface.handle());
+      } else {
+        LOG(Warn, "To Surface '" << thisSubSurface.name().get() << "' is not part of thermal zone '" << thermalZone.name().get() << "'.");
+      }
+
     } else if (viewFactor.toSurfaceAsInternalMass()) {
-      to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSurfaceAsInternalMass().get().handle());
+      InternalMass thisInternalMass = viewFactor.toSurfaceAsInternalMass().get();
+
+      ThermalZone thermalZone = this->thermalZone();
+      std::vector<Space> spaces = thermalZone.spaces();
+      boost::optional<Space> space = thisInternalMass.space();
+      if (space) {
+        toExists = std::find(std::begin(spaces), std::end(spaces), *space) != std::end(spaces);
+      }
+      if (toExists) {
+        to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, thisInternalMass.handle());
+      } else {
+        LOG(Warn, " To Surface '" << thisInternalMass.name().get() << "' is not part of thermal zone '" << thermalZone.name().get() << "'.");
+      }
+
     } else {
       LOG(Error, "Unable to add View Factor which has an incompatible toSurface object to " << briefDescription());
       OS_ASSERT(false);

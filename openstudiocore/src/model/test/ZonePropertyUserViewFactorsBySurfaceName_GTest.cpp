@@ -38,6 +38,8 @@
 #include "../ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "../ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
 #include "../Surface.hpp"
@@ -104,7 +106,9 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_ZonePropertyUserVie
 
 TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_AddAndRemove) {
   Model model;
+  Space space(model);
   ThermalZone thermalZone(model);
+  space.setThermalZone(thermalZone);
   ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
 
   zoneProp.removeAllViewFactors();
@@ -122,6 +126,18 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_AddAndRemove) {
   InternalMass fromInternalMass(fromDefinition);
   InternalMassDefinition toDefinition(model);
   InternalMass toInternalMass(toDefinition);
+  EXPECT_FALSE(zoneProp.addViewFactor(fromSurface, toSurface, 0.5)); // surfaces aren't attached to zone yet
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_FALSE(zoneProp.addViewFactor(fromSubSurface, toSubSurface, 0.5)); // subsurfaces aren't attached to zone yet
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  EXPECT_FALSE(zoneProp.addViewFactor(fromInternalMass, toInternalMass, 0.5)); // internalmasses aren't attached to zone yet
+  EXPECT_EQ(0, zoneProp.numberofViewFactors());
+  fromSurface.setSpace(space);
+  toSurface.setSpace(space);
+  fromSubSurface.setSurface(fromSurface);
+  toSubSurface.setSurface(toSurface);
+  fromInternalMass.setSpace(space);
+  toInternalMass.setSpace(space);
 
   EXPECT_EQ(0, zoneProp.numberofViewFactors());
   EXPECT_TRUE(zoneProp.addViewFactor(fromSurface, toSurface, 0.5));
