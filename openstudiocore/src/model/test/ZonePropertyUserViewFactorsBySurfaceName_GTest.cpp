@@ -52,33 +52,35 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_ZonePropertyUserViewFactorsBySufaceName) {
+TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_ZonePropertyUserViewFactorsBySufaceName_Ctor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
     {
       // create a model to use
       Model model;
-      
+
       // create a thermal zone object to use
       ThermalZone thermalZone(model);
+
+      ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
 
       exit(0);
     },
     ::testing::ExitedWithCode(0),
     ""
   );
-    
-  // create a model to use
-  Model model;  
+}
 
-  // create a thermal zone object to use
+TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySufaceName_ZonePropertyUserViewFactorsBySufaceName_Uniqueness) {
+
+  Model model;
   ThermalZone thermalZone(model);
   auto size = model.modelObjects().size();
 
   // new thermal zone will create a zone property user view factors by surface name object
   ZonePropertyUserViewFactorsBySurfaceName zoneProp1 = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
-  EXPECT_EQ(thermalZone.handle(), zoneProp1.thermalZone().handle());  
+  EXPECT_EQ(thermalZone.handle(), zoneProp1.thermalZone().handle());
   EXPECT_EQ(size+1, model.modelObjects().size());
   ZonePropertyUserViewFactorsBySurfaceName zoneProp2 = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
   EXPECT_EQ(size+1, model.modelObjects().size());
