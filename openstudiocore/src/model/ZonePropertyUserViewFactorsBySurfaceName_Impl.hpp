@@ -47,7 +47,7 @@ namespace detail {
 
   /** ZonePropertyUserViewFactorsBySurfaceName_Impl is a ModelObject_Impl that is the implementation class for ZonePropertyUserViewFactorsBySurfaceName.*/
   class MODEL_API ZonePropertyUserViewFactorsBySurfaceName_Impl : public ModelObject_Impl {
-  
+
   public:
 
     /** @name Constructors and Destructors */
@@ -73,7 +73,7 @@ namespace detail {
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override; 
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */

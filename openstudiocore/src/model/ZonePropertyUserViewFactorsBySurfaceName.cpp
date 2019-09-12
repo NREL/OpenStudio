@@ -53,9 +53,15 @@
 namespace openstudio {
 namespace model {
 
+
+/*****************************************************************************************************************************************************
+*                                                      V I E W    F A C T O R    W R A P P E R                                                      *
+*****************************************************************************************************************************************************/
+
+
 ViewFactor::ViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor)
   : m_from_surface(fromSurface), m_to_surface(toSurface), m_view_factor(viewFactor) {
-    
+
   if (m_view_factor > 1) {
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
@@ -63,7 +69,7 @@ ViewFactor::ViewFactor(const Surface& fromSurface, const Surface& toSurface, dou
 
 ViewFactor::ViewFactor(const Surface& fromSurface, const SubSurface& toSubSurface, double viewFactor)
   : m_from_surface(fromSurface), m_to_sub_surface(toSubSurface), m_view_factor(viewFactor) {
-    
+
   if (m_view_factor > 1) {
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
@@ -71,7 +77,7 @@ ViewFactor::ViewFactor(const Surface& fromSurface, const SubSurface& toSubSurfac
 
 ViewFactor::ViewFactor(const Surface& fromSurface, const InternalMass& toInternalMass, double viewFactor)
   : m_from_surface(fromSurface), m_to_internal_mass(toInternalMass), m_view_factor(viewFactor) {
-    
+
   if (m_view_factor > 1) {
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
@@ -79,7 +85,7 @@ ViewFactor::ViewFactor(const Surface& fromSurface, const InternalMass& toInterna
 
 ViewFactor::ViewFactor(const SubSurface& fromSubSurface, const SubSurface& toSubSurface, double viewFactor)
   : m_from_sub_surface(fromSubSurface), m_to_sub_surface(toSubSurface), m_view_factor(viewFactor) {
-    
+
   if (m_view_factor > 1) {
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
@@ -87,7 +93,7 @@ ViewFactor::ViewFactor(const SubSurface& fromSubSurface, const SubSurface& toSub
 
 ViewFactor::ViewFactor(const SubSurface& fromSubSurface, const Surface& toSurface, double viewFactor)
   : m_from_sub_surface(fromSubSurface), m_to_surface(toSurface), m_view_factor(viewFactor) {
-    
+
   if (m_view_factor > 1) {
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
@@ -95,7 +101,7 @@ ViewFactor::ViewFactor(const SubSurface& fromSubSurface, const Surface& toSurfac
 
 ViewFactor::ViewFactor(const SubSurface& fromSubSurface, const InternalMass& toInternalMass, double viewFactor)
   : m_from_sub_surface(fromSubSurface), m_to_internal_mass(toInternalMass), m_view_factor(viewFactor) {
-    
+
   if (m_view_factor > 1) {
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
@@ -103,7 +109,7 @@ ViewFactor::ViewFactor(const SubSurface& fromSubSurface, const InternalMass& toI
 
 ViewFactor::ViewFactor(const InternalMass& fromInternalMass, const InternalMass& toInternalMass, double viewFactor)
   : m_from_internal_mass(fromInternalMass), m_to_internal_mass(toInternalMass), m_view_factor(viewFactor) {
-    
+
   if (m_view_factor > 1) {
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
@@ -111,7 +117,7 @@ ViewFactor::ViewFactor(const InternalMass& fromInternalMass, const InternalMass&
 
 ViewFactor::ViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double viewFactor)
   : m_from_internal_mass(fromInternalMass), m_to_surface(toSurface), m_view_factor(viewFactor) {
-    
+
   if (m_view_factor > 1) {
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
@@ -119,7 +125,7 @@ ViewFactor::ViewFactor(const InternalMass& fromInternalMass, const Surface& toSu
 
 ViewFactor::ViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor)
   : m_from_internal_mass(fromInternalMass), m_to_sub_surface(toSubSurface), m_view_factor(viewFactor) {
-    
+
   if (m_view_factor > 1) {
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
@@ -174,6 +180,10 @@ std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactor
   return out;
 }
 
+/*****************************************************************************************************************************************************
+*                                  Z O N E P R O P E R T Y U S E R V I E W F A C T O R S B Y S U R F A C E N A M E                                  *
+*****************************************************************************************************************************************************/
+
 namespace detail {
 
   ZonePropertyUserViewFactorsBySurfaceName_Impl::ZonePropertyUserViewFactorsBySurfaceName_Impl(const IdfObject& idfObject,
@@ -214,7 +224,7 @@ namespace detail {
     OS_ASSERT(thermalZone);
     return thermalZone.get();
   }
-  
+
   unsigned int ZonePropertyUserViewFactorsBySurfaceName_Impl::numberofViewFactors() const {
     return numExtensibleGroups();
   }
@@ -223,7 +233,7 @@ namespace detail {
     bool result;
     bool from;
     bool to;
-    
+
     // Push an extensible group
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     if (viewFactor.fromSurface()) {
@@ -251,7 +261,7 @@ namespace detail {
     }
     return result;
   }
-  
+
   bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const Surface& fromSurface, const Surface& toSurface, double value) {
     ViewFactor viewFactor(fromSurface, toSurface, value);
     return addViewFactor(viewFactor);
@@ -295,11 +305,11 @@ namespace detail {
   bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double value) {
     ViewFactor viewFactor(fromInternalMass, toSubSurface, value);
     return addViewFactor(viewFactor);
-  } 
+  }
 
   bool ZonePropertyUserViewFactorsBySurfaceName_Impl::removeViewFactor(unsigned groupIndex) {
     bool result;
-    
+
     unsigned int num = numberofViewFactors();
     if (groupIndex < num) {
       getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
@@ -313,17 +323,17 @@ namespace detail {
   void ZonePropertyUserViewFactorsBySurfaceName_Impl::removeAllViewFactors() {
     getObject<ModelObject>().clearExtensibleGroups();
   }
-  
+
   std::vector<ViewFactor> ZonePropertyUserViewFactorsBySurfaceName_Impl::viewFactors() const {
     std::vector<ViewFactor> result;
-    
+
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
-    
+
     for (const auto & group : groups) {
       boost::optional<WorkspaceObject> wo1 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName);
       boost::optional<WorkspaceObject> wo2 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName);
       boost::optional<double> value = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor);
-      
+
       if (wo1->optionalCast<Surface>() && wo2->optionalCast<Surface>() && value) {
         ViewFactor viewFactor(wo1->optionalCast<Surface>().get(), wo2->optionalCast<Surface>().get(), *value);
         result.push_back(viewFactor);
@@ -353,7 +363,7 @@ namespace detail {
         result.push_back(viewFactor);
       }
     }
-    
+
     return result;
   }
 
@@ -363,7 +373,7 @@ namespace detail {
     for (const ViewFactor& viewFactor : viewFactors) {
       addViewFactor(viewFactor);
     }
-    return true;    
+    return true;
   }
 
 } // detail

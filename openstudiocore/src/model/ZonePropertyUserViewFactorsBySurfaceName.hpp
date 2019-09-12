@@ -67,7 +67,7 @@ class ViewFactor {
     ViewFactor(const SubSurface& fromSubSurface, const InternalMass& toInternalMass, double viewFactor);
     ViewFactor(const InternalMass& fromInternalMass, const InternalMass& toInternalMass, double viewFactor);
     ViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double viewFactor);
-    ViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor);    
+    ViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor);
 
     boost::optional<Surface> fromSurface() const;
     boost::optional<Surface> toSurface() const;
@@ -78,12 +78,16 @@ class ViewFactor {
     double viewFactor() const;
 
   private:
+    // From
     boost::optional<Surface> m_from_surface;
-    boost::optional<Surface> m_to_surface;
     boost::optional<SubSurface> m_from_sub_surface;
-    boost::optional<SubSurface> m_to_sub_surface;
     boost::optional<InternalMass> m_from_internal_mass;
+
+    // To
+    boost::optional<Surface> m_to_surface;
+    boost::optional<SubSurface> m_to_sub_surface;
     boost::optional<InternalMass> m_to_internal_mass;
+
     double m_view_factor;
     REGISTER_LOGGER("openstudio.model.ViewFactor");
 };
@@ -112,7 +116,7 @@ class MODEL_API ZonePropertyUserViewFactorsBySurfaceName : public ModelObject {
 
   std::vector<ViewFactor> viewFactors() const;
 
-  unsigned int numberofViewFactors() const;  
+  unsigned int numberofViewFactors() const;
 
   //@}
   /** @name Setters */
@@ -149,7 +153,7 @@ class MODEL_API ZonePropertyUserViewFactorsBySurfaceName : public ModelObject {
   //@{
 
   //@}
- protected: 
+ protected:
   /// @cond
   typedef detail::ZonePropertyUserViewFactorsBySurfaceName_Impl ImplType;
 
