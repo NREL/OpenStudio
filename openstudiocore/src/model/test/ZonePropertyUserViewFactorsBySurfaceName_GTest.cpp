@@ -144,14 +144,14 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   points.push_back(Point3d(0, 2, 0));
   points.push_back(Point3d(0, 0, 0));
   points.push_back(Point3d(1, 0, 0));
-  Surface fromSurface(points, model);
-  Surface toSurface(points, model);
-  SubSurface fromSubSurface(points, model);
-  SubSurface toSubSurface(points, model);
+  Surface fromSurface(points, model); fromSurface.setName("fromSurface");
+  Surface toSurface(points, model); toSurface.setName("toSurface");
+  SubSurface fromSubSurface(points, model); fromSubSurface.setName("fromSubSurface");
+  SubSurface toSubSurface(points, model); toSubSurface.setName("toSubSurface");
   InternalMassDefinition fromDefinition(model);
-  InternalMass fromInternalMass(fromDefinition);
+  InternalMass fromInternalMass(fromDefinition); fromInternalMass.setName("fromInternalMass");
   InternalMassDefinition toDefinition(model);
-  InternalMass toInternalMass(toDefinition);
+  InternalMass toInternalMass(toDefinition); toInternalMass.setName("toInternalMass");
 
 
   // Make all of these part of a space, but the space isn't yet part of the thermal zone
@@ -196,11 +196,11 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   EXPECT_EQ(3, zoneProp.numberofViewFactors());
   EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toSubSurface, 0));
   EXPECT_EQ(4, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toSurface, 0.0));
+  EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toSurface, 0.0)); // groupIndex = 4
   EXPECT_EQ(5, zoneProp.numberofViewFactors());
   EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toInternalMass, -2));
   EXPECT_EQ(6, zoneProp.numberofViewFactors());
-  EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toInternalMass, -1));
+  EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toInternalMass, -1)); // groupIndex = 6
   EXPECT_EQ(7, zoneProp.numberofViewFactors());
   EXPECT_TRUE(zoneProp.addViewFactor(fromInternalMass, toSurface, -1.5));
   EXPECT_EQ(8, zoneProp.numberofViewFactors());
@@ -208,6 +208,53 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   EXPECT_EQ(9, zoneProp.numberofViewFactors());
 
 
+  // Get a ViewFactor at a given index
+  boost::optional<ViewFactor> r_viewFactor = zoneProp.getViewFactor(4u);
+  ASSERT_TRUE(r_viewFactor);
+  EXPECT_EQ(r_viewFactor->fromSurface().nameString(), fromSubSurface.nameString());
+  EXPECT_EQ(r_viewFactor->toSurface().nameString(), toSurface.nameString());
+  EXPECT_EQ(r_viewFactor->viewFactor(), 0.0);
+
+
+  // Test that you cannot add the same ViewFactor twice, but that instead it'll overwrite its viewFactor value
+
+  // * Via the ViewFactor class directly
+  ViewFactor t_viewFactor = ViewFactor(fromSubSurface, toSurface, 0.75);
+  // Test that we can locate an existing ViewFactor correctly (comparing on to/from only, not viewFactor value)
+  boost::optional<unsigned> _existingIndex = zoneProp.viewFactorIndex(t_viewFactor);
+  ASSERT_TRUE(_existingIndex);
+  EXPECT_EQ(4u, _existingIndex.get());
+  // Now call addViewFactor, which should jut override it
+  EXPECT_TRUE(zoneProp.addViewFactor(t_viewFactor));
+  // Should still have the same number
+  EXPECT_EQ(9, zoneProp.numberofViewFactors());
+  // Retrieve it again, making sure it changed only the value
+  r_viewFactor = zoneProp.getViewFactor(4u);
+  ASSERT_TRUE(r_viewFactor);
+  EXPECT_EQ(r_viewFactor->fromSurface().nameString(), fromSubSurface.nameString());
+  EXPECT_EQ(r_viewFactor->toSurface().nameString(), toSurface.nameString());
+  EXPECT_EQ(r_viewFactor->viewFactor(), 0.75);
+
+  // * Via the overload addViewFactor
+  EXPECT_TRUE(zoneProp.addViewFactor(fromSubSurface, toSurface, 0.3));
+  // Should still have the same number
+  EXPECT_EQ(9, zoneProp.numberofViewFactors());
+  // Retrieve it again, making sure it changed only the value
+  r_viewFactor = zoneProp.getViewFactor(4u);
+  ASSERT_TRUE(r_viewFactor);
+  EXPECT_EQ(r_viewFactor->fromSurface().nameString(), fromSubSurface.nameString());
+  EXPECT_EQ(r_viewFactor->toSurface().nameString(), toSurface.nameString());
+  EXPECT_EQ(r_viewFactor->viewFactor(), 0.3);
+
+  // Test that you cannot get a ViewFactor by an index that's too high
+  EXPECT_FALSE(zoneProp.getViewFactor(zoneProp.numberofViewFactors()));
+
+  // Test that you cannot find a ViewFactor if it doesn't exist
+  Surface anotherSurface(points, model);
+  ViewFactor anotherViewFactor(fromSurface, anotherSurface, 0.2);
+  EXPECT_FALSE(zoneProp.viewFactorIndex(anotherViewFactor));
+
+  // Remove a viewFactor
   zoneProp.removeViewFactor(3);
   EXPECT_EQ(8, zoneProp.numberofViewFactors());
 
@@ -220,10 +267,13 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   EXPECT_TRUE(viewFactors[0].toSurface().optionalCast<Surface>());
   EXPECT_EQ(0.5, viewFactors[0].viewFactor());
 
+  // Check the one that used to be groupIndex = 6
   EXPECT_EQ(fromInternalMass, viewFactors[5].fromSurface());
   EXPECT_EQ(toInternalMass, viewFactors[5].toSurface());
   EXPECT_TRUE(viewFactors[5].fromSurface().optionalCast<InternalMass>());
   EXPECT_TRUE(viewFactors[5].toSurface().optionalCast<InternalMass>());
+  EXPECT_EQ(viewFactors[5].fromSurface().nameString(), fromInternalMass.nameString());
+  EXPECT_EQ(viewFactors[5].toSurface().nameString(), toInternalMass.nameString());
   EXPECT_EQ(-1, viewFactors[5].viewFactor());
 
   // more remove checking
@@ -233,7 +283,7 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_AddAndRemove) {
   EXPECT_EQ(0, zoneProp.numberofViewFactors());
 
   // check adding view factor non-conveniently
-  ViewFactor viewFactor(fromSurface, toSurface, 0.333);
+  ViewFactor viewFactor(fromSurface, toInternalMass, 0.333);
   ASSERT_TRUE(zoneProp.addViewFactor(viewFactor));
   EXPECT_EQ(1, zoneProp.numberofViewFactors());
 

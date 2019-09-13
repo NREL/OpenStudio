@@ -88,6 +88,10 @@ namespace detail {
 
     unsigned int numberofViewFactors() const;
 
+    boost::optional<unsigned> viewFactorIndex(const ViewFactor& viewFactor) const;
+
+    boost::optional<ViewFactor> getViewFactor(unsigned groupIndex) const;
+
     //@}
     /** @name Setters */
     //@{

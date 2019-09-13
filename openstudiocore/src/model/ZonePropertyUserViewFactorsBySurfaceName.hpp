@@ -106,12 +106,19 @@ class MODEL_API ZonePropertyUserViewFactorsBySurfaceName : public ModelObject {
 
   unsigned int numberofViewFactors() const;
 
+  /** If a viewFactor group is already present (cf `viewFactorIndex()`), it will Warn and override the viewFactor value */
+  boost::optional<unsigned> viewFactorIndex(const ViewFactor& viewFactor) const;
+
+  boost::optional<ViewFactor> getViewFactor(unsigned groupIndex) const;
+
   //@}
   /** @name Setters */
   //@{
 
+  /** If a viewFactor group is already present (cf `viewFactorIndex()`), it will Warn and override the viewFactor value */
   bool addViewFactor(const ViewFactor& viewFactor);
 
+  // Overloads, they create a ViewFactor wrapper, then call `addViewFactor(const ViewFactor& viewFactor)`
   bool addViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor);
 
   bool addViewFactor(const Surface& fromSurface, const SubSurface& toSubSurface, double viewFactor);

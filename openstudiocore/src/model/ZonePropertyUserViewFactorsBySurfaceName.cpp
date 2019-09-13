@@ -51,6 +51,7 @@
 #include <utilities/idd/OS_ZoneProperty_UserViewFactors_BySurfaceName_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include <algorithm>
 
 namespace openstudio {
 namespace model {
@@ -62,12 +63,18 @@ namespace model {
 ViewFactor::ViewFactor(const ModelObject& fromSurface, const ModelObject& toSurface, double viewFactor)
   : m_from_surface(fromSurface), m_to_surface(toSurface), m_view_factor(viewFactor)
 {
+  // Matches the maximum value in IDD
   if (m_view_factor > 1) {
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
 
-  IddObjectType fromIddType = fromSurface.iddObjectType();
+  // Can't create if to & from are the same
+  if (fromSurface.handle() == toSurface.handle()) {
+    LOG_AND_THROW("Cannot create a viewFactor when fromSurface and toSurface are the same: " << fromSurface.briefDescription());
+  }
 
+  // Check the IDD types to ensure they are ok
+  IddObjectType fromIddType = fromSurface.iddObjectType();
   if ((fromIddType != IddObjectType::OS_Surface) &&
       (fromIddType != IddObjectType::OS_SubSurface) &&
       (fromIddType != IddObjectType::OS_InternalMass) )
@@ -76,7 +83,6 @@ ViewFactor::ViewFactor(const ModelObject& fromSurface, const ModelObject& toSurf
   }
 
   IddObjectType toIddType = toSurface.iddObjectType();
-
   if ((toIddType != IddObjectType::OS_Surface) &&
       (toIddType != IddObjectType::OS_SubSurface) &&
       (toIddType != IddObjectType::OS_InternalMass) )
@@ -160,6 +166,63 @@ namespace detail {
     return numExtensibleGroups();
   }
 
+  boost::optional<unsigned> ZonePropertyUserViewFactorsBySurfaceName_Impl::viewFactorIndex(const ViewFactor& t_viewFactor) const {
+    boost::optional<unsigned> result;
+
+    std::vector<ViewFactor> currentViewFactors = viewFactors();
+
+    // Find with custom predicate, checking handle equality between the toSurface and the fromSurface pairs
+    auto it = std::find_if(currentViewFactors.begin(), currentViewFactors.end(),
+        [&t_viewFactor](const ViewFactor& viewFactor) {
+          if ((t_viewFactor.fromSurface().handle() == viewFactor.fromSurface().handle()) &&
+              (t_viewFactor.toSurface().handle() == viewFactor.toSurface().handle()))
+          {
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+    // If found, we compute the index by using std::distance between the start of vector and the iterator returned by std::find_if
+    if (it != currentViewFactors.end()) {
+      result = std::distance(currentViewFactors.begin(), it);
+    }
+
+    return result;
+  }
+
+  boost::optional<ViewFactor> ZonePropertyUserViewFactorsBySurfaceName_Impl::getViewFactor(unsigned groupIndex) const {
+
+    boost::optional<ViewFactor> result;
+
+    if (groupIndex >= numberofViewFactors()) {
+      LOG(Error, "Asked to get ViewFactor with index " << groupIndex << ", but ZoneProper"
+          << briefDescription() << " has just " << numberofViewFactors() << " ViewFactors.");
+      return result;
+    }
+
+    ModelExtensibleGroup group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
+
+    boost::optional<ModelObject> _toSurface = group.getModelObjectTarget<ModelObject>(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName);
+    boost::optional<ModelObject> _fromSurface = group.getModelObjectTarget<ModelObject>(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName);
+    boost::optional<double> value = group.getDouble(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor);
+
+    if (!_toSurface) {
+      LOG(Error, "Could not retrieve FromSurfaceName for extensible group " << group.groupIndex() << ".");
+    }
+    if (!_fromSurface) {
+      LOG(Error, "Could not retrieve ToSurfaceName for extensible group " << group.groupIndex() << ".");
+    }
+    if (!value) {
+      LOG(Error, "Could not retrieve ViewFactor for extensible group " << group.groupIndex() << ".");
+    }
+
+    result = ViewFactor(_toSurface.get(), _fromSurface.get(), value.get());
+
+    return result;
+
+  }
+
   bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const ViewFactor& viewFactor) {
     bool result = false;
 
@@ -205,16 +268,27 @@ namespace detail {
       return false;
     }
 
+    // Check if viewFactor already exists
+    boost::optional<unsigned> _existingIndex = viewFactorIndex(viewFactor);
+    if (_existingIndex) {
+      boost::optional<ViewFactor> _viewFactor = getViewFactor(_existingIndex.get());
+      OS_ASSERT(_viewFactor);
+      LOG(Warn, "For " << briefDescription() << ", ViewFactor already exists, will be modified in place from " << _viewFactor.get()
+             << " to " << viewFactor << ".");
+    }
 
-    // Push an extensible group
-    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>();
+    // If existing, get it, otherwise Push an extensible group. ModelExtensibleGroup cannot be default-constructed, so use a ternary operator
+    ModelExtensibleGroup eg = (_existingIndex
+                                ? getExtensibleGroup(_existingIndex.get()).cast<ModelExtensibleGroup>()
+                                : getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>());
+
     bool from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, fromSurface.handle());
     if (!from) {
       LOG(Error, "Unable to add View Factor which has an incompatible fromSurface object to " << briefDescription());
       OS_ASSERT(false);
     }
 
-    bool to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, toSurface.handle());
+    bool to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, toSurface.handle());
     if (!to) {
       LOG(Error, "Unable to add View Factor which has an incompatible toSurface object to " << briefDescription());
       OS_ASSERT(false);
@@ -288,6 +362,7 @@ namespace detail {
     return result;
   }
 
+
   void ZonePropertyUserViewFactorsBySurfaceName_Impl::removeAllViewFactors() {
     getObject<ModelObject>().clearExtensibleGroups();
   }
@@ -295,28 +370,18 @@ namespace detail {
   std::vector<ViewFactor> ZonePropertyUserViewFactorsBySurfaceName_Impl::viewFactors() const {
     std::vector<ViewFactor> result;
 
+    for (unsigned i = 0; i < numberofViewFactors(); ++i) {
 
-    for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+      boost::optional<ViewFactor> _viewFactor = getViewFactor(i);
 
-      boost::optional<ModelObject> _toSurface = group.getModelObjectTarget<ModelObject>(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName);
-      boost::optional<ModelObject> _fromSurface = group.getModelObjectTarget<ModelObject>(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName);
-      boost::optional<double> value = group.getDouble(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor);
-
-      if (!_toSurface) {
-        LOG(Error, "Could not retrieve FromSurfaceName for extensible group " << group.groupIndex() << ".");
-        // Skip this group, process the rest
-        continue;
+      // getViewFactor is responsible for handling error and issuing Error log messages.
+      // Here we add it to the result array if it worked, and if it didn't, we keep going
+      // We just issue a message about index so user can delete it easily
+      if(_viewFactor) {
+        result.push_back(_viewFactor.get());
+      } else {
+        LOG(Error, briefDescription() << " has an invalid ViewFactor group at index " << i);
       }
-      if (!_fromSurface) {
-        LOG(Error, "Could not retrieve ToSurfaceName for extensible group " << group.groupIndex() << ".");
-        continue;
-      }
-      if (!value) {
-        LOG(Error, "Could not retrieve ViewFactor for extensible group " << group.groupIndex() << ".");
-        continue;
-      }
-
-      result.push_back(ViewFactor(_toSurface.get(), _fromSurface.get(), value.get()));
     }
 
     return result;
@@ -403,6 +468,14 @@ bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const InternalMass&
 
 bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor) {
   return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(fromInternalMass, toSubSurface, viewFactor);
+}
+
+boost::optional<unsigned> ZonePropertyUserViewFactorsBySurfaceName::viewFactorIndex(const ViewFactor& viewFactor) const {
+  return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->viewFactorIndex(viewFactor);
+}
+
+boost::optional<ViewFactor> ZonePropertyUserViewFactorsBySurfaceName::getViewFactor(unsigned groupIndex) const {
+  return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->getViewFactor(groupIndex);
 }
 
 void ZonePropertyUserViewFactorsBySurfaceName::removeViewFactor(int groupIndex) {
