@@ -68,6 +68,7 @@ ViewFactor::ViewFactor(const ModelObject& fromSurface, const ModelObject& toSurf
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
 
+  // TODO: JM 2019-09-13 NOT SURE WHETHER WE WANT TO ALLOW TO==FROM here
   // Can't create if to & from are the same
   if (fromSurface.handle() == toSurface.handle()) {
     LOG_AND_THROW("Cannot create a viewFactor when fromSurface and toSurface are the same: " << fromSurface.briefDescription());

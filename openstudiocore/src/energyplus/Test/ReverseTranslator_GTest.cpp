@@ -835,6 +835,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
   EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1 Thermal Zone");
 
+  // TODO: JM 2019-09-13 NOT SURE WHETHER WE WANT TO ALLOW TO==FROM here
   bool isToEqualFromAllowed = false;
   if (!isToEqualFromAllowed) {
     // If we don't allow toSurface to equal to fromSurface

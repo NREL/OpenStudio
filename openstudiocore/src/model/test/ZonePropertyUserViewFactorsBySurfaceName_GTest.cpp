@@ -81,6 +81,7 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ViewFactor) {
   EXPECT_THROW(ViewFactor(z, s, 0.9), openstudio::Exception);
 
 
+  // TODO: JM 2019-09-13 NOT SURE WHETHER WE WANT TO ALLOW TO==FROM here
   // Test that you cannot add a view factor  if toSurface == fromSurface
   EXPECT_THROW(ViewFactor(s, s, 0.25),  openstudio::Exception);
 
