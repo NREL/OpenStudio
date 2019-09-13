@@ -747,8 +747,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
 
   openstudio::WorkspaceObject epZonePropertyUserViewFactorsBySurfaceName = workspace.addObject(idf_zoneProp).get();
 
-  workspace.save("/media/Data/Software/Others/OS-build-develop/test_rt.idf", true);
-
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
@@ -835,19 +833,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
   EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1 Thermal Zone");
 
-  // TODO: JM 2019-09-13 NOT SURE WHETHER WE WANT TO ALLOW TO==FROM here
-  bool isToEqualFromAllowed = false;
-  if (!isToEqualFromAllowed) {
-    // If we don't allow toSurface to equal to fromSurface
-    EXPECT_EQ(0u, zoneProp.numberofViewFactors());
-
-  } else {
-    // If we allow toSurface to be equal to fromSurface
-    EXPECT_EQ(1u, zoneProp.numberofViewFactors());
-    std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
-    ViewFactor viewFactor = viewFactors[0];
-    EXPECT_EQ(viewFactor.fromSurface().name().get(), "Surface 1");
-    EXPECT_EQ(viewFactor.toSurface().name().get(), "Surface 1");
-    EXPECT_EQ(0.25, viewFactor.viewFactor());
-  }
+  // If we allow toSurface to be equal to fromSurface
+  EXPECT_EQ(1u, zoneProp.numberofViewFactors());
+  std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
+  ViewFactor viewFactor = viewFactors[0];
+  EXPECT_EQ(viewFactor.fromSurface().name().get(), "Surface 1");
+  EXPECT_EQ(viewFactor.toSurface().name().get(), "Surface 1");
+  EXPECT_EQ(0.25, viewFactor.viewFactor());
 }

@@ -394,9 +394,7 @@ namespace detail {
     for (const ViewFactor& viewFactor : viewFactors) {
       bool thisResult = addViewFactor(viewFactor);
       if (!thisResult) {
-        LOG(Error, "Could not add viewFactor " << viewFactor << " to " << briefDescription() << ". Continuing with others.");
-        OS_ASSERT(false);
-        result = false;
+        LOG(Warn, "Could not add viewFactor " << viewFactor << " to " << briefDescription() << ". Continuing with others.");
       }
     }
 

@@ -117,13 +117,13 @@ OptionalModelObject ReverseTranslator::translateZonePropertyUserViewFactorsBySur
         try {
           ViewFactor viewFactor(fromModelObject.get(), toModelObject.get(), _viewFactor.get());
           // add the view factor
-          if (zoneProp.addViewFactor(viewFactor)) {
+          if (!zoneProp.addViewFactor(viewFactor)) {
             LOG(Warn, "Adding ViewFactor in ThermalZone " << thermalZone.nameString()
                   << " failed for viewFactor=" << viewFactor << ".");
           }
         } catch (...) {
           // The ViewFactor Ctor threw, so there's a wrong type, or a wrong double
-          LOG(Error, "Couldn't not create ViewFactor in ThermalZone " << thermalZone.nameString()
+          LOG(Error, "Could not create ViewFactor in ThermalZone " << thermalZone.nameString()
                   << " for fromModelObject=(" << fromModelObject->briefDescription() << "), toModelObject=("
                   << toModelObject->briefDescription() << ") and viewFactor=" << _viewFactor.get() << ".");
         }
