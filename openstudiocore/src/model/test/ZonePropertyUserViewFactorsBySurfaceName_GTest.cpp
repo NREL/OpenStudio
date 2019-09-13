@@ -81,6 +81,9 @@ TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ViewFactor) {
   EXPECT_THROW(ViewFactor(z, s, 0.9), openstudio::Exception);
 
 
+  // Test that you cannot add a view factor  if toSurface == fromSurface
+  EXPECT_THROW(ViewFactor(s, s, 0.25),  openstudio::Exception);
+
 }
 TEST_F(ModelFixture, ZonePropertyUserViewFactorsBySurfaceName_ZonePropertyUserViewFactorsBySufaceName_Ctor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";

@@ -196,7 +196,7 @@ namespace detail {
     boost::optional<ViewFactor> result;
 
     if (groupIndex >= numberofViewFactors()) {
-      LOG(Error, "Asked to get ViewFactor with index " << groupIndex << ", but ZoneProper"
+      LOG(Error, "Asked to get ViewFactor with index " << groupIndex << ", but "
           << briefDescription() << " has just " << numberofViewFactors() << " ViewFactors.");
       return result;
     }

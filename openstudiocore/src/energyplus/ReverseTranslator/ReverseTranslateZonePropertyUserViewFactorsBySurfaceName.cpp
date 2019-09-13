@@ -109,29 +109,25 @@ OptionalModelObject ReverseTranslator::translateZonePropertyUserViewFactorsBySur
         toModelObject = fromModelObject;
       }
 
-      OptionalDouble viewFactor = workspaceGroup.getDouble(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ViewFactor);
+      OptionalDouble _viewFactor = workspaceGroup.getDouble(ZoneProperty_UserViewFactors_bySurfaceNameExtensibleFields::ViewFactor);
 
-      // add the view factor
-      if (fromModelObject->optionalCast<Surface>() && toModelObject->optionalCast<Surface>()) {
-        zoneProp.addViewFactor(fromModelObject->cast<Surface>(), toModelObject->cast<Surface>(), *viewFactor);
-      } else if (fromModelObject->optionalCast<Surface>() && toModelObject->optionalCast<SubSurface>()) {
-        zoneProp.addViewFactor(fromModelObject->cast<Surface>(), toModelObject->cast<SubSurface>(), *viewFactor);
-      } else if (fromModelObject->optionalCast<Surface>() && toModelObject->optionalCast<InternalMass>()) {
-        zoneProp.addViewFactor(fromModelObject->cast<Surface>(), toModelObject->cast<InternalMass>(), *viewFactor);
-      } else if (fromModelObject->optionalCast<SubSurface>() && toModelObject->optionalCast<SubSurface>()) {
-        zoneProp.addViewFactor(fromModelObject->cast<SubSurface>(), toModelObject->cast<SubSurface>(), *viewFactor);
-      } else if (fromModelObject->optionalCast<SubSurface>() && toModelObject->optionalCast<Surface>()) {
-        zoneProp.addViewFactor(fromModelObject->cast<SubSurface>(), toModelObject->cast<Surface>(), *viewFactor);
-      } else if (fromModelObject->optionalCast<SubSurface>() && toModelObject->optionalCast<InternalMass>()) {
-        zoneProp.addViewFactor(fromModelObject->cast<SubSurface>(), toModelObject->cast<InternalMass>(), *viewFactor);
-      } else if (fromModelObject->optionalCast<InternalMass>() && toModelObject->optionalCast<InternalMass>()) {
-        zoneProp.addViewFactor(fromModelObject->cast<InternalMass>(), toModelObject->cast<InternalMass>(), *viewFactor);
-      } else if (fromModelObject->optionalCast<InternalMass>() && toModelObject->optionalCast<Surface>()) {
-        zoneProp.addViewFactor(fromModelObject->cast<InternalMass>(), toModelObject->cast<Surface>(), *viewFactor);
-      } else if (fromModelObject->optionalCast<InternalMass>() && toModelObject->optionalCast<SubSurface>()) {
-        zoneProp.addViewFactor(fromModelObject->cast<InternalMass>(), toModelObject->cast<SubSurface>(), *viewFactor);
+      // If the objects translated ok, and the viewFactor double value exists
+      if (fromModelObject && toModelObject && _viewFactor) {
+        // try to create a viewFactor, which will throw in case wrong type, or wrong double value. Here we let it slide though
+        try {
+          ViewFactor viewFactor(fromModelObject.get(), toModelObject.get(), _viewFactor.get());
+          // add the view factor
+          if (zoneProp.addViewFactor(viewFactor)) {
+            LOG(Warn, "Adding ViewFactor in ThermalZone " << thermalZone.nameString()
+                  << " failed for viewFactor=" << viewFactor << ".");
+          }
+        } catch (...) {
+          // The ViewFactor Ctor threw, so there's a wrong type, or a wrong double
+          LOG(Error, "Couldn't not create ViewFactor in ThermalZone " << thermalZone.nameString()
+                  << " for fromModelObject=(" << fromModelObject->briefDescription() << "), toModelObject=("
+                  << toModelObject->briefDescription() << ") and viewFactor=" << _viewFactor.get() << ".");
+        }
       }
-
     }
   }
 
