@@ -50,7 +50,7 @@ if(MSVC)
   set(CSHARP_VERSION_PATCH ${PROJECT_VERSION_PATCH})
   set(CSHARP_VERSION_BUILD 0)
 
-  if (CMAKE_CL_64)
+  if(CMAKE_CL_64)
     set(CSHARP_PLATFORM "x64")
   else()
     set(CSHARP_PLATFORM "x86")
@@ -132,7 +132,7 @@ if(MSVC)
     set(notfound TRUE)
 
     foreach(model_wrapper IN LISTS model_wrappers)
-      if( wrapper_name STREQUAL model_wrapper )
+      if(wrapper_name STREQUAL model_wrapper)
         list(APPEND model_wrapper_files ${wrapper_file})
         set(notfound FALSE)
         break()
@@ -140,14 +140,14 @@ if(MSVC)
     endforeach()
 
     foreach(translator_wrapper IN LISTS translator_wrappers)
-      if( wrapper_name STREQUAL translator_wrapper )
+      if(wrapper_name STREQUAL translator_wrapper)
         list(APPEND translator_wrapper_files ${wrapper_file})
         set(notfound FALSE)
         break()
       endif()
     endforeach()
 
-    if( notfound )
+    if(notfound)
       list(APPEND core_wrapper_files ${wrapper_file})
     endif()
   endforeach()
@@ -193,8 +193,8 @@ if(MSVC)
   )
   add_dependencies(openstudio_translators_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
   target_link_libraries(openstudio_translators_csharp
-   ${ALL_CSHARP_BINDING_DEPENDS}
-   ${Boost_LIBRARIES}
+    ${ALL_CSHARP_BINDING_DEPENDS}
+    ${Boost_LIBRARIES}
   )
   install(TARGETS openstudio_translators_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
   install(TARGETS openstudio_translators_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
@@ -205,5 +205,4 @@ if(MSVC)
   )
 
 endif()
-
 

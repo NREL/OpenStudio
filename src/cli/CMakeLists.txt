@@ -1,31 +1,31 @@
-if (APPLE)
-   find_library(COREFOUNDATION_LIBRARY CoreFoundation )
-endif (APPLE)
+if(APPLE)
+  find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+endif()
 
 set(INIT_CALLS "")
 set(INIT_DECLARATIONS "")
 foreach(LIB ${EXTENSION_LIBS_LIST})
   get_filename_component(LIB_NAME ${LIB} NAME_WE)
-  list (FIND LIBS "${LIB_NAME}" _index)
-  if( ${_index} GREATER -1 )
-    set(INIT_DECLARATIONS "${INIT_DECLARATIONS}  void Init_${LIB_NAME}();\\\n" )
-    set(INIT_CALLS "${INIT_CALLS}  Init_${LIB_NAME}();\\\n" )
-    set(INIT_CALLS "${INIT_CALLS}  rb_provide(\"${LIB_NAME}.so\");\\\n" )
+  list(FIND LIBS "${LIB_NAME}" _index)
+  if(${_index} GREATER -1)
+    set(INIT_DECLARATIONS "${INIT_DECLARATIONS} void Init_${LIB_NAME}();\\\n")
+    set(INIT_CALLS "${INIT_CALLS} Init_${LIB_NAME}();\\\n")
+    set(INIT_CALLS "${INIT_CALLS} rb_provide(\"${LIB_NAME}.so\");\\\n")
   endif()
 endforeach()
 
 CONFIGURE_FILE_WITH_CHECKSUM("InitMacros.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/InitMacros.hxx")
 
 set(MODULE_ROOT "${CONAN_OPENSTUDIO_RUBY_ROOT}")
-if ("${MODULE_ROOT}" STREQUAL "")
+if("${MODULE_ROOT}" STREQUAL "")
   set(MODULE_ROOT "${CONAN_OPENSTUDIO_RUBY_ROOT_DEBUG}")
 endif()
 
 message("Searching for ruby modules in '${MODULE_ROOT}/lib/**/*.rb'")
-file(GLOB_RECURSE  EXTENSION_RB  FOLLOW_SYMLINKS "${MODULE_ROOT}/lib/**/*.rb")
+file(GLOB_RECURSE EXTENSION_RB FOLLOW_SYMLINKS "${MODULE_ROOT}/lib/**/*.rb")
 
 
-foreach( _FILE ${EXTENSION_RB} )
+foreach(_FILE ${EXTENSION_RB})
   file(RELATIVE_PATH LOCATION ${MODULE_ROOT}/lib ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
@@ -51,116 +51,116 @@ file(GLOB_RECURSE GZ_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gem
 file(GLOB_RECURSE YML_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.yml")
 file(GLOB_RECURSE OS_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/**/*.rb") # DLM: this is temporary, these files should live somewhere else and be included in the shared Ruby lib
 
-foreach( _FILE ${GEMFILE_FILES} )
+foreach(_FILE ${GEMFILE_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${RB_FILES} )
+foreach(_FILE ${RB_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${ERB_FILES} )
+foreach(_FILE ${ERB_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${JS_FILES} )
+foreach(_FILE ${JS_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${CSS_FILES} )
+foreach(_FILE ${CSS_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${GIF_FILES} )
+foreach(_FILE ${GIF_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${PNG_FILES} )
+foreach(_FILE ${PNG_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${HTML_FILES} )
+foreach(_FILE ${HTML_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${IDF_FILES} )
+foreach(_FILE ${IDF_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${OSM_FILES} )
+foreach(_FILE ${OSM_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${EPW_FILES} )
+foreach(_FILE ${EPW_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${DDY_FILES} )
+foreach(_FILE ${DDY_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${STAT_FILES} )
+foreach(_FILE ${STAT_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${CSV_FILES} )
+foreach(_FILE ${CSV_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${JSON_FILES} )
+foreach(_FILE ${JSON_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${SPEC_FILES} )
+foreach(_FILE ${SPEC_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${GZ_FILES} )
+foreach(_FILE ${GZ_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-foreach( _FILE ${YML_FILES} )
+foreach(_FILE ${YML_FILES})
   file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
 # DLM: this is temporary, these files should live somewhere else and be included in the shared Ruby lib
-foreach( _FILE ${OS_FILES} )
+foreach(_FILE ${OS_FILES})
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
   list(APPEND FILES ${_FILE})
   list(APPEND EMBEDDED_PATHS ${LOCATION})
@@ -190,7 +190,7 @@ set_source_files_properties(EmbeddedScripting.i
   PROPERTIES CPLUSPLUS true
 )
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
@@ -250,10 +250,10 @@ endif()
 # -Wno-register, /wd5033: ISO C++1z does not allow ‘register’ storage class specifier
 if(MSVC)
   set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
-  set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
+  set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED")
 else()
   set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-register")
-  set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-unused-variable" )
+  set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-unused-variable")
 endif()
 
 
@@ -276,34 +276,34 @@ target_link_libraries(ruby_libs PUBLIC additional_ruby_libs)
 
 target_link_libraries(openstudio init_openstudio ruby_libs)
 
-if( NOT UNIX )
+if(NOT UNIX)
   LINK_DEBUG_AND_RELEASE(additional_ruby_libs "${ADDITIONAL_RUBY_LIBS_DEBUG}" "${ADDITIONAL_RUBY_LIBS_RELEASE}")
 else()
   target_link_libraries(additional_ruby_libs ${ADDITIONAL_RUBY_LIBS})
 endif()
 
 target_link_libraries(openstudio
- openstudio_airflow
- openstudio_model
- openstudio_energyplus
- openstudio_measure
- openstudio_osversion
- openstudio_sdd
- openstudio_isomodel
- openstudio_gbxml
- openstudio_radiance
+  openstudio_airflow
+  openstudio_model
+  openstudio_energyplus
+  openstudio_measure
+  openstudio_osversion
+  openstudio_sdd
+  openstudio_isomodel
+  openstudio_gbxml
+  openstudio_radiance
 )
 
 # Change to CONAN_PKG::OpenSSL vs OPENSSL_CRYPTO_LIBRARY if this is needed.  
 # link CLI with ruby static library, ruby bindings (openstudio.so) are linked to dynamic ruby
-#if (APPLE)
+#if(APPLE)
 #  target_link_libraries(openstudio
 #    ${OPENSSL_CRYPTO_LIBRARY}
 #    ${OPENSSL_SSL_LIBRARY}
 #  )
 #endif()
 
-if (UNIX AND NOT APPLE)
+if(UNIX AND NOT APPLE)
   target_link_libraries(additional_ruby_libs dl crypt)
   target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
 elseif(WIN32)
@@ -312,7 +312,7 @@ elseif(WIN32)
 else()
 endif()
 
-if( APPLE )
+if(APPLE)
   target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY})
 endif()
 
@@ -322,15 +322,6 @@ install(TARGETS openstudio DESTINATION bin COMPONENT "CLI")
 install(FILES openstudio_cli.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES measure_manager.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES measure_manager_server.rb DESTINATION Ruby COMPONENT "RubyAPI")
-
-if( BUILD_PAT )
-  if( APPLE )
-    install(TARGETS openstudio
-      DESTINATION ParametricAnalysisTool.app/Contents/Resources/OpenStudio/bin/
-      COMPONENT PAT
-    )
-  endif()
-endif()
 
 
 ###############################################################################
@@ -365,7 +356,7 @@ foreach(f ${RUBY_TEST_SRC})
           "$<TARGET_FILE:openstudio>" "${f}" "--name=test_${TEST_NAME}"
         )
 
-      set_tests_properties("CLITest-${FILE_NAME}-${TEST_NAME}" PROPERTIES TIMEOUT 660 )
+      set_tests_properties("CLITest-${FILE_NAME}-${TEST_NAME}" PROPERTIES TIMEOUT 660)
     endif()
   endforeach()
 endforeach()

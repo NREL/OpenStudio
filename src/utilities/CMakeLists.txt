@@ -192,14 +192,14 @@ set(documentation_src
 )
 
 # embedded files, bump again to update common files
-file(GLOB_RECURSE BCL_TEMPLATES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/bcl/templates/**/*.*")
+file(GLOB_RECURSE BCL_TEMPLATES FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/bcl/templates/**/*.*")
 foreach(_FILE ${BCL_TEMPLATES})
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/bcl/" ${_FILE})
   list(APPEND E_FILES ${_FILE})
   list(APPEND E_PATHS ${LOCATION})
 endforeach()
 
-file(GLOB_RECURSE IDD_FILES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/idd/versions/*/*.idd")
+file(GLOB_RECURSE IDD_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/idd/versions/*/*.idd")
 foreach(_FILE ${IDD_FILES})
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
   list(APPEND E_FILES ${_FILE})

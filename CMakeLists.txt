@@ -31,7 +31,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     "MinSizeRel" "RelWithDebInfo")
 endif()
 
-if ( APPLE )
+if(APPLE)
   find_library(SECURITY_FRAMEWORK Security)
 endif()
 
@@ -144,9 +144,6 @@ if(UNIX AND NOT APPLE)
   # the RPATH to be used when installing
   set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
 endif()
-
-# TODO: should this be only in OpenStudioApplication?
-option(BUILD_PAT "Build PAT" OFF)
 
 # Build C++ documentation using Doxygen
 # Requires: doxygen
@@ -337,7 +334,7 @@ if(UNIX)
 
   # all warnings
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fPIC -fno-strict-aliasing -Winvalid-pch")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fno-strict-aliasing -Winvalid-pch")
   # Treat all warnings as errors
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   if(APPLE)
@@ -529,12 +526,12 @@ elseif(WIN32)
 endif()
 
 # Allows placing the archive manually in the build dir too
-if (NOT EXISTS "${ENERGYPLUS_PATH}")
+if(NOT EXISTS "${ENERGYPLUS_PATH}")
   unset(ENERGYPLUS_FOUND CACHE)
   unset(ENERGYPLUS_EXE CACHE)
   unset(ENERGYPLUS_IDD CACHE)
   unset(ENERGYPLUS_WEATHER_DIR CACHE)
-  if (UNIX)
+  if(UNIX)
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
   else()
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
@@ -542,7 +539,7 @@ if (NOT EXISTS "${ENERGYPLUS_PATH}")
 endif()
 
 # Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
-if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
+if(ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
   set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
 else()
   # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
@@ -550,7 +547,7 @@ else()
 endif()
 
 # Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
-if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
+if(ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
   set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
 else()
   # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
@@ -884,9 +881,6 @@ endif()
 
 include("embedded/EmbedFiles.cmake")
 add_subdirectory("embedded")
-if(BUILD_PAT)
-  add_subdirectory("pat")
-endif()
 
 # Each subfolder of src is a major sub-project
 set(project_directories
@@ -1202,7 +1196,7 @@ endif()
 
 install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
 install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
-install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
+install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
 
 get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 file(GLOB ENERGYPLUS_FILES "${ENERGYPLUS_DIR}/energyplus*")
@@ -1248,17 +1242,7 @@ else()
   install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
 endif()
 
-if(BUILD_PAT AND APPLE)
-  install(FILES "${ENERGYPLUS_IDD}" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
-  install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
-  install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
-  install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.3.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
-  install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
-endif()
-
-if (NOT DELAY_INCLUDE_CPACK)
+if(NOT DELAY_INCLUDE_CPACK)
   include(CPack)
 endif()
 
@@ -1317,21 +1301,8 @@ if(BUILD_CSHARP_BINDINGS)
   )
 endif()
 
-if(BUILD_PAT)
-  cpack_add_component(PAT
-    DISPLAY_NAME "Parametric Analysis Tool"
-    DESCRIPTION "Parametric Analysis Tool"
-  )
-
-  cpack_ifw_configure_component(PAT
-    DEPENDS CLI RubyAPI
-    SCRIPT pat/install_operations.qs
-    REQUIRES_ADMIN_RIGHTS
-  )
-endif()
-
-if( BUILD_NUGET_PACKAGE )
-  configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )
+if(BUILD_NUGET_PACKAGE)
+  configure_file(OpenStudio.nuspec.in OpenStudio.nuspec)
 
   add_custom_target(nuget_package
     COMMAND NuGet pack OpenStudio.nuspec -BasePath "${PROJECT_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
@@ -1339,4 +1310,3 @@ if( BUILD_NUGET_PACKAGE )
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
   )
 endif()
-

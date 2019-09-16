@@ -45,8 +45,8 @@ set(${target_name}_swig_src
 # resource files
 include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 # EMBEDDED_OUTPUT stores the list of cxx files that we need to link later
-file(GLOB_RECURSE IDD_FILES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/resources/*.xml")
-foreach( _FILE ${IDD_FILES} )
+file(GLOB_RECURSE IDD_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/resources/*.xml")
+foreach(_FILE ${IDD_FILES})
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
   list(APPEND E_FILES ${_FILE})
   list(APPEND E_PATHS ${LOCATION})

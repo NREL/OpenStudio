@@ -120,7 +120,7 @@ endif()
 # Add Color Output if Using Ninja
 macro(AddCXXFlagIfSupported flag test)
    CHECK_CXX_COMPILER_FLAG(${flag} ${test})
-   if( ${${test}} )
+   if(${${test}})
       message(STATUS "adding ${flag}")
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
    endif()
@@ -144,7 +144,7 @@ endif()
 if(MSVC)
 #  # Visual Studio compiler check
 #  # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
-#  if    (${CMAKE_C_COMPILER_VERSION} VERSION_LESS "18.0.21005.1")
+#  if(${CMAKE_C_COMPILER_VERSION} VERSION_LESS "18.0.21005.1")
 #    message(FATAL_ERROR "Visual Studio earlier than VS2013 is not supported")
 #  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.0.21005.1")
 #    # VS2013
@@ -160,9 +160,9 @@ if(MSVC)
 #    # VS2013 Update 5: no-op
 #  endif()
 #
-#  if ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 12 2013 Win64")
+#  if("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 12 2013 Win64")
 #    set(CMAKE_GENERATOR_TOOLSET "v120</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v120")
-#  elseif ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 14 2015 Win64")
+#  elseif("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 14 2015 Win64")
 #    set(CMAKE_GENERATOR_TOOLSET "v140</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v140")
 #  else()
 #    message(STATUS "This version of Visual Studio will not use the 64 bit linker. Build times will likely suffer.")
@@ -270,9 +270,9 @@ conan_add_remote(NAME bincrafters
 
 set(CONAN_OPTIONS "")
 set(CONAN_BUILD "")
-if (MSVC)
+if(MSVC)
   set(CONAN_OPENSSL "")
-elseif (APPLE)
+elseif(APPLE)
   set(CONAN_OPENSSL "")
 else()
   set(CONAN_OPENSSL "OpenSSL/1.1.0g@conan/stable")
@@ -291,7 +291,7 @@ conan_cmake_run(REQUIRES
 message(STATUS "DONE RUNNING CONAN")
 
 if(UNIX)
-  if (NOT APPLE)
+  if(NOT APPLE)
     set(OPENSSL_ROOT_DIR ${CONAN_OPENSSL_ROOT})
   endif()
 endif()
@@ -391,11 +391,11 @@ endif()
 
 # Ruby
 option(BUILD_RUBY "Build Ruby" OFF)
-if( BUILD_RUBY )
+if(BUILD_RUBY)
 
-  if( UNIX )
+  if(UNIX)
     set(RUBY_EXT_CONFIG "")
-    if (NOT APPLE)
+    if(NOT APPLE)
     #  # DLM: still missing: curses, dbm, gdbm
     #  # gbdm: libgbdm3 for Up to 16.04, libgbdm5 for 18.04
     #  # sudo apt-get -y install ruby autoconf automake libtool bison libgdbm-dev zlib1g-dev libffi-dev libssl-dev
@@ -420,7 +420,7 @@ if( BUILD_RUBY )
       BUILD_COMMAND ${MAKE} # cd ext/openssl && ../../ruby extconf.rb && cd ../readline && ../../ruby extconf.rb && cd ../../ && ${MAKE}
       INSTALL_COMMAND ${MAKE} install && sh -c "cp ./rbconfig.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ruby/2.5.0/." && sh -c "rm -rf ./ext/-test-" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc" && sh -c "find ./ext -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext/" && sh -c "find ./enc -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc"
     )
-    find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/" )
+    find_file(RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/")
     set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a") # TODO: might be libruby.2.5.1-static.a on Mac
     set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.5.0")
     set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
@@ -553,7 +553,7 @@ if(BUILD_QT)
 
   if(APPLE)
     execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
-    if( Qt5Static )
+    if(Qt5Static)
       set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -static -openssl-linked -I${OPENSSL_INCLUDE_DIR} OPENSSL_LIBS=\\\"${OPENSSL_CRYPTO_LIBRARY} ${OPENSSL_SSL_LIBRARY}\\\" -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
     else()
       message(WARNING "Shared Apple Qt build untested")
@@ -570,13 +570,13 @@ if(BUILD_QT)
     )
     set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/")
 
-  elseif( UNIX )
+  elseif(UNIX)
     # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
     # also reference https://wiki.qt.io/Building_Qt_5_from_Git
-    if( Qt5Static )
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -static -openssl -no-pch -no-ssse3 -sql-sqlite -plugin-sql-sqlite -skip enginio -skip qtconnectivity -skip qtlocation -skip qtmultimedia -skip qtpurchasing -skip qtsensors -skip qtwayland -no-compile-examples -nomake examples -nomake tests -nomake tools -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
+    if(Qt5Static)
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -static -openssl -no-pch -no-ssse3 -sql-sqlite -plugin-sql-sqlite -skip enginio -skip qtconnectivity -skip qtlocation -skip qtmultimedia -skip qtpurchasing -skip qtsensors -skip qtwayland -no-compile-examples -nomake examples -nomake tests -nomake tools -qt-xcb -confirm-license -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
     else()
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -shared -openssl -no-pch -no-ssse3 -sql-sqlite -plugin-sql-sqlite -skip enginio -skip qtconnectivity -skip qtmultimedia -skip qtpurchasing -skip qtsensors -skip qtwayland -no-compile-examples -nomake examples -nomake tests -nomake tools -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
+      set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -shared -openssl -no-pch -no-ssse3 -sql-sqlite -plugin-sql-sqlite -skip enginio -skip qtconnectivity -skip qtmultimedia -skip qtpurchasing -skip qtsensors -skip qtwayland -no-compile-examples -nomake examples -nomake tests -nomake tools -qt-xcb -confirm-license -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
     endif()
     ExternalProject_Add(Qt
       URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-src-5.11.2.tar.xz
@@ -604,7 +604,7 @@ if(BUILD_QT)
 
     configure_file("${CMAKE_SOURCE_DIR}/../dependencies/qt/build_static_qt.bat.in" "${CMAKE_BINARY_DIR}/build_static_qt.bat")
     configure_file("${CMAKE_SOURCE_DIR}/../dependencies/qt/build_shared_qt.bat.in" "${CMAKE_BINARY_DIR}/build_shared_qt.bat")
-    if( Qt5Static )
+    if(Qt5Static)
       set(QT_BUILD_SCRIPT "build_static_qt.bat")
     else()
       set(QT_BUILD_SCRIPT "build_shared_qt.bat")
@@ -626,7 +626,7 @@ else()
 endif()
 
 option(BUILD_DVIEW "Build DView" OFF)
-if( BUILD_DVIEW )
+if(BUILD_DVIEW)
     ExternalProject_Add(curl
       URL https://curl.haxx.se/download/curl-7.55.1.tar.gz
       CONFIGURE_COMMAND ""
@@ -676,7 +676,7 @@ if(BUILD_V8)
   list(APPEND OpenStudioCore_DEPENDS V8)
 endif()
 
-if (BUILD_OSCORE)
+if(BUILD_OSCORE)
   set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
 
   if(MSVC)
@@ -701,7 +701,6 @@ if (BUILD_OSCORE)
       -DBUILD_PYTHON_BINDINGS:BOOL=${BUILD_PYTHON_BINDINGS}
       -DBUILD_TESTING:BOOL=${BUILD_TESTING}
       -DBUILD_PACKAGE:BOOL=${BUILD_PACKAGE}
-      -DBUILD_PAT:BOOL=${BUILD_PAT}
       -DBUILD_WITH_MULTIPLE_PROCESSES:BOOL=${BUILD_WITH_MULTIPLE_PROCESSES}
       -DUSE_PCH:BOOL=${USE_PCH}
       -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}

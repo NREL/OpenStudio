@@ -93,10 +93,10 @@ macro(AddPCH TARGET_NAME)
           PROPERTIES COMPILE_FLAGS "${PROPSTRING}"
         )
       else()
-        if (add_pch_include)
+        if(add_pch_include)
           set_target_properties(${TARGET_NAME}
             PROPERTIES COMPILE_FLAGS "-include ${PROJECT_BINARY_DIR}/src/utilities/pch/PCH.hpp"
-            )
+          )
           add_dependencies(${TARGET_NAME} BUILD_PCH)
         endif()
       endif()

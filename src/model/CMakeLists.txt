@@ -1616,7 +1616,7 @@ file(GLOB_RECURSE embedded_files "${CMAKE_CURRENT_SOURCE_DIR}/Resources/**/*.*")
 list(FILTER embedded_files EXCLUDE REGEX ".*\.rb")
 
 # We compute a relative path, so that they end up in :/Resources/
-foreach( _FILE ${embedded_files} )
+foreach(_FILE ${embedded_files})
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
   list(APPEND E_FILES ${_FILE})
   list(APPEND E_PATHS ${LOCATION})

@@ -1,18 +1,18 @@
-if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")
   # using Clang
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -undefined dynamic_lookup")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # using GCC
   #set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} --unresolved-symbols=ignore-all")
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} --unresolved-symbols=ignore-all")
 endif()
 
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 # common library for openstudio.so and openstudio.exe
 
-add_library( init_openstudio STATIC
+add_library(init_openstudio STATIC
   init_openstudio.cpp
   RubyAPI.hpp
 )
@@ -23,7 +23,7 @@ if(MSVC)
   # so instead of defining that three times, perhaps modify CMAKE_CXX_FLAGS?
   # wd4996=no deprecated warnings ; wd5033=register
   set_target_properties(init_openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
-elseif (UNIX)
+elseif(UNIX)
   # Disable register warnings
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=register -Wno-register")
 endif()
@@ -80,9 +80,9 @@ set_target_properties(openstudio_rb PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE
 set_target_properties(openstudio_rb PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
 
 if(APPLE)
-  set_target_properties(openstudio_rb PROPERTIES SUFFIX ".bundle" )
+  set_target_properties(openstudio_rb PROPERTIES SUFFIX ".bundle")
 else()
-  set_target_properties(openstudio_rb PROPERTIES SUFFIX ".so" )
+  set_target_properties(openstudio_rb PROPERTIES SUFFIX ".so")
 endif()
 
 if(MSVC)
@@ -115,11 +115,11 @@ target_link_libraries(openstudio_rb
   openstudio_radiance
 )
 
-if( WIN32 )
+if(WIN32)
   target_link_libraries(openstudio_rb ${RUBY_MINGW_STUB_LIB})
 endif()
 
-if (APPLE)
+if(APPLE)
   target_link_libraries(openstudio_rb
     ${OPENSSL_CRYPTO_LIBRARY}
     ${OPENSSL_SSL_LIBRARY}
@@ -188,7 +188,7 @@ else()
           "${SYSTEM_RUBY_EXECUTABLE}" "-I" "$<TARGET_FILE_DIR:openstudio_rb>" "${f}" "--name=test_${TEST_NAME}"
         )
 
-        set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES TIMEOUT 660 )
+        set_tests_properties("RubyTest-${FILE_NAME}-${TEST_NAME}" PROPERTIES TIMEOUT 660)
       endif()
     endforeach()
   endforeach()

@@ -59,7 +59,7 @@ target_link_libraries(${target_name} ${${target_name}_depends})
 #  )
 #endif()
 
-if( MSVC )
+if(MSVC)
   target_compile_definitions(${target_name} PUBLIC ${WIN_MVC})
 endif()
 
