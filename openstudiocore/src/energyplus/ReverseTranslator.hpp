@@ -339,6 +339,8 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateZoneMixing(const WorkspaceObject & workspaceObject);
 
+  boost::optional<model::ModelObject> translateZonePropertyUserViewFactorsBySurfaceName(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateZoneVentilationDesignFlowRate(const WorkspaceObject & workspaceObject);
 
   std::map<openstudio::Handle,model::ModelObject> m_workspaceToModelMap;

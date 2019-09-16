@@ -73,6 +73,8 @@
 #include "../../model/SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
 #include "../../model/PerformancePrecisionTradeoffs.hpp"
 #include "../../model/PerformancePrecisionTradeoffs_Impl.hpp"
+#include "../../model/ZonePropertyUserViewFactorsBySurfaceName.hpp"
+#include "../../model/ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -489,7 +491,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OtherEquipment) {
   EXPECT_EQ(otherEquipments[0].endUseSubcategory(), "Category A");
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {  
+TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::Foundation_Kiva_Settings);
@@ -531,7 +533,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {
   EXPECT_EQ("Hourly", foundationKivaSettings.simulationTimestep());
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {  
+TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::Material);
@@ -601,14 +603,14 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
   group5.setDouble(2, 0);
 
   openstudio::WorkspaceObject epSurface = workspace.addObject(idfObject3).get();
-  
+
   openstudio::IdfObject idfObject4(openstudio::IddObjectType::SurfaceProperty_ExposedFoundationPerimeter);
-  
+
   idfObject4.setString(SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName, "Surface 1");
   idfObject4.setString(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod, "TotalExposedPerimeter");
   idfObject4.setDouble(SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, 40.8932111725161);
   idfObject4.setDouble(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, 1);
-  
+
   openstudio::WorkspaceObject epPerimeter = workspace.addObject(idfObject4).get();
 
   ReverseTranslator trans;
@@ -626,11 +628,12 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
   ASSERT_EQ(1u, surfaces.size());
   Surface surface = surfaces[0];
   EXPECT_EQ(surface.adjacentFoundation().get().name().get(), "Foundation Kiva 1");
-  
+
   boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter = surface.surfacePropertyExposedFoundationPerimeter();
   std::string surfaceName = surfacePropertyExposedFoundationPerimeter.get().surfaceName();
   EXPECT_EQ(surface.name().get(), surfaceName);
 }
+
 TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleFile) {
   openstudio::path idfPath = resourcesPath() / toPath("energyplus/ScheduleFile/in.idf");
   OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
@@ -648,19 +651,194 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleFile) {
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
-  
+
   openstudio::IdfObject idfObject(openstudio::IddObjectType::PerformancePrecisionTradeoffs);
   idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
-  
+
   openstudio::WorkspaceObject epPerformancePrecisionTradeoffs = workspace.addObject(idfObject).get();
-  
+
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
-  
+
   ASSERT_TRUE(model.getOptionalUniqueModelObject<openstudio::model::PerformancePrecisionTradeoffs>());
-  
+
   openstudio::model::PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<openstudio::model::PerformancePrecisionTradeoffs>();
   EXPECT_TRUE(performancePrecisionTradeoffs.useCoilDirectSolutions());
 }
 
+TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idf_zone(openstudio::IddObjectType::Zone);
+  idf_zone.setName("Thermal Zone 1");
+
+  openstudio::WorkspaceObject epZone = workspace.addObject(idf_zone).get();
+
+  openstudio::IdfObject idf_surface(openstudio::IddObjectType::BuildingSurface_Detailed);
+  {
+    idf_surface.setName("Surface 1"); // Name
+    idf_surface.setString(BuildingSurface_DetailedFields::SurfaceType, "Wall"); // Surface Type
+    idf_surface.setString(BuildingSurface_DetailedFields::ConstructionName, "");
+    idf_surface.setString(BuildingSurface_DetailedFields::ZoneName, "Thermal Zone 1");
+    idf_surface.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, "Outdoors");
+    idf_surface.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, "");
+    idf_surface.setString(BuildingSurface_DetailedFields::SunExposure, "SunExposed");
+    idf_surface.setString(BuildingSurface_DetailedFields::WindExposure, "WindExposed");
+    idf_surface.setString(BuildingSurface_DetailedFields::ViewFactortoGround, "");
+    idf_surface.setString(BuildingSurface_DetailedFields::NumberofVertices, "");
+    IdfExtensibleGroup group2 = idf_surface.pushExtensibleGroup(); // vertex 1
+    group2.setDouble(0, 0);
+    group2.setDouble(1, 50);
+    group2.setDouble(2, 4);
+    IdfExtensibleGroup group3 = idf_surface.pushExtensibleGroup(); // vertex 2
+    group3.setDouble(0, 0);
+    group3.setDouble(1, 50);
+    group3.setDouble(2, 0);
+    IdfExtensibleGroup group4 = idf_surface.pushExtensibleGroup(); // vertex 3
+    group4.setDouble(0, 0);
+    group4.setDouble(1, 0);
+    group4.setDouble(2, 0);
+    IdfExtensibleGroup group5 = idf_surface.pushExtensibleGroup(); // vertex 4
+    group5.setDouble(0, 0);
+    group5.setDouble(1, 4);
+    group5.setDouble(2, 0);
+  }
+  openstudio::WorkspaceObject epBuildingSurfaceDetailed = workspace.addObject(idf_surface).get();
+
+
+  openstudio::IdfObject idf_surface2(openstudio::IddObjectType::BuildingSurface_Detailed);
+  {
+    idf_surface2.setName("Surface 2"); // Name
+    idf_surface2.setString(BuildingSurface_DetailedFields::SurfaceType, "Wall"); // Surface Type
+    idf_surface2.setString(BuildingSurface_DetailedFields::ConstructionName, "");
+    idf_surface2.setString(BuildingSurface_DetailedFields::ZoneName, "Thermal Zone 1");
+    idf_surface2.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, "Outdoors");
+    idf_surface2.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, "");
+    idf_surface2.setString(BuildingSurface_DetailedFields::SunExposure, "SunExposed");
+    idf_surface2.setString(BuildingSurface_DetailedFields::WindExposure, "WindExposed");
+    idf_surface2.setString(BuildingSurface_DetailedFields::ViewFactortoGround, "");
+    idf_surface2.setString(BuildingSurface_DetailedFields::NumberofVertices, "");
+    IdfExtensibleGroup group2 = idf_surface2.pushExtensibleGroup(); // vertex 1
+    group2.setDouble(0, 5);
+    group2.setDouble(1, 50);
+    group2.setDouble(2, 4);
+    IdfExtensibleGroup group3 = idf_surface2.pushExtensibleGroup(); // vertex 2
+    group3.setDouble(0, 0);
+    group3.setDouble(1, 50);
+    group3.setDouble(2, 0);
+    IdfExtensibleGroup group4 = idf_surface2.pushExtensibleGroup(); // vertex 3
+    group4.setDouble(0, 0);
+    group4.setDouble(1, 0);
+    group4.setDouble(2, 0);
+    IdfExtensibleGroup group5 = idf_surface2.pushExtensibleGroup(); // vertex 4
+    group5.setDouble(0, 0);
+    group5.setDouble(1, 4);
+    group5.setDouble(2, 0);
+  }
+  openstudio::WorkspaceObject epBuildingSurfaceDetailed2 = workspace.addObject(idf_surface2).get();
+
+
+  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
+  idf_zoneProp.setString(0, "Thermal Zone 1"); // Zone or ZoneList Name
+  idf_zoneProp.setString(1, "Surface 1"); // From Surface 1
+  idf_zoneProp.setString(2, "Surface 2"); // To Surface 2
+  idf_zoneProp.setDouble(3, 0.25); // View Factor 1
+
+  openstudio::WorkspaceObject epZonePropertyUserViewFactorsBySurfaceName = workspace.addObject(idf_zoneProp).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<ThermalZone> thermalZones = model.getModelObjects<ThermalZone>();
+  ASSERT_EQ(1u, thermalZones.size());
+  ThermalZone thermalZone = thermalZones[0];
+  EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1 Thermal Zone");
+  std::vector<Surface> surfaces = model.getModelObjects<Surface>();
+  EXPECT_EQ(2u, surfaces.size());
+  std::sort(surfaces.begin(), surfaces.end(), openstudio::WorkspaceObjectNameLess());
+  EXPECT_EQ(surfaces[0].name().get(), "Surface 1");
+  EXPECT_EQ(surfaces[1].name().get(), "Surface 2");
+  ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
+  EXPECT_EQ(1u, zoneProp.numberofViewFactors());
+  std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
+  ViewFactor viewFactor = viewFactors[0];
+  EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1 Thermal Zone");
+  EXPECT_EQ(viewFactor.fromSurface().name().get(), "Surface 1");
+  EXPECT_EQ(viewFactor.toSurface().name().get(), "Surface 2");
+  EXPECT_EQ(0.25, viewFactor.viewFactor());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName_SameSurface) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idf_zone(openstudio::IddObjectType::Zone);
+  idf_zone.setName("Thermal Zone 1");
+
+  openstudio::WorkspaceObject epZone = workspace.addObject(idf_zone).get();
+
+  openstudio::IdfObject idf_surface(openstudio::IddObjectType::BuildingSurface_Detailed);
+  {
+    idf_surface.setName("Surface 1"); // Name
+    idf_surface.setString(BuildingSurface_DetailedFields::SurfaceType, "Wall"); // Surface Type
+    idf_surface.setString(BuildingSurface_DetailedFields::ConstructionName, "");
+    idf_surface.setString(BuildingSurface_DetailedFields::ZoneName, "Thermal Zone 1");
+    idf_surface.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, "Outdoors");
+    idf_surface.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, "");
+    idf_surface.setString(BuildingSurface_DetailedFields::SunExposure, "SunExposed");
+    idf_surface.setString(BuildingSurface_DetailedFields::WindExposure, "WindExposed");
+    idf_surface.setString(BuildingSurface_DetailedFields::ViewFactortoGround, "");
+    idf_surface.setString(BuildingSurface_DetailedFields::NumberofVertices, "");
+    IdfExtensibleGroup group2 = idf_surface.pushExtensibleGroup(); // vertex 1
+    group2.setDouble(0, 0);
+    group2.setDouble(1, 50);
+    group2.setDouble(2, 4);
+    IdfExtensibleGroup group3 = idf_surface.pushExtensibleGroup(); // vertex 2
+    group3.setDouble(0, 0);
+    group3.setDouble(1, 50);
+    group3.setDouble(2, 0);
+    IdfExtensibleGroup group4 = idf_surface.pushExtensibleGroup(); // vertex 3
+    group4.setDouble(0, 0);
+    group4.setDouble(1, 0);
+    group4.setDouble(2, 0);
+    IdfExtensibleGroup group5 = idf_surface.pushExtensibleGroup(); // vertex 4
+    group5.setDouble(0, 0);
+    group5.setDouble(1, 4);
+    group5.setDouble(2, 0);
+  }
+  openstudio::WorkspaceObject epBuildingSurfaceDetailed = workspace.addObject(idf_surface).get();
+
+
+  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
+  idf_zoneProp.setString(0, "Thermal Zone 1"); // Zone or ZoneList Name
+  idf_zoneProp.setString(1, "Surface 1"); // From Surface 1
+  idf_zoneProp.setString(2, "Surface 1"); // To Surface 1
+  idf_zoneProp.setDouble(3, 0.25); // View Factor 1
+
+  openstudio::WorkspaceObject epZonePropertyUserViewFactorsBySurfaceName = workspace.addObject(idf_zoneProp).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<ThermalZone> thermalZones = model.getModelObjects<ThermalZone>();
+  ASSERT_EQ(1u, thermalZones.size());
+  ThermalZone thermalZone = thermalZones[0];
+  EXPECT_EQ(thermalZone.name().get(), "Thermal Zone 1 Thermal Zone");
+  std::vector<Surface> surfaces = model.getModelObjects<Surface>();
+  ASSERT_EQ(1u, surfaces.size());
+  Surface surface = surfaces[0];
+  EXPECT_EQ(surface.name().get(), "Surface 1");
+  ZonePropertyUserViewFactorsBySurfaceName zoneProp = thermalZone.getZonePropertyUserViewFactorsBySurfaceName();
+  EXPECT_EQ(zoneProp.thermalZone().name().get(), "Thermal Zone 1 Thermal Zone");
+
+
+  // We allow toSurface to be equal to fromSurface
+  EXPECT_EQ(1u, zoneProp.numberofViewFactors());
+  std::vector<ViewFactor> viewFactors = zoneProp.viewFactors();
+  ViewFactor viewFactor = viewFactors[0];
+  EXPECT_EQ(viewFactor.fromSurface().name().get(), "Surface 1");
+  EXPECT_EQ(viewFactor.toSurface().name().get(), "Surface 1");
+  EXPECT_EQ(0.25, viewFactor.viewFactor());
+}

@@ -53,6 +53,7 @@ class SizingZone;
 class PortList;
 class ZoneMixing;
 class AirflowNetworkZone;
+class ZonePropertyUserViewFactorsBySurfaceName;
 
 namespace detail {
 
@@ -128,6 +129,8 @@ class MODEL_API ThermalZone : public HVACComponent {
   bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const;
 
   SizingZone sizingZone() const;
+
+  ZonePropertyUserViewFactorsBySurfaceName getZonePropertyUserViewFactorsBySurfaceName() const;
 
   //@}
   /** @name Setters */
