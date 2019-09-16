@@ -68,10 +68,16 @@ ViewFactor::ViewFactor(const ModelObject& fromSurface, const ModelObject& toSurf
     LOG_AND_THROW("Unable to create view factor, factor of " << m_view_factor << " more than 1");
   }
 
-  // TODO: JM 2019-09-13 NOT SURE WHETHER WE WANT TO ALLOW TO==FROM here
-  // Can't create if to & from are the same
+  // Note JM 2019-09-13: E+ will issue a Warning if you don't have numSurfaces^2 viewFactors in HeatBalanceIntRadExchange::GetInputViewFactorsbyName
+  // and set them to zero (which is probably what you want). In order to avoid this warning, I'll allow toSurface == fromSurface
   if (fromSurface.handle() == toSurface.handle()) {
-    LOG_AND_THROW("Cannot create a viewFactor when fromSurface and toSurface are the same: " << fromSurface.briefDescription());
+    // LOG_AND_THROW("Cannot create a viewFactor when fromSurface and toSurface are the same: " << fromSurface.briefDescription());
+
+    // Issue a warning if viewFactor isn't zero though, it's unusual for a surface to view itself
+    if (viewFactor != 0.0) {
+      LOG(Warn, "You are creating a viewFactor with a value of " << viewFactor
+             << " while fromSurface and toSurface are the same: " << fromSurface.briefDescription());
+    }
   }
 
   // Check the IDD types to ensure they are ok
@@ -395,8 +401,8 @@ namespace detail {
       bool thisResult = addViewFactor(viewFactor);
       if (!thisResult) {
         LOG(Error, "Could not add viewFactor " << viewFactor << " to " << briefDescription() << ". Continuing with others.");
-        OS_ASSERT(false);
-        result = false;
+        // OS_ASSERT(false);
+        // result = false;
       }
     }
 
