@@ -192,16 +192,19 @@ set_source_files_properties(EmbeddedScripting.i
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
+# Must call CMake itself in order to set the SWIG_LIB env var for add_custom_command
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
-  COMMAND "${SWIG_EXECUTABLE}"
+  COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+          "${SWIG_EXECUTABLE}"
           "-ruby"
           -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
 )
 
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
-  COMMAND "${SWIG_EXECUTABLE}"
+  COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+          "${SWIG_EXECUTABLE}"
           "-ruby"
           "-c++"
           -o "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
@@ -294,7 +297,7 @@ target_link_libraries(openstudio
  openstudio_radiance
 )
 
-# Change to CONAN_PKG::OpenSSL vs OPENSSL_CRYPTO_LIBRARY if this is needed.  
+# Change to CONAN_PKG::OpenSSL vs OPENSSL_CRYPTO_LIBRARY if this is needed.
 # link CLI with ruby static library, ruby bindings (openstudio.so) are linked to dynamic ruby
 #if (APPLE)
 #  target_link_libraries(openstudio

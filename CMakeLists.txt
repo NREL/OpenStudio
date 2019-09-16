@@ -737,40 +737,22 @@ endif()
 
 # SWIG
 
-# using forked version of SWIG at https://github.com/macumber/swig/tree/openstudio_swig_3_0_12
-if(UNIX)
-  # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
-  ExternalProject_Add(SWIG
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.12.tar.gz
-    URL_MD5 a7d384966974ed79455a455b517ad83d
-    PATCH_COMMAND cp ${PROJECT_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
-    CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG-install
-    BUILD_COMMAND ${MAKE}
-    INSTALL_COMMAND ${MAKE} install
-    BUILD_IN_SOURCE 1
-  )
-  set(SWIG_EXECUTABLE ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
-else()
-  # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
-  set(SWIG_ZIP "swigwin-3.0.12.zip")
-  set(SWIG_DIR "swigwin-3.0.12")
-  set(SWIG_EXPECTED_HASH "8ee412d1278ba3cac22e58f26a842918")
-  if(EXISTS "${PROJECT_BINARY_DIR}/${SWIG_ZIP}")
-    file(MD5 "${PROJECT_BINARY_DIR}/${SWIG_ZIP}" SWIG_HASH)
-  endif()
-  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${SWIG_ZIP}" OR NOT EXISTS "${PROJECT_BINARY_DIR}/${SWIG_DIR}" OR NOT "${SWIG_HASH}" MATCHES "${SWIG_EXPECTED_HASH}")
-    message(STATUS "Downloading SWIG)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${SWIG_ZIP}" "${PROJECT_BINARY_DIR}/${SWIG_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${SWIG_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${SWIG_DIR}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${SWIG_ZIP}" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
-  endif()
-
-  set(SWIG_EXECUTABLE ${PROJECT_BINARY_DIR}/${SWIG_DIR}/swig.exe)
+# We use conan swig_installer 4.0 which enhances our PATH to include the CONAN_BIN_DIRS_SWIG_INSTALLER already
+# So I could just do:
+# set(SWIG_EXECUTABLE swig)
+# But better be safe
+find_program(SWIG_EXECUTABLE swig)
+if(NOT SWIG_EXECUTABLE)
+  message(FATAL_ERROR "Couldn't find swig, which shouldn't happen. CONAN_BIN_DIRS_SWIG_INSTALLER=${CONAN_BIN_DIRS_SWIG_INSTALLER}")
 endif()
+
+# The conan-provided binary has a built-in swiglib (`swig -swiglib`) that points to the build box on which it was built, which is problematic for us.
+set(SWIG_LIB "${CONAN_SWIG_INSTALLER_ROOT}/share/swig/4.0.0")
 
 # Export SWIG to parent scope
 if(hasParent)
   set(SWIG_EXECUTABLE "${SWIG_EXECUTABLE}" PARENT_SCOPE)
+  set(SWIG_LIB "${SWIG_LIB}" PARENT_SCOPE)
 endif()
 
 set(ALL_RUBY_BINDING_TARGETS "") # global list

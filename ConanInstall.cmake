@@ -86,6 +86,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     cpprestsdk/2.10.13@bincrafters/stable
     websocketpp/0.8.1@bincrafters/stable
     geographiclib/1.49@bincrafters/stable
+    swig_installer/4.0.0@bincrafters/stable
     ${CONAN_GTEST}
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
     OPTIONS ${CONAN_OPTIONS}
