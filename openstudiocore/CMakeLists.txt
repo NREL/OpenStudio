@@ -74,7 +74,7 @@ set(ENERGYPLUS_BUILD_SHA "d67e9e635f")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.2.0")
+set(ENERGYPLUS_RELEASE_NAME "v9.2.0-Alpha2")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -382,7 +382,7 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH d5cee5e3af2d71c8d3554bf4f427af09)
+    set(ENERGYPLUS_EXPECTED_HASH f9642bb57a5c4974b1f4a2818ea5776f)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
@@ -622,7 +622,7 @@ endif()
 # build and release openstudio gems at https://github.com/NREL/OpenStudio-gems
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
 set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20190916.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "12fc96b208f74762172d6e93178e6b72")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "14f08cf581b5e3951e91f7949ff5fafd")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
