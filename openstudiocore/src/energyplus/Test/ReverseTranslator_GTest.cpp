@@ -747,8 +747,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
 
   openstudio::WorkspaceObject epZonePropertyUserViewFactorsBySurfaceName = workspace.addObject(idf_zoneProp).get();
 
-  workspace.save("/media/Data/Software/Others/OS-build-develop/test_rt.idf", true);
-
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
