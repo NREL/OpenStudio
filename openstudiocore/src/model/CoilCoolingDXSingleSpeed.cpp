@@ -1046,12 +1046,12 @@ namespace detail{
 
   // E+ output has a bug where this field label is incorrect
   boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedEvaporativeCondenserAirFlowRate() const {
-    return getAutosizedValue("Design Size Evaporative Condenser Effectiveness", "m3/s");
+    return getAutosizedValue("Design Size Evaporative Condenser Air Flow Rate", "m3/s");
   }
 
   // E+ output has a bug where this field label is incorrect
   boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption()  const {
-    return getAutosizedValue("Design Size Evaporative Condenser Air Flow Rate", "W");
+    return getAutosizedValue("Design Size Evaporative Condenser Pump Rated Power Consumption", "W");
   }
 
   std::vector<EMSActuatorNames> CoilCoolingDXSingleSpeed_Impl::emsActuatorNames() const {
