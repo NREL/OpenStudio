@@ -3335,6 +3335,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateZoneMixing(mo);
     break;
   }
+  case openstudio::IddObjectType::OS_ZoneProperty_UserViewFactors_BySurfaceName:
+  {
+    model::ZonePropertyUserViewFactorsBySurfaceName mo = modelObject.cast<ZonePropertyUserViewFactorsBySurfaceName>();
+    retVal = translateZonePropertyUserViewFactorsBySurfaceName(mo);
+    break;
+  }
   case openstudio::IddObjectType::OS_ZoneVentilation_DesignFlowRate :
     {
       auto mo = modelObject.cast<ZoneVentilationDesignFlowRate>();
@@ -3477,6 +3483,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ShadingSurface);
 
   result.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
+  result.push_back(IddObjectType::OS_ZoneProperty_UserViewFactors_BySurfaceName);
 
   result.push_back(IddObjectType::OS_Daylighting_Control);
   result.push_back(IddObjectType::OS_DaylightingDevice_Shelf);

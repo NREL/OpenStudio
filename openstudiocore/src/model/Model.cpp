@@ -327,7 +327,7 @@ namespace detail {
 
     return m_cachedYearDescription;
   }
-  
+
   boost::optional<PerformancePrecisionTradeoffs> Model_Impl::performancePrecisionTradeoffs() const
   {
     if (m_cachedPerformancePrecisionTradeoffs){
@@ -3093,6 +3093,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveWater);
   REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
   REGISTER_CONSTRUCTOR(ZoneMixing);
+  REGISTER_CONSTRUCTOR(ZonePropertyUserViewFactorsBySurfaceName);
   REGISTER_CONSTRUCTOR(ZoneVentilationDesignFlowRate);
 
 #define REGISTER_COPYCONSTRUCTORS(_className) \
@@ -3579,6 +3580,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveWater);
   REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);
   REGISTER_COPYCONSTRUCTORS(ZoneMixing);
+  REGISTER_COPYCONSTRUCTORS(ZonePropertyUserViewFactorsBySurfaceName);
   REGISTER_COPYCONSTRUCTORS(ZoneVentilationDesignFlowRate);
 }
 

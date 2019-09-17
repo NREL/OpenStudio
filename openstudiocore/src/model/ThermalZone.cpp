@@ -105,6 +105,8 @@
 #include "ZoneMixing_Impl.hpp"
 #include "AirflowNetworkZone.hpp"
 #include "AirflowNetworkZone_Impl.hpp"
+#include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
+#include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -2946,6 +2948,22 @@ namespace detail {
     return boost::none;
   }
 
+  ZonePropertyUserViewFactorsBySurfaceName ThermalZone_Impl::getZonePropertyUserViewFactorsBySurfaceName() const {
+    ThermalZone thisThermalZone = getObject<ThermalZone>();
+    std::vector<ZonePropertyUserViewFactorsBySurfaceName> zoneProps = thisThermalZone.getModelObjectSources<ZonePropertyUserViewFactorsBySurfaceName>(ZonePropertyUserViewFactorsBySurfaceName::iddObjectType());
+    if (!zoneProps.empty()) {
+      if (zoneProps.size() > 1u) {
+        // This shouldn't happen, ZonePropertyUserViewFactorsBySurfaceName's ctor should throw if a zone already has one
+        OS_ASSERT(false);
+        LOG(Error, briefDescription() << " is referenced by more than one ZonePropertyUserViewFactorsBySurfaceName, returning the first");
+      }
+      return zoneProps[0];
+    }
+
+    ZonePropertyUserViewFactorsBySurfaceName zoneProp(thisThermalZone);
+    return zoneProp;
+  }
+
 } // detail
 
 ThermalZone::ThermalZone(const Model& model)
@@ -3639,6 +3657,11 @@ boost::optional<AirflowNetworkZone> ThermalZone::airflowNetworkZone() const
 std::vector<AirLoopHVAC> ThermalZone::airLoopHVACs() const
 {
   return getImpl<detail::ThermalZone_Impl>()->airLoopHVACs();
+}
+
+ZonePropertyUserViewFactorsBySurfaceName ThermalZone::getZonePropertyUserViewFactorsBySurfaceName() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->getZonePropertyUserViewFactorsBySurfaceName();
 }
 
 /// @cond

@@ -391,6 +391,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACUnitVentilator.cpp
   ForwardTranslator/ForwardTranslateZoneHVACWaterToAirHeatPump.cpp
   ForwardTranslator/ForwardTranslateZoneMixing.cpp
+  ForwardTranslator/ForwardTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
   ForwardTranslator/ForwardTranslateZoneVentilationDesignFlowRate.cpp
   ForwardTranslator/CreateAirLoopHVACSupplyPath.cpp
   ForwardTranslator/CreateAirLoopHVACReturnPath.cpp
@@ -528,6 +529,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateZoneInfiltrationEffectiveLeakageArea.cpp
   ReverseTranslator/ReverseTranslateZoneList.cpp
   ReverseTranslator/ReverseTranslateZoneMixing.cpp
+  ReverseTranslator/ReverseTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
   ReverseTranslator/ReverseTranslateZoneVentilationDesignFlowRate.cpp
 )
 
@@ -545,6 +547,7 @@ set(${target_name}_test_src
   Test/AirflowNetwork_GTest.cpp
 
   Test/AirLoopHVACUnitarySystem_GTest.cpp
+  Test/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_GTest.cpp
   Test/AirTerminalDualDuctConstantVolume_GTest.cpp
   Test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
   Test/AirTerminalSingleDuctConstantVolumeFourPipeBeam_GTest.cpp
@@ -621,6 +624,7 @@ set(${target_name}_test_src
   Test/ZoneHVACLowTemperatureRadiantConstFlow_GTest.cpp
   Test/ZoneHVACLowTempRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
+  Test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
 )
 
 set(${target_name}_swig_src

@@ -442,6 +442,7 @@ class ZoneHVACUnitHeater;
 class ZoneHVACUnitVentilator;
 class ZoneHVACWaterToAirHeatPump;
 class ZoneMixing;
+class ZonePropertyUserViewFactorsBySurfaceName;
 class ZoneVentilationDesignFlowRate;
 }
 
@@ -1308,6 +1309,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateZoneHVACWaterToAirHeatPump( model::ZoneHVACWaterToAirHeatPump & modelObject );
 
   boost::optional<IdfObject> translateZoneMixing( model::ZoneMixing & modelObject);
+
+  boost::optional<IdfObject> translateZonePropertyUserViewFactorsBySurfaceName( model::ZonePropertyUserViewFactorsBySurfaceName & modelObject);
 
   boost::optional<IdfObject> createAirLoopHVACSupplyPath( const model::Node & demandInletNode );
 
