@@ -26,6 +26,41 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.0")
 endif()
 
 ###############################################################################
+#                                  N I N J A                                  #
+###############################################################################
+# Ninja support: has to be atop for it to take effect before anything else is done
+# Add Color Output if Using Ninja
+macro(AddCXXFlagIfSupported flag test)
+  CHECK_CXX_COMPILER_FLAG(${flag} ${test})
+  if(${${test}})
+    message("adding ${flag}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+  endif()
+endmacro()
+
+if("Ninja" STREQUAL ${CMAKE_GENERATOR})
+  # Clang
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    AddCXXFlagIfSupported(-fcolor-diagnostics COMPILER_SUPPORTS_fcolor-diagnostics)
+  endif()
+
+  # g++
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    # For some reason it doesn't say its supported, but it works...
+    # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
+    message(STATUS "Ninja: Forcing -fdiagnostics-color=always")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+  endif()
+endif()
+
+# Xcode/Ninja generators undefined MAKE
+if(CMAKE_GENERATOR MATCHES "Make")
+  set(MAKE "$(MAKE)")
+else()
+  set(MAKE make)
+endif()
+
+###############################################################################
 # Project version information
 set(PROJECT_VERSION_BUILD "Unknown" CACHE STRING "Build number") # git sha
 find_package(Git)
@@ -341,29 +376,6 @@ if(MSVC)
 
 endif()
 
-# Add Color Output if Using Ninja
-macro(AddCXXFlagIfSupported flag test)
-   CHECK_CXX_COMPILER_FLAG(${flag} ${test})
-   if( ${${test}} )
-      message("adding ${flag}")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
-   endif()
-endmacro()
-
-if("Ninja" STREQUAL ${CMAKE_GENERATOR})
-  # Clang
-  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    AddCXXFlagIfSupported(-fcolor-diagnostics COMPILER_SUPPORTS_fcolor-diagnostics)
-  endif()
-
-  # g++
-  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    # For some reason it doesn't say its supported, but it works...
-    # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
-    message(STATUS "Forcing -fdiagnostics-color=always")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
-  endif()
-endif()
 ##############################################################################
 
 
@@ -737,14 +749,6 @@ if( BUILD_DVIEW )
 endif()
 
 # SWIG
-
-# Xcode/Ninja generators undefined MAKE
-if(CMAKE_GENERATOR MATCHES "Make")
-  set(MAKE "$(MAKE)")
-else()
-  set(MAKE make)
-endif()
-
 
 # using forked version of SWIG at https://github.com/macumber/swig/tree/openstudio_swig_3_0_12
 if(UNIX)
