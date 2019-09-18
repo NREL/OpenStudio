@@ -2,7 +2,7 @@
 #define OPENSTUDIO_HXX
 
 // Support for Ninja on Windows (Ninja isn't multi-configuration while MSVC is)
-#cmakedefine GENERATOR_IS_NINJA
+#cmakedefine NINJA
 
 inline std::string openStudioVersion()
 {
@@ -47,7 +47,7 @@ inline std::string rubyLibDir()
 inline std::string rubyOpenStudioDir()
 {
   #ifdef WIN32
-    #ifdef GENERATOR_IS_NINJA
+    #ifdef NINJA
       return "${CMAKE_BINARY_DIR}/ruby/";
     #else
       return "${CMAKE_BINARY_DIR}/ruby/" + std::string(CMAKE_INTDIR) + "/";

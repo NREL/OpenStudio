@@ -40,7 +40,7 @@ endmacro()
 
 if("Ninja" STREQUAL ${CMAKE_GENERATOR})
   # Will be passed to OpenStudio.in to deal with the Win32 case
-  set(GENERATOR_IS_NINJA TRUE)
+  set(NINJA TRUE)
   # Clang
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     AddCXXFlagIfSupported(-fcolor-diagnostics COMPILER_SUPPORTS_fcolor-diagnostics)
@@ -272,7 +272,8 @@ if(WIN32)
   add_definitions(-DNOMINMAX)
 endif()
 
-if(MSVC)
+# /MP is useless for ninja (and nmake), and gets passed to rc.exe which will fatal out.
+if(MSVC AND NOT NINJA)
   # Build with Multiple Processes
   set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
   mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
@@ -347,7 +348,8 @@ if(MSVC)
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
 
   # create compiler processes on all effective processors
-  if(BUILD_WITH_MULTIPLE_PROCESSES)
+  # /MP is useless for ninja and will cause problems. BUILD_WITH_MULTIPLE_PROCESSES shouldn't have been set if ninja but let's be safe
+  if(BUILD_WITH_MULTIPLE_PROCESSES AND NOT NINJA)
     add_definitions(/MP)
   endif()
 
