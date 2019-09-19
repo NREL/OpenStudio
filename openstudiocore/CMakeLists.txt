@@ -354,7 +354,10 @@ if(MSVC)
   endif()
 
   #Enable warning on thread un-safe static member initialization - DLM: we have been bit by this many times
-  add_definitions(/w14640)
+  # TODO: JM 2019-09-19: Disabling for now
+  # Using the righ flag (/w14460 and not the previously mispelled /w44640) will make compilation fail with many warnings treated as error,
+  # eg: IddRegex.cpp all scoped `const static std::string result` inside functions will issue that and make it fatal
+  # add_definitions(/w14640)
 
   # ignore decorated name length exceeded
   add_definitions(/wd4503)
