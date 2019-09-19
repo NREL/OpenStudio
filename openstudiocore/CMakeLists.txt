@@ -354,7 +354,7 @@ if(MSVC)
   endif()
 
   #Enable warning on thread un-safe static member initialization - DLM: we have been bit by this many times
-  add_definitions(/w44640)
+  add_definitions(/w14640)
 
   # ignore decorated name length exceeded
   add_definitions(/wd4503)
