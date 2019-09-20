@@ -118,7 +118,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
     // add the values
     for (const auto& xValue : xValues) {
       auto eg = tableIndependentVariable.pushExtensibleGroup();
-      eg.setDouble(Table_IndependentVariableExtensibleFields::Value, xvalue);
+      eg.setDouble(Table_IndependentVariableExtensibleFields::Value, xValue);
     }
 
     tableIndependentVariables.push_back(tableIndependentVariable);
