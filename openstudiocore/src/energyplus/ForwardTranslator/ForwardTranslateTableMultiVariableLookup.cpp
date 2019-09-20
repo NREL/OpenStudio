@@ -72,7 +72,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
     // expect a full grid of values
     expectedNumberOfValues *= sizeX;
 
-    // create an independent variable for this x 
+    // create an independent variable for this x
     IdfObject tableIndependentVariable(IddObjectType::Table_IndependentVariable);
     if (s) {
       tableIndependentVariable.setName(*s + "_IndependentVariable_" + std::to_string(i));
@@ -90,7 +90,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
       tableIndependentVariable.setString(Table_IndependentVariableFields::InterpolationMethod, "Cubic");
       tableIndependentVariable.setString(Table_IndependentVariableFields::ExtrapolationMethod, "Constant");
     }
-    
+
     // these values should be unique and sorted in ascending order
     tableIndependentVariable.setDouble(Table_IndependentVariableFields::MinimumValue, xValues[0]);
     tableIndependentVariable.setDouble(Table_IndependentVariableFields::MaximumValue, xValues[sizeX - 1]);
@@ -117,7 +117,8 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
 
     // add the values
     for (const auto& xValue : xValues) {
-      tableIndependentVariable.pushExtensibleGroup(std::vector<std::string>(1, std::to_string(xValue)));
+      auto eg = tableIndependentVariable.pushExtensibleGroup();
+      eg.setDouble(Table_IndependentVariableExtensibleFields::Value, xvalue);
     }
 
     tableIndependentVariables.push_back(tableIndependentVariable);
@@ -174,13 +175,14 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   // ExternalFileName
   // Not supported
 
-  // add the sorted values 
+  // add the sorted values
   for (const auto& point : points) {
-    tableLookup.pushExtensibleGroup(std::vector<std::string>(1, std::to_string(point.y())));
+    auto eg = tableLookup.pushExtensibleGroup();
+    eg.setDouble(Table_LookupExtensibleFields::OutputValue, point.y());
   }
 
   return tableLookup;
-  
+
 }
 
 } // energyplus
