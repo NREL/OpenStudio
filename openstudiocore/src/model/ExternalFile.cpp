@@ -129,11 +129,20 @@ namespace detail {
 
   path ExternalFile_Impl::filePath() const {
     path result;
+    path fname = toPath(fileName());
     std::vector<path> absoluteFilePaths = this->model().workflowJSON().absoluteFilePaths();
     if (absoluteFilePaths.empty()) {
-      result = this->model().workflowJSON().absoluteRootDir() / toPath(fileName());
+      result = this->model().workflowJSON().absoluteRootDir() / fname;
     } else {
-      result = absoluteFilePaths[0] / toPath(fileName());
+      // Loop to find the file in all possible directories in order of preference
+      // (eg goes to hardcoded paths, then potentially generated_files, then files, etc.)
+      for (const openstudio::path& dirpath: absoluteFilePaths) {
+        path p = dirpath / fname;
+        if (openstudio::filesystem::exists(p) || openstudio::filesystem::is_regular_file(p)) {
+          result = p;
+          break;
+        }
+      }
     }
     return result;
   }
