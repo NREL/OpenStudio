@@ -173,7 +173,6 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
   // Maximum Supply Air Temperature from Supplemental Heater (autosized)
   boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
   bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const;
-
   bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
   void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
@@ -181,19 +180,19 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
   double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
   bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const ;
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoHeatingisNeeded() const ;
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoHeatingisNeeded() const;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
 
 
