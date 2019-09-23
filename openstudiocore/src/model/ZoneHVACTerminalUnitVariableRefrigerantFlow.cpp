@@ -431,7 +431,10 @@ namespace detail {
 
 
   boost::optional<ModelObject> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::supplementalHeatingCoilAsModelObject() const {
-    OptionalModelObject result = supplementalHeatingCoil();
+    OptionalModelObject result;
+    if (boost::optional<HVACComponent> _coil = supplementalHeatingCoil()) {
+      result = _coil.get();
+    }
     return result;
   }
 
