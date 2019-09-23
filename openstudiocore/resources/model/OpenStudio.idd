@@ -24239,11 +24239,40 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \type real
         \units W
         \minimum 0
-  N10; \field Rated Total Heating Capacity Sizing Ratio
+  N10,  \field Rated Total Heating Capacity Sizing Ratio
         \required-field
-       \type real
-       \units W/W
-       \minimum 1.0
+        \type real
+        \units W/W
+        \minimum 1.0
+        \note If this terminal unit's heating coil is autosized, the heating capacity is sized
+        \note to be equal to the cooling capacity multiplied by this sizing ratio.
+        \note This input applies to the terminal unit heating coil and overrides the sizing
+        \note ratio entered in the AirConditioner:VariableRefrigerantFlow object.
+  A12,  \field Availability Manager List Name
+        \note Enter the name of an AvailabilityManagerAssignmentList object.
+        \type object-list
+        \object-list SystemAvailabilityManagerLists
+  A13,  \field Design Specification ZoneHVAC Sizing Object Name
+        \note Enter the name of a DesignSpecificationZoneHVACSizing object.
+        \type object-list
+        \object-list DesignSpecificationZoneHVACSizingName
+  A14,  \field Supplemental Heating Coil Name
+        \type object-list
+        \object-list HeatingCoilName
+        \note Needs to match in the supplemental heating coil object.
+  N11,  \field Maximum Supply Air Temperature from Supplemental Heater
+        \type real
+        \units C
+        \autosizable
+        \default autosize
+        \note Supply air temperature from the supplemental heater will not exceed this value.
+  N12;  \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
+        \type real
+        \maximum 21.0
+        \default 21.0
+        \units C
+        \note Supplemental heater will not operate when outdoor temperature exceeds this value.
+
 
 OS:ZoneHVAC:WaterToAirHeatPump,
         \min-fields 25

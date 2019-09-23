@@ -159,6 +159,32 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
 
   bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
 
+
+
+  // \field Availability Manager List Name
+  // \field Design Specification ZoneHVAC Sizing Object Name
+
+
+  // Supplemental Heating Coil Name
+  boost::optional<HVACComponent> supplementalHeatingCoil() const;
+  bool setSupplementalHeatingCoil(const HVACComponent& coil);
+  void resetSupplementalHeatingCoil();
+
+  // Maximum Supply Air Temperature from Supplemental Heater (autosized)
+  boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
+  bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const;
+
+  bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
+  void resetMaximumSupplyAirTemperaturefromSupplementalHeater(); // <=== ?
+  void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+
+  // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation (default 21C)
+  double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
+  bool isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted() const; // <=== ?
+  bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+  void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(); // <=== ?
+
+
   boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
 
   boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const ;
