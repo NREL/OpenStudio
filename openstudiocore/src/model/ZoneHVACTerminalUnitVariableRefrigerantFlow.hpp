@@ -175,15 +175,11 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
   bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const;
 
   bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
-  void resetMaximumSupplyAirTemperaturefromSupplementalHeater(); // <=== ?
   void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
   // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation (default 21C)
   double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
-  bool isMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperationDefaulted() const; // <=== ?
   bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
-  void resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(); // <=== ?
-
 
   boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
 

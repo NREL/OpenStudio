@@ -24264,12 +24264,10 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \type real
         \units C
         \autosizable
-        \default autosize
         \note Supply air temperature from the supplemental heater will not exceed this value.
   N12;  \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
         \type real
         \maximum 21.0
-        \default 21.0
         \units C
         \note Supplemental heater will not operate when outdoor temperature exceeds this value.
 

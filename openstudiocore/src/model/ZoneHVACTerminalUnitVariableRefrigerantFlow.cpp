@@ -585,6 +585,9 @@ ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrige
 
   setRatedTotalHeatingCapacitySizingRatio(1.0);
 
+  autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+  setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
+
   CoilCoolingDXVariableRefrigerantFlow coolingCoil(model);
   coolingCoil.setName(name().get() + " Cooling Coil");
   getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coolingCoil);
