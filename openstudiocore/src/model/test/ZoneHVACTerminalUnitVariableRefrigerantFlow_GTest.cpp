@@ -128,7 +128,7 @@ TEST_F(ModelFixture, ZoneHVACTerminalUnitVariableRefrigerantFlow_SupplementalHea
   EXPECT_TRUE(vrf.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(19.0));
   EXPECT_EQ(19.0, vrf.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation());
   EXPECT_FALSE(vrf.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(45.0)); // > max
-  EXPECT_EQ(45.0, vrf.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation());
+  EXPECT_EQ(19.0, vrf.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation());
 
 }
 
