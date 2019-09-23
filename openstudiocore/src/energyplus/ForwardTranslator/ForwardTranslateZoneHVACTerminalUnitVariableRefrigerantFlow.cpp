@@ -62,6 +62,9 @@
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_VariableRefrigerantFlow_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -223,6 +226,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
   heatOutletNodeName = modelObject.name().get() + " Heating Coil Outlet Node";
 
+  std::string supplementalOutletNodeName = modelObject.name().get() + " Supplemental Heating Coil Outlet Node";
+
   oaNodeName = modelObject.name().get() + " Outdoor Air Node";
 
   // TerminalUnitAirInletNodeName
@@ -330,6 +335,61 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
     }
   }
 
+
+  boost::optional<HVACComponent> _mo_supplementalHeatingCoil = modelObject.supplementalHeatingCoil();
+
+  if( _mo_supplementalHeatingCoil ) {
+    if( boost::optional<IdfObject> _supplementalHeatingCoil = translateAndMapModelObject(_mo_supplementalHeatingCoil.get()) )
+    {
+      // SupplementalHeatingCoilObjectType
+      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplementalHeatingCoilObjectType,
+                          _supplementalHeatingCoil->iddObject().name());
+
+      // SupplementalHeatingCoilObjectName
+      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplementalHeatingCoilName,
+                          _supplementalHeatingCoil->name().get());
+
+      std::string supplementalInletNodeName;
+      if (heatingCoil) {
+        // This is always true actually...
+         supplementalInletNodeName = heatOutletNodeName;
+      } else if( coolingCoil ) {
+        supplementalInletNodeName = coolOutletNodeName;
+      } else if( translateMixer() ) {
+        supplementalInletNodeName = mixerOutletNodeName;
+      } else {
+        supplementalInletNodeName = inletNodeName;
+      }
+
+
+      if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel )
+      {
+        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName, supplementalInletNodeName);
+        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName, supplementalOutletNodeName);
+      }
+      else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric )
+      {
+        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName, supplementalInletNodeName);
+        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName, supplementalOutletNodeName);
+      }
+      else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
+      {
+        _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, supplementalInletNodeName);
+        _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, supplementalOutletNodeName);
+      }
+      else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Steam )
+      {
+        // Not yet supported in OS
+        OS_ASSERT(false);
+      }
+      else
+      {
+        LOG(Error, "Unsupported supplemental heating Coil type for " << modelObject.briefDescription());
+        OS_ASSERT(false);
+      }
+    }
+  }
+
   if( boost::optional<IdfObject> _fan = translateAndMapModelObject(fan) )
   {
     // SupplyAirFanObjectType
@@ -342,7 +402,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
     std::string fanInletNodeName;
 
-    if( heatingCoil ) {
+    if (_mo_supplementalHeatingCoil) {
+      fanInletNodeName = supplementalOutletNodeName;
+    } else if( heatingCoil ) {
       fanInletNodeName = heatOutletNodeName;
     } else if( coolingCoil ) {
       fanInletNodeName = coolOutletNodeName;
@@ -383,6 +445,23 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
   {
     idfObject.setDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::RatedHeatingCapacitySizingRatio,value.get());
   }
+
+  // \field Availability Manager List Name
+  // \field Design Specification ZoneHVAC Sizing Object Name
+
+  //  Maximum Supply Air Temperature from Supplemental Heater (autosized)
+  if( modelObject.isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() )
+  {
+    idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumSupplyAirTemperaturefromSupplementalHeater, "Autosize");
+  }
+  else if( (value = modelObject.maximumSupplyAirTemperaturefromSupplementalHeater()) )
+  {
+    idfObject.setDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumSupplyAirTemperaturefromSupplementalHeater,value.get());
+  }
+
+  // \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation (default 21C)
+  idfObject.setDouble(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation,
+                      modelObject.maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() );
 
   return idfObject;
 }
