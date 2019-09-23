@@ -7067,13 +7067,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
           fluidCooler.setDesignEnteringWaterTemperature(value);
         }
 
-        value = htRejElement.firstChildElement("DsgnDBT").text().toDouble(&ok);
+        value = doc.documentElement().firstChildElement("Proj").firstChildElement("DsgnDBT").text().toDouble(&ok);
         if ( ok ) {
           value = unitToUnit(value,"F","C").get();
           fluidCooler.setDesignEnteringAirTemperature(value);
         }
 
-        value = htRejElement.firstChildElement("DsgnWBT").text().toDouble(&ok);
+        value = doc.documentElement().firstChildElement("Proj").firstChildElement("DsgnWBT").text().toDouble(&ok);
         if ( ok ) {
           value = unitToUnit(value,"F","C").get();
           fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
@@ -7157,13 +7157,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         fluidCooler.setDesignEnteringWaterTemperature(value);
       }
 
-      value = htRejElement.firstChildElement("DsgnDBT").text().toDouble(&ok);
+      value = doc.documentElement().firstChildElement("Proj").firstChildElement("DsgnDBT").text().toDouble(&ok);
       if ( ok ) {
         value = unitToUnit(value,"F","C").get();
         fluidCooler.setDesignEnteringAirTemperature(value);
       }
 
-      value = htRejElement.firstChildElement("DsgnWBT").text().toDouble(&ok);
+      value = doc.documentElement().firstChildElement("Proj").firstChildElement("DsgnWBT").text().toDouble(&ok);
       if ( ok ) {
         value = unitToUnit(value,"F","C").get();
         fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
@@ -7252,13 +7252,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
           fluidCooler.setDesignEnteringWaterTemperature(value);
         }
 
-        value = htRejElement.firstChildElement("DsgnDBT").text().toDouble(&ok);
+        value = doc.documentElement().firstChildElement("Proj").firstChildElement("DsgnDBT").text().toDouble(&ok);
         if ( ok ) {
           value = unitToUnit(value,"F","C").get();
           fluidCooler.setDesignEnteringAirTemperature(value);
         }
 
-        value = htRejElement.firstChildElement("DsgnWBT").text().toDouble(&ok);
+        value = doc.documentElement().firstChildElement("Proj").firstChildElement("DsgnWBT").text().toDouble(&ok);
         if ( ok ) {
           value = unitToUnit(value,"F","C").get();
           fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
@@ -7391,13 +7391,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         fluidCooler.setDesignEnteringWaterTemperature(value);
       }
 
-      value = htRejElement.firstChildElement("DsgnDBT").text().toDouble(&ok);
+      value = doc.documentElement().firstChildElement("Proj").firstChildElement("DsgnDBT").text().toDouble(&ok);
       if ( ok ) {
         value = unitToUnit(value,"F","C").get();
         fluidCooler.setDesignEnteringAirTemperature(value);
       }
 
-      value = htRejElement.firstChildElement("DsgnWBT").text().toDouble(&ok);
+      value = doc.documentElement().firstChildElement("Proj").firstChildElement("DsgnWBT").text().toDouble(&ok);
       if ( ok ) {
         value = unitToUnit(value,"F","C").get();
         fluidCooler.setDesignEnteringAirWetbulbTemperature(value);
