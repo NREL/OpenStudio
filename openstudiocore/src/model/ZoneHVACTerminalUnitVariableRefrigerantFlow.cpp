@@ -453,7 +453,7 @@ namespace detail {
   }
 
   void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::resetSupplementalHeatingCoil() {
-    bool result = setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplementalHeatingCoil, "");
+    bool result = setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplementalHeatingCoilName, "");
     OS_ASSERT(result);
   }
 
