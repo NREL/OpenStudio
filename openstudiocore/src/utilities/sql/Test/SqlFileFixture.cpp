@@ -28,6 +28,8 @@
 ***********************************************************************************************************************/
 
 #include "SqlFileFixture.hpp"
+#include <iomanip>
+#include <cmath>
 
 using openstudio::Logger;
 using openstudio::FileLogSink;
@@ -56,6 +58,18 @@ void SqlFileFixture::SetUpTestCase()
 
 void SqlFileFixture::TearDownTestCase() {
   logFile->disable();
+}
+
+::testing::AssertionResult SqlFileFixture::IsWithinRelativeTolerance(double expectedValue, double actualValue, double tolerance) {
+  double percentageDifference = (actualValue - expectedValue) / expectedValue;
+  if (std::fabs(percentageDifference) <= tolerance) {
+    return ::testing::AssertionSuccess();
+  } else {
+    // Google Test seems to be ingoring the fixed && precision iomanips
+    return ::testing::AssertionFailure() << "Value isn't within the required tolerance of "
+      << std::fixed << std::setprecision(2) << (tolerance * 100) << "%. "
+      << "Expected Value = " << expectedValue << ", Sql Value = " << actualValue << ", Difference = " << (100*percentageDifference) << "%.";
+  }
 }
 
 // define static storage
