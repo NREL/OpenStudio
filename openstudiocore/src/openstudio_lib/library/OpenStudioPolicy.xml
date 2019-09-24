@@ -135,6 +135,7 @@
     <rule IddField="Supplemental Heating Coil Name" Access="HIDDEN"/>
     <rule IddField="Outdoor Dry-Bulb Temperature Sensor Node Name" Access="HIDDEN"/>
     <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
+    <rule IddField="Design Specification ZoneHVAC Sizing Object Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlow">
     <rule IddField="Low Temp Radiant Constant Flow Heating Coil Name" Access="HIDDEN"/>
@@ -1043,6 +1044,9 @@
     <rule IddField="Outside Air Mixer" Access="HIDDEN"/>
     <rule IddField="Cooling Coil" Access="HIDDEN"/>
     <rule IddField="Heating Coil" Access="HIDDEN"/>
+    <rule IddField="Availability Manager List Name" Access="HIDDEN"/>
+    <rule IddField="Design Specification ZoneHVAC Sizing Object Name" Access="HIDDEN"/>
+    <rule IddField="Supplemental Heating Coil Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_Coil_Heating_DX_VariableRefrigerantFlow">
     <rule IddField="Coil Air Inlet Node" Access="HIDDEN"/>
