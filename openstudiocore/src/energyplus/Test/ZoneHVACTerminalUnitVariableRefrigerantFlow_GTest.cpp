@@ -84,6 +84,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
 
     ForwardTranslator ft;
 
+    // VRF defaults to DrawThrough, so components are ordered like
+    // InletNode ----- (Mixer) ---- CoolingCoil ----- HeatingCoil ----- Fan ---- (Supplemental Heating Coil) -------- OutletNode
+
+
     // No Supplemental HC
     {
       // Translate
@@ -150,15 +154,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
       WorkspaceObject idf_supHC = idf_supHCs[0];
 
       // Check Node Connections
-      // --- CC --- HC --- supHC --- Fan
+      // --- CC --- HC --- Fan --- supHC
       EXPECT_EQ(idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
                 idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
 
       EXPECT_EQ(idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
-                idf_supHC.getString(Coil_Heating_ElectricFields::AirInletNodeName).get());
-
-      EXPECT_EQ(idf_supHC.getString(Coil_Heating_ElectricFields::AirOutletNodeName).get(),
                 idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
+
+      EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(),
+                idf_supHC.getString(Coil_Heating_ElectricFields::AirInletNodeName).get());
 
     }
 
@@ -192,15 +196,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
       WorkspaceObject idf_supHC = idf_supHCs[0];
 
       // Check Node Connections
-      // --- CC --- HC --- supHC --- Fan
+      // --- CC --- HC --- Fan --- supHC
       EXPECT_EQ(idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
                 idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
 
       EXPECT_EQ(idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
-                idf_supHC.getString(Coil_Heating_FuelFields::AirInletNodeName).get());
-
-      EXPECT_EQ(idf_supHC.getString(Coil_Heating_FuelFields::AirOutletNodeName).get(),
                 idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
+
+      EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(),
+                idf_supHC.getString(Coil_Heating_FuelFields::AirInletNodeName).get());
 
     }
 
@@ -234,15 +238,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
       WorkspaceObject idf_supHC = idf_supHCs[0];
 
       // Check Node Connections
-      // --- CC --- HC --- supHC --- Fan
+      // --- CC --- HC --- Fan --- supHC
       EXPECT_EQ(idf_cc.getString(Coil_Cooling_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
                 idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirInletNode).get());
 
       EXPECT_EQ(idf_hc.getString(Coil_Heating_DX_VariableRefrigerantFlowFields::CoilAirOutletNode).get(),
-                idf_supHC.getString(Coil_Heating_WaterFields::AirInletNodeName).get());
-
-      EXPECT_EQ(idf_supHC.getString(Coil_Heating_WaterFields::AirOutletNodeName).get(),
                 idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
+
+      EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(),
+                idf_supHC.getString(Coil_Heating_WaterFields::AirInletNodeName).get());
 
     }
 

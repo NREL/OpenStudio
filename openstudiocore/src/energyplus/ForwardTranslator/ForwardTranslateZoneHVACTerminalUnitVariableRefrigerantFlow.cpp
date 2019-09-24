@@ -199,12 +199,16 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
   model::ModelObject fan = modelObject.supplyAirFan();
 
   // Node Names
+  // Currently we default the Fan to DrawThrough, which means the components are ordered as such:
+  // InletNode ----- (Mixer) ---- CoolingCoil ----- HeatingCoil ----- Fan ---- (Supplemental Heating Coil) -------- OutletNode
 
   std::string inletNodeName;
   std::string outletNodeName;
   std::string mixerOutletNodeName;
   std::string coolOutletNodeName;
   std::string heatOutletNodeName;
+  std::string fanOutletNodeName;
+  // std::string supplementalOutletNodeName;
   std::string oaNodeName;
 
   auto coolingCoil = modelObject.coolingCoil();
@@ -226,7 +230,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
   heatOutletNodeName = modelObject.name().get() + " Heating Coil Outlet Node";
 
-  std::string supplementalOutletNodeName = modelObject.name().get() + " Supplemental Heating Coil Outlet Node";
+  fanOutletNodeName = modelObject.name().get() + " Fan Outlet Node";  // Will be overriden to outletNodeName if no supplemental Heating coil
+
+  // supplementalOutletNodeName = modelObject.name().get() + " Supplemental Heating Coil Outlet Node";
 
   oaNodeName = modelObject.name().get() + " Outdoor Air Node";
 
@@ -335,60 +341,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
     }
   }
 
-
   boost::optional<HVACComponent> _mo_supplementalHeatingCoil = modelObject.supplementalHeatingCoil();
-
-  if( _mo_supplementalHeatingCoil ) {
-    if( boost::optional<IdfObject> _supplementalHeatingCoil = translateAndMapModelObject(_mo_supplementalHeatingCoil.get()) )
-    {
-      // SupplementalHeatingCoilObjectType
-      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplementalHeatingCoilObjectType,
-                          _supplementalHeatingCoil->iddObject().name());
-
-      // SupplementalHeatingCoilObjectName
-      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplementalHeatingCoilName,
-                          _supplementalHeatingCoil->name().get());
-
-      std::string supplementalInletNodeName;
-      if (heatingCoil) {
-        // This is always true actually...
-         supplementalInletNodeName = heatOutletNodeName;
-      } else if( coolingCoil ) {
-        supplementalInletNodeName = coolOutletNodeName;
-      } else if( translateMixer() ) {
-        supplementalInletNodeName = mixerOutletNodeName;
-      } else {
-        supplementalInletNodeName = inletNodeName;
-      }
-
-
-      if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel )
-      {
-        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName, supplementalInletNodeName);
-        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName, supplementalOutletNodeName);
-      }
-      else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric )
-      {
-        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName, supplementalInletNodeName);
-        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName, supplementalOutletNodeName);
-      }
-      else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
-      {
-        _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, supplementalInletNodeName);
-        _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, supplementalOutletNodeName);
-      }
-      else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Steam )
-      {
-        // Not yet supported in OS
-        OS_ASSERT(false);
-      }
-      else
-      {
-        LOG(Error, "Unsupported supplemental heating Coil type for " << modelObject.briefDescription());
-        OS_ASSERT(false);
-      }
-    }
-  }
 
   if( boost::optional<IdfObject> _fan = translateAndMapModelObject(fan) )
   {
@@ -402,9 +355,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
 
     std::string fanInletNodeName;
 
-    if (_mo_supplementalHeatingCoil) {
-      fanInletNodeName = supplementalOutletNodeName;
-    } else if( heatingCoil ) {
+    if( heatingCoil ) {
       fanInletNodeName = heatOutletNodeName;
     } else if( coolingCoil ) {
       fanInletNodeName = coolOutletNodeName;
@@ -414,14 +365,58 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
       fanInletNodeName = inletNodeName;
     }
 
+    // If no supplemental coil, then directly the outletNodeName, otherwise it has its own name constructed above
+    if (!_mo_supplementalHeatingCoil) {
+      fanOutletNodeName = outletNodeName;
+    }
+
     if( fan.iddObject().type() == model::FanOnOff::iddObjectType() ) {
       _fan->setString(Fan_OnOffFields::AirInletNodeName,fanInletNodeName);
-      _fan->setString(Fan_OnOffFields::AirOutletNodeName,outletNodeName);
+      _fan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
     } else if( fan.iddObject().type() == model::FanConstantVolume::iddObjectType() ) {
       _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,fanInletNodeName);
-      _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,outletNodeName);
+      _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName);
     } else {
       LOG(Error, "VRF named " << modelObject.name().get() << " uses an unsupported fan type.");
+    }
+  }
+
+  if( _mo_supplementalHeatingCoil ) {
+    if( boost::optional<IdfObject> _supplementalHeatingCoil = translateAndMapModelObject(_mo_supplementalHeatingCoil.get()) )
+    {
+      // SupplementalHeatingCoilObjectType
+      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplementalHeatingCoilObjectType,
+                          _supplementalHeatingCoil->iddObject().name());
+
+      // SupplementalHeatingCoilObjectName
+      idfObject.setString(ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplementalHeatingCoilName,
+                          _supplementalHeatingCoil->name().get());
+
+      if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel )
+      {
+        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName, fanOutletNodeName);
+        _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName, outletNodeName);
+      }
+      else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric )
+      {
+        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName, fanOutletNodeName);
+        _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName, outletNodeName);
+      }
+      else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
+      {
+        _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirInletNodeName, fanOutletNodeName);
+        _supplementalHeatingCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName, outletNodeName);
+      }
+      else if( _supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Steam )
+      {
+        // Not yet supported in OS
+        OS_ASSERT(false);
+      }
+      else
+      {
+        LOG(Error, "Unsupported supplemental heating Coil type for " << modelObject.briefDescription());
+        OS_ASSERT(false);
+      }
     }
   }
 
