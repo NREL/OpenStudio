@@ -24142,13 +24142,13 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \object-list ScheduleNames
 
 OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
-  A1, \field Handle
-       \type handle
-       \required-field
+  A1 ,  \field Handle
+        \type handle
+        \required-field
   A2 ,  \field Name
         \type alpha
         \reference ZoneTerminalUnitNames
-       \reference ConnectionObject
+        \reference ConnectionObject
   A3 ,  \field Terminal Unit Availability schedule
         \required-field
         \type object-list
@@ -24215,7 +24215,7 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \required-field
         \type object-list
         \object-list FansCVandOnOff
-  A9,  \field Outside Air Mixer
+  A9 ,  \field Outside Air Mixer
         \type object-list
         \object-list OutdoorAirMixers
         \note If this field is blank, and outside air mixer is not used.
@@ -24264,11 +24264,13 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \type real
         \units C
         \autosizable
+        \required-field
         \note Supply air temperature from the supplemental heater will not exceed this value.
   N12;  \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
         \type real
         \maximum 21.0
         \units C
+        \required-field
         \note Supplemental heater will not operate when outdoor temperature exceeds this value.
 
 
