@@ -64,15 +64,12 @@ def fix_encoding(idf_path):
 if __name__ == '__main__':
     # Glob all .idf / .imf
     # Glob recursive Works in python3.4 and above only...
-    if sys.version_info > (3, 4):
-        test_files = gb.glob(os.path.join(ROOT_DIR, '**/*.i[d|m]f'),
-                             recursive=True)
-    else:
-        import fnmatch
-        test_files = []
-        for root, dirnames, filenames in os.walk(ROOT_DIR):
-            for filename in fnmatch.filter(filenames, '*.i[d|m]f'):
-                test_files.append(os.path.join(root, filename))
+    exts = ['idf', 'imf', 'osm', 'osc', 'cpp', 'hpp', 'in', 'txt', 'i',
+            'qs']
+    test_files = []
+    for ext in exts:
+        test_files += gb.glob(os.path.join(ROOT_DIR, '**/*.{}'.format(ext)),
+                              recursive=True)
 
     for test_file in test_files:
         success = check_file_encoding(test_file)
