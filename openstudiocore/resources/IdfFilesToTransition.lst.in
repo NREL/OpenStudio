@@ -1,3 +1,4 @@
+${CMAKE_SOURCE_DIR}/resources/energyplus/SimpleSurfaces/4ZoneWithShading_Simple_2.idf
 ${CMAKE_SOURCE_DIR}/resources/energyplus/5ZoneAirCooled/in.idf
 ${CMAKE_SOURCE_DIR}/resources/energyplus/BestestEx/in.idf
 ${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_roof_1/Large Office TSD_Nonresidential_3A_Roof_Attic and Other.idf
@@ -64,3 +65,10 @@ ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0200 su-alt wds rotate.
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0300 multiple windows.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0400 offset window error.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0500 window split into two gap.idf
+${CMAKE_SOURCE_DIR}/resources/utilities/Idf/DosLineEndingTest.idf
+${CMAKE_SOURCE_DIR}/resources/utilities/Idf/FormatPropertyTest_Unformatted.idf
+${CMAKE_SOURCE_DIR}/resources/utilities/Idf/MixedLineEndingTest.idf
+${CMAKE_SOURCE_DIR}/resources/utilities/Idf/CommentTest.idf
+${CMAKE_SOURCE_DIR}/resources/utilities/Idf/UnixLineEndingTest.idf
+${CMAKE_SOURCE_DIR}/resources/utilities/Idf/FormatPropertyTest_Formatted.idf
+${CMAKE_SOURCE_DIR}/src/energyplus/Resources/LCCusePriceEscalationDataSet2011.idf
