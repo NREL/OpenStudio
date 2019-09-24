@@ -47,8 +47,8 @@
 !
 ! Location:                Denver, CO
 !
-! Design Days:             DENVER_STAPLETON_CO_USA Annual Heating 99%, MaxDB=-16°C
-!                          DENVER_STAPLETON_CO_USA Annual Cooling (DB=>MWB) 1%, MaxDB=32.6°C MWB=15.5°C
+! Design Days:             DENVER_STAPLETON_CO_USA Annual Heating 99%, MaxDB=-16Â°C
+!                          DENVER_STAPLETON_CO_USA Annual Cooling (DB=>MWB) 1%, MaxDB=32.6Â°C MWB=15.5Â°C
 !
 ! Run Period (Weather File): Full Annual Simulation, DENVER_STAPLETON_CO_USA_WMO_724690
 !
