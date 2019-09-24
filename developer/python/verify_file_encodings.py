@@ -3,28 +3,23 @@
 
 """
 This script ensures that files are encoded in UTF-8.
-
-cf: https://github.com/NREL/EnergyPlus/issues/7213
-Winter in Winter 2019
 """
 
 __author__ = "Julien Marrec, EffiBEM"
 __email__ = "julien@effibem.com"
 
 import os
-import sys
 import json
-import io  # For Python 2 compat
 import glob as gb
 
 # Get a path that'll work if run directly from this folder (when running
-# locally usually) or the root of the repo (decent_ci for eg)
+# locally usually) or the root of the repo
 ROOT_DIR = os.path.abspath(
     os.path.join(os.path.dirname(os.path.realpath(__file__)),
                  "../../"))
 
 # If you want this script to fix the encoding problems it finds
-DO_FIX = True
+DO_FIX = False
 
 
 def check_file_encoding(idf_path):
@@ -33,7 +28,7 @@ def check_file_encoding(idf_path):
     print a json message to console otherwise for decent_ci to consume
     """
     try:
-        with io.open(idf_path, 'r', encoding='utf-8', errors='strict') as f:
+        with open(idf_path, 'r', encoding='utf-8', errors='strict') as f:
             f.read()
         return True
     except UnicodeDecodeError:
@@ -50,10 +45,10 @@ def check_file_encoding(idf_path):
 
 def fix_encoding(idf_path):
     try:
-        with io.open(idf_path, 'r', encoding='latin-1',
+        with open(idf_path, 'r', encoding='latin-1',
                      errors='strict') as f_in:
             idf_text = f_in.read()
-        with io.open(idf_path, 'w', encoding='utf-8') as f_out:
+        with open(idf_path, 'w', encoding='utf-8') as f_out:
             f_out.write(idf_text)
 
     except ValueError:
