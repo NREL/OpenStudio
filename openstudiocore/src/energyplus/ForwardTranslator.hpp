@@ -453,7 +453,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "9.1"
+#define ENERGYPLUS_VERSION "9.2"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -991,7 +991,7 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOutputEnergyManagementSystem(model::OutputEnergyManagementSystem & modelObject );
 
   boost::optional<IdfObject> translatePeople( model::People & modelObject );
-  
+
   boost::optional<IdfObject> translatePerformancePrecisionTradeoffs( model::PerformancePrecisionTradeoffs & modelObject );
 
   boost::optional<IdfObject> translatePhotovoltaicPerformanceEquivalentOneDiode(model::PhotovoltaicPerformanceEquivalentOneDiode & modelObject);
