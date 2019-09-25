@@ -64,6 +64,8 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   static std::vector<std::string> pumpControlTypeValues();
 
+  static std::vector<std::string> designPowerSizingMethodValues();
+
   /** @name Getters */
   //@{
 
