@@ -747,7 +747,7 @@ if(NOT SWIG_EXECUTABLE)
 endif()
 
 # The conan-provided binary has a built-in swiglib (`swig -swiglib`) that points to the build box on which it was built, which is problematic for us.
-set(SWIG_LIB "${CONAN_SWIG_INSTALLER_ROOT}/share/swig/4.0.0")
+set(SWIG_LIB "${CONAN_SWIG_INSTALLER_ROOT}/share/swig/4.0.1")
 
 # Export SWIG to parent scope
 if(hasParent)
