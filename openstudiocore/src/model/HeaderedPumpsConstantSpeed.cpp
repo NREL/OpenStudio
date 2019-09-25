@@ -206,7 +206,7 @@ namespace detail {
     return result;
   }
 
-  bool HeaderedPumpsConstantSpeed_Impl::setFlowSequencingControlScheme(std::string flowSequencingControlScheme) {
+  bool HeaderedPumpsConstantSpeed_Impl::setFlowSequencingControlScheme(const std::string& flowSequencingControlScheme) {
     bool result = setString(OS_HeaderedPumps_ConstantSpeedFields::FlowSequencingControlScheme, flowSequencingControlScheme);
     return result;
   }
@@ -241,12 +241,12 @@ namespace detail {
     return result;
   }
 
-  bool HeaderedPumpsConstantSpeed_Impl::setPumpControlType(std::string pumpControlType) {
+  bool HeaderedPumpsConstantSpeed_Impl::setPumpControlType(const std::string& pumpControlType) {
     bool result = setString(OS_HeaderedPumps_ConstantSpeedFields::PumpControlType, pumpControlType);
     return result;
   }
 
-  bool HeaderedPumpsConstantSpeed_Impl::setPumpFlowRateSchedule(Schedule& schedule) {
+  bool HeaderedPumpsConstantSpeed_Impl::setPumpFlowRateSchedule(const Schedule& schedule) {
     bool result = setSchedule(OS_HeaderedPumps_ConstantSpeedFields::PumpFlowRateSchedule,
                               "HeaderedPumpsConstantSpeed",
                               "Pump Flow Rate Schedule",
@@ -444,7 +444,7 @@ bool HeaderedPumpsConstantSpeed::setNumberofPumpsinBank(int numberofPumpsinBank)
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setNumberofPumpsinBank(numberofPumpsinBank);
 }
 
-bool HeaderedPumpsConstantSpeed::setFlowSequencingControlScheme(std::string flowSequencingControlScheme) {
+bool HeaderedPumpsConstantSpeed::setFlowSequencingControlScheme(const std::string& flowSequencingControlScheme) {
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setFlowSequencingControlScheme(flowSequencingControlScheme);
 }
 
@@ -468,11 +468,11 @@ bool HeaderedPumpsConstantSpeed::setFractionofMotorInefficienciestoFluidStream(d
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setFractionofMotorInefficienciestoFluidStream(fractionofMotorInefficienciestoFluidStream);
 }
 
-bool HeaderedPumpsConstantSpeed::setPumpControlType(std::string pumpControlType) {
+bool HeaderedPumpsConstantSpeed::setPumpControlType(const std::string& pumpControlType) {
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setPumpControlType(pumpControlType);
 }
 
-bool HeaderedPumpsConstantSpeed::setPumpFlowRateSchedule(Schedule& schedule) {
+bool HeaderedPumpsConstantSpeed::setPumpFlowRateSchedule(const Schedule& schedule) {
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setPumpFlowRateSchedule(schedule);
 }
 
