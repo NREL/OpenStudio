@@ -4710,6 +4710,33 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+
+    // Four fields were added but only the last (End Use Subcat) was implemented, but withotu transition rules either
+    } else if ((iddname == "OS:HeaderedPumps:ConstantSpeed") || (iddname == "OS:HeaderedPumps:VariableSpeed")) {
+      auto iddObject = idd_2_9_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields() - 4; ++i) {
+        if ((value = object.getString(i))) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+       unsigned i = object.numFields() - 4;
+      // DesignPowerSizingMethod
+      newObject.setString(i++, "PowerPerFlowPerPressure");
+      // DesignElectricPowerPerUnitFlowRate
+      newObject.setDouble(i++, 348701.1);
+      // DesignElectricPowerPerUnitFlowRate
+      newObject.setDouble(i++, 1.282051282);
+
+      // EndUseSubcategory
+      if (value = object.getString(i)) {
+        newObject.setString(i, value.get());
+      } else {
+        newObject.setString(i,"General");
+      }
+
     // No-op
     } else {
       ss << object;
