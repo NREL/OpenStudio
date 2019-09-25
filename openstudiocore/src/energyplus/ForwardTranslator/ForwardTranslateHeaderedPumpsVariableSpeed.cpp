@@ -169,6 +169,23 @@ boost::optional<IdfObject> ForwardTranslator::translateHeaderedPumpsVariableSpee
     idfObject.setDouble(HeaderedPumps_VariableSpeedFields::SkinLossRadiativeFraction,value);
   }
 
+  {
+    auto s = modelObject.designPowerSizingMethod();
+    idfObject.setString(HeaderedPumps_VariableSpeedFields::DesignPowerSizingMethod, s);
+  }
+
+
+  {
+    auto value = modelObject.designElectricPowerPerUnitFlowRate();
+    idfObject.setDouble(HeaderedPumps_VariableSpeedFields::DesignElectricPowerperUnitFlowRate, value);
+  }
+
+
+  {
+    auto value = modelObject.designShaftPowerPerUnitFlowRatePerUnitHead();
+    idfObject.setDouble(HeaderedPumps_VariableSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead, value);
+  }
+
   // End Use Subcategory
   idfObject.setString(HeaderedPumps_VariableSpeedFields::EndUseSubcategory, modelObject.endUseSubcategory());
 
