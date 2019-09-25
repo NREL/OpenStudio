@@ -114,7 +114,7 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   bool setNumberofPumpsinBank(int numberofPumpsinBank);
 
-  bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
+  bool setFlowSequencingControlScheme(const std::string& flowSequencingControlScheme);
 
   bool setRatedPumpHead(double ratedPumpHead);
 
@@ -126,9 +126,9 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   bool setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream);
 
-  bool setPumpControlType(std::string pumpControlType);
+  bool setPumpControlType(const std::string& pumpControlType);
 
-  bool setPumpFlowRateSchedule(Schedule& schedule);
+  bool setPumpFlowRateSchedule(const Schedule& schedule);
 
   void resetPumpFlowRateSchedule();
 
