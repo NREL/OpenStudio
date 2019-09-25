@@ -4731,11 +4731,15 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
       newObject.setDouble(i++, 1.282051282);
 
       // EndUseSubcategory
-      if (value = object.getString(i)) {
+      if ((value = object.getString(i))) {
         newObject.setString(i, value.get());
       } else {
         newObject.setString(i,"General");
       }
+
+      // Register refactored
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
 
     // No-op
     } else {
