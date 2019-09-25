@@ -119,6 +119,12 @@ namespace detail {
 
     double skinLossRadiativeFraction() const;
 
+    std::string designPowerSizingMethod() const;
+
+    double designElectricPowerPerUnitFlowRate() const;
+
+    double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
     boost::optional<double> autosizedTotalRatedFlowRate() const ;
 
     boost::optional<double> autosizedRatedPowerConsumption() const ;
@@ -169,7 +175,13 @@ namespace detail {
 
     bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
 
-    bool setEndUseSubcategory(const std::string & endUseSubcategory);
+    bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
+
+    bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+    bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     //@}
     /** @name Other */
