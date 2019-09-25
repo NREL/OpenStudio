@@ -4716,25 +4716,31 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
       auto iddObject = idd_2_9_0.getObject(iddname);
       IdfObject newObject(iddObject.get());
 
-      for (size_t i = 0; i < object.numFields() - 4; ++i) {
+      for (size_t i = 0; i < object.numFields(); ++i) {
         if ((value = object.getString(i))) {
           newObject.setString(i, value.get());
         }
       }
 
-       unsigned i = object.numFields() - 4;
+      unsigned currentIndex;
+      if (iddname == "OS:HeaderedPumps:ConstantSpeed") {
+        currentIndex = 15;
+      } else {
+        currentIndex = 20;
+      }
+
       // DesignPowerSizingMethod
-      newObject.setString(i++, "PowerPerFlowPerPressure");
+      newObject.setString(currentIndex++, "PowerPerFlowPerPressure");
       // DesignElectricPowerPerUnitFlowRate
-      newObject.setDouble(i++, 348701.1);
+      newObject.setDouble(currentIndex++, 348701.1);
       // DesignElectricPowerPerUnitFlowRate
-      newObject.setDouble(i++, 1.282051282);
+      newObject.setDouble(currentIndex++, 1.282051282);
 
       // EndUseSubcategory
-      if ((value = object.getString(i))) {
-        newObject.setString(i, value.get());
+      if ((value = object.getString(currentIndex))) {
+        newObject.setString(currentIndex, value.get());
       } else {
-        newObject.setString(i,"General");
+        newObject.setString(currentIndex,"General");
       }
 
       // Register refactored
