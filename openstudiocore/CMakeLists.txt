@@ -70,7 +70,7 @@ set(ENERGYPLUS_VERSION_MINOR 2)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "d67e9e635f")
+set(ENERGYPLUS_BUILD_SHA "4cbc4940aa")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
