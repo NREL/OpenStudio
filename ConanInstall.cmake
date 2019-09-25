@@ -32,8 +32,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_add_remote(NAME nrel
     URL https://api.bintray.com/conan/commercialbuilding/nrel)
 
-  #conan_add_remote(NAME jmarrec
-  #  URL https://api.bintray.com/conan/jmarrec/testing)
+  conan_add_remote(NAME jmarrec
+    URL https://api.bintray.com/conan/jmarrec/testing)
 
   # Convenience variable to set a consistent version for individual boost packages
   set(BOOST_VERSION "1.69.0")
@@ -86,7 +86,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     cpprestsdk/2.10.13@bincrafters/stable
     websocketpp/0.8.1@bincrafters/stable
     geographiclib/1.49@bincrafters/stable
-    swig_installer/4.0.0@bincrafters/stable
+    # 4.0.1 should fix a C++17 issue with unexpectted_handler an set_unexpected but not available in bincrafters yet
+    swig_installer/4.0.1@jmarrec/testing
     ${CONAN_GTEST}
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
     OPTIONS ${CONAN_OPTIONS}
