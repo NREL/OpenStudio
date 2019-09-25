@@ -246,7 +246,7 @@ namespace detail {
     return result;
   }
 
-  bool HeaderedPumpsConstantSpeed_Impl::setPumpFlowRateSchedule(const Schedule& schedule) {
+  bool HeaderedPumpsConstantSpeed_Impl::setPumpFlowRateSchedule(Schedule& schedule) {
     bool result = setSchedule(OS_HeaderedPumps_ConstantSpeedFields::PumpFlowRateSchedule,
                               "HeaderedPumpsConstantSpeed",
                               "Pump Flow Rate Schedule",
@@ -511,7 +511,7 @@ bool HeaderedPumpsConstantSpeed::setPumpControlType(const std::string& pumpContr
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setPumpControlType(pumpControlType);
 }
 
-bool HeaderedPumpsConstantSpeed::setPumpFlowRateSchedule(const Schedule& schedule) {
+bool HeaderedPumpsConstantSpeed::setPumpFlowRateSchedule(Schedule& schedule) {
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setPumpFlowRateSchedule(schedule);
 }
 

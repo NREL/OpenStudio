@@ -165,7 +165,7 @@ namespace detail {
 
     bool setPumpControlType(const std::string& pumpControlType);
 
-    bool setPumpFlowRateSchedule(const Schedule& schedule);
+    bool setPumpFlowRateSchedule(Schedule& schedule);
 
     void resetPumpFlowRateSchedule();
 

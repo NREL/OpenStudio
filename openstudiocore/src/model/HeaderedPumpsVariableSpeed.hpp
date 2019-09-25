@@ -150,7 +150,7 @@ class MODEL_API HeaderedPumpsVariableSpeed : public StraightComponent {
 
   bool setPumpControlType(const std::string& pumpControlType);
 
-  bool setPumpFlowRateSchedule(const Schedule& schedule);
+  bool setPumpFlowRateSchedule(Schedule& schedule);
 
   void resetPumpFlowRateSchedule();
 
