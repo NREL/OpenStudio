@@ -119,6 +119,12 @@ namespace detail {
 
     double skinLossRadiativeFraction() const;
 
+    std::string designPowerSizingMethod() const;
+
+    double designElectricPowerPerUnitFlowRate() const;
+
+    double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
     boost::optional<double> autosizedTotalRatedFlowRate() const ;
 
     boost::optional<double> autosizedRatedPowerConsumption() const ;
@@ -135,7 +141,7 @@ namespace detail {
 
     bool setNumberofPumpsinBank(int numberofPumpsinBank);
 
-    bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
+    bool setFlowSequencingControlScheme(const std::string& flowSequencingControlScheme);
 
     bool setRatedPumpHead(double ratedPumpHead);
 
@@ -157,7 +163,7 @@ namespace detail {
 
     bool setMinimumFlowRateFraction(double minimumFlowRateFraction);
 
-    bool setPumpControlType(std::string pumpControlType);
+    bool setPumpControlType(const std::string& pumpControlType);
 
     bool setPumpFlowRateSchedule(Schedule& schedule);
 
@@ -169,7 +175,13 @@ namespace detail {
 
     bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
 
-    bool setEndUseSubcategory(const std::string & endUseSubcategory);
+    bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
+
+    bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+    bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
     //@}
     /** @name Other */

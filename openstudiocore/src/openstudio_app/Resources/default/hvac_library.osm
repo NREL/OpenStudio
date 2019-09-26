@@ -10797,7 +10797,10 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
   0.96265085,                             !- Cooling Compressor Power Coefficient 2
   8.69489229,                             !- Cooling Compressor Power Coefficient 3
   0.02501669,                             !- Cooling Compressor Power Coefficient 4
-  -0.20132665;                            !- Cooling Compressor Power Coefficient 5
+  -0.20132665,                            !- Cooling Compressor Power Coefficient 5
+  8.0,                                    !- Reference Coefficient of Performance
+  1.0,                                    !- Sizing Factor
+  ;                                       !- Companion Heating Heat Pump Name
 
 OS:HeatPump:WaterToWater:EquationFit:Heating,
   {80f71496-82ae-4ad8-b677-1ca17b0ca84a}, !- Handle
@@ -10820,8 +10823,9 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
   1.29660976,                             !- Heating Compressor Power Coefficient 3
   -0.21629222,                            !- Heating Compressor Power Coefficient 4
   0.033862378,                            !- Heating Compressor Power Coefficient 5
-  ,                                       !- Reference Coefficient of Performance
-  ;                                       !- Sizing Factor
+  7.5,                                    !- Reference Coefficient of Performance
+  1.0,                                    !- Sizing Factor
+  ;                                       !- Companion Cooling Heat Pump Name
 
 OS:Generator:MicroTurbine,
   {5f037e71-1ba0-4b22-9d0d-0ab372356d49}, !- Handle
