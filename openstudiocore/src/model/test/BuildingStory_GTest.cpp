@@ -105,7 +105,7 @@ TEST_F(ModelFixture, BuildingStory_getDefaultSchedule)
 
   // BuildingStory, Building and its SpaceType both have a lighting schedule. It should return the BuildingStory's one in priority
   ASSERT_TRUE(buildingStory.getDefaultSchedule(DefaultScheduleType::LightingSchedule));
-  EXPECT_EQ(sch_bldg_people.handle(), buildingStory.getDefaultSchedule(DefaultScheduleType::LightingSchedule)->handle());
+  EXPECT_EQ(sch_bs_lighting.handle(), buildingStory.getDefaultSchedule(DefaultScheduleType::LightingSchedule)->handle());
 
   // BuldingStory doesn't have one, but Building and its SpaceType both have a people schedule. It should return the building's one in priority
   ASSERT_TRUE(buildingStory.getDefaultSchedule(DefaultScheduleType::NumberofPeopleSchedule));
