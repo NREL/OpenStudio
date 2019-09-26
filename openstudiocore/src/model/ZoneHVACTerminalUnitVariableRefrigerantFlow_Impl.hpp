@@ -75,6 +75,22 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+    virtual unsigned inletPort() const override;
+
+    virtual unsigned outletPort() const override;
+
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -123,27 +139,34 @@ namespace detail {
 
     double ratedTotalHeatingCapacitySizingRatio() const;
 
-    boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+    // Supplemental Heating Coil Name
+    boost::optional<HVACComponent> supplementalHeatingCoil() const;
+    bool setSupplementalHeatingCoil(const HVACComponent& coil);
+    void resetSupplementalHeatingCoil();
 
-    boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const ;
+    // Maximum Supply Air Temperature from Supplemental Heater (autosized)
+    boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
+    bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const;
+    bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
+    void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
-    boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+    // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation (default 21C)
+    double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
+    bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
 
-    boost::optional<double> autosizedSupplyAirFlowRateWhenNoHeatingisNeeded() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 
-    boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const;
 
-    boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const;
 
-    boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoHeatingisNeeded() const;
 
-    virtual void autosize() override;
+    boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const;
 
-    virtual void applySizingValues() override;
+    boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
-
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+    boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
     //@}
     /** @name Setters */
@@ -191,19 +214,12 @@ namespace detail {
     /** @name Other */
     //@{
 
-    unsigned inletPort() const override;
-
-    unsigned outletPort() const override;
-
     bool setSupplyAirFan(const HVACComponent & component);
 
     bool setCoolingCoil(const CoilCoolingDXVariableRefrigerantFlow & component);
 
     bool setHeatingCoil(const CoilHeatingDXVariableRefrigerantFlow & component);
 
-    ModelObject clone(Model model) const override;
-
-    std::vector<ModelObject> children() const override;
 
     //@}
    protected:
@@ -214,6 +230,10 @@ namespace detail {
     boost::optional<Schedule> optionalTerminalUnitAvailabilityschedule() const;
     boost::optional<Schedule> optionalSupplyAirFanOperatingModeSchedule() const;
     boost::optional<HVACComponent> optionalSupplyAirFan() const;
+
+    boost::optional<ModelObject> supplementalHeatingCoilAsModelObject() const;
+    bool setSupplementalHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject);
+
   };
 
 } // detail

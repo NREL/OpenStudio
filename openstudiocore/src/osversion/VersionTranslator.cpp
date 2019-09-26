@@ -4711,6 +4711,30 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
       ss << newObject;
 
 
+    } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
+      auto iddObject = idd_2_9_0.getObject("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow");
+      IdfObject newObject(iddObject.get());
+
+      // Added fields at end, so copy everything existing in place
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+      // 21 = AVM List
+      // 22 = Design Spec ZoneHVAC Sizing
+      // 23 = Supplemental Heating Coil (optional)
+      // Maximum SAT for Supplemental Heater
+      newObject.setString(24, "Autosize");
+      // Maximum OATdb for Supplemental Heater
+      newObject.setDouble(25, 21.0);
+
+      // Register refactored
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+
     // Four fields were added but only the last (End Use Subcat) was implemented, but withotu transition rules either
     } else if ((iddname == "OS:HeaderedPumps:ConstantSpeed") || (iddname == "OS:HeaderedPumps:VariableSpeed")) {
       auto iddObject = idd_2_9_0.getObject(iddname);

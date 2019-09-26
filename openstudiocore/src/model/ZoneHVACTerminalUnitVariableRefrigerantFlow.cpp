@@ -424,6 +424,80 @@ namespace detail {
     return setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::HeatingCoil,component.handle());
   }
 
+
+  boost::optional<HVACComponent> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::supplementalHeatingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplementalHeatingCoilName);
+  }
+
+
+  boost::optional<ModelObject> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::supplementalHeatingCoilAsModelObject() const {
+    OptionalModelObject result;
+    if (boost::optional<HVACComponent> _coil = supplementalHeatingCoil()) {
+      result = _coil.get();
+    }
+    return result;
+  }
+
+  bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::setSupplementalHeatingCoil(const HVACComponent& coil) {
+    bool result = setPointer(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplementalHeatingCoilName, coil.handle());
+    return result;
+  }
+
+  bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::setSupplementalHeatingCoilAsModelObject(const boost::optional<ModelObject>& modelObject) {
+    if (modelObject) {
+      OptionalHVACComponent intermediate = modelObject->optionalCast<HVACComponent>();
+      if (intermediate) {
+        HVACComponent heatingCoilName(*intermediate);
+        setSupplementalHeatingCoil(heatingCoilName);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::resetSupplementalHeatingCoil() {
+    bool result = setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::SupplementalHeatingCoilName, "");
+    OS_ASSERT(result);
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::maximumSupplyAirTemperaturefromSupplementalHeater() const {
+    boost::optional<double> value = getDouble(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumSupplyAirTemperaturefromSupplementalHeater, false);
+    return value;
+  }
+
+  bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
+    bool result = setDouble(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumSupplyAirTemperaturefromSupplementalHeater, maximumSupplyAirTemperaturefromSupplementalHeater);
+    // OS_ASSERT(result);
+    return result;
+  }
+
+  bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumSupplyAirTemperaturefromSupplementalHeater, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "Autosize");
+    }
+    return result;
+  }
+
+  void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
+    bool result = setString(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumSupplyAirTemperaturefromSupplementalHeater, "Autosize");
+    OS_ASSERT(result);
+  }
+
+  double ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const {
+    boost::optional<double> value = getDouble(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
+    bool result = setDouble(OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlowFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+    // OS_ASSERT(result);
+    return result;
+  }
+
+
   ModelObject ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::clone(Model model) const
   {
     ModelObject terminalClone = ZoneHVACComponent_Impl::clone(model);
@@ -438,6 +512,11 @@ namespace detail {
     if( auto coil = heatingCoil() ) {
       auto coilClone = coil->clone(model).cast<CoilHeatingDXVariableRefrigerantFlow>();
       terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setHeatingCoil(coilClone);
+    }
+
+    if (auto coil = supplementalHeatingCoil()) {
+      auto coilClone = coil->clone(model).cast<HVACComponent>();
+      terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplementalHeatingCoil(coilClone);
     }
 
     terminalClone.getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplyAirFan(fanClone);
@@ -460,6 +539,10 @@ namespace detail {
     }
 
     if( auto coil = heatingCoil() ) {
+      result.push_back(coil.get());
+    }
+
+    if (auto coil = supplementalHeatingCoil()) {
       result.push_back(coil.get());
     }
 
@@ -585,6 +668,9 @@ ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrige
 
   setRatedTotalHeatingCapacitySizingRatio(1.0);
 
+  autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+  setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
+
   CoilCoolingDXVariableRefrigerantFlow coolingCoil(model);
   coolingCoil.setName(name().get() + " Cooling Coil");
   getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coolingCoil);
@@ -630,6 +716,9 @@ ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrige
   setZoneTerminalUnitOffParasiticElectricEnergyUse(20);
 
   setRatedTotalHeatingCapacitySizingRatio(1.0);
+
+  autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+  setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(21.0);
 
   getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setCoolingCoil(coolingCoil);
 
@@ -817,6 +906,42 @@ bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setCoolingCoil(const CoilCooli
 
 bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setHeatingCoil(const CoilHeatingDXVariableRefrigerantFlow & coil) {
   return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setHeatingCoil(coil);
+}
+
+boost::optional<HVACComponent> ZoneHVACTerminalUnitVariableRefrigerantFlow::supplementalHeatingCoil() const {
+  return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->supplementalHeatingCoil();
+}
+
+bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setSupplementalHeatingCoil(const HVACComponent& coil) {
+  return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setSupplementalHeatingCoil(coil);
+}
+
+void ZoneHVACTerminalUnitVariableRefrigerantFlow::resetSupplementalHeatingCoil() {
+  getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->resetSupplementalHeatingCoil();
+}
+
+boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow::maximumSupplyAirTemperaturefromSupplementalHeater() const {
+  return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->maximumSupplyAirTemperaturefromSupplementalHeater();
+}
+
+bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater) {
+  return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setMaximumSupplyAirTemperaturefromSupplementalHeater(maximumSupplyAirTemperaturefromSupplementalHeater);
+}
+
+bool ZoneHVACTerminalUnitVariableRefrigerantFlow::isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const {
+  return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized();
+}
+
+void ZoneHVACTerminalUnitVariableRefrigerantFlow::autosizeMaximumSupplyAirTemperaturefromSupplementalHeater() {
+  getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+}
+
+bool ZoneHVACTerminalUnitVariableRefrigerantFlow::setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation) {
+  return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+}
+
+double ZoneHVACTerminalUnitVariableRefrigerantFlow::maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const {
+  return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
 }
 
 /// @cond

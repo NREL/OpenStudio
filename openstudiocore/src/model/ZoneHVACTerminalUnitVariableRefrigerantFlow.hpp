@@ -159,19 +159,40 @@ class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACCom
 
   bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const ;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+  // \field Availability Manager List Name
+  // \field Design Specification ZoneHVAC Sizing Object Name
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoHeatingisNeeded() const ;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+  // Supplemental Heating Coil Name
+  boost::optional<HVACComponent> supplementalHeatingCoil() const;
+  bool setSupplementalHeatingCoil(const HVACComponent& coil);
+  void resetSupplementalHeatingCoil();
 
-  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+  // Maximum Supply Air Temperature from Supplemental Heater (autosized)
+  boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
+  bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const;
+  bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
+  void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
-  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+  // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation (default 21C)
+  double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
+  bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const;
+
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const;
+
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoHeatingisNeeded() const;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const;
+
+  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
 
 
