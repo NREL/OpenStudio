@@ -591,6 +591,36 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<DefaultScheduleSet>(OS_BuildingFields::DefaultScheduleSetName);
   }
 
+  boost::optional<Schedule> Building_Impl::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const
+  {
+    boost::optional<Schedule> result;
+    boost::optional<DefaultScheduleSet> defaultScheduleSet;
+    boost::optional<SpaceType> spaceType;
+
+    // first check this object (building)
+    defaultScheduleSet = this->defaultScheduleSet();
+    if (defaultScheduleSet){
+      result = defaultScheduleSet->getDefaultSchedule(defaultScheduleType);
+      if (result){
+        return result;
+      }
+    }
+
+
+    // then check building's space type
+    if (boost::optional<SpaceType> spaceType = this->spaceType()) {
+      defaultScheduleSet = spaceType->defaultScheduleSet();
+      if (defaultScheduleSet){
+        result = defaultScheduleSet->getDefaultSchedule(defaultScheduleType);
+        if (result){
+          return result;
+        }
+      }
+    }
+
+    return boost::none;
+  }
+
   bool Building_Impl::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet)
   {
     return setPointer(OS_BuildingFields::DefaultScheduleSetName, defaultScheduleSet.handle());
