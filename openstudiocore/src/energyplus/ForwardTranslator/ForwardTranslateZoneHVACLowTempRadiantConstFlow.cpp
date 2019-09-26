@@ -147,7 +147,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   }
 
   //field Hydronic Tubing Length
- if( (value = modelObject.hydronicTubingLength()) )
+  if (modelObject.isHydronicTubingLengthAutosized())
+  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength, "Autosize");
+  }
+  else if( (value = modelObject.hydronicTubingLength()) )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength,value.get());
   }
@@ -159,7 +163,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   }
 
   //field Rated Flow Rate
-  if( (value = modelObject.ratedFlowRate()) )
+  if (modelObject.isRatedFlowRateAutosized())
+  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate, "Autosize");
+  }
+  else if( (value = modelObject.ratedFlowRate()) )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate,value.get());
   }
