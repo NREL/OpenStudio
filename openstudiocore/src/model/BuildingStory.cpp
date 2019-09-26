@@ -367,6 +367,10 @@ boost::optional<DefaultScheduleSet> BuildingStory::defaultScheduleSet() const
   return getImpl<detail::BuildingStory_Impl>()->defaultScheduleSet();
 }
 
+boost::optional<Schedule> BuildingStory::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+  return getImpl<detail::BuildingStory_Impl>()->getDefaultSchedule(defaultScheduleType);
+}
+
 bool BuildingStory::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet)
 {
   return getImpl<detail::BuildingStory_Impl>()->setDefaultScheduleSet(defaultScheduleSet);
