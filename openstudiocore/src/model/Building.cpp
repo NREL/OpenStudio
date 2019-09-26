@@ -1329,6 +1329,10 @@ boost::optional<DefaultScheduleSet> Building::defaultScheduleSet() const
   return getImpl<detail::Building_Impl>()->defaultScheduleSet();
 }
 
+boost::optional<Schedule> Building::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+  return getImpl<detail::Building_Impl>()->getDefaultSchedule(defaultScheduleType);
+}
+
 bool Building::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet)
 {
   return getImpl<detail::Building_Impl>()->setDefaultScheduleSet(defaultScheduleSet);
