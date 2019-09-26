@@ -44,6 +44,8 @@
 #include "DefaultConstructionSet_Impl.hpp"
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "ShadingSurface.hpp"
