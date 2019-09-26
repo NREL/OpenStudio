@@ -916,11 +916,11 @@ void ZoneHVACLowTempRadiantConstFlow::removeFromThermalZone()
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->removeFromThermalZone();
 }
 
-boost::optional<double> ZoneHVACLowTempRadiantConstFlow::autosizedHydronicTubingLength() {
+boost::optional<double> ZoneHVACLowTempRadiantConstFlow::autosizedHydronicTubingLength() const {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->autosizedHydronicTubingLength();
 }
 
-boost::optional<double> ZoneHVACLowTempRadiantConstFlow::autosizedRatedFlowRate() {
+boost::optional<double> ZoneHVACLowTempRadiantConstFlow::autosizedRatedFlowRate() const {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->autosizedRatedFlowRate();
 }
 
