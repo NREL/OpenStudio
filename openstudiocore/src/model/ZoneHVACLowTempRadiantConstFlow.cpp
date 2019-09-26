@@ -623,12 +623,12 @@ namespace detail {
     return getAutosizedValue("Design Size Maximum Water Flow", "m3/s");
   }
 
- void ZoneHVACWaterToAirHeatPump_Impl::autosize() {
+ void ZoneHVACLowTempRadiantConstFlow_Impl::autosize() {
     autosizeHydronicTubingLength();
     autosizeRatedFlowRate();
   }
 
-  void ZoneHVACWaterToAirHeatPump_Impl::applySizingValues() {
+  void ZoneHVACLowTempRadiantConstFlow_Impl::applySizingValues() {
     boost::optional<double> val;
     val = autosizedHydronicTubingLength();
     if (val) {
