@@ -1176,6 +1176,9 @@ OS:Site:WaterMainsTemperature,
        \required-field
        \key Schedule
        \key Correlation
+       \key CorrelationFromWeatherFile
+       \note If calculation method is CorrelationFromWeatherFile, the two numeric input
+       \note fields are ignored. Instead, EnergyPlus calculates them from weather file.
   A3, \field Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
