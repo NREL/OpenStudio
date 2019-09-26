@@ -67,6 +67,8 @@
 #include "../PortList_Impl.hpp"
 #include "../OutputMeter.hpp"
 #include "../OutputMeter_Impl.hpp"
+#include "../DefaultScheduleSet.hpp"
+#include "../ScheduleConstant.hpp"
 
 #include "../../utilities/data/Attribute.hpp"
 #include "../../utilities/geometry/Geometry.hpp"
@@ -527,4 +529,36 @@ TEST_F(ModelFixture, Building_remove_exampleModel) {
   // For now this tests that at least we don't end up with bad connections
   ASSERT_EQ(1, m.getModelObjects<AirLoopHVAC>().size());
   EXPECT_NO_THROW(m.getModelObjects<AirLoopHVAC>()[0].components());
+}
+
+
+TEST_F(ModelFixture, Building_getDefaultSchedule)
+{
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+  DefaultScheduleSet bldgDefaultScheduleSet(model);
+  ScheduleConstant sch_bldg_people(model);
+  EXPECT_TRUE(bldgDefaultScheduleSet.setNumberofPeopleSchedule(sch_bldg_people));
+  EXPECT_TRUE(building.setDefaultScheduleSet(bldgDefaultScheduleSet));
+
+
+  SpaceType spaceType(model);
+  EXPECT_TRUE(building.setSpaceType(spaceType));
+
+  DefaultScheduleSet spDefaultScheduleSet(model);
+  ScheduleConstant sch_sp_people(model);
+  EXPECT_TRUE(spDefaultScheduleSet.setNumberofPeopleSchedule(sch_sp_people));
+  ScheduleConstant sch_sp_hours(model);
+  EXPECT_TRUE(spDefaultScheduleSet.setHoursofOperationSchedule(sch_sp_hours));
+  EXPECT_TRUE(spaceType.setDefaultScheduleSet(spDefaultScheduleSet));
+
+
+  // Building and its SpaceType both have a people schedule. It should return the building's one in priority
+  ASSERT_TRUE(building.getDefaultSchedule(DefaultScheduleType::NumberofPeopleSchedule));
+  EXPECT_EQ(sch_bldg_people.handle(), building.getDefaultSchedule(DefaultScheduleType::NumberofPeopleSchedule)->handle());
+
+  // Building doesn't have an hours of operation schedule, but its SpaceType does so it should return the SpaceType's one
+  ASSERT_TRUE(building.getDefaultSchedule(DefaultScheduleType::HoursofOperationSchedule));
+  EXPECT_EQ(sch_sp_hours.handle(), building.getDefaultSchedule(DefaultScheduleType::HoursofOperationSchedule)->handle());
 }
