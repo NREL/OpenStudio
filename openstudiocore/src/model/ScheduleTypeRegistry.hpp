@@ -81,7 +81,9 @@ struct MODEL_API ScheduleType {
 /** \relates ScheduleType */
 typedef std::vector<ScheduleType> ScheduleTypeVector;
 
-/** Returns true if candidate is consistent with scheduleType. \relates ScheduleType */
+/** Returns true if candidate is consistent with scheduleType.
+ * When isStringent is true, we also check that if scheduleType does not have a lower/upper bound, then candidate must not have them either.
+ * \relates ScheduleType */
 MODEL_API bool isCompatible(const ScheduleType& scheduleType,
                             const ScheduleTypeLimits& candidate,
                             bool isStringent = false);
@@ -134,8 +136,7 @@ typedef openstudio::Singleton<ScheduleTypeRegistrySingleton> ScheduleTypeRegistr
  *  \relates ScheduleTypeRegistrySingleton */
 MODEL_API bool isCompatible(const std::string& className,
                             const std::string& scheduleDisplayName,
-                            const ScheduleTypeLimits& candidate,
-                            bool isStringent = false);
+                            const ScheduleTypeLimits& candidate);
 
 /** If schedule.scheduleTypeLimtis(), returns true if that ScheduleTypeLimits isCompatible and
  *  otherwise returns false. Otherwise, uses
