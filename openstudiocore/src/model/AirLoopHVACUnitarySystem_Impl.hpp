@@ -124,6 +124,8 @@ namespace detail {
 
     bool isDOASDXCoolingCoilLeavingMinimumAirTemperatureDefaulted() const;
 
+    bool isDOASDXCoolingCoilLeavingMinimumAirTemperatureAutosized() const;
+
     std::string latentLoadControl() const;
 
     bool isLatentLoadControlDefaulted() const;
@@ -224,6 +226,8 @@ namespace detail {
 
     boost::optional<double> autosizedMaximumSupplyAirTemperature() const ;
 
+    boost::optional<double> autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature() const;
+
     virtual void autosize() override;
 
     virtual void applySizingValues() override;
@@ -283,6 +287,8 @@ namespace detail {
     bool setDOASDXCoolingCoilLeavingMinimumAirTemperature(double dOASDXCoolingCoilLeavingMinimumAirTemperature);
 
     void resetDOASDXCoolingCoilLeavingMinimumAirTemperature();
+
+    void autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature();
 
     bool setLatentLoadControl(std::string latentLoadControl);
 
