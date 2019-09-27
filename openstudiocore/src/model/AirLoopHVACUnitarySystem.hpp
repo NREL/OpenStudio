@@ -112,7 +112,10 @@ class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
   /** As of EnergyPlus version 8.7.0 this field maps to MinimumSupplyAirTemperature **/
   double dOASDXCoolingCoilLeavingMinimumAirTemperature() const;
 
+  // Note JM 2019-09-27: I would probably make this field \required instead and remove this.
   bool isDOASDXCoolingCoilLeavingMinimumAirTemperatureDefaulted() const;
+
+  bool isDOASDXCoolingCoilLeavingMinimumAirTemperatureAutosized() const;
 
   std::string latentLoadControl() const;
 
@@ -276,6 +279,9 @@ class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
   /** As of EnergyPlus version 8.7.0 this field maps to MinimumSupplyAirTemperature **/
   bool setDOASDXCoolingCoilLeavingMinimumAirTemperature(double dOASDXCoolingCoilLeavingMinimumAirTemperature);
 
+  void autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature();
+
+  // Would remove
   void resetDOASDXCoolingCoilLeavingMinimumAirTemperature();
 
   bool setLatentLoadControl(std::string latentLoadControl);
@@ -414,15 +420,15 @@ class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
   /** @name Other */
   //@{
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const ;
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const;
 
-  boost::optional<double> autosizedMaximumSupplyAirTemperature() const ;
+  boost::optional<double> autosizedMaximumSupplyAirTemperature() const;
 
-
+  boost::optional<double> autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature() const;
 
   //@}
  protected:
