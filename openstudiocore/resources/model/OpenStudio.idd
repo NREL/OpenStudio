@@ -10766,6 +10766,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \type object-list
        \object-list UnitarySystemPerformaceNames
        \note Enter the name of the performance specification object used to describe the multispeed coil.
+
 OS:UnitarySystemPerformance:Multispeed,
        \memo The UnitarySystemPerformance object is used to specify the air flow ratio at each
        \memo operating speed. This object is primarily used for multispeed DX and water coils to allow
