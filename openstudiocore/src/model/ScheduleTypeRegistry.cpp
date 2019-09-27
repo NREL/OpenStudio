@@ -517,6 +517,10 @@ bool isCompatible(const ScheduleType& scheduleType,
     {
       return false;
     }
+  } else {
+    if (candidate.lowerLimitValue()) {
+      return false;
+    }
   }
 
   // check upper limit
@@ -524,6 +528,10 @@ bool isCompatible(const ScheduleType& scheduleType,
     if (!candidate.upperLimitValue() ||
         (candidate.upperLimitValue().get() > scheduleType.upperLimitValue.get()))
     {
+      return false;
+    }
+  } else {
+    if (candidate.upperLimitValue()) {
       return false;
     }
   }
