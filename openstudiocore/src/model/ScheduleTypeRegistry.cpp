@@ -109,7 +109,7 @@ ScheduleTypeLimits ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits(
   //if (scheduleType.lowerLimitValue && scheduleType.upperLimitValue) {
   ScheduleTypeLimitsVector candidates = model.getConcreteModelObjectsByName<ScheduleTypeLimits>(defaultName);
     for (const ScheduleTypeLimits& candidate : candidates) {
-      if (isCompatible(scheduleType,candidate)) {
+      if (isCompatible(scheduleType,candidate, true)) {
         return candidate;
       }
     }
@@ -493,14 +493,16 @@ std::string ScheduleTypeRegistrySingleton::getDefaultName(const ScheduleType& sc
 
 bool isCompatible(const std::string& className,
                   const std::string& scheduleDisplayName,
-                  const ScheduleTypeLimits& candidate)
+                  const ScheduleTypeLimits& candidate,
+                  bool isStringent)
 {
   ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className,scheduleDisplayName);
-  return isCompatible(scheduleType,candidate);
+  return isCompatible(scheduleType,candidate, isStringent);
 }
 
 bool isCompatible(const ScheduleType& scheduleType,
-                  const ScheduleTypeLimits& candidate)
+                  const ScheduleTypeLimits& candidate,
+                  bool isStringent)
 {
   // do not check continuous/discrete
 
@@ -518,7 +520,7 @@ bool isCompatible(const ScheduleType& scheduleType,
       return false;
     }
   } else {
-    if (candidate.lowerLimitValue()) {
+    if (isStringent && candidate.lowerLimitValue()) {
       return false;
     }
   }
@@ -531,7 +533,7 @@ bool isCompatible(const ScheduleType& scheduleType,
       return false;
     }
   } else {
-    if (candidate.upperLimitValue()) {
+    if (isStringent && candidate.upperLimitValue()) {
       return false;
     }
   }
@@ -549,7 +551,7 @@ bool checkOrAssignScheduleTypeLimits(const std::string& className,
       scheduleDisplayName);
   bool result(true);
   if (OptionalScheduleTypeLimits scheduleTypeLimits = schedule.scheduleTypeLimits()) {
-    if (!isCompatible(scheduleType,*scheduleTypeLimits)) {
+    if (!isCompatible(scheduleType,*scheduleTypeLimits, false)) {
       result = false;
     }
   }
@@ -574,7 +576,7 @@ std::vector<ScheduleTypeLimits> getCompatibleScheduleTypeLimits(const Model& mod
   ScheduleTypeLimitsVector candidates = model.getConcreteModelObjects<ScheduleTypeLimits>();
   ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className,scheduleDisplayName);
   for (const ScheduleTypeLimits& candidate : candidates) {
-    if (isCompatible(scheduleType,candidate)) {
+    if (isCompatible(scheduleType,candidate, true)) {
       result.push_back(candidate);
     }
   }

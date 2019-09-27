@@ -83,7 +83,8 @@ typedef std::vector<ScheduleType> ScheduleTypeVector;
 
 /** Returns true if candidate is consistent with scheduleType. \relates ScheduleType */
 MODEL_API bool isCompatible(const ScheduleType& scheduleType,
-                            const ScheduleTypeLimits& candidate);
+                            const ScheduleTypeLimits& candidate,
+                            bool isStringent = false);
 
 
 /** Singleton class that contains a registry of all types of schedules that can exist in a Model.
@@ -133,7 +134,8 @@ typedef openstudio::Singleton<ScheduleTypeRegistrySingleton> ScheduleTypeRegistr
  *  \relates ScheduleTypeRegistrySingleton */
 MODEL_API bool isCompatible(const std::string& className,
                             const std::string& scheduleDisplayName,
-                            const ScheduleTypeLimits& candidate);
+                            const ScheduleTypeLimits& candidate,
+                            bool isStringent = false);
 
 /** If schedule.scheduleTypeLimtis(), returns true if that ScheduleTypeLimits isCompatible and
  *  otherwise returns false. Otherwise, uses
