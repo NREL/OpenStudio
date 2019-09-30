@@ -70,11 +70,11 @@ set(ENERGYPLUS_VERSION_MINOR 2)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "087671f57a")
+set(ENERGYPLUS_BUILD_SHA "921312fa1d")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.2.0-RC3")
+set(ENERGYPLUS_RELEASE_NAME "v9.2.0")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -381,14 +381,14 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 0152589c6742c9ae20be7de6cf8d93ff)
-    set(ENERGYPLUS_PLATFORM "Darwin-10.14-x86_64")
+    set(ENERGYPLUS_EXPECTED_HASH 49a8eb402738e4146779c15b63b4ad99)
+    set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 70c09bbd403f780a66df9f9ec5542db8)
+    set(ENERGYPLUS_EXPECTED_HASH 91739b15520092e74ff4eed2a2ee1cbd)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -413,7 +413,7 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH cb8a5d43f8d665e75fe682d2a127e234)
+    set(ENERGYPLUS_EXPECTED_HASH a95da7a01599d4f3379cc9423e38f155)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
@@ -620,8 +620,8 @@ endif()
 
 # build and release openstudio gems at https://github.com/NREL/OpenStudio-gems
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20190918-rc1.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "77b29687d3981dacf67fe72826456a16")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20190930.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "286d0e0a3ccd260976a9cb864e9c7126")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
