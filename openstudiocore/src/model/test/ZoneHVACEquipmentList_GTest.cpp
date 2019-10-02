@@ -35,6 +35,8 @@
 #include "../ThermalZone.hpp"
 #include "../ZoneHVACBaseboardConvectiveElectric.hpp"
 #include "../ScheduleConstant.hpp"
+#include "../Schedule.hpp"
+#include "../ScheduleTypeLimits.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -146,5 +148,31 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
   EXPECT_FALSE(z.sequentialHeatingFractionSchedule(b1));
   EXPECT_FALSE(z.sequentialHeatingFraction(b2));
   EXPECT_FALSE(z.sequentialHeatingFractionSchedule(b2));
+
+}
+
+TEST_F(ModelFixture, ZoneHVACEquipmentList_ScheduleTypeLimits)
+{
+  Model m;
+
+  ThermalZone z(m);
+
+
+  EXPECT_TRUE(z.setLoadDistributionScheme("SequentialLoad"));
+
+  ZoneHVACBaseboardConvectiveElectric b1(m);
+  EXPECT_TRUE(b1.addToThermalZone(z));
+  EXPECT_TRUE(z.setHeatingPriority(b1, 0));
+  ZoneHVACBaseboardConvectiveElectric b2(m);
+  EXPECT_TRUE(b2.addToThermalZone(z));
+
+  EXPECT_TRUE(z.setSequentialCoolingFraction(b1, 0.5));
+
+  // This should have created a schedule, and this schedule should automatically have been assigned a schedule type lim via the ScheduleTypeRegistry
+  boost::optional<Schedule> _sch = z.sequentialCoolingFractionSchedule(b1);
+  ASSERT_TRUE(_sch);
+  boost::optional<ScheduleTypeLimits> _sch_lim = _sch->scheduleTypeLimits();
+  ASSERT_TRUE(_sch_lim);
+  EXPECT_EQ("Dimensionless", _sch_lim->unitType());
 
 }
