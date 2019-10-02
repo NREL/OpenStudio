@@ -359,6 +359,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ZoneControlContaminantController","Minimum Carbon Dioxide Concentration","minimumCarbonDioxideConcentrationSchedule",true,"",0.0,OptionalDouble()},
     {"ZoneControlContaminantController","Generic Contaminant Control Availability","genericContaminantControlAvailabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneControlContaminantController","Generic Contaminant Setpoint","genericContaminantSetpointSchedule",true,"",0.0,OptionalDouble()},
+    {"ZoneHVACEquipmentList","Sequential Cooling Fraction", "sequentialCoolingFractionSchedule",true,"",0.0,1.0},
+    {"ZoneHVACEquipmentList","Sequential Heating Fraction", "sequentialHeatingFractionSchedule",true,"",0.0,1.0},
     {"WaterHeaterMixed","Setpoint Temperature","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterMixed","Ambient Temperature","ambientTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterMixed","Use Flow Rate Fraction","useFlowRateFractionSchedule",true,"",0.0,1.0},

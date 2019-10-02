@@ -41,7 +41,7 @@
 #include <utilities/idd/OS_ZoneHVAC_EquipmentList_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+#include "ModelExtensibleGroup.hpp"
 
 namespace openstudio {
 namespace model {
@@ -78,6 +78,36 @@ const std::vector<std::string>& ZoneHVACEquipmentList_Impl::outputVariableNames(
 
 IddObjectType ZoneHVACEquipmentList_Impl::iddObjectType() const {
   return ZoneHVACEquipmentList::iddObjectType();
+}
+
+std::vector<ScheduleTypeKey> ZoneHVACEquipmentList_Impl::getScheduleTypeKeys(const Schedule& schedule) const
+{
+  std::vector<ScheduleTypeKey> result;
+
+  // This is unusual, but the schedules here are in the Extensible Fields (and only there)
+  // UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+  UnsignedVector fieldIndices;
+  for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+    UnsignedVector thisFieldIndices = group.getSourceFieldIndices(schedule.handle());
+    fieldIndices.insert(fieldIndices.end(), thisFieldIndices.begin(),thisFieldIndices.end());
+  }
+
+  // Make unique, have to sort before calling unique, unique only works on consecutive elements
+  std::sort(fieldIndices.begin(), fieldIndices.end());
+  fieldIndices.erase(std::unique(fieldIndices.begin(), fieldIndices.end()), fieldIndices.end());
+
+  UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+  if (std::find(b,e,OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName) != e)
+  {
+    result.push_back(ScheduleTypeKey("ZoneHVACEquipmentList", "Sequential Cooling Fraction"));
+  }
+  if (std::find(b,e,OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName) != e)
+  {
+    result.push_back(ScheduleTypeKey("ZoneHVACEquipmentList", "Sequential Heating Fraction"));
+  }
+
+  return result;
+
 }
 
 std::string ZoneHVACEquipmentList_Impl::loadDistributionScheme() const

@@ -78,6 +78,8 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
 
   virtual IddObjectType iddObjectType() const override;
 
+  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
   std::string loadDistributionScheme() const;
 
   bool setLoadDistributionScheme(std::string scheme);
