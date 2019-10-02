@@ -411,9 +411,9 @@ namespace detail {
 
     boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
 
-    bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
+    bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
-    bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
+    bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
     // Convenience methods
     boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
