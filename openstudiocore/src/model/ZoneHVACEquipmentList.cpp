@@ -576,7 +576,7 @@ bool ZoneHVACEquipmentList_Impl::setSequentialHeatingFractionSchedule(const Mode
     return false;
   }
 
-  bool result = eg->setSchedule(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName,
+  bool result = eg->setSchedule(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName,
                                 "ZoneHVACEquipmentList",
                                 "Sequential Heating Fraction",
                                 schedule);
