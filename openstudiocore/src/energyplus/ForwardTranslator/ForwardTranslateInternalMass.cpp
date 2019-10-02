@@ -42,6 +42,7 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/ConstructionBase.hpp"
 #include "../../model/ConstructionBase_Impl.hpp"
+#include "../../model/SurfacePropertyConvectionCoefficients.hpp"
 
 #include <utilities/idd/InternalMass_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
