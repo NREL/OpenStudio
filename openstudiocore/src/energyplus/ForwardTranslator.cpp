@@ -3482,7 +3482,6 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
   result.push_back(IddObjectType::OS_ShadingSurface);
 
-  result.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
   result.push_back(IddObjectType::OS_ZoneProperty_UserViewFactors_BySurfaceName);
 
   result.push_back(IddObjectType::OS_Daylighting_Control);
@@ -3680,10 +3679,11 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_DefaultConstructionSet);
   iddObjectTypes.push_back(IddObjectType::OS_DefaultScheduleSet);
 
-  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);
-  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
-  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);
-  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
+  // Translated by the surface (or subsurface, except ExposedFoundation which doesn't concern it) directly
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
 
   for (const IddObjectType& iddObjectType : iddObjectTypes){
 
