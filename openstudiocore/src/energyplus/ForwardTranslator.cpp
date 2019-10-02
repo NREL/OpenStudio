@@ -3679,11 +3679,11 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_DefaultConstructionSet);
   iddObjectTypes.push_back(IddObjectType::OS_DefaultScheduleSet);
 
-  // Translated by the surface (or subsurface, except ExposedFoundation which doesn't concern it) directly
-  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);
-  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
-  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);
-  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
+  // Translated by the object it references directly
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);      // Surface, SubSurface,
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);   // Surface, SubSurface,
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter); // Surface Only
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);     // Surface, SubSurface, or InternalMass
 
   for (const IddObjectType& iddObjectType : iddObjectTypes){
 

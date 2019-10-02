@@ -74,6 +74,13 @@ boost::optional<IdfObject> ForwardTranslator::translateInternalMass( model::Inte
     spaces = spaceType->spaces();
   }
 
+  // Call the translation of the SurfacePropertyConvectionCoefficients, which has two advantages:
+  // * will not translate them if they are orphaned (=not referencing a surface or subsurface), and,
+  // * makes the order of these objects in the IDF deterministic
+  if (boost::optional<SurfacePropertyConvectionCoefficients> _sCoefs = modelObject.surfacePropertyConvectionCoefficients()) {
+    translateAndMapModelObject(_sCoefs.get());
+  }
+
   boost::optional<IdfObject> result;
   if (spaces.empty()){
 
