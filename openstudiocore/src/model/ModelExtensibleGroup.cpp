@@ -30,8 +30,25 @@
 #include "ModelExtensibleGroup.hpp"
 #include "ModelObject_Impl.hpp"
 
+#include "ScheduleTypeRegistry.hpp"
+#include "Schedule.hpp"
+
 namespace openstudio {
 namespace model {
+
+
+bool ModelExtensibleGroup::setSchedule(unsigned index,
+    const std::string& className,
+    const std::string& scheduleDisplayName,
+    Schedule& schedule)
+{
+  bool result = checkOrAssignScheduleTypeLimits(className,scheduleDisplayName,schedule);
+  if (!result) {
+    return result;
+  }
+  return setPointer(index,schedule.handle());
+}
+
 
 // PROTECTED
 
