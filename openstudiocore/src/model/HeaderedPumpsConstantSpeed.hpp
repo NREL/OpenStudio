@@ -64,6 +64,8 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   static std::vector<std::string> pumpControlTypeValues();
 
+  static std::vector<std::string> designPowerSizingMethodValues();
+
   /** @name Getters */
   //@{
 
@@ -96,6 +98,12 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   double skinLossRadiativeFraction() const;
 
+  std::string designPowerSizingMethod() const;
+
+  double designElectricPowerPerUnitFlowRate() const;
+
+  double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
   std::string endUseSubcategory() const;
 
   //@}
@@ -108,7 +116,7 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   bool setNumberofPumpsinBank(int numberofPumpsinBank);
 
-  bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
+  bool setFlowSequencingControlScheme(const std::string& flowSequencingControlScheme);
 
   bool setRatedPumpHead(double ratedPumpHead);
 
@@ -120,7 +128,7 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   bool setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream);
 
-  bool setPumpControlType(std::string pumpControlType);
+  bool setPumpControlType(const std::string& pumpControlType);
 
   bool setPumpFlowRateSchedule(Schedule& schedule);
 
@@ -132,7 +140,13 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
 
-  bool setEndUseSubcategory(const std::string & endUseSubcategory);
+  bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
+
+  bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+  bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+
+  bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
   //@}
   /** @name Other */

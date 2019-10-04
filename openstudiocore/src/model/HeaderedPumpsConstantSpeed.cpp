@@ -206,7 +206,7 @@ namespace detail {
     return result;
   }
 
-  bool HeaderedPumpsConstantSpeed_Impl::setFlowSequencingControlScheme(std::string flowSequencingControlScheme) {
+  bool HeaderedPumpsConstantSpeed_Impl::setFlowSequencingControlScheme(const std::string& flowSequencingControlScheme) {
     bool result = setString(OS_HeaderedPumps_ConstantSpeedFields::FlowSequencingControlScheme, flowSequencingControlScheme);
     return result;
   }
@@ -241,7 +241,7 @@ namespace detail {
     return result;
   }
 
-  bool HeaderedPumpsConstantSpeed_Impl::setPumpControlType(std::string pumpControlType) {
+  bool HeaderedPumpsConstantSpeed_Impl::setPumpControlType(const std::string& pumpControlType) {
     bool result = setString(OS_HeaderedPumps_ConstantSpeedFields::PumpControlType, pumpControlType);
     return result;
   }
@@ -336,6 +336,36 @@ namespace detail {
     return types;
   }
 
+  std::string HeaderedPumpsConstantSpeed_Impl::designPowerSizingMethod() const {
+    auto value = getString(OS_HeaderedPumps_ConstantSpeedFields::DesignPowerSizingMethod,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool HeaderedPumpsConstantSpeed_Impl::setDesignPowerSizingMethod(const std::string & designPowerSizingMethod) {
+    return setString(OS_HeaderedPumps_ConstantSpeedFields::DesignPowerSizingMethod,designPowerSizingMethod);
+  }
+
+  double HeaderedPumpsConstantSpeed_Impl::designElectricPowerPerUnitFlowRate() const {
+    auto value = getDouble(OS_HeaderedPumps_ConstantSpeedFields::DesignElectricPowerperUnitFlowRate,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool HeaderedPumpsConstantSpeed_Impl::setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate) {
+    return setDouble(OS_HeaderedPumps_ConstantSpeedFields::DesignElectricPowerperUnitFlowRate,designElectricPowerPerUnitFlowRate);
+  }
+
+  double HeaderedPumpsConstantSpeed_Impl::designShaftPowerPerUnitFlowRatePerUnitHead() const {
+    auto value = getDouble(OS_HeaderedPumps_ConstantSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool HeaderedPumpsConstantSpeed_Impl::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead) {
+    return setDouble(OS_HeaderedPumps_ConstantSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead,designShaftPowerPerUnitFlowRatePerUnitHead);
+  }
+
   std::string HeaderedPumpsConstantSpeed_Impl::endUseSubcategory() const {
     auto value = getString(OS_HeaderedPumps_ConstantSpeedFields::EndUseSubcategory, true);
     OS_ASSERT(value);
@@ -363,6 +393,10 @@ HeaderedPumpsConstantSpeed::HeaderedPumpsConstantSpeed(const Model& model)
   setPumpControlType("Continuous");
   setSkinLossRadiativeFraction(0.1);
 
+  setDesignPowerSizingMethod("PowerPerFlowPerPressure");
+  setDesignElectricPowerPerUnitFlowRate(348701.1);
+  setDesignShaftPowerPerUnitFlowRatePerUnitHead(1.282051282);
+
   setEndUseSubcategory("General");
 }
 
@@ -378,6 +412,11 @@ std::vector<std::string> HeaderedPumpsConstantSpeed::flowSequencingControlScheme
 std::vector<std::string> HeaderedPumpsConstantSpeed::pumpControlTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_HeaderedPumps_ConstantSpeedFields::PumpControlType);
+}
+
+std::vector<std::string> HeaderedPumpsConstantSpeed::designPowerSizingMethodValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_HeaderedPumps_ConstantSpeedFields::DesignPowerSizingMethod);
 }
 
 boost::optional<double> HeaderedPumpsConstantSpeed::totalRatedFlowRate() const {
@@ -444,7 +483,7 @@ bool HeaderedPumpsConstantSpeed::setNumberofPumpsinBank(int numberofPumpsinBank)
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setNumberofPumpsinBank(numberofPumpsinBank);
 }
 
-bool HeaderedPumpsConstantSpeed::setFlowSequencingControlScheme(std::string flowSequencingControlScheme) {
+bool HeaderedPumpsConstantSpeed::setFlowSequencingControlScheme(const std::string& flowSequencingControlScheme) {
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setFlowSequencingControlScheme(flowSequencingControlScheme);
 }
 
@@ -468,7 +507,7 @@ bool HeaderedPumpsConstantSpeed::setFractionofMotorInefficienciestoFluidStream(d
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setFractionofMotorInefficienciestoFluidStream(fractionofMotorInefficienciestoFluidStream);
 }
 
-bool HeaderedPumpsConstantSpeed::setPumpControlType(std::string pumpControlType) {
+bool HeaderedPumpsConstantSpeed::setPumpControlType(const std::string& pumpControlType) {
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setPumpControlType(pumpControlType);
 }
 
@@ -492,6 +531,29 @@ bool HeaderedPumpsConstantSpeed::setSkinLossRadiativeFraction(double skinLossRad
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setSkinLossRadiativeFraction(skinLossRadiativeFraction);
 }
 
+std::string HeaderedPumpsConstantSpeed::designPowerSizingMethod() const {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->designPowerSizingMethod();
+}
+
+bool HeaderedPumpsConstantSpeed::setDesignPowerSizingMethod(const std::string & designPowerSizingMethod) {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setDesignPowerSizingMethod(designPowerSizingMethod);
+}
+
+double HeaderedPumpsConstantSpeed::designElectricPowerPerUnitFlowRate() const {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->designElectricPowerPerUnitFlowRate();
+}
+
+bool HeaderedPumpsConstantSpeed::setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate) {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setDesignElectricPowerPerUnitFlowRate(designElectricPowerPerUnitFlowRate);
+}
+
+double HeaderedPumpsConstantSpeed::designShaftPowerPerUnitFlowRatePerUnitHead() const {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->designShaftPowerPerUnitFlowRatePerUnitHead();
+}
+
+bool HeaderedPumpsConstantSpeed::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead) {
+  return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->setDesignShaftPowerPerUnitFlowRatePerUnitHead(designShaftPowerPerUnitFlowRatePerUnitHead);
+}
 
 std::string HeaderedPumpsConstantSpeed::endUseSubcategory() const {
   return getImpl<detail::HeaderedPumpsConstantSpeed_Impl>()->endUseSubcategory();

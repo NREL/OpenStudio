@@ -1,7 +1,7 @@
 
 OS:Version,
-  {87b26a9f-d06c-43a9-99f1-8a1f8d5bcc33}, !- Handle
-  2.8.1;                                  !- Version Identifier
+  {e5f51381-88d5-414c-92ad-658163b12e1c}, !- Handle
+  2.9.0;                                  !- Version Identifier
 
 ! Always OnOff Discrete Schedule Type Limits
 OS:ScheduleTypeLimits,
@@ -1658,11 +1658,11 @@ OS:Pump:VariableSpeed,
   ,                                       !- Pump Curve Name
   ,                                       !- Impeller Diameter {m}
   ,                                       !- VFD Control Type
-  ,                                       !- Pump rpm Schedule Name
+  ,                                       !- Pump RPM Schedule Name
   ,                                       !- Minimum Pressure Schedule {Pa}
   ,                                       !- Maximum Pressure Schedule {Pa}
-  ,                                       !- Minimum RPM Schedule {Rotations Per Minute}
-  ,                                       !- Maximum RPM Schedule {Rotations Per Minute}
+  ,                                       !- Minimum RPM Schedule {rev/min}
+  ,                                       !- Maximum RPM Schedule {rev/min}
   ,                                       !- Zone Name
   0.5,                                    !- Skin Loss Radiative Fraction
   PowerPerFlowPerPressure,                !- Design Power Sizing Method
@@ -1707,9 +1707,10 @@ OS:HeaderedPumps:ConstantSpeed,
   ,                                       !- Pump Flow Rate Schedule
   ,                                       !- Thermal Zone
   0.1,                                    !- Skin Loss Radiative Fraction
-  ,                                       !- Design Power Sizing Method
-  ,                                       !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
-  ;                                       !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
+  PowerPerFlowPerPressure,                !- Design Power Sizing Method
+  348701.1,                               !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
+  1.282051282,                            !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
+  General;                                !- End-Use Subcategory
 
 OS:HeaderedPumps:VariableSpeed,
   {5a813bd2-9427-45dd-9909-0edd559f9027}, !- Handle
@@ -1732,9 +1733,10 @@ OS:HeaderedPumps:VariableSpeed,
   ,                                       !- Pump Flow Rate Schedule
   ,                                       !- Thermal Zone
   0.1,                                    !- Skin Loss Radiative Fraction
-  ,                                       !- Design Power Sizing Method
-  ,                                       !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
-  ;                                       !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
+  PowerPerFlowPerPressure,                !- Design Power Sizing Method
+  348701.1,                               !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
+  1.282051282,                            !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
+  General;                                !- End-Use Subcategory
 
 OS:ZoneHVAC:HighTemperatureRadiant,
   {78b89842-8c8d-46d2-8f30-1322d180980e}, !- Handle
@@ -4753,37 +4755,37 @@ OS:AirConditioner:VariableRefrigerantFlow,
   {8e372bc7-d7e7-4b5a-8a86-1743336eeb58}, !- Handle
   VRF System,                             !- Name
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule
-  autosize,                               !- Rated Total Cooling Capacity {W}
-  3.3,                                    !- Rated Cooling COP {W/W}
+  autosize,                               !- Gross Rated Total Cooling Capacity {W}
+  3.3,                                    !- Gross Rated Cooling COP {W/W}
   -5,                                     !- Minimum Outdoor Temperature in Cooling Mode {C}
   43,                                     !- Maximum Outdoor Temperature in Cooling Mode {C}
-  {2926f90c-053a-445f-9b13-0d558ac66748}, !- Cooling Capacity Ratio Modifier Function of Low Temperature Curve
-  {0aa4713f-db13-4220-8a27-6aad3ac5244a}, !- Cooling Capacity Ratio Boundary Curve
-  {b1e0b7b3-3344-4e2b-88d3-999116ee2631}, !- Cooling Capacity Ratio Modifier Function of High Temperature Curve
-  {dba051d9-1723-4ee1-89ef-233688219289}, !- Cooling Energy Input Ratio Modifier Function of Low Temperature Curve
-  {22b89fad-955f-461b-a968-ed8f28e827af}, !- Cooling Energy Input Ratio Boundary Curve
-  {fb71bd1b-f0d1-456f-bebe-20fe55705faa}, !- Cooling Energy Input Ratio Modifier Function of High Temperature Curve
-  {a229172a-6b1a-464d-bf6a-4cdb6fab82b4}, !- Cooling Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve
-  {0bdd7db2-69e4-41c4-8f8a-8ef53fe9f815}, !- Cooling Energy Input Ratio Modifier Function of High Part-Load Ratio Curve
-  {f3fd889e-b137-49c8-9c37-226b61f66f33}, !- Cooling Combination Ratio Correction Factor Curve
-  {14f8f003-46ae-43fe-a743-607c63cd092c}, !- Cooling Part-Load Fraction Correlation Curve
-  autosize,                               !- Rated Total Heating Capacity {W}
-  1,                                      !- Rated Total Heating Capacity Sizing Ratio {W/W}
+  {2926f90c-053a-445f-9b13-0d558ac66748}, !- Cooling Capacity Ratio Modifier Function of Low Temperature Curve Name
+  {0aa4713f-db13-4220-8a27-6aad3ac5244a}, !- Cooling Capacity Ratio Boundary Curve Name
+  {b1e0b7b3-3344-4e2b-88d3-999116ee2631}, !- Cooling Capacity Ratio Modifier Function of High Temperature Curve Name
+  {dba051d9-1723-4ee1-89ef-233688219289}, !- Cooling Energy Input Ratio Modifier Function of Low Temperature Curve Name
+  {22b89fad-955f-461b-a968-ed8f28e827af}, !- Cooling Energy Input Ratio Boundary Curve Name
+  {fb71bd1b-f0d1-456f-bebe-20fe55705faa}, !- Cooling Energy Input Ratio Modifier Function of High Temperature Curve Name
+  {a229172a-6b1a-464d-bf6a-4cdb6fab82b4}, !- Cooling Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve Name
+  {0bdd7db2-69e4-41c4-8f8a-8ef53fe9f815}, !- Cooling Energy Input Ratio Modifier Function of High Part-Load Ratio Curve Name
+  {f3fd889e-b137-49c8-9c37-226b61f66f33}, !- Cooling Combination Ratio Correction Factor Curve Name
+  {14f8f003-46ae-43fe-a743-607c63cd092c}, !- Cooling Part-Load Fraction Correlation Curve Name
+  autosize,                               !- Gross Rated Heating Capacity {W}
+  1,                                      !- Rated Heating Capacity Sizing Ratio {W/W}
   3.5,                                    !- Rated Heating COP {W/W}
   -20,                                    !- Minimum Outdoor Temperature in Heating Mode {C}
   30,                                     !- Maximum Outdoor Temperature in Heating Mode {C}
-  {f3ee1617-95d7-4e86-8c41-c4054351f32d}, !- Heating Capacity Ratio Modifier Function of Low Temperature Curve
-  {443ca85b-e6db-48f4-88f7-fb7736da372d}, !- Heating Capacity Ratio Boundary Curve
-  {7114f15a-b91a-4b48-98c5-91fe3169d763}, !- Heating Capacity Ratio Modifier Function of High Temperature Curve
-  {a3076463-2be9-4802-90a7-081d24ce8d8d}, !- Heating Energy Input Ratio Modifier Function of Low Temperature Curve
-  {2f575dc9-b03e-4064-b231-6e43383e292a}, !- Heating Energy Input Ratio Boundary Curve
-  {bba9f395-e337-48f9-852d-b987452dc367}, !- Heating Energy Input Ratio Modifier Function of High Temperature Curve
+  {f3ee1617-95d7-4e86-8c41-c4054351f32d}, !- Heating Capacity Ratio Modifier Function of Low Temperature Curve Name
+  {443ca85b-e6db-48f4-88f7-fb7736da372d}, !- Heating Capacity Ratio Boundary Curve Name
+  {7114f15a-b91a-4b48-98c5-91fe3169d763}, !- Heating Capacity Ratio Modifier Function of High Temperature Curve Name
+  {a3076463-2be9-4802-90a7-081d24ce8d8d}, !- Heating Energy Input Ratio Modifier Function of Low Temperature Curve Name
+  {2f575dc9-b03e-4064-b231-6e43383e292a}, !- Heating Energy Input Ratio Boundary Curve Name
+  {bba9f395-e337-48f9-852d-b987452dc367}, !- Heating Energy Input Ratio Modifier Function of High Temperature Curve Name
   WetBulbTemperature,                     !- Heating Performance Curve Outdoor Temperature Type
-  {aa3d41db-cd17-44ef-a3ce-bec6504e8910}, !- Heating Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve
-  {30fbccd3-f4f0-4bf8-94be-faf7bba3e968}, !- Heating Energy Input Ratio Modifier Function of High Part-Load Ratio Curve
-  {68c0f092-88a2-4ba9-b6b4-4d8f2b091efc}, !- Heating Combination Ratio Correction Factor Curve
-  {14f8f003-46ae-43fe-a743-607c63cd092c}, !- Heating Part-Load Fraction Correlation Curve
-  0.25,                                   !- Minimum Heat Pump Part-Load Ratio
+  {aa3d41db-cd17-44ef-a3ce-bec6504e8910}, !- Heating Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve Name
+  {30fbccd3-f4f0-4bf8-94be-faf7bba3e968}, !- Heating Energy Input Ratio Modifier Function of High Part-Load Ratio Curve Name
+  {68c0f092-88a2-4ba9-b6b4-4d8f2b091efc}, !- Heating Combination Ratio Correction Factor Curve Name
+  {14f8f003-46ae-43fe-a743-607c63cd092c}, !- Heating Part-Load Fraction Correlation Curve Name
+  0.25,                                   !- Minimum Heat Pump Part-Load Ratio {dimensionless}
   ,                                       !- Zone Name for Master Thermostat Location
   LoadPriority,                           !- Master Thermostat Priority Control Type
   ,                                       !- Thermostat Priority Schedule
@@ -4791,19 +4793,19 @@ OS:AirConditioner:VariableRefrigerantFlow,
   No,                                     !- Heat Pump Waste Heat Recovery
   30,                                     !- Equivalent Piping Length used for Piping Correction Factor in Cooling Mode {m}
   10,                                     !- Vertical Height used for Piping Correction Factor {m}
-  {8a603e43-55d3-4244-9b79-d432a9bdcbb1}, !- Piping Correction Factor for Length in Cooling Mode Curve
-  -0.000386,                              !- Piping Correction Factor for Height in Cooling Mode Coefficient
+  {8a603e43-55d3-4244-9b79-d432a9bdcbb1}, !- Piping Correction Factor for Length in Cooling Mode Curve Name
+  -0.000386,                              !- Piping Correction Factor for Height in Cooling Mode Coefficient {1/m}
   30,                                     !- Equivalent Piping Length used for Piping Correction Factor in Heating Mode {m}
-  {5bd36fea-b2fe-4c07-8aa2-f6a4fb1215a3}, !- Piping Correction Factor for Length in Heating Mode Curve
-  0,                                      !- Piping Correction Factor for Height in Heating Mode Coefficient
+  {5bd36fea-b2fe-4c07-8aa2-f6a4fb1215a3}, !- Piping Correction Factor for Length in Heating Mode Curve Name
+  0,                                      !- Piping Correction Factor for Height in Heating Mode Coefficient {1/m}
   15,                                     !- Crankcase Heater Power per Compressor {W}
-  3,                                      !- Number of Compressors
-  0.33,                                   !- Ratio of Compressor Size to Total Compressor Capacity
+  3,                                      !- Number of Compressors {dimensionless}
+  0.33,                                   !- Ratio of Compressor Size to Total Compressor Capacity {W/W}
   7,                                      !- Maximum Outdoor Dry-bulb Temperature for Crankcase Heater {C}
   Resistive,                              !- Defrost Strategy
   Timed,                                  !- Defrost Control
-  ,                                       !- Defrost Energy Input Ratio Modifier Function of Temperature Curve
-  0.058333,                               !- Defrost Time Period Fraction
+  ,                                       !- Defrost Energy Input Ratio Modifier Function of Temperature Curve Name
+  0.058333,                               !- Defrost Time Period Fraction {dimensionless}
   1e-07,                                  !- Resistive Defrost Heater Capacity {W}
   7,                                      !- Maximum Outdoor Dry-bulb Temperature for Defrost Operation {C}
   ,                                       !- Condenser Type
@@ -4820,17 +4822,17 @@ OS:AirConditioner:VariableRefrigerantFlow,
   Electricity,                            !- Fuel Type
   0,                                      !- Minimum Outdoor Temperature in Heat Recovery Mode {C}
   20,                                     !- Maximum Outdoor Temperature in Heat Recovery Mode {C}
-  {04efa453-3a5a-4c65-9942-ef1013cf64d9}, !- Heat Recovery Cooling Capacity Modifier Curve
-  0.5,                                    !- Initial Heat Recovery Cooling Capacity Fraction
+  {04efa453-3a5a-4c65-9942-ef1013cf64d9}, !- Heat Recovery Cooling Capacity Modifier Curve Name
+  0.5,                                    !- Initial Heat Recovery Cooling Capacity Fraction {W/W}
   0.083,                                  !- Heat Recovery Cooling Capacity Time Constant {hr}
-  {3319190d-4e8f-470c-bb70-9e727f06659c}, !- Heat Recovery Cooling Energy Modifier Curve
-  1,                                      !- Initial Heat Recovery Cooling Energy Fraction
+  {3319190d-4e8f-470c-bb70-9e727f06659c}, !- Heat Recovery Cooling Energy Modifier Curve Name
+  1,                                      !- Initial Heat Recovery Cooling Energy Fraction {W/W}
   0,                                      !- Heat Recovery Cooling Energy Time Constant {hr}
-  {54ee453b-84b5-47d6-8c0e-a2084392d85c}, !- Heat Recovery Heating Capacity Modifier Curve
-  0.5,                                    !- Initial Heat Recovery Heating Capacity Fraction
+  {54ee453b-84b5-47d6-8c0e-a2084392d85c}, !- Heat Recovery Heating Capacity Modifier Curve Name
+  0.5,                                    !- Initial Heat Recovery Heating Capacity Fraction {W/W}
   0.083,                                  !- Heat Recovery Heating Capacity Time Constant {hr}
-  {e16ba0c4-b38c-4e58-a3fb-6a63836d6fcc}, !- Heat Recovery Heating Energy Modifier Curve
-  0.5,                                    !- Initial Heat Recovery Heating Energy Fraction
+  {e16ba0c4-b38c-4e58-a3fb-6a63836d6fcc}, !- Heat Recovery Heating Energy Modifier Curve Name
+  0.5,                                    !- Initial Heat Recovery Heating Energy Fraction {W/W}
   0;                                      !- Heat Recovery Heating Energy Time Constant {hr}
 
 OS:Curve:Biquadratic,
@@ -8147,6 +8149,20 @@ OS:Fan:ConstantVolume,
   ,                                       !- Air Outlet Node Name
   ;                                       !- End-Use Subcategory
 
+OS:Node,
+  {c67a19fa-782f-4d1d-8f3e-dab9b6e44746}, !- Handle
+  VAV Changeover Bypass Plenum or Mixer Inlet Node, !- Name
+  {96e23b68-0ea3-4f0b-b14e-baf0cf3405e0}, !- Inlet Port
+  ;                                       !- Outlet Port
+
+OS:Connection,
+  {96e23b68-0ea3-4f0b-b14e-baf0cf3405e0}, !- Handle
+  {f09e4d0a-0735-4c49-bcdb-f2371817f943}, !- Name
+  {8b3614b6-19a8-496b-ad68-96351a2ab688}, !- Source Object
+  24,                                     !- Outlet Port
+  {c67a19fa-782f-4d1d-8f3e-dab9b6e44746}, !- Target Object
+  2;                                      !- Inlet Port
+
 OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
   {8b3614b6-19a8-496b-ad68-96351a2ab688}, !- Handle
   VAV Changeover Bypass,                  !- Name
@@ -8171,7 +8187,9 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
   ZonePriority,                           !- Priority Control Mode
   8,                                      !- Minimum Outlet Air Temperature During Cooling Operation {C}
   50,                                     !- Maximum Outlet Air Temperature During Heating Operation {C}
-  None;                                   !- Dehumidification Control Type
+  None,                                   !- Dehumidification Control Type
+  {96e23b68-0ea3-4f0b-b14e-baf0cf3405e0}, !- Plenum or Mixer Inlet Node Name
+  0;                                      !- Minimum Runtime Before Operating Mode Change {hr}
 
 OS:SetpointManager:MultiZone:Humidity:Minimum,
   {00bd9f3b-df01-4dae-8a06-befb066e1385}, !- Handle
@@ -9655,7 +9673,9 @@ OS:ThermalStorage:Ice:Detailed,
   0.5,                                    !- Capacity {GJ}
   ,                                       !- Inlet Node Name
   ,                                       !- Outlet Node Name
+  FractionDischargedLMTD,                 !- Discharging Curve Variable Specifications
   {9395922f-513b-43a9-8024-dcba3ca72a7d}, !- Discharging Curve
+  FractionChargedLMTD,                    !- Charging Curve Variable Specifications
   {baa65b6a-5ce0-4068-b226-be15d766a608}, !- Charging Curve
   1,                                      !- Timestep of the Curve Data {hr}
   0.0001,                                 !- Parasitic Electric Load During Discharging {dimensionless}
@@ -10797,7 +10817,10 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
   0.96265085,                             !- Cooling Compressor Power Coefficient 2
   8.69489229,                             !- Cooling Compressor Power Coefficient 3
   0.02501669,                             !- Cooling Compressor Power Coefficient 4
-  -0.20132665;                            !- Cooling Compressor Power Coefficient 5
+  -0.20132665,                            !- Cooling Compressor Power Coefficient 5
+  8.0,                                    !- Reference Coefficient of Performance
+  1.0,                                    !- Sizing Factor
+  ;                                       !- Companion Heating Heat Pump Name
 
 OS:HeatPump:WaterToWater:EquationFit:Heating,
   {80f71496-82ae-4ad8-b677-1ca17b0ca84a}, !- Handle
@@ -10820,8 +10843,9 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
   1.29660976,                             !- Heating Compressor Power Coefficient 3
   -0.21629222,                            !- Heating Compressor Power Coefficient 4
   0.033862378,                            !- Heating Compressor Power Coefficient 5
-  ,                                       !- Reference Coefficient of Performance
-  ;                                       !- Sizing Factor
+  7.5,                                    !- Reference Coefficient of Performance
+  1.0,                                    !- Sizing Factor
+  ;                                       !- Companion Cooling Heat Pump Name
 
 OS:Generator:MicroTurbine,
   {5f037e71-1ba0-4b22-9d0d-0ab372356d49}, !- Handle

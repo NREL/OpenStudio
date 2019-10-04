@@ -242,11 +242,11 @@ void EMSInspectorView::layoutModelObject( const model::ModelObject & modelObject
   for( const auto & objecti : modelObjects ) {
     if( m_type == Type::ACTUATOR ) {
       if (objecti.nameString().empty()) {
-        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.iddObjectType().valueName()) + " Acuators");
+        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.iddObjectType().valueName()) + " Actuators");
         m_layout->addWidget(label);
       }
       else {
-        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Acuators");
+        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Actuators");
         m_layout->addWidget(label);
       }
 
