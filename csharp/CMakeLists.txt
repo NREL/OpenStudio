@@ -98,6 +98,9 @@ else()
     message(FATAL_ERROR "C# generation outside of MSVC requires .NET Core (dotnet)")
   endif()
 
+  # ignore deprecated warnings since we will export deprecated methods
+  add_definitions(-Wno-deprecated-declarations)
+
   # custom command to make OPENSTUDIO_CSHARP_DLL
   add_custom_command(
     OUTPUT ${OPENSTUDIO_CSHARP_DLL}
