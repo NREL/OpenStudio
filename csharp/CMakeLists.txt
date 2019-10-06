@@ -78,12 +78,27 @@ if(MSVC)
     set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.dll")
   endif()
 
+if (MSVC)
   # custom command to make OPENSTUDIO_CSHARP_DLL
   add_custom_command(
     OUTPUT ${OPENSTUDIO_CSHARP_DLL}
     COMMAND "MSBuild" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj" "${CONFIG_ARGS}"
     DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
   )
+else()
+  # Rely on dotnet Core (open source)
+  find_program(DOTNET dotnet)
+  if(NOT DOTNET)
+    message(FATAL_ERROR "C# generation outside of MSVC requires .NET Core (dotnet)")
+  endif()
+
+  # custom command to make OPENSTUDIO_CSHARP_DLL
+  add_custom_command(
+    OUTPUT ${OPENSTUDIO_CSHARP_DLL}
+    COMMAND "${DOTNET}" "build" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj" "-c ${CMAKE_BUILD_TYPE}"
+    DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
+  )
+endif()
 
   install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Debug/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
   install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Release/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
