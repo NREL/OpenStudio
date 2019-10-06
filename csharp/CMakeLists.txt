@@ -77,7 +77,14 @@ if(NINJA)
   set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.dll")
 endif()
 
+
 if (MSVC)
+  # DLM: currently there are some multiply defined symbols, force them for now, investigate later
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /FORCE:MULTIPLE")
+
+# ignore deprecated warnings since we will export deprecated methods
+  add_definitions(/wd4996 /bigobj)
+
   # custom command to make OPENSTUDIO_CSHARP_DLL
   add_custom_command(
     OUTPUT ${OPENSTUDIO_CSHARP_DLL}
@@ -94,19 +101,13 @@ else()
   # custom command to make OPENSTUDIO_CSHARP_DLL
   add_custom_command(
     OUTPUT ${OPENSTUDIO_CSHARP_DLL}
-    COMMAND "${DOTNET}" "build" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj" "-c ${CMAKE_BUILD_TYPE}"
+    COMMAND "${DOTNET}" "build" "-c ${CMAKE_BUILD_TYPE}" "--force" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
     DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
   )
 endif()
 
 install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Debug/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
 install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Release/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
-
-# DLM: currently there are some multiply defined symbols, force them for now, investigate later
-set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /FORCE:MULTIPLE")
-
-# ignore deprecated warnings since we will export deprecated methods
-add_definitions(/wd4996 /bigobj)
 
 # keep the following lists aligned with translator_names in \openstudiocore\ProjectMacros.cmake
 set(translator_wrappers
