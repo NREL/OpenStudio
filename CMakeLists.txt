@@ -235,10 +235,7 @@ option(BUILD_PAT "Build PAT" OFF)
 option(BUILD_DOCUMENTATION "Build Documentation" OFF)
 
 # Build CSharp bindings
-# Requires: SWIG
-if(WIN32)
-  option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
-endif()
+option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
 
 # Build Java bindings
 # Requires: SWIG
