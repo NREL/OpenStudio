@@ -236,6 +236,7 @@ option(BUILD_DOCUMENTATION "Build Documentation" OFF)
 
 # Build CSharp bindings
 option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
+option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 
 # Build Java bindings
 # Requires: SWIG
@@ -258,10 +259,6 @@ set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Con
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
-endif()
-
-if(WIN32)
-  option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 endif()
 
 # Enable runtime checking features
@@ -1365,11 +1362,24 @@ endif()
 if( BUILD_NUGET_PACKAGE )
   configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )
 
-  add_custom_target(nuget_package
-    COMMAND NuGet pack OpenStudio.nuspec -BasePath "${PROJECT_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
-    DEPENDS csharp_sdk
-    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
-  )
+  if (MSVC)
+    add_custom_target(nuget_package
+      COMMAND NuGet pack OpenStudio.nuspec -BasePath "${PROJECT_BINARY_DIR}/" -properties Configuration=$<CONFIG>
+      DEPENDS csharp_sdk
+      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
+    )
+  else()
+    find_program(DOTNET dotnet)
+    if(NOT DOTNET)
+      message(FATAL_ERROR "C# generation outside of MSVC requires .NET Core (dotnet)")
+    endif()
+    add_custom_target(nuget_package
+      COMMAND "${DOTNET}" pack --configuration $<CONFIG> "${PROJECT_BINARY_DIR}/OpenStudio.nuspec"
+      DEPENDS csharp_sdk
+      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
+    )
+  endif()
+
 endif()
 
 
