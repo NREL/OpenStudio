@@ -60,7 +60,7 @@ set(CSHARP_ASSEMBLY_VERSION "${CSHARP_VERSION_MAJOR}.${CSHARP_VERSION_MINOR}.${C
 set(CSHARP_TOOLS_VERSION "4.5")
 
 file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/csharp_wrapper/generated_sources")
-configure_file("${PROJECT_SOURCE_DIR}/csharp/developer/OpenStudio/OpenStudio.csproj.in" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj")
+configure_file("${PROJECT_SOURCE_DIR}/csharp/developer/OpenStudio/OpenStudio.csproj_dotnet.in" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj")
 configure_file("${PROJECT_SOURCE_DIR}/csharp/developer/OpenStudio/Properties/AssemblyVersion.cs.in" "${PROJECT_BINARY_DIR}/csharp_wrapper/generated_sources/AssemblyVersion.cs")
 
 #This is generating odd errors about needing to convert the included project file, but it seems like it would be a good
@@ -104,7 +104,7 @@ else()
   # custom command to make OPENSTUDIO_CSHARP_DLL
   add_custom_command(
     OUTPUT ${OPENSTUDIO_CSHARP_DLL}
-    COMMAND "${DOTNET}" "build" "-c ${CMAKE_BUILD_TYPE}" "--force" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
+    COMMAND "${DOTNET}" "build" "-c ${CMAKE_BUILD_TYPE}" "-f netcoreapp3.0" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
     DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
   )
 endif()
@@ -188,6 +188,11 @@ add_library(
   ${core_wrapper_files}
 )
 add_dependencies(openstudio_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
+# if (UNIX)
+#   target_link_options(openstudio_csharp
+#     PUBLIC "-Wl,--allow-multiple-definition")
+# endif()
+
 target_link_libraries(openstudio_csharp
  openstudiolib
 )

@@ -1,0 +1,84 @@
+﻿<!-- <?xml version="1.0" encoding="utf-8"?> -->
+<!-- <Project ToolsVersion="${CSHARP_TOOLS_VERSION}" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"> -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">${CSHARP_PLATFORM}</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <ProjectGuid>{63F7E86E-6A41-4033-A5C6-E41015F5AD4B}</ProjectGuid>
+    <TargetFramework>net35;netcoreapp3.0</TargetFramework>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>${CSHARP_SOURCE_DIR}\developer\OpenStudio\StrongNameKeyFile.snk</AssemblyOriginatorKeyFile>
+    <AssemblyTitle>OpenStudio</AssemblyTitle>
+
+     <!-- Do not generate AssemblyInfo.cs since we import our own. Ours is pretty useless though, so we could just generate one from the info we have here  -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <Product>OpenStudio</Product>
+    <Copyright>Copyright © 2019</Copyright>
+    <OutputPath>${CSHARP_LIBRARY_OUTPUT_DIRECTORY}\$(Configuration)\</OutputPath>
+    <NoWarn>1591</NoWarn>
+    <WarningLevel>4</WarningLevel>
+    <!--
+     <FileAlignment>512</FileAlignment>
+     <RootNamespace>OpenStudio</RootNamespace>
+     <ErrorReport>prompt</ErrorReport>
+     <OutputType>Library</OutputType>
+     <AppDesignerFolder>Properties</AppDesignerFolder>
+    -->
+    <DocumentationFile>${CSHARP_LIBRARY_OUTPUT_DIRECTORY}\$(Configuration)\OpenStudio.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|${CSHARP_PLATFORM}' ">
+    <DebugType>full</DebugType> <!-- Potentially replace by portable -->
+    <!--  <Optimize>false</Optimize> -->
+    <!-- <DefineConstants>DEBUG;TRACE</DefineConstants> -->
+    <!-- <DebugSymbols>true</DebugSymbols> -->
+
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|${CSHARP_PLATFORM}' ">
+    <DebugType>pdbonly</DebugType>
+    <!--  <Optimize>true</Optimize> -->
+    <!-- <DefineConstants>TRACE</DefineConstants> -->
+  </PropertyGroup>
+  <!-- TODO: remove ? -->
+  <!-- Conditionally obtain references for the .NET Framework 3.5 target -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+
+  <!-- Conditionally obtain references for the .NET Core target -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+    <Reference Include="System.Data.DataSetExtensions" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Include="${CSHARP_SOURCE_DIR}\developer\OpenStudio\Properties\AssemblyInfo.cs" />
+    <Compile Include="${CSHARP_BINARY_DIR}\generated_sources\*.cs" />
+    <Compile Include="${CSHARP_BINARY_DIR}\generated_sources\*\*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="${CSHARP_SOURCE_DIR}\developer\OpenStudio\StrongNameKeyFile.snk" />
+  </ItemGroup>
+  <!-- TODO: is this needed? Stripped by Project2015To2017.Migrate2019.Tool -->
+  <!-- <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> -->
+  <!-- Was already commented out -->
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
