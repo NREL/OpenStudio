@@ -61,7 +61,11 @@ set(CSHARP_TOOLS_VERSION "4.5")
 
 file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/csharp_wrapper/generated_sources")
 configure_file("${PROJECT_SOURCE_DIR}/csharp/developer/OpenStudio/OpenStudio.csproj_dotnet.in" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj")
-configure_file("${PROJECT_SOURCE_DIR}/csharp/developer/OpenStudio/Properties/AssemblyVersion.cs.in" "${PROJECT_BINARY_DIR}/csharp_wrapper/generated_sources/AssemblyVersion.cs")
+
+# Trying to get rid of this by placing more attributes in csproj instead
+if (MSVC)
+  configure_file("${PROJECT_SOURCE_DIR}/csharp/developer/OpenStudio/Properties/AssemblyVersion.cs.in" "${PROJECT_BINARY_DIR}/csharp_wrapper/generated_sources/AssemblyVersion.cs")
+endif()
 
 #This is generating odd errors about needing to convert the included project file, but it seems like it would be a good
 #way to move forward, if it worked. Leaving here as a note.

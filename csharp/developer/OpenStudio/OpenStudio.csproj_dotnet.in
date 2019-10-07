@@ -93,7 +93,8 @@
     <None Include="${CSHARP_SOURCE_DIR}\developer\OpenStudio\StrongNameKeyFile.snk" />
   </ItemGroup>
   <!-- TODO: is this needed? Stripped by Project2015To2017.Migrate2019.Tool -->
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+      <!-- If I import this, it fails to build error MSB3644: The reference assemblies for .NETFramework,Version=v4.0 were not found
+      <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /> -->
   <!-- Was already commented out -->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
