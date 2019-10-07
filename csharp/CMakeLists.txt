@@ -242,3 +242,27 @@ install(TARGETS openstudio_translators_csharp DESTINATION CSharp/openstudio/ CON
 add_custom_target(csharp_sdk ALL
   DEPENDS ${OPENSTUDIO_CSHARP_DLL} openstudio_csharp openstudio_model_csharp openstudio_translators_csharp
 )
+
+if( BUILD_NUGET_PACKAGE )
+
+  # TODO: move in MSVC block, remove altogether? For dotnet I'm trying to use the nuget properties metadata directly in csproj
+  configure_file( ${PROJECT_SOURCE_DIR}/OpenStudio.nuspec.in ${PROJECT_BINARY_DIR}/OpenStudio.nuspec )
+
+  if (MSVC)
+
+    add_custom_target(nuget_package
+      COMMAND NuGet pack OpenStudio.nuspec -BasePath "${PROJECT_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
+      DEPENDS csharp_sdk
+      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
+    )
+  else()
+    #dotnet pack OpenStudio.csproj --configuration $<CONFIG> -p:NuspecFile="${PROJECT_BINARY_DIR}/OpenStudio.nuspec" -p:NuspectProperties="Configuration=$<CONFIG>"
+    # dotnet pack <path to .csproj file> -p:NuspecFile=<path to nuspec file> -p:NuspecProperties=<> -p:NuspecBasePath=<Base path>
+    add_custom_target(nuget_package
+      COMMAND ${DOTNET} pack --configuration $<CONFIG> -p:TargetFrameworks=netcoreapp3.0 ${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj
+      DEPENDS csharp_sdk
+      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/csharp_wrapper/"
+    )
+  endif()
+
+endif()

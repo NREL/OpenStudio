@@ -1359,27 +1359,9 @@ if(BUILD_PAT)
   )
 endif()
 
-if( BUILD_NUGET_PACKAGE )
-  configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )
-
-  if (MSVC)
-    add_custom_target(nuget_package
-      COMMAND NuGet pack OpenStudio.nuspec -BasePath "${PROJECT_BINARY_DIR}/" -properties Configuration=$<CONFIG>
-      DEPENDS csharp_sdk
-      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
-    )
-  else()
-    find_program(DOTNET dotnet)
-    if(NOT DOTNET)
-      message(FATAL_ERROR "C# generation outside of MSVC requires .NET Core (dotnet)")
-    endif()
-    add_custom_target(nuget_package
-      COMMAND "${DOTNET}" pack --configuration $<CONFIG> "${PROJECT_BINARY_DIR}/OpenStudio.nuspec"
-      DEPENDS csharp_sdk
-      WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
-    )
-  endif()
-
+if( BUILD_NUGET_PACKAGE AND NOT BUILD_CSHARP_BINDINGS)
+  message("If BUILD_NUGET_PACKAGE=ON, you must use BUILD_CSHARP_BINDINGS=ON too")
+  # Rest moved to csharp/CMakeLists.txt
 endif()
 
 
