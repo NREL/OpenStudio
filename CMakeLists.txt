@@ -344,10 +344,10 @@ option(CONAN_PRINT_RUN_COMMANDS "Log every conan self.run command" OFF)
 mark_as_advanced(CONAN_PRINT_RUN_COMMANDS)
 if(CONAN_PRINT_RUN_COMMANDS)
   set(ENV{CONAN_PRINT_RUN_COMMANDS} "1")
-  message("Setting CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
+  message(STATUS "Setting CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
 else()
   unset(ENV{CONAN_PRINT_RUN_COMMANDS})
-  message("CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
+  message(STATUS "CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
 endif()
 
 # Attempt to run, it'll do the right thing if the calling cmake script already ran it
