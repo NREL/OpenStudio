@@ -91,4 +91,9 @@ namespace std {
 %include <std_shared_ptr.i>
 %include <boost_shared_ptr.i>
 
+// Ignore the ostream operator<<, for CSharp where it'll throw a multiple definition
+%ignore openstudio::operator<<;
+%ignore openstudio::model::operator<<;
+
+
 #endif
