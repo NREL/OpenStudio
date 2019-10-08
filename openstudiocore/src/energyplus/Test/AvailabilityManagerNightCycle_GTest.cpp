@@ -168,7 +168,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
 
   ScheduleConstant sch_applicability(m);
   sch_applicability.setName("AVM NightCycle Applicability Schedule");
-  sch.setValue(1.0);
+  sch_applicability.setValue(1.0);
   EXPECT_TRUE(avm.setApplicabilitySchedule(sch_applicability));
 
   // Re translate
