@@ -37,6 +37,8 @@
 #include "../../model/AvailabilityManagerNightCycle.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/AirLoopHVAC.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/ScheduleConstant.hpp"
 
 #include <utilities/idd/AvailabilityManager_NightCycle_FieldEnums.hxx>
 #include <utilities/idd/ZoneList_FieldEnums.hxx>
@@ -183,7 +185,4 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
   EXPECT_EQ(avm.applicabilitySchedule().name().get(), idf_avm3.getString(AvailabilityManager_NightCycleFields::ApplicabilityScheduleName).get());
   EXPECT_EQ("AVM NightCycle Applicability Schedule",  idf_avm3.getString(AvailabilityManager_NightCycleFields::ApplicabilityScheduleName).get());
 
-
 }
-
-
