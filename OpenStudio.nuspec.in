@@ -15,10 +15,10 @@
   </metadata>
   <files>
     <file src="Products/csharp/$CONFIGURATION$/OpenStudio.dll" target="lib" />
-    <file src="Products/$CONFIGURATION$/openstudio_csharp.dll" target="build" />
-    <file src="Products/$CONFIGURATION$/openstudio_model_csharp.dll" target="build" />
-    <file src="Products/$CONFIGURATION$/openstudio_translators_csharp.dll" target="build" />
-    <file src="Products/$CONFIGURATION$/openstudio_model_csharp.dll" target="build" />
+    <file src="Products/$CONFIGURATION$/@OPENSTUDIO_CSHARP_LIBNAME@" target="build" />
+    <file src="Products/$CONFIGURATION$/@OPENSTUDIO_MODEL_CSHARP_LIBNAME@" target="build" />
+    <file src="Products/$CONFIGURATION$/@OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME@" target="build" />
+    <file src="Products/$CONFIGURATION$/@OPENSTUDIO_MODEL_CSHARP_LIBNAME@" target="build" /> <!-- TODO why is this repeated? -->
     <file src="@PROJECT_SOURCE_DIR@/OpenStudio.targets" target="build" />
   </files>
 </package>

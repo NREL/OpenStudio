@@ -188,7 +188,7 @@ set_source_files_properties(${ALL_CSHARP_WRAPPER_FILES} PROPERTIES GENERATED TRU
 
 add_library(
   openstudio_csharp
-  MODULE
+  SHARED # Was "MODULE" on Windows before
   ${core_wrapper_files}
 )
 add_dependencies(openstudio_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
@@ -219,7 +219,7 @@ install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS 
 
 add_library(
   openstudio_model_csharp
-  MODULE
+  SHARED
   ${model_wrapper_files}
 )
 add_dependencies(openstudio_model_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
@@ -232,7 +232,7 @@ install(TARGETS openstudio_model_csharp DESTINATION CSharp/openstudio/ CONFIGURA
 
 add_library(
   openstudio_translators_csharp
-  MODULE
+  SHARED
   ${translator_wrapper_files}
 )
 add_dependencies(openstudio_translators_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
@@ -254,16 +254,25 @@ if( BUILD_NUGET_PACKAGE )
 
   if (MSVC)
 
+    set(OPENSTUDIO_CSHARP_LIBNAME "openstudio_csharp.dll")
+    set(OPENSTUDIO_MODEL_CSHARP_LIBNAME "openstudio_model_csharp.dll")
+    set(OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME "openstudio_translators_csharp.dll")
+
     add_custom_target(nuget_package
       COMMAND NuGet pack OpenStudio.nuspec -BasePath "${PROJECT_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
       DEPENDS csharp_sdk
       WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
     )
   else()
+
+    set(OPENSTUDIO_CSHARP_LIBNAME "libopenstudio_csharp.so")
+    set(OPENSTUDIO_MODEL_CSHARP_LIBNAME "libopenstudio_model_csharp.so")
+    set(OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME "libopenstudio_translators_csharp.so")
+
     #dotnet pack OpenStudio.csproj --configuration $<CONFIG> -p:NuspecFile="${PROJECT_BINARY_DIR}/OpenStudio.nuspec" -p:NuspectProperties="Configuration=$<CONFIG>"
     # dotnet pack <path to .csproj file> -p:NuspecFile=<path to nuspec file> -p:NuspecProperties=<> -p:NuspecBasePath=<Base path>
     add_custom_target(nuget_package
-      COMMAND ${DOTNET} pack --configuration $<CONFIG> -p:TargetFrameworks=netcoreapp3.0 ${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj
+      COMMAND ${DOTNET} pack --configuration $<CONFIG> -p:TargetFrameworks=netcoreapp3.0 -p:Configuration=$<CONFIG> -p:NuspecProperties="Configuration=$<CONFIG>" ${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj
       DEPENDS csharp_sdk
       WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/csharp_wrapper/"
     )

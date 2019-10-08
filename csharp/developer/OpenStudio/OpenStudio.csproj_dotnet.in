@@ -37,7 +37,10 @@
 
     <!-- NuGet metadata properties -->
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <!-- <NuspecFile>${PROJECT_BINARY_BIR}/OpenStudio.nuspec</NuspecFile> --> <!-- Using this discards everything specified below -->
+
+    <!-- Using NuspecFile discards everything specified below, but I haven't figured out how to pack the shared libraries (openstudio_csharp.dll/so etc) from here -->
+    <NuspecFile>${PROJECT_BINARY_BIR}/OpenStudio.nuspec</NuspecFile>
+
     <PackageId>OpenStudio</PackageId>
     <PackageVersion>${OPENSTUDIO_VERSION}</PackageVersion>
     <RepositoryUrl>https://github.com/NREL/OpenStudio</RepositoryUrl>
