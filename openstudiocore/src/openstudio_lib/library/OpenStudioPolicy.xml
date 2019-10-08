@@ -13,7 +13,7 @@
     <rule IddField="Induced Air Outlet Port List" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_AvailabilityManager_NightCycle">
-    <rule IddField="Fan Schedule" Access="LOCKED"/>
+    <rule IddField="Fan Schedule" Access="HIDDEN"/>
     <rule IddField="Control Zone or Zone List Name" Access="HIDDEN"/>
     <rule IddField="Cooling Control Zone or Zone List Name" Access="HIDDEN"/>
     <rule IddField="Heating Control Zone or Zone List Name" Access="HIDDEN"/>
