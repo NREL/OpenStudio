@@ -113,7 +113,7 @@ namespace detail {
     return value.get();
   }
 
-  bool AvailabilityManagerNightCycle_Impl::setAvailabilitySchedule(Schedule& schedule) {
+  bool AvailabilityManagerNightCycle_Impl::setApplicabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_AvailabilityManager_NightCycleFields::ApplicabilitySchedule,
                               "AvailabilityManagerNightCycle",
                               "Applicability Schedule",
