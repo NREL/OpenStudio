@@ -148,8 +148,8 @@ namespace detail {
   }
 
   bool FanConstantVolume_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    if (boost::optional<AirLoopHVAC> _airLoopHVAC = airLoopHVAC()) {
-      LOG(Warn, briefDescription() << " is connected to an AirLoopHVAC '" << _airLoop->nameString()
+    if (boost::optional<AirLoopHVAC> _airLoop = airLoopHVAC()) {
+      LOG(Info, briefDescription() << " is connected to an AirLoopHVAC '" << _airLoop->nameString()
              << "', therefore its Availability Schedule will be overriden by the AirLoopHVAC's one.");
     }
     bool result = setSchedule(OS_Fan_ConstantVolumeFields::AvailabilityScheduleName,
