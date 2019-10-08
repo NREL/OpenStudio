@@ -44,6 +44,7 @@ namespace model {
 
 class Schedule;
 class ThermalZone;
+class AirLoopHVAC;
 
 namespace detail {
 
