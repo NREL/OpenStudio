@@ -152,7 +152,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
   // Schedules
 
   // default
-  EXPECT_EQ(avm.fanSchedule().name().get(),           idf_avm2.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
+  EXPECT_EQ(avm.fanSchedule()->name().get(),          idf_avm2.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
   EXPECT_EQ(a.availabilitySchedule().name().get(),    idf_avm2.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
   EXPECT_EQ("Always On Discrete",                     idf_avm2.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
 
@@ -178,7 +178,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
   EXPECT_EQ(1u, idfObjs3.size());
   WorkspaceObject idf_avm3(idfObjs3[0]);
 
-  EXPECT_EQ(avm.fanSchedule().name().get(),           idf_avm3.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
+  EXPECT_EQ(avm.fanSchedule()->name().get(),          idf_avm3.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
   EXPECT_EQ(a.availabilitySchedule().name().get(),    idf_avm3.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
   EXPECT_EQ("HVAC Operation",                         idf_avm3.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
 
