@@ -151,7 +151,7 @@ TEST_F(ModelFixture, AvailabilityManagerNightCycle_Schedules)
 
   ScheduleConstant sch_applicability(m);
   sch_applicability.setName("AVM NightCycle Applicability Schedule");
-  sch.setValue(1.0);
+  sch_applicability.setValue(1.0);
   EXPECT_TRUE(avm.setApplicabilitySchedule(sch_applicability));
   EXPECT_EQ(sch_applicability, avm.applicabilitySchedule());
 
@@ -165,7 +165,9 @@ TEST_F(ModelFixture, AvailabilityManagerNightCycle_Schedules)
   EXPECT_TRUE(a.setAvailabilitySchedule(sch_op));
 
   EXPECT_TRUE(a.addAvailabilityManager(avm));
-  EXPECT_TRUE(avm.airLoopHVAC());
+  boost::optional<AirLoopHVAC> _a = avm.airLoopHVAC();
+  ASSERT_TRUE(_a);
+  EXPECT_EQ(a, _a.get());
   boost::optional<Schedule> _sch = avm.fanSchedule();
   ASSERT_TRUE(_sch);
   EXPECT_EQ(sch_op, _sch.get());
