@@ -60,9 +60,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
 
   // Assign it to a loop
   AirLoopHVAC a(m);
-  // TODO: This is going to be deprecated once #2844 gets merged in, replace it
-  // EXPECT_TRUE(a.addAvailabilityManager(avm));
-  EXPECT_TRUE(a.setAvailabilityManager(avm));
+  EXPECT_TRUE(a.addAvailabilityManager(avm));
 
   // Assign Thermal Zones to the AirLoopHVAC
   ThermalZone z1(m);
@@ -148,6 +146,43 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerNightCycle) {
 
   boost::optional<WorkspaceObject> idf_coolingControlThermalZones2 = idf_avm2.getTarget(AvailabilityManager_NightCycleFields::CoolingControlZoneorZoneListName);
   EXPECT_FALSE(idf_coolingControlThermalZones2);
+
+  // Schedules
+
+  // default
+  EXPECT_EQ(avm.fanSchedule().name().get(),           idf_avm2.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
+  EXPECT_EQ(a.availabilitySchedule().name().get(),    idf_avm2.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
+  EXPECT_EQ("Always On Discrete",                     idf_avm2.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
+
+  EXPECT_EQ(avm.applicabilitySchedule().name().get(), idf_avm2.getString(AvailabilityManager_NightCycleFields::ApplicabilityScheduleName).get());
+  EXPECT_EQ("Always On Discrete",                     idf_avm2.getString(AvailabilityManager_NightCycleFields::ApplicabilityScheduleName).get());
+
+
+  // hardset them
+  ScheduleConstant sch_op(m);
+  sch_op.setName("HVAC Operation");
+  sch_op.setValue(1.0);
+  EXPECT_TRUE(a.setAvailabilitySchedule(sch_op));
+
+  ScheduleConstant sch_applicability(m);
+  sch_applicability.setName("AVM NightCycle Applicability Schedule");
+  sch.setValue(1.0);
+  EXPECT_TRUE(avm.setApplicabilitySchedule(sch_applicability));
+
+  // Re translate
+  w = ft.translateModel(m);
+
+  WorkspaceObjectVector idfObjs3(w.getObjectsByType(IddObjectType::AvailabilityManager_NightCycle));
+  EXPECT_EQ(1u, idfObjs3.size());
+  WorkspaceObject idf_avm3(idfObjs3[0]);
+
+  EXPECT_EQ(avm.fanSchedule().name().get(),           idf_avm3.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
+  EXPECT_EQ(a.availabilitySchedule().name().get(),    idf_avm3.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
+  EXPECT_EQ("HVAC Operation",                         idf_avm3.getString(AvailabilityManager_NightCycleFields::FanScheduleName).get());
+
+  EXPECT_EQ(avm.applicabilitySchedule().name().get(), idf_avm3.getString(AvailabilityManager_NightCycleFields::ApplicabilityScheduleName).get());
+  EXPECT_EQ("AVM NightCycle Applicability Schedule",  idf_avm3.getString(AvailabilityManager_NightCycleFields::ApplicabilityScheduleName).get());
+
 
 }
 
