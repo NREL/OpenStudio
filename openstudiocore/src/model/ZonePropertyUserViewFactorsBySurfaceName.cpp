@@ -275,19 +275,7 @@ namespace detail {
       return false;
     }
 
-    // Check if viewFactor already exists
-    boost::optional<unsigned> _existingIndex = viewFactorIndex(viewFactor);
-    if (_existingIndex) {
-      boost::optional<ViewFactor> _viewFactor = getViewFactor(_existingIndex.get());
-      OS_ASSERT(_viewFactor);
-      LOG(Warn, "For " << briefDescription() << ", ViewFactor already exists, will be modified in place from " << _viewFactor.get()
-             << " to " << viewFactor << ".");
-    }
-
-    // If existing, get it, otherwise Push an extensible group. ModelExtensibleGroup cannot be default-constructed, so use a ternary operator
-    ModelExtensibleGroup eg = (_existingIndex
-                                ? getExtensibleGroup(_existingIndex.get()).cast<ModelExtensibleGroup>()
-                                : getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>());
+    ModelExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>();
 
     bool from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, fromSurface.handle());
     if (!from) {
