@@ -12,6 +12,13 @@
     <rule IddField="Outlet Node" Access="HIDDEN"/>
     <rule IddField="Induced Air Outlet Port List" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_AvailabilityManager_NightCycle">
+    <rule IddField="Fan Schedule" Access="LOCKED"/>
+    <rule IddField="Control Zone or Zone List Name" Access="HIDDEN"/>
+    <rule IddField="Cooling Control Zone or Zone List Name" Access="HIDDEN"/>
+    <rule IddField="Heating Control Zone or Zone List Name" Access="HIDDEN"/>
+    <rule IddField="Heating Zone Fans Only Zone or Zone List Name" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_CentralHeatPumpSystem">
     <rule IddField="Cooling Loop Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Cooling Loop Outlet Node Name" Access="HIDDEN"/>
