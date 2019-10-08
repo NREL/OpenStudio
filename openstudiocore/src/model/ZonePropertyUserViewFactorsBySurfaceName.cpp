@@ -285,9 +285,10 @@ namespace detail {
     }
 
     // If existing, get it, otherwise Push an extensible group. ModelExtensibleGroup cannot be default-constructed, so use a ternary operator
+    std::vector<std::string> temp;
     ModelExtensibleGroup eg = (_existingIndex
                                 ? getExtensibleGroup(_existingIndex.get()).cast<ModelExtensibleGroup>()
-                                : getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>());
+                                : pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>());
 
     bool from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, fromSurface.handle());
     if (!from) {
