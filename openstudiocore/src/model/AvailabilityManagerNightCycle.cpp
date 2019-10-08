@@ -38,6 +38,11 @@
 #include "ModelObject.hpp"
 #include "ModelObjectList.hpp"
 #include "ModelObjectList_Impl.hpp"
+#include "Model.hpp"
+#include "Loop.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_AvailabilityManager_NightCycle_FieldEnums.hxx>
@@ -87,6 +92,48 @@ namespace detail {
   std::vector<ScheduleTypeKey> AvailabilityManagerNightCycle_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
     std::vector<ScheduleTypeKey> result;
+    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+    if (std::find(b,e,OS_AvailabilityManager_NightCycleFields::ApplicabilitySchedule) != e)
+    {
+      result.push_back(ScheduleTypeKey("AvailabilityManagerNightCycle","Applicability Schedule"));
+    }
+    return result;
+  }
+
+  boost::optional<Schedule> AvailabilityManagerNightCycle_Impl::optionalApplicabilitySchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AvailabilityManager_NightCycleFields::ApplicabilitySchedule);
+  }
+
+  Schedule AvailabilityManagerNightCycle_Impl::applicabilitySchedule() const {
+    boost::optional<Schedule> value = optionalApplicabilitySchedule();
+    if (!value) {
+      LOG_AND_THROW(briefDescription() << " does not have an Applicability Schedule attached.");
+    }
+    return value.get();
+  }
+
+  bool AvailabilityManagerNightCycle_Impl::setApplicabilitySchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_AvailabilityManager_NightCycleFields::ApplicabilitySchedule,
+                              "AvailabilityManagerNightCycle",
+                              "Applicability Schedule",
+                              schedule);
+    return result;
+  }
+
+
+  boost::optional<AirLoopHVAC> AvailabilityManagerNightCycle_Impl::airLoopHVAC() const {
+    if (boost::optional<Loop> _loop = loop()) {
+      return _loop->optionalCast<AirLoopHVAC>();
+    }
+    return boost::none;
+  }
+
+  boost::optional<Schedule> AvailabilityManagerNightCycle_Impl::fanSchedule() const {
+    boost::optional<Schedule> result;
+    if (boost::optional<AirLoopHVAC> _airLoop = airLoopHVAC()) {
+      result = _airLoop->availabilitySchedule();
+    }
     return result;
   }
 
@@ -476,6 +523,12 @@ AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(const Model& model)
   : AvailabilityManager(AvailabilityManagerNightCycle::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::AvailabilityManagerNightCycle_Impl>());
+
+  {
+    auto schedule = model.alwaysOnDiscreteSchedule();
+    setApplicabilitySchedule(schedule);
+  }
+
   setThermostatTolerance(1.0);
   setCyclingRunTime(3600);
 
@@ -486,20 +539,20 @@ AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(const Model& model)
 
   // Cooling Control Zone List
   ModelObjectList coolingControlThermalZoneList = ModelObjectList(model);
-  controlThermalZoneList.setName(this->name().get() + " Cooling Control Zone List");
+  coolingControlThermalZoneList.setName(this->name().get() + " Cooling Control Zone List");
   ok = setPointer(OS_AvailabilityManager_NightCycleFields::CoolingControlZoneorZoneListName, coolingControlThermalZoneList.handle());
   OS_ASSERT(ok);
 
   // Cooling Control Zone List
   ModelObjectList heatingControlThermalZoneList = ModelObjectList(model);
-  controlThermalZoneList.setName(this->name().get() + " Heating Control Zone List");
+  heatingControlThermalZoneList.setName(this->name().get() + " Heating Control Zone List");
   ok = setPointer(OS_AvailabilityManager_NightCycleFields::HeatingControlZoneorZoneListName, heatingControlThermalZoneList.handle());
   OS_ASSERT(ok);
 
 
   // Heating Zone Fans Only Zone List
   ModelObjectList heatingZoneFansOnlyThermalZoneList = ModelObjectList(model);
-  controlThermalZoneList.setName(this->name().get() + " Heating Zone Fans Only Zone List");
+  heatingZoneFansOnlyThermalZoneList.setName(this->name().get() + " Heating Zone Fans Only Zone List");
   ok = setPointer(OS_AvailabilityManager_NightCycleFields::HeatingZoneFansOnlyZoneorZoneListName, heatingZoneFansOnlyThermalZoneList.handle());
   OS_ASSERT(ok);
 }
@@ -679,7 +732,21 @@ void AvailabilityManagerNightCycle::resetCyclingRunTimeControlType() {
   getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetCyclingRunTimeControlType();
 }
 
+boost::optional<AirLoopHVAC> AvailabilityManagerNightCycle::airLoopHVAC() const {
+  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->airLoopHVAC();
+}
 
+Schedule AvailabilityManagerNightCycle::applicabilitySchedule() const {
+  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->applicabilitySchedule();
+}
+
+bool AvailabilityManagerNightCycle::setApplicabilitySchedule(Schedule& schedule) {
+  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setApplicabilitySchedule(schedule);
+}
+
+boost::optional<Schedule> AvailabilityManagerNightCycle::fanSchedule() const {
+  return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->fanSchedule();
+}
 
 /// @cond
 AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(std::shared_ptr<detail::AvailabilityManagerNightCycle_Impl> impl)
