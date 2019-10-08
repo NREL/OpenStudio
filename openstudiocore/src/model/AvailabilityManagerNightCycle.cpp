@@ -38,6 +38,7 @@
 #include "ModelObject.hpp"
 #include "ModelObjectList.hpp"
 #include "ModelObjectList_Impl.hpp"
+#include "Model.hpp"
 #include "Loop.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
