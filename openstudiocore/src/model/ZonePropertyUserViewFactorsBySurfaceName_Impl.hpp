@@ -96,6 +96,12 @@ namespace detail {
     /** @name Setters */
     //@{
 
+    // No Checks whatsoever before adding it
+    bool addViewFactorNoChecks(const ViewFactor& viewFactor);
+
+    bool addViewFactorUnsafe(const ViewFactor& viewFactor);
+
+    // This checks that toSurface/fromSurface is part of thermal zone, and looks for any existing ViewFactor to modify double value in place
     bool addViewFactor(const ViewFactor& viewFactor);
 
     bool addViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor);

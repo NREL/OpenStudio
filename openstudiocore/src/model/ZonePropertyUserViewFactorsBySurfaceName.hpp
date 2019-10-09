@@ -115,8 +115,11 @@ class MODEL_API ZonePropertyUserViewFactorsBySurfaceName : public ModelObject {
   /** @name Setters */
   //@{
 
-  /** If a viewFactor group is already present (cf `viewFactorIndex()`), it will Warn and override the viewFactor value */
-  bool addViewFactor(const ViewFactor& viewFactor);
+  bool addViewFactorUnsafe(const ViewFactor& viewFactor);
+
+  /** If checkExisting, will check if toSurface/fromSurfae is part of the thermal zone in question, and,
+   *  if a viewFactor group is already present (cf `viewFactorIndex()`), it will Warn and override the viewFactor value */
+  bool addViewFactor(const ViewFactor& viewFactor, bool checkExisting = true);
 
   // Overloads, they create a ViewFactor wrapper, then call `addViewFactor(const ViewFactor& viewFactor)`
   bool addViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor);

@@ -230,6 +230,54 @@ namespace detail {
 
   }
 
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactorUnsafe(const ViewFactor& viewFactor) {
+
+    std::vector<std::string> temp({
+        toString(viewFactor.fromSurface().handle()),
+        toString(viewFactor.toSurface().handle()),
+        toString(viewFactor.viewFactor())
+    });
+
+    pushExtensibleGroup(temp, false);
+
+    return true;
+
+  }
+
+
+  bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactorNoChecks(const ViewFactor& viewFactor) {
+
+    bool result = false;
+
+    // If existing, get it, otherwise Push an extensible group. ModelExtensibleGroup cannot be default-constructed, so use a ternary operator
+    std::vector<std::string> temp;
+    ModelExtensibleGroup eg = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
+
+    bool from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, viewFactor.fromSurface().handle());
+    if (!from) {
+      LOG(Error, "Unable to add View Factor which has an incompatible fromSurface object to " << briefDescription());
+      OS_ASSERT(false);
+    }
+
+    bool to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, viewFactor.toSurface().handle());
+    if (!to) {
+      LOG(Error, "Unable to add View Factor which has an incompatible toSurface object to " << briefDescription());
+      OS_ASSERT(false);
+    }
+
+    bool value = eg.setDouble(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ViewFactor, viewFactor.viewFactor());
+    if (from && to && value) {
+      result = true;
+    } else {
+      // Something went wrong
+      // So erase the new extensible group
+      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      result = false;
+    }
+    return result;
+
+  }
+
   bool ZonePropertyUserViewFactorsBySurfaceName_Impl::addViewFactor(const ViewFactor& viewFactor) {
     bool result = false;
 
@@ -438,8 +486,16 @@ unsigned int ZonePropertyUserViewFactorsBySurfaceName::numberofViewFactors() con
   return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->numberofViewFactors();
 }
 
-bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const ViewFactor& viewFactor) {
-  return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(viewFactor);
+bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactorUnsafe(const ViewFactor& viewFactor) {
+  return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactorUnsafe(viewFactor);
+}
+
+bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const ViewFactor& viewFactor, bool checkExisting) {
+  if (checkExisting) {
+    return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactor(viewFactor);
+  } else {
+    return getImpl<detail::ZonePropertyUserViewFactorsBySurfaceName_Impl>()->addViewFactorNoChecks(viewFactor);
+  }
 }
 
 bool ZonePropertyUserViewFactorsBySurfaceName::addViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor) {
