@@ -55,7 +55,7 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
 {
   // after pre-processing in ForwardTranslator, all ShadingControls should only reference subsurfaces in a single zone
   // additionally, the additional property "Shading Control Sequence Number" is set as an integer
-  
+
   std::vector<SubSurface> subSurfaces = modelObject.subSurfaces();
 
   if (subSurfaces.empty()) {

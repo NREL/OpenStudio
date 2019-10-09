@@ -5642,6 +5642,8 @@ OS:ShadingControl,
        \key BetweenGlassShade
        \key BetweenGlassBlind
        \key SwitchableGlazing
+       \note InteriorDaylightRedirectionDevice maps to InteriorBlind in EnergyPlus ForwardTranslator.
+       \note It is used by Radiance though.
        \key InteriorDaylightRedirectionDevice
   A4 , \field Construction with Shading Name
        \type object-list
