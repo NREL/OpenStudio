@@ -532,6 +532,7 @@ AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(const Model& model)
   setThermostatTolerance(1.0);
   setCyclingRunTime(3600);
 
+  // Control Zone List
   ModelObjectList controlThermalZoneList = ModelObjectList(model);
   controlThermalZoneList.setName(this->name().get() + " Control Zone List");
   bool ok = setPointer(OS_AvailabilityManager_NightCycleFields::ControlZoneorZoneListName, controlThermalZoneList.handle());
@@ -543,12 +544,11 @@ AvailabilityManagerNightCycle::AvailabilityManagerNightCycle(const Model& model)
   ok = setPointer(OS_AvailabilityManager_NightCycleFields::CoolingControlZoneorZoneListName, coolingControlThermalZoneList.handle());
   OS_ASSERT(ok);
 
-  // Cooling Control Zone List
+  // Heating Control Zone List
   ModelObjectList heatingControlThermalZoneList = ModelObjectList(model);
   heatingControlThermalZoneList.setName(this->name().get() + " Heating Control Zone List");
   ok = setPointer(OS_AvailabilityManager_NightCycleFields::HeatingControlZoneorZoneListName, heatingControlThermalZoneList.handle());
   OS_ASSERT(ok);
-
 
   // Heating Zone Fans Only Zone List
   ModelObjectList heatingZoneFansOnlyThermalZoneList = ModelObjectList(model);
