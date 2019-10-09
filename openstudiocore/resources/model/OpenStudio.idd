@@ -5664,7 +5664,44 @@ OS:ShadingControl,
        \key AlwaysOn
        \key AlwaysOff
        \key OnIfScheduleAllows
+       \note OnIfScheduleAllows requires that Schedule Name be specified and
+       \note Shading Control Is Scheduled = Yes.
+       \note AlwaysOn, AlwaysOff and OnIfScheduleAllows are the only valid control types for ExteriorScreen.
+       \note The following six control types are used primarily to reduce
+       \note zone cooling load due to window solar gain
        \key OnIfHighSolarOnWindow
+       \key OnIfHighHorizontalSolar
+       \key OnIfHighOutdoorAirTemperature
+       \key OnIfHighZoneAirTemperature
+       \key OnIfHighZoneCooling
+       \key OnIfHighGlare
+       \note Following entry should be used only if Shading Type = SwitchableGlazing
+       \note and window is in a daylit zone
+       \key MeetDaylightIlluminanceSetpoint
+       \note The following three control types are used to reduce zone Heating load. They can be
+       \note used with any Shading Type but are most appropriate for opaque interior or exterior
+       \note shades with high insulating value ("opaque movable insulation")
+       \key OnNightIfLowOutdoorTempAndOffDay
+       \key OnNightIfLowInsideTempAndOffDay
+       \key OnNightIfHeatingAndOffDay
+       \note The following two control types are used to reduce zone heating and cooling load.
+       \note They can be used with any Shading Type but are most appropriate for translucent interior
+       \note or exterior shades with high insulating value ("translucent movable insulation")
+       \key OnNightIfLowOutdoorTempAndOnDayIfCooling
+       \key OnNightIfHeatingAndOnDayIfCooling
+       \note The following two control types are used to reduce zone Cooling load.
+       \note They can be used with any Shading Type but are most appropriate for interior
+       \note or exterior blinds,interior or exterior shades with low insulating value, or
+       \note switchable glazing
+       \key OffNightAndOnDayIfCoolingAndHighSolarOnWindow
+       \key OnNightAndOnDayIfCoolingAndHighSolarOnWindow
+       \note The following four control types require that both Setpoint and Setpoint2 be specified
+       \note Setpoint will correspond to outdoor air temp or zone air temp (deg C)
+       \note Setpoint2 will correspond to solar on window or horizontal solar (W/m2)
+       \key OnIfHighOutdoorAirTempAndHighSolarOnWindow
+       \key OnIfHighOutdoorAirTempAndHighHorizontalSolar
+       \key OnIfHighZoneAirTempAndHighSolarOnWindow
+       \key OnIfHighZoneAirTempAndHighHorizontalSolar
        \default OnIfHighSolarOnWindow
   A7 , \field Schedule Name
        \type object-list
