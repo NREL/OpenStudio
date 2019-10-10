@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -82,6 +82,9 @@ public:
 
   std::string costUnits() const;
 
+  std::string startOfCosts() const;
+  bool isStartOfCostsDefaulted() const;
+
   int yearsFromStart() const;
   bool isYearsFromStartDefaulted() const;
   int monthsFromStart() const;
@@ -101,6 +104,9 @@ public:
   bool setCost(double cost);
 
   bool setCostUnits(const std::string& costUnits);
+
+  bool setStartOfCosts(const std::string& startOfCosts);
+  void resetStartOfCosts() ;
 
   bool setYearsFromStart(int yearsFromStart);
   void resetYearsFromStart();

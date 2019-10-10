@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -713,22 +713,22 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned ChillerElectricEIR_Impl::supplyInletPort()
+  unsigned ChillerElectricEIR_Impl::supplyInletPort() const
   {
     return OS_Chiller_Electric_EIRFields::ChilledWaterInletNodeName;
   }
 
-  unsigned ChillerElectricEIR_Impl::supplyOutletPort()
+  unsigned ChillerElectricEIR_Impl::supplyOutletPort() const
   {
     return OS_Chiller_Electric_EIRFields::ChilledWaterOutletNodeName;
   }
 
-  unsigned ChillerElectricEIR_Impl::demandInletPort()
+  unsigned ChillerElectricEIR_Impl::demandInletPort() const
   {
     return OS_Chiller_Electric_EIRFields::CondenserInletNodeName;
   }
 
-  unsigned ChillerElectricEIR_Impl::demandOutletPort()
+  unsigned ChillerElectricEIR_Impl::demandOutletPort() const
   {
     return OS_Chiller_Electric_EIRFields::CondenserOutletNodeName;
   }

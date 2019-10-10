@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -409,6 +409,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateConstruction(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::Construction_AirBoundary:
+  {
+    modelObject = translateConstructionAirBoundary(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::Controller_OutdoorAir :
     {
       //modelObject = translateControllerOutdoorAir(workspaceObject);
@@ -616,6 +621,16 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateFenestrationSurfaceDetailed(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::Foundation_Kiva :
+    {
+      modelObject = translateFoundationKiva(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Foundation_Kiva_Settings :
+    {
+      modelObject = translateFoundationKivaSettings(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::Generator_MicroTurbine :
     {
       modelObject = translateGeneratorMicroTurbine(workspaceObject);
@@ -757,6 +772,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::People :
     {
       modelObject = translatePeople(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::PerformancePrecisionTradeoffs :
+    {
+      modelObject = translatePerformancePrecisionTradeoffs(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::Refrigeration_Case :
@@ -919,6 +939,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       //modelObject = translateSurfaceConvectionAlgorithmOutside(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::SurfaceProperty_ExposedFoundationPerimeter :
+    {
+      modelObject = translateSurfacePropertyExposedFoundationPerimeter(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint :
     {
       modelObject = translateThermostatSetpointDualSetpoint(workspaceObject);
@@ -929,14 +954,37 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateTimestep(workspaceObject);
       break;
     }
-  case openstudio::IddObjectType::UtilityCost_Charge_Simple :
-    {
-      break; // no-op
-    }
-  case openstudio::IddObjectType::UtilityCost_Qualify :
-    {
-      break; // no-op
-    }
+
+   // TODO: once UtilityCost objects are wrapped (and ReverseTranslated)
+  //case openstudio::IddObjectType::OS_UtilityCost_Charge_Block:
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Charge_Simple :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Computation :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Qualify :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Ratchet :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Tariff :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Variable :
+    //{
+      //break; // no-op
+    //}
+
   case openstudio::IddObjectType::Version :
    {
      modelObject = translateVersion(workspaceObject );
@@ -1015,6 +1063,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::ZoneMixing:
   {
     modelObject = translateZoneMixing(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName:
+  {
+    modelObject = translateZonePropertyUserViewFactorsBySurfaceName(workspaceObject);
     break;
   }
   case openstudio::IddObjectType::ZoneVentilation_DesignFlowRate :

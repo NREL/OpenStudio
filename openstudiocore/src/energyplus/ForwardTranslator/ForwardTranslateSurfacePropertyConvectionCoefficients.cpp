@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -59,7 +59,12 @@ boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyConvection
   boost::optional<Schedule> convectionCoefficient2Schedule = modelObject.convectionCoefficient2Schedule();
 
   if (!(convectionCoefficientSurface && convectionCoefficient1Location && convectionCoefficient1Type)){
-    LOG(Error, "SurfacePropertyConvectionCoefficients '" << modelObject.name().get() << "' missing required fields, will not be translated");
+    if (convectionCoefficientSurface) {
+      LOG(Error, "SurfacePropertyConvectionCoefficients for Surface '" << convectionCoefficientSurface->nameString()
+            << "' missing required fields, will not be translated");
+    } else {
+      LOG(Error, "SurfacePropertyConvectionCoefficients does not reference a surface, it will not be translated.");
+    }
     return boost::none;
   }
 

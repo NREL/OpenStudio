@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -223,6 +223,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"CoilHeatingWaterBaseboard","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilWaterHeatingDesuperheater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilWaterHeatingDesuperheater","Setpoint Temperature","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"ConstructionAirBoundary", "Simple Mixing", "simpleMixingSchedule", true, "", 0.0, OptionalDouble()},
     {"ControllerOutdoorAir","Minimum Outdoor Air","minimumOutdoorAirSchedule",true,"",0.0,1.0},
     {"ControllerOutdoorAir","Minimum Fraction of Outdoor Air","minimumFractionofOutdoorAirSchedule",true,"",0.0,1.0},
     {"ControllerOutdoorAir","Maximum Fraction of Outdoor Air","maximumFractionofOutdoorAirSchedule",true,"",0.0,1.0},
@@ -246,6 +247,10 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"DefaultScheduleSet","Other Equipment","otherEquipmentSchedule",true,"",OptionalDouble(),OptionalDouble()},
     {"DesignSpecificationOutdoorAir","Outdoor Air Flow Rate","outdoorAirFlowRateFractionSchedule",true,"",0.0,1.0},
     {"ElectricEquipment","Electric Equipment","schedule",true,"",0.0,1.0},
+    {"ElectricEquipmentITEAirCooled", "Design Power Input", "designPowerInputSchedule", true, "", 0.0, 1.0},
+    {"ElectricEquipmentITEAirCooled", "CPU Loading", "cPULoadingSchedule", true, "", 0.0, 1.0},
+    {"ElectricEquipmentITEAirCooledDefinition", "Supply Temperature Difference", "supplyTemperatureDifferenceSchedule", true, "Temperature", 0.0, 50.0},
+    {"ElectricEquipmentITEAirCooledDefinition", "Return Temperature Difference", "returnTemperatureDifferenceSchedule", true, "Temperature", -50.0, 50.0},
     {"ElectricLoadCenterDistribution", "Track  Scheme", "trackScheduleSchemeSchedule",true,"",0.0,OptionalDouble()},
     {"ElectricLoadCenterDistribution", "Storage Charge Power Fraction", "storageChargePowerFractionSchedule",true,"",0.0,1.0},
     {"ElectricLoadCenterDistribution", "Storage Discharge Power Fraction", "storageDischargePowerFractionSchedule",true,"",0.0,1.0},

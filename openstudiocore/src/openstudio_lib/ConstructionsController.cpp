@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,6 +36,7 @@
 #include "../model/ComponentData.hpp"
 #include "../model/ComponentData_Impl.hpp"
 #include "../model/Construction.hpp"
+#include "../model/ConstructionAirBoundary.hpp"
 #include "../model/ConstructionBase.hpp"
 #include "../model/ConstructionBase_Impl.hpp"
 #include "../model/ConstructionWithInternalSource.hpp"
@@ -64,6 +65,9 @@ void ConstructionsController::onAddObject(const openstudio::IddObjectType& iddOb
     case IddObjectType::OS_Construction:
       openstudio::model::Construction(this->model());
       break;
+    case IddObjectType::OS_Construction_AirBoundary:
+      openstudio::model::ConstructionAirBoundary(this->model());
+      break;      
     case IddObjectType::OS_Construction_InternalSource:
       openstudio::model::ConstructionWithInternalSource(this->model());
       break;

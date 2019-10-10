@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -138,6 +138,26 @@ boost::optional<IdfObject> ForwardTranslator::translateHeaderedPumpsConstantSpee
     auto value = modelObject.skinLossRadiativeFraction();
     idfObject.setDouble(HeaderedPumps_ConstantSpeedFields::SkinLossRadiativeFraction,value);
   }
+
+  {
+    auto s = modelObject.designPowerSizingMethod();
+    idfObject.setString(HeaderedPumps_ConstantSpeedFields::DesignPowerSizingMethod, s);
+  }
+
+
+  {
+    auto value = modelObject.designElectricPowerPerUnitFlowRate();
+    idfObject.setDouble(HeaderedPumps_ConstantSpeedFields::DesignElectricPowerperUnitFlowRate, value);
+  }
+
+
+  {
+    auto value = modelObject.designShaftPowerPerUnitFlowRatePerUnitHead();
+    idfObject.setDouble(HeaderedPumps_ConstantSpeedFields::DesignShaftPowerperUnitFlowRateperUnitHead, value);
+  }
+
+  // End Use Subcategory
+  idfObject.setString(HeaderedPumps_ConstantSpeedFields::EndUseSubcategory, modelObject.endUseSubcategory());
 
   return idfObject;
 }

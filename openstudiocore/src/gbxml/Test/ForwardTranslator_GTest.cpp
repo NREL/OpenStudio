@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,6 +34,18 @@
 #include "../ReverseTranslator.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
+#include "../../model/Construction.hpp"
+#include "../../model/Construction_Impl.hpp"
+#include "../../model/Facility.hpp"
+#include "../../model/Facility_Impl.hpp"
+#include "../../model/Building.hpp"
+#include "../../model/Building_Impl.hpp"
+#include "../../model/MasslessOpaqueMaterial.hpp"
+#include "../../model/MasslessOpaqueMaterial_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/ThermalZone.hpp"
 
 #include "../../model/Model.hpp"
 
@@ -104,4 +116,80 @@ TEST_F(gbXMLFixture, ForwardTranslator_AdiabaticSurface)
   EXPECT_EQ("Adiabatic", osurf->outsideBoundaryCondition());
   EXPECT_EQ("NoSun", osurf->sunExposure());
   EXPECT_EQ("NoWind", osurf->windExposure());
+}
+
+TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
+  Model model;
+
+  Construction construction(model);
+  construction.setName("Construction1");
+
+  MaterialVector layers;
+
+  MasslessOpaqueMaterial material1(model);
+  material1.setName("Material1");
+  layers.push_back(material1);
+
+  StandardOpaqueMaterial material2(model);
+  material2.setName("Material2");
+  layers.push_back(material2);
+
+  MasslessOpaqueMaterial material3(model);
+  material3.setName("Material3");
+  layers.push_back(material3);
+
+  StandardOpaqueMaterial material4(model);
+  material4.setName("Material4");
+  layers.push_back(material4);
+
+  construction.setLayers(layers);
+
+  Facility facility = model.getUniqueModelObject<Facility>();
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  Space space(model);
+  space.setName("Space1");
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 1));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(1, 0, 0));
+  points.push_back(Point3d(1, 0, 1));
+
+  //std::string surfname("Surface 1"); // DLM: note this will fail because "Surface 1" gets round tripped as "Surface_1"
+  std::string surfname("Surface1");
+  Surface surface(points, model);
+  surface.setName(surfname);
+  surface.setConstruction(construction);
+  surface.setSpace(space);
+
+  ThermalZone zone(model);
+  space.setThermalZone(zone);
+
+  // Write out the XML
+  path p = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_ConstructionLayers.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test = forwardTranslator.modelToGbXML(model, p);
+
+  EXPECT_TRUE(test);
+
+  // Read the XML back in and check the surface
+  ReverseTranslator reverseTranslator;
+  boost::optional<Model> model2 = reverseTranslator.loadModel(p);
+
+  ASSERT_TRUE(model2);
+  //std::cout << *model2 << std::endl;
+  auto osurf = model2->getModelObjectByName<Surface>(surfname);  
+  ASSERT_TRUE(osurf);
+  auto ocons = osurf->construction();
+  ASSERT_TRUE(ocons);
+  auto olayeredcons = ocons->optionalCast<Construction>();
+  ASSERT_TRUE(olayeredcons);
+  ASSERT_EQ(4u, olayeredcons->layers().size());
+  EXPECT_TRUE(olayeredcons->layers()[0].optionalCast<MasslessOpaqueMaterial>());
+  EXPECT_TRUE(olayeredcons->layers()[1].optionalCast<StandardOpaqueMaterial>());
+  EXPECT_TRUE(olayeredcons->layers()[2].optionalCast<MasslessOpaqueMaterial>());
+  EXPECT_TRUE(olayeredcons->layers()[3].optionalCast<StandardOpaqueMaterial>());
 }

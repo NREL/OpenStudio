@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -134,12 +134,12 @@ namespace detail {
     return result;
   }
 
-  unsigned BoilerHotWater_Impl::inletPort()
+  unsigned BoilerHotWater_Impl::inletPort() const
   {
     return OS_Boiler_HotWaterFields::BoilerWaterInletNodeName;
   }
 
-  unsigned BoilerHotWater_Impl::outletPort()
+  unsigned BoilerHotWater_Impl::outletPort() const
   {
     return OS_Boiler_HotWaterFields::BoilerWaterOutletNodeName;
   }
@@ -791,4 +791,4 @@ BoilerHotWater::BoilerHotWater(std::shared_ptr<detail::BoilerHotWater_Impl> impl
   }
 
 } // model
-} // openstudio
+} // openstudio

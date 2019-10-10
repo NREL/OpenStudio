@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,10 +52,6 @@
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
-
-// TODO: only needed for API warning
-#include <OpenStudio.hxx>
-
 
 namespace openstudio {
 
@@ -144,12 +140,12 @@ namespace detail{
     return result;
   }
 
-  unsigned AirTerminalSingleDuctVAVReheat_Impl::inletPort()
+  unsigned AirTerminalSingleDuctVAVReheat_Impl::inletPort() const
   {
     return OS_AirTerminal_SingleDuct_VAV_ReheatFields::AirInletNodeName;
   }
 
-  unsigned AirTerminalSingleDuctVAVReheat_Impl::outletPort()
+  unsigned AirTerminalSingleDuctVAVReheat_Impl::outletPort() const
   {
     return OS_AirTerminal_SingleDuct_VAV_ReheatFields::AirOutletNodeName;
   }
@@ -877,14 +873,6 @@ bool AirTerminalSingleDuctVAVReheat::setZoneMinimumAirFlowMethod( std::string va
 
 boost::optional<double> AirTerminalSingleDuctVAVReheat::constantMinimumAirFlowFraction() const
 {
-  if( VersionString( openStudioVersion() ) < VersionString("2.8.0") ) {
-    // TODO: remove in 2 versions
-    LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, it now returns an Optional double");
-  } else {
-    // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
-    LOG(Debug, "Please go tell a developper to remove the warning in AirTerminalSingleDuctVAVReheat::constantMinimumAirFlowFraction");
-    OS_ASSERT(false);
-  }
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->constantMinimumAirFlowFraction();
 }
 
@@ -904,14 +892,6 @@ void AirTerminalSingleDuctVAVReheat::autosizeConstantMinimumAirFlowFraction() {
 
 boost::optional<double> AirTerminalSingleDuctVAVReheat::fixedMinimumAirFlowRate() const
 {
-  if( VersionString( openStudioVersion() ) < VersionString("2.8.0") ) {
-    // TODO: remove in 2 versions
-    LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, it now returns an Optional double");
-  } else {
-    // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
-    LOG(Debug, "Please go tell a developper to remove the warning AirTerminalSingleDuctVAVReheat::fixedMinimumAirFlowRate");
-    OS_ASSERT(false);
-  }
   return getImpl<detail::AirTerminalSingleDuctVAVReheat_Impl>()->fixedMinimumAirFlowRate();
 }
 

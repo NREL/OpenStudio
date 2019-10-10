@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -155,6 +155,7 @@
 #include "ConnectorMixer.hpp"
 #include "ConnectorSplitter.hpp"
 #include "Construction.hpp"
+#include "ConstructionAirBoundary.hpp"
 #include "ConstructionWithInternalSource.hpp"
 #include "ControllerMechanicalVentilation.hpp"
 #include "ControllerOutdoorAir.hpp"
@@ -198,6 +199,8 @@
 #include "Duct.hpp"
 #include "ElectricEquipment.hpp"
 #include "ElectricEquipmentDefinition.hpp"
+#include "ElectricEquipmentITEAirCooled.hpp"
+#include "ElectricEquipmentITEAirCooledDefinition.hpp"
 #include "ElectricLoadCenterDistribution.hpp"
 #include "ElectricLoadCenterInverterLookUpTable.hpp"
 #include "ElectricLoadCenterInverterSimple.hpp"
@@ -318,6 +321,7 @@
 #include "OutsideSurfaceConvectionAlgorithm.hpp"
 #include "People.hpp"
 #include "PeopleDefinition.hpp"
+#include "PerformancePrecisionTradeoffs.hpp"
 #include "PhotovoltaicPerformanceEquivalentOneDiode.hpp"
 #include "PhotovoltaicPerformanceSimple.hpp"
 #include "PipeAdiabatic.hpp"
@@ -449,13 +453,16 @@
 #include "Timestep.hpp"
 #include "UtilityBill.hpp"
 #include "UnitarySystemPerformanceMultispeed.hpp"
-#include "UtilityCost_Charge_Block.hpp"
-#include "UtilityCost_Charge_Simple.hpp"
-#include "UtilityCost_Computation.hpp"
-#include "UtilityCost_Qualify.hpp"
-#include "UtilityCost_Ratchet.hpp"
-#include "UtilityCost_Tariff.hpp"
-#include "UtilityCost_Variable.hpp"
+
+// TODO: once UtilityCost objects are wrapped
+// #include "UtilityCost_Charge_Block.hpp"
+// #include "UtilityCost_Charge_Simple.hpp"
+// #include "UtilityCost_Computation.hpp"
+// #include "UtilityCost_Qualify.hpp"
+// #include "UtilityCost_Ratchet.hpp"
+// #include "UtilityCost_Tariff.hpp"
+// #include "UtilityCost_Variable.hpp"
+
 #include "Version.hpp"
 #include "WaterHeaterMixed.hpp"
 #include "WaterHeaterHeatPump.hpp"
@@ -498,6 +505,7 @@
 #include "ZoneHVACUnitVentilator.hpp"
 #include "ZoneHVACWaterToAirHeatPump.hpp"
 #include "ZoneMixing.hpp"
+#include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "ZoneVentilationDesignFlowRate.hpp"
 
 // include all concrete ModelObject Impls too
@@ -626,6 +634,7 @@
 #include "ConnectorMixer_Impl.hpp"
 #include "ConnectorSplitter_Impl.hpp"
 #include "Construction_Impl.hpp"
+#include "ConstructionAirBoundary_Impl.hpp"
 #include "ConstructionWithInternalSource_Impl.hpp"
 #include "ControllerMechanicalVentilation_Impl.hpp"
 #include "ControllerOutdoorAir_Impl.hpp"
@@ -669,6 +678,8 @@
 #include "Duct_Impl.hpp"
 #include "ElectricEquipment_Impl.hpp"
 #include "ElectricEquipmentDefinition_Impl.hpp"
+#include "ElectricEquipmentITEAirCooled_Impl.hpp"
+#include "ElectricEquipmentITEAirCooledDefinition_Impl.hpp"
 #include "ElectricLoadCenterDistribution_Impl.hpp"
 #include "ElectricLoadCenterInverterLookUpTable_Impl.hpp"
 #include "ElectricLoadCenterInverterSimple_Impl.hpp"
@@ -789,6 +800,7 @@
 #include "OutsideSurfaceConvectionAlgorithm_Impl.hpp"
 #include "People_Impl.hpp"
 #include "PeopleDefinition_Impl.hpp"
+#include "PerformancePrecisionTradeoffs_Impl.hpp"
 #include "PhotovoltaicPerformanceSimple_Impl.hpp"
 #include "PhotovoltaicPerformanceEquivalentOneDiode_Impl.hpp"
 #include "PipeAdiabatic_Impl.hpp"
@@ -920,13 +932,16 @@
 #include "Timestep_Impl.hpp"
 #include "UnitarySystemPerformanceMultispeed_Impl.hpp"
 #include "UtilityBill_Impl.hpp"
-#include "UtilityCost_Charge_Block_Impl.hpp"
-#include "UtilityCost_Charge_Simple_Impl.hpp"
-#include "UtilityCost_Computation_Impl.hpp"
-#include "UtilityCost_Qualify_Impl.hpp"
-#include "UtilityCost_Ratchet_Impl.hpp"
-#include "UtilityCost_Tariff_Impl.hpp"
-#include "UtilityCost_Variable_Impl.hpp"
+
+// TODO: once UtilityCost objects are wrapped
+// #include "UtilityCost_Charge_Block_Impl.hpp"
+// #include "UtilityCost_Charge_Simple_Impl.hpp"
+// #include "UtilityCost_Computation_Impl.hpp"
+// #include "UtilityCost_Qualify_Impl.hpp"
+// #include "UtilityCost_Ratchet_Impl.hpp"
+// #include "UtilityCost_Tariff_Impl.hpp"
+// #include "UtilityCost_Variable_Impl.hpp"
+
 #include "Version_Impl.hpp"
 #include "WaterHeaterMixed_Impl.hpp"
 #include "WaterHeaterHeatPump_Impl.hpp"
@@ -969,6 +984,7 @@
 #include "ZoneHVACUnitVentilator_Impl.hpp"
 #include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "ZoneMixing_Impl.hpp"
+#include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 #include "ZoneVentilationDesignFlowRate_Impl.hpp"
 
 #endif // MODEL_CONCRETEMODELOBJECTS_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -192,6 +192,48 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   resolveMatchedSurfaceConstructionConflicts(model);
   resolveMatchedSubSurfaceConstructionConflicts(model);
 
+  // remove subsurfaces from air walls
+  for (Surface surface : model.getConcreteModelObjects<Surface>()) {
+    if (surface.isAirWall()) {
+      for (auto& subSurface : surface.subSurfaces()) {
+        LOG(Warn, "Removing SubSurface '" << subSurface.nameString() << "' from air wall Surface '" << surface.nameString() << "'.");
+        subSurface.remove();
+      }
+    }
+  }
+
+  // replace old style air wall Constructions with ConstructionAirBoundary
+  for (LayeredConstruction construction : model.getModelObjects<LayeredConstruction>()) {
+    if (construction.isModelPartition() && (construction.numLayers() == 1)) {
+      MaterialVector layers = construction.layers();
+      OS_ASSERT(layers.size() == 1u);
+      bool isAirWall = layers[0].optionalCast<AirWallMaterial>();
+
+      // if this is an old style air wall
+      if (isAirWall)
+      {
+        ConstructionAirBoundary newConstruction(model);
+        newConstruction.setName(construction.nameString() + "_ConstructionAirBoundary");
+
+        for (WorkspaceObject source : construction.sources()) {
+          for (unsigned index : source.getSourceIndices(construction.handle())) {
+            bool test = source.setPointer(index, newConstruction.handle());
+            OS_ASSERT(test);
+          }
+        }
+
+        LOG(Warn, "Construction '" << construction.nameString() << "' has been converted to ConstructionAirBoundary '" << newConstruction.nameString() << "'.");
+        construction.remove();
+      }
+    }
+  }
+
+  // remove all AirWallMaterial objects
+  for (AirWallMaterial airWall : model.getConcreteModelObjects<AirWallMaterial>()) {
+    LOG(Warn, "Removing AirWallMaterial '" << airWall.nameString() << "'.");
+    airWall.remove();
+  }
+
   // check for spaces not in a thermal zone
   for (Space space : model.getConcreteModelObjects<Space>()){
     if (!space.thermalZone()){
@@ -263,6 +305,26 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
       }
       //now, delete the one that points to a spacetype
       otherEquipment.remove();
+    }
+  }
+
+  // Energyplus only allows single zone input for ITE object. If space type is assigned in OS,
+  // will translate to multiple ITE objects assigned to each zone under the same space type.
+  // then delete the one that pointed to a spacetype.
+  // By doing this, we can solve the potential problem that if this load is applied to a space type,
+  // the load gets copied to each space of the space type, which may cause conflict of supply air node.
+  std::vector<ElectricEquipmentITEAirCooled> iTEAirCooledEquipments = model.getConcreteModelObjects<ElectricEquipmentITEAirCooled>();
+  for (ElectricEquipmentITEAirCooled iTequipment : iTEAirCooledEquipments) {
+    boost::optional<SpaceType> spaceTypeOfITEquipment = iTequipment.spaceType();
+    if (spaceTypeOfITEquipment) {
+      //loop through the spaces in this space type and make a new instance for each one
+      std::vector<Space> spaces = spaceTypeOfITEquipment.get().spaces();
+      for (Space space : spaces) {
+        ElectricEquipmentITEAirCooled iTEquipmentForSpace = iTequipment.clone().cast<ElectricEquipmentITEAirCooled>();
+        iTEquipmentForSpace.setSpace(space);
+      }
+      //now, delete the one that points to a spacetype
+      iTequipment.remove();
     }
   }
 
@@ -1223,6 +1285,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateConstruction(construction);
       break;
     }
+  case openstudio::IddObjectType::OS_Construction_AirBoundary:
+  {
+    model::ConstructionAirBoundary constructionAirBoundary = modelObject.cast<ConstructionAirBoundary>();
+    retVal = translateConstructionAirBoundary(constructionAirBoundary);
+    break;
+  }
   case openstudio::IddObjectType::OS_Construction_InternalSource :
     {
       model::ConstructionWithInternalSource constructionIntSource = modelObject.cast<ConstructionWithInternalSource>();
@@ -1503,6 +1571,17 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
+  case openstudio::IddObjectType::OS_ElectricEquipment_ITE_AirCooled:
+  {
+    model::ElectricEquipmentITEAirCooled equipmentITE = modelObject.cast<ElectricEquipmentITEAirCooled>();
+    retVal = translateElectricEquipmentITEAirCooled(equipmentITE);
+    break;
+  }
+  case openstudio::IddObjectType::OS_ElectricEquipment_ITE_AirCooled_Definition:
+  {
+    // no-op
+    break;
+  }
   case openstudio::IddObjectType::OS_ElectricLoadCenter_Distribution:
   {
     model::ElectricLoadCenterDistribution temp = modelObject.cast<ElectricLoadCenterDistribution>();
@@ -1824,74 +1903,75 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell:
   {
-    // Will also translate the Generator:FuelCell if there is one
+    // Will also translate all children of Generator:FuelCell (Generator:FuelCell:AirSupply, etc)
     model::GeneratorFuelCell temp = modelObject.cast<GeneratorFuelCell>();
     retVal = translateGeneratorFuelCell(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_AirSupply:
   {
-    // Will also translate the Generator:FuelCell:AirSupply if there is one
     model::GeneratorFuelCellAirSupply temp = modelObject.cast<GeneratorFuelCellAirSupply>();
     retVal = translateGeneratorFuelCellAirSupply(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_AuxiliaryHeater:
   {
-    // Will also translate the Generator:FuelCell:AuxiliaryHeater if there is one
     model::GeneratorFuelCellAuxiliaryHeater temp = modelObject.cast<GeneratorFuelCellAuxiliaryHeater>();
     retVal = translateGeneratorFuelCellAuxiliaryHeater(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_ElectricalStorage:
   {
-    // Will also translate the Generator:FuelCell:ElectricalStorage if there is one
     model::GeneratorFuelCellElectricalStorage temp = modelObject.cast<GeneratorFuelCellElectricalStorage>();
     retVal = translateGeneratorFuelCellElectricalStorage(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger:
   {
-    // Will also translate the Generator:FuelCell:ExhaustGasToWaterHeatExchanger if there is one
     model::GeneratorFuelCellExhaustGasToWaterHeatExchanger temp = modelObject.cast<GeneratorFuelCellExhaustGasToWaterHeatExchanger>();
     retVal = translateGeneratorFuelCellExhaustGasToWaterHeatExchanger(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_Inverter:
   {
-    // Will also translate the Generator:FuelCell:Inverter if there is one
     model::GeneratorFuelCellInverter temp = modelObject.cast<GeneratorFuelCellInverter>();
     retVal = translateGeneratorFuelCellInverter(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_PowerModule:
   {
-    // Will also translate the Generator:FuelCell:PowerModule if there is one
     model::GeneratorFuelCellPowerModule temp = modelObject.cast<GeneratorFuelCellPowerModule>();
     retVal = translateGeneratorFuelCellPowerModule(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_StackCooler:
   {
-    // Will also translate the Generator:FuelCell:StackCooler if there is one
     model::GeneratorFuelCellStackCooler temp = modelObject.cast<GeneratorFuelCellStackCooler>();
     retVal = translateGeneratorFuelCellStackCooler(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelCell_WaterSupply:
   {
-    // Will also translate the Generator:FuelCell:WaterSupply if there is one
     model::GeneratorFuelCellWaterSupply temp = modelObject.cast<GeneratorFuelCellWaterSupply>();
     retVal = translateGeneratorFuelCellWaterSupply(temp);
     break;
   }
   case openstudio::IddObjectType::OS_Generator_FuelSupply:
   {
-    // Will also translate the Generator:FuelSupply if there is one
     model::GeneratorFuelSupply temp = modelObject.cast<GeneratorFuelSupply>();
     retVal = translateGeneratorFuelSupply(temp);
     break;
   }
+  // TODO: JM 2018-10-12 Placeholder for Generator:MicroCHP if/when it is implemented
+  // to remember that translateGeneratorMicroCHP should be calling translation of child GeneratorFuelSupply as needed
+  /*
+   *case openstudio::IddObjectType::OS_Generator_MicroCHP:
+   *{
+   *  model::GeneratorFuelSupply temp = modelObject.cast<GeneratorMicroCHP>();
+   *  retVal = translateGeneratorMicroCHP(temp);
+   *  break;
+   *}
+   */
   case openstudio::IddObjectType::OS_Generator_Photovoltaic:
   {
     model::GeneratorPhotovoltaic temp = modelObject.cast<GeneratorPhotovoltaic>();
@@ -2341,6 +2421,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
+  case openstudio::IddObjectType::OS_PerformancePrecisionTradeoffs:
+  {
+    model::PerformancePrecisionTradeoffs performancePrecisionTradeoffs = modelObject.cast<PerformancePrecisionTradeoffs>();
+    retVal = translatePerformancePrecisionTradeoffs(performancePrecisionTradeoffs);
+    break;
+  }
   case openstudio::IddObjectType::OS_Pipe_Adiabatic:
   {
     model::PipeAdiabatic pipe = modelObject.cast<PipeAdiabatic>();
@@ -2968,41 +3054,44 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       break;
     }
-  case openstudio::IddObjectType::OS_UtilityCost_Charge_Block:
-    {
-      LOG(Warn, "OS_UtilityCost_Charge_Block is not currently translated");
-      break;
-    }
-  case openstudio::IddObjectType::OS_UtilityCost_Charge_Simple:
-    {
-      LOG(Warn, "OS_UtilityCost_Charge_Simple is not currently translated");
-      break;
-    }
-  case openstudio::IddObjectType::OS_UtilityCost_Computation:
-    {
-      LOG(Warn, "OS_UtilityCost_Computation is not currently translated");
-      break;
-    }
-  case openstudio::IddObjectType::OS_UtilityCost_Qualify:
-    {
-      LOG(Warn, "OS_UtilityCost_Qualify is not currently translated");
-      break;
-    }
-  case openstudio::IddObjectType::OS_UtilityCost_Ratchet:
-    {
-      LOG(Warn, "OS_UtilityCost_Ratchet is not currently translated");
-      break;
-    }
-  case openstudio::IddObjectType::OS_UtilityCost_Tariff:
-    {
-      LOG(Warn, "OS_UtilityCost_Tariff is not currently translated");
-      break;
-    }
-  case openstudio::IddObjectType::OS_UtilityCost_Variable:
-    {
-      LOG(Warn, "OS_UtilityCost_Variable is not currently translated");
-      break;
-    }
+
+  // TODO: once UtilityCost objects are wrapped
+  //case openstudio::IddObjectType::OS_UtilityCost_Charge_Block:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Charge_Block is not currently translated");
+      //break;
+    //}
+  //case openstudio::IddObjectType::OS_UtilityCost_Charge_Simple:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Charge_Simple is not currently translated");
+      //break;
+    //}
+  //case openstudio::IddObjectType::OS_UtilityCost_Computation:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Computation is not currently translated");
+      //break;
+    //}
+  //case openstudio::IddObjectType::OS_UtilityCost_Qualify:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Qualify is not currently translated");
+      //break;
+    //}
+  //case openstudio::IddObjectType::OS_UtilityCost_Ratchet:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Ratchet is not currently translated");
+      //break;
+    //}
+  //case openstudio::IddObjectType::OS_UtilityCost_Tariff:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Tariff is not currently translated");
+      //break;
+    //}
+  //case openstudio::IddObjectType::OS_UtilityCost_Variable:
+    //{
+      //LOG(Warn, "OS_UtilityCost_Variable is not currently translated");
+      //break;
+    //}
+
   case openstudio::IddObjectType::OS_Version :
     {
       model::Version version = modelObject.cast<Version>();
@@ -3246,6 +3335,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateZoneMixing(mo);
     break;
   }
+  case openstudio::IddObjectType::OS_ZoneProperty_UserViewFactors_BySurfaceName:
+  {
+    model::ZonePropertyUserViewFactorsBySurfaceName mo = modelObject.cast<ZonePropertyUserViewFactorsBySurfaceName>();
+    retVal = translateZonePropertyUserViewFactorsBySurfaceName(mo);
+    break;
+  }
   case openstudio::IddObjectType::OS_ZoneVentilation_DesignFlowRate :
     {
       auto mo = modelObject.cast<ZoneVentilationDesignFlowRate>();
@@ -3342,6 +3437,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneAirMassFlowConservation);
   result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
   result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
+  result.push_back(IddObjectType::OS_PerformancePrecisionTradeoffs);
 
   result.push_back(IddObjectType::OS_Site);
   result.push_back(IddObjectType::OS_Site_GroundReflectance);
@@ -3357,13 +3453,14 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Foundation_Kiva);
   result.push_back(IddObjectType::OS_Foundation_Kiva_Settings);
 
-  result.push_back(IddObjectType::OS_UtilityCost_Charge_Block);
-  result.push_back(IddObjectType::OS_UtilityCost_Charge_Simple);
-  result.push_back(IddObjectType::OS_UtilityCost_Computation);
-  result.push_back(IddObjectType::OS_UtilityCost_Qualify);
-  result.push_back(IddObjectType::OS_UtilityCost_Ratchet);
-  result.push_back(IddObjectType::OS_UtilityCost_Tariff);
-  result.push_back(IddObjectType::OS_UtilityCost_Variable);
+  // TODO: once UtilityCost objects are wrapped
+  // result.push_back(IddObjectType::OS_UtilityCost_Charge_Block);
+  // result.push_back(IddObjectType::OS_UtilityCost_Charge_Simple);
+  // result.push_back(IddObjectType::OS_UtilityCost_Computation);
+  // result.push_back(IddObjectType::OS_UtilityCost_Qualify);
+  // result.push_back(IddObjectType::OS_UtilityCost_Ratchet);
+  // result.push_back(IddObjectType::OS_UtilityCost_Tariff);
+  // result.push_back(IddObjectType::OS_UtilityCost_Variable);
 
   result.push_back(IddObjectType::OS_WeatherFile);
   result.push_back(IddObjectType::OS_WeatherProperty_SkyTemperature);
@@ -3386,6 +3483,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ShadingSurface);
 
   result.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
+  result.push_back(IddObjectType::OS_ZoneProperty_UserViewFactors_BySurfaceName);
 
   result.push_back(IddObjectType::OS_Daylighting_Control);
   result.push_back(IddObjectType::OS_DaylightingDevice_Shelf);
@@ -3397,6 +3495,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Lights);
   result.push_back(IddObjectType::OS_Luminaire);
   result.push_back(IddObjectType::OS_ElectricEquipment);
+  result.push_back(IddObjectType::OS_ElectricEquipment_ITE_AirCooled);
   result.push_back(IddObjectType::OS_GasEquipment);
   result.push_back(IddObjectType::OS_HotWaterEquipment);
   result.push_back(IddObjectType::OS_SteamEquipment);
@@ -3457,9 +3556,14 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_DistrictCooling);
   result.push_back(IddObjectType::OS_DistrictHeating);
   result.push_back(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
-  result.push_back(IddObjectType::OS_Fan_ConstantVolume);
+
+  // Equipments should be responsible for translating their fans
+  // result.push_back(IddObjectType::OS_Fan_Variable);
+  // result.push_back(IddObjectType::OS_Fan_ConstantVolume);
+  // TODO: JM 2019-07-11 These two should also be commented out. Fan_ZoneExhaust will be translated by ZoneHVACEquipmentList
   result.push_back(IddObjectType::OS_Fan_OnOff);
   result.push_back(IddObjectType::OS_Fan_ZoneExhaust);
+
   result.push_back(IddObjectType::OS_Node);
   result.push_back(IddObjectType::OS_PlantLoop);
   result.push_back(IddObjectType::OS_Splitter);
@@ -3477,15 +3581,18 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ElectricLoadCenter_Distribution);
   result.push_back(IddObjectType::OS_Generator_MicroTurbine);
   result.push_back(IddObjectType::OS_Generator_FuelCell);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_AirSupply);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_AuxiliaryHeater);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_ElectricalStorage);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_Inverter);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_PowerModule);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_StackCooler);
-  result.push_back(IddObjectType::OS_Generator_FuelCell_WaterSupply);
-  result.push_back(IddObjectType::OS_Generator_FuelSupply);
+  // Fuel Cell is responsible for translating these
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_AirSupply);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_AuxiliaryHeater);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_ElectricalStorage);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_ExhaustGasToWaterHeatExchanger);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_Inverter);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_PowerModule);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_StackCooler);
+  // result.push_back(IddObjectType::OS_Generator_FuelCell_WaterSupply);
+  // Fuel Cell (and MicroCHP when implemented) are responsible for translating this one
+  // result.push_back(IddObjectType::OS_Generator_FuelSupply);
+
   result.push_back(IddObjectType::OS_Generator_Photovoltaic);
   result.push_back(IddObjectType::OS_Generator_PVWatts);
   result.push_back(IddObjectType::OS_PhotovoltaicPerformance_EquivalentOneDiode);
@@ -3561,6 +3668,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_ShadingControl);
 
   iddObjectTypes.push_back(IddObjectType::OS_Construction);
+  iddObjectTypes.push_back(IddObjectType::OS_Construction_AirBoundary);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_CfactorUndergroundWall);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_FfactorGroundFloor);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_InternalSource);
@@ -4479,6 +4587,9 @@ boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::s
     }
   }
 
+  // TODO: JM 2019-03-22 I am not sure you need this one
+  // But I temporarily removed the \reference FluidAndGlycolNames from FluidProperties_GlycolConcentration to avoid problems of having two objects of
+  // the same reference group bearing the same name (FluidProperties:Name also has the same reference group)
   IdfObject fluidPropName(openstudio::IddObjectType::FluidProperties_Name);
   fluidPropName.setString(FluidProperties_NameFields::FluidName, glycolName);
   fluidPropName.setString(FluidProperties_NameFields::FluidType, "Glycol");

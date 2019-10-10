@@ -8,7 +8,7 @@ if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-project(OpenStudio VERSION 2.7.0)
+project(OpenStudio VERSION 2.9.0)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -66,14 +66,15 @@ set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.$
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 9)
-set(ENERGYPLUS_VERSION_MINOR 0)
-set(ENERGYPLUS_VERSION_PATCH 1)
+set(ENERGYPLUS_VERSION_MINOR 2)
+set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "bb7ca4f0da")
+set(ENERGYPLUS_BUILD_SHA "921312fa1d")
+
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.0.1")
+set(ENERGYPLUS_RELEASE_NAME "v9.2.0")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -85,7 +86,8 @@ configure_file(${CMAKE_SOURCE_DIR}/OpenStudio.in ${CMAKE_BINARY_DIR}/src/OpenStu
 if(APPLE)
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPENSTUDIO_VERSION}")
   set(MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION_BUILD}")
-  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2018 National Renewable Energy Laboratory")
+  set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.")
+  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.11" CACHE STRING "Minimum OS X deployment version")
 endif()
 
 # compiler id for about boxes
@@ -380,14 +382,14 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 7b8b8481a5f261800570de0d86e9c608)
+    set(ENERGYPLUS_EXPECTED_HASH 49a8eb402738e4146779c15b63b4ad99)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH xyz)
+    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 135e17dd5e4ca355b25bf77b61fc8cf2)
+    set(ENERGYPLUS_EXPECTED_HASH 91739b15520092e74ff4eed2a2ee1cbd)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -396,41 +398,66 @@ if(UNIX)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
-    unset(ENERGYPLUS_FOUND CACHE)
-    unset(ENERGYPLUS_EXE CACHE)
-    unset(ENERGYPLUS_IDD CACHE)
-    unset(ENERGYPLUS_WEATHER_DIR CACHE)
-    file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+
+    if(EXISTS "/etc/redhat-release")
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    else()
+      file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    endif()
+
+    # Remove the old extracted dir if exists
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+
   endif()
-  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+
 elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 4094c49b908ba2feb3f0b352126ea0ac)
+    set(ENERGYPLUS_EXPECTED_HASH a95da7a01599d4f3379cc9423e38f155)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
     ## TODO: update md5 hash, but not present on GitHub as .zip, only .exe for now at least
-    set(ENERGYPLUS_EXPECTED_HASH a2cbd995acd1928a7baa18407bb8e949)
+    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_a2cbd995acd1928a7baa18407bb8e949)
   endif()
   if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
-    unset(ENERGYPLUS_FOUND CACHE)
-    unset(ENERGYPLUS_EXE CACHE)
-    unset(ENERGYPLUS_IDD CACHE)
-    unset(ENERGYPLUS_WEATHER_DIR CACHE)
+
     file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+
+    # Remove the old extracted dir if exists
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}")
+
+  endif()
+
+endif()
+
+# Allows placing the archive manually in the build dir too
+if (NOT EXISTS "${ENERGYPLUS_PATH}")
+  unset(ENERGYPLUS_FOUND CACHE)
+  unset(ENERGYPLUS_EXE CACHE)
+  unset(ENERGYPLUS_IDD CACHE)
+  unset(ENERGYPLUS_WEATHER_DIR CACHE)
+  if (UNIX)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
+  else()
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
-  set(ENV{ENERGYPLUSDIR} "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
 endif()
+
+# Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
+if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
+  set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+else()
+  # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
+  set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+endif()
+
+# Find EnergyPlus, which will set the ENERGYPLUS_XXX variables and cache them
 find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
 
 # Radiance
@@ -439,8 +466,8 @@ if(UNIX)
     set(RADIANCE_EXPECTED_HASH 115ef9052ad5011d3fc7cebc2991644f)
     set(RADIANCE_PLATFORM "Darwin")
   elseif(EXISTS "/etc/redhat-release")
-    #message(FATAL_ERROR "Radiance ${RADIANCE_VERSION} redhat build missing")
-    set(RADIANCE_EXPECTED_HASH c1f4211b131a445941eb91ed1a248891)
+    # DLM: note that the installer expects the extracted directory to be named radiance-5.0.a.12-Linux
+    set(RADIANCE_EXPECTED_HASH f75898bbfd238a740c1902d385c42b92)
     set(RADIANCE_PLATFORM "Redhat")
   else()
     set(RADIANCE_EXPECTED_HASH 7b9e4df2b6050fe51c6e138e4c0e6a5a)
@@ -451,8 +478,13 @@ if(UNIX)
     file(MD5 "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" RADIANCE_HASH)
   endif()
   if(NOT EXISTS "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
-    message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
+  message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
+  if(EXISTS "/etc/redhat-release")
+    message("http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+  else()
     file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+  endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
@@ -499,18 +531,18 @@ mark_as_advanced(RUBY_INSTALL_DIR)
 if(NOT EXISTS ${RUBY_INSTALL_DIR})
   if( WIN32 )
     if(CMAKE_CL_64)
-      set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "f55c2ced4dab19c910fa6f828df5d97e")
+      set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_static_2.tar.gz")
+      set(RUBY_ZIP_EXPECTED_MD5 "74cc63d6f997097b8e650999a1da717f")
     else()
-      set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_32_static.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "4c2055305b105b0c8210697aaa596419")
-	  endif()
+      set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_32_static_2.tar.gz")
+      set(RUBY_ZIP_EXPECTED_MD5 "DOES_NOT_EXIST_4c2055305b105b0c8210697aaa596419")
+    endif()
   elseif( APPLE )
     set(RUBY_ZIP_FILENAME "ruby_2_2_4_osx_static.tar.gz")
     set(RUBY_ZIP_EXPECTED_MD5 "7ac16f5791d210d425aef268d97bf734")
   elseif(EXISTS "/etc/redhat-release")
     set(RUBY_ZIP_FILENAME "ruby_2_2_4_redhat_static.tar.gz")
-    set(RUBY_ZIP_EXPECTED_MD5 "0491123e60186896bae838f7d148bf20")
+    set(RUBY_ZIP_EXPECTED_MD5 "d130a17b23cc532975665ee4e9095c8d")
   else()
     set(RUBY_ZIP_FILENAME "ruby_2_2_4_linux_static.tar.gz")
     set(RUBY_ZIP_EXPECTED_MD5 "d238febf646382fe1b323bcdf16ea0e2")
@@ -522,6 +554,7 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
   endif()
 
   if( NOT RUBY_ZIP_MD5 STREQUAL RUBY_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading Ruby: ${RUBY_ZIP_FILENAME}")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_ZIP_FILENAME}"
       ${RUBY_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -571,6 +604,7 @@ if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
   endif()
 
   if( NOT RUBY_MINGW_LIB_ZIP_MD5 STREQUAL RUBY_MINGW_LIB_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading Ruby Mingw Lib: ${RUBY_MINGW_LIB_ZIP_FILENAME}")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_MINGW_LIB_ZIP_FILENAME}"
       ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -585,11 +619,10 @@ endif()
 
 # openstudio gems
 
-# to update the openstudio gems, you must first update the gems specified in the \dependencies\ruby\Gemfile file
-# next, build the openstudio-gems target of the OpenStudio super-build project (CMakeLists.txt one directory above this)
+# build and release openstudio gems at https://github.com/NREL/OpenStudio-gems
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20181010.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e07e5bd74ab643f7ed9f0e013db8c2d0")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20191004.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "feca3fd67e55b667c49a03b80b871dd8")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -597,6 +630,7 @@ if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
 endif()
 
 if( NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
+  message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
   file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
     ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
     INACTIVITY_TIMEOUT 120
@@ -680,6 +714,7 @@ if( BUILD_DVIEW )
     endif()
 
     if( NOT DVIEW_ZIP_MD5 STREQUAL DVIEW_ZIP_EXPECTED_MD5)
+      message(STATUS "Downloading DView: ${DVIEW_ZIP_FILENAME}")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${DVIEW_ZIP_FILENAME}"
         ${DVIEW_ZIP_LOCAL_PATH}
         INACTIVITY_TIMEOUT 120
@@ -711,11 +746,12 @@ else()
 endif()
 
 
+# using forked version of SWIG at https://github.com/macumber/swig/tree/openstudio_swig_3_0_12
 if(UNIX)
   # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
   ExternalProject_Add(SWIG
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.7.tar.gz
-    URL_MD5 7fff46c84b8c630ede5b0f0827e3d90a
+    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.12.tar.gz
+    URL_MD5 a7d384966974ed79455a455b517ad83d
     PATCH_COMMAND cp ${CMAKE_SOURCE_DIR}/../dependencies/pcre-8.31.tar.bz2 ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
     CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install
     BUILD_COMMAND ${MAKE}
@@ -725,9 +761,9 @@ if(UNIX)
   set(SWIG_EXECUTABLE ${CMAKE_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
 else()
   # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
-  set(SWIG_ZIP "swigwin-3.0.7.zip")
-  set(SWIG_DIR "swigwin-3.0.7")
-  set(SWIG_EXPECTED_HASH "d8b5a9ce49c819cc1bfc1e797b85ba7a")
+  set(SWIG_ZIP "swigwin-3.0.12.zip")
+  set(SWIG_DIR "swigwin-3.0.12")
+  set(SWIG_EXPECTED_HASH "8ee412d1278ba3cac22e58f26a842918")
   if(EXISTS "${CMAKE_BINARY_DIR}/${SWIG_ZIP}")
     file(MD5 "${CMAKE_BINARY_DIR}/${SWIG_ZIP}" SWIG_HASH)
   endif()
@@ -857,7 +893,7 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
       set(BOOST_ZIP_EXPECTED_MD5 "9e4c01a3f5c63e3bbf5cc76021eceb75")
   elseif(EXISTS "/etc/redhat-release")
     set(BOOST_ZIP_FILENAME "boost_1_55_0_redhat.tar.gz")
-    set(BOOST_ZIP_EXPECTED_MD5 "de952e0c36900a3ad000d74a1c41b7d2")
+    set(BOOST_ZIP_EXPECTED_MD5 "1517315d5b07fe5e1bdb135ecdc0213d")
   else()
     find_program(LSB_RELEASE lsb_release)
     execute_process(COMMAND ${LSB_RELEASE} -r
@@ -882,6 +918,7 @@ if(NOT EXISTS ${BOOST_INSTALL_DIR})
   endif()
 
   if( NOT BOOST_ZIP_MD5 STREQUAL BOOST_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading Boost: ${BOOST_ZIP_FILENAME}")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${BOOST_ZIP_FILENAME}"
       ${BOOST_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -937,7 +974,7 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
       set(QT_ZIP_EXPECTED_MD5 "326887393d55b5da97a1be9764fb0d1b")
   elseif(EXISTS "/etc/redhat-release")
     set(QT_ZIP_FILENAME "qt_5_6_redhat_shared.tar.gz")
-    set(QT_ZIP_EXPECTED_MD5 "b0610716854ed91a003347c455b22eb8")
+    set(QT_ZIP_EXPECTED_MD5 "12576637037b8d5428e2d63a5e298131")
   else()
     set(QT_ZIP_FILENAME "qt_5_6_linux_shared.tar.gz")
     set(QT_ZIP_EXPECTED_MD5 "3322cce1806ef134391d94a73adf3f15")
@@ -949,6 +986,7 @@ if(NOT EXISTS ${QT_INSTALL_DIR})
   endif()
 
   if( NOT QT_ZIP_MD5 STREQUAL QT_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading Qt: ${QT_ZIP_FILENAME}")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_ZIP_FILENAME}"
       ${QT_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 120
@@ -1066,11 +1104,11 @@ if( WIN32 )
     set(QT_STATIC_ZIP_EXPECTED_MD5 "d03d2fae40cba06f8b4887c8dce64a07")
   endif()
 elseif( APPLE )
-  set(QT_STATIC_ZIP_FILENAME "qt_5_6_osx_static.tar.gz")
-  set(QT_STATIC_ZIP_EXPECTED_MD5 "d24756746d2fe07212070f675871cf93")
+  set(QT_STATIC_ZIP_FILENAME "qt_5_6_1_osx_static_openssl_linked_1.0.2q.tar.gz")
+  set(QT_STATIC_ZIP_EXPECTED_MD5 "3fd24225db9a26cef48cca8d87859d0f")
 elseif(EXISTS "/etc/redhat-release")
   set(QT_STATIC_ZIP_FILENAME "qt_5_6_redhat_64_static.tar.gz")
-  set(QT_STATIC_ZIP_EXPECTED_MD5 "f5d9406349d1688e99db012862c22072")
+  set(QT_STATIC_ZIP_EXPECTED_MD5 "52159660cbdd95a41ab84a2c43140f11")
 else()
   set(QT_STATIC_ZIP_FILENAME "qt_5_6_linux_64_static.tar.gz")
   set(QT_STATIC_ZIP_EXPECTED_MD5 "77e24a44ae6c194ce1f2c3cf4aaa8a48")
@@ -1082,6 +1120,7 @@ if(EXISTS "${QT_STATIC_ZIP_LOCAL_PATH}")
 endif()
 
 if( NOT QT_STATIC_ZIP_MD5 STREQUAL QT_STATIC_ZIP_EXPECTED_MD5)
+  message(STATUS "Downloading Qt Static: ${QT_STATIC_ZIP_FILENAME}")
   file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${QT_STATIC_ZIP_FILENAME}"
     ${QT_STATIC_ZIP_LOCAL_PATH}
     INACTIVITY_TIMEOUT 120
@@ -1305,7 +1344,9 @@ add_subdirectory(resources)
 
 add_subdirectory(ruby)
 
-add_subdirectory(sketchup_plugin)
+if(BUILD_OS_APP)
+  add_subdirectory(sketchup_plugin)
+endif()
 
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
@@ -1457,6 +1498,7 @@ if(BUILD_DOCUMENTATION)
   # Zip documentation
   if(WIN32)
     if(NOT EXISTS "${CMAKE_BINARY_DIR}/7za.exe")
+      message(STATUS "Downloading 7za.zip")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/7za.zip" "${CMAKE_BINARY_DIR}/7za.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 EXPECTED_MD5 860077d3f314e939abab680218a3febe)
       execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/7za.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
     endif()
@@ -1537,7 +1579,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../doc/ReleaseNotes/OpenStudio_Release_Notes_2_7_0_20181012.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../developer/doc/ReleaseNotes/OpenStudio_Release_Notes_2_9_0_20191011.pdf" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../LICENSE.md" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../CHANGELOG.md" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../copyright.txt" DESTINATION .)
@@ -1562,7 +1604,7 @@ set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
 # Trusty (14.04) uses 3.0-0, all other including Xenial (16.04) use 3.0-0v5
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-0v5 (>= 3.0.0) | libwxgtk3.0-0 (>=3.0.0)")
-# Default the debian package name to include version to allow several versions to be installed concurrently instead of overwritting any existing one
+# Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
 set(CPACK_DEBIAN_PACKAGE_NAME "openstudio-${OpenStudio_VERSION}")
 # CPACK_DEBIAN_PACKAGE_DESCRIPTION defaults to this one too. dpkg-deb -I xxx.deb will show this description
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenStudio is a cross-platform collection of software tools to support whole building energy modeling using EnergyPlus and advanced daylight analysis using Radiance")
@@ -1581,7 +1623,7 @@ elseif( UNIX )
   set( CPACK_SET_DESTDIR ON )
   set( CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/ )
   # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio
-  # Add an abritary link (broken) at build/openstudio (if build/ is your build folder) that already points to the **future** /usr/local/openstudio-x.y.z/bin/openstudio
+  # Add an arbitrary link (broken) at build/openstudio (if build/ is your build folder) that already points to the **future** /usr/local/openstudio-x.y.z/bin/openstudio
   execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio openstudio)
   # Plus a versioned one
   execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio openstudio-${OpenStudio_VERSION})
@@ -1671,6 +1713,7 @@ endif()
 
 install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
 install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
+install(FILES "${CMAKE_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
 
 get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
 file(GLOB ENERGYPLUS_FILES "${ENERGYPLUS_DIR}/energyplus*")
@@ -1683,7 +1726,7 @@ install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./EnergyPlus/ COMPONENT Ene
 install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
 
 if( APPLE )
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
   install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus )
 elseif( WIN32 )
   file(GLOB ENERGYPLUS_MSVC_FILES "${ENERGYPLUS_DIR}/msvc*.dll")
@@ -1702,10 +1745,10 @@ elseif( WIN32 )
   foreach(msapi_file IN LISTS ENERGYPLUS_MSAPI_FILES)
     install(PROGRAMS "${msapi_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   endforeach()
-  #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/)
+  #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
 else()
-  #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.3.dylib" DESTINATION ./EnergyPlus/)
+  #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
 endif()
 
@@ -1721,18 +1764,13 @@ if( BUILD_PAT AND APPLE )
   install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
   install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
   install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.3.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
   install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT )
   install(DIRECTORY "${CMAKE_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS )
 endif()
 
 include(CPack)
 include(CPackIFW)
-
-cpack_add_component(SketchUpPlugin
-  DISPLAY_NAME "SketchUp Plugin"
-  DESCRIPTION "SketchUp Plugin"
-)
 
 cpack_add_component(CLI
   DISPLAY_NAME "Command Line Interface"
@@ -1742,26 +1780,6 @@ cpack_add_component(CLI
 cpack_add_component(RubyAPI
   DISPLAY_NAME "Ruby API"
   DESCRIPTION "Ruby API"
-)
-
-cpack_add_component(CSharpAPI
-  DISPLAY_NAME "C# API"
-  DESCRIPTION "C# API"
-)
-
-cpack_add_component(PAT
-  DISPLAY_NAME "Parametric Analysis Tool"
-  DESCRIPTION "Parametric Analysis Tool"
-)
-
-cpack_add_component(OpenStudioApp
-  DISPLAY_NAME "OpenStudio Application"
-  DESCRIPTION "OpenStudio Application"
-)
-
-cpack_add_component(DView
-  DISPLAY_NAME "DView"
-  DESCRIPTION "DView Application for viewing results"
 )
 
 cpack_add_component(EnergyPlus
@@ -1774,43 +1792,12 @@ cpack_add_component(Radiance
   DESCRIPTION "Full Radiance installation"
 )
 
-cpack_add_component(Resources
-  DISPLAY_NAME "Application Resources"
-  DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
-)
-
-cpack_ifw_configure_component(SketchUpPlugin
-  DEPENDS Resources
-  SCRIPT sketchup_plugin/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
 cpack_ifw_configure_component(CLI
   SCRIPT src/cli/install_operations.qs
   REQUIRES_ADMIN_RIGHTS
 )
 
 cpack_ifw_configure_component(RubyAPI
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(CSharpAPI
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(PAT
-  DEPENDS CLI RubyAPI
-  SCRIPT pat/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(OpenStudioApp
-  DEPENDS Resources CLI
-  SCRIPT src/openstudio_app/install_operations.qs
-  REQUIRES_ADMIN_RIGHTS
-)
-
-cpack_ifw_configure_component(DView
   REQUIRES_ADMIN_RIGHTS
 )
 
@@ -1822,14 +1809,79 @@ cpack_ifw_configure_component(Radiance
   REQUIRES_ADMIN_RIGHTS
 )
 
-cpack_ifw_configure_component(Resources
-  REQUIRES_ADMIN_RIGHTS
-)
-
 cpack_ifw_configure_component(Unspecified
   SCRIPT src/install_utility/install_operations.qs
   REQUIRES_ADMIN_RIGHTS
 )
+
+if(BUILD_CSHARP_BINDINGS)
+  cpack_add_component(CSharpAPI
+    DISPLAY_NAME "C# API"
+    DESCRIPTION "C# API"
+  )
+
+  cpack_ifw_configure_component(CSharpAPI
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_OS_APP)
+
+  cpack_add_component(Resources
+    DISPLAY_NAME "Application Resources"
+    DESCRIPTION "Resource Files used by the OpenStudio Application and SketchUp Plugin"
+  )
+
+  cpack_add_component(SketchUpPlugin
+    DISPLAY_NAME "SketchUp Plugin"
+    DESCRIPTION "SketchUp Plugin"
+  )
+
+  cpack_add_component(OpenStudioApp
+    DISPLAY_NAME "OpenStudio Application"
+    DESCRIPTION "OpenStudio Application"
+  )
+
+  cpack_ifw_configure_component(Resources
+    REQUIRES_ADMIN_RIGHTS
+  )
+
+  cpack_ifw_configure_component(SketchUpPlugin
+    DEPENDS Resources
+    SCRIPT sketchup_plugin/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+
+  cpack_ifw_configure_component(OpenStudioApp
+    DEPENDS Resources CLI
+    SCRIPT src/openstudio_app/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_PAT)
+  cpack_add_component(PAT
+    DISPLAY_NAME "Parametric Analysis Tool"
+    DESCRIPTION "Parametric Analysis Tool"
+  )
+
+  cpack_ifw_configure_component(PAT
+    DEPENDS CLI RubyAPI
+    SCRIPT pat/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if(BUILD_DVIEW)
+  cpack_add_component(DView
+    DISPLAY_NAME "DView"
+    DESCRIPTION "DView Application for viewing results"
+  )
+
+  cpack_ifw_configure_component(DView
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
 
 if( BUILD_NUGET_PACKAGE )
   configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )

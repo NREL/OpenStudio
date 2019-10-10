@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,20 +30,15 @@
 #include <gtest/gtest.h>
 #include "BCLFixture.hpp"
 
-#include "../BCLComponent.hpp"
-#include "../BCLMeasure.hpp"
 #include "../LocalBCL.hpp"
 #include "../RemoteBCL.hpp"
-#include "../../data/Attribute.hpp"
 #include "../../idd/IddFile.hpp"
+#include "../../idf/IdfFile.hpp"
 #include "../../idf/Workspace.hpp"
-#include "../../time/DateTime.hpp"
 #include "../../core/FilesystemHelpers.hpp"
 
-#include <QDateTime>
 #include <QDir>
 
-#include <time.h>
 
 using namespace openstudio;
 
@@ -284,10 +279,12 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   EXPECT_EQ(1u, oscFiles.size());
   openstudio::path oscPath = toPath(oscFiles[0]);
   EXPECT_TRUE(QDir().exists(toQString(oscPath)));
-  // DLM: the real loading procedure would be to run this through the version translator first
-  boost::optional<Workspace> workspace = Workspace::load(oscPath, IddFile::catchallIddFile());
+  
+  // DLM: the real loading procedure would be to run this through the version translator 
+  // since we are in utilities we can only test that it is an idf
   // This will fail on Windows if the path is greater than MAX_PATH
-  EXPECT_TRUE(workspace);
+  boost::optional<VersionString> version = IdfFile::loadVersionOnly(oscPath);
+  EXPECT_TRUE(version);
 
   // search for components by type
   std::vector<std::pair<std::string, std::string> > searchTerms;

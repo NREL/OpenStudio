@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,6 +41,16 @@
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+
+#include "ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
+
 #include <utilities/idd/OS_CoilSystem_Cooling_DX_HeatExchangerAssisted_FieldEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -84,6 +94,107 @@ namespace detail {
     return CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType();
   }
 
+
+  std::vector<ModelObject> CoilSystemCoolingDXHeatExchangerAssisted_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+
+    result.push_back(coolingCoil());
+    result.push_back(heatExchanger());
+
+    return result;
+  }
+
+  ModelObject CoilSystemCoolingDXHeatExchangerAssisted_Impl::clone(Model model) const
+  {
+    auto newCoilSystem = StraightComponent_Impl::clone(model).cast<CoilSystemCoolingDXHeatExchangerAssisted>();
+
+    {
+      auto mo = coolingCoil().clone(model).cast<StraightComponent>();
+      newCoilSystem.setCoolingCoil(mo);
+    }
+
+    {
+      auto mo = heatExchanger().clone(model).cast<AirToAirComponent>();
+      newCoilSystem.setHeatExchanger(mo);
+    }
+
+    return newCoilSystem;
+  }
+
+  boost::optional<HVACComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::containingHVACComponent() const
+  {
+     // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return airLoopHVACUnitarySystem;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+    std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+
+    for( const auto & bypassSystem : bypassSystems )
+    {
+      if( boost::optional<HVACComponent> coolingCoil = bypassSystem.coolingCoil() )
+      {
+        if( coolingCoil->handle() == this->handle() )
+        {
+          return bypassSystem;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatPumpAirToAir
+
+    std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs;
+
+    airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
+
+    for( const auto & airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs )
+    {
+      if( boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return airLoopHVACUnitaryHeatPumpAirToAir;
+        }
+      }
+    }   return boost::none;
+  }
+
+  boost::optional<ZoneHVACComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::containingZoneHVACComponent() const
+  {
+
+    // ZoneHVACPackagedTerminalHeatPump
+
+    std::vector<ZoneHVACPackagedTerminalHeatPump> zoneHVACPackagedTerminalHeatPumps;
+
+    zoneHVACPackagedTerminalHeatPumps = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
+
+    for( const auto & zoneHVACPackagedTerminalHeatPump : zoneHVACPackagedTerminalHeatPumps )
+    {
+      if( boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalHeatPump.coolingCoil() )
+      {
+        if( coil->handle() == this->handle() )
+        {
+          return zoneHVACPackagedTerminalHeatPump;
+        }
+      }
+    }
+
+    // ZoneHVAC:WindowAirConditioner not wrapped
+
+    return boost::none;
+  }
+
   AirToAirComponent CoilSystemCoolingDXHeatExchangerAssisted_Impl::heatExchanger() const {
     boost::optional<AirToAirComponent> value = optionalHeatExchanger();
     if (!value) {
@@ -118,54 +229,36 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::CoolingCoil);
   }
 
-  unsigned CoilSystemCoolingDXHeatExchangerAssisted_Impl::inletPort() {
+  unsigned CoilSystemCoolingDXHeatExchangerAssisted_Impl::inletPort() const {
     return OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirInletNodeName;
   }
 
-  unsigned CoilSystemCoolingDXHeatExchangerAssisted_Impl::outletPort() {
+  unsigned CoilSystemCoolingDXHeatExchangerAssisted_Impl::outletPort() const {
     return OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirOutletNodeName;
   }
 
   bool CoilSystemCoolingDXHeatExchangerAssisted_Impl::addToNode(Node & node)
   {
-    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() ) {
-      if( ! airLoop->demandComponent(node.handle()) ) {
-        return StraightComponent_Impl::addToNode( node );
-      }
-    }
 
-    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
-      return StraightComponent_Impl::addToNode( node );
-    }
+    /**
+     * Note JM 2019-03-13: At this point in time
+     * CoilSystemCoolingDXHeatExchangerAssisted is **NOT** allowed on a Branch directly and should be placed inside one of the Unitary systems
+     * cf https://github.com/NREL/EnergyPlus/issues/7222
+     * This method returns false and does nothing as a result
+     */
+
+    // TODO: uncomment this if it becomes allowed
+    //if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() ) {
+      //if( ! airLoop->demandComponent(node.handle()) ) {
+        //return StraightComponent_Impl::addToNode( node );
+      //}
+    //}
+
+    //if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      //return StraightComponent_Impl::addToNode( node );
+    //}
 
     return false;
-  }
-
-  ModelObject CoilSystemCoolingDXHeatExchangerAssisted_Impl::clone(Model model) const
-  {
-    auto newCoil = StraightComponent_Impl::clone(model).cast<CoilSystemCoolingDXHeatExchangerAssisted>();
-
-    {
-      auto mo = heatExchanger().clone(model).cast<AirToAirComponent>();
-      newCoil.setHeatExchanger(mo);
-    }
-
-    {
-      auto mo = coolingCoil().clone(model).cast<StraightComponent>();
-      newCoil.setCoolingCoil(mo);
-    }
-
-    return newCoil;
-  }
-
-  std::vector<ModelObject> CoilSystemCoolingDXHeatExchangerAssisted_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-
-    result.push_back(heatExchanger());
-    result.push_back(coolingCoil());
-
-    return result;
   }
 
 } // detail

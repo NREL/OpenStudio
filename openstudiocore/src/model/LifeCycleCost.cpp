@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -177,6 +177,18 @@ std::string LifeCycleCost_Impl::costUnits() const
   return value.get();
 }
 
+std::string LifeCycleCost_Impl::startOfCosts() const 
+{
+  boost::optional<std::string> value = getString(OS_LifeCycleCostFields::StartofCosts, true);
+  OS_ASSERT(value);
+  return value.get();
+}
+
+bool LifeCycleCost_Impl::isStartOfCostsDefaulted() const 
+{
+  return isEmpty(OS_LifeCycleCostFields::StartofCosts);
+}
+
 int LifeCycleCost_Impl::yearsFromStart() const
 {
   boost::optional<int> value = getInt(OS_LifeCycleCostFields::YearsfromStart,true);
@@ -243,6 +255,15 @@ bool LifeCycleCost_Impl::setCostUnits(const std::string& costUnits)
   }
 
   return setString(OS_LifeCycleCostFields::CostUnits, costUnits);
+}
+
+bool LifeCycleCost_Impl::setStartOfCosts(const std::string& startOfCosts) {
+  return setString(OS_LifeCycleCostFields::StartofCosts, startOfCosts);
+}
+
+void LifeCycleCost_Impl::resetStartOfCosts() {
+  bool test = setString(OS_LifeCycleCostFields::StartofCosts, "");
+  OS_ASSERT(test);
 }
 
 bool LifeCycleCost_Impl::setYearsFromStart(int yearsFromStart)
@@ -552,6 +573,9 @@ LifeCycleCost::LifeCycleCost(const ModelObject& modelObject)
   test = this->setCostUnits(validCostUnitsValues[0]);
   OS_ASSERT(test);
 
+  test = this->setStartOfCosts("ServicePeriod");
+  OS_ASSERT(test);
+
 }
 
 // constructor
@@ -573,6 +597,11 @@ std::vector<std::string> LifeCycleCost::validCategoryValues()
 std::vector<std::string> LifeCycleCost::validItemTypeValues()
 {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_LifeCycleCostFields::ItemType);
+}
+
+std::vector<std::string> LifeCycleCost::validStartOfCostsValues() 
+{
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_LifeCycleCostFields::StartofCosts);
 }
 
 boost::optional<LifeCycleCost> LifeCycleCost::createLifeCycleCost(const std::string& name, const ModelObject& modelObject, double cost, const std::string& costUnits, const std::string& category, int repeatPeriodYears, int yearsFromStart)
@@ -632,6 +661,16 @@ std::string LifeCycleCost::costUnits() const
   return getImpl<detail::LifeCycleCost_Impl>()->costUnits();
 }
 
+std::string LifeCycleCost::startOfCosts() const 
+{
+  return getImpl<detail::LifeCycleCost_Impl>()->startOfCosts();
+}
+
+bool LifeCycleCost::isStartOfCostsDefaulted() const 
+{
+  return getImpl<detail::LifeCycleCost_Impl>()->isStartOfCostsDefaulted();
+}
+
 int LifeCycleCost::yearsFromStart() const
 {
   return getImpl<detail::LifeCycleCost_Impl>()->yearsFromStart();
@@ -682,6 +721,16 @@ bool LifeCycleCost::setCost(double cost) {
 
 bool LifeCycleCost::setCostUnits(const std::string& costUnits) {
   return getImpl<detail::LifeCycleCost_Impl>()->setCostUnits(costUnits);
+}
+
+bool LifeCycleCost::setStartOfCosts(const std::string& startOfCosts) 
+{
+  return getImpl<detail::LifeCycleCost_Impl>()->setStartOfCosts(startOfCosts);
+}
+
+void LifeCycleCost::resetStartOfCosts() 
+{
+  getImpl<detail::LifeCycleCost_Impl>()->resetStartOfCosts();
 }
 
 bool LifeCycleCost::setYearsFromStart(int yearsFromStart)

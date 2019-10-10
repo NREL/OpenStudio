@@ -12,11 +12,65 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+%import <model/ModelZoneHVAC.i>
 
 #if defined SWIGCSHARP
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelStraightComponent
+
+  // ignore airflow objects for now, add back in with partial classes in ModelAirflow.i (swigged after us)
+  // TODO: haven't added them to ModelAirflow.i but I don't see any other that are indeed implemented...
+  %ignore openstudio::model::AirTerminalSingleDuctConstantVolumeReheat::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::AirTerminalSingleDuctConstantVolumeReheat::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::AirTerminalSingleDuctVAVReheat::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::AirTerminalSingleDuctVAVReheat::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilCoolingDXMultiSpeed::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilCoolingDXMultiSpeed::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilCoolingDXSingleSpeed::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilCoolingDXSingleSpeed::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilCoolingDXTwoStageWithHumidityControlMode::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilCoolingDXTwoStageWithHumidityControlMode::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingDesuperheater::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingDesuperheater::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingDXMultiSpeed::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingDXMultiSpeed::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingDXSingleSpeed::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingDXSingleSpeed::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingElectric::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingElectric::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingGas::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilHeatingGas::airflowNetworkEquivalentDuct;
+
+  %ignore openstudio::model::FanConstantVolume::getAirflowNetworkFan;
+  %ignore openstudio::model::FanConstantVolume::airflowNetworkFan;
+  %ignore openstudio::model::FanOnOff::getAirflowNetworkFan;
+  %ignore openstudio::model::FanOnOff::airflowNetworkFan;
+  %ignore openstudio::model::FanVariableVolume::getAirflowNetworkFan;
+  %ignore openstudio::model::FanVariableVolume::airflowNetworkFan;
+
+  // ignore generator objects for now, add back in with partial classes in ModelGenerators.i (swigged after us)
+  %ignore openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic;
+  %ignore openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal::setGeneratorPhotovoltaic;
+
 #endif
+
+namespace openstudio {
+  namespace model {
+
+    // forward declarations
+    // For ATUs
+    %feature("valuewrapper") AirflowNetworkEquivalentDuct;
+    // For Fans
+    %feature("valuewrapper") AirflowNetworkFan;
+    // For SolarCollectorFlatPlatePhotovoltaicThermal
+    %feature("valuewrapper") GeneratorPhotovoltaic;
+
+    class AirflowNetworkEquivalentDuct;
+    class AirflowNetworkFan;
+    class GeneratorPhotovoltaic;
+
+  }
+}
 
 %ignore std::vector<openstudio::model::GFunction>::vector(size_type);
 %ignore std::vector<openstudio::model::GFunction>::resize(size_type);
@@ -191,4 +245,32 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
   %}
 #endif
 
+#if defined(SWIGCSHARP) || defined(SWIGJAVA)
+  %inline {
+    namespace openstudio {
+      namespace model {
+        OptionalWaterUseConnections waterUseConnections(const openstudio::model::WaterUseEquipment& weq){
+          return weq.waterUseConnections();
+        }
+      }
+    }
+  }
+#endif
+
+#if defined(SWIGCSHARP)
+  //%pragma(csharp) imclassimports=%{
+  %pragma(csharp) moduleimports=%{
+
+    using System;
+    using System.Runtime.InteropServices;
+
+    public partial class WaterUseEquipment : SpaceLoadInstance
+    {
+      public OptionalWaterUseConnections waterUseConnections() {
+        return OpenStudio.OpenStudioModelStraightComponent.waterUseConnections(this);
+      }
+    }
+
+  %}
+#endif
 #endif

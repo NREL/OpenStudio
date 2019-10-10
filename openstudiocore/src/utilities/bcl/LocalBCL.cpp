@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -27,33 +27,20 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "BCLComponent.hpp"
-#include "BCLMeasure.hpp"
 #include "LocalBCL.hpp"
 #include "RemoteBCL.hpp"
 #include "../core/Application.hpp"
 #include "../core/Assert.hpp"
-#include "../data/Attribute.hpp"
 #include "../time/DateTime.hpp"
-#include "../core/Path.hpp"
 #include "../core/PathHelpers.hpp"
-#include "../core/System.hpp"
 
 #include <QDir>
 #include <QIcon>
 #include <QInputDialog>
 #include <QSettings>
-#include <QSqlDatabase>
-#include <QSqlDriver>
-#include <QSqlError>
 #include <QSqlQuery>
-#include <QSqlResult>
 
-#include <boost/lexical_cast.hpp>
 
-#include <algorithm>
-#include <set>
-#include <vector>
 
 namespace openstudio{
 

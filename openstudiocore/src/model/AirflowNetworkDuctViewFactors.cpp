@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,6 +48,22 @@
 
 namespace openstudio {
 namespace model {
+
+ViewFactorData::ViewFactorData(const PlanarSurface& s, double viewFactor)
+  : m_planarSurface(s), m_viewFactor(viewFactor) {}
+
+PlanarSurface ViewFactorData::planarSurface() const {
+  return m_planarSurface;
+}
+
+double ViewFactorData::viewFactor() const {
+  return m_viewFactor;
+}
+
+std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactorData& vf) {
+  out << "(" << vf.planarSurface().nameString() << ",  " << vf.viewFactor() << ")";
+  return out;
+}
 
 namespace detail {
 
@@ -173,9 +189,9 @@ namespace detail {
     return boost::none;
   }
 
-  std::vector<std::pair<PlanarSurface, double>> AirflowNetworkDuctViewFactors_Impl::viewFactors() const
+  std::vector<ViewFactorData> AirflowNetworkDuctViewFactors_Impl::viewFactors() const
   {
-    std::vector<std::pair<PlanarSurface, double>> result;
+    std::vector<ViewFactorData> result;
     for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
       OptionalString name = group.getString(0);
       if (name) {
@@ -183,7 +199,7 @@ namespace detail {
         if (value) {
           boost::optional<PlanarSurface> optsurface = group.getModelObjectTarget<PlanarSurface>(0);
           if (optsurface) {
-            result.push_back({optsurface.get(), value.get()});
+            result.push_back(ViewFactorData{optsurface.get(), value.get()});
           } else {
             LOG(Warn, "Failed to find surface named " << name.get() << " in " << briefDescription() << ".");
           }
@@ -317,7 +333,7 @@ boost::optional<double> AirflowNetworkDuctViewFactors::getViewFactor(const Plana
   return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->getViewFactor(surf);
 }
 
-std::vector<std::pair<PlanarSurface, double>> AirflowNetworkDuctViewFactors::viewFactors() const
+std::vector<ViewFactorData> AirflowNetworkDuctViewFactors::viewFactors() const
 {
   return getImpl<detail::AirflowNetworkDuctViewFactors_Impl>()->viewFactors();
 }

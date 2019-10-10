@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,28 +57,28 @@ class MODEL_API WaterToAirComponent : public HVACComponent
   virtual ~WaterToAirComponent() {}
 
   /** Returns the air inlet port. **/
-  virtual unsigned airInletPort();
+  virtual unsigned airInletPort() const;
 
   /** Returns the air outlet port. **/
-  virtual unsigned airOutletPort();
+  virtual unsigned airOutletPort() const;
 
   /** Returns the optional ModelObject connected to the air inlet port. **/
-  virtual boost::optional<ModelObject> airInletModelObject();
+  virtual boost::optional<ModelObject> airInletModelObject() const;
 
   /** Returns the optional ModelObject connected to the air outlet port. **/
-  virtual boost::optional<ModelObject> airOutletModelObject();
+  virtual boost::optional<ModelObject> airOutletModelObject() const;
 
   /** Returns the water inlet port. **/
-  virtual unsigned waterInletPort();
+  virtual unsigned waterInletPort() const;
 
   /** Returns the water outlet port. **/
-  virtual unsigned waterOutletPort();
+  virtual unsigned waterOutletPort() const;
 
   /** Returns the optional ModelObject connected to the water inlet port. **/
-  virtual boost::optional<ModelObject> waterInletModelObject();
+  virtual boost::optional<ModelObject> waterInletModelObject() const;
 
   /** Returns the optional ModelObject connected to the water outlet port. **/
-  virtual boost::optional<ModelObject> waterOutletModelObject();
+  virtual boost::optional<ModelObject> waterOutletModelObject() const;
 
   virtual boost::optional<AirLoopHVAC> airLoopHVAC() const;
 

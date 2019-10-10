@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -217,22 +217,22 @@ namespace detail {
     return result;
   }
 
-  unsigned WaterHeaterStratified_Impl::supplyInletPort()
+  unsigned WaterHeaterStratified_Impl::supplyInletPort() const
   {
     return OS_WaterHeater_StratifiedFields::UseSideInletNodeName;
   }
 
-  unsigned WaterHeaterStratified_Impl::supplyOutletPort()
+  unsigned WaterHeaterStratified_Impl::supplyOutletPort() const
   {
     return OS_WaterHeater_StratifiedFields::UseSideOutletNodeName;
   }
 
-  unsigned WaterHeaterStratified_Impl::demandInletPort()
+  unsigned WaterHeaterStratified_Impl::demandInletPort() const
   {
     return OS_WaterHeater_StratifiedFields::SourceSideInletNodeName;
   }
 
-  unsigned WaterHeaterStratified_Impl::demandOutletPort()
+  unsigned WaterHeaterStratified_Impl::demandOutletPort() const
   {
     return OS_WaterHeater_StratifiedFields::SourceSideOutletNodeName;
   }
@@ -1971,4 +1971,4 @@ WaterHeaterStratified::WaterHeaterStratified(std::shared_ptr<detail::WaterHeater
   }
 
 } // model
-} // openstudio
+} // openstudio

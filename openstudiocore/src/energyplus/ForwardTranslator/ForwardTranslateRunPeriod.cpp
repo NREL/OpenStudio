@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -63,7 +63,7 @@ boost::optional<IdfObject> ForwardTranslator::translateRunPeriod( RunPeriod& mod
 
   model::YearDescription yd = modelObject.model().getUniqueModelObject<model::YearDescription>();
   Date firstDay = yd.makeDate(modelObject.getBeginMonth(), modelObject.getBeginDayOfMonth());
-  Date endDay = yd.makeDate(modelObject.getEndMonth(), modelObject.getEndMonth());
+  Date endDay = yd.makeDate(modelObject.getEndMonth(), modelObject.getEndDayOfMonth());
 
   int beginYear = firstDay.year();
   int endYear = 0;

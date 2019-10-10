@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -110,11 +110,13 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingElectric( Coil
     if( boost::optional<Node> node = mo->optionalCast<Node>() )
     {
       idfObject.setString(Coil_Heating_ElectricFields::AirOutletNodeName,node->name().get());
+      // For now we write the temp setpoint node as the Coil Outlet Node
+      idfObject.setString(Coil_Heating_ElectricFields::TemperatureSetpointNodeName,node->name().get());
     }
   }
 
   // Temperature Setpoint Node Name
-
+  // If it was hardset we actually use that, otherwise keep above default (coil outlet)
   if( boost::optional<Node> node = modelObject.temperatureSetpointNode() )
   {
     idfObject.setString(Coil_Heating_ElectricFields::TemperatureSetpointNodeName,node->name().get());

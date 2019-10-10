@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -326,6 +326,21 @@ namespace detail {
     }
 
     return m_cachedYearDescription;
+  }
+
+  boost::optional<PerformancePrecisionTradeoffs> Model_Impl::performancePrecisionTradeoffs() const
+  {
+    if (m_cachedPerformancePrecisionTradeoffs){
+      return m_cachedPerformancePrecisionTradeoffs;
+    }
+
+    boost::optional<PerformancePrecisionTradeoffs> result = this->model().getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>();
+    if (result){
+      m_cachedPerformancePrecisionTradeoffs = result;
+      result->getImpl<PerformancePrecisionTradeoffs_Impl>().get()->PerformancePrecisionTradeoffs_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedPerformancePrecisionTradeoffs>(const_cast<openstudio::model::detail::Model_Impl *>(this));
+    }
+
+    return m_cachedPerformancePrecisionTradeoffs;
   }
 
   boost::optional<int> Model_Impl::calendarYear() const
@@ -987,6 +1002,7 @@ namespace detail {
     clearCachedRunPeriod(dummy);
     clearCachedYearDescription(dummy);
     clearCachedWeatherFile(dummy);
+    clearCachedPerformancePrecisionTradeoffs(dummy);
   }
 
   void Model_Impl::clearCachedBuilding(const Handle &)
@@ -1017,6 +1033,11 @@ namespace detail {
   void Model_Impl::clearCachedWeatherFile(const Handle& handle)
   {
     m_cachedWeatherFile.reset();
+  }
+
+  void Model_Impl::clearCachedPerformancePrecisionTradeoffs(const Handle &)
+  {
+    m_cachedPerformancePrecisionTradeoffs.reset();
   }
 
   void Model_Impl::autosize() {
@@ -1174,6 +1195,11 @@ boost::optional<Building> Model::building() const
 boost::optional<FoundationKivaSettings> Model::foundationKivaSettings() const
 {
   return getImpl<detail::Model_Impl>()->foundationKivaSettings();
+}
+
+boost::optional<PerformancePrecisionTradeoffs> Model::performancePrecisionTradeoffs() const
+{
+  return getImpl<detail::Model_Impl>()->performancePrecisionTradeoffs();
 }
 
 boost::optional<LifeCycleCostParameters> Model::lifeCycleCostParameters() const
@@ -2385,10 +2411,7 @@ void addExampleConstructions(Model& model) {
 
   // Air Wall
 
-  AirWallMaterial airWallMaterial(model);
-  airWallMaterial.setName("Air Wall Material");
-
-  Construction airWall(airWallMaterial);
+  ConstructionAirBoundary airWall(model);
   airWall.setName("Air Wall");
   interiorSurfaceConstructions.setWallConstruction(airWall);
 
@@ -2721,6 +2744,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(ConnectorMixer);
   REGISTER_CONSTRUCTOR(ConnectorSplitter);
   REGISTER_CONSTRUCTOR(Construction);
+  REGISTER_CONSTRUCTOR(ConstructionAirBoundary);
   REGISTER_CONSTRUCTOR(ConstructionWithInternalSource);
   REGISTER_CONSTRUCTOR(ControllerMechanicalVentilation);
   REGISTER_CONSTRUCTOR(ControllerOutdoorAir);
@@ -2764,6 +2788,8 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(Duct);
   REGISTER_CONSTRUCTOR(ElectricEquipment);
   REGISTER_CONSTRUCTOR(ElectricEquipmentDefinition);
+  REGISTER_CONSTRUCTOR(ElectricEquipmentITEAirCooled);
+  REGISTER_CONSTRUCTOR(ElectricEquipmentITEAirCooledDefinition);
   REGISTER_CONSTRUCTOR(ElectricLoadCenterDistribution);
   REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterLookUpTable);
   REGISTER_CONSTRUCTOR(ElectricLoadCenterInverterSimple);
@@ -2882,6 +2908,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(OutsideSurfaceConvectionAlgorithm);
   REGISTER_CONSTRUCTOR(People);
   REGISTER_CONSTRUCTOR(PeopleDefinition);
+  REGISTER_CONSTRUCTOR(PerformancePrecisionTradeoffs);
   REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceEquivalentOneDiode);
   REGISTER_CONSTRUCTOR(PhotovoltaicPerformanceSimple);
   REGISTER_CONSTRUCTOR(PipeAdiabatic);
@@ -3014,13 +3041,16 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(Timestep);
   REGISTER_CONSTRUCTOR(UnitarySystemPerformanceMultispeed);
   REGISTER_CONSTRUCTOR(UtilityBill);
-  REGISTER_CONSTRUCTOR(UtilityCost_Charge_Block);
-  REGISTER_CONSTRUCTOR(UtilityCost_Charge_Simple);
-  REGISTER_CONSTRUCTOR(UtilityCost_Computation);
-  REGISTER_CONSTRUCTOR(UtilityCost_Qualify);
-  REGISTER_CONSTRUCTOR(UtilityCost_Ratchet);
-  REGISTER_CONSTRUCTOR(UtilityCost_Tariff);
-  REGISTER_CONSTRUCTOR(UtilityCost_Variable);
+
+  // TODO: once UtilityCost objects are wrapped
+  // REGISTER_CONSTRUCTOR(UtilityCost_Charge_Block);
+  // REGISTER_CONSTRUCTOR(UtilityCost_Charge_Simple);
+  // REGISTER_CONSTRUCTOR(UtilityCost_Computation);
+  // REGISTER_CONSTRUCTOR(UtilityCost_Qualify);
+  // REGISTER_CONSTRUCTOR(UtilityCost_Ratchet);
+  // REGISTER_CONSTRUCTOR(UtilityCost_Tariff);
+  // REGISTER_CONSTRUCTOR(UtilityCost_Variable);
+
   REGISTER_CONSTRUCTOR(Version);
   REGISTER_CONSTRUCTOR(WaterHeaterMixed);
   REGISTER_CONSTRUCTOR(WaterHeaterHeatPump);
@@ -3063,6 +3093,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveWater);
   REGISTER_CONSTRUCTOR(ZoneHVACBaseboardRadiantConvectiveElectric);
   REGISTER_CONSTRUCTOR(ZoneMixing);
+  REGISTER_CONSTRUCTOR(ZonePropertyUserViewFactorsBySurfaceName);
   REGISTER_CONSTRUCTOR(ZoneVentilationDesignFlowRate);
 
 #define REGISTER_COPYCONSTRUCTORS(_className) \
@@ -3200,6 +3231,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(ConnectorMixer);
   REGISTER_COPYCONSTRUCTORS(ConnectorSplitter);
   REGISTER_COPYCONSTRUCTORS(Construction);
+  REGISTER_COPYCONSTRUCTORS(ConstructionAirBoundary);
   REGISTER_COPYCONSTRUCTORS(ConstructionWithInternalSource);
   REGISTER_COPYCONSTRUCTORS(ControllerMechanicalVentilation);
   REGISTER_COPYCONSTRUCTORS(ControllerOutdoorAir);
@@ -3243,6 +3275,8 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(Duct);
   REGISTER_COPYCONSTRUCTORS(ElectricEquipment);
   REGISTER_COPYCONSTRUCTORS(ElectricEquipmentDefinition);
+  REGISTER_COPYCONSTRUCTORS(ElectricEquipmentITEAirCooled);
+  REGISTER_COPYCONSTRUCTORS(ElectricEquipmentITEAirCooledDefinition);
   REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterDistribution);
   REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterLookUpTable);
   REGISTER_COPYCONSTRUCTORS(ElectricLoadCenterInverterSimple);
@@ -3361,6 +3395,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(OutsideSurfaceConvectionAlgorithm);
   REGISTER_COPYCONSTRUCTORS(People);
   REGISTER_COPYCONSTRUCTORS(PeopleDefinition);
+  REGISTER_COPYCONSTRUCTORS(PerformancePrecisionTradeoffs);
   REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceEquivalentOneDiode);
   REGISTER_COPYCONSTRUCTORS(PhotovoltaicPerformanceSimple);
   REGISTER_COPYCONSTRUCTORS(PipeAdiabatic);
@@ -3493,13 +3528,16 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(Timestep);
   REGISTER_COPYCONSTRUCTORS(UnitarySystemPerformanceMultispeed);
   REGISTER_COPYCONSTRUCTORS(UtilityBill);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Block);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Simple);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Computation);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Qualify);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Ratchet);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Tariff);
-  REGISTER_COPYCONSTRUCTORS(UtilityCost_Variable);
+
+  // TODO: once UtilityCost objects are wrapped
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Block);
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Charge_Simple);
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Computation);
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Qualify);
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Ratchet);
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Tariff);
+  // REGISTER_COPYCONSTRUCTORS(UtilityCost_Variable);
+
   REGISTER_COPYCONSTRUCTORS(Version);
   REGISTER_COPYCONSTRUCTORS(WaterHeaterMixed);
   REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPump);
@@ -3542,6 +3580,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveWater);
   REGISTER_COPYCONSTRUCTORS(ZoneHVACBaseboardRadiantConvectiveElectric);
   REGISTER_COPYCONSTRUCTORS(ZoneMixing);
+  REGISTER_COPYCONSTRUCTORS(ZonePropertyUserViewFactorsBySurfaceName);
   REGISTER_COPYCONSTRUCTORS(ZoneVentilationDesignFlowRate);
 }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -75,18 +76,20 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   bool setAvailabilitySchedule(Schedule& schedule);
 
 
-  boost::optional<double> ratedTotalCoolingCapacity() const;
+  boost::optional<double> grossRatedTotalCoolingCapacity() const;
+  bool isGrossRatedTotalCoolingCapacityAutosized() const;
+  bool setGrossRatedTotalCoolingCapacity(double grossRatedTotalCoolingCapacity);
+  void autosizeGrossRatedTotalCoolingCapacity();
+  double grossRatedCoolingCOP() const;
+  bool setGrossRatedCoolingCOP(double grossRatedCoolingCOP);
 
-  bool isRatedTotalCoolingCapacityAutosized() const;
-
-  bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
-
-  void autosizeRatedTotalCoolingCapacity();
-
-
-  double ratedCoolingCOP() const;
-
-  bool setRatedCoolingCOP(double ratedCoolingCOP);
+  // Deprecated
+  OS_DEPRECATED boost::optional<double> ratedTotalCoolingCapacity() const;
+  OS_DEPRECATED bool isRatedTotalCoolingCapacityAutosized() const;
+  OS_DEPRECATED bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
+  OS_DEPRECATED void autosizeRatedTotalCoolingCapacity();
+  OS_DEPRECATED double ratedCoolingCOP() const;
+  OS_DEPRECATED bool setRatedCoolingCOP(double ratedCoolingCOP);
 
 
   double minimumOutdoorTemperatureinCoolingMode() const;
@@ -169,18 +172,20 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
   void resetCoolingPartLoadFractionCorrelationCurve();
 
 
-  boost::optional<double> ratedTotalHeatingCapacity() const;
+  boost::optional<double> grossRatedHeatingCapacity() const;
+  bool isGrossRatedHeatingCapacityAutosized() const;
+  bool setGrossRatedHeatingCapacity(double grossRatedHeatingCapacity);
+  void autosizeGrossRatedHeatingCapacity();
+  double ratedHeatingCapacitySizingRatio() const;
+  bool setRatedHeatingCapacitySizingRatio(double ratedHeatingCapacitySizingRatio);
 
-  bool isRatedTotalHeatingCapacityAutosized() const;
-
-  bool setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity);
-
-  void autosizeRatedTotalHeatingCapacity();
-
-
-  double ratedTotalHeatingCapacitySizingRatio() const;
-
-  bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
+  // Deprecated
+  OS_DEPRECATED boost::optional<double> ratedTotalHeatingCapacity() const;
+  OS_DEPRECATED bool isRatedTotalHeatingCapacityAutosized() const;
+  OS_DEPRECATED bool setRatedTotalHeatingCapacity(double ratedTotalHeatingCapacity);
+  OS_DEPRECATED void autosizeRatedTotalHeatingCapacity();
+  OS_DEPRECATED double ratedTotalHeatingCapacitySizingRatio() const;
+  OS_DEPRECATED bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
 
 
   double ratedHeatingCOP() const;
@@ -396,6 +401,16 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
 
   bool setMaximumOutdoorDrybulbTemperatureforDefrostOperation(double maximumOutdoorDrybulbTemperatureforDefrostOperation);
 
+  // Returns the hardcoded condenserType, or the defaulted one if not (If PlantLoop => 'WaterCooled', else 'AirCooled')
+  std::string condenserType() const;
+
+  // Sets the condenser type explicitly. Note is was decided that not "smart" logic would be implemented in the model api, and it was moved to the FT
+  // If you harcode the condenser type, you are responsible to ensure that you are matching the plant loop connection status (eg: If you set this to
+  // 'AirCooled' or 'EvaporativelyCooled', the object should not be on a PlantLoop. If 'WaterCooled', it should be on a PlantLoop)
+  bool setCondenserType(const std::string& condenserType);
+
+  bool isCondenserTypeDefaulted() const;
+  void resetCondenserType();
 
   boost::optional<double> waterCondenserVolumeFlowRate() const;
 
@@ -537,9 +552,13 @@ class MODEL_API AirConditionerVariableRefrigerantFlow : public StraightComponent
 
   std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
-  boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
 
-  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+  boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const ;
+  boost::optional<double> autosizedGrossRatedHeatingCapacity() const ;
+
+  // Deprecated
+  OS_DEPRECATED boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
+  OS_DEPRECATED boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
 
   boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
 
@@ -578,4 +597,4 @@ typedef std::vector<AirConditionerVariableRefrigerantFlow> AirConditionerVariabl
 } // model
 } // openstudio
 
-#endif // MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOW_HPP
+#endif // MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOW_HPP

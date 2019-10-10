@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -63,6 +63,14 @@ UTILITIES_API path toPath(const std::string& s);
 
 /** QString to path*/
 UTILITIES_API path toPath(const QString& q);
+
+#ifdef WIN32
+/** UTF-16 encoded std::wstring for opening fstreams*/
+UTILITIES_API std::wstring toSystemFilename(const path& p);
+#else
+/** UTF-8 encoded std::string for opening fstreams*/
+UTILITIES_API std::string toSystemFilename(const path& p);
+#endif
 
 /** Optional path*/
 typedef boost::optional<path> OptionalPath;

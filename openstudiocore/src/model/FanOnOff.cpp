@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,6 +57,10 @@
 #include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
+#include "ZoneHVACUnitHeater.hpp"
+#include "ZoneHVACUnitHeater_Impl.hpp"
+#include "ZoneHVACUnitVentilator.hpp"
+#include "ZoneHVACUnitVentilator_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAir_Impl.hpp"
 #include "AirLoopHVACUnitarySystem.hpp"
@@ -129,12 +133,12 @@ namespace detail {
 
   // Inlet and Outlet nodes
 
-  unsigned FanOnOff_Impl::inletPort()
+  unsigned FanOnOff_Impl::inletPort() const
   {
     return OS_Fan_OnOffFields::AirInletNodeName;
   }
 
-  unsigned FanOnOff_Impl::outletPort()
+  unsigned FanOnOff_Impl::outletPort() const
   {
     return OS_Fan_OnOffFields::AirOutletNodeName;
   }
@@ -495,6 +499,18 @@ namespace detail {
       case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :
         {
           ZoneHVACWaterToAirHeatPump component = elem.cast<ZoneHVACWaterToAirHeatPump>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
+          break;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater :
+        {
+          ZoneHVACUnitHeater component = elem.cast<ZoneHVACUnitHeater>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
+          break;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_UnitVentilator :
+        {
+          ZoneHVACUnitVentilator component = elem.cast<ZoneHVACUnitVentilator>();
           if (component.supplyAirFan().handle() == this->handle()) return elem;
           break;
         }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -327,7 +327,7 @@ namespace radiance {
 
       // write options files
       std::string dcmatsStringin;
-      std::ifstream dcmatfilein(openstudio::toString(radDir / openstudio::toPath("materials/materials_dc.rad")).c_str());
+      std::ifstream dcmatfilein(openstudio::toSystemFilename(radDir / openstudio::toPath("materials/materials_dc.rad")));
 
       while (dcmatfilein.good())
       {

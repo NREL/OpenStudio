@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,7 +57,9 @@ OPENSTUDIO_ENUM(DefaultScheduleType,
   ((InfiltrationSchedule)(Infiltration Schedule)(8))
   ((SteamEquipmentSchedule)(Steam Equipment Schedule)(9))
   ((OtherEquipmentSchedule)(Other Equipment Schedule)(10))
-);
+  ((DesignPowerInputScheduleName)(Design Power Input Schedule)(11))
+  ((CPULoadingScheduleName)(CPU Loading Schedule)(12))
+  );
 
 /** DefaultScheduleSet is a ResourceObject that wraps the OpenStudio IDD object
  *  'OS:DefaultScheduleSet'. */

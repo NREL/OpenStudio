@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,7 +53,6 @@ typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
 
 #include <polypartition/polypartition.h>
 
-#include <list>
 
 // remove_spikes
 // adapted from https://github.com/boostorg/geometry/commits/develop/include/boost/geometry/algorithms/remove_spikes.hpp eb3260708eb241d8da337f4be73b41d69d33cd09
@@ -361,6 +360,9 @@ namespace openstudio{
 
     std::vector<BoostRing> inners = boostPolygon.inners();
     for (const BoostRing& inner : inners){
+      if (inner.size() < 3) {
+        continue;
+      }
       TPPLPoly innerPoly; // must be clockwise
       innerPoly.Init(inner.size() - 1);
       innerPoly.SetHole(true);
@@ -657,6 +659,52 @@ namespace openstudio{
     return m_newPolygons2;
   }
 
+  double IntersectionResult::area1() const 
+  {
+    double result = 0;
+    boost::optional<double> d;
+    d = getArea(m_polygon1);
+    if (d) {
+      result += *d;
+    } else {
+      LOG_FREE(Warn, "utilities.geometry.IntersectionResult", "Cannot calculate area for polygon1");
+    }
+
+    for (const auto& polygon: m_newPolygons1) {
+      d = getArea(polygon);
+      if (d) {
+        result += *d;
+      } else {
+        LOG_FREE(Warn, "utilities.geometry.IntersectionResult", "Cannot calculate area for polygon in polygons1");
+      }
+    }
+    
+    return result;
+  }
+
+  double IntersectionResult::area2() const 
+  {
+    double result = 0;
+    boost::optional<double> d;
+    d = getArea(m_polygon2);
+    if (d) {
+      result += *d;
+    } else {
+      LOG_FREE(Warn, "utilities.geometry.IntersectionResult", "Cannot calculate area for polygon2");
+    }
+
+    for (const auto& polygon: m_newPolygons2) {
+      d = getArea(polygon);
+      if (d) {
+        result += *d;
+      } else {
+        LOG_FREE(Warn, "utilities.geometry.IntersectionResult", "Cannot calculate area for polygon in polygons2");
+      }
+    }
+
+    return result;
+  }
+
   std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double tol)
   {
     // convert vertices to boost rings
@@ -740,7 +788,11 @@ namespace openstudio{
       return boost::none;
     }else if (unionResult.size() > 1){
       return boost::none;
-    }
+    }else if (!unionResult[0].inners().empty()) {
+      // check for holes
+      LOG_FREE(Error, "utilities.geometry.join", "Union has inner loops");
+      return boost::none;
+    };
 
     std::vector<Point3d> unionVertices = verticesFromBoostPolygon(unionResult[0], allPoints, tol);
     boost::optional<double> testArea = boost::geometry::area(unionResult[0]);
@@ -751,18 +803,13 @@ namespace openstudio{
       LOG_FREE(Info, "utilities.geometry.join", "Union has very small area of " << *testArea << " m^2");
       return boost::none;
     }
+
     try{
       boost::geometry::detail::overlay::has_self_intersections(unionResult[0]);
     }catch(const boost::geometry::overlay_invalid_input_exception&){
       LOG_FREE(Error, "utilities.geometry.join", "Union is self intersecting");
       return boost::none;
     }
-
-    // check for holes
-    if (!unionResult[0].inners().empty()){
-      LOG_FREE(Error, "utilities.geometry.join", "Union has inner loops");
-      return boost::none;
-    };
 
     unionVertices = reorderULC(unionVertices);
     unionVertices = removeCollinearLegacy(unionVertices);
@@ -791,8 +838,6 @@ namespace openstudio{
       }
     }
 
-
-
     std::vector<std::vector<unsigned> > connectedComponents = findConnectedComponents(A);
     for (const std::vector<unsigned>& component : connectedComponents){
       std::vector<Point3d> points;
@@ -820,6 +865,9 @@ namespace openstudio{
     std::vector<Point3d> resultPolygon2;
     std::vector< std::vector<Point3d> > newPolygons1;
     std::vector< std::vector<Point3d> > newPolygons2;
+
+    //std::cout << "Initial polygon1 area " << getArea(polygon1).get() << std::endl;
+    //std::cout << "Initial polygon2 area " << getArea(polygon2).get() << std::endl;
 
     // convert vertices to boost rings
     std::vector<Point3d> allPoints;
@@ -969,7 +1017,12 @@ namespace openstudio{
       newPolygons2.push_back(newPolygon2);
     }
 
-    return IntersectionResult(resultPolygon1, resultPolygon2, newPolygons1, newPolygons2);
+    IntersectionResult result(resultPolygon1, resultPolygon2, newPolygons1, newPolygons2);
+
+    //std::cout << "Result area1 " << result.area1() << std::endl;
+    //std::cout << "Result area2 " << result.area2() << std::endl;
+
+    return result;
   }
 
   std::vector<std::vector<Point3d> > subtract(const std::vector<Point3d>& polygon, const std::vector<std::vector<Point3d> >& holes, double tol)

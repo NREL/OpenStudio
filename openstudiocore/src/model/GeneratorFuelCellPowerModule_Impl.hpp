@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLPOWERMODULE_IMPL_HPP
 #define MODEL_GENERATORFUELCELLPOWERMODULE_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
 namespace openstudio {
@@ -70,6 +70,10 @@ namespace detail {
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
+
+    virtual std::vector<IddObjectType> allowableChildTypes() const;
+
+    virtual std::vector<ModelObject> children() const;
 
     //@}
     /** @name Getters */
@@ -140,7 +144,7 @@ namespace detail {
     double maximumOperatingPoint() const;
 
     // Return optional parent generator
-    GeneratorFuelCell fuelCell() const;
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
     //@}
     /** @name Setters */
@@ -275,11 +279,7 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-    virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
-
-    virtual std::vector<ModelObject> children() const;
     //@}
    protected:
    private:

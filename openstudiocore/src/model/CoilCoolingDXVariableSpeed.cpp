@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,6 +49,8 @@
 #include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
 #include "ZoneHVACPackagedTerminalHeatPump.hpp"
 #include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
@@ -147,11 +149,11 @@ namespace detail {
     return result;
   }
 
-  unsigned CoilCoolingDXVariableSpeed_Impl::inletPort() {
+  unsigned CoilCoolingDXVariableSpeed_Impl::inletPort() const {
     return OS_Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName;
   }
 
-  unsigned CoilCoolingDXVariableSpeed_Impl::outletPort() {
+  unsigned CoilCoolingDXVariableSpeed_Impl::outletPort() const {
     return OS_Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName;
   }
 
@@ -520,6 +522,17 @@ namespace detail {
       }
     }
 
+    // CoilSystemCoolingDXHeatExchangerAssisted
+    {
+      auto coilSystems = this->model().getConcreteModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>();
+      for( const auto & coilSystem : coilSystems ) {
+        if( coilSystem.coolingCoil().handle() == this->handle() ) {
+          return coilSystem;
+        }
+      }
+    }
+
+
     return boost::none;
   }
 
@@ -554,18 +567,26 @@ namespace detail {
 
   bool CoilCoolingDXVariableSpeed_Impl::addToNode(Node & node)
   {
-    if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
-    {
-      if( ! airLoop->demandComponent(node.handle()) )
+
+    // TODO: JM 2019-03-12 I'm not sure we shouldn't just restrict to ANY containingHVACComponent (disallow if part of a UnitarySystem)
+    auto t_containingHVACComponent = containingHVACComponent();
+    if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
+      LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemCoolingDXHeatExchangerAssisted. Please call CoilSystemCoolingDXHeatExchangerAssisted::addToNode instead");
+    } else {
+
+      if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() )
       {
+        if( ! airLoop->demandComponent(node.handle()) )
+        {
+          return StraightComponent_Impl::addToNode( node );
+        }
+      }
+
+      if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
         return StraightComponent_Impl::addToNode( node );
       }
-    }
 
-    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
-      return StraightComponent_Impl::addToNode( node );
     }
-
     return false;
   }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,7 +38,6 @@
 #include "../model/ModelMerger.hpp"
 #include "../model/ThreeJSReverseTranslator.hpp"
 #include "../model/ThreeJSForwardTranslator.hpp"
-#include "../model/FloorplanJSForwardTranslator.hpp"
 #include "../model/FloorplanJSForwardTranslator.hpp"
 #include "../model/Building.hpp"
 #include "../model/Building_Impl.hpp"
@@ -82,7 +81,6 @@
 #include <QTimer>
 #include <QStackedWidget>
 #include <QVBoxLayout>
-#include <QLabel>
 #include <QPushButton>
 #include <QWebEnginePage>
 #include <QWebEngineSettings>
@@ -90,7 +88,7 @@
 #include <QProcess>
 #include <QSettings>
 #include <QProcessEnvironment>
-#include <QDesktopServices>
+
 
 int CHECKFORUPDATEMSEC = 5000;
 
@@ -109,17 +107,6 @@ QUrl getEmbeddedFileUrl(const QString& filename)
   return result;
 }
 
-bool OSWebEnginePage::acceptNavigationRequest(const QUrl & url, QWebEnginePage::NavigationType type, bool isMainFrame)
-{
-  if (type == QWebEnginePage::NavigationTypeLinkClicked)
-  {
-    QString s = url.toString();
-    // open links in system browser rather than embedded view
-    QDesktopServices::openUrl(url);
-    return false;
-  }
-  return true;
-}
 
 GeometryEditorView::GeometryEditorView(bool isIP,
                                      const openstudio::model::Model& model,
@@ -208,7 +195,7 @@ std::map<UUID, UUID> BaseEditor::exportModelHandleMapping() const
 }
 
 void BaseEditor::onChanged()
-{  
+{
   emit changed();
   //m_document->markAsModified();
 }
@@ -1145,7 +1132,7 @@ EditorWebView::~EditorWebView()
     QString mergeWarnKeyName("geometryMergeWarn");
     bool settingsMergeWarn = settings.value(mergeWarnKeyName, true).toBool();
     if (settingsMergeWarn){
-      QMessageBox msg(QMessageBox::Question, "Unmerged Changes", "Your geometry may include unmerged changes.  Merge with Current OSM now?  Choose Ignore to skip this message in the future.", 
+      QMessageBox msg(QMessageBox::Question, "Unmerged Changes", "Your geometry may include unmerged changes.  Merge with Current OSM now?  Choose Ignore to skip this message in the future.",
         QMessageBox::Yes | QMessageBox::No | QMessageBox::Ignore, this, Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
       msg.setDefaultButton(QMessageBox::No);
       msg.setEscapeButton(QMessageBox::No);

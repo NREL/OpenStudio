@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,7 @@
 #include "ConstructionCfactorUndergroundWallInspectorView.hpp"
 #include "ConstructionFfactorGroundFloorInspectorView.hpp"
 #include "ConstructionInspectorView.hpp"
+#include "ConstructionAirBoundaryInspectorView.hpp"
 #include "ConstructionInternalSourceInspectorView.hpp"
 #include "ConstructionWindowDataFileInspectorView.hpp"
 #include "ModelObjectTypeListView.hpp"
@@ -60,6 +61,7 @@ std::vector<std::pair<IddObjectType, std::string> > ConstructionsView::modelObje
 {
   std::vector<std::pair<IddObjectType, std::string> > result;
   result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_Construction, "Constructions"));
+  result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_Construction_AirBoundary, "Air Boundary Constructions"));
   result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_Construction_InternalSource, "Internal Source Constructions"));
   result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_Construction_CfactorUndergroundWall, "C-factor Underground Wall Constructions"));
   result.push_back(std::make_pair<IddObjectType, std::string>(IddObjectType::OS_Construction_FfactorGroundFloor, "F-factor Ground Floor Constructions"));
@@ -99,6 +101,9 @@ void ConstructionsInspectorView::onSelectModelObject(const openstudio::model::Mo
     case IddObjectType::OS_Construction:
       this->showConstructionInspector(modelObject);
       break;
+    case IddObjectType::OS_Construction_AirBoundary:
+      this->showAirBoundaryInspector(modelObject);
+      break;      
     case IddObjectType::OS_Construction_CfactorUndergroundWall:
       this->showCfactorUndergroundWallInspector(modelObject);
       break;
@@ -124,6 +129,16 @@ void ConstructionsInspectorView::showConstructionInspector(const openstudio::mod
   constructionInspectorView->selectModelObject(modelObject);
 
   this->showInspector(constructionInspectorView);
+}
+
+void ConstructionsInspectorView::showAirBoundaryInspector(const openstudio::model::ModelObject & modelObject)
+{
+  auto constructionAirBoundaryInspectorView = new ConstructionAirBoundaryInspectorView(m_isIP, m_model);
+  connect(this, &ConstructionsInspectorView::toggleUnitsClicked, constructionAirBoundaryInspectorView, &ConstructionAirBoundaryInspectorView::toggleUnitsClicked);
+
+  constructionAirBoundaryInspectorView->selectModelObject(modelObject);
+
+  this->showInspector(constructionAirBoundaryInspectorView);
 }
 
 void ConstructionsInspectorView::showCfactorUndergroundWallInspector(const openstudio::model::ModelObject & modelObject)

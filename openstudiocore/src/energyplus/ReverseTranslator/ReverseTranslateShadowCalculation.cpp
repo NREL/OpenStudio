@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,6 +51,11 @@ boost::optional<model::ModelObject> ReverseTranslator::translateShadowCalculatio
 
   ShadowCalculation shadowCalculation = m_model.getUniqueModelObject<ShadowCalculation>();
 
+  OptionalString s = workspaceObject.getString(ShadowCalculationFields::CalculationMethod);
+  if (s) {
+    shadowCalculation.setCalculationMethod(*s);
+  }
+
   OptionalInt i = workspaceObject.getInt(ShadowCalculationFields::CalculationFrequency);
   if (i) {
     shadowCalculation.setCalculationFrequency(*i);
@@ -61,7 +66,7 @@ boost::optional<model::ModelObject> ReverseTranslator::translateShadowCalculatio
     shadowCalculation.setMaximumFiguresInShadowOverlapCalculations(*i);
   }
 
-  OptionalString s = workspaceObject.getString(ShadowCalculationFields::PolygonClippingAlgorithm);
+  s = workspaceObject.getString(ShadowCalculationFields::PolygonClippingAlgorithm);
   if (s && !s->empty()) {
     shadowCalculation.setPolygonClippingAlgorithm(*s);
   }

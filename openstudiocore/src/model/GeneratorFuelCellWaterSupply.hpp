@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLWATERSUPPLY_HPP
 #define MODEL_GENERATORFUELCELLWATERSUPPLY_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
 namespace openstudio {
@@ -94,7 +94,7 @@ class MODEL_API GeneratorFuelCellWaterSupply : public ModelObject {
   boost::optional<Schedule> waterTemperatureSchedule() const;
 
   // Return optional parent generator
-  GeneratorFuelCell fuelCell() const;
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */

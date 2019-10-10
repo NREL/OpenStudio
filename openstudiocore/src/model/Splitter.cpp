@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -68,12 +68,12 @@ Splitter_Impl::Splitter_Impl(const Splitter_Impl& other,
 {
 }
 
-boost::optional<ModelObject> Splitter_Impl::inletModelObject()
+boost::optional<ModelObject> Splitter_Impl::inletModelObject() const
 {
   return connectedObject( inletPort() );
 }
 
-boost::optional<ModelObject> Splitter_Impl::outletModelObject(unsigned branchIndex)
+boost::optional<ModelObject> Splitter_Impl::outletModelObject(unsigned branchIndex) const
 {
   return connectedObject( outletPort( branchIndex ) );
 }
@@ -83,7 +83,7 @@ std::vector<HVACComponent> Splitter_Impl::edges(const boost::optional<HVACCompon
   return castVector<HVACComponent>(outletModelObjects());
 }
 
-boost::optional<ModelObject> Splitter_Impl::lastOutletModelObject()
+boost::optional<ModelObject> Splitter_Impl::lastOutletModelObject() const
 {
   std::vector<ModelObject> objects = outletModelObjects();
   if( objects.size() > 0 )
@@ -115,7 +115,7 @@ unsigned Splitter_Impl::newOutletPortAfterBranch(unsigned branchIndex)
   return outletPort(branchIndex++);
 }
 
-unsigned Splitter_Impl::branchIndexForOutletModelObject( ModelObject modelObject )
+unsigned Splitter_Impl::branchIndexForOutletModelObject( ModelObject modelObject ) const
 {
   int stop = nextBranchIndex();
   for(int i = 0; i < stop; i++)
@@ -128,7 +128,7 @@ unsigned Splitter_Impl::branchIndexForOutletModelObject( ModelObject modelObject
   return 0;
 }
 
-unsigned Splitter_Impl::nextBranchIndex()
+unsigned Splitter_Impl::nextBranchIndex() const
 {
   unsigned i = 0;
   OptionalModelObject modelObject;
@@ -155,7 +155,7 @@ void Splitter_Impl::removePortForBranch(unsigned branchIndex)
   }
 }
 
-std::vector<ModelObject> Splitter_Impl::outletModelObjects()
+std::vector<ModelObject> Splitter_Impl::outletModelObjects() const
 {
   std::vector<ModelObject> result;
   int stop = nextBranchIndex();
@@ -212,37 +212,37 @@ Splitter::Splitter(IddObjectType type,const Model& model)
   OS_ASSERT(getImpl<detail::Splitter_Impl>());
 }
 
-unsigned Splitter::inletPort()
+unsigned Splitter::inletPort() const
 {
   return getImpl<detail::Splitter_Impl>()->inletPort();
 }
 
-unsigned Splitter::outletPort(unsigned branchIndex)
+unsigned Splitter::outletPort(unsigned branchIndex) const
 {
   return getImpl<detail::Splitter_Impl>()->outletPort(branchIndex);
 }
 
-unsigned Splitter::nextOutletPort()
+unsigned Splitter::nextOutletPort() const
 {
   return getImpl<detail::Splitter_Impl>()->nextOutletPort();
 }
 
-boost::optional<ModelObject> Splitter::inletModelObject()
+boost::optional<ModelObject> Splitter::inletModelObject() const
 {
   return getImpl<detail::Splitter_Impl>()->inletModelObject();
 }
 
-boost::optional<ModelObject> Splitter::outletModelObject(unsigned branchIndex)
+boost::optional<ModelObject> Splitter::outletModelObject(unsigned branchIndex) const
 {
   return getImpl<detail::Splitter_Impl>()->outletModelObject(branchIndex);
 }
 
-boost::optional<ModelObject> Splitter::lastOutletModelObject()
+boost::optional<ModelObject> Splitter::lastOutletModelObject() const
 {
   return getImpl<detail::Splitter_Impl>()->lastOutletModelObject();
 }
 
-std::vector<ModelObject> Splitter::outletModelObjects()
+std::vector<ModelObject> Splitter::outletModelObjects() const
 {
   return getImpl<detail::Splitter_Impl>()->outletModelObjects();
 }
@@ -252,12 +252,12 @@ unsigned Splitter::newOutletPortAfterBranch(unsigned branchIndex)
   return getImpl<detail::Splitter_Impl>()->newOutletPortAfterBranch(branchIndex);
 }
 
-unsigned Splitter::branchIndexForOutletModelObject( ModelObject modelObject )
+unsigned Splitter::branchIndexForOutletModelObject( ModelObject modelObject ) const
 {
   return getImpl<detail::Splitter_Impl>()->branchIndexForOutletModelObject(modelObject);
 }
 
-unsigned Splitter::nextBranchIndex()
+unsigned Splitter::nextBranchIndex() const
 {
   return getImpl<detail::Splitter_Impl>()->nextBranchIndex();
 }

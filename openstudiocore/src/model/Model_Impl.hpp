@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,6 +37,7 @@
 #include "RunPeriod.hpp"
 #include "YearDescription.hpp"
 #include "WeatherFile.hpp"
+#include "PerformancePrecisionTradeoffs.hpp"
 
 #include "../nano/nano_signal_slot.hpp" // Signal-Slot replacement
 
@@ -143,7 +144,11 @@ namespace detail {
 
     /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
-    boost::optional<FoundationKivaSettings> foundationKivaSettings() const;    
+    boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
+    
+    /** Get the PerformancePrecisionTradeoffs object if there is one, this implementation uses a cached reference to the PerformancePrecisionTradeoffs
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>(). */
+    boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs() const;    
     
     /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
@@ -302,6 +307,7 @@ namespace detail {
     mutable boost::optional<RunPeriod> m_cachedRunPeriod;
     mutable boost::optional<YearDescription> m_cachedYearDescription;
     mutable boost::optional<WeatherFile> m_cachedWeatherFile;
+    mutable boost::optional<PerformancePrecisionTradeoffs> m_cachedPerformancePrecisionTradeoffs;
 
   // private slots:
     void clearCachedData();
@@ -311,6 +317,7 @@ namespace detail {
     void clearCachedRunPeriod(const Handle& handle);
     void clearCachedYearDescription(const Handle& handle);
     void clearCachedWeatherFile(const Handle& handle);
+    void clearCachedPerformancePrecisionTradeoffs(const Handle& handle);
 
     typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(Model_Impl *, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)> CopyConstructorFunction;
     typedef std::map<IddObjectType, CopyConstructorFunction> CopyConstructorMap;

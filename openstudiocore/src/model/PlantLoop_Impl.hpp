@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -73,7 +73,16 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual IddObjectType iddObjectType() const override;
 
-
+  /**
+   * This method creates the basic, barebone, PlantLoop topology:
+   * - Supply inlet & oulet nodes,
+   * - Supply splitter & mixer,
+   * - A Suply branch with a node (Connector Node)
+   * - Demand inlet & outlet nodes,
+   * - Demand splitter & mixer,
+   * - A Demand branch with a node (Branch Node)
+   */
+  virtual void createTopology() override;
 
   std::string loadDistributionScheme();
 
@@ -169,6 +178,14 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   virtual std::vector<openstudio::IdfObject> remove() override;
 
+  /**
+   * This method will clone a Plant Loop with the following rationale:
+   * - Handle all non-branch components from both the supply and the demand side
+   * - Handle branch components on the supply side (between supply splitter and mixer)
+   * - Clone any SetpointManagers and add them to the correct location
+   * - If the component that is cloned is connected to another PlantLoop, we try to connect the clone
+   *   to the same other PlantLoop (if comp is on the supply side, we add a demand branch to the other plantloop)
+   */
   virtual ModelObject clone(Model model) const override;
 
   unsigned supplyInletPort() const;
@@ -199,11 +216,11 @@ class MODEL_API PlantLoop_Impl : public Loop_Impl {
 
   bool setSupplySplitter(Splitter const & splitter);
 
-  Mixer demandMixer() override;
+  virtual Mixer demandMixer() const override;
 
   bool setDemandMixer(Mixer const & mixer);
 
-  Splitter demandSplitter() override;
+  virtual Splitter demandSplitter() const override;
 
   bool setDemandSplitter(Splitter const & splitter);
 

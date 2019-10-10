@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,6 +54,28 @@ namespace detail {
 
 } // detail
 
+
+/** This class implements a custom block */
+class CustomBlock {
+  public:
+    CustomBlock(const Material& material, double depth, double xPosition, double zPosition);
+    
+    Material material() const;
+    double depth() const;
+    double xPosition() const;
+    double zPosition() const;
+    
+  private:
+    Material m_material;
+    double m_depth;
+    double m_xPosition;
+    double m_zPosition;
+    REGISTER_LOGGER("openstudio.model.CustomBlock");
+};
+
+// Overload operator<<
+std::ostream& operator<< (std::ostream& out, const openstudio::model::CustomBlock& customBlock);
+
 /** FoundationKiva is a ModelObject that wraps the OpenStudio IDD object 'OS:Foundation:Kiva'. */
 class MODEL_API FoundationKiva : public ModelObject {
  public:
@@ -67,9 +89,25 @@ class MODEL_API FoundationKiva : public ModelObject {
   //@}
 
   static IddObjectType iddObjectType();
+  
+  //extensible fields
+  
+  bool addCustomBlock(const CustomBlock& customBlock);
+
+  bool addCustomBlock(const Material& material, double depth, double xPosition, double zPosition);
+  
+  void removeCustomBlock(int groupIndex);
+  
+  void removeAllCustomBlocks();
+  
+  std::vector<CustomBlock> customBlocks() const;
+  
+  bool addCustomBlocks(const std::vector<CustomBlock> &customBlocks);
 
   /** @name Getters */
   //@{
+
+  boost::optional<double> initialIndoorAirTemperature();
 
   boost::optional<Material> interiorHorizontalInsulationMaterial() const;
 
@@ -112,10 +150,14 @@ class MODEL_API FoundationKiva : public ModelObject {
   bool isFootingDepthDefaulted() const;
 
   std::vector<Surface> surfaces() const;
+  
+  unsigned int numberofCustomBlocks() const;
 
   //@}
   /** @name Setters */
   //@{
+
+  bool setInitialIndoorAirTemperature(double initialIndoorAirTemperature);
 
   bool setInteriorHorizontalInsulationMaterial(const Material& material);
 

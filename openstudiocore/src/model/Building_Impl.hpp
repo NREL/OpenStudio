@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,6 +43,7 @@ namespace model {
 
 class Facility;
 class OutputMeter;
+class BuildingStory;
 class ShadingSurfaceGroup;
 class Surface;
 class Space;
@@ -76,6 +77,8 @@ namespace detail {
     //@}
 
     virtual boost::optional<ParentObject> parent() const override;
+
+    virtual std::vector<IdfObject> remove() override;
 
     virtual std::vector<ModelObject> children() const override;
 
@@ -169,6 +172,8 @@ namespace detail {
 
     std::vector<OutputMeter> meters() const;
 
+    std::vector<BuildingStory> buildingStories() const;
+
     boost::optional<Facility> facility() const;
 
     std::vector<Space> spaces() const;
@@ -245,6 +250,7 @@ namespace detail {
     boost::optional<ModelObject> defaultConstructionSetAsModelObject() const;
     boost::optional<ModelObject> defaultScheduleSetAsModelObject() const;
     std::vector<ModelObject> metersAsModelObjects() const;
+    std::vector<ModelObject> buildingStoriesAsModelObjects() const;
     boost::optional<ModelObject> facilityAsModelObject() const;
     std::vector<ModelObject> spacesAsModelObjects() const;
     std::vector<ModelObject> shadingSurfaceGroupsAsModelObjects() const;

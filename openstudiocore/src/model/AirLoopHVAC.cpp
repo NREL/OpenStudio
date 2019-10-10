@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -74,6 +74,8 @@
 #include "AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
 #include "AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeBeam.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeBeam_Impl.hpp"
 #include "AvailabilityManagerAssignmentList.hpp"
 #include "AvailabilityManagerAssignmentList_Impl.hpp"
 #include "AvailabilityManager.hpp"
@@ -407,7 +409,7 @@ namespace detail {
 
       // Reconnect the cloned terminal to the plant loop(s)
 
-      // TODO: (Temporary?) Ugly hack for FourPipeInduction for now, which has both a cooling and heating plantLoop
+      // Special case for FourPipeInduction for now, which has both a cooling and heating plantLoop
       if ( lastAirTerminal->iddObjectType() == IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeInduction ) {
 
         // Safe to directly cast
@@ -421,14 +423,41 @@ namespace detail {
 
         // If the original ATU has a cooling coil, if it's a CoilCoolingWater, and the cooling coil has a plantLoop, reconnect it here
         if (lastAtuFourPipe.coolingCoil()) {
-          if (boost::optional<CoilCoolingWater> _lastCC = lastAtuFourPipe.coolingCoil()->cast<CoilCoolingWater>() ) {
+          if (boost::optional<CoilCoolingWater> _lastCC = lastAtuFourPipe.coolingCoil()->optionalCast<CoilCoolingWater>() ) {
             if (boost::optional<PlantLoop> _coolingPl = _lastCC->plantLoop()) {
               _coolingPl->addDemandBranchForComponent(newAtuFourPipe.coolingCoil().get());
             }
           }
         }
 
-        // TODO: Another ugly hack for CooledBeam, which isn't a HVAComponent but a StraightComponent
+      // Special case for FourPipeInduction, which has both optional cooling and heating coils, that can or cannot be linked to some PlantLoops
+      } else if ( lastAirTerminal->iddObjectType() == IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_FourPipeBeam ) {
+
+        // Safe to directly cast (checked iddObjectType already)
+        AirTerminalSingleDuctConstantVolumeFourPipeBeam lastAtuFourPipeBeam = lastAirTerminal->cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+        AirTerminalSingleDuctConstantVolumeFourPipeBeam newAtuFourPipeBeam = airTerminal.cast<AirTerminalSingleDuctConstantVolumeFourPipeBeam>();
+
+        boost::optional<PlantLoop> _loop;
+
+        // If the original ATU has a cooling coil, and the cooling coil has a plantLoop, reconnect it here
+        boost::optional<HVACComponent> _hc = lastAtuFourPipeBeam.heatingCoil();
+        if ( _hc && (_loop = _hc->plantLoop()) ) {
+          boost::optional<HVACComponent> _hcClone = newAtuFourPipeBeam.heatingCoil();
+          // FourPipeBeam::clone should clone and re-set the coils, so it should have worked
+          OS_ASSERT(_hcClone);
+          _loop->addDemandBranchForComponent(*_hcClone);
+        }
+
+        // If the original ATU has a cooling coil, and the cooling coil has a plantLoop, reconnect it here
+        boost::optional<HVACComponent> _cc = lastAtuFourPipeBeam.coolingCoil();
+        if ( _cc && (_loop = _cc->plantLoop()) ) {
+          boost::optional<HVACComponent> _ccClone = newAtuFourPipeBeam.coolingCoil();
+          // FourPipeBeam::clone should clone and re-set the coils, so it should have worked
+          OS_ASSERT(_ccClone);
+          _loop->addDemandBranchForComponent(*_ccClone);
+        }
+
+        // Special case for CooledBeam, which isn't a HVAComponent but a StraightComponent
       } else if (lastAirTerminal->iddObjectType() == IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam) {
 
         // Safe to directly cast
@@ -726,6 +755,9 @@ namespace detail {
     airLoopClone.setString(demandInletPortB(),"");
     airLoopClone.setString(demandOutletPort(),"");
 
+    // Sizing:System was already cloned because it is declared as a child
+    // And because it has the setParent method overriden, no need to do anything
+
     {
       auto clone = availabilitySchedule().clone(model).cast<Schedule>();
       airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilitySchedule,clone.handle());
@@ -735,12 +767,6 @@ namespace detail {
       AvailabilityManagerAssignmentList avmListClone = availabilityManagerAssignmentList().clone(model).cast<AvailabilityManagerAssignmentList>();
       avmListClone.setName(airLoopClone.name().get() + " AvailabilityManagerAssigmentList");
       airLoopClone.setPointer(OS_AirLoopHVACFields::AvailabilityManagerListName, avmListClone.handle());
-    }
-
-    {
-      auto sizing = sizingSystem();
-      auto sizingClone = sizing.clone(model).cast<SizingSystem>();
-      sizingClone.setAirLoopHVAC(airLoopClone);
     }
 
     airLoopClone.getImpl<detail::AirLoopHVAC_Impl>()->createTopology();
@@ -755,6 +781,13 @@ namespace detail {
       } else {
         auto compClone = comp.clone(model).cast<HVACComponent>();
         compClone.addToNode(outletNodeClone);
+        // If the original component was also on a PlantLoop
+        if( boost::optional<HVACComponent> hvacComp = comp.optionalCast<HVACComponent>() ) {
+          if( boost::optional<PlantLoop> pl = hvacComp->plantLoop() ) {
+            // Connect the clone to the plantLoop too
+            pl->addDemandBranchForComponent(compClone);
+          }
+        }
       }
     }
 
@@ -779,6 +812,8 @@ namespace detail {
       termtypes.push_back(comp.iddObjectType());
     });
 
+    // std::unique only works on sorted vectors, need to sort
+    std::sort(termtypes.begin(), termtypes.end());
     auto uniquetypes = std::vector<IddObjectType>(termtypes.begin(), std::unique(termtypes.begin(), termtypes.end()));
     std::vector<HVACComponent> uniqueterms;
 
@@ -840,6 +875,18 @@ namespace detail {
     }
   }
 
+  boost::optional<Node> AirLoopHVAC_Impl::outdoorAirNode() const
+  {
+    if( airLoopHVACOutdoorAirSystem() )
+    {
+      return airLoopHVACOutdoorAirSystem()->outboardOANode();
+    }
+    else
+    {
+      return boost::optional<Node>();
+    }
+  }
+
   boost::optional<Node> AirLoopHVAC_Impl::reliefAirNode() const
   {
     if( airLoopHVACOutdoorAirSystem() )
@@ -896,12 +943,12 @@ namespace detail {
     return result;
   }
 
-  Splitter AirLoopHVAC_Impl::demandSplitter()
+  Splitter AirLoopHVAC_Impl::demandSplitter() const
   {
     return this->zoneSplitter();
   }
 
-  Mixer AirLoopHVAC_Impl::demandMixer()
+  Mixer AirLoopHVAC_Impl::demandMixer() const
   {
     return this->zoneMixer();
   }
@@ -974,6 +1021,7 @@ namespace detail {
     return result;
   }
 
+  // TODO: REMOVE!
   //bool AirLoopHVAC_Impl::addBranchForZoneImpl(ThermalZone & thermalZone, OptionalStraightComponent & airTerminal)
   //{
   //  boost::optional<HVACComponent> comp;
@@ -1375,6 +1423,21 @@ namespace detail {
     if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVACOutdoorAirSystem() )
     {
       if( boost::optional<ModelObject> mo = oaSystem->mixedAirModelObject() )
+      {
+        result = mo->optionalCast<Node>();
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<Node> AirLoopHVAC_Impl::returnAirNode() const
+  {
+    boost::optional<Node> result;
+
+    if( boost::optional<AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVACOutdoorAirSystem() )
+    {
+      if( boost::optional<ModelObject> mo = oaSystem->returnAirModelObject() )
       {
         result = mo->optionalCast<Node>();
       }
@@ -2129,26 +2192,24 @@ std::vector<ModelObject> AirLoopHVAC::oaComponents(openstudio::IddObjectType typ
   return getImpl<detail::AirLoopHVAC_Impl>()->oaComponents( type );
 }
 
-boost::optional<Node> AirLoopHVAC::outdoorAirNode()
+boost::optional<Node> AirLoopHVAC::outdoorAirNode() const
 {
-  // ETH@20111101 Adding to get Ruby bindings building.
-  LOG_AND_THROW("Not implemented.");
+  return getImpl<detail::AirLoopHVAC_Impl>()->outdoorAirNode();
 }
 
-boost::optional<Node> AirLoopHVAC::reliefAirNode()
+boost::optional<Node> AirLoopHVAC::reliefAirNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->reliefAirNode();
 }
 
-boost::optional<Node> AirLoopHVAC::mixedAirNode()
+boost::optional<Node> AirLoopHVAC::mixedAirNode() const
 {
   return getImpl<detail::AirLoopHVAC_Impl>()->mixedAirNode();
 }
 
-boost::optional<Node> AirLoopHVAC::returnAirNode()
+boost::optional<Node> AirLoopHVAC::returnAirNode() const
 {
-  // ETH@20111101 Adding to get Ruby bindings building.
-  LOG_AND_THROW("Not implemented.");
+  return getImpl<detail::AirLoopHVAC_Impl>()->returnAirNode();
 }
 
 boost::optional<Splitter> AirLoopHVAC::supplySplitter() const {

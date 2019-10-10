@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -87,6 +87,8 @@
 #include "DesignSpecificationOutdoorAir_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "ScheduleConstant.hpp"
+#include "ScheduleConstant_Impl.hpp"
 #include "AirLoopHVACZoneSplitter.hpp"
 #include "AirLoopHVACZoneSplitter_Impl.hpp"
 #include "AirLoopHVACZoneMixer.hpp"
@@ -103,6 +105,8 @@
 #include "ZoneMixing_Impl.hpp"
 #include "AirflowNetworkZone.hpp"
 #include "AirflowNetworkZone_Impl.hpp"
+#include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
+#include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -173,6 +177,10 @@ namespace detail {
       result.push_back(afnz.get());
     }
 
+    if ( boost::optional<ZoneHVACEquipmentList> z_eq = this->zoneHVACEquipmentList() ) {
+      result.push_back(z_eq.get());
+    }
+
     return result;
   }
 
@@ -191,6 +199,7 @@ namespace detail {
     // DLM: this does not seem to agree with implementation of children()
     result.push_back(IddObjectType::OS_ThermostatSetpoint_DualSetpoint);
     result.push_back(IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint);
+    result.push_back(IddObjectType::OS_ZoneHVAC_EquipmentList);
     return result;
   }
 
@@ -291,6 +300,33 @@ namespace detail {
       "Zone Hot Water Equipment Lost Heat Rate",
       "Zone Hot Water Equipment Total Heating Energy",
       "Zone Hot Water Equipment Total Heating Rate",
+
+      // IT Equipment
+      "Zone ITE Adjusted Return Air Temperature ",
+      "Zone ITE CPU Electric Power ",
+      "Zone ITE Fan Electric Power ",
+      "Zone ITE UPS Electric Power ",
+      "Zone ITE CPU Electric Power at Design Inlet Conditions ",
+      "Zone ITE Fan Electric Power at Design Inlet Conditions ",
+      "Zone ITE UPS Heat Gain to Zone Rate ",
+      "Zone ITE Total Heat Gain to Zone Rate ",
+      "Zone ITE CPU Electric Energy ",
+      "Zone ITE Fan Electric Energy ",
+      "Zone ITE UPS Electric Energy ",
+      "Zone ITE CPU Electric Energy at Design Inlet Conditions ",
+      "Zone ITE Fan Electric Energy at Design Inlet Conditions ",
+      "Zone ITE UPS Heat Gain to Zone Energy ",
+      "Zone ITE Total Heat Gain to Zone Energy ",
+      "Zone ITE Standard Density Air Volume Flow Rate ",
+      "Zone ITE Air Mass Flow Rate ",
+      "Zone ITE Average Supply Heat Index ",
+      "Zone ITE Any Air Inlet Operating Range Exceeded Time ",
+      "Zone ITE Any Air Inlet Dry-Bulb Temperature Above Operating Range Time ",
+      "Zone ITE Any Air Inlet Dry-Bulb Temperature Below Operating Range Time ",
+      "Zone ITE Any Air Inlet Dewpoint Temperature Above Operating Range Time ",
+      "Zone ITE Any Air Inlet Dewpoint Temperature Below Operating Range Time ",
+      "Zone ITE Any Air Inlet Relative Humidity Above Operating Range Time ",
+      "Zone ITE Any Air Inlet Relative Humidity Below Operating Range Time ",
 
       // Lights
       // TODO: if zone.spaces.select{|s| s.lights.size > 0}.size > 0
@@ -865,17 +901,17 @@ namespace detail {
     return pl.get();
   }
 
-  unsigned ThermalZone_Impl::returnAirPort()
+  unsigned ThermalZone_Impl::returnAirPort() const
   {
     return returnPortList().port(0);
   }
 
-  unsigned ThermalZone_Impl::zoneAirPort()
+  unsigned ThermalZone_Impl::zoneAirPort() const
   {
     return OS_ThermalZoneFields::ZoneAirNodeName;
   }
 
-  OptionalModelObject ThermalZone_Impl::returnAirModelObject()
+  OptionalModelObject ThermalZone_Impl::returnAirModelObject() const
   {
     return returnPortList().connectedObject(this->returnAirPort());
   }
@@ -885,7 +921,7 @@ namespace detail {
     return returnPortList().modelObjects();
   }
 
-  Node ThermalZone_Impl::zoneAirNode()
+  Node ThermalZone_Impl::zoneAirNode() const
   {
     return this->connectedObject(this->zoneAirPort())->cast<Node>();
   }
@@ -1823,8 +1859,8 @@ namespace detail {
     inletPortList().remove();
     exhaustPortList().remove();
 
-    // remove ZoneHVACEquipmentList
-    zoneHVACEquipmentList().remove();
+    // remove ZoneHVACEquipmentList: handled already by the fact that it's a child of this ParentObject
+    // zoneHVACEquipmentList().remove();
 
     // remove ZoneMixing objects
     for (auto mixing : this->zoneMixing()) {
@@ -2317,7 +2353,7 @@ namespace detail {
     return zoneHVACEquipmentList().equipment();
   }
 
-  std::string ThermalZone_Impl::loadDistributionScheme()
+  std::string ThermalZone_Impl::loadDistributionScheme() const
   {
     return zoneHVACEquipmentList().loadDistributionScheme();
   }
@@ -2327,14 +2363,87 @@ namespace detail {
     return zoneHVACEquipmentList().setLoadDistributionScheme(scheme);
   }
 
-  std::vector<ModelObject> ThermalZone_Impl::equipmentInHeatingOrder()
+  std::vector<ModelObject> ThermalZone_Impl::equipmentInHeatingOrder() const
   {
     return zoneHVACEquipmentList().equipmentInHeatingOrder();
   }
 
-  std::vector<ModelObject> ThermalZone_Impl::equipmentInCoolingOrder()
+  std::vector<ModelObject> ThermalZone_Impl::equipmentInCoolingOrder() const
   {
     return zoneHVACEquipmentList().equipmentInCoolingOrder();
+  }
+
+  boost::optional<double> ThermalZone_Impl::sequentialCoolingFraction(const ModelObject& equipment) const
+  {
+
+    boost::optional<double> result;
+
+    if (boost::optional<Schedule> _schedule = sequentialCoolingFractionSchedule(equipment)) {
+      if (boost::optional<ScheduleConstant> _schConstant = _schedule->optionalCast<ScheduleConstant>()) {
+        result = boost::optional<double>(_schConstant->value());
+      } else {
+        LOG(Warn, "This deprecated method cannot return a double when the "
+                  "'Zone Equipment Sequential Cooling Fraction Schedule' isn't a Schedule:Constant, "
+                  "here the schedule is a '" << _schedule->iddObject().name() << ". Occurred for " << briefDescription());
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<Schedule> ThermalZone_Impl::sequentialCoolingFractionSchedule(const ModelObject& equipment) const
+  {
+    return zoneHVACEquipmentList().sequentialCoolingFractionSchedule(equipment);
+  }
+
+  boost::optional<double> ThermalZone_Impl::sequentialHeatingFraction(const ModelObject& equipment) const
+  {
+    boost::optional<double> result;
+
+    if (boost::optional<Schedule> _schedule = sequentialHeatingFractionSchedule(equipment)) {
+      if (boost::optional<ScheduleConstant> _schConstant = _schedule->optionalCast<ScheduleConstant>()) {
+        result = boost::optional<double>(_schConstant->value());
+      } else {
+        LOG(Warn, "This deprecated method cannot return a double when the "
+                  "'Zone Equipment Sequential Heating Fraction Schedule' isn't a Schedule:Constant, "
+                  "here the schedule is a '" << _schedule->iddObject().name() << ". Occurred for " << briefDescription());
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<Schedule> ThermalZone_Impl::sequentialHeatingFractionSchedule(const ModelObject& equipment) const
+  {
+    return zoneHVACEquipmentList().sequentialHeatingFractionSchedule(equipment);
+  }
+
+  bool ThermalZone_Impl::setSequentialCoolingFraction(const ModelObject & equipment, double fraction)
+  {
+    Model model = this->model();
+    ScheduleConstant schedule(model);
+    schedule.setValue(fraction);
+
+    return setSequentialCoolingFractionSchedule(equipment, schedule);
+  }
+
+  bool ThermalZone_Impl::setSequentialCoolingFractionSchedule(const ModelObject & equipment, const Schedule& schedule)
+  {
+    return zoneHVACEquipmentList().setSequentialCoolingFractionSchedule(equipment, schedule);
+  }
+
+  bool ThermalZone_Impl::setSequentialHeatingFraction(const ModelObject & equipment, double fraction)
+  {
+    Model model = this->model();
+    ScheduleConstant schedule(model);
+    schedule.setValue(fraction);
+
+    return setSequentialHeatingFractionSchedule(equipment, schedule);
+  }
+
+  bool ThermalZone_Impl::setSequentialHeatingFractionSchedule(const ModelObject & equipment, const Schedule& schedule)
+  {
+    return zoneHVACEquipmentList().setSequentialHeatingFractionSchedule(equipment, schedule);
   }
 
   ModelObject ThermalZone_Impl::clone(Model model) const
@@ -2839,6 +2948,22 @@ namespace detail {
     return boost::none;
   }
 
+  ZonePropertyUserViewFactorsBySurfaceName ThermalZone_Impl::getZonePropertyUserViewFactorsBySurfaceName() const {
+    ThermalZone thisThermalZone = getObject<ThermalZone>();
+    std::vector<ZonePropertyUserViewFactorsBySurfaceName> zoneProps = thisThermalZone.getModelObjectSources<ZonePropertyUserViewFactorsBySurfaceName>(ZonePropertyUserViewFactorsBySurfaceName::iddObjectType());
+    if (!zoneProps.empty()) {
+      if (zoneProps.size() > 1u) {
+        // This shouldn't happen, ZonePropertyUserViewFactorsBySurfaceName's ctor should throw if a zone already has one
+        OS_ASSERT(false);
+        LOG(Error, briefDescription() << " is referenced by more than one ZonePropertyUserViewFactorsBySurfaceName, returning the first");
+      }
+      return zoneProps[0];
+    }
+
+    ZonePropertyUserViewFactorsBySurfaceName zoneProp(thisThermalZone);
+    return zoneProp;
+  }
+
 } // detail
 
 ThermalZone::ThermalZone(const Model& model)
@@ -3056,17 +3181,17 @@ void ThermalZone::resetFractionofZoneControlledbySecondaryDaylightingControl() {
   getImpl<detail::ThermalZone_Impl>()->resetFractionofZoneControlledbySecondaryDaylightingControl();
 }
 
-unsigned ThermalZone::returnAirPort()
+unsigned ThermalZone::returnAirPort() const
 {
   return getImpl<detail::ThermalZone_Impl>()->returnAirPort();
 }
 
-unsigned ThermalZone::zoneAirPort()
+unsigned ThermalZone::zoneAirPort() const
 {
   return getImpl<detail::ThermalZone_Impl>()->zoneAirPort();
 }
 
-OptionalModelObject ThermalZone::returnAirModelObject()
+OptionalModelObject ThermalZone::returnAirModelObject() const
 {
   return getImpl<detail::ThermalZone_Impl>()->returnAirModelObject();
 }
@@ -3076,7 +3201,7 @@ std::vector<ModelObject> ThermalZone::returnAirModelObjects() const
   return getImpl<detail::ThermalZone_Impl>()->returnAirModelObjects();
 }
 
-Node ThermalZone::zoneAirNode()
+Node ThermalZone::zoneAirNode() const
 {
   return getImpl<detail::ThermalZone_Impl>()->zoneAirNode();
 }
@@ -3353,12 +3478,48 @@ bool ThermalZone::setHeatingPriority(const ModelObject & equipment, unsigned pri
   return getImpl<detail::ThermalZone_Impl>()->setHeatingPriority(equipment,priority);
 }
 
+boost::optional<double> ThermalZone::sequentialCoolingFraction(const ModelObject& equipment) const {
+  return getImpl<detail::ThermalZone_Impl>()->sequentialCoolingFraction(equipment);
+}
+
+boost::optional<Schedule> ThermalZone::sequentialCoolingFractionSchedule(const ModelObject& equipment) const {
+  return getImpl<detail::ThermalZone_Impl>()->sequentialCoolingFractionSchedule(equipment);
+}
+
+bool ThermalZone::setSequentialCoolingFraction(const ModelObject& equipment, double fraction)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setSequentialCoolingFraction(equipment, fraction);
+}
+
+bool ThermalZone::setSequentialCoolingFractionSchedule(const ModelObject& equipment, const Schedule& schedule)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setSequentialCoolingFractionSchedule(equipment, schedule);
+}
+
+boost::optional<double> ThermalZone::sequentialHeatingFraction(const ModelObject& equipment) const {
+  return getImpl<detail::ThermalZone_Impl>()->sequentialHeatingFraction(equipment);
+}
+
+boost::optional<Schedule> ThermalZone::sequentialHeatingFractionSchedule(const ModelObject& equipment) const {
+  return getImpl<detail::ThermalZone_Impl>()->sequentialHeatingFractionSchedule(equipment);
+}
+
+bool ThermalZone::setSequentialHeatingFraction(const ModelObject& equipment, double fraction)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setSequentialHeatingFraction(equipment, fraction);
+}
+
+bool ThermalZone::setSequentialHeatingFractionSchedule(const ModelObject& equipment, const Schedule& schedule)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setSequentialHeatingFractionSchedule(equipment, schedule);
+}
+
 std::vector<ModelObject> ThermalZone::equipment() const
 {
   return getImpl<detail::ThermalZone_Impl>()->equipment();
 }
 
-std::string ThermalZone::loadDistributionScheme()
+std::string ThermalZone::loadDistributionScheme() const
 {
   return getImpl<detail::ThermalZone_Impl>()->loadDistributionScheme();
 }
@@ -3368,12 +3529,12 @@ bool ThermalZone::setLoadDistributionScheme(std::string scheme)
   return getImpl<detail::ThermalZone_Impl>()->setLoadDistributionScheme(scheme);
 }
 
-std::vector<ModelObject> ThermalZone::equipmentInHeatingOrder()
+std::vector<ModelObject> ThermalZone::equipmentInHeatingOrder() const
 {
   return getImpl<detail::ThermalZone_Impl>()->equipmentInHeatingOrder();
 }
 
-std::vector<ModelObject> ThermalZone::equipmentInCoolingOrder()
+std::vector<ModelObject> ThermalZone::equipmentInCoolingOrder() const
 {
   return getImpl<detail::ThermalZone_Impl>()->equipmentInCoolingOrder();
 }
@@ -3496,6 +3657,11 @@ boost::optional<AirflowNetworkZone> ThermalZone::airflowNetworkZone() const
 std::vector<AirLoopHVAC> ThermalZone::airLoopHVACs() const
 {
   return getImpl<detail::ThermalZone_Impl>()->airLoopHVACs();
+}
+
+ZonePropertyUserViewFactorsBySurfaceName ThermalZone::getZonePropertyUserViewFactorsBySurfaceName() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->getZonePropertyUserViewFactorsBySurfaceName();
 }
 
 /// @cond

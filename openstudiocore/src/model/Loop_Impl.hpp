@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,6 +62,10 @@ namespace detail {
 
     virtual ~Loop_Impl() {}
 
+    /** This pure virtual method is intended to be overriden by child classes (namely PlantLoop and AirLoopHVAC) to create the basic topology of the
+     * loop, that is to create the supply/demand inlet/outlet nodes, splitters and mixers as appropriate */
+    virtual void createTopology() = 0;
+
     virtual Node supplyInletNode() const = 0;
 
     virtual Node supplyOutletNode() const = 0;
@@ -116,9 +120,9 @@ namespace detail {
 
     virtual ModelObject clone(Model model) const override;
 
-    virtual Splitter demandSplitter() = 0;
+    virtual Splitter demandSplitter() const = 0;
 
-    virtual Mixer demandMixer() = 0;
+    virtual Mixer demandMixer() const = 0;
 
     virtual void autosize();
 

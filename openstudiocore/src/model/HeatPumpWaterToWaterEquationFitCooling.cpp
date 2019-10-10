@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -348,22 +348,22 @@ namespace detail {
     return this->setPointer(OS_HeatPump_WaterToWater_EquationFit_CoolingFields::CompanionHeatingHeatPumpName, companionHP.handle());
   }
 
-  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::supplyInletPort()
+  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::supplyInletPort() const
   {
     return OS_HeatPump_WaterToWater_EquationFit_CoolingFields::SourceSideInletNodeName;
   }
 
-  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::supplyOutletPort()
+  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::supplyOutletPort() const
   {
     return OS_HeatPump_WaterToWater_EquationFit_CoolingFields::SourceSideOutletNodeName;
   }
 
-  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::demandInletPort()
+  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::demandInletPort() const
   {
     return OS_HeatPump_WaterToWater_EquationFit_CoolingFields::LoadSideInletNodeName;
   }
 
-  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::demandOutletPort()
+  unsigned HeatPumpWaterToWaterEquationFitCooling_Impl::demandOutletPort() const
   {
     return OS_HeatPump_WaterToWater_EquationFit_CoolingFields::LoadSideOutletNodeName;
   }

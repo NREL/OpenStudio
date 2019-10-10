@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -216,6 +216,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell2) {
   GeneratorFuelSupply fuelSupply(model);
   // create default fuelcell
   GeneratorFuelCell fuelcell(model, powerModule, airSupply, waterSupply, auxHeater, exhaustHX, elecStorage, inverter, fuelSupply);
+  // Stack cooler is optional. For it to be transalted, it needs to be linked to a fuelcell parent
+  fuelcell.setStackCooler(stackCooler);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -230,12 +232,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell2) {
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_ExhaustGasToWaterHeatExchanger).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_Inverter).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_PowerModule).size());
-  //expect stack cooler
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_StackCooler).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_WaterSupply).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelSupply).size());
   //no water mains expected
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Site_WaterMainsTemperature).size());
+  // Expect stack cooler since it is linked to a FuelCell
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_StackCooler).size());
 
 
   model.save(toPath("./fuelcell2.osm"), true);
@@ -280,12 +282,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell3) {
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_ExhaustGasToWaterHeatExchanger).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_Inverter).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_PowerModule).size());
-  //expect stack cooler
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_StackCooler).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_WaterSupply).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelSupply).size());
   //no water mains expected
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Site_WaterMainsTemperature).size());
+  // Stack cooler is optional. For it to be transalted, it needs to be linked to a fuelcell parent
+  // Here we didn't, so we don't expect a Stack Cooler
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_StackCooler).size());
+
 
 
   model.save(toPath("./fuelcell3.osm"), true);
@@ -331,7 +335,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell4) {
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_ExhaustGasToWaterHeatExchanger).size());
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_Inverter).size());
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_PowerModule).size());
-  //expect stack cooler
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_StackCooler).size());
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_WaterSupply).size());
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelSupply).size());

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,6 +38,8 @@
 #include "HVACComponent_Impl.hpp"
 #include "WaterHeaterMixed.hpp"
 #include "WaterHeaterMixed_Impl.hpp"
+#include "WaterHeaterStratified.hpp"
+#include "WaterHeaterStratified_Impl.hpp"
 #include "WaterToWaterComponent.hpp"
 #include "WaterToWaterComponent_Impl.hpp"
 #include "Node.hpp"
@@ -119,12 +121,12 @@ namespace detail {
     return result;
   }
 
-  unsigned CoilWaterHeatingDesuperheater_Impl::inletPort()
+  unsigned CoilWaterHeatingDesuperheater_Impl::inletPort() const
   {
     return OS_Coil_WaterHeating_DesuperheaterFields::WaterInletNodeName;
   }
 
-  unsigned CoilWaterHeatingDesuperheater_Impl::outletPort()
+  unsigned CoilWaterHeatingDesuperheater_Impl::outletPort() const
   {
     return OS_Coil_WaterHeating_DesuperheaterFields::WaterOutletNodeName;
   }
@@ -198,7 +200,8 @@ namespace detail {
   bool CoilWaterHeatingDesuperheater_Impl::addToHeatRejectionTarget(const ModelObject& heatRejectionTarget)
   {
     bool validChoice = false;
-    if( heatRejectionTarget.iddObjectType() == openstudio::IddObjectType::OS_WaterHeater_Mixed )
+    if( (heatRejectionTarget.iddObjectType() == openstudio::IddObjectType::OS_WaterHeater_Mixed) ||
+        (heatRejectionTarget.iddObjectType() == openstudio::IddObjectType::OS_WaterHeater_Stratified) )
     {
       validChoice = true;
     }

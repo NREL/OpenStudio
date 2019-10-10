@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -84,12 +84,12 @@ namespace detail {
     return FluidCoolerSingleSpeed::iddObjectType();
   }
 
-  unsigned FluidCoolerSingleSpeed_Impl::inletPort()
+  unsigned FluidCoolerSingleSpeed_Impl::inletPort() const
   {
     return  OS_FluidCooler_SingleSpeedFields::WaterInletNode;
   }
 
-  unsigned FluidCoolerSingleSpeed_Impl::outletPort()
+  unsigned FluidCoolerSingleSpeed_Impl::outletPort() const
   {
     return  OS_FluidCooler_SingleSpeedFields::WaterOutletNode;
   }

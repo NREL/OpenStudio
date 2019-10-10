@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,9 +44,6 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 
-// TODO: only needed for API warning
-#include <OpenStudio.hxx>
-
 namespace openstudio {
 
 namespace model {
@@ -81,6 +78,15 @@ const std::vector<std::string>& SizingSystem_Impl::outputVariableNames() const
 
 IddObjectType SizingSystem_Impl::iddObjectType() const {
   return SizingSystem::iddObjectType();
+}
+
+bool SizingSystem_Impl::setParent(ParentObject& newParent)
+{
+  bool result = false;
+  if( boost::optional<AirLoopHVAC> airLoopHVAC = newParent.optionalCast<AirLoopHVAC>()){
+    result = this->setAirLoopHVAC(airLoopHVAC.get());
+  }
+  return result;
 }
 
 std::string SizingSystem_Impl::typeofLoadtoSizeOn() const {
@@ -1518,29 +1524,17 @@ SizingSystem::SizingSystem(std::shared_ptr<detail::SizingSystem_Impl> impl)
     return getImpl<detail::SizingSystem_Impl>()->autosizedCentralHeatingMaximumSystemAirFlowRatio();
   }
 
-  // DEPRECATED: TODO REMOVED in 2.6.2, REMOVE FROM API In the FUTURE
-  boost::optional<double> SizingSystem::minimumSystemAirFlowRatio() const {
-    LOG(Warn, "SizingSystem::minimumSystemAirFlowRatio has been deprecated and will be removed in a future release, please use SizingSystem::centralHeatingMaximumSystemAirFlowRatio");
-    LOG(Warn, "Prior to OpenStudio 2.6.2, this field was returning a double, now it returns an Optional double");
-    if( VersionString( openStudioVersion() ) >= VersionString("2.8.0") ) {
-      // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
-      LOG(Debug, "Please go tell a developper to remove SizingSystem::minimumSystemAirFlowRatio");
-      OS_ASSERT(false);
-    }
 
+
+  // DEPRECATED: TODO REMOVE as soon as standards > 0.29.0 is relased
+  boost::optional<double> SizingSystem::minimumSystemAirFlowRatio() const {
     return getImpl<detail::SizingSystem_Impl>()->centralHeatingMaximumSystemAirFlowRatio();
   }
-
-  // DEPRECATED: TODO REMOVED in 2.6.2, REMOVE FROM API In the FUTURE
+  // DEPRECATED: TODO REMOVE as soon as standards > 0.29.0 is relased
   bool SizingSystem::setMinimumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio) {
-    LOG(Warn, "SizingSystem::setMinimumSystemAirFlowRatio has been deprecated and will be removed in a future release, please use SizingSystem::setCentralHeatingMaximumSystemAirFlowRatio");
-    if( VersionString( openStudioVersion() ) >= VersionString("2.8.0") ) {
-      // TODO: remove in 2 versions. here's a message and a Debug crash to remind you
-      LOG(Debug, "Please go tell a developper to remove SizingSystem::minimumSystemAirFlowRatio");
-      OS_ASSERT(false);
-    }
     return getImpl<detail::SizingSystem_Impl>()->setCentralHeatingMaximumSystemAirFlowRatio(centralHeatingMaximumSystemAirFlowRatio);
   }
+
 
 } // model
 

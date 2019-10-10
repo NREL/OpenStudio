@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "HVACComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -52,6 +53,7 @@ class SizingZone;
 class PortList;
 class ZoneMixing;
 class AirflowNetworkZone;
+class ZonePropertyUserViewFactorsBySurfaceName;
 
 namespace detail {
 
@@ -127,6 +129,8 @@ class MODEL_API ThermalZone : public HVACComponent {
   bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const;
 
   SizingZone sizingZone() const;
+
+  ZonePropertyUserViewFactorsBySurfaceName getZonePropertyUserViewFactorsBySurfaceName() const;
 
   //@}
   /** @name Setters */
@@ -208,15 +212,15 @@ class MODEL_API ThermalZone : public HVACComponent {
 
   // As of OS Version 2.6.1 this method returns the first port on the returnPortList
   // because multiple return air ports (and AirLoopHVAC instances) are allowed
-  unsigned returnAirPort();
+  unsigned returnAirPort() const;
 
-  unsigned zoneAirPort();
+  unsigned zoneAirPort() const;
 
-  OptionalModelObject returnAirModelObject();
+  OptionalModelObject returnAirModelObject() const;
 
   std::vector<ModelObject> returnAirModelObjects() const;
 
-  Node zoneAirNode();
+  Node zoneAirNode() const;
 
   boost::optional<DaylightingControl> primaryDaylightingControl() const;
 
@@ -390,7 +394,7 @@ class MODEL_API ThermalZone : public HVACComponent {
     */
   bool removeEquipment(const ModelObject & equipment);
 
-  std::string loadDistributionScheme();
+  std::string loadDistributionScheme() const;
 
   bool setLoadDistributionScheme(std::string scheme);
 
@@ -405,10 +409,58 @@ class MODEL_API ThermalZone : public HVACComponent {
   bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
 
   /** Return all equipment.  Order is determined by heating priority */
-  std::vector<ModelObject> equipmentInHeatingOrder();
+  std::vector<ModelObject> equipmentInHeatingOrder() const;
 
   /** Return all equipment.  Order is determined by cooling priority */
-  std::vector<ModelObject> equipmentInCoolingOrder();
+  std::vector<ModelObject> equipmentInCoolingOrder() const;
+
+  /** Return the Sequential Cooling Fraction of equipment, if it's a ScheduleConstant.
+   *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+
+  /** Return the Sequential Cooling Fraction Schedule of equipment.
+   *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
+
+  /** Return the Sequential Heating Fraction of equipment, if it's a ScheduleConstant
+   *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+
+  /** Return the Sequential Heating Fraction Schedule of equipment.
+   *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
+
+  /** Set the Sequential Cooling Fraction of equipment, creates a ScheduleConstant for your convenience.
+   *  Returns false when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+
+  /** Set the Sequential Cooling Fraction Schedule of equipment.
+   *  Returns false when equipement is not in the ZoneHVACEquipmentList, its cooling priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
+
+  /** Set the Sequential Heating Fraction of equipment, creates a ScheduleConstant for your convenience.
+   *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
+
+  /** Set the Sequential Heating Fraction Schedule of equipment.
+   *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
+   *  or the loadDistributionScheme isn't 'Sequential'
+   */
+  bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
 
   /** Return true if the ThermalZone is attached to
   *   an AirLoopHVACSupplyPlenum or AirLoopHVACReturnPlenum
@@ -441,7 +493,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   */
   void removeSupplyPlenum();
 
-  /** Remove any supply plenum associated with 
+  /** Remove any supply plenum associated with
    * the given AirLoopHVAC instance.
    * This method is important when a zone is connected to multiple AirLoopHVAC instances.
    */
@@ -454,7 +506,7 @@ class MODEL_API ThermalZone : public HVACComponent {
   */
   void removeSupplyPlenum(unsigned branchIndex);
 
-  /** Remove any supply plenum associated with 
+  /** Remove any supply plenum associated with
    * the given AirLoopHVAC instance, and branchIndex in a dual duct system.
    *  This method is important when a zone is connected to multiple AirLoopHVAC instances.
     * This variation can account for dual duct systems, branchIndex can be 0 or 1

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -136,22 +136,22 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerSingleSpeed( 
 
   if( (d = modelObject.airFlowRateinFreeConvectionRegime()) )
   {
-    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionAirFlowRate,d.get());
+    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionRegimeAirFlowRate, d.get());
   }
   else if( modelObject.isAirFlowRateinFreeConvectionRegimeAutosized() )
   {
-    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionAirFlowRate,"Autosize");
+    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionRegimeAirFlowRate, "Autosize");
   }
 
   // UFactorTimesAreaValueatFreeConvectionAirFlowRate
 
   if( (d = modelObject.uFactorTimesAreaValueatFreeConvectionAirFlowRate()) )
   {
-    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionUFactorTimesAreaValue,d.get());
+    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionRegimeUFactorTimesAreaValue, d.get());
   }
   else if( modelObject.isUFactorTimesAreaValueatFreeConvectionAirFlowRateAutosized() )
   {
-    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionUFactorTimesAreaValue,"Autosize");
+    idfObject.setString(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionRegimeUFactorTimesAreaValue, "Autosize");
   }
 
   // PerformanceInputMethod
@@ -290,7 +290,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoolingTowerSingleSpeed( 
   }
 
   if( (d = modelObject.freeConvectionAirFlowRateSizingFactor()) ) {
-    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionAirFlowRateSizingFactor,d.get());
+    idfObject.setDouble(openstudio::CoolingTower_SingleSpeedFields::FreeConvectionRegimeAirFlowRateSizingFactor, d.get());
   }
 
   if( (d = modelObject.freeConvectionUFactorTimesAreaValueSizingFactor()) ) {

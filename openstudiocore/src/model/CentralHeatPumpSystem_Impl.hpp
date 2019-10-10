@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -73,11 +73,11 @@ namespace detail {
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     // CoolingLoop
-    virtual unsigned supplyInletPort() override;
-    virtual unsigned supplyOutletPort() override;
+    virtual unsigned supplyInletPort() const override;
+    virtual unsigned supplyOutletPort() const override;
     // SourceLoop
-    virtual unsigned demandInletPort() override;
-    virtual unsigned demandOutletPort() override;
+    virtual unsigned demandInletPort() const override;
+    virtual unsigned demandOutletPort() const override;
     // HeatingLoop
     virtual unsigned tertiaryInletPort() const override;
     virtual unsigned tertiaryOutletPort() const override;

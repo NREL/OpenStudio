@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,15 +62,15 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
 
   bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
 
-  bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+  bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
 
   std::vector<ModelObject> equipment() const;
 
-  std::vector<ModelObject> equipmentInHeatingOrder();
+  std::vector<ModelObject> equipmentInHeatingOrder() const;
 
-  std::vector<ModelObject> equipmentInCoolingOrder();
+  std::vector<ModelObject> equipmentInCoolingOrder() const;
 
-  WorkspaceExtensibleGroup getGroupForModelObject(const ModelObject & modelObject);
+  boost::optional<WorkspaceExtensibleGroup> getGroupForModelObject(const ModelObject & modelObject) const;
 
   virtual ~ZoneHVACEquipmentList_Impl() {}
 
@@ -78,17 +78,31 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
 
   virtual IddObjectType iddObjectType() const override;
 
-  std::string loadDistributionScheme();
+  std::string loadDistributionScheme() const;
 
   bool setLoadDistributionScheme(std::string scheme);
 
   ThermalZone thermalZone() const;
 
-  unsigned heatingPriority(const ModelObject & equipment);
+  unsigned heatingPriority(const ModelObject & equipment) const;
 
-  unsigned coolingPriority(const ModelObject & equipment);
+  unsigned coolingPriority(const ModelObject & equipment) const;
 
-  protected:
+  boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
+  bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
+
+  boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
+  bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
+
+  // Deprecated
+  boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+  bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+
+  boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+  bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
+
+
+ protected:
 
   private:
 

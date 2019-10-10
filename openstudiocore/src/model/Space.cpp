@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -84,6 +84,10 @@
 #include "ElectricEquipment_Impl.hpp"
 #include "ElectricEquipmentDefinition.hpp"
 #include "ElectricEquipmentDefinition_Impl.hpp"
+#include "ElectricEquipmentITEAirCooled.hpp"
+#include "ElectricEquipmentITEAirCooled_Impl.hpp"
+#include "ElectricEquipmentITEAirCooledDefinition.hpp"
+#include "ElectricEquipmentITEAirCooledDefinition_Impl.hpp"
 #include "GasEquipment.hpp"
 #include "GasEquipment_Impl.hpp"
 #include "GasEquipmentDefinition.hpp"
@@ -209,6 +213,10 @@ namespace detail {
     ElectricEquipmentVector electricEquipment = this->electricEquipment();
     result.insert(result.end(), electricEquipment.begin(), electricEquipment.end());
 
+    // IT electric equipment
+    ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = this->electricEquipmentITEAirCooled();
+    result.insert(result.end(), electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end());
+
     // gas equipment
     GasEquipmentVector gasEquipment = this->gasEquipment();
     result.insert(result.end(), gasEquipment.begin(), gasEquipment.end());
@@ -263,6 +271,7 @@ namespace detail {
     result.push_back(IddObjectType::OS_Luminaire);
     result.push_back(IddObjectType::OS_People);
     result.push_back(IddObjectType::OS_ElectricEquipment);
+    result.push_back(IddObjectType::OS_ElectricEquipment_ITE_AirCooled);
     result.push_back(IddObjectType::OS_GasEquipment);
     result.push_back(IddObjectType::OS_HotWaterEquipment);
     result.push_back(IddObjectType::OS_Daylighting_Control);
@@ -789,6 +798,11 @@ namespace detail {
   {
     return getObject<ModelObject>().getModelObjectSources<ElectricEquipment>(
       ElectricEquipment::iddObjectType());
+  }
+
+  ElectricEquipmentITEAirCooledVector Space_Impl::electricEquipmentITEAirCooled() const {
+    return getObject<ModelObject>().getModelObjectSources<ElectricEquipmentITEAirCooled>(
+      ElectricEquipmentITEAirCooled::iddObjectType());
   }
 
   GasEquipmentVector Space_Impl::gasEquipment() const
@@ -1482,6 +1496,23 @@ namespace detail {
     return result;
   }
 
+  double Space_Impl::electricEquipmentITEAirCooledPower() const {
+    double result(0.0);
+    double area = floorArea();
+
+    for (const ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled()) {
+      result += iTequipment.getWattsperUnit(area);
+    }
+
+    if (OptionalSpaceType spaceType = this->spaceType()) {
+      for (const ElectricEquipmentITEAirCooled& iTequipment : spaceType->electricEquipmentITEAirCooled()) {
+        result += iTequipment.getWattsperUnit(area);
+      }
+    }
+
+    return result;
+  }
+
   bool Space_Impl::setElectricEquipmentPower(double electricEquipmentPower) {
     OptionalElectricEquipment templateEquipment;
     ElectricEquipmentVector myEquipment = electricEquipment();
@@ -1557,6 +1588,23 @@ namespace detail {
     if (OptionalSpaceType spaceType = this->spaceType()) {
       for (const ElectricEquipment& equipment : spaceType->electricEquipment()) {
         result += equipment.getPowerPerFloorArea(area,numPeople);
+      }
+    }
+
+    return result;
+  }
+
+  double Space_Impl::electricEquipmentITEAirCooledPowerPerFloorArea() const {
+    double result(0.0);
+    double area = floorArea();
+
+    for (const ElectricEquipmentITEAirCooled& iTequipment : electricEquipmentITEAirCooled()) {
+      result += iTequipment.getWattsperZoneFloorArea(area);
+    }
+
+    if (OptionalSpaceType spaceType = this->spaceType()) {
+      for (const ElectricEquipmentITEAirCooled& iTequipment : spaceType->electricEquipmentITEAirCooled()) {
+        result += iTequipment.getWattsperZoneFloorArea(area);
       }
     }
 
@@ -2299,6 +2347,9 @@ namespace detail {
     std::vector<Surface> surfaces = this->surfaces();
     std::vector<Surface> otherSurfaces = other.surfaces();
 
+    std::sort(surfaces.begin(), surfaces.end(), [](const Surface & a, const Surface & b) -> bool {return a.grossArea() > b.grossArea(); });
+    std::sort(otherSurfaces.begin(), otherSurfaces.end(), [](const Surface & a, const Surface & b) -> bool {return a.grossArea() > b.grossArea(); });
+
     std::map<std::string, bool> hasSubSurfaceMap;
     std::map<std::string, bool> hasAdjacentSurfaceMap;
     std::set<std::string> completedIntersections;
@@ -2349,6 +2400,22 @@ namespace detail {
 
             std::vector<Surface> newSurfaces2 = intersection->newSurfaces2();
             newOtherSurfaces.insert(newOtherSurfaces.end(), newSurfaces2.begin(), newSurfaces2.end());
+
+            // surfaces involved in this intersection are ineligible to be re-intersected with other surfaces in this intersection
+            std::vector<Surface> ineligibleSurfaces;
+            ineligibleSurfaces.push_back(surface);
+            ineligibleSurfaces.insert(ineligibleSurfaces.end(), newSurfaces1.begin(), newSurfaces1.end());
+
+            std::vector<Surface> ineligibleOtherSurfaces;
+            ineligibleOtherSurfaces.push_back(otherSurface);
+            ineligibleOtherSurfaces.insert(ineligibleOtherSurfaces.end(), newSurfaces2.begin(), newSurfaces2.end());
+            for (Surface ineligibleSurface : ineligibleSurfaces){
+              for (Surface ineligibleOtherSurface : ineligibleOtherSurfaces){
+                std::string ineligibleIntersectionKey = toString(ineligibleSurface.handle()) + toString(ineligibleOtherSurface.handle()); 
+                completedIntersections.insert(ineligibleIntersectionKey);
+              }
+            }
+           
           }
         }
       }
@@ -2550,6 +2617,11 @@ namespace detail {
 
   std::vector<ModelObject> Space_Impl::electricEquipmentAsModelObjects() const {
     ModelObjectVector result = castVector<ModelObject>(electricEquipment());
+    return result;
+  }
+
+  std::vector<ModelObject> Space_Impl::electricEquipmentITEAirCooledAsModelObjects() const {
+    ModelObjectVector result = castVector<ModelObject>(electricEquipmentITEAirCooled());
     return result;
   }
 
@@ -3130,6 +3202,10 @@ std::vector<ElectricEquipment> Space::electricEquipment() const {
   return getImpl<detail::Space_Impl>()->electricEquipment();
 }
 
+std::vector<ElectricEquipmentITEAirCooled> Space::electricEquipmentITEAirCooled() const {
+  return getImpl<detail::Space_Impl>()->electricEquipmentITEAirCooled();
+}
+
 std::vector<GasEquipment> Space::gasEquipment() const {
   return getImpl<detail::Space_Impl>()->gasEquipment();
 }
@@ -3287,6 +3363,10 @@ double Space::electricEquipmentPower() const {
   return getImpl<detail::Space_Impl>()->electricEquipmentPower();
 }
 
+double Space::electricEquipmentITEAirCooledPower() const {
+  return getImpl<detail::Space_Impl>()->electricEquipmentITEAirCooledPower();
+}
+
 bool Space::setElectricEquipmentPower(double electricEquipmentPower) {
   return getImpl<detail::Space_Impl>()->setElectricEquipmentPower(electricEquipmentPower);
 }
@@ -3299,6 +3379,10 @@ bool Space::setElectricEquipmentPower(double electricEquipmentPower,
 
 double Space::electricEquipmentPowerPerFloorArea() const {
   return getImpl<detail::Space_Impl>()->electricEquipmentPowerPerFloorArea();
+}
+
+double Space::electricEquipmentITEAirCooledPowerPerFloorArea() const {
+  return getImpl<detail::Space_Impl>()->electricEquipmentITEAirCooledPowerPerFloorArea();
 }
 
 bool Space::setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea) {
@@ -3436,8 +3520,11 @@ Space::Space(std::shared_ptr<detail::Space_Impl> impl)
 {}
 /// @endcond
 
-void intersectSurfaces(std::vector<Space>& spaces)
+void intersectSurfaces(std::vector<Space>& t_spaces)
 {
+  std::vector<Space> spaces(t_spaces);	
+  std::sort(spaces.begin(), spaces.end(), [](const Space & a, const Space & b) -> bool {return a.floorArea() < b.floorArea(); });
+ 
   std::vector<BoundingBox> bounds;
   for (const Space& space : spaces){
     bounds.push_back(space.transformation()*space.boundingBox());

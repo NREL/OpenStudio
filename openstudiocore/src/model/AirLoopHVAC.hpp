@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -132,21 +132,21 @@ class MODEL_API AirLoopHVAC : public Loop
    * is an outdoor air system within the air loop.  A freshly constructed
    * AirLoopHVAC object will not have an outdoor air system.
    */
-  boost::optional<Node> outdoorAirNode();
+  boost::optional<Node> outdoorAirNode() const;
 
   /** Returns the relief air node.  This is the outermost node from which
    * air is relieved from the air loop to the outdoor air.  This node only exists
    * if there is an outdoor air system within the air loop.  A freshly
    * constructed AirLoopHVAC object will not have an outdoor air system.
    */
-  boost::optional<Node> reliefAirNode();
+  boost::optional<Node> reliefAirNode() const;
 
   /** Returns the mixed air node.  This is the mixed air node of the outdoor
    * air mixer of the air loop.  This node only exists if there is an outdoor air
    * system within the air loop.  A freshly constructed AirLoopHVAC object
    * will not have an outdoor air system.
    */
-  boost::optional<Node> mixedAirNode();
+  boost::optional<Node> mixedAirNode() const;
 
   /** Returns the return air node.  This is the return air node of the outdoor
    * air mixer of the air loop.  This node only exists if there is an outdoor air
@@ -155,7 +155,7 @@ class MODEL_API AirLoopHVAC : public Loop
    * same as the supply inlet node, because there is often no hvac equipment
    * before the outdoor air mixer.
    */
-  boost::optional<Node> returnAirNode();
+  boost::optional<Node> returnAirNode() const;
 
   /** Returns true if the system is "dual duct"
     * ie. there is a supply splitter

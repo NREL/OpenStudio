@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -74,7 +74,6 @@
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/sql/SqlFile.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
-#include "../../utilities/idf/IdfObject.hpp"
 
 // OS FieldEnums
 // #include <utilities/idd/OS_CentralHeatPumpSystem_FieldEnums.hxx>
@@ -83,8 +82,6 @@
 
 // E+ FieldEnums
 #include <utilities/idd/CentralHeatPumpSystem_FieldEnums.hxx>
-
-#include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
 
 #include <utilities/idd/PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentOperationSchemes_FieldEnums.hxx>

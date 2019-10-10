@@ -12,6 +12,11 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
+// Needed to reimplement SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic
+%import <model/ModelStraightComponent.i>
+
+// ignore specific overload of ThreeJSForwardTranslator::modelToThreeJS to avoid dealing with std::function<void(double)>updatePercentage
+%ignore openstudio::model::ThreeJSForwardTranslator::modelToThreeJS(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage);
 
 // All base classes for PV, Generators, inverters and Electrical Storage
 %{
@@ -38,6 +43,7 @@
 %include <model/ModelMerger.hpp>
 
 
+
 #if defined SWIGCSHARP
 
   #undef _csharp_module_name
@@ -53,10 +59,29 @@ namespace openstudio {
   }
 }
 
+%extend openstudio::model::AirSupplyConstituent {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
+%extend openstudio::model::FuelSupplyConstituent {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 MODELOBJECT_TEMPLATES(PhotovoltaicPerformance);
 MODELOBJECT_TEMPLATES(Generator);
 MODELOBJECT_TEMPLATES(Inverter);
 MODELOBJECT_TEMPLATES(ElectricalStorage);
+MODELOBJECT_TEMPLATES(AirSupplyConstituent);
 MODELOBJECT_TEMPLATES(GeneratorFuelCellAirSupply);
 MODELOBJECT_TEMPLATES(GeneratorFuelCellAuxiliaryHeater);
 MODELOBJECT_TEMPLATES(GeneratorFuelCellElectricalStorage);
@@ -65,6 +90,7 @@ MODELOBJECT_TEMPLATES(GeneratorFuelCellInverter);
 MODELOBJECT_TEMPLATES(GeneratorFuelCellPowerModule);
 MODELOBJECT_TEMPLATES(GeneratorFuelCellStackCooler);
 MODELOBJECT_TEMPLATES(GeneratorFuelCellWaterSupply);
+MODELOBJECT_TEMPLATES(FuelSupplyConstituent);
 MODELOBJECT_TEMPLATES(GeneratorFuelSupply);
 MODELOBJECT_TEMPLATES(GeneratorFuelCell);
 MODELOBJECT_TEMPLATES(GeneratorPhotovoltaic);
@@ -118,6 +144,17 @@ SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
         std::vector<openstudio::model::GeneratorPhotovoltaic> getGeneratorPhotovoltaics(const openstudio::model::PlanarSurface& surface){
           return surface.generatorPhotovoltaics();
         }
+
+        boost::optional<GeneratorPhotovoltaic> getOptionalGeneratorPhotovoltaic(const openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal& collector) {
+          return collector.generatorPhotovoltaic();
+        }
+
+        bool setGeneratorPhotovoltaic(openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal collector,
+                                      openstudio::model::GeneratorPhotovoltaic pv)
+        {
+          return collector.setGeneratorPhotovoltaic(pv);
+        }
+
       }
     }
   }
@@ -134,6 +171,17 @@ SWIG_MODELOBJECT(PhotovoltaicPerformanceSimple, 1);
       public GeneratorPhotovoltaicVector generatorPhotovoltaics()
       {
         return OpenStudio.OpenStudioModelGenerators.getGeneratorPhotovoltaics(this);
+      }
+    }
+
+    public partial class SolarCollectorFlatPlatePhotovoltaicThermal : StraightComponent
+    {
+      public OptionalGeneratorPhotovoltaic generatorPhotovoltaic() {
+        return OpenStudio.OpenStudioModelGenerators.getOptionalGeneratorPhotovoltaic(this);
+      }
+
+      public bool setGeneratorPhotovoltaic(OpenStudio.GeneratorPhotovoltaic pv) {
+        return OpenStudio.OpenStudioModelGenerators.setGeneratorPhotovoltaic(this, pv);
       }
     }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -69,6 +69,23 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual unsigned inletPort() const override;
+
+    virtual unsigned outletPort() const override;
+
+    // will return the coolingCoil and heatExchanger
+    virtual std::vector<ModelObject> children() const override;
+
+    // Will also clone the coolingCoil and heatExchanger
+    virtual ModelObject clone(Model model) const override;
+
+    // This function will connect the underlying Coil:Cooling:Water object
+    virtual bool addToNode(Node & node) override;
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -88,12 +105,6 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
-
-    unsigned inletPort() override;
-
-    unsigned outletPort() override;
-
-    bool addToNode(Node & node) override;
 
     //@}
    protected:

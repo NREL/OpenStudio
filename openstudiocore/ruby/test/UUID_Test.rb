@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -56,11 +56,11 @@ class UUID_Test < MiniTest::Unit::TestCase
   end
 
   def test_uuid_big_set
-    n = 10000
-    nGroup = 10
+    n = 1000
+    nGroup = 3
 
     (0...nGroup).each do |group|
-      assert(system("#{$OpenStudio_RubyExe} -I'#{$OpenStudio_Dir}' '#{$OpenStudio_LibPath}openstudio/utilities/test/UUID_BigSet_Aux.rb' '#{n}'"))
+      assert(system("'#{OpenStudio::getOpenStudioCLI}' '#{File.join(File.dirname(__FILE__), 'UUID_BigSet_Aux.rb')}' '#{n}'"))
     end
 
     File.delete("UUIDSet.txt")

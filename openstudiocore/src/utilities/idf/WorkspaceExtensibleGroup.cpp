@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,10 +31,7 @@
 #include "WorkspaceObject.hpp"
 #include "WorkspaceObject_Impl.hpp"
 
-#include "../idd/IddObjectProperties.hpp"
-#include "../idd/IddFieldProperties.hpp"
 
-#include <boost/lexical_cast.hpp>
 
 using std::shared_ptr;
 using std::dynamic_pointer_cast;
@@ -68,8 +65,14 @@ std::vector<unsigned> WorkspaceExtensibleGroup::getSourceFieldIndices(const Hand
 
 // SETTERS
 bool WorkspaceExtensibleGroup::setPointer(unsigned fieldIndex, const Handle& targetHandle) {
-  if (!isValid(fieldIndex)) { return false; }
-  return getImpl<detail::WorkspaceObject_Impl>()->setPointer(mf_toIndex(fieldIndex),targetHandle);
+  return setPointer(fieldIndex, targetHandle, true);
+}
+
+bool WorkspaceExtensibleGroup::setPointer(unsigned fieldIndex, const Handle& targetHandle, bool checkValidity) {
+  if (checkValidity) {
+    if (!isValid(fieldIndex)) { return false; }
+  }
+  return getImpl<detail::WorkspaceObject_Impl>()->setPointer(mf_toIndex(fieldIndex),targetHandle,checkValidity);
 }
 
 // QUERIES

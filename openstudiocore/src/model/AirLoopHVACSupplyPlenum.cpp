@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -114,12 +114,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned AirLoopHVACSupplyPlenum_Impl::inletPort()
+  unsigned AirLoopHVACSupplyPlenum_Impl::inletPort() const
   {
     return OS_AirLoopHVAC_SupplyPlenumFields::InletNode;
   }
 
-  unsigned AirLoopHVACSupplyPlenum_Impl::outletPort(unsigned branchIndex)
+  unsigned AirLoopHVACSupplyPlenum_Impl::outletPort(unsigned branchIndex) const
   {
     unsigned result;
     result = numNonextensibleFields();
@@ -127,7 +127,7 @@ namespace detail {
     return result;
   }
 
-  unsigned AirLoopHVACSupplyPlenum_Impl::nextOutletPort()
+  unsigned AirLoopHVACSupplyPlenum_Impl::nextOutletPort() const
   {
     return outletPort( this->nextBranchIndex() );
   }
@@ -350,17 +350,17 @@ void AirLoopHVACSupplyPlenum::resetThermalZone() {
   getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->resetThermalZone();
 }
 
-unsigned AirLoopHVACSupplyPlenum::inletPort()
+unsigned AirLoopHVACSupplyPlenum::inletPort() const
 {
   return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->inletPort();
 }
 
-unsigned AirLoopHVACSupplyPlenum::outletPort(unsigned branchIndex)
+unsigned AirLoopHVACSupplyPlenum::outletPort(unsigned branchIndex) const
 {
   return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->outletPort(branchIndex);
 }
 
-unsigned AirLoopHVACSupplyPlenum::nextOutletPort()
+unsigned AirLoopHVACSupplyPlenum::nextOutletPort() const
 {
   return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->nextOutletPort();
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -698,12 +698,12 @@ namespace detail {
     return true;
   }
 
-  unsigned PumpConstantSpeed_Impl::inletPort()
+  unsigned PumpConstantSpeed_Impl::inletPort() const
   {
     return OS_Pump_ConstantSpeedFields::InletNodeName;
   }
 
-  unsigned PumpConstantSpeed_Impl::outletPort()
+  unsigned PumpConstantSpeed_Impl::outletPort() const
   {
     return OS_Pump_ConstantSpeedFields::OutletNodeName;
   }
@@ -785,6 +785,16 @@ namespace detail {
     return types;
   }
 
+  std::string PumpConstantSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_Pump_ConstantSpeedFields::EndUseSubcategory, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool PumpConstantSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_Pump_ConstantSpeedFields::EndUseSubcategory, endUseSubcategory);
+  }
+
 } // detail
 
 PumpConstantSpeed::PumpConstantSpeed(const Model& model)
@@ -808,6 +818,8 @@ PumpConstantSpeed::PumpConstantSpeed(const Model& model)
   setString(OS_Pump_ConstantSpeedFields::RotationalSpeed,"");
   setString(OS_Pump_ConstantSpeedFields::Zone,"");
   setString(OS_Pump_ConstantSpeedFields::SkinLossRadiativeFraction,"");
+
+  setEndUseSubcategory("General");
 }
 
 IddObjectType PumpConstantSpeed::iddObjectType() {
@@ -1088,6 +1100,14 @@ bool PumpConstantSpeed::setDesignShaftPowerPerUnitFlowRatePerUnitHead(double des
   return getImpl<detail::PumpConstantSpeed_Impl>()->setDesignShaftPowerPerUnitFlowRatePerUnitHead(designShaftPowerPerUnitFlowRatePerUnitHead);
 }
 
+std::string PumpConstantSpeed::endUseSubcategory() const {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->endUseSubcategory();
+}
+
+bool PumpConstantSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::PumpConstantSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
+}
+
 /// @cond
 PumpConstantSpeed::PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_Impl> impl)
   : StraightComponent(std::move(impl))
@@ -1103,4 +1123,4 @@ PumpConstantSpeed::PumpConstantSpeed(std::shared_ptr<detail::PumpConstantSpeed_I
   }
 
 } // model
-} // openstudio
+} // openstudio

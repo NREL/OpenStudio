@@ -1,19 +1,41 @@
+REM IMPORTANT NOTE ABOUT WINDOWS SYSTEM VARIABLES
+REM set x = 2 defines a system variable called "x " with a value of " 2"
+REM set x= 2 defines a system variable called "x" with a value of " 2"
+REM set x=2 defines a system variable called "x" with a value of "2"
+REM set x =2 defines a system variable called "x " with a value of "2"
+REM In other words, whitespace is critically important with system variables on Windows
+
+
 REM Install http://gnuwin32.sourceforge.net/packages/bison.htm and http://gnuwin32.sourceforge.net/packages/sed.htm to a location with no spaces in the path and add to path
 
+PATH=C:\ruby-2.2.4-x64-mingw32\bin\;${CMAKE_BINARY_DIR}/OpenSSL-Win64/bin;${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/bin;%PATH%
 call C:\Devkit\devkitvars.bat
+REM call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\amd64\vcvars64.bat"
+
 REM The build process litters the source tree with the extension binaries
 REM so we make a copy of the clean source tree. One for release and one for debug
 XCOPY /e /i /Y . ..\Ruby-release
 XCOPY /e /i /Y . ..\Ruby-debug
 
+if "%1" == "Debug" GOTO DEBUG
+
+echo "****"
+echo "***** Building Ruby Release Build"
+echo "****"
+
 cd ..\Ruby-release
-set CFLAGS = MD -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600 
-call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release" --target=i386-mswin32
-set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstatic.lib"
-nmake libenc
-nmake libtrans
-nmake
+set CL=/MP
+set CFLAGS=-MD -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600 
+call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-dir="${CMAKE_BINARY_DIR}/OpenSSL-Win64/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release" --target=x64-mswin64
+set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstatic.lib" 
+nmake /K libenc
+nmake /K libencs
+nmake /K libtrans
+nmake /K 
 nmake install
+"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/OpenSSL-Win64/bin/ssleay32.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/bin"
+"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/OpenSSL-Win64/bin/libeay32.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/bin"
+"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/bin/zlib.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/bin"
 "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/encinit.c" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/include/"
 "${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/ext/"
 for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/ext/" %%f in (*.lib) do (
@@ -24,14 +46,27 @@ for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-release/enc/" %%f in (*.lib) do
   "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/lib/enc/"
 )
 
+GOTO END
+
+:DEBUG
+
+echo "****"
+echo "***** Building Ruby Debug Build"
+echo "****"
+
 cd ..\Ruby-debug
-set CFLAGS = MDd -Zi -W2 -wd4996 -we4028 -we4142 -O2sy-  -Zm600
-call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug" --target=i386-mswin32
+set CL=/MP
+set CFLAGS=-MDd -Zi -W2 -wd4996 -we4028 -we4142 -Od -Zm600
+call .\win32\configure.bat --with-static-linked-ext --with-zlib-dir="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/" --with-openssl-dir="${CMAKE_BINARY_DIR}/OpenSSL-Win64/"  --without-win32ole --disable-install-doc --prefix="${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug" --target=x64-mswin64
 set EXTLIBS="${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/zlibstaticd.lib"
-nmake libenc
-nmake libtrans
-nmake
+nmake /K libenc
+nmake /K libencs
+nmake /K libtrans
+nmake /K 
 nmake install
+"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/OpenSSL-Win64/bin/ssleay32.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/bin"
+"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/OpenSSL-Win64/bin/libeay32.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/bin"
+"${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/bin/zlibd.dll" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/release/bin"
 "${CMAKE_COMMAND}" -E copy_if_different "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/enc/encinit.c" "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/include/"
 "${CMAKE_COMMAND}" -E make_directory "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/ext/"
 for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/ext/" %%f in (*.lib) do (
@@ -41,3 +76,10 @@ for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/ext/" %%f in (*.lib) do (
 for /R "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-debug/enc/" %%f in (*.lib) do (
   "${CMAKE_COMMAND}" -E copy_if_different %%f "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/debug/lib/enc/"
 )
+
+
+:END
+
+echo "****"
+echo "***** Ruby Build Completed"
+echo "****"

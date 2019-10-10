@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -72,13 +72,13 @@ namespace detail {
 
     //virtual bool addToNode(Node & node);
 
-    virtual unsigned airInletPort() override;
+    virtual unsigned airInletPort() const override;
 
-    virtual unsigned airOutletPort() override;
+    virtual unsigned airOutletPort() const override;
 
-    virtual unsigned waterInletPort() override;
+    virtual unsigned waterInletPort() const override;
 
-    virtual unsigned waterOutletPort() override;
+    virtual unsigned waterOutletPort() const override;
 
     virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 

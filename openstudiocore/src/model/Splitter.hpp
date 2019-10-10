@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,37 +47,37 @@ class MODEL_API Splitter : public HVACComponent
   virtual ~Splitter() {}
 
   /** Returns the inlet port to the splitter. */
-  virtual unsigned inletPort();
+  virtual unsigned inletPort() const;
 
   /** Returns the outlet port for branchIndex.  Branches consequtively
    *  indexed starting from 0.
    */
-  virtual unsigned outletPort(unsigned branchIndex);
+  virtual unsigned outletPort(unsigned branchIndex) const;
 
   /** Returns the next available outlet port.  This will be the first port
    *  with no connected objects */
-  virtual unsigned nextOutletPort();
+  virtual unsigned nextOutletPort() const;
 
   /** Returns the optional ModelObject connected to the inlet port.
    *  If there is no connected object then the optional will be false.
    */
-  virtual boost::optional<ModelObject> inletModelObject();
+  virtual boost::optional<ModelObject> inletModelObject() const;
 
   /** Returns the optional ModelObject connected to the branch designated by branchIndex.
    *  If there is no connected object then the optional will be false.
    */
-  virtual boost::optional<ModelObject> outletModelObject(unsigned branchIndex);
+  virtual boost::optional<ModelObject> outletModelObject(unsigned branchIndex) const;
 
   /** Returns the optional ModelObject connected to the last branch of the splitter.
    *  If there are no connections to the splitter's outlet ports, then the
    *  optional will be false.
    */
-  virtual boost::optional<ModelObject> lastOutletModelObject();
+  virtual boost::optional<ModelObject> lastOutletModelObject() const;
 
   /** Returns a vector of all objects connected to the splitter's outlet ports.
    *  If no objects are connected to the splitter then an empty vector will be returned.
    */
-  virtual std::vector<ModelObject> outletModelObjects();
+  virtual std::vector<ModelObject> outletModelObjects() const;
 
   /** Returns a new port after the branch specified by branchIndex */
   virtual unsigned newOutletPortAfterBranch(unsigned branchIndex);
@@ -85,10 +85,10 @@ class MODEL_API Splitter : public HVACComponent
   /** Returns the branch index for the ModelObject specified by modelObject.
    *  The specified object must be connected to an outlet port of the splitter.
    */
-  virtual unsigned branchIndexForOutletModelObject( ModelObject modelObject );
+  virtual unsigned branchIndexForOutletModelObject( ModelObject modelObject ) const;
 
   /** Returns the index of the next available branch */
-  virtual unsigned nextBranchIndex();
+  virtual unsigned nextBranchIndex() const;
 
   /** Effectively disconnects anything connected to the outlet port
    *  at the specified branch index.  All branches after the specified

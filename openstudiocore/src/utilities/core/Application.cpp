@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -29,11 +29,8 @@
 
 #include "Application.hpp"
 #include "ApplicationPathHelpers.hpp"
-#include "PathHelpers.hpp"
 #include "String.hpp"
-#include <OpenStudio.hxx>
 
-#include <QWidget>
 #include <QSettings>
 
 #if _WIN32 || _MSC_VER
@@ -44,7 +41,6 @@
   #include <dlfcn.h>
 #endif
 
-#include <iostream>
 
 namespace openstudio{
 

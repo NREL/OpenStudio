@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -81,22 +81,22 @@ boost::optional<Loop> WaterToAirComponent_Impl::loop() const
   return boost::none;
 }
 
-boost::optional<ModelObject> WaterToAirComponent_Impl::airInletModelObject()
+boost::optional<ModelObject> WaterToAirComponent_Impl::airInletModelObject() const
 {
   return connectedObject( airInletPort() );
 }
 
-boost::optional<ModelObject> WaterToAirComponent_Impl::airOutletModelObject()
+boost::optional<ModelObject> WaterToAirComponent_Impl::airOutletModelObject() const
 {
   return connectedObject( airOutletPort() );
 }
 
-boost::optional<ModelObject> WaterToAirComponent_Impl::waterInletModelObject()
+boost::optional<ModelObject> WaterToAirComponent_Impl::waterInletModelObject() const
 {
   return connectedObject( waterInletPort() );
 }
 
-boost::optional<ModelObject> WaterToAirComponent_Impl::waterOutletModelObject()
+boost::optional<ModelObject> WaterToAirComponent_Impl::waterOutletModelObject() const
 {
   return connectedObject( waterOutletPort() );
 }
@@ -381,22 +381,22 @@ WaterToAirComponent::WaterToAirComponent(std::shared_ptr<detail::WaterToAirCompo
   : HVACComponent(std::move(p))
 {}
 
-boost::optional<ModelObject> WaterToAirComponent::airInletModelObject()
+boost::optional<ModelObject> WaterToAirComponent::airInletModelObject() const
 {
   return getImpl<detail::WaterToAirComponent_Impl>()->airInletModelObject();
 }
 
-boost::optional<ModelObject> WaterToAirComponent::airOutletModelObject()
+boost::optional<ModelObject> WaterToAirComponent::airOutletModelObject() const
 {
   return getImpl<detail::WaterToAirComponent_Impl>()->airOutletModelObject();
 }
 
-boost::optional<ModelObject> WaterToAirComponent::waterInletModelObject()
+boost::optional<ModelObject> WaterToAirComponent::waterInletModelObject() const
 {
   return getImpl<detail::WaterToAirComponent_Impl>()->waterInletModelObject();
 }
 
-boost::optional<ModelObject> WaterToAirComponent::waterOutletModelObject()
+boost::optional<ModelObject> WaterToAirComponent::waterOutletModelObject() const
 {
   return getImpl<detail::WaterToAirComponent_Impl>()->waterOutletModelObject();
 }
@@ -426,22 +426,22 @@ ModelObject WaterToAirComponent::clone(Model model) const
   return getImpl<detail::WaterToAirComponent_Impl>()->clone( model );
 }
 
-unsigned WaterToAirComponent::airInletPort()
+unsigned WaterToAirComponent::airInletPort() const
 {
   return getImpl<detail::WaterToAirComponent_Impl>()->airInletPort();
 }
 
-unsigned WaterToAirComponent::airOutletPort()
+unsigned WaterToAirComponent::airOutletPort() const
 {
   return getImpl<detail::WaterToAirComponent_Impl>()->airOutletPort();
 }
 
-unsigned WaterToAirComponent::waterInletPort()
+unsigned WaterToAirComponent::waterInletPort() const
 {
   return getImpl<detail::WaterToAirComponent_Impl>()->waterInletPort();
 }
 
-unsigned WaterToAirComponent::waterOutletPort()
+unsigned WaterToAirComponent::waterOutletPort() const
 {
   return getImpl<detail::WaterToAirComponent_Impl>()->waterOutletPort();
 }

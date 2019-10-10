@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -71,6 +71,14 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -111,17 +119,17 @@ namespace detail {
 
     double skinLossRadiativeFraction() const;
 
-  boost::optional<double> autosizedTotalRatedFlowRate() const ;
+    std::string designPowerSizingMethod() const;
 
-  boost::optional<double> autosizedRatedPowerConsumption() const ;
+    double designElectricPowerPerUnitFlowRate() const;
 
-  virtual void autosize() override;
+    double designShaftPowerPerUnitFlowRatePerUnitHead() const;
 
-  virtual void applySizingValues() override;
+    boost::optional<double> autosizedTotalRatedFlowRate() const ;
 
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+    boost::optional<double> autosizedRatedPowerConsumption() const ;
 
-  virtual std::vector<std::string> emsInternalVariableNames() const override;
+    std::string endUseSubcategory() const;
 
     //@}
     /** @name Setters */
@@ -133,7 +141,7 @@ namespace detail {
 
     bool setNumberofPumpsinBank(int numberofPumpsinBank);
 
-    bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
+    bool setFlowSequencingControlScheme(const std::string& flowSequencingControlScheme);
 
     bool setRatedPumpHead(double ratedPumpHead);
 
@@ -155,7 +163,7 @@ namespace detail {
 
     bool setMinimumFlowRateFraction(double minimumFlowRateFraction);
 
-    bool setPumpControlType(std::string pumpControlType);
+    bool setPumpControlType(const std::string& pumpControlType);
 
     bool setPumpFlowRateSchedule(Schedule& schedule);
 
@@ -167,13 +175,21 @@ namespace detail {
 
     bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
 
+    bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
+
+    bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+    bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
     //@}
     /** @name Other */
     //@{
 
-    unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     bool addToNode(Node & node) override;
 
@@ -188,4 +204,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_HEADEREDPUMPSVARIABLESPEED_IMPL_HPP
+#endif // MODEL_HEADEREDPUMPSVARIABLESPEED_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,7 +42,6 @@
 #include <QPushButton>
 #include <QString>
 #include <QRegExp>
-#include <QWebEnginePage>
 #include <QWebEngineSettings>
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
@@ -119,6 +118,9 @@ ResultsView::ResultsView(QWidget *t_parent)
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::SpatialNavigationEnabled, true);
 
+  m_page = new OSWebEnginePage(this);
+  m_view->setPage(m_page); // note, view does not take ownership of page
+
   connect(m_view, &QWebEngineView::loadFinished, this, &ResultsView::onLoadFinished);
   connect(m_view, &QWebEngineView::loadProgress, this, &ResultsView::onLoadProgress);
   connect(m_view, &QWebEngineView::loadStarted, this, &ResultsView::onLoadStarted);
@@ -138,6 +140,7 @@ ResultsView::ResultsView(QWidget *t_parent)
 ResultsView::~ResultsView()
 {
   delete m_view;
+  delete m_page;
 }
 
 void ResultsView::refreshClicked()

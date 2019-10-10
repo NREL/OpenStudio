@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,10 +40,7 @@
 #include "../core/Containers.hpp"
 
 
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
 
-#include <sstream>
 
 namespace openstudio {
 
@@ -481,7 +478,7 @@ std::ostream& IddFile::print(std::ostream& os) const
 
 std::pair<VersionString, std::string> IddFile::parseVersionBuild(const openstudio::path &p)
 {
-  std::ifstream ifs(openstudio::toString(p));
+  std::ifstream ifs(openstudio::toSystemFilename(p));
 
   if (!ifs.good()) {
     throw std::runtime_error("Unable to open file for reading: " + openstudio::toString(p));

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -58,6 +58,7 @@ IddUnitString::IddUnitString (const std::string &s)
   m_converted = boost::regex_replace(m_converted,boost::regex("dimensionless"),"");
   m_converted = boost::regex_replace(m_converted,boost::regex("Person"),"person");
   m_converted = boost::regex_replace(m_converted,boost::regex("Rotations Per Minute"),"rpm");
+  m_converted = boost::regex_replace(m_converted,boost::regex("rev/min"),"rpm");
   m_converted = boost::regex_replace(m_converted,boost::regex("ohms"),"ohm");
   m_converted = boost::regex_replace(m_converted,boost::regex("VA"),"V*A");
   m_converted = boost::regex_replace(m_converted,boost::regex("deltaJ"),"J");
