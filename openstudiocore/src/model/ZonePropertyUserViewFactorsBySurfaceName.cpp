@@ -176,23 +176,18 @@ namespace detail {
   boost::optional<unsigned> ZonePropertyUserViewFactorsBySurfaceName_Impl::viewFactorIndex(const ViewFactor& t_viewFactor) const {
     boost::optional<unsigned> result;
 
-    std::vector<ViewFactor> currentViewFactors = viewFactors();
-
-    // Find with custom predicate, checking handle equality between the toSurface and the fromSurface pairs
-    auto it = std::find_if(currentViewFactors.begin(), currentViewFactors.end(),
-        [&t_viewFactor](const ViewFactor& viewFactor) {
-          if ((t_viewFactor.fromSurface().handle() == viewFactor.fromSurface().handle()) &&
-              (t_viewFactor.toSurface().handle() == viewFactor.toSurface().handle()))
-          {
-            return true;
-          } else {
-            return false;
-          }
-        });
+    auto egs = extensibleGroups();
+    auto from = t_viewFactor.fromSurface().nameString();
+    auto to = t_viewFactor.toSurface().nameString();
+    auto it = std::find_if(egs.begin(), egs.end(),
+      [&](const IdfExtensibleGroup& eg) {
+        return ((eg.getString(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName) == from) && 
+           (eg.getString(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName) == to));
+      });
 
     // If found, we compute the index by using std::distance between the start of vector and the iterator returned by std::find_if
-    if (it != currentViewFactors.end()) {
-      result = std::distance(currentViewFactors.begin(), it);
+    if (it != egs.end()) {
+      result = std::distance(egs.begin(), it);
     }
 
     return result;
@@ -285,17 +280,18 @@ namespace detail {
     }
 
     // If existing, get it, otherwise Push an extensible group. ModelExtensibleGroup cannot be default-constructed, so use a ternary operator
+    std::vector<std::string> temp;
     ModelExtensibleGroup eg = (_existingIndex
                                 ? getExtensibleGroup(_existingIndex.get()).cast<ModelExtensibleGroup>()
-                                : getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>());
+                                : pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>());
 
-    bool from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, fromSurface.handle());
+    bool from = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName, fromSurface.handle(),false);
     if (!from) {
       LOG(Error, "Unable to add View Factor which has an incompatible fromSurface object to " << briefDescription());
       OS_ASSERT(false);
     }
 
-    bool to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, toSurface.handle());
+    bool to = eg.setPointer(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName, toSurface.handle(),false);
     if (!to) {
       LOG(Error, "Unable to add View Factor which has an incompatible toSurface object to " << briefDescription());
       OS_ASSERT(false);
