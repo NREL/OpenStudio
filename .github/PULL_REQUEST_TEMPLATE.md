@@ -10,10 +10,10 @@ Please read [OpenStudio Pull Requests](https://github.com/NREL/OpenStudio/wiki/O
 
 Add to this list or remove from it as applicable.  This is a simple templated set of guidelines.
 
- - [ ] Model API Changes
+ - [ ] Model API Changes / Additions
  - [ ] Any new or modified fields have been implemented in the EnergyPlus ForwardTranslator (and ReverseTranslator as appropriate)
  - [ ] Model API methods are tested (in `src/model/test`)
- - [ ] EnergyPlus ForwardTranslator Tests (in `src/energyplus/Test`
+ - [ ] EnergyPlus ForwardTranslator Tests (in `src/energyplus/Test`)
  - [ ] If a new object or method, added a test in NREL/OpenStudio-resources: Add Link
  - [ ] If needed, added VersionTranslation rules for the objects (`src/osversion/VersionTranslator.cpp`)
  - [ ] Checked behavior in OpenStudioApplication, adjusted policies as needed (`src/openstudio_lib/library/OpenStudioPolicy.xml`)
@@ -36,4 +36,3 @@ This will not be exhaustively relevant to every PR.
  - [ ] If defect, verify by running develop branch and reproducing defect, then running PR and reproducing fix
  - [ ] If feature, test running new feature, try creative ways to break it
  - [ ] CI status: all green or justified
- - [ ] Run Unit Test(s) locally
