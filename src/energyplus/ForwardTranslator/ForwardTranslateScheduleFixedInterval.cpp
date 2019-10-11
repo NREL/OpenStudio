@@ -224,26 +224,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
         }
         fieldIndex = addUntil(idfObject,fieldIndex,hours,minutes,values[i]);
       }
-<<<<<<< HEAD:src/energyplus/ForwardTranslator/ForwardTranslateScheduleFixedInterval.cpp
-      if(values[i] == values[i+1]){
-        // Bail on values that match the next value
-        continue;
-      }
-      // Write out the current entry
-      Time time(0,0,0,secondsFromStartOfDay);
-      int hours = time.hours();
-      int minutes = time.minutes() + (int)floor((time.seconds()/60.0) + 0.5);
-      // This is a little dangerous, but all of the problematic 24:00
-      // times that might need to cause a day++ should be caught above.
-      if(minutes==60)
-      {
-        hours += 1;
-        minutes = 0;
-      }
-      fieldIndex = addUntil(idfObject,fieldIndex,hours,minutes,values[i]);
-=======
       lastDay = today;
->>>>>>> develop:openstudiocore/src/energyplus/ForwardTranslator/ForwardTranslateScheduleFixedInterval.cpp
     }
     // Handle the last point a little differently to make sure that the schedule ends exactly on the end of a day
     unsigned int i = values.size()-1;
@@ -252,7 +233,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( Sc
 
     return boost::optional<IdfObject>(idfObject);
   }
-  
+
 }
 
 } // energyplus

@@ -235,19 +235,7 @@ namespace model {
 
       OptionalConstructionBase oConstruction = this->construction();
       if (oConstruction && oConstruction->isModelPartition()) {
-<<<<<<< HEAD:src/model/PlanarSurface.cpp
-        LayeredConstruction construction = oConstruction->cast<LayeredConstruction>();
-        if (construction.numLayers() == 1) {
-          MaterialVector layers = construction.layers();
-          OS_ASSERT(layers.size() == 1u);
-          result = layers[0].optionalCast<AirWallMaterial>().has_value();
-        }else if (construction.numLayers() == 0) {
-          LOG(Info, "Construction detected with zero layers, classifying as non-air wall");
-          result = false;
-        }else {
-          LOG(Error, "Air wall detected with more than one layer, classifying as non-air wall");
-          result = false;
-=======
+
         boost::optional<ConstructionAirBoundary> constructionAirBoundary = oConstruction->optionalCast<ConstructionAirBoundary>();
         if (constructionAirBoundary) {
           return true;
@@ -269,7 +257,6 @@ namespace model {
             LOG(Error, "Air wall detected with more than one layer, classifying as non-air wall");
             result = false;
           }
->>>>>>> develop:openstudiocore/src/model/PlanarSurface.cpp
         }
       }
       return result;

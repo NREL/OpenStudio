@@ -31,14 +31,9 @@
 #include "ModelFixture.hpp"
 #include "../AvailabilityManagerNightCycle.hpp"
 #include "../ThermalZone.hpp"
-<<<<<<< HEAD:src/model/test/AvailabilityManagerNightCycle_GTest.cpp
-=======
 #include "../Schedule.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../AirLoopHVAC.hpp"
-#include "../../utilities/units/Quantity.hpp"
-#include "../../utilities/units/Unit.hpp"
->>>>>>> develop:openstudiocore/src/model/test/AvailabilityManagerNightCycle_GTest.cpp
 
 using namespace openstudio;
 using namespace openstudio::model;
