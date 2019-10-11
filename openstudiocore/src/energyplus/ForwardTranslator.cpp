@@ -207,10 +207,9 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     if (construction.isModelPartition() && (construction.numLayers() == 1)) {
       MaterialVector layers = construction.layers();
       OS_ASSERT(layers.size() == 1u);
-      bool isAirWall = layers[0].optionalCast<AirWallMaterial>();
 
       // if this is an old style air wall
-      if (isAirWall)
+      if (layers[0].optionalCast<AirWallMaterial>())
       {
         ConstructionAirBoundary newConstruction(model);
         newConstruction.setName(construction.nameString() + "_ConstructionAirBoundary");

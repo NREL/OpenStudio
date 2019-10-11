@@ -33,8 +33,8 @@
 // TODO: Check the following class names against object getters and setters.
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -96,22 +96,22 @@ namespace detail {
     return result;
   }
 
-  bool ConstructionAirBoundary_Impl::isOpaque() const 
+  bool ConstructionAirBoundary_Impl::isOpaque() const
   {
     return false;
   }
 
-  bool ConstructionAirBoundary_Impl::isFenestration() const 
+  bool ConstructionAirBoundary_Impl::isFenestration() const
   {
     return false;
   }
 
-  bool ConstructionAirBoundary_Impl::isSolarDiffusing() const 
+  bool ConstructionAirBoundary_Impl::isSolarDiffusing() const
   {
     return false;
   }
 
-  bool ConstructionAirBoundary_Impl::isModelPartition() const 
+  bool ConstructionAirBoundary_Impl::isModelPartition() const
   {
     return true;
   }
