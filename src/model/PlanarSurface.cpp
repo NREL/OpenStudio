@@ -246,8 +246,8 @@ namespace model {
           if (construction->numLayers() == 1) {
             MaterialVector layers = construction->layers();
             OS_ASSERT(layers.size() == 1u);
-            result = layers[0].optionalCast<AirWallMaterial>();
-            if (result){
+            if (layers[0].optionalCast<AirWallMaterial>()){
+              result = true;
               LOG(Warn, "AirWallMaterial is deprecated, use ConstructionAirBoundary instead.");
             }
           } else if (construction->numLayers() == 0) {
