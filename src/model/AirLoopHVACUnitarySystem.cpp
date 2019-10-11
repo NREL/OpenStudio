@@ -350,7 +350,8 @@ namespace detail {
   }
 
   boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::fanPlacement() const {
-    return getString(OS_AirLoopHVAC_UnitarySystemFields::FanPlacement,true);
+    // No default, and return uninitalized if empty
+    return getString(OS_AirLoopHVAC_UnitarySystemFields::FanPlacement, false, true);
   }
 
   boost::optional<Schedule> AirLoopHVACUnitarySystem_Impl::supplyAirFanOperatingModeSchedule() const {

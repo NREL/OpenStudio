@@ -99,6 +99,9 @@ set(data_src
 )
 
 set(filetypes_src
+  filetypes/CSVFile.hpp
+  filetypes/CSVFile_Impl.hpp
+  filetypes/CSVFile.cpp
   filetypes/EpwFile.hpp
   filetypes/EpwFile.cpp
   filetypes/RunOptions.hpp
@@ -293,6 +296,7 @@ set(${target_name}_test_src
   data/Test/Variant_GTest.cpp
   data/Test/Vector_GTest.cpp
 
+  filetypes/test/CSVFile_GTest.cpp
   filetypes/test/EpwFile_GTest.cpp
   filetypes/test/WorkflowJSON_GTest.cpp
   filetypes/test/StandardsJSON_GTest.cpp

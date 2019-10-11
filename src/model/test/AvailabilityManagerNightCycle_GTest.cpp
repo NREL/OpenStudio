@@ -31,6 +31,14 @@
 #include "ModelFixture.hpp"
 #include "../AvailabilityManagerNightCycle.hpp"
 #include "../ThermalZone.hpp"
+<<<<<<< HEAD:src/model/test/AvailabilityManagerNightCycle_GTest.cpp
+=======
+#include "../Schedule.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../../utilities/units/Quantity.hpp"
+#include "../../utilities/units/Unit.hpp"
+>>>>>>> develop:openstudiocore/src/model/test/AvailabilityManagerNightCycle_GTest.cpp
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -119,4 +127,36 @@ TEST_F(ModelFixture, AvailabilityManagerNightCycle_zoneLists)
   EXPECT_EQ(0, avm.heatingControlThermalZones().size());
   EXPECT_EQ(0, avm.heatingZoneFansOnlyThermalZones().size());
 
+}
+
+TEST_F(ModelFixture, AvailabilityManagerNightCycle_Schedules)
+{
+  Model m;
+
+  Schedule alwaysOnDiscreteSchedule = m.alwaysOnDiscreteSchedule();
+  AvailabilityManagerNightCycle avm(m);
+  EXPECT_EQ(alwaysOnDiscreteSchedule, avm.applicabilitySchedule());
+
+  ScheduleConstant sch_applicability(m);
+  sch_applicability.setName("AVM NightCycle Applicability Schedule");
+  sch_applicability.setValue(1.0);
+  EXPECT_TRUE(avm.setApplicabilitySchedule(sch_applicability));
+  EXPECT_EQ(sch_applicability, avm.applicabilitySchedule());
+
+  EXPECT_FALSE(avm.airLoopHVAC());
+  EXPECT_FALSE(avm.fanSchedule());
+
+  AirLoopHVAC a(m);
+  ScheduleConstant sch_op(m);
+  sch_op.setName("HVAC Operation");
+  sch_op.setValue(1.0);
+  EXPECT_TRUE(a.setAvailabilitySchedule(sch_op));
+
+  EXPECT_TRUE(a.addAvailabilityManager(avm));
+  boost::optional<AirLoopHVAC> _a = avm.airLoopHVAC();
+  ASSERT_TRUE(_a);
+  EXPECT_EQ(a, _a.get());
+  boost::optional<Schedule> _sch = avm.fanSchedule();
+  ASSERT_TRUE(_sch);
+  EXPECT_EQ(sch_op, _sch.get());
 }

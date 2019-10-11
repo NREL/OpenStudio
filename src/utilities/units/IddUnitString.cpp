@@ -58,6 +58,7 @@ IddUnitString::IddUnitString (const std::string &s)
   m_converted = boost::regex_replace(m_converted,boost::regex("dimensionless"),"");
   m_converted = boost::regex_replace(m_converted,boost::regex("Person"),"person");
   m_converted = boost::regex_replace(m_converted,boost::regex("Rotations Per Minute"),"rpm");
+  m_converted = boost::regex_replace(m_converted,boost::regex("rev/min"),"rpm");
   m_converted = boost::regex_replace(m_converted,boost::regex("ohms"),"ohm");
   m_converted = boost::regex_replace(m_converted,boost::regex("VA"),"V*A");
   m_converted = boost::regex_replace(m_converted,boost::regex("deltaJ"),"J");

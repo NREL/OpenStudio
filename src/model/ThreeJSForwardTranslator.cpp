@@ -36,6 +36,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "SpaceType.hpp"
 #include "SpaceType_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
 #include "BuildingStory.hpp"
 #include "BuildingStory_Impl.hpp"
 #include "BuildingUnit.hpp"
@@ -592,7 +594,13 @@ namespace openstudio
         updatePercentage(100.0*n / N);
       }
 
-      ThreeSceneMetadata metadata(buildingStoryNames, threeBoundingBox, modelObjectMetadata);
+      double northAxis = 0.0;
+      boost::optional<Building> building = model.getOptionalUniqueModelObject<Building>();
+      if (building) {
+        northAxis = -building->northAxis();
+      }
+
+      ThreeSceneMetadata metadata(buildingStoryNames, threeBoundingBox, northAxis, modelObjectMetadata);
 
       ThreeScene scene(metadata, allGeometries, materials, sceneObject);
 

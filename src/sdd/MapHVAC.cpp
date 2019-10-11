@@ -571,7 +571,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     boost::optional<double> _value = lexicalCastToDouble(element);
     if( _value ) {
       double value = unitToUnit(_value.get(),"Btu/h","W").get();
-      vrf.setRatedTotalCoolingCapacity(value);
+      vrf.setGrossRatedTotalCoolingCapacity(value);
     }
   }
 
@@ -579,7 +579,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     auto element = vrfSysElement.child("ClgEIR");
     boost::optional<double> _value = lexicalCastToDouble(element);
     if( _value ) {
-      vrf.setRatedCoolingCOP(1.0 / _value.get() );
+      vrf.setGrossRatedCoolingCOP(1.0 / _value.get() );
     }
   }
 
@@ -588,7 +588,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     boost::optional<double> _value = lexicalCastToDouble(element);
     if( _value ) {
       double value = unitToUnit(_value.get(),"Btu/h","W").get();
-      vrf.setRatedTotalHeatingCapacity(value);
+      vrf.setGrossRatedHeatingCapacity(value);
     }
   }
 
@@ -604,7 +604,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateVRFS
     auto element = vrfSysElement.child("HtgToClgSizingRat");
     boost::optional<double> _value = lexicalCastToDouble(element);
     if( _value ) {
-      vrf.setRatedTotalHeatingCapacitySizingRatio(_value.get());
+      vrf.setRatedHeatingCapacitySizingRatio(_value.get());
     }
   }
 

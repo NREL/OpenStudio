@@ -36,6 +36,8 @@
 #include "ModelExtensibleGroup.hpp"
 #include "ConstructionBase.hpp"
 #include "ConstructionBase_Impl.hpp"
+#include "ConstructionAirBoundary.hpp"
+#include "ConstructionAirBoundary_Impl.hpp"
 #include "LayeredConstruction.hpp"
 #include "LayeredConstruction_Impl.hpp"
 #include "Material.hpp"
@@ -233,6 +235,7 @@ namespace model {
 
       OptionalConstructionBase oConstruction = this->construction();
       if (oConstruction && oConstruction->isModelPartition()) {
+<<<<<<< HEAD:src/model/PlanarSurface.cpp
         LayeredConstruction construction = oConstruction->cast<LayeredConstruction>();
         if (construction.numLayers() == 1) {
           MaterialVector layers = construction.layers();
@@ -244,6 +247,29 @@ namespace model {
         }else {
           LOG(Error, "Air wall detected with more than one layer, classifying as non-air wall");
           result = false;
+=======
+        boost::optional<ConstructionAirBoundary> constructionAirBoundary = oConstruction->optionalCast<ConstructionAirBoundary>();
+        if (constructionAirBoundary) {
+          return true;
+        }
+
+        boost::optional<LayeredConstruction> construction = oConstruction->optionalCast<LayeredConstruction>();
+        if (construction) {
+          if (construction->numLayers() == 1) {
+            MaterialVector layers = construction->layers();
+            OS_ASSERT(layers.size() == 1u);
+            result = layers[0].optionalCast<AirWallMaterial>();
+            if (result){
+              LOG(Warn, "AirWallMaterial is deprecated, use ConstructionAirBoundary instead.");
+            }
+          } else if (construction->numLayers() == 0) {
+            LOG(Info, "Construction detected with zero layers, classifying as non-air wall");
+            result = false;
+          } else {
+            LOG(Error, "Air wall detected with more than one layer, classifying as non-air wall");
+            result = false;
+          }
+>>>>>>> develop:openstudiocore/src/model/PlanarSurface.cpp
         }
       }
       return result;

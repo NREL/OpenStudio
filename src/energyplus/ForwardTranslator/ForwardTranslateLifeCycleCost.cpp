@@ -63,6 +63,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCost( LifeCycleC
 
   std::string name = modelObject.name().get();
   std::string category = modelObject.category();
+  std::string startOfCosts = modelObject.startOfCosts();
   double totalCost = modelObject.totalCost();
   int yearsFromStart = modelObject.yearsFromStart();
   int monthsFromStart = modelObject.monthsFromStart();
@@ -90,7 +91,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCost( LifeCycleC
       idfObject.setString(LifeCycleCost_NonrecurringCostFields::Name, name);
       idfObject.setString(LifeCycleCost_NonrecurringCostFields::Category, category);
       idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, totalCost);
-      idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
+      idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, startOfCosts);
 
       if (yearsFromStart > 0){
         idfObject.setInt(LifeCycleCost_NonrecurringCostFields::YearsfromStart, yearsFromStart);
@@ -129,7 +130,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCost( LifeCycleC
       idfObject.setString(LifeCycleCost_RecurringCostsFields::Name, name);
       idfObject.setString(LifeCycleCost_RecurringCostsFields::Category, category);
       idfObject.setDouble(LifeCycleCost_RecurringCostsFields::Cost, totalCost);
-      idfObject.setString(LifeCycleCost_RecurringCostsFields::StartofCosts, "ServicePeriod");
+      idfObject.setString(LifeCycleCost_RecurringCostsFields::StartofCosts, startOfCosts);
 
       if (yearsFromStart > 0){
         idfObject.setInt(LifeCycleCost_RecurringCostsFields::YearsfromStart, yearsFromStart);
