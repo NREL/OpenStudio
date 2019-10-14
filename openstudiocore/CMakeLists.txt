@@ -640,8 +640,8 @@ endif()
 
 # build and release openstudio gems at https://github.com/NREL/OpenStudio-gems
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20191003.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "9c9fd5fc0f65666713807252bedb2c06")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio-gems-20191004.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "feca3fd67e55b667c49a03b80b871dd8")
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${CMAKE_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
@@ -1590,7 +1590,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${CMAKE_SOURCE_DIR}/../developer/doc/ReleaseNotes/OpenStudio_Release_Notes_2_8_0_20181012.pdf" DESTINATION .)
+install(FILES "${CMAKE_SOURCE_DIR}/../developer/doc/ReleaseNotes/OpenStudio_Release_Notes_2_9_0_20191011.pdf" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../LICENSE.md" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../CHANGELOG.md" DESTINATION .)
 install(FILES "${CMAKE_SOURCE_DIR}/../copyright.txt" DESTINATION .)

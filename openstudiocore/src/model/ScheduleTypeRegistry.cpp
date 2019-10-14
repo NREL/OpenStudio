@@ -180,6 +180,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"AvailabilityManagerHybridVentilation","Minimum Outdoor Ventilation Air Schedule","minimumOutdoorVentilationAirSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"AvailabilityManagerHybridVentilation","AirflowNetwork Control Type Schedule","airflowNetworkControlTypeSchedule",false,"ControlMode",0.0,1.0},
     {"AvailabilityManagerHybridVentilation","Simple Airflow Control Type Schedule","simpleAirflowControlTypeSchedule",false,"ControlMode",0.0,1.0},
+    {"AvailabilityManagerNightCycle","Applicability Schedule","applicabilitySchedule",false,"Availability",0.0,1.0},
     {"AvailabilityManagerNightVentilation","Applicability Schedule","applicabilitySchedule",false,"Availability",0.0,1.0},
     {"AvailabilityManagerNightVentilation","Ventilation Temperature Schedule","ventilationTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"AvailabilityManagerOptimumStart","Applicability Schedule","applicabilitySchedule",false,"Availability",0.0,1.0},
