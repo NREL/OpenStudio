@@ -4570,7 +4570,7 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
                 boost::optional<IdfObject> _eq = idf_2_8_1.getObject(toUUID(eg.getString(0).get()));
                 if (_eq) {
                    // name of zone equipment plus group index
-                    scheduleConstant.setString(1, _eq->nameString() + " " + std::to_string((int)i));
+                    scheduleConstant.setString(1, _eq->nameString() + " " + std::to_string(static_cast<int>(i)));
                 }
 
                 scheduleConstant.setString(2, "");
