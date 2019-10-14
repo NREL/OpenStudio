@@ -74,6 +74,8 @@ class UTILITIES_API WorkspaceExtensibleGroup : public IdfExtensibleGroup {
    *  is greater than enums::None, of a proper type). */
   bool setPointer(unsigned fieldIndex, const Handle& targetHandle);
 
+  bool setPointer(unsigned fieldIndex, const Handle& targetHandle, bool checkValidity);
+
   //@}
   /** @name Queries */
   //@{

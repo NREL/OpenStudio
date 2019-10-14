@@ -54,6 +54,8 @@ TEST_F(IddFixture, EpIddFile)
   StringStreamLogSink ss;
   ss.setLogLevel(Debug);
 
+  //openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
+
   // from file
   path iddPath = resourcesPath()/toPath("energyplus/ProposedEnergy+.idd");
   openstudio::filesystem::ifstream inFile(iddPath); ASSERT_TRUE(inFile?true:false);
@@ -74,7 +76,7 @@ TEST_F(IddFixture, EpIddFile)
     EXPECT_EQ("", logMessage.logMessage());
   }
 
-  EXPECT_EQ("9.1.0",loadedIddFile->version());
+  EXPECT_EQ("9.2.0",loadedIddFile->version());
   EXPECT_EQ(epIddFile.objects().size(),loadedIddFile->objects().size());
   if (epIddFile.objects().size() != loadedIddFile->objects().size()) {
     // get sets of IddObjectType

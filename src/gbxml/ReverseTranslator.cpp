@@ -56,6 +56,8 @@
 #include "../model/ConstructionBase_Impl.hpp"
 #include "../model/Construction.hpp"
 #include "../model/Construction_Impl.hpp"
+#include "../model/ConstructionAirBoundary.hpp"
+#include "../model/ConstructionAirBoundary_Impl.hpp"
 #include "../model/AirWallMaterial.hpp"
 #include "../model/AirWallMaterial_Impl.hpp"
 #include "../model/AdditionalProperties.hpp"
@@ -387,6 +389,7 @@ namespace gbxml {
 
     std::string id = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(id, building));
+    building.additionalProperties().setFeature("gbXMLId", id);
 
     std::string name = element.child("Name").text().as_string();
     building.setName(escapeName(id, name));
@@ -434,6 +437,7 @@ namespace gbxml {
 
     std::string id = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(id, story));
+    story.additionalProperties().setFeature("gbXMLId", id);
 
     std::string name = element.child("Name").text().as_string();
     story.setName(escapeName(id, name));
@@ -451,6 +455,7 @@ namespace gbxml {
 
     std::string id = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(id, zone));
+    zone.additionalProperties().setFeature("gbXMLId", id);
 
     std::string name = element.child("Name").text().as_string();
     zone.setName(escapeName(id, name));
@@ -477,6 +482,7 @@ namespace gbxml {
 
     std::string id = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(id, space));
+    space.additionalProperties().setFeature("gbXMLId", id);
 
     std::string name = element.child("Name").text().as_string();
     space.setName(escapeName(id, name));
@@ -584,6 +590,7 @@ namespace gbxml {
 
       std::string shadingSurfaceId = element.attribute("id").value();
       m_idToObjectMap.insert(std::make_pair(shadingSurfaceId, shadingSurface));
+      shadingSurface.additionalProperties().setFeature("gbXMLId", shadingSurfaceId);
 
       std::string shadingSurfaceName = element.child("Name").text().as_string();
       shadingSurface.setName(escapeName(shadingSurfaceId, shadingSurfaceName));
@@ -632,6 +639,7 @@ namespace gbxml {
 
       std::string surfaceId = element.attribute("id").value();
       m_idToObjectMap.insert(std::make_pair(surfaceId, surface));
+      surface.additionalProperties().setFeature("gbXMLId", surfaceId);
 
       std::string surfaceName = element.child("Name").text().as_string();
       surface.setName(escapeName(surfaceId, surfaceName));
@@ -695,22 +703,14 @@ namespace gbxml {
 
       // if air wall
       if (surfaceType.find("Air") != std::string::npos) {
-        boost::optional<model::Construction> airWall;
+        boost::optional<model::ConstructionAirBoundary> airWall;
 
-        for (const auto& construction : model.getConcreteModelObjects<model::Construction>()) {
-          if ((construction.numLayers() == 1) && (construction.isModelPartition())) {
-            model::MaterialVector layers = construction.layers();
-            OS_ASSERT(layers.size() == 1u);
-            if (layers[0].optionalCast<model::AirWallMaterial>()) {
-              airWall = construction;
-              break;
-            }
-          }
+        for (const auto& construction : model.getConcreteModelObjects<model::ConstructionAirBoundary>()){
+          airWall = construction;
+          break;
         }
-        if (!airWall) {
-          airWall = model::Construction(model);
-          model::AirWallMaterial airWallMaterial(model);
-          airWall->setLayer(airWallMaterial);
+        if (!airWall){
+          airWall = model::ConstructionAirBoundary(model);
         }
         surface.setConstruction(*airWall);
 
@@ -928,15 +928,31 @@ namespace gbxml {
 
     // import CADObjectId
     for (auto &cadObjectId : element.children("CADObjectId")) {
-      // TODO: import multiple CADObjectIds
       translateCADObjectId(cadObjectId, *result);
-
-      boost::optional<openstudio::model::Surface> otherSurface = result->cast<model::Surface>().adjacentSurface();
-      if (otherSurface) {
-        translateCADObjectId(cadObjectId, *otherSurface);
-      }
-      break; // TODO: import multiple CADObjectIds
     }
+
+    // merge additional properties for reversed surfaces and sub surfaces
+    if (boost::optional<model::Surface> _surface = result->optionalCast<model::Surface>()) {
+
+      boost::optional<openstudio::model::Surface> otherSurface = _surface->adjacentSurface();
+      if (otherSurface) {
+        otherSurface->additionalProperties().merge(result->additionalProperties(), true);
+        otherSurface->additionalProperties().setFeature("gbXMLReversed", true);
+      }
+
+      for (const auto& subSurface : _surface->subSurfaces()) {
+        boost::optional<openstudio::model::SubSurface> otherSubSurface = subSurface.adjacentSubSurface();
+        if (otherSubSurface) {
+          otherSubSurface->additionalProperties().merge(subSurface.additionalProperties(), true);
+          otherSubSurface->additionalProperties().setFeature("gbXMLReversed", true);
+        }
+
+        subSurface.additionalProperties().setFeature("gbXMLReversed", false);
+      }
+
+      _surface->additionalProperties().setFeature("gbXMLReversed", false);
+    }
+
 
     return result;
   }
@@ -984,11 +1000,12 @@ namespace gbxml {
     openstudio::model::SubSurface subSurface(vertices, model);
     subSurface.setSurface(surface);
 
-    auto id = element.attribute("id");
-    m_idToObjectMap.insert(std::make_pair(id.as_string(), subSurface));
+    std::string id = element.attribute("id").value();
+    m_idToObjectMap.insert(std::make_pair(id, subSurface));
+    subSurface.additionalProperties().setFeature("gbXMLId", id);
 
     std::string name = element.child("Name").text().as_string();
-    subSurface.setName(escapeName(id.value(), name));
+    subSurface.setName(escapeName(id, name));
 
     result = subSurface;
 
@@ -1012,22 +1029,14 @@ namespace gbxml {
 
     // if air wall
     if (openingType.find("Air") != std::string::npos) {
-      boost::optional<model::Construction> airWall;
+      boost::optional<model::ConstructionAirBoundary> airWall;
 
-      for (const auto& construction : model.getConcreteModelObjects<model::Construction>()) {
-        if ((construction.numLayers() == 1) && (construction.isModelPartition())) {
-          model::MaterialVector layers = construction.layers();
-          OS_ASSERT(layers.size() == 1u);
-          if (layers[0].optionalCast<model::AirWallMaterial>()) {
-            airWall = construction;
-            break;
-          }
-        }
+      for (const auto& construction : model.getConcreteModelObjects<model::ConstructionAirBoundary>()) {
+        airWall = construction;
+        break;
       }
-      if (!airWall) {
-        airWall = model::Construction(model);
-        model::AirWallMaterial airWallMaterial(model);
-        airWall->setLayer(airWallMaterial);
+      if (!airWall){
+        airWall = model::ConstructionAirBoundary(model);
       }
       subSurface.setConstruction(*airWall);
 
@@ -1051,14 +1060,7 @@ namespace gbxml {
 
     // import CADObjectId
     for (auto &cadObjectId : element.children("CADObjectId")) {
-      // TODO: import multiple CADObjectIds
       translateCADObjectId(cadObjectId, subSurface);
-
-      boost::optional<openstudio::model::SubSurface> otherSubSurface = subSurface.adjacentSubSurface();
-      if (otherSubSurface) {
-        translateCADObjectId(cadObjectId, *otherSubSurface);
-      }
-      break; // TODO: import multiple CADObjectIds
     }
 
     return result;

@@ -51,3 +51,30 @@ TEST_F(ModelFixture,HeaderedPumpsConstantSpeed)
   } ,
     ::testing::ExitedWithCode(0), "" );
 }
+
+TEST_F(ModelFixture,HeaderedPumpsConstantSpeed_DesignFields) {
+
+  Model m;
+  HeaderedPumpsConstantSpeed p(m);
+
+  // Check defaults
+  EXPECT_EQ("PowerPerFlowPerPressure", p.designPowerSizingMethod());
+  EXPECT_EQ(348701.1, p.designElectricPowerPerUnitFlowRate());
+  EXPECT_EQ(1.282051282, p.designShaftPowerPerUnitFlowRatePerUnitHead());
+  EXPECT_EQ("General", p.endUseSubcategory());
+
+  EXPECT_TRUE(p.setDesignPowerSizingMethod("PowerPerFlow"));
+  EXPECT_EQ("PowerPerFlow", p.designPowerSizingMethod());
+  EXPECT_FALSE(p.setDesignPowerSizingMethod("ABADVALUE"));
+  EXPECT_EQ("PowerPerFlow", p.designPowerSizingMethod());
+
+  EXPECT_TRUE(p.setDesignElectricPowerPerUnitFlowRate(350000.0));
+  EXPECT_EQ(350000.0, p.designElectricPowerPerUnitFlowRate());
+
+  EXPECT_TRUE(p.setDesignShaftPowerPerUnitFlowRatePerUnitHead(1.1));
+  EXPECT_EQ(1.1, p.designShaftPowerPerUnitFlowRatePerUnitHead());
+
+  EXPECT_TRUE(p.setEndUseSubcategory("Pumps"));
+  EXPECT_EQ("Pumps", p.endUseSubcategory());
+
+}

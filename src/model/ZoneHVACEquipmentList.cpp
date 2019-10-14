@@ -33,6 +33,8 @@
 #include "ZoneHVACComponent_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
+#include "ScheduleConstant.hpp"
+#include "ScheduleConstant_Impl.hpp"
 #include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
@@ -97,8 +99,9 @@ bool ZoneHVACEquipmentList_Impl::setLoadDistributionScheme(std::string scheme)
   // Reset the Sequential Cooling/Heating fractions if not 'SequentialLoad'
   if (!istringEqual(scheme, "SequentialLoad")) {
     for (IdfExtensibleGroup& eg: extensibleGroups()) {
-      eg.setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFraction, "");
-      eg.setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFraction, "");
+      eg.setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName, "");
+      eg.setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName, "");
+      // TODO: delete existing schedule(s) if not tied to anything else
     }
   }
 
@@ -157,7 +160,8 @@ bool ZoneHVACEquipmentList_Impl::setCoolingPriority(const ModelObject & equipmen
   } else {
     // If zero, we just remove it from the list of available equipment (no insertion needed now)
     // and we reset the Sequential Cooling Fraction
-    _eg->setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFraction, "");
+    _eg->setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName, "");
+    // TODO: delete existing schedule(s) if not tied to anything else
   }
 
 
@@ -202,7 +206,8 @@ bool ZoneHVACEquipmentList_Impl::setHeatingPriority(const ModelObject & equipmen
   } else {
     // If zero, we just remove it from the list of available equipment (no insertion needed now)
     // and we reset the Sequential Heating Fraction
-    _eg->setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFraction, "");
+    _eg->setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName, "");
+    // TODO: delete existing schedule(s) if not tied to anything else
   }
 
   unsigned newPriority = 1;
@@ -423,9 +428,9 @@ unsigned ZoneHVACEquipmentList_Impl::coolingPriority(const ModelObject & equipme
   }
 }
 
-boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialCoolingFraction(const ModelObject& equipment) const {
+boost::optional<Schedule> ZoneHVACEquipmentList_Impl::sequentialCoolingFractionSchedule(const ModelObject& equipment) const {
 
-  boost::optional<double> result;
+  boost::optional<Schedule> result;
 
   if ( (openstudio::istringEqual(loadDistributionScheme(), "SequentialLoad")) &&
        (coolingPriority(equipment) > 0 ) ) {
@@ -438,8 +443,11 @@ boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialCoolingFraction(co
       OS_ASSERT(wo);
 
       if (wo->handle() == equipment.handle()) {
-        result = group.getDouble(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFraction, true);
-        break;
+        boost::optional<WorkspaceObject> wo2 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName);
+        if (wo2) {
+          result = wo2->optionalCast<Schedule>();
+          break;
+        }
       }
     }
   }
@@ -448,9 +456,10 @@ boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialCoolingFraction(co
 
 }
 
-boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialHeatingFraction(const ModelObject& equipment) const {
 
-  boost::optional<double> result;
+boost::optional<Schedule> ZoneHVACEquipmentList_Impl::sequentialHeatingFractionSchedule(const ModelObject& equipment) const {
+
+  boost::optional<Schedule> result;
 
   if ( (openstudio::istringEqual(loadDistributionScheme(), "SequentialLoad")) &&
        (heatingPriority(equipment) > 0 ) ) {
@@ -463,8 +472,11 @@ boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialHeatingFraction(co
       OS_ASSERT(wo);
 
       if (wo->handle() == equipment.handle()) {
-        result = group.getDouble(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFraction, true);
-        break;
+        boost::optional<WorkspaceObject> wo2 = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName);
+        if (wo2) {
+          result = wo2->optionalCast<Schedule>();
+          break;
+        }
       }
     }
   }
@@ -473,7 +485,7 @@ boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialHeatingFraction(co
 
 }
 
-bool ZoneHVACEquipmentList_Impl::setSequentialCoolingFraction(const ModelObject& equipment, double fraction)
+bool ZoneHVACEquipmentList_Impl::setSequentialCoolingFractionSchedule(const ModelObject& equipment, const Schedule& schedule)
 {
   boost::optional<WorkspaceExtensibleGroup> eg = getGroupForModelObject(equipment);
   if (!eg) {
@@ -491,11 +503,10 @@ bool ZoneHVACEquipmentList_Impl::setSequentialCoolingFraction(const ModelObject&
     return false;
   }
 
-  return eg->setDouble(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFraction, fraction);
+  return eg->setPointer(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName, schedule.handle());
 }
 
-
-bool ZoneHVACEquipmentList_Impl::setSequentialHeatingFraction(const ModelObject& equipment, double fraction)
+bool ZoneHVACEquipmentList_Impl::setSequentialHeatingFractionSchedule(const ModelObject& equipment, const Schedule& schedule)
 {
   boost::optional<WorkspaceExtensibleGroup> eg = getGroupForModelObject(equipment);
   if (!eg) {
@@ -513,7 +524,61 @@ bool ZoneHVACEquipmentList_Impl::setSequentialHeatingFraction(const ModelObject&
     return false;
   }
 
-  return eg->setDouble(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFraction, fraction);
+  return eg->setPointer(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName, schedule.handle());
+}
+
+// Deprecated
+
+boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialCoolingFraction(const ModelObject& equipment) const {
+
+  boost::optional<double> result;
+
+  if (boost::optional<Schedule> _schedule = sequentialCoolingFractionSchedule(equipment)) {
+    if (boost::optional<ScheduleConstant> _schConstant = _schedule->optionalCast<ScheduleConstant>()) {
+      result = boost::optional<double>(_schConstant->value());
+    } else {
+      LOG(Warn, "This deprecated method cannot return a double when the "
+                "'Zone Equipment Sequential Cooling Fraction Schedule' isn't a Schedule:Constant, "
+                "here the schedule is a '" << _schedule->iddObject().name() << ". Occurred for " << briefDescription());
+    }
+  }
+
+  return result;
+}
+
+boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialHeatingFraction(const ModelObject& equipment) const {
+
+  boost::optional<double> result;
+
+  if (boost::optional<Schedule> _schedule = sequentialHeatingFractionSchedule(equipment)) {
+    if (boost::optional<ScheduleConstant> _schConstant = _schedule->optionalCast<ScheduleConstant>()) {
+      result = boost::optional<double>(_schConstant->value());
+    } else {
+      LOG(Warn, "This deprecated method cannot return a double when the "
+                "'Zone Equipment Sequential Heating Fraction Schedule' isn't a Schedule:Constant, "
+                "here the schedule is a '" << _schedule->iddObject().name() << ". Occurred for " << briefDescription());
+    }
+  }
+
+  return result;
+}
+
+bool ZoneHVACEquipmentList_Impl::setSequentialCoolingFraction(const ModelObject& equipment, double fraction)
+{
+  Model model = this->model();
+  ScheduleConstant schedule(model);
+  schedule.setValue(fraction);
+
+  return setSequentialCoolingFractionSchedule(equipment, schedule);
+}
+
+bool ZoneHVACEquipmentList_Impl::setSequentialHeatingFraction(const ModelObject& equipment, double fraction)
+{
+  Model model = this->model();
+  ScheduleConstant schedule(model);
+  schedule.setValue(fraction);
+
+  return setSequentialHeatingFractionSchedule(equipment, schedule);
 }
 
 } // detail
@@ -600,6 +665,28 @@ unsigned ZoneHVACEquipmentList::coolingPriority(const ModelObject & equipment) c
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->coolingPriority(equipment);
 }
 
+boost::optional<Schedule> ZoneHVACEquipmentList::sequentialCoolingFractionSchedule(const ModelObject& equipment) const
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->sequentialCoolingFractionSchedule(equipment);
+}
+
+bool ZoneHVACEquipmentList::setSequentialCoolingFractionSchedule(const ModelObject& equipment, const Schedule& schedule)
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setSequentialCoolingFractionSchedule(equipment, schedule);
+}
+
+boost::optional<Schedule> ZoneHVACEquipmentList::sequentialHeatingFractionSchedule(const ModelObject& equipment) const
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->sequentialHeatingFractionSchedule(equipment);
+}
+
+bool ZoneHVACEquipmentList::setSequentialHeatingFractionSchedule(const ModelObject& equipment, const Schedule& schedule)
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setSequentialHeatingFractionSchedule(equipment, schedule);
+}
+
+
+// DEPRECATED
 boost::optional<double> ZoneHVACEquipmentList::sequentialCoolingFraction(const ModelObject& equipment) const
 {
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->sequentialCoolingFraction(equipment);
@@ -619,6 +706,7 @@ bool ZoneHVACEquipmentList::setSequentialHeatingFraction(const ModelObject& equi
 {
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setSequentialHeatingFraction(equipment, fraction);
 }
+
 
 /// @cond
 ZoneHVACEquipmentList::ZoneHVACEquipmentList(std::shared_ptr<detail::ZoneHVACEquipmentList_Impl> impl)

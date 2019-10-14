@@ -92,7 +92,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanConstantVolume( FanCon
 
 
   ///////////////////////////////////////////////////////////////////////////
-  // Fan Efficiency /////////////////////////////////////////////////////////
+  // Fan Total Efficiency ///////////////////////////////////////////////////
   idfObject.setDouble(openstudio::Fan_ConstantVolumeFields::FanTotalEfficiency,modelObject.fanEfficiency());
   ///////////////////////////////////////////////////////////////////////////
 
@@ -151,11 +151,13 @@ boost::optional<IdfObject> ForwardTranslator::translateFanConstantVolume( FanCon
   ///
   ////////////////////////////////////////////////////////////////////////
 
+  // End Use Subcategory
+  idfObject.setString(Fan_ConstantVolumeFields::EndUseSubcategory, modelObject.endUseSubcategory());
+
   m_idfObjects.push_back(idfObject);
-  return boost::optional<IdfObject>(idfObject);
+  return idfObject;
 }
 
 } // energyplus
 
 } // openstudio
-

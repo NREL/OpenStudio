@@ -83,7 +83,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanVariableVolume( FanVar
     idfObject.setString(Fan_VariableVolumeFields::AvailabilityScheduleName,sched.name().get());
   }
 
-  // Fan Efficiency /////////////////////////////////////////////////////////
+  // Fan Total Efficiency ///////////////////////////////////////////////////
   idfObject.setDouble(openstudio::Fan_VariableVolumeFields::FanTotalEfficiency,modelObject.fanEfficiency());
 
   // Pressure Rise //////////////////////////////////////////////////////////
@@ -121,6 +121,9 @@ boost::optional<IdfObject> ForwardTranslator::translateFanVariableVolume( FanVar
   // Motor Efficiency ///////////////////////////////////////////////////////
   idfObject.setDouble(openstudio::Fan_VariableVolumeFields::MotorEfficiency,modelObject.motorEfficiency());
 
+  // Motor In Airstream Fraction ////////////////////////////////////////////
+  idfObject.setDouble(openstudio::Fan_VariableVolumeFields::MotorInAirstreamFraction,modelObject.motorInAirstreamFraction());
+
   // FanPowerCoefficient1
 
   if( (d = modelObject.fanPowerCoefficient1()) )
@@ -156,9 +159,6 @@ boost::optional<IdfObject> ForwardTranslator::translateFanVariableVolume( FanVar
     idfObject.setDouble(Fan_VariableVolumeFields::FanPowerCoefficient5,d.get());
   }
 
-  // Motor In Airstream Fraction ////////////////////////////////////////////
-  idfObject.setDouble(openstudio::Fan_VariableVolumeFields::MotorInAirstreamFraction,modelObject.motorInAirstreamFraction());
-
   // Air Inlet Node Name ////////////////////////////////////////////////////
   temp = modelObject.inletModelObject();
   if(temp)
@@ -181,10 +181,12 @@ boost::optional<IdfObject> ForwardTranslator::translateFanVariableVolume( FanVar
     }
   }
 
+  // End Use Subcategory
+  idfObject.setString(Fan_VariableVolumeFields::EndUseSubcategory, modelObject.endUseSubcategory());
+
   return idfObject;
 }
 
 } // energyplus
 
 } // openstudio
-

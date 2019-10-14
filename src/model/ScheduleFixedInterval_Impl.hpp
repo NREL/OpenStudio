@@ -81,6 +81,10 @@ namespace detail {
     bool interpolatetoTimestep() const;
 
     bool isInterpolatetoTimestepDefaulted() const;
+    
+    bool translatetoScheduleFile() const;
+    
+    bool isTranslatetoScheduleFileDefaulted() const;
 
     double intervalLength() const;
 
@@ -99,6 +103,10 @@ namespace detail {
     bool setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod = true);
 
     void resetInterpolatetoTimestep(bool driverMethod = true);
+    
+    bool setTranslatetoScheduleFile(bool translatetoScheduleFile, bool driverMethod = true);
+    
+    void resetTranslatetoScheduleFile(bool driverMethod = true);
 
     bool setIntervalLength(double intervalLength, bool driverMethod = true);
 

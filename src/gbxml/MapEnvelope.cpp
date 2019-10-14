@@ -34,6 +34,8 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
+#include "../model/AdditionalProperties.hpp"
+#include "../model/AdditionalProperties_Impl.hpp"
 #include "../model/Construction.hpp"
 #include "../model/Construction_Impl.hpp"
 #include "../model/AirGap.hpp"
@@ -118,6 +120,7 @@ namespace gbxml {
     openstudio::model::Construction construction(model);
     std::string windowTypeId = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(windowTypeId, construction));
+    construction.additionalProperties().setFeature("gbXMLId", windowTypeId);
 
     std::string windowTypeName = element.child("Name").text().as_string();
     construction.setName(escapeName(windowTypeId, windowTypeName));
@@ -189,6 +192,7 @@ namespace gbxml {
 
       std::string id = element.attribute("id").value();
       m_idToObjectMap.insert(std::make_pair(id, material));
+      material.additionalProperties().setFeature("gbXMLId", id);
 
       std::string name = element.child("Name").text().as_string();
       material.setName(escapeName(id, name));
@@ -214,6 +218,7 @@ namespace gbxml {
 
       std::string id = element.attribute("id").value();
       m_idToObjectMap.insert(std::make_pair(id, material));
+      material.additionalProperties().setFeature("gbXMLId", id);
 
       std::string name = element.child("Name").text().as_string();
       material.setName(escapeName(id, name));
@@ -228,6 +233,7 @@ namespace gbxml {
 
       std::string id = element.attribute("id").value();
       m_idToObjectMap.insert(std::make_pair(id, material));
+      material.additionalProperties().setFeature("gbXMLId", id);
 
       std::string name = element.child("Name").text().as_string();
       material.setName(escapeName(id, name));

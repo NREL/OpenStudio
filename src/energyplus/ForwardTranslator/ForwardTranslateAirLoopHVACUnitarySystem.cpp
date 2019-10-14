@@ -173,7 +173,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Supply Fan Object Type
   // Supply Fan Name
   boost::optional<IdfObject> _fan;
-
   if( boost::optional<HVACComponent> supplyFan = modelObject.supplyFan() )
   {
     _fan = translateAndMapModelObject(supplyFan.get());
@@ -193,6 +192,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     if( istringEqual(*s, "BlowThrough") ) {
       blowThroughFan = true;
     }
+  } else if ( _fan ) {
+    // You must set one, or E+ will crash.
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::FanPlacement, "DrawThrough");
   }
 
   // Supply Air Fan Operating Mode Schedule Name

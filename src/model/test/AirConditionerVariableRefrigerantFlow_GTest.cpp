@@ -109,26 +109,77 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
 
 TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow_addToNode) {
   Model m;
-  AirConditionerVariableRefrigerantFlow testObject(m);
+  AirConditionerVariableRefrigerantFlow vrf(m);
 
+  // By default
+  EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
+  EXPECT_EQ("AirCooled", vrf.condenserType());
+
+  // Not connected to a PlantLoop, we still allow everything.
+  EXPECT_TRUE(vrf.setCondenserType("EvaporativelyCooled"));
+  EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
+  EXPECT_EQ("EvaporativelyCooled", vrf.condenserType());
+
+  vrf.resetCondenserType();
+  EXPECT_TRUE(vrf.setCondenserType("AirCooled"));
+  EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
+  EXPECT_EQ("AirCooled", vrf.condenserType());
+
+  vrf.resetCondenserType();
+  EXPECT_TRUE(vrf.setCondenserType("WaterCooled"));
+  EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
+  EXPECT_EQ("WaterCooled", vrf.condenserType());
+
+  // Disallow connection to an AirLoopHVAC
+  vrf.resetCondenserType();
   AirLoopHVAC airLoop(m);
-
   Node supplyOutletNode = airLoop.supplyOutletNode();
-
-  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_FALSE(vrf.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
+  EXPECT_EQ("AirCooled", vrf.condenserType());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
-
-  EXPECT_FALSE(testObject.addToNode(inletNode));
+  EXPECT_FALSE(vrf.addToNode(inletNode));
   EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+  EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
+  EXPECT_EQ("AirCooled", vrf.condenserType());
 
+  // Allow Connection to a PlantLoop, but only on Demand Side
+  vrf.resetCondenserType();
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
-  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_FALSE(vrf.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
+  EXPECT_EQ("AirCooled", vrf.condenserType());
 
-  Node demandOutletNode = plantLoop.demandOutletNode();
-  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  // Demand side should be allowed
+  EXPECT_TRUE(plantLoop.addDemandBranchForComponent(vrf));
+  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+  // This should have switched the **default** Condenser Type to 'WaterCooled'
+  EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
+  EXPECT_EQ("WaterCooled", vrf.condenserType());
+
+  // Should still allow Evap or AirCooled (even though it's not correct...handled in FT)
+  EXPECT_TRUE(vrf.setCondenserType("AirCooled"));
+  EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
+  EXPECT_EQ("AirCooled", vrf.condenserType());
+
+  EXPECT_TRUE(vrf.setCondenserType("EvaporativelyCooled"));
+  EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
+  EXPECT_EQ("EvaporativelyCooled", vrf.condenserType());
+
+  // Disconnect it, shouldn't affect anything
+  // Note: do not use removeDemandBranchWithComponent here, it would delete the VRF itself
+  vrf.disconnect();
+  EXPECT_FALSE(vrf.plantLoop());
+  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
+  EXPECT_EQ("EvaporativelyCooled", vrf.condenserType());
+
+  // Resetting should re-default to AirCooled
+  vrf.resetCondenserType();
+  EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
+  EXPECT_EQ("AirCooled", vrf.condenserType());
 }

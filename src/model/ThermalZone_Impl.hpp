@@ -52,6 +52,7 @@ class PortList;
 class ZoneMixing;
 class ZoneHVACEquipmentList;
 class AirflowNetworkZone;
+class ZonePropertyUserViewFactorsBySurfaceName;
 
 namespace detail {
 
@@ -139,6 +140,8 @@ namespace detail {
     virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
     virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+    ZonePropertyUserViewFactorsBySurfaceName getZonePropertyUserViewFactorsBySurfaceName() const;
 
     //@}
     /** @name Setters */
@@ -386,12 +389,19 @@ namespace detail {
 
     std::vector<ModelObject> equipmentInCoolingOrder() const;
 
-    boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+    boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
 
+    boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
+
+    bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
+
+    bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
+
+    // Convenience methods
+    boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
     boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
 
     bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
-
     bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
 
 

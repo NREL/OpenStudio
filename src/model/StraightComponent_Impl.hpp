@@ -95,9 +95,9 @@ namespace detail {
 
     virtual std::vector<openstudio::IdfObject> remove() override;
 
-    bool removeFromLoop();
+    virtual bool removeFromLoop();
 
-    void disconnect() override;
+    virtual void disconnect() override;
 
     //@}
    private:

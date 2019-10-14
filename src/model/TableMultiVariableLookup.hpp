@@ -58,6 +58,10 @@ class TableMultiVariableLookupPoint {
 
   std::vector<double> x() const;
   double y() const;
+
+  // this operator is to support sorting of TableMultiVariableLookupPoint in the order required by EnergyPlus Table:Lookup object
+  bool operator<(const TableMultiVariableLookupPoint& other) const;
+ 
  private:
   std::vector<double> m_x;
   double m_y;

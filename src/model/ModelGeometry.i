@@ -29,12 +29,15 @@
   %ignore openstudio::model::Space::thermalZone;
   %ignore openstudio::model::Space::setThermalZone;
   %ignore openstudio::model::Space::waterUseEquipment;
+  // Ignore this ctor, use of zone.getZonePropertyUserViewFactorsBySurfaceName is preferred anyways (so I won't even reimplement it using partial classes)
+  %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
+  %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::thermalZone;
 
   // ignore airflow objects for now, add back in with partial classes in ModelAirflow.i
-   %ignore openstudio::model::Surface::getAirflowNetworkSurface;
-   %ignore openstudio::model::Surface::airflowNetworkSurface;
-   %ignore openstudio::model::SubSurface::getAirflowNetworkSurface;
-   %ignore openstudio::model::SubSurface::airflowNetworkSurface;
+  %ignore openstudio::model::Surface::getAirflowNetworkSurface;
+  %ignore openstudio::model::Surface::airflowNetworkSurface;
+  %ignore openstudio::model::SubSurface::getAirflowNetworkSurface;
+  %ignore openstudio::model::SubSurface::airflowNetworkSurface;
 
   // ignore generator objects for now, add back in with partial classes in ModelGenerators.i
   %ignore openstudio::model::PlanarSurface::generatorPhotovoltaics;
@@ -126,6 +129,24 @@ class ExteriorLoadInstance;
   }
 };
 
+%extend openstudio::model::CustomBlock {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
+%extend openstudio::model::ViewFactor {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 UNIQUEMODELOBJECT_TEMPLATES(Site);
 UNIQUEMODELOBJECT_TEMPLATES(Facility);
 UNIQUEMODELOBJECT_TEMPLATES(Building);
@@ -166,9 +187,11 @@ MODELOBJECT_TEMPLATES(IlluminanceMap);
 MODELOBJECT_TEMPLATES(DaylightingDeviceShelf);
 MODELOBJECT_TEMPLATES(SpaceType);
 MODELOBJECT_TEMPLATES(LightingSimulationZone);
+MODELOBJECT_TEMPLATES(CustomBlock);
 MODELOBJECT_TEMPLATES(FoundationKiva);
 MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
-
+MODELOBJECT_TEMPLATES(ViewFactor);
+MODELOBJECT_TEMPLATES(ZonePropertyUserViewFactorsBySurfaceName);
 MODELOBJECT_TEMPLATES(ExteriorLoadInstance);
 MODELOBJECT_TEMPLATES(ExteriorLights);
 MODELOBJECT_TEMPLATES(ExteriorFuelEquipment);
@@ -216,7 +239,7 @@ SWIG_MODELOBJECT(SpaceType, 1);
 SWIG_MODELOBJECT(LightingSimulationZone, 1);
 SWIG_MODELOBJECT(FoundationKiva, 1);
 SWIG_MODELOBJECT(SurfacePropertyExposedFoundationPerimeter, 1);
-
+SWIG_MODELOBJECT(ZonePropertyUserViewFactorsBySurfaceName, 1);
 SWIG_MODELOBJECT(ExteriorLoadInstance, 0);
 SWIG_MODELOBJECT(ExteriorLights, 1);
 SWIG_MODELOBJECT(ExteriorFuelEquipment, 1);

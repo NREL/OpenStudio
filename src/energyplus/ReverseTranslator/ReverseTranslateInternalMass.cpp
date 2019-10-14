@@ -88,7 +88,7 @@ OptionalModelObject ReverseTranslator::translateInternalMass( const WorkspaceObj
     internalMass.setName(*s);
   }
 
-  target = workspaceObject.getTarget(openstudio::InternalMassFields::ZoneName);
+  target = workspaceObject.getTarget(openstudio::InternalMassFields::ZoneorZoneListName);
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){

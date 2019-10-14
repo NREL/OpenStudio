@@ -409,6 +409,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateConstruction(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::Construction_AirBoundary:
+  {
+    modelObject = translateConstructionAirBoundary(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::Controller_OutdoorAir :
     {
       //modelObject = translateControllerOutdoorAir(workspaceObject);
@@ -616,6 +621,16 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateFenestrationSurfaceDetailed(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::Foundation_Kiva :
+    {
+      modelObject = translateFoundationKiva(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Foundation_Kiva_Settings :
+    {
+      modelObject = translateFoundationKivaSettings(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::Generator_MicroTurbine :
     {
       modelObject = translateGeneratorMicroTurbine(workspaceObject);
@@ -757,6 +772,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::People :
     {
       modelObject = translatePeople(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::PerformancePrecisionTradeoffs :
+    {
+      modelObject = translatePerformancePrecisionTradeoffs(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::Refrigeration_Case :
@@ -919,6 +939,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       //modelObject = translateSurfaceConvectionAlgorithmOutside(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::SurfaceProperty_ExposedFoundationPerimeter :
+    {
+      modelObject = translateSurfacePropertyExposedFoundationPerimeter(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint :
     {
       modelObject = translateThermostatSetpointDualSetpoint(workspaceObject);
@@ -1038,6 +1063,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::ZoneMixing:
   {
     modelObject = translateZoneMixing(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName:
+  {
+    modelObject = translateZonePropertyUserViewFactorsBySurfaceName(workspaceObject);
     break;
   }
   case openstudio::IddObjectType::ZoneVentilation_DesignFlowRate :
