@@ -45,6 +45,7 @@ namespace openstudio
   {
 
     class Construction;
+    class ConstructionAirBoundary;
 
     /** ThreeJSReverseTranslator converts a ThreeJS JSON to OpenStudio Model. There are two variations of the ThreeJS format,
     *   this translator requires that the ThreeJS JSON be in OpenStudio Model format rather than optimized for display.
@@ -76,7 +77,7 @@ namespace openstudio
 
       Point3dVectorVector getFaces(const ThreeGeometryData& data) const;
 
-      Construction getAirWallConstruction(Model& model);
+      ConstructionAirBoundary getAirWallConstruction(Model& model);
 
       std::map<UUID, UUID> m_handleMapping;
 

@@ -87,6 +87,8 @@
 #include "DesignSpecificationOutdoorAir_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "ScheduleConstant.hpp"
+#include "ScheduleConstant_Impl.hpp"
 #include "AirLoopHVACZoneSplitter.hpp"
 #include "AirLoopHVACZoneSplitter_Impl.hpp"
 #include "AirLoopHVACZoneMixer.hpp"
@@ -103,6 +105,8 @@
 #include "ZoneMixing_Impl.hpp"
 #include "AirflowNetworkZone.hpp"
 #include "AirflowNetworkZone_Impl.hpp"
+#include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
+#include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -2272,22 +2276,75 @@ namespace detail {
 
   boost::optional<double> ThermalZone_Impl::sequentialCoolingFraction(const ModelObject& equipment) const
   {
-    return zoneHVACEquipmentList().sequentialCoolingFraction(equipment);
+
+    boost::optional<double> result;
+
+    if (boost::optional<Schedule> _schedule = sequentialCoolingFractionSchedule(equipment)) {
+      if (boost::optional<ScheduleConstant> _schConstant = _schedule->optionalCast<ScheduleConstant>()) {
+        result = boost::optional<double>(_schConstant->value());
+      } else {
+        LOG(Warn, "This deprecated method cannot return a double when the "
+                  "'Zone Equipment Sequential Cooling Fraction Schedule' isn't a Schedule:Constant, "
+                  "here the schedule is a '" << _schedule->iddObject().name() << ". Occurred for " << briefDescription());
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<Schedule> ThermalZone_Impl::sequentialCoolingFractionSchedule(const ModelObject& equipment) const
+  {
+    return zoneHVACEquipmentList().sequentialCoolingFractionSchedule(equipment);
   }
 
   boost::optional<double> ThermalZone_Impl::sequentialHeatingFraction(const ModelObject& equipment) const
   {
-    return zoneHVACEquipmentList().sequentialHeatingFraction(equipment);
+    boost::optional<double> result;
+
+    if (boost::optional<Schedule> _schedule = sequentialHeatingFractionSchedule(equipment)) {
+      if (boost::optional<ScheduleConstant> _schConstant = _schedule->optionalCast<ScheduleConstant>()) {
+        result = boost::optional<double>(_schConstant->value());
+      } else {
+        LOG(Warn, "This deprecated method cannot return a double when the "
+                  "'Zone Equipment Sequential Heating Fraction Schedule' isn't a Schedule:Constant, "
+                  "here the schedule is a '" << _schedule->iddObject().name() << ". Occurred for " << briefDescription());
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<Schedule> ThermalZone_Impl::sequentialHeatingFractionSchedule(const ModelObject& equipment) const
+  {
+    return zoneHVACEquipmentList().sequentialHeatingFractionSchedule(equipment);
   }
 
   bool ThermalZone_Impl::setSequentialCoolingFraction(const ModelObject & equipment, double fraction)
   {
-    return zoneHVACEquipmentList().setSequentialCoolingFraction(equipment, fraction);
+    Model model = this->model();
+    ScheduleConstant schedule(model);
+    schedule.setValue(fraction);
+
+    return setSequentialCoolingFractionSchedule(equipment, schedule);
+  }
+
+  bool ThermalZone_Impl::setSequentialCoolingFractionSchedule(const ModelObject & equipment, const Schedule& schedule)
+  {
+    return zoneHVACEquipmentList().setSequentialCoolingFractionSchedule(equipment, schedule);
   }
 
   bool ThermalZone_Impl::setSequentialHeatingFraction(const ModelObject & equipment, double fraction)
   {
-    return zoneHVACEquipmentList().setSequentialHeatingFraction(equipment, fraction);
+    Model model = this->model();
+    ScheduleConstant schedule(model);
+    schedule.setValue(fraction);
+
+    return setSequentialHeatingFractionSchedule(equipment, schedule);
+  }
+
+  bool ThermalZone_Impl::setSequentialHeatingFractionSchedule(const ModelObject & equipment, const Schedule& schedule)
+  {
+    return zoneHVACEquipmentList().setSequentialHeatingFractionSchedule(equipment, schedule);
   }
 
   ModelObject ThermalZone_Impl::clone(Model model) const
@@ -2792,6 +2849,22 @@ namespace detail {
     return boost::none;
   }
 
+  ZonePropertyUserViewFactorsBySurfaceName ThermalZone_Impl::getZonePropertyUserViewFactorsBySurfaceName() const {
+    ThermalZone thisThermalZone = getObject<ThermalZone>();
+    std::vector<ZonePropertyUserViewFactorsBySurfaceName> zoneProps = thisThermalZone.getModelObjectSources<ZonePropertyUserViewFactorsBySurfaceName>(ZonePropertyUserViewFactorsBySurfaceName::iddObjectType());
+    if (!zoneProps.empty()) {
+      if (zoneProps.size() > 1u) {
+        // This shouldn't happen, ZonePropertyUserViewFactorsBySurfaceName's ctor should throw if a zone already has one
+        OS_ASSERT(false);
+        LOG(Error, briefDescription() << " is referenced by more than one ZonePropertyUserViewFactorsBySurfaceName, returning the first");
+      }
+      return zoneProps[0];
+    }
+
+    ZonePropertyUserViewFactorsBySurfaceName zoneProp(thisThermalZone);
+    return zoneProp;
+  }
+
 } // detail
 
 ThermalZone::ThermalZone(const Model& model)
@@ -3278,18 +3351,36 @@ boost::optional<double> ThermalZone::sequentialCoolingFraction(const ModelObject
   return getImpl<detail::ThermalZone_Impl>()->sequentialCoolingFraction(equipment);
 }
 
+boost::optional<Schedule> ThermalZone::sequentialCoolingFractionSchedule(const ModelObject& equipment) const {
+  return getImpl<detail::ThermalZone_Impl>()->sequentialCoolingFractionSchedule(equipment);
+}
+
 bool ThermalZone::setSequentialCoolingFraction(const ModelObject& equipment, double fraction)
 {
   return getImpl<detail::ThermalZone_Impl>()->setSequentialCoolingFraction(equipment, fraction);
+}
+
+bool ThermalZone::setSequentialCoolingFractionSchedule(const ModelObject& equipment, const Schedule& schedule)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setSequentialCoolingFractionSchedule(equipment, schedule);
 }
 
 boost::optional<double> ThermalZone::sequentialHeatingFraction(const ModelObject& equipment) const {
   return getImpl<detail::ThermalZone_Impl>()->sequentialHeatingFraction(equipment);
 }
 
+boost::optional<Schedule> ThermalZone::sequentialHeatingFractionSchedule(const ModelObject& equipment) const {
+  return getImpl<detail::ThermalZone_Impl>()->sequentialHeatingFractionSchedule(equipment);
+}
+
 bool ThermalZone::setSequentialHeatingFraction(const ModelObject& equipment, double fraction)
 {
   return getImpl<detail::ThermalZone_Impl>()->setSequentialHeatingFraction(equipment, fraction);
+}
+
+bool ThermalZone::setSequentialHeatingFractionSchedule(const ModelObject& equipment, const Schedule& schedule)
+{
+  return getImpl<detail::ThermalZone_Impl>()->setSequentialHeatingFractionSchedule(equipment, schedule);
 }
 
 std::vector<ModelObject> ThermalZone::equipment() const
@@ -3435,6 +3526,11 @@ boost::optional<AirflowNetworkZone> ThermalZone::airflowNetworkZone() const
 std::vector<AirLoopHVAC> ThermalZone::airLoopHVACs() const
 {
   return getImpl<detail::ThermalZone_Impl>()->airLoopHVACs();
+}
+
+ZonePropertyUserViewFactorsBySurfaceName ThermalZone::getZonePropertyUserViewFactorsBySurfaceName() const
+{
+  return getImpl<detail::ThermalZone_Impl>()->getZonePropertyUserViewFactorsBySurfaceName();
 }
 
 /// @cond

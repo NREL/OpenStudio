@@ -69,7 +69,7 @@
 ! ExtWallConstruction=Wood-Framed and Other
 ! End SimMetaData
 
-  Version,9.1;
+  Version,9.2;
 
   Timestep,6;
 
@@ -1900,7 +1900,7 @@
   InternalMass,
     Dining Internal Mass,    !- Name
     InteriorFurnishings,     !- Construction Name
-    Dining,                  !- Zone Name
+    Dining,                  !- Zone or ZoneList Name
     232.3430;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -2095,14 +2095,14 @@
     Dining Exhaust Fan,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
-    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
-    ,                        !- Zone Equipment 1 Sequential Heating Fraction
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ,                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 2 Object Type
     Dining Direct Air,       !- Zone Equipment 2 Name
     2,                       !- Zone Equipment 2 Cooling Sequence
     2,                       !- Zone Equipment 2 Heating or No-Load Sequence
-    ,                        !- Zone Equipment 2 Sequential Cooling Fraction
-    ;                        !- Zone Equipment 2 Sequential Heating Fraction
+    ,                        !- Zone Equipment 2 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 2 Sequential Heating Fraction Schedule Name
 
   Fan:ZoneExhaust,
     Dining Exhaust Fan,      !- Name
@@ -2244,7 +2244,7 @@
   InternalMass,
     Kitchen Internal Mass,   !- Name
     InteriorFurnishings,     !- Construction Name
-    Kitchen,                 !- Zone Name
+    Kitchen,                 !- Zone or ZoneList Name
     232.3430;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -2496,14 +2496,14 @@
     Kitchen Exhaust Fan,     !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
-    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
-    ,                        !- Zone Equipment 1 Sequential Heating Fraction
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ,                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 2 Object Type
     Kitchen Direct Air,      !- Zone Equipment 2 Name
     2,                       !- Zone Equipment 2 Cooling Sequence
     2,                       !- Zone Equipment 2 Heating or No-Load Sequence
-    ,                        !- Zone Equipment 2 Sequential Cooling Fraction
-    ;                        !- Zone Equipment 2 Sequential Heating Fraction
+    ,                        !- Zone Equipment 2 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 2 Sequential Heating Fraction Schedule Name
 
   Fan:ZoneExhaust,
     Kitchen Exhaust Fan,     !- Name

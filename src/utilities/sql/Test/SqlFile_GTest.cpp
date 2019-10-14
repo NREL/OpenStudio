@@ -301,20 +301,57 @@ TEST_F(SqlFileFixture, CreateSqlFile)
 
 TEST_F(SqlFileFixture, AnnualTotalCosts) {
 
-  // Total annual costs for all fuel types
-  EXPECT_NEAR(195052539.91, *(sqlFile2.annualTotalUtilityCost()), 1000);
+  struct SqlResults {
+
+    // Total annual costs for all fuel types
+    double annualTotalUtilityCost;
+
+    // Costs by fuel type
+    double annualTotalCost_Electricity;
+    double annualTotalCost_Gas;
+    double annualTotalCost_DistrictCooling;
+    double annualTotalCost_DistrictHeating;
+    double annualTotalCost_Water;
+    double annualTotalCost_FuelOil_1;
+  };
+
+  // Actual values
+  SqlResults ep_910 = {195052539.91, 27600.69, 427.17, 324.04, 782.87, 3256405.15, 191767000.0};
+  SqlResults ep_920 = {194898706.43, 27595.94, 426.75, 324.25, 782.28, 3256577.21, 191613000.0};
+
+  // =========== Check that you are within relatively normal ranges compared to previous versions  =================
+
+  // Total annual costs for all fuel types. Here I'm explicitly passing a tolerance of 0.1% (which is the default really, so omitting it after)
+  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.001));
 
   // Costs by fuel type
-  EXPECT_NEAR(27600.69, *(sqlFile2.annualTotalCost(FuelType::Electricity)), 0.1);
-  EXPECT_NEAR(427.17, *(sqlFile2.annualTotalCost(FuelType::Gas)), 0.1);
-  EXPECT_NEAR(324.04, *(sqlFile2.annualTotalCost(FuelType::DistrictCooling)), 0.1);
-  EXPECT_NEAR(782.87, *(sqlFile2.annualTotalCost(FuelType::DistrictHeating)), 0.1);
-  EXPECT_NEAR(3256405.15, *(sqlFile2.annualTotalCost(FuelType::Water)), 0.1);
-  EXPECT_NEAR(191767000, *(sqlFile2.annualTotalCost(FuelType::FuelOil_1)), 1000);
+  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get()));
+  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get()));
+  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get()));
+  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get()));
+  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get()));
+  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get()));
 
+
+  // =========== Check that within our development based on the current E+ version we do not make the results vary (at all)  =================
+
+  // Total annual costs for all fuel types
+  EXPECT_DOUBLE_EQ(ep_920.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get());
+
+  // Costs by fuel type
+  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get());
+  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get());
+  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get());
+  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get());
+  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get());
+  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get());
+
+
+  // These have a relatively high tolerance and shouldn't fail, and they depend on the above values divided by square footage which shouldn't vary
+  // So it's fine to keep it as is
   // Costs by total building area by fuel type
-  EXPECT_NEAR(11.50, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1);
-  EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Gas)), 0.1);
+  EXPECT_NEAR(11.50, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1); // (E+ 9.2.0 = 11.498308333333332)
+  EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Gas)), 0.1);          // (E+ 9.2.0 = 0.1778125)
 
   // Costs by conditioned building area by fuel type
   EXPECT_NEAR(11.50, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Electricity)), 0.1);

@@ -222,7 +222,9 @@ TEST_F(IddFixture,IddFactory_Units) {
   unsupported.push_back(boost::regex("percent"));
   unsupported.push_back(boost::regex("ppm"));
   unsupported.push_back(boost::regex("W/\\(\\(m3/s\\)-Pa\\)"));
-
+  unsupported.push_back(boost::regex("W/m2 or deg C"));
+  unsupported.push_back(boost::regex("W/m2, W or deg C"));
+  
   IddObjectVector objects = IddFactory::instance().getObjects(IddFileType(IddFileType::WholeFactory));
   StringSet goodUnits;
   StringSet badUnits;

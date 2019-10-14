@@ -153,7 +153,7 @@ namespace openstudio{
     bool setUnits(const std::string& units);
     void resetUnits();
 
-    /// degrees from North measured clockwise
+    /// degrees from Building North to True North measured clockwise, opposite of EnergyPlus convention
     double northAxis() const;
     bool setNorthAxis(double northAxis);
     void resetNorthAxis();

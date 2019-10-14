@@ -82,7 +82,8 @@ MODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
   // Ignored for Csharp, use Model::setCalendarYear etc
   UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
 #endif
-MODELOBJECT_TEMPLATES(FoundationKivaSettings);
+UNIQUEMODELOBJECT_TEMPLATES(FoundationKivaSettings);
+UNIQUEMODELOBJECT_TEMPLATES(PerformancePrecisionTradeoffs);
 
 SWIG_UNIQUEMODELOBJECT(RunPeriod);
 SWIG_UNIQUEMODELOBJECT(SimulationControl);
@@ -121,5 +122,6 @@ SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);
   SWIG_UNIQUEMODELOBJECT(YearDescription);
 #endif
 SWIG_UNIQUEMODELOBJECT(FoundationKivaSettings);
+SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
 
 #endif

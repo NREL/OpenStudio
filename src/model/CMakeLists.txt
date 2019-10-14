@@ -432,6 +432,9 @@ set(${target_name}_src
   Construction.hpp
   Construction_Impl.hpp
   Construction.cpp
+  ConstructionAirBoundary.hpp
+  ConstructionAirBoundary_Impl.hpp
+  ConstructionAirBoundary.cpp  
   ConstructionBase.hpp
   ConstructionBase_Impl.hpp
   ConstructionBase.cpp
@@ -977,6 +980,9 @@ set(${target_name}_src
   PeopleDefinition.hpp
   PeopleDefinition_Impl.hpp
   PeopleDefinition.cpp
+  PerformancePrecisionTradeoffs.hpp
+  PerformancePrecisionTradeoffs_Impl.hpp
+  PerformancePrecisionTradeoffs.cpp
   PhotovoltaicPerformance.hpp
   PhotovoltaicPerformance_Impl.hpp
   PhotovoltaicPerformance.cpp
@@ -1586,6 +1592,9 @@ set(${target_name}_src
   ZoneMixing.hpp
   ZoneMixing_Impl.hpp
   ZoneMixing.cpp
+  ZonePropertyUserViewFactorsBySurfaceName.hpp
+  ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp
+  ZonePropertyUserViewFactorsBySurfaceName.cpp
   ZoneVentilationDesignFlowRate.hpp
   ZoneVentilationDesignFlowRate_Impl.hpp
   ZoneVentilationDesignFlowRate.cpp
@@ -1753,6 +1762,7 @@ set(${target_name}_test_src
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
   test/Construction_GTest.cpp
+  test/ConstructionAirBoundary_GTest.cpp
   test/ConstructionWithInternalSource_GTest.cpp
   test/ControllerOutdoorAir_GTest.cpp
   test/ControllerMechanicalVentilation_GTest.cpp
@@ -1885,6 +1895,7 @@ set(${target_name}_test_src
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp
   test/PeopleDefinition_GTest.cpp
+  test/PerformancePrecisionTradeoffs_GTest.cpp
   test/PhotovoltaicPerformanceEquivalentOneDiode_GTest.cpp
   test/PhotovoltaicPerformanceSimple_GTest.cpp
   test/PipeAdiabatic_GTest.cpp
@@ -1960,6 +1971,7 @@ set(${target_name}_test_src
   test/ShadingControl_GTest.cpp
   test/ShadingSurfaceGroup_GTest.cpp
   test/ShadingSurface_GTest.cpp
+  test/ShadowCalculation_GTest.cpp
   test/SimpleGlazing_GTest.cpp
   test/SimulationControl_GTest.cpp
   test/Site_GTest.cpp
@@ -2027,6 +2039,7 @@ set(${target_name}_test_src
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   test/ZoneHVACIdealLoadsAirSystem_GTest.cpp
   test/ZoneMixing_GTest.cpp
+  test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   test/ZoneVentilationDesignFlowRate_GTest.cpp
 )
 

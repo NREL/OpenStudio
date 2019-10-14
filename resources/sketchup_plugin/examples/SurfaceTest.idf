@@ -86,7 +86,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,9.1;
+  Version,9.2;
 
   Timestep,4;
 
@@ -112,7 +112,7 @@
     No;                      !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    RUNPERIOD 1,             !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
     ,                        !- Begin Year
@@ -1164,13 +1164,13 @@
   InternalMass,
     Zn001:IntM001,           !- Name
     CUSTPARTITION,           !- Construction Name
-    HEARTLAND AREA,          !- Zone Name
+    HEARTLAND AREA,          !- Zone or ZoneList Name
     130.0000;                !- Surface Area {m2}
 
   InternalMass,
     Zn001:IntM002,           !- Name
     CUSTPARTITION,           !- Construction Name
-    HEARTLAND AREA,          !- Zone Name
+    HEARTLAND AREA,          !- Zone or ZoneList Name
     920.0000;                !- Surface Area {m2}
 
 ! Floor subdivided:
@@ -1389,7 +1389,7 @@
   InternalMass,
     Zn001:IntM003,           !- Name
     CUSTPARTITION,           !- Construction Name
-    HEARTLAND AREA,          !- Zone Name
+    HEARTLAND AREA,          !- Zone or ZoneList Name
     2380.000;                !- Surface Area {m2}
 
   BuildingSurface:Detailed,

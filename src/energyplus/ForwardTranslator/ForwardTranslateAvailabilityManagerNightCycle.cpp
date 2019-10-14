@@ -66,17 +66,22 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightC
   }
 
   {
-    auto schedule = modelObject.model().alwaysOnDiscreteSchedule();
+    auto schedule = modelObject.applicabilitySchedule();
     idfObject.setString(AvailabilityManager_NightCycleFields::ApplicabilityScheduleName,schedule.name().get());
   }
 
-  if( airLoopHVAC ) {
-    // Fan schedules are set to match the availabilitySchedule in the translator
-    idfObject.setString(AvailabilityManager_NightCycleFields::FanScheduleName,airLoopHVAC->availabilitySchedule().name().get());
-  }
 
-  // TODO: @kbenne, we don't even translate the AVM:NightCycle if it's not on an airloop anyways
+  // Note: always true, we don't even translate the AVM:NightCycle if it's not on an airloop anyways
   // Translation is triggered from the AirLoopHVAC itself
+  // if( airLoopHVAC ) {
+  //   // Fan schedules are set to match the availabilitySchedule in the translator
+  //   idfObject.setString(AvailabilityManager_NightCycleFields::FanScheduleName,airLoopHVAC->availabilitySchedule().name().get());
+  // }
+
+  // The above was moved to the model API directly, so use that instead. It will fetch the airLoopHVAC availability schedule (which we know exists)
+  if(boost::optional<Schedule> _fanSchedule = modelObject.fanSchedule()) {
+    idfObject.setString(AvailabilityManager_NightCycleFields::FanScheduleName, _fanSchedule->name().get());
+  }
 
   if( auto s = modelObject.name() ) {
     idfObject.setName(*s);

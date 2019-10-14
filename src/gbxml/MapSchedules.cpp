@@ -32,6 +32,8 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
+#include "../model/AdditionalProperties.hpp"
+#include "../model/AdditionalProperties_Impl.hpp"
 #include "../model/ScheduleDay.hpp"
 #include "../model/ScheduleDay_Impl.hpp"
 #include "../model/ScheduleWeek.hpp"
@@ -85,6 +87,7 @@ namespace gbxml {
 
     openstudio::model::ScheduleDay result(model);
     m_idToObjectMap.insert(std::make_pair(id, result));
+    result.additionalProperties().setFeature("gbXMLId", id);
 
     std::string name = element.child("Name").text().as_string();
     result.setName(escapeName(id, name));
@@ -113,6 +116,7 @@ namespace gbxml {
 
     openstudio::model::ScheduleWeek result(model);
     m_idToObjectMap.insert(std::make_pair(id, result));
+    result.additionalProperties().setFeature("gbXMLId", id);
 
     std::string name = element.child("Name").text().as_string();
     result.setName(escapeName(id, name));
@@ -184,6 +188,7 @@ namespace gbxml {
 
     openstudio::model::ScheduleYear result(model);
     m_idToObjectMap.insert(std::make_pair(id, result));
+    result.additionalProperties().setFeature("gbXMLId", id);
 
     std::string name = element.child("Name").text().as_string();
     result.setName(escapeName(id, name));

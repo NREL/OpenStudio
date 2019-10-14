@@ -39,6 +39,7 @@ namespace model {
 
 class Schedule;
 class ThermalZone;
+class AirLoopHVAC;
 
 namespace detail {
 
@@ -67,12 +68,14 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
     Schedule applicabilitySchedule() const;
     bool setApplicabilitySchedule(Schedule& schedule);
 
-    Schedule fanSchedule() const;
-    bool setFanSchedule(Schedule& schedule);
+    boost::optional<Schedule> fanSchedule() const;
+    // Not implemented, it uses AirLoopHVAC::availabilitySchedule
+    // bool setFanSchedule(Schedule& schedule);
 
     std::string controlType() const;
     bool isControlTypeDefaulted() const;
@@ -116,19 +119,9 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.AvailabilityManagerNightCycle");
 
     boost::optional<Schedule> optionalApplicabilitySchedule() const;
-    boost::optional<Schedule> optionalFanSchedule() const;
 
     std::vector<std::string> controlTypeValues() const;
     std::vector<std::string> cyclingRunTimeControlTypeValues() const;
-
-
-    boost::optional<ModelObject> applicabilityScheduleAsModelObject() const;
-    boost::optional<ModelObject> fanScheduleAsModelObject() const;
-    // boost::optional<ModelObject> controlThermalZonesAsModelObject() const;
-
-    bool setApplicabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setFanScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    // bool setControlThermalZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
 
     ModelObjectList controlThermalZoneList() const;
     void clearControlThermalZoneList();

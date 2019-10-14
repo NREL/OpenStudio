@@ -57,6 +57,8 @@ class MODEL_API ShadowCalculation : public ModelObject {
 
   static IddObjectType iddObjectType();
 
+  static std::vector<std::string> validCalculationMethodValues();
+
   static std::vector<std::string> validPolygonClippingAlgorithmValues();
 
   static std::vector<std::string> validSkyDiffuseModelingAlgorithmValues();
@@ -64,6 +66,10 @@ class MODEL_API ShadowCalculation : public ModelObject {
   //@}
   /** @name Getters */
   //@{
+
+  std::string calculationMethod() const;
+
+  bool isCalculationMethodDefaulted() const;
 
   int calculationFrequency() const;
 
@@ -80,6 +86,10 @@ class MODEL_API ShadowCalculation : public ModelObject {
   //@}
   /** @name Setters */
   //@{
+
+  bool setCalculationMethod(const std::string& calculationMethod);
+
+  void resetCalculationMethod();
 
   bool setCalculationFrequency(int calculationFrequency);
 

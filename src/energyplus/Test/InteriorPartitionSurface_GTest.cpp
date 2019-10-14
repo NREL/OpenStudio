@@ -131,8 +131,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_InteriorPartitionSurface)
   EXPECT_EQ(constructionObject.handle(), internalMassObject.getTarget(InternalMassFields::ConstructionName)->handle());
 
   WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
-  ASSERT_TRUE(internalMassObject.getTarget(InternalMassFields::ZoneName));
-  EXPECT_EQ(zoneObject.handle(), internalMassObject.getTarget(InternalMassFields::ZoneName)->handle());
+  ASSERT_TRUE(internalMassObject.getTarget(InternalMassFields::ZoneorZoneListName));
+  EXPECT_EQ(zoneObject.handle(), internalMassObject.getTarget(InternalMassFields::ZoneorZoneListName)->handle());
 }
 
 
