@@ -29,12 +29,15 @@
   %ignore openstudio::model::Space::thermalZone;
   %ignore openstudio::model::Space::setThermalZone;
   %ignore openstudio::model::Space::waterUseEquipment;
+  // Ignore this ctor, use of zone.getZonePropertyUserViewFactorsBySurfaceName is preferred anyways (so I won't even reimplement it using partial classes)
+  %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
+  %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::thermalZone;
 
   // ignore airflow objects for now, add back in with partial classes in ModelAirflow.i
-   %ignore openstudio::model::Surface::getAirflowNetworkSurface;
-   %ignore openstudio::model::Surface::airflowNetworkSurface;
-   %ignore openstudio::model::SubSurface::getAirflowNetworkSurface;
-   %ignore openstudio::model::SubSurface::airflowNetworkSurface;
+  %ignore openstudio::model::Surface::getAirflowNetworkSurface;
+  %ignore openstudio::model::Surface::airflowNetworkSurface;
+  %ignore openstudio::model::SubSurface::getAirflowNetworkSurface;
+  %ignore openstudio::model::SubSurface::airflowNetworkSurface;
 
   // ignore generator objects for now, add back in with partial classes in ModelGenerators.i
   %ignore openstudio::model::PlanarSurface::generatorPhotovoltaics;
