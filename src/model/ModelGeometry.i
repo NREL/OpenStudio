@@ -30,7 +30,7 @@
   %ignore openstudio::model::Space::setThermalZone;
   %ignore openstudio::model::Space::waterUseEquipment;
   // Ignore this ctor, use of zone.getZonePropertyUserViewFactorsBySurfaceName is preferred anyways (so I won't even reimplement it using partial classes)
-  %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
+  %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
   %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::thermalZone;
 
   // ignore airflow objects for now, add back in with partial classes in ModelAirflow.i
