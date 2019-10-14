@@ -30,6 +30,7 @@
   %ignore openstudio::model::Model::runPeriod;
   %ignore openstudio::model::Model::weatherFile;
   %ignore openstudio::model::Model::yearDescription;
+  %ignore openstudio::model::Model::performancePrecisionTradeoffs;
 
   // ignore geometry objects for now, add back in with partial classes in ModelGeometry.i
   %ignore openstudio::model::Model::building;
@@ -42,15 +43,15 @@
 
   // EnergyManagementSystemActuator: depends on Space (ModelGeometry.i),
   %ignore openstudio::model::EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject,
-                                                                                            const std::string actuatedComponentType,
-                                                                                            const std::string actuatedComponentControlType,
+                                                                                            const std::string& actuatedComponentType,
+                                                                                            const std::string& actuatedComponentControlType,
                                                                                             const Space& space);
   %ignore openstudio::model::EnergyManagementSystemActuator::setSpace;
 
   // depends on ThermalZone (ModelHVAC.i)
   %ignore openstudio::model::EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject,
-                                                                                            const std::string actuatedComponentType,
-                                                                                            const std::string actuatedComponentControlType,
+                                                                                            const std::string& actuatedComponentType,
+                                                                                            const std::string& actuatedComponentControlType,
                                                                                             const ThermalZone& thermalZone);
   %ignore openstudio::model::EnergyManagementSystemActuator::setThermalZone;
 

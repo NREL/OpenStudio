@@ -324,6 +324,10 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
           return space.setThermalZone(thermalZone);
         }
 
+        openstudio::model::ThermalZone getThermalZone(const openstudio::model::ZonePropertyUserViewFactorsBySurfaceName& zoneProp){
+          return zoneProp.thermalZone();
+        }
+
         // EMS Actuator setter for ThermalZone (reimplemented from ModelCore.i)
         bool setThermalZoneForEMSActuator(openstudio::model::EnergyManagementSystemActuator actuator, openstudio::model::ThermalZone thermalZone) {
           return actuator.setThermalZone(thermalZone);
@@ -363,6 +367,13 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
       public bool setThermalZone(OpenStudio.ThermalZone thermalZone)
       {
         return OpenStudio.OpenStudioModelHVAC.setThermalZone(this, thermalZone);
+      }
+    }
+
+    public partial class ZonePropertyUserViewFactorsBySurfaceName : ModelObject {
+      public ThermalZone thermalZone()
+      {
+        return OpenStudio.OpenStudioModelHVAC.getThermalZone(this);
       }
     }
 
