@@ -30,6 +30,7 @@
   %ignore openstudio::model::Model::runPeriod;
   %ignore openstudio::model::Model::weatherFile;
   %ignore openstudio::model::Model::yearDescription;
+  %ignore openstudio::model::Model::performancePrecisionTradeoffs;
 
   // ignore geometry objects for now, add back in with partial classes in ModelGeometry.i
   %ignore openstudio::model::Model::building;
