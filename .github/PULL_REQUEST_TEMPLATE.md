@@ -17,6 +17,7 @@ Add to this list or remove from it as applicable.  This is a simple templated se
  - [ ] If a new object or method, added a test in NREL/OpenStudio-resources: Add Link
  - [ ] If needed, added VersionTranslation rules for the objects (`src/osversion/VersionTranslator.cpp`)
  - [ ] Checked behavior in OpenStudioApplication, adjusted policies as needed (`src/openstudio_lib/library/OpenStudioPolicy.xml`)
+ - [ ] Verified that C# bindings built fine on Windows, partial classes used as needed, etc.
  - [ ] All new and existing tests passes
  - [ ] If methods have been deprecated, update rest of code to use the new methods
 
