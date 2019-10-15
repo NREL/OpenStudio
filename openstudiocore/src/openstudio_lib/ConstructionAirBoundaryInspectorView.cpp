@@ -200,7 +200,7 @@ void ConstructionAirBoundaryInspectorView::attach(openstudio::model::Constructio
   m_nameEdit->bind(
     *m_constructionAirBoundary,
     OptionalStringGetter(std::bind(&model::ConstructionAirBoundary::name, m_constructionAirBoundary.get_ptr(), true)),
-    boost::optional<StringSetter>(std::bind(&model::ConstructionAirBoundary::setName, m_constructionAirBoundary.get_ptr(), std::placeholders::_1))
+    boost::optional<StringSetterOptionalStringReturn>(std::bind(&model::ConstructionAirBoundary::setName, m_constructionAirBoundary.get_ptr(), std::placeholders::_1))
   );
 
   m_solarAndDaylightingMethod->bind<std::string>(
