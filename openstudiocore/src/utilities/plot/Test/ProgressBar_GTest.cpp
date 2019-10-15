@@ -67,7 +67,7 @@ private:
 // *** BEGIN TESTS ***
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(ProgressBar, BasicTest)
+TEST(ProgressBar, QtGUI_BasicTest)
 {
   if (!Application::instance().hasApplication()){
     Application::instance().application(true);
@@ -86,7 +86,7 @@ TEST(ProgressBar, BasicTest)
   
 }
 
-TEST(ProgressBar, AdvancedTest)
+TEST(ProgressBar, QtGUI_AdvancedTest)
 {
   if (!Application::instance().hasApplication()){
     Application::instance().application(true);
@@ -108,7 +108,7 @@ TEST(ProgressBar, AdvancedTest)
   }
 }
 
-TEST(ProgressBar, WorkspaceTest)
+TEST(ProgressBar, QtGUI_WorkspaceTest)
 {
   if (!Application::instance().hasApplication()){
     Application::instance().application(true);
