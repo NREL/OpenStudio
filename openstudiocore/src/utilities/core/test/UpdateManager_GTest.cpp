@@ -41,7 +41,7 @@
 namespace openstudio
 {
 
-  TEST(UpdateManager, GeneralTest)
+  TEST(UpdateManager, QtGUI_GeneralTest)
   {
     UpdateManager manager("GTest");
     EXPECT_EQ("GTest", manager.appName());
@@ -52,7 +52,7 @@ namespace openstudio
     EXPECT_FALSE(manager.error());
   }
 
-  TEST(UpdateManager, ExpandedTest)
+  TEST(UpdateManager, QtGUI_ExpandedTest)
   {
     std::string url = "https://www.openstudio.net/updateGTest.html?app=GTest&version=0.0.0";
     UpdateManager manager("GTest", url);

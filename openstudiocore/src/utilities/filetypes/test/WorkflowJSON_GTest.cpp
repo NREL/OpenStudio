@@ -201,7 +201,7 @@ public:
   bool dirty;
 };
 
-TEST(Filetypes, WorkflowJSON_Load)
+TEST(Filetypes, QtGUI_WorkflowJSON_Load)
 {
   path p = resourcesPath() / toPath("utilities/Filetypes/min.osw");
   path p2 = resourcesPath() / toPath("utilities/Filetypes/min.2.osw");
