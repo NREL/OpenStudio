@@ -277,7 +277,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
   add_custom_command(
     OUTPUT "${SWIG_WRAPPER}"
-    COMMAND "${SWIG_EXECUTABLE}"
+    COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+            "${SWIG_EXECUTABLE}"
             "-ruby" "-c++" "-fvirtual" "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src" "${extra_includes}" "${extra_includes2}" ${RUBY_AUTODOC}
             -module "${MODULE}" -initname "${LOWER_NAME}"
             "-I${PROJECT_SOURCE_DIR}/ruby"
@@ -492,7 +493,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     add_custom_command(
       OUTPUT "${SWIG_WRAPPER_FULL_PATH}"
-      COMMAND "${SWIG_EXECUTABLE}"
+      COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+              "${SWIG_EXECUTABLE}"
               "-python" ${SWIG_PYTHON_3_FLAG} "-c++" ${PYTHON_AUTODOC}
               -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src"
               -module "${MODULE}"
@@ -622,7 +624,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       OUTPUT ${SWIG_WRAPPER_FULL_PATH}
       COMMAND "${CMAKE_COMMAND}" -E remove_directory "${CSHARP_GENERATED_SRC_DIR}"
       COMMAND "${CMAKE_COMMAND}" -E make_directory "${CSHARP_GENERATED_SRC_DIR}"
-      COMMAND "${SWIG_EXECUTABLE}"
+      COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+              "${SWIG_EXECUTABLE}"
               "-csharp" "-c++" -namespace ${NAMESPACE} ${CSHARP_AUTODOC}
               -outdir "${CSHARP_GENERATED_SRC_DIR}"  "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src"
               -module "${MODULE}"
@@ -715,7 +718,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       OUTPUT ${SWIG_WRAPPER}
       COMMAND "${CMAKE_COMMAND}" -E remove_directory "${JAVA_GENERATED_SRC_DIR}"
       COMMAND "${CMAKE_COMMAND}" -E make_directory "${JAVA_GENERATED_SRC_DIR}"
-      COMMAND "${SWIG_EXECUTABLE}"
+      COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+              "${SWIG_EXECUTABLE}"
               "-java" "-c++"
               -package ${NAMESPACE}
               #-features autodoc=1
@@ -835,7 +839,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     add_custom_command(
       OUTPUT ${SWIG_WRAPPER}
-      COMMAND "${SWIG_EXECUTABLE}"
+      COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+              "${SWIG_EXECUTABLE}"
               "-javascript" ${SWIG_ENGINE} "-c++"
               #-namespace ${NAMESPACE}
               #-features autodoc=1
