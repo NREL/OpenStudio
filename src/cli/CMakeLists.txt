@@ -279,12 +279,6 @@ target_link_libraries(ruby_libs PUBLIC additional_ruby_libs)
 
 target_link_libraries(openstudio init_openstudio ruby_libs)
 
-if( NOT UNIX )
-  LINK_DEBUG_AND_RELEASE(additional_ruby_libs "${ADDITIONAL_RUBY_LIBS_DEBUG}" "${ADDITIONAL_RUBY_LIBS_RELEASE}")
-else()
-  target_link_libraries(additional_ruby_libs ${ADDITIONAL_RUBY_LIBS})
-endif()
-
 target_link_libraries(openstudio
  openstudio_airflow
  openstudio_model
@@ -310,7 +304,7 @@ if (UNIX AND NOT APPLE)
   target_link_libraries(additional_ruby_libs dl crypt)
   target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
 elseif(WIN32)
-  target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi)
+  target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi Iphlpapi)
   set_target_properties(openstudio PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
 endif()

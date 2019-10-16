@@ -657,63 +657,6 @@ if(WIN32)
   endif()
 endif()
 
-# Ruby related dependencies
-if(UNIX)
-  if(APPLE)
-    # TODO: JM 2019-06-20 Remove when properly tested
-    #find_library(GMP libgmp.a PATHS /usr/local/opt/gmp/lib)
-    #find_library(EDIT libedit.dylib)
-    #find_library(UTIL libutil.dylib)
-    #find_library(CURSES libncurses.dylib)
-    #find_library(Z libz.dylib)
-    #find_library(FFI libffi.dylib)
-    #find_library(YAML libyaml.a)
-    #find_library(READLINE libreadline.a PATHS /usr/local/opt/readline/lib)
-    #set(ADDITIONAL_RUBY_LIBS ${GDBM} ${GMP} ${EDIT} ${UTIL} ${CURSES} ${Z} ${FFI} ${READLINE} ${YAML} CONAN_PKG::OpenSSL)
-    set(ADDITIONAL_RUBY_LIBS "")
-    message("ADDITIONAL_RUBY_LIBS=${ADDITIONAL_RUBY_LIBS}")
-  else()
-    # TODO: JM 2019-06-20 Remove when properly tested
-    #find_library(GMP libgmp.a)
-    #find_library(GDBM libgdbm.a)
-    # libqdbm-dev
-    #find_library(QDBM libqdbm.a)
-    #find_library(FFI libffi.a)
-    #find_library(READLINE libreadline.a)
-    #find_library(TERMCAP libtermcap.a)
-    #find_library(YAML libyaml.a)
-    #find_library(CRYPTO libcrypto.a)
-    #set(ADDITIONAL_RUBY_LIBS ${GDBM} ${QDBM} ${GMP} ${FFI} ${READLINE} ${TERMCAP} ${YAML} CONAN_PKG::OpenSSL)
-    message("ADDITIONAL_RUBY_LIBS=${ADDITIONAL_RUBY_LIBS}")
-  endif()
-else()
-  # TODO: if we can make conan-libffi to work, remove this.
-  set(FFI_ZIP_FILENAME "FFI_3_2_1-msvc2017_v2.zip")
-  set(FFI_ZIP_EXPECTED_MD5 "9d43417932447eb5830a389273954a75")
-  set(FFI_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${FFI_ZIP_FILENAME}")
-  if(EXISTS "${FFI_ZIP_LOCAL_PATH}")
-    file(MD5 "${FFI_ZIP_LOCAL_PATH}" FFI_ZIP_MD5)
-  endif()
-
-  if(NOT FFI_ZIP_MD5 STREQUAL FFI_ZIP_EXPECTED_MD5)
-    unset(FFI CACHE)
-    unset(FFID CACHE)
-    message(STATUS "Downloading FFI: ${FFI_ZIP_FILENAME}")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${FFI_ZIP_FILENAME}"
-      ${FFI_ZIP_LOCAL_PATH}
-      INACTIVITY_TIMEOUT 120
-      SHOW_PROGRESS
-      EXPECTED_MD5 ${FFI_ZIP_EXPECTED_MD5})
-
-    file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/FFI-install")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${FFI_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
-  endif()
-
-  find_library(FFI libffi.lib PATHS "${PROJECT_BINARY_DIR}/FFI-install/Release/lib")
-  find_library(FFID libffi.lib PATHS "${PROJECT_BINARY_DIR}/FFI-install/Debug/lib")
-  set(ADDITIONAL_RUBY_LIBS_RELEASE ${FFI} Iphlpapi)
-  set(ADDITIONAL_RUBY_LIBS_DEBUG ${FFID} Iphlpapi)
-endif()
 
 # openstudio gems
 
