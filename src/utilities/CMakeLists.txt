@@ -228,18 +228,14 @@ source_group(units FILES ${units_src})
 source_group(documentation FILES ${documentation_src})
 source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
-if(UNIX)
-  set(SWIG_DEPENDS "SWIG")
-else()
-  set(SWIG_DEPENDS "")
-endif()
-
+# Must call CMake itself in order to set the SWIG_LIB env var for add_custom_command
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
-  COMMAND "${SWIG_EXECUTABLE}"
+  COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+          "${SWIG_EXECUTABLE}"
+          "-v"
           "-ruby"
           -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
-  DEPENDS "${SWIG_DEPENDS}"
 )
 
 set(${target_name}_src

@@ -286,6 +286,19 @@ endif()
 set(CONAN_INSTALL_FILE "${PROJECT_SOURCE_DIR}/ConanInstall.cmake")
 include("${CONAN_INSTALL_FILE}")
 
+# A macro to find a conan related value especially when using multi-config builds (MSVC)
+# But it also works with single-config builds
+macro(FindValue ValueName)
+  set(LocalVar "")
+  set(LocalVar $<$<CONFIG:Debug>:${${ValueName}_DEBUG}>$<$<CONFIG:Release>:${${ValueName}_RELEASE}>$<$<CONFIG:RelWithDebInfo>:${$ValueName}_RELWITHDEBINFO}>$<$<CONFIG:MinSizeRel>:${${ValueName}_MINSIZEREL}>
+  )
+#  list(JOIN LocalVar "" LocalVar)
+  string(STRIP ${LocalVar} LocalVar)
+  set(CURRENT_${ValueName} $<IF:$<BOOL:${LocalVar}>,${LocalVar},${${ValueName}}>)
+  # For debug purposes
+  # message(STATUS "Found '${ValueName}' as '${CURRENT_${ValueName}}'")
+endmacro()
+
 ###############################################################################
 
 get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
@@ -649,9 +662,8 @@ endif()
 
 # build and release openstudio gems at https://github.com/NREL/OpenStudio-gems
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-# TODO: Update to 20191004 @tijcolem
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20190715.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "5268f0e0b52a72700b8b821316f034b1")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20191015.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d907c406a53d8b52c79f4179beebf6af")
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
   file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
@@ -673,40 +685,34 @@ endif()
 
 # SWIG
 
-# using forked version of SWIG at https://github.com/macumber/swig/tree/openstudio_swig_3_0_12
-if(UNIX)
-  # We patch it up with a version of pcre we provide to avoid having to have the requirement locally
-  ExternalProject_Add(SWIG
-    URL http://openstudio-resources.s3.amazonaws.com/dependencies/swig-3.0.12.tar.gz
-    URL_MD5 a7d384966974ed79455a455b517ad83d
-    PATCH_COMMAND cp ${PROJECT_SOURCE_DIR}/dependencies/pcre-8.31.tar.bz2 ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG && cd ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG && ./Tools/pcre-build.sh
-    CONFIGURE_COMMAND ./autogen.sh && ./configure --prefix=${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG-install
-    BUILD_COMMAND ${MAKE}
-    INSTALL_COMMAND ${MAKE} install
-    BUILD_IN_SOURCE 1
-  )
-  set(SWIG_EXECUTABLE ${PROJECT_BINARY_DIR}/SWIG-prefix/src/SWIG-install/bin/swig)
-else()
-  # SWIG requires MinGW to compile on windows, so we just copy in the prebuilt binary
-  set(SWIG_ZIP "swigwin-3.0.12.zip")
-  set(SWIG_DIR "swigwin-3.0.12")
-  set(SWIG_EXPECTED_HASH "8ee412d1278ba3cac22e58f26a842918")
-  if(EXISTS "${PROJECT_BINARY_DIR}/${SWIG_ZIP}")
-    file(MD5 "${PROJECT_BINARY_DIR}/${SWIG_ZIP}" SWIG_HASH)
-  endif()
-  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${SWIG_ZIP}" OR NOT EXISTS "${PROJECT_BINARY_DIR}/${SWIG_DIR}" OR NOT "${SWIG_HASH}" MATCHES "${SWIG_EXPECTED_HASH}")
-    message(STATUS "Downloading SWIG)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${SWIG_ZIP}" "${PROJECT_BINARY_DIR}/${SWIG_ZIP}" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${SWIG_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${SWIG_DIR}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${SWIG_ZIP}" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
-  endif()
+# Note: JM 2019-10-16
+# We use conan swig_installer 4.0 which enhances our PATH to include the CONAN_BIN_DIRS_SWIG_INSTALLER already
+# So I could just do:
+# set(SWIG_EXECUTABLE swig)
+# But will have the probblem with the swiglib anyways.
+# Plus, it doesn't appear to work on windows either, the PATH doesn't include it.
+#find_program(SWIG_EXECUTABLE swig PATHS CURRENT_CONAN_SWIG_INSTALLER_ROOT NO_DEFAULT_PATH)
+#if(NOT SWIG_EXECUTABLE)
+#  message(FATAL_ERROR "Couldn't find swig, which shouldn't happen. CONAN_BIN_DIRS_SWIG_INSTALLER=${CONAN_BIN_DIRS_SWIG_INSTALLER}, CONAN_SWIG_INSTALLER_ROOT_RELEASE=${CONAN_SWIG_INSTALLER_ROOT_RELEASE}, CURRENT_CONAN_SWIG_INSTALLER_ROOT=${CURRENT_CONAN_SWIG_INSTALLER_ROOT}, ${ENV{SWIG_LIB}}, ${ENV{SWIG_INSTALLER_ROOT}}")
+#endif()
 
-  set(SWIG_EXECUTABLE ${PROJECT_BINARY_DIR}/${SWIG_DIR}/swig.exe)
-endif()
+# Another thing I tried is to use the `virtualenv` generator (`conan_cmake_run( ... GENERATORS virtualenv)`),
+# but you end up having to call the activation script on each call, and the call is dependent on the platform which is even more annoying
+# (either cmake -E cmd /C activate.bat, or cmake -E source activate.sh)
+# I also tried using CMake to extract the value from the activate.sh script on all plaftorms but it seems even more of a hack
+
+# So instead, we use a generator expression to find the right value. At least it makes sense, and should be robust.
+FindValue(CONAN_SWIG_INSTALLER_ROOT)
+
+set(SWIG_EXECUTABLE "${CURRENT_CONAN_SWIG_INSTALLER_ROOT}/bin/swig")
+
+# The conan-provided binary has a built-in swiglib (`swig -swiglib`) that points to the build box on which it was built, which is problematic for us.
+set(SWIG_LIB "${CURRENT_CONAN_SWIG_INSTALLER_ROOT}/share/swig/4.0.1")
 
 # Export SWIG to parent scope
 if(hasParent)
   set(SWIG_EXECUTABLE "${SWIG_EXECUTABLE}" PARENT_SCOPE)
+  set(SWIG_LIB "${SWIG_LIB}" PARENT_SCOPE)
 endif()
 
 set(ALL_RUBY_BINDING_TARGETS "") # global list
