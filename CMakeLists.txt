@@ -286,6 +286,19 @@ endif()
 set(CONAN_INSTALL_FILE "${PROJECT_SOURCE_DIR}/ConanInstall.cmake")
 include("${CONAN_INSTALL_FILE}")
 
+# A macro to find a conan related value especially when using multi-config builds (MSVC)
+# But it also works with single-config builds
+macro(FindValue ValueName)
+  set(LocalVar "")
+  set(LocalVar $<$<CONFIG:Debug>:${${ValueName}_DEBUG}>$<$<CONFIG:Release>:${${ValueName}_RELEASE}>$<$<CONFIG:RelWithDebInfo>:${$ValueName}_RELWITHDEBINFO}>$<$<CONFIG:MinSizeRel>:${${ValueName}_MINSIZEREL}>
+  )
+#  list(JOIN LocalVar "" LocalVar)
+  string(STRIP ${LocalVar} LocalVar)
+  set(CURRENT_${ValueName} $<IF:$<BOOL:${LocalVar}>,${LocalVar},${${ValueName}}>)
+  # For debug purposes
+  # message(STATUS "Found '${ValueName}' as '${CURRENT_${ValueName}}'")
+endmacro()
+
 ###############################################################################
 
 get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
@@ -729,17 +742,29 @@ endif()
 
 # SWIG
 
+# Note: JM 2019-10-16
 # We use conan swig_installer 4.0 which enhances our PATH to include the CONAN_BIN_DIRS_SWIG_INSTALLER already
 # So I could just do:
 # set(SWIG_EXECUTABLE swig)
-# But better be safe
-find_program(SWIG_EXECUTABLE swig)
-if(NOT SWIG_EXECUTABLE)
-  message(FATAL_ERROR "Couldn't find swig, which shouldn't happen. CONAN_BIN_DIRS_SWIG_INSTALLER=${CONAN_BIN_DIRS_SWIG_INSTALLER}")
-endif()
+# But will have the probblem with the swiglib anyways.
+# Plus, it doesn't appear to work on windows either, the PATH doesn't include it.
+#find_program(SWIG_EXECUTABLE swig PATHS CURRENT_CONAN_SWIG_INSTALLER_ROOT NO_DEFAULT_PATH)
+#if(NOT SWIG_EXECUTABLE)
+#  message(FATAL_ERROR "Couldn't find swig, which shouldn't happen. CONAN_BIN_DIRS_SWIG_INSTALLER=${CONAN_BIN_DIRS_SWIG_INSTALLER}, CONAN_SWIG_INSTALLER_ROOT_RELEASE=${CONAN_SWIG_INSTALLER_ROOT_RELEASE}, CURRENT_CONAN_SWIG_INSTALLER_ROOT=${CURRENT_CONAN_SWIG_INSTALLER_ROOT}, ${ENV{SWIG_LIB}}, ${ENV{SWIG_INSTALLER_ROOT}}")
+#endif()
+
+# Another thing I tried is to use the `virtualenv` generator (`conan_cmake_run( ... GENERATORS virtualenv)`),
+# but you end up having to call the activation script on each call, and the call is dependent on the platform which is even more annoying
+# (either cmake -E cmd /C activate.bat, or cmake -E source activate.sh)
+# I also tried using CMake to extract the value from the activate.sh script on all plaftorms but it seems even more of a hack
+
+# So instead, we use a generator expression to find the right value. At least it makes sense, and should be robust.
+FindValue(CONAN_SWIG_INSTALLER_ROOT)
+
+set(SWIG_EXECUTABLE "${CURRENT_CONAN_SWIG_INSTALLER_ROOT}/bin/swig")
 
 # The conan-provided binary has a built-in swiglib (`swig -swiglib`) that points to the build box on which it was built, which is problematic for us.
-set(SWIG_LIB "${CONAN_SWIG_INSTALLER_ROOT}/share/swig/4.0.1")
+set(SWIG_LIB "${CURRENT_CONAN_SWIG_INSTALLER_ROOT}/share/swig/4.0.1")
 
 # Export SWIG to parent scope
 if(hasParent)
