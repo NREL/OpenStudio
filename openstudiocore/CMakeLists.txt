@@ -1092,6 +1092,12 @@ if( UNIX )
   list(APPEND QT_INCLUDES ${Qt5XcbQpa_INCLUDE_DIRS})
 endif()
 
+
+if( APPLE )
+    set(QT_SQLDRIVERS_PATHNAME ${QT_INSTALL_DIR}/plugins/sqldrivers)
+    file(COPY "${QT_SQLDRIVERS_PATHNAME}" DESTINATION "${CMAKE_BINARY_DIR}/Products/")
+endif()
+
 set(CMAKE_AUTOMOC OFF)
 
 # download qt static
