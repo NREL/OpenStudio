@@ -229,7 +229,7 @@ public:
   EpwDataPoint();
   /** Create an EpwDataPoint object with specified properties */
   EpwDataPoint(int year,int month,int day,int hour,int minute,
-    std::string dataSourceandUncertaintyFlags,double dryBulbTemperature,double dewPointTemperature,
+    const std::string &dataSourceandUncertaintyFlags,double dryBulbTemperature,double dewPointTemperature,
     double relativeHumidity,double atmosphericStationPressure,double extraterrestrialHorizontalRadiation,
     double extraterrestrialDirectNormalRadiation,double horizontalInfraredRadiationIntensity,
     double globalHorizontalRadiation,double directNormalRadiation,double diffuseHorizontalRadiation,
@@ -484,7 +484,7 @@ public:
   /** Create an empty EpwDesignCondition object */
   EpwDesignCondition();
   /** Create an EpwDesignCondition object with specified properties */
-  EpwDesignCondition(std::string titleOfDesignCondition, int heatingColdestMonth, double heatingDryBulb99pt6, double heatingDryBulb99,
+  EpwDesignCondition(const std::string &titleOfDesignCondition, int heatingColdestMonth, double heatingDryBulb99pt6, double heatingDryBulb99,
     double heatingHumidificationDewPoint99pt6, double heatingHumidificationHumidityRatio99pt6, double heatingHumidificationMeanCoincidentDryBulb99pt6,
     double heatingHumidificationDewPoint99, double heatingHumidificationHumidityRatio99, double heatingHumidificationMeanCoincidentDryBulb99,
     double heatingColdestMonthWindSpeed0pt4, double heatingColdestMonthMeanCoincidentDryBulb0pt4, double heatingColdestMonthWindSpeed1,
@@ -650,7 +650,7 @@ public:
 
 private:
   // Setters
-  void setTitleOfDesignCondition(std::string titleOfDesignCondition);
+  void setTitleOfDesignCondition(const std::string &titleOfDesignCondition);
   bool setHeatingColdestMonth(const std::string &heatingColdestMonth);
   void setHeatingColdestMonth(int heatingColdestMonth);
   bool setHeatingDryBulb99pt6(const std::string &heatingDryBulb99pt6);

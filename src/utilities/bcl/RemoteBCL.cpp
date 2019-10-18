@@ -362,7 +362,11 @@ namespace openstudio{
       .request(web::http::methods::GET)
       .then([](web::http::http_response response) {
         auto statusCode = response.status_code();
-        if (statusCode != 200) return std::string("Error: response code was " + statusCode);
+        if (statusCode != 200) {
+          std::stringstream ss;
+          ss << "Error: response code was " << statusCode;
+          return ss.str();
+        }
 
         auto body = response.extract_utf8string(true).get();
         // Remove trailing line ending

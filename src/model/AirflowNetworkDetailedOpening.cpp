@@ -242,7 +242,7 @@ void AirflowNetworkDetailedOpening_Impl::resetAirMassFlowExponentWhenOpeningisCl
   OS_ASSERT(result);
 }
 
-bool AirflowNetworkDetailedOpening_Impl::setTypeofRectangularLargeVerticalOpening(std::string typeofRectangularLargeVerticalOpening)
+bool AirflowNetworkDetailedOpening_Impl::setTypeofRectangularLargeVerticalOpening(const std::string& typeofRectangularLargeVerticalOpening)
 {
   bool result = setString(OS_AirflowNetworkDetailedOpeningFields::TypeofRectangularLargeVerticalOpening, typeofRectangularLargeVerticalOpening);
   return result;
@@ -302,7 +302,7 @@ bool AirflowNetworkDetailedOpening_Impl::setOpeningFactors(std::vector<DetailedO
 AirflowNetworkDetailedOpening::AirflowNetworkDetailedOpening(const Model& model,
   double massFlowCoefficientWhenOpeningisClosed,
   double massFlowExponentWhenOpeningisClosed,
-  std::string typeofRectangularLargeVerticalOpening,
+  const std::string& typeofRectangularLargeVerticalOpening,
   double extraCrackLengthorHeightofPivotingAxis,
   std::vector<DetailedOpeningFactorData>& openingFactors)
   : AirflowNetworkComponent(AirflowNetworkDetailedOpening::iddObjectType(), model)
@@ -400,7 +400,7 @@ void AirflowNetworkDetailedOpening::resetAirMassFlowExponentWhenOpeningisClosed(
   getImpl<detail::AirflowNetworkDetailedOpening_Impl>()->resetAirMassFlowExponentWhenOpeningisClosed();
 }
 
-bool AirflowNetworkDetailedOpening::setTypeofRectangularLargeVerticalOpening(std::string typeofRectangularLargeVerticalOpening)
+bool AirflowNetworkDetailedOpening::setTypeofRectangularLargeVerticalOpening(const std::string& typeofRectangularLargeVerticalOpening)
 {
   return getImpl<detail::AirflowNetworkDetailedOpening_Impl>()->setTypeofRectangularLargeVerticalOpening(typeofRectangularLargeVerticalOpening);
 }

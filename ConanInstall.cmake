@@ -47,10 +47,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   if (MSVC)
     # No-op
   elseif (APPLE)
-    #  On mac Need to force build when building openstudio_ruby (because static isn't supported on Mac, and it'll create linking problems when
-    # building gdbm that depends on it).
-    set(CONAN_READLINE "readline/7.0@bincrafters/stable")
-    list(APPEND CONAN_BUILD "readline")
+    # No-op
   else()
     list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
   endif()

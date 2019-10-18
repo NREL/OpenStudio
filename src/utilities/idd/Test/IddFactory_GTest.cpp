@@ -174,7 +174,7 @@ TEST_F(IddFixture,IddFactory_IddObjects)
 TEST_F(IddFixture,IddFactory_ObjectFinder) {
   IddFileType fileType = IddFileType::WholeFactory;
   struct DesiredCharacteristics {
-    bool operator()(const IddObject& object) {
+    bool operator()(const IddObject& object) const {
       // fields that are \autocalculatable with no default, or a default other than 'autocalculate',
       // or fields that are \autosizable with no default or a default other than 'autosize'.
       for (const IddField& iddField : object.nonextensibleFields()) {

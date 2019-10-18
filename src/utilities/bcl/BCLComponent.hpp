@@ -85,7 +85,7 @@ namespace openstudio{
     // These should probably be a std::vector<openstudio::path> too
     std::vector<std::string> files() const;
 
-    std::vector<std::string> files(std::string filetype) const;
+    std::vector<std::string> files(const std::string& filetype) const;
 
     std::vector<std::string> filetypes() const;
 

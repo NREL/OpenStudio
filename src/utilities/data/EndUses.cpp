@@ -33,7 +33,7 @@
 namespace openstudio {
 
  struct FuelTypeAttributeSorter{
-    bool operator()(const Attribute& leftFuelTypeAttribute, const Attribute& rightFuelTypeAttribute){
+    bool operator()(const Attribute& leftFuelTypeAttribute, const Attribute& rightFuelTypeAttribute) const {
       EndUseFuelType leftFuelType(leftFuelTypeAttribute.name());
       EndUseFuelType rightFuelType(rightFuelTypeAttribute.name());
       return (leftFuelType.value() < rightFuelType.value());
@@ -41,7 +41,7 @@ namespace openstudio {
   };
 
   struct CategoryAttributeSorter{
-    bool operator()(const Attribute& leftCategoryAttribute, const Attribute& rightCategoryAttribute){
+    bool operator()(const Attribute& leftCategoryAttribute, const Attribute& rightCategoryAttribute) const {
       EndUseCategoryType leftCategory(leftCategoryAttribute.name());
       EndUseCategoryType rightCategory(rightCategoryAttribute.name());
       return (leftCategory.value() < rightCategory.value());
@@ -49,7 +49,7 @@ namespace openstudio {
   };
 
   struct SubCategoryAttributeSorter{
-    bool operator()(const Attribute& leftSubCategoryAttribute, const Attribute& rightSubCategoryAttribute){
+    bool operator()(const Attribute& leftSubCategoryAttribute, const Attribute& rightSubCategoryAttribute) const {
       return (leftSubCategoryAttribute.name() < rightSubCategoryAttribute.name());
     }
   };

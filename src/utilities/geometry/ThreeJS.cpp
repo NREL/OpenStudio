@@ -110,7 +110,7 @@ namespace openstudio{
     return surfaceType;
   }
 
-  ThreeMaterial makeThreeMaterial(const std::string& name, unsigned color, double opacity, unsigned side, unsigned shininess, const std::string type)
+  ThreeMaterial makeThreeMaterial(const std::string& name, unsigned color, double opacity, unsigned side, unsigned shininess, const std::string& type)
   {
     bool transparent = false;
     if (opacity < 1){
