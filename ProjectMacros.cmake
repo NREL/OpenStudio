@@ -114,7 +114,6 @@ endmacro()
 # add a swig target
 # KEY_I_FILE should include path, see src/utilities/CMakeLists.txt.
 macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_SWIG_TARGETS)
-  set(DEPENDS "${PARENT_TARGET}")
   set(SWIG_DEFINES "")
   set(SWIG_COMMON "")
 
@@ -122,7 +121,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   ## Begin collection of requirements to reduce SWIG regenerations
   ## and fix parallel build issues
   ##
-
 
   # Get all of the source files for the parent target this SWIG library is wrapping
   get_target_property(target_files ${PARENT_TARGET} SOURCES)
@@ -202,6 +200,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   set(${exportname} "${RequiredHeaders}" PARENT_SCOPE)
 
   if(NOT TARGET ${PARENT_TARGET}_GeneratedHeaders)
+    if ("${NAME}" STREQUAL "OpenStudioUtilitiesCore")
+      # Workaround appending GenerateIddFactoryRun to GeneratedHeaders, so we ensure that the custom command below actually is called AFTER
+      # GenerateIddFactoryRun has been called
+      list(APPEND GeneratedHeaders "GenerateIddFactoryRun")
+    endif()
+
     # Add a command to generate the generated headers discovered at this point.
     add_custom_command(
       OUTPUT "${PROJECT_BINARY_DIR}/${PARENT_TARGET}_HeadersGenerated_done.stamp"
@@ -655,7 +659,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     #if(MSVC)
     #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996")  ## /wd4996 suppresses deprecated warnings
     #endif()
-    #target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS})
+    #target_link_libraries(${swig_target} ${PARENT_TARGET})
 
     #ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
     add_dependencies(${SWIG_TARGET} ${PARENT_TARGET})
@@ -760,7 +764,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare")
     endif()
 
-    target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${JAVA_JVM_LIBRARY})
+    target_link_libraries(${swig_target} ${PARENT_TARGET} ${JAVA_JVM_LIBRARY})
     if(APPLE)
       set_target_properties(${swig_target} PROPERTIES SUFFIX ".dylib")
       set(final_name "lib${JAVA_OUTPUT_NAME}.dylib")
@@ -892,7 +896,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     if(APPLE)
       set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress -flat_namespace")
     endif()
-    target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS})
+    target_link_libraries(${swig_target} ${PARENT_TARGET})
 
     #add_dependencies("${swig_target}" "${PARENT_TARGET}_resources")
 
@@ -949,7 +953,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   endif()
 
 
-endmacro()
+endmacro() # End of MAKE_SWIG_TARGET
 
 # add target dependencies
 # this will add targets to a "global" variable marking
