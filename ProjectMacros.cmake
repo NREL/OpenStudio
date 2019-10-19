@@ -361,7 +361,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
   target_link_libraries(${swig_target} ${PARENT_TARGET})
   target_include_directories(${swig_target} PRIVATE ${RUBY_INCLUDE_DIRS})
-  add_dependencies(${swig_target} ${PARENT_TARGET} ${DEPENDS})
+  add_dependencies(${swig_target} ${PARENT_TARGET})
 
   # QT-Separation-Move
   target_include_directories(${swig_target} PUBLIC ${QT_INCLUDES})
