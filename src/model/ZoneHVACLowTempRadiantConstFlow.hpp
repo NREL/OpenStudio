@@ -34,6 +34,7 @@
 #include "Surface.hpp"
 #include "Surface_Impl.hpp"
 #include "ZoneHVACComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -60,6 +61,12 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
                                   HVACComponent& coolingCoil,
                                   double hydronicTubingLength);
 
+  // Ctor with hydronicTubingLength autosized
+  ZoneHVACLowTempRadiantConstFlow(const Model& model,
+                                  Schedule& availabilitySchedule,
+                                  HVACComponent& heatingCoil,
+                                  HVACComponent& coolingCoil);
+
   virtual ~ZoneHVACLowTempRadiantConstFlow() {}
 
   //@}
@@ -83,7 +90,9 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   bool isHydronicTubingInsideDiameterDefaulted() const;
 
-  double hydronicTubingLength() const;
+  boost::optional<double> hydronicTubingLength() const;
+
+  bool isHydronicTubingLengthAutosized() const;
 
   std::string temperatureControlType() const;
 
@@ -94,6 +103,8 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
   HVACComponent coolingCoil() const;
 
   boost::optional<double> ratedFlowRate() const;
+
+  bool isRatedFlowRateAutosized() const;
 
   boost::optional<Schedule> pumpFlowRateSchedule() const;
 
@@ -131,7 +142,10 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   bool setHydronicTubingLength(double hydronicTubingLength);
 
-  void resetHydronicTubingLength();
+  // Will forward to autosizeHydronicTubingLength()
+  OS_DEPRECATED void resetHydronicTubingLength(); // Shouldn't have existed to begin with.
+
+  void autosizeHydronicTubingLength();
 
   bool setTemperatureControlType(std::string temperatureControlType);
 
@@ -143,7 +157,10 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   bool setRatedFlowRate(double ratedFlowRate);
 
-  void resetRatedFlowRate();
+  // Will forward to autosizeRatedFlowRate()
+  OS_DEPRECATED void resetRatedFlowRate();
+
+  void autosizeRatedFlowRate();
 
   bool setPumpFlowRateSchedule(Schedule& schedule);
 
@@ -178,6 +195,10 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
   //@}
   /** @name Other */
   //@{
+
+  boost::optional<double> autosizedHydronicTubingLength() const;
+
+  boost::optional<double> autosizedRatedFlowRate() const;
 
   //@}
  protected:

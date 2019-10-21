@@ -1176,6 +1176,9 @@ OS:Site:WaterMainsTemperature,
        \required-field
        \key Schedule
        \key Correlation
+       \key CorrelationFromWeatherFile
+       \note If calculation method is CorrelationFromWeatherFile, the two numeric input
+       \note fields are ignored. Instead, EnergyPlus calculates them from weather file.
   A3, \field Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
@@ -23787,6 +23790,7 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \note Total length of pipe embedded in surface
         \units m
         \minimum> 0
+        \autosizable
         \required-field
    A5 , \field Temperature Control Type
         \note Temperature used to control system
@@ -23807,6 +23811,8 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \object-list CoilCoolingLowTempRadiantConstantFlow
    N3 , \field Rated Flow Rate
         \units m3/s
+        \ip-units gal/min
+        \autosizable
    A8 , \field Pump Flow Rate Schedule Name
         \note Modifies the Rated Flow Rate of the pump on a time basis
         \note the default is that the pump is ON and runs according to its other

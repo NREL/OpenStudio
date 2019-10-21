@@ -166,5 +166,27 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   EXPECT_TRUE(testCC1.containingZoneHVACComponent());
 
 
+  EXPECT_TRUE(testRad.isRatedFlowRateAutosized());
+  EXPECT_FALSE(testRad.ratedFlowRate());
+  EXPECT_TRUE(testRad.setRatedFlowRate(0.75));
+  EXPECT_FALSE(testRad.isRatedFlowRateAutosized());
+  ASSERT_TRUE(testRad.ratedFlowRate());
+  EXPECT_EQ(0.75, testRad.ratedFlowRate().get());
+  testRad.autosizeRatedFlowRate();
+  EXPECT_TRUE(testRad.isRatedFlowRateAutosized());
+  EXPECT_FALSE(testRad.ratedFlowRate());
+
+
+  testRad.autosizeHydronicTubingLength();
+  EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());
+  EXPECT_FALSE(testRad.hydronicTubingLength());
+  EXPECT_TRUE(testRad.setHydronicTubingLength(150.0));
+  EXPECT_FALSE(testRad.isHydronicTubingLengthAutosized());
+  ASSERT_TRUE(testRad.hydronicTubingLength());
+  EXPECT_EQ(150.0, testRad.hydronicTubingLength().get());
+  testRad.autosizeHydronicTubingLength();
+  EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());
+  EXPECT_FALSE(testRad.hydronicTubingLength());
+
 }
 
