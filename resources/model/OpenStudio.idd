@@ -10393,9 +10393,13 @@ OS:AirLoopHVAC:UnitarySystem,
        \type choice
        \key Load
        \key SetPoint
+       \key SingleZoneVAV
        \default Load
        \note Load control requires a Controlling Zone name.
        \note SetPoint control requires set points at coil outlet node.
+       \note SingleZoneVAV also requires a Controlling Zone name and allows
+       \note load control at low speed fan until the load exceeds capacity
+       \note or outlet air temperature limits. The fan speed is then increased.
   A4,  \field Controlling Zone or Thermostat Location
        \note Used only for Load based control
        \type object-list
@@ -10407,14 +10411,14 @@ OS:AirLoopHVAC:UnitarySystem,
        \key Multimode
        \key CoolReheat
        \default None
-       \note None = meet sensible load only
+       \note None = meet sensible load only. Required when Control Type = SingleZoneVAV.
        \note Multimode = activate enhanced dehumidification mode
        \note as needed and meet sensible load.  Valid only with
-       \note cooling coil type CoilSystem:Cooling:DX:HeatExchangerAssisted.
-       \note This control mode allows the heat exchanger to be turned
+       \note cooling coil type Coil:Cooling:DX:TwoStageWithHumidityControlMode or CoilSystem:Cooling:DX:HeatExchangerAssisted.
+       \note This control mode either switches the coil mode or allows the heat exchanger to be turned
        \note on and off based on the zone dehumidification requirements.
        \note A ZoneControl:Humidistat object is also required.
-       \note CoolReheat = cool beyond the dry bulb setpoint.
+       \note CoolReheat = cool beyond the dry-bulb setpoint.
        \note as required to meet the humidity setpoint.  Valid with all
        \note cooling coil types. When a heat exchanger assisted cooling
        \note coil is used, the heat exchanger is locked on at all times.
@@ -10457,7 +10461,8 @@ OS:AirLoopHVAC:UnitarySystem,
        \note Leaving this schedule name blank will default to constant fan mode for the
        \note entire simulation period.
        \note This field is not used when set point based control is used where a set point
-       \note controls the coil (i.e., model assumes constant fan mode operation).
+       \note controls the coil.
+       \note SingleZoneVAV control type is only active when constant fan operating mode is active.
   A12, \field Heating Coil Name
        \type object-list
        \object-list HeatingCoilsDX
@@ -10475,7 +10480,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \default 1.0
        \minimum> 0
        \note Used to adjust heat pump heating capacity with respect to DX cooling capacity
-       \note used only for heat pump configurations (i.e., a cooling and DX heating coil is used).
+       \note used only for heat pump configurations (i.e., a DX cooling and DX heating coil is used).
   A13, \field Cooling Coil Name
        \type object-list
        \object-list CoolingCoilsDX
@@ -10497,19 +10502,22 @@ OS:AirLoopHVAC:UnitarySystem,
        \type real
        \units C
        \minimum 0.0
-       \maximum 7.2
+       \maximum 20.0
        \default 2.0
-       \note DX cooling coil leaving minimum air temperature defines the minimum DOAS DX cooling coil
-       \note leaving air temperature that should be maintained to avoid frost formation. This input
-       \note field is optional and only used along with the input field above.
+       \autosizable
+       \note When Use DOAS DX Cooling Coil is specified as Yes, Minimum Supply Air Temperature
+       \note defines the minimum DOAS DX cooling coil leaving air temperature that should
+       \note be maintained to avoid frost formation. This field is not autosizable when
+       \note the input for Use DOAS DX Cooling Coil = Yes.
+       \note When Control Type = SingleZoneVAV, enter the minimum air temperature limit for reduced fan speed.
   A15, \field Latent Load Control
        \type choice
        \key SensibleOnlyLoadControl
        \key LatentOnlyLoadControl
        \key LatentWithSensibleLoadControl
        \key LatentOrSensibleLoadControl
-       \Default SensibleOnlyLoadControl
-       \note SensibleOnlyLoadControl is selected when thermostat control is used.
+       \default SensibleOnlyLoadControl
+       \note SensibleOnlyLoadControl is selected when thermostat or SingleZoneVAV control is used.
        \note LatentOnlyLoadControl is selected when humidistat control is used.
        \note LatentWithSensibleLoadControl is selected when thermostat control is used and
        \note dehumidification is required only when a sensible load exists.
@@ -10519,6 +10527,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \type object-list
        \object-list HeatingCoilName
        \object-list HeatingCoilsDesuperheater
+       \object-list UserDefinedCoil
        \note Enter the name of the supplemental heating coil if included in the unitary system.
        \note Only required if dehumidification control type is "CoolReheat".
   A17, \field Supply Air Flow Rate Method During Cooling Operation
@@ -10619,7 +10628,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \key FlowPerCoolingCapacity
        \key FlowPerHeatingCapacity
        \note Enter the method used to determine the supply air volume flow rate when no cooling or heating is required.
-       \note None is used when a heating coil is not included in the unitary system or this field may be blank.
+       \note None is used when a cooling and heating coil is not included in the unitary system or this field may be blank.
        \note SupplyAirFlowRate is selected when the magnitude of the supply air volume is used.
        \note FlowPerFloorArea is selected when the supply air volume flow rate is based on total floor area
        \note served by the unitary system.
@@ -10672,6 +10681,7 @@ OS:AirLoopHVAC:UnitarySystem,
        \autosizable
        \default 80.0
        \note Enter the maximum supply air temperature leaving the heating coil.
+       \note When Control Type = SingleZoneVAV, enter the maximum air temperature limit for reduced fan speed.
   N18, \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
        \type real
        \units C
