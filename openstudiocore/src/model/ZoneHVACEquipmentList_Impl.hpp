@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
 class ThermalZone;
+class ModelExtensibleGroup;
 
 namespace detail {
 
@@ -70,13 +71,15 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
 
   std::vector<ModelObject> equipmentInCoolingOrder() const;
 
-  boost::optional<WorkspaceExtensibleGroup> getGroupForModelObject(const ModelObject & modelObject) const;
+  boost::optional<ModelExtensibleGroup> getGroupForModelObject(const ModelObject & modelObject) const;
 
   virtual ~ZoneHVACEquipmentList_Impl() {}
 
   virtual const std::vector<std::string>& outputVariableNames() const override;
 
   virtual IddObjectType iddObjectType() const override;
+
+  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
   std::string loadDistributionScheme() const;
 
@@ -89,10 +92,10 @@ class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
   unsigned coolingPriority(const ModelObject & equipment) const;
 
   boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
-  bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
+  bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
   boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
-  bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
+  bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
   // Deprecated
   boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
