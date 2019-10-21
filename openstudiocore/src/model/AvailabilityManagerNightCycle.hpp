@@ -44,6 +44,7 @@ namespace model {
 
 class Schedule;
 class ThermalZone;
+class AirLoopHVAC;
 
 namespace detail {
 
@@ -63,6 +64,13 @@ class MODEL_API AvailabilityManagerNightCycle : public AvailabilityManager {
 
   static std::vector<std::string> controlTypeValues();
 
+  boost::optional<AirLoopHVAC> airLoopHVAC() const;
+
+  Schedule applicabilitySchedule() const;
+  bool setApplicabilitySchedule(Schedule& schedule);
+
+  /** Helper getter which will fetch the AirLoopHVAC::AvailabilitySchedule */
+  boost::optional<Schedule> fanSchedule() const;
 
   std::string controlType() const;
   bool setControlType(std::string controlType);

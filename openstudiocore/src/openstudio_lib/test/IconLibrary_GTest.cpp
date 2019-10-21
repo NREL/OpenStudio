@@ -39,7 +39,7 @@
 
 using namespace openstudio;
 
-TEST_F(OpenStudioLibFixture, IconLibrary_Icon)
+TEST_F(OpenStudioLibFixture, QtGUI_IconLibrary_Icon)
 {
   std::vector<IddObjectType> iddObjectTypes;
   iddObjectTypes.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
@@ -127,7 +127,7 @@ TEST_F(OpenStudioLibFixture, IconLibrary_Icon)
   }
 }
 
-TEST_F(OpenStudioLibFixture, IconLibrary_MiniIcon)
+TEST_F(OpenStudioLibFixture, QtGUI_IconLibrary_MiniIcon)
 {
   std::vector<IddObjectType> iddObjectTypes;
   iddObjectTypes.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);

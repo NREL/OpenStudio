@@ -202,7 +202,11 @@ TEST_F(CoreFixture, PathWatcher_Dir)
   EXPECT_FALSE(openstudio::filesystem::exists(filePath));
 
   // calls processEvents
-  System::msleep(10);
+  // TJC increased this from 10 to 1000 as osx CI machine was taking a long time to
+  // remove the file from delete operation above and this check would fail
+  System::msleep(1000);
 
-  EXPECT_TRUE(watcher.changed);
+
+   EXPECT_TRUE(watcher.changed);
+//  EXPECT_TRUE(watcher.removed);
 }
