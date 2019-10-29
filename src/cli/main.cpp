@@ -411,10 +411,6 @@ int main(int argc, char *argv[])
     rb_provide("fiddle");
     rb_provide("fiddle.so");
 
-    Init_generator();
-    rb_provide("generator");
-    rb_provide("generator.so");
-
     Init_md5();
     rb_provide("md5");
     rb_provide("digest/md5");
@@ -433,9 +429,13 @@ int main(int argc, char *argv[])
     rb_provide("objspace");
     rb_provide("objspace.so");
 
+    Init_generator();
+    rb_provide("json/ext/generator");
+    rb_provide("json/ext/generator.so");
+
     Init_parser();
-    rb_provide("parser");
-    rb_provide("parser.so");
+    rb_provide("json/ext/parser");
+    rb_provide("json/ext/parser.so");
 
     Init_pathname();
     rb_provide("pathname");
