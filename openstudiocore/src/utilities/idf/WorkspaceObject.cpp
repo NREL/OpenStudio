@@ -219,6 +219,10 @@ namespace detail {
     return IdfObject_Impl::getString(index,returnDefault,returnUninitializedEmpty);
   }
 
+  boost::optional<std::string> WorkspaceObject_Impl::getField(unsigned index) const {
+    return IdfObject_Impl::getString(index,false,false);
+  }
+
   OptionalWorkspaceObject WorkspaceObject_Impl::getTarget(unsigned index) const {
     if (!initialized()) { return boost::none; }
 
@@ -1350,6 +1354,10 @@ bool WorkspaceObject::objectListFieldsEqual(const WorkspaceObject& other) const 
 
 bool WorkspaceObject::objectListFieldsNonConflicting(const WorkspaceObject& other) const {
   return getImpl<WorkspaceObject_Impl>()->objectListFieldsNonConflicting(other);
+}
+
+boost::optional<std::string> WorkspaceObject::getField(unsigned index) const {
+  return getImpl<WorkspaceObject_Impl>()->getField(index);
 }
 
 // SERIALIZATION
