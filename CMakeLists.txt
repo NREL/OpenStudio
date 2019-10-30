@@ -843,6 +843,7 @@ set(project_directories
   osversion
   measure
   sdd
+  lib
   cli
   install_utility
 )

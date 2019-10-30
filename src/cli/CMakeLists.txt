@@ -280,15 +280,7 @@ target_link_libraries(ruby_libs PUBLIC additional_ruby_libs)
 target_link_libraries(openstudio init_openstudio ruby_libs)
 
 target_link_libraries(openstudio
- openstudio_airflow
- openstudio_model
- openstudio_energyplus
- openstudio_measure
- openstudio_osversion
- openstudio_sdd
- openstudio_isomodel
- openstudio_gbxml
- openstudio_radiance
+ openstudiolib_static
 )
 
 # Change to CONAN_PKG::OpenSSL vs OPENSSL_CRYPTO_LIBRARY if this is needed.
