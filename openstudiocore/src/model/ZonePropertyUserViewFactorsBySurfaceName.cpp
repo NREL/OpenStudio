@@ -179,13 +179,13 @@ namespace detail {
     // Find with custom predicate, checking handle equality between the toSurface and the fromSurface pairs
     // We do it with extensibleGroups() (rather than viewFactors()) and getString to avoid overhead
     // of manipulating actual model objects (getTarget, then create a ViewFactor wrapper, get handle convert to string...) and speed up the routine
-    auto egs = extensibleGroups();
-    auto from = t_viewFactor.fromSurface().nameString();
-    auto to = t_viewFactor.toSurface().nameString();
+    auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
+    auto from = toString(t_viewFactor.fromSurface().handle());
+    auto to = toString(t_viewFactor.toSurface().handle());
     auto it = std::find_if(egs.begin(), egs.end(),
-      [&](const IdfExtensibleGroup& eg) {
-        return ((eg.getString(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName) == from) &&
-           (eg.getString(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName) == to));
+      [&](const WorkspaceExtensibleGroup& eg) {
+        return ((eg.getField(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName) == from) &&
+           (eg.getField(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName) == to));
       });
 
     // If found, we compute the index by using std::distance between the start of vector and the iterator returned by std::find_if
