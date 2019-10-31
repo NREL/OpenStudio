@@ -1227,6 +1227,11 @@ cpack_add_component(Radiance
   DESCRIPTION "Full Radiance installation"
 )
 
+cpack_add_component(CPPAPI
+  DISPLAY_NAME "C++ API"
+  DESCRIPTION "Libraries and headers for OpenStudio C++ API"
+)
+
 cpack_ifw_configure_component(CLI
   SCRIPT src/cli/install_operations.qs
   REQUIRES_ADMIN_RIGHTS

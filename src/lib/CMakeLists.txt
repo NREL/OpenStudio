@@ -46,4 +46,28 @@ target_link_libraries(
  ${DISABLE_LINK_ALL}
 )
 
+# `export` command is only for use within the build tree
+export(TARGETS openstudiolib NAMESPACE "openstudio::" FILE OpenStudioConfig.cmake)
+
+install(TARGETS openstudiolib
+        EXPORT openstudio
+        DESTINATION lib
+        COMPONENT "CPPCLI"
+        INCLUDES DESTINATION include
+        )
+
+# `install(EXPORT)` is for installation package
+install(EXPORT openstudio DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/openstudio NAMESPACE "openstudio::" COMPONENT "CPPCLI" FILE openstudioConfig.cmake)
+
+install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/"
+                  "${PROJECT_BINARY_DIR}/src/"
+        DESTINATION include
+        COMPONENT "CPPCLI"
+        FILES_MATCHING 
+        PATTERN "*.h"
+        PATTERN "*.hpp"
+        PATTERN "*.hxx"
+        )
+
+
 
