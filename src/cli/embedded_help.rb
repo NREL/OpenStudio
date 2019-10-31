@@ -70,12 +70,7 @@ module Kernel
       return false
     end
     
-    if path.include? 'json/ext'
-      if RUBY_PLATFORM =~ /mswin/
-        raise LoadError.new("Preventing segfault if native JSON is built as MinGW")
-      end
-    end
-    
+  
     extname = File.extname(path)
     if extname.empty? or extname != '.rb'
       rb_path = path + '.rb'
