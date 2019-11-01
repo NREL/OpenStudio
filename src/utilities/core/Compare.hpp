@@ -118,17 +118,29 @@ class UTILITIES_API VersionString {
 
   VersionString(int major,int minor,int patch);
 
-  VersionString(int major,int minor,int patch,int build);
+  VersionString(int major, int minor, int patch, const std::string& patchString);
+
+  VersionString(int major, int minor, int patch, const std::string& patchString, const std::string& buildString);
 
   std::string str() const;
 
+  /// major verion must be a positve integer, e.g. returns 3 for '3.1.0-rc1'
   int major() const;
 
+  /// minor version must be a positive integer, e.g. returns 1 for '3.1.0-rc1'
   int minor() const;
 
+  /// returns the integer portion of patch version, e.g. returns 0 for '3.1.0-rc1'
   boost::optional<int> patch() const;
 
-  boost::optional<int> build() const;
+  /// returns the string portion of patch version, e.g. returns 'rc1' for '3.1.0-rc1'
+  std::string patchString() const;
+
+  /// build version can be any string, e.g. returns 'build2' for '3.1.0-rc1+build2'
+  std::string buildString() const;
+
+  /// deprecated will always return empty
+  //boost::optional<int> build() const;
 
   bool operator<(const VersionString& other) const;
 
@@ -142,7 +154,7 @@ class UTILITIES_API VersionString {
 
   bool operator>=(const VersionString& other) const;
 
-  bool fidelityEqual(const VersionString& other) const;
+  //bool fidelityEqual(const VersionString& other) const;
 
   /** Returns true if it is plausible for nextVersionCandidate to be the
    *  next version after this one. */
@@ -153,7 +165,8 @@ class UTILITIES_API VersionString {
   int m_major;
   int m_minor;
   boost::optional<int> m_patch;
-  boost::optional<int> m_build;
+  std::string m_patchString;
+  std::string m_buildString;
 };
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os,const VersionString& version);

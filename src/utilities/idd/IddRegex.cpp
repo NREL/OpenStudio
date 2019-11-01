@@ -47,7 +47,7 @@ namespace iddRegex{
   /// Search for IDD version in line
   /// matches[1], version identifier
   const boost::regex &version(){
-    const static boost::regex result("^!IDD_Version ([0-9\\.]+)");
+    const static boost::regex result("^!IDD_Version (\\S+)");
     return result;
   }
 
