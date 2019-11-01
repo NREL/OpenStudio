@@ -139,8 +139,7 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.7.1")] = &VersionTranslator::update_2_7_0_to_2_7_1;
   m_updateMethods[VersionString("2.7.2")] = &VersionTranslator::update_2_7_1_to_2_7_2;
   m_updateMethods[VersionString("2.9.0")] = &VersionTranslator::update_2_8_1_to_2_9_0;
-  m_updateMethods[VersionString("2.9.1")] = &VersionTranslator::update_2_9_0_to_2_9_1;
-  //m_updateMethods[VersionString("2.9.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("3.0.0")] = &VersionTranslator::update_2_9_0_to_3_0_0;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -4712,6 +4711,30 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
       ss << newObject;
 
 
+    } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
+      auto iddObject = idd_2_9_0.getObject("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow");
+      IdfObject newObject(iddObject.get());
+
+      // Added fields at end, so copy everything existing in place
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+      // 21 = AVM List
+      // 22 = Design Spec ZoneHVAC Sizing
+      // 23 = Supplemental Heating Coil (optional)
+      // Maximum SAT for Supplemental Heater
+      newObject.setString(24, "Autosize");
+      // Maximum OATdb for Supplemental Heater
+      newObject.setDouble(25, 21.0);
+
+      // Register refactored
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+
     // Four fields were added but only the last (End Use Subcat) was implemented, but withotu transition rules either
     } else if ((iddname == "OS:HeaderedPumps:ConstantSpeed") || (iddname == "OS:HeaderedPumps:VariableSpeed")) {
       auto iddObject = idd_2_9_0.getObject(iddname);
@@ -4759,12 +4782,12 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
 }
 
 
-std::string VersionTranslator::update_2_9_0_to_2_9_1(const IdfFile& idf_2_9_0, const IddFileAndFactoryWrapper& idd_2_9_1) {
+std::string VersionTranslator::update_2_9_0_to_3_0_0(const IdfFile& idf_2_9_0, const IddFileAndFactoryWrapper& idd_3_0_0) {
   std::stringstream ss;
   boost::optional<std::string> value;
 
   ss << idf_2_9_0.header() << std::endl << std::endl;
-  IdfFile targetIdf(idd_2_9_1.iddFile());
+  IdfFile targetIdf(idd_3_0_0.iddFile());
   ss << targetIdf.versionObject().get();
 
   boost::optional<IdfObject> alwaysOnDiscreteSchedule;
@@ -4793,14 +4816,14 @@ std::string VersionTranslator::update_2_9_0_to_2_9_1(const IdfFile& idf_2_9_0, c
 
     if( ! alwaysOnDiscreteSchedule )
     {
-      alwaysOnDiscreteSchedule = IdfObject(idd_2_9_1.getObject("OS:Schedule:Constant").get());
+      alwaysOnDiscreteSchedule = IdfObject(idd_3_0_0.getObject("OS:Schedule:Constant").get());
 
       alwaysOnDiscreteSchedule->setString(0,toString(createUUID()));
       alwaysOnDiscreteSchedule->setString(1,"Always On Discrete");
       alwaysOnDiscreteSchedule->setDouble(3,1.0);
 
 
-      IdfObject typeLimits(idd_2_9_1.getObject("OS:ScheduleTypeLimits").get());
+      IdfObject typeLimits(idd_3_0_0.getObject("OS:ScheduleTypeLimits").get());
       typeLimits.setString(0,toString(createUUID()));
       typeLimits.setString(1,"Always On Discrete Limits");
       typeLimits.setDouble(2,0.0);
@@ -4823,7 +4846,7 @@ std::string VersionTranslator::update_2_9_0_to_2_9_1(const IdfFile& idf_2_9_0, c
     auto iddname = object.iddObject().name();
 
     if (iddname == "OS:AvailabilityManager:NightCycle") {
-      auto iddObject = idd_2_9_1.getObject("OS:AvailabilityManager:NightCycle");
+      auto iddObject = idd_3_0_0.getObject("OS:AvailabilityManager:NightCycle");
       IdfObject newObject(iddObject.get());
 
       for (size_t i = 0; i < object.numFields(); ++i) {

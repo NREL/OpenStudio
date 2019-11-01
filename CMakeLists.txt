@@ -13,7 +13,20 @@ if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-project(OpenStudio VERSION 2.9.0)
+# Project macro can only take digits in the version, it splits these out to specific variables
+project(OpenStudio VERSION 3.0.0)
+
+# The RT Manifest file and C# SDK only support the digit portion of patch
+string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
+
+# CPack package version does not support extended patch version
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+
+# Modify the more specific variables as needed to indicate prerelease, etc
+string(APPEND PROJECT_VERSION "-rc1")
+string(APPEND OpenStudio_VERSION "-rc1")
+string(APPEND PROJECT_VERSION_PATCH "-rc1")
+string(APPEND OpenStudio_VERSION_PATCH "-rc1")
 
 # The PROJECT_SOURCE_DIR here is OpenStudio/, which we will use instead of using CMAKE_SOURCE_DIR
 set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -96,11 +109,11 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # OpenStudio version
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
-set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_BUILD}")
+set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}+${PROJECT_VERSION_BUILD}")
 # Export to parent scope
 if(hasParent)
   set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}" PARENT_SCOPE)
-  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}.${PROJECT_VERSION_BUILD}" PARENT_SCOPE)
+  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}+${PROJECT_VERSION_BUILD}" PARENT_SCOPE)
 endif()
 
 # EnergyPlus Idd version

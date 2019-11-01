@@ -83,6 +83,14 @@ namespace detail {
 
     virtual unsigned outletPort() const override;
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
 
     //@}
     /** @name Getters */
@@ -98,7 +106,9 @@ namespace detail {
 
     bool isHydronicTubingInsideDiameterDefaulted() const;
 
-    double hydronicTubingLength() const;
+    boost::optional<double> hydronicTubingLength() const;
+
+    bool isHydronicTubingLengthAutosized() const;
 
     std::string temperatureControlType() const;
 
@@ -109,6 +119,8 @@ namespace detail {
     HVACComponent coolingCoil() const;
 
     boost::optional<double> ratedFlowRate() const;
+
+    bool isRatedFlowRateAutosized() const;
 
     boost::optional<Schedule> pumpFlowRateSchedule() const;
 
@@ -146,7 +158,7 @@ namespace detail {
 
     bool setHydronicTubingLength(boost::optional<double> hydronicTubingLength);
 
-    void resetHydronicTubingLength();
+    void autosizeHydronicTubingLength();
 
     bool setTemperatureControlType(std::string temperatureControlType);
 
@@ -158,7 +170,7 @@ namespace detail {
 
     bool setRatedFlowRate(boost::optional<double> ratedFlowRate);
 
-    void resetRatedFlowRate();
+    void autosizeRatedFlowRate();
 
     bool setPumpFlowRateSchedule(Schedule& schedule);
 
@@ -194,9 +206,9 @@ namespace detail {
     /** @name Other */
     //@{
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+    boost::optional<double> autosizedHydronicTubingLength() const;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+    boost::optional<double> autosizedRatedFlowRate() const;
 
     //@}
    protected:
