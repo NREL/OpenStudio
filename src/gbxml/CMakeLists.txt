@@ -23,11 +23,13 @@ set(${target_name}_swig_src
 )
 
 set(${target_name}_depends
+  openstudio_utilities
   openstudio_model
   openstudio_energyplus
 )
-add_library(${target_name} ${${target_name}_src})
-target_link_libraries(${target_name} ${${target_name}_depends})
+add_library(${target_name} OBJECT ${${target_name}_src})
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
+target_compile_definitions(${target_name} PRIVATE openstudio_gbxml_EXPORTS)
 
 #No need to install static library
 #if(NOT APPLE)

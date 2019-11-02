@@ -19,15 +19,17 @@ target_link_libraries(
 
 add_library(openstudiolib SHARED empty.cpp)
 
-if (MSVC)
-  set(ENABLE_LINK_ALL "/WHOLEARCHIVE")
-  set(DISABLE_LINK_ALL "")
-elseif (APPLE)
-  set(ENABLE_LINK_ALL "-all_load")
-  set(DISABLE_LINK_ALL "")
-else()
-  set(ENABLE_LINK_ALL "-Wl,--whole-archive")
-  set(DISABLE_LINK_ALL "-Wl,--no-whole-archive")
+if (LINK_STATIC_LIBS)
+  if (MSVC)
+    set(ENABLE_LINK_ALL "/WHOLEARCHIVE")
+    set(DISABLE_LINK_ALL "")
+  elseif (APPLE)
+    set(ENABLE_LINK_ALL "-all_load")
+    set(DISABLE_LINK_ALL "")
+  else()
+    set(ENABLE_LINK_ALL "-Wl,--whole-archive")
+    set(DISABLE_LINK_ALL "-Wl,--no-whole-archive")
+  endif()
 endif()
 
 target_link_libraries(
