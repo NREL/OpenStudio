@@ -36,6 +36,7 @@ target_link_libraries(
  openstudiolib
  PRIVATE
  ${ENABLE_LINK_ALL}
+ openstudio_utilities
  openstudio_airflow
  openstudio_model
  openstudio_energyplus
@@ -49,7 +50,20 @@ target_link_libraries(
 )
 
 # `export` command is only for use within the build tree
-export(TARGETS openstudiolib NAMESPACE "openstudio::" FILE OpenStudioConfig.cmake)
+export(TARGETS  openstudio_airflow
+ openstudio_model
+ openstudio_energyplus
+ openstudio_measure
+ openstudio_osversion
+ openstudio_sdd
+ openstudio_isomodel
+ openstudio_gbxml
+ openstudio_radiance
+ openstudio_utilities
+ openstudiolib
+ openstudiolib_static 
+ NAMESPACE "openstudio::" 
+ FILE openstudioConfig.cmake)
 
 install(TARGETS openstudiolib
         EXPORT openstudio

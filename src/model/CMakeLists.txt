@@ -1,8 +1,5 @@
 set(target_name openstudio_model)
 
-include_directories(${PROJECT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 set(${target_name}_src
   mainpage.hpp
   ModelAPI.hpp
@@ -1649,6 +1646,9 @@ add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
 
 target_link_libraries(${target_name} PUBLIC "${${target_name}_depends}")
 target_compile_definitions(${target_name} PRIVATE openstudio_model_EXPORTS)
+target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
+target_include_directories(${target_name} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+
 
 if(BUILD_SHARED_LIBS)
   install(TARGETS ${target_name}

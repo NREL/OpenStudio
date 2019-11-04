@@ -2,10 +2,6 @@
 
 set(target_name openstudio_utilities)
 
-include_directories(${PROJECT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/idd)
-
 include(idd/CMakeLists.txt)
 include(idf/CMakeLists.txt)
 include(sql/CMakeLists.txt)
@@ -426,13 +422,17 @@ elseif(APPLE)
   list(APPEND ${target_name}_depends ${COREFOUNDATION_LIBRARY})
 endif()
 
-add_library(${target_name} OBJECT
+add_library(${target_name}
   ${${target_name}_src}
 )
 add_dependencies("${target_name}" GenerateIddFactoryRun)
 
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_compile_definitions(${target_name} PRIVATE openstudio_utilities_EXPORTS)
+target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
+target_include_directories(${target_name} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(${target_name} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/idd)
+
 
 #install(TARGETS ${target_name}
 #  EXPORT openstudio
