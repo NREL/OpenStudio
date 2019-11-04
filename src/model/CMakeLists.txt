@@ -431,7 +431,7 @@ set(${target_name}_src
   Construction.cpp
   ConstructionAirBoundary.hpp
   ConstructionAirBoundary_Impl.hpp
-  ConstructionAirBoundary.cpp  
+  ConstructionAirBoundary.cpp
   ConstructionBase.hpp
   ConstructionBase_Impl.hpp
   ConstructionBase.cpp
@@ -2036,6 +2036,7 @@ set(${target_name}_test_src
   test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
   test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
+  test/ZoneHVACTerminalUnitVariableRefrigerantFlow_GTest.cpp
   test/ZoneHVACUnitHeater_GTest.cpp
   test/ZoneHVACUnitVentilator_GTest.cpp
   test/ZoneHVACWaterToAirHeatPump_GTest.cpp

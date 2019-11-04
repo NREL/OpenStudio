@@ -278,12 +278,6 @@ namespace detail {
     return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingInsideDiameter);
   }
 
-  double ZoneHVACLowTempRadiantConstFlow_Impl::hydronicTubingLength() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
   std::string ZoneHVACLowTempRadiantConstFlow_Impl::temperatureControlType() const {
     boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::TemperatureControlType,true);
     OS_ASSERT(value);
@@ -304,10 +298,6 @@ namespace detail {
     boost::optional<HVACComponent> coil = optionalCoolingCoil();
     OS_ASSERT(coil);
     return coil.get();
-  }
-
-  boost::optional<double> ZoneHVACLowTempRadiantConstFlow_Impl::ratedFlowRate() const {
-    return getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate,true);
   }
 
   boost::optional<Schedule> ZoneHVACLowTempRadiantConstFlow_Impl::pumpFlowRateSchedule() const {
@@ -395,20 +385,33 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<double> ZoneHVACLowTempRadiantConstFlow_Impl::hydronicTubingLength() const {
+    return getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength,true);
+  }
+
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setHydronicTubingLength(boost::optional<double> hydronicTubingLength) {
     bool result(false);
     if (hydronicTubingLength) {
       result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength, hydronicTubingLength.get());
     }
     else {
-      resetHydronicTubingLength();
+      autosizeHydronicTubingLength();
       result = true;
     }
     return result;
   }
 
-  void ZoneHVACLowTempRadiantConstFlow_Impl::resetHydronicTubingLength() {
-    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength, "");
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::isHydronicTubingLengthAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "Autosize");
+    }
+    return result;
+  }
+
+  void ZoneHVACLowTempRadiantConstFlow_Impl::autosizeHydronicTubingLength() {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength, "Autosize");
     OS_ASSERT(result);
   }
 
@@ -432,21 +435,34 @@ namespace detail {
     return result;
   }
 
+  boost::optional<double> ZoneHVACLowTempRadiantConstFlow_Impl::ratedFlowRate() const {
+    return getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate,true);
+  }
+
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setRatedFlowRate(boost::optional<double> ratedFlowRate) {
     bool result(false);
     if (ratedFlowRate) {
       result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate, ratedFlowRate.get());
     }
     else {
-      resetRatedFlowRate();
+      autosizeRatedFlowRate();
       result = true;
     }
     OS_ASSERT(result);
     return result;
   }
 
-  void ZoneHVACLowTempRadiantConstFlow_Impl::resetRatedFlowRate() {
-    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate, "");
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::isRatedFlowRateAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "Autosize");
+    }
+    return result;
+  }
+
+  void ZoneHVACLowTempRadiantConstFlow_Impl::autosizeRatedFlowRate() {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RatedFlowRate, "Autosize");
     OS_ASSERT(result);
   }
 
@@ -599,7 +615,58 @@ namespace detail {
     return types;
   }
 
+  boost::optional<double> ZoneHVACLowTempRadiantConstFlow_Impl::autosizedHydronicTubingLength() const {
+    return getAutosizedValue("Design Size Hydronic Tubing Length", "m");
+  }
+
+  boost::optional<double> ZoneHVACLowTempRadiantConstFlow_Impl::autosizedRatedFlowRate() const {
+    return getAutosizedValue("Design Size Maximum Water Flow", "m3/s");
+  }
+
+ void ZoneHVACLowTempRadiantConstFlow_Impl::autosize() {
+    autosizeHydronicTubingLength();
+    autosizeRatedFlowRate();
+  }
+
+  void ZoneHVACLowTempRadiantConstFlow_Impl::applySizingValues() {
+    boost::optional<double> val;
+    val = autosizedHydronicTubingLength();
+    if (val) {
+      setHydronicTubingLength(val.get());
+    }
+
+    val = autosizedRatedFlowRate();
+    if (val) {
+      setRatedFlowRate(val.get());
+    }
+  }
+
+
 } // detail
+
+ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& model,
+                                                                 Schedule& availabilitySchedule,
+                                                                 HVACComponent& heatingCoil,
+                                                                 HVACComponent& coolingCoil)
+  : ZoneHVACComponent(ZoneHVACLowTempRadiantConstFlow::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>());
+
+  bool ok = setAvailabilitySchedule(availabilitySchedule);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s availability schedule to "
+                  << availabilitySchedule.briefDescription() << ".");
+  }
+  ok = setHeatingCoil(heatingCoil);
+  OS_ASSERT(ok);
+
+  ok = setCoolingCoil(coolingCoil);
+  OS_ASSERT(ok);
+
+  autosizeHydronicTubingLength();
+  autosizeRatedFlowRate();
+}
 
 ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& model,
                                                                  Schedule& availabilitySchedule,
@@ -625,6 +692,7 @@ ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(const Model& mo
   ok = setHydronicTubingLength(hydronicTubingLength);
   OS_ASSERT(ok);
 
+  autosizeRatedFlowRate();
 }
 
 IddObjectType ZoneHVACLowTempRadiantConstFlow::iddObjectType() {
@@ -661,8 +729,12 @@ bool ZoneHVACLowTempRadiantConstFlow::isHydronicTubingInsideDiameterDefaulted() 
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->isHydronicTubingInsideDiameterDefaulted();
 }
 
-double ZoneHVACLowTempRadiantConstFlow::hydronicTubingLength() const {
+boost::optional<double> ZoneHVACLowTempRadiantConstFlow::hydronicTubingLength() const {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->hydronicTubingLength();
+}
+
+bool ZoneHVACLowTempRadiantConstFlow::isHydronicTubingLengthAutosized() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->isHydronicTubingLengthAutosized();
 }
 
 std::string ZoneHVACLowTempRadiantConstFlow::temperatureControlType() const {
@@ -683,6 +755,10 @@ HVACComponent ZoneHVACLowTempRadiantConstFlow::coolingCoil() const {
 
 boost::optional<double> ZoneHVACLowTempRadiantConstFlow::ratedFlowRate() const {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->ratedFlowRate();
+}
+
+bool ZoneHVACLowTempRadiantConstFlow::isRatedFlowRateAutosized() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->isRatedFlowRateAutosized();
 }
 
 boost::optional<Schedule> ZoneHVACLowTempRadiantConstFlow::pumpFlowRateSchedule() const {
@@ -749,8 +825,8 @@ bool ZoneHVACLowTempRadiantConstFlow::setHydronicTubingLength(double hydronicTub
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setHydronicTubingLength(hydronicTubingLength);
 }
 
-void ZoneHVACLowTempRadiantConstFlow::resetHydronicTubingLength() {
-  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetHydronicTubingLength();
+void ZoneHVACLowTempRadiantConstFlow::autosizeHydronicTubingLength() {
+  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->autosizeHydronicTubingLength();
 }
 
 bool ZoneHVACLowTempRadiantConstFlow::setTemperatureControlType(std::string temperatureControlType) {
@@ -773,8 +849,8 @@ bool ZoneHVACLowTempRadiantConstFlow::setRatedFlowRate(double ratedFlowRate) {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRatedFlowRate(ratedFlowRate);
 }
 
-void ZoneHVACLowTempRadiantConstFlow::resetRatedFlowRate() {
-  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetRatedFlowRate();
+void ZoneHVACLowTempRadiantConstFlow::autosizeRatedFlowRate() {
+  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->autosizeRatedFlowRate();
 }
 
 bool ZoneHVACLowTempRadiantConstFlow::setPumpFlowRateSchedule(Schedule& schedule) {
@@ -839,11 +915,30 @@ void ZoneHVACLowTempRadiantConstFlow::removeFromThermalZone()
 {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->removeFromThermalZone();
 }
+
+boost::optional<double> ZoneHVACLowTempRadiantConstFlow::autosizedHydronicTubingLength() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->autosizedHydronicTubingLength();
+}
+
+boost::optional<double> ZoneHVACLowTempRadiantConstFlow::autosizedRatedFlowRate() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->autosizedRatedFlowRate();
+}
+
 /// @cond
 ZoneHVACLowTempRadiantConstFlow::ZoneHVACLowTempRadiantConstFlow(std::shared_ptr<detail::ZoneHVACLowTempRadiantConstFlow_Impl> impl)
   : ZoneHVACComponent(std::move(impl))
 {}
 /// @endcond
+
+// TODO: deprecated
+void ZoneHVACLowTempRadiantConstFlow::resetHydronicTubingLength() {
+  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->autosizeHydronicTubingLength();
+}
+
+void ZoneHVACLowTempRadiantConstFlow::resetRatedFlowRate() {
+  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->autosizeRatedFlowRate();
+}
+
 
 } // model
 } // openstudio

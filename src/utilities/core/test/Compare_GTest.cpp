@@ -32,6 +32,8 @@
 #include "../Compare.hpp"
 #include "../Logger.hpp"
 
+#include <OpenStudio.hxx>
+
 #include <set>
 #include <vector>
 #include <utility> // for pair
@@ -215,20 +217,85 @@ TEST(Compare, EqualityForOneHalfOfPair)
 
 TEST(Compare,VersionString) {
   EXPECT_TRUE(VersionString("3.1.2") < VersionString("3.2.0"));
-  EXPECT_TRUE(VersionString("3.1") < VersionString("3.2.3"));
-  EXPECT_FALSE(VersionString("3.1") < VersionString("3.1.3"));
-  EXPECT_FALSE(VersionString("3.1") > VersionString("3.1.3"));
-  EXPECT_TRUE(VersionString("3.1") == VersionString("3.1.3")); // not the best outcome
+  EXPECT_TRUE(VersionString("3.1.2") < VersionString("3.2.3"));
+  EXPECT_TRUE(VersionString("3.1.2") < VersionString("3.1.3"));
+  EXPECT_TRUE(VersionString("3.1.4") > VersionString("3.1.3"));
+  EXPECT_TRUE(VersionString("3.1.3") == VersionString("3.1.3")); // not the best outcome
 
-  EXPECT_TRUE(VersionString("3.1.2").fidelityEqual(VersionString("3.2.0")));
-  EXPECT_FALSE(VersionString("3.1").fidelityEqual(VersionString("3.1.3")));
 
-  EXPECT_TRUE(VersionString("7.1.0.32891") != VersionString("7.0"));
-  EXPECT_TRUE(VersionString("7.1.0.32891") == VersionString("7.1"));
-  EXPECT_FALSE(VersionString("7.1.0.32891").fidelityEqual(VersionString("7.1")));
+  EXPECT_TRUE(VersionString("7.1.0+32891") == VersionString("7.1.0"));
+  EXPECT_TRUE(VersionString("7.1.0+32891") == VersionString("7.1.0+32891"));
+  EXPECT_TRUE(VersionString("7.1.0-rc1+32891") < VersionString("7.1.0"));
 
-  EXPECT_TRUE(VersionString("0.7.0") <= VersionString("0.7"));
-  EXPECT_TRUE(VersionString("0.3.1") <= VersionString("0.7"));
+  EXPECT_TRUE(VersionString("0.7.0") <= VersionString("0.7.0"));
+  EXPECT_TRUE(VersionString("0.3.1") <= VersionString("0.7.0"));
 
   EXPECT_TRUE(VersionString("1.0.0") >= VersionString("0.9.1"));
+
+  EXPECT_TRUE(VersionString("3.1.0-rc2") >= VersionString("3.1.0-rc1"));
+  EXPECT_TRUE(VersionString("3.1.0-rc2") > VersionString("3.1.0-rc1"));
+  EXPECT_TRUE(VersionString("3.1.0-rc2") < VersionString("3.1.0-rc3"));
+  EXPECT_TRUE(VersionString("3.1.0-rc2") <= VersionString("3.1.0-rc3"));
+  EXPECT_FALSE(VersionString("3.1.0-rc2+build1") < VersionString("3.1.0-rc2+build2"));
+  EXPECT_FALSE(VersionString("3.1.0-rc2+build1") > VersionString("3.1.0-rc2+build2"));
+  EXPECT_TRUE(VersionString("3.1.0-rc2+build1") == VersionString("3.1.0-rc2+build2"));
+
+  EXPECT_TRUE(VersionString("1.0.0") < VersionString("2.0.0"));
+  EXPECT_TRUE(VersionString("2.0.0") < VersionString("2.1.0"));
+  EXPECT_TRUE(VersionString("2.0.0") < VersionString("2.1.1"));
+
+  EXPECT_TRUE(VersionString("1.0.0-alpha") < VersionString("1.0.0-alpha.1"));
+  EXPECT_TRUE(VersionString("1.0.0-alpha.1") < VersionString("1.0.0-alpha.beta"));
+  EXPECT_TRUE(VersionString("1.0.0-alpha.beta") < VersionString("1.0.0-beta"));
+  EXPECT_TRUE(VersionString("1.0.0-beta") < VersionString("1.0.0-beta.2"));
+  //EXPECT_TRUE(VersionString("1.0.0-beta.2") < VersionString("1.0.0-beta.11")); // we aren't supporting the dot separators in patch release yet
+  EXPECT_TRUE(VersionString("1.0.0-beta.11") < VersionString("1.0.0-rc.1"));
+  EXPECT_TRUE(VersionString("1.0.0-rc.1") < VersionString("1.0.0"));
+
+  EXPECT_NO_THROW(VersionString v(openStudioVersion()));
+  EXPECT_NO_THROW(VersionString vl(openStudioLongVersion()));
+
+}
+
+TEST(Compare, VersionString_SemVer) {
+
+	// not allowable in semantic versioning but allowed for backwards compatibility
+  VersionString v31("3.1");
+  EXPECT_EQ(3, v31.major());
+  EXPECT_EQ(1, v31.minor());
+  EXPECT_FALSE(v31.patch());
+  EXPECT_EQ("", v31.patchString());
+  EXPECT_EQ("", v31.buildString());
+
+	VersionString v310("3.1.0");
+	EXPECT_EQ(3, v310.major());
+	EXPECT_EQ(1, v310.minor());
+	ASSERT_TRUE(v310.patch());
+	EXPECT_EQ(0, v310.patch().get());
+	EXPECT_EQ("", v310.patchString());
+	EXPECT_EQ("", v310.buildString());
+
+	VersionString v310rc1("3.1.0-rc1");
+	EXPECT_EQ(3, v310rc1.major());
+	EXPECT_EQ(1, v310rc1.minor());
+	ASSERT_TRUE(v310rc1.patch());
+	EXPECT_EQ(0, v310rc1.patch().get());
+	EXPECT_EQ("rc1", v310rc1.patchString());
+	EXPECT_EQ("", v310rc1.buildString());
+
+	VersionString v310sha("3.1.0+b2cad10881576015005245c7b2e089ff66ef437d");
+	EXPECT_EQ(3, v310sha.major());
+	EXPECT_EQ(1, v310sha.minor());
+	ASSERT_TRUE(v310sha.patch());
+	EXPECT_EQ(0, v310sha.patch().get());
+	EXPECT_EQ("", v310sha.patchString());
+	EXPECT_EQ("b2cad10881576015005245c7b2e089ff66ef437d", v310sha.buildString());
+
+	VersionString v310rc1sha("3.1.0-rc1+b2cad10881576015005245c7b2e089ff66ef437d");
+	EXPECT_EQ(3, v310rc1sha.major());
+	EXPECT_EQ(1, v310rc1sha.minor());
+	ASSERT_TRUE(v310rc1sha.patch());
+	EXPECT_EQ(0, v310rc1sha.patch().get());
+	EXPECT_EQ("rc1", v310rc1sha.patchString());
+	EXPECT_EQ("b2cad10881576015005245c7b2e089ff66ef437d", v310rc1sha.buildString());
 }
