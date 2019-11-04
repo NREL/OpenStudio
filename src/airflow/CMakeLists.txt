@@ -75,11 +75,11 @@ set(${target_name}_depends
 )
 
 add_library(${target_name}
-  OBJECT
   ${${target_name}_src}
   ${EMBEDDED_OUTPUT}
 )
-target_link_libraries(${target_name} ${${target_name}_depends})
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
+target_compile_definitions(${target_name} PRIVATE openstudio_airflow_EXPORTS)
 
 if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")

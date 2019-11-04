@@ -46,7 +46,6 @@ set(${target_name}_depends
 )
 
 add_library(${target_name}
-  OBJECT
   ${${target_name}_src}
 )
 

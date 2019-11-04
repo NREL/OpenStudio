@@ -1645,9 +1645,10 @@ set(${target_name}_depends
   openstudio_utilities
 )
 
-add_library(${target_name} OBJECT ${${target_name}_src} ${EMBEDDED_OUTPUT})
+add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
 
 target_link_libraries(${target_name} PUBLIC "${${target_name}_depends}")
+target_compile_definitions(${target_name} PRIVATE openstudio_model_EXPORTS)
 
 if(BUILD_SHARED_LIBS)
   install(TARGETS ${target_name}
@@ -1657,7 +1658,6 @@ if(BUILD_SHARED_LIBS)
   )
 endif()
 
-target_compile_definitions(${target_name} PRIVATE openstudio_model_EXPORTS)
 
 set(${target_name}_test_src
   test/AdditionalProperties_GTest.cpp

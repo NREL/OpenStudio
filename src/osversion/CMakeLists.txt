@@ -18,13 +18,14 @@ set(${target_name}_swig_src
   OSVersion.i
 )
 
-add_library(${target_name} OBJECT
+add_library(${target_name}
   ${${target_name}_src}
 )
 
 set(${target_name}_depends
   openstudio_model
 )
+
 target_compile_definitions(${target_name} PRIVATE openstudio_osversion_EXPORTS)
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 

@@ -32,7 +32,7 @@ set(${target_name}_depends
   openstudio_osversion
 )
 
-add_library(${target_name} OBJECT ${${target_name}_src})
+add_library(${target_name} ${${target_name}_src})
 target_compile_definitions(${target_name} PRIVATE openstudio_sdd_EXPORTS)
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 

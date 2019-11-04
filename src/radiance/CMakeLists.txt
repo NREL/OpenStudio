@@ -64,7 +64,7 @@ set(${target_name}_depends
   openstudio_model
 )
 
-add_library(${target_name} OBJECT ${${target_name}_src} ${EMBEDDED_OUTPUT})
+add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
 target_compile_definitions(${target_name} PRIVATE openstudio_radiance_EXPORTS)
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 
