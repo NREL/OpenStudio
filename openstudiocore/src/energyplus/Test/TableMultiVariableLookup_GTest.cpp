@@ -77,6 +77,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(2).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.5);
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(3).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.7);
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(4).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.9);
+    EXPECT_FALSE(idfTable.getString(Table_LookupFields::NormalizationMethod));
+    EXPECT_FALSE(idfTable.getDouble(Table_LookupFields::NormalizationDivisor));
 
     std::vector<WorkspaceObject> independentVariableObjects = workspace.getObjectsByType(IddObjectType::Table_IndependentVariable);
     ASSERT_EQ(1u, independentVariableObjects.size());
@@ -230,6 +232,69 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
     ASSERT_TRUE(independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName));
     EXPECT_EQ(independentVariableObjects[2].nameString(), independentVariableListObject.getExtensibleGroup(2).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
   }
+
+  // One with a normalization reference
+  {
+    Model m;
+    TableMultiVariableLookup table(m,1);
+    table.setNormalizationReference(0.9);
+    ASSERT_TRUE(table.addPoint(70, 0.1));
+    ASSERT_TRUE(table.addPoint(72, 0.3));
+    ASSERT_TRUE(table.addPoint(74, 0.5));
+    ASSERT_TRUE(table.addPoint(76, 0.7));
+    ASSERT_TRUE(table.addPoint(78, 0.9));
+
+    ForwardTranslator ft;
+    Workspace workspace = ft.translateModel(m);
+
+    std::vector<WorkspaceObject> tableObjects = workspace.getObjectsByType(IddObjectType::Table_Lookup);
+    ASSERT_EQ(1u, tableObjects.size());
+
+    WorkspaceObject idfTable = tableObjects.front();
+
+    ASSERT_EQ(idfTable.getString(Table_LookupFields::OutputUnitType).get(),"Dimensionless");
+    ASSERT_EQ(5u, idfTable.numExtensibleGroups());
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(0).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.1);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(1).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.3);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(2).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.5);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(3).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.7);
+    ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(4).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.9);
+
+    // Normallization reference should be filled in TableLookup
+    ASSERT_TRUE(idfTable.getString(Table_LookupFields::NormalizationMethod));
+    EXPECT_EQ(idfTable.getString(Table_LookupFields::NormalizationMethod).get(), "DivisorOnly");
+    ASSERT_TRUE(idfTable.getDouble(Table_LookupFields::NormalizationDivisor));
+    EXPECT_EQ(idfTable.getDouble(Table_LookupFields::NormalizationDivisor).get(), 0.9);
+
+    std::vector<WorkspaceObject> independentVariableObjects = workspace.getObjectsByType(IddObjectType::Table_IndependentVariable);
+    ASSERT_EQ(1u, independentVariableObjects.size());
+
+    WorkspaceObject independentVariableObject = independentVariableObjects.front();
+    ASSERT_TRUE(independentVariableObject.getString(Table_IndependentVariableFields::InterpolationMethod));
+    EXPECT_EQ(independentVariableObject.getString(Table_IndependentVariableFields::InterpolationMethod).get(), "Cubic");
+    ASSERT_TRUE(independentVariableObject.getString(Table_IndependentVariableFields::ExtrapolationMethod));
+    EXPECT_EQ(independentVariableObject.getString(Table_IndependentVariableFields::ExtrapolationMethod).get(), "Linear");
+    ASSERT_TRUE(independentVariableObject.getDouble(Table_IndependentVariableFields::MinimumValue));
+    EXPECT_DOUBLE_EQ(independentVariableObject.getDouble(Table_IndependentVariableFields::MinimumValue).get(), 70.0);
+    ASSERT_TRUE(independentVariableObject.getDouble(Table_IndependentVariableFields::MaximumValue));
+    EXPECT_DOUBLE_EQ(independentVariableObject.getDouble(Table_IndependentVariableFields::MaximumValue).get(), 78.0);
+
+    // It's the TableLookup object that gets the normalization reference
+    EXPECT_FALSE(independentVariableObject.getDouble(Table_IndependentVariableFields::NormalizationReferenceValue));
+
+    ASSERT_TRUE(independentVariableObject.getString(Table_IndependentVariableFields::UnitType));
+    EXPECT_EQ(independentVariableObject.getString(Table_IndependentVariableFields::UnitType).get(), "Dimensionless");
+    ASSERT_EQ(5u, independentVariableObject.numExtensibleGroups());
+
+    std::vector<WorkspaceObject> independentVariableListObjects = workspace.getObjectsByType(IddObjectType::Table_IndependentVariableList);
+    ASSERT_EQ(1u, independentVariableListObjects.size());
+
+    WorkspaceObject independentVariableListObject = independentVariableListObjects.front();
+    ASSERT_EQ(1u, independentVariableListObject.numExtensibleGroups());
+    ASSERT_TRUE(independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName));
+    EXPECT_EQ(independentVariableObject.nameString(), independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
+  }
+
 
 }
 
