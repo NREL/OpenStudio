@@ -49,21 +49,43 @@ target_link_libraries(
  ${DISABLE_LINK_ALL}
 )
 
+# We cannot make the libs that make up the shared library public dependency at all, if we do
+# then we have to export and install them as well, which we probably don't want to do.
+
+# If we try to include directories from the dependent libraries directly, we have to use
+# generator expressions to get the specific configuration's INTERFACE_INCLUDE_DIRECTORIES
+
+# This also does not seem to do what we ultimately want, as it would also require
+# that we export the .a files.
+
+# So here we are, I'm manually exporting the directories, it's probably a mistake
+# TODO reevaluate this.
+
+
+target_include_directories(
+  openstudiolib
+  INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
+  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+  $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
+  )
+
 # `export` command is only for use within the build tree
-export(TARGETS  openstudio_airflow
- openstudio_model
- openstudio_energyplus
- openstudio_measure
- openstudio_osversion
- openstudio_sdd
- openstudio_isomodel
- openstudio_gbxml
- openstudio_radiance
- openstudio_utilities
- openstudiolib
- openstudiolib_static 
- NAMESPACE "openstudio::" 
- FILE openstudioConfig.cmake)
+export(TARGETS
+         openstudio_airflow
+         openstudio_model
+         openstudio_energyplus
+         openstudio_measure
+         openstudio_osversion
+         openstudio_sdd
+         openstudio_isomodel
+         openstudio_gbxml
+         openstudio_radiance
+         openstudio_utilities
+         openstudiolib
+         openstudiolib_static 
+       NAMESPACE "openstudio::" 
+       FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake")
 
 install(TARGETS openstudiolib
         EXPORT openstudio
@@ -73,7 +95,11 @@ install(TARGETS openstudiolib
         )
 
 # `install(EXPORT)` is for installation package
-install(EXPORT openstudio DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/openstudio NAMESPACE "openstudio::" COMPONENT "CPPCLI" FILE openstudioConfig.cmake)
+install(EXPORT openstudio 
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/openstudio
+        NAMESPACE "openstudio::"
+        COMPONENT "CPPCLI"
+        FILE openstudioConfig.cmake)
 
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/"
                   "${PROJECT_BINARY_DIR}/src/"
