@@ -153,7 +153,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
 
   // NormalizationReference
   if ((d = modelObject.normalizationReference())) {
-    tableLookup.setString(Table_LookupFields::NormalizationMethod, "Divisor");
+    tableLookup.setString(Table_LookupFields::NormalizationMethod, "DivisorOnly");
     tableLookup.setDouble(Table_LookupFields::NormalizationDivisor, d.get());
   }
 
