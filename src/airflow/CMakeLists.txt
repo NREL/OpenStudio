@@ -78,7 +78,6 @@ add_library(${target_name}
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_compile_definitions(${target_name} PRIVATE openstudio_airflow_EXPORTS)
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
-target_include_directories(${target_name} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 
 if(BUILD_TESTING)

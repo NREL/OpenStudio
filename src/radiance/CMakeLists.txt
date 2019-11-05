@@ -65,7 +65,6 @@ add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
 target_compile_definitions(${target_name} PRIVATE openstudio_radiance_EXPORTS)
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
-target_include_directories(${target_name} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 
 # No need to install static library
