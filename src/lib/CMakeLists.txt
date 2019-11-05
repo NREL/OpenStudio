@@ -19,6 +19,8 @@ target_link_libraries(
 
 add_library(openstudiolib SHARED empty.cpp)
 
+set(LINK_STATIC_LIBS TRUE)
+
 if (LINK_STATIC_LIBS)
   if (MSVC)
     set(ENABLE_LINK_ALL "/WHOLEARCHIVE")
@@ -47,6 +49,23 @@ target_link_libraries(
  openstudio_gbxml
  openstudio_radiance
  ${DISABLE_LINK_ALL}
+)
+
+
+target_link_libraries(
+ openstudiolib
+ INTERFACE
+ CONAN_PKG::boost_core
+ CONAN_PKG::boost_filesystem
+ CONAN_PKG::boost_crc
+ CONAN_PKG::boost_regex
+ CONAN_PKG::boost_algorithm
+ CONAN_PKG::boost_uuid
+ CONAN_PKG::boost_log
+ CONAN_PKG::boost_program_options
+ CONAN_PKG::boost_numeric_ublas
+ CONAN_PKG::boost_functional
+ CONAN_PKG::boost_geometry
 )
 
 # We cannot make the libs that make up the shared library public dependency at all, if we do
@@ -85,7 +104,8 @@ export(TARGETS
          openstudiolib
          openstudiolib_static 
        NAMESPACE "openstudio::" 
-       FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake")
+       FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
+       )
 
 install(TARGETS openstudiolib
         EXPORT openstudio
@@ -96,7 +116,7 @@ install(TARGETS openstudiolib
 
 # `install(EXPORT)` is for installation package
 install(EXPORT openstudio 
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/openstudio
+        DESTINATION lib/cmake/openstudio
         NAMESPACE "openstudio::"
         COMPONENT "CPPCLI"
         FILE openstudioConfig.cmake)
