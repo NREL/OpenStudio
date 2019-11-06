@@ -29,6 +29,7 @@ set(${target_name}_src
   contam/PrjAirflowElementsImpl.cpp
   SurfaceNetworkBuilder.hpp
   SurfaceNetworkBuilder.cpp
+  PARENT_SCOPE
 )
 
 # resource files
@@ -66,10 +67,11 @@ set(${target_name}_swig_src
 set(${target_name}_depends
   ${Boost_LIBRARIES}
   ${CMAKE_THREAD_LIBS}
-  openstudio_utilities
-  openstudio_model
-  openstudio_osversion
+  ${openstudio_utilities_depends}
+  ${openstudio_model_depends}
+  ${openstudio_osversion_depends}
 )
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
 add_library(${target_name}
   OBJECT

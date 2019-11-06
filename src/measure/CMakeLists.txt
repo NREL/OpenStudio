@@ -42,8 +42,9 @@ CREATE_SRC_GROUPS("${${target_name}_src}")
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
 set(${target_name}_depends
-  openstudio_osversion
+  ${openstudio_osversion_depends}
 )
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
 add_library(${target_name}
   OBJECT

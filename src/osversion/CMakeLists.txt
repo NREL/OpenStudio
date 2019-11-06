@@ -24,8 +24,12 @@ add_library(${target_name}
 )
 
 set(${target_name}_depends
-  openstudio_model
+  ${openstudio_model_depends}
 )
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
+
+message(ERROR "model deps: '${openstudio_model_depends}'")
+message(ERROR "deps: '${${target_name}_depends}'")
 
 target_compile_definitions(${target_name} PRIVATE openstudio_osversion_EXPORTS)
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})

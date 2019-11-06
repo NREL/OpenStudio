@@ -58,8 +58,9 @@ source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
 
 set(${target_name}_depends
-  openstudio_model
+  ${openstudio_model_depends}
 )
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
 add_library(${target_name} OBJECT ${${target_name}_src} ${EMBEDDED_OUTPUT})
 target_compile_definitions(${target_name} PRIVATE openstudio_radiance_EXPORTS)

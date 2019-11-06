@@ -627,9 +627,6 @@ set(${target_name}_swig_src
   EnergyPlus.i
 )
 
-set(${target_name}_depends
-  openstudio_model
-)
 
 set(FILES
   "${CMAKE_CURRENT_SOURCE_DIR}/Resources/LCCusePriceEscalationDataSet2011.idf"
@@ -665,8 +662,9 @@ include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${FILES}" "${EMBEDDED_PATHS}" OUTPUT energyplus)
 
 set(${target_name}_depends
-  openstudio_model
+  ${openstudio_model_depends}
 )
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
 add_library(${target_name} OBJECT ${${target_name}_src} ${OUTPUT})
 

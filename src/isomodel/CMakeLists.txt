@@ -48,8 +48,9 @@ set(${target_name}_swig_src
 )
 
 set(${target_name}_depends
-  openstudio_model
+  ${openstudio_model_depends}
 )
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
 add_library(${target_name} OBJECT ${${target_name}_src})
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
