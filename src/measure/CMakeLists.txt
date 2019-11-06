@@ -46,11 +46,19 @@ set(${target_name}_depends
 )
 
 add_library(${target_name}
+  OBJECT
   ${${target_name}_src}
 )
 
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_compile_definitions(${target_name} PRIVATE openstudio_measure_EXPORTS)
+
+add_library(${target_name}_static
+  STATIC
+  empty.cpp
+)
+target_link_libraries(${target_name})
+
 
 # No need to install static lib
 #if(NOT APPLE)

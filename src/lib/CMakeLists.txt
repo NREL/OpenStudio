@@ -6,6 +6,7 @@ add_library(openstudiolib_static STATIC empty.cpp)
 target_link_libraries(
  openstudiolib_static
  PUBLIC
+ openstudio_utilities
  openstudio_airflow
  openstudio_model
  openstudio_energyplus
@@ -19,7 +20,7 @@ target_link_libraries(
 
 add_library(openstudiolib SHARED empty.cpp)
 
-set(LINK_STATIC_LIBS TRUE)
+#set(LINK_STATIC_LIBS TRUE)
 
 if (LINK_STATIC_LIBS)
   if (MSVC)

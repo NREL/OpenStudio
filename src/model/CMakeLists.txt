@@ -1642,11 +1642,18 @@ set(${target_name}_depends
   openstudio_utilities
 )
 
-add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
+add_library(${target_name} OBJECT ${${target_name}_src} ${EMBEDDED_OUTPUT})
 
 target_link_libraries(${target_name} PUBLIC "${${target_name}_depends}")
 target_compile_definitions(${target_name} PRIVATE openstudio_model_EXPORTS)
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
+
+
+add_library(${target_name}_static
+  STATIC
+  empty.cpp
+)
+target_link_libraries(${target_name})
 
 
 if(BUILD_SHARED_LIBS)

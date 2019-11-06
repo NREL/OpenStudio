@@ -301,7 +301,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   include_directories(${PROJECT_SOURCE_DIR})
 
   add_library(
-    ${swig_target} STATIC
+    ${swig_target} OBJECT
     ${SWIG_WRAPPER}
   )
 
