@@ -80,12 +80,6 @@ target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_compile_definitions(${target_name} PRIVATE openstudio_airflow_EXPORTS)
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
 
-add_library(${target_name}_static
-  STATIC
-  empty.cpp
-)
-target_link_libraries(${target_name})
-
 if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
   add_dependencies(${target_name}_tests openstudio_airflow_resources)

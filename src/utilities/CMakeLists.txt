@@ -434,13 +434,6 @@ target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR}/src)
 
 
-add_library(${target_name}_static
-  STATIC
-  empty.cpp
-)
-target_link_libraries(${target_name})
-
-
 #install(TARGETS ${target_name}
 #  EXPORT openstudio
 #  RUNTIME DESTINATION bin

@@ -1649,13 +1649,6 @@ target_compile_definitions(${target_name} PRIVATE openstudio_model_EXPORTS)
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
 
 
-add_library(${target_name}_static
-  STATIC
-  empty.cpp
-)
-target_link_libraries(${target_name})
-
-
 if(BUILD_SHARED_LIBS)
   install(TARGETS ${target_name}
     RUNTIME DESTINATION bin

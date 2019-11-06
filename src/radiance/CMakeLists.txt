@@ -67,13 +67,6 @@ target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
 
 
-add_library(${target_name}_static
-  STATIC
-  empty.cpp
-)
-target_link_libraries(${target_name})
-
-
 # No need to install static library
 #if(NOT APPLE)
 #  install(TARGETS ${target_name}
