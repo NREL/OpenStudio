@@ -77,7 +77,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_TableMultiVariableLookup)
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(2).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.5);
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(3).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.7);
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(4).getDouble(Table_LookupExtensibleFields::OutputValue).get(),0.9);
-    EXPECT_FALSE(idfTable.getString(Table_LookupFields::NormalizationMethod));
+    EXPECT_FALSE(idfTable.getString(Table_LookupFields::NormalizationMethod, false, true)); // Don't return default, return unitialized empty
     EXPECT_FALSE(idfTable.getDouble(Table_LookupFields::NormalizationDivisor));
 
     std::vector<WorkspaceObject> independentVariableObjects = workspace.getObjectsByType(IddObjectType::Table_IndependentVariable);
