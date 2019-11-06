@@ -84,16 +84,54 @@ namespace detail {
     return 2;
   }
 
-  double CurveQuadraticLinear_Impl::evaluate(const std::vector<double>& x) const {
-    OS_ASSERT(x.size() == 2u);
-    double x2 = pow(x[0],2);
+  double CurveQuadraticLinear_Impl::evaluate(const std::vector<double>& independantVariables) const {
+    OS_ASSERT(independantVariables.size() == 2u);
+
+    double x = independantVariables[0];
+    if (x < minimumValueofx()) {
+      LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
+      x = minimumValueofx();
+    }
+    if (x > maximumValueofx()) {
+      LOG(Warn, "Supplied x is above the maximumValueofx, resetting it.");
+      x = maximumValueofx();
+    }
+
+    double y = independantVariables[1];
+    if (y < minimumValueofy()) {
+      LOG(Warn, "Supplied y is below the minimumValueofy, resetting it.");
+      y = minimumValueofy();
+    }
+    if (y > maximumValueofy()) {
+      LOG(Warn, "Supplied y is above the maximumValueofy, resetting it.");
+      y = maximumValueofy();
+    }
+
+    double x2 = pow(x,2);
     double result = coefficient1Constant();
-    result += coefficient2x() * x[0];
+    result += coefficient2x() * x;
     result += coefficient3xPOW2() * x2;
     double temp = coefficient4y();
-    temp += coefficient5xTIMESY() * x[0];
+    temp += coefficient5xTIMESY() * x;
     temp += coefficient6xPOW2TIMESY() * x2;
-    result += temp * x[1];
+    result += temp * y;
+
+    if (boost::optional<double> _minVal = minimumCurveOutput()) {
+      double minVal = _minVal.get();
+      if (result < minVal) {
+        LOG(Warn, "Calculated curve output is below minimumCurveOutput, resetting it.");
+        result = minVal;
+      }
+    }
+
+    if (boost::optional<double> _maxVal = maximumCurveOutput()) {
+      double maxVal = _maxVal.get();
+      if (result > maxVal) {
+        LOG(Warn, "Calculated curve output is above maximumCurveOutput, resetting it.");
+        result = maxVal;
+      }
+    }
+
     return result;
   }
 
