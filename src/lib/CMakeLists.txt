@@ -1,23 +1,23 @@
 # Some operating systems don't like compiling a library with
 # no source files
 
-add_library(openstudiolib_static STATIC empty.cpp)
+#add_library(openstudiolib_static STATIC empty.cpp)
 
-target_link_libraries(
- openstudiolib_static
- PUBLIC
- openstudio_utilities
- openstudio_airflow
- openstudio_model
- openstudio_energyplus
- openstudio_measure
- openstudio_osversion
- openstudio_sdd
- openstudio_isomodel
- openstudio_gbxml
- openstudio_radiance
-)
-
+#target_link_libraries(
+# openstudiolib_static
+# PUBLIC
+# openstudio_utilities
+# openstudio_airflow
+# openstudio_model
+# openstudio_energyplus
+# openstudio_measure
+# openstudio_osversion
+# openstudio_sdd
+# openstudio_isomodel
+# openstudio_gbxml
+# openstudio_radiance
+#)
+#
 add_library(openstudiolib SHARED empty.cpp)
 
 #set(LINK_STATIC_LIBS TRUE)
@@ -103,7 +103,7 @@ export(TARGETS
          openstudio_radiance
          openstudio_utilities
          openstudiolib
-         openstudiolib_static 
+         #         openstudiolib_static 
        NAMESPACE "openstudio::" 
        FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
        )

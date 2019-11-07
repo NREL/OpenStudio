@@ -54,6 +54,13 @@ add_library(${target_name}
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_compile_definitions(${target_name} PRIVATE openstudio_measure_EXPORTS)
 
+set(${target_name}_test_depends
+  ${${target_name}_depends}
+  ${COREFOUNDATION_LIBRARY}
+  openstudiolib
+)
+
+
 
 # No need to install static lib
 #if(NOT APPLE)
@@ -67,6 +74,6 @@ if( MSVC )
   target_compile_definitions(${target_name} PUBLIC ${WIN_MVC})
 endif()
 
-CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends};${COREFOUNDATION_LIBRARY}")
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 
 MAKE_SWIG_TARGET(OpenStudioMeasure measure "${CMAKE_CURRENT_SOURCE_DIR}/Measure.i" "${${target_name}_swig_src}" ${target_name} OpenStudioOSVersion)

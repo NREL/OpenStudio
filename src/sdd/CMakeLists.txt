@@ -39,6 +39,12 @@ target_compile_definitions(${target_name} PRIVATE openstudio_sdd_EXPORTS)
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 
 
+set(${target_name}_test_depends
+  ${${target_name}_depends}
+  openstudiolib
+)
+
+
 # No need to install static library
 #if(NOT APPLE)
 #install(TARGETS ${target_name}
@@ -52,7 +58,7 @@ CREATE_SRC_GROUPS("${${target_name}_test_src}")
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
 if(BUILD_TESTING)
-  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
   add_dependencies(${target_name}_tests openstudio_sdd_resources)
 endif()
 

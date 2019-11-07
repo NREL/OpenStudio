@@ -104,6 +104,7 @@ endforeach()
 
 target_link_libraries(openstudio_rb
   init_openstudio
+  openstudio_utilities
   openstudio_airflow
   openstudio_model
   openstudio_energyplus

@@ -2049,6 +2049,7 @@ set(${target_name}_test_src
 
 set(${target_name}_test_depends
   ${${target_name}_depends}
+  openstudiolib
 )
 
 CREATE_SRC_GROUPS("${${target_name}_test_src}")

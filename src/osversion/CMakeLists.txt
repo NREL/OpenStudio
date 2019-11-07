@@ -28,11 +28,13 @@ set(${target_name}_depends
 )
 set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
-message(ERROR "model deps: '${openstudio_model_depends}'")
-message(ERROR "deps: '${${target_name}_depends}'")
-
 target_compile_definitions(${target_name} PRIVATE openstudio_osversion_EXPORTS)
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
+
+set(${target_name}_test_depends
+  ${${target_name}_depends}
+  openstudiolib
+)
 
 
 # No need to install static lib
@@ -49,7 +51,7 @@ CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
 if(BUILD_TESTING)
 
-  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
   
   #add_dependencies("${target_name}_tests"
   #  openstudio_osversion_resources
