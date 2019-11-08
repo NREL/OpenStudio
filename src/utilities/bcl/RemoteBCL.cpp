@@ -60,6 +60,14 @@ namespace openstudio{
     return m_domDocument->document_element();
   }
 
+  // TODO: please note that you should use getClient everywhere after instead of instantiating your own http_client_config
+  // as it will allow us to change http_client_config (SSL settings etc) in  only one place
+  web::http::client::http_client RemoteBCL::getClient(const std::string& url) const {
+    web::http::client::http_client_config config;
+    config.set_validate_certificates(false);
+
+    return web::http::client::http_client(utility::conversions::to_string_t(url), config);
+  }
 
   bool RemoteBCL::DownloadFile::open()
   {
@@ -228,7 +236,7 @@ namespace openstudio{
 
       m_lastSearch.clear();
 
-      web::http::client::http_client client(to_string_t(remoteUrl()));
+      auto client = getClient(remoteUrl());
       web::uri_builder builder(U("/api/search/"));
 
       builder.append_path(U("*.xml"));
@@ -271,7 +279,7 @@ namespace openstudio{
 
       m_lastSearch.clear();
 
-      web::http::client::http_client client(to_string_t(remoteUrl()));
+      auto client = getClient(remoteUrl());
       web::uri_builder builder(U("/api/search/"));
 
       builder.append_path(U("*.xml"));
@@ -358,7 +366,7 @@ namespace openstudio{
 
   bool RemoteBCL::isOnline() const
   {
-    auto ip = web::http::client::http_client(U("https://checkip.amazonaws.com/"))
+    auto ip = getClient("https://checkip.amazonaws.com/")
       .request(web::http::methods::GET)
       .then([](web::http::http_response response) {
         auto statusCode = response.status_code();
@@ -515,7 +523,7 @@ namespace openstudio{
 
       m_lastSearch.clear();
 
-      web::http::client::http_client client(to_string_t(remoteUrl));
+      auto client = getClient(remoteUrl);
       web::uri_builder builder(U("/api/search/"));
 
       builder.append_path(U("*.xml"));
@@ -611,7 +619,7 @@ namespace openstudio{
 
     m_downloadUid = uid;
     // request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
-    web::http::client::http_client client(to_string_t(remoteUrl()));
+    auto client = getClient(remoteUrl());
     web::uri_builder builder(U("/api/component/download"));
 
     builder.append_query(U("uids"), to_string_t(uid));
@@ -653,7 +661,7 @@ namespace openstudio{
 
     m_lastMetaSearch.reset();
 
-    web::http::client::http_client client(to_string_t(remoteUrl()));
+    auto client = getClient(remoteUrl());
     web::uri_builder builder(U("/api/metasearch/"));
 
     auto query = searchTerm.empty() ? "*" : searchTerm;
@@ -701,7 +709,7 @@ namespace openstudio{
 
     m_lastMetaSearch.reset();
 
-    web::http::client::http_client client(to_string_t(remoteUrl()));
+    auto client = getClient(remoteUrl());
     web::uri_builder builder(U("/api/metasearch/"));
 
     auto query = searchTerm.empty() ? "*" : searchTerm;
@@ -748,7 +756,7 @@ namespace openstudio{
 
     m_lastSearch.clear();
 
-    web::http::client::http_client client(to_string_t(remoteUrl()));
+    auto client = getClient(remoteUrl());
     web::uri_builder builder(U("/api/search/"));
 
     auto query = searchTerm.empty() ? "*" : searchTerm;
@@ -792,7 +800,7 @@ namespace openstudio{
 
     m_lastSearch.clear();
 
-    web::http::client::http_client client(to_string_t(remoteUrl()));
+    auto client = getClient(remoteUrl());
     web::uri_builder builder(U("/api/search/"));
 
     auto query = searchTerm.empty() ? "*" : searchTerm;

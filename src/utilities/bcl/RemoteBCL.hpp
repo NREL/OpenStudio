@@ -223,7 +223,7 @@ namespace openstudio{
 
     /// Emitted when a component download completes
     Nano::Signal<void(const std::string& uid, const boost::optional<BCLComponent>& component)> componentDownloaded;
-    
+
     /// Emitted when a measure download completes
     Nano::Signal<void(const std::string& uid, const boost::optional<BCLMeasure>& measure)> measureDownloaded;
 
@@ -253,6 +253,9 @@ namespace openstudio{
     void setLastTotalResults(const int lastTotalResults);
 
     // members
+
+    // A helper function to prepare a client, allowing us to change the http_client_config in one place only
+    web::http::client::http_client getClient(const std::string& url) const;
 
     boost::optional<pplx::task<void> > m_httpResponse;
 
