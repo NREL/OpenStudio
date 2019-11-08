@@ -49,7 +49,12 @@ namespace openstudio{
       m_newMajorRelease(false), m_newMinorRelease(false), m_newPatchRelease(false),
       m_mostRecentVersion(openStudioVersion())
   {
-    web::http::client::http_client client(to_string_t(url));
+
+    // TODO: I don't see it being used anywhere, so not sure if it's trying to use SSL or not
+    web::http::client::http_client_config config;
+    config.set_validate_certificates(false);
+
+    web::http::client::http_client client(to_string_t(url), config);
     m_httpResponse = client
       .request(web::http::methods::GET)
       .then([](web::http::http_response resp) { return resp.extract_utf8string(); })
