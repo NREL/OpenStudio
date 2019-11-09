@@ -18,7 +18,11 @@
 # openstudio_radiance
 #)
 #
+
 add_library(openstudiolib SHARED empty.cpp)
+
+add_executable(test_openstudiolib test_lib.cpp)
+target_link_libraries(test_openstudiolib openstudiolib)
 
 #set(LINK_STATIC_LIBS TRUE)
 
@@ -67,6 +71,10 @@ target_link_libraries(
  CONAN_PKG::boost_numeric_ublas
  CONAN_PKG::boost_functional
  CONAN_PKG::boost_geometry
+ CONAN_PKG::jsoncpp
+ CONAN_PKG::cpprestsdk
+ CONAN_PKG::OpenSSL
+ CONAN_PKG::pugixml
 )
 
 # We cannot make the libs that make up the shared library public dependency at all, if we do

@@ -199,9 +199,9 @@ set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Con
 # Build shared OS libraries
 option(BUILD_SHARED_LIBS "Build OS libs as shared libraries.  Currently not tested." OFF)
 
-if(BUILD_SHARED_LIBS)
+#if(BUILD_SHARED_LIBS)
   add_definitions("-DSHARED_OS_LIBS")
-endif()
+  #endif()
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -418,6 +418,9 @@ if(MSVC)
   # we will not rely on exporting templates instead all libraries must
   # be linked against the same runtime
   add_definitions(/wd4251)
+
+  # ignore base class not dll-exported error
+  add_definitions(/wd4275)
 
   add_definitions(/bigobj)
 

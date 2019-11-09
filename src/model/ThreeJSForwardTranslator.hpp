@@ -49,7 +49,7 @@ namespace openstudio
     *
     *   The FloorplanJS in the Utilities/Geometry project converts a FloorspaceJS JSON file to ThreeJS format, code should be shared between these two classes as much as possible.
     */
-    MODEL_API class ThreeJSForwardTranslator
+    class MODEL_API ThreeJSForwardTranslator
     {
     public:
       ThreeJSForwardTranslator();
