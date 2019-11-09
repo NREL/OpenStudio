@@ -53,6 +53,7 @@ add_library(${target_name}
 
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_compile_definitions(${target_name} PRIVATE openstudio_measure_EXPORTS)
+add_dependencies(${target_name} GenerateIddFactoryRun)
 
 set(${target_name}_test_depends
   ${${target_name}_depends}

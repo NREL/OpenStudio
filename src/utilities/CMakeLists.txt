@@ -426,7 +426,7 @@ add_library(${target_name}
   OBJECT
   ${${target_name}_src}
 )
-add_dependencies("${target_name}" GenerateIddFactoryRun)
+add_dependencies(${target_name} GenerateIddFactoryRun)
 
 
 set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
@@ -436,18 +436,10 @@ target_compile_definitions(${target_name} PRIVATE openstudio_utilities_EXPORTS)
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR}/src)
 
-
-#install(TARGETS ${target_name}
-#  EXPORT openstudio
-#  RUNTIME DESTINATION bin
-#  LIBRARY DESTINATION lib
-#  ARCHIVE DESTINATION lib
-#)
-
 if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib)
-  add_dependencies("${target_name}_tests" openstudio_model_resources)
-  add_dependencies("${target_name}_tests" openstudio_energyplus_resources)
+  add_dependencies(${target_name}_tests openstudio_model_resources)
+  add_dependencies(${target_name}_tests openstudio_energyplus_resources)
 endif()
 
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")

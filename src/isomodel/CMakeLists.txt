@@ -55,6 +55,7 @@ set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 add_library(${target_name} OBJECT ${${target_name}_src})
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_compile_definitions(${target_name} PRIVATE openstudio_isomodel_EXPORTS)
+add_dependencies(${target_name} GenerateIddFactoryRun)
 
 
 set(${target_name}_test_depends

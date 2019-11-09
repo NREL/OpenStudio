@@ -37,6 +37,7 @@ set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 add_library(${target_name} OBJECT ${${target_name}_src})
 target_compile_definitions(${target_name} PRIVATE openstudio_sdd_EXPORTS)
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
+add_dependencies(${target_name} GenerateIddFactoryRun)
 
 
 set(${target_name}_test_depends
