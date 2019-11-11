@@ -7956,6 +7956,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       heatPump.setDeadBandTemperatureDifference( value * 5.0 / 9.0 );
     }
 
+    // Default MinInletAirTempCprsrOper to 5.0
+    heatPump.setMinimumInletAirTemperatureforCompressorOperation(5.0);
+    // Override default using value from SDD file
     value = element.firstChildElement("MinInletAirTempCprsrOper").text().toDouble(&ok);
     if ( ok ) {
       value = unitToUnit(value, "F", "C").get();
@@ -7991,13 +7994,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     } else {
 			heatPump.autosizeEvaporatorAirFlowRate();
 		}
-
-    heatPump.setMinimumInletAirTemperatureforCompressorOperation(5.0);
-    value = element.firstChildElement("MinAirTemp").text().toDouble(&ok);
-    if( ok ) {
-      value = unitToUnit(value,"F","C").get();
-      heatPump.setMinimumInletAirTemperatureforCompressorOperation(value);
-    }
 
 		waterHeater.setDeadbandTemperatureDifference(0.01);
 		waterHeater.setHeaterControlType("Cycle");
