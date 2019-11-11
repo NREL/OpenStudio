@@ -33,18 +33,8 @@ target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 add_dependencies(${target_name} GenerateIddFactoryRun)
 
 set(${target_name}_test_depends
-  ${${target_name}_depends}
   openstudiolib
 )
-
-
-# No need to install static lib
-#if(NOT APPLE)
-#  install(TARGETS ${target_name}
-#    RUNTIME DESTINATION bin
-#    LIBRARY DESTINATION lib
-#  )
-#endif()
 
 CREATE_SRC_GROUPS("${${target_name}_src}")
 CREATE_SRC_GROUPS("${${target_name}_test_src}")

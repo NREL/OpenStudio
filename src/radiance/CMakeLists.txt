@@ -69,20 +69,9 @@ target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
 add_dependencies(${target_name} GenerateIddFactoryRun)
 
 
-
 set(${target_name}_test_depends
-  ${${target_name}_depends}
   openstudiolib
 )
-
-
-# No need to install static library
-#if(NOT APPLE)
-#  install(TARGETS ${target_name}
-#    RUNTIME DESTINATION bin
-#    LIBRARY DESTINATION lib
-#  )
-#endif()
 
 CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 
