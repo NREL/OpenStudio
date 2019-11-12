@@ -390,8 +390,6 @@ set(${target_name}_swig_src
   units/QuantityConverter.i
 )
 
-#include subdir for pch
-add_subdirectory(pch)
 
 set(${target_name}_depends
   CONAN_PKG::sqlite3
