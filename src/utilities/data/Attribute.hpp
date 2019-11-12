@@ -60,7 +60,7 @@ namespace detail{
   // we add std::monostate to allow the variant to be empty basically
   typedef std::variant<std::monostate, bool, double, int, unsigned, std::string, std::vector<Attribute> > OSAttributeVariant;
 
-  std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attribute);
+  UTILITIES_API std::ostream& operator<<(std::ostream& os, const OSAttributeVariant& attribute);
 
 
 /** \class AttributeValueType

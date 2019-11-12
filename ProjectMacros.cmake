@@ -650,10 +650,10 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     #target_link_libraries(${swig_target} ${PARENT_TARGET})
 
     #ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
-    add_dependencies(${SWIG_TARGET} ${PARENT_TARGET})
+    #    add_dependencies(${SWIG_TARGET} ${PARENT_TARGET})
 
     # add this target to a "global" variable so csharp tests can require these
-    list(APPEND ALL_CSHARP_BINDING_DEPENDS "${PARENT_TARGET}")
+    list(APPEND ALL_CSHARP_BINDING_DEPENDS "${${PARENT_TARGET}_depends}")
     set(ALL_CSHARP_BINDING_DEPENDS "${ALL_CSHARP_BINDING_DEPENDS}" PARENT_SCOPE)
 
     list(APPEND ALL_CSHARP_WRAPPER_FILES "${SWIG_WRAPPER_FULL_PATH}")

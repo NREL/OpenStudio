@@ -167,8 +167,7 @@ if(MSVC)
   )
   add_dependencies(openstudio_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
   target_link_libraries(openstudio_csharp
-   ${ALL_CSHARP_BINDING_DEPENDS}
-   ${Boost_LIBRARIES}
+   openstudiolib
   )
   install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
   install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
@@ -180,8 +179,7 @@ if(MSVC)
   )
   add_dependencies(openstudio_model_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
   target_link_libraries(openstudio_model_csharp
-   ${ALL_CSHARP_BINDING_DEPENDS}
-   ${Boost_LIBRARIES}
+    openstudiolib
   )
   install(TARGETS openstudio_model_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
   install(TARGETS openstudio_model_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
@@ -193,8 +191,7 @@ if(MSVC)
   )
   add_dependencies(openstudio_translators_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
   target_link_libraries(openstudio_translators_csharp
-   ${ALL_CSHARP_BINDING_DEPENDS}
-   ${Boost_LIBRARIES}
+    openstudiolib
   )
   install(TARGETS openstudio_translators_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
   install(TARGETS openstudio_translators_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
