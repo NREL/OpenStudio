@@ -280,17 +280,17 @@ target_link_libraries(ruby_libs PUBLIC additional_ruby_libs)
 target_link_libraries(openstudio init_openstudio ruby_libs)
 
 target_link_libraries(openstudio
-  openstudio_utilities
-  openstudio_airflow
-  openstudio_model
-  openstudio_energyplus
-  openstudio_measure
-  openstudio_osversion
-  openstudio_sdd
-  openstudio_isomodel
-  openstudio_gbxml
-  openstudio_radiance
- )
+ openstudio_utilities
+ openstudio_airflow
+ openstudio_model
+ openstudio_energyplus
+ openstudio_measure
+ openstudio_osversion
+ openstudio_sdd
+ openstudio_isomodel
+ openstudio_gbxml
+ openstudio_radiance
+)
 
 # Change to CONAN_PKG::OpenSSL vs OPENSSL_CRYPTO_LIBRARY if this is needed.
 # link CLI with ruby static library, ruby bindings (openstudio.so) are linked to dynamic ruby

@@ -56,20 +56,9 @@ target_compile_definitions(${target_name} PRIVATE openstudio_measure_EXPORTS)
 add_dependencies(${target_name} GenerateIddFactoryRun)
 
 set(${target_name}_test_depends
-  ${${target_name}_depends}
   ${COREFOUNDATION_LIBRARY}
   openstudiolib
 )
-
-
-
-# No need to install static lib
-#if(NOT APPLE)
-#  install(TARGETS ${target_name}
-#    RUNTIME DESTINATION bin
-#    LIBRARY DESTINATION lib
-#  )
-#endif()
 
 if( MSVC )
   target_compile_definitions(${target_name} PUBLIC ${WIN_MVC})

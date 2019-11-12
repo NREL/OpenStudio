@@ -77,6 +77,7 @@ add_library(${target_name}
   ${${target_name}_src}
   ${EMBEDDED_OUTPUT}
 )
+
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_compile_definitions(${target_name} PRIVATE openstudio_airflow_EXPORTS)
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
@@ -84,7 +85,6 @@ add_dependencies(${target_name} GenerateIddFactoryRun)
 
 
 set(${target_name}_test_depends
-  ${${target_name}_depends}
   openstudiolib
 )
 

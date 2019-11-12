@@ -199,9 +199,7 @@ set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Con
 # Build shared OS libraries
 option(BUILD_SHARED_LIBS "Build OS libs as shared libraries.  Currently not tested." OFF)
 
-#if(BUILD_SHARED_LIBS)
-  add_definitions("-DSHARED_OS_LIBS")
-  #endif()
+add_definitions("-DSHARED_OS_LIBS")
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -266,8 +264,14 @@ if(BUILD_V8_BINDINGS)
   option(BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON)
 endif()
 
-# Use PCH
-option(USE_PCH "Use precompiled headers" OFF)
+option(USE_LTO "Use Link-Time-Optimization" OFF)
+
+if (USE_LTO)
+  include(CheckIPOSupported)
+
+  check_ipo_supported()
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+endif()
 
 if(WIN32)
   add_definitions(-DNOMINMAX)

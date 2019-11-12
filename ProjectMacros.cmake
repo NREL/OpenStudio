@@ -1,9 +1,5 @@
 include(CMakeParseArguments)
 
-if(NOT USE_PCH)
-  macro(AddPCH TARGET_NAME)
-  endmacro()
-endif()
 
 # Add google tests macro
 macro(ADD_GOOGLE_TESTS executable)
@@ -68,8 +64,6 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
     if(TARGET "${BASE_NAME}_resources")
       add_dependencies("${BASE_NAME}_tests" "${BASE_NAME}_resources")
     endif()
-
-    AddPCH(${BASE_NAME}_tests)
 
     ## suppress deprecated warnings in unit tests
     if(UNIX)
@@ -293,8 +287,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     ${SWIG_WRAPPER}
   )
 
-
-  AddPCH(${swig_target})
 
   # run rdoc
   if(BUILD_DOCUMENTATION)

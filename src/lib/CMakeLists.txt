@@ -77,6 +77,8 @@ target_link_libraries(
  CONAN_PKG::pugixml
 )
 
+target_compile_definitions(openstudiolib INTERFACE "-DSHARED_OS_LIBS")
+
 # We cannot make the libs that make up the shared library public dependency at all, if we do
 # then we have to export and install them as well, which we probably don't want to do.
 
@@ -119,7 +121,7 @@ export(TARGETS
 install(TARGETS openstudiolib
         EXPORT openstudio
         DESTINATION lib
-        COMPONENT "CPPCLI"
+        COMPONENT "CPPAPI"
         INCLUDES DESTINATION include
         )
 
@@ -127,13 +129,13 @@ install(TARGETS openstudiolib
 install(EXPORT openstudio 
         DESTINATION lib/cmake/openstudio
         NAMESPACE "openstudio::"
-        COMPONENT "CPPCLI"
+        COMPONENT "CPPAPI"
         FILE openstudioConfig.cmake)
 
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/"
                   "${PROJECT_BINARY_DIR}/src/"
         DESTINATION include
-        COMPONENT "CPPCLI"
+        COMPONENT "CPPAPI"
         FILES_MATCHING 
         PATTERN "*.h"
         PATTERN "*.hpp"
