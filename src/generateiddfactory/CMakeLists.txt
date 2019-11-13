@@ -34,7 +34,6 @@ target_link_libraries(${target_name}
 # generate the IddFactory files
 add_custom_command(
   OUTPUT
-  "${CMAKE_CURRENT_BINARY_DIR}/../OpenStudio.hxx"
   "${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd/IddFactoryFileIndex.hxx"
   "${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd/IddEnums.hxx"
   "${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd/IddFieldEnums.hxx"
@@ -52,7 +51,6 @@ add_custom_command(
 
 add_custom_target("GenerateIddFactoryRun"
   DEPENDS
-  "${CMAKE_CURRENT_BINARY_DIR}/../OpenStudio.hxx"
   "${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd/IddFactoryFileIndex.hxx"
   "${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd/IddEnums.hxx"
   "${CMAKE_CURRENT_BINARY_DIR}/../utilities/idd/IddFieldEnums.hxx"

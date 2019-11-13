@@ -430,7 +430,7 @@ add_dependencies(${target_name} GenerateIddFactoryRun)
 set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
-target_compile_definitions(${target_name} PRIVATE openstudio_utilities_EXPORTS)
+target_compile_definitions(${target_name} PRIVATE openstudio_utilities_EXPORTS SHARED_OS_LIBS)
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR}/src)
 

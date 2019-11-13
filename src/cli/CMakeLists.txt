@@ -292,6 +292,24 @@ target_link_libraries(openstudio
  openstudio_radiance
 )
 
+if (MSVC)
+  if (NOT USE_LTO)
+    message(WARN "Suppressing Thousands of linker warnings, see src/cli/CMakeLists.txt for details")
+    # The actual solution to this is to use the new openstudio_EXPORTS preprocessor
+    # definition and make all of the libs truely one large lib with a single set of exports
+    # the problem is that somehow using this now causes the openstudio_model.lib to grow too large
+    # and we get a linker error
+
+    # The alternative is to suppress these warnings.
+    # The problem is that we are using export/import of symbols between function calls
+    # within the same library. This may result in less efficient function calls.
+
+    # The potential inefficiency goes away if we use LTO linking
+    target_link_libraries(openstudiolib PRIVATE -IGNORE:4217,4049)
+  endif()
+endif()
+
+
 # Change to CONAN_PKG::OpenSSL vs OPENSSL_CRYPTO_LIBRARY if this is needed.
 # link CLI with ruby static library, ruby bindings (openstudio.so) are linked to dynamic ruby
 #if (APPLE)

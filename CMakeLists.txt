@@ -196,10 +196,6 @@ option(BUILD_PACKAGE "Build package" OFF)
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
 
-# Build shared OS libraries
-option(BUILD_SHARED_LIBS "Build OS libs as shared libraries.  Currently not tested." OFF)
-
-add_definitions("-DSHARED_OS_LIBS")
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")

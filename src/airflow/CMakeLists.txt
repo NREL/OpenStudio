@@ -79,7 +79,7 @@ add_library(${target_name}
 )
 
 target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
-target_compile_definitions(${target_name} PRIVATE openstudio_airflow_EXPORTS)
+target_compile_definitions(${target_name} PRIVATE openstudio_airflow_EXPORTS SHARED_OS_LIBS)
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
 add_dependencies(${target_name} GenerateIddFactoryRun)
 
