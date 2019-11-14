@@ -72,9 +72,9 @@ class MODEL_API CurveDoubleExponentialDecay : public Curve {
 
   double coefficient3C3() const;
 
-  double coefficient3C4() const;
+  double coefficient3C4() const; // TODO: ill-named, should be coefficient4C4
 
-  double coefficient3C5() const;
+  double coefficient3C5() const; // TODO: ill-named, should be coefficient5C5
 
   double minimumValueofx() const;
 
