@@ -97,10 +97,10 @@ namespace detail {
       x = maximumValueofx();
     }
 
-    double z1 = (x - coefficient1C1()) / coefficient2C2();
+    double z1 = (x - coefficient1C1()) / coefficient2C2(); // TODO Mistake HERE (documentation's fault)
     double z2 = (exp(coefficient3C3() * x) * coefficient4C4() * x - coefficient1C1()) /
                 coefficient2C2();
-    double z3 = -coefficient1C1()/coefficient4C4();
+    double z3 = -coefficient1C1()/coefficient4C4(); // TODO: MISTAKE HERE (user error)
     double numerator = 1.0 + (z2/abs(z2)) * boost::math::erf<double>(abs(z2)/sqrt(2.0));
     numerator *= exp(-0.5 * pow(z1,2));
     double denominator = 1.0 + (z3/abs(z3)) * boost::math::erf<double>(abs(z3)/sqrt(2.0));

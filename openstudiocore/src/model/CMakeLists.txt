@@ -436,7 +436,7 @@ set(${target_name}_src
   Construction.cpp
   ConstructionAirBoundary.hpp
   ConstructionAirBoundary_Impl.hpp
-  ConstructionAirBoundary.cpp  
+  ConstructionAirBoundary.cpp
   ConstructionBase.hpp
   ConstructionBase_Impl.hpp
   ConstructionBase.cpp
@@ -1774,6 +1774,29 @@ set(${target_name}_test_src
   test/ControllerWaterCoil_GTest.cpp
   test/CoolingTowerSingleSpeed_GTest.cpp
   test/CoolingTowerTwoSpeed_GTest.cpp
+
+  # n == 1
+  test/CurveCubic_GTest.cpp
+  test/CurveDoubleExponentialDecay_GTest.cpp
+  test/CurveExponent_GTest.cpp
+  test/CurveExponentialDecay_GTest.cpp
+  test/CurveExponentialSkewNormal_GTest.cpp
+  test/CurveLinear_GTest.cpp
+  test/CurveQuadratic_GTest.cpp
+  test/CurveQuartic_GTest.cpp
+  test/CurveRectangularHyperbola1_GTest.cpp
+  test/CurveRectangularHyperbola2_GTest.cpp
+  test/CurveSigmoid_GTest.cpp
+
+  # n == 2
+  #test/CurveBicubic_GTest.cpp
+  #test/CurveBiquadratic_GTest.cpp
+  #test/CurveFanPressureRise_GTest.cpp
+  #test/CurveQuadraticLinear_GTest.cpp
+
+  # n == 3
+  #test/CurveTriquadratic_GTest.cpp
+
   test/DaylightingControl_GTest.cpp
   test/DaylightingDeviceShelf_GTest.cpp
   test/DaylightRedirectionDevice_GTest.cpp
