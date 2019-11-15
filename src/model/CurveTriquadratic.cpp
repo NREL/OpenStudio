@@ -92,6 +92,9 @@ namespace detail {
     double z2 = pow(x[2],2);
     double result = 0.0;
     if (OptionalDouble coeff = coefficient1Constant()) {
+      result += coeff.get();
+    }
+    if (OptionalDouble coeff = coefficient2xPOW2()) {
       result += coeff.get() * x2;
     }
     if (OptionalDouble coeff = coefficient3x()) {
