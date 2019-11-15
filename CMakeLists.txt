@@ -1308,7 +1308,7 @@ endif()
 
 if (MSVC)
   if (NOT USE_LTO)
-    message(WARN "Suppressing 121,000+ linker warnings, see src/lib/CMakeLists.txt for details")
+    message(WARNING "Suppressing 121,000+ linker warnings, see src/lib/CMakeLists.txt for details")
     # The actual solution to this is to use the new openstudio_EXPORTS preprocessor
     # definition and make all of the libs truely one large lib with a single set of exports
     # the problem is that somehow using this now causes the openstudio_model.lib to grow too large

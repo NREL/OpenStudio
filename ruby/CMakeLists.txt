@@ -69,8 +69,6 @@ foreach(OPENSTUDIO_FILE ${OPENSTUDIO_FILES})
   )
 endforeach()
 
-message(INFO ${ALL_RUBY_BINDING_TARGETS})
-
 target_link_libraries(
   openstudio_rb
   PRIVATE
