@@ -59,7 +59,7 @@ TEST_F(ModelFixture, CurveRectangularHyperbola2_GetterSetters_evaluate)
 
   EXPECT_EQ(1.0, curve.coefficient1C1());
   EXPECT_EQ(1.0, curve.coefficient2C2());
-  EXPECT_EQ(0.0, curve.coefficient3C3());
+  EXPECT_EQ(1.0, curve.coefficient3C3());
 
   EXPECT_EQ(0.0, curve.minimumValueofx());
   EXPECT_EQ(1.0, curve.maximumValueofx());

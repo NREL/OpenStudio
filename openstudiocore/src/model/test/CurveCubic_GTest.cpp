@@ -73,7 +73,7 @@ TEST_F(ModelFixture, CurveCubic_GetterSetters_evaluate)
   double max_x = 3.0;
 
   auto calc = [c1, c2, c3, c4](double x) {
-    return c1 + c2 * x + c3 * pow(x, 2) + c4 * pow(x, 3);
+    return c1 + c2 * x + c3 * std::pow(x, 2) + c4 * std::pow(x, 3);
   };
 
   EXPECT_TRUE(curve.setCoefficient1Constant(c1));

@@ -57,12 +57,12 @@ TEST_F(ModelFixture, CurveExponentialSkewNormal_GetterSetters_evaluate)
   Model m;
   CurveExponentialSkewNormal curve(m);
 
-  EXPECT_EQ(0.0, curve.coefficient1C1());
-  EXPECT_EQ(0.0, curve.coefficient2C2());
-  EXPECT_EQ(0.0, curve.coefficient3C3());
-  EXPECT_EQ(0.0, curve.coefficient4C4());
+  EXPECT_EQ(1.0, curve.coefficient1C1());
+  EXPECT_EQ(1.0, curve.coefficient2C2());
+  EXPECT_EQ(-1.0, curve.coefficient3C3());
+  EXPECT_EQ(1.0, curve.coefficient4C4());
 
-  EXPECT_EQ(0.0, curve.minimumValueofx());
+  EXPECT_EQ(-1.0, curve.minimumValueofx());
   EXPECT_EQ(1.0, curve.maximumValueofx());
 
   double c1 = 1.0;
@@ -78,8 +78,8 @@ TEST_F(ModelFixture, CurveExponentialSkewNormal_GetterSetters_evaluate)
     double z2 = (c4 * x * std::exp(c3 * x) - c1) / c2;
     double z3 = -c1 / c2;
 
-    double numerator = exp(-0.5 * pow(z1, 2)) * (1.0 + (z2/abs(z2)) * boost::math::erf<double>(std::abs(z2)/sqrt(2.0)));
-    double denominator = exp(-0.5 * pow(z3, 2)) * (1.0 + (z3/abs(z3)) * boost::math::erf<double>(std::abs(z3)/sqrt(2.0)));
+    double numerator = std::exp(-0.5 * std::pow(z1, 2)) * (1.0 + (z2/abs(z2)) * std::erf(std::abs(z2)/std::sqrt(2.0)));
+    double denominator = std::exp(-0.5 * std::pow(z3, 2)) * (1.0 + (z3/abs(z3)) * std::erf(std::abs(z3)/std::sqrt(2.0)));
 
     return numerator / denominator;
   };
