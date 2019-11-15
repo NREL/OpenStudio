@@ -118,7 +118,7 @@ namespace detail {
       }
     }
 
-    double z = independantVariables[1];
+    double z = independantVariables[2];
     if (boost::optional<double> _val = minimumValueofz()) {
       if (z < _val.get()) {
         LOG(Warn, "Supplied z is below the minimumValueofz, resetting it.");
