@@ -285,7 +285,7 @@ TEST_F(ModelFixture, CurveTriquadratic_GetterSetters_evaluate)
 
   // z > max_z
   z = 40.0;
-  EXPECT_DOUBLE_EQ(calc(x, max_y, z), curve.evaluate(x, y, z));
+  EXPECT_DOUBLE_EQ(calc(x, y, max_z), curve.evaluate(x, y, z));
   EXPECT_DOUBLE_EQ(112624.25, curve.evaluate(x, y, z));
 
   // x < min_x, y < min_y, z < min_z

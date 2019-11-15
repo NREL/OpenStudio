@@ -110,16 +110,16 @@ TEST_F(ModelFixture, CurveExponentialSkewNormal_GetterSetters_evaluate)
   // x < min_x
   x = 0.05;
   EXPECT_DOUBLE_EQ(calc(min_x), curve.evaluate(x));
-  EXPECT_DOUBLE_EQ(1.5003628786238339, curve.evaluate(x));
+  EXPECT_DOUBLE_EQ(1.3575844732109894, curve.evaluate(x));
 
   // x > max_x
   x = 20.0;
   EXPECT_DOUBLE_EQ(calc(max_x), curve.evaluate(x));
-  EXPECT_DOUBLE_EQ(1.1923328444587, curve.evaluate(x));
+  EXPECT_DOUBLE_EQ(2.2275710165736293, curve.evaluate(x));
 
   // Set output limits
-  double min_output = 12.0;
-  double max_output = 20.5;
+  double min_output = 1.5;
+  double max_output = 2.5;
   EXPECT_TRUE(curve.setMinimumCurveOutput(min_output));
   EXPECT_TRUE(curve.setMaximumCurveOutput(max_output));
 
