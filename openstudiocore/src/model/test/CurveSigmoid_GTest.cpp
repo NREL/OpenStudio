@@ -58,10 +58,10 @@ TEST_F(ModelFixture, CurveSigmoid_GetterSetters_evaluate)
   CurveSigmoid curve(m);
 
   EXPECT_EQ(0.0, curve.coefficient1C1());
-  EXPECT_EQ(0.0, curve.coefficient2C2());
-  EXPECT_EQ(0.0, curve.coefficient3C3());
-  EXPECT_EQ(0.0, curve.coefficient4C4());
-  EXPECT_EQ(0.0, curve.coefficient5C5());
+  EXPECT_EQ(1.0, curve.coefficient2C2());
+  EXPECT_EQ(1.0, curve.coefficient3C3());
+  EXPECT_EQ(1.0, curve.coefficient4C4());
+  EXPECT_EQ(1.0, curve.coefficient5C5());
 
   EXPECT_EQ(0.0, curve.minimumValueofx());
   EXPECT_EQ(1.0, curve.maximumValueofx());

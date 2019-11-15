@@ -71,7 +71,7 @@ TEST_F(ModelFixture, CurveExponentialDecay_GetterSetters_evaluate)
   double max_x = 3.0;
 
   auto calc = [c1, c2, c3](double x) {
-    return c1 + c2 * exp(c3 * x);
+    return c1 + c2 * std::exp(c3 * x);
   };
 
   EXPECT_TRUE(curve.setCoefficient1C1(c1));

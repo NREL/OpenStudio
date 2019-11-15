@@ -75,7 +75,7 @@ TEST_F(ModelFixture, CurveQuartic_GetterSetters_evaluate)
   double max_x = 3.0;
 
   auto calc = [c1, c2, c3, c4, c5](double x) {
-    return c1 + c2 * x + c3 * pow(x, 2) + c4 * pow(x, 3) + c5 * pow(x, 4);
+    return c1 + c2 * x + c3 * std::pow(x, 2) + c4 * std::pow(x, 3) + c5 * std::pow(x, 4);
   };
 
   EXPECT_TRUE(curve.setCoefficient1Constant(c1));
@@ -101,17 +101,17 @@ TEST_F(ModelFixture, CurveQuartic_GetterSetters_evaluate)
   // X in range, no output limit
   double x = 0.5;
   EXPECT_DOUBLE_EQ(calc(x), curve.evaluate(x));
-  EXPECT_DOUBLE_EQ(2.75, curve.evaluate(x));
+  EXPECT_DOUBLE_EQ(3.5625, curve.evaluate(x));
 
   // x < min_x
   x = 0.05;
   EXPECT_DOUBLE_EQ(calc(min_x), curve.evaluate(x));
-  EXPECT_DOUBLE_EQ(1.23, curve.evaluate(x));
+  EXPECT_DOUBLE_EQ(1.2345, curve.evaluate(x));
 
   // x > max_x
   x = 20.0;
   EXPECT_DOUBLE_EQ(calc(max_x), curve.evaluate(x));
-  EXPECT_DOUBLE_EQ(34.0, curve.evaluate(x));
+  EXPECT_DOUBLE_EQ(547.0, curve.evaluate(x));
 
   // Set output limits
   double min_output = 3.5;
