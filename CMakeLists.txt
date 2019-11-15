@@ -867,11 +867,12 @@ set(project_directories
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
 
-add_subdirectory(ruby)
-
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
 endforeach()
+
+add_subdirectory(ruby)
+
 
 # csharp, after loading projects
 if(BUILD_CSHARP_BINDINGS)
@@ -1303,4 +1304,26 @@ if( BUILD_NUGET_PACKAGE )
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
   )
 endif()
+
+
+if (MSVC)
+  if (NOT USE_LTO)
+    message(WARN "Suppressing 121,000+ linker warnings, see src/lib/CMakeLists.txt for details")
+    # The actual solution to this is to use the new openstudio_EXPORTS preprocessor
+    # definition and make all of the libs truely one large lib with a single set of exports
+    # the problem is that somehow using this now causes the openstudio_model.lib to grow too large
+    # and we get a linker error
+
+    # The alternative is to suppress these warnings.
+    # The problem is that we are using export/import of symbols between function calls
+    # within the same library. This may result in less efficient function calls.
+
+    # The potential inefficiency goes away if we use LTO linking
+    target_link_libraries(openstudiolib PRIVATE -IGNORE:4217,4049)
+    target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
+    target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
+  endif()
+endif()
+
+
 

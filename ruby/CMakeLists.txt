@@ -12,7 +12,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_
 
 # common library for openstudio.so and openstudio.exe
 
-add_library( init_openstudio STATIC
+add_library( init_openstudio OBJECT
   init_openstudio.cpp
   RubyAPI.hpp
 )
@@ -28,45 +28,12 @@ elseif (UNIX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=register -Wno-register")
 endif()
 
-target_link_libraries(init_openstudio
- ruby_OpenStudioAirflow
- ruby_OpenStudioModelCore
- ruby_OpenStudioModelSimulation
- ruby_OpenStudioUtilitiesCore
- ruby_OpenStudioUtilitiesPlot
- ruby_OpenStudioEnergyPlus
- ruby_OpenStudioOSVersion
- ruby_OpenStudioUtilitiesData
- ruby_OpenStudioUtilitiesSql
- ruby_OpenStudioGBXML
- ruby_OpenStudioModelGenerators
- ruby_OpenStudioRadiance
- ruby_OpenStudioUtilitiesTime
- ruby_OpenStudioISOModel
- ruby_OpenStudioModelGeometry
- ruby_OpenStudioSDD
- ruby_OpenStudioUtilitiesFileTypes
- ruby_OpenStudioUtilitiesUnits
- ruby_OpenStudioModelHVAC
- ruby_OpenStudioModelZoneHVAC
- ruby_OpenStudioModelAvailabilityManager
- ruby_OpenStudioModelPlantEquipmentOperationScheme
- ruby_OpenStudioModelStraightComponent
- ruby_OpenStudioModelAirflow
- ruby_OpenStudioUtilities
- ruby_OpenStudioUtilitiesGeometry
- ruby_OpenStudioMeasure
- ruby_OpenStudioModelRefrigeration
- ruby_OpenStudioUtilitiesBCL
- ruby_OpenStudioUtilitiesIdd
- ruby_OpenStudioModel
- ruby_OpenStudioModelResources
- ruby_OpenStudioUtilitiesIdf
-)
 
 # openstudio ruby bindings to load into normal ruby
 
-add_library(openstudio_rb MODULE
+add_library(
+  openstudio_rb
+  MODULE
   RubyAPI.hpp
   openstudio_rb.cpp
 )
@@ -102,8 +69,13 @@ foreach(OPENSTUDIO_FILE ${OPENSTUDIO_FILES})
   )
 endforeach()
 
-target_link_libraries(openstudio_rb
+message(INFO ${ALL_RUBY_BINDING_TARGETS})
+
+target_link_libraries(
+  openstudio_rb
+  PRIVATE
   init_openstudio
+  ${ALL_RUBY_BINDING_TARGETS}
   openstudio_utilities
   openstudio_airflow
   openstudio_model
@@ -117,11 +89,12 @@ target_link_libraries(openstudio_rb
 )
 
 if( WIN32 )
-  target_link_libraries(openstudio_rb ${RUBY_MINGW_STUB_LIB})
+  target_link_libraries(openstudio_rb PRIVATE ${RUBY_MINGW_STUB_LIB})
 endif()
 
 if (APPLE)
   target_link_libraries(openstudio_rb
+    PRIVATE
     ${OPENSSL_CRYPTO_LIBRARY}
     ${OPENSSL_SSL_LIBRARY}
   )

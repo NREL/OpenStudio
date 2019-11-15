@@ -23,8 +23,6 @@
 # no source files
 add_library(openstudiolib SHARED empty.cpp)
 
-add_executable(test_openstudiolib test_lib.cpp)
-target_link_libraries(test_openstudiolib openstudiolib)
 
 target_link_libraries(
  openstudiolib
@@ -60,23 +58,6 @@ target_link_libraries(
  CONAN_PKG::OpenSSL
  CONAN_PKG::pugixml
 )
-
-if (MSVC)
-  if (NOT USE_LTO)
-    message(WARN "Suppressing 121,000+ linker warnings, see src/lib/CMakeLists.txt for details")
-    # The actual solution to this is to use the new openstudio_EXPORTS preprocessor
-    # definition and make all of the libs truely one large lib with a single set of exports
-    # the problem is that somehow using this now causes the openstudio_model.lib to grow too large
-    # and we get a linker error
-
-    # The alternative is to suppress these warnings.
-    # The problem is that we are using export/import of symbols between function calls
-    # within the same library. This may result in less efficient function calls.
-
-    # The potential inefficiency goes away if we use LTO linking
-    target_link_libraries(openstudiolib PRIVATE -IGNORE:4217,4049)
-  endif()
-endif()
 
 target_compile_definitions(openstudiolib INTERFACE "-DSHARED_OS_LIBS")
 
