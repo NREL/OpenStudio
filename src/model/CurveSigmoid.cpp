@@ -89,8 +89,8 @@ namespace detail {
     double temp = coefficient3C3() - x[0];
     temp /= coefficient4C4();
     temp = exp(temp);
-    temp = pow(temp,coefficient5C5());
-    result /= (1.0 + temp);
+    temp = pow(1.0 + temp, coefficient5C5());
+    result /= temp;
     result += coefficient1C1();
     return result;
   }
