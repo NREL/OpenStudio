@@ -119,7 +119,7 @@ TEST_F(ModelFixture, CurveExponentialSkewNormal_GetterSetters_evaluate)
 
   // Set output limits
   double min_output = 1.5;
-  double max_output = 2.5;
+  double max_output = 2.0;
   EXPECT_TRUE(curve.setMinimumCurveOutput(min_output));
   EXPECT_TRUE(curve.setMaximumCurveOutput(max_output));
 
