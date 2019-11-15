@@ -1787,15 +1787,13 @@ set(${target_name}_test_src
   test/CurveRectangularHyperbola1_GTest.cpp
   test/CurveRectangularHyperbola2_GTest.cpp
   test/CurveSigmoid_GTest.cpp
-
   # n == 2
-  #test/CurveBicubic_GTest.cpp
-  #test/CurveBiquadratic_GTest.cpp
-  #test/CurveFanPressureRise_GTest.cpp
-  #test/CurveQuadraticLinear_GTest.cpp
-
+  test/CurveBicubic_GTest.cpp
+  test/CurveBiquadratic_GTest.cpp
+  test/CurveFanPressureRise_GTest.cpp
+  test/CurveQuadraticLinear_GTest.cpp
   # n == 3
-  #test/CurveTriquadratic_GTest.cpp
+  test/CurveTriquadratic_GTest.cpp
 
   test/DaylightingControl_GTest.cpp
   test/DaylightingDeviceShelf_GTest.cpp
