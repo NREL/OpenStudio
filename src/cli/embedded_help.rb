@@ -102,8 +102,8 @@ module Kernel
     current_directory = Dir.pwd 
     if original_directory != current_directory
       Dir.chdir(original_directory)
-      puts "Directory changed from '#{original_directory}' to '#{current_directory}' while requiring '#{path}', result = #{result}, restoring original_directory"
-      STDOUT.flush
+      #puts "Directory changed from '#{original_directory}' to '#{current_directory}' while requiring '#{path}', result = #{result}, restoring original_directory"
+      #STDOUT.flush
     end
     
     return result
@@ -122,8 +122,8 @@ module Kernel
     current_directory = Dir.pwd 
     if original_directory != current_directory
       Dir.chdir(original_directory)
-      puts "Directory changed from '#{original_directory}' to '#{current_directory}' while require_embedded_absolute '#{path}', result = #{result}, restoring original_directory"
-      STDOUT.flush
+      #puts "Directory changed from '#{original_directory}' to '#{current_directory}' while require_embedded_absolute '#{path}', result = #{result}, restoring original_directory"
+      #STDOUT.flush
     end
     
     return result
