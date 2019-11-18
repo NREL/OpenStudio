@@ -114,14 +114,14 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the Building object if there is one, this implementation uses a cached reference to the Building
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<Building>(). */
   boost::optional<Building> building() const;
-  
+
   /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
-  boost::optional<FoundationKivaSettings> foundationKivaSettings() const;  
-  
+  boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
+
   /** Get the PerformancePrecisionTradeoffs object if there is one, this implementation uses a cached reference to the PerformancePrecisionTradeoffs
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>(). */
-  boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs() const;  
+  boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs() const;
 
   /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
@@ -234,7 +234,10 @@ class MODEL_API Model : public openstudio::Workspace {
    *  \todo Use of this template method requires knowledge of the size of the implementation object.
    *  Therefore, to use model.getUniqueModelObject<Facility>() the user must include both
    *  Facility.hpp and Facility_Impl.hpp. It may be better to instantiate each version of this
-   *  template method to avoid exposing the implementation objects, this is an open question. */
+   *  template method to avoid exposing the implementation objects, this is an open question.
+   *  Additionally, you should also prefer using direct getters if they exists and can return a cached object
+   *  since this implementation tests all objects in the model and is slower
+   *  eg: Prefer using `boost::optional<YearDescription> Model::yearDescription())` */
   template <typename T>
   T getUniqueModelObject() {
     std::vector<WorkspaceObject> objects = this->allObjects();
