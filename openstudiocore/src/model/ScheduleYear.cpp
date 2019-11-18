@@ -109,7 +109,12 @@ namespace detail {
   {
     std::vector<openstudio::Date> result;
 
-    YearDescription yd = this->model().getUniqueModelObject<YearDescription>();
+    // Use the cached version if available (faster), otherwise initialize it
+    boost::optional<YearDescription> yd = this->model().yearDescription();
+    if (!yd) {
+      yd = this->model().getUniqueModelObject<model::YearDescription>();
+    }
+    OS_ASSERT(yd);
 
     for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(this->extensibleGroups()))
     {
@@ -117,7 +122,7 @@ namespace detail {
       OptionalUnsigned day = group.getUnsigned(1, true);
 
       if (month && day){
-        result.push_back(yd.makeDate(*month, *day));
+        result.push_back(yd->makeDate(*month, *day));
       }else{
         LOG(Error, "Could not read date " << group.groupIndex() << " in " << briefDescription() << "." );
       }
@@ -149,10 +154,15 @@ namespace detail {
 
   boost::optional<ScheduleWeek> ScheduleYear_Impl::getScheduleWeek(const openstudio::Date& date) const
   {
-    YearDescription yd = this->model().getUniqueModelObject<YearDescription>();
+    // Use the cached version if available (faster), otherwise initialize it
+    boost::optional<YearDescription> yd = this->model().yearDescription();
+    if (!yd) {
+      yd = this->model().getUniqueModelObject<model::YearDescription>();
+    }
+    OS_ASSERT(yd);
 
-    if (yd.assumedYear() != date.assumedBaseYear()){
-      LOG(Error, "Assumed base year " << date.assumedBaseYear() << " of date does not match this model's assumed base year of " << yd.assumedYear());
+    if (yd->assumedYear() != date.assumedBaseYear()){
+      LOG(Error, "Assumed base year " << date.assumedBaseYear() << " of date does not match this model's assumed base year of " << yd->assumedYear());
       return boost::none;
     }
 
@@ -182,10 +192,15 @@ namespace detail {
 
   bool ScheduleYear_Impl::addScheduleWeek(const openstudio::Date& untilDate, const ScheduleWeek& scheduleWeek)
   {
-    YearDescription yd = this->model().getUniqueModelObject<YearDescription>();
+    // Use the cached version if available (faster), otherwise initialize it
+    boost::optional<YearDescription> yd = this->model().yearDescription();
+    if (!yd) {
+      yd = this->model().getUniqueModelObject<model::YearDescription>();
+    }
+    OS_ASSERT(yd);
 
-    if (yd.assumedYear() != untilDate.assumedBaseYear()){
-      LOG(Error, "Assumed base year " << untilDate.assumedBaseYear() << " of untilDate does not match this model's assumed base year of " << yd.assumedYear());
+    if (yd->assumedYear() != untilDate.assumedBaseYear()){
+      LOG(Error, "Assumed base year " << untilDate.assumedBaseYear() << " of untilDate does not match this model's assumed base year of " << yd->assumedYear());
       return false;
     }
 

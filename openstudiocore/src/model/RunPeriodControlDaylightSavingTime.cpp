@@ -218,7 +218,13 @@ namespace detail {
   openstudio::Date RunPeriodControlDaylightSavingTime_Impl::getDate(const std::string& text) const
   {
     Date result;
-    YearDescription yd = this->model().getUniqueModelObject<YearDescription>();
+    // Use the cached version if available (faster), otherwise initialize it
+    // try the cached version first
+    boost::optional<YearDescription> yd = this->model().yearDescription();
+    if (!yd) {
+      yd = this->model().getUniqueModelObject<model::YearDescription>();
+    }
+    OS_ASSERT(yd);
 
     /*
      \note  <number>/<number>  (month/day)
@@ -240,7 +246,7 @@ namespace detail {
       std::string dayOfMonthString(matches[2].first, matches[2].second);
       unsigned dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
 
-      result = yd.makeDate(monthOfYear, dayOfMonth);
+      result = yd->makeDate(monthOfYear, dayOfMonth);
       return result;
     }else if (boost::regex_search(text, matches, boost::regex("(\\d+)\\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)", boost::regex::icase))){
 
@@ -248,7 +254,7 @@ namespace detail {
       unsigned dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
       std::string monthString(matches[2].first, matches[2].second);
 
-      result = yd.makeDate(monthOfYear(monthString), dayOfMonth);
+      result = yd->makeDate(monthOfYear(monthString), dayOfMonth);
       return result;
     }else if (boost::regex_search(text, matches, boost::regex("(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)\\s+(\\d+)", boost::regex::icase))){
 
@@ -256,7 +262,7 @@ namespace detail {
       std::string dayOfMonthString(matches[2].first, matches[2].second);
       unsigned dayOfMonth = boost::lexical_cast<unsigned>(dayOfMonthString);
 
-      result = yd.makeDate(monthOfYear(monthString), dayOfMonth);
+      result = yd->makeDate(monthOfYear(monthString), dayOfMonth);
       return result;
     }else if (boost::regex_search(text, matches, boost::regex("(1|2|3|4|5|1st|2nd|3rd|4th|5th|Last)\\s+(Sun|Mon|Tue|Wed|Thu|Fri|Sat|Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)\\s+in\\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec|January|February|March|April|May|June|July|August|September|October|November|December)", boost::regex::icase))){
 
@@ -264,7 +270,7 @@ namespace detail {
       std::string dayOfWeekString(matches[2].first, matches[2].second);
       std::string monthString(matches[3].first, matches[3].second);
 
-      result = yd.makeDate(nthDayOfWeekInMonth(nthString), dayOfWeek(dayOfWeekString), monthOfYear(monthString));
+      result = yd->makeDate(nthDayOfWeekInMonth(nthString), dayOfWeek(dayOfWeekString), monthOfYear(monthString));
       return result;
     }
 
