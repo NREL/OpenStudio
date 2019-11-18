@@ -2585,6 +2585,26 @@ void Model::applySizingValues() {
   return getImpl<detail::Model_Impl>()->applySizingValues();
 }
 
+
+// Template specilization to use caching for YearDescription
+template<>
+YearDescription Model::getUniqueModelObject<YearDescription>() {
+  if (boost::optional<YearDescription> _yd = yearDescription()) {
+    return _yd.get();
+  } else {
+    return YearDescription(*this);
+  }
+}
+
+template<>
+Building Model::getUniqueModelObject<Building>() {
+  if (boost::optional<Building> _b = building()) {
+    return _b.get();
+  } else {
+    return Building(*this);
+  }
+}
+
 std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::ModelObjectCreator::getNew(
   Model_Impl * model,
   const IdfObject& obj,
