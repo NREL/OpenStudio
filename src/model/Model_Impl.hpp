@@ -145,11 +145,11 @@ namespace detail {
     /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
     boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
-    
+
     /** Get the PerformancePrecisionTradeoffs object if there is one, this implementation uses a cached reference to the PerformancePrecisionTradeoffs
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>(). */
-    boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs() const;    
-    
+    boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs() const;
+
     /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
     boost::optional<LifeCycleCostParameters> lifeCycleCostParameters() const;
@@ -304,20 +304,20 @@ namespace detail {
     mutable boost::optional<Building> m_cachedBuilding;
     mutable boost::optional<FoundationKivaSettings> m_cachedFoundationKivaSettings;
     mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
+    mutable boost::optional<PerformancePrecisionTradeoffs> m_cachedPerformancePrecisionTradeoffs;
     mutable boost::optional<RunPeriod> m_cachedRunPeriod;
     mutable boost::optional<YearDescription> m_cachedYearDescription;
     mutable boost::optional<WeatherFile> m_cachedWeatherFile;
-    mutable boost::optional<PerformancePrecisionTradeoffs> m_cachedPerformancePrecisionTradeoffs;
 
   // private slots:
     void clearCachedData();
     void clearCachedBuilding(const Handle& handle);
     void clearCachedFoundationKivaSettings(const Handle& handle);
     void clearCachedLifeCycleCostParameters(const Handle& handle);
+    void clearCachedPerformancePrecisionTradeoffs(const Handle& handle);
     void clearCachedRunPeriod(const Handle& handle);
     void clearCachedYearDescription(const Handle& handle);
     void clearCachedWeatherFile(const Handle& handle);
-    void clearCachedPerformancePrecisionTradeoffs(const Handle& handle);
 
     typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(Model_Impl *, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)> CopyConstructorFunction;
     typedef std::map<IddObjectType, CopyConstructorFunction> CopyConstructorMap;
@@ -327,7 +327,7 @@ namespace detail {
 
     // The purpose of ModelObjectCreator is to support static initialization of two large maps.
     // One is a map from IddObjectType to a function that creates a new ModelObject instance,
-    // The other is a map from IddObjectType to a function that creates a copy of an existing 
+    // The other is a map from IddObjectType to a function that creates a copy of an existing
     //
     // See Model_Impl::createObject implementation to see applicaiton of this class.
     struct ModelObjectCreator {
