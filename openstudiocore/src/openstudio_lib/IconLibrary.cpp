@@ -50,25 +50,31 @@ namespace openstudio {
   const QPixmap* IconLibrary::findIcon(unsigned int v) const
   {
     auto i = m_icons.find(v);
-    if (i != m_icons.end())
+    if (i != m_icons.end()) {
       return (*i).second;
-
-    return nullptr;
+    } else {
+      LOG(Error, "Missing Icon for IddObjectType=" << openstudio::IddObjectType(v).valueName());
+      return m_icons.at(openstudio::IddObjectType(openstudio::IddObjectType::Catchall).value());
+    }
 
   }
 
   const QPixmap* IconLibrary::findMiniIcon(unsigned int v) const
   {
     auto i = m_miniIcons.find(v);
-    if (i != m_miniIcons.end())
+    if (i != m_miniIcons.end()) {
       return (*i).second;
-
-    return nullptr;
-
+    } else {
+      LOG(Error, "Missing Mini Icon for IddObjectType=" << openstudio::IddObjectType(v).valueName());
+      return m_miniIcons.at(openstudio::IddObjectType(openstudio::IddObjectType::Catchall).value());
+    }
   }
 
 IconLibrary::IconLibrary()
 {
+  // Default icon to avoid a crash
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::Catchall).value()] = new QPixmap(":images/missing_icon.png");
+
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem).value()] = new QPixmap(":images/OAMixer.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirLoopHVAC_UnitaryCoolOnly).value()] = new QPixmap(":images/DXCoolingCoil.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirLoopHVAC_UnitaryHeatPump_AirToAir).value()] = new QPixmap(":images/heat_pump3.png");
@@ -214,11 +220,14 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AvailabilityManager_HybridVentilation).value()] = new QPixmap(":images/hvac-icon.png");
 
   // mini icons
+  // Default mini icon to avoid a crash
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::Catchall).value()] = new QPixmap(":images/mini_icons/missing_icon.png");
+
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow).value()] = new QPixmap(":images/mini_icons/mini_vrf_outdoor.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Building).value()] = new QPixmap(":images/mini_icons/building.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_BuildingStory).value()] = new QPixmap(":images/mini_icons/building_story.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Construction).value()] = new QPixmap(":images/mini_icons/construction.png");
-  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Construction_AirBoundary).value()] = new QPixmap(":images/mini_icons/construction_air_boundary.png");  
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Construction_AirBoundary).value()] = new QPixmap(":images/mini_icons/construction_air_boundary.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Construction_CfactorUndergroundWall).value()] = new QPixmap(":images/mini_icons/construction_undergnd.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Construction_FfactorGroundFloor).value()] = new QPixmap(":images/mini_icons/construction_gnd.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Construction_InternalSource).value()] = new QPixmap(":images/mini_icons/construct_inter_source.png");

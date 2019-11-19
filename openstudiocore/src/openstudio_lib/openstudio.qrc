@@ -150,6 +150,7 @@
     <file>images/lowtempradiant_constflow.png</file>
     <file>images/lowtempradiant_varflow.png</file>
     <file>images/mechanical-sub-cooler.png</file>
+    <file>images/missing_icon.png</file>
     <file>images/mixer.png</file>
     <file>images/OAMixer.png</file>
     <file>images/off_building_tab.png</file>
@@ -467,6 +468,7 @@
     <file>images/mini_icons/mini_headered_pumps_variable.png</file>
     <file>images/mini_icons/mini_infiltration_leak.png</file>
     <file>images/mini_icons/mini_mechanical-sub-cooler.png</file>
+    <file>images/mini_icons/missing_icon.png</file>
     <file>images/mini_icons/pipe.png</file>
     <file>images/mini_icons/mini_pipe_adiabatic.png</file>
     <file>images/mini_icons/mini_pipe_indoor.png</file>

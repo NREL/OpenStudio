@@ -31,6 +31,7 @@
 #define OPENSTUDIO_ICONLIBRARY_HPP
 
 #include "OpenStudioAPI.hpp"
+#include "../utilities/core/Logger.hpp"
 
 #include <QPixmap>
 #include <map>
@@ -65,6 +66,8 @@ public:
 protected:
 
 private:
+
+  REGISTER_LOGGER("openstudio.openstudio_lib.IconLibrary");
 
   IconLibrary();
   IconLibrary(const IconLibrary&);
