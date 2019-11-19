@@ -53,7 +53,7 @@ namespace openstudio {
     if (i != m_icons.end()) {
       return (*i).second;
     } else {
-      LOG(Error, "Missing Icon for IddObjectType=" << openstudio::IddObjectType(v).valueName());
+      // LOG(Debug, "Missing Icon for IddObjectType=" << openstudio::IddObjectType(v).valueName());
       return m_icons.at(openstudio::IddObjectType(openstudio::IddObjectType::Catchall).value());
     }
 
@@ -65,7 +65,7 @@ namespace openstudio {
     if (i != m_miniIcons.end()) {
       return (*i).second;
     } else {
-      LOG(Error, "Missing Mini Icon for IddObjectType=" << openstudio::IddObjectType(v).valueName());
+      // LOG(Debug, "Missing Mini Icon for IddObjectType=" << openstudio::IddObjectType(v).valueName());
       return m_miniIcons.at(openstudio::IddObjectType(openstudio::IddObjectType::Catchall).value());
     }
   }
