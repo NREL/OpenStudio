@@ -189,6 +189,7 @@ IconLibrary::IconLibrary()
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_CooledBeam).value()] = new QPixmap(":images/coilcoolingchilledbeam.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_FourPipeBeam).value()] = new QPixmap(":images/coilcoolingfourpipebeam.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_FourPipeBeam).value()] = new QPixmap(":images/coilheatingfourpipebeam.png");
+  m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_Desuperheater).value()] = new QPixmap(":images/coilheatingdesuperheater.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode).value()] = new QPixmap(":images/dxcoolingcoil_2stage_humidity.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_CoilSystem_Cooling_Water_HeatExchangerAssisted).value()] = new QPixmap(":images/coil_system_coolingwater_heat_exchanger.png");
   m_icons[openstudio::IddObjectType(openstudio::IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted).value()] = new QPixmap(":images/coilsystem_cooling_dx.png");
@@ -360,6 +361,7 @@ IconLibrary::IconLibrary()
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_CooledBeam).value()] = new QPixmap(":images/mini_icons/coilcoolingchilledbeam_mini.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_FourPipeBeam).value()] = new QPixmap(":images/mini_icons/coilcoolingfourpipebeam.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_FourPipeBeam).value()] = new QPixmap(":images/mini_icons/coilheatingfourpipebeam.png");
+  m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Heating_Desuperheater).value()] = new QPixmap(":images/mini_icons/coilheatingdesuperheater.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed).value()] = new QPixmap(":images/mini_icons/mini_dxcoolingcoil_singlespeed.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_DX_TwoSpeed).value()] = new QPixmap(":images/mini_icons/mini-dxcoolingcoil_2speed.png");
   m_miniIcons[openstudio::IddObjectType(openstudio::IddObjectType::OS_Coil_Cooling_DX_TwoStageWithHumidityControlMode).value()] = new QPixmap(":images/mini_icons/mini_dxcoolingcoil_2stage_humidity.png");
