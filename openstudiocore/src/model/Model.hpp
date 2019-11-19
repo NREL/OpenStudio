@@ -516,12 +516,27 @@ MODEL_API Model exampleModel();
 /// Adds example model objects to an existing model.
 MODEL_API void addExampleModelObjects(Model& model);
 
-// Template specilizations for getUniqueModelObject to use caching
+// Template specializations for getUniqueModelObject to use caching
+template <>
+Building Model::getUniqueModelObject<Building>();
+
+template <>
+FoundationKivaSettings Model::getUniqueModelObject<FoundationKivaSettings>();
+
+template <>
+LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>();
+
+template <>
+PerformancePrecisionTradeoffs Model::getUniqueModelObject<PerformancePrecisionTradeoffs>();
+
+template <>
+RunPeriod Model::getUniqueModelObject<RunPeriod>();
+
 template <>
 YearDescription Model::getUniqueModelObject<YearDescription>();
 
 template <>
-Building Model::getUniqueModelObject<Building>();
+WeatherFile Model::getUniqueModelObject<WeatherFile>();
 
 } // model
 } // openstudio
