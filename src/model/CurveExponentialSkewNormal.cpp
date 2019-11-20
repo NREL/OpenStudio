@@ -84,12 +84,23 @@ namespace detail {
     return 1;
   }
 
-  double CurveExponentialSkewNormal_Impl::evaluate(const std::vector<double>& x) const {
-    OS_ASSERT(x.size() == 1u);
-    double z1 = (x[0] - coefficient1C1()) / coefficient2C2();
-    double z2 = (exp(coefficient3C3() * x[0]) * coefficient4C4() * x[0] - coefficient1C1()) /
+  double CurveExponentialSkewNormal_Impl::evaluate(const std::vector<double>& independantVariables) const {
+    OS_ASSERT(independantVariables.size() == 1u);
+
+    double x = independantVariables[0];
+    if (x < minimumValueofx()) {
+      LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
+      x = minimumValueofx();
+    }
+    if (x > maximumValueofx()) {
+      LOG(Warn, "Supplied x is above the maximumValueofx, resetting it.");
+      x = maximumValueofx();
+    }
+
+    double z1 = (x - coefficient1C1()) / coefficient2C2(); // TODO Mistake HERE (documentation's fault)
+    double z2 = (exp(coefficient3C3() * x) * coefficient4C4() * x - coefficient1C1()) /
                 coefficient2C2();
-    double z3 = -coefficient1C1()/coefficient4C4();
+    double z3 = -coefficient1C1()/coefficient4C4(); // TODO: MISTAKE HERE (user error)
     double numerator = 1.0 + (z2/abs(z2)) * boost::math::erf<double>(abs(z2)/sqrt(2.0));
     numerator *= exp(-0.5 * pow(z1,2));
     double denominator = 1.0 + (z3/abs(z3)) * boost::math::erf<double>(abs(z3)/sqrt(2.0));
