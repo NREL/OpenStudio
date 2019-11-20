@@ -462,6 +462,8 @@ OutputMeter::OutputMeter(const Model& model)
   : ModelObject(OutputMeter::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::OutputMeter_Impl>());
+  // Don't keep the automatic name
+  setName("");
 }
 
 IddObjectType OutputMeter::iddObjectType() {
