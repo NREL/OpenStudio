@@ -29727,9 +29727,10 @@ OS:Output:Meter,
   A2, \field Name
        \note Form is EnergyUseType:..., e.g. Electricity:* for all Electricity meters
        \note or EndUse:..., e.g. GeneralLights:* for all General Lights
-       \type external-list
        \required-field
-       \external-list autoRDDmeter
+       \type alpha
+       \memo type external-list
+       \memo external-list autoRDDmeter
   A3, \field Reporting Frequency
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
        \note RunPeriod, Environment, and Annual are the same
@@ -29773,9 +29774,10 @@ OS:Output:Variable,
        \type alpha
        \default *
   A4, \field Variable Name
-       \type external-list
        \required-field
-       \external-list autoRDDvariable
+       \type alpha
+       \memo type external-list
+       \memo external-list autoRDDvariable
   A5, \field Reporting Frequency
        \note Detailed lists every instance (i.e. HVAC variable timesteps)
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
@@ -31524,8 +31526,9 @@ OS:ExternalInterface:FunctionalMockupUnitImport:From:Variable,
        \type alpha
   A4 , \field Output:Variable Name
        \required-field
-       \type external-list
-       \external-list autoRDDvariable
+       \type alpha
+       \memo type external-list
+       \memo external-list autoRDDvariable
   A5 , \field FMU File Name
        \required-field
        \retaincase
@@ -31658,8 +31661,9 @@ OS:ExternalInterface:FunctionalMockupUnitExport:From:Variable,
        \type alpha
   A4 , \field Output:Variable Name
        \required-field
-       \type external-list
-       \external-list autoRDDvariable
+       \type alpha
+       \memo type external-list
+       \memo external-list autoRDDvariable
   A5 ; \field FMU Variable Name
        \required-field
        \type alpha
