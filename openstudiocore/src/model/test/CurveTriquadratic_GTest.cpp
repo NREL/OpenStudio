@@ -123,8 +123,10 @@ TEST_F(ModelFixture, CurveTriquadratic_GetterSetters_evaluate)
 
   double min_x = 0.1;
   double max_x = 3.0;
+
   double min_y = 4.0;
   double max_y = 6.0;
+
   double min_z = 8.0;
   double max_z = 10.0;
 

@@ -85,11 +85,56 @@ namespace detail {
     return 3;
   }
 
-  double CurveTriquadratic_Impl::evaluate(const std::vector<double>& x) const {
-    OS_ASSERT(x.size() == 3u);
-    double x2 = pow(x[0],2);
-    double y2 = pow(x[1],2);
-    double z2 = pow(x[2],2);
+  double CurveTriquadratic_Impl::evaluate(const std::vector<double>& independantVariables) const {
+    OS_ASSERT(independantVariables.size() == 3u);
+
+    // TODO: I think minimumValueofx/y/z etc shouldn't be optionals to match other curves...
+
+    double x = independantVariables[0];
+    if (boost::optional<double> _val = minimumValueofx()) {
+      if (x < _val.get()) {
+        LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
+        x = _val.get();
+      }
+    }
+    if (boost::optional<double> _val = maximumValueofx()) {
+      if (x > _val.get()) {
+        LOG(Warn, "Supplied x is above the maximumValueofx, resetting it.");
+        x = _val.get();
+      }
+    }
+
+    double y = independantVariables[1];
+    if (boost::optional<double> _val = minimumValueofy()) {
+      if (y < _val.get()) {
+        LOG(Warn, "Supplied y is below the minimumValueofy, resetting it.");
+        y = _val.get();
+      }
+    }
+    if (boost::optional<double> _val = maximumValueofy()) {
+      if (y > _val.get()) {
+        LOG(Warn, "Supplied y is above the maximumValueofy, resetting it.");
+        y = _val.get();
+      }
+    }
+
+    double z = independantVariables[2];
+    if (boost::optional<double> _val = minimumValueofz()) {
+      if (z < _val.get()) {
+        LOG(Warn, "Supplied z is below the minimumValueofz, resetting it.");
+        z = _val.get();
+      }
+    }
+    if (boost::optional<double> _val = maximumValueofz()) {
+      if (z > _val.get()) {
+        LOG(Warn, "Supplied z is above the maximumValueofz, resetting it.");
+        z = _val.get();
+      }
+    }
+
+    double x2 = pow(x,2);
+    double y2 = pow(y,2);
+    double z2 = pow(z,2);
     double result = 0.0;
     if (OptionalDouble coeff = coefficient1Constant()) {
       result += coeff.get();
