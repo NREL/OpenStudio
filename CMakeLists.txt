@@ -23,10 +23,10 @@ string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 
 # Modify the more specific variables as needed to indicate prerelease, etc
-string(APPEND PROJECT_VERSION "")
-string(APPEND OpenStudio_VERSION "")
-string(APPEND PROJECT_VERSION_PATCH "")
-string(APPEND OpenStudio_VERSION_PATCH "")
+string(APPEND PROJECT_VERSION "-pre1")
+string(APPEND OpenStudio_VERSION "-pre1")
+string(APPEND PROJECT_VERSION_PATCH "-pre1")
+string(APPEND OpenStudio_VERSION_PATCH "-pre1")
 
 # The PROJECT_SOURCE_DIR here is OpenStudio/, which we will use instead of using CMAKE_SOURCE_DIR
 set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
