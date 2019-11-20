@@ -918,7 +918,9 @@ NewPlenumDialog::NewPlenumDialog(QWidget * parent)
       it != allZones.end();
       ++it)
   {
-    if( (! it->isPlenum()) && it->equipment().empty() && (! it->airLoopHVAC()) )
+    // equipment() is empty if you useIdealAirLoads, so we have to filter that out explicitly
+    // to match AirLoopHVACSupplyReturnPlenum_Impl::setThermalZone and AirLoopHVACReturnPlenum_Impl::setThermalZone
+    if( (! it->isPlenum()) && it->equipment().empty() && (! it->airLoopHVAC()) && (! it->useIdealAirLoads()) )
     {
       zoneChooser->addItem(QString::fromStdString(it->name().get()),toQString(it->handle()));
     }
