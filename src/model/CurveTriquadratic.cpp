@@ -143,80 +143,97 @@ namespace detail {
       result += coeff.get() * x2;
     }
     if (OptionalDouble coeff = coefficient3x()) {
-      result += coeff.get() * x[0];
+      result += coeff.get() * x;
     }
     if (OptionalDouble coeff = coefficient4yPOW2()) {
       result += coeff.get() * y2;
     }
     if (OptionalDouble coeff = coefficient5y()) {
-      result += coeff.get() * x[1];
+      result += coeff.get() * y;
     }
     if (OptionalDouble coeff = coefficient6zPOW2()) {
       result += coeff.get() * z2;
     }
     if (OptionalDouble coeff = coefficient7z()) {
-      result += coeff.get() * x[2];
+      result += coeff.get() * z;
     }
     if (OptionalDouble coeff = coefficient8xPOW2TIMESYPOW2()) {
       result += coeff.get() * x2 * y2;
     }
     if (OptionalDouble coeff = coefficient9xTIMESY()) {
-      result += coeff.get() * x[0] * x[1];
+      result += coeff.get() * x * y;
     }
     if (OptionalDouble coeff = coefficient10xTIMESYPOW2()) {
-      result += coeff.get() * x[0] * y2;
+      result += coeff.get() * x * y2;
     }
     if (OptionalDouble coeff = coefficient11xPOW2TIMESY()) {
-      result += coeff.get() * x2 * x[1];
+      result += coeff.get() * x2 * y;
     }
     if (OptionalDouble coeff = coefficient12xPOW2TIMESZPOW2()) {
       result += coeff.get() * x2 * z2;
     }
     if (OptionalDouble coeff = coefficient13xTIMESZ()) {
-      result += coeff.get() * x[0] * x[2];
+      result += coeff.get() * x * z;
     }
     if (OptionalDouble coeff = coefficient14xTIMESZPOW2()) {
-      result += coeff.get() * x[0] * z2;
+      result += coeff.get() * x * z2;
     }
     if (OptionalDouble coeff = coefficient15xPOW2TIMESZ()) {
-      result += coeff.get() * x2 * x[2];
+      result += coeff.get() * x2 * z;
     }
     if (OptionalDouble coeff = coefficient16yPOW2TIMESZPOW2()) {
       result += coeff.get() * y2 * z2;
     }
     if (OptionalDouble coeff = coefficient17yTIMESZ()) {
-      result += coeff.get() * x[1] * x[2];
+      result += coeff.get() * y * z;
     }
     if (OptionalDouble coeff = coefficient18yTIMESZPOW2()) {
-      result += coeff.get() * x[1] * z2;
+      result += coeff.get() * y * z2;
     }
     if (OptionalDouble coeff = coefficient19yPOW2TIMESZ()) {
-      result += coeff.get() * y2 * x[2];
+      result += coeff.get() * y2 * z;
     }
     if (OptionalDouble coeff = coefficient20xPOW2TIMESYPOW2TIMESZPOW2()) {
       result += coeff.get() * x2 * y2 * z2;
     }
     if (OptionalDouble coeff = coefficient21xPOW2TIMESYPOW2TIMESZ()) {
-      result += coeff.get() * x2 * y2 * x[2];
+      result += coeff.get() * x2 * y2 * z;
     }
     if (OptionalDouble coeff = coefficient22xPOW2TIMESYTIMESZPOW2()) {
-      result += coeff.get() * x2 * x[1] * z2;
+      result += coeff.get() * x2 * y * z2;
     }
     if (OptionalDouble coeff = coefficient23xTIMESYPOW2TIMESZPOW2()) {
-      result += coeff.get() * x[0] * y2 * z2;
+      result += coeff.get() * x * y2 * z2;
     }
     if (OptionalDouble coeff = coefficient24xPOW2TIMESYTIMESZ()) {
-      result += coeff.get() * x2 * x[1] * x[2];
+      result += coeff.get() * x2 * y * z;
     }
     if (OptionalDouble coeff = coefficient25xTIMESYPOW2TIMESZ()) {
-      result += coeff.get() * x[0] * y2 * x[2];
+      result += coeff.get() * x * y2 * z;
     }
     if (OptionalDouble coeff = coefficient26xTIMESYTIMESZPOW2()) {
-      result += coeff.get() * x[0] * x[1] * z2;
+      result += coeff.get() * x * y * z2;
     }
     if (OptionalDouble coeff = coefficient27xTIMESYTIMESZ()) {
-      result += coeff.get() * x[0] * x[1] * x[2];
+      result += coeff.get() * x * y * z;
     }
+
+    if (boost::optional<double> _minVal = minimumCurveOutput()) {
+      double minVal = _minVal.get();
+      if (result < minVal) {
+        LOG(Warn, "Calculated curve output is below minimumCurveOutput, resetting it.");
+        result = minVal;
+      }
+    }
+
+    if (boost::optional<double> _maxVal = maximumCurveOutput()) {
+      double maxVal = _maxVal.get();
+      if (result > maxVal) {
+        LOG(Warn, "Calculated curve output is above maximumCurveOutput, resetting it.");
+        result = maxVal;
+      }
+    }
+
     return result;
   }
 

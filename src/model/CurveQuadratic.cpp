@@ -83,11 +83,39 @@ namespace detail {
     return 1;
   }
 
-  double CurveQuadratic_Impl::evaluate(const std::vector<double>& x) const {
-    OS_ASSERT(x.size() == 1u);
+  double CurveQuadratic_Impl::evaluate(const std::vector<double>& independantVariables) const {
+    OS_ASSERT(independantVariables.size() == 1u);
+
+    double x = independantVariables[0];
+    if (x < minimumValueofx()) {
+      LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
+      x = minimumValueofx();
+    }
+    if (x > maximumValueofx()) {
+      LOG(Warn, "Supplied x is above the maximumValueofx, resetting it.");
+      x = maximumValueofx();
+    }
+
     double result = coefficient1Constant();
-    result += coefficient2x() * x[0];
-    result += coefficient3xPOW2() * pow(x[0],2);
+    result += coefficient2x() * x;
+    result += coefficient3xPOW2() * pow(x,2);
+
+    if (boost::optional<double> _minVal = minimumCurveOutput()) {
+      double minVal = _minVal.get();
+      if (result < minVal) {
+        LOG(Warn, "Calculated curve output is below minimumCurveOutput, resetting it.");
+        result = minVal;
+      }
+    }
+
+    if (boost::optional<double> _maxVal = maximumCurveOutput()) {
+      double maxVal = _maxVal.get();
+      if (result > maxVal) {
+        LOG(Warn, "Calculated curve output is above maximumCurveOutput, resetting it.");
+        result = maxVal;
+      }
+    }
+
     return result;
   }
 

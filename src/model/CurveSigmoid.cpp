@@ -83,15 +83,43 @@ namespace detail {
     return 1;
   }
 
-  double CurveSigmoid_Impl::evaluate(const std::vector<double>& x) const {
-    OS_ASSERT(x.size() == 1u);
+  double CurveSigmoid_Impl::evaluate(const std::vector<double>& independantVariables) const {
+    OS_ASSERT(independantVariables.size() == 1u);
+
+    double x = independantVariables[0];
+    if (x < minimumValueofx()) {
+      LOG(Warn, "Supplied x is below the minimumValueofx, resetting it.");
+      x = minimumValueofx();
+    }
+    if (x > maximumValueofx()) {
+      LOG(Warn, "Supplied x is above the maximumValueofx, resetting it.");
+      x = maximumValueofx();
+    }
+
     double result = coefficient2C2();
-    double temp = coefficient3C3() - x[0];
+    double temp = coefficient3C3() - x;
     temp /= coefficient4C4();
     temp = exp(temp);
     temp = pow(1.0 + temp, coefficient5C5());
     result /= temp;
     result += coefficient1C1();
+
+    if (boost::optional<double> _minVal = minimumCurveOutput()) {
+      double minVal = _minVal.get();
+      if (result < minVal) {
+        LOG(Warn, "Calculated curve output is below minimumCurveOutput, resetting it.");
+        result = minVal;
+      }
+    }
+
+    if (boost::optional<double> _maxVal = maximumCurveOutput()) {
+      double maxVal = _maxVal.get();
+      if (result > maxVal) {
+        LOG(Warn, "Calculated curve output is above maximumCurveOutput, resetting it.");
+        result = maxVal;
+      }
+    }
+
     return result;
   }
 

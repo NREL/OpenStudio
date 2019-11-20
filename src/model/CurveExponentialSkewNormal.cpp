@@ -105,7 +105,25 @@ namespace detail {
     numerator *= exp(-0.5 * pow(z1,2));
     double denominator = 1.0 + (z3/abs(z3)) * boost::math::erf<double>(abs(z3)/sqrt(2.0));
     denominator *= exp(-0.5 * pow(z3,2));
-    return numerator/denominator;
+    double result = numerator/denominator;
+
+    if (boost::optional<double> _minVal = minimumCurveOutput()) {
+      double minVal = _minVal.get();
+      if (result < minVal) {
+        LOG(Warn, "Calculated curve output is below minimumCurveOutput, resetting it.");
+        result = minVal;
+      }
+    }
+
+    if (boost::optional<double> _maxVal = maximumCurveOutput()) {
+      double maxVal = _maxVal.get();
+      if (result > maxVal) {
+        LOG(Warn, "Calculated curve output is above maximumCurveOutput, resetting it.");
+        result = maxVal;
+      }
+    }
+
+    return result;
   }
 
   double CurveExponentialSkewNormal_Impl::coefficient1C1() const {

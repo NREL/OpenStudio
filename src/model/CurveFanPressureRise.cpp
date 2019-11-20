@@ -82,14 +82,50 @@ namespace detail {
     return 2;
   }
 
-  double CurveFanPressureRise_Impl::evaluate(const std::vector<double>& x) const {
-    OS_ASSERT(x.size() == 2u);
-    double Qfan = x[0];
-    double Psm = x[1];
+  double CurveFanPressureRise_Impl::evaluate(const std::vector<double>& independantVariables) const {
+    OS_ASSERT(independantVariables.size() == 2u);
+
+    double Qfan = independantVariables[0];
+    if (Qfan < minimumValueofQfan()) {
+      LOG(Warn, "Supplied Qfan is below the minimumValueofx, resetting it.");
+      Qfan = minimumValueofQfan();
+    }
+    if (Qfan > maximumValueofQfan()) {
+      LOG(Warn, "Supplied Qfan is above the maximumValueofx, resetting it.");
+      Qfan = maximumValueofQfan();
+    }
+
+    double Psm = independantVariables[1];
+    if (Psm < minimumValueofPsm()) {
+      LOG(Warn, "Supplied Psm is below the minimumValueofPsm, resetting it.");
+      Psm = minimumValueofPsm();
+    }
+    if (Psm > maximumValueofPsm()) {
+      LOG(Warn, "Supplied Psm is above the maximumValueofPsm, resetting it.");
+      Psm = maximumValueofPsm();
+    }
+
     double result = coefficient1C1() * pow(Qfan,2);
     result += coefficient2C2() * Qfan;
     result += coefficient3C3() * Qfan * sqrt(Psm);
     result += coefficient4C4() * Psm;
+
+    if (boost::optional<double> _minVal = minimumCurveOutput()) {
+      double minVal = _minVal.get();
+      if (result < minVal) {
+        LOG(Warn, "Calculated curve output is below minimumCurveOutput, resetting it.");
+        result = minVal;
+      }
+    }
+
+    if (boost::optional<double> _maxVal = maximumCurveOutput()) {
+      double maxVal = _maxVal.get();
+      if (result > maxVal) {
+        LOG(Warn, "Calculated curve output is above maximumCurveOutput, resetting it.");
+        result = maxVal;
+      }
+    }
+
     return result;
   }
 
