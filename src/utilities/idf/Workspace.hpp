@@ -228,6 +228,15 @@ class UTILITIES_API Workspace {
   boost::optional<WorkspaceObject> getObjectByNameAndReference(
       std::string name,const std::vector<std::string>& referenceNames) const;
 
+  /** Overloaded functions that take in a std::string instead of an IddObjectType.
+   *  They will internally create an IddObjectType (which may throw!) then forward to the overload method that takes IddObjectType
+   *  eg: `getObjectsByType(IddObjectType objectType)` */
+  std::vector<WorkspaceObject> getObjectsByType(const std::string& objectTypeName) const;
+  boost::optional<WorkspaceObject> getObjectByTypeAndName(const std::string& objectTypeName,
+                                                          const std::string& name) const;
+  std::vector<WorkspaceObject> getObjectsByTypeAndName(const std::string& objectTypeName,
+                                                       const std::string& name) const;
+
   /** Returns true if fast naming is enabled. Fast naming creates UUID-based names for new
    *  objects and does not do any name conflict checking. */
   bool fastNaming() const;
