@@ -4475,21 +4475,6 @@ OS:Refrigeration:Subcooler:LiquidSuction,
   16,                                     !- Design Liquid Inlet Temperature {C}
   0;                                      !- Design Vapor Inlet Temperature {C}
 
-OS:Schedule:Ruleset,
-  {fd825879-6f23-4878-89c7-5aa0a612c4b1}, !- Handle
-  Always Off Schedule,                    !- Name
-  {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Schedule Type Limits Name
-  {cf531912-42db-457b-983b-bd936ad4f545}; !- Default Day Schedule Name
-
-OS:Schedule:Day,
-  {cf531912-42db-457b-983b-bd936ad4f545}, !- Handle
-  Always Off Schedule Day,                !- Name
-  {800d56d5-16ef-4ac2-a7d0-6abcfc246032}, !- Schedule Type Limits Name
-  ,                                       !- Interpolate to Timestep
-  24,                                     !- Hour 1
-  0,                                      !- Minute 1
-  0;                                      !- Value Until Time 1
-
 OS:Refrigeration:WalkIn,
   {ee3d06e5-e4a3-4b2d-b500-c9622fffe03c}, !- Handle
   Walk In Cooler,                         !- Name
@@ -4505,7 +4490,7 @@ OS:Refrigeration:WalkIn,
   ,                                       !- Lighting Schedule Name
   Electric,                               !- Defrost Type
   TimeSchedule,                           !- Defrost Control Type
-  {fd825879-6f23-4878-89c7-5aa0a612c4b1}, !- Defrost Schedule Name
+  {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Defrost Schedule Name
   ,                                       !- Defrost Drip-Down Schedule Name
   5512,                                   !- Defrost Power {W}
   ,                                       !- Temperature Termination Defrost Fraction to Ice {dimensionless}
@@ -10161,7 +10146,7 @@ OS:ZoneHVAC:UnitVentilator,
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   VariablePercent,                        !- Outdoor Air Control Type
   autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
-  {fd825879-6f23-4878-89c7-5aa0a612c4b1}, !- Minimum Outdoor Air Schedule Name
+  {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Minimum Outdoor Air Schedule Name
   autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Maximum Outdoor Air Fraction or Temperature Schedule Name
   ,                                       !- Air Inlet Node Name
@@ -10213,7 +10198,7 @@ OS:ZoneHVAC:UnitVentilator,
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   VariablePercent,                        !- Outdoor Air Control Type
   autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
-  {fd825879-6f23-4878-89c7-5aa0a612c4b1}, !- Minimum Outdoor Air Schedule Name
+  {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Minimum Outdoor Air Schedule Name
   autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Maximum Outdoor Air Fraction or Temperature Schedule Name
   ,                                       !- Air Inlet Node Name
@@ -10265,7 +10250,7 @@ OS:ZoneHVAC:UnitVentilator,
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   VariablePercent,                        !- Outdoor Air Control Type
   autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
-  {fd825879-6f23-4878-89c7-5aa0a612c4b1}, !- Minimum Outdoor Air Schedule Name
+  {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Minimum Outdoor Air Schedule Name
   autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
   {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Maximum Outdoor Air Fraction or Temperature Schedule Name
   ,                                       !- Air Inlet Node Name
