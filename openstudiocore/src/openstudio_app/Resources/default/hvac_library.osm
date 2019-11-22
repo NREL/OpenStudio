@@ -10372,13 +10372,13 @@ OS:Coil:Cooling:Water,
 OS:ZoneHVAC:UnitVentilator,
   {9c5ad95d-e9b9-430e-a6cb-4de13a068ded}, !- Handle
   Unit Ventilator - OnOff - Cooling,      !- Name
-  ,                                       !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   VariablePercent,                        !- Outdoor Air Control Type
   autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
   {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Minimum Outdoor Air Schedule Name
   autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
-  ,                                       !- Maximum Outdoor Air Fraction or Temperature Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Maximum Outdoor Air Fraction or Temperature Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   {9403933f-2f7f-4c08-9cfc-4a2e4686d6dd}, !- Supply Air Fan Name
@@ -10449,13 +10449,13 @@ OS:Coil:Heating:Water,
 OS:ZoneHVAC:UnitVentilator,
   {19862f1b-dd00-42f4-8e0a-15cccac4831d}, !- Handle
   Unit Ventilator - OnOff - Heating,      !- Name
-  ,                                       !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   VariablePercent,                        !- Outdoor Air Control Type
   autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
   {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Minimum Outdoor Air Schedule Name
   autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
-  ,                                       !- Maximum Outdoor Air Fraction or Temperature Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Maximum Outdoor Air Fraction or Temperature Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   {1de181b7-cdad-45a4-b128-ca4ad5c4bda7}, !- Supply Air Fan Name
@@ -10544,13 +10544,13 @@ OS:Coil:Heating:Water,
 OS:ZoneHVAC:UnitVentilator,
   {c6a834ef-f4e8-4c35-80cc-ebb4343908fa}, !- Handle
   Unit Ventilator - OnOff - Heating - Cooling, !- Name
-  ,                                       !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   VariablePercent,                        !- Outdoor Air Control Type
   autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
   {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Minimum Outdoor Air Schedule Name
   autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
-  ,                                       !- Maximum Outdoor Air Fraction or Temperature Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Maximum Outdoor Air Fraction or Temperature Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   {b1bd7d0d-c9f6-43b3-b9ee-e526307bc075}, !- Supply Air Fan Name
@@ -10604,13 +10604,13 @@ OS:Coil:Cooling:Water,
 OS:ZoneHVAC:UnitVentilator,
   {b77c8f25-94ef-4436-9390-d8d72cac291b}, !- Handle
   Unit Ventilator - Variable - Cooling,   !- Name
-  ,                                       !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   VariablePercent,                        !- Outdoor Air Control Type
   autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
   {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Minimum Outdoor Air Schedule Name
   autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
-  ,                                       !- Maximum Outdoor Air Fraction or Temperature Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Maximum Outdoor Air Fraction or Temperature Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   {3a5c4d7d-b0cc-4ab2-a4d7-3760f8f8c23d}, !- Supply Air Fan Name
@@ -10664,13 +10664,13 @@ OS:Coil:Heating:Water,
 OS:ZoneHVAC:UnitVentilator,
   {48a4ec47-f045-4041-a161-b587e385f309}, !- Handle
   Unit Ventilator - Variable - Heating,   !- Name
-  ,                                       !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   VariablePercent,                        !- Outdoor Air Control Type
   autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
   {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Minimum Outdoor Air Schedule Name
   autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
-  ,                                       !- Maximum Outdoor Air Fraction or Temperature Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Maximum Outdoor Air Fraction or Temperature Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   {bad53ddc-aa16-4015-892c-f5ff046eee38}, !- Supply Air Fan Name
@@ -10742,13 +10742,13 @@ OS:Coil:Heating:Water,
 OS:ZoneHVAC:UnitVentilator,
   {4f7a2fae-f037-4db0-b0a5-cb63a1d97393}, !- Handle
   Unit Ventilator - Variable - Heating - Cooling, !- Name
-  ,                                       !- Availability Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Availability Schedule Name
   autosize,                               !- Maximum Supply Air Flow Rate {m3/s}
   VariablePercent,                        !- Outdoor Air Control Type
   autosize,                               !- Minimum Outdoor Air Flow Rate {m3/s}
   {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Minimum Outdoor Air Schedule Name
   autosize,                               !- Maximum Outdoor Air Flow Rate {m3/s}
-  ,                                       !- Maximum Outdoor Air Fraction or Temperature Schedule Name
+  {9f54092d-a4a8-41b8-a381-c4c332ecb843}, !- Maximum Outdoor Air Fraction or Temperature Schedule Name
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   {a225515b-f5e9-4836-8df4-889357ca2700}, !- Supply Air Fan Name
