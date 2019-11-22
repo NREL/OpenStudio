@@ -10382,7 +10382,7 @@ OS:ZoneHVAC:UnitVentilator,
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   {9403933f-2f7f-4c08-9cfc-4a2e4686d6dd}, !- Supply Air Fan Name
-  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Supply Air Fan Operating Mode Schedule Name
   ,                                       !- Heating Coil Name
   0.001,                                  !- Heating Convergence Tolerance
   {837825eb-3562-4dee-9542-e345d3d99923}, !- Cooling Coil Name
@@ -10459,7 +10459,7 @@ OS:ZoneHVAC:UnitVentilator,
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   {1de181b7-cdad-45a4-b128-ca4ad5c4bda7}, !- Supply Air Fan Name
-  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Supply Air Fan Operating Mode Schedule Name
   {940edd6c-db24-4569-aa44-e9f1ff13f5eb}, !- Heating Coil Name
   0.001,                                  !- Heating Convergence Tolerance
   ,                                       !- Cooling Coil Name
@@ -10554,7 +10554,7 @@ OS:ZoneHVAC:UnitVentilator,
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
   {b1bd7d0d-c9f6-43b3-b9ee-e526307bc075}, !- Supply Air Fan Name
-  ,                                       !- Supply Air Fan Operating Mode Schedule Name
+  {b267e42b-9691-4116-8393-70bb1197dc5b}, !- Supply Air Fan Operating Mode Schedule Name
   {947c5d3d-53cc-42e1-bd57-cf1298b1712b}, !- Heating Coil Name
   0.001,                                  !- Heating Convergence Tolerance
   {451b5808-a4d4-43f8-a669-5bd272ef8a4d}, !- Cooling Coil Name
