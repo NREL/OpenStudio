@@ -2577,6 +2577,71 @@ void Model::applySizingValues() {
   return getImpl<detail::Model_Impl>()->applySizingValues();
 }
 
+
+// Template specializations for getUniqueModelObject to use caching
+template<>
+Building Model::getUniqueModelObject<Building>() {
+  if (boost::optional<Building> _b = building()) {
+    return _b.get();
+  } else {
+    return Building(*this);
+  }
+}
+
+template <>
+FoundationKivaSettings Model::getUniqueModelObject<FoundationKivaSettings>() {
+  if (boost::optional<FoundationKivaSettings> _b = foundationKivaSettings()) {
+    return _b.get();
+  } else {
+    return FoundationKivaSettings(*this);
+  }
+}
+
+template <>
+LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>() {
+  if (boost::optional<LifeCycleCostParameters> _l = lifeCycleCostParameters()) {
+    return _l.get();
+  } else {
+    return LifeCycleCostParameters(*this);
+  }
+}
+
+template <>
+PerformancePrecisionTradeoffs Model::getUniqueModelObject<PerformancePrecisionTradeoffs>() {
+  if (boost::optional<PerformancePrecisionTradeoffs> _p = performancePrecisionTradeoffs()) {
+    return _p.get();
+  } else {
+    return PerformancePrecisionTradeoffs(*this);
+  }
+}
+
+template <>
+RunPeriod Model::getUniqueModelObject<RunPeriod>() {
+  if (boost::optional<RunPeriod> _r = runPeriod()) {
+    return _r.get();
+  } else {
+    return RunPeriod(*this);
+  }
+}
+
+template<>
+YearDescription Model::getUniqueModelObject<YearDescription>() {
+  if (boost::optional<YearDescription> _yd = yearDescription()) {
+    return _yd.get();
+  } else {
+    return YearDescription(*this);
+  }
+}
+
+template <>
+WeatherFile Model::getUniqueModelObject<WeatherFile>() {
+  if (boost::optional<WeatherFile> _w = weatherFile()) {
+    return _w.get();
+  } else {
+    return WeatherFile(*this);
+  }
+}
+
 std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::ModelObjectCreator::getNew(
   Model_Impl * model,
   const IdfObject& obj,

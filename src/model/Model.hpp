@@ -114,14 +114,14 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the Building object if there is one, this implementation uses a cached reference to the Building
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<Building>(). */
   boost::optional<Building> building() const;
-  
+
   /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
-  boost::optional<FoundationKivaSettings> foundationKivaSettings() const;  
-  
+  boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
+
   /** Get the PerformancePrecisionTradeoffs object if there is one, this implementation uses a cached reference to the PerformancePrecisionTradeoffs
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>(). */
-  boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs() const;  
+  boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs() const;
 
   /** Get the LifeCycleCostParameters object if there is one, this implementation uses a cached reference to the LifeCycleCostParameters
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
@@ -234,7 +234,11 @@ class MODEL_API Model : public openstudio::Workspace {
    *  \todo Use of this template method requires knowledge of the size of the implementation object.
    *  Therefore, to use model.getUniqueModelObject<Facility>() the user must include both
    *  Facility.hpp and Facility_Impl.hpp. It may be better to instantiate each version of this
-   *  template method to avoid exposing the implementation objects, this is an open question. */
+   *  template method to avoid exposing the implementation objects, this is an open question.
+   *
+   *  Note that template specilizations are provided below for objects were there is a
+   *  performance gain to be had by caching the unique model object
+   *  eg: getUniqueModelObject<YearDescription>() */
   template <typename T>
   T getUniqueModelObject() {
     std::vector<WorkspaceObject> objects = this->allObjects();
@@ -511,6 +515,28 @@ MODEL_API Model exampleModel();
 
 /// Adds example model objects to an existing model.
 MODEL_API void addExampleModelObjects(Model& model);
+
+// Template specializations for getUniqueModelObject to use caching
+template <>
+Building Model::getUniqueModelObject<Building>();
+
+template <>
+FoundationKivaSettings Model::getUniqueModelObject<FoundationKivaSettings>();
+
+template <>
+LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>();
+
+template <>
+PerformancePrecisionTradeoffs Model::getUniqueModelObject<PerformancePrecisionTradeoffs>();
+
+template <>
+RunPeriod Model::getUniqueModelObject<RunPeriod>();
+
+template <>
+YearDescription Model::getUniqueModelObject<YearDescription>();
+
+template <>
+WeatherFile Model::getUniqueModelObject<WeatherFile>();
 
 } // model
 } // openstudio
