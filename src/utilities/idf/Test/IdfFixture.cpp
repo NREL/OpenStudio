@@ -47,6 +47,7 @@ void IdfFixture::SetUpTestCase() {
 
   // load idfFile and time it
   openstudio::Time start = openstudio::Time::currentTime();
+  // Note: The name implies 5 zones; but there's actually a plenum, so 6 zones in total
   openstudio::path path = resourcesPath()/toPath("energyplus/5ZoneAirCooled/in.idf");
   openstudio::OptionalIdfFile oidf = openstudio::IdfFile::load(path); // should assume IddFileType::EnergyPlus
   ASSERT_TRUE(oidf);

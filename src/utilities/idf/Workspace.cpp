@@ -2932,6 +2932,23 @@ IdfFile Workspace::toIdfFile() const {
   return m_impl->toIdfFile();
 }
 
+// OVERLOADED FUNCTIONS THAT TAKE IN A std::string INSTEAD OF AN IddObjecTtype
+
+std::vector<WorkspaceObject> Workspace::getObjectsByType(const std::string& objectTypeName) const {
+  return getObjectsByType(IddObjectType(objectTypeName));
+}
+
+boost::optional<WorkspaceObject> Workspace::getObjectByTypeAndName(const std::string& objectTypeName,
+                                                                   const std::string& name) const {
+  return getObjectByTypeAndName(IddObjectType(objectTypeName), name);
+}
+
+std::vector<WorkspaceObject> Workspace::getObjectsByTypeAndName(const std::string& objectTypeName,
+                                                                const std::string& name) const {
+  return getObjectsByTypeAndName(IddObjectType(objectTypeName), name);
+}
+
+
 // PROTECTED
 
 Workspace::Workspace(std::shared_ptr<detail::Workspace_Impl> impl)

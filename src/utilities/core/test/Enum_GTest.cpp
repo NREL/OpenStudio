@@ -56,8 +56,23 @@ namespace enums {
 TEST(Enum, EnumThrows)
 {
   EXPECT_THROW(openstudio::enums::TestEnum("forth"), std::runtime_error);
+  // #1741, we expect an informative error message
+  try {
+    openstudio::enums::TestEnum("forth");
+  } catch (std::runtime_error& e) {
+    std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'FORTH'");
+    EXPECT_EQ(expectedErrorMessage, std::string(e.what()));
+  }
+
   EXPECT_NO_THROW(openstudio::enums::TestEnum("third"));
   EXPECT_THROW(openstudio::enums::TestEnum(3), std::runtime_error);
+  try {
+    openstudio::enums::TestEnum(3);
+  } catch (std::runtime_error& e) {
+    std::string expectedErrorMessage("Unknown OpenStudio Enum Value = 3");
+    EXPECT_EQ(expectedErrorMessage, std::string(e.what()));
+  }
+
   EXPECT_THROW(openstudio::enums::TestEnum3(4), std::runtime_error);
   EXPECT_THROW(openstudio::enums::TestEnum3("bob"), std::runtime_error);
   EXPECT_NO_THROW(openstudio::enums::TestEnum3("my second"));

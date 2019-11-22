@@ -2093,3 +2093,59 @@ TEST_F(IdfFixture, Workspace_DuplicateObjectName) {
   EXPECT_EQ("Zone Group", zoneGroup1->nameString());
   EXPECT_EQ("Zone Group 1", zoneGroup2->nameString());
 }
+
+// test for #1531 (and #1741)
+TEST_F(IdfFixture, Workspace_getObjects_Type_StringOverload) {
+
+  ASSERT_TRUE(epIdfFile.objects().size() > 0);
+  Workspace workspace(epIdfFile, StrictnessLevel::Draft);
+
+  EXPECT_EQ(epIdfFile.objects().size(), workspace.objects().size());
+
+  // there are 6 zones (5ZoneAirCooled + plenum)
+  // Test everything with the IddObjectType version (proved and weathered!)
+  WorkspaceObjectVector zones = workspace.getObjectsByType(IddObjectType::Zone);
+  EXPECT_EQ(static_cast<size_t>(6), zones.size());
+
+  boost::optional<WorkspaceObject> _zone = workspace.getObjectByTypeAndName(IddObjectType::Zone, "SPACE1-1");
+  EXPECT_TRUE(_zone);
+
+  zones = workspace.getObjectsByTypeAndName(IddObjectType::Zone, "SPACE1-1");
+  ASSERT_EQ(1u, zones.size());
+  EXPECT_EQ("SPACE1-1", zones[0].nameString());
+
+  // Now try the std::string overloads
+  zones = workspace.getObjectsByType("Zone");
+  EXPECT_EQ(static_cast<size_t>(6), zones.size());
+
+  _zone = workspace.getObjectByTypeAndName("Zone", "SPACE1-1");
+  EXPECT_TRUE(_zone);
+
+  zones = workspace.getObjectsByTypeAndName("Zone", "SPACE1-1");
+  ASSERT_EQ(1u, zones.size());
+  EXPECT_EQ("SPACE1-1", zones[0].nameString());
+
+  // And check with a bad std::string, that it throws, and that we get an informative message (#1741)
+  ASSERT_THROW(workspace.getObjectsByType("BadEnum"), std::runtime_error);
+  std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'BADENUM'");
+  try {
+    workspace.getObjectsByType("BadEnum");
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(expectedErrorMessage, std::string(e.what()));
+  }
+
+  ASSERT_THROW(workspace.getObjectByTypeAndName("BadEnum", "SPACE1-1"), std::runtime_error);
+  try {
+    workspace.getObjectByTypeAndName("BadEnum", "SPACE1-1");
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(expectedErrorMessage, std::string(e.what()));
+  }
+
+  ASSERT_THROW(workspace.getObjectsByTypeAndName("BadEnum", "SPACE1-1"), std::runtime_error);
+  try {
+    workspace.getObjectsByTypeAndName("BadEnum", "SPACE1-1");
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(expectedErrorMessage, std::string(e.what()));
+  }
+
+}
