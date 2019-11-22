@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,6 +42,8 @@
 namespace openstudio {
 namespace model {
 
+class Schedule;
+
 /** ModelExtensibleGroup is a WorkspaceExtensibleGroup with additional methods added to support
  *  extensible \link ModelObject ModelObjects\endlink. The ExtensibleGroup inheritance hierarchy
  *  roughly follows the IdfObject <- WorkspaceObject <- ModelObject <- etc. hierarchy, except that
@@ -76,6 +78,17 @@ class MODEL_API ModelExtensibleGroup : public WorkspaceExtensibleGroup {
     }
     return result;
   }
+
+  /** Sets index to point to schedule if schedule's ScheduleTypeLimits are compatible with the
+   *  ScheduleType in the ScheduleTypeRegistry for (className,scheduleDisplayName), or if
+   *  schedule's ScheduleTypeLimits have not yet been set (in which case the ScheduleTypeRegistry
+   *  is used to retrieve or create an appropriate one).
+   *  Because ModelExtensibleGroup has no knowledge of its model,
+   *  you should ensure that schedule belongs to the right model in the first place */
+  bool setSchedule(unsigned index,
+                   const std::string& className,
+                   const std::string& scheduleDisplayName,
+                   Schedule& schedule);
 
   //@}
  protected:

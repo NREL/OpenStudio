@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,12 +34,12 @@
 #include "ModelObject.hpp"
 #include <vector>
 #include <unordered_map>
+#include "PlanarSurface.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-class PlanarSurface;
 class AirflowNetworkLinkage;
 
 namespace detail {
@@ -47,6 +47,22 @@ namespace detail {
   class AirflowNetworkDuctViewFactors_Impl;
 
 } // detail
+
+/** This class implements a single point of a viewFactors, meant to replace std::pair<PlanarSurface, double> */
+class ViewFactorData {
+ public:
+  ViewFactorData(const PlanarSurface& s, double y);
+
+  PlanarSurface planarSurface() const;
+  double viewFactor() const;
+
+ private:
+  openstudio::model::PlanarSurface m_planarSurface;
+  double m_viewFactor;
+};
+
+// Overload operator<<
+std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactorData& vf);
 
 /** AirflowNetworkDuctViewFactors is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkDuctViewFactors'. */
 class MODEL_API AirflowNetworkDuctViewFactors : public ModelObject {
@@ -65,7 +81,6 @@ class MODEL_API AirflowNetworkDuctViewFactors : public ModelObject {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: AirflowNetworkComponent.
   AirflowNetworkLinkage linkage() const;
 
   double ductSurfaceExposureFraction() const;
@@ -78,7 +93,7 @@ class MODEL_API AirflowNetworkDuctViewFactors : public ModelObject {
 
   boost::optional<double> getViewFactor(const PlanarSurface &surf) const;
 
-  std::vector<std::pair<PlanarSurface, double>> viewFactors() const;
+  std::vector<ViewFactorData> viewFactors() const;
 
   //std::unordered_map<PlanarSurface, double> viewFactorMap() const;
 

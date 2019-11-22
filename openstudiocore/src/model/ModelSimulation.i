@@ -20,12 +20,13 @@
   #define _csharp_module_name OpenStudioModelSimulation
 
   // Conflicts with class name in utilities
+  // Note JM 2019-04-16: Will completely ignore it below if C# actually. Note that there are convenience functions in Model.hpp such as Model::setCalendarYear to act upon YearDescription
+  // indirectly.
   //%rename(ModelYearDescription) openstudio::model::YearDescription;
-  %ignore openstudio::model::YearDescription;
 
-  // site is being imported from weather file
-  // schedule day is being imported from design day
-  // might want to move both of those to geometry so they can import resources and site
+  // Note JM 2019-04-16: Ignoring Site-related methods and reimplementing them in ModelGeometry.i using partial classes
+  %ignore openstudio::model::WeatherFile::site;
+  %ignore openstudio::model::ClimateZones::site;
 
 #endif
 
@@ -39,6 +40,11 @@ namespace model {
   class Schedule;
 }
 }
+
+// Note JM 2019-04-16: This is a special case, technically it should be UNIQUEMODELOBJET_TEMPLATES(RunPeriod) since it IS unique right now
+// Nevertheless, there is a `std::vector<RunPeriod> SimulationControl::runPeriods()` (a reservation for when we allow multiple RunPeriods)
+// UNIQUEMODELOBJECT_TEMPLATES(RunPeriod);
+MODELOBJECT_TEMPLATES(RunPeriod);
 
 UNIQUEMODELOBJECT_TEMPLATES(SimulationControl);
 UNIQUEMODELOBJECT_TEMPLATES(LightingSimulationControl);
@@ -58,7 +64,6 @@ UNIQUEMODELOBJECT_TEMPLATES(InsideSurfaceConvectionAlgorithm);
 UNIQUEMODELOBJECT_TEMPLATES(OutputControlReportingTolerances);
 UNIQUEMODELOBJECT_TEMPLATES(OutsideSurfaceConvectionAlgorithm);
 MODELOBJECT_TEMPLATES(SurfacePropertyConvectionCoefficientsMultipleSurface);
-UNIQUEMODELOBJECT_TEMPLATES(RunPeriod);
 UNIQUEMODELOBJECT_TEMPLATES(ShadowCalculation);
 MODELOBJECT_TEMPLATES(RunPeriodControlSpecialDays);
 UNIQUEMODELOBJECT_TEMPLATES(Timestep);
@@ -73,9 +78,14 @@ MODELOBJECT_TEMPLATES(SiteGroundTemperatureDeep);
 MODELOBJECT_TEMPLATES(SiteGroundTemperatureShallow);
 MODELOBJECT_TEMPLATES(SiteGroundTemperatureFCfactorMethod);
 MODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
-UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
-MODELOBJECT_TEMPLATES(FoundationKivaSettings);
+#ifndef SWIGCSHARP
+  // Ignored for Csharp, use Model::setCalendarYear etc
+  UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
+#endif
+UNIQUEMODELOBJECT_TEMPLATES(FoundationKivaSettings);
+UNIQUEMODELOBJECT_TEMPLATES(PerformancePrecisionTradeoffs);
 
+SWIG_UNIQUEMODELOBJECT(RunPeriod);
 SWIG_UNIQUEMODELOBJECT(SimulationControl);
 SWIG_UNIQUEMODELOBJECT(LightingSimulationControl);
 SWIG_UNIQUEMODELOBJECT(SizingParameters);
@@ -94,7 +104,6 @@ SWIG_UNIQUEMODELOBJECT(InsideSurfaceConvectionAlgorithm);
 SWIG_UNIQUEMODELOBJECT(OutputControlReportingTolerances);
 SWIG_UNIQUEMODELOBJECT(OutsideSurfaceConvectionAlgorithm);
 SWIG_MODELOBJECT(SurfacePropertyConvectionCoefficientsMultipleSurface, 1);
-SWIG_UNIQUEMODELOBJECT(RunPeriod);
 SWIG_UNIQUEMODELOBJECT(ShadowCalculation);
 SWIG_MODELOBJECT(RunPeriodControlSpecialDays, 1);
 SWIG_UNIQUEMODELOBJECT(Timestep);
@@ -109,7 +118,10 @@ SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureDeep);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureShallow);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureFCfactorMethod);
 SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);
-SWIG_UNIQUEMODELOBJECT(YearDescription);
+#ifndef SWIGCSHARP
+  SWIG_UNIQUEMODELOBJECT(YearDescription);
+#endif
 SWIG_UNIQUEMODELOBJECT(FoundationKivaSettings);
+SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
 
 #endif

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,7 +36,9 @@
 namespace openstudio {
 namespace model {
 
+// Foward declaration
 class AirflowNetworkLinkage;
+class ViewFactorData;
 
 namespace detail {
 
@@ -84,15 +86,12 @@ namespace detail {
 
     boost::optional<double> getViewFactor(const PlanarSurface &surf) const;
 
-    std::vector<std::pair<PlanarSurface, double>> viewFactors() const;
-
-    //std::unordered_map<PlanarSurface, double> viewFactorMap() const;
+    std::vector<ViewFactorData> viewFactors() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: AirflowNetworkComponent.
     bool setLinkage(const AirflowNetworkLinkage& linkage);
 
     bool setDuctSurfaceExposureFraction(double ductSurfaceExposureFraction);
@@ -116,7 +115,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.AirflowNetworkDuctViewFactors");
 
-    // TODO: Check the return types of these methods.
     // Optional getters for use by methods like children() so can remove() if the constructor fails.
     // There are other ways for the public versions of these getters to fail--perhaps all required
     // objects should be returned as boost::optionals

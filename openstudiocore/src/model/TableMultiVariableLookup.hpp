@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -58,6 +58,10 @@ class TableMultiVariableLookupPoint {
 
   std::vector<double> x() const;
   double y() const;
+
+  // this operator is to support sorting of TableMultiVariableLookupPoint in the order required by EnergyPlus Table:Lookup object
+  bool operator<(const TableMultiVariableLookupPoint& other) const;
+ 
  private:
   std::vector<double> m_x;
   double m_y;

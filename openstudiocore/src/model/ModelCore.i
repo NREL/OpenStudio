@@ -22,11 +22,15 @@
   #undef _csharp_module_name
   #define _csharp_module_name OpenStudioModelCore
 
+  // Ignore AccessPolicyStore which is used by GUIs only
+  %ignore openstudio::model::AccessPolicyStore;
+
   // ignore simulation objects for now, add back in with partial classes in ModelSimulation.i
   %ignore openstudio::model::Model::foundationKivaSettings;
   %ignore openstudio::model::Model::runPeriod;
   %ignore openstudio::model::Model::weatherFile;
   %ignore openstudio::model::Model::yearDescription;
+  %ignore openstudio::model::Model::performancePrecisionTradeoffs;
 
   // ignore geometry objects for now, add back in with partial classes in ModelGeometry.i
   %ignore openstudio::model::Model::building;
@@ -34,6 +38,32 @@
 
   // Ignore hvac objects for now, add back in with partial classes in ModelHVAC.i
   %ignore openstudio::model::Model::outdoorAirNode;
+
+
+
+  // EnergyManagementSystemActuator: depends on Space (ModelGeometry.i),
+  %ignore openstudio::model::EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject,
+                                                                                            const std::string& actuatedComponentType,
+                                                                                            const std::string& actuatedComponentControlType,
+                                                                                            const Space& space);
+  %ignore openstudio::model::EnergyManagementSystemActuator::setSpace;
+
+  // depends on ThermalZone (ModelHVAC.i)
+  %ignore openstudio::model::EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject,
+                                                                                            const std::string& actuatedComponentType,
+                                                                                            const std::string& actuatedComponentControlType,
+                                                                                            const ThermalZone& thermalZone);
+  %ignore openstudio::model::EnergyManagementSystemActuator::setThermalZone;
+
+
+  // depends on Constructions (Geometry.i)
+  %ignore openstudio::model::EnergyManagementSystemConstructionIndexVariable::EnergyManagementSystemConstructionIndexVariable(const Model& model, const Construction& construction);
+  // Note JM 2019-04-16: setConstructioObject doesn't need to be ignored and reimplemented because it takes a ModelObject and not a Construction
+
+  // Depends on Curves (ModelResources.i)
+  %ignore openstudio::model::EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(const Model& model, const Curve& curve);
+  %ignore openstudio::model::EnergyManagementSystemCurveOrTableIndexVariable::setCurveOrTableObject;
+  // getter curveOrTableObject doesn't need to be ignored and reimplemented because it returns a ModelObject
 
   // should be able to do something here as C# supports partial classes
   // http://www.swig.org/Doc1.3/CSharp.html#csharp_extending_proxy_class
@@ -105,13 +135,24 @@ namespace model {
 // forward declarations
 class SpaceType;
 class Node;
-}
-}
+
+// For EMS
+class Space;
+class ThermalZone;
+class Curve;
+class Construction;
 
 // DLM: forward declaring these classes and requesting the valuewrapper feature seems to be sufficient for the Ruby bindings
-// For C# we ignore any methods using these and then reimpliment using partial class later
+// For C# we ignore any methods using these and then reimplement using partial class later
 %feature("valuewrapper") SpaceType;
 %feature("valuewrapper") Node;
+%feature("valuewrapper") Space;
+%feature("valuewrapper") ThermalZone;
+%feature("valuewrapper") Curve;
+%feature("valuewrapper") Construction;
+
+}
+}
 
 // templates
 %ignore std::vector<openstudio::model::ModelObject>::vector(size_type);
@@ -178,6 +219,7 @@ namespace model {
 };
 
 //MODELOBJECT_TEMPLATES(ModelObject); // swig preprocessor did not seem to see these for other objects so these are defined above
+MODELOBJECT_TEMPLATES(EMSActuatorNames);
 MODELEXTENSIBLEGROUP_TEMPLATES(ModelExtensibleGroup);
 MODELOBJECT_TEMPLATES(ParentObject);
 MODELOBJECT_TEMPLATES(ResourceObject);

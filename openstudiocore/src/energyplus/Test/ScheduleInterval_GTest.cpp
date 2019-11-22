@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,8 @@
 #include "../../model/ScheduleFixedInterval_Impl.hpp"
 #include "../../model/ScheduleVariableInterval.hpp"
 #include "../../model/ScheduleVariableInterval_Impl.hpp"
+#include "../../model/ScheduleFile.hpp"
+#include "../../model/ScheduleFile_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -505,6 +507,35 @@ TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleFixedInterval_TwoPo
 
   // check that there were 366 untils
   EXPECT_EQ(366, numUntils);
+}
+
+TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_TranslatetoScheduleFile)
+{
+  // Create the values vector
+  Vector values = linspace(1, 8760, 8760);
+
+  // Create an hourly interval time series that begins on 1/1 00:00
+  TimeSeries timeseries(DateTime(Date(MonthOfYear::Jan, 1), Time(0,1,0)), Time(0,1,0), values, "");
+
+  Model model;
+
+  // Create a schedule and make sure that it worked
+  boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(timeseries, model);
+  ASSERT_TRUE(scheduleInterval);
+  EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
+  ScheduleFixedInterval scheduleFixedInterval = scheduleInterval->optionalCast<ScheduleFixedInterval>().get();  
+  
+  // Set translate to Schedule:File
+  scheduleFixedInterval.setTranslatetoScheduleFile(true);
+  EXPECT_TRUE(scheduleFixedInterval.translatetoScheduleFile());
+
+  // Forward translate the schedule
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_File);
+  ASSERT_EQ(1u, objects.size());
+  ASSERT_EQ(scheduleFixedInterval.name().get(), objects[0].name().get());
 }
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)

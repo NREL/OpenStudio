@@ -10,7 +10,14 @@
     <rule IddField="ThermalZone" Access="LOCKED"/>
     <rule IddField="Inlet Node" Access="HIDDEN"/>
     <rule IddField="Outlet Node" Access="HIDDEN"/>
-    <rule IddField="Induced Air Outlet Node" Access="HIDDEN"/>
+    <rule IddField="Induced Air Outlet Port List" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_AvailabilityManager_NightCycle">
+    <rule IddField="Fan Schedule" Access="HIDDEN"/>
+    <rule IddField="Control Zone or Zone List Name" Access="HIDDEN"/>
+    <rule IddField="Cooling Control Zone or Zone List Name" Access="HIDDEN"/>
+    <rule IddField="Heating Control Zone or Zone List Name" Access="HIDDEN"/>
+    <rule IddField="Heating Zone Fans Only Zone or Zone List Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_CentralHeatPumpSystem">
     <rule IddField="Cooling Loop Inlet Node Name" Access="HIDDEN"/>
@@ -90,6 +97,18 @@
     <rule IddField="Energy Part Load Fraction Curve Name" Access="LOCKED"/>
     <rule IddField="Speed Data List" Access="HIDDEN"/>
   </POLICY>
+  <POLICY IddObjectType="OS_CoilSystem_Cooling_Water_HeatExchangerAssisted">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heat Exchanger" Access="HIDDEN"/>
+    <rule IddField="Cooling Coil" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_CoilSystem_Cooling_DX_HeatExchangerAssisted">
+    <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Air Outlet Node Name" Access="HIDDEN"/>
+    <rule IddField="Heat Exchanger" Access="HIDDEN"/>
+    <rule IddField="Cooling Coil" Access="HIDDEN"/>
+  </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_HighTemperatureRadiant">
     <rule IddField="Radiant Surface Type" Access="HIDDEN"/>
   </POLICY>
@@ -152,6 +171,7 @@
     <rule IddField="Supply Air Fan" Access="HIDDEN"/>
     <rule IddField="Cooling Coil" Access="HIDDEN"/>
     <rule IddField="Heating Coil" Access="HIDDEN"/>
+    <rule IddField="Plenum or Mixer Inlet Node Name" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_AirLoopHVAC_UnitaryHeatPump_AirToAir">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>
@@ -877,6 +897,12 @@
     <rule IddField="Inlet Node Name" Access="HIDDEN"/>
     <rule IddField="Outlet Node Name" Access="HIDDEN"/>
     <rule IddField="Heating Coil Name" Access="HIDDEN"/>
+  </POLICY>
+  <POLICY IddObjectType="OS_ZoneHVAC_EquipmentList">
+    <rule IddField="Thermal Zone" Access="HIDDEN"/>
+    <rule IddField="Zone Equipment" Access="HIDDEN"/>
+    <rule IddField="Zone Equipment Cooling Sequence" Access="HIDDEN"/>
+    <rule IddField="Zone Equipment Heating or No-Load Sequence" Access="HIDDEN"/>
   </POLICY>
   <POLICY IddObjectType="OS_ZoneHVAC_FourPipeFanCoil">
     <rule IddField="Air Inlet Node Name" Access="HIDDEN"/>

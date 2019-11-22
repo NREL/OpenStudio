@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,6 +40,8 @@
 #include "DefaultConstructionSet_Impl.hpp"
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 #include "RenderingColor.hpp"
 #include "RenderingColor_Impl.hpp"
 
@@ -146,6 +148,49 @@ namespace detail {
   boost::optional<DefaultScheduleSet> BuildingStory_Impl::defaultScheduleSet() const
   {
     return getObject<ModelObject>().getModelObjectTarget<DefaultScheduleSet>(OS_BuildingStoryFields::DefaultScheduleSetName);
+  }
+
+  boost::optional<Schedule> BuildingStory_Impl::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const
+  {
+    boost::optional<Schedule> result;
+    boost::optional<DefaultScheduleSet> defaultScheduleSet;
+    boost::optional<Building> building;
+    boost::optional<SpaceType> spaceType;
+
+    // first check this object
+    defaultScheduleSet = this->defaultScheduleSet();
+    if (defaultScheduleSet){
+      result = defaultScheduleSet->getDefaultSchedule(defaultScheduleType);
+      if (result){
+        return result;
+      }
+    }
+
+    // then check building
+    building = this->model().building();
+    if (building){
+      defaultScheduleSet = building->defaultScheduleSet();
+      if (defaultScheduleSet){
+        result = defaultScheduleSet->getDefaultSchedule(defaultScheduleType);
+        if (result){
+          return result;
+        }
+      }
+
+      // then check building's space type
+      spaceType = building->spaceType();
+      if (spaceType){
+        defaultScheduleSet = spaceType->defaultScheduleSet();
+        if (defaultScheduleSet){
+          result = defaultScheduleSet->getDefaultSchedule(defaultScheduleType);
+          if (result){
+            return result;
+          }
+        }
+      }
+    }
+
+    return boost::none;
   }
 
   bool BuildingStory_Impl::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet)
@@ -320,6 +365,10 @@ void BuildingStory::resetDefaultConstructionSet()
 boost::optional<DefaultScheduleSet> BuildingStory::defaultScheduleSet() const
 {
   return getImpl<detail::BuildingStory_Impl>()->defaultScheduleSet();
+}
+
+boost::optional<Schedule> BuildingStory::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+  return getImpl<detail::BuildingStory_Impl>()->getDefaultSchedule(defaultScheduleType);
 }
 
 bool BuildingStory::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet)

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,6 +38,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/Model_Impl.hpp"
 #include "../../model/ModelMerger.hpp"
+#include "../../model/AdditionalProperties.hpp"
+#include "../../model/AdditionalProperties_Impl.hpp"
 #include "../../model/Facility.hpp"
 #include "../../model/Facility_Impl.hpp"
 #include "../../model/Building.hpp"
@@ -48,6 +50,8 @@
 #include "../../model/Space_Impl.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
+#include "../../model/ShadingSurface.hpp"
+#include "../../model/ShadingSurface_Impl.hpp"
 #include "../../model/SubSurface.hpp"
 #include "../../model/SubSurface_Impl.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
@@ -78,6 +82,23 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH)
   openstudio::gbxml::ReverseTranslator reverseTranslator;
   boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
   ASSERT_TRUE(model);
+
+  // check for additional properties
+  for (const auto& object : model->getModelObjects<ModelObject>()) {
+    if (object.optionalCast<Space>() || 
+        object.optionalCast<Surface>() || 
+        object.optionalCast<ShadingSurface>() || 
+        object.optionalCast<SubSurface>()) {
+
+      EXPECT_TRUE(object.hasAdditionalProperties()) << object;
+      if (object.optionalCast<Surface>() && object.cast<Surface>().isAirWall()) {
+        // air walls don't have cad object ids in this file
+      } else {
+        EXPECT_TRUE(object.additionalProperties().hasFeature("CADObjectId")) << object;
+      }
+      EXPECT_TRUE(object.additionalProperties().hasFeature("gbXMLId")) << object;
+    }
+  }
 
   model->save(resourcesPath() / openstudio::toPath("gbxml/ZNETH.osm"), true);
 
@@ -509,6 +530,24 @@ TEST_F(gbXMLFixture, ReverseTranslator_TwoStoryOffice_Trane)
   openstudio::gbxml::ReverseTranslator reverseTranslator;
   boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
   ASSERT_TRUE(model);
+
+  // check for additional properties
+  for (const auto& object : model->getModelObjects<ModelObject>()) {
+    if (object.optionalCast<ThermalZone>() ||
+      object.optionalCast<Space>() ||
+      object.optionalCast<Surface>() ||
+      object.optionalCast<ShadingSurface>() ||
+      object.optionalCast<SubSurface>()) {
+
+      EXPECT_TRUE(object.hasAdditionalProperties()) << object;
+      if (object.optionalCast<Surface>() && object.cast<Surface>().isAirWall()) {
+        // air walls don't have cad object ids in this file
+      } else {
+        EXPECT_TRUE(object.additionalProperties().hasFeature("CADObjectId")) << object;
+      }
+      EXPECT_TRUE(object.additionalProperties().hasFeature("gbXMLId")) << object;
+    }
+  }
 
   model->save(resourcesPath() / openstudio::toPath("gbxml/TwoStoryOffice_Trane.osm"), true);
 

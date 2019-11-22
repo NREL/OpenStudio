@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -504,6 +504,13 @@ namespace detail{
       if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
         return canonicalOrAbsolute(p);
       }
+    }
+
+    // Extra check: if it starts with file://
+    std::string fileName = toString(file);
+    if (fileName.rfind("file://", 0) == 0) {
+      // We strip it, and try again
+      return findFile(toPath(fileName.substr(7)));
     }
     return boost::none;
   }

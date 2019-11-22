@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,6 +57,8 @@ class MODEL_API ShadowCalculation : public ModelObject {
 
   static IddObjectType iddObjectType();
 
+  static std::vector<std::string> validCalculationMethodValues();
+
   static std::vector<std::string> validPolygonClippingAlgorithmValues();
 
   static std::vector<std::string> validSkyDiffuseModelingAlgorithmValues();
@@ -64,6 +66,10 @@ class MODEL_API ShadowCalculation : public ModelObject {
   //@}
   /** @name Getters */
   //@{
+
+  std::string calculationMethod() const;
+
+  bool isCalculationMethodDefaulted() const;
 
   int calculationFrequency() const;
 
@@ -80,6 +86,10 @@ class MODEL_API ShadowCalculation : public ModelObject {
   //@}
   /** @name Setters */
   //@{
+
+  bool setCalculationMethod(const std::string& calculationMethod);
+
+  void resetCalculationMethod();
 
   bool setCalculationFrequency(int calculationFrequency);
 

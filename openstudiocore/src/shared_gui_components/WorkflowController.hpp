@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -212,6 +212,9 @@ class MeasureStepItem : public OSListItem
 
   // arguments includes the full list of arguments calculated for the given model along with any values specified in the OSW
   std::vector<measure::OSArgument> arguments() const;
+
+  // Returns the name of the measure directory in question (not a path, just the last level)
+  QString measureDirectory() const;
 
   bool hasIncompleteArguments() const;
 

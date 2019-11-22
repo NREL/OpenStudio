@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -85,6 +85,8 @@ class MODEL_API DefaultConstructionSet : public ResourceObject {
 
   boost::optional<ConstructionBase> siteShadingConstruction() const;
 
+  boost::optional<ConstructionBase> adiabaticSurfaceConstruction() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -124,6 +126,10 @@ class MODEL_API DefaultConstructionSet : public ResourceObject {
   bool setSiteShadingConstruction(const ConstructionBase& construction);
 
   void resetSiteShadingConstruction();
+
+  bool setAdiabaticSurfaceConstruction(const ConstructionBase& construction);
+
+  void resetAdiabaticSurfaceConstruction();
 
   //@}
 

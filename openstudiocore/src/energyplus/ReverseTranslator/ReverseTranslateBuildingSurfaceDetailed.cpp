@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,6 +36,8 @@
 #include "../../model/ConstructionBase_Impl.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Space_Impl.hpp"
+#include "../../model/FoundationKiva.hpp"
+#include "../../model/FoundationKiva_Impl.hpp"
 
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -156,6 +158,16 @@ OptionalModelObject ReverseTranslator::translateBuildingSurfaceDetailed( const W
             return surface.get();
           }
         }
+      }
+
+    }else if (target->iddObject().type() == IddObjectType::Foundation_Kiva){
+      // Foundation boundary condition
+      
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if(modelObject->optionalCast<FoundationKiva>()){
+        FoundationKiva foundationKiva = modelObject->cast<FoundationKiva>();
+        surface->setAdjacentFoundation(foundationKiva);
+        return surface.get();
       }
 
     }else{

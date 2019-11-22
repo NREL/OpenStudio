@@ -1,3 +1,5 @@
+${CMAKE_SOURCE_DIR}/resources/energyplus/5ZoneAirCooled/in.idf
+${CMAKE_SOURCE_DIR}/resources/energyplus/BestestEx/in.idf
 ${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_roof_1/Large Office TSD_Nonresidential_3A_Roof_Attic and Other.idf
 ${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_roof_2/CEC Title 24-2008_Nonresidential_9_Roof_Insulation Entirely Above Deck.idf
 ${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_designday_1/Annual_Humidification_99_6.idf
@@ -11,9 +13,12 @@ ${CMAKE_SOURCE_DIR}/resources/energyplus/Components/idf_designday_5/Annual_Heati
 ${CMAKE_SOURCE_DIR}/resources/energyplus/Daylighting_Office/in.idf
 ${CMAKE_SOURCE_DIR}/resources/energyplus/Daylighting_School/in.idf
 ${CMAKE_SOURCE_DIR}/resources/energyplus/HospitalBaseline/in.idf
+${CMAKE_SOURCE_DIR}/resources/energyplus/Office_With_Many_HVAC_Types/in.idf
+${CMAKE_SOURCE_DIR}/resources/energyplus/RefLargeOffice/RefBldgLargeOfficeNew2004_Chicago.idf
 ${CMAKE_SOURCE_DIR}/resources/energyplus/SimpleSurfaces/SimpleSurfaces_Reference.idf
 ${CMAKE_SOURCE_DIR}/resources/energyplus/SimpleSurfaces/SimpleSurfaces_Relative.idf
 ${CMAKE_SOURCE_DIR}/resources/energyplus/TranslatorV2_Tests/Simple_Construction.idf
+${CMAKE_SOURCE_DIR}/resources/energyplus/ZoneBoundaryCondition/Bug_486_zone_bdr_test.idf
 ${CMAKE_SOURCE_DIR}/resources/energyplus/NewFileTemplate.idf
 ${CMAKE_SOURCE_DIR}/resources/project/buildings/SmallOffice.idf
 ${CMAKE_SOURCE_DIR}/resources/project/results/MetricsOfInterest.idf
@@ -59,4 +64,3 @@ ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0200 su-alt wds rotate.
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0300 multiple windows.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0400 offset window error.idf
 ${CMAKE_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0500 window split into two gap.idf
-${CMAKE_SOURCE_DIR}/resources/standardsinterface/CEC_Buildings/SmallOffice.idf

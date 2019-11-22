@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -93,8 +93,8 @@ namespace detail {
   const std::vector<std::string>& CoilHeatingDXSingleSpeed_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result{
-      "Heating Coil Total Heating Rate",
-      "Heating Coil Total Heating Energy",
+      "Heating Coil Heating Rate",
+      "Heating Coil Heating Energy",
       "Heating Coil Electric Power",
       "Heating Coil Electric Energy",
       "Heating Coil Defrost Electric Power",

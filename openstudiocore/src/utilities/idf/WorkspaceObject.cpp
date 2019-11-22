@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -217,6 +217,10 @@ namespace detail {
 
     // regular field, let IdfObject_Impl take care of it
     return IdfObject_Impl::getString(index,returnDefault,returnUninitializedEmpty);
+  }
+
+  boost::optional<std::string> WorkspaceObject_Impl::getField(unsigned index) const {
+    return IdfObject_Impl::getString(index,false,false);
   }
 
   OptionalWorkspaceObject WorkspaceObject_Impl::getTarget(unsigned index) const {
@@ -1350,6 +1354,10 @@ bool WorkspaceObject::objectListFieldsEqual(const WorkspaceObject& other) const 
 
 bool WorkspaceObject::objectListFieldsNonConflicting(const WorkspaceObject& other) const {
   return getImpl<WorkspaceObject_Impl>()->objectListFieldsNonConflicting(other);
+}
+
+boost::optional<std::string> WorkspaceObject::getField(unsigned index) const {
+  return getImpl<WorkspaceObject_Impl>()->getField(index);
 }
 
 // SERIALIZATION

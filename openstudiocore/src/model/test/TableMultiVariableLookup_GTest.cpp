@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -175,3 +175,162 @@ TEST_F(ModelFixture,TableMultiVariableLookupPoint) {
 
 }
 
+
+TEST_F(ModelFixture, TableMultiVariablePointOrder) {
+
+  Model m;
+  // Table with 3 independent variables
+  TableMultiVariableLookup table(m, 3);
+
+  // from the E+ IO Reference for Table:Lookup
+  EXPECT_TRUE(table.addPoint(1, 1, 1, 111)); // 0
+  EXPECT_TRUE(table.addPoint(1, 1, 2, 112)); // 1
+  EXPECT_TRUE(table.addPoint(1, 1, 3, 113)); // 2
+  EXPECT_TRUE(table.addPoint(1, 1, 4, 114)); // 3
+  EXPECT_TRUE(table.addPoint(1, 2, 1, 121)); // 4
+  EXPECT_TRUE(table.addPoint(1, 2, 2, 122)); // 5
+  EXPECT_TRUE(table.addPoint(1, 2, 3, 123)); // 6
+  EXPECT_TRUE(table.addPoint(1, 2, 4, 124)); // 7
+
+  EXPECT_TRUE(table.addPoint(2, 1, 1, 211)); // 8
+  EXPECT_TRUE(table.addPoint(2, 1, 2, 212)); // 9
+  EXPECT_TRUE(table.addPoint(2, 1, 3, 213)); // 10
+  EXPECT_TRUE(table.addPoint(2, 1, 4, 214)); // 11
+  EXPECT_TRUE(table.addPoint(2, 2, 1, 221)); // 12
+  EXPECT_TRUE(table.addPoint(2, 2, 2, 222)); // 13
+  EXPECT_TRUE(table.addPoint(2, 2, 3, 223)); // 14
+  EXPECT_TRUE(table.addPoint(2, 2, 4, 224)); // 15
+
+  EXPECT_TRUE(table.addPoint(3, 1, 1, 311)); // 16
+  EXPECT_TRUE(table.addPoint(3, 1, 2, 312)); // 17
+  EXPECT_TRUE(table.addPoint(3, 1, 3, 313)); // 18
+  EXPECT_TRUE(table.addPoint(3, 1, 4, 314)); // 19
+  EXPECT_TRUE(table.addPoint(3, 2, 1, 321)); // 20
+  EXPECT_TRUE(table.addPoint(3, 2, 2, 322)); // 21
+  EXPECT_TRUE(table.addPoint(3, 2, 3, 323)); // 22
+  EXPECT_TRUE(table.addPoint(3, 2, 4, 324)); // 23
+
+  auto points = table.points();
+  std::sort(points.begin(), points.end());
+  ASSERT_EQ(24u, points.size());
+
+  EXPECT_EQ(1, points[0].x()[0]);
+  EXPECT_EQ(1, points[0].x()[1]);
+  EXPECT_EQ(1, points[0].x()[2]);
+  EXPECT_EQ(111, points[0].y());
+
+  EXPECT_EQ(1, points[6].x()[0]);
+  EXPECT_EQ(2, points[6].x()[1]);
+  EXPECT_EQ(3, points[6].x()[2]);
+  EXPECT_EQ(123, points[6].y());
+
+  EXPECT_EQ(2, points[10].x()[0]);
+  EXPECT_EQ(1, points[10].x()[1]);
+  EXPECT_EQ(3, points[10].x()[2]);
+  EXPECT_EQ(213, points[10].y());
+
+  EXPECT_EQ(2, points[13].x()[0]);
+  EXPECT_EQ(2, points[13].x()[1]);
+  EXPECT_EQ(2, points[13].x()[2]);
+  EXPECT_EQ(222, points[13].y());
+
+  EXPECT_EQ(2, points[14].x()[0]);
+  EXPECT_EQ(2, points[14].x()[1]);
+  EXPECT_EQ(3, points[14].x()[2]);
+  EXPECT_EQ(223, points[14].y());
+
+  EXPECT_EQ(2, points[15].x()[0]);
+  EXPECT_EQ(2, points[15].x()[1]);
+  EXPECT_EQ(4, points[15].x()[2]);
+  EXPECT_EQ(224, points[15].y()); 
+
+  EXPECT_EQ(3, points[16].x()[0]);
+  EXPECT_EQ(1, points[16].x()[1]);
+  EXPECT_EQ(1, points[16].x()[2]);
+  EXPECT_EQ(311, points[16].y());
+
+  EXPECT_EQ(3, points[23].x()[0]);
+  EXPECT_EQ(2, points[23].x()[1]);
+  EXPECT_EQ(4, points[23].x()[2]);
+  EXPECT_EQ(324, points[23].y());
+}
+
+
+TEST_F(ModelFixture, TableMultiVariablePointOrder2) {
+
+  Model m;
+  // Table with 3 independent variables
+  TableMultiVariableLookup table(m, 3);
+
+  // from the E+ IO Reference for Table:Lookup
+  EXPECT_TRUE(table.addPoint(3, 1, 1, 311)); // 16
+  EXPECT_TRUE(table.addPoint(3, 1, 2, 312)); // 17
+  EXPECT_TRUE(table.addPoint(3, 1, 3, 313)); // 18
+  EXPECT_TRUE(table.addPoint(3, 1, 4, 314)); // 19
+  EXPECT_TRUE(table.addPoint(3, 2, 1, 321)); // 20
+  EXPECT_TRUE(table.addPoint(3, 2, 2, 322)); // 21
+  EXPECT_TRUE(table.addPoint(3, 2, 3, 323)); // 22
+  EXPECT_TRUE(table.addPoint(3, 2, 4, 324)); // 23
+
+  EXPECT_TRUE(table.addPoint(2, 1, 1, 211)); // 8
+  EXPECT_TRUE(table.addPoint(2, 1, 2, 212)); // 9
+  EXPECT_TRUE(table.addPoint(2, 1, 3, 213)); // 10
+  EXPECT_TRUE(table.addPoint(2, 1, 4, 214)); // 11
+  EXPECT_TRUE(table.addPoint(2, 2, 1, 221)); // 12
+  EXPECT_TRUE(table.addPoint(2, 2, 2, 222)); // 13
+  EXPECT_TRUE(table.addPoint(2, 2, 3, 223)); // 14
+  EXPECT_TRUE(table.addPoint(2, 2, 4, 224)); // 15
+
+  EXPECT_TRUE(table.addPoint(1, 1, 1, 111)); // 0
+  EXPECT_TRUE(table.addPoint(1, 1, 2, 112)); // 1
+  EXPECT_TRUE(table.addPoint(1, 1, 3, 113)); // 2
+  EXPECT_TRUE(table.addPoint(1, 1, 4, 114)); // 3
+  EXPECT_TRUE(table.addPoint(1, 2, 1, 121)); // 4
+  EXPECT_TRUE(table.addPoint(1, 2, 2, 122)); // 5
+  EXPECT_TRUE(table.addPoint(1, 2, 3, 123)); // 6
+  EXPECT_TRUE(table.addPoint(1, 2, 4, 124)); // 7
+
+  auto points = table.points();
+  std::sort(points.begin(), points.end());
+  ASSERT_EQ(24u, points.size());
+
+  EXPECT_EQ(1, points[0].x()[0]);
+  EXPECT_EQ(1, points[0].x()[1]);
+  EXPECT_EQ(1, points[0].x()[2]);
+  EXPECT_EQ(111, points[0].y());
+
+  EXPECT_EQ(1, points[6].x()[0]);
+  EXPECT_EQ(2, points[6].x()[1]);
+  EXPECT_EQ(3, points[6].x()[2]);
+  EXPECT_EQ(123, points[6].y());
+
+  EXPECT_EQ(2, points[10].x()[0]);
+  EXPECT_EQ(1, points[10].x()[1]);
+  EXPECT_EQ(3, points[10].x()[2]);
+  EXPECT_EQ(213, points[10].y());
+
+  EXPECT_EQ(2, points[13].x()[0]);
+  EXPECT_EQ(2, points[13].x()[1]);
+  EXPECT_EQ(2, points[13].x()[2]);
+  EXPECT_EQ(222, points[13].y());
+
+  EXPECT_EQ(2, points[14].x()[0]);
+  EXPECT_EQ(2, points[14].x()[1]);
+  EXPECT_EQ(3, points[14].x()[2]);
+  EXPECT_EQ(223, points[14].y());
+
+  EXPECT_EQ(2, points[15].x()[0]);
+  EXPECT_EQ(2, points[15].x()[1]);
+  EXPECT_EQ(4, points[15].x()[2]);
+  EXPECT_EQ(224, points[15].y());
+
+  EXPECT_EQ(3, points[16].x()[0]);
+  EXPECT_EQ(1, points[16].x()[1]);
+  EXPECT_EQ(1, points[16].x()[2]);
+  EXPECT_EQ(311, points[16].y());
+
+  EXPECT_EQ(3, points[23].x()[0]);
+  EXPECT_EQ(2, points[23].x()[1]);
+  EXPECT_EQ(4, points[23].x()[2]);
+  EXPECT_EQ(324, points[23].y());
+}

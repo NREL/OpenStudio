@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -202,7 +202,11 @@ TEST_F(CoreFixture, PathWatcher_Dir)
   EXPECT_FALSE(openstudio::filesystem::exists(filePath));
 
   // calls processEvents
-  System::msleep(10);
+  // TJC increased this from 10 to 1000 as osx CI machine was taking a long time to
+  // remove the file from delete operation above and this check would fail
+  System::msleep(1000);
 
-  EXPECT_TRUE(watcher.changed);
+
+   EXPECT_TRUE(watcher.changed);
+//  EXPECT_TRUE(watcher.removed);
 }

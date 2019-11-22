@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -69,7 +69,11 @@ class MODEL_API ThermalStorageIceDetailed : public StraightComponent {
 
   double capacity() const;
 
+  std::string dischargingCurveVariableSpecifications() const;
+
   Curve dischargingCurve() const;
+
+  std::string chargingCurveVariableSpecifications() const;
 
   Curve chargingCurve() const;
 
@@ -95,7 +99,11 @@ class MODEL_API ThermalStorageIceDetailed : public StraightComponent {
 
   bool setCapacity(double capacity);
 
+  bool setDischargingCurveVariableSpecifications(const std::string& dischargingCurveVariableSpecifications);
+
   bool setDischargingCurve(const Curve& dischargingCurve);
+
+  bool setChargingCurveVariableSpecifications(const std::string& chargingCurveVariableSpecifications);
 
   bool setChargingCurve(const Curve& chargingCurve);
 

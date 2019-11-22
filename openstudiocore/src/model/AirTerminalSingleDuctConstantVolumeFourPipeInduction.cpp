@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -257,8 +257,8 @@ namespace detail {
       }
     }
 
-    model().disconnect(getObject<ModelObject>(),inletPort());
-    model().disconnect(getObject<ModelObject>(),outletPort());
+    model().disconnect(thisObject, inletPort());
+    model().disconnect(thisObject, outletPort());
 
     if( _coolingCoil && ( loop = _coolingCoil->plantLoop() ) )
     {

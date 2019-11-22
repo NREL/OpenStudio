@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -61,13 +61,13 @@ boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyExposedFou
   if( (value = modelObject.totalExposedPerimeter()) )
   {
     idfObject.setDouble(SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, value.get());
+    idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, "");
   }
   else 
   {
     idfObject.setString(SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter, "");
-  }
-
-  idfObject.setDouble(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, modelObject.exposedPerimeterFraction());
+    idfObject.setDouble(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterFraction, modelObject.exposedPerimeterFraction());
+  }  
 
   return boost::optional<IdfObject>(idfObject);
 }

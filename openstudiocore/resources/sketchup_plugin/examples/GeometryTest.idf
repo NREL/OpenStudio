@@ -101,7 +101,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,9.0;
+  Version,9.2;
 
   Timestep,4;
 
@@ -129,7 +129,7 @@
     Yes;                     !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    RUNPERIOD 1,             !- Name
     5,                       !- Begin Month
     1,                       !- Begin Day of Month
     ,                        !- Begin Year
@@ -142,7 +142,7 @@
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
-    ;                        !- Treat Weather as Actual
+    No;                      !- Treat Weather as Actual
 
   Site:Location,
     COLORADO_SPRGS_CO_USA_WMO_724660,  !- Name
@@ -1535,13 +1535,13 @@
   InternalMass,
     Zn002:IntM001,           !- Name
     INTERIOR,                !- Construction Name
-    DORM ROOMS AND COMMON AREAS,  !- Zone Name
+    DORM ROOMS AND COMMON AREAS,  !- Zone or ZoneList Name
     408.7734;                !- Surface Area {m2}
 
   InternalMass,
     Zn002:IntM002,           !- Name
     PARTITION02,             !- Construction Name
-    DORM ROOMS AND COMMON AREAS,  !- Zone Name
+    DORM ROOMS AND COMMON AREAS,  !- Zone or ZoneList Name
     371.6122;                !- Surface Area {m2}
 
   BuildingSurface:Detailed,
@@ -2206,7 +2206,9 @@
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     PSI FOYER PURCHASED AIR, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     PSI FOYER PURCHASED AIR, !- Name
@@ -2281,7 +2283,9 @@
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     DORM ROOMS AND COMMON AREAS PURCHASED AIR,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     DORM ROOMS AND COMMON AREAS PURCHASED AIR,  !- Name
@@ -2356,7 +2360,9 @@
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     LEFT FORK PURCHASED AIR, !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     LEFT FORK PURCHASED AIR, !- Name
@@ -2431,7 +2437,9 @@
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     MIDDLE FORK PURCHASED AIR,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     MIDDLE FORK PURCHASED AIR,  !- Name
@@ -2506,7 +2514,9 @@
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     RIGHT FORK PURCHASED AIR,!- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     RIGHT FORK PURCHASED AIR,!- Name

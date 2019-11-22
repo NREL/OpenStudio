@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -81,9 +81,12 @@ struct MODEL_API ScheduleType {
 /** \relates ScheduleType */
 typedef std::vector<ScheduleType> ScheduleTypeVector;
 
-/** Returns true if candidate is consistent with scheduleType. \relates ScheduleType */
+/** Returns true if candidate is consistent with scheduleType.
+ * When isStringent is true, we also check that if scheduleType does not have a lower/upper bound, then candidate must not have them either.
+ * \relates ScheduleType */
 MODEL_API bool isCompatible(const ScheduleType& scheduleType,
-                            const ScheduleTypeLimits& candidate);
+                            const ScheduleTypeLimits& candidate,
+                            bool isStringent = false);
 
 
 /** Singleton class that contains a registry of all types of schedules that can exist in a Model.

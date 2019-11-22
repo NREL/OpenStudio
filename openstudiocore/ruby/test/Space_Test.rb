@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -42,12 +42,8 @@ class Space_Test < MiniTest::Unit::TestCase
 
     # test name attributes
     space.setName("Space")
-    attribute = space.getAttribute("name")
-    assert((not attribute.empty?))
-    assert_equal("Space", attribute.get.valueAsString)
-    space.setAttribute("name", "Space 2")
     assert(space.name)
-    assert_equal("Space 2", space.name.get)
+    assert_equal("Space", space.name.get)
   end
 
 end

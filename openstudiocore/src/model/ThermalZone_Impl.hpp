@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,6 +54,7 @@ class PortList;
 class ZoneMixing;
 class ZoneHVACEquipmentList;
 class AirflowNetworkZone;
+class ZonePropertyUserViewFactorsBySurfaceName;
 
 namespace detail {
 
@@ -149,6 +150,8 @@ namespace detail {
     virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
     virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+    ZonePropertyUserViewFactorsBySurfaceName getZonePropertyUserViewFactorsBySurfaceName() const;
 
     //@}
     /** @name Setters */
@@ -385,6 +388,9 @@ namespace detail {
 
     PortList returnPortList() const;
 
+
+    ZoneHVACEquipmentList zoneHVACEquipmentList() const;
+
     bool addEquipment(const ModelObject & equipment);
 
     bool removeEquipment(const ModelObject & equipment);
@@ -401,7 +407,21 @@ namespace detail {
 
     std::vector<ModelObject> equipmentInCoolingOrder() const;
 
-    ZoneHVACEquipmentList zoneHVACEquipmentList() const;
+    boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
+
+    boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
+
+    bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
+
+    bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
+
+    // Convenience methods
+    boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+    boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+
+    bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+    bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
+
 
     virtual ModelObject clone(Model model) const override;
 

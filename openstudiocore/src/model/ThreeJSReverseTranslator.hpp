@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,6 +45,7 @@ namespace openstudio
   {
 
     class Construction;
+    class ConstructionAirBoundary;
 
     /** ThreeJSReverseTranslator converts a ThreeJS JSON to OpenStudio Model. There are two variations of the ThreeJS format,
     *   this translator requires that the ThreeJS JSON be in OpenStudio Model format rather than optimized for display.
@@ -76,7 +77,7 @@ namespace openstudio
 
       Point3dVectorVector getFaces(const ThreeGeometryData& data) const;
 
-      Construction getAirWallConstruction(Model& model);
+      ConstructionAirBoundary getAirWallConstruction(Model& model);
 
       std::map<UUID, UUID> m_handleMapping;
 

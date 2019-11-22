@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -71,6 +71,24 @@ std::vector<double> TableMultiVariableLookupPoint::x() const {
 
 double TableMultiVariableLookupPoint::y() const {
   return m_y;
+}
+
+bool TableMultiVariableLookupPoint::operator<(const TableMultiVariableLookupPoint& other) const {
+  auto n = m_x.size();
+  auto other_x = other.x();
+  if (n != other_x.size()) {
+    LOG_FREE_AND_THROW("TableMultiVariableLookupPoint", "Cannot compare points of different size " << n << " and " << other_x.size());
+  }
+
+  for (size_t i = 0; i < n; ++i) {
+    if (m_x[i] < other_x[i]) {
+      return true;
+    } else if (m_x[i] > other_x[i]) {
+      return false;
+    }
+  }
+
+  return false;
 }
 
 std::ostream& operator<< (std::ostream& out, const openstudio::model::TableMultiVariableLookupPoint& point) {

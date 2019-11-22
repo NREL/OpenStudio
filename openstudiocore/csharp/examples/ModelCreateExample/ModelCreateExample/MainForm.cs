@@ -22,7 +22,7 @@ namespace ModelCreateExample
             {
               MessageBox.Show("It appears that there was an error accessing the C# SWIG Bindings for OpenStudio. Note that the libraries installed in <installdir>/CSharp/openstudio need to be accessible to this application at runtime, either through the path or in the same directory as the exe. Nothing else will work properly have this point.\n\nError Text: " + e.InnerException.InnerException.Message, "Error loading libraries");
             }
-           
+
             InitializeComponent();
         }
 
@@ -66,7 +66,7 @@ namespace ModelCreateExample
             points.Add(new OpenStudio.Point3d(1, 0, 0));
             points.Add(new OpenStudio.Point3d(1, 0, 1));
 
-            OpenStudio.Surface roof = new OpenStudio.Surface(points, model); 
+            OpenStudio.Surface roof = new OpenStudio.Surface(points, model);
             roof.setName("Roof");
             roof.setSpace(space);
             roof.setSurfaceType("Roof");
@@ -89,7 +89,7 @@ namespace ModelCreateExample
             //ASSERT_TRUE(wall.construction());
             //EXPECT_EQ(construction.handle(), wall.construction()->handle());
 
-            OpenStudio.SubSurface window = new OpenStudio.SubSurface(points, model); 
+            OpenStudio.SubSurface window = new OpenStudio.SubSurface(points, model);
             window.setName("Window");
             window.setSurface(wall);
             window.setSubSurfaceType("Window");
@@ -100,17 +100,19 @@ namespace ModelCreateExample
             //ASSERT_TRUE(window.construction());
             //EXPECT_EQ(construction.handle(), window.construction()->handle());
 
-            OpenStudio.Surface floor = new OpenStudio.Surface(points, model); 
+            OpenStudio.Surface floor = new OpenStudio.Surface(points, model);
             floor.setName("Floor");
             floor.setSpace(space);
             floor.setSurfaceType("Floor");
             floor.setConstruction(construction);
 
-            if (model.save(new OpenStudio.Path(fname), true))
+            // Create a path
+            OpenStudio.Path p = OpenStudio.OpenStudioUtilitiesCore.toPath(fname);
+            if (model.save(p, true))
             {
               MessageBox.Show("Model saved to: " + fname);
 
-              OpenStudio.OptionalModel optionalModel = OpenStudio.Model.load(new OpenStudio.Path(fname));
+              OpenStudio.OptionalModel optionalModel = OpenStudio.Model.load(p);
               if (optionalModel.is_initialized())
               {
                 OpenStudio.Model model2 = optionalModel.get();

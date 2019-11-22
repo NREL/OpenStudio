@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -952,7 +952,13 @@ namespace detail{
     {
       if( ! airLoop->demandComponent(node.handle()) )
       {
-        return StraightComponent_Impl::addToNode( node );
+        // TODO: JM 2019-03-12 I'm not sure we shouldn't just restrict to ANY containingHVACComponent (disallow if part of a UnitarySystem)
+        auto t_containingHVACComponent = containingHVACComponent();
+        if (t_containingHVACComponent && t_containingHVACComponent->optionalCast<CoilSystemCoolingDXHeatExchangerAssisted>()) {
+          LOG(Warn, this->briefDescription() << " cannot be connected directly when it's part of a parent CoilSystemCoolingDXHeatExchangerAssisted. Please call CoilSystemCoolingDXHeatExchangerAssisted::addToNode instead");
+        } else {
+          return StraightComponent_Impl::addToNode( node );
+        }
       }
     }
 
@@ -1040,12 +1046,12 @@ namespace detail{
 
   // E+ output has a bug where this field label is incorrect
   boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedEvaporativeCondenserAirFlowRate() const {
-    return getAutosizedValue("Design Size Evaporative Condenser Effectiveness", "m3/s");
+    return getAutosizedValue("Design Size Evaporative Condenser Air Flow Rate", "m3/s");
   }
 
   // E+ output has a bug where this field label is incorrect
   boost::optional<double> CoilCoolingDXSingleSpeed_Impl::autosizedEvaporativeCondenserPumpRatedPowerConsumption()  const {
-    return getAutosizedValue("Design Size Evaporative Condenser Air Flow Rate", "W");
+    return getAutosizedValue("Design Size Evaporative Condenser Pump Rated Power Consumption", "W");
   }
 
   std::vector<EMSActuatorNames> CoilCoolingDXSingleSpeed_Impl::emsActuatorNames() const {

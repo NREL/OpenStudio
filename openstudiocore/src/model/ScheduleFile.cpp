@@ -1,30 +1,31 @@
 /***********************************************************************************************************************
- *  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
- *
- *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
- *  following conditions are met:
- *
- *  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
- *  disclaimer.
- *
- *  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
- *  following disclaimer in the documentation and/or other materials provided with the distribution.
- *
- *  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
- *  products derived from this software without specific prior written permission from the respective party.
- *
- *  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
- *  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
- *  specific prior written permission from Alliance for Sustainable Energy, LLC.
- *
- *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- *  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
- *  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- *  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
- *  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- **********************************************************************************************************************/
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
 
 #include "ScheduleFile.hpp"
 #include "ScheduleFile_Impl.hpp"
@@ -43,6 +44,7 @@
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/data/TimeSeries.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/filetypes/CSVFile.hpp"
 
 #include <unordered_map>
 
@@ -129,7 +131,7 @@ namespace detail {
   }
 
   char ScheduleFile_Impl::columnSeparatorChar() const {
-    static std::unordered_map<std::string, char> lookup({ { "Comma", ',' }, { "Tab", '\t' }, { "Fixed", ' ' }, { "Semicolon", ';' } });
+    static std::unordered_map<std::string, char> lookup({ { "Comma", ',' }, { "Tab", '\t' }, {"Fixed", ' ' }, { "Space", ' ' }, { "Semicolon", ';' } });
     boost::optional<std::string> value = getString(OS_Schedule_FileFields::ColumnSeparator, true);
     OS_ASSERT(value);
     auto it = lookup.find(value.get());
@@ -223,6 +225,56 @@ namespace detail {
     bool result = setString(OS_Schedule_FileFields::MinutesperItem, "");
     OS_ASSERT(result);
   }
+  
+  boost::optional<CSVFile> ScheduleFile_Impl::csvFile() const {
+    boost::optional<CSVFile> csvFile;
+    ExternalFile externalFile = this->externalFile();
+    csvFile = CSVFile::load(externalFile.filePath());
+    return csvFile;
+  }
+
+  /* FIXME!
+  openstudio::TimeSeries ScheduleFile_Impl::timeSeries(unsigned columnIndex) const
+  { 
+    // need to catch integers less than or equal to 0
+    // need to ensure that first column is dateTimes
+    
+    boost::optional<CSVFile> csvFile;
+    ExternalFile externalFile = this->externalFile();
+    csvFile = CSVFile::load(externalFile.filePath());    
+    
+    std::vector<DateTime> dateTimes = csvFile->getColumnAsDateTimes(0);
+    std::vector<double> values = csvFile->getColumnAsDoubleVector(columnIndex);
+    Vector vectorValues(values.size());
+    unsigned i = 0;
+    for (double value : values) {
+      vectorValues[i] = value;
+      ++i;
+    }
+
+    Time delta = dateTimes[1] - dateTimes[0];
+    Time intervalLength(delta.days(), delta.hours(), delta.minutes(), delta.seconds());
+    TimeSeries result(dateTimes[0].date(), intervalLength, vectorValues, "");
+
+    return result;
+  }
+  */
+
+  /* FIXME!
+  unsigned ScheduleFile_Impl::addTimeSeries(const openstudio::TimeSeries& timeSeries)
+  {
+    // need to ensure that first column is dateTimes
+    // need to ensure that length of timeSeries equals length of dateTimes
+
+    boost::optional<CSVFile> csvFile;
+    ExternalFile externalFile = this->externalFile();
+    csvFile = CSVFile::load(externalFile.filePath());
+    unsigned columnIndex = csvFile->addColumn(timeSeries.values());
+    // save?
+
+    return columnIndex;
+  }
+  */
 
   openstudio::TimeSeries ScheduleFile_Impl::timeSeries() const
   {
@@ -230,7 +282,6 @@ namespace detail {
     /* FIXME!
     Date startDate(openstudio::MonthOfYear(this->startMonth()), this->startDay());
     Time intervalLength(0, 0, this->intervalLength());
-
     Vector values(this->numExtensibleGroups());
     unsigned i = 0;
     for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
@@ -239,7 +290,6 @@ namespace detail {
       values[i] = *x;
       ++i;
     }
-
     TimeSeries result(startDate, intervalLength, values, "");
     result.setOutOfRangeValue(this->outOfRangeValue());
     */
@@ -254,28 +304,23 @@ namespace detail {
     if (!intervalTime) {
       return false;
     }
-
     // check the interval
     double intervalLength = intervalTime->totalMinutes();
     if (intervalLength - floor(intervalLength) > 0) {
       return false;
     }
-
     // check the interval
     if (intervalTime->totalDays() > 1) {
       return false;
     }
-
     // check that first report is whole number of intervals from start date
     DateTime firstReportDateTime = timeSeries.firstReportDateTime();
     Date startDate = firstReportDateTime.date();
     Time firstReportTime = firstReportDateTime.time();
-
     double numIntervalsToFirstReport = std::max(1.0, firstReportTime.totalMinutes() / intervalLength);
     if (numIntervalsToFirstReport - floor(numIntervalsToFirstReport) > 0) {
       return false;
     }
-
     // check the values
     openstudio::Vector values = timeSeries.values();
     for (const auto& value : values) {
@@ -290,40 +335,30 @@ namespace detail {
         return false;
       }
     }
-
     // at this point we are going to change the object
     clearExtensibleGroups(false);
-
     // set the interval
     this->setIntervalLength(intervalLength, false);
-
     // set the start date
     this->setStartMonth(startDate.monthOfYear().value(), false);
     this->setStartDay(startDate.dayOfMonth(), false);
-
     // set the out of range value
     double outOfRangeValue = timeSeries.outOfRangeValue();
-
     // add in numIntervalsToFirstReport-1 outOfRangeValues to pad the timeseries
     for (unsigned i = 0; i < numIntervalsToFirstReport - 1; ++i) {
       std::vector<std::string> temp;
       temp.push_back(toString(outOfRangeValue));
-
       ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
       OS_ASSERT(!group.empty());
     }
-
     // set the values
     for (unsigned i = 0; i < values.size(); ++i) {
       std::vector<std::string> temp;
       temp.push_back(toString(values[i]));
-
       ModelExtensibleGroup group = pushExtensibleGroup(temp, false).cast<ModelExtensibleGroup>();
       OS_ASSERT(!group.empty());
     }
-
     this->emitChangeSignals();
-
     return true;
     */
     return false;
@@ -415,6 +450,22 @@ boost::optional<std::string> ScheduleFile::minutesperItem() const {
 bool ScheduleFile::isMinutesperItemDefaulted() const {
   return getImpl<detail::ScheduleFile_Impl>()->isMinutesperItemDefaulted();
 }
+
+boost::optional<CSVFile> ScheduleFile::csvFile() const {
+  return getImpl<detail::ScheduleFile_Impl>()->csvFile();
+}
+
+/* FIXME!
+openstudio::TimeSeries ScheduleFile::timeSeries(unsigned columnIndex) const {
+  return getImpl<detail::ScheduleFile_Impl>()->timeSeries(columnIndex);
+}
+*/
+
+/* FIXME!
+unsigned ScheduleFile::addTimeSeries(const openstudio::TimeSeries& timeSeries) {
+  return getImpl<detail::ScheduleFile_Impl>()->addTimeSeries(timeSeries);
+}
+*/
 
 bool ScheduleFile::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
   return getImpl<detail::ScheduleFile_Impl>()->setScheduleTypeLimits(scheduleTypeLimits);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -65,6 +65,12 @@ class UTILITIES_API WorkspaceExtensibleGroup : public IdfExtensibleGroup {
    *  if possible. */
   std::vector<unsigned> getSourceFieldIndices(const Handle& targetHandle) const;
 
+  /** Like getString except for reference fields getString will return the
+   *  name of the referenced object. This method, getField, will always return the string value
+   *  of the field.
+   */
+  boost::optional<std::string> getField(unsigned index) const;
+
   //@}
   /** @name Setters */
   //@{
@@ -73,6 +79,8 @@ class UTILITIES_API WorkspaceExtensibleGroup : public IdfExtensibleGroup {
    *  object-list type, and target must be valid (in the containing Workspace, and if the strictness
    *  is greater than enums::None, of a proper type). */
   bool setPointer(unsigned fieldIndex, const Handle& targetHandle);
+
+  bool setPointer(unsigned fieldIndex, const Handle& targetHandle, bool checkValidity);
 
   //@}
   /** @name Queries */

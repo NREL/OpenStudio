@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -148,6 +148,10 @@ namespace detail {
   }
 
   bool FanConstantVolume_Impl::setAvailabilitySchedule(Schedule& schedule) {
+    if (boost::optional<AirLoopHVAC> _airLoop = airLoopHVAC()) {
+      LOG(Info, briefDescription() << " is connected to an AirLoopHVAC '" << _airLoop->nameString()
+             << "', therefore its Availability Schedule will be overriden by the AirLoopHVAC's one.");
+    }
     bool result = setSchedule(OS_Fan_ConstantVolumeFields::AvailabilityScheduleName,
                               "FanConstantVolume",
                               "Availability",

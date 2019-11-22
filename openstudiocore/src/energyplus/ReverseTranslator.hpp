@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -105,6 +105,8 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateConstruction(const WorkspaceObject & workspaceObject);
 
+  boost::optional<model::ModelObject> translateConstructionAirBoundary(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateConvergenceLimits(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateCurveBicubic(const WorkspaceObject& workspaceObject);
@@ -188,6 +190,10 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateFanConstantVolume(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateFenestrationSurfaceDetailed(const WorkspaceObject & workspaceObject);
+  
+  boost::optional<model::ModelObject> translateFoundationKivaSettings(const WorkspaceObject & workspaceObject);
+  
+  boost::optional<model::ModelObject> translateFoundationKiva(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateGasEquipment(const WorkspaceObject & workspaceObject);
 
@@ -230,6 +236,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateOutputVariable( const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translatePeople(const WorkspaceObject & workspaceObject);
+  
+  boost::optional<model::ModelObject> translatePerformancePrecisionTradeoffs(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateSizingPeriodDesignDay(const WorkspaceObject & workspaceObject);
 
@@ -294,6 +302,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateSurfaceConvectionAlgorithmInside(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateSurfaceConvectionAlgorithmOutside(const WorkspaceObject & workspaceObject);
+  
+  boost::optional<model::ModelObject> translateSurfacePropertyExposedFoundationPerimeter(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateThermostatSetpointDualSetpoint(const WorkspaceObject & workspaceObject);
 
@@ -328,6 +338,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateZoneList(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateZoneMixing(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateZonePropertyUserViewFactorsBySurfaceName(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateZoneVentilationDesignFlowRate(const WorkspaceObject & workspaceObject);
 

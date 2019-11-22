@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -112,7 +112,7 @@ namespace detail {
     {
       result.push_back(ScheduleTypeKey("PumpVariableSpeed","Pump Flow Rate"));
     }
-    if (std::find(b,e,OS_Pump_VariableSpeedFields::PumprpmScheduleName) != e)
+    if (std::find(b,e,OS_Pump_VariableSpeedFields::PumpRPMScheduleName) != e)
     {
       result.push_back(ScheduleTypeKey("PumpVariableSpeed","Pump RPM"));
     }
@@ -370,7 +370,7 @@ namespace detail {
   }
 
   boost::optional<Schedule> PumpVariableSpeed_Impl::pumpRPMSchedule() const {
-    return getObject<PumpVariableSpeed>().getModelObjectTarget<Schedule>(OS_Pump_VariableSpeedFields::PumprpmScheduleName);
+    return getObject<PumpVariableSpeed>().getModelObjectTarget<Schedule>(OS_Pump_VariableSpeedFields::PumpRPMScheduleName);
   }
 
   boost::optional<Schedule> PumpVariableSpeed_Impl::minimumPressureSchedule() const {
@@ -723,7 +723,7 @@ namespace detail {
   }
 
   bool PumpVariableSpeed_Impl::setPumpRPMSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_Pump_VariableSpeedFields::PumprpmScheduleName,
+    bool result = setSchedule(OS_Pump_VariableSpeedFields::PumpRPMScheduleName,
                               "PumpVariableSpeed",
                               "Pump RPM",
                               schedule);
@@ -731,7 +731,7 @@ namespace detail {
   }
 
   void PumpVariableSpeed_Impl::resetPumpRPMSchedule() {
-    bool result = setString(OS_Pump_VariableSpeedFields::PumprpmScheduleName, "");
+    bool result = setString(OS_Pump_VariableSpeedFields::PumpRPMScheduleName, "");
     OS_ASSERT(result);
   }
 
@@ -1174,6 +1174,16 @@ namespace detail {
     return types;
   }
 
+  std::string PumpVariableSpeed_Impl::endUseSubcategory() const {
+    auto value = getString(OS_Pump_VariableSpeedFields::EndUseSubcategory, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool PumpVariableSpeed_Impl::setEndUseSubcategory(const std::string & endUseSubcategory) {
+    return setString(OS_Pump_VariableSpeedFields::EndUseSubcategory, endUseSubcategory);
+  }
+
 } // detail
 
 PumpVariableSpeed::PumpVariableSpeed(const Model& model)
@@ -1188,6 +1198,8 @@ PumpVariableSpeed::PumpVariableSpeed(const Model& model)
   setDesignElectricPowerPerUnitFlowRate(348701.1);
   setDesignShaftPowerPerUnitFlowRatePerUnitHead(1.282051282);
   setDesignMinimumFlowRateFraction(0.0);
+
+  setEndUseSubcategory("General");
 }
 
 IddObjectType PumpVariableSpeed::iddObjectType() {
@@ -1652,6 +1664,14 @@ double PumpVariableSpeed::designMinimumFlowRateFraction() const {
 
 bool PumpVariableSpeed::setDesignMinimumFlowRateFraction(double designMinimumFlowRateFraction) {
   return getImpl<detail::PumpVariableSpeed_Impl>()->setDesignMinimumFlowRateFraction(designMinimumFlowRateFraction);
+}
+
+std::string PumpVariableSpeed::endUseSubcategory() const {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->endUseSubcategory();
+}
+
+bool PumpVariableSpeed::setEndUseSubcategory(const std::string & endUseSubcategory) {
+  return getImpl<detail::PumpVariableSpeed_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
 /// @cond

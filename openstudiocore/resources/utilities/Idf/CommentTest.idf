@@ -2,7 +2,7 @@
 ! Written by Elaine T. Hale, 15 September 2010
 ! Version object should keep up with EnergyPlus version number.
 
-  Version,9.0;
+  Version,9.1;
 
 ! Timestep should be > 1.
 
@@ -31,7 +31,7 @@
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
-    ;                        !- Treat Weather as Actual
+    No;                      !- Treat Weather as Actual
 
 ! This building has no surfaces, no volume, no nothing.
 

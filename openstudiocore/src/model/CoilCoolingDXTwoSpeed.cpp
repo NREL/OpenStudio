@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -861,22 +861,22 @@ namespace detail{
 
   // E+ output has a bug where this field label is incorrect
   boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedHighSpeedEvaporativeCondenserAirFlowRate() const {
-    return getAutosizedValue("Design Size High Speed Evaporative Condenser Effectiveness", "m3/s");
+    return getAutosizedValue("Design Size High Speed Evaporative Condenser Air Flow Rate", "m3/s");
   }
 
   // E+ output has a bug where this field label is incorrect
   boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
-    return getAutosizedValue("Design Size High Speed Evaporative Condenser Air Flow Rate", "W");
+    return getAutosizedValue("Design Size High Speed Evaporative Condenser Pump Rated Power Consumption", "W");
   }
 
   // E+ output has a bug where this field label is incorrect
   boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedLowSpeedEvaporativeCondenserAirFlowRate() const {
-    return getAutosizedValue("Design Size Low Speed Evaporative Condenser Effectiveness", "m3/s");
+    return getAutosizedValue("Design Size Low Speed Evaporative Condenser Air Flow Rate", "m3/s");
   }
 
   // E+ output has a bug where this field label is incorrect
   boost::optional<double> CoilCoolingDXTwoSpeed_Impl::autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const {
-    return getAutosizedValue("Design Size Low Speed Evaporative Condenser Air Flow Rate", "W");
+    return getAutosizedValue("Design Size Low Speed Evaporative Condenser Pump Rated Power Consumption", "W");
   }
 
   void CoilCoolingDXTwoSpeed_Impl::autosize() {

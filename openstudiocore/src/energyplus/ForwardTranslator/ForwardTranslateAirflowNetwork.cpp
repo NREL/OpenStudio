@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -572,7 +572,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDistributio
 
   AirflowNetworkNode node1 = modelObject.node1();
   if (node1.optionalCast<AirflowNetworkZone>()) {
-    // DLM: Jason, the thermal zone and other objects may be renamed on translation, need to get the translated object's name   
+    // DLM: Jason, the thermal zone and other objects may be renamed on translation, need to get the translated object's name
     auto z = node1.cast<AirflowNetworkZone>().thermalZone();
     obj = translateAndMapModelObject(z);
     OS_ASSERT(obj);
@@ -618,7 +618,7 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDuctViewFac
 {
   IdfObject idfObject(IddObjectType::AirflowNetwork_Distribution_DuctViewFactors);
 
-  std::vector<std::pair<PlanarSurface, double>> vfs = modelObject.viewFactors();
+  std::vector<ViewFactorData> vfs = modelObject.viewFactors();
 
   if (vfs.size() > 0) {
     m_idfObjects.push_back(idfObject);
@@ -631,8 +631,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkDuctViewFac
     for (const auto& vf : vfs) {
       IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
       OS_ASSERT(group.numFields() == 2);
-      group.setString(0, vf.first.nameString());
-      group.setDouble(1, vf.second);
+      group.setString(0, vf.planarSurface().nameString());
+      group.setDouble(1, vf.viewFactor());
     }
 
     return idfObject;

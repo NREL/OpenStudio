@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -173,7 +173,6 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   // Supply Fan Object Type
   // Supply Fan Name
   boost::optional<IdfObject> _fan;
-
   if( boost::optional<HVACComponent> supplyFan = modelObject.supplyFan() )
   {
     _fan = translateAndMapModelObject(supplyFan.get());
@@ -193,6 +192,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     if( istringEqual(*s, "BlowThrough") ) {
       blowThroughFan = true;
     }
+  } else if ( _fan ) {
+    // You must set one, or E+ will crash.
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::FanPlacement, "DrawThrough");
   }
 
   // Supply Air Fan Operating Mode Schedule Name
@@ -253,9 +255,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
   }
 
   // DOAS DX Cooling Coil Leaving Minimum Air Temperature
-  d = modelObject.dOASDXCoolingCoilLeavingMinimumAirTemperature();
-  if (d) {
-    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MinimumSupplyAirTemperature,d.get());
+  if( modelObject.isDOASDXCoolingCoilLeavingMinimumAirTemperatureAutosized() ) {
+    unitarySystem.setString(AirLoopHVAC_UnitarySystemFields::MinimumSupplyAirTemperature, "Autosize");
+  } else if ((d = modelObject.dOASDXCoolingCoilLeavingMinimumAirTemperature())) {
+    unitarySystem.setDouble(AirLoopHVAC_UnitarySystemFields::MinimumSupplyAirTemperature, d.get());
   }
 
   // Latent Load Control

@@ -4,7 +4,7 @@ setx GYP_MSVS_VERSION 2013
 rmdir "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT" /S /Q 2>nul
 move "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT-${PAT_SHA}" "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT"
 chdir "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT"
-cmd /C "${NPM_COMMAND}" install --msvs_version=2013 --no-optional
+cmd /C "${NPM_COMMAND}" install --msvs_version=2013
 cmd /C "${NPM_COMMAND}" install bower
 cmd /C "${CMAKE_CURRENT_BINARY_DIR}/OpenStudio-PAT/node_modules/.bin/bower" install
 cmd /C "${NPM_COMMAND}" run release

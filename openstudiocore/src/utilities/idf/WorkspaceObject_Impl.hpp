@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -154,6 +154,8 @@ namespace detail {
      *  passed in as true, getString will return the default value for non-existent
      *  (non-extensible) fields and fields with empty data, if a default exists. */
     virtual boost::optional<std::string> getString(unsigned index, bool returnDefault=false,bool returnUninitializedEmpty=false) const override;
+
+    boost::optional<std::string> getField(unsigned index) const;
 
     /** Returns the object pointed to by the field at index, if it exists. */
     boost::optional<WorkspaceObject> getTarget(unsigned index) const;

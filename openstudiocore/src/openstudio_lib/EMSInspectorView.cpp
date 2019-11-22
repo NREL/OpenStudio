@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -242,11 +242,11 @@ void EMSInspectorView::layoutModelObject( const model::ModelObject & modelObject
   for( const auto & objecti : modelObjects ) {
     if( m_type == Type::ACTUATOR ) {
       if (objecti.nameString().empty()) {
-        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.iddObjectType().valueName()) + " Acuators");
+        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.iddObjectType().valueName()) + " Actuators");
         m_layout->addWidget(label);
       }
       else {
-        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Acuators");
+        auto label = new EMSInspectorHeader(QString::fromStdString(objecti.nameString()) + " Actuators");
         m_layout->addWidget(label);
       }
 

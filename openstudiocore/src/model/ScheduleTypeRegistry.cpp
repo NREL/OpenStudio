@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -113,7 +113,8 @@ ScheduleTypeLimits ScheduleTypeRegistrySingleton::getOrCreateScheduleTypeLimits(
   //if (scheduleType.lowerLimitValue && scheduleType.upperLimitValue) {
   ScheduleTypeLimitsVector candidates = model.getConcreteModelObjectsByName<ScheduleTypeLimits>(defaultName);
     for (const ScheduleTypeLimits& candidate : candidates) {
-      if (isCompatible(scheduleType,candidate)) {
+      // Pass isStringent = true, so we don't return for eg a Dimensionless schedule with limits [0.5, 0.7] when our object accepts any number
+      if (isCompatible(scheduleType,candidate, true)) {
         return candidate;
       }
     }
@@ -184,6 +185,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"AvailabilityManagerHybridVentilation","Minimum Outdoor Ventilation Air Schedule","minimumOutdoorVentilationAirSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"AvailabilityManagerHybridVentilation","AirflowNetwork Control Type Schedule","airflowNetworkControlTypeSchedule",false,"ControlMode",0.0,1.0},
     {"AvailabilityManagerHybridVentilation","Simple Airflow Control Type Schedule","simpleAirflowControlTypeSchedule",false,"ControlMode",0.0,1.0},
+    {"AvailabilityManagerNightCycle","Applicability Schedule","applicabilitySchedule",false,"Availability",0.0,1.0},
     {"AvailabilityManagerNightVentilation","Applicability Schedule","applicabilitySchedule",false,"Availability",0.0,1.0},
     {"AvailabilityManagerNightVentilation","Ventilation Temperature Schedule","ventilationTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"AvailabilityManagerOptimumStart","Applicability Schedule","applicabilitySchedule",false,"Availability",0.0,1.0},
@@ -227,6 +229,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"CoilHeatingWaterBaseboard","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilWaterHeatingDesuperheater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilWaterHeatingDesuperheater","Setpoint Temperature","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"ConstructionAirBoundary", "Simple Mixing", "simpleMixingSchedule", true, "", 0.0, OptionalDouble()},
     {"ControllerOutdoorAir","Minimum Outdoor Air","minimumOutdoorAirSchedule",true,"",0.0,1.0},
     {"ControllerOutdoorAir","Minimum Fraction of Outdoor Air","minimumFractionofOutdoorAirSchedule",true,"",0.0,1.0},
     {"ControllerOutdoorAir","Maximum Fraction of Outdoor Air","maximumFractionofOutdoorAirSchedule",true,"",0.0,1.0},
@@ -362,6 +365,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ZoneControlContaminantController","Minimum Carbon Dioxide Concentration","minimumCarbonDioxideConcentrationSchedule",true,"",0.0,OptionalDouble()},
     {"ZoneControlContaminantController","Generic Contaminant Control Availability","genericContaminantControlAvailabilitySchedule",false,"Availability",0.0,1.0},
     {"ZoneControlContaminantController","Generic Contaminant Setpoint","genericContaminantSetpointSchedule",true,"",0.0,OptionalDouble()},
+    {"ZoneHVACEquipmentList","Sequential Cooling Fraction", "sequentialCoolingFractionSchedule",true,"",0.0,1.0},
+    {"ZoneHVACEquipmentList","Sequential Heating Fraction", "sequentialHeatingFractionSchedule",true,"",0.0,1.0},
     {"WaterHeaterMixed","Setpoint Temperature","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterMixed","Ambient Temperature","ambientTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"WaterHeaterMixed","Use Flow Rate Fraction","useFlowRateFractionSchedule",true,"",0.0,1.0},
@@ -499,11 +504,13 @@ bool isCompatible(const std::string& className,
                   const ScheduleTypeLimits& candidate)
 {
   ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className,scheduleDisplayName);
-  return isCompatible(scheduleType,candidate);
+  // Always call with isString=false
+  return isCompatible(scheduleType, candidate, false);
 }
 
 bool isCompatible(const ScheduleType& scheduleType,
-                  const ScheduleTypeLimits& candidate)
+                  const ScheduleTypeLimits& candidate,
+                  bool isStringent)
 {
   // do not check continuous/discrete
 
@@ -520,6 +527,10 @@ bool isCompatible(const ScheduleType& scheduleType,
     {
       return false;
     }
+  } else {
+    if (isStringent && candidate.lowerLimitValue()) {
+      return false;
+    }
   }
 
   // check upper limit
@@ -527,6 +538,10 @@ bool isCompatible(const ScheduleType& scheduleType,
     if (!candidate.upperLimitValue() ||
         (candidate.upperLimitValue().get() > scheduleType.upperLimitValue.get()))
     {
+      return false;
+    }
+  } else {
+    if (isStringent && candidate.upperLimitValue()) {
       return false;
     }
   }
@@ -544,7 +559,9 @@ bool checkOrAssignScheduleTypeLimits(const std::string& className,
       scheduleDisplayName);
   bool result(true);
   if (OptionalScheduleTypeLimits scheduleTypeLimits = schedule.scheduleTypeLimits()) {
-    if (!isCompatible(scheduleType,*scheduleTypeLimits)) {
+    // isStringent = false, we do not enforce NOT having lower / upper limits if our object accepts any.
+    // This is user-specified, so user is free to do this
+    if (!isCompatible(scheduleType, *scheduleTypeLimits, false)) {
       result = false;
     }
   }
@@ -569,7 +586,8 @@ std::vector<ScheduleTypeLimits> getCompatibleScheduleTypeLimits(const Model& mod
   ScheduleTypeLimitsVector candidates = model.getConcreteModelObjects<ScheduleTypeLimits>();
   ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType(className,scheduleDisplayName);
   for (const ScheduleTypeLimits& candidate : candidates) {
-    if (isCompatible(scheduleType,candidate)) {
+    // Pass isStringent = true, so we don't return for eg a Dimensionless schedule with limits [0.5, 0.7] when our object accepts any number
+    if (isCompatible(scheduleType, candidate, true)) {
       result.push_back(candidate);
     }
   }

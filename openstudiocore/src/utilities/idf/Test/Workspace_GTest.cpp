@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -2156,4 +2156,24 @@ TEST_F(IdfFixture, Workspace_GetObjectsByNameUUID)
   EXPECT_EQ(0u, ws.getObjectsByName("Zone 2", false).size());
   EXPECT_EQ(1u, ws.getObjectsByName("{af63d539-6e16-4fd1-a10e-dafe3793373b}", true).size());
   EXPECT_EQ(1u, ws.getObjectsByName("{af63d539-6e16-4fd1-a10e-dafe3793373b}", false).size());
+}
+
+TEST_F(IdfFixture, Workspace_DuplicateObjectName) {
+  Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
+
+  OptionalIddObject zoneGroupIdd = IddFactory::instance().getObject(IddObjectType::ZoneGroup);
+  ASSERT_TRUE(zoneGroupIdd);
+  ASSERT_EQ(1u, zoneGroupIdd->references().size());
+  EXPECT_EQ("ZoneGroupUniqueNames", zoneGroupIdd->references()[0]);
+
+  boost::optional<WorkspaceObject> zoneGroup1 = ws.addObject(IdfObject(IddObjectType::ZoneGroup));
+  OS_ASSERT(zoneGroup1);
+  EXPECT_TRUE(zoneGroup1->setName("Zone Group"));
+  EXPECT_EQ("Zone Group", zoneGroup1->nameString());
+
+  boost::optional<WorkspaceObject> zoneGroup2 = ws.addObject(IdfObject(IddObjectType::ZoneGroup));
+  OS_ASSERT(zoneGroup2);
+  EXPECT_TRUE(zoneGroup2->setName("Zone Group"));
+  EXPECT_EQ("Zone Group", zoneGroup1->nameString());
+  EXPECT_EQ("Zone Group 1", zoneGroup2->nameString());
 }

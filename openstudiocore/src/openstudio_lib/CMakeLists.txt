@@ -27,6 +27,8 @@ set(${target_name}_SRC
   ConstructionFfactorGroundFloorInspectorView.hpp
   ConstructionInspectorView.cpp
   ConstructionInspectorView.hpp
+  ConstructionAirBoundaryInspectorView.cpp
+  ConstructionAirBoundaryInspectorView.hpp
   ConstructionInternalSourceInspectorView.cpp
   ConstructionInternalSourceInspectorView.hpp
   ConstructionObjectVectorController.cpp
@@ -198,6 +200,8 @@ set(${target_name}_SRC
   OSItemSelector.hpp
   OSItemSelectorButtons.cpp
   OSItemSelectorButtons.hpp
+  OSWebEnginePage.cpp
+  OSWebEnginePage.hpp
   OSVectorController.cpp
   OSVectorController.hpp
   OtherEquipmentInspectorView.cpp
@@ -481,6 +485,7 @@ set(${target_name}_moc
   ConstructionCfactorUndergroundWallInspectorView.hpp
   ConstructionFfactorGroundFloorInspectorView.hpp
   ConstructionInspectorView.hpp
+  ConstructionAirBoundaryInspectorView.hpp
   ConstructionInternalSourceInspectorView.hpp
   ConstructionObjectVectorController.hpp
   ConstructionsController.hpp
@@ -565,6 +570,7 @@ set(${target_name}_moc
   OSItemList.hpp
   OSItemSelector.hpp
   OSItemSelectorButtons.hpp
+  OSWebEnginePage.hpp
   OSVectorController.hpp
   OtherEquipmentInspectorView.hpp
   PeopleInspectorView.hpp

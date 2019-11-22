@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -85,11 +85,11 @@ class MODEL_API ScheduleRule : public ParentObject {
   bool applyMonday() const;
 
   bool applyTuesday() const;
- 
+
   bool applyWednesday() const;
 
   bool applyThursday() const;
- 
+
   bool applyFriday() const;
 
   bool applySaturday() const;
@@ -168,6 +168,23 @@ class MODEL_API ScheduleRule : public ParentObject {
 
   /// Returns whether or not this rule covers each given date.
   std::vector<bool> containsDates(const std::vector<openstudio::Date>& dates);
+
+  // Convenience methods
+  /** Returns true if the rule applies to all days from Monday to Sunday */
+  bool applyAllDays() const;
+  /** Returns true if the rule applies to all weekdays Monday to Friday */
+  bool applyWeekdays() const;
+  /** Returns true if the rule applies to Saturday and Sunday */
+  bool applyWeekends() const;
+
+  // calls setApplyMonday to setApplySunday */
+  bool setApplyAllDays(bool applyAllDays);
+
+  // calls setApplyMonday to setApplyFriday */
+  bool setApplyWeekdays(bool applyWeekdays);
+
+  // calls setApplySaturday and setApplySunday */
+  bool setApplyWeekends(bool applyWeekends);
 
   //@}
  protected:

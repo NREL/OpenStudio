@@ -60,7 +60,7 @@ macro(ADD_GOOGLE_TESTS executable)
   else()
     set(NEWPATH $ENV{PATH})
   endif()
-  
+
   foreach(source ${ARGN})
     if(NOT "${source}" MATCHES "/moc_.*cxx")
       string(REGEX MATCH .*cpp source "${source}")
@@ -159,7 +159,6 @@ endmacro()
 # add a swig target
 # KEY_I_FILE should include path, see src/utilities/CMakeLists.txt.
 macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_SWIG_TARGETS)
-  set(DEPENDS "${PARENT_TARGET}")
   set(SWIG_DEFINES "")
   set(SWIG_COMMON "")
 
@@ -167,7 +166,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   ## Begin collection of requirements to reduce SWIG regenerations
   ## and fix parallel build issues
   ##
-
 
   # Get all of the source files for the parent target this SWIG library is wrapping
   get_target_property(target_files ${PARENT_TARGET} SOURCES)
@@ -247,6 +245,12 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   set(${exportname} "${RequiredHeaders}" PARENT_SCOPE)
 
   if(NOT TARGET ${PARENT_TARGET}_GeneratedHeaders)
+    if ("${NAME}" STREQUAL "OpenStudioUtilitiesCore")
+      # Workaround appending GenerateIddFactoryRun to GeneratedHeaders, so we ensure that the custom command below actually is called AFTER
+      # GenerateIddFactoryRun has been called
+      list(APPEND GeneratedHeaders "GenerateIddFactoryRun")
+    endif()
+
     # Add a command to generate the generated headers discovered at this point.
     add_custom_command(
       OUTPUT "${CMAKE_BINARY_DIR}/${PARENT_TARGET}_HeadersGenerated_done.stamp"
@@ -403,7 +407,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
   set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
   target_link_libraries(${swig_target} ${PARENT_TARGET})
-  add_dependencies(${swig_target} ${PARENT_TARGET} ${DEPENDS})
+  add_dependencies(${swig_target} ${PARENT_TARGET})
 
   target_include_directories(${swig_target} PUBLIC ${QT_STATIC_INCLUDES})
   target_compile_definitions(${swig_target} PUBLIC ${QT_DEFS})
@@ -525,7 +529,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     # Add the -py3 flag if the version used is Python 3
     set(SWIG_PYTHON_3_FLAG "")
-    if (PYTHON_VERSION_MAJOR) 
+    if (PYTHON_VERSION_MAJOR)
       if (PYTHON_VERSION_MAJOR EQUAL 3)
         set(SWIG_PYTHON_3_FLAG -py3)
         message(STATUS "${MODULE} - Building SWIG Bindings for Python 3")
@@ -539,7 +543,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     add_custom_command(
       OUTPUT "${SWIG_WRAPPER_FULL_PATH}"
       COMMAND "${SWIG_EXECUTABLE}"
-              "-python" ${SWIG_PYTHON_3_FLAG} "-c++" ${PYTHON_AUTODOC} 
+              "-python" ${SWIG_PYTHON_3_FLAG} "-c++" ${PYTHON_AUTODOC}
               -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${CMAKE_SOURCE_DIR}/src" "-I${CMAKE_BINARY_DIR}/src"
               -module "${MODULE}"
               -o "${SWIG_WRAPPER_FULL_PATH}"
@@ -547,7 +551,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       DEPENDS ${this_depends}
     )
 
-    
+
     set_source_files_properties(${SWIG_WRAPPER_FULL_PATH} PROPERTIES GENERATED TRUE)
     set_source_files_properties(${PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
 
@@ -611,7 +615,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       OpenStudioRadiance
       OpenStudioSDD
     )
-    
+
     set( model_names
       OpenStudioMeasure
       OpenStudioModel
@@ -698,7 +702,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     #if(MSVC)
     #  set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996")  ## /wd4996 suppresses deprecated warnings
     #endif()
-    #target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS})
+    #target_link_libraries(${swig_target} ${PARENT_TARGET})
 
     #ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
     add_dependencies(${SWIG_TARGET} ${PARENT_TARGET})
@@ -802,7 +806,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
     endif()
 
-    target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS} ${JAVA_JVM_LIBRARY})
+    target_link_libraries(${swig_target} ${PARENT_TARGET} ${JAVA_JVM_LIBRARY})
     if(APPLE)
       set_target_properties(${swig_target} PROPERTIES SUFFIX ".dylib")
       set(final_name "lib${JAVA_OUTPUT_NAME}.dylib")
@@ -933,7 +937,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     if(APPLE)
       set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress -flat_namespace")
     endif()
-    target_link_libraries(${swig_target} ${PARENT_TARGET} ${DEPENDS})
+    target_link_libraries(${swig_target} ${PARENT_TARGET})
 
     #add_dependencies("${swig_target}" "${PARENT_TARGET}_resources")
 
@@ -989,7 +993,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   endif()
 
 
-endmacro()
+endmacro() # End of MAKE_SWIG_TARGET
 
 # add target dependencies
 # this will add targets to a "global" variable marking
@@ -1118,3 +1122,19 @@ function(QT5_WRAP_CPP_MINIMALLY outfiles)
   # Restore include directories
   set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES "${_orig_DIRS}")
 endfunction()
+
+# adds custom command to update a resource via configure
+macro(CONFIGURE_FILE_WITH_CHECKSUM INPUT_FILE OUTPUT_FILE)
+  SET(TMP_OUTPUT_FILE "${OUTPUT_FILE}.tmp")
+
+  if(NOT EXISTS "${OUTPUT_FILE}")
+    configure_file( "${INPUT_FILE}" "${OUTPUT_FILE}" )
+  else()
+    configure_file( "${INPUT_FILE}" "${TMP_OUTPUT_FILE}" )
+    file(MD5 "${OUTPUT_FILE}" EXISTING_HASH)
+    file(MD5 "${TMP_OUTPUT_FILE}" NEW_HASH)
+    if (NOT "${EXISTING_HASH}" MATCHES "${NEW_HASH}")
+      configure_file( "${INPUT_FILE}" "${OUTPUT_FILE}" )
+    endif()
+  endif()
+endmacro()

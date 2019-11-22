@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -200,7 +200,17 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData)
   testObject.setFanPlacement("BlowThrough");
   testObject.setDXHeatingCoilSizingRatio(999.0);
   testObject.setUseDOASDXCoolingCoil(true);
+
+  testObject.resetDOASDXCoolingCoilLeavingMinimumAirTemperature();
+  EXPECT_TRUE(testObject.isDOASDXCoolingCoilLeavingMinimumAirTemperatureDefaulted());
+  EXPECT_FALSE(testObject.isDOASDXCoolingCoilLeavingMinimumAirTemperatureAutosized());
+  testObject.autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature();
+  EXPECT_FALSE(testObject.isDOASDXCoolingCoilLeavingMinimumAirTemperatureDefaulted());
+  EXPECT_TRUE(testObject.isDOASDXCoolingCoilLeavingMinimumAirTemperatureAutosized());
   testObject.setDOASDXCoolingCoilLeavingMinimumAirTemperature(7.0);
+  EXPECT_FALSE(testObject.isDOASDXCoolingCoilLeavingMinimumAirTemperatureDefaulted());
+  EXPECT_FALSE(testObject.isDOASDXCoolingCoilLeavingMinimumAirTemperatureAutosized());
+
   testObject.setLatentLoadControl("LatentWithSensibleLoadControl");
   testObject.autosizeSupplyAirFlowRateDuringCoolingOperation();
   testObject.autosizeSupplyAirFlowRateDuringHeatingOperation();

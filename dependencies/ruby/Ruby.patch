@@ -191,7 +191,7 @@ index 668f9e1..73e5429 100644
  !else
  MINIRUBY = .\miniruby$(EXEEXT) -I$(srcdir)/lib -I.
 -RUNRUBY = .\$(PROGRAM) -I$(srcdir)/lib -I"$(EXTOUT)/$(arch)" -I.
-+RUNRUBY = .\$(PROGRAM) -I$(srcdir)/lib -I"$(EXTOUT)/$(arch)" -I. -I./ext/date/lib/
++RUNRUBY = .\$(PROGRAM) -I$(srcdir)/lib -I"$(EXTOUT)/$(arch)" -I. -I./ext/date/lib/ -I./ext/openssl/lib/
  !endif
  MINIRUBY = $(MINIRUBY) $(MINIRUBYOPT)
  RUNRUBY = $(RUNRUBY) "$(srcdir)/tool/runruby.rb" --extout="$(EXTOUT)" $(RUNRUBYOPT) -- $(RUN_OPTS)

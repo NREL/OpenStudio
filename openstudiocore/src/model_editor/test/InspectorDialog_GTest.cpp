@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,7 +54,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelEditorFixture, InspectorDialog_EmptyModel)
+TEST_F(ModelEditorFixture, QtGUI_InspectorDialog_EmptyModel)
 {
   std::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog());
 
@@ -76,7 +76,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_EmptyModel)
 }
 
 
-TEST_F(ModelEditorFixture, InspectorDialog_Remove1Object)
+TEST_F(ModelEditorFixture, QtGUI_InspectorDialog_Remove1Object)
 {
   Model model;
   Space space1(model);
@@ -108,7 +108,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_Remove1Object)
   EXPECT_EQ(space2.handle(), inspectorDialog->selectedObjectHandles()[0]);
 }
 
-TEST_F(ModelEditorFixture, InspectorDialog_Copy1Object)
+TEST_F(ModelEditorFixture, QtGUI_InspectorDialog_Copy1Object)
 {
   Model model;
   Space space1(model);
@@ -145,7 +145,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_Copy1Object)
 }
 
 
-TEST_F(ModelEditorFixture, InspectorDialog_ModelObjectRemove)
+TEST_F(ModelEditorFixture, QtGUI_InspectorDialog_ModelObjectRemove)
 {
   Model model;
   LightsDefinition definition(model);
@@ -175,7 +175,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_ModelObjectRemove)
 }
 
 
-TEST_F(ModelEditorFixture, InspectorDialog_SignalsOnIddObjectTypeChange)
+TEST_F(ModelEditorFixture, QtGUI_InspectorDialog_SignalsOnIddObjectTypeChange)
 {
   Model model;
   Space space(model);
@@ -229,7 +229,7 @@ TEST_F(ModelEditorFixture, InspectorDialog_SignalsOnIddObjectTypeChange)
   EXPECT_FALSE(thermalZoneWatcher.dirty());
 }
 
-TEST_F(ModelEditorFixture, InspectorDialog_SketchUpPlugin)
+TEST_F(ModelEditorFixture, QtGUI_InspectorDialog_SketchUpPlugin)
 {
   std::shared_ptr<InspectorDialog> inspectorDialog(new InspectorDialog(InspectorDialogClient::SketchUpPlugin));
 }

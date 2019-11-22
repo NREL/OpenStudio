@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,7 +53,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Cancel)
+TEST_F(ModelEditorFixture, QtGUI_ModalDialogs_EmptyModel_Cancel)
 {
   Model model;
 
@@ -75,7 +75,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Cancel)
 }
 
 
-TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Ok)
+TEST_F(ModelEditorFixture, QtGUI_ModalDialogs_EmptyModel_Ok)
 {
   Model model;
 
@@ -97,7 +97,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_EmptyModel_Ok)
 }
 
 
-TEST_F(ModelEditorFixture, ModalDialogs_Cancel)
+TEST_F(ModelEditorFixture, QtGUI_ModalDialogs_Cancel)
 {
   Model model;
   Space space1(model);
@@ -122,7 +122,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_Cancel)
 }
 
 
-TEST_F(ModelEditorFixture, ModalDialogs_Ok)
+TEST_F(ModelEditorFixture, QtGUI_ModalDialogs_Ok)
 {
   Model model;
   Space space1(model);
@@ -148,7 +148,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_Ok)
 }
 
 
-TEST_F(ModelEditorFixture, ModalDialogs_EnsureSpaceLoadDefinition_EmptyModel)
+TEST_F(ModelEditorFixture, QtGUI_ModalDialogs_EnsureSpaceLoadDefinition_EmptyModel)
 {
   Model model;
   EXPECT_TRUE(model.addObject(IdfObject(IddObjectType::OS_Lights)));
@@ -190,7 +190,7 @@ TEST_F(ModelEditorFixture, ModalDialogs_EnsureSpaceLoadDefinition)
 }
 */
 
-TEST_F(ModelEditorFixture, ModalDialogs_EnsureSpaceLoadDefinition_WithDefinition)
+TEST_F(ModelEditorFixture, QtGUI_ModalDialogs_EnsureSpaceLoadDefinition_WithDefinition)
 {
   Model model;
   LightsDefinition definition1(model);

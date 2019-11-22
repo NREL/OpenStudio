@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,11 +33,15 @@
 #include "ZoneHVACComponent_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
+#include "ScheduleConstant.hpp"
+#include "ScheduleConstant_Impl.hpp"
 #include "Model.hpp"
+
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ZoneHVAC_EquipmentList_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+#include "ModelExtensibleGroup.hpp"
 
 namespace openstudio {
 namespace model {
@@ -76,6 +80,36 @@ IddObjectType ZoneHVACEquipmentList_Impl::iddObjectType() const {
   return ZoneHVACEquipmentList::iddObjectType();
 }
 
+std::vector<ScheduleTypeKey> ZoneHVACEquipmentList_Impl::getScheduleTypeKeys(const Schedule& schedule) const
+{
+  std::vector<ScheduleTypeKey> result;
+
+  // This is unusual, but the schedules here are in the Extensible Fields (and only there)
+  // UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+  UnsignedVector fieldIndices;
+  for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+    UnsignedVector thisFieldIndices = group.getSourceFieldIndices(schedule.handle());
+    fieldIndices.insert(fieldIndices.end(), thisFieldIndices.begin(),thisFieldIndices.end());
+  }
+
+  // Make unique, have to sort before calling unique, unique only works on consecutive elements
+  std::sort(fieldIndices.begin(), fieldIndices.end());
+  fieldIndices.erase(std::unique(fieldIndices.begin(), fieldIndices.end()), fieldIndices.end());
+
+  UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+  if (std::find(b,e,OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName) != e)
+  {
+    result.push_back(ScheduleTypeKey("ZoneHVACEquipmentList", "Sequential Cooling Fraction"));
+  }
+  if (std::find(b,e,OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName) != e)
+  {
+    result.push_back(ScheduleTypeKey("ZoneHVACEquipmentList", "Sequential Heating Fraction"));
+  }
+
+  return result;
+
+}
+
 std::string ZoneHVACEquipmentList_Impl::loadDistributionScheme() const
 {
   auto value = getString(OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme,true);
@@ -85,26 +119,40 @@ std::string ZoneHVACEquipmentList_Impl::loadDistributionScheme() const
 
 bool ZoneHVACEquipmentList_Impl::setLoadDistributionScheme(std::string scheme)
 {
+  // Backward compat
   if( istringEqual(scheme,"Sequential") ) {
     scheme = "SequentialLoad";
   } else if( istringEqual(scheme,"Uniform") ) {
     scheme = "UniformLoad";
   }
+
+  // Reset the Sequential Cooling/Heating fractions if not 'SequentialLoad'
+  if (!istringEqual(scheme, "SequentialLoad")) {
+    for (IdfExtensibleGroup& eg: extensibleGroups()) {
+      eg.setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName, "");
+      eg.setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName, "");
+      // TODO: delete existing schedule(s) if not tied to anything else
+    }
+  }
+
   return setString(OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme,scheme);
 }
 
 bool ZoneHVACEquipmentList_Impl::addEquipment(const ModelObject & equipment)
 {
-  unsigned count = this->equipment().size();
 
-  WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  // Get max priorities before pushing an extensible group
+  unsigned heatingCount = this->equipmentInHeatingOrder().size();
+  unsigned coolingCount = this->equipmentInCoolingOrder().size();
+
+  ModelExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<ModelExtensibleGroup>();
 
   bool ok = eg.setPointer(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment,equipment.handle());
 
   if( ok )
   {
-    eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,count + 1);
-    eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,count + 1);
+    eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence, coolingCount + 1);
+    eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence, heatingCount + 1);
   }
   else
   {
@@ -117,25 +165,43 @@ bool ZoneHVACEquipmentList_Impl::setCoolingPriority(const ModelObject & equipmen
 {
   std::vector<ModelObject> equipmentVector = equipmentInCoolingOrder();
 
-  if ( std::find(equipmentVector.begin(),equipmentVector.end(),equipment) == equipmentVector.end() ) {
-    LOG(Warn, "Cannot set cooling priority of an equipment that isn't in the ZoneHVACEquipmentList for " << briefDescription());
-    return false;
+  if( priority > equipmentVector.size() ) {
+    priority = equipmentVector.size();
+  } else if (priority < 1) {
+    // TODO: Temp, until E+ actually allows zero priority (=unavailable) like the IDD seems to indicate
+    priority = 1;
   }
 
-  if( priority > equipmentVector.size() ) priority = equipmentVector.size();
-  if( priority < 1 ) priority = 1;
+  boost::optional<ModelExtensibleGroup> _eg = getGroupForModelObject(equipment);
+  if (!_eg) {
+    LOG(Warn, "Cannot set cooling priority of an equipment that isn't in the ZoneHVACEquipmentList for " << briefDescription());
+    return false;
+  } else {
+    // Set the priority of this one, in case we actually put it to zero
+    bool success = _eg->setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence, priority);
+    OS_ASSERT(success);
+  }
 
   equipmentVector.erase(std::find(equipmentVector.begin(),equipmentVector.end(),equipment));
 
-  equipmentVector.insert(equipmentVector.begin() + (priority - 1),equipment);
+  // If supplied priority isn't zero, we have to insert it where it belongs
+  if (priority > 0) {
+    equipmentVector.insert(equipmentVector.begin() + (priority - 1),equipment);
+  } else {
+    // If zero, we just remove it from the list of available equipment (no insertion needed now)
+    // and we reset the Sequential Cooling Fraction
+    _eg->setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName, "");
+    // TODO: delete existing schedule(s) if not tied to anything else
+  }
+
 
   unsigned newPriority = 1;
 
   for( const auto & equipment : equipmentVector )
   {
-    WorkspaceExtensibleGroup eg = getGroupForModelObject(equipment);
-
-    eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,newPriority);
+    boost::optional<ModelExtensibleGroup> eg = getGroupForModelObject(equipment);
+    OS_ASSERT(eg);
+    eg->setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,newPriority);
 
     newPriority++;
   }
@@ -146,54 +212,68 @@ bool ZoneHVACEquipmentList_Impl::setHeatingPriority(const ModelObject & equipmen
 {
   std::vector<ModelObject> equipmentVector = equipmentInHeatingOrder();
 
-  if ( std::find(equipmentVector.begin(),equipmentVector.end(),equipment) == equipmentVector.end() ) {
+  if( priority > equipmentVector.size() ) {
+    priority = equipmentVector.size();
+  } else if (priority < 1) {
+    // TODO: Temp, until E+ actually allows zero priority (=unavailable) like the IDD seems to indicate
+    priority = 1;
+  }
+  boost::optional<ModelExtensibleGroup> _eg = getGroupForModelObject(equipment);
+  if (!_eg) {
     LOG(Warn, "Cannot set Heating priority of an equipment that isn't in the ZoneHVACEquipmentList for " << briefDescription());
     return false;
+  } else {
+    // Set the priority of this one, in case we actually put it to zero
+    bool success = _eg->setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence, priority);
+    OS_ASSERT(success);
   }
-
-  if( priority > equipmentVector.size() ) priority = equipmentVector.size();
-  if( priority < 1 ) priority = 1;
 
   equipmentVector.erase(std::find(equipmentVector.begin(),equipmentVector.end(),equipment));
 
-  equipmentVector.insert(equipmentVector.begin() + (priority - 1),equipment);
+  // If supplied priority isn't zero, we have to insert it where it belongs
+  if (priority > 0) {
+    equipmentVector.insert(equipmentVector.begin() + (priority - 1),equipment);
+  } else {
+    // If zero, we just remove it from the list of available equipment (no insertion needed now)
+    // and we reset the Sequential Heating Fraction
+    _eg->setString(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName, "");
+    // TODO: delete existing schedule(s) if not tied to anything else
+  }
 
   unsigned newPriority = 1;
 
   for( const auto & equipment : equipmentVector )
   {
-    WorkspaceExtensibleGroup eg = getGroupForModelObject(equipment);
-
-    eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,newPriority);
+    boost::optional<ModelExtensibleGroup> eg = getGroupForModelObject(equipment);
+    OS_ASSERT(eg);
+    eg->setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,newPriority);
 
     newPriority++;
   }
   return true;
 }
 
-WorkspaceExtensibleGroup ZoneHVACEquipmentList_Impl::getGroupForModelObject(const ModelObject & modelObject)
+boost::optional<ModelExtensibleGroup> ZoneHVACEquipmentList_Impl::getGroupForModelObject(const ModelObject & modelObject) const
 {
-  boost::optional<WorkspaceExtensibleGroup> result;
+  boost::optional<ModelExtensibleGroup> result;
 
   std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
   for( const auto & group : groups )
   {
-    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    boost::optional<WorkspaceObject> wo = group.cast<ModelExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
     OS_ASSERT(wo);
 
     if( wo->handle() == modelObject.handle() )
     {
-      result = group.cast<WorkspaceExtensibleGroup>();
+      result = group.cast<ModelExtensibleGroup>();
 
       break;
     }
   }
 
-  OS_ASSERT(result);
-
-  return result.get();
+  return result;
 }
 
 std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipment() const
@@ -204,13 +284,15 @@ std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipment() const
 
   for( const auto & group : groups )
   {
-    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    boost::optional<WorkspaceObject> wo = group.cast<ModelExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
     if( wo )
     {
       result.push_back(wo->cast<ModelObject>());
     }
   }
+
+
 
   return result;
 }
@@ -225,14 +307,19 @@ std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipmentInHeatingOrder() c
   {
     unsigned heatingPriority = group.getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence).get();
 
-    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    // Filter out equipment having a priority of 0 (=unavailable for heating)
+    if (heatingPriority > 0) {
+      boost::optional<WorkspaceObject> wo = group.cast<ModelExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
-    OS_ASSERT(wo);
+      OS_ASSERT(wo);
 
-    ModelObject mo = wo->cast<ModelObject>();
+      ModelObject mo = wo->cast<ModelObject>();
 
-    equipmentMap.insert(std::make_pair(heatingPriority,mo));
+      equipmentMap.insert(std::make_pair(heatingPriority,mo));
+    }
   }
+
+
 
   std::vector<ModelObject> equipmentVector;
 
@@ -256,13 +343,17 @@ std::vector<ModelObject> ZoneHVACEquipmentList_Impl::equipmentInCoolingOrder() c
   {
     unsigned coolingPriority = group.getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence).get();
 
-    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    // Filter out equipment having a priority of 0 (=unavailable for cooling)
+    if (coolingPriority > 0) {
 
-    OS_ASSERT(wo);
+      boost::optional<WorkspaceObject> wo = group.cast<ModelExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
-    ModelObject mo = wo->cast<ModelObject>();
+      OS_ASSERT(wo);
 
-    equipmentMap.insert(std::make_pair(coolingPriority,mo));
+      ModelObject mo = wo->cast<ModelObject>();
+
+      equipmentMap.insert(std::make_pair(coolingPriority,mo));
+    }
   }
 
   std::vector<ModelObject> equipmentVector;
@@ -297,7 +388,7 @@ bool ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
 
   for( const auto & group : groups )
   {
-    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    boost::optional<WorkspaceObject> wo = group.cast<ModelExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
 
     OS_ASSERT(wo);
 
@@ -317,9 +408,9 @@ bool ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
 
   for( const auto & elem : coolingVector )
   {
-    WorkspaceExtensibleGroup eg = getGroupForModelObject(elem);
-
-    eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,priority);
+    boost::optional<ModelExtensibleGroup> eg = getGroupForModelObject(elem);
+    OS_ASSERT(eg);
+    eg->setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,priority);
 
     priority++;
   }
@@ -328,9 +419,9 @@ bool ZoneHVACEquipmentList_Impl::removeEquipment(const ModelObject & equipment)
 
   for( const auto & elem : heatingVector )
   {
-    WorkspaceExtensibleGroup eg = getGroupForModelObject(elem);
-
-    eg.setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,priority);
+    boost::optional<ModelExtensibleGroup> eg = getGroupForModelObject(elem);
+    OS_ASSERT(eg);
+    eg->setUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,priority);
 
     priority++;
   }
@@ -343,50 +434,207 @@ unsigned ZoneHVACEquipmentList_Impl::heatingPriority(const ModelObject & equipme
 {
   boost::optional<unsigned> result;
 
-  std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+  boost::optional<ModelExtensibleGroup> _eg = getGroupForModelObject(equipment);
+  if (!_eg) {
+    LOG(Warn, "Cannot get Heating Priority of an equipment that isn't in the ZoneHVACEquipmentList for " << briefDescription());
+    return 0;
+  } else {
+    result = _eg->getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence);
+    OS_ASSERT(result);
 
-  for( const auto & group : groups )
-  {
-    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
-
-    OS_ASSERT(wo);
-
-    if( wo->handle() == equipment.handle() )
-    {
-      result = group.getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence);
-
-      break;
-    }
+    return result.get();
   }
-
-  OS_ASSERT(result);
-
-  return result.get();
 }
 
 unsigned ZoneHVACEquipmentList_Impl::coolingPriority(const ModelObject & equipment) const
 {
   boost::optional<unsigned> result;
 
-  std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+  boost::optional<ModelExtensibleGroup> _eg = getGroupForModelObject(equipment);
+  if (!_eg) {
+    LOG(Warn, "Cannot get Cooling Priority of an equipment that isn't in the ZoneHVACEquipmentList for " << briefDescription());
+    return 0;
+  } else {
+    result = _eg->getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence);
+    OS_ASSERT(result);
 
-  for( const auto & group : groups )
-  {
-    boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+    return result.get();
+  }
+}
 
-    OS_ASSERT(wo);
+boost::optional<Schedule> ZoneHVACEquipmentList_Impl::sequentialCoolingFractionSchedule(const ModelObject& equipment) const {
 
-    if( wo->handle() == equipment.handle() )
-    {
-      result = group.getUnsigned(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence);
+  boost::optional<Schedule> result;
 
-      break;
+  if ( (openstudio::istringEqual(loadDistributionScheme(), "SequentialLoad")) &&
+       (coolingPriority(equipment) > 0 ) ) {
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+
+    for (const auto & group : groups) {
+      boost::optional<WorkspaceObject> wo = group.cast<ModelExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+
+      OS_ASSERT(wo);
+
+      if (wo->handle() == equipment.handle()) {
+        boost::optional<WorkspaceObject> wo2 = group.cast<ModelExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName);
+        if (wo2) {
+          result = wo2->optionalCast<Schedule>();
+          break;
+        }
+      }
     }
   }
 
-  OS_ASSERT(result);
+  return result;
 
-  return result.get();
+}
+
+
+boost::optional<Schedule> ZoneHVACEquipmentList_Impl::sequentialHeatingFractionSchedule(const ModelObject& equipment) const {
+
+  boost::optional<Schedule> result;
+
+  if ( (openstudio::istringEqual(loadDistributionScheme(), "SequentialLoad")) &&
+       (heatingPriority(equipment) > 0 ) ) {
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+
+    for (const auto & group : groups) {
+      boost::optional<WorkspaceObject> wo = group.cast<ModelExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipment);
+
+      OS_ASSERT(wo);
+
+      if (wo->handle() == equipment.handle()) {
+        boost::optional<WorkspaceObject> wo2 = group.cast<ModelExtensibleGroup>().getTarget(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName);
+        if (wo2) {
+          result = wo2->optionalCast<Schedule>();
+          break;
+        }
+      }
+    }
+  }
+
+  return result;
+
+}
+
+bool ZoneHVACEquipmentList_Impl::setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule)
+{
+  if (schedule.model() != model()) {
+    LOG(Info, "Cannot set Sequential Cooling Fraction for equipment " << equipment.nameString()
+        << " with a schedule that isn't part of the same model.");
+    return false;
+  }
+
+  boost::optional<ModelExtensibleGroup> eg = getGroupForModelObject(equipment);
+
+  if (!eg) {
+    LOG(Info, "Cannot set Sequential Cooling Fraction for equipment " << equipment.nameString()
+        << " that isn't part of the ZoneHVACEquipmentList.");
+    return false;
+  }
+  if ( !openstudio::istringEqual(loadDistributionScheme(), "SequentialLoad")) {
+    LOG(Info, "Cannot set Sequential Cooling Fraction for a Load Distribution Scheme other than 'SequentialLoad'");
+    return false;
+  }
+
+  if (coolingPriority(equipment) == 0) {
+    LOG(Info, "Cannot set Sequential Cooling Fraction for an equipment that doesn't have a cooling priority strictly greater than zero.");
+    return false;
+  }
+
+  bool result = eg->setSchedule(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName,
+                                "ZoneHVACEquipmentList",
+                                "Sequential Cooling Fraction",
+                                schedule);
+  return result;
+
+}
+
+bool ZoneHVACEquipmentList_Impl::setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule)
+{
+  if (schedule.model() != model()) {
+    LOG(Info, "Cannot set Sequential Cooling Fraction for equipment " << equipment.nameString()
+        << " with a schedule that isn't part of the same model.");
+    return false;
+  }
+
+  boost::optional<ModelExtensibleGroup> eg = getGroupForModelObject(equipment);
+  if (!eg) {
+    LOG(Info, "Cannot set Sequential Heating Fraction for equipment " << equipment.nameString()
+        << " that isn't part of the ZoneHVACEquipmentList.");
+    return false;
+  }
+  if ( !openstudio::istringEqual(loadDistributionScheme(), "SequentialLoad")) {
+    LOG(Info, "Cannot set Sequential Heating Fraction for a Load Distribution Scheme other than 'SequentialLoad'");
+    return false;
+  }
+
+  if (heatingPriority(equipment) == 0) {
+    LOG(Info, "Cannot set Sequential Heating Fraction for an equipment that doesn't have a heating priority strictly greater than zero.");
+    return false;
+  }
+
+  bool result = eg->setSchedule(OS_ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName,
+                                "ZoneHVACEquipmentList",
+                                "Sequential Heating Fraction",
+                                schedule);
+  return result;
+}
+
+// Deprecated
+
+boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialCoolingFraction(const ModelObject& equipment) const {
+
+  boost::optional<double> result;
+
+  if (boost::optional<Schedule> _schedule = sequentialCoolingFractionSchedule(equipment)) {
+    if (boost::optional<ScheduleConstant> _schConstant = _schedule->optionalCast<ScheduleConstant>()) {
+      result = boost::optional<double>(_schConstant->value());
+    } else {
+      LOG(Warn, "This deprecated method cannot return a double when the "
+                "'Zone Equipment Sequential Cooling Fraction Schedule' isn't a Schedule:Constant, "
+                "here the schedule is a '" << _schedule->iddObject().name() << ". Occurred for " << briefDescription());
+    }
+  }
+
+  return result;
+}
+
+boost::optional<double> ZoneHVACEquipmentList_Impl::sequentialHeatingFraction(const ModelObject& equipment) const {
+
+  boost::optional<double> result;
+
+  if (boost::optional<Schedule> _schedule = sequentialHeatingFractionSchedule(equipment)) {
+    if (boost::optional<ScheduleConstant> _schConstant = _schedule->optionalCast<ScheduleConstant>()) {
+      result = boost::optional<double>(_schConstant->value());
+    } else {
+      LOG(Warn, "This deprecated method cannot return a double when the "
+                "'Zone Equipment Sequential Heating Fraction Schedule' isn't a Schedule:Constant, "
+                "here the schedule is a '" << _schedule->iddObject().name() << ". Occurred for " << briefDescription());
+    }
+  }
+
+  return result;
+}
+
+bool ZoneHVACEquipmentList_Impl::setSequentialCoolingFraction(const ModelObject& equipment, double fraction)
+{
+  Model model = this->model();
+  ScheduleConstant schedule(model);
+  schedule.setValue(fraction);
+
+  return setSequentialCoolingFractionSchedule(equipment, schedule);
+}
+
+bool ZoneHVACEquipmentList_Impl::setSequentialHeatingFraction(const ModelObject& equipment, double fraction)
+{
+  Model model = this->model();
+  ScheduleConstant schedule(model);
+  schedule.setValue(fraction);
+
+  return setSequentialHeatingFractionSchedule(equipment, schedule);
 }
 
 } // detail
@@ -406,6 +654,16 @@ IddObjectType ZoneHVACEquipmentList::iddObjectType() {
 std::string ZoneHVACEquipmentList::loadDistributionScheme() const
 {
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->loadDistributionScheme();
+}
+
+
+std::vector<std::string> ZoneHVACEquipmentList::loadDistributionSchemeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_ZoneHVAC_EquipmentListFields::LoadDistributionScheme);
+}
+
+std::vector<std::string> ZoneHVACEquipmentList::validLoadDistributionSchemeValues() {
+  return loadDistributionSchemeValues();
 }
 
 bool ZoneHVACEquipmentList::setLoadDistributionScheme(std::string scheme)
@@ -462,6 +720,49 @@ unsigned ZoneHVACEquipmentList::coolingPriority(const ModelObject & equipment) c
 {
   return getImpl<detail::ZoneHVACEquipmentList_Impl>()->coolingPriority(equipment);
 }
+
+boost::optional<Schedule> ZoneHVACEquipmentList::sequentialCoolingFractionSchedule(const ModelObject& equipment) const
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->sequentialCoolingFractionSchedule(equipment);
+}
+
+bool ZoneHVACEquipmentList::setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule)
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setSequentialCoolingFractionSchedule(equipment, schedule);
+}
+
+boost::optional<Schedule> ZoneHVACEquipmentList::sequentialHeatingFractionSchedule(const ModelObject& equipment) const
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->sequentialHeatingFractionSchedule(equipment);
+}
+
+bool ZoneHVACEquipmentList::setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule)
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setSequentialHeatingFractionSchedule(equipment, schedule);
+}
+
+
+// DEPRECATED
+boost::optional<double> ZoneHVACEquipmentList::sequentialCoolingFraction(const ModelObject& equipment) const
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->sequentialCoolingFraction(equipment);
+}
+
+bool ZoneHVACEquipmentList::setSequentialCoolingFraction(const ModelObject& equipment, double fraction)
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setSequentialCoolingFraction(equipment, fraction);
+}
+
+boost::optional<double> ZoneHVACEquipmentList::sequentialHeatingFraction(const ModelObject& equipment) const
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->sequentialHeatingFraction(equipment);
+}
+
+bool ZoneHVACEquipmentList::setSequentialHeatingFraction(const ModelObject& equipment, double fraction)
+{
+  return getImpl<detail::ZoneHVACEquipmentList_Impl>()->setSequentialHeatingFraction(equipment, fraction);
+}
+
 
 /// @cond
 ZoneHVACEquipmentList::ZoneHVACEquipmentList(std::shared_ptr<detail::ZoneHVACEquipmentList_Impl> impl)
