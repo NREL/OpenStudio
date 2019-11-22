@@ -63,6 +63,9 @@
 #include "../../model/AirLoopHVACZoneSplitter.hpp"
 #include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../../model/AirTerminalSingleDuctVAVReheat.hpp"
+#include "../../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../../model/FanConstantVolume.hpp"
+#include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilHeatingElectric.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
@@ -395,6 +398,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Constr
   ThermalZone thermalZone(model);
   Space space(model);
   space.setThermalZone(thermalZone);
+  AirLoopHVAC airLoopHVAC(model);
+  ScheduleCompact schedule(model);
+  CoilHeatingElectric reheatCoil(model);
+  AirTerminalSingleDuctVAVReheat singleDuctVAVTerminal(model, schedule, reheatCoil);
+
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone, singleDuctVAVTerminal));
 
   ElectricEquipmentITEAirCooledDefinition definition1(model);
   ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled1(definition1);
@@ -438,18 +447,26 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Constr
   AirLoopHVAC airLoopHVAC(model);
   ThermalZone thermalZone1(model);
   ThermalZone thermalZone2(model);
+  ThermalZone thermalZone3(model);
   Space space1(model);
   Space space2(model);
+  Space space3(model);
   space1.setThermalZone(thermalZone1);
   space2.setThermalZone(thermalZone2);
+  space3.setThermalZone(thermalZone3);
   ScheduleCompact schedule(model);
   CoilHeatingElectric reheatCoil(model);
+  CoilHeatingElectric heatCoil(model);
+  FanConstantVolume fan(model);
+  CoilCoolingDXSingleSpeed coolCoil(model);
   AirTerminalSingleDuctVAVReheat singleDuctVAVTerminal(model, schedule, reheatCoil);
-  AirTerminalSingleDuctUncontrolled singleDuctUncontrolledTerminal(model, schedule);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(model, schedule);
+  ZoneHVACPackagedTerminalAirConditioner ptac(model, schedule, fan, heatCoil, coolCoil);
 
   // connect the thermal zone to airloopHVAC
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone1, singleDuctVAVTerminal));
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, singleDuctUncontrolledTerminal));
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, singleDuctTerminal));
+  EXPECT_TRUE(ptac.addToThermalZone(thermalZone3));
 
   ElectricEquipmentITEAirCooledDefinition definition1(model);
   ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled1(definition1);
@@ -461,12 +478,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricEquipmentITEAirCooled_Constr
   electricEquipmentITEAirCooled2.setSpace(space2);
   definition2.setAirFlowCalculationMethod("FlowControlWithApproachTemperatures");
 
+  ElectricEquipmentITEAirCooledDefinition definition3(model);
+  ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled3(definition3);
+  electricEquipmentITEAirCooled3.setSpace(space3);
+  definition3.setAirFlowCalculationMethod("FlowControlWithApproachTemperatures");
+
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
-  // electricEquipmentITEAirCooled2 was not translated because the terminal is not single duct VAV terminal
+  // electricEquipmentITEAirCooled2 and 3 were not translated because the terminal is not single duct VAV terminal
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricEquipment_ITE_AirCooled).size());
-  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
+  ASSERT_EQ(3u, workspace.getObjectsByType(IddObjectType::Zone).size());
 
   // should return warning that "The FlowControlWithApproachTemperatures only applies to ITE zones with single duct VAV terminal unit."
   std::string warnings;

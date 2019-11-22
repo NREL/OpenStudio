@@ -134,6 +134,9 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
             LOG(Warn, modelObject.briefDescription() << " The FlowControlWithApproachTemperatures only applies to ITE zones with single duct VAV terminal unit.");
             return boost::none;
           }
+        } else {
+          LOG(Warn, modelObject.briefDescription() << " The FlowControlWithApproachTemperatures only applies to ITE zones with single duct VAV terminal unit.");
+          return boost::none;
         }
       }
     }

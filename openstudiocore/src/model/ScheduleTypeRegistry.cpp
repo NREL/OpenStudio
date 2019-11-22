@@ -90,6 +90,10 @@ ScheduleType ScheduleTypeRegistrySingleton::getScheduleType(const std::string &c
 {
   ScheduleTypeVector scheduleTypes = getScheduleTypesByClassName(className);
   for (const ScheduleType& scheduleType : scheduleTypes) {
+    
+    std::cout << scheduleType.scheduleDisplayName << "\n";
+    std::cout << scheduleDisplayName << "\n";
+
     if (scheduleType.scheduleDisplayName == scheduleDisplayName) {
       return scheduleType;
     }
@@ -248,8 +252,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ElectricEquipment","Electric Equipment","schedule",true,"",0.0,1.0},
     {"ElectricEquipmentITEAirCooled", "Design Power Input", "designPowerInputSchedule", true, "", 0.0, 1.0},
     {"ElectricEquipmentITEAirCooled", "CPU Loading", "cPULoadingSchedule", true, "", 0.0, 1.0},
-    {"ElectricEquipmentITEAirCooledDefinition", "Supply Temperature Difference", "supplyTemperatureDifferenceSchedule", true, "Temperature", 0.0, 50.0},
-    {"ElectricEquipmentITEAirCooledDefinition", "Return Temperature Difference", "returnTemperatureDifferenceSchedule", true, "Temperature", -50.0, 50.0},
+    {"ElectricEquipmentITEAirCooledDefinition", "Supply Temperature Difference Schedule", "supplyTemperatureDifferenceSchedule", true, "Temperature", 0.0, 50.0},
+    {"ElectricEquipmentITEAirCooledDefinition", "Return Temperature Difference Schedule", "returnTemperatureDifferenceSchedule", true, "Temperature", -50.0, 50.0},
     {"ElectricLoadCenterDistribution", "Track  Scheme", "trackScheduleSchemeSchedule",true,"",0.0,OptionalDouble()},
     {"ElectricLoadCenterDistribution", "Storage Charge Power Fraction", "storageChargePowerFractionSchedule",true,"",0.0,1.0},
     {"ElectricLoadCenterDistribution", "Storage Discharge Power Fraction", "storageDischargePowerFractionSchedule",true,"",0.0,1.0},
