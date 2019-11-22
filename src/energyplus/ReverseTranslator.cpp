@@ -1057,7 +1057,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   }
   case openstudio::IddObjectType::ZoneList:
     {
-      modelObject = translateZone(workspaceObject);
+      modelObject = translateZoneList(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::ZoneMixing:

@@ -48,8 +48,8 @@ namespace energyplus {
 
 OptionalModelObject ReverseTranslator::translateZoneList( const WorkspaceObject & workspaceObject )
 {
-   if( workspaceObject.iddObject().type() != IddObjectType::Zone ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: Zone");
+   if( workspaceObject.iddObject().type() != IddObjectType::ZoneList ){
+    LOG(Error, "WorkspaceObject is not IddObjectType: ZoneList");
     return boost::none;
   }
 
@@ -60,6 +60,9 @@ OptionalModelObject ReverseTranslator::translateZoneList( const WorkspaceObject 
     spaceType.setName(*s);
   }
 
+  // Note that this is coarse: it will create a space type for each Zonelist it finds, but if a zone is referenced by multiple zonelists,
+  // its spaces will end up with a spacetype corresponding to the last Zonelist it found that references it.
+  // You'll get a warning that the previous SpaceType was overwritten though
   for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
     WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
 

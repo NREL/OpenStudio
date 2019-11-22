@@ -41,6 +41,8 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Space.hpp"
 #include "../../model/Space_Impl.hpp"
+#include "../../model/SpaceType.hpp"
+#include "../../model/SpaceType_Impl.hpp"
 #include "../../model/Lights.hpp"
 #include "../../model/Lights_Impl.hpp"
 #include "../../model/InteriorPartitionSurface.hpp"
@@ -83,6 +85,7 @@
 #include "../../utilities/sql/SqlFile.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/OtherEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -94,6 +97,9 @@
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/SurfaceProperty_ExposedFoundationPerimeter_FieldEnums.hxx>
 #include <utilities/idd/PerformancePrecisionTradeoffs_FieldEnums.hxx>
+#include <utilities/idd/ZoneList_FieldEnums.hxx>
+#include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
+
 #include "../../utilities/time/Time.hpp"
 
 #include <resources.hxx>
@@ -841,4 +847,124 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   EXPECT_EQ(viewFactor.fromSurface().name().get(), "Surface 1");
   EXPECT_EQ(viewFactor.toSurface().name().get(), "Surface 1");
   EXPECT_EQ(0.25, viewFactor.viewFactor());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList)
+{
+  ReverseTranslator reverseTranslator;
+
+  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  OptionalWorkspaceObject _i_zone1 = w.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(_i_zone1);
+  EXPECT_TRUE(_i_zone1->setName("Zone1"));
+  OptionalWorkspaceObject _i_zone2 = w.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(_i_zone2);
+  EXPECT_TRUE(_i_zone2->setName("Zone2"));
+  OptionalWorkspaceObject _i_zoneList1 = w.addObject(IdfObject(IddObjectType::ZoneList));
+  ASSERT_TRUE(_i_zoneList1);
+  EXPECT_TRUE(_i_zoneList1->setName("ZoneList1 for Zone1 and Zone2"));
+
+  WorkspaceExtensibleGroup eg1 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  EXPECT_TRUE(eg1.setPointer(ZoneListExtensibleFields::ZoneName, _i_zone1->handle()));
+  WorkspaceExtensibleGroup eg2 = _i_zoneList1->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  EXPECT_TRUE(eg2.setPointer(ZoneListExtensibleFields::ZoneName, _i_zone2->handle()));
+
+
+  // To avoid other warnings, we add required objects
+  OptionalWorkspaceObject _i_globalGeometryRules = w.addObject(IdfObject(IddObjectType::GlobalGeometryRules));
+  ASSERT_TRUE(_i_globalGeometryRules);
+
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::StartingVertexPosition, "UpperLeftCorner");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::VertexEntryDirection, "Counterclockwise");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::CoordinateSystem, "Relative");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, "Relative");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, "Relative");
+
+  OptionalWorkspaceObject _i_building = w.addObject(IdfObject(IddObjectType::Building));
+  ASSERT_TRUE(_i_building);
+
+  {
+    ASSERT_NO_THROW(reverseTranslator.translateWorkspace(w));
+    Model model = reverseTranslator.translateWorkspace(w);
+    EXPECT_TRUE(reverseTranslator.errors().empty());
+    EXPECT_TRUE(reverseTranslator.warnings().empty());
+
+    std::vector<openstudio::model::ThermalZone> zones = model.getModelObjects<openstudio::model::ThermalZone>();
+    ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::ThermalZone>().size());
+    boost::optional<openstudio::model::ThermalZone> _zone1 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString() + " Thermal Zone");
+    ASSERT_TRUE(_zone1);
+    boost::optional<openstudio::model::ThermalZone> _zone2 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString() + " Thermal Zone");
+    ASSERT_TRUE(_zone2);
+
+    ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
+    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString());
+    ASSERT_TRUE(_zone1);
+    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString());
+    ASSERT_TRUE(_zone2);
+
+    ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::SpaceType>().size());
+    openstudio::model::SpaceType spaceType1 = model.getModelObjects<openstudio::model::SpaceType>()[0];
+    EXPECT_EQ(spaceType1.nameString(), _i_zoneList1->nameString());
+
+    ASSERT_TRUE(_space1->thermalZone());
+    EXPECT_EQ(_zone1.get(), _space1->thermalZone().get());
+    ASSERT_TRUE(_space2->thermalZone());
+    EXPECT_EQ(_zone2.get(), _space2->thermalZone().get());
+
+    ASSERT_TRUE(_space1->spaceType());
+    EXPECT_EQ(spaceType1, _space1->spaceType().get());
+    ASSERT_TRUE(_space2->spaceType());
+    EXPECT_EQ(spaceType1, _space2->spaceType().get());
+  }
+
+  // We add another ZoneList, that references only Space2
+  OptionalWorkspaceObject _i_zoneList2 = w.addObject(IdfObject(IddObjectType::ZoneList));
+  ASSERT_TRUE(_i_zoneList2);
+  EXPECT_TRUE(_i_zoneList2->setName("ZoneList2 for Zone2"));
+
+  WorkspaceExtensibleGroup eg3 = _i_zoneList2->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  EXPECT_TRUE(eg3.setPointer(ZoneListExtensibleFields::ZoneName, _i_zone2->handle()));
+
+  // Translate again
+  {
+    ASSERT_NO_THROW(reverseTranslator.translateWorkspace(w));
+    Model model = reverseTranslator.translateWorkspace(w);
+    EXPECT_TRUE(reverseTranslator.errors().empty());
+    // This time we should have gotten one warning that the SpaceType is overriden
+    EXPECT_EQ(1u, reverseTranslator.warnings().size());
+    EXPECT_EQ("Overriding previously assigned SpaceType for Space 'Zone2'", reverseTranslator.warnings()[0].logMessage());
+
+    std::vector<openstudio::model::ThermalZone> zones = model.getModelObjects<openstudio::model::ThermalZone>();
+    ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::ThermalZone>().size());
+    boost::optional<openstudio::model::ThermalZone> _zone1 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString() + " Thermal Zone");
+    ASSERT_TRUE(_zone1);
+    boost::optional<openstudio::model::ThermalZone> _zone2 = model.getModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString() + " Thermal Zone");
+    ASSERT_TRUE(_zone2);
+
+    ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
+    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString());
+    ASSERT_TRUE(_zone1);
+    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString());
+    ASSERT_TRUE(_zone2);
+
+    ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::SpaceType>().size());
+    boost::optional<openstudio::model::SpaceType> _spaceType1 = model.getModelObjectByName<openstudio::model::SpaceType>(_i_zoneList1->nameString());
+    ASSERT_TRUE(_spaceType1);
+    boost::optional<openstudio::model::SpaceType> _spaceType2 = model.getModelObjectByName<openstudio::model::SpaceType>(_i_zoneList2->nameString());
+    ASSERT_TRUE(_spaceType2);
+
+    ASSERT_TRUE(_space1->thermalZone());
+    EXPECT_EQ(_zone1.get(), _space1->thermalZone().get());
+    ASSERT_TRUE(_space2->thermalZone());
+    EXPECT_EQ(_zone2.get(), _space2->thermalZone().get());
+
+    ASSERT_TRUE(_space1->spaceType());
+    EXPECT_EQ(_spaceType1, _space1->spaceType().get());
+
+    // Space2 is in two zoneList, but it'll keep the last ZoneList that referenced it
+    ASSERT_TRUE(_space2->spaceType());
+    EXPECT_EQ(_spaceType2, _space2->spaceType().get())
+      << "Expected space2 to have a SpaceType '" << _spaceType2->nameString() << "', but it has '" << _space2->spaceType()->nameString() << "'";
+
+  }
 }
