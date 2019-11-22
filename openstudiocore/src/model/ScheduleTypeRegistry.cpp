@@ -90,10 +90,6 @@ ScheduleType ScheduleTypeRegistrySingleton::getScheduleType(const std::string &c
 {
   ScheduleTypeVector scheduleTypes = getScheduleTypesByClassName(className);
   for (const ScheduleType& scheduleType : scheduleTypes) {
-    
-    std::cout << scheduleType.scheduleDisplayName << "\n";
-    std::cout << scheduleDisplayName << "\n";
-
     if (scheduleType.scheduleDisplayName == scheduleDisplayName) {
       return scheduleType;
     }
