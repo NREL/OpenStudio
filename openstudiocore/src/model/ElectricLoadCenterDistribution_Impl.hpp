@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,7 +40,7 @@ class Schedule;
 class Generator;
 class Inverter;
 class ElectricalStorage;
-//class Transformer;
+class ElectricLoadCenterTransformer;
 class ElectricLoadCenterStorageConverter;
 class ModelObjectList;
 
@@ -114,7 +114,7 @@ namespace detail {
 
     boost::optional<ElectricalStorage> electricalStorage() const;
 
-    //boost::optional<Transformer> transformer() const;
+    boost::optional<ElectricLoadCenterTransformer> transformer() const;
 
     // New
 
@@ -197,9 +197,9 @@ namespace detail {
 
     void resetElectricalStorage();
 
-    //bool setTransformer(const Transformer& transformer);
+    bool setTransformer(const ElectricLoadCenterTransformer& transformer);
 
-    //void resetTransformerObject();
+    void resetTransformer();
 
     // Storage Operation Scheme
     bool setStorageOperationScheme(const std::string& operationScheme);

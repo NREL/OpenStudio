@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,7 +30,7 @@
 #ifndef MODEL_GENERATORFUELCELLAIRSUPPLY_HPP
 #define MODEL_GENERATORFUELCELLAIRSUPPLY_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
 namespace openstudio {
@@ -41,6 +41,28 @@ class Node;
 class CurveCubic;
 class CurveQuadratic;
 class GeneratorFuelCell;
+
+
+/** This class implements a constituent */
+class AirSupplyConstituent {
+ public:
+  AirSupplyConstituent(std::string constituentName, double molarFraction);
+
+  std::string constituentName() const;
+  double molarFraction() const;
+
+  static bool isValid(std::string constituentName);
+  static std::vector<std::string> constituentNameValues();
+  static std::vector<std::string> validConstituentNameValues();
+
+ private:
+  std::string m_name;
+  double m_molarFraction;
+  REGISTER_LOGGER("openstudio.model.AirSupplyConstituent");
+};
+
+// Overload operator<<
+std::ostream& operator<< (std::ostream& out, const openstudio::model::AirSupplyConstituent& constituent);
 
 namespace detail {
 
@@ -83,14 +105,16 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   static std::vector<std::string> airSupplyConstituentModeValues();
 
   //extensible fields
-
+  bool addConstituent(const AirSupplyConstituent& constituent);
+  // Convenience function to add a constituent without explicitly creating a FuelSupplyConstituent
   bool addConstituent(std::string name, double molarFraction);
 
+  // TODO: this should return bool (to indicate whether groupIndex is valid...)
   void removeConstituent(int groupIndex);
 
   void removeAllConstituents();
 
-  std::vector< std::pair<std::string, double> > constituents();
+  std::vector<AirSupplyConstituent> constituents() const;
 
   /** @name Getters */
   //@{
@@ -115,10 +139,14 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
 
   std::string airSupplyConstituentMode() const;
 
+  // TODO: this should be a non optional
   boost::optional<unsigned int> numberofUserDefinedConstituents() const;
 
+  // Convenience function to check that it's equal to 1.0 (If no constituents, returns 0 and warns)
+  double sumofConstituentsMolarFractions() const;
+
   // Return optional parent generator
-  GeneratorFuelCell fuelCell() const;
+  boost::optional<GeneratorFuelCell> fuelCell() const;
 
   //@}
   /** @name Setters */
@@ -157,10 +185,6 @@ class MODEL_API GeneratorFuelCellAirSupply : public ModelObject {
   bool setAirIntakeHeatRecoveryMode(const std::string& airIntakeHeatRecoveryMode);
 
   bool setAirSupplyConstituentMode(const std::string& airSupplyConstituentMode);
-
-  bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
-
-  void resetNumberofUserDefinedConstituents();
 
   //@}
   /** @name Other */

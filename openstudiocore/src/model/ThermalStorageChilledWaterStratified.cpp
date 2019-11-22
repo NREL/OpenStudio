@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -129,22 +129,22 @@ namespace detail {
     return result;
   }
 
-  unsigned ThermalStorageChilledWaterStratified_Impl::supplyInletPort()
+  unsigned ThermalStorageChilledWaterStratified_Impl::supplyInletPort() const
   {
     return OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideInletNodeName;
   }
 
-  unsigned ThermalStorageChilledWaterStratified_Impl::supplyOutletPort()
+  unsigned ThermalStorageChilledWaterStratified_Impl::supplyOutletPort() const
   {
     return OS_ThermalStorage_ChilledWater_StratifiedFields::UseSideOutletNodeName;
   }
 
-  unsigned ThermalStorageChilledWaterStratified_Impl::demandInletPort()
+  unsigned ThermalStorageChilledWaterStratified_Impl::demandInletPort() const
   {
     return OS_ThermalStorage_ChilledWater_StratifiedFields::SourceSideInletNodeName;
   }
 
-  unsigned ThermalStorageChilledWaterStratified_Impl::demandOutletPort()
+  unsigned ThermalStorageChilledWaterStratified_Impl::demandOutletPort() const
   {
     return OS_ThermalStorage_ChilledWater_StratifiedFields::SourceSideOutletNodeName;
   }
@@ -1230,4 +1230,4 @@ ThermalStorageChilledWaterStratified::ThermalStorageChilledWaterStratified(std::
   }
 
 } // model
-} // openstudio
+} // openstudio

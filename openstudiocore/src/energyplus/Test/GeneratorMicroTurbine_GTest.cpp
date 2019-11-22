@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -186,5 +186,55 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop)
 
   model.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop.osm"), true);
   workspace.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop.idf"), true);
+
+}
+//test orphaning the generator before FT
+TEST_F(EnergyPlusFixture, ForwardTranslatorGeneratorMicroTurbine_ELCD_Orphan)
+{
+  // Create a model, a mchp, a mchpHR, a plantLoop and an electricalLoadCenter
+  Model model;
+
+  GeneratorMicroTurbine mchp = GeneratorMicroTurbine(model);
+  GeneratorMicroTurbineHeatRecovery mchpHR = GeneratorMicroTurbineHeatRecovery(model, mchp);
+  ASSERT_EQ(mchpHR, mchp.generatorMicroTurbineHeatRecovery().get());
+
+  PlantLoop plantLoop(model);
+  // Add a supply branch for the mchpHR
+  ASSERT_TRUE(plantLoop.addSupplyBranchForComponent(mchpHR));
+
+  // Create a WaterHeater:Mixed
+  WaterHeaterMixed waterHeater(model);
+  // Add it on the same branch as the chpHR, right after it
+  Node mchpHROutletNode = mchpHR.outletModelObject()->cast<Node>();
+  ASSERT_TRUE(waterHeater.addToNode(mchpHROutletNode));
+
+  // Create a plantEquipmentOperationHeatingLoad
+  PlantEquipmentOperationHeatingLoad operation(model);
+  operation.setName(plantLoop.name().get() + " PlantEquipmentOperationHeatingLoad");
+  ASSERT_TRUE(plantLoop.setPlantEquipmentOperationHeatingLoad(operation));
+  ASSERT_TRUE(operation.addEquipment(mchpHR));
+  ASSERT_TRUE(operation.addEquipment(waterHeater));
+
+  // Create an ELCD
+  ElectricLoadCenterDistribution elcd = ElectricLoadCenterDistribution(model);
+  elcd.setName("Capstone C65 ELCD");
+  elcd.setElectricalBussType("AlternatingCurrent");
+  elcd.addGenerator(mchp);
+
+  // orphan the generator from the ELCD
+  boost::optional<ElectricLoadCenterDistribution> elcd2 = mchp.electricLoadCenterDistribution();
+  elcd2.get().remove();
+  EXPECT_FALSE(mchp.electricLoadCenterDistribution());
+
+  // Forward Translates
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  //ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::WaterHeater_Mixed).size());
+  ASSERT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution).size());
+
+  //model.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_orhpan.osm"), true);
+  //workspace.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_orphan.idf"), true);
 
 }

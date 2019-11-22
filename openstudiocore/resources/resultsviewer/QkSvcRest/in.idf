@@ -69,7 +69,7 @@
 ! ExtWallConstruction=Wood-Framed and Other
 ! End SimMetaData
 
-  Version,8.9;
+  Version,9.2;
 
   Timestep,6;
 
@@ -84,29 +84,33 @@
     WinterRunPeriod,         !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     1,                       !- End Month
     15,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
-    1;                       !- Number of Times Runperiod to be Repeated
+    No;                      !- Treat Weather as Actual
 
   RunPeriod,
     SummerRunPeriod,         !- Name
     7,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     7,                       !- End Month
     15,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
     Yes,                     !- Use Weather File Snow Indicators
-    1;                       !- Number of Times Runperiod to be Repeated
+    No;                      !- Treat Weather as Actual
 
   SurfaceConvectionAlgorithm:Inside,TARP;
 
@@ -1775,7 +1779,6 @@
     Dining_Wall_East,        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1807,7 +1810,6 @@
     Dining_Wall_South,       !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1839,7 +1841,6 @@
     Dining_Wall_West,        !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     AutoCalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0000,                  !- Multiplier
     4,                       !- Number of Vertices
@@ -1899,7 +1900,7 @@
   InternalMass,
     Dining Internal Mass,    !- Name
     InteriorFurnishings,     !- Construction Name
-    Dining,                  !- Zone Name
+    Dining,                  !- Zone or ZoneList Name
     232.3430;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -2094,10 +2095,14 @@
     Dining Exhaust Fan,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ,                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 2 Object Type
     Dining Direct Air,       !- Zone Equipment 2 Name
     2,                       !- Zone Equipment 2 Cooling Sequence
-    2;                       !- Zone Equipment 2 Heating or No-Load Sequence
+    2,                       !- Zone Equipment 2 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 2 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 2 Sequential Heating Fraction Schedule Name
 
   Fan:ZoneExhaust,
     Dining Exhaust Fan,      !- Name
@@ -2239,7 +2244,7 @@
   InternalMass,
     Kitchen Internal Mass,   !- Name
     InteriorFurnishings,     !- Construction Name
-    Kitchen,                 !- Zone Name
+    Kitchen,                 !- Zone or ZoneList Name
     232.3430;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -2491,10 +2496,14 @@
     Kitchen Exhaust Fan,     !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ,                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
     AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 2 Object Type
     Kitchen Direct Air,      !- Zone Equipment 2 Name
     2,                       !- Zone Equipment 2 Cooling Sequence
-    2;                       !- Zone Equipment 2 Heating or No-Load Sequence
+    2,                       !- Zone Equipment 2 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 2 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 2 Sequential Heating Fraction Schedule Name
 
   Fan:ZoneExhaust,
     Kitchen Exhaust Fan,     !- Name

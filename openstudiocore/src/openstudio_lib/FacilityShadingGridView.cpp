@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -95,7 +95,15 @@ namespace openstudio {
   FacilityShadingGridView::FacilityShadingGridView(bool isIP, const model::Model & model, QWidget * parent)
     : GridViewSubTab(isIP, model, parent)
   {
-    auto modelObjects = subsetCastVector<model::ModelObject>(model.getConcreteModelObjects<model::ShadingSurfaceGroup>());
+    std::vector<model::ShadingSurfaceGroup> shadingGroups = model.getConcreteModelObjects<model::ShadingSurfaceGroup>();
+    // Filter out the 'Space' shadingSurfaceTypes
+    // These are displayed on the Space's "Shading" subtab
+    shadingGroups.erase(
+      std::remove_if(shadingGroups.begin(), shadingGroups.end(),
+          [](const model::ShadingSurfaceGroup & sg) { return sg.shadingSurfaceType() == "Space"; }),
+      shadingGroups.end());
+
+    auto modelObjects = subsetCastVector<model::ModelObject>(shadingGroups);
     std::sort(modelObjects.begin(), modelObjects.end(), ModelObjectNameSorter());
 
     m_gridController = new FacilityShadingGridController(isIP, "Shading Surface Group", IddObjectType::OS_ShadingSurfaceGroup, model, modelObjects);
@@ -153,7 +161,8 @@ namespace openstudio {
     m_typeFilter = new QComboBox();
     m_typeFilter->addItem("Site");
     m_typeFilter->addItem("Building");
-    m_typeFilter->addItem("Space");
+    // Space-level shading is on the Space's "Shading" subtab
+    //m_typeFilter->addItem("Space");
     m_typeFilter->setFixedWidth(OSItem::ITEM_WIDTH);
     connect(m_typeFilter, &QComboBox::currentTextChanged, this, &openstudio::FacilityShadingGridView::typeFilterChanged);
 
@@ -487,7 +496,7 @@ namespace openstudio {
       else if (field == TYPE) {
         std::function<std::vector<std::string>()> choices(
           []() {
-          std::vector<std::string> choices{  "Site", "Building", "Space" };
+          std::vector<std::string> choices{  "Site", "Building", }; // "Space" };
           return choices;
         }
         );
@@ -506,8 +515,11 @@ namespace openstudio {
         std::function<std::vector<model::ModelObject>(const model::ShadingSurfaceGroup &)> allShadingSurfaces(
           [](const model::ShadingSurfaceGroup &t_shadingSurfaceGroup) {
           std::vector<model::ModelObject> allModelObjects;
+          // Only keep shadingSurfaces that are not of the 'Space' shadingSurfaceType
+          //if( t_shadingSurfaceGroup.shadingSurfaceType() != "Space" ) {
           auto shadingSurfaces = t_shadingSurfaceGroup.shadingSurfaces();
           allModelObjects.insert(allModelObjects.end(), shadingSurfaces.begin(), shadingSurfaces.end());
+          // }
           return allModelObjects;
         }
         );
@@ -601,7 +613,17 @@ namespace openstudio {
 
   void FacilityShadingGridController::refreshModelObjects()
   {
-    m_modelObjects = subsetCastVector<model::ModelObject>(m_model.getConcreteModelObjects<model::ShadingSurfaceGroup>());
+    std::vector<model::ShadingSurfaceGroup> shadingGroups = m_model.getConcreteModelObjects<model::ShadingSurfaceGroup>();
+    // Filter out the 'Space' shadingSurfaceTypes
+    // These are displayed on the Space's "Shading" subtab
+    shadingGroups.erase(
+      std::remove_if(shadingGroups.begin(), shadingGroups.end(),
+          [](const model::ShadingSurfaceGroup & sg) { return sg.shadingSurfaceType() == "Space"; }),
+      shadingGroups.end());
+
+    m_modelObjects = subsetCastVector<model::ModelObject>(shadingGroups);
+
+    // Sort them
     std::sort(m_modelObjects.begin(), m_modelObjects.end(), ModelObjectNameSorter());
   }
 

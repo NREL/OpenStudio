@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -203,6 +203,16 @@ namespace detail {
   bool ScheduleFixedInterval_Impl::isInterpolatetoTimestepDefaulted() const {
     return isEmpty(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep);
   }
+  
+  bool ScheduleFixedInterval_Impl::translatetoScheduleFile() const {
+    boost::optional<std::string> value = getString(OS_Schedule_FixedIntervalFields::TranslatetoScheduleFile,true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "Yes");
+  }
+  
+  bool ScheduleFixedInterval_Impl::isTranslatetoScheduleFileDefaulted() const {
+    return isEmpty(OS_Schedule_FixedIntervalFields::TranslatetoScheduleFile);
+  }
 
   int ScheduleFixedInterval_Impl::startMonth() const {
     boost::optional<int> value = getInt(OS_Schedule_FixedIntervalFields::StartMonth,true);
@@ -247,6 +257,22 @@ namespace detail {
 
   void ScheduleFixedInterval_Impl::resetInterpolatetoTimestep(bool driverMethod) {
     bool result = setString(OS_Schedule_FixedIntervalFields::InterpolatetoTimestep, "", driverMethod);
+    OS_ASSERT(result);
+  }
+  
+  bool ScheduleFixedInterval_Impl::setTranslatetoScheduleFile(bool translatetoScheduleFile, bool driverMethod) {
+    bool result = false;
+    if (translatetoScheduleFile) {
+      result = setString(OS_Schedule_FixedIntervalFields::TranslatetoScheduleFile, "Yes", driverMethod);
+    } else {
+      result = setString(OS_Schedule_FixedIntervalFields::TranslatetoScheduleFile, "No", driverMethod);
+    }
+    OS_ASSERT(result);
+    return result;
+  }
+  
+  void ScheduleFixedInterval_Impl::resetTranslatetoScheduleFile(bool driverMethod) {
+    bool result = setString(OS_Schedule_FixedIntervalFields::TranslatetoScheduleFile, "", driverMethod);
     OS_ASSERT(result);
   }
 
@@ -312,6 +338,14 @@ bool ScheduleFixedInterval::isInterpolatetoTimestepDefaulted() const {
   return getImpl<detail::ScheduleFixedInterval_Impl>()->isInterpolatetoTimestepDefaulted();
 }
 
+bool ScheduleFixedInterval::translatetoScheduleFile() const {
+  return getImpl<detail::ScheduleFixedInterval_Impl>()->translatetoScheduleFile();
+}
+
+bool ScheduleFixedInterval::isTranslatetoScheduleFileDefaulted() const {
+  return getImpl<detail::ScheduleFixedInterval_Impl>()->isTranslatetoScheduleFileDefaulted();
+}
+
 int ScheduleFixedInterval::startMonth() const {
   return getImpl<detail::ScheduleFixedInterval_Impl>()->startMonth();
 }
@@ -338,6 +372,14 @@ bool ScheduleFixedInterval::setInterpolatetoTimestep(bool interpolatetoTimestep)
 
 void ScheduleFixedInterval::resetInterpolatetoTimestep() {
   getImpl<detail::ScheduleFixedInterval_Impl>()->resetInterpolatetoTimestep();
+}
+
+bool ScheduleFixedInterval::setTranslatetoScheduleFile(bool translatetoScheduleFile) {
+  return getImpl<detail::ScheduleFixedInterval_Impl>()->setTranslatetoScheduleFile(translatetoScheduleFile);
+}
+
+void ScheduleFixedInterval::resetTranslatetoScheduleFile() {
+  getImpl<detail::ScheduleFixedInterval_Impl>()->resetTranslatetoScheduleFile();
 }
 
 bool ScheduleFixedInterval::setStartMonth(int startMonth) {
@@ -368,4 +410,4 @@ ScheduleFixedInterval::ScheduleFixedInterval(std::shared_ptr<detail::ScheduleFix
 
 
 } // model
-} // openstudio
+} // openstudio

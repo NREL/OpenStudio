@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -503,19 +503,19 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Chiller_Absorption_IndirectFields::GeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve);
   }
 
-  unsigned ChillerAbsorptionIndirect_Impl::supplyInletPort() {
+  unsigned ChillerAbsorptionIndirect_Impl::supplyInletPort() const {
     return OS_Chiller_Absorption_IndirectFields::ChilledWaterInletNodeName;
   }
 
-  unsigned ChillerAbsorptionIndirect_Impl::supplyOutletPort() {
+  unsigned ChillerAbsorptionIndirect_Impl::supplyOutletPort() const {
     return OS_Chiller_Absorption_IndirectFields::ChilledWaterOutletNodeName;
   }
 
-  unsigned ChillerAbsorptionIndirect_Impl::demandInletPort() {
+  unsigned ChillerAbsorptionIndirect_Impl::demandInletPort() const {
     return OS_Chiller_Absorption_IndirectFields::CondenserInletNodeName;
   }
 
-  unsigned ChillerAbsorptionIndirect_Impl::demandOutletPort() {
+  unsigned ChillerAbsorptionIndirect_Impl::demandOutletPort() const {
     return OS_Chiller_Absorption_IndirectFields::CondenserOutletNodeName;
   }
 
@@ -981,4 +981,4 @@ ChillerAbsorptionIndirect::ChillerAbsorptionIndirect(std::shared_ptr<detail::Chi
   }
 
 } // model
-} // openstudio
+} // openstudio

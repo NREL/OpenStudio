@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -70,9 +70,9 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     virtual bool addToNode(Node & node) override;
 
@@ -84,9 +84,9 @@ namespace detail {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    double coolerEffectiveness() const;
+    double coolerDesignEffectiveness() const;
 
-    bool setCoolerEffectiveness( double value );
+    bool setCoolerDesignEffectiveness( double value );
 
     boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
 
@@ -131,6 +131,15 @@ namespace detail {
     void autosizePrimaryAirDesignFlowRate();
 
     bool isPrimaryAirDesignFlowRateAutosized() const;
+
+    double evaporativeOperationMinimumDrybulbTemperature() const;
+    bool setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature);
+
+    double evaporativeOperationMaximumLimitWetbulbTemperature() const;
+    bool setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature);
+
+    double evaporativeOperationMaximumLimitDrybulbTemperature() const;
+    bool setEvaporativeOperationMaximumLimitDrybulbTemperature(double evaporativeOperationMaximumLimitDrybulbTemperature);
 
     boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
 

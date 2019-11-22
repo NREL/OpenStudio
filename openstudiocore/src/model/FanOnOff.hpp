@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -75,8 +75,11 @@ class MODEL_API FanOnOff : public StraightComponent {
 
   Schedule availabilitySchedule() const;
 
-  double fanEfficiency() const;
+  double fanTotalEfficiency() const;
+  bool isFanTotalEfficiencyDefaulted() const;
 
+  /** Deprecrated in favor of fanTotalEfficiency **/
+  double fanEfficiency() const;
   bool isFanEfficiencyDefaulted() const;
 
   double pressureRise() const;
@@ -100,8 +103,11 @@ class MODEL_API FanOnOff : public StraightComponent {
 
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setFanEfficiency(double fanEfficiency);
 
+  bool setFanTotalEfficiency(double fanTotalEfficiency);
+  void resetFanTotalEfficiency();
+
+  bool setFanEfficiency(double fanTotalEfficiency);
   void resetFanEfficiency();
 
   bool setPressureRise(double pressureRise);

@@ -33,10 +33,11 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirTerminalDualDuctVAVOutdoorAir.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeCooledBeam.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeFourPipeInduction.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeFourPipeBeam.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctParallelPIUReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctSeriesPIUReheat.cpp
-  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctUncontrolled.cpp
+  ForwardTranslator/ForwardTranslateAirTerminalSingleDuctConstantVolumeNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctInletSideMixer.cpp
@@ -93,6 +94,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilWaterHeatingAirToWaterHeatPump.cpp
   ForwardTranslator/ForwardTranslateCoilWaterHeatingAirToWaterHeatPumpWrapped.cpp
   ForwardTranslator/ForwardTranslateConstruction.cpp
+  ForwardTranslator/ForwardTranslateConstructionAirBoundary.cpp
   ForwardTranslator/ForwardTranslateConstructionWithInternalSource.cpp
   ForwardTranslator/ForwardTranslateConvergenceLimits.cpp
   ForwardTranslator/ForwardTranslateControllerMechanicalVentilation.cpp
@@ -130,11 +132,14 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateDistrictHeating.cpp
   ForwardTranslator/ForwardTranslateDuct.cpp
   ForwardTranslator/ForwardTranslateElectricEquipment.cpp
+  ForwardTranslator/ForwardTranslateElectricEquipmentITEAirCooled.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterDistribution.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterLookUpTable.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterInverterSimple.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterInverterPVWatts.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageConverter.cpp
   ForwardTranslator/ForwardTranslateElectricLoadCenterStorageSimple.cpp
+  ForwardTranslator/ForwardTranslateElectricLoadCenterTransformer.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemActuator.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemConstructionIndexVariable.cpp
   ForwardTranslator/ForwardTranslateEnergyManagementSystemCurveOrTableIndexVariable.cpp
@@ -180,6 +185,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateGasEquipment.cpp
   ForwardTranslator/ForwardTranslateGasMixture.cpp
   ForwardTranslator/ForwardTranslateGeneratorPhotovoltaic.cpp
+  ForwardTranslator/ForwardTranslateGeneratorPVWatts.cpp
   ForwardTranslator/ForwardTranslateGeneratorMicroTurbine.cpp
   ForwardTranslator/ForwardTranslateGeneratorFuelCell.cpp
   ForwardTranslator/ForwardTranslateGeneratorFuelCellAirSupply.cpp
@@ -226,6 +232,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
   ForwardTranslator/ForwardTranslateOutputEnergyManagementSystem.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
+  ForwardTranslator/ForwardTranslatePerformancePrecisionTradeoffs.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceEquivalentOneDiode.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceSimple.cpp
   ForwardTranslator/ForwardTranslatePipeAdiabatic.cpp
@@ -233,6 +240,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslatePipeOutdoor.cpp
   ForwardTranslator/ForwardTranslatePlantLoop.cpp
   ForwardTranslator/ForwardTranslatePlantComponentTemperatureSource.cpp
+  ForwardTranslator/ForwardTranslatePlantComponentUserDefined.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationSchemes.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationCoolingLoad.cpp
   ForwardTranslator/ForwardTranslatePlantEquipmentOperationHeatingLoad.cpp
@@ -269,6 +277,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateScheduleCompact.cpp
   ForwardTranslator/ForwardTranslateScheduleConstant.cpp
   ForwardTranslator/ForwardTranslateScheduleDay.cpp
+  ForwardTranslator/ForwardTranslateScheduleFile.cpp
   ForwardTranslator/ForwardTranslateScheduleFixedInterval.cpp
   ForwardTranslator/ForwardTranslateScheduleRuleset.cpp
   ForwardTranslator/ForwardTranslateScheduleTypeLimits.cpp
@@ -382,6 +391,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneHVACUnitVentilator.cpp
   ForwardTranslator/ForwardTranslateZoneHVACWaterToAirHeatPump.cpp
   ForwardTranslator/ForwardTranslateZoneMixing.cpp
+  ForwardTranslator/ForwardTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
   ForwardTranslator/ForwardTranslateZoneVentilationDesignFlowRate.cpp
   ForwardTranslator/CreateAirLoopHVACSupplyPath.cpp
   ForwardTranslator/CreateAirLoopHVACReturnPath.cpp
@@ -391,7 +401,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateAirLoopHVAC.cpp
   ReverseTranslator/ReverseTranslateAirLoopHVACOutdoorAirSystem.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeReheat.cpp
-  ReverseTranslator/ReverseTranslateAirTerminalSingleDuctUncontrolled.cpp
+  ReverseTranslator/ReverseTranslateAirTerminalSingleDuctConstantVolumeNoReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVNoReheat.cpp
   ReverseTranslator/ReverseTranslateAirTerminalSingleDuctVAVReheat.cpp
   ReverseTranslator/ReverseTranslateBuilding.cpp
@@ -401,6 +411,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateCoilHeatingGas.cpp
   ReverseTranslator/ReverseTranslateCoilSystemCoolingDX.cpp
   ReverseTranslator/ReverseTranslateConstruction.cpp
+  ReverseTranslator/ReverseTranslateConstructionAirBoundary.cpp
+ # ReverseTranslator/ReverseTranslateConstructionWithInternalSource.cpp # DLM: todo this is missing
   ReverseTranslator/ReverseTranslateConvergenceLimits.cpp
   ReverseTranslator/ReverseTranslateCurveBicubic.cpp
   ReverseTranslator/ReverseTranslateCurveBiquadratic.cpp
@@ -444,6 +456,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateExteriorWaterEquipment.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
+  ReverseTranslator/ReverseTranslateFoundationKiva.cpp
+  ReverseTranslator/ReverseTranslateFoundationKivaSettings.cpp
   ReverseTranslator/ReverseTranslateGasEquipment.cpp
   ReverseTranslator/ReverseTranslateGeneratorMicroTurbine.cpp
   ReverseTranslator/ReverseTranslateHeatBalanceAlgorithm.cpp
@@ -464,6 +478,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateOutputMeterMeterFileOnly.cpp
   ReverseTranslator/ReverseTranslateOutputVariable.cpp
   ReverseTranslator/ReverseTranslatePeople.cpp
+  ReverseTranslator/ReverseTranslatePerformancePrecisionTradeoffs.cpp
   ReverseTranslator/ReverseTranslateRefrigerationCase.cpp
   ReverseTranslator/ReverseTranslateRefrigerationCompressor.cpp
   ReverseTranslator/ReverseTranslateRunPeriod.cpp
@@ -473,6 +488,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateScheduleConstant.cpp
   ReverseTranslator/ReverseTranslateScheduleDayHourly.cpp
   ReverseTranslator/ReverseTranslateScheduleDayInterval.cpp
+  ReverseTranslator/ReverseTranslateScheduleFile.cpp
   ReverseTranslator/ReverseTranslateScheduleTypeLimits.cpp
   ReverseTranslator/ReverseTranslateScheduleWeekDaily.cpp
   ReverseTranslator/ReverseTranslateScheduleYear.cpp
@@ -495,6 +511,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSteamEquipment.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmInside.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmOutside.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertyExposedFoundationPerimeter.cpp
   ReverseTranslator/ReverseTranslateThermostatSetpointDualSetpoint.cpp
   ReverseTranslator/ReverseTranslateTimestep.cpp
   ReverseTranslator/ReverseTranslateVersion.cpp
@@ -512,6 +529,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateZoneInfiltrationEffectiveLeakageArea.cpp
   ReverseTranslator/ReverseTranslateZoneList.cpp
   ReverseTranslator/ReverseTranslateZoneMixing.cpp
+  ReverseTranslator/ReverseTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
   ReverseTranslator/ReverseTranslateZoneVentilationDesignFlowRate.cpp
 )
 
@@ -525,11 +543,14 @@ set(${target_name}_test_src
   Test/ForwardTranslator_GTest.cpp
   Test/ReverseTranslator_GTest.cpp
 
+  Test/AirConditionerVariableRefrigerantFlow_GTest.cpp
   Test/AirflowNetwork_GTest.cpp
 
   Test/AirLoopHVACUnitarySystem_GTest.cpp
+  Test/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_GTest.cpp
   Test/AirTerminalDualDuctConstantVolume_GTest.cpp
   Test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
+  Test/AirTerminalSingleDuctConstantVolumeFourPipeBeam_GTest.cpp
   Test/AirWallMaterial_GTest.cpp
 
   Test/AirLoopHVAC_GTest.cpp
@@ -544,23 +565,31 @@ set(${target_name}_test_src
   Test/AvailabilityManagerLowTemperatureTurnOn_GTest.cpp
   Test/AvailabilityManagerLowTemperatureTurnOff_GTest.cpp
   Test/AvailabilityManagerNightCycle_GTest.cpp
+  Test/AvailabilityManagerHybridVentilation_GTest
   Test/Building_GTest.cpp
 
   Test/CentralHeatPumpSystem_GTest.cpp
 
   Test/CoilHeatingGas_GTest.cpp
   Test/CoilCoolingDXMultiSpeed_GTest.cpp
+  Test/CoilWaterHeatingDesuperheater_GTest.cpp
+  Test/CoilHeatingDesuperheater_GTest.cpp
   Test/Construction_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
+  Test/ElectricEquipmentITEAirCooled_GTest.cpp
+  Test/ElectricLoadCenterTransformer_GTest.cpp
   Test/EMS_GTest.cpp
-  Test/FuelCell_GTest.cpp
+  Test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   Test/ExteriorLights_GTest.cpp
   Test/ExteriorFuelEquipment_GTest.cpp
   Test/ExteriorWaterEquipment_GTest.cpp
   Test/ExternalInterfaceFT_GTest.cpp
+  Test/FanConstantVolume_GTest.cpp
+  Test/FanVariableVolume_GTest.cpp
+  Test/FuelCell_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
@@ -574,7 +603,8 @@ set(${target_name}_test_src
   Test/Meter_GTest.cpp
   Test/People_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
-
+  Test/PlantComponentUserDefined_GTest.cpp
+  Test/RunPeriod_GTest.cpp
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp
@@ -594,6 +624,7 @@ set(${target_name}_test_src
   Test/ZoneHVACLowTemperatureRadiantConstFlow_GTest.cpp
   Test/ZoneHVACLowTempRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
+  Test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
 )
 
 set(${target_name}_swig_src

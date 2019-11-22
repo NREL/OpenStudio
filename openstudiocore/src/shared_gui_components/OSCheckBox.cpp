@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -28,9 +28,12 @@
 ***********************************************************************************************************************/
 
 #include "OSCheckBox.hpp"
+
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
+
 #include <QString>
+#include <QFocusEvent>
 
 namespace openstudio {
 
@@ -110,6 +113,7 @@ namespace openstudio {
 
   void OSCheckBox3::onToggled(bool checked)
   {
+    emit inFocus(true, true); // fake that is has data
     if (m_modelObject && m_set) {
       if ((*m_get)() != checked) {
         (*m_set)(checked);
@@ -137,6 +141,32 @@ namespace openstudio {
   {
     unbind();
   }
+
+  void OSCheckBox3::focusInEvent(QFocusEvent * e)
+  {
+    if( (e->reason() == Qt::MouseFocusReason) && (this->focusPolicy() == Qt::ClickFocus) ) {
+      // Switch to yellow background
+      QPalette p = this->palette();
+      QColor yellow("#ffc627");
+      p.setColor(QPalette::Base, yellow);
+      this->setPalette(p);
+
+      emit inFocus(true, true);
+    }
+    QWidget::focusInEvent(e);
+  }
+
+  void OSCheckBox3::focusOutEvent(QFocusEvent * e)
+  {
+    if( (e->reason() == Qt::MouseFocusReason) && (this->focusPolicy() == Qt::ClickFocus) ) {
+      // Reset the style sheet
+      setStyleSheet("");
+      emit inFocus(false, false);
+    }
+    // Pass it on for further processing
+    QWidget::focusOutEvent(e);
+  }
+
 
 OSCheckBox2::OSCheckBox2( QWidget * parent )
   : QPushButton(parent)

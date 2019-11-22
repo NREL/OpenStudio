@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -79,26 +79,26 @@ namespace detail {
     return Connection::iddObjectType();
   }
 
-  boost::optional<ModelObject>  Connection_Impl::sourceObject()
+  boost::optional<ModelObject>  Connection_Impl::sourceObject() const
   {
     if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::SourceObject) )
       { return oCandidate->optionalCast<ModelObject>(); }
     return boost::none;
   }
 
-  boost::optional<unsigned> Connection_Impl::sourceObjectPort()
+  boost::optional<unsigned> Connection_Impl::sourceObjectPort() const
   {
     return this->getUnsigned(openstudio::OS_ConnectionFields::OutletPort);
   }
 
-  boost::optional<ModelObject> Connection_Impl::targetObject()
+  boost::optional<ModelObject> Connection_Impl::targetObject() const
   {
     if ( boost::optional<WorkspaceObject> oCandidate = getTarget(openstudio::OS_ConnectionFields::TargetObject) )
       { return oCandidate->optionalCast<ModelObject>(); }
     return boost::none;
   }
 
-  boost::optional<unsigned> Connection_Impl::targetObjectPort()
+  boost::optional<unsigned> Connection_Impl::targetObjectPort() const
   {
     return this->getUnsigned(openstudio::OS_ConnectionFields::InletPort).get();
   }
@@ -135,22 +135,22 @@ Connection::Connection(std::shared_ptr<detail::Connection_Impl> p)
   : ModelObject(std::move(p))
 {}
 
-OptionalModelObject Connection::sourceObject()
+OptionalModelObject Connection::sourceObject() const
 {
   return getImpl<detail::Connection_Impl>()->sourceObject();
 }
 
-OptionalUnsigned Connection::sourceObjectPort()
+OptionalUnsigned Connection::sourceObjectPort() const
 {
   return getImpl<detail::Connection_Impl>()->sourceObjectPort();
 }
 
-OptionalModelObject Connection::targetObject()
+OptionalModelObject Connection::targetObject() const
 {
   return getImpl<detail::Connection_Impl>()->targetObject();
 }
 
-OptionalUnsigned Connection::targetObjectPort()
+OptionalUnsigned Connection::targetObjectPort() const
 {
   return getImpl<detail::Connection_Impl>()->targetObjectPort();
 }

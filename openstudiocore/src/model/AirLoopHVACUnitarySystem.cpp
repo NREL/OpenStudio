@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -350,7 +350,8 @@ namespace detail {
   }
 
   boost::optional<std::string> AirLoopHVACUnitarySystem_Impl::fanPlacement() const {
-    return getString(OS_AirLoopHVAC_UnitarySystemFields::FanPlacement,true);
+    // No default, and return uninitalized if empty
+    return getString(OS_AirLoopHVAC_UnitarySystemFields::FanPlacement, false, true);
   }
 
   boost::optional<Schedule> AirLoopHVACUnitarySystem_Impl::supplyAirFanOperatingModeSchedule() const {
@@ -395,6 +396,15 @@ namespace detail {
     return isEmpty(OS_AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature);
   }
 
+  bool AirLoopHVACUnitarySystem_Impl::isDOASDXCoolingCoilLeavingMinimumAirTemperatureAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "Autosize");
+    }
+    return result;
+  }
+
   std::string AirLoopHVACUnitarySystem_Impl::latentLoadControl() const {
     boost::optional<std::string> value = getString(OS_AirLoopHVAC_UnitarySystemFields::LatentLoadControl,true);
     OS_ASSERT(value);
@@ -421,7 +431,7 @@ namespace detail {
     bool result = false;
     boost::optional<std::string> value = getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+      result = openstudio::istringEqual(value.get(), "Autosize");
     }
     return result;
   }
@@ -450,7 +460,7 @@ namespace detail {
     bool result = false;
     boost::optional<std::string> value = getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+      result = openstudio::istringEqual(value.get(), "Autosize");
     }
     return result;
   }
@@ -479,7 +489,7 @@ namespace detail {
     bool result = false;
     boost::optional<std::string> value = getString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+      result = openstudio::istringEqual(value.get(), "Autosize");
     }
     return result;
   }
@@ -516,7 +526,7 @@ namespace detail {
     bool result = false;
     boost::optional<std::string> value = getString(OS_AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, true);
     if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+      result = openstudio::istringEqual(value.get(), "Autosize");
     }
     return result;
   }
@@ -779,6 +789,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  void AirLoopHVACUnitarySystem_Impl::autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature() {
+    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::DOASDXCoolingCoilLeavingMinimumAirTemperature, "Autosize");
+    OS_ASSERT(result);
+  }
+
   bool AirLoopHVACUnitarySystem_Impl::setLatentLoadControl(std::string latentLoadControl) {
     bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::LatentLoadControl, latentLoadControl);
     return result;
@@ -841,7 +856,7 @@ namespace detail {
   }
 
   void AirLoopHVACUnitarySystem_Impl::autosizeSupplyAirFlowRateDuringCoolingOperation() {
-    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation, "autosize");
+    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringCoolingOperation, "Autosize");
     OS_ASSERT(result);
   }
 
@@ -931,7 +946,7 @@ namespace detail {
   }
 
   void AirLoopHVACUnitarySystem_Impl::autosizeSupplyAirFlowRateDuringHeatingOperation() {
-    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation, "autosize");
+    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateDuringHeatingOperation, "Autosize");
     OS_ASSERT(result);
   }
 
@@ -1021,7 +1036,7 @@ namespace detail {
   }
 
   void AirLoopHVACUnitarySystem_Impl::autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() {
-    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired, "autosize");
+    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::SupplyAirFlowRateWhenNoCoolingorHeatingisRequired, "Autosize");
     OS_ASSERT(result);
   }
 
@@ -1129,7 +1144,7 @@ namespace detail {
   }
 
   void AirLoopHVACUnitarySystem_Impl::autosizeMaximumSupplyAirTemperature() {
-    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, "autosize");
+    bool result = setString(OS_AirLoopHVAC_UnitarySystemFields::MaximumSupplyAirTemperature, "Autosize");
     OS_ASSERT(result);
   }
 
@@ -1273,6 +1288,10 @@ namespace detail {
 
   boost::optional<double> AirLoopHVACUnitarySystem_Impl::autosizedMaximumSupplyAirTemperature() const {
     return getAutosizedValue("Design Size Maximum Supply Air Temperature", "C");
+  }
+
+  boost::optional<double> AirLoopHVACUnitarySystem_Impl::autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature() const {
+    return getAutosizedValue("Design Size Minimum Supply Air Temperature", "C");
   }
 
   void AirLoopHVACUnitarySystem_Impl::autosize() {
@@ -1468,6 +1487,10 @@ double AirLoopHVACUnitarySystem::dOASDXCoolingCoilLeavingMinimumAirTemperature()
 
 bool AirLoopHVACUnitarySystem::isDOASDXCoolingCoilLeavingMinimumAirTemperatureDefaulted() const {
   return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isDOASDXCoolingCoilLeavingMinimumAirTemperatureDefaulted();
+}
+
+bool AirLoopHVACUnitarySystem::isDOASDXCoolingCoilLeavingMinimumAirTemperatureAutosized() const {
+  return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->isDOASDXCoolingCoilLeavingMinimumAirTemperatureAutosized();
 }
 
 std::string AirLoopHVACUnitarySystem::latentLoadControl() const {
@@ -1749,6 +1772,10 @@ bool AirLoopHVACUnitarySystem::setDOASDXCoolingCoilLeavingMinimumAirTemperature(
 
 void AirLoopHVACUnitarySystem::resetDOASDXCoolingCoilLeavingMinimumAirTemperature() {
   getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->resetDOASDXCoolingCoilLeavingMinimumAirTemperature();
+}
+
+void AirLoopHVACUnitarySystem::autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature() {
+  getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature();
 }
 
 bool AirLoopHVACUnitarySystem::setLatentLoadControl(std::string latentLoadControl) {
@@ -2038,5 +2065,9 @@ AirLoopHVACUnitarySystem::AirLoopHVACUnitarySystem(std::shared_ptr<detail::AirLo
     return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->autosizedMaximumSupplyAirTemperature();
   }
 
+  boost::optional<double> AirLoopHVACUnitarySystem::autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature() const {
+    return getImpl<detail::AirLoopHVACUnitarySystem_Impl>()->autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature();
+  }
+
 } // model
-} // openstudio
+} // openstudio

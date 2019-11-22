@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -148,6 +148,77 @@ OPENSTUDIO_ENUM(EpwComputedField,
   ((SpecificVolume)(Specific Volume))
   );
 
+OPENSTUDIO_ENUM(EpwDesignField,
+  ((TitleOfDesignCondition)(Title of Design Condition)(0))
+  ((Blank)(Blank))
+  ((Heating)(Heating))
+  ((HeatingColdestMonth)(Heating Coldest Month))
+  ((HeatingDryBulb99pt6)(Heating Dry Bulb Temperature 99.6%))
+  ((HeatingDryBulb99)(Heating Dry Bulb Temperature 99%))
+  ((HeatingHumidificationDewPoint99pt6)(Heating Humidification Dew Point Temperature 99.6%))
+  ((HeatingHumidificationHumidityRatio99pt6)(Heating Humidification Humidity Ratio 99.6%))
+  ((HeatingHumidificationMeanCoincidentDryBulb99pt6)(Heating Humidification Mean Coincident Dry Bulb Temperature 99.6%))
+  ((HeatingHumidificationDewPoint99)(Heating Humidification Dew Point Temperature 99%))
+  ((HeatingHumidificationHumidityRatio99)(Heating Humidification Humidity Ratio 99%))
+  ((HeatingHumidificationMeanCoincidentDryBulb99)(Heating Humidification Mean Coincident Dry Bulb 99%))
+  ((HeatingColdestMonthWindSpeed0pt4)(Heating Coldest Month Wind Speed 0.4%))
+  ((HeatingColdestMonthMeanCoincidentDryBulb0pt4)(Heating Coldest Month Mean Coincident Dry Bulb 0.4%))
+  ((HeatingColdestMonthWindSpeed1)(Heating Coldest Month Wind Speed 1%))
+  ((HeatingColdestMonthMeanCoincidentDryBulb1)(Heating Coldest Month Mean Coincident Dry Bulb 1%))
+  ((HeatingMeanCoincidentWindSpeed99pt6)(Heating Mean Coincident Wind Speed))
+  ((HeatingPrevailingCoincidentWindDirection99pt6)(Heating Prevailing Coincident Wind Direction 99.6%))
+  ((Cooling)(Cooling))
+  ((CoolingHottestMonth)(Cooling Hottest Month))
+  ((CoolingDryBulbRange)(Cooling Dry Bulb Range))
+  ((CoolingDryBulb0pt4)(Cooling Dry Bulb 0.4%))
+  ((CoolingMeanCoincidentWetBulb0pt4)(Cooling Mean Coincident Wet Bulb 0.4%))
+  ((CoolingDryBulb1)(Cooling Dry Bulb 1%))
+  ((CoolingMeanCoincidentWetBulb1)(Cooling Mean Coincident Wet Bulb 1%))
+  ((CoolingDryBulb2)(Cooling Dry Bulb 2%))
+  ((CoolingMeanCoincidentWetBulb2)(Cooling Mean Coincident Wet Bulb 2%))
+  ((CoolingEvaporationWetBulb0pt4)(Cooling Evaporation Wet Bulb 0.4%))
+  ((CoolingEvaporationMeanCoincidentDryBulb0pt4)(Cooling Evaporation Mean Coincident Dry Bulb 0.4%))
+  ((CoolingEvaporationWetBulb1)(Cooling Evaporation Wet Bulb 1%))
+  ((CoolingEvaporationMeanCoincidentDryBulb1)(Cooling Evaporation Mean Coincident Dry Bulb 1%))
+  ((CoolingEvaporationWetBulb2)(Cooling Evaporation Wet Bulb 2%))
+  ((CoolingEvaporationMeanCoincidentDryBulb2)(Cooling Evaporation Mean Coincident Dry Bulb 2%))
+  ((CoolingMeanCoincidentWindSpeed0pt4)(Cooling Mean Coincident Wind Speed 0.4%))
+  ((CoolingPrevailingCoincidentWindDirection0pt4)(Cooling Prevailing Coincident Wind Direction 0.4%))
+  ((CoolingDehumidificationDewPoint0pt4)(Cooling Dehumidification Dew Point 0.4%))
+  ((CoolingDehumidificationHumidityRatio0pt4)(Cooling Dehumidification Humidity Ratio 0.4%))
+  ((CoolingDehumidificationMeanCoincidentDryBulb0pt4)(Cooling Dehumidification Mean Coincident Dry Bulb 0.4%))
+  ((CoolingDehumidificationDewPoint1)(Cooling Dehumidification Dew Point 1%))
+  ((CoolingDehumidificationHumidityRatio1)(Cooling Dehumidification Humidity Ratio 1%))
+  ((CoolingDehumidificationMeanCoincidentDryBulb1)(Cooling Dehumidification Mean Coincident Dry Bulb 1%))
+  ((CoolingDehumidificationDewPoint2)(Cooling Dehumidification Dew Point 2%))
+  ((CoolingDehumidificationHumidityRatio2)(Cooling Dehumidification Humidity Ratio 2%))
+  ((CoolingDehumidificationMeanCoincidentDryBulb2)(Cooling Dehumidification Mean Coincident Dry Bulb 2%))
+  ((CoolingEnthalpy0pt4)(Cooling Enthalpy 0.4%))
+  ((CoolingEnthalpyMeanCoincidentDryBulb0pt4)(Cooling Enthalpy Mean Coincident Dry Bulb 0.4%))
+  ((CoolingEnthalpy1)(Cooling Enthalpy 1%))
+  ((CoolingEnthalpyMeanCoincidentDryBulb1)(Cooling Enthalpy Mean Coincident Dry Bulb 1%))
+  ((CoolingEnthalpy2)(Cooling Enthalpy 2%))
+  ((CoolingEnthalpyMeanCoincidentDryBulb2)(Cooling Enthalpy Mean Coincident Dry Bulb 2%))
+  ((CoolingHours8To4AndDryBulb12pt8To20pt6)(Cooling Hours 8 to 4 and Dry Bulb 12.8% to 20.6%))
+  ((Extremes)(Extremes))
+  ((ExtremeWindSpeed1)(Extreme Wind Speed 1%))
+  ((ExtremeWindSpeed2pt5)(Extreme Wind Speed 2.5%))
+  ((ExtremeWindSpeed5)(Extreme Wind Speed 5%))
+  ((ExtremeMaxWetBulb)(Extreme Max Wet Bulb))
+  ((ExtremeMeanMinDryBulb)(Extreme Mean Min Dry Bulb))
+  ((ExtremeMeanMaxDryBulb)(Extreme Mean Max Dry Bulb))
+  ((ExtremeStdDevMinDryBulb)(Extreme Std Dev Min Dry Bulb))
+  ((ExtremeStdDevMaxDryBulb)(Extreme Std Dev Max Dry Bulb))
+  ((ExtremeN5YearsMinDryBulb)(Extreme N5 Years Min Dry Bulb))
+  ((ExtremeN5YearsMaxDryBulb)(Extreme N5 Years Max Dry Bulb))
+  ((ExtremeN10YearsMinDryBulb)(Extreme N10 Years Min Dry Bulb))
+  ((ExtremeN10YearsMaxDryBulb)(Extreme N10 Years Max Dry Bulb))
+  ((ExtremeN20YearsMinDryBulb)(Extreme N20 Years Min Dry Bulb))
+  ((ExtremeN20YearsMaxDryBulb)(Extreme N20 Years Max Dry Bulb))
+  ((ExtremeN50YearsMinDryBulb)(Extreme N50 Years Min Dry Bulb))
+  ((ExtremeN50YearsMaxDryBulb)(Extreme N50 Years Max Dry Bulb))
+  );
+
 /** EpwDataPoint is one line from the EPW file. All floating point numbers are stored as strings,
  * but are checked as numbers.
  */
@@ -187,11 +258,11 @@ public:
   // Conversion
   /** Create an EpwDataPoint from an EPW-formatted string */
   static boost::optional<EpwDataPoint> fromEpwString(const std::string &line);
-  /** Creata an EpwDataPoint from a list of EPW data as strings. The pedantic argument controls how strict the conversion is.
+  /** Create an EpwDataPoint from a list of EPW data as strings. The pedantic argument controls how strict the conversion is.
       If pedantic is true, the list should have 35 elements. If pedantic is false, lists with more or fewer elements may
       still result in an EpwDataPoint */
   static boost::optional<EpwDataPoint> fromEpwStrings(const std::vector<std::string> &list, bool pedantic=true);
-  /** Creata an EpwDataPoint from a list of EPW data as strings, overriding the date and time with the specified arguments.
+  /** Create an EpwDataPoint from a list of EPW data as strings, overriding the date and time with the specified arguments.
       The pedantic argument controls how strict the conversion is. If pedantic is true, the list should have 35 elements.
       If pedantic is false, lists with more or fewer elements may still result in an EpwDataPoint */
   static boost::optional<EpwDataPoint> fromEpwStrings(int year, int month, int day, int hour, int minute,
@@ -404,6 +475,375 @@ private:
   std::string m_liquidPrecipitationQuantity; // units hr, missing 99
 };
 
+/** EpwDesignCondition is one line from the EPW file. All floating point numbers are stored as strings,
+* but are checked as numbers.
+*/
+class UTILITIES_API EpwDesignCondition
+{
+public:
+  /** Create an empty EpwDesignCondition object */
+  EpwDesignCondition();
+  /** Create an EpwDesignCondition object with specified properties */
+  EpwDesignCondition(std::string titleOfDesignCondition, int heatingColdestMonth, double heatingDryBulb99pt6, double heatingDryBulb99,
+    double heatingHumidificationDewPoint99pt6, double heatingHumidificationHumidityRatio99pt6, double heatingHumidificationMeanCoincidentDryBulb99pt6,
+    double heatingHumidificationDewPoint99, double heatingHumidificationHumidityRatio99, double heatingHumidificationMeanCoincidentDryBulb99,
+    double heatingColdestMonthWindSpeed0pt4, double heatingColdestMonthMeanCoincidentDryBulb0pt4, double heatingColdestMonthWindSpeed1, 
+    double heatingColdestMonthMeanCoincidentDryBulb1, double heatingMeanCoincidentWindSpeed99pt6, int heatingPrevailingCoincidentWindDirection99pt6,
+    int coolingHottestMonth, double coolingDryBulbRange, double coolingDryBulb0pt4, double coolingMeanCoincidentWetBulb0pt4,
+    double coolingDryBulb1, double coolingMeanCoincidentWetBulb1, double coolingDryBulb2, double coolingMeanCoincidentWetBulb2,
+    double coolingEvaporationWetBulb0pt4, double coolingEvaporationMeanCoincidentDryBulb0pt4, double coolingEvaporationWetBulb1,
+    double coolingEvaporationMeanCoincidentDryBulb1, double coolingEvaporationWetBulb2, double coolingEvaporationMeanCoincidentDryBulb2,
+    double coolingMeanCoincidentWindSpeed0pt4, int coolingPrevailingCoincidentWindDirection0pt4, double coolingDehumidificationDewPoint0pt4,
+    double coolingDehumidificationHumidityRatio0pt4, double coolingDehumidificationMeanCoincidentDryBulb0pt4,
+    double coolingDehumidificationDewPoint1, double coolingDehumidificationHumidityRatio1, double coolingDehumidificationMeanCoincidentDryBulb1,
+    double coolingDehumidificationDewPoint2, double coolingDehumidificationHumidityRatio2, double coolingDehumidificationMeanCoincidentDryBulb2,
+    double coolingEnthalpy0pt4, double coolingEnthalpyMeanCoincidentDryBulb0pt4, double coolingEnthalpy1, double coolingEnthalpyMeanCoincidentDryBulb1,
+    double coolingEnthalpy2, double coolingEnthalpyMeanCoincidentDryBulb2, int coolingHours8To4AndDryBulb12pt8To20pt6, double extremeWindSpeed1,
+    double extremeWindSpeed2pt5, double extremeWindSpeed5, double extremeMaxWetBulb, double extremeMeanMinDryBulb, double extremeMeanMaxDryBulb,
+    double extremeStdDevMinDryBulb, double extremeStdDevMaxDryBulb, double extremeN5YearsMinDryBulb, double extremeN5YearsMaxDryBulb,
+    double extremeN10YearsMinDryBulb, double extremeN10YearsMaxDryBulb, double extremeN20YearsMinDryBulb, double extremeN20YearsMaxDryBulb,
+    double extremeN50YearsMinDryBulb, double extremeN50YearsMaxDryBulb);
+  // Static
+  /** Returns the units of the named field */
+  static boost::optional<std::string> getUnitsByName(const std::string &name);
+  /** Returns the units of the field specified by enumeration value */
+  static std::string getUnits(EpwDesignField field);
+  // Data retrieval
+  /** Returns the double value of the named field if possible */
+  boost::optional<double> getFieldByName(const std::string &name);
+  /** Returns the dobule value of the field specified by enumeration value */
+  boost::optional<double> getField(EpwDesignField id);
+  // Conversion
+  /** Create an EpwDesignCondition from an EPW-formatted string */
+  static boost::optional<EpwDesignCondition> fromDesignConditionsString(const std::string &line);
+  /** Create an EpwDesignCondition from a list of EPW designs as strings */
+  static boost::optional<EpwDesignCondition> fromDesignConditionsStrings(const std::vector<std::string> &list);
+  // Getters
+  /** Returns the title of design condition */
+  std::string titleOfDesignCondition() const;
+  /** Returns the heating coldest month */
+  int heatingColdestMonth() const;
+  /** Returns the heating dry bulb temperature 99.6% in degrees C*/
+  double heatingDryBulb99pt6() const;
+  /** Returns the heating dry bulb temperature 99% in degrees C*/
+  double heatingDryBulb99() const;
+  /** Returns the heating humidification dew point temperature 99.6% in degrees C*/
+  double heatingHumidificationDewPoint99pt6() const;
+  /** Returns the heating humidification humidity ratio 99.6% in g of moisture per kg of dry air */
+  double heatingHumidificationHumidityRatio99pt6() const;
+  /** Returns the heating humidification mean coincident dry bulb temperature 99.6% in degrees C*/
+  double heatingHumidificationMeanCoincidentDryBulb99pt6() const;
+  /** Returns the heating humidification dew point temperature 99% in degrees C*/
+  double heatingHumidificationDewPoint99() const;
+  /** Returns the heating humidification humidity ratio 99% in g of moisture per kg of dry air */
+  double heatingHumidificationHumidityRatio99() const;
+  /** Returns the heating humidification mean coincient dry bulb temperature 99% in degrees C */
+  double heatingHumidificationMeanCoincidentDryBulb99() const;
+  /** Returns the heating coldest month wind speed 0.4% in m/s */
+  double heatingColdestMonthWindSpeed0pt4() const;
+  /** Returns the heating coldest month mean coincident dry bulb temperature 0.4% in degrees C*/
+  double heatingColdestMonthMeanCoincidentDryBulb0pt4() const;
+  /** Returns the heating coldest month wind speed 1% in m/s */
+  double heatingColdestMonthWindSpeed1() const;
+  /** Returns the heating coldest month mean coincident dry bulb temperature 1% in degrees C */
+  double heatingColdestMonthMeanCoincidentDryBulb1() const;
+  /** Returns the heating mean coincident wind speed 99.6% in m/s */
+  double heatingMeanCoincidentWindSpeed99pt6() const;
+  /** Returns the heating prevailing coincident wind direction 99.6% in degrees */
+  int heatingPrevailingCoincidentWindDirection99pt6() const;
+  /** Returns the cooling hottest month */
+  int coolingHottestMonth() const;
+  /** Returns the cooling dry bulb temperature range in degrees C */
+  double coolingDryBulbRange() const;
+  /** Returns the cooling dry bulb temperature 0.4% in degrees C */
+  double coolingDryBulb0pt4() const;
+  /** Returns the cooling mean coincident wet bulb temperature in degrees C */
+  double coolingMeanCoincidentWetBulb0pt4() const;
+  /** Returns the cooling dry bulb temperature 1% in degrees C */
+  double coolingDryBulb1() const;
+  /** Returns the cooling mean coincident wet bulb temperature 1% in degrees C */
+  double coolingMeanCoincidentWetBulb1() const;
+  /** Returns the cooling dry bulb temperature 2% in degrees C */
+  double coolingDryBulb2() const;
+  /** Returns the cooling mean coincident wet bulb temperature 2% in degrees C */
+  double coolingMeanCoincidentWetBulb2() const;
+  /** Returns the cooling evaporation wet bulb temperature 0.4% in degrees C */
+  double coolingEvaporationWetBulb0pt4() const;
+  /** Returns the cooling evaporation mean coincident dry bulb temperature 0.4% in degrees C */
+  double coolingEvaporationMeanCoincidentDryBulb0pt4() const;
+  /** Returns the cooling evaporation wet bulb temperature 1% in degrees C */
+  double coolingEvaporationWetBulb1() const;
+  /** Returns the cooling evaporation mean coincident dry bulb temperature 1% in degrees C */
+  double coolingEvaporationMeanCoincidentDryBulb1() const;
+  /** Returns the cooling evaporation wet bulb temperature 2% in degrees C */
+  double coolingEvaporationWetBulb2() const;
+  /** Returns the cooling evaporation mean coincident dry bulb temperature 2% in degrees C */
+  double coolingEvaporationMeanCoincidentDryBulb2() const;
+  /** Returns the cooling mean coincident wind speed 0.4% in m/s */
+  double coolingMeanCoincidentWindSpeed0pt4() const;
+  /** Returns the cooling prevailing coincident wind direction 0.4% in degrees */
+  int coolingPrevailingCoincidentWindDirection0pt4() const;
+  /** Returns the cooling dehumidification dew point temperature 0.4% in degrees C */
+  double coolingDehumidificationDewPoint0pt4() const;
+  /** Returns the cooling dehumidification humidity ratio 0.4% in g of moisture per kg of dry air */
+  double coolingDehumidificationHumidityRatio0pt4() const;
+  /** Returns the cooling dehumidification mean coincident dry bulb temperature 0.4% in degrees C */
+  double coolingDehumidificationMeanCoincidentDryBulb0pt4() const;
+  /** Returns the cooling dehumidification dew point temperature 1% in degrees C */
+  double coolingDehumidificationDewPoint1() const;
+  /** Returns the cooling dehumidification humidity ratio 1% in g of moisture per kg of dry air */
+  double coolingDehumidificationHumidityRatio1() const;
+  /** Returns the cooling dehumidification mean coincident dry bulb temperature 1% in degrees C */
+  double coolingDehumidificationMeanCoincidentDryBulb1() const;
+  /** Returns the cooling dehumidification dew point temperature 2% in degrees C */
+  double coolingDehumidificationDewPoint2() const;
+  /** Returns the cooling dehumidification humidity ratio 2% in g of moisture per kg of dry air */
+  double coolingDehumidificationHumidityRatio2() const;
+  /** Returns the cooling dehumidification mean coincident dry bulb temperature 2% in degrees C */
+  double coolingDehumidificationMeanCoincidentDryBulb2() const;
+  /** Returns the cooling enthalpy 0.4% in kJ/kg */
+  double coolingEnthalpy0pt4() const;
+  /** Returns the cooling enthalpy mean coincident dry bulb temperature 0.4% in degrees C */
+  double coolingEnthalpyMeanCoincidentDryBulb0pt4() const;
+  /** Returns the cooling enthalpy 1% in kJ/kg */
+  double coolingEnthalpy1() const;
+  /** Returns the cooling enthalpy mean coincident dry bulb temperature 1% in degrees C */
+  double coolingEnthalpyMeanCoincidentDryBulb1() const;
+  /** Returns the cooling enthalpy 2% in kJ/kg */
+  double coolingEnthalpy2() const;
+  /** Returns the cooling enthalpy mean coincident dry bulb temperature 2% in degrees C */
+  double coolingEnthalpyMeanCoincidentDryBulb2() const;
+  /** Returns the number of cooling hours between 8am and 4pm with dry bulb temperature between 12.8 and 20.6 degrees C */
+  int coolingHours8To4AndDryBulb12pt8To20pt6() const;
+  /** Returns the extreme wind speed 1% in m/s */
+  double extremeWindSpeed1() const;
+  /** Returns the extreme wind speed 2.5% in m/s */
+  double extremeWindSpeed2pt5() const;
+  /** Returns the extreme wind speed 5% in m/s */
+  double extremeWindSpeed5() const;
+  /** Returns the extreme maximum wet bulb temperature in degrees C */
+  double extremeMaxWetBulb() const;
+  /** Returns the extreme mean minimum dry bulb temperature in degrees C */
+  double extremeMeanMinDryBulb() const;
+  /** Returns the extreme mean maximum dry bulb temperature in degrees C */
+  double extremeMeanMaxDryBulb() const;
+  /** Returns the extreme standard deviation minimum dry bulb temperature in degrees C */
+  double extremeStdDevMinDryBulb() const;
+  /** Returns the extreme standard deviation maximum dry bulb temperature in degrees C */
+  double extremeStdDevMaxDryBulb() const;
+  /** Returns the extreme n=5 years minimum dry bulb temperature in degrees C */
+  double extremeN5YearsMinDryBulb() const;
+  /** Returns the extreme n=5 years maximum dry bulb temperature in degrees C */
+  double extremeN5YearsMaxDryBulb() const;
+  /** Returns the extreme n=10 years minimum dry bulb temperature in degrees C */
+  double extremeN10YearsMinDryBulb() const;
+  /** Returns the extreme n=10 years maximum dry bulb temperature in degrees C */
+  double extremeN10YearsMaxDryBulb() const;
+  /** Returns the extreme n=20 years minimum dry bulb temperature in degrees C */
+  double extremeN20YearsMinDryBulb() const;
+  /** Returns the extreme n=20 years maximum dry bulb temperature in degrees C */
+  double extremeN20YearsMaxDryBulb() const;
+  /** Returns the extreme n=50 years minimum dry bulb temperature in degrees C */
+  double extremeN50YearsMinDryBulb() const;
+  /** Returns the extreme n=50 years maximum dry bulb temperature in degrees C */
+  double extremeN50YearsMaxDryBulb() const;
+
+private:
+  // Setters
+  void setTitleOfDesignCondition(std::string titleOfDesignCondition);
+  bool setHeatingColdestMonth(const std::string &heatingColdestMonth);
+  void setHeatingColdestMonth(int heatingColdestMonth);
+  bool setHeatingDryBulb99pt6(const std::string &heatingDryBulb99pt6);
+  void setHeatingDryBulb99pt6(double heatingDryBulb99pt6);
+  bool setHeatingDryBulb99(const std::string &heatingDryBulb99);
+  void setHeatingDryBulb99(double heatingDryBulb99);
+  bool setHeatingHumidificationDewPoint99pt6(const std::string &heatingHumidificationDewPoint99pt6);
+  void setHeatingHumidificationDewPoint99pt6(double heatingHumidificationDewPoint99pt6);
+  bool setHeatingHumidificationHumidityRatio99pt6(const std::string &heatingHumidificationHumidityRatio99pt6);
+  void setHeatingHumidificationHumidityRatio99pt6(double heatingHumidificationHumidityRatio99pt6);
+  bool setHeatingHumidificationMeanCoincidentDryBulb99pt6(const std::string &heatingHumidificationMeanCoincidentDryBulb99pt6);
+  void setHeatingHumidificationMeanCoincidentDryBulb99pt6(double heatingHumidificationMeanCoincidentDryBulb99pt6);
+  bool setHeatingHumidificationDewPoint99(const std::string &heatingHumidificationDewPoint99);
+  void setHeatingHumidificationDewPoint99(double heatingHumidificationDewPoint99);
+  bool setHeatingHumidificationHumidityRatio99(const std::string &heatingHumidificationHumidityRatio99);
+  void setHeatingHumidificationHumidityRatio99(double heatingHumidificationHumidityRatio99);
+  bool setHeatingHumidificationMeanCoincidentDryBulb99(const std::string &heatingHumidificationMeanCoincidentDryBulb99);
+  void setHeatingHumidificationMeanCoincidentDryBulb99(double heatingHumidificationMeanCoincidentDryBulb99);
+  bool setHeatingColdestMonthWindSpeed0pt4(const std::string &heatingColdestMonthWindSpeed0pt4);
+  void setHeatingColdestMonthWindSpeed0pt4(double heatingColdestMonthWindSpeed0pt4);
+  bool setHeatingColdestMonthMeanCoincidentDryBulb0pt4(const std::string &heatingColdestMonthMeanCoincidentDryBulb0pt4);
+  void setHeatingColdestMonthMeanCoincidentDryBulb0pt4(double heatingColdestMonthMeanCoincidentDryBulb0pt4);
+  bool setHeatingColdestMonthWindSpeed1(const std::string &heatingColdestMonthWindSpeed1);
+  void setHeatingColdestMonthWindSpeed1(double heatingColdestMonthWindSpeed1);
+  bool setHeatingColdestMonthMeanCoincidentDryBulb1(const std::string &heatingColdestMonthMeanCoincidentDryBulb1);
+  void setHeatingColdestMonthMeanCoincidentDryBulb1(double heatingColdestMonthMeanCoincidentDryBulb1);
+  bool setHeatingMeanCoincidentWindSpeed99pt6(const std::string &heatingMeanCoincidentWindSpeed99pt6);
+  void setHeatingMeanCoincidentWindSpeed99pt6(double heatingMeanCoincidentWindSpeed99pt6);
+  bool setHeatingPrevailingCoincidentWindDirection99pt6(const std::string &heatingPrevailingCoincidentWindDirection99pt6);
+  void setHeatingPrevailingCoincidentWindDirection99pt6(int heatingPrevailingCoincidentWindDirection99pt6);
+  bool setCoolingHottestMonth(const std::string &coolingHottestMonth);
+  void setCoolingHottestMonth(int coolingHottestMonth);
+  bool setCoolingDryBulbRange(const std::string &coolingDryBulbRange);
+  void setCoolingDryBulbRange(double coolingDryBulbRange);
+  bool setCoolingDryBulb0pt4(const std::string &coolingDryBulb0pt4);
+  void setCoolingDryBulb0pt4(double coolingDryBulb0pt4);
+  bool setCoolingMeanCoincidentWetBulb0pt4(const std::string &coolingMeanCoincidentWetBulb0pt4);
+  void setCoolingMeanCoincidentWetBulb0pt4(double coolingMeanCoincidentWetBulb0pt4);
+  bool setCoolingDryBulb1(const std::string &coolingDryBulb1);
+  void setCoolingDryBulb1(double coolingDryBulb1);
+  bool setCoolingMeanCoincidentWetBulb1(const std::string &coolingMeanCoincidentWetBulb1);
+  void setCoolingMeanCoincidentWetBulb1(double coolingMeanCoincidentWetBulb1);
+  bool setCoolingDryBulb2(const std::string &coolingDryBulb2);
+  void setCoolingDryBulb2(double coolingDryBulb2);
+  bool setCoolingMeanCoincidentWetBulb2(const std::string &coolingMeanCoincidentWetBulb2);
+  void setCoolingMeanCoincidentWetBulb2(double coolingMeanCoincidentWetBulb2);
+  bool setCoolingEvaporationWetBulb0pt4(const std::string &coolingEvaporationWetBulb0pt4);
+  void setCoolingEvaporationWetBulb0pt4(double coolingEvaporationWetBulb0pt4);
+  bool setCoolingEvaporationMeanCoincidentDryBulb0pt4(const std::string &coolingEvaporationMeanCoincidentDryBulb0pt4);
+  void setCoolingEvaporationMeanCoincidentDryBulb0pt4(double coolingEvaporationMeanCoincidentDryBulb0pt4);
+  bool setCoolingEvaporationWetBulb1(const std::string &coolingEvaporationWetBulb1);
+  void setCoolingEvaporationWetBulb1(double coolingEvaporationWetBulb1);
+  bool setCoolingEvaporationMeanCoincidentDryBulb1(const std::string &coolingEvaporationMeanCoincidentDryBulb1);
+  void setCoolingEvaporationMeanCoincidentDryBulb1(double coolingEvaporationMeanCoincidentDryBulb1);
+  bool setCoolingEvaporationWetBulb2(const std::string &coolingEvaporationWetBulb2);
+  void setCoolingEvaporationWetBulb2(double coolingEvaporationWetBulb2);
+  bool setCoolingEvaporationMeanCoincidentDryBulb2(const std::string &coolingEvaporationMeanCoincidentDryBulb2);
+  void setCoolingEvaporationMeanCoincidentDryBulb2(double coolingEvaporationMeanCoincidentDryBulb2);
+  bool setCoolingMeanCoincidentWindSpeed0pt4(const std::string &coolingMeanCoincidentWindSpeed0pt4);
+  void setCoolingMeanCoincidentWindSpeed0pt4(double coolingMeanCoincidentWindSpeed0pt4);
+  bool setCoolingPrevailingCoincidentWindDirection0pt4(const std::string &coolingPrevailingCoincidentWindDirection0pt4);
+  void setCoolingPrevailingCoincidentWindDirection0pt4(int coolingPrevailingCoincidentWindDirection0pt4);
+  bool setCoolingDehumidificationDewPoint0pt4(const std::string &coolingDehumidificationDewPoint0pt4);
+  void setCoolingDehumidificationDewPoint0pt4(double coolingDehumidificationDewPoint0pt4);
+  bool setCoolingDehumidificationHumidityRatio0pt4(const std::string &coolingDehumidificationHumidityRatio0pt4);
+  void setCoolingDehumidificationHumidityRatio0pt4(double coolingDehumidificationHumidityRatio0pt4);
+  bool setCoolingDehumidificationMeanCoincidentDryBulb0pt4(const std::string &coolingDehumidificationMeanCoincidentDryBulb0pt4);
+  void setCoolingDehumidificationMeanCoincidentDryBulb0pt4(double coolingDehumidificationMeanCoincidentDryBulb0pt4);
+  bool setCoolingDehumidificationDewPoint1(const std::string &coolingDehumidificationDewPoint1);
+  void setCoolingDehumidificationDewPoint1(double coolingDehumidificationDewPoint1);
+  bool setCoolingDehumidificationHumidityRatio1(const std::string &coolingDehumidificationHumidityRatio1);
+  void setCoolingDehumidificationHumidityRatio1(double coolingDehumidificationHumidityRatio1);
+  bool setCoolingDehumidificationMeanCoincidentDryBulb1(const std::string &coolingDehumidificationMeanCoincidentDryBulb1);
+  void setCoolingDehumidificationMeanCoincidentDryBulb1(double coolingDehumidificationMeanCoincidentDryBulb1);
+  bool setCoolingDehumidificationDewPoint2(const std::string &coolingDehumidificationDewPoint2);
+  void setCoolingDehumidificationDewPoint2(double coolingDehumidificationDewPoint2);
+  bool setCoolingDehumidificationHumidityRatio2(const std::string &coolingDehumidificationHumidityRatio2);
+  void setCoolingDehumidificationHumidityRatio2(double coolingDehumidificationHumidityRatio2);
+  bool setCoolingDehumidificationMeanCoincidentDryBulb2(const std::string &coolingDehumidificationMeanCoincidentDryBulb2);
+  void setCoolingDehumidificationMeanCoincidentDryBulb2(double coolingDehumidificationMeanCoincidentDryBulb2);
+  bool setCoolingEnthalpy0pt4(const std::string &coolingEnthalpy0pt4);
+  void setCoolingEnthalpy0pt4(double coolingEnthalpy0pt4);
+  bool setCoolingEnthalpyMeanCoincidentDryBulb0pt4(const std::string &coolingEnthalpyMeanCoincidentDryBulb0pt4);
+  void setCoolingEnthalpyMeanCoincidentDryBulb0pt4(double coolingEnthalpyMeanCoincidentDryBulb0pt4);
+  bool setCoolingEnthalpy1(const std::string &coolingEnthalpy1);
+  void setCoolingEnthalpy1(double coolingEnthalpy1);
+  bool setCoolingEnthalpyMeanCoincidentDryBulb1(const std::string &coolingEnthalpyMeanCoincidentDryBulb1);
+  void setCoolingEnthalpyMeanCoincidentDryBulb1(double coolingEnthalpyMeanCoincidentDryBulb1);
+  bool setCoolingEnthalpy2(const std::string &coolingEnthalpy2);
+  void setCoolingEnthalpy2(double coolingEnthalpy2);
+  bool setCoolingEnthalpyMeanCoincidentDryBulb2(const std::string &coolingEnthalpyMeanCoincidentDryBulb2);
+  void setCoolingEnthalpyMeanCoincidentDryBulb2(double coolingEnthalpyMeanCoincidentDryBulb2);
+  bool setCoolingHours8To4AndDryBulb12pt8To20pt6(const std::string &coolingHours8To4AndDryBulb12pt8To20pt6);
+  void setCoolingHours8To4AndDryBulb12pt8To20pt6(int coolingHours8To4AndDryBulb12pt8To20pt6);
+  bool setExtremeWindSpeed1(const std::string &extremeWindSpeed1);
+  void setExtremeWindSpeed1(double extremeWindSpeed1);
+  bool setExtremeWindSpeed2pt5(const std::string &extremeWindSpeed2pt5);
+  void setExtremeWindSpeed2pt5(double extremeWindSpeed2pt5);
+  bool setExtremeWindSpeed5(const std::string &extremeWindSpeed5);
+  void setExtremeWindSpeed5(double extremeWindSpeed5);
+  bool setExtremeMaxWetBulb(const std::string &extremeMaxWetBulb);
+  void setExtremeMaxWetBulb(double extremeMaxWetBulb);
+  bool setExtremeMeanMinDryBulb(const std::string &extremeMeanMinDryBulb);
+  void setExtremeMeanMinDryBulb(double extremeMeanMinDryBulb);
+  bool setExtremeMeanMaxDryBulb(const std::string &extremeMeanMaxDryBulb);
+  void setExtremeMeanMaxDryBulb(double extremeMeanMaxDryBulb);
+  bool setExtremeStdDevMinDryBulb(const std::string &extremeStdDevMinDryBulb);
+  void setExtremeStdDevMinDryBulb(double extremeStdDevMinDryBulb);
+  bool setExtremeStdDevMaxDryBulb(const std::string &extremeStdDevMaxDryBulb);
+  void setExtremeStdDevMaxDryBulb(double extremeStdDevMaxDryBulb);
+  bool setExtremeN5YearsMinDryBulb(const std::string &extremeN5YearsMinDryBulb);
+  void setExtremeN5YearsMinDryBulb(double extremeN5YearsMinDryBulb);
+  bool setExtremeN5YearsMaxDryBulb(const std::string &extremeN5YearsMaxDryBulb);
+  void setExtremeN5YearsMaxDryBulb(double extremeN5YearsMaxDryBulb);
+  bool setExtremeN10YearsMinDryBulb(const std::string &extremeN10YearsMinDryBulb);
+  void setExtremeN10YearsMinDryBulb(double extremeN10YearsMinDryBulb);
+  bool setExtremeN10YearsMaxDryBulb(const std::string &extremeN10YearsMaxDryBulb);
+  void setExtremeN10YearsMaxDryBulb(double extremeN10YearsMaxDryBulb);
+  bool setExtremeN20YearsMinDryBulb(const std::string &extremeN20YearsMinDryBulb);
+  void setExtremeN20YearsMinDryBulb(double extremeN20YearsMinDryBulb);
+  bool setExtremeN20YearsMaxDryBulb(const std::string &extremeN20YearsMaxDryBulb);
+  void setExtremeN20YearsMaxDryBulb(double extremeN20YearsMaxDryBulb);
+  bool setExtremeN50YearsMinDryBulb(const std::string &extremeN50YearsMinDryBulb);
+  void setExtremeN50YearsMinDryBulb(double extremeN50YearsMinDryBulb);
+  bool setExtremeN50YearsMaxDryBulb(const std::string &extremeN50YearsMaxDryBulb);
+  void setExtremeN50YearsMaxDryBulb(double extremeN50YearsMaxDryBulb);
+
+  std::string m_titleOfDesignCondition;
+  int m_heatingColdestMonth;
+  double m_heatingDryBulb99pt6;
+  double m_heatingDryBulb99;
+  double m_heatingHumidificationDewPoint99pt6;
+  double m_heatingHumidificationHumidityRatio99pt6;
+  double m_heatingHumidificationMeanCoincidentDryBulb99pt6;
+  double m_heatingHumidificationDewPoint99;
+  double m_heatingHumidificationHumidityRatio99;
+  double m_heatingHumidificationMeanCoincidentDryBulb99;
+  double m_heatingColdestMonthWindSpeed0pt4;
+  double m_heatingColdestMonthMeanCoincidentDryBulb0pt4;
+  double m_heatingColdestMonthWindSpeed1;
+  double m_heatingColdestMonthMeanCoincidentDryBulb1;
+  double m_heatingMeanCoincidentWindSpeed99pt6;
+  int m_heatingPrevailingCoincidentWindDirection99pt6;
+  int m_coolingHottestMonth;
+  double m_coolingDryBulbRange;
+  double m_coolingDryBulb0pt4;
+  double m_coolingMeanCoincidentWetBulb0pt4;
+  double m_coolingDryBulb1;
+  double m_coolingMeanCoincidentWetBulb1;
+  double m_coolingDryBulb2;
+  double m_coolingMeanCoincidentWetBulb2;
+  double m_coolingEvaporationWetBulb0pt4;
+  double m_coolingEvaporationMeanCoincidentDryBulb0pt4;
+  double m_coolingEvaporationWetBulb1;
+  double m_coolingEvaporationMeanCoincidentDryBulb1;
+  double m_coolingEvaporationWetBulb2;
+  double m_coolingEvaporationMeanCoincidentDryBulb2;
+  double m_coolingMeanCoincidentWindSpeed0pt4;
+  int m_coolingPrevailingCoincidentWindDirection0pt4;
+  double m_coolingDehumidificationDewPoint0pt4;
+  double m_coolingDehumidificationHumidityRatio0pt4;
+  double m_coolingDehumidificationMeanCoincidentDryBulb0pt4;
+  double m_coolingDehumidificationDewPoint1;
+  double m_coolingDehumidificationHumidityRatio1;
+  double m_coolingDehumidificationMeanCoincidentDryBulb1;
+  double m_coolingDehumidificationDewPoint2;
+  double m_coolingDehumidificationHumidityRatio2;
+  double m_coolingDehumidificationMeanCoincidentDryBulb2;
+  double m_coolingEnthalpy0pt4;
+  double m_coolingEnthalpyMeanCoincidentDryBulb0pt4;
+  double m_coolingEnthalpy1;
+  double m_coolingEnthalpyMeanCoincidentDryBulb1;
+  double m_coolingEnthalpy2;
+  double m_coolingEnthalpyMeanCoincidentDryBulb2;
+  int m_coolingHours8To4AndDryBulb12pt8To20pt6;
+  double m_extremeWindSpeed1;
+  double m_extremeWindSpeed2pt5;
+  double m_extremeWindSpeed5;
+  double m_extremeMaxWetBulb;
+  double m_extremeMeanMinDryBulb;
+  double m_extremeMeanMaxDryBulb;
+  double m_extremeStdDevMinDryBulb;
+  double m_extremeStdDevMaxDryBulb;
+  double m_extremeN5YearsMinDryBulb;
+  double m_extremeN5YearsMaxDryBulb;
+  double m_extremeN10YearsMinDryBulb;
+  double m_extremeN10YearsMaxDryBulb;
+  double m_extremeN20YearsMinDryBulb;
+  double m_extremeN20YearsMaxDryBulb;
+  double m_extremeN50YearsMinDryBulb;
+  double m_extremeN50YearsMaxDryBulb;
+};
+
 /** EpwFile parses a weather file in EPW format.  Later it may provide
  *   methods for writing and converting other weather files to EPW format.
  */
@@ -477,6 +917,9 @@ public:
   /// get the weather data
   std::vector<EpwDataPoint> data();
 
+  /// get the design conditions
+  std::vector<EpwDesignCondition> designConditions();
+
   /// get a time series of a particular weather field
   // This will probably need to include the period at some point, but for now just dump everything into a time series
   boost::optional<TimeSeries> getTimeSeries(const std::string &field);
@@ -497,6 +940,7 @@ private:
   EpwFile();
   bool parse(std::istream& is, bool storeData=false);
   bool parseLocation(const std::string& line);
+  bool parseDesignConditions(const std::string& line);
   bool parseDataPeriod(const std::string& line);
 
   // configure logging
@@ -520,6 +964,7 @@ private:
   boost::optional<int> m_startDateActualYear;
   boost::optional<int> m_endDateActualYear;
   std::vector<EpwDataPoint> m_data;
+  std::vector<EpwDesignCondition> m_designs;
 
   bool m_isActual;
 

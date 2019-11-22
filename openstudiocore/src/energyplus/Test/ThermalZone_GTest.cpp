@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,10 +51,12 @@
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/DefaultScheduleSet.hpp"
 #include "../../model/DaylightingControl.hpp"
+#include "../../model/FanZoneExhaust.hpp"
 
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
+#include <utilities/idd/ZoneHVAC_EquipmentList_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -772,5 +774,44 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_Daylighting)
 
 }
 
+TEST_F(EnergyPlusFixture,ForwardTranslator_LoadDistributionScheme)
+{
+  // Create a model with a space and thermalZone
+  Model model;
 
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
 
+  SpaceType spaceType(model);
+  spaceType.setLightingPowerPerFloorArea(1);
+
+  ThermalZone zone(model);
+
+  Space space1(model);
+  space1.setThermalZone(zone);
+  space1.setSpaceType(spaceType);
+
+  Surface surface1(points, model);
+  surface1.setSpace(space1);
+
+  // For the ZoneHVAC:EquipmentList to be created, we need to add at least one equipment
+  FanZoneExhaust fan(model);
+  fan.addToThermalZone(zone);
+
+  // The field we're actually testing. Set it to the non-default value (which is "SequentialLoad")
+  zone.setLoadDistributionScheme("UniformLoad");
+
+  ForwardTranslator trans;
+  Workspace workspace = trans.translateModel(model);
+
+  // We verify that we end up with the right field in the IDF
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+  WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::ZoneHVAC_EquipmentList);
+  EXPECT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_eqlist(idfObjs[0]);
+ 
+  EXPECT_EQ("UniformLoad", idf_eqlist.getString(ZoneHVAC_EquipmentListFields::LoadDistributionScheme).get());
+}

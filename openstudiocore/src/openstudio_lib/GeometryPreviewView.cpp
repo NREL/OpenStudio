@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,7 +44,6 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QFile>
-#include <QWebEnginePage>
 #include <QWebEngineSettings>
 #include <QWebEngineScriptCollection>
 #include <QtConcurrent>
@@ -118,6 +117,9 @@ PreviewWebView::PreviewWebView(bool isIP, const model::Model& model, QWidget *t_
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::LocalContentCanAccessRemoteUrls, true);
   m_view->settings()->setAttribute(QWebEngineSettings::WebAttribute::SpatialNavigationEnabled, true);
 
+  m_page = new OSWebEnginePage(this);
+  m_view->setPage(m_page); // note, view does not take ownership of page
+
   connect(m_view, &QWebEngineView::loadFinished, this, &PreviewWebView::onLoadFinished);
   //connect(m_view, &QWebEngineView::loadProgress, this, &PreviewWebView::onLoadProgress);
   //connect(m_view, &QWebEngineView::loadStarted, this, &PreviewWebView::onLoadStarted);
@@ -138,6 +140,7 @@ PreviewWebView::PreviewWebView(bool isIP, const model::Model& model, QWidget *t_
 PreviewWebView::~PreviewWebView()
 {
   delete m_view;
+  delete m_page;
 }
 
 void PreviewWebView::refreshClicked()

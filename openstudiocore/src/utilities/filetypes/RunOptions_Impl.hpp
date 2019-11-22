@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,9 +57,21 @@ namespace detail {
     bool setDebug(bool debug);
     void resetDebug();
 
+    bool fast() const;
+    bool setFast(bool fast);
+    void resetFast();
+
     bool preserveRunDir() const;
     bool setPreserveRunDir(bool preserve);
     void resetPreserveRunDir();
+
+    bool skipExpandObjects() const;
+    bool setSkipExpandObjects(bool skip);
+    void resetSkipExpandObjects();
+
+    bool skipEnergyPlusPreprocess() const;
+    bool setSkipEnergyPlusPreprocess(bool skip);
+    void resetSkipEnergyPlusPreprocess();
 
     bool cleanup() const;
     bool setCleanup(bool cleanup);
@@ -82,7 +94,10 @@ namespace detail {
     REGISTER_LOGGER("openstudio.RunOptions");
 
     bool m_debug;
+    bool m_fast;
     bool m_preserveRunDir;
+    bool m_skipExpandObjects;
+    bool m_skipEnergyPlusPreprocess;
     bool m_cleanup;
     boost::optional<CustomOutputAdapter> m_customOutputAdapter;
   };

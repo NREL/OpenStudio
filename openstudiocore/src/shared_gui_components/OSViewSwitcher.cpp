@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,6 +42,7 @@ OSViewSwitcher::OSViewSwitcher(QWidget * parent)
   : QWidget(parent),
     m_view(nullptr)
 {
+  // This is weird. A QWidget with a QVBoxLayout that has a QStackedWidget (which is a convenience Widget that exposes a QStackedLayout)
   auto layout = new QVBoxLayout();
   layout->setContentsMargins(0,0,0,0);
   setLayout(layout);
@@ -62,6 +63,7 @@ void OSViewSwitcher::setView(QWidget * view)
   if (!view) {
     //return;
   }
+  // If the QStackWidget already has a widget, we remove it
   if( QWidget * widget = m_stack->currentWidget() )
   {
     m_stack->removeWidget( widget );
@@ -71,8 +73,16 @@ void OSViewSwitcher::setView(QWidget * view)
   }
   OS_ASSERT(m_stack->count() == 0);
 
+  // Store the view
   m_view = view;
 
+  // TODO: this line triggers all of the warnings
+  // Warning: QLayout: Attempting to add QLayout "" to openstudio::OSGridView "", which already has a layout ((null):0, (null))
+  // qDebug() << m_view << "\n\n";
+  // When this happens: m_view => openstudio::SpaceTypesTabView(0x7560610, name="BlueGradientWidget"
+
+  // The QStackedWidget is empty before this function is called, so currentWidget() becomes the current widget.
+  // Ownership of widget is passed on to the QStackedWidget.
   m_stack->addWidget(m_view);
 }
 

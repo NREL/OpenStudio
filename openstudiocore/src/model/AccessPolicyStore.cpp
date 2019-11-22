@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -286,6 +286,11 @@ namespace openstudio
     {
     }
 
+    AccessPolicyStore::~AccessPolicyStore()
+    {
+      clear();
+    }
+
     AccessPolicyStore& AccessPolicyStore::Instance()
     {
       if(!s_instance)
@@ -301,10 +306,8 @@ namespace openstudio
       AccessParser ap;
       xmlReader.setContentHandler( &ap );
 
-      //JMT 2016-03-22 this looks like a memory leak to me. I don't see an assigned owner
-      //               in Qt nor a delete
-      auto source = new QXmlInputSource( );
-      source->setData( data );
+      QXmlInputSource source;
+      source.setData( data );
       //LER:: add error handler
       if(!xmlReader.parse(source))
       {
@@ -345,6 +348,16 @@ namespace openstudio
 
       return nullptr;
 
+    }
+
+    void AccessPolicyStore::clear()
+    {
+      for (auto& policyPair : m_policyMap) {
+        if (policyPair.second) {
+          delete policyPair.second;
+        }
+      }
+      m_policyMap.clear();
     }
 
   }//model

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,6 +54,7 @@ class PortList;
 class ZoneMixing;
 class ZoneHVACEquipmentList;
 class AirflowNetworkZone;
+class ZonePropertyUserViewFactorsBySurfaceName;
 
 namespace detail {
 
@@ -150,6 +151,8 @@ namespace detail {
 
     virtual std::vector<std::string> emsInternalVariableNames() const override;
 
+    ZonePropertyUserViewFactorsBySurfaceName getZonePropertyUserViewFactorsBySurfaceName() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -222,13 +225,15 @@ namespace detail {
 
     //@}
 
-    unsigned returnAirPort();
+    unsigned returnAirPort() const;
 
-    unsigned zoneAirPort();
+    unsigned zoneAirPort() const;
 
-    OptionalModelObject returnAirModelObject();
+    OptionalModelObject returnAirModelObject() const;
 
-    Node zoneAirNode();
+    std::vector<ModelObject> returnAirModelObjects() const;
+
+    Node zoneAirNode() const;
 
     boost::optional<DaylightingControl> primaryDaylightingControl() const;
 
@@ -373,23 +378,50 @@ namespace detail {
 
     bool addToNode(Node & node) override;
 
+    bool addToNodeImpl(Node & node);
+
+    bool multiAddToNode(Node & node);
+
     PortList inletPortList() const;
 
     PortList exhaustPortList() const;
+
+    PortList returnPortList() const;
+
+
+    ZoneHVACEquipmentList zoneHVACEquipmentList() const;
 
     bool addEquipment(const ModelObject & equipment);
 
     bool removeEquipment(const ModelObject & equipment);
 
+    std::string loadDistributionScheme() const;
+
+    bool setLoadDistributionScheme(std::string scheme);
+
     bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
 
-    bool setHeatingPriority(const ModelObject & euqipment, unsigned priority);
+    bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
 
-    std::vector<ModelObject> equipmentInHeatingOrder();
+    std::vector<ModelObject> equipmentInHeatingOrder() const;
 
-    std::vector<ModelObject> equipmentInCoolingOrder();
+    std::vector<ModelObject> equipmentInCoolingOrder() const;
 
-    ZoneHVACEquipmentList zoneHVACEquipmentList() const;
+    boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
+
+    boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
+
+    bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
+
+    bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
+
+    // Convenience methods
+    boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+    boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+
+    bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+    bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
+
 
     virtual ModelObject clone(Model model) const override;
 
@@ -402,18 +434,25 @@ namespace detail {
     bool setSupplyPlenum(const ThermalZone & plenumZone);
     bool setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex);
     void removeSupplyPlenum();
-    bool setReturnPlenum(const ThermalZone & plenumZone);
-    void removeReturnPlenum();
     void removeSupplyPlenum(unsigned branchIndex);
+    void removeSupplyPlenum(const AirLoopHVAC & airloop);
+    void removeSupplyPlenum(const AirLoopHVAC & airloop, unsigned branchIndex);
+    bool setReturnPlenum(const ThermalZone & plenumZone);
+    bool setReturnPlenum(const ThermalZone & plenumZone, AirLoopHVAC & airLoop);
+    void removeReturnPlenum();
+    void removeReturnPlenum(AirLoopHVAC & airLoop);
 
     std::vector<ZoneMixing> zoneMixing() const;
     std::vector<ZoneMixing> supplyZoneMixing() const;
     std::vector<ZoneMixing> exhaustZoneMixing() const;
 
     boost::optional<HVACComponent> airLoopHVACTerminal() const;
+    std::vector<HVACComponent> airLoopHVACTerminals() const;
 
     AirflowNetworkZone getAirflowNetworkZone();
     boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
+
+    std::vector<AirLoopHVAC> airLoopHVACs() const;
 
    protected:
 

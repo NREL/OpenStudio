@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -110,7 +110,7 @@ namespace detail{
       // The following node variable is also available for system nodes that are for “air”:
       // TODO: implement check? If no, make result non static and remove the result.empty() check
       "System Node Current Density Volume Flow Rate",
-      "Average, System Node Current Density"
+      "System Node Current Density"
 
       // The following node variables are “advanced” and normally used for debugging unusual cases:
       //"System Node Minimum Temperature",
@@ -137,12 +137,12 @@ namespace detail{
     return Node::iddObjectType();
   }
 
-  unsigned Node_Impl::inletPort()
+  unsigned Node_Impl::inletPort() const
   {
     return OS_NodeFields::InletPort;
   }
 
-  unsigned Node_Impl::outletPort()
+  unsigned Node_Impl::outletPort() const
   {
     return OS_NodeFields::OutletPort;
   }
@@ -439,7 +439,7 @@ namespace detail{
     std::vector<std::string> types;
     return types;
   }
-
+  
   AirflowNetworkDistributionNode Node_Impl::getAirflowNetworkDistributionNode()
   {
     boost::optional<AirflowNetworkDistributionNode> opt = airflowNetworkDistributionNode();

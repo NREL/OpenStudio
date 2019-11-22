@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,12 +31,16 @@
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../model/ZoneHVACEquipmentList.hpp"
 #include "../../model/ZoneHVACEquipmentList_Impl.hpp"
+#include "../../model/ZoneHVACComponent.hpp"
+#include "../../model/ZoneHVACComponent_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/RefrigerationAirChiller.hpp"
 #include "../../model/RefrigerationAirChiller_Impl.hpp"
 #include "../../model/ZoneVentilationDesignFlowRate.hpp"
 #include "../../model/ZoneVentilationDesignFlowRate_Impl.hpp"
+#include "../../model/AirLoopHVACReturnPlenum.hpp"
+#include "../../model/AirLoopHVACReturnPlenum_Impl.hpp"
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EquipmentList_FieldEnums.hxx>
@@ -138,6 +142,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
     idfObject.setName(name);
   }
 
+  // LoadDistributionScheme
+  {
+    auto scheme = modelObject.loadDistributionScheme();
+    idfObject.setString(ZoneHVAC_EquipmentListFields::LoadDistributionScheme,scheme);
+  }
+
   for( auto & elem : stdEquipment )
   {
     unsigned coolingPriority = coolingMap[elem];
@@ -151,8 +161,28 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
       eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentName,_equipment->name().get());
       eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentCoolingSequence,coolingPriority);
       eg.setUnsigned(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentHeatingorNoLoadSequence,heatingPriority);
+
+      // Only translate the Sequential Load Fractions if appropriate (model checks for Load Distribution = SequentialLoad, and has heating/cooling
+      // Priority that isn't zero)
+      if (boost::optional<Schedule> _schedule = modelObject.sequentialCoolingFractionSchedule(elem)) {
+        eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialCoolingFractionScheduleName, _schedule.get().name().get());
+      }
+
+      if (boost::optional<Schedule> _schedule = modelObject.sequentialHeatingFractionSchedule(elem)) {
+        eg.setString(ZoneHVAC_EquipmentListExtensibleFields::ZoneEquipmentSequentialHeatingFractionScheduleName, _schedule.get().name().get());
+      }
+
+    }
+
+    auto zoneHVAC = elem.optionalCast<ZoneHVACComponent>();
+    if ( zoneHVAC ) {
+      auto plenum = zoneHVAC->returnPlenum();
+      if ( plenum ) {
+        auto _plenum = translateAndMapModelObject(plenum.get());
+      }
     }
   }
+
 
   if (!airChillers.empty()) {
     // ZoneHVAC:RefrigerationChillerSet

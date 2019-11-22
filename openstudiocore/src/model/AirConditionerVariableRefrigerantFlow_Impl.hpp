@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,6 +62,9 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
                                              Model_Impl* model,
                                              bool keepHandle);
 
+  /** @name Virtual Methods */
+  //@{
+
   virtual ~AirConditionerVariableRefrigerantFlow_Impl() {}
 
   virtual const std::vector<std::string>& outputVariableNames() const override;
@@ -70,13 +73,37 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+  virtual unsigned inletPort() const override;
+
+  virtual unsigned outletPort() const override;
+
+  virtual ModelObject clone(Model model) const override;
+
+  virtual std::vector<openstudio::IdfObject> remove() override;
+
+  virtual bool addToNode(Node & node) override;
+
+  virtual bool removeFromLoop() override;
+
+  virtual std::vector<ModelObject> children() const override;
+
+  virtual void autosize() override;
+
+  virtual void applySizingValues() override;
+
+  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+  virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+  //@}
+
   Schedule availabilitySchedule() const;
 
-  boost::optional<double> ratedTotalCoolingCapacity() const;
+  boost::optional<double> grossRatedTotalCoolingCapacity() const;
 
-  bool isRatedTotalCoolingCapacityAutosized() const;
+  bool isGrossRatedTotalCoolingCapacityAutosized() const;
 
-  double ratedCoolingCOP() const;
+  double grossRatedCoolingCOP() const;
 
   double minimumOutdoorTemperatureinCoolingMode() const;
 
@@ -102,11 +129,11 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   boost::optional<Curve> coolingPartLoadFractionCorrelationCurve() const;
 
-  boost::optional<double> ratedTotalHeatingCapacity() const;
+  boost::optional<double> grossRatedHeatingCapacity() const;
 
-  bool isRatedTotalHeatingCapacityAutosized() const;
+  bool isGrossRatedHeatingCapacityAutosized() const;
 
-  double ratedTotalHeatingCapacitySizingRatio() const;
+  double ratedHeatingCapacitySizingRatio() const;
 
   double ratedHeatingCOP() const;
 
@@ -182,6 +209,12 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   double maximumOutdoorDrybulbTemperatureforDefrostOperation() const;
 
+  std::string condenserType() const;
+  bool setCondenserType(const std::string& condenserType);
+  bool isCondenserTypeDefaulted() const;
+  void resetCondenserType();
+
+
   boost::optional<double> waterCondenserVolumeFlowRate() const;
 
   bool isWaterCondenserVolumeFlowRateAutosized() const;
@@ -234,11 +267,11 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setRatedTotalCoolingCapacity(boost::optional<double> ratedTotalCoolingCapacity);
+  bool setGrossRatedTotalCoolingCapacity(boost::optional<double> grossRatedTotalCoolingCapacity);
 
-  void autosizeRatedTotalCoolingCapacity();
+  void autosizeGrossRatedTotalCoolingCapacity();
 
-  bool setRatedCoolingCOP(double ratedCoolingCOP);
+  bool setGrossRatedCoolingCOP(double grossRatedCoolingCOP);
 
   bool setMinimumOutdoorTemperatureinCoolingMode(double minimumOutdoorTemperatureinCoolingMode);
 
@@ -284,11 +317,11 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   void resetCoolingPartLoadFractionCorrelationCurve();
 
-  bool setRatedTotalHeatingCapacity(boost::optional<double> ratedTotalHeatingCapacity);
+  bool setGrossRatedHeatingCapacity(boost::optional<double> grossRatedHeatingCapacity);
 
-  void autosizeRatedTotalHeatingCapacity();
+  void autosizeGrossRatedHeatingCapacity();
 
-  bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
+  bool setRatedHeatingCapacitySizingRatio(double ratedHeatingCapacitySizingRatio);
 
   bool setRatedHeatingCOP(double ratedHeatingCOP);
 
@@ -454,10 +487,6 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   bool setHeatRecoveryHeatingEnergyTimeConstant(double heatRecoveryHeatingEnergyTimeConstant);
 
-  unsigned inletPort() override;
-
-  unsigned outletPort() override;
-
   ModelObjectList vrfModelObjectList() const;
 
   bool setVRFModelObjectList(const ModelObjectList & modelObjectList);
@@ -470,17 +499,9 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 
   std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
 
-  ModelObject clone(Model model) const override;
+  boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const ;
 
-  std::vector<openstudio::IdfObject> remove() override;
-
-  bool addToNode(Node & node) override;
-
-  std::vector<ModelObject> children() const override;
-
-  boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
-
-  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+  boost::optional<double> autosizedGrossRatedHeatingCapacity() const ;
 
   boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
 
@@ -489,14 +510,6 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
   boost::optional<double> autosizedEvaporativeCondenserAirFlowRate() const ;
 
   boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const ;
-
-  virtual void autosize() override;
-
-  virtual void applySizingValues() override;
-
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
-
-  virtual std::vector<std::string> emsInternalVariableNames() const override;
 
  private:
 
@@ -510,4 +523,4 @@ class MODEL_API AirConditionerVariableRefrigerantFlow_Impl : public StraightComp
 } // model
 } // openstudio
 
-#endif // MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOW_IMPL_HPP
+#endif // MODEL_AIRCONDITIONERVARIABLEREFRIGERANTFLOW_IMPL_HPP

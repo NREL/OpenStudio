@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -478,6 +478,7 @@ void SchedulesView::showScheduleRule(model::ScheduleRule scheduleRule)
 void SchedulesView::onScheduleRuleRemoved(const Handle& handle)
 {
   // DLM: todo, show something else?
+  // Note JM 2018-08-20: Handled in SchedulesTabController::removeScheduleRule() instead
   showEmptyPage();
 }
 
@@ -1828,9 +1829,10 @@ ScheduleRuleView::ScheduleRuleView(bool isIP,
 
 void ScheduleRuleView::onRemoveClicked()
 {
-  std::cout << "ScheduleRuleView::onRemoveClicked: " << m_scheduleRule << std::endl;
+  // std::cout << "ScheduleRuleView::onRemoveClicked: " << m_scheduleRule << std::endl;
 
   //m_scheduleRule.remove();
+  // TODO: why is this calling the impl without doing anything?
   m_scheduleRule.getImpl<openstudio::model::detail::ScheduleRule_Impl>();
 
   emit removeScheduleRuleClicked(m_scheduleRule);

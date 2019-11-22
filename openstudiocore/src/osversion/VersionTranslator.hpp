@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,6 +38,9 @@
 #include "../utilities/idd/IddFile.hpp"
 #include "../utilities/idd/IddFileAndFactoryWrapper.hpp"
 
+#include "../utilities/idf/IdfObject.hpp"
+#include "../utilities/idd/IddObject.hpp"
+
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
@@ -45,6 +48,9 @@
 #include <boost/functional.hpp>
 
 #include <map>
+#include <istream>
+#include <string>
+#include <set>
 
 namespace openstudio {
   class ProgressBar;
@@ -53,6 +59,19 @@ namespace model {
   class Component;
 }
 namespace osversion {
+
+  /** Helper class meant to replace std::pair<IdfObject, IdfObject> that maps objects that have been significantly refactor (old, new) */
+  class RefactoredObjectData {
+   public:
+    RefactoredObjectData(const IdfObject& old, const IdfObject& newObject);
+
+    IdfObject oldObject() const;
+    IdfObject newObject() const;
+
+   private:
+    IdfObject m_oldObject;
+    IdfObject m_newObject;
+  };
 
 /** This class updates OpenStudio Models and Components to the latest version of OpenStudio. It
  *  must be maintained to keep everything working. The developer who is wrapping up the current
@@ -148,9 +167,9 @@ class OSVERSION_API VersionTranslator {
    *  version of OpenStudio. */
   std::vector<IdfObject> newObjects() const;
 
-  /** Returns an original object, new object pair for objects that have been significantly
+  /** Returns an (original object, new object) pair for objects that have been significantly
    *  refactored. */
-  std::vector< std::pair<IdfObject,IdfObject> > refactoredObjects() const;
+  std::vector<RefactoredObjectData> refactoredObjects() const;
 
   /** Returns true if loading newer versions is allowable. Defaults to true. */
   bool allowNewerVersions() const;
@@ -171,7 +190,7 @@ class OSVERSION_API VersionTranslator {
   std::map<VersionString, IdfFile> m_map;
   StringStreamLogSink m_logSink;
   std::vector<IdfObject> m_deprecated, m_untranslated, m_new;
-  std::vector< std::pair<IdfObject,IdfObject> > m_refactored;
+  std::vector<RefactoredObjectData> m_refactored;
   int m_nObjectsStart;
   int m_nObjectsFinalIdf;
   int m_nObjectsFinalModel;
@@ -223,6 +242,13 @@ class OSVERSION_API VersionTranslator {
   std::string update_2_3_0_to_2_3_1(const IdfFile& idf_2_3_0, const IddFileAndFactoryWrapper& idd_2_3_1);
   std::string update_2_4_1_to_2_4_2(const IdfFile& idf_2_4_1, const IddFileAndFactoryWrapper& idd_2_4_2);
   std::string update_2_4_3_to_2_5_0(const IdfFile& idf_2_4_3, const IddFileAndFactoryWrapper& idd_2_5_0);
+  std::string update_2_6_0_to_2_6_1(const IdfFile& idf_2_6_0, const IddFileAndFactoryWrapper& idd_2_6_1);
+  std::string update_2_6_1_to_2_6_2(const IdfFile& idf_2_6_1, const IddFileAndFactoryWrapper& idd_2_6_2);
+  std::string update_2_6_2_to_2_7_0(const IdfFile& idf_2_6_2, const IddFileAndFactoryWrapper& idd_2_7_0);
+  std::string update_2_7_0_to_2_7_1(const IdfFile& idf_2_7_0, const IddFileAndFactoryWrapper& idd_2_7_1);
+  std::string update_2_7_1_to_2_7_2(const IdfFile& idf_2_7_1, const IddFileAndFactoryWrapper& idd_2_7_2);
+  std::string update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, const IddFileAndFactoryWrapper& idd_2_9_0);
+  std::string update_2_9_0_to_2_9_1(const IdfFile& idf_2_9_0, const IddFileAndFactoryWrapper& idd_2_9_1);
 
   IdfObject updateUrlField_0_7_1_to_0_7_2(const IdfObject& object, unsigned index);
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,6 +40,8 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Foundation_Kiva_FieldEnums.hxx>
 
@@ -47,6 +49,35 @@
 
 namespace openstudio {
 namespace model {
+
+CustomBlock::CustomBlock(const Material& material, double depth, double xPosition, double zPosition)
+  : m_material(material), m_depth(depth), m_xPosition(xPosition), m_zPosition(zPosition) {
+    
+  if (m_depth < 0) {
+    LOG_AND_THROW("Unable to create custom block, depth of " << m_depth << " less than 0");
+  }
+}
+
+Material CustomBlock::material() const {
+  return m_material;
+}
+
+double CustomBlock::depth() const {
+  return m_depth;
+}
+
+double CustomBlock::xPosition() const {
+  return m_xPosition;
+}
+
+double CustomBlock::zPosition() const {
+  return m_zPosition;
+}
+
+std::ostream& operator<< (std::ostream& out, const openstudio::model::CustomBlock& customBlock) {
+  out << "material name=" << customBlock.material().name().get() << ", depth=" << customBlock.depth() << ", x position=" << customBlock.xPosition() << ", z position=" << customBlock.zPosition();
+  return out;
+}
 
 namespace detail {
 
@@ -80,6 +111,10 @@ namespace detail {
 
   IddObjectType FoundationKiva_Impl::iddObjectType() const {
     return FoundationKiva::iddObjectType();
+  }
+
+  boost::optional<double> FoundationKiva_Impl::initialIndoorAirTemperature() {
+    return getDouble(OS_Foundation_KivaFields::InitialIndoorAirTemperature);
   }
 
   boost::optional<Material> FoundationKiva_Impl::interiorHorizontalInsulationMaterial() const {
@@ -170,6 +205,12 @@ namespace detail {
 
   bool FoundationKiva_Impl::isFootingDepthDefaulted() const {
     return isEmpty(OS_Foundation_KivaFields::FootingDepth);
+  }
+
+  bool FoundationKiva_Impl::setInitialIndoorAirTemperature(double initialIndoorAirTemperature) {
+    bool result = setDouble(OS_Foundation_KivaFields::InitialIndoorAirTemperature, initialIndoorAirTemperature);
+    OS_ASSERT(result);
+    return result;
   }
 
   bool FoundationKiva_Impl::setInteriorHorizontalInsulationMaterial(const Material& material) {
@@ -309,6 +350,96 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectSources<Surface>(Surface::iddObjectType());
   }
 
+  unsigned int FoundationKiva_Impl::numberofCustomBlocks() const {
+    return numExtensibleGroups();
+  }
+  
+  bool FoundationKiva_Impl::addCustomBlock(const CustomBlock& customBlock) {
+    bool result;
+   
+    unsigned int num = numberofCustomBlocks();
+    // Max number of custom blocks is 10
+    if (num >= 10) {
+      LOG(Warn, briefDescription() << " already has 10 custom blocks which is the limit");
+      result = false;
+    } else {
+      // Push an extensible group
+      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      bool material = eg.setPointer(OS_Foundation_KivaExtensibleFields::CustomBlockMaterialName, customBlock.material().handle());
+      bool depth = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockDepth, customBlock.depth());
+      bool xPosition = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockXPosition, customBlock.xPosition());
+      bool zPosition = eg.setDouble(OS_Foundation_KivaExtensibleFields::CustomBlockZPosition, customBlock.zPosition());
+      if (material && depth && xPosition && zPosition) {
+        result = true;
+      } else {
+        // Something went wrong
+        // So erase the new extensible group
+        getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+        result = false;
+      }
+      result = true;
+    }    
+    return result;
+  }
+  
+  bool FoundationKiva_Impl::addCustomBlock(const Material& material, double depth, double xPosition, double zPosition) {
+    // Make a custom block, and then call the above function
+    CustomBlock customBlock(material, depth, xPosition, zPosition);
+    return addCustomBlock(customBlock);
+  }
+  
+  bool FoundationKiva_Impl::removeCustomBlock(unsigned groupIndex) {
+    bool result;
+    
+    unsigned int num = numberofCustomBlocks();
+    if (groupIndex < num) {
+      getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }
+  
+  void FoundationKiva_Impl::removeAllCustomBlocks() {
+    getObject<ModelObject>().clearExtensibleGroups();
+  }
+  
+  std::vector<CustomBlock> FoundationKiva_Impl::customBlocks() const {
+    std::vector<CustomBlock> result;
+    
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+    
+    for (const auto & group : groups) {
+      boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Foundation_KivaExtensibleFields::CustomBlockMaterialName);
+      boost::optional<Material> material = wo->optionalCast<Material>();
+      boost::optional<double> depth = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockDepth);
+      boost::optional<double> xPosition = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockXPosition);
+      boost::optional<double> zPosition = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Foundation_KivaExtensibleFields::CustomBlockZPosition);
+      
+      if (material && depth && xPosition && zPosition) {
+        CustomBlock customBlock(material.get(), depth.get(), xPosition.get(), zPosition.get());
+        result.push_back(customBlock);
+      }
+    }
+    
+    return result;
+  }
+  
+  bool FoundationKiva_Impl::addCustomBlocks(const std::vector<CustomBlock> &customBlocks) {
+    unsigned int num = numberofCustomBlocks();
+    if ((num + customBlocks.size()) > 10) {
+      LOG(Warn, briefDescription() << " would have more than the 10 maximum custom blocks");
+      return false;
+    } else {
+      for (const CustomBlock& customBlock : customBlocks) {
+        addCustomBlock(customBlock);
+      }
+      return true;
+    }
+    
+  }
+
 } // detail
 
 FoundationKiva::FoundationKiva(Model& model)
@@ -317,6 +448,10 @@ FoundationKiva::FoundationKiva(Model& model)
 
 IddObjectType FoundationKiva::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Foundation_Kiva);
+}
+
+boost::optional<double> FoundationKiva::initialIndoorAirTemperature() {
+  return getImpl<detail::FoundationKiva_Impl>()->initialIndoorAirTemperature();
 }
 
 boost::optional<Material> FoundationKiva::interiorHorizontalInsulationMaterial() const {
@@ -397,6 +532,10 @@ double FoundationKiva::footingDepth() const {
 
 bool FoundationKiva::isFootingDepthDefaulted() const {
   return getImpl<detail::FoundationKiva_Impl>()->isFootingDepthDefaulted();
+}
+
+bool FoundationKiva::setInitialIndoorAirTemperature(double initialIndoorAirTemperature) {
+  return getImpl<detail::FoundationKiva_Impl>()->setInitialIndoorAirTemperature(initialIndoorAirTemperature);
 }
 
 bool FoundationKiva::setInteriorHorizontalInsulationMaterial(const Material& material) {
@@ -505,6 +644,34 @@ void FoundationKiva::resetFootingDepth() {
 
 std::vector<Surface> FoundationKiva::surfaces() const {
   return getImpl<detail::FoundationKiva_Impl>()->surfaces();
+}
+
+unsigned int FoundationKiva::numberofCustomBlocks() const {
+  return getImpl<detail::FoundationKiva_Impl>()->numberofCustomBlocks();
+}
+
+bool FoundationKiva::addCustomBlock(const CustomBlock& customBlock) {
+  return getImpl<detail::FoundationKiva_Impl>()->addCustomBlock(customBlock);
+}
+
+bool FoundationKiva::addCustomBlock(const Material& material, double depth, double xPosition, double zPosition) {
+  return getImpl<detail::FoundationKiva_Impl>()->addCustomBlock(material, depth, xPosition, zPosition);
+}
+
+void FoundationKiva::removeCustomBlock(int groupIndex) {
+  getImpl<detail::FoundationKiva_Impl>()->removeCustomBlock(groupIndex);
+}
+
+void FoundationKiva::removeAllCustomBlocks() {
+  return getImpl<detail::FoundationKiva_Impl>()->removeAllCustomBlocks();
+}
+
+std::vector<CustomBlock> FoundationKiva::customBlocks() const {
+  return getImpl<detail::FoundationKiva_Impl>()->customBlocks();
+}
+
+bool FoundationKiva::addCustomBlocks(const std::vector<CustomBlock> &customBlocks) {
+  return getImpl<detail::FoundationKiva_Impl>()->addCustomBlocks(customBlocks);
 }
 
 /// @cond

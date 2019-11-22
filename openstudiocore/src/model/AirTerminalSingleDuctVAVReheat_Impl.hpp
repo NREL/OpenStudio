@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -73,9 +73,9 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const override;
 
-    virtual unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() override;
+    virtual unsigned outletPort() const override;
 
     virtual bool addToNode(Node & node) override;
 
@@ -101,13 +101,15 @@ namespace detail {
 
     bool setZoneMinimumAirFlowMethod( std::string value );
 
-    double constantMinimumAirFlowFraction();
-
+    boost::optional<double> constantMinimumAirFlowFraction() const;
+    bool isConstantMinimumAirFlowFractionAutosized() const;
     bool setConstantMinimumAirFlowFraction( double value );
+    void autosizeConstantMinimumAirFlowFraction();
 
-    double fixedMinimumAirFlowRate();
-
+    boost::optional<double> fixedMinimumAirFlowRate() const;
+    bool isFixedMinimumAirFlowRateAutosized() const;
     bool setFixedMinimumAirFlowRate( double value );
+    void autosizeFixedMinimumAirFlowRate();
 
     boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
 
@@ -163,20 +165,24 @@ namespace detail {
 
     bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+    boost::optional<double> autosizedMaximumAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumHotWaterOrSteamFlowRate() const ;
+    boost::optional<double> autosizedConstantMinimumAirFlowFraction() const;
 
-  boost::optional<double> autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const ;
+    boost::optional<double> autosizedFixedMinimumAirFlowRate() const;
 
-  boost::optional<double> autosizedMaximumFlowFractionDuringReheat() const ;
+    boost::optional<double> autosizedMaximumHotWaterOrSteamFlowRate() const;
 
-  virtual void autosize() override;
+    boost::optional<double> autosizedMaximumFlowPerZoneFloorAreaDuringReheat() const;
 
-  virtual void applySizingValues() override;
+    boost::optional<double> autosizedMaximumFlowFractionDuringReheat() const;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
 
     AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-    
+
     boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
    private:

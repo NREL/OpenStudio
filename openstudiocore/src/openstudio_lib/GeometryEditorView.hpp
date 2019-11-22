@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,7 @@
 
 #include "ModelObjectInspectorView.hpp"
 #include "ModelSubTabView.hpp"
+#include "OSWebEnginePage.hpp"
 
 #include "../model/Model.hpp"
 
@@ -39,8 +40,8 @@
 
 #include <QWidget>
 #include <QDialog>
-#include <QWebEngineView>
 #include <QProgressBar>
+#include <QWebEngineView>
 
 class QComboBox;
 class QPushButton;
@@ -80,6 +81,140 @@ class DebugWebView : public QDialog
 
 // main widget
 
+class BaseEditor : public QObject
+{
+  Q_OBJECT;
+
+  public:
+    BaseEditor(bool isIP, const openstudio::model::Model& model, QWebEngineView * m_view, QWidget *t_parent = nullptr);
+    virtual ~BaseEditor();
+
+    bool editorLoaded() const;
+    bool javascriptRunning() const;
+    bool blockUpdateTimerSignals(bool block);
+
+    model::Model exportModel() const;
+    std::map<UUID, UUID> exportModelHandleMapping() const;
+
+  public slots:
+    virtual void loadEditor() = 0;
+    virtual void doExport() = 0;
+    virtual void saveExport() = 0;
+    virtual void translateExport() = 0;
+    virtual void updateModel(const openstudio::model::Model& model) = 0;
+    virtual void checkForUpdate() = 0;
+
+    virtual void onChanged();
+
+  signals:
+
+    bool changed();
+
+  protected:
+    bool m_editorLoaded;
+    bool m_javascriptRunning;
+    unsigned m_versionNumber;
+
+    bool m_isIP;
+    openstudio::model::Model m_model;
+    QWebEngineView * m_view;
+
+    QVariant m_export;
+    model::Model m_exportModel;
+    std::map<UUID, UUID> m_exportModelHandleMapping;
+
+    std::shared_ptr<OSDocument> m_document;
+    QTimer* m_checkForUpdateTimer;
+};
+
+class FloorspaceEditor : public BaseEditor
+{
+  Q_OBJECT;
+
+  public:
+    FloorspaceEditor(const openstudio::path& floorplanPath, bool isIP, const openstudio::model::Model& model, QWebEngineView * m_view, QWidget *t_parent = nullptr);
+    virtual ~FloorspaceEditor();
+
+  public slots:
+    virtual void loadEditor();
+    virtual void doExport();
+    virtual void saveExport();
+    virtual void translateExport();
+    virtual void updateModel(const openstudio::model::Model& model);
+    virtual void checkForUpdate();
+
+  private:
+
+   openstudio::path m_floorplanPath;
+   boost::optional<FloorplanJS> m_floorplan;
+};
+
+class GbXmlEditor : public BaseEditor
+{
+  Q_OBJECT;
+
+  public:
+    GbXmlEditor(const openstudio::path& gbXmlPath, bool isIP, const openstudio::model::Model& model, QWebEngineView * m_view, QWidget *t_parent = nullptr);
+    virtual ~GbXmlEditor();
+
+  public slots:
+    virtual void loadEditor();
+    virtual void doExport();
+    virtual void saveExport();
+    virtual void translateExport();
+    virtual void updateModel(const openstudio::model::Model& model);
+    virtual void checkForUpdate();
+
+  private:
+
+   openstudio::path m_gbXmlPath;
+   QString m_gbXML;
+};
+
+class IdfEditor : public BaseEditor
+{
+  Q_OBJECT;
+
+  public:
+    IdfEditor(const openstudio::path& idfPath, bool forceConvert, bool isIP, const openstudio::model::Model& model, QWebEngineView * m_view, QWidget *t_parent = nullptr);
+    virtual ~IdfEditor();
+
+  public slots:
+    virtual void loadEditor();
+    virtual void doExport();
+    virtual void saveExport();
+    virtual void translateExport();
+    virtual void updateModel(const openstudio::model::Model& model);
+    virtual void checkForUpdate();
+
+  private:
+
+   openstudio::path m_idfPath;
+   QString m_jdf;
+};
+
+class OsmEditor : public BaseEditor
+{
+  Q_OBJECT;
+
+  public:
+    OsmEditor(const openstudio::path& osmPath, bool isIP, const openstudio::model::Model& model, QWebEngineView * m_view, QWidget *t_parent = nullptr);
+    virtual ~OsmEditor();
+
+  public slots:
+    virtual void loadEditor();
+    virtual void doExport();
+    virtual void saveExport();
+    virtual void translateExport();
+    virtual void updateModel(const openstudio::model::Model& model);
+    virtual void checkForUpdate();
+
+  private:
+
+   openstudio::path m_osmPath;
+};
+
+// EditorWebView is the main UI widget, it decides which BaseEditor to instantiate
 class EditorWebView : public QWidget
 {
   Q_OBJECT;
@@ -99,13 +234,8 @@ class EditorWebView : public QWidget
     void previewClicked();
     void mergeClicked();
     void debugClicked();
-    void startEditor();
-    void doExport();
-    void saveExport();
-    void translateExport();
     void previewExport();
     void mergeExport();
-    void checkForUpdate();
     void onChanged();
 
     void 	onLoadFinished(bool ok);
@@ -117,18 +247,17 @@ class EditorWebView : public QWidget
     REGISTER_LOGGER("openstudio::EditorWebView");
 
     openstudio::path floorplanPath() const;
+    openstudio::path gbXmlPath() const;
+    openstudio::path idfPath() const;
+    openstudio::path osmPath() const;
+
+    BaseEditor * m_baseEditor;
 
     bool m_isIP;
-    bool m_geometryEditorStarted;
-    bool m_geometryEditorLoaded;
-    bool m_javascriptRunning;
-    boost::optional<FloorplanJS> m_floorplan;
+    bool m_mergeWarn;
+
     model::Model m_model;
-    QVariant m_export;
-    unsigned m_versionNumber;
-    model::Model m_exportModel;
-    std::map<UUID, UUID> m_exportModelHandleMapping;
-    QTimer* m_checkForUpdateTimer;
+
     QString m_debugPort;
 
     QComboBox * m_geometrySourceComboBox;
@@ -140,6 +269,7 @@ class EditorWebView : public QWidget
     QPushButton * m_debugBtn;
 
     QWebEngineView * m_view;
+    OSWebEnginePage * m_page;
     std::shared_ptr<OSDocument> m_document;
 };
 

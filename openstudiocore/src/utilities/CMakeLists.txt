@@ -11,7 +11,7 @@ include(idf/CMakeLists.txt)
 include(sql/CMakeLists.txt)
 include(units/CMakeLists.txt)
 
-configure_file("core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx")
+CONFIGURE_FILE_WITH_CHECKSUM("core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx")
 
 set(core_src
   core/ApplicationPathHelpers.hpp
@@ -71,8 +71,6 @@ set(core_src
   core/StringStreamLogSink.hpp
   core/StringStreamLogSink_Impl.hpp
   core/StringStreamLogSink.cpp
-  core/TemporaryDirectory.hpp
-  core/TemporaryDirectory.cpp
   core/System.hpp
   core/System.cpp
   core/UpdateManager.hpp
@@ -110,6 +108,9 @@ set(data_src
 )
 
 set(filetypes_src
+  filetypes/CSVFile.hpp
+  filetypes/CSVFile_Impl.hpp
+  filetypes/CSVFile.cpp
   filetypes/EpwFile.hpp
   filetypes/EpwFile.cpp
   filetypes/RunOptions.hpp
@@ -303,7 +304,7 @@ qt5_wrap_cpp_minimally(data_moc_src ${data_moc}) # RM
 qt5_wrap_cpp_minimally(plot_moc_src ${plot_moc}) # [sudo] RM [-rf]
 
 
-# embedded files
+# embedded files, bump again to update common files
 file(GLOB_RECURSE BCL_TEMPLATES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/bcl/templates/**/*.*")
 foreach( _FILE ${BCL_TEMPLATES} )
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/bcl/" ${_FILE})
@@ -419,6 +420,7 @@ set(${target_name}_test_src
   data/Test/Variant_GTest.cpp
   data/Test/Vector_GTest.cpp
 
+  filetypes/test/CSVFile_GTest.cpp
   filetypes/test/EpwFile_GTest.cpp
   filetypes/test/WorkflowJSON_GTest.cpp
 

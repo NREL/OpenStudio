@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,8 +30,6 @@
 #include "TimeSeries.hpp"
 #include "../core/Assert.hpp"
 
-#include <exception>
-#include <set>
 
 using namespace std;
 using namespace boost;
@@ -583,31 +581,36 @@ double TimeSeries_Impl::value(const DateTime& dateTime) const
 {
   boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
 
+  // If our timeseries doesn't have a year, we force it to the assumed one
   DateTime firstReportDateTimeWithYear = m_firstReportDateTime;
+  int timeSeriesYear = m_firstReportDateTime.date().year();
   if (!calendarYear) {
-    firstReportDateTimeWithYear = DateTime(Date(m_firstReportDateTime.date().monthOfYear(), m_firstReportDateTime.date().dayOfMonth(), m_firstReportDateTime.date().year()), m_firstReportDateTime.time());
+    firstReportDateTimeWithYear = DateTime(Date(m_firstReportDateTime.date().monthOfYear(), m_firstReportDateTime.date().dayOfMonth(), timeSeriesYear),
+                                           m_firstReportDateTime.time());
   }
 
+  // If our requested datetime doesn't have an assigned year, we default to the one of the **TimeSeries** (whether hard assigned or not)
+  // Or the one right after in case it ends up before the start (try wrap-around)
   DateTime dateTimeWithYear = dateTime;
   if (!dateTimeWithYear.date().baseYear()) {
-    dateTimeWithYear = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth(), dateTime.date().year()), dateTime.time());
-  }
+    // Starts by assuming same year as timeseries, then use that to compare, and if before, then assume wrap-around
+    // Even if it doesn't really wrap-around, it'll just return nothing so it's fine
+    // (and valueAtSecondsFromFirstReport will also add Debug message)
+    dateTimeWithYear = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth(), timeSeriesYear), dateTime.time());
 
-  DateTime dateTimeCompare = dateTime;
-  if (!calendarYear && dateTime.date().baseYear()) {
-    // remove year for comparison with m_firstReportDateTime
-    dateTimeCompare = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth()), dateTime.time());
-  }
+    int secondsFromFirstReport = (dateTimeWithYear - firstReportDateTimeWithYear).totalSeconds();
 
-  // check for wrap around
-  if (m_wrapAround) {
-    if (dateTimeCompare < m_firstReportDateTime) {
-      DateTime wrappedDateTime = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth(), m_firstReportDateTime.date().year() + 1), dateTime.time());
-
-      // wrapped by less than one year, use wrapped value
-      return value(wrappedDateTime - firstReportDateTimeWithYear);
+    // If it's negative, then: if m_intervalLength exist we check that it's even bigger than intervalLength,
+    // in which case we do shift to next year, otherwise we do nothing
+    // This allows passing "2005-01-01 00:01:00" to report at "2005-01-01 01:00:00" (historical behavior)
+    // cf valueAtSecondsFromFirstReport which will allow it
+    if (secondsFromFirstReport < 0 && (!m_intervalLength || secondsFromFirstReport <= -m_intervalLength->totalSeconds())) {
+      dateTimeWithYear = DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth(), timeSeriesYear + 1), dateTime.time());
     }
   }
+
+  LOG(Debug, "Initial: dateTime=" << dateTime << ", m_firstReportDateTime=" << m_firstReportDateTime);
+  LOG(Debug, "Querying with dateTimeWithYear=" << dateTimeWithYear <<  ", firstReportDateTimeWithYear=" << firstReportDateTimeWithYear);
 
   return value(dateTimeWithYear - firstReportDateTimeWithYear);
 }
@@ -617,38 +620,46 @@ Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& en
 {
   boost::optional<int> calendarYear = m_firstReportDateTime.date().baseYear();
 
-  DateTime startDateTimeCompare = startDateTime;
-  if (!calendarYear && startDateTime.date().baseYear()) {
-    startDateTimeCompare = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth()), startDateTime.time());
-  }
-
-  DateTime endDateTimeCompare = endDateTime;
-  if (!calendarYear && endDateTime.date().baseYear()) {
-    endDateTimeCompare = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth()), endDateTime.time());
-  }
-
+  // If our timeseries doesn't have a year, we force it to the assumed one
   DateTime firstReportDateTimeWithYear = m_firstReportDateTime;
+  int timeSeriesYear = m_firstReportDateTime.date().year();
   if (!calendarYear) {
-    firstReportDateTimeWithYear = DateTime(Date(m_firstReportDateTime.date().monthOfYear(), m_firstReportDateTime.date().dayOfMonth(), m_firstReportDateTime.date().year()), m_firstReportDateTime.time());
+    firstReportDateTimeWithYear = DateTime(Date(m_firstReportDateTime.date().monthOfYear(), m_firstReportDateTime.date().dayOfMonth(), timeSeriesYear), m_firstReportDateTime.time());
   }
 
+  // If our requested start doen't have an assigned year, we default to the one of the **TimeSeries** (whether hard assigned or not)
   DateTime startDateTimeWithYear = startDateTime;
   if (!startDateTime.date().baseYear()) {
-    startDateTimeWithYear = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth(), startDateTime.date().year()), startDateTime.time());
+    startDateTimeWithYear = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth(), timeSeriesYear), startDateTime.time());
   }
 
+  // Then if our end doesn't have an assigned year, we default it based on the start one
   DateTime endDateTimeWithYear = endDateTime;
   if (!endDateTime.date().baseYear()) {
-    if (m_wrapAround) {
-      if (endDateTimeCompare < startDateTimeCompare) {
-        endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), endDateTime.date().year() + 1), endDateTime.time());
-      } else {
-        endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), endDateTime.date().year()), endDateTime.time());
-      }
+
+    // Compare on a Month/Day basis only
+    DateTime startDateTimeCompare = DateTime(Date(startDateTime.date().monthOfYear(), startDateTime.date().dayOfMonth()), startDateTime.time());
+    DateTime endDateTimeCompare = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth()), endDateTime.time());
+
+    if (endDateTimeCompare <= startDateTimeCompare) {
+      endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), startDateTimeWithYear.date().year() + 1),
+                                     endDateTime.time());
     } else {
-      endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), endDateTime.date().year()), endDateTime.time());
+      int totalSeconds = (endDateTimeCompare - startDateTimeCompare).totalSeconds();
+      endDateTimeWithYear = startDateTimeWithYear + Time(0, 0, 0, totalSeconds);
+      // endDateTimeWithYear = DateTime(Date(endDateTime.date().monthOfYear(), endDateTime.date().dayOfMonth(), timeSeriesYear), endDateTime.time());
     }
   }
+
+  // After our thing, we ensure that we do end up with dates that make sense
+  if (endDateTimeWithYear < startDateTimeWithYear) {
+    LOG(Warn, "Incorrect DateTimes passed, ensure that the start and end dates are coherent");
+  }
+
+  LOG(Debug, "Initial: startDateTime=" << startDateTime << ", endDateTime=" << endDateTime <<
+      ", m_firstReportDateTime=" << m_firstReportDateTime);
+  LOG(Debug, "Querying with startDateTimeWithYear=" << startDateTimeWithYear << ", endDateTimeWithYear=" << endDateTimeWithYear
+      <<  ", firstReportDateTimeWithYear=" << firstReportDateTimeWithYear);
 
   double startSecondsFromFirstReport = (startDateTimeWithYear - firstReportDateTimeWithYear).totalSeconds();
   double endSecondsFromFirstReport = (endDateTimeWithYear - firstReportDateTimeWithYear).totalSeconds();
@@ -667,6 +678,10 @@ Vector TimeSeries_Impl::values(const DateTime& startDateTime, const DateTime& en
   }
 
   result.resize(resultSize, true);
+  // Warn if empty
+  if (resultSize == 0) {
+    LOG(Warn, "The combination of start and end DateTimes you passed resulted in zero values");
+  }
 
   return result;
 }

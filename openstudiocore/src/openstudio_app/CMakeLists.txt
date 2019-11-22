@@ -39,15 +39,12 @@ qt5_wrap_cpp_minimally(${target_name}_moc_src ${${target_name}_moc})
 
 # configure the AboutBox.hpp file
 # this needs to be configured to embed the build number
-configure_file(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
+CONFIGURE_FILE_WITH_CHECKSUM(AboutBox.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/AboutBox.hpp")
 
 
 if(WIN32)
-  set(RC_BUILD_STR "0")
-  if(NOT CMAKE_VERSION_BUILD STREQUAL "" AND NOT CMAKE_VERSION_BUILD MATCHES "([a-zA-Z]+)")
-    set(RC_BUILD_STR "${CMAKE_VERSION_BUILD}")
-  endif()
-  configure_file(OpenStudioApp.rc.in "${CMAKE_CURRENT_BINARY_DIR}/OpenStudioApp.rc")
+  remove_definitions(/bigobj)
+  CONFIGURE_FILE_WITH_CHECKSUM(OpenStudioApp.rc.in "${CMAKE_CURRENT_BINARY_DIR}/OpenStudioApp.rc")
   set(ICON_SRC "${CMAKE_CURRENT_BINARY_DIR}/OpenStudioApp.rc")
 endif()
 # For Apple set the icns file containing icons
@@ -62,7 +59,7 @@ if(APPLE)
   set(MACOSX_BUNDLE_EXECUTABLE_NAME ${target_name})
   set(MACOSX_BUNDLE_GUI_IDENTIFIER "gov.nrel.openstudio.${CMAKE_VERSION_BUILD}.openstudio")
   set(MACOSX_BUNDLE_BUNDLE_NAME "OpenStudio")
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
+  CONFIGURE_FILE_WITH_CHECKSUM(${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.in ${CMAKE_CURRENT_BINARY_DIR}/Info.plist)
 endif()
 
 #include_directories(${RUBY_INCLUDE_DIRS})

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,11 @@
 #include "ModelFixture.hpp"
 #include "../Building.hpp"
 #include "../Building_Impl.hpp"
+#include "../PlantLoop.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../AvailabilityManagerHighTemperatureTurnOff.hpp"
+#include "../AvailabilityManagerHighTemperatureTurnOff_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../EnergyManagementSystemSensor.hpp"
 #include "../EnergyManagementSystemSensor_Impl.hpp"
@@ -175,6 +180,34 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
   outvar1.remove();
   EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
 
+}
+
+TEST_F(ModelFixture, EMSSensorDelete) {
+  Model model;
+  PlantLoop plantLoop(model);
+  AvailabilityManagerHighTemperatureTurnOff avm(model);
+  avm.setSensorNode(model.outdoorAirNode());
+  plantLoop.addAvailabilityManager(avm);
+  std::vector<std::string> avm_names = avm.outputVariableNames();
+
+  // add sensor 1
+  EnergyManagementSystemSensor sensor(model, avm_names[0]);
+  sensor.setKeyName(toString(avm.handle()));
+
+  // Sensor attached to AVM
+  std::string key = toString(avm.handle());
+  EXPECT_EQ(key, sensor.keyName());
+  // 1 sensor in the model
+  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
+  // 1 avm in the model
+  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
+  model.save(toPath("./EMS_sensor_delete_test.osm"), true);
+
+  avm.remove();
+  // 0 avm in the model
+  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
+  //sensor still has keyName as avm UUID string (will not FT though eventually)
+  EXPECT_EQ(key, sensor.keyName());
 }
 
 

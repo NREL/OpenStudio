@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -100,22 +100,22 @@ namespace detail {
     return CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType();
   }
 
-  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::airInletPort()
+  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::airInletPort() const
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirInletNodeName;
   }
 
-  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::airOutletPort()
+  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::airOutletPort() const
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName;
   }
 
-  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::waterInletPort()
+  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::waterInletPort() const
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName;
   }
 
-  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::waterOutletPort()
+  unsigned CoilHeatingWaterToAirHeatPumpEquationFit_Impl::waterOutletPort() const
   {
     return OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName;
   }

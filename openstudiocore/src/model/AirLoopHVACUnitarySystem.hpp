@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -112,7 +112,10 @@ class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
   /** As of EnergyPlus version 8.7.0 this field maps to MinimumSupplyAirTemperature **/
   double dOASDXCoolingCoilLeavingMinimumAirTemperature() const;
 
+  // Note JM 2019-09-27: I would probably make this field \required instead and remove this.
   bool isDOASDXCoolingCoilLeavingMinimumAirTemperatureDefaulted() const;
+
+  bool isDOASDXCoolingCoilLeavingMinimumAirTemperatureAutosized() const;
 
   std::string latentLoadControl() const;
 
@@ -276,6 +279,9 @@ class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
   /** As of EnergyPlus version 8.7.0 this field maps to MinimumSupplyAirTemperature **/
   bool setDOASDXCoolingCoilLeavingMinimumAirTemperature(double dOASDXCoolingCoilLeavingMinimumAirTemperature);
 
+  void autosizeDOASDXCoolingCoilLeavingMinimumAirTemperature();
+
+  // Would remove
   void resetDOASDXCoolingCoilLeavingMinimumAirTemperature();
 
   bool setLatentLoadControl(std::string latentLoadControl);
@@ -414,15 +420,15 @@ class MODEL_API AirLoopHVACUnitarySystem : public ZoneHVACComponent {
   /** @name Other */
   //@{
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const ;
+  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisRequired() const;
 
-  boost::optional<double> autosizedMaximumSupplyAirTemperature() const ;
+  boost::optional<double> autosizedMaximumSupplyAirTemperature() const;
 
-
+  boost::optional<double> autosizedDOASDXCoolingCoilLeavingMinimumAirTemperature() const;
 
   //@}
  protected:
@@ -449,4 +455,4 @@ typedef std::vector<AirLoopHVACUnitarySystem> AirLoopHVACUnitarySystemVector;
 } // model
 } // openstudio
 
-#endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP
+#endif // MODEL_AIRLOOPHVACUNITARYSYSTEM_HPP

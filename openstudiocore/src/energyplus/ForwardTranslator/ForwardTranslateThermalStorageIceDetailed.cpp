@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -90,12 +90,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStorageIceDetailed
     auto curve = modelObject.dischargingCurve();
     auto idf = translateAndMapModelObject(curve);
     OS_ASSERT(idf);
-    auto type = idf->iddObject().type();
-    if( type == IddObjectType::Curve_QuadraticLinear ) {
-      idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveObjectType,"QuadraticLinear");
-    } else if( type == IddObjectType::Curve_CubicLinear ) {
-      idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveObjectType,"CubicLinear");
-    }
+
+    idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveVariableSpecifications, modelObject.dischargingCurveVariableSpecifications());
     idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveName,idf->name().get());
   }
 
@@ -105,12 +101,8 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStorageIceDetailed
     auto curve = modelObject.chargingCurve();
     auto idf = translateAndMapModelObject(curve);
     OS_ASSERT(idf);
-    auto type = idf->iddObject().type();
-    if( type == IddObjectType::Curve_QuadraticLinear ) {
-      idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveObjectType,"QuadraticLinear");
-    } else if( type == IddObjectType::Curve_CubicLinear ) {
-      idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveObjectType,"CubicLinear");
-    }
+
+    idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveVariableSpecifications, modelObject.chargingCurveVariableSpecifications());
     idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveName,idf->name().get());
   }
 

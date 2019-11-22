@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -208,12 +208,12 @@ namespace detail {
     return true;
   }
 
-  unsigned WaterUseConnections_Impl::inletPort()
+  unsigned WaterUseConnections_Impl::inletPort() const
   {
     return OS_WaterUse_ConnectionsFields::InletNodeName;
   }
 
-  unsigned WaterUseConnections_Impl::outletPort()
+  unsigned WaterUseConnections_Impl::outletPort() const
   {
     return OS_WaterUse_ConnectionsFields::OutletNodeName;
   }
@@ -328,12 +328,12 @@ void WaterUseConnections::resetColdWaterSupplyTemperatureSchedule() {
   getImpl<detail::WaterUseConnections_Impl>()->resetColdWaterSupplyTemperatureSchedule();
 }
 
-unsigned WaterUseConnections::inletPort()
+unsigned WaterUseConnections::inletPort() const
 {
   return getImpl<detail::WaterUseConnections_Impl>()->inletPort();
 }
 
-unsigned WaterUseConnections::outletPort()
+unsigned WaterUseConnections::outletPort() const
 {
   return getImpl<detail::WaterUseConnections_Impl>()->outletPort();
 }

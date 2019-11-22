@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,6 +45,8 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "ElectricLoadCenterStorageConverter.hpp"
 #include "ElectricLoadCenterStorageConverter_Impl.hpp"
+#include "ElectricLoadCenterTransformer.hpp"
+#include "ElectricLoadCenterTransformer_Impl.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleTypeRegistry.hpp"
 
@@ -131,8 +133,10 @@ namespace detail {
     if (boost::optional<ElectricalStorage> optElectricalStorage = electricalStorage()) {
       result.push_back(optElectricalStorage.get());
     }
-
-    return result;
+    if (boost::optional<ElectricLoadCenterTransformer> optElectricLoadCenterTransformer = transformer()) {
+      result.push_back(optElectricLoadCenterTransformer.get());
+    }
+  return result;
   }
 
   std::vector<openstudio::IdfObject> ElectricLoadCenterDistribution_Impl::remove()
@@ -201,9 +205,9 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ElectricalStorage>(OS_ElectricLoadCenter_DistributionFields::ElectricalStorageObjectName);
   }
 
-  //boost::optional<Transformer> ElectricLoadCenterDistribution_Impl::transformer() const {
-  //  return getObject<ModelObject>().getModelObjectTarget<Transformer>(OS_ElectricLoadCenter_DistributionFields::TransformerObjectName);
-  //}
+  boost::optional<ElectricLoadCenterTransformer> ElectricLoadCenterDistribution_Impl::transformer() const {
+    return getObject<ModelObject>().getModelObjectTarget<ElectricLoadCenterTransformer>(OS_ElectricLoadCenter_DistributionFields::TransformerObjectName);
+  }
 
   // Storage Operation Scheme, defaults to TrackFacilityElectricDemandStoreExcessOnSite
   std::string ElectricLoadCenterDistribution_Impl::storageOperationScheme() const {
@@ -290,11 +294,7 @@ namespace detail {
     return isEmpty(OS_ElectricLoadCenter_DistributionFields::StorageControlUtilityDemandTargetFractionScheduleName);
   }
 
-
   /// Setters
-
-
-
 
   bool ElectricLoadCenterDistribution_Impl::addGenerator(const Generator& generator)
   {
@@ -451,14 +451,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  //bool ElectricLoadCenterDistribution_Impl::setTransformer(const Transformer& transformer) {
-  //  return setPointer(OS_ElectricLoadCenter_DistributionFields::TransformerObjectName, transformer.handle());
-  //}
+  bool ElectricLoadCenterDistribution_Impl::setTransformer(const ElectricLoadCenterTransformer& transformer) {
+    return setPointer(OS_ElectricLoadCenter_DistributionFields::TransformerObjectName, transformer.handle());
+  }
 
-  //void ElectricLoadCenterDistribution_Impl::resetTransformer() {
-  //  bool result = setString(OS_ElectricLoadCenter_DistributionFields::TransformerObjectName, "");
-  //  OS_ASSERT(result);
-  //}
+  void ElectricLoadCenterDistribution_Impl::resetTransformer() {
+    bool result = setString(OS_ElectricLoadCenter_DistributionFields::TransformerObjectName, "");
+    OS_ASSERT(result);
+  }
 
   ModelObjectList ElectricLoadCenterDistribution_Impl::generatorModelObjectList()  const {
     boost::optional<ModelObjectList> result = getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_ElectricLoadCenter_DistributionFields::GeneratorListName);
@@ -791,9 +791,6 @@ std::vector<std::string> ElectricLoadCenterDistribution::storageOperationSchemeV
     OS_ElectricLoadCenter_DistributionFields::StorageOperationScheme);
 }
 
-
-
-
 std::vector<Generator> ElectricLoadCenterDistribution::generators() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->generators();
 }
@@ -834,9 +831,9 @@ boost::optional<ElectricalStorage> ElectricLoadCenterDistribution::electricalSto
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->electricalStorage();
 }
 
-//boost::optional<Transformer> ElectricLoadCenterDistribution::transformer() const {
-//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->transformer();
-//}
+boost::optional<ElectricLoadCenterTransformer> ElectricLoadCenterDistribution::transformer() const {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->transformer();
+}
 
 // New
 
@@ -896,12 +893,10 @@ boost::optional<Schedule> ElectricLoadCenterDistribution::storageDischargePowerF
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->storageDischargePowerFractionSchedule();
 }
 
-
 // Storage Control Utility Demand Target, required if FacilityDemandLeveling
 boost::optional<double> ElectricLoadCenterDistribution::storageControlUtilityDemandTarget() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->storageControlUtilityDemandTarget();
 }
-
 
 // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
 Schedule ElectricLoadCenterDistribution::storageControlUtilityDemandTargetFractionSchedule() const {
@@ -910,8 +905,6 @@ Schedule ElectricLoadCenterDistribution::storageControlUtilityDemandTargetFracti
 bool ElectricLoadCenterDistribution::isStorageControlUtilityDemandTargetFractionScheduleDefaulted() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->isStorageControlUtilityDemandTargetFractionScheduleDefaulted();
 }
-
-
 
 bool ElectricLoadCenterDistribution::addGenerator(const Generator& generator){
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->addGenerator(generator);
@@ -981,13 +974,13 @@ void ElectricLoadCenterDistribution::resetElectricalStorage() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetElectricalStorage();
 }
 
-//bool ElectricLoadCenterDistribution::setTransformer(const Transformer& transformer) {
-//  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setTransformer(transformer);
-//}
+bool ElectricLoadCenterDistribution::setTransformer(const ElectricLoadCenterTransformer& transformer) {
+  return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setTransformer(transformer);
+}
 
-//void ElectricLoadCenterDistribution::resetTransformer() {
-//  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetTransformer();
-//}
+void ElectricLoadCenterDistribution::resetTransformer() {
+  getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetTransformer();
+}
 
 // Storage Operation Scheme
 bool ElectricLoadCenterDistribution::setStorageOperationScheme(const std::string& operationScheme) {
@@ -1021,7 +1014,6 @@ void ElectricLoadCenterDistribution::resetMaximumStorageStateofChargeFraction() 
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetMaximumStorageStateofChargeFraction();
 }
 
-
 // Minimum Storage State of Charge Fraction, required if storage, defaults
 bool ElectricLoadCenterDistribution::setMinimumStorageStateofChargeFraction(const double minStateofCharge) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setMinimumStorageStateofChargeFraction(minStateofCharge);
@@ -1030,7 +1022,6 @@ void ElectricLoadCenterDistribution::resetMinimumStorageStateofChargeFraction() 
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetMinimumStorageStateofChargeFraction();
 }
 
-
 // Design Storage Control Charge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
 bool ElectricLoadCenterDistribution::setDesignStorageControlChargePower(const double designStorageControlChargePower) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setDesignStorageControlChargePower(designStorageControlChargePower);
@@ -1038,7 +1029,6 @@ bool ElectricLoadCenterDistribution::setDesignStorageControlChargePower(const do
 void ElectricLoadCenterDistribution::resetDesignStorageControlChargePower() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetDesignStorageControlChargePower();
 }
-
 
 // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
 // TODO: do I want to default that to daytime?
@@ -1049,7 +1039,6 @@ void ElectricLoadCenterDistribution::resetStorageChargePowerFractionSchedule() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageChargePowerFractionSchedule();
 }
 
-
 // Design Storage Control Discharge Power, required if FacilityDemandLeveling or TrackChargeDischargeSchedules
 bool ElectricLoadCenterDistribution::setDesignStorageControlDischargePower(const double designStorageControlDischargePower) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setDesignStorageControlDischargePower(designStorageControlDischargePower);
@@ -1057,7 +1046,6 @@ bool ElectricLoadCenterDistribution::setDesignStorageControlDischargePower(const
 void ElectricLoadCenterDistribution::resetDesignStorageControlDischargePower() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetDesignStorageControlDischargePower();
 }
-
 
 // Storage Charge Power Fraction Schedule Name, required if TrackChargeDischargeSchedules
 // TODO: do I want to default that to daytime?
@@ -1068,7 +1056,6 @@ void ElectricLoadCenterDistribution::resetStorageDischargePowerFractionSchedule(
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageDischargePowerFractionSchedule();
 }
 
-
 // Storage Control Utility Demand Target, required if FacilityDemandLeveling
 bool ElectricLoadCenterDistribution::setStorageControlUtilityDemandTarget(const double storageControlUtilityDemandTarget) {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->setStorageControlUtilityDemandTarget(storageControlUtilityDemandTarget);
@@ -1076,7 +1063,6 @@ bool ElectricLoadCenterDistribution::setStorageControlUtilityDemandTarget(const 
 void ElectricLoadCenterDistribution::resetStorageControlUtilityDemandTarget() {
   getImpl<detail::ElectricLoadCenterDistribution_Impl>()->resetStorageControlUtilityDemandTarget();
 }
-
 
 // Storage Control Utility Demand Target Fraction Schedule Name, will be used only if FacilityDemandLeveling, defaults to 1.0
 bool ElectricLoadCenterDistribution::setStorageControlUtilityDemandTargetFractionSchedule(Schedule& schedule) {
@@ -1089,7 +1075,6 @@ void ElectricLoadCenterDistribution::resetStorageControlUtilityDemandTargetFract
 bool ElectricLoadCenterDistribution::validityCheck() const {
   return getImpl<detail::ElectricLoadCenterDistribution_Impl>()->validityCheck();
 }
-
 
 /// @cond
 ElectricLoadCenterDistribution::ElectricLoadCenterDistribution(std::shared_ptr<detail::ElectricLoadCenterDistribution_Impl> impl)

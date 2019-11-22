@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -29,7 +29,7 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
 #include "../AirflowNetworkDuctViewFactors.hpp"
 #include "../AirflowNetworkDuctViewFactors_Impl.hpp"
@@ -41,8 +41,8 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, AirflowNetwork_DuctViewFactors_Basic)
 {
-  openstudio::Logger::instance().standardOutLogger().enable();
-  openstudio::Logger::instance().standardOutLogger().setLogLevel(Info);
+  // openstudio::Logger::instance().standardOutLogger().enable();
+  // openstudio::Logger::instance().standardOutLogger().setLogLevel(Info);
   Model model;
   Point3dVector points;
 

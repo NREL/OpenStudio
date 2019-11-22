@@ -1,6 +1,6 @@
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,8.9;
+  Version,9.2;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -28,17 +28,20 @@
     Yes;                     !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    RUNPERIOD 1,             !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     SUNDAY,                  !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
-    Yes;                     !- Use Weather File Snow Indicators
+    Yes,                     !- Use Weather File Snow Indicators
+    No;                      !- Treat Weather as Actual
 
 !-   ===========  ALL OBJECTS IN CLASS: LOCATION ===========
 
@@ -681,7 +684,6 @@
     North Window,            !- Name
     Exterior Window,         !- Construction Name
     North Wall,              !- Building Surface Name
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
@@ -693,7 +695,6 @@
     East Window,             !- Name
     Exterior Window,         !- Construction Name
     East Wall,               !- Building Surface Name
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
@@ -705,7 +706,6 @@
     South Window,            !- Name
     Exterior Window,         !- Construction Name
     South Wall,              !- Building Surface Name
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
@@ -717,7 +717,6 @@
     West Window,             !- Name
     Exterior Window,         !- Construction Name
     West Wall,               !- Building Surface Name
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
@@ -729,7 +728,6 @@
     Roof Window,             !- Name
     Exterior Window,         !- Construction Name
     Roof,                    !- Building Surface Name
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}
@@ -741,7 +739,6 @@
     Floor Window,            !- Name
     Exterior Window,         !- Construction Name
     Floor,                   !- Building Surface Name
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     1,                       !- Starting X Coordinate {m}

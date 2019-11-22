@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,6 +43,9 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/bcl/LocalBCL.hpp"
+
+#include "../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 #include <iostream>
 
@@ -125,6 +128,29 @@ std::vector<OSItemId> ModelObjectListController::makeVector()
         if( (! hvacComponent->containingHVACComponent()) && (! hvacComponent->containingZoneHVACComponent()) ) {
           result.push_back(modelObjectToItemId(hvacComponent.get(), false));
         }
+        // Special case when there is a containingZoneHVACComponent, it might be a tank for a HPWH that we DO want to be able
+        // to drag and drop...
+        else if ( boost::optional<openstudio::model::ZoneHVACComponent> zComp = hvacComponent->containingZoneHVACComponent() ) {
+
+          openstudio::IddObjectType zCompType = zComp->iddObjectType();
+
+          // Special case for a WaterHeaterMixed, can be part of a HeatPump(PumpedCondenser) or HeatPump:WrappedCondenser
+          if ( (m_iddObjectType == openstudio::IddObjectType::OS_WaterHeater_Stratified) &&
+               ( ( zCompType == openstudio::IddObjectType::OS_WaterHeater_HeatPump ) ||
+                 ( zCompType == openstudio::IddObjectType::OS_WaterHeater_HeatPump_WrappedCondenser ) )
+             )
+          {
+            result.push_back(modelObjectToItemId(hvacComponent.get(), false));
+          }
+          // Special case for a WaterHeaterMixed, can be part of a HeatPump(PumpedCondenser) only
+          else if ( (m_iddObjectType == openstudio::IddObjectType::OS_WaterHeater_Mixed) &&
+                    (zCompType == openstudio::IddObjectType::OS_WaterHeater_HeatPump) )
+          {
+            result.push_back(modelObjectToItemId(hvacComponent.get(), false));
+          }
+        }
+
+
       } else {
         result.push_back(modelObjectToItemId(modelObject, false));
       }

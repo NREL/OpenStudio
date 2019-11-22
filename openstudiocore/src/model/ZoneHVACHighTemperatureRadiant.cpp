@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -334,7 +334,13 @@ namespace detail {
   }
 
   boost::optional<double> ZoneHVACHighTemperatureRadiant_Impl::autosizedMaximumPowerInput() const {
-    return getAutosizedValue("Design Size Heating Design Capacity", "W");
+    boost::optional<double> result;
+    result = getAutosizedValue("Design Size Heating Design Capacity", "W");
+    // E+ 9.0.0 wrongly returns as User-Specified
+    if (!result) {
+      result = getAutosizedValue("User-Specified Heating Design Capacity", "W");
+    }
+    return result;
   }
 
   void ZoneHVACHighTemperatureRadiant_Impl::autosize() {

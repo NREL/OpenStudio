@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,10 @@
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_EnergyManagementSystem_Actuator_FieldEnums.hxx>
@@ -84,6 +88,15 @@ namespace detail {
     return result;
   }
 
+  boost::optional<ModelObject> EnergyManagementSystemActuator_Impl::zoneName() const {
+    boost::optional<ModelObject> result;
+    boost::optional<WorkspaceObject> wo = this->getTarget(OS_EnergyManagementSystem_ActuatorFields::ZoneName);
+    if (wo) {
+      result = wo->cast<ModelObject>();
+    }
+    return result;
+  }
+
   std::string EnergyManagementSystemActuator_Impl::actuatedComponentControlType() const {
     boost::optional<std::string> value = getString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType,true);
     if (value) {
@@ -106,6 +119,21 @@ namespace detail {
     return setPointer(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentName, modelObject.handle());
   }
 
+  bool EnergyManagementSystemActuator_Impl::setThermalZone(const ThermalZone& thermalZone) {
+    return setPointer(OS_EnergyManagementSystem_ActuatorFields::ZoneName, thermalZone.handle());
+  }
+
+  bool EnergyManagementSystemActuator_Impl::setSpace(const Space& space) {
+    //boost::optional<ThermalZone> tz;
+    auto tz = space.thermalZone();
+    if (tz){
+      return setPointer(OS_EnergyManagementSystem_ActuatorFields::ZoneName, tz.get().handle());
+    } else {
+      LOG(Warn, "Warning, Space object" << space.briefDescription() << " does not have a ThermalZone object.")
+      return false;
+    }
+  }
+
   bool EnergyManagementSystemActuator_Impl::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
     bool result = setString(OS_EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, actuatedComponentControlType);
     return result;
@@ -116,11 +144,18 @@ namespace detail {
     return result;
   }
 
+  void EnergyManagementSystemActuator_Impl::resetZoneName() {
+    bool result = setString(OS_EnergyManagementSystem_ActuatorFields::ZoneName, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
-EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string actuatedComponentType, const std::string actuatedComponentControlType)
+EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType, const std::string& actuatedComponentControlType)
   : ModelObject(EnergyManagementSystemActuator::iddObjectType(), modelObject.model()) {
   OS_ASSERT(getImpl<detail::EnergyManagementSystemActuator_Impl>());
+  /** Do not use this constructor for spaceloads that are defined in SpaceType objects
+  **/
   bool ok = setActuatedComponent(modelObject);
   if (!ok) {
     remove();
@@ -138,6 +173,72 @@ EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject
     remove();
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s actuatedComponentControlType to "
       << actuatedComponentControlType << ".");
+  }
+}
+
+EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType, const std::string& actuatedComponentControlType, const ThermalZone& thermalZone)
+  : ModelObject(EnergyManagementSystemActuator::iddObjectType(), modelObject.model()) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemActuator_Impl>());
+  /** This constructor uses the ThermalZone as the ZoneName field
+      * This is what is expected in E+ for spaceloads in OS that are defined in SpaceTypes and used in Spaces
+  **/
+  bool ok = setActuatedComponent(modelObject);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s setActuatedComponent to "
+      << modelObject.briefDescription() << ".");
+  }
+  ok = setActuatedComponentType(actuatedComponentType);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s actuatedComponentType to "
+      << actuatedComponentType << ".");
+  }
+  ok = setActuatedComponentControlType(actuatedComponentControlType);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s actuatedComponentControlType to "
+      << actuatedComponentControlType << ".");
+  }
+  //set the ModelObject to the ZoneName field (uses name of this object on FT)
+  ok = setThermalZone(thermalZone);
+  //Fail on failure to set modelobject to ZoneName field
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s setThermalZone to "
+      << thermalZone.briefDescription() << ".");
+  }
+}
+
+EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType, const std::string& actuatedComponentControlType, const Space& space)
+  : ModelObject(EnergyManagementSystemActuator::iddObjectType(), modelObject.model()) {
+  OS_ASSERT(getImpl<detail::EnergyManagementSystemActuator_Impl>());
+  //This constructor takes the Space and uses the ThermalZone of the Space as the ZoneName
+  bool ok = setActuatedComponent(modelObject);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s setActuatedComponent to "
+      << modelObject.briefDescription() << ".");
+  }
+  ok = setActuatedComponentType(actuatedComponentType);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s actuatedComponentType to "
+      << actuatedComponentType << ".");
+  }
+  ok = setActuatedComponentControlType(actuatedComponentControlType);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s actuatedComponentControlType to "
+      << actuatedComponentControlType << ".");
+  }
+  //set the Space's ThermalZone to the ZoneName field (uses name of this object on FT)
+  ok = setSpace(space);
+  //Fail on failure to set space to ZoneName field
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s setSpace to "
+      << space.briefDescription() << ".");
   }
 }
 
@@ -170,6 +271,10 @@ boost::optional<ModelObject> EnergyManagementSystemActuator::actuatedComponent()
   return getImpl<detail::EnergyManagementSystemActuator_Impl>()->actuatedComponent();
 }
 
+boost::optional<ModelObject> EnergyManagementSystemActuator::zoneName() const {
+  return getImpl<detail::EnergyManagementSystemActuator_Impl>()->zoneName();
+}
+
 std::string EnergyManagementSystemActuator::actuatedComponentControlType() const {
   return getImpl<detail::EnergyManagementSystemActuator_Impl>()->actuatedComponentControlType();
 }
@@ -182,12 +287,24 @@ bool EnergyManagementSystemActuator::setActuatedComponent(const ModelObject& mod
   return getImpl<detail::EnergyManagementSystemActuator_Impl>()->setActuatedComponent(modelObject);
 }
 
+bool EnergyManagementSystemActuator::setThermalZone(const ThermalZone& thermalZone) {
+  return getImpl<detail::EnergyManagementSystemActuator_Impl>()->setThermalZone(thermalZone);
+}
+
+bool EnergyManagementSystemActuator::setSpace(const Space& space) {
+  return getImpl<detail::EnergyManagementSystemActuator_Impl>()->setSpace(space);
+}
+
 bool EnergyManagementSystemActuator::setActuatedComponentControlType(const std::string& actuatedComponentControlType) {
   return getImpl<detail::EnergyManagementSystemActuator_Impl>()->setActuatedComponentControlType(actuatedComponentControlType);
 }
 
 bool EnergyManagementSystemActuator::setActuatedComponentType(const std::string& actuatedComponentType) {
   return getImpl<detail::EnergyManagementSystemActuator_Impl>()->setActuatedComponentType(actuatedComponentType);
+}
+
+void EnergyManagementSystemActuator::resetZoneName() {
+  getImpl<detail::EnergyManagementSystemActuator_Impl>()->resetZoneName();
 }
 
 /// @cond

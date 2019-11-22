@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,8 +33,8 @@
 #include "../../model/AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../../model/AirLoopHVACZoneMixer.hpp"
 #include "../../model/AirLoopHVACZoneMixer_Impl.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled.hpp"
-#include "../../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../../model/AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_ZoneSplitter_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -78,8 +78,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACZoneSplitter( 
   int i = 2;
   for( const auto & outletModelObject : outletModelObjects )
   {
-    if( OptionalAirTerminalSingleDuctUncontrolled airTerminal =
-        outletModelObject.optionalCast<AirTerminalSingleDuctUncontrolled>() )
+    if( OptionalAirTerminalSingleDuctConstantVolumeNoReheat airTerminal =
+        outletModelObject.optionalCast<AirTerminalSingleDuctConstantVolumeNoReheat>() )
     {
       temp = airTerminal->outletModelObject();
       if(temp)

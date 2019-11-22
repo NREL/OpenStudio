@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -61,9 +61,9 @@ boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyGlazingSp
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
     OS_ASSERT(group.numFields() == 4);
     group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Wavelength, spectralDataField.wavelength());
-    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::transmittance, spectralDataField.transmittance());
-    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::frontreflectance, spectralDataField.frontReflectance());
-    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::backreflectance, spectralDataField.backReflectance());
+    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Transmittance, spectralDataField.transmittance());
+    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::FrontReflectance, spectralDataField.frontReflectance());
+    group.setDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::BackReflectance, spectralDataField.backReflectance());
   }
 
   return boost::optional<IdfObject>(idfObject);

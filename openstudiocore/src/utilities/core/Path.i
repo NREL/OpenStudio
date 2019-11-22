@@ -9,6 +9,13 @@
 %template(PathPair) std::pair<openstudio::path, openstudio::path>;
 %template(PathPairVector) std::vector<std::pair<openstudio::path, openstudio::path> >;
 
+#if defined(SWIGCSHARP)
+
+  // Avoid triggering a SWIG warning: 'string' is a C# keyword
+  %rename(toString) openstudio::path::string;
+
+#endif
+
 %{
   #include <utilities/core/Path.hpp>
   #include <utilities/core/PathHelpers.hpp>
@@ -77,17 +84,17 @@ namespace openstudio {
     path();
     //path(const PathStringType& p);
     //path(const PathCharType* p);
-    path(const std::string& p);
-    path(const char* p);
+    //path(const std::string& p);
+    //path(const char* p);
     path(const path& p);
     virtual ~path();
 
     //path& operator=(const PathStringType& s);
-    path& operator=(const std::string& s);
+    //path& operator=(const std::string& s);
     path& operator=(const path& p);
 
     //path& operator/=(const PathStringType& s);
-    path& operator/=(const std::string& s);
+    //path& operator/=(const std::string& s);
     path& operator/=(const path& p);
 
     void clear();
@@ -100,6 +107,7 @@ namespace openstudio {
     //PathStringType file_string() const;
     //PathStringType directory_string() const;
     //PathStringType external_file_string() const;
+    // TODO: this generates a CSHARP SWIG warning: 'string' is a C# keyword
     path string() const;
 
     path root_path() const;
@@ -134,7 +142,7 @@ namespace openstudio {
 
   // path to QString.
   // DLM: deprecate
-  QString toQString(const path& p);
+  //QString toQString(const path& p);
 
   // UTF-8 encoded char* to path
   // DLM: deprecate
@@ -146,7 +154,7 @@ namespace openstudio {
 
   // QString to path
   // DLM: deprecate
-  path toPath(const QString& q);
+  //path toPath(const QString& q);
 
   // does the path exist
   bool exists(const path& p);
@@ -182,30 +190,29 @@ namespace openstudio {
       return toString(*self);
     }
 
-    //#ifdef SWIGRUBY
-    //  #ifdef _WINDOWS
-    //    // constructor from std::string
-    //    path(const std::string& s){
-    //      path *p;
-    //      p = new path(toPath(s));
-    //      return p;
-    //    }
-    //  #endif
-    //#endif
+    #ifndef SWIGCSHARP
+      // DLM: this generates code that does not compile due to compiler error C2733
+      // I think this may be a SWIG bug, for now users of C# will have to call toPath(string) instead
+
+      // from char*
+      // ensure that we use conversion from string to path
+      path(const char* c) {
+          path* p = new path(toPath(c));
+          return p;
+      }
+
+      // from std::string
+      // ensure that we use conversion from string to path
+      path(const std::string& s) {
+         path* p = new path(toPath(s));
+         return p;
+      }
+    #endif
 
     #ifdef SWIGJAVASCRIPT
         path append(const path &other) const {
           return (*self) / other;
         }
-
-      #ifdef _WINDOWS
-          // constructor from std::string
-          path(const std::string& s){
-            path *p;
-            p = new path(toPath(s));
-            return p;
-          }
-      #endif
     #endif
   };
 

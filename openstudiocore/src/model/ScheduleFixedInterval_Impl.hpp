@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,13 +41,6 @@ namespace detail {
   /** ScheduleFixedInterval_Impl is a ScheduleInterval_Impl that is the implementation class for ScheduleFixedInterval.*/
   class MODEL_API ScheduleFixedInterval_Impl : public ScheduleInterval_Impl {
 
-
-
-
-
-
-
-
    public:
 
     /** @name Constructors and Destructors */
@@ -88,6 +81,10 @@ namespace detail {
     bool interpolatetoTimestep() const;
 
     bool isInterpolatetoTimestepDefaulted() const;
+    
+    bool translatetoScheduleFile() const;
+    
+    bool isTranslatetoScheduleFileDefaulted() const;
 
     double intervalLength() const;
 
@@ -106,6 +103,10 @@ namespace detail {
     bool setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod = true);
 
     void resetInterpolatetoTimestep(bool driverMethod = true);
+    
+    bool setTranslatetoScheduleFile(bool translatetoScheduleFile, bool driverMethod = true);
+    
+    void resetTranslatetoScheduleFile(bool driverMethod = true);
 
     bool setIntervalLength(double intervalLength, bool driverMethod = true);
 
@@ -131,4 +132,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SCHEDULEFIXEDINTERVAL_IMPL_HPP
+#endif // MODEL_SCHEDULEFIXEDINTERVAL_IMPL_HPP

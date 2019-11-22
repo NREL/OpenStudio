@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -28,6 +28,9 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
+
+#include "ModelFixture.hpp"
+
 #include "../AirLoopHVAC.hpp"
 #include "../Model.hpp"
 #include "../Node.hpp"
@@ -38,7 +41,7 @@
 
 using namespace openstudio;
 
-TEST(CoilCoolingWater,CoilCoolingWater_CoilCoolingWater)
+TEST_F(ModelFixture, CoilCoolingWater_CoilCoolingWater)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
@@ -51,11 +54,11 @@ TEST(CoilCoolingWater,CoilCoolingWater_CoilCoolingWater)
      model::CoilCoolingWater coil(m,s);
 
      exit(0);
-  } ,
+} ,
     ::testing::ExitedWithCode(0), "" );
 }
 
-TEST(CoilCoolingWater,CoilCoolingWater_addToNode)
+TEST_F(ModelFixture, CoilCoolingWater_addToNode)
 {
   model::Model m;
 

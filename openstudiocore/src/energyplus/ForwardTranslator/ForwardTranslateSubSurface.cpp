@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -124,14 +124,16 @@ boost::optional<IdfObject> ForwardTranslator::translateSubSurface( model::SubSur
     }
   }
 
+  // Call the translation of the SurfacePropertyConvectionCoefficients, which has two advantages:
+  // * will not translate them if they are orphaned (=not referencing a surface or subsurface), and,
+  // * makes the order of these objects in the IDF deterministic
+  if (boost::optional<SurfacePropertyConvectionCoefficients> _sCoefs = modelObject.surfacePropertyConvectionCoefficients()) {
+    translateAndMapModelObject(_sCoefs.get());
+  }
+
   boost::optional<double> viewFactortoGround = modelObject.viewFactortoGround();
   if (viewFactortoGround){
     idfObject.setDouble(FenestrationSurface_DetailedFields::ViewFactortoGround, *viewFactortoGround);
-  }
-
-  boost::optional<ShadingControl> shadingControl = modelObject.shadingControl();
-  if (shadingControl){
-    idfObject.setString(FenestrationSurface_DetailedFields::ShadingControlName, shadingControl->name().get());
   }
 
   boost::optional<WindowPropertyFrameAndDivider> frameAndDivider = modelObject.windowPropertyFrameAndDivider();

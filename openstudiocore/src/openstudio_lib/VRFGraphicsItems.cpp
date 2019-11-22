@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,8 +43,8 @@
 namespace openstudio {
 
 const int VRFSystemView::margin = 20;
-const int VRFSystemView::terminalDropZoneWidth = 200;
-const int VRFSystemView::zoneDropZoneWidth = 300;
+const int VRFSystemView::terminalDropZoneWidth = 300;
+const int VRFSystemView::zoneDropZoneWidth = 500;
 const int VRFSystemView::dropZoneHeight = 150;
 const int VRFSystemView::terminalViewHeight = 100;
 
@@ -319,7 +319,7 @@ void VRFTerminalView::paint( QPainter *painter,
 VRFThermalZoneDropZoneView::VRFThermalZoneDropZoneView()
   : m_hasZone(false)
 {
-  setSize(300,50);
+  setSize(600,50);
   setText("Drop Thermal Zone");
 }
 
@@ -342,7 +342,8 @@ void VRFThermalZoneDropZoneView::paint( QPainter *painter,
     painter->drawRect(boundingRect());
 
     QFont font = painter->font();
-    font.setPointSize(25);
+    // This changes the size of the font for the name of the Thermal Zone once you've dragged it next to a VRF Terminal
+    font.setPointSize(16);
     painter->setFont(font);
     painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));
     QRectF t_rec = boundingRect();
@@ -505,6 +506,7 @@ void VRFSystemDropZoneView::paint( QPainter *painter,
   painter->drawRect(boundingRect());
 
   QFont font = painter->font();
+  // This is first "Drop VRF System" one, make it big!
   font.setPointSize(30);
   painter->setFont(font);
   painter->setPen(QPen(QColor(109,109,109),2,Qt::DashLine, Qt::RoundCap));

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -75,7 +75,7 @@ class MODEL_API ZoneHVACComponent_Impl : public HVACComponent_Impl {
 
   boost::optional<Node> outletNode() const;
 
-  virtual boost::optional<ThermalZone> thermalZone();
+  virtual boost::optional<ThermalZone> thermalZone() const;
 
   virtual bool addToThermalZone(ThermalZone & thermalZone);
 
@@ -97,11 +97,19 @@ class MODEL_API ZoneHVACComponent_Impl : public HVACComponent_Impl {
 
   boost::optional<ModelObject> airOutletModelObject() const;
 
+  bool setReturnPlenum(const ThermalZone & plenumZone);
+
+  void removeReturnPlenum();
+
+  boost::optional<AirLoopHVACReturnPlenum> returnPlenum() const;
+
  protected:
 
   friend class Model_Impl;
 
  private:
+
+  boost::optional<Connection> returnPlenumOutletNodeConnection() const;
 
   REGISTER_LOGGER("openstudio.model.ZoneHVACComponent");
 };

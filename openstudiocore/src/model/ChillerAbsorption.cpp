@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -375,19 +375,19 @@ namespace detail {
     return result;
   }
 
-  unsigned ChillerAbsorption_Impl::supplyInletPort() {
+  unsigned ChillerAbsorption_Impl::supplyInletPort() const {
     return OS_Chiller_AbsorptionFields::ChilledWaterInletNodeName;
   }
 
-  unsigned ChillerAbsorption_Impl::supplyOutletPort() {
+  unsigned ChillerAbsorption_Impl::supplyOutletPort() const {
     return OS_Chiller_AbsorptionFields::ChilledWaterOutletNodeName;
   }
 
-  unsigned ChillerAbsorption_Impl::demandInletPort() {
+  unsigned ChillerAbsorption_Impl::demandInletPort() const {
     return OS_Chiller_AbsorptionFields::CondenserInletNodeName;
   }
 
-  unsigned ChillerAbsorption_Impl::demandOutletPort() {
+  unsigned ChillerAbsorption_Impl::demandOutletPort() const {
     return OS_Chiller_AbsorptionFields::CondenserOutletNodeName;
   }
 

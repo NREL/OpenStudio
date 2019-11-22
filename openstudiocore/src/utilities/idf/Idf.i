@@ -212,7 +212,7 @@
   }
 
   // for Marshal mixin
-  static openstudio::IdfObject _load(const std::string& text) const {
+  static openstudio::IdfObject _load(const std::string& text) {
     boost::optional<openstudio::IdfObject> result = openstudio::IdfObject::load(text);
     if (!result){
       throw openstudio::Exception("Cannot load IdfObject from string '" + text + "'");

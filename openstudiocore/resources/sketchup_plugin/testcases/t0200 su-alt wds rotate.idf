@@ -4,7 +4,7 @@
 !-      Use '!' comments if they need to be retained when using the IDFEditor.
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,8.9;
+  Version,9.2;
 
 !-   ===========  ALL OBJECTS IN CLASS: SIMULATIONCONTROL ===========
 
@@ -340,7 +340,6 @@
     wall-01,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -356,7 +355,6 @@
     wall-01,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -372,7 +370,6 @@
     wall-01,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -388,7 +385,6 @@
     wall-01,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -404,7 +400,6 @@
     roof-01,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -420,7 +415,6 @@
     roof-01,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -436,7 +430,6 @@
     roof-01,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -452,7 +445,6 @@
     roof-01,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -468,7 +460,6 @@
     wall-02,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -484,7 +475,6 @@
     wall-02,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -500,7 +490,6 @@
     wall-02,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -516,7 +505,6 @@
     wall-02,                 !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     Autocalculate,           !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices

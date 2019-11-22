@@ -1,0 +1,42 @@
+<%#= README.md.erb is used to auto-generate README.md. %>
+<%#= To manually maintain README.md throw away README.md.erb and manually edit README.md %>
+###### (Automatically generated documentation)
+
+# <%= name %>
+
+## Description
+<%= description %>
+
+## Modeler Description
+<%= modelerDescription %>
+
+## Measure Type
+<%= measureType %>
+
+## Taxonomy
+<%= taxonomy %>
+
+## Arguments
+
+<% arguments.each do |argument| %>
+### <%= argument[:display_name] %>
+<%= argument[:description] %>
+**Name:** <%= argument[:name] %>,
+**Type:** <%= argument[:type] %>,
+**Units:** <%= argument[:units] %>,
+**Required:** <%= argument[:required] %>,
+**Model Dependent:** <%= argument[:model_dependent] %>
+<% end %>
+
+<% if arguments.size == 0 %>
+<%= "This measure does not have any user arguments" %>
+<% end %>
+
+<% if outputs.size > 0 %>
+## Outputs
+<% output_names = [] %>
+<% outputs.each do |output| %>
+<% output_names << output[:display_name] %>
+<% end %>
+<%= output_names.join(", ") %>
+<% end %>

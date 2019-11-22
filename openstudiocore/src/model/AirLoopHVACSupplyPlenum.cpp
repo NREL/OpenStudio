@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,8 +43,8 @@
 #include "Model_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include "AirTerminalSingleDuctUncontrolled.hpp"
-#include "AirTerminalSingleDuctUncontrolled_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 #include <utilities/idd/OS_AirLoopHVAC_SupplyPlenum_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -114,12 +114,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned AirLoopHVACSupplyPlenum_Impl::inletPort()
+  unsigned AirLoopHVACSupplyPlenum_Impl::inletPort() const
   {
     return OS_AirLoopHVAC_SupplyPlenumFields::InletNode;
   }
 
-  unsigned AirLoopHVACSupplyPlenum_Impl::outletPort(unsigned branchIndex)
+  unsigned AirLoopHVACSupplyPlenum_Impl::outletPort(unsigned branchIndex) const
   {
     unsigned result;
     result = numNonextensibleFields();
@@ -127,7 +127,7 @@ namespace detail {
     return result;
   }
 
-  unsigned AirLoopHVACSupplyPlenum_Impl::nextOutletPort()
+  unsigned AirLoopHVACSupplyPlenum_Impl::nextOutletPort() const
   {
     return outletPort( this->nextBranchIndex() );
   }
@@ -161,12 +161,12 @@ namespace detail {
 
     boost::optional<ModelObject> inletObj = node.inletModelObject();
     boost::optional<ModelObject> outletObj = node.outletModelObject();
-    boost::optional<AirTerminalSingleDuctUncontrolled> directAirModelObject;
+    boost::optional<AirTerminalSingleDuctConstantVolumeNoReheat> directAirModelObject;
     boost::optional<ModelObject> directAirInletModelObject;
 
-    if( inletObj && inletObj->optionalCast<AirTerminalSingleDuctUncontrolled>() )
+    if( inletObj && inletObj->optionalCast<AirTerminalSingleDuctConstantVolumeNoReheat>() )
     {
-      directAirModelObject = inletObj->cast<AirTerminalSingleDuctUncontrolled>();
+      directAirModelObject = inletObj->cast<AirTerminalSingleDuctConstantVolumeNoReheat>();
       directAirInletModelObject = directAirModelObject->inletModelObject();
     }
 
@@ -292,7 +292,7 @@ namespace detail {
     OS_ASSERT(splitter);
     OS_ASSERT(mixer);
 
-    return AirLoopHVAC_Impl::addBranchForZoneImpl(thermalZone,t_airLoopHVAC.get(),splitter.get(),mixer.get(),terminal);
+    return AirLoopHVAC_Impl::addBranchForZoneImpl(thermalZone,t_airLoopHVAC.get(),splitter.get(),mixer.get(),true,terminal);
   }
 
   std::vector<IdfObject> AirLoopHVACSupplyPlenum_Impl::remove()
@@ -350,17 +350,17 @@ void AirLoopHVACSupplyPlenum::resetThermalZone() {
   getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->resetThermalZone();
 }
 
-unsigned AirLoopHVACSupplyPlenum::inletPort()
+unsigned AirLoopHVACSupplyPlenum::inletPort() const
 {
   return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->inletPort();
 }
 
-unsigned AirLoopHVACSupplyPlenum::outletPort(unsigned branchIndex)
+unsigned AirLoopHVACSupplyPlenum::outletPort(unsigned branchIndex) const
 {
   return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->outletPort(branchIndex);
 }
 
-unsigned AirLoopHVACSupplyPlenum::nextOutletPort()
+unsigned AirLoopHVACSupplyPlenum::nextOutletPort() const
 {
   return getImpl<detail::AirLoopHVACSupplyPlenum_Impl>()->nextOutletPort();
 }

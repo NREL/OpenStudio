@@ -1,6 +1,13 @@
 #ifndef UTILITIES_GEOMETRY_GEOMETRY_I
 #define UTILITIES_GEOMETRY_GEOMETRY_I
 
+#if defined(SWIGCSHARP)
+
+  // Avoid triggering a SWIG warning: 'object' is a C# keyword
+  %rename(threeSceneObject) openstudio::ThreeScene::object;
+
+#endif
+
 %{
   namespace openstudio{}
   using namespace openstudio;
@@ -43,29 +50,42 @@
 %template(OptionalThreeMaterial) boost::optional<openstudio::ThreeMaterial>;
 %template(OptionalThreeGeometry) boost::optional<openstudio::ThreeGeometry>;
 %template(OptionalFloorplanJS) boost::optional<openstudio::FloorplanJS>;
+%template(OptionalFloorplanObject) boost::optional<openstudio::FloorplanObject>;
 
 // create an instantiation of the vector classes
+// Note JM 2019-04-16: No need to ignore std::vector<T>::vector/resize when you have a default constructor
 %template(Point3dVector) std::vector<openstudio::Point3d>;
 %template(Point3dVectorVector) std::vector<std::vector<openstudio::Point3d> >; // for polygon subtraction routines
+%template(OptionalPoint3dVector) boost::optional< std::vector<openstudio::Point3d> >; // For openstudio::join (Intersection.hpp)
 %template(PointLatLonVector) std::vector<openstudio::PointLatLon>;
 %template(Vector3dVector) std::vector<openstudio::Vector3d>;
+
 %ignore std::vector<openstudio::Plane>::vector(size_type);
 %ignore std::vector<openstudio::Plane>::resize(size_type);
 %template(PlaneVector) std::vector<openstudio::Plane>;
+
 %template(EulerAnglesVector) std::vector<openstudio::EulerAngles>;
 %template(BoundingBoxVector) std::vector<openstudio::BoundingBox>;
+
 %ignore std::vector<openstudio::ThreeSceneChild>::vector(size_type);
 %ignore std::vector<openstudio::ThreeSceneChild>::resize(size_type);
 %template(ThreeSceneChildVector) std::vector<openstudio::ThreeSceneChild>;
+
 %ignore std::vector<openstudio::ThreeGeometry>::vector(size_type);
 %ignore std::vector<openstudio::ThreeGeometry>::resize(size_type);
 %template(ThreeGeometryVector) std::vector<openstudio::ThreeGeometry>;
+
 %ignore std::vector<openstudio::ThreeMaterial>::vector(size_type);
 %ignore std::vector<openstudio::ThreeMaterial>::resize(size_type);
 %template(ThreeMaterialVector) std::vector<openstudio::ThreeMaterial>;
-%template(ThreeModelObjectMetadataVector) std::vector<openstudio::ThreeModelObjectMetadata>;
+
 %ignore std::vector<openstudio::ThreeModelObjectMetadata>::vector(size_type);
 %ignore std::vector<openstudio::ThreeModelObjectMetadata>::resize(size_type);
+%template(ThreeModelObjectMetadataVector) std::vector<openstudio::ThreeModelObjectMetadata>;
+
+%ignore std::vector<openstudio::FloorplanObject>::vector(size_type);
+%ignore std::vector<openstudio::FloorplanObject>::resize(size_type);
+%template(FloorplanObjectVector) std::vector<openstudio::FloorplanObject>;
 
 %ignore openstudio::operator<<;
 

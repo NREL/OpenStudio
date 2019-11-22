@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,8 @@
 #include "DefaultConstructionSet_Impl.hpp"
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "ShadingSurface.hpp"
@@ -111,7 +113,7 @@ namespace detail {
     result.insert(result.end(),meters.begin(),meters.end());
 
     // building stories
-    BuildingStoryVector stories = model().getConcreteModelObjects<BuildingStory>();
+    BuildingStoryVector stories = this->buildingStories();
     result.insert(result.end(),stories.begin(),stories.end());
 
     // exterior shading groups
@@ -125,6 +127,57 @@ namespace detail {
     // spaces
     SpaceVector spaces = this->spaces();
     result.insert(result.end(), spaces.begin(), spaces.end());
+
+    // TODO: JM 2019-05-13: handle HVAC (#2449)
+    // AirLoopHVACs should be considered de facto part of the building
+    // PlantLoops may merit more attention:
+    // if a PlantLoop doesn't serve an AirLoopHVAC or a ThermalZone, should it be considered part of the Building?
+    // eg: a PlantLoop serving only a LoadProfile:Plant?
+
+    return result;
+  }
+
+  // TODO: this is far from perfect, currently this is just trying to address a known issue #3524
+  // Ideally all corner cases would be handled correctly, and HVAC too
+  std::vector<IdfObject> Building_Impl::remove() {
+
+    // A result vector, and a temporary vector to insert into the result one
+    std::vector<IdfObject> result;
+    std::vector<IdfObject> tmp;
+
+    // Spaces
+    for (auto& s: this->spaces()) {
+      tmp = s.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+    }
+
+    // thermal zones
+    for (auto& z: this->thermalZones()) {
+      tmp = z.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+    }
+
+    // exterior shading groups
+    for (auto& sg: this->shadingSurfaceGroups()) {
+      tmp = sg.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+
+    }
+
+    // building stories
+    for (auto& bs: this->buildingStories()) {
+      tmp = bs.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+    }
+
+    // meters
+    for (auto& m: this->meters()) {
+      tmp = m.remove();
+      result.insert(result.end(), tmp.begin(), tmp.end());
+    }
+
+    tmp = ParentObject_Impl::remove();
+    result.insert(result.end(), tmp.begin(), tmp.end());
 
     return result;
   }
@@ -167,7 +220,7 @@ namespace detail {
       }
 
       // BuildingStory instances
-      auto t_stories = model().getConcreteModelObjects<BuildingStory>();
+      auto t_stories = buildingStories();
       // Map of the source model story handle to the target model story "cloned" ModelObject
       std::map<Handle,BuildingStory> m_storyMap;
 
@@ -281,37 +334,34 @@ namespace detail {
     return value;
   }
 
-  boost::optional<std::string> Building_Impl::standardsBuildingType() const
+
+  boost::optional<std::string> Building_Impl::standardsTemplate() const
   {
-    return getString(OS_BuildingFields::StandardsBuildingType, false, true);
+    return getString(OS_BuildingFields::StandardsTemplate, false, true);
   }
 
-  std::vector<std::string> Building_Impl::suggestedStandardsBuildingTypes() const
+  std::vector<std::string> Building_Impl::suggestedStandardsTemplates() const
   {
-    std::vector<std::string> result;
 
-    boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
+    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
 
-    // DLM: temp code, eventually get from StandardsLibrary
+    // Make a dummy model and a dummy space Type,
+    // and call suggestedStandardsTemplates from it, so we don't have to repeat code here
     Model tempModel;
     SpaceType tempSpaceType(tempModel);
-    std::vector<std::string> tempSuggestions = tempSpaceType.suggestedStandardsBuildingTypes();
-    for (const std::string& suggestion : tempSuggestions){
-      result.push_back(suggestion);
-    }
+    std::vector<std::string> result = tempSpaceType.suggestedStandardsTemplates();
 
     // include values from model
-    for (const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>()){
-      boost::optional<std::string> otherBuildingType = other.standardsBuildingType();
-      if (otherBuildingType){
-        result.push_back(*otherBuildingType);
+    for( const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>() ){
+      if( boost::optional<std::string> otherTemplate = other.standardsTemplate() ) {
+        result.push_back(*otherTemplate);
       }
     }
 
-    // remove standardsBuildingType
+    // remove standardsTemplate
     IstringFind finder;
-    if (standardsBuildingType){
-      finder.addTarget(*standardsBuildingType);
+    if( standardsTemplate ){
+      finder.addTarget(*standardsTemplate);
     }
     auto it = std::remove_if(result.begin(), result.end(), finder);
     result.resize( std::distance(result.begin(),it) );
@@ -325,11 +375,89 @@ namespace detail {
     result.resize( std::distance(result.begin(),it) );
 
     // add current to front
-    if (standardsBuildingType){
-      result.insert(result.begin(), *standardsBuildingType);
+    if( standardsTemplate ){
+      result.insert(result.begin(), *standardsTemplate);
     }
 
     return result;
+  }
+
+  bool Building_Impl::setStandardsTemplate(const std::string& standardsTemplate)
+  {
+    bool result = setString(OS_BuildingFields::StandardsTemplate, standardsTemplate);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void Building_Impl::resetStandardsTemplate()
+  {
+    bool test = setString(OS_BuildingFields::StandardsTemplate, "");
+    OS_ASSERT(test);
+  }
+
+  boost::optional<std::string> Building_Impl::standardsBuildingType() const
+  {
+    return getString(OS_BuildingFields::StandardsBuildingType, false, true);
+  }
+
+  std::vector<std::string> Building_Impl::suggestedStandardsBuildingTypes() const
+  {
+    // If standardsTemplate isn't set, return empty
+    boost::optional<std::string> standardsTemplate = this->standardsTemplate();
+    if( !standardsTemplate ) {
+      return std::vector<std::string>();
+    } else {
+
+      boost::optional<std::string> standardsBuildingType = this->standardsBuildingType();
+
+      // Make a dummy Model and a dummy space Type,
+      // and call suggestedStandardsTemplates from it, so we don't have to repeat code here
+      Model tempModel;
+      SpaceType tempSpaceType(tempModel);
+      // We set the standards template to the value
+      tempSpaceType.setStandardsTemplate( standardsTemplate.get() );
+      std::vector<std::string> result = tempSpaceType.suggestedStandardsBuildingTypes();
+
+      // include values from model
+      for( const SpaceType& other : this->model().getConcreteModelObjects<SpaceType>() ){
+        if( boost::optional<std::string> otherBuildingType = other.standardsBuildingType() ){
+          result.push_back(*otherBuildingType);
+        }
+      }
+
+      // remove standardsBuildingType
+      IstringFind finder;
+      if( standardsBuildingType ){
+        finder.addTarget(*standardsBuildingType);
+      }
+      auto it = std::remove_if(result.begin(), result.end(), finder);
+      result.resize( std::distance(result.begin(),it) );
+
+      // sort, unique only works on consecutive elements
+      std::sort(result.begin(), result.end(), IstringCompare());
+      // make unique
+      it = std::unique(result.begin(), result.end(), IstringEqual());
+      result.resize( std::distance(result.begin(),it) );
+
+      // add current to front
+      if( standardsBuildingType ){
+        result.insert(result.begin(), *standardsBuildingType);
+      }
+      return result;
+    }
+  }
+
+  bool Building_Impl::setStandardsBuildingType(const std::string& standardsBuildingType)
+  {
+    bool result = setString(OS_BuildingFields::StandardsBuildingType, standardsBuildingType);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void Building_Impl::resetStandardsBuildingType()
+  {
+    bool test = setString(OS_BuildingFields::StandardsBuildingType, "");
+    OS_ASSERT(test);
   }
 
   bool Building_Impl::relocatable() const
@@ -410,19 +538,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool Building_Impl::setStandardsBuildingType(const std::string& standardsBuildingType)
-  {
-    bool result = setString(OS_BuildingFields::StandardsBuildingType, standardsBuildingType);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void Building_Impl::resetStandardsBuildingType()
-  {
-    bool test = setString(OS_BuildingFields::StandardsBuildingType, "");
-    OS_ASSERT(test);
-  }
-
   bool Building_Impl::setRelocatable(bool relocatable)
   {
     bool result = false;
@@ -478,6 +593,36 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<DefaultScheduleSet>(OS_BuildingFields::DefaultScheduleSetName);
   }
 
+  boost::optional<Schedule> Building_Impl::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const
+  {
+    boost::optional<Schedule> result;
+    boost::optional<DefaultScheduleSet> defaultScheduleSet;
+    boost::optional<SpaceType> spaceType;
+
+    // first check this object (building)
+    defaultScheduleSet = this->defaultScheduleSet();
+    if (defaultScheduleSet){
+      result = defaultScheduleSet->getDefaultSchedule(defaultScheduleType);
+      if (result){
+        return result;
+      }
+    }
+
+
+    // then check building's space type
+    if (boost::optional<SpaceType> spaceType = this->spaceType()) {
+      defaultScheduleSet = spaceType->defaultScheduleSet();
+      if (defaultScheduleSet){
+        result = defaultScheduleSet->getDefaultSchedule(defaultScheduleType);
+        if (result){
+          return result;
+        }
+      }
+    }
+
+    return boost::none;
+  }
+
   bool Building_Impl::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet)
   {
     return setPointer(OS_BuildingFields::DefaultScheduleSetName, defaultScheduleSet.handle());
@@ -498,6 +643,12 @@ namespace detail {
       }
     }
     return result;
+  }
+
+  BuildingStoryVector Building_Impl::buildingStories() const
+  {
+    // all Building Stories in workspace implicitly belong to building
+    return this->model().getConcreteModelObjects<BuildingStory>();
   }
 
   OptionalFacility Building_Impl::facility() const
@@ -920,6 +1071,11 @@ namespace detail {
     return result;
   }
 
+  std::vector<ModelObject> Building_Impl::buildingStoriesAsModelObjects() const {
+    ModelObjectVector result = castVector<ModelObject>(buildingStories());
+    return result;
+  }
+
   boost::optional<ModelObject> Building_Impl::facilityAsModelObject() const {
     OptionalModelObject result;
     OptionalFacility intermediate = facility();
@@ -1037,12 +1193,36 @@ boost::optional<double> Building::nominalFloortoCeilingHeight() const {
   return getImpl<detail::Building_Impl>()->nominalFloortoCeilingHeight();
 }
 
+boost::optional<std::string> Building::standardsTemplate() const{
+  return getImpl<detail::Building_Impl>()->standardsTemplate();
+}
+
+std::vector<std::string> Building::suggestedStandardsTemplates() const{
+  return getImpl<detail::Building_Impl>()->suggestedStandardsTemplates();
+}
+
+bool Building::setStandardsTemplate(const std::string& standardsTemplate){
+  return getImpl<detail::Building_Impl>()->setStandardsTemplate(standardsTemplate);
+}
+
+void Building::resetStandardsTemplate(){
+  getImpl<detail::Building_Impl>()->resetStandardsTemplate();
+}
+
 boost::optional<std::string> Building::standardsBuildingType() const{
   return getImpl<detail::Building_Impl>()->standardsBuildingType();
 }
 
 std::vector<std::string> Building::suggestedStandardsBuildingTypes() const{
   return getImpl<detail::Building_Impl>()->suggestedStandardsBuildingTypes();
+}
+
+bool Building::setStandardsBuildingType(const std::string& standardsBuildingType){
+  return getImpl<detail::Building_Impl>()->setStandardsBuildingType(standardsBuildingType);
+}
+
+void Building::resetStandardsBuildingType(){
+  getImpl<detail::Building_Impl>()->resetStandardsBuildingType();
 }
 
 bool Building::relocatable() const{
@@ -1101,14 +1281,6 @@ void Building::resetNominalFloortoCeilingHeight() {
   getImpl<detail::Building_Impl>()->resetNominalFloortoCeilingHeight();
 }
 
-bool Building::setStandardsBuildingType(const std::string& standardsBuildingType){
-  return getImpl<detail::Building_Impl>()->setStandardsBuildingType(standardsBuildingType);
-}
-
-void Building::resetStandardsBuildingType(){
-  getImpl<detail::Building_Impl>()->resetStandardsBuildingType();
-}
-
 bool Building::setRelocatable(bool isRelocatable){
   return getImpl<detail::Building_Impl>()->setRelocatable(isRelocatable);
 }
@@ -1157,6 +1329,10 @@ boost::optional<DefaultScheduleSet> Building::defaultScheduleSet() const
   return getImpl<detail::Building_Impl>()->defaultScheduleSet();
 }
 
+boost::optional<Schedule> Building::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+  return getImpl<detail::Building_Impl>()->getDefaultSchedule(defaultScheduleType);
+}
+
 bool Building::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet)
 {
   return getImpl<detail::Building_Impl>()->setDefaultScheduleSet(defaultScheduleSet);
@@ -1170,6 +1346,11 @@ void Building::resetDefaultScheduleSet()
 OutputMeterVector Building::meters() const
 {
   return getImpl<detail::Building_Impl>()->meters();
+}
+
+BuildingStoryVector Building::buildingStories() const
+{
+  return getImpl<detail::Building_Impl>()->buildingStories();
 }
 
 OptionalFacility Building::facility() const

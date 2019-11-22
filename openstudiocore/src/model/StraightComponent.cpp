@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -78,12 +78,12 @@ StraightComponent_Impl::StraightComponent_Impl(const StraightComponent_Impl& oth
 {
 }
 
-OptionalModelObject StraightComponent_Impl::inletModelObject()
+OptionalModelObject StraightComponent_Impl::inletModelObject() const
 {
   return connectedObject(inletPort());
 }
 
-OptionalModelObject StraightComponent_Impl::outletModelObject()
+OptionalModelObject StraightComponent_Impl::outletModelObject() const
 {
   return connectedObject(outletPort());
 }
@@ -229,22 +229,22 @@ StraightComponent::StraightComponent(std::shared_ptr<detail::StraightComponent_I
   : HVACComponent(std::move(p))
 {}
 
-unsigned StraightComponent::inletPort()
+unsigned StraightComponent::inletPort() const
 {
   return getImpl<detail::StraightComponent_Impl>()->inletPort();
 }
 
-unsigned StraightComponent::outletPort()
+unsigned StraightComponent::outletPort() const
 {
   return getImpl<detail::StraightComponent_Impl>()->outletPort();
 }
 
-OptionalModelObject StraightComponent::inletModelObject()
+OptionalModelObject StraightComponent::inletModelObject() const
 {
   return getImpl<detail::StraightComponent_Impl>()->inletModelObject();
 }
 
-OptionalModelObject StraightComponent::outletModelObject()
+OptionalModelObject StraightComponent::outletModelObject() const
 {
   return getImpl<detail::StraightComponent_Impl>()->outletModelObject();
 }

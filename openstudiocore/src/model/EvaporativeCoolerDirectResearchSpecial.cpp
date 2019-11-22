@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -105,12 +105,12 @@ namespace detail{
     return result;
   }
 
-  unsigned EvaporativeCoolerDirectResearchSpecial_Impl::inletPort()
+  unsigned EvaporativeCoolerDirectResearchSpecial_Impl::inletPort() const
   {
     return OS_EvaporativeCooler_Direct_ResearchSpecialFields::AirInletNodeName;
   }
 
-  unsigned EvaporativeCoolerDirectResearchSpecial_Impl::outletPort()
+  unsigned EvaporativeCoolerDirectResearchSpecial_Impl::outletPort() const
   {
     return OS_EvaporativeCooler_Direct_ResearchSpecialFields::AirOutletNodeName;
   }
@@ -172,14 +172,14 @@ namespace detail{
     return result;
   }
 
-  double EvaporativeCoolerDirectResearchSpecial_Impl::coolerEffectiveness() const
+  double EvaporativeCoolerDirectResearchSpecial_Impl::coolerDesignEffectiveness() const
   {
-    return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::CoolerEffectiveness).get();
+    return this->getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::CoolerDesignEffectiveness).get();
   }
 
-  bool EvaporativeCoolerDirectResearchSpecial_Impl::setCoolerEffectiveness( double value )
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::setCoolerDesignEffectiveness( double value )
   {
-    return this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::CoolerEffectiveness,value);
+    return this->setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::CoolerDesignEffectiveness,value);
   }
 
   boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::recirculatingWaterPumpPowerConsumption() const
@@ -325,6 +325,38 @@ namespace detail{
     OS_ASSERT(result);
   }
 
+
+  // Evaporative Operation Minimum Drybulb Temperature
+  double EvaporativeCoolerDirectResearchSpecial_Impl::evaporativeOperationMinimumDrybulbTemperature() const {
+    return getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature).get();
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature) {
+    bool result = setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature, evaporativeOperationMinimumDrybulbTemperature);
+    return result;
+  }
+
+  // Evaporative Operation Maximum Limit Wetbulb Temperature
+  double EvaporativeCoolerDirectResearchSpecial_Impl::evaporativeOperationMaximumLimitWetbulbTemperature() const {
+    return getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature).get();
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature) {
+    bool result = setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature, evaporativeOperationMaximumLimitWetbulbTemperature);
+    return result;
+  }
+
+  // Evaporative Operation Maximum Limit Drybulb Temperature
+  double EvaporativeCoolerDirectResearchSpecial_Impl::evaporativeOperationMaximumLimitDrybulbTemperature() const {
+    return getDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature).get();
+  }
+
+  bool EvaporativeCoolerDirectResearchSpecial_Impl::setEvaporativeOperationMaximumLimitDrybulbTemperature(double evaporativeOperationMaximumLimitDrybulbTemperature) {
+    bool result = setDouble(OS_EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature, evaporativeOperationMaximumLimitDrybulbTemperature);
+    return result;
+  }
+
+
   boost::optional<double> EvaporativeCoolerDirectResearchSpecial_Impl::autosizedRecirculatingWaterPumpPowerConsumption() const {
     return getAutosizedValue("Recirculating Pump Power", "W");
   }
@@ -362,7 +394,7 @@ EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(c
 
   this->setAvailabilitySchedule(schedule);
 
-  setCoolerEffectiveness(1.0);
+  setCoolerDesignEffectiveness(1.0);
 
   setRecirculatingWaterPumpPowerConsumption(0.0);
 
@@ -370,7 +402,17 @@ EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(c
 
   setBlowdownConcentrationRatio(0.0);
 
+  // TODO: JM 2019-02-25: This input seems wrong given the current E+ IDD notes / IO documentation.
+  // This isn't a regular sizing factor, but something in W/(m3/s), with a default of 90 and a range of 55 to 150.0
+  // @kbenne for review please
   setWaterPumpPowerSizingFactor(0.1);
+
+
+  // E+ suggested values
+  setEvaporativeOperationMinimumDrybulbTemperature(16);
+  setEvaporativeOperationMaximumLimitWetbulbTemperature(24);
+  setEvaporativeOperationMaximumLimitDrybulbTemperature(28);
+
 }
 
 Schedule EvaporativeCoolerDirectResearchSpecial::availabilitySchedule() const
@@ -393,14 +435,26 @@ bool EvaporativeCoolerDirectResearchSpecial::setAvailableSchedule(Schedule & sch
   return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setAvailabilitySchedule(schedule);
 }
 
+double EvaporativeCoolerDirectResearchSpecial::coolerDesignEffectiveness() const
+{
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->coolerDesignEffectiveness();
+}
+
 double EvaporativeCoolerDirectResearchSpecial::coolerEffectiveness() const
 {
-  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->coolerEffectiveness();
+  LOG(Info, "This method is deprecated, please replace it with coolerDesignEffectiveness.");
+  return coolerDesignEffectiveness();
+}
+
+bool EvaporativeCoolerDirectResearchSpecial::setCoolerDesignEffectiveness( double value )
+{
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setCoolerDesignEffectiveness(value);
 }
 
 bool EvaporativeCoolerDirectResearchSpecial::setCoolerEffectiveness( double value )
 {
-  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setCoolerEffectiveness(value);
+  LOG(Info, "This method is deprecated, please replace it with setCoolerDesignEffectiveness.");
+  return setCoolerDesignEffectiveness(value);
 }
 
 boost::optional<double> EvaporativeCoolerDirectResearchSpecial::recirculatingWaterPumpPowerConsumption() const
@@ -503,6 +557,38 @@ void EvaporativeCoolerDirectResearchSpecial::autosizePrimaryAirDesignFlowRate()
 bool EvaporativeCoolerDirectResearchSpecial::isPrimaryAirDesignFlowRateAutosized() const
 {
   return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->isPrimaryAirDesignFlowRateAutosized();
+}
+
+// Evaporative Operation Minimum Drybulb Temperature
+double EvaporativeCoolerDirectResearchSpecial::evaporativeOperationMinimumDrybulbTemperature() const
+{
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->evaporativeOperationMinimumDrybulbTemperature();
+}
+
+bool EvaporativeCoolerDirectResearchSpecial::setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature) {
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setEvaporativeOperationMinimumDrybulbTemperature(evaporativeOperationMinimumDrybulbTemperature);
+}
+
+// Evaporative Operation Maximum Limit Wetbulb Temperature
+double EvaporativeCoolerDirectResearchSpecial::evaporativeOperationMaximumLimitWetbulbTemperature() const
+{
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->evaporativeOperationMaximumLimitWetbulbTemperature();
+}
+
+bool EvaporativeCoolerDirectResearchSpecial::setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature)
+{
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setEvaporativeOperationMaximumLimitWetbulbTemperature(evaporativeOperationMaximumLimitWetbulbTemperature);
+}
+
+// Evaporative Operation Maximum Limit Drybulb Temperature
+double EvaporativeCoolerDirectResearchSpecial::evaporativeOperationMaximumLimitDrybulbTemperature() const
+{
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->evaporativeOperationMaximumLimitDrybulbTemperature();
+}
+
+bool EvaporativeCoolerDirectResearchSpecial::setEvaporativeOperationMaximumLimitDrybulbTemperature(double evaporativeOperationMaximumLimitDrybulbTemperature)
+{
+  return getImpl<detail::EvaporativeCoolerDirectResearchSpecial_Impl>()->setEvaporativeOperationMaximumLimitDrybulbTemperature(evaporativeOperationMaximumLimitDrybulbTemperature);
 }
 
 EvaporativeCoolerDirectResearchSpecial::EvaporativeCoolerDirectResearchSpecial(

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,6 +35,9 @@
 
 namespace openstudio {
 namespace model {
+
+class ThermalZone;
+class Space;
 
 namespace detail {
 
@@ -76,6 +79,8 @@ namespace detail {
 
     std::string actuatedComponentType() const;
 
+    boost::optional<ModelObject> zoneName() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -85,6 +90,12 @@ namespace detail {
     bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
     bool setActuatedComponentType(const std::string& actuatedComponentType);
+
+    bool setThermalZone(const ThermalZone& thermalZone);
+
+    bool setSpace(const Space& space);
+
+    void resetZoneName();
 
     //@}
     /** @name Other */

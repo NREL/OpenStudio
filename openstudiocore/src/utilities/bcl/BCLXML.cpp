@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -29,15 +29,9 @@
 
 #include "BCLXML.hpp"
 
-#include "../data/Attribute.hpp"
 
-#include "../units/Unit.hpp"
 #include "../units/Quantity.hpp"
-#include "../core/Compare.hpp"
-#include "../core/String.hpp"
-#include "../core/System.hpp"
 #include "../core/Checksum.hpp"
-#include "../core/Assert.hpp"
 #include "../core/FilesystemHelpers.hpp"
 #include "../time/DateTime.hpp"
 
@@ -212,6 +206,8 @@ namespace openstudio{
         openstudio::path path; ;
         if (usageType == "script"){
           path = m_path.parent_path() / toPath(fileName);
+        }else if (usageType == "doc"){
+          path = m_path.parent_path() / toPath("docs") / toPath(fileName);
         }else if (usageType == "test"){
           path = m_path.parent_path() / toPath("tests") / toPath(fileName);
         }else if (usageType == "resource"){

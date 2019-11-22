@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1637,22 +1637,22 @@ namespace detail {
     return true;
   }
 
-  unsigned WaterHeaterMixed_Impl::supplyInletPort()
+  unsigned WaterHeaterMixed_Impl::supplyInletPort() const
   {
     return OS_WaterHeater_MixedFields::UseSideInletNodeName;
   }
 
-  unsigned WaterHeaterMixed_Impl::supplyOutletPort()
+  unsigned WaterHeaterMixed_Impl::supplyOutletPort() const
   {
     return OS_WaterHeater_MixedFields::UseSideOutletNodeName;
   }
 
-  unsigned WaterHeaterMixed_Impl::demandInletPort()
+  unsigned WaterHeaterMixed_Impl::demandInletPort() const
   {
     return OS_WaterHeater_MixedFields::SourceSideInletNodeName;
   }
 
-  unsigned WaterHeaterMixed_Impl::demandOutletPort()
+  unsigned WaterHeaterMixed_Impl::demandOutletPort() const
   {
     return OS_WaterHeater_MixedFields::SourceSideOutletNodeName;
   }
@@ -2622,4 +2622,4 @@ WaterHeaterMixed::WaterHeaterMixed(std::shared_ptr<detail::WaterHeaterMixed_Impl
   }
 
 } // model
-} // openstudio
+} // openstudio

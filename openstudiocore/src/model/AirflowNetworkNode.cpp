@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -58,19 +58,19 @@ AirflowNetworkNode_Impl::AirflowNetworkNode_Impl(IddObjectType type, Model_Impl*
 
 AirflowNetworkNode_Impl::AirflowNetworkNode_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
   : ModelObject_Impl(idfObject, model, keepHandle)
-{ 
+{
 }
 
 AirflowNetworkNode_Impl::AirflowNetworkNode_Impl(
-    const openstudio::detail::WorkspaceObject_Impl& other, 
-    Model_Impl* model, 
+    const openstudio::detail::WorkspaceObject_Impl& other,
+    Model_Impl* model,
     bool keepHandle)
   : ModelObject_Impl(other,model,keepHandle)
 {
 }
 
 AirflowNetworkNode_Impl::AirflowNetworkNode_Impl(const AirflowNetworkNode_Impl& other,
-                                                 Model_Impl* model, 
+                                                 Model_Impl* model,
                                                  bool keepHandles)
   : ModelObject_Impl(other,model,keepHandles)
 {

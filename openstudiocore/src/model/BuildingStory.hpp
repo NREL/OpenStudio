@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,6 +40,7 @@ namespace model {
 class SpaceType;
 class DefaultConstructionSet;
 class DefaultScheduleSet;
+class DefaultScheduleType;
 class Space;
 class RenderingColor;
 
@@ -107,6 +108,12 @@ class MODEL_API BuildingStory : public ModelObject {
 
   /// Resets the default schedule set for this space.
   void resetDefaultScheduleSet();
+
+  /// Returns the default schedule set for the specified type if available by searching (in order):
+  /// This object
+  /// The building's default schedule set
+  /// The building's space type's default schedule set
+  boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
 
   /// Returns the rendering color.
   boost::optional<RenderingColor> renderingColor() const;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -58,27 +58,27 @@ namespace detail {
 
     std::vector<openstudio::IdfObject> remove() override;
 
-    unsigned inletPort() override;
+    virtual unsigned inletPort() const override;
 
-    unsigned outletPort(unsigned branchIndex) override;
+    unsigned outletPort(unsigned branchIndex) const override;
 
-    unsigned nextOutletPort() override;
+    unsigned nextOutletPort() const override;
 
-    //boost::optional<ModelObject> inletModelObject();
+    //boost::optional<ModelObject> inletModelObject() const;
     //
-    //virtual boost::optional<ModelObject> outletModelObject(unsigned branchIndex);
+    //virtual boost::optional<ModelObject> outletModelObject(unsigned branchIndex) const override;
     //
-    //virtual boost::optional<ModelObject> lastOutletModelObject();
+    //virtual boost::optional<ModelObject> lastOutletModelObject() const override;
     //
-    //virtual std::vector<ModelObject> outletModelObjects();
+    //virtual std::vector<ModelObject> outletModelObjects() const override;
     //
-    //unsigned newOutletPortAfterBranch(unsigned branchIndex);
+    //virtual unsigned newOutletPortAfterBranch(unsigned branchIndex) override;
     //
-    //unsigned branchIndexForOutletModelObject( ModelObject modelObject );
+    //virtual unsigned branchIndexForOutletModelObject( ModelObject modelObject ) const override;
     //
-    //unsigned nextBranchIndex();
+    //virtual unsigned nextBranchIndex() const override;
     //
-    //void removePortForBranch(unsigned branchIndex);
+    //virtual void removePortForBranch(unsigned branchIndex) override;
 
     virtual bool addToNode(Node & node) override;
 

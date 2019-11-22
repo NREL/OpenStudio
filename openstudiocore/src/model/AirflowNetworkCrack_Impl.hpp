@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,8 +30,8 @@
 #ifndef MODEL_AIRFLOWNETWORKCRACK_IMPL_HPP
 #define MODEL_AIRFLOWNETWORKCRACK_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
-#include <model/ModelObject_Impl.hpp>
+#include "ModelAPI.hpp"
+#include "ModelObject_Impl.hpp"
 
 #include "AirflowNetworkComponent_Impl.hpp"
 

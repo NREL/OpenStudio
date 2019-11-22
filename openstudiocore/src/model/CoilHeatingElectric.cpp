@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -191,12 +191,12 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  unsigned CoilHeatingElectric_Impl::inletPort()
+  unsigned CoilHeatingElectric_Impl::inletPort() const
   {
     return OS_Coil_Heating_ElectricFields::AirInletNodeName;
   }
 
-  unsigned CoilHeatingElectric_Impl::outletPort()
+  unsigned CoilHeatingElectric_Impl::outletPort() const
   {
     return OS_Coil_Heating_ElectricFields::AirOutletNodeName;
   }
@@ -230,24 +230,12 @@ namespace detail {
     {
       if( ! airLoop->demandComponent(node.handle()) )
       {
-        if( StraightComponent_Impl::addToNode( node ) )
-        {
-          if( boost::optional<Node> node = outletModelObject()->optionalCast<Node>() )
-          {
-            setTemperatureSetpointNode(node.get());
-          }
-          return true;
-        }
+        return StraightComponent_Impl::addToNode( node );
       }
     }
 
     if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
-      if ( StraightComponent_Impl::addToNode( node ) ) {
-        if ( auto _node = outletModelObject()->optionalCast<Node>() ) {
-          setTemperatureSetpointNode(_node.get());
-        }
-        return true;
-      }
+      return StraightComponent_Impl::addToNode( node );
     }
 
     return false;

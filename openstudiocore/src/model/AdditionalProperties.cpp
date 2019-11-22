@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -133,6 +133,11 @@ namespace detail {
       }
     }
     return boost::none;
+  }
+
+  bool AdditionalProperties_Impl::hasFeature(const std::string &name) const
+  {
+    return getFeatureGroupByName(name);
   }
 
   boost::optional<std::string> AdditionalProperties_Impl::getFeatureDataType(const std::string &name) const
@@ -369,6 +374,11 @@ IddObjectType AdditionalProperties::iddObjectType() {
 std::vector<std::string> AdditionalProperties::featureNames() const
 {
   return getImpl<detail::AdditionalProperties_Impl>()->featureNames();
+}
+
+bool AdditionalProperties::hasFeature(const std::string& name) const
+{
+  return getImpl<detail::AdditionalProperties_Impl>()->hasFeature(name);
 }
 
 boost::optional<std::string> AdditionalProperties::getFeatureDataType(const std::string& name) const

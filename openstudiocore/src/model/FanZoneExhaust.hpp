@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -68,6 +68,10 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
 
   boost::optional<Schedule> availabilitySchedule() const;
 
+
+  double fanTotalEfficiency() const;
+
+  /** Deprecated, forwards to fanTotalEfficiency */
   double fanEfficiency() const;
 
   double pressureRise() const;
@@ -92,7 +96,10 @@ class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
 
   void resetAvailabilitySchedule();
 
-  bool setFanEfficiency(double fanEfficiency);
+  bool setFanTotalEfficiency(double fanTotalEfficiency);
+
+  /** Deprecated, forwards to setFanTotalEfficiency */
+  bool setFanEfficiency(double fanTotalEfficiency);
 
   bool setPressureRise(double pressureRise);
 
@@ -148,4 +155,4 @@ typedef std::vector<FanZoneExhaust> FanZoneExhaustVector;
 } // model
 } // openstudio
 
-#endif // MODEL_FANZONEEXHAUST_HPP
+#endif // MODEL_FANZONEEXHAUST_HPP

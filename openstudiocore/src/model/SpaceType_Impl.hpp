@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,7 @@ class People;
 class Lights;
 class Luminaire;
 class ElectricEquipment;
+class ElectricEquipmentITEAirCooled;
 class GasEquipment;
 class HotWaterEquipment;
 class SteamEquipment;
@@ -101,12 +102,16 @@ namespace detail {
     /// Returns the rendering color.
     boost::optional<RenderingColor> renderingColor() const;
 
-    boost::optional<std::string> standardsBuildingType() const;
+    /** This corresponds to the energy Standard that is used: eg: 90.1-2010, 90.1-2013 **/
+    boost::optional<std::string> standardsTemplate() const;
+    std::vector<std::string> suggestedStandardsTemplates() const;
 
+    /** This corresponds to the Building Types in the template: eg: FullServiceRestaurant, Hospital **/
+    boost::optional<std::string> standardsBuildingType() const;
     std::vector<std::string> suggestedStandardsBuildingTypes() const;
 
+    /** This corresponds to the Space Types under the Building Type: eg: Kitchen, Corridor **/
     boost::optional<std::string> standardsSpaceType() const;
-
     std::vector<std::string> suggestedStandardsSpaceTypes() const;
 
     //@}
@@ -130,6 +135,9 @@ namespace detail {
 
     /// Resets the rendering color.
     void resetRenderingColor();
+
+    bool setStandardsTemplate(const std::string& standardsTemplate);
+    void resetStandardsTemplate();
 
     bool setStandardsBuildingType(const std::string& standardsBuildingType);
     void resetStandardsBuildingType();
@@ -164,6 +172,9 @@ namespace detail {
 
     /// Returns all ElectricEquipment in this space type.
     std::vector<ElectricEquipment> electricEquipment() const;
+
+    /// Returns all ElectricEquipmentITEAirCooled in this space type.
+    std::vector<ElectricEquipmentITEAirCooled> electricEquipmentITEAirCooled() const;
 
     /// Returns all GasEquipment in this space type.
     std::vector<GasEquipment> gasEquipment() const;
@@ -316,6 +327,11 @@ namespace detail {
 
     double getElectricEquipmentPowerPerPerson(double floorArea, double numPeople) const;
 
+    /** Returns the total IT equipment power per space floor area, if it can be calculated
+    *  directly from the underlying electricEquipmentITEAirCooled() data (without knowing floorArea and
+    *  numPeople). */
+    boost::optional<double> electricEquipmentITEAirCooledPowerPerFloorArea() const;
+
     /** Returns the total gas equipment power per space floor area, if it can be calculated
      *  directly from the underlying gasEquipment() data (without knowing floorArea and
      *  numPeople). */
@@ -372,6 +388,7 @@ namespace detail {
     std::vector<ModelObject> lightsAsModelObjects() const;
     std::vector<ModelObject> luminairesAsModelObjects() const;
     std::vector<ModelObject> electricEquipmentAsModelObjects() const;
+    std::vector<ModelObject> electricEquipmentITEAirCooledAsModelObjects() const;
     std::vector<ModelObject> gasEquipmentAsModelObjects() const;
     std::vector<ModelObject> hotWaterEquipmentAsModelObjects() const;
     std::vector<ModelObject> steamEquipmentAsModelObjects() const;
@@ -390,8 +407,8 @@ namespace detail {
     template <typename T>
     void removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep);
 
-    static QMap<QString, QVariant> m_standardsMap;
-    void parseStandardsMap() const;
+    static QJsonArray m_standardsArr;
+    void parseStandardsJSON() const;
   };
 
 } // detail

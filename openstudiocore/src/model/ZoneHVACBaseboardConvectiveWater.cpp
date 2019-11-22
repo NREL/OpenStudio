@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -226,7 +226,7 @@ std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove()
     return false;
   }
 
-  boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveWater_Impl::thermalZone()
+  boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveWater_Impl::thermalZone() const
   {
     ModelObject thisObject = this->getObject<ModelObject>();
     std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
@@ -326,7 +326,7 @@ bool ZoneHVACBaseboardConvectiveWater::setAvailabilitySchedule(Schedule& schedul
 bool ZoneHVACBaseboardConvectiveWater::setHeatingCoil(const StraightComponent& baseboardHeatingCoil) {
   return getImpl<detail::ZoneHVACBaseboardConvectiveWater_Impl>()->setHeatingCoil(baseboardHeatingCoil);
 }
-boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveWater::thermalZone()
+boost::optional<ThermalZone> ZoneHVACBaseboardConvectiveWater::thermalZone() const
 {
   return getImpl<detail::ZoneHVACBaseboardConvectiveWater_Impl>()->thermalZone();
 }

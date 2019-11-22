@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,10 +36,16 @@
 #include "../Path.hpp"
 #include "../PathHelpers.hpp"
 #include "../URLHelpers.hpp"
+#include "../Filesystem.hpp"
+#include "utilities/sql/SqlFileDataDictionary.hpp"
+
+#include <QTextCodec>
+#include <clocale>
 
 using openstudio::path;
 using openstudio::toPath;
 using openstudio::toString;
+using openstudio::toQString;
 using openstudio::completePathToFile;
 using openstudio::setFileExtension;
 using openstudio::makeParentFolder;
@@ -88,6 +94,7 @@ TEST_F(CoreFixture, Path_CompletePathToFile)
 
 TEST_F(CoreFixture, Path_toString)
 {
+#ifdef _WINDOWS
   EXPECT_EQ("energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("energyplus/5ZoneAirCooled/eplusout.sql")));
   EXPECT_EQ("energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("energyplus\\5ZoneAirCooled\\eplusout.sql")));
   EXPECT_EQ("/energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("/energyplus/5ZoneAirCooled/eplusout.sql")));
@@ -100,6 +107,20 @@ TEST_F(CoreFixture, Path_toString)
   EXPECT_EQ("energyplus/5ZoneAirCooled", toString(toPath("energyplus\\5ZoneAirCooled")));
   EXPECT_EQ("/energyplus/5ZoneAirCooled", toString(toPath("/energyplus/5ZoneAirCooled")));
   EXPECT_EQ("/energyplus/5ZoneAirCooled", toString(toPath("\\energyplus\\5ZoneAirCooled")));
+#else
+  EXPECT_EQ("energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("energyplus/5ZoneAirCooled/eplusout.sql")));
+  EXPECT_EQ("energyplus\\5ZoneAirCooled\\eplusout.sql", toString(toPath("energyplus\\5ZoneAirCooled\\eplusout.sql")));
+  EXPECT_EQ("/energyplus/5ZoneAirCooled/eplusout.sql", toString(toPath("/energyplus/5ZoneAirCooled/eplusout.sql")));
+  EXPECT_EQ("/energyplus\\5ZoneAirCooled\\eplusout.sql", toString(toPath("/energyplus\\5ZoneAirCooled\\eplusout.sql")));
+  EXPECT_EQ("energyplus/5ZoneAirCooled/", toString(toPath("energyplus/5ZoneAirCooled/")));
+  EXPECT_EQ("energyplus\\5ZoneAirCooled\\", toString(toPath("energyplus\\5ZoneAirCooled\\")));
+  EXPECT_EQ("/energyplus/5ZoneAirCooled/", toString(toPath("/energyplus/5ZoneAirCooled/")));
+  EXPECT_EQ("\\energyplus\\5ZoneAirCooled\\", toString(toPath("\\energyplus\\5ZoneAirCooled\\")));
+  EXPECT_EQ("energyplus/5ZoneAirCooled", toString(toPath("energyplus/5ZoneAirCooled")));
+  EXPECT_EQ("energyplus\\5ZoneAirCooled", toString(toPath("energyplus\\5ZoneAirCooled")));
+  EXPECT_EQ("/energyplus/5ZoneAirCooled", toString(toPath("/energyplus/5ZoneAirCooled")));
+  EXPECT_EQ("\\energyplus\\5ZoneAirCooled", toString(toPath("\\energyplus\\5ZoneAirCooled")));
+#endif
 }
 
 TEST_F(CoreFixture, Path_RelativePathToFile)
@@ -352,10 +373,12 @@ TEST_F(CoreFixture, IsNetworkPath)
   EXPECT_FALSE(isNetworkPath(path));
   EXPECT_FALSE(isNetworkPathAvailable(path));
 
+#ifdef _WINDOWS
   path = toPath("\\\\server\\folder");
   EXPECT_TRUE(path.is_absolute());
   EXPECT_TRUE(isNetworkPath(path));
   EXPECT_FALSE(isNetworkPathAvailable(path));
+#endif
 
   // DLM: below you can use for manual testing, don't check in
   // on windows you can type 'net use' to see network drives and their status
@@ -382,4 +405,221 @@ TEST_F(CoreFixture, IsNetworkPath)
   EXPECT_FALSE(isNetworkPath(path));
   EXPECT_FALSE(isNetworkPathAvailable(path));
   */
+}
+
+TEST_F(CoreFixture, Path_Conversions)
+{
+  std::string s;
+  std::wstring w;
+  path p;
+
+  s = std::string("basic_path");
+  w = std::wstring(L"basic_path");
+  p = path(s);
+  EXPECT_EQ(s, p.string());
+  EXPECT_EQ(s, toQString(p).toStdString());
+  EXPECT_EQ(s, toString(p));
+  EXPECT_EQ(s, toQString(toString(p)).toStdString());
+  EXPECT_EQ(s, std::string(toQString(toString(p)).toUtf8()));
+  EXPECT_EQ(s, toPath(toQString(toString(p))).string());
+  EXPECT_EQ(w, p.wstring());
+  EXPECT_EQ(w, toQString(p).toStdWString());
+  //EXPECT_EQ(w, toString(p));
+  EXPECT_EQ(w, toQString(toString(p)).toStdWString());
+  //EXPECT_EQ(w, std::wstring(toQString(toString(p)).toUtf16()));
+  EXPECT_EQ(w, toPath(toQString(toString(p))).wstring());
+
+  p = path(w);
+  EXPECT_EQ(s, p.string());
+  EXPECT_EQ(s, toQString(p).toStdString());
+  EXPECT_EQ(s, toString(p));
+  EXPECT_EQ(s, toQString(toString(p)).toStdString());
+  EXPECT_EQ(s, std::string(toQString(toString(p)).toUtf8()));
+  EXPECT_EQ(s, toPath(toQString(toString(p))).string());
+
+  p = path(w);
+  EXPECT_EQ(s, p.string());
+  EXPECT_EQ(s, toQString(p).toStdString());
+  EXPECT_EQ(s, toString(p));
+  EXPECT_EQ(s, toQString(toString(p)).toStdString());
+  EXPECT_EQ(s, std::string(toQString(toString(p)).toUtf8()));
+  EXPECT_EQ(s, toPath(toQString(toString(p))).string());
+
+  // http://utf8everywhere.org/
+
+
+  // from http://www.nubaria.com/en/blog/?p=289
+
+  // Chinese characters for "zhongwen" ("Chinese language").
+  const char kChineseSampleText[] = {-28, -72, -83, -26, -106, -121, 0};
+
+  // Arabic "al-arabiyya" ("Arabic").
+  const char kArabicSampleText[] = {-40, -89, -39, -124, -40, -71, -40, -79, -40, -88, -39, -118, -40, -87, 0};
+
+  // Spanish word "canon" with an "n" with "~" on top and an "o" with an acute accent.
+  const char kSpanishSampleText[] = {99, 97, -61, -79, -61, -77, 110, 0};
+
+  std::string t;
+  QString q;
+
+  t = std::string(kChineseSampleText);
+  q = QString::fromUtf8(t.c_str());
+  p = toPath(t);
+  EXPECT_EQ(t, std::string(toQString(p).toUtf8()));
+  EXPECT_EQ(t, toString(p));
+  EXPECT_EQ(t, toString(toQString(toString(p))));
+  EXPECT_EQ(t, std::string(toQString(toString(p)).toUtf8()));
+  EXPECT_EQ(t, toString(toPath(toQString(toString(p)))));
+
+  t = std::string(kArabicSampleText);
+  q = QString::fromUtf8(t.c_str());
+  p = toPath(t);
+  EXPECT_EQ(t, std::string(toQString(p).toUtf8()));
+  EXPECT_EQ(t, toString(p));
+  EXPECT_EQ(t, toString(toQString(toString(p))));
+  EXPECT_EQ(t, std::string(toQString(toString(p)).toUtf8()));
+  EXPECT_EQ(t, toString(toPath(toQString(toString(p)))));
+
+  t = std::string(kSpanishSampleText);
+  q = QString::fromUtf8(t.c_str());
+  p = toPath(t);
+  EXPECT_EQ(t, std::string(toQString(p).toUtf8()));
+  EXPECT_EQ(t, toString(p));
+  EXPECT_EQ(t, toString(toQString(toString(p))));
+  EXPECT_EQ(t, std::string(toQString(toString(p)).toUtf8()));
+  EXPECT_EQ(t, toString(toPath(toQString(toString(p)))));
+
+}
+
+TEST_F(CoreFixture, LastLevelDirectoryWithDot) {
+  // We want to make sure that we don't end up with "A measure with 90" (test for #3249)
+  openstudio::path measure_directory = openstudio::toPath("C:/users/user name/OpenStudio/Measures/A measure with 90.1 dots");
+  openstudio::path lastLevelDir = openstudio::getLastLevelDirectoryName(measure_directory);
+  EXPECT_EQ("A measure with 90.1 dots", toString(lastLevelDir));
+  EXPECT_EQ(measure_directory, measure_directory.parent_path() / lastLevelDir);
+}
+
+
+TEST_F(CoreFixture, Path_WithSpecialChars) {
+
+  // TODO: we should perhaps include Boost.Locale (which requires compilation...)
+  // or even better use ICU...
+
+  // Note JM 2019-05-22: MSVC 2013 doesn't support unicode string literals...
+  // https://docs.microsoft.com/en-us/previous-versions/hh567368(v=vs.140)
+
+  // "AfolderwithspécialCHar#%ù/test.osm"
+  #if defined(_MSC_VER)
+    // On Windows, assume Windows-1252
+    std::string windows_1252_str("Afolderwithsp" "\xe9" "cialCHar#%" "\xf9" "/test.osm");
+    openstudio::path p_native(windows_1252_str);
+  #else
+    // We're going to rely on boost::filesystem::path passing a wide string with unicode code points, as it will correctly interpret this as unicode
+    std::wstring unicode_w_str(L"Afolderwithsp\u00E9cialCHar\u0023\u0025\u00F9/test.osm");
+    openstudio::path p_native(unicode_w_str);
+  #endif
+
+  // é = \xc3\xa9
+  // # = \x23 (but classic)
+  // % = \x25 (but classic)
+  // ù = \xc3\xb9
+  // / = \x2f (but classic)
+  // By classic I mean part of the Latin Classic table
+  // é and ù are part of the Latin-1 Supplement
+  // Here I have breaking between normal chars and the escape codes otherwise it tries to read whatever normal char is after an \x until the next \x
+  std::string c("Afolderwithsp" "\xc3\xa9" "cialCHar" "\x23\x25\xc3\xb9\x2f" "test.osm");
+  // Perhaps ill-named now (because before I was just using L"Afolderwithsp\u00E9cialCHar\u0023\u0025\u00F9/test.osm")
+  // But we are comparing this and the p_native so it should be ok
+  openstudio::path pwide;
+  EXPECT_NO_THROW(pwide = toPath(c));
+  EXPECT_EQ(pwide, p_native);
+
+  // Make the folder, and touch the test file
+  openstudio::path outfolder = resourcesPath() / toPath("..") / toPath("Testing");
+  openstudio::path pwide_full = outfolder / p_native;
+  makeParentFolder(pwide_full, path(), true);
+  boost::filesystem::ofstream outfile(pwide_full);
+  outfile.close();
+  // Ensure that worked
+  EXPECT_TRUE(openstudio::filesystem::exists(pwide_full));
+
+
+  // Alright, now we try with a regular string with special chars
+  std::string s("AfolderwithspécialCHar#%ù/test.osm");
+  #if defined(_MSC_VER)
+    EXPECT_NE(s, windows_1252_str);
+  #else
+    // s = "Afolderwithsp\xC3\xA9" "cialCHar#%\xC3\xB9/test.osm"
+    // the string representation of unicode_w_str is "Afolderwithsp\xE9" "cialCHar#%\xF9/test.osm"
+    EXPECT_NE(s, std::string(unicode_w_str.begin(), unicode_w_str.end()));
+  #endif
+  openstudio::path p;
+  EXPECT_NO_THROW(p = toPath(s));
+  openstudio::path pfull = outfolder / p;
+
+
+  // The real test is that the internal paths should be the same
+  EXPECT_TRUE(openstudio::filesystem::exists(pfull));
+  EXPECT_EQ(p, pwide);
+
+  // Test some strings
+  std::string converted_s = toString(p);
+  std::string converted_swide = toString(pwide);
+  EXPECT_EQ(converted_s, converted_swide);
+
+  // This doesn't work
+  //EXPECT_EQ(s, converted_s);
+  //EXPECT_EQ(s, converted_swide);
+  //EXPECT_EQ(s.length(), converted_s.length());
+  //for (size_t i = 0; i < s.length(); ++i) {
+  //  EXPECT_EQ(s[i], converted_s[i]) << "s[i]=" << s[i] << ", converted_s[i]=" << converted_s[i];
+  //}
+
+
+  // Alright, now we try with a regular string that is encoded as Windows-1252
+  // "Afolderwithsp\xe9cialCHar#%\xf9/test.osm"
+#if defined(_MSC_VER)
+  #pragma warning( push )
+  // MSVC 2013 appears to raise this warning
+  #pragma warning( disable : 4309 )
+  // MSVC 2017/19 would issue this one instead
+  #pragma warning( disable : 4838 )
+
+// Commented out because we don't want to run that on Unix
+//#else
+//  #pragma GCC diagnostic push
+//  #pragma GCC diagnostic ignored "-Wnarrowing"
+//#endif
+
+  const char windows_1252_chr[] = {65, 102, 111, 108, 100, 101, 114, 119, 105, 116, 104, 115, 112, 233, 99, 105, 97, 108, 67, 72, 97, 114, 35,
+                                   37, 249, 47, 116, 101, 115, 116, 46, 111, 115, 109, 0};
+  // std::string s3("Afolderwithsp\xe9cialCHar#%\xf9/test.osm");
+  std::string s2(windows_1252_chr);
+  // This really ends up the same as the windows_1252_str string defined above
+  EXPECT_EQ(s2, windows_1252_str);
+  // But it isn't indeed the same as the string we used to create the folder and file
+  EXPECT_NE(s2, c);
+
+
+  openstudio::path p2;
+  EXPECT_NO_THROW(p2 = toPath(s2));
+  openstudio::path pfull2 = outfolder / p2;
+
+  // The real test is that the internal paths should be the same
+  ASSERT_NO_THROW(openstudio::filesystem::exists(pfull2));
+  EXPECT_TRUE(openstudio::filesystem::exists(pfull2));
+  EXPECT_EQ(p2, pwide);
+
+  // Test some strings
+  std::string converted_s2 = toString(p2);
+  EXPECT_EQ(converted_s2, converted_swide);
+
+  // Clean up after yourself!
+  boost::filesystem::remove_all(pwide_full);
+
+// #if defined(_MSC_VER)
+  #pragma warning( pop )
+// #else
+//  #pragma GCC diagnostic pop
+#endif
 }

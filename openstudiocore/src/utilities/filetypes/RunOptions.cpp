@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,13 +32,12 @@
 
 #include "../core/Assert.hpp"
 
-#include <jsoncpp/json.h>
 
 namespace openstudio{
 namespace detail{
 
   RunOptions_Impl::RunOptions_Impl()
-    : m_debug(false), m_preserveRunDir(false), m_cleanup(true)
+    : m_debug(false), m_fast(false), m_preserveRunDir(false), m_skipExpandObjects(false), m_skipEnergyPlusPreprocess(false), m_cleanup(true)
   {}
 
   RunOptions_Impl::~RunOptions_Impl()
@@ -57,8 +56,20 @@ namespace detail{
       result["debug"] = m_debug;
     }
 
+    if (m_fast){
+      result["fast"] = m_fast;
+    }
+
     if (m_preserveRunDir){
       result["preserve_run_dir"] = m_preserveRunDir;
+    }
+
+    if (m_skipExpandObjects){
+      result["skip_expand_objects"] = m_skipExpandObjects;
+    }
+
+    if (m_skipEnergyPlusPreprocess){
+      result["skip_energyplus_preprocess"] = m_skipEnergyPlusPreprocess;
     }
 
     if (m_customOutputAdapter){
@@ -99,6 +110,24 @@ namespace detail{
     onUpdate();
   }
 
+  bool RunOptions_Impl::fast() const
+  {
+    return m_fast;
+  }
+
+  bool RunOptions_Impl::setFast(bool fast)
+  {
+    m_fast = fast;
+    onUpdate();
+    return true;
+  }
+
+  void RunOptions_Impl::resetFast()
+  {
+    m_fast = false;
+    onUpdate();
+  }
+
   bool RunOptions_Impl::preserveRunDir() const
   {
     return m_preserveRunDir;
@@ -114,6 +143,42 @@ namespace detail{
   void RunOptions_Impl::resetPreserveRunDir()
   {
     m_preserveRunDir = false;
+    onUpdate();
+  }
+
+  bool RunOptions_Impl::skipExpandObjects() const
+  {
+    return m_skipExpandObjects;
+  }
+
+  bool RunOptions_Impl::setSkipExpandObjects(bool skip)
+  {
+    m_skipExpandObjects = skip;
+    onUpdate();
+    return true;
+  }
+
+  void RunOptions_Impl::resetSkipExpandObjects()
+  {
+    m_skipExpandObjects = false;
+    onUpdate();
+  }
+
+  bool RunOptions_Impl::skipEnergyPlusPreprocess() const
+  {
+    return m_skipEnergyPlusPreprocess;
+  }
+
+  bool RunOptions_Impl::setSkipEnergyPlusPreprocess(bool skip)
+  {
+    m_skipEnergyPlusPreprocess = skip;
+    onUpdate();
+    return true;
+  }
+
+  void RunOptions_Impl::resetSkipEnergyPlusPreprocess()
+  {
+    m_skipEnergyPlusPreprocess = false;
     onUpdate();
   }
 
@@ -200,8 +265,20 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s)
     result->setDebug(value["debug"].asBool());
   }
 
+  if (value.isMember("fast") && value["fast"].isBool()){
+    result->setFast(value["fast"].asBool());
+  }
+
   if (value.isMember("preserve_run_dir") && value["preserve_run_dir"].isBool()){
     result->setPreserveRunDir(value["preserve_run_dir"].asBool());
+  }
+
+  if (value.isMember("skip_expand_objects") && value["skip_expand_objects"].isBool()){
+    result->setSkipExpandObjects(value["skip_expand_objects"].asBool());
+  }
+
+  if (value.isMember("skip_energyplus_preprocess") && value["skip_energyplus_preprocess"].isBool()){
+    result->setSkipEnergyPlusPreprocess(value["skip_energyplus_preprocess"].asBool());
   }
 
   if (value.isMember("output_adapter")){
@@ -236,9 +313,24 @@ bool RunOptions::setDebug(bool debug)
 {
   return getImpl<detail::RunOptions_Impl>()->setDebug(debug);
 }
+
 void RunOptions::resetDebug()
 {
   getImpl<detail::RunOptions_Impl>()->resetDebug();
+}
+
+bool RunOptions::fast() const
+{
+  return getImpl<detail::RunOptions_Impl>()->fast();
+}
+
+bool RunOptions::setFast(bool fast)
+{
+  return getImpl<detail::RunOptions_Impl>()->setFast(fast);
+}
+void RunOptions::resetFast()
+{
+  getImpl<detail::RunOptions_Impl>()->resetFast();
 }
 
 bool RunOptions::preserveRunDir() const
@@ -254,6 +346,36 @@ bool RunOptions::setPreserveRunDir(bool preserve)
 void RunOptions::resetPreserveRunDir()
 {
   getImpl<detail::RunOptions_Impl>()->resetPreserveRunDir();
+}
+
+bool RunOptions::skipExpandObjects() const
+{
+  return getImpl<detail::RunOptions_Impl>()->skipExpandObjects();
+}
+
+bool RunOptions::setSkipExpandObjects(bool preserve)
+{
+  return getImpl<detail::RunOptions_Impl>()->setSkipExpandObjects(preserve);
+}
+
+void RunOptions::resetSkipExpandObjects()
+{
+  getImpl<detail::RunOptions_Impl>()->resetSkipExpandObjects();
+}
+
+bool RunOptions::skipEnergyPlusPreprocess() const
+{
+  return getImpl<detail::RunOptions_Impl>()->skipEnergyPlusPreprocess();
+}
+
+bool RunOptions::setSkipEnergyPlusPreprocess(bool preserve)
+{
+  return getImpl<detail::RunOptions_Impl>()->setSkipEnergyPlusPreprocess(preserve);
+}
+
+void RunOptions::resetSkipEnergyPlusPreprocess()
+{
+  getImpl<detail::RunOptions_Impl>()->resetSkipEnergyPlusPreprocess();
 }
 
 bool RunOptions::cleanup() const

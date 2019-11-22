@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -93,6 +93,16 @@ namespace detail {
     return ShadowCalculation::iddObjectType();
   }
 
+  std::string ShadowCalculation_Impl::calculationMethod() const {
+    boost::optional<std::string> value = getString(OS_ShadowCalculationFields::CalculationMethod, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ShadowCalculation_Impl::isCalculationMethodDefaulted() const {
+    return isEmpty(OS_ShadowCalculationFields::CalculationMethod);
+  }
+
   int ShadowCalculation_Impl::calculationFrequency() const {
     boost::optional<int> value = getInt(OS_ShadowCalculationFields::CalculationFrequency,true);
     OS_ASSERT(value);
@@ -119,6 +129,16 @@ namespace detail {
 
   boost::optional<std::string> ShadowCalculation_Impl::skyDiffuseModelingAlgorithm() const {
     return getString(OS_ShadowCalculationFields::SkyDiffuseModelingAlgorithm,true);
+  }
+
+  bool ShadowCalculation_Impl::setCalculationMethod(const std::string& calculationMethod) {
+    bool result = setString(OS_ShadowCalculationFields::CalculationMethod, calculationMethod);
+    return result;
+  }
+
+  void ShadowCalculation_Impl::resetCalculationMethod() {
+    bool result = setString(OS_ShadowCalculationFields::CalculationMethod, "");
+    OS_ASSERT(result);
   }
 
   bool ShadowCalculation_Impl::setCalculationFrequency(int calculationFrequency) {
@@ -194,6 +214,11 @@ IddObjectType ShadowCalculation::iddObjectType() {
   return result;
 }
 
+std::vector<std::string> ShadowCalculation::validCalculationMethodValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+    OS_ShadowCalculationFields::CalculationMethod);
+}
+
 std::vector<std::string> ShadowCalculation::validPolygonClippingAlgorithmValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_ShadowCalculationFields::PolygonClippingAlgorithm);
@@ -202,6 +227,14 @@ std::vector<std::string> ShadowCalculation::validPolygonClippingAlgorithmValues(
 std::vector<std::string> ShadowCalculation::validSkyDiffuseModelingAlgorithmValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_ShadowCalculationFields::SkyDiffuseModelingAlgorithm);
+}
+
+std::string ShadowCalculation::calculationMethod() const {
+  return getImpl<detail::ShadowCalculation_Impl>()->calculationMethod();
+}
+
+bool ShadowCalculation::isCalculationMethodDefaulted() const {
+  return getImpl<detail::ShadowCalculation_Impl>()->isCalculationMethodDefaulted();
 }
 
 int ShadowCalculation::calculationFrequency() const {
@@ -226,6 +259,14 @@ boost::optional<std::string> ShadowCalculation::polygonClippingAlgorithm() const
 
 boost::optional<std::string> ShadowCalculation::skyDiffuseModelingAlgorithm() const {
   return getImpl<detail::ShadowCalculation_Impl>()->skyDiffuseModelingAlgorithm();
+}
+
+bool ShadowCalculation::setCalculationMethod(const std::string& calculationMethod) {
+  return getImpl<detail::ShadowCalculation_Impl>()->setCalculationMethod(calculationMethod);
+}
+
+void ShadowCalculation::resetCalculationMethod() {
+  getImpl<detail::ShadowCalculation_Impl>()->resetCalculationMethod();
 }
 
 bool ShadowCalculation::setCalculationFrequency(int calculationFrequency) {

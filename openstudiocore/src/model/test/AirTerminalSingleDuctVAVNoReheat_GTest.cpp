@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -374,9 +374,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_ConstantMinimumAirFlowFrac
 
   EXPECT_TRUE(testObject.setConstantMinimumAirFlowFraction(-1.0));
 
-  testObject.resetConstantMinimumAirFlowFraction();
-  EXPECT_TRUE(testObject.isConstantMinimumAirFlowFractionDefaulted());
-  EXPECT_DOUBLE_EQ(0.3, testObject.constantMinimumAirFlowFraction().get());
+  EXPECT_FALSE(testObject.isConstantMinimumAirFlowFractionAutosized());
+  testObject.autosizeConstantMinimumAirFlowFraction();
+  EXPECT_TRUE(testObject.isConstantMinimumAirFlowFractionAutosized());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_FixedMinimumAirFlowRate)
@@ -386,7 +386,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_FixedMinimumAirFlowRate)
 
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(m,s);
 
-  EXPECT_TRUE(testObject.isFixedMinimumAirFlowRateDefaulted());
+  EXPECT_TRUE(testObject.isFixedMinimumAirFlowRateAutosized());
 
   testObject.setFixedMinimumAirFlowRate(999.0);
   EXPECT_DOUBLE_EQ(999.0, testObject.fixedMinimumAirFlowRate().get());
@@ -396,9 +396,9 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_FixedMinimumAirFlowRate)
 
   EXPECT_TRUE(testObject.setFixedMinimumAirFlowRate(-1.0));
 
-  testObject.resetFixedMinimumAirFlowRate();
-  EXPECT_TRUE(testObject.isFixedMinimumAirFlowRateDefaulted());
-  EXPECT_DOUBLE_EQ(0.0, testObject.fixedMinimumAirFlowRate().get());
+  EXPECT_FALSE(testObject.isFixedMinimumAirFlowRateAutosized());
+  testObject.autosizeFixedMinimumAirFlowRate();
+  EXPECT_TRUE(testObject.isFixedMinimumAirFlowRateAutosized());
 }
 
 TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_MinimumAirFlowFractionSchedule)

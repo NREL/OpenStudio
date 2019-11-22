@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -100,8 +100,8 @@ void testExampleModel(int minor, int major) {
           LOG_FREE(Debug, "OSVersionFixture", object);
         }
         LOG_FREE(Debug, "OSVersionFixture", "Refactored objects: ");
-        for (const IdfObjectPair& p : translator.refactoredObjects()) {
-          LOG_FREE(Debug, "OSVersionFixture", p.first << "replaced with" << std::endl << std::endl << p.second);
+        for (const RefactoredObjectData& p : translator.refactoredObjects()) {
+          LOG_FREE(Debug, "OSVersionFixture", p.oldObject() << "replaced with" << std::endl << std::endl << p.newObject());
         }
         // make sure save and load is ok
         modelPath = it->path() / toPath("example_updated.osm");
@@ -184,8 +184,8 @@ void testExampleComponent(int major, int minor) {
           LOG_FREE(Debug, "OSVersionFixture", object);
         }
         LOG_FREE(Debug, "OSVersionFixture", "Refactored objects: ");
-        for (const IdfObjectPair& p : translator.refactoredObjects()) {
-          LOG_FREE(Debug, "OSVersionFixture", p.first << "replaced with" << std::endl << std::endl << p.second);
+        for (const RefactoredObjectData& p : translator.refactoredObjects()) {
+          LOG_FREE(Debug, "OSVersionFixture", p.oldObject() << "replaced with" << std::endl << std::endl << p.newObject());
         }
         // make sure component came out ok
         ASSERT_TRUE(result);

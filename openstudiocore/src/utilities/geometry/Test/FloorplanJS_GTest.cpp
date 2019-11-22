@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,7 +42,7 @@ TEST_F(GeometryFixture, FloorplanJS)
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
   ASSERT_TRUE(exists(p));
 
-  std::ifstream ifs(toString(p));
+  std::ifstream ifs(toSystemFilename(p));
   EXPECT_TRUE(ifs.is_open());
 
   std::istreambuf_iterator<char> eos;

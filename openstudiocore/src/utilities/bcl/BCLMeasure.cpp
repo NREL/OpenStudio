@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,24 +30,18 @@
 #include "BCLMeasure.hpp"
 #include "LocalBCL.hpp"
 
-#include "../core/System.hpp"
-#include "../core/Path.hpp"
 #include "../core/PathHelpers.hpp"
 #include "../core/FilesystemHelpers.hpp"
 #include "../core/StringHelpers.hpp"
 #include "../core/FileReference.hpp"
-#include "../data/Attribute.hpp"
 #include "../core/Assert.hpp"
-#include "../core/Checksum.hpp"
 
 #include <OpenStudio.hxx>
 
 #include <QDir>
-#include <QDomDocument>
 #include <QSettings>
 #include <QRegularExpression>
 
-#include <boost/algorithm/string/predicate.hpp>
 
 #include <src/utilities/embedded_files.hxx>
 
@@ -97,16 +91,21 @@ namespace openstudio{
     : m_directory(openstudio::filesystem::system_complete(dir)),
       m_bclXML(BCLXMLType::MeasureXML)
   {
-
+    openstudio::path measureDocDir = dir / toPath("docs");
     openstudio::path measureTestDir = dir / toPath("tests");
     std::string lowerClassName = toUnderscoreCase(className);
 
     createDirectory(dir);
+    createDirectory(measureDocDir);
     createDirectory(measureTestDir);
 
     // read in template files
     std::string measureTemplate;
+    std::string licenseTemplate = ":/templates/common/LICENSE.md";
+    std::string readmeTemplate = ":/templates/common/README.md.erb";
+    std::string docTemplate = ":/templates/common/docs/.gitkeep";;
     std::string testTemplate;
+
     QString templateClassName;
     QString templateName = "NAME_TEXT";
     QString templateDescription = "DESCRIPTION_TEXT";
@@ -116,6 +115,7 @@ namespace openstudio{
     std::string testOSM;
     std::string testEPW;
     std::string resourceFile;
+
     openstudio::path testOSMPath;
     openstudio::path testEPWPath;
     openstudio::path resourceFilePath;
@@ -188,6 +188,21 @@ namespace openstudio{
       measureString.replace(templateDescription, toQString(description));
     }
 
+    QString licenseString;
+    if (!licenseTemplate.empty()){
+      licenseString = toQString(::openstudio::embedded_files::getFileAsString(licenseTemplate));
+    }
+
+    QString readmeString;
+    if (!readmeTemplate.empty()){
+      readmeString = toQString(::openstudio::embedded_files::getFileAsString(readmeTemplate));
+    }
+
+    QString docString;
+    if (!docTemplate.empty()){
+      docString = toQString(::openstudio::embedded_files::getFileAsString(docTemplate));
+    }
+
     QString testString;
     if (!testTemplate.empty()){
       testString = toQString(::openstudio::embedded_files::getFileAsString(testTemplate));
@@ -212,6 +227,9 @@ namespace openstudio{
     // write files
     openstudio::path measureXMLPath = dir / toPath("measure.xml");
     openstudio::path measureScriptPath = dir / toPath("measure.rb");
+    openstudio::path measureLicensePath = dir / toPath("LICENSE.md");
+    openstudio::path measureReadmePath = dir / toPath("README.md.erb");
+    openstudio::path measureDocPath = measureDocDir / toPath(".gitkeep");
     openstudio::path measureTestPath = measureTestDir / toPath(lowerClassName + "_test.rb");
 
     // write measure.rb
@@ -227,6 +245,48 @@ namespace openstudio{
       measureScriptFileReference.setUsageType("script");
       measureScriptFileReference.setSoftwareProgramVersion(openStudioVersion());
       m_bclXML.addFile(measureScriptFileReference);
+    }
+
+    // write LICENSE.md
+    {
+      openstudio::filesystem::ofstream file(measureLicensePath, std::ios_base::binary);
+      if (!file.is_open()){
+        LOG_AND_THROW("Cannot write LICENSE.md to '" << toString(measureLicensePath) << "'");
+      }
+      openstudio::filesystem::write(file, licenseString);
+      file.close();
+
+      BCLFileReference measureLicenseFileReference(measureLicensePath, true);
+      measureLicenseFileReference.setUsageType("license");
+      m_bclXML.addFile(measureLicenseFileReference);
+    }
+
+    // write README.md.erb
+    {
+      openstudio::filesystem::ofstream file(measureReadmePath, std::ios_base::binary);
+      if (!file.is_open()){
+        LOG_AND_THROW("Cannot write README.md.erb to '" << toString(measureReadmePath) << "'");
+      }
+      openstudio::filesystem::write(file, readmeString);
+      file.close();
+
+      BCLFileReference measureReadmeFileReference(measureReadmePath, true);
+      measureReadmeFileReference.setUsageType("readmeerb");
+      m_bclXML.addFile(measureReadmeFileReference);
+    }
+
+    // write docs
+    {
+      openstudio::filesystem::ofstream file(measureDocPath, std::ios_base::binary);
+      if (!file.is_open()){
+        LOG_AND_THROW("Cannot write doc file to '" << toString(measureDocPath) << "'");
+      }
+      openstudio::filesystem::write(file, docString);
+      file.close();
+
+      BCLFileReference measureDocFileReference(measureDocPath, true);
+      measureDocFileReference.setUsageType("doc");
+      m_bclXML.addFile(measureDocFileReference);
     }
 
     // write test
@@ -1008,8 +1068,12 @@ namespace openstudio{
         // what if this is the measure.rb file?
         filesToRemove.push_back(file);
       }else if (filename.empty() || boost::starts_with(filename, ".")){
-        result = true;
-        filesToRemove.push_back(file);
+        if (filename == ".gitkeep") {
+          // allow this file
+        } else {
+          result = true;
+          filesToRemove.push_back(file);
+        }
       }else if (file.checkForUpdate()){
         result = true;
         filesToAdd.push_back(file);
@@ -1073,6 +1137,31 @@ namespace openstudio{
       }
     }
 
+    srcDir = m_directory / "docs";
+    if (openstudio::filesystem::is_directory(srcDir)) {
+      for (const auto &file : openstudio::filesystem::directory_files(srcDir))
+      {
+        openstudio::path srcItemPath = srcDir / file;
+
+        std::string filename = toString(file.filename());
+        if (filename.empty() || boost::starts_with(filename, ".")){
+          if (filename == ".gitkeep") {
+            // allow this file
+          } else {
+            continue;
+          }
+
+        }
+
+        if (!m_bclXML.hasFile(srcItemPath)){
+          BCLFileReference file(srcItemPath, true);
+          file.setUsageType("doc");
+          result = true;
+          filesToAdd.push_back(file);
+        }
+      }
+    }
+
     // check for measure.rb
     openstudio::path srcItemPath = m_directory / toPath("measure.rb");
     if (!m_bclXML.hasFile(srcItemPath)){
@@ -1081,6 +1170,39 @@ namespace openstudio{
         file.setUsageType("script");
         // we don't know what the actual version this was created for, we also don't know minimum version
         file.setSoftwareProgramVersion(openStudioVersion());
+        result = true;
+        filesToAdd.push_back(file);
+      }
+    }
+
+    // check for LICENSE.md
+    srcItemPath = m_directory / toPath("LICENSE.md");
+    if (!m_bclXML.hasFile(srcItemPath)){
+      if (exists(srcItemPath)){
+        BCLFileReference file(srcItemPath, true);
+        file.setUsageType("license");
+        result = true;
+        filesToAdd.push_back(file);
+      }
+    }
+
+    // check for README.me
+    srcItemPath = m_directory / toPath("README.md");
+    if (!m_bclXML.hasFile(srcItemPath)){
+      if (exists(srcItemPath)){
+        BCLFileReference file(srcItemPath, true);
+        file.setUsageType("readme");
+        result = true;
+        filesToAdd.push_back(file);
+      }
+    }
+
+    // check for README.me.erb
+    srcItemPath = m_directory / toPath("README.md.erb");
+    if (!m_bclXML.hasFile(srcItemPath)){
+      if (exists(srcItemPath)){
+        BCLFileReference file(srcItemPath, true);
+        file.setUsageType("readmeerb");
         result = true;
         filesToAdd.push_back(file);
       }

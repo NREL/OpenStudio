@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,12 +39,12 @@
 
 using namespace openstudio;
 
-TEST_F(OpenStudioLibFixture, IconLibrary_Icon)
+TEST_F(OpenStudioLibFixture, QtGUI_IconLibrary_Icon)
 {
   std::vector<IddObjectType> iddObjectTypes;
   iddObjectTypes.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
   iddObjectTypes.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryHeatPump_AirToAir);
-  iddObjectTypes.push_back(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled);
+  iddObjectTypes.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat);
   iddObjectTypes.push_back(IddObjectType::OS_AirTerminal_SingleDuct_VAV_Reheat);
   iddObjectTypes.push_back(IddObjectType::OS_Boiler_HotWater);
   //iddObjectTypes.push_back(IddObjectType::OS_Building);
@@ -127,12 +127,12 @@ TEST_F(OpenStudioLibFixture, IconLibrary_Icon)
   }
 }
 
-TEST_F(OpenStudioLibFixture, IconLibrary_MiniIcon)
+TEST_F(OpenStudioLibFixture, QtGUI_IconLibrary_MiniIcon)
 {
   std::vector<IddObjectType> iddObjectTypes;
   iddObjectTypes.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
   iddObjectTypes.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryHeatPump_AirToAir);
-  iddObjectTypes.push_back(IddObjectType::OS_AirTerminal_SingleDuct_Uncontrolled);
+  iddObjectTypes.push_back(IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_NoReheat);
   iddObjectTypes.push_back(IddObjectType::OS_AirTerminal_SingleDuct_VAV_Reheat);
   iddObjectTypes.push_back(IddObjectType::OS_Boiler_HotWater);
   iddObjectTypes.push_back(IddObjectType::OS_Building);
@@ -144,6 +144,7 @@ TEST_F(OpenStudioLibFixture, IconLibrary_MiniIcon)
   iddObjectTypes.push_back(IddObjectType::OS_Coil_Heating_Gas);
   iddObjectTypes.push_back(IddObjectType::OS_Coil_Heating_Water);
   iddObjectTypes.push_back(IddObjectType::OS_Construction);
+  iddObjectTypes.push_back(IddObjectType::OS_Construction_AirBoundary);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_CfactorUndergroundWall);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_FfactorGroundFloor);
   iddObjectTypes.push_back(IddObjectType::OS_Construction_InternalSource);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,13 +30,10 @@
 #include "Json.hpp"
 
 #include "Assert.hpp"
-#include "Compare.hpp"
-#include "Logger.hpp"
 #include "PathHelpers.hpp"
+#include "Logger.hpp"
 #include "FilesystemHelpers.hpp"
-#include "String.hpp"
 
-#include <jsoncpp/json.h>
 
 #include <OpenStudio.hxx>
 
@@ -96,7 +93,23 @@ bool checkType(const Json::Value& value, const std::string& key, const Json::Val
 /// check key is present and type is correct, return false if key not found or type is not correct
 bool checkKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType)
 {
-  return (checkKey(value, key) && checkType(value, key, valueType));
+  if (value.isMember(key)) {
+    if (value[key].isConvertibleTo(valueType)) {
+      if (value[key].isNull()) {
+        if (valueType == Json::nullValue) {
+          return true;
+        } else {
+          return false;
+        }
+      } 
+      // not null and is convertible
+      return true;
+    } else {
+     // not convertible to valueType
+     LOG_FREE(Warn, "JSON", "Key '" << key << "' exists but is not the correct type");
+    }
+  }
+  return false;
 }
 
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -73,6 +73,15 @@ namespace detail {
 
   IddObjectType SizingPlant_Impl::iddObjectType() const {
     return SizingPlant::iddObjectType();
+  }
+
+  bool SizingPlant_Impl::setParent(ParentObject& newParent)
+  {
+    bool result = false;
+    if( boost::optional<PlantLoop> plantLoop = newParent.optionalCast<PlantLoop>()){
+      result = this->setPlantLoop(plantLoop.get());
+    }
+    return result;
   }
 
   PlantLoop SizingPlant_Impl::plantLoop() const {

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -77,6 +77,19 @@ struct WeekScheduleStruct{
   std::string customDay1Schedule;
   std::string customDay2Schedule;
 
+
+  /** Helper function to name it like `Heating Sch Week Rule - Jan1-Dec31` */
+  bool setName(const std::string& scheduleYearName, const openstudio::Date& startDate, const openstudio::Date& endDate) {
+    if (startDate > endDate) {
+      return false;
+    }
+    std::stringstream ss;
+    ss << scheduleYearName << " Week Rule - ";
+    ss << startDate.monthOfYear().valueName() << startDate.dayOfMonth() << "-" << endDate.monthOfYear().valueName() << endDate.dayOfMonth();
+    this->name = ss.str();
+    return true;
+  }
+
   bool operator==(const WeekScheduleStruct& other)
   {
     return (sundaySchedule == other.sundaySchedule &&
@@ -96,8 +109,7 @@ struct WeekScheduleStruct{
   IdfObject toIdfObject()
   {
     IdfObject weekSchedule(openstudio::IddObjectType::Schedule_Week_Daily);
-    weekSchedule.createName();
-    this->name = weekSchedule.name().get();
+    weekSchedule.setName(name);
     weekSchedule.setString(Schedule_Week_DailyFields::SundaySchedule_DayName, sundaySchedule);
     weekSchedule.setString(Schedule_Week_DailyFields::MondaySchedule_DayName, mondaySchedule);
     weekSchedule.setString(Schedule_Week_DailyFields::TuesdaySchedule_DayName, tuesdaySchedule);
@@ -121,7 +133,8 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
 
   IdfObject scheduleYear( openstudio::IddObjectType::Schedule_Year );
 
-  scheduleYear.setName(modelObject.name().get());
+  std::string scheduleYearName = modelObject.name().get();
+  scheduleYear.setName(scheduleYearName);
 
   boost::optional<ScheduleTypeLimits> scheduleTypeLimits = modelObject.scheduleTypeLimits();
   if (scheduleTypeLimits){
@@ -226,7 +239,6 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
         // check if this schedule is equal to last week schedule
         if (weekSchedule && lastWeekSchedule && ( !(weekSchedule.get() == lastWeekSchedule.get()) )){
           // if not write out last week schedule
-          m_idfObjects.push_back(lastWeekSchedule->toIdfObject());
 
           // get last extensible group, if any, to find start date otherwise use jan1
           openstudio::Date startDate;
@@ -244,6 +256,9 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
 
           OS_ASSERT(startDate <= lastDate);
 
+          // Name the schedule week
+          lastWeekSchedule->setName(scheduleYearName, startDate, lastDate);
+
           // add the values
           std::vector<std::string> values;
           values.push_back(lastWeekSchedule->name);
@@ -253,6 +268,10 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
           values.push_back(boost::lexical_cast<std::string>(lastDate.dayOfMonth()));
           IdfExtensibleGroup test = scheduleYear.pushExtensibleGroup(values);
           OS_ASSERT(!test.empty());
+
+          // Write the schedule
+          m_idfObjects.push_back(lastWeekSchedule->toIdfObject());
+
         }
       }
 
@@ -286,7 +305,6 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
         // check if this schedule is equal to last week schedule
         if (weekSchedule && lastWeekSchedule && ( !(weekSchedule.get() == lastWeekSchedule.get()) )){
           // if not write out last week schedule
-          m_idfObjects.push_back(lastWeekSchedule->toIdfObject());
 
           // get last extensible group, if any, to find start date otherwise use jan1
           openstudio::Date startDate;
@@ -304,6 +322,9 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
 
           OS_ASSERT(startDate <= lastDate);
 
+          // Name the schedule week
+          lastWeekSchedule->setName(scheduleYearName, startDate, lastDate);
+
           // add the values
           std::vector<std::string> values;
           values.push_back(lastWeekSchedule->name);
@@ -313,10 +334,13 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
           values.push_back(boost::lexical_cast<std::string>(lastDate.dayOfMonth()));
           IdfExtensibleGroup test = scheduleYear.pushExtensibleGroup(values);
           OS_ASSERT(!test.empty());
+
+          // Write the schedule
+          m_idfObjects.push_back(lastWeekSchedule->toIdfObject());
+
         }
 
         // write out the last week schedule
-        m_idfObjects.push_back(weekSchedule->toIdfObject());
 
         // get last extensible group, if any, to find start date otherwise use jan1
         openstudio::Date startDate;
@@ -334,6 +358,9 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
 
         OS_ASSERT(startDate <= date);
 
+        // Name the schedule week
+        weekSchedule->setName(scheduleYearName, startDate, date);
+
         // add the values
         std::vector<std::string> values;
         values.push_back(weekSchedule->name);
@@ -343,6 +370,10 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
         values.push_back(boost::lexical_cast<std::string>(date.dayOfMonth()));
         IdfExtensibleGroup test = scheduleYear.pushExtensibleGroup(values);
         OS_ASSERT(!test.empty());
+
+        // Write the schedule
+        m_idfObjects.push_back(weekSchedule->toIdfObject());
+
       }
 
       // increment date

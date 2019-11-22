@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -157,6 +157,7 @@ TEST_F(ModelFixture,AirTerminalDualDuctConstantVolume_AddToAirLoopHVAC) {
     EXPECT_EQ(7u,a.demandComponents().size());
 
     // Make sure we can't add the same zone again
+    EXPECT_EQ(1u,zone.airLoopHVACs().size());
     EXPECT_FALSE(a.addBranchForZone(zone));
 
     // Remove the whole branch

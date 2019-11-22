@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -258,7 +258,8 @@ namespace openstudio {
             );
         }
         else if (field == CONVERTTOINTERNALMASS) {
-          addCheckBoxColumn(Heading(QString(CONVERTTOINTERNALMASS), true, false),
+          // We add the "Apply Selected" button to this column by passing 3rd arg, t_showColumnButton=true
+          addCheckBoxColumn(Heading(QString(CONVERTTOINTERNALMASS), true, true),
             std::string("Check to enable convert to InternalMass."),
             NullAdapter(&model::InteriorPartitionSurface::converttoInternalMass),
             NullAdapter(&model::InteriorPartitionSurface::setConverttoInternalMass),

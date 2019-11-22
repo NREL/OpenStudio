@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -102,6 +102,7 @@ namespace gbxml {
     boost::optional<QDomElement> translateLayer(const openstudio::model::Material& material, QDomDocument& doc);
     boost::optional<QDomElement> translateMaterial(const openstudio::model::Material& material, QDomDocument& doc);
     boost::optional<QDomElement> translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, QDomDocument& doc);
+    boost::optional<QDomElement> translateCADObjectId(const openstudio::model::ModelObject& modelObject, QDomElement& parentElement, QDomDocument& doc);
 
     std::map<openstudio::Handle, QDomElement> m_translatedObjects;
 

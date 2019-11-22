@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -75,6 +75,9 @@
 #include "../model/ZoneAirHeatBalanceAlgorithm_Impl.hpp"
 #include "../model/ZoneCapacitanceMultiplierResearchSpecial.hpp"
 #include "../model/ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp"
+#include "../model/Schedule.hpp"
+#include "../model/Schedule_Impl.hpp"
+#include "../model/ScheduleTypeRegistry.hpp"
 
 #include "../utilities/time/Date.hpp"
 #include "../utilities/time/Time.hpp"
@@ -1565,17 +1568,56 @@ void SimSettingsView::attachZoneAirContaminantBalance()
     boost::optional<BasicQuery>(std::bind(&model::ZoneAirContaminantBalance::isCarbonDioxideConcentrationDefaulted, mo))
   );
 
-  // m_outdoorCarbonDioxideScheduleName->bind(mo,"outdoorCarbonDioxideScheduleName");
-  // outdoorCarbonDioxideScheduleName does not exist in ZoneAirContaminantBalance
 
-  // TODO: Locate "outdoorCarbonDioxideScheduleName" and reimplement.
-  // m_outdoorCarbonDioxideScheduleName->bind(
-  //   *m_mo,
-  //   StringGetter(std::bind(&model::ZoneAirContaminantBalance::outdoorCarbonDioxideScheduleName, m_mo.get_ptr())),
-  //   boost::optional<StringSetter>(std::bind(&model::ZoneAirContaminantBalance::setOutdoorCarbonDioxideScheduleName, m_mo.get_ptr(),std::placeholders::_1)),
-  //   boost::optional<NoFailAction>(std::bind(&model::ZoneAirContaminantBalance::resetOutdoorCarbonDioxideScheduleName, m_mo.get_ptr())),
-  //   boost::optional<BasicQuery>(std::bind(&model::ZoneAirContaminantBalance::isOutdoorCarbonDioxideScheduleNameDefaulted, m_mo.get_ptr()))
-  // );
+
+  /* // This would work fine too
+   *std::function<std::string (const model::Schedule &)> toString =
+   *  [](const model::Schedule& t_s) {
+   *    return t_s.nameString();
+   *  };
+   */
+
+  std::function<std::vector<model::Schedule> (model::ZoneAirContaminantBalance*)> choices_lambda =
+    [](model::ZoneAirContaminantBalance* t_z) {
+      std::vector<model::Schedule> results = openstudio::model::getCompatibleSchedules(t_z->model(),
+                                                                                       "ZoneAirContaminantBalance",
+                                                                                       "Outdoor Carbon Dioxide");
+      return openstudio::sortByObjectName<model::Schedule>(results);
+    };
+
+  /*
+   * // The following works fine too
+   *std::function<std::vector<model::Schedule> (model::ZoneAirContaminantBalance *)> choices = std::bind(&openstudio::sortByObjectName<model::Schedule>,
+   *                                                                   std::bind(&openstudio::model::getCompatibleSchedules,
+   *                                                                             m_model,
+   *                                                                             "ZoneAirContaminantBalance",
+   *                                                                             "Outdoor Carbon Dioxide"));
+   */
+
+  std::function<boost::optional<model::Schedule> (model::ZoneAirContaminantBalance*)> getter =
+    [](model::ZoneAirContaminantBalance* t_z) {
+      return t_z->outdoorCarbonDioxideSchedule();
+    };
+
+  std::function<bool (model::ZoneAirContaminantBalance*, model::Schedule)> setter =
+    [](model::ZoneAirContaminantBalance* t_z, model::Schedule sch)
+    {
+      return t_z->setOutdoorCarbonDioxideSchedule(sch);
+    };
+
+  std::function<void (model::ZoneAirContaminantBalance*)> reset =
+    [](model::ZoneAirContaminantBalance* t_z) {
+      t_z->resetOutdoorCarbonDioxideSchedule();
+    };
+
+  m_outdoorCarbonDioxideScheduleName->bind<model::Schedule,model::ZoneAirContaminantBalance>(
+      mo,
+      &openstudio::objectName, // toString
+      choices_lambda, // choices
+      getter, // getter
+      setter, // setter
+      reset  // reset
+      );
 }
 
 void SimSettingsView::attachZoneCapacitanceMultipleResearchSpecial()

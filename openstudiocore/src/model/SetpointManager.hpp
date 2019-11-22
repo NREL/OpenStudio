@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -63,6 +63,10 @@ class MODEL_API SetpointManager : public HVACComponent {
 
   /** Returns the Control Variable **/
   std::string controlVariable() const;
+
+  /** Returns whether this SPM is allowed to be placed on a PlantLoop
+   * (*all* SPMs are allowed on an AirLoopHVAC, *some* are allowed on a PlantLoop) **/
+  bool isAllowedOnPlantLoop() const;
 
   //@}
   /** @name Setters */

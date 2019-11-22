@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -163,6 +163,15 @@ namespace detail {
 
     /// Returns whether or not this rule covers each given date.
     std::vector<bool> containsDates(const std::vector<openstudio::Date>& dates);
+
+    // Convenience methods
+    bool applyAllDays() const;
+    bool applyWeekdays() const;
+    bool applyWeekends() const;
+
+    bool setApplyAllDays(bool applyAllDays);
+    bool setApplyWeekdays(bool applyWeekdays);
+    bool setApplyWeekends(bool applyWeekends);
 
    protected:
    private:

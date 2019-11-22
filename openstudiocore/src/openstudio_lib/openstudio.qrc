@@ -12,6 +12,7 @@
     <file>images/airterminal_dualduct_vav.png</file>
     <file>images/airterminal_dualduct_vav_outdoorair.png</file>
     <file>images/airterminal_dualduct_constantvolume.png</file>
+    <file>images/airterminal_fourpipebeam.png</file>
     <file>images/arrow.png</file>
     <file>images/baseboard_electric.png</file>
     <file>images/baseboard_water.png</file>
@@ -28,6 +29,8 @@
     <file>images/coil_ht_dx_singlespeed.png</file>
     <file>images/coil_system_coolingwater_heat_exchanger.png</file>
     <file>images/coilcoolingchilledbeam.png</file>
+    <file>images/coilcoolingfourpipebeam.png</file>
+    <file>images/coilheatingfourpipebeam.png</file>
     <file>images/coilcoolinglowtemprad_constflow.png</file>
     <file>images/coilcoolinglowtemprad_varflow.png</file>
     <file>images/coilheatinglowtemprad_constflow.png</file>
@@ -260,6 +263,7 @@
     <file>images/sewer_alone.png</file>
     <file>images/sewer_over.png</file>
     <file>images/sewer_press.png</file>
+    <file>images/shw_loop_icon.png</file>
     <file>images/single_ducts_constant_vol_4pipe.png</file>
     <file>images/sink.png</file>
     <file>images/sizing.png</file>
@@ -298,6 +302,7 @@
     <file>images/toggle_true_over.png</file>
     <file>images/unitary_system.png</file>
     <file>images/unit_ventilator.png</file>
+    <file>images/user_defined.png</file>
     <file>images/utility_calibration_warning.png</file>
     <file>images/v_divider_dots.png</file>
     <file>images/vav-reheat.png</file>
@@ -345,9 +350,12 @@
     <file>images/mini_icons/cav_reheat.png</file>
     <file>images/mini_icons/centralheatpumpsystem.png</file>
     <file>images/mini_icons/chilled_beam.png</file>
+    <file>images/mini_icons/airterminal_fourpipebeam.png</file>
     <file>images/mini_icons/chiller_air.png</file>
     <file>images/mini_icons/coil_ht_dx_singlespeed_mini.png</file>
     <file>images/mini_icons/coilcoolingchilledbeam_mini.png</file>
+    <file>images/mini_icons/coilcoolingfourpipebeam.png</file>
+    <file>images/mini_icons/coilheatingfourpipebeam.png</file>
     <file>images/mini_icons/coilcoolinglowtemprad_constflow.png</file>
     <file>images/mini_icons/coilcoolinglowtemprad_varflow.png</file>
     <file>images/mini_icons/coilheatinglowtemprad_constflow.png</file>
@@ -357,6 +365,7 @@
     <file>images/mini_icons/mini_ht_coil_dx_vari.png</file>
     <file>images/mini_icons/construct_inter_source.png</file>
     <file>images/mini_icons/construction.png</file>
+    <file>images/mini_icons/construction_air_boundary.png</file>
     <file>images/mini_icons/construction_gnd.png</file>
     <file>images/mini_icons/construction_undergnd.png</file>
     <file>images/mini_icons/cool_coil.png</file>
@@ -530,6 +539,7 @@
     <file>images/mini_icons/system_type_1.png</file>
     <file>images/mini_icons/system_type_2.png</file>
     <file>images/mini_icons/thermal_zone.png</file>
+    <file>images/mini_icons/user_defined.png</file>
     <file>images/mini_icons/variable_fan.png</file>
     <file>images/mini_icons/vav-reheat.png</file>
     <file>images/mini_icons/vav_noreheat.png</file>
@@ -549,11 +559,13 @@
 
     <file>library/tid_api.xml</file>
     <file>library/embeddable_geometry_editor.html</file>
+    <file>library/embeddable_gbxml_editor.html</file>
+    <file>library/embeddable_idf_editor.html</file>
     <file>library/geometry_editor.css</file>
     <file>library/geometry_editor_start.html</file>
     <file>library/geometry_preview.html</file>
-    
-    
+
+
     <file alias="shared_gui_components/images/add_script_icon.png">../shared_gui_components/images/add_script_icon.png</file>
     <file alias="shared_gui_components/images/add_script_icon_over.png">../shared_gui_components/images/add_script_icon_over.png</file>
     <file alias="shared_gui_components/images/add_script_icon_press.png">../shared_gui_components/images/add_script_icon_press.png</file>

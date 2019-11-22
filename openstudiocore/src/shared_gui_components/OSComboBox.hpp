@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,8 @@
 
 #include "FieldMethodTypedefs.hpp"
 #include "OSConcepts.hpp"
+
+#include "OSGridController.hpp" // Needed for DataSource
 
 #include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
 #include "../model/Model.hpp"
@@ -160,6 +162,42 @@ class OSComboBox2 : public QComboBox, public Nano::Observer {
     completeBind();
   }
 
+  // Interface for direct bind with two model objects, for eg to set the Schedule of a modelObject (`bind<model::Schedule, model::Class>`)
+  // This is similar to the way OSGridController uses a template to create a ComboBoxOptionalChoiceImpl (same signature for the getter/setter etc)
+  // For an example of usage refer to ../openstudio_lib/SimSettingsView.hpp.
+  template<typename ChoiceType, typename DataSourceType>
+  void bind(model::ModelObject& modelObject,
+            std::function<std::string (const ChoiceType &)> toString,
+            std::function<std::vector<ChoiceType> (DataSourceType *)> choices,
+            std::function<boost::optional<ChoiceType> (DataSourceType*)> getter,
+            std::function<bool (DataSourceType*, ChoiceType)> setter,
+            boost::optional<std::function<void (DataSourceType*)> > reset = boost::none,
+            const boost::optional<DataSource> &t_source = boost::none,
+            bool editable = false)
+  {
+    m_modelObject = modelObject;
+
+    std::shared_ptr<DataSourceType> dataSource = std::shared_ptr<DataSourceType>(
+        new DataSourceType(modelObject.cast<DataSourceType>()));
+
+    boost::optional<NoFailAction> resetAction;
+    if (reset) {
+      resetAction = std::bind(reset.get(), dataSource.get());
+    }
+
+    m_choiceConcept = std::make_shared<OptionalChoiceSaveDataSourceConceptImpl<ChoiceType,DataSourceType>>(
+              dataSource,
+              toString,
+              std::bind(choices, dataSource.get()),
+              std::bind(getter, dataSource.get()),
+              std::bind(setter, dataSource.get(),std::placeholders::_1),
+              resetAction,
+              editable);
+
+    clear();
+    completeBind();
+  }
+
   // interface for OSGridController bind
   void bind(model::ModelObject& modelObject,
             std::shared_ptr<ChoiceConcept> choiceConcept)
@@ -183,6 +221,10 @@ class OSComboBox2 : public QComboBox, public Nano::Observer {
 
   void inFocus(bool inFocus, bool hasData);
 
+ public slots:
+  // Need to make that public for dependent dropdowns...
+  void onChoicesRefreshTrigger();
+
  private slots:
 
   void onModelObjectChanged();
@@ -192,8 +234,6 @@ class OSComboBox2 : public QComboBox, public Nano::Observer {
   void onCurrentIndexChanged(const QString & text);
 
   void onEditTextChanged(const QString & text);
-
-  void onChoicesRefreshTrigger();
 
   void onDataSourceChange(int);
 

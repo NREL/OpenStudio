@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -28,16 +28,11 @@
 ***********************************************************************************************************************/
 
 #include "Assert.hpp"
-#include "Optional.hpp"
 #include "StringHelpers.hpp"
 #include "../math/FloatCompare.hpp"
 
-#include <boost/regex.hpp>
-#include <boost/algorithm/string.hpp>
 
-#include <cmath>
 #include <iomanip>
-#include <sstream>
 
 namespace openstudio {
 
@@ -313,11 +308,89 @@ std::vector <std::string> splitString(const std::string &string, char delimiter)
     while(std::getline(stream, substring, delimiter)) { // Loop and fill the results vector
       results.push_back(substring);
     }
-    if(*(string.end() - 1) == ',') { // Add an empty string if the last char is the delimiter
+    if(*(string.end() - 1) == delimiter) { // Add an empty string if the last char is the delimiter
       results.push_back(std::string());
     }
   }
   return results;
 }
+
+std::vector<std::string> splitEMSLineToTokens(const std::string& line, const std::string delimiters) {
+
+  // Split line to get 'tokens' and look for ModelObject names
+  // Note: JM 2018-08-16: Really this parser should match the E+ one, so probably split on operators, handle parenthesis, etc
+  // The idea is to split on ' +-*/^=<>&|' which are the operators
+  // We also need to ignore the reserved keywords and functions
+
+  std::vector<std::string> reservedKeyWords = {
+    // Constant built-in variables
+    "NULL",
+    "FALSE",
+    "TRUE",
+    "OFF",
+    "ON",
+    "PI",
+
+    // Dynamic built-in variables
+    "YEAR",
+    "MONTH",
+    "DAYOFMONTH",
+    "DAYOFWEEK",
+    "DAYOFYEAR",
+    "HOUR",
+    "MINUTE",
+    "HOLIDAY",
+    "DAYLIGHTSAVINGS",
+    "CURRENTTIME",
+    "SUNISUP",
+    "ISRAINING",
+    "SYSTEMTIMESTEP",
+    "ZONETIMESTEP",
+    "CURRENTENVIRONMENT",
+    "ACTUALDATEANDTIME",
+    "ACTUALTIME",
+    "WARMUPFLAG",
+
+    // Statement Keywords
+    "RUN",
+    "RETURN",
+    "SET",
+    "IF",
+    "ELSEIF",
+    "ELSE",
+    "ENDIF",
+    "WHILE",
+    "ENDWHILE",
+  };
+
+
+  std::vector<std::string> tokens;
+  boost::split(tokens, line, boost::is_any_of(delimiters));
+
+  for (std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end(); ) {
+    // We trim eventual parenthesis
+    boost::replace_all(*it, "(", "");
+    boost::replace_all(*it, ")", "");
+    // We trim leading and trailing whitespaces (shouldn't be necesssary with boost::split)
+    boost::trim(*it);
+
+    // We Delete the token:
+
+          // If there's nothing left in the token,
+    if (  (it->empty())
+          // or it starts with "@" (function)
+          || (boost::starts_with(*it, "@"))
+          // or its one of the reserved keyword above
+          || (std::find(reservedKeyWords.begin(), reservedKeyWords.end(), boost::to_upper_copy<std::string>(*it)) != reservedKeyWords.end())
+        )
+    {
+      it = tokens.erase(it);
+    } else {
+      ++it;
+    }
+  } return tokens;
+
+}
+
 
 } // openstudio

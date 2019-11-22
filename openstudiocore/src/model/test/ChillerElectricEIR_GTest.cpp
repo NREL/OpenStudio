@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -28,6 +28,9 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
+
+#include "ModelFixture.hpp"
+
 #include "../PlantLoop.hpp"
 #include "../Model.hpp"
 #include "../ChillerElectricEIR.hpp"
@@ -42,7 +45,7 @@
 
 using namespace openstudio;
 
-TEST(ChillerElectricEIR,ChillerElectricEIR_ChillerElectricEIR)
+TEST_F(ModelFixture, ChillerElectricEIR_ChillerElectricEIR)
 {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
@@ -62,7 +65,7 @@ TEST(ChillerElectricEIR,ChillerElectricEIR_ChillerElectricEIR)
 }
 
 // Add to the end of an empty supply side and check that it is placed correctly.
-TEST(ChillerElectricEIR,ChillerElectricEIR_addToNode1)
+TEST_F(ModelFixture, ChillerElectricEIR_addToNode1)
 {
   model::Model m;
 
@@ -103,7 +106,7 @@ TEST(ChillerElectricEIR,ChillerElectricEIR_addToNode1)
 }
 
 // Add to the front of an empty supply side and check that it is placed correctly.
-TEST(ChillerElectricEIR,ChillerElectricEIR_addToNode2)
+TEST_F(ModelFixture, ChillerElectricEIR_addToNode2)
 {
   model::Model m;
 
@@ -143,7 +146,7 @@ TEST(ChillerElectricEIR,ChillerElectricEIR_addToNode2)
 }
 
 // Add to the middle of the existing branch.
-TEST(ChillerElectricEIR,ChillerElectricEIR_addToNode3)
+TEST_F(ModelFixture, ChillerElectricEIR_addToNode3)
 {
   model::Model m;
 
@@ -215,7 +218,7 @@ TEST(ChillerElectricEIR,ChillerElectricEIR_addToNode3)
 }
 
 // Add to new branch
-TEST(ChillerElectricEIR,PlantLoop_addSupplyBranch)
+TEST_F(ModelFixture, ChillerElectricEIR_PlantLoop_addSupplyBranch)
 {
   model::Model m;
 
@@ -263,7 +266,7 @@ TEST(ChillerElectricEIR,PlantLoop_addSupplyBranch)
 }
 
 // Add to the end of an empty demand side and check that it is placed correctly.
-TEST(ChillerElectricEIR,ChillerElectricEIR_addToDemandNode1)
+TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode1)
 {
   model::Model m;
 
@@ -308,7 +311,7 @@ TEST(ChillerElectricEIR,ChillerElectricEIR_addToDemandNode1)
 }
 
 // Add to the front of an empty demand side and check that it is placed correctly.
-TEST(ChillerElectricEIR,ChillerElectricEIR_addToDemandNode2)
+TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode2)
 {
   model::Model m;
 
@@ -352,7 +355,7 @@ TEST(ChillerElectricEIR,ChillerElectricEIR_addToDemandNode2)
 }
 
 // Add to the middle of the existing branch.
-TEST(ChillerElectricEIR,ChillerElectricEIR_addToDemandNode3)
+TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode3)
 {
   model::Model m;
 
@@ -404,7 +407,7 @@ TEST(ChillerElectricEIR,ChillerElectricEIR_addToDemandNode3)
 }
 
 // Add to new demand branch
-TEST(ChillerElectricEIR,PlantLoop_addDemandBranch)
+TEST_F(ModelFixture, ChillerElectricEIR_PlantLoop_addDemandBranch)
 {
   model::Model m;
 
@@ -456,7 +459,7 @@ TEST(ChillerElectricEIR,PlantLoop_addDemandBranch)
 }
 
 // Check condenser type setting/defaulting
-TEST(ChillerElectricEIR, ChillerElectricEIR_CondenserType)
+TEST_F(ModelFixture, ChillerElectricEIR_CondenserType)
 {
   model::Model m;
 

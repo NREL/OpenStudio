@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -64,6 +64,8 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   static std::vector<std::string> pumpControlTypeValues();
 
+  static std::vector<std::string> designPowerSizingMethodValues();
+
   /** @name Getters */
   //@{
 
@@ -96,6 +98,14 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   double skinLossRadiativeFraction() const;
 
+  std::string designPowerSizingMethod() const;
+
+  double designElectricPowerPerUnitFlowRate() const;
+
+  double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+
+  std::string endUseSubcategory() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -106,7 +116,7 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   bool setNumberofPumpsinBank(int numberofPumpsinBank);
 
-  bool setFlowSequencingControlScheme(std::string flowSequencingControlScheme);
+  bool setFlowSequencingControlScheme(const std::string& flowSequencingControlScheme);
 
   bool setRatedPumpHead(double ratedPumpHead);
 
@@ -118,7 +128,7 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
 
   bool setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream);
 
-  bool setPumpControlType(std::string pumpControlType);
+  bool setPumpControlType(const std::string& pumpControlType);
 
   bool setPumpFlowRateSchedule(Schedule& schedule);
 
@@ -129,6 +139,14 @@ class MODEL_API HeaderedPumpsConstantSpeed : public StraightComponent {
   void resetThermalZone();
 
   bool setSkinLossRadiativeFraction(double skinLossRadiativeFraction);
+
+  bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
+
+  bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+
+  bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+
+  bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
   //@}
   /** @name Other */
@@ -165,4 +183,4 @@ typedef std::vector<HeaderedPumpsConstantSpeed> HeaderedPumpsConstantSpeedVector
 } // model
 } // openstudio
 
-#endif // MODEL_HEADEREDPUMPSCONSTANTSPEED_HPP
+#endif // MODEL_HEADEREDPUMPSCONSTANTSPEED_HPP

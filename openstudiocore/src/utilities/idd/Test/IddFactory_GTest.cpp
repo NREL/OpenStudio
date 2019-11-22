@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -222,7 +222,9 @@ TEST_F(IddFixture,IddFactory_Units) {
   unsupported.push_back(boost::regex("percent"));
   unsupported.push_back(boost::regex("ppm"));
   unsupported.push_back(boost::regex("W/\\(\\(m3/s\\)-Pa\\)"));
-
+  unsupported.push_back(boost::regex("W/m2 or deg C"));
+  unsupported.push_back(boost::regex("W/m2, W or deg C"));
+  
   IddObjectVector objects = IddFactory::instance().getObjects(IddFileType(IddFileType::WholeFactory));
   StringSet goodUnits;
   StringSet badUnits;

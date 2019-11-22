@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -70,22 +70,22 @@ AirToAirComponent_Impl::AirToAirComponent_Impl(const AirToAirComponent_Impl& oth
 {
 }
 
-OptionalModelObject AirToAirComponent_Impl::primaryAirInletModelObject()
+OptionalModelObject AirToAirComponent_Impl::primaryAirInletModelObject() const
 {
   return connectedObject(primaryAirInletPort());
 }
 
-OptionalModelObject AirToAirComponent_Impl::primaryAirOutletModelObject()
+OptionalModelObject AirToAirComponent_Impl::primaryAirOutletModelObject() const
 {
   return connectedObject(primaryAirOutletPort());
 }
 
-OptionalModelObject AirToAirComponent_Impl::secondaryAirInletModelObject()
+OptionalModelObject AirToAirComponent_Impl::secondaryAirInletModelObject() const
 {
   return connectedObject(secondaryAirInletPort());
 }
 
-OptionalModelObject AirToAirComponent_Impl::secondaryAirOutletModelObject()
+OptionalModelObject AirToAirComponent_Impl::secondaryAirOutletModelObject() const
 {
   return connectedObject(secondaryAirOutletPort());
 }
@@ -550,42 +550,42 @@ AirToAirComponent::AirToAirComponent(std::shared_ptr<detail::AirToAirComponent_I
   : HVACComponent(std::move(p))
 {}
 
-unsigned AirToAirComponent::primaryAirInletPort()
+unsigned AirToAirComponent::primaryAirInletPort() const
 {
   return getImpl<detail::AirToAirComponent_Impl>()->primaryAirInletPort();
 }
 
-unsigned AirToAirComponent::primaryAirOutletPort()
+unsigned AirToAirComponent::primaryAirOutletPort() const
 {
   return getImpl<detail::AirToAirComponent_Impl>()->primaryAirOutletPort();
 }
 
-unsigned AirToAirComponent::secondaryAirInletPort()
+unsigned AirToAirComponent::secondaryAirInletPort() const
 {
   return getImpl<detail::AirToAirComponent_Impl>()->secondaryAirInletPort();
 }
 
-unsigned AirToAirComponent::secondaryAirOutletPort()
+unsigned AirToAirComponent::secondaryAirOutletPort() const
 {
   return getImpl<detail::AirToAirComponent_Impl>()->secondaryAirOutletPort();
 }
 
-OptionalModelObject AirToAirComponent::primaryAirInletModelObject()
+OptionalModelObject AirToAirComponent::primaryAirInletModelObject() const
 {
   return getImpl<detail::AirToAirComponent_Impl>()->primaryAirInletModelObject();
 }
 
-OptionalModelObject AirToAirComponent::primaryAirOutletModelObject()
+OptionalModelObject AirToAirComponent::primaryAirOutletModelObject() const
 {
   return getImpl<detail::AirToAirComponent_Impl>()->primaryAirOutletModelObject();
 }
 
-OptionalModelObject AirToAirComponent::secondaryAirInletModelObject()
+OptionalModelObject AirToAirComponent::secondaryAirInletModelObject() const
 {
   return getImpl<detail::AirToAirComponent_Impl>()->secondaryAirInletModelObject();
 }
 
-OptionalModelObject AirToAirComponent::secondaryAirOutletModelObject()
+OptionalModelObject AirToAirComponent::secondaryAirOutletModelObject() const
 {
   return getImpl<detail::AirToAirComponent_Impl>()->secondaryAirOutletModelObject();
 }

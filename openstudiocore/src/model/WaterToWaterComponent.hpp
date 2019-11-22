@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,28 +57,28 @@ class MODEL_API WaterToWaterComponent : public HVACComponent
   virtual ~WaterToWaterComponent() {}
 
   /** Returns the supply inlet port. **/
-  virtual unsigned supplyInletPort();
+  virtual unsigned supplyInletPort() const;
 
   /** Returns the supply outlet port. **/
-  virtual unsigned supplyOutletPort();
+  virtual unsigned supplyOutletPort() const;
 
   /** Returns the demand inlet port. **/
-  virtual unsigned demandInletPort();
+  virtual unsigned demandInletPort() const;
 
   /** Returns the demand outlet port. **/
-  virtual unsigned demandOutletPort();
+  virtual unsigned demandOutletPort() const;
 
   /** Returns the optional ModelObject connected to the supply inlet port. **/
-  virtual boost::optional<ModelObject> supplyInletModelObject();
+  virtual boost::optional<ModelObject> supplyInletModelObject() const;
 
   /** Returns the optional ModelObject connected to the supply outlet port. **/
-  virtual boost::optional<ModelObject> supplyOutletModelObject();
+  virtual boost::optional<ModelObject> supplyOutletModelObject() const;
 
   /** Returns the optional ModelObject connected to the demand inlet port. **/
-  virtual boost::optional<ModelObject> demandInletModelObject();
+  virtual boost::optional<ModelObject> demandInletModelObject() const;
 
   /** Returns the optional ModelObject connected to the demand outlet port. **/
-  virtual boost::optional<ModelObject> demandOutletModelObject();
+  virtual boost::optional<ModelObject> demandOutletModelObject() const;
 
   virtual bool addToNode(Node & node);
 

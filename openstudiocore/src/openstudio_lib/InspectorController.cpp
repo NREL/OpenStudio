@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,12 +44,6 @@
 #include "../model/AirLoopHVACZoneSplitter.hpp"
 #include "../model/AirLoopHVACZoneSplitter_Impl.hpp"
 #include "../model/AirLoopHVAC_Impl.hpp"
-#include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
-#include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam_Impl.hpp"
-#include "../model/AirTerminalSingleDuctUncontrolled.hpp"
-#include "../model/AirTerminalSingleDuctUncontrolled_Impl.hpp"
-#include "../model/AirTerminalSingleDuctVAVReheat.hpp"
-#include "../model/AirTerminalSingleDuctVAVReheat_Impl.hpp"
 #include "../model/HVACComponent.hpp"
 #include "../model/HVACComponent_Impl.hpp"
 #include "../model/PlantLoop.hpp"
@@ -142,7 +136,7 @@ void InspectorController::addBranchForZone(model::ThermalZone & zone)
   {
     model::Model model = zone.model();
 
-    airLoop->addBranchForZone(zone,boost::none);
+    airLoop->multiAddBranchForZone(zone);
   }
 }
 

@@ -14,7 +14,7 @@
 ! FCW, 6/17/04: changed height for daylighting illuminance maps from 0.0m to 0.8m to correspond
 !               to reference point height
 
-  Version,8.9;
+  Version,9.2;
 
   Building,
     Daylighting Shelf Example,  !- Name
@@ -111,17 +111,20 @@
     1.00;                    !- Sky Clearness
 
   RunPeriod,
-    ,                        !- Name
+    RUNPERIOD 1,             !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Tuesday,                 !- Day of Week for Start Day
     Yes,                     !- Use Weather File Holidays and Special Days
     Yes,                     !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
-    Yes;                     !- Use Weather File Snow Indicators
+    Yes,                     !- Use Weather File Snow Indicators
+    No;                      !- Treat Weather as Actual
 
   SimulationControl,
     NO,                      !- Do Zone Sizing Calculation
@@ -416,7 +419,6 @@
     Standard South Wall,     !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -432,7 +434,6 @@
     Standard South Wall,     !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -555,7 +556,6 @@
     Daylit South Wall,       !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
@@ -578,7 +578,6 @@
     Daylit South Wall,       !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.211,                   !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices

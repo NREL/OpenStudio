@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -92,7 +92,7 @@ boost::optional<openstudio::FileLogSink> IlluminanceMapFixture::logFile;
 // *** BEGIN TESTS ***
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlot)
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlot)
 {
   if (!Application::instance().hasApplication()){
     Application::instance().application(true);
@@ -186,7 +186,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesCount)
 }
 
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeries)
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlotSeries)
 {
   if (!Application::instance().hasApplication()){
     Application::instance().application(true);
@@ -203,7 +203,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeries)
   }
 }
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlotSeriesOpt)
 {
   if (!Application::instance().hasApplication()){
     Application::instance().application(true);
@@ -226,7 +226,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
   }
 }
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapMatrixBaseline)
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapMatrixBaseline)
 {
   if (!Application::instance().hasApplication()){
     Application::instance().application(true);

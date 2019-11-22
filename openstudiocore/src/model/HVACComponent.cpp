@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -484,6 +484,8 @@ namespace detail {
 
   ModelObject HVACComponent_Impl::clone(Model model) const
   {
+    // Note: JM 2018-08-29: children controls what we see in the Inspector in OS App, and it's not necessarilly what we want to clone
+    // So the parent/children link is broken on purpose here
     return ModelObject_Impl::clone(model);
   }
 

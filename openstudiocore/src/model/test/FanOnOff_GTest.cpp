@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -181,7 +181,7 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithDefaultData)
     EXPECT_TRUE(it->parent());
   }
 
-  EXPECT_DOUBLE_EQ(0.6, testObjectClone.fanEfficiency());
+  EXPECT_DOUBLE_EQ(0.6, testObjectClone.fanTotalEfficiency());
   EXPECT_DOUBLE_EQ(300, testObjectClone.pressureRise());
   EXPECT_DOUBLE_EQ(0.8, testObjectClone.motorEfficiency());
   EXPECT_TRUE(testObjectClone.isMaximumFlowRateAutosized());
@@ -204,7 +204,7 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithCustomData)
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff testObject = FanOnOff(m, s);
   testObject.setPressureRise(999.0);
-  testObject.setFanEfficiency(0.99);
+  testObject.setFanTotalEfficiency(0.99);
   testObject.setMaximumFlowRate(999.0);
 
   CurveExponent fanPowerFuncSpeedCurve(m);
@@ -215,7 +215,7 @@ TEST_F(ModelFixture, FanOnOff_CloneOneModelWithCustomData)
 
   FanOnOff testObjectClone = testObject.clone(m).cast<FanOnOff>();
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.pressureRise());
-  EXPECT_DOUBLE_EQ(0.99, testObjectClone.fanEfficiency());
+  EXPECT_DOUBLE_EQ(0.99, testObjectClone.fanTotalEfficiency());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.maximumFlowRate().get());
   EXPECT_EQ(testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle(), testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle());
   EXPECT_EQ(fanPowerFuncSpeedCurve.handle(), testObjectClone.fanPowerRatioFunctionofSpeedRatioCurve().handle());
@@ -266,7 +266,7 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithDefaultData)
     EXPECT_TRUE(it->parent());
   }
 
-  EXPECT_DOUBLE_EQ(0.6, testObjectClone2.fanEfficiency());
+  EXPECT_DOUBLE_EQ(0.6, testObjectClone2.fanTotalEfficiency());
   EXPECT_DOUBLE_EQ(300, testObjectClone2.pressureRise());
   EXPECT_DOUBLE_EQ(0.8, testObjectClone2.motorEfficiency());
   EXPECT_TRUE(testObjectClone2.isMaximumFlowRateAutosized());
@@ -283,7 +283,7 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithCustomData)
   Schedule s = m.alwaysOnDiscreteSchedule();
   FanOnOff testObject = FanOnOff(m, s);
   testObject.setPressureRise(999.0);
-  testObject.setFanEfficiency(0.99);
+  testObject.setFanTotalEfficiency(0.99);
   testObject.setMaximumFlowRate(999.0);
 
   CurveExponent fanPowerFuncSpeedCurve(m);
@@ -346,7 +346,7 @@ TEST_F(ModelFixture, FanOnOff_CloneTwoModelsWithCustomData)
   }
 
   EXPECT_DOUBLE_EQ(999.0, testObjectClone2.pressureRise());
-  EXPECT_DOUBLE_EQ(0.99, testObjectClone2.fanEfficiency());
+  EXPECT_DOUBLE_EQ(0.99, testObjectClone2.fanTotalEfficiency());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone2.maximumFlowRate().get());
   EXPECT_NE(testObject.fanPowerRatioFunctionofSpeedRatioCurve().handle(), testObjectClone2.fanPowerRatioFunctionofSpeedRatioCurve().handle());
   EXPECT_NE(fanPowerFuncSpeedCurve.handle(), testObjectClone2.fanPowerRatioFunctionofSpeedRatioCurve().handle());
@@ -369,12 +369,22 @@ TEST_F(ModelFixture,FanOnOff_Test_Setters_and_Getters)
   EXPECT_EQ(test_sched, testObject.availabilitySchedule());
 
   // Field Fan Efficiency
+  EXPECT_TRUE(testObject.setFanTotalEfficiency(0.8));
+  EXPECT_DOUBLE_EQ(0.8, testObject.fanTotalEfficiency());
+  EXPECT_FALSE(testObject.isFanTotalEfficiencyDefaulted());
+
+  testObject.resetFanTotalEfficiency();
+  EXPECT_TRUE(testObject.isFanTotalEfficiencyDefaulted());
+
+  // Test the deprecated older name
+
   EXPECT_TRUE(testObject.setFanEfficiency(0.7));
   EXPECT_DOUBLE_EQ(0.7, testObject.fanEfficiency());
   EXPECT_FALSE(testObject.isFanEfficiencyDefaulted());
 
   testObject.resetFanEfficiency();
   EXPECT_TRUE(testObject.isFanEfficiencyDefaulted());
+
 
   // Field Pressure Rise
 
@@ -527,7 +537,7 @@ TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACUnitHeater)
   ZoneHVACUnitHeater zoneHVACUnitHeater(m, s, fan, heatingCoil);
 
   boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
-  EXPECT_FALSE(component);
+  EXPECT_TRUE(component);
 }
 
 TEST_F(ModelFixture,FanOnOff_containingZoneHVACComponent_ZoneHVACTerminalUnitVariableRefrigerantFlow)

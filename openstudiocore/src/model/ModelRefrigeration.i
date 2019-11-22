@@ -12,7 +12,7 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 %import <model/ModelHVAC.i>
-%import <model/ModelAirflow.i>
+%import <model/ModelZoneHVAC.i>
 
 #if defined SWIGCSHARP
 
@@ -20,6 +20,14 @@
   #define _csharp_module_name OpenStudioModelRefrigeration
 
 #endif
+
+namespace openstudio {
+  namespace model {
+
+    // forward declarations
+    class RefrigerationSystem;
+  }
+}
 
 MODELOBJECT_TEMPLATES(RefrigerationAirChiller);
 MODELOBJECT_TEMPLATES(RefrigerationCase);

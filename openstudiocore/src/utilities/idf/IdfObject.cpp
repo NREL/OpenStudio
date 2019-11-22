@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,14 +34,9 @@
 #include "IdfRegex.hpp"
 #include "ValidityReport.hpp"
 
-#include "../idd/IddObject.hpp"
-#include "../idd/IddObjectProperties.hpp"
-#include "../idd/IddFieldProperties.hpp"
 #include "../idd/IddKey.hpp"
-#include "../idd/ExtensibleIndex.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include "../idd/IddField.hpp"
 #include "../idd/IddRegex.hpp"
 #include "../idd/CommentRegex.hpp"
 #include "../idd/Comments.hpp"
@@ -50,20 +45,14 @@
 #include "../core/Finder.hpp"
 #include "../core/Assert.hpp"
 #include "../core/Url.hpp"
-#include "../core/UUID.hpp"
 
 #include "../units/Quantity.hpp"
 #include "../units/OSOptionalQuantity.hpp"
 #include "../units/QuantityConverter.hpp"
 
 #include <boost/lexical_cast.hpp>
-#include <boost/numeric/conversion/cast.hpp>
 
-#include <iostream>
-#include <sstream>
 #include <iomanip>
-#include <algorithm>
-#include <limits>
 
 using std::cout;
 using std::endl;

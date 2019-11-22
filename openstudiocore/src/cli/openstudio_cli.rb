@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -9,31 +9,29 @@
 #  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
 #  disclaimer.
 #
-#  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-#  following disclaimer in the documentation and/or other materials provided with the distribution.
+#  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+#  disclaimer in the documentation and/or other materials provided with the distribution.
 #
-#  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote
-#  products derived from this software without specific prior written permission from the respective party.
+#  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+#  derived from this software without specific prior written permission from the respective party.
 #
-#  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative
-#  works may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without
-#  specific prior written permission from Alliance for Sustainable Energy, LLC.
+#  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+#  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+#  written permission from Alliance for Sustainable Energy, LLC.
 #
-#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 #  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER, THE UNITED STATES GOVERNMENT, OR ANY CONTRIBUTORS BE LIABLE FOR
-#  ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
-#  AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+#  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+#  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+#  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+#  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################################################################
 
 require 'openstudio'
 
 OpenStudio::Application::instance().application(false)
-if (!OpenStudio::RemoteBCL::initializeSSL())
-  puts "Unable to initialize OpenSSL: Verify that openstudio.exe can access the OpenSSL libraries"
-end
 
 #File.open('E:\test\test.log', 'w') do |f|
 #  ENV.each_key {|k| f.puts "#{k} = #{ENV[k]}" }
@@ -43,6 +41,8 @@ end
 
 require 'logger'
 require 'optparse'
+require 'stringio'
+require 'rbconfig'
 
 #include OpenStudio::Workflow::Util::IO
 
@@ -57,9 +57,21 @@ $logger.level = Logger::WARN
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
+original_arch = nil
+if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
+  # assume that system ruby of 'x64-mingw32' architecture was used to create bundle
+  original_arch = RbConfig::CONFIG['arch']
+  RbConfig::CONFIG['arch'] = 'x64-mingw32'
+end
+
 # load embedded ruby gems
 require 'rubygems'
 require 'rubygems/version'
+Gem::Platform.local
+
+if original_arch
+  RbConfig::CONFIG['arch'] = original_arch
+end
 
 module Gem
 class Specification < BasicSpecification
@@ -146,6 +158,9 @@ class Specification < BasicSpecification
 end
 end
 
+# have to do some forward declaration and pre-require to get around autoload cycles
+#module Bundler
+#end
 
 # This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
 module IRB # :nodoc:
@@ -275,6 +290,7 @@ def parse_main_args(main_args)
   # Operate on the include option to add to $LOAD_PATH
   remove_indices = []
   new_path = []
+  init_ssl = true
   main_args.each_index do |i|
 
     if main_args[i] == '-I' || main_args[i] == '--include'
@@ -292,8 +308,20 @@ def parse_main_args(main_args)
         #$logger.warn "'#{dir}' passed to #{main_args[i]} is not a directory"
       end
       new_path << dir
+    elsif main_args[i] == '--no-ssl'
+      # remove from further processing
+      remove_indices << i
+      
+      init_ssl = false
     end
   end
+  
+  if init_ssl
+    if (!OpenStudio::RemoteBCL::initializeSSL())
+      puts "Unable to initialize OpenSSL: Verify that openstudio.exe can access the OpenSSL libraries"
+    end
+  end
+
   remove_indices.reverse_each {|i| main_args.delete_at(i)}
 
   if !new_path.empty?
@@ -354,17 +382,91 @@ def parse_main_args(main_args)
     ENV['GEM_HOME'] = new_home
   end
 
+  # Operate on the bundle option to set BUNDLE_GEMFILE
+  use_bundler = false
+  if main_args.include? '--bundle'
+    option_index = main_args.index '--bundle'
+    path_index = option_index + 1
+    gemfile = main_args[path_index]
+    main_args.slice! path_index
+    main_args.slice! main_args.index '--bundle'
+
+    $logger.info "Setting BUNDLE_GEMFILE to #{gemfile}"
+    ENV['BUNDLE_GEMFILE'] = gemfile
+    use_bundler = true
+    
+  elsif ENV['BUNDLE_GEMFILE']
+    # no argument but env var is set
+    $logger.info "ENV['BUNDLE_GEMFILE'] set to '#{ENV['BUNDLE_GEMFILE']}'"
+    use_bundler = true
+  
+  end  
+  
+  if main_args.include? '--bundle_path'
+    option_index = main_args.index '--bundle_path'
+    path_index = option_index + 1
+    bundle_path = main_args[path_index]
+    main_args.slice! path_index
+    main_args.slice! main_args.index '--bundle_path'
+
+    $logger.info "Setting BUNDLE_PATH to #{bundle_path}"
+    ENV['BUNDLE_PATH'] = bundle_path
+  
+  elsif ENV['BUNDLE_PATH']
+    # no argument but env var is set
+    $logger.info "ENV['BUNDLE_PATH'] set to '#{ENV['BUNDLE_PATH']}'"
+  
+  elsif use_bundler
+    # bundle was requested but bundle_path was not provided
+    $logger.warn "Bundle activated but ENV['BUNDLE_PATH'] is not set"
+    
+    $logger.info "Setting BUNDLE_PATH to ':/ruby/2.2.0/'"
+    ENV['BUNDLE_PATH'] = ':/ruby/2.2.0/'
+ 
+  end  
+  
+  if main_args.include? '--bundle_without'
+    option_index = main_args.index '--bundle_without'
+    path_index = option_index + 1
+    bundle_without = main_args[path_index]
+    main_args.slice! path_index
+    main_args.slice! main_args.index '--bundle_without'
+
+    $logger.info "Setting BUNDLE_WITHOUT to #{bundle_without}"
+    ENV['BUNDLE_WITHOUT'] = bundle_without
+  
+  elsif ENV['BUNDLE_WITHOUT']
+    # no argument but env var is set
+    $logger.info "ENV['BUNDLE_WITHOUT'] set to '#{ENV['BUNDLE_WITHOUT']}'"
+  
+  elsif use_bundler
+    # bundle was requested but bundle_path was not provided
+    $logger.warn "Bundle activated but ENV['BUNDLE_WITHOUT'] is not set"
+    
+    # match configuration in build_openstudio_gems
+    $logger.info "Setting BUNDLE_WITHOUT to 'test'"
+    ENV['BUNDLE_WITHOUT'] = 'test'
+    
+    # ignore any local config on disk
+    #DLM: this would be correct if the bundle was created here
+    #it would not be correct if the bundle was transfered from another computer
+    #ENV['BUNDLE_IGNORE_CONFIG'] = 'true'
+  end  
+  
   Gem.paths.path << ':/ruby/2.2.0/gems/'
   Gem.paths.path << ':/ruby/2.2.0/bundler/gems/'
 
   # find all the embedded gems
+  original_embedded_gems = {}
   begin
     EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
-      if md = /specifications\/.*\.gemspec$/.match(f)
+      if md = /specifications\/.*\.gemspec$/.match(f) || 
+         md = /bundler\/.*\.gemspec$/.match(f)
         begin
           spec = EmbeddedScripting::getFileAsString(f)
           s = eval(spec)
           s.loaded_from = f
+          original_embedded_gems[s.name] = s
 
           init_count = 0
           Gem::Specification.each {|x| init_count += 1}
@@ -377,13 +479,12 @@ def parse_main_args(main_args)
 
           if post_count == init_count
             $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
-            $logger.debug "Ignoring embdedded gem #{s.file_name}"
           end
 
         rescue LoadError => e
-          puts e.message
+          safe_puts e.message
         rescue => e
-          puts e.message
+          safe_puts e.message
         end
       end
     end
@@ -391,116 +492,158 @@ def parse_main_args(main_args)
     # EmbeddedScripting not available
   end
 
-  # activate bundler
+  # activate or remove bundler
   Gem::Specification.each do |spec|
     if spec.gem_dir.chars.first == ':'
       if spec.name == 'bundler'
-        # DLM: for now remove this
-        #spec.activate
-        Gem::Specification.remove_spec(spec)
-      end
-    end
-  end
-
-  # require bundler
-  # have to do some forward declaration and pre-require to get around autoload cycles
-  #module Bundler
-  #end
-  #require 'bundler/gem_helpers'
-  #require 'bundler/errors'
-  #require 'bundler/plugin'
-  #require 'bundler/source'
-  #require 'bundler/definition'
-  #require 'bundler/dsl'
-  #require 'bundler/dsl'
-  #require 'bundler'
-
-  #begin
-  #  # activate bundled gems
-  #  # bundler will look in:
-  #  # 1) ENV["BUNDLE_GEMFILE"]
-  #  # 2) find_file("Gemfile", "gems.rb")
-  #  Bundler.setup
-  #  Bundler.require
-  #rescue Bundler::BundlerError => e
-  #  puts "#{e.message}"
-  #  #puts e.backtrace.join("\n")
-  #  if e.is_a?(Bundler::GemNotFound)
-  #    puts "Run `bundle install` to install missing gems."
-  #  elsif e.is_a?(Bundler::ProductionError)
-  #
-  #  else
-  #
-  #  end
-  #  exit e.status_code
-  #end
-
-  embedded_gems = []
-  user_gems = []
-  Gem::Specification.each do |spec|
-    if spec.gem_dir.chars.first == ':'
-      embedded_gems << spec
-    else
-      user_gems << spec
-    end
-  end
-
-  # remove any embedded gems that are also found on disk with equal or higher version but compatible major version
-  user_gems_to_remove = []
-  embedded_gems.each do |spec|
-    remove = false
-    user_gems.each do |s|
-      if s.name == spec.name
-        if s.version > spec.version
-          # only allow higher versions with compatible major version
-          if s.version.to_s.split('.').first == spec.version.to_s.split('.').first
-            $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
-            remove = true
-          else
-            $logger.debug "Ignoring system gem #{s.name} #{s.version}, incompatible with embedded gem"
-            user_gems_to_remove << s
-          end
-        elsif s.version == spec.version
-          $logger.debug "Found system gem #{s.name} #{s.version}, overrides embedded gem"
-          remove = true
+        if use_bundler
+          spec.activate
         else
-          $logger.debug "Found system gem #{s.name} #{s.version}, does not override embedded gem"
+          # DLM: don't remove, used by Resolver
+          #Gem::Specification.remove_spec(spec)
         end
       end
     end
-
-    if remove
-      $logger.debug "Ignoring embdedded gem #{spec.file_name}"
-      Gem::Specification.remove_spec(spec)
-    end
   end
+  
+  if use_bundler
+  
+    current_dir = Dir.pwd
+    
+    original_arch = nil
+    if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
+      # assume that system ruby of 'x64-mingw32' architecture was used to create bundle
+      original_arch = RbConfig::CONFIG['arch']
+      $logger.info "Temporarily replacing arch '#{original_arch}' with 'x64-mingw32' for Bundle"
+      RbConfig::CONFIG['arch'] = 'x64-mingw32'
+    end
+    
+   
+   
+    # require bundler
+    # have to do some forward declaration and pre-require to get around autoload cycles
+    require 'bundler/errors'
+    #require 'bundler/environment_preserver'
+    require 'bundler/plugin'
+    #require 'bundler/rubygems_ext'
+    require 'bundler/rubygems_integration'
+    require 'bundler/version'
+    require 'bundler/ruby_version'
+    #require 'bundler/constants'
+    #require 'bundler/current_ruby'  
+    require 'bundler/gem_helpers'
+    #require 'bundler/plugin'
+    require 'bundler/source'
+    require 'bundler/definition'
+    require 'bundler/dsl'
+    require 'bundler/uri_credentials_filter'
+    require 'bundler'
+    
+    begin
+      # activate bundled gems
+      # bundler will look in:
+      # 1) ENV["BUNDLE_GEMFILE"]
+      # 2) find_file("Gemfile", "gems.rb")
+      #require 'bundler/setup'
+      
+      groups = Bundler.definition.groups
+      keep_groups = []
+      without_groups = ENV['BUNDLE_WITHOUT']
+      $logger.info "without_groups = #{without_groups}"
+      groups.each do |g| 
+        $logger.info "g = #{g}"
+        if without_groups.include?(g.to_s)
+          $logger.info "Bundling without group '#{g}'"
+        else
+          keep_groups << g
+        end
+      end
+      
+      $logger.info "Bundling with groups [#{keep_groups.join(',')}]"
+      
+      remaining_specs = []
+      Bundler.definition.specs_for(keep_groups).each {|s| remaining_specs << s.name}
+      
+      $logger.info "Specs to be included [#{remaining_specs.join(',')}]"
+        
+      Bundler.setup(*keep_groups) 
+      #Bundler.require(*keep_groups)
+      
+    #rescue Bundler::BundlerError => e
+    
+      #$logger.info e.backtrace.join("\n")
+      #$logger.error "Bundler #{e.class}: Use `bundle install` to install missing gems"
+      #exit e.status_code
 
-  user_gems_to_remove.uniq.each {|s| Gem::Specification.remove_spec(s)}
+    ensure
+    
+      if original_arch
+        $logger.info "Restoring arch '#{original_arch}'"
+        RbConfig::CONFIG['arch'] = original_arch
+      end
+    
+      Dir.chdir(current_dir)
+    end
 
-  # activate remaining embedded gems
-  Gem::Specification.each do |spec|
-    if spec.gem_dir.chars.first == ':'
+  else 
+    # not using_bundler
+    
+    # DLM: test code, useful for testing from command line using system ruby
+    #Gem::Specification.each do |spec|
+    #  if /openstudio/.match(spec.name) 
+    #    original_embedded_gems[spec.name] = spec
+    #  end
+    #end
 
-      # check if gem can be loaded from RUBYLIB, this supports developer use case
+    # get a list of all the embedded gems
+    dependencies = []
+    original_embedded_gems.each_value do |spec|
+      $logger.debug "Adding dependency on #{spec.name} '~> #{spec.version}'"
+      dependencies << Gem::Dependency.new(spec.name, "~> #{spec.version}")
+    end
+    #dependencies.each {|d| $logger.debug "Added dependency #{d}"}
+
+    # resolve dependencies
+    activation_errors = false
+    original_load_path = $:.clone
+    resolver = Gem::Resolver.for_current_gems(dependencies)
+    activation_requests = resolver.resolve
+    $logger.debug "Processing #{activation_requests.size} activation requests"
+    activation_requests.each do |request|
       do_activate = true
-      $:.each do |lp|
-        if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
-          $logger.debug "Found #{spec.name} in '#{lp}', overrides embdedded gem"
-          do_activate = false
-          break
+      spec = request.spec
+
+      # check if this is one of our embedded gems
+      if original_embedded_gems[spec.name]
+
+        # check if gem can be loaded from RUBYLIB, this supports developer use case
+        original_load_path.each do |lp|
+          if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
+            $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
+            Gem::Specification.remove_spec(spec)
+            do_activate = false
+            break
+          end
         end
       end
-
+      
       if do_activate
-        $logger.debug "Activating embdedded gem #{spec.file_name}"
-        spec.activate
-      else
-        $logger.debug "Ignoring embdedded gem #{spec.file_name}"
-        Gem::Specification.remove_spec(spec)
+        $logger.debug "Activating gem #{spec.spec_file}"
+        begin
+          spec.activate
+        rescue Gem::LoadError
+          $logger.error "Error activating gem #{spec.spec_file}"
+        end
       end
+        
     end
-  end
-
+    
+    if activation_errors
+      return false
+    end
+    
+  end # use_bundler
+    
   # Handle -e commands
   remove_indices = []
   $eval_cmds = []
@@ -639,9 +782,10 @@ class CLI
     if quiet
       commands = ['-h','--help',
                   '--verbose',
+                  '--no-ssl',
                   '-i', '--include',
                   '-e', '--execute',
-                  '--gem_path', '--gem_home']
+                  '--gem_path', '--gem_home', '--bundle', '--bundle_path', '--bundle_without']
       command_list.each do |key, data|
         # Skip non-primary commands. These only show up in extended
         # help output.
@@ -656,10 +800,14 @@ class CLI
         o.separator ''
         o.on('-h', '--help', 'Print this help.')
         o.on('--verbose', 'Print the full log to STDOUT')
+        o.on('--no-ssl', 'Skip initializing SSL')
         o.on('-I', '--include DIR', 'Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)')
         o.on('-e', '--execute CMD', 'Execute one line of script (may be used more than once). Returns after executing commands.')
         o.on('--gem_path DIR', 'Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)')
         o.on('--gem_home DIR', 'Set GEM_HOME environment variable')
+        o.on('--bundle GEMFILE', 'Use bundler for GEMFILE')
+        o.on('--bundle_path BUNDLE_PATH', 'Use bundler installed gems in BUNDLE_PATH')
+        o.on('--bundle_without WITHOUT_GROUPS', 'Space separated list of groups for bundler to exclude in WITHOUT_GROUPS.  Surround multiple groups with quotes like "test development".')
         o.separator ''
         o.separator 'Common commands:'
 
@@ -717,6 +865,12 @@ class Run
     # options are local to this method, run_methods are what get passed to workflow gem
     run_options = {}
 
+    # Hidden option shhhhh
+    run_options[:fast] = false
+    if sub_argv.delete '--fast'
+      run_options[:fast] = true
+    end
+    
     options = {}
     options[:debug] = false
     options[:no_simulation] = false
@@ -914,11 +1068,11 @@ class GemList
       end
 
       embedded.each do |spec|
-        puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
+        safe_puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
       end
 
       user.each do |spec|
-        puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
+        safe_puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
       end
 
     rescue => e
@@ -1026,6 +1180,14 @@ class Measure
     options[:update] = false
     options[:compute_arguments] = nil
 
+    # save some arguments to pass to minitest
+    saved_subargv = []
+    if sub_argv[0] == '-r' || sub_argv[0] == '--run_tests'
+      saved_subargv = sub_argv[2..-1]
+      sub_argv = sub_argv[0...2]
+    end
+    
+    # find the directory
     directory = nil
     if sub_argv.size > 1
       unless (sub_argv[0] == '-s' || sub_argv[0] == '--start_server')
@@ -1051,16 +1213,20 @@ class Measure
         options[:compute_arguments] = true
         options[:compute_arguments_model] = model_file
       end
+      o.on('-r', '--run_tests', 'Run all tests recursively found in a directory, additional arguments are passed to minitest') do
+        options[:run_tests] = true
+      end
       o.on('-s', '--start_server [PORT]', 'Start a measure manager server') do |port|
         options[:start_server] = true
         options[:start_server_port] = port
       end
+      # TODO: run unit tests
     end
-
+    
     # Parse the options
     argv = parse_options(opts, sub_argv)
     return 0 if argv == nil
-
+    
     $logger.debug("Measure command: #{argv.inspect} #{options.inspect}")
 
     if !options[:start_server]
@@ -1089,7 +1255,7 @@ class Measure
         end
       end
 
-      puts JSON.generate(result)
+      safe_puts JSON.generate(result)
 
     elsif options[:update]
       measure_manager = MeasureManager.new($logger)
@@ -1100,7 +1266,7 @@ class Measure
       end
 
       hash = measure_manager.measure_hash(directory, measure)
-      puts JSON.generate(hash)
+      safe_puts JSON.generate(hash)
 
     elsif options[:compute_arguments]
       measure_manager = MeasureManager.new($logger)
@@ -1149,8 +1315,41 @@ class Measure
       measure_info = measure_manager.get_measure_info(directory, measure, model_path, model, workspace)
 
       hash = measure_manager.measure_hash(directory, measure, measure_info)
-      puts JSON.generate(hash)
+      safe_puts JSON.generate(hash)
 
+    elsif options[:run_tests]
+      
+      # restore saved arguments for minitest
+      ARGV.clear
+      saved_subargv.each do |arg|
+        ARGV << arg
+      end
+      $logger.debug("Minitest arguments are '#{saved_subargv}'")
+      
+      # load openstudio_measure_tester gem
+      #begin
+        require 'minitest'
+        require 'minitest/reporters'
+        
+        # Minitest Reports use a plugin that is normally found by Minitest::load_plugins using Gem.find
+        # until Gem.find is overloaded to find embedded gems, we will manually load the plugin here
+        require 'minitest/minitest_reporter_plugin'
+        Minitest.extensions << 'minitest_reporter'
+        
+        require 'openstudio_measure_tester'
+      #rescue LoadError
+        #puts "Cannot load 'openstudio_measure_tester'"
+        #return 1
+      #end
+      
+      runner = OpenStudioMeasureTester::Runner.new(directory)
+      result = runner.run_all(Dir.pwd) 
+      
+      if result != 0
+        $logger.error("Measure tester returned errors")
+        return 1
+      end
+    
     elsif options[:start_server]
 
       require_relative 'measure_manager_server'

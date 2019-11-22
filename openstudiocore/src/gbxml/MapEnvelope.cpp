@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,6 +34,8 @@
 #include "../model/Model.hpp"
 #include "../model/ModelObject.hpp"
 #include "../model/ModelObject_Impl.hpp"
+#include "../model/AdditionalProperties.hpp"
+#include "../model/AdditionalProperties_Impl.hpp"
 #include "../model/Construction.hpp"
 #include "../model/Construction_Impl.hpp"
 #include "../model/AirGap.hpp"
@@ -64,9 +66,17 @@ namespace gbxml {
     openstudio::model::Construction construction(model);
     QString constructionId = element.attribute("id");
     m_idToObjectMap.insert(std::make_pair(constructionId, construction));
+    construction.additionalProperties().setFeature("gbXMLId", toString(constructionId));
 
     QString constructionName = element.firstChildElement("Name").toElement().text();
     construction.setName(escapeName(constructionId, constructionName));
+
+    //// import CADObjectId
+    //QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    //if (cadObjectIdElements.size() >= 1) {
+    //  // TODO: import multiple CADObjectIds
+    //  translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, construction);
+    //}
 
     QDomNodeList layerIdList = element.elementsByTagName("LayerId");
 
@@ -74,23 +84,27 @@ namespace gbxml {
       return construction;
     }
 
-    QString layerId = layerIdList.at(0).toElement().attribute("layerIdRef");
-
+    // Construction::LayerId (layerIdList) -> Layer (layerElements), Layer::MaterialId -> Material
     std::vector<openstudio::model::Material> materials;
-    for (int i = 0; i < layerElements.count(); i++){
-      QDomElement layerElement = layerElements.at(i).toElement();
-      if (layerId == layerElement.attribute("id")){
-        QDomNodeList materialIdElements = layerElement.elementsByTagName("MaterialId");
-        for (int j = 0; j < materialIdElements.count(); j++){
-          QString materialId = materialIdElements.at(j).toElement().attribute("materialIdRef");
-          auto materialIt = m_idToObjectMap.find(materialId);
-          if (materialIt != m_idToObjectMap.end()){
-            boost::optional<openstudio::model::Material> material = materialIt->second.optionalCast<openstudio::model::Material>();
-            OS_ASSERT(material); // Krishnan, what type of error handling do you want?
-            materials.push_back(*material);
+    for (int layerIdIdx = 0; layerIdIdx < layerIdList.count(); layerIdIdx++) {
+      QString layerId = layerIdList.at(layerIdIdx).toElement().attribute("layerIdRef");
+
+      // find this layerId in all the layers
+      for (int i = 0; i < layerElements.count(); i++) {
+        QDomElement layerElement = layerElements.at(i).toElement();
+        if (layerId == layerElement.attribute("id")) {
+          QDomNodeList materialIdElements = layerElement.elementsByTagName("MaterialId");
+          for (int j = 0; j < materialIdElements.count(); j++) {
+            QString materialId = materialIdElements.at(j).toElement().attribute("materialIdRef");
+            auto materialIt = m_idToObjectMap.find(materialId);
+            if (materialIt != m_idToObjectMap.end()) {
+              boost::optional<openstudio::model::Material> material = materialIt->second.optionalCast<openstudio::model::Material>();
+              OS_ASSERT(material); // Krishnan, what type of error handling do you want?
+              materials.push_back(*material);
+            }
           }
+          break;
         }
-        break;
       }
     }
 
@@ -117,6 +131,7 @@ namespace gbxml {
     openstudio::model::Construction construction(model);
     QString windowTypeId = element.attribute("id");
     m_idToObjectMap.insert(std::make_pair(windowTypeId, construction));
+    construction.additionalProperties().setFeature("gbXMLId", toString(windowTypeId));
 
     QString windowTypeName = element.firstChildElement("Name").toElement().text();
     construction.setName(escapeName(windowTypeId, windowTypeName));
@@ -162,7 +177,13 @@ namespace gbxml {
       layers.push_back(glazing);
       construction.setLayers(layers);
     }
-
+      
+    //// import CADObjectId
+    //QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    //if (cadObjectIdElements.size() >= 1) {
+    //  // TODO: import multiple CADObjectIds
+    //  translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, construction);
+    //}
     return construction;
   }
 
@@ -194,6 +215,7 @@ namespace gbxml {
 
       QString id = element.attribute("id");
       m_idToObjectMap.insert(std::make_pair(id, material));
+      material.additionalProperties().setFeature("gbXMLId", toString(id));
 
       QString name = element.firstChildElement("Name").toElement().text();
       material.setName(escapeName(id, name));
@@ -219,6 +241,7 @@ namespace gbxml {
 
       QString id = element.attribute("id");
       m_idToObjectMap.insert(std::make_pair(id, material));
+      material.additionalProperties().setFeature("gbXMLId", toString(id));
 
       QString name = element.firstChildElement("Name").toElement().text();
       material.setName(escapeName(id, name));
@@ -233,6 +256,7 @@ namespace gbxml {
 
       QString id = element.attribute("id");
       m_idToObjectMap.insert(std::make_pair(id, material));
+      material.additionalProperties().setFeature("gbXMLId", toString(id));
 
       QString name = element.firstChildElement("Name").toElement().text();
       material.setName(escapeName(id, name));
@@ -241,6 +265,15 @@ namespace gbxml {
 
       material.setThermalResistance(.001);
     }
+
+    //// import CADObjectId
+    //QDomNodeList cadObjectIdElements = element.elementsByTagName("CADObjectId");
+    //if (cadObjectIdElements.size() >= 1) {
+    //  // TODO: import multiple CADObjectIds
+    //  if (result) {
+    //    translateCADObjectId(cadObjectIdElements.at(0).toElement(), doc, *result);
+    //  }
+    //}
 
     return result;
   }

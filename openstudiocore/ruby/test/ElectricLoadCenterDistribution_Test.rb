@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -42,7 +42,7 @@ class ElectricLoadCenterDistribution_Test < MiniTest::Unit::TestCase
     assert(elcd.inverter.empty?)
 
     simple_panel = OpenStudio::Model::GeneratorPhotovoltaic::simple(model)
-    assert(simple_panel.electricLoadCenterDistribution.empty?)
+    assert(!simple_panel.electricLoadCenterDistribution.empty?)
 
     elcd.addGenerator(simple_panel)
     assert(!simple_panel.electricLoadCenterDistribution.empty?)
@@ -50,7 +50,7 @@ class ElectricLoadCenterDistribution_Test < MiniTest::Unit::TestCase
     assert(elcd.inverter.empty?)
 
     eod_panel = OpenStudio::Model::GeneratorPhotovoltaic::equivalentOneDiode(model)
-    assert(eod_panel.electricLoadCenterDistribution.empty?)
+    assert(!eod_panel.electricLoadCenterDistribution.empty?)
 
     elcd.addGenerator(eod_panel)
     assert(!eod_panel.electricLoadCenterDistribution.empty?)

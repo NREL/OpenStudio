@@ -1,4 +1,4 @@
-  Version,8.9;
+  Version,9.2;
 
   Timestep,4;
 
@@ -20,17 +20,20 @@
     Yes;                     !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    RUNPERIOD 1,             !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
-    USEWEATHERFILE,          !- Day of Week for Start Day
+    ,                        !- End Year
+    ,                        !- Day of Week for Start Day
     YES,                     !- Use Weather File Holidays and Special Days
     YES,                     !- Use Weather File Daylight Saving Period
     NO,                      !- Apply Weekend Holiday Rule
     YES,                     !- Use Weather File Rain Indicators
-    YES;                     !- Use Weather File Snow Indicators
+    YES,                     !- Use Weather File Snow Indicators
+    No;                      !- Treat Weather as Actual
 
 ! NOTE:  Values overridden by weather file, if used
 
@@ -809,7 +812,6 @@
     Bedroom1 N-1,            !- Building Surface Name
     Bath1 SDoor-1,           !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -857,7 +859,6 @@
     Bedroom1 E-1,            !- Building Surface Name
     Sunspace WDoor-1,        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -891,7 +892,6 @@
     Bedroom1 W-1,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Insulated Shade Control, !- Shading Control Name
     Single Casement,         !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1000,7 +1000,6 @@
     Sunspace N-1,            !- Building Surface Name
     Bedroom2 SDoor-1,        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1032,7 +1031,6 @@
     Sunspace N-2,            !- Building Surface Name
     Bedroom3 SDoor-1,        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1064,7 +1062,6 @@
     Sunspace E-1,            !- Building Surface Name
     Bedroom4 WDoor-1,        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1096,7 +1093,6 @@
     Sunspace S-1,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     Sunspace,                !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1112,7 +1108,6 @@
     Sunspace S-1,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     Sunspace Door,           !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1128,7 +1123,6 @@
     Sunspace S-1,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     Sunspace,                !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1160,7 +1154,6 @@
     Sunspace W-1,            !- Building Surface Name
     Bedroom1 EDoor-1,        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1267,7 +1260,6 @@
     Bedroom4 N-2,            !- Building Surface Name
     Bath4 SDoor-1,           !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1299,7 +1291,6 @@
     Bedroom4 E-1,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Insulated Shade Control, !- Shading Control Name
     Single Casement,         !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1333,7 +1324,6 @@
     Bedroom4 W-1,            !- Building Surface Name
     Sunspace EDoor-1,        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1488,7 +1478,6 @@
     Bath1 S-1,               !- Building Surface Name
     Bedroom1 NDoor-1,        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1522,7 +1511,6 @@
     Bath1 S-2,               !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Insulated Shade Control, !- Shading Control Name
     Bath Clerestory,         !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1554,7 +1542,6 @@
     Bath1 W-1,               !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Always Frosted Control,  !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1695,7 +1682,6 @@
     Utility1 W-1,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1770,7 +1756,6 @@
     Bath2 N-1,               !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Always Frosted Control,  !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1802,7 +1787,6 @@
     Bath2 E-1,               !- Building Surface Name
     Bedroom2 WDoor-1,        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1941,7 +1925,6 @@
     Bedroom2 N-1,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Insulated Shade Control, !- Shading Control Name
     Single Casement,         !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2005,7 +1988,6 @@
     Bedroom2 S-2,            !- Building Surface Name
     Sunspace NDoor-1,        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2039,7 +2021,6 @@
     Bedroom2 S-3,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Insulated Shade Control, !- Shading Control Name
     Bedroom Clerestory,      !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2087,7 +2068,6 @@
     Bedroom2 W-2,            !- Building Surface Name
     Bath2 EDoor-1,           !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2178,7 +2158,6 @@
     Bedroom3 N-1,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Insulated Shade Control, !- Shading Control Name
     Single Casement,         !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2226,7 +2205,6 @@
     Bedroom3 E-2,            !- Building Surface Name
     Bath3 WDoor-1,           !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2258,7 +2236,6 @@
     Bedroom3 S-1,            !- Building Surface Name
     Sunspace NDoor-2,        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2308,7 +2285,6 @@
     Bedroom3 S-3,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Insulated Shade Control, !- Shading Control Name
     Bedroom Clerestory,      !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2447,7 +2423,6 @@
     Bath4 E-1,               !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Always Frosted Control,  !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2479,7 +2454,6 @@
     Bath4 S-1,               !- Building Surface Name
     Bedroom4 NDoor-1,        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2513,7 +2487,6 @@
     Bath4 S-2,               !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Insulated Shade Control, !- Shading Control Name
     Bath Clerestory,         !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2620,7 +2593,6 @@
     Bath3 N-1,               !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Always Frosted Control,  !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2684,7 +2656,6 @@
     Bath3 W-1,               !- Building Surface Name
     Bedroom3 EDoor-1,        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2809,7 +2780,6 @@
     Utility2 E-1,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2884,8 +2854,10 @@
 
 ! This will be deleted once it is verified that "Solar Diffusing" in Material:WindowGlass works right.
 
-  WindowProperty:ShadingControl,
-    Always Frosted Control,  !- Name
+  WindowShadingControl,
+    Always Frosted Control-Bath1,  !- Name
+    Bath1,                   !- Zone Name
+    1,                       !- Shading Control Sequence Number
     INTERIORSHADE,           !- Shading Type
     ,                        !- Construction with Shading Name
     ALWAYSON,                !- Shading Control Type
@@ -2895,13 +2867,76 @@
     NO,                      !- Glare Control Is Active
     Frosted Glass,           !- Shading Device Material Name
     FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
-    ;                        !- Slat Angle Schedule Name
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Bath1 WWin-1;            !- Fenestration Surface 1 Name
+
+  WindowShadingControl,
+    Always Frosted Control-Bath2,  !- Name
+    Bath2,                   !- Zone Name
+    1,                       !- Shading Control Sequence Number
+    INTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ALWAYSON,                !- Shading Control Type
+    ,                        !- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    NO,                      !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Frosted Glass,           !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Bath2 NWin-1;            !- Fenestration Surface 1 Name
+
+  WindowShadingControl,
+    Always Frosted Control-Bath4,  !- Name
+    Bath4,                   !- Zone Name
+    1,                       !- Shading Control Sequence Number
+    INTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ALWAYSON,                !- Shading Control Type
+    ,                        !- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    NO,                      !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Frosted Glass,           !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Bath4 EWin-1;            !- Fenestration Surface 1 Name
+
+  WindowShadingControl,
+    Always Frosted Control-Bath3,  !- Name
+    Bath3,                   !- Zone Name
+    1,                       !- Shading Control Sequence Number
+    INTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ALWAYSON,                !- Shading Control Type
+    ,                        !- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    NO,                      !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Frosted Glass,           !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Bath3 NWin-1;            !- Fenestration Surface 1 Name
 
 ! Currently all bedroom windows (incl. clerestories) and the bathroom clerestories have insulation.
 ! All sunspace windows and small bathroom windows have no insulation.
 
-  WindowProperty:ShadingControl,
-    Insulated Shade Control, !- Name
+  WindowShadingControl,
+    Insulated Shade Control-Bedroom1,  !- Name
+    Bedroom1,                !- Zone Name
+    1,                       !- Shading Control Sequence Number
     INTERIORSHADE,           !- Shading Type
     ,                        !- Construction with Shading Name
     ONIFSCHEDULEALLOWS,      !- Shading Control Type
@@ -2911,7 +2946,110 @@
     NO,                      !- Glare Control Is Active
     Insulated Shade,         !- Shading Device Material Name
     FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
-    ;                        !- Slat Angle Schedule Name
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Bedroom1 WWin-1,         !- Fenestration Surface 1 Name
+    Bedroom1 SWin-1;         !- Fenestration Surface 2 Name
+
+  WindowShadingControl,
+    Insulated Shade Control-Bedroom4,  !- Name
+    Bedroom4,                !- Zone Name
+    1,                       !- Shading Control Sequence Number
+    INTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ONIFSCHEDULEALLOWS,      !- Shading Control Type
+    Insulated Shade Schedule,!- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    YES,                     !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Insulated Shade,         !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Bedroom4 EWin-1,         !- Fenestration Surface 1 Name
+    Bedroom4 SWin-1;         !- Fenestration Surface 2 Name
+
+  WindowShadingControl,
+    Insulated Shade Control-Bath1,  !- Name
+    Bath1,                   !- Zone Name
+    2,                       !- Shading Control Sequence Number
+    INTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ONIFSCHEDULEALLOWS,      !- Shading Control Type
+    Insulated Shade Schedule,!- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    YES,                     !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Insulated Shade,         !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Bath1 SWin-1;            !- Fenestration Surface 1 Name
+
+  WindowShadingControl,
+    Insulated Shade Control-Bedroom2,  !- Name
+    Bedroom2,                !- Zone Name
+    1,                       !- Shading Control Sequence Number
+    INTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ONIFSCHEDULEALLOWS,      !- Shading Control Type
+    Insulated Shade Schedule,!- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    YES,                     !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Insulated Shade,         !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Bedroom2 NWin-1,         !- Fenestration Surface 1 Name
+    Bedroom2 SWin-1;         !- Fenestration Surface 2 Name
+
+  WindowShadingControl,
+    Insulated Shade Control-Bedroom3,  !- Name
+    Bedroom3,                !- Zone Name
+    1,                       !- Shading Control Sequence Number
+    INTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ONIFSCHEDULEALLOWS,      !- Shading Control Type
+    Insulated Shade Schedule,!- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    YES,                     !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Insulated Shade,         !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Bedroom3 NWin-1,         !- Fenestration Surface 1 Name
+    Bedroom3 SWin-1;         !- Fenestration Surface 2 Name
+
+  WindowShadingControl,
+    Insulated Shade Control-Bath4,  !- Name
+    Bath4,                   !- Zone Name
+    2,                       !- Shading Control Sequence Number
+    INTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ONIFSCHEDULEALLOWS,      !- Shading Control Type
+    Insulated Shade Schedule,!- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    YES,                     !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Insulated Shade,         !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Bath4 SWin-1;            !- Fenestration Surface 1 Name
 
   Schedule:Compact,
     Insulated Shade Schedule,!- Name
@@ -2933,67 +3071,67 @@
   InternalMass,
     Bedroom1 I-1,            !- Name
     Light Internal Mass,     !- Construction Name
-    Bedroom1,                !- Zone Name
+    Bedroom1,                !- Zone or ZoneList Name
     15.0;                    !- Surface Area {m2}
 
   InternalMass,
     Sunspace I-1,            !- Name
     Light Internal Mass,     !- Construction Name
-    Sunspace,                !- Zone Name
+    Sunspace,                !- Zone or ZoneList Name
     2.0;                     !- Surface Area {m2}
 
   InternalMass,
     Bedroom4 I-1,            !- Name
     Light Internal Mass,     !- Construction Name
-    Bedroom4,                !- Zone Name
+    Bedroom4,                !- Zone or ZoneList Name
     15.0;                    !- Surface Area {m2}
 
   InternalMass,
     Bath1 I-1,               !- Name
     Heavy Internal Mass,     !- Construction Name
-    Bath1,                   !- Zone Name
+    Bath1,                   !- Zone or ZoneList Name
     2.0;                     !- Surface Area {m2}
 
   InternalMass,
     Utility1 I-1,            !- Name
     Light Internal Mass,     !- Construction Name
-    Utility1,                !- Zone Name
+    Utility1,                !- Zone or ZoneList Name
     2.0;                     !- Surface Area {m2}
 
   InternalMass,
     Bath2 I-1,               !- Name
     Heavy Internal Mass,     !- Construction Name
-    Bath2,                   !- Zone Name
+    Bath2,                   !- Zone or ZoneList Name
     2.0;                     !- Surface Area {m2}
 
   InternalMass,
     Bedroom2 I-1,            !- Name
     Light Internal Mass,     !- Construction Name
-    Bedroom2,                !- Zone Name
+    Bedroom2,                !- Zone or ZoneList Name
     15.0;                    !- Surface Area {m2}
 
   InternalMass,
     Bedroom3 I-1,            !- Name
     Light Internal Mass,     !- Construction Name
-    Bedroom3,                !- Zone Name
+    Bedroom3,                !- Zone or ZoneList Name
     15.0;                    !- Surface Area {m2}
 
   InternalMass,
     Bath4 I-1,               !- Name
     Heavy Internal Mass,     !- Construction Name
-    Bath4,                   !- Zone Name
+    Bath4,                   !- Zone or ZoneList Name
     2.0;                     !- Surface Area {m2}
 
   InternalMass,
     Bath3 I-1,               !- Name
     Heavy Internal Mass,     !- Construction Name
-    Bath3,                   !- Zone Name
+    Bath3,                   !- Zone or ZoneList Name
     2.0;                     !- Surface Area {m2}
 
   InternalMass,
     Utility2 I-1,            !- Name
     Light Internal Mass,     !- Construction Name
-    Utility2,                !- Zone Name
+    Utility2,                !- Zone or ZoneList Name
     2.0;                     !- Surface Area {m2}
 
   Schedule:Compact,
@@ -3233,7 +3371,6 @@
     Bedroom1 S-4,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Insulated Shade Control, !- Shading Control Name
     Double Casement,         !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3344,7 +3481,6 @@
     Trombe1 S-1,             !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Trombe Shade Control,    !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3405,7 +3541,6 @@
     Trombe2 S-1,             !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Trombe Shade Control,    !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3466,7 +3601,6 @@
     Trombe3 S-1,             !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Trombe Shade Control,    !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3546,7 +3680,6 @@
     Bedroom4 S-4,            !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Insulated Shade Control, !- Shading Control Name
     Double Casement,         !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3657,7 +3790,6 @@
     Trombe4 S-1,             !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Trombe Shade Control,    !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3718,7 +3850,6 @@
     Trombe5 S-1,             !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Trombe Shade Control,    !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3779,7 +3910,6 @@
     Trombe6 S-1,             !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
-    Trombe Shade Control,    !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3788,8 +3918,10 @@
     13.462000,-0.076200,0.076200,  !- X,Y,Z ==> Vertex 3 {m}
     13.462000,-0.076200,2.006600;  !- X,Y,Z ==> Vertex 4 {m}
 
-  WindowProperty:ShadingControl,
-    Trombe Shade Control,    !- Name
+  WindowShadingControl,
+    Trombe Shade Control-Trombe1,  !- Name
+    Trombe1,                 !- Zone Name
+    1,                       !- Shading Control Sequence Number
     EXTERIORSHADE,           !- Shading Type
     ,                        !- Construction with Shading Name
     ONIFSCHEDULEALLOWS,      !- Shading Control Type
@@ -3799,7 +3931,106 @@
     NO,                      !- Glare Control Is Active
     Trombe Shade,            !- Shading Device Material Name
     FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
-    ;                        !- Slat Angle Schedule Name
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Trombe1 Win-1;           !- Fenestration Surface 1 Name
+
+  WindowShadingControl,
+    Trombe Shade Control-Trombe2,  !- Name
+    Trombe2,                 !- Zone Name
+    1,                       !- Shading Control Sequence Number
+    EXTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ONIFSCHEDULEALLOWS,      !- Shading Control Type
+    Trombe Shade Schedule,   !- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    YES,                     !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Trombe Shade,            !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Trombe2 Win-1;           !- Fenestration Surface 1 Name
+
+  WindowShadingControl,
+    Trombe Shade Control-Trombe3,  !- Name
+    Trombe3,                 !- Zone Name
+    1,                       !- Shading Control Sequence Number
+    EXTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ONIFSCHEDULEALLOWS,      !- Shading Control Type
+    Trombe Shade Schedule,   !- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    YES,                     !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Trombe Shade,            !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Trombe3 Win-1;           !- Fenestration Surface 1 Name
+
+  WindowShadingControl,
+    Trombe Shade Control-Trombe4,  !- Name
+    Trombe4,                 !- Zone Name
+    1,                       !- Shading Control Sequence Number
+    EXTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ONIFSCHEDULEALLOWS,      !- Shading Control Type
+    Trombe Shade Schedule,   !- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    YES,                     !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Trombe Shade,            !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Trombe4 Win-1;           !- Fenestration Surface 1 Name
+
+  WindowShadingControl,
+    Trombe Shade Control-Trombe5,  !- Name
+    Trombe5,                 !- Zone Name
+    1,                       !- Shading Control Sequence Number
+    EXTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ONIFSCHEDULEALLOWS,      !- Shading Control Type
+    Trombe Shade Schedule,   !- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    YES,                     !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Trombe Shade,            !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Trombe5 Win-1;           !- Fenestration Surface 1 Name
+
+  WindowShadingControl,
+    Trombe Shade Control-Trombe6,  !- Name
+    Trombe6,                 !- Zone Name
+    1,                       !- Shading Control Sequence Number
+    EXTERIORSHADE,           !- Shading Type
+    ,                        !- Construction with Shading Name
+    ONIFSCHEDULEALLOWS,      !- Shading Control Type
+    Trombe Shade Schedule,   !- Schedule Name
+    ,                        !- Setpoint {W/m2, W or deg C}
+    YES,                     !- Shading Control Is Scheduled
+    NO,                      !- Glare Control Is Active
+    Trombe Shade,            !- Shading Device Material Name
+    FixedSlatAngle,          !- Type of Slat Angle Control for Blinds
+    ,                        !- Slat Angle Schedule Name
+    ,                        !- Setpoint 2 {W/m2 or deg C}
+    ,                        !- Daylighting Control Object Name
+    Sequential,              !- Multiple Surface Control Type
+    Trombe6 Win-1;           !- Fenestration Surface 1 Name
 
   Schedule:Compact,
     Trombe Shade Schedule,   !- Name
@@ -4219,7 +4450,9 @@
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     Bedroom1 Air,            !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     Bedroom1 Air,            !- Name
@@ -4271,7 +4504,9 @@
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     Bedroom2 Air,            !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     Bedroom2 Air,            !- Name
@@ -4323,7 +4558,9 @@
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     Bedroom3 Air,            !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     Bedroom3 Air,            !- Name
@@ -4375,7 +4612,9 @@
     ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
     Bedroom4 Air,            !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     Bedroom4 Air,            !- Name

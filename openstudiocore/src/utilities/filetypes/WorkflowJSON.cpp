@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,10 +30,7 @@
 #include "WorkflowJSON.hpp"
 #include "WorkflowJSON_Impl.hpp"
 
-#include "WorkflowStep.hpp"
 #include "WorkflowStep_Impl.hpp"
-#include "WorkflowStepResult.hpp"
-#include "RunOptions.hpp"
 #include "RunOptions_Impl.hpp"
 
 #include "../core/Assert.hpp"
@@ -41,10 +38,7 @@
 #include "../core/Checksum.hpp"
 #include "../time/DateTime.hpp"
 
-#include <boost/optional.hpp>
 
-#include <string>
-#include <fstream>
 
 namespace openstudio{
 namespace detail{
@@ -85,7 +79,8 @@ namespace detail{
       openstudio::path p = toPath(s);
       if (boost::filesystem::exists(p) && boost::filesystem::is_regular_file(p)){
         // open file
-        std::ifstream ifs(openstudio::toString(p));
+        std::ifstream ifs(openstudio::toSystemFilename(p));
+
         m_value.clear();
         parsingSuccessful = reader.parse(ifs, m_value);
       }
@@ -106,7 +101,7 @@ namespace detail{
     }
 
     // open file
-    std::ifstream ifs(openstudio::toString(p));
+    std::ifstream ifs(openstudio::toSystemFilename(p));
 
     Json::Reader reader;
     bool parsingSuccessful = reader.parse(ifs, m_value);
@@ -203,7 +198,8 @@ namespace detail{
     }
 
     if (makeParentFolder(*p)) {
-      std::ofstream outFile(openstudio::toString(*p));
+      std::ofstream outFile(openstudio::toSystemFilename(*p));
+
       if (outFile) {
         try {
           outFile << string();
@@ -509,6 +505,13 @@ namespace detail{
         return canonicalOrAbsolute(p);
       }
     }
+
+    // Extra check: if it starts with file://
+    std::string fileName = toString(file);
+    if (fileName.rfind("file://", 0) == 0) {
+      // We strip it, and try again
+      return findFile(toPath(fileName.substr(7)));
+    }
     return boost::none;
   }
 
@@ -752,26 +755,32 @@ namespace detail{
     std::vector<openstudio::path> paths = absoluteMeasurePaths();
     OS_ASSERT(!paths.empty());
 
-    openstudio::path stem = bclMeasure.directory().stem();
-    if (!toUUID(toString(stem)).isNull()){
+    // Get the name of the directory (=last level directory name), eg: /path/to/measure_folder => measure_folder
+    openstudio::path lastLevelDirectoryName = getLastLevelDirectoryName( bclMeasure.directory() );
+    if (!toUUID(toString(lastLevelDirectoryName)).isNull()){
       // directory name is convertible to uuid, use the class name
-      stem = toPath(bclMeasure.className());
+      lastLevelDirectoryName = toPath(bclMeasure.className());
     }
 
     int i = 1;
-    while (boost::filesystem::exists(paths[0] / stem)){
+    while (boost::filesystem::exists(paths[0] / lastLevelDirectoryName)){
       std::stringstream ss;
-      ss << toString(stem) << " " << i;
-      stem = toPath(ss.str());
+      ss << toString(lastLevelDirectoryName) << " " << i;
+      lastLevelDirectoryName = toPath(ss.str());
     }
-    openstudio::path newMeasureDirName = paths[0] / stem;
+    openstudio::path newMeasureDirName = paths[0] / lastLevelDirectoryName;
 
-    if (existingMeasureDirName && (existingMeasureDirName->stem() != newMeasureDirName.stem())){
-      // update steps
-      for (auto& step : m_steps){
-        if (auto measureStep = step.optionalCast<MeasureStep>()){
-          if (measureStep->measureDirName() == toString(existingMeasureDirName->stem())){
-            measureStep->setMeasureDirName(toString(newMeasureDirName.stem()));
+    // If we have an existing measure
+    if( existingMeasureDirName) {
+      openstudio::path lastLevelExistingDirectoryName = getLastLevelDirectoryName(*existingMeasureDirName);
+      // And the previous directory name isn't the same as the new one
+      if( lastLevelExistingDirectoryName != lastLevelDirectoryName ) {
+        // update steps
+        for (auto& step : m_steps){
+          if (auto measureStep = step.optionalCast<MeasureStep>()){
+            if (measureStep->measureDirName() == toString(lastLevelExistingDirectoryName) ) {
+              measureStep->setMeasureDirName(toString(lastLevelDirectoryName));
+            }
           }
         }
       }

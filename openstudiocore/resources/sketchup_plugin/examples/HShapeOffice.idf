@@ -111,7 +111,7 @@
 ! ZONE_TERMINAL_FAN_STATIC_PRESSURE=300
 ! End WebInterface Parameters
 
-  Version,8.9;
+  Version,9.2;
 
   Timestep,1;
 
@@ -123,17 +123,20 @@
     No;                      !- Run Simulation for Weather File Run Periods
 
   RunPeriod,
-    ,                        !- Name
+    RUNPERIOD 1,             !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
+    ,                        !- Begin Year
     12,                      !- End Month
     31,                      !- End Day of Month
+    ,                        !- End Year
     Sunday,                  !- Day of Week for Start Day
     No,                      !- Use Weather File Holidays and Special Days
     No,                      !- Use Weather File Daylight Saving Period
     No,                      !- Apply Weekend Holiday Rule
     Yes,                     !- Use Weather File Rain Indicators
-    Yes;                     !- Use Weather File Snow Indicators
+    Yes,                     !- Use Weather File Snow Indicators
+    No;                      !- Treat Weather as Actual
 
   SurfaceConvectionAlgorithm:Inside,TARP;
 
@@ -1491,7 +1494,6 @@
     ZN_1_FLR_1_SEC_1_Wall_1, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1748,7 +1750,6 @@
     ZN_1_FLR_1_SEC_1_Wall_2, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -1896,7 +1897,6 @@
     ZN_1_FLR_1_SEC_1_Wall_4, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2003,7 +2003,6 @@
     ZN_1_FLR_1_SEC_1_Wall_5, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2035,7 +2034,6 @@
     ZN_1_FLR_1_SEC_1_Wall_6, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2444,7 +2442,7 @@
   InternalMass,
     ZN_1_FLR_1_SEC_1_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN_1_FLR_1_SEC_1,        !- Zone Name
+    ZN_1_FLR_1_SEC_1,        !- Zone or ZoneList Name
     1200.0000;               !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -2588,7 +2586,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN_1_FLR_1_SEC_1 VAV Box,!- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN_1_FLR_1_SEC_1 VAV Box,!- Name
@@ -2671,7 +2671,6 @@
     ZN_1_FLR_2_SEC_1_Wall_1, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -2928,7 +2927,6 @@
     ZN_1_FLR_2_SEC_1_Wall_2, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3076,7 +3074,6 @@
     ZN_1_FLR_2_SEC_1_Wall_4, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3183,7 +3180,6 @@
     ZN_1_FLR_2_SEC_1_Wall_5, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3215,7 +3211,6 @@
     ZN_1_FLR_2_SEC_1_Wall_6, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -3624,7 +3619,7 @@
   InternalMass,
     ZN_1_FLR_2_SEC_1_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN_1_FLR_2_SEC_1,        !- Zone Name
+    ZN_1_FLR_2_SEC_1,        !- Zone or ZoneList Name
     1200.0000;               !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -3768,7 +3763,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN_1_FLR_2_SEC_1 VAV Box,!- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN_1_FLR_2_SEC_1 VAV Box,!- Name
@@ -3851,7 +3848,6 @@
     ZN_1_FLR_3_SEC_1_Wall_1, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4108,7 +4104,6 @@
     ZN_1_FLR_3_SEC_1_Wall_2, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4256,7 +4251,6 @@
     ZN_1_FLR_3_SEC_1_Wall_4, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4363,7 +4357,6 @@
     ZN_1_FLR_3_SEC_1_Wall_5, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4395,7 +4388,6 @@
     ZN_1_FLR_3_SEC_1_Wall_6, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4793,7 +4785,6 @@
     ZN_1_FLR_3_SEC_1_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4809,7 +4800,6 @@
     ZN_1_FLR_3_SEC_1_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4825,7 +4815,6 @@
     ZN_1_FLR_3_SEC_1_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4841,7 +4830,6 @@
     ZN_1_FLR_3_SEC_1_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4857,7 +4845,6 @@
     ZN_1_FLR_3_SEC_1_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4873,7 +4860,6 @@
     ZN_1_FLR_3_SEC_1_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4889,7 +4875,6 @@
     ZN_1_FLR_3_SEC_1_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4905,7 +4890,6 @@
     ZN_1_FLR_3_SEC_1_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4921,7 +4905,6 @@
     ZN_1_FLR_3_SEC_1_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4937,7 +4920,6 @@
     ZN_1_FLR_3_SEC_1_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4953,7 +4935,6 @@
     ZN_1_FLR_3_SEC_1_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4969,7 +4950,6 @@
     ZN_1_FLR_3_SEC_1_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -4996,7 +4976,7 @@
   InternalMass,
     ZN_1_FLR_3_SEC_1_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN_1_FLR_3_SEC_1,        !- Zone Name
+    ZN_1_FLR_3_SEC_1,        !- Zone or ZoneList Name
     1200.0000;               !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -5140,7 +5120,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN_1_FLR_3_SEC_1 VAV Box,!- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN_1_FLR_3_SEC_1 VAV Box,!- Name
@@ -5223,7 +5205,6 @@
     ZN_1_FLR_1_SEC_2_Wall_1, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -5396,7 +5377,6 @@
     ZN_1_FLR_1_SEC_2_Wall_3, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -5471,7 +5451,7 @@
   InternalMass,
     ZN_1_FLR_1_SEC_2_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN_1_FLR_1_SEC_2,        !- Zone Name
+    ZN_1_FLR_1_SEC_2,        !- Zone or ZoneList Name
     400.0000;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -5615,7 +5595,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN_1_FLR_1_SEC_2 VAV Box,!- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN_1_FLR_1_SEC_2 VAV Box,!- Name
@@ -5698,7 +5680,6 @@
     ZN_1_FLR_2_SEC_2_Wall_1, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -5871,7 +5852,6 @@
     ZN_1_FLR_2_SEC_2_Wall_3, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -5946,7 +5926,7 @@
   InternalMass,
     ZN_1_FLR_2_SEC_2_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN_1_FLR_2_SEC_2,        !- Zone Name
+    ZN_1_FLR_2_SEC_2,        !- Zone or ZoneList Name
     400.0000;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -6090,7 +6070,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN_1_FLR_2_SEC_2 VAV Box,!- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN_1_FLR_2_SEC_2 VAV Box,!- Name
@@ -6173,7 +6155,6 @@
     ZN_1_FLR_3_SEC_2_Wall_1, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -6346,7 +6327,6 @@
     ZN_1_FLR_3_SEC_2_Wall_3, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -6410,7 +6390,6 @@
     ZN_1_FLR_3_SEC_2_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -6426,7 +6405,6 @@
     ZN_1_FLR_3_SEC_2_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -6442,7 +6420,6 @@
     ZN_1_FLR_3_SEC_2_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -6469,7 +6446,7 @@
   InternalMass,
     ZN_1_FLR_3_SEC_2_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN_1_FLR_3_SEC_2,        !- Zone Name
+    ZN_1_FLR_3_SEC_2,        !- Zone or ZoneList Name
     400.0000;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -6613,7 +6590,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN_1_FLR_3_SEC_2 VAV Box,!- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN_1_FLR_3_SEC_2 VAV Box,!- Name
@@ -6696,7 +6675,6 @@
     ZN_1_FLR_1_SEC_3_Wall_1, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -6953,7 +6931,6 @@
     ZN_1_FLR_1_SEC_3_Wall_2, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -7335,7 +7312,6 @@
     ZN_1_FLR_1_SEC_3_Wall_3, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -7367,7 +7343,6 @@
     ZN_1_FLR_1_SEC_3_Wall_4, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -7490,7 +7465,6 @@
     ZN_1_FLR_1_SEC_3_Wall_6, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -7649,7 +7623,7 @@
   InternalMass,
     ZN_1_FLR_1_SEC_3_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN_1_FLR_1_SEC_3,        !- Zone Name
+    ZN_1_FLR_1_SEC_3,        !- Zone or ZoneList Name
     1200.0000;               !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -7793,7 +7767,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN_1_FLR_1_SEC_3 VAV Box,!- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN_1_FLR_1_SEC_3 VAV Box,!- Name
@@ -7876,7 +7852,6 @@
     ZN_1_FLR_2_SEC_3_Wall_1, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -8133,7 +8108,6 @@
     ZN_1_FLR_2_SEC_3_Wall_2, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -8515,7 +8489,6 @@
     ZN_1_FLR_2_SEC_3_Wall_3, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -8547,7 +8520,6 @@
     ZN_1_FLR_2_SEC_3_Wall_4, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -8670,7 +8642,6 @@
     ZN_1_FLR_2_SEC_3_Wall_6, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -8829,7 +8800,7 @@
   InternalMass,
     ZN_1_FLR_2_SEC_3_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN_1_FLR_2_SEC_3,        !- Zone Name
+    ZN_1_FLR_2_SEC_3,        !- Zone or ZoneList Name
     1200.0000;               !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -8973,7 +8944,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN_1_FLR_2_SEC_3 VAV Box,!- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN_1_FLR_2_SEC_3 VAV Box,!- Name
@@ -9056,7 +9029,6 @@
     ZN_1_FLR_3_SEC_3_Wall_1, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -9313,7 +9285,6 @@
     ZN_1_FLR_3_SEC_3_Wall_2, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -9695,7 +9666,6 @@
     ZN_1_FLR_3_SEC_3_Wall_3, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -9727,7 +9697,6 @@
     ZN_1_FLR_3_SEC_3_Wall_4, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -9850,7 +9819,6 @@
     ZN_1_FLR_3_SEC_3_Wall_6, !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -9998,7 +9966,6 @@
     ZN_1_FLR_3_SEC_3_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -10014,7 +9981,6 @@
     ZN_1_FLR_3_SEC_3_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -10030,7 +9996,6 @@
     ZN_1_FLR_3_SEC_3_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -10046,7 +10011,6 @@
     ZN_1_FLR_3_SEC_3_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -10062,7 +10026,6 @@
     ZN_1_FLR_3_SEC_3_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -10078,7 +10041,6 @@
     ZN_1_FLR_3_SEC_3_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -10094,7 +10056,6 @@
     ZN_1_FLR_3_SEC_3_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -10110,7 +10071,6 @@
     ZN_1_FLR_3_SEC_3_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -10126,7 +10086,6 @@
     ZN_1_FLR_3_SEC_3_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -10142,7 +10101,6 @@
     ZN_1_FLR_3_SEC_3_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -10158,7 +10116,6 @@
     ZN_1_FLR_3_SEC_3_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -10174,7 +10131,6 @@
     ZN_1_FLR_3_SEC_3_Ceiling,!- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.0000,                  !- View Factor to Ground
-    ,                        !- Shading Control Name
     ,                        !- Frame and Divider Name
     1,                       !- Multiplier
     4,                       !- Number of Vertices
@@ -10201,7 +10157,7 @@
   InternalMass,
     ZN_1_FLR_3_SEC_3_InternalMass_1,  !- Name
     InteriorFurnishings,     !- Construction Name
-    ZN_1_FLR_3_SEC_3,        !- Zone Name
+    ZN_1_FLR_3_SEC_3,        !- Zone or ZoneList Name
     1200.0000;               !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -10345,7 +10301,9 @@
     ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
     ZN_1_FLR_3_SEC_3 VAV Box,!- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
-    1;                       !- Zone Equipment 1 Heating or No-Load Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:AirDistributionUnit,
     ZN_1_FLR_3_SEC_3 VAV Box,!- Name
@@ -10802,7 +10760,6 @@
     0.8,                     !- Nominal Thermal Efficiency
     LeavingBoiler,           !- Efficiency Curve Temperature Evaluation Variable
     HeatSys1 Boiler Efficiency Curve,  !- Normalized Boiler Efficiency Curve Name
-    81.0,                    !- Design Water Outlet Temperature {C}
     AUTOSIZE,                !- Design Water Flow Rate {m3/s}
     0.0,                     !- Minimum Part Load Ratio
     1.2,                     !- Maximum Part Load Ratio
@@ -11378,9 +11335,9 @@
     AUTOSIZE,                !- Design Air Flow Rate {m3/s}
     AUTOSIZE,                !- Design Fan Power {W}
     AUTOSIZE,                !- Design U-Factor Times Area Value {W/K}
-    autocalculate,           !- Free Convection Air Flow Rate {m3/s}
-    0.1,                     !- Free Convection Air Flow Rate Sizing Factor
-    autocalculate,           !- Free Convection U-Factor Times Area Value {W/K}
+    autocalculate,           !- Free Convection Regime Air Flow Rate {m3/s}
+    0.1,                     !- Free Convection Regime Air Flow Rate Sizing Factor
+    autocalculate,           !- Free Convection Regime U-Factor Times Area Value {W/K}
     0.1,                     !- Free Convection U-Factor Times Area Value Sizing Factor
     UFactorTimesAreaAndDesignWaterFlowRate,  !- Performance Input Method
     1.25,                    !- Heat Rejection Capacity and Nominal Capacity Sizing Ratio

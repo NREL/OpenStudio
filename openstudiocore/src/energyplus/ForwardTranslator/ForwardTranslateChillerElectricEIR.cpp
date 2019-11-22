@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -198,6 +198,23 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   // (eg: if you connect the chiller to a secondaryPlantLoop, it switches automatically to "WaterCooled")
   idfObject.setString(Chiller_Electric_EIRFields::CondenserType,modelObject.condenserType());
 
+  if( !openstudio::istringEqual(modelObject.condenserType(), "WaterCooled") ) {
+    {
+      // Create an OutdoorAir:NodeList for the condenser inlet conditions to be set directly from weather file
+      IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
+      auto name = modelObject.nameString() + " Inlet Node For Condenser";
+      oaNodeListIdf.setString(0,name);
+      m_idfObjects.push_back(oaNodeListIdf);
+      idfObject.setString(Chiller_Electric_EIRFields::CondenserInletNodeName,name);
+    }
+
+    {
+      // Name the condenser outlet node
+      auto name = modelObject.nameString() + " Outlet Node For Condenser";
+      idfObject.setString(Chiller_Electric_EIRFields::CondenserOutletNodeName, name);
+    }
+
+  }
 
   // CondenserFanPowerRatio
 

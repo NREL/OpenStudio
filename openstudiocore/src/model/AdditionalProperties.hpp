@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -64,29 +64,32 @@ class MODEL_API AdditionalProperties : public ModelObject {
 	/** @name Getters */
 	//@{
 
- /// Returns the ModelObject this AdditionalProperties object refers to.
- /// This method will throw if the ModelObject cannot be found.
+  /// Returns the ModelObject this AdditionalProperties object refers to.
+  /// This method will throw if the ModelObject cannot be found.
 	ModelObject modelObject() const;
 
- /// Returns the set of feature name strings.
+  /// Returns the set of feature name strings.
 	std::vector<std::string> featureNames() const;
 
- /// Returns optional feature data type as String, Double, Boolean, or Integer.
+  /// Returns true if a feature exists
+	bool hasFeature(const std::string& name) const;
+
+  /// Returns optional feature data type as String, Double, Boolean, or Integer.
 	boost::optional<std::string> getFeatureDataType(const std::string& name) const;
 
- /// Returns optional feature value as String.
+  /// Returns optional feature value as String.
 	boost::optional<std::string> getFeatureAsString(const std::string& name) const;
 
- /// Returns optional feature value as Double.
+  /// Returns optional feature value as Double.
 	boost::optional<double> getFeatureAsDouble(const std::string& name) const;
 
- /// Returns optional feature value as Integer.
+  /// Returns optional feature value as Integer.
 	boost::optional<int> getFeatureAsInteger(const std::string& name) const;
 
- /// Returns optional feature value as Boolean.
+  /// Returns optional feature value as Boolean.
 	boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
 
- /// Returns set of AdditionalProperties feature names already in the model.
+  /// Returns set of AdditionalProperties feature names already in the model.
 	std::vector<std::string> suggestedFeatureNames() const;
 
 	//@}

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2018, Alliance for Sustainable Energy, LLC. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,6 +43,7 @@
 #include "../utilities/plot/ProgressBar.hpp"
 
 #include <QThread>
+#include <boost/serialization/version.hpp>
 
 using namespace openstudio::model;
 
@@ -77,9 +78,11 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
 
   m_logSink.setChannelRegex(boost::regex("openstudio\\.IdfFile"));
 
-  //load idf and convert to a workspace
+  // load idf
   boost::optional<openstudio::IdfFile> idfFile = IdfFile::load(path, IddFileType::EnergyPlus, progressBar);
 
+  // change channel after loading file
+  // DLM: is this right?  we miss messages from loading idf
   m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ReverseTranslator"));
 
   // energyplus idfs may not be draft level strictness, eventually need a fixer
@@ -95,7 +98,22 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
       LOG(Error, "Check that IDF is of correct version and that all fields are valid against Energy+.idd.");
       LOG(Error, idfFile->validityReport(StrictnessLevel::Draft));
       return boost::none;
+    }
 
+    VersionString expectedVersion(IddFileAndFactoryWrapper(IddFileType::EnergyPlus).version());
+    boost::optional<IdfObject> versionObject = idfFile->versionObject();
+    if (!versionObject) {
+      LOG(Warn, "Idf file missing Version object, use IDFVersionUpdater to ensure that Idf file is at expected version = '" << expectedVersion.str() << "'");
+    } else {
+      boost::optional<std::string> vs = versionObject->getString(versionObject->numFields() - 1);
+      if (!vs){
+        LOG(Warn, "Idf file contains empty Version object, use IDFVersionUpdater to ensure that Idf file is at expected version = '" << expectedVersion.str() << "'");
+      } else{
+        VersionString fileVersion(*vs);
+        if ((expectedVersion.major() != fileVersion.major()) || (expectedVersion.minor() != fileVersion.minor())){
+          LOG(Warn, "Idf file Version = '" << fileVersion.str() << "' does not match expected version = '" << expectedVersion.str() << "'");
+        }
+      }
     }
 
     if (progressBar){
@@ -115,15 +133,21 @@ boost::optional<model::Model> ReverseTranslator::loadModel(const openstudio::pat
       workspace.disconnectProgressBar(*progressBar);
     }
 
-    return this->translateWorkspace(workspace, progressBar);
+    return this->translateWorkspace(workspace, progressBar, false);
 
   }
 
   return boost::none;
 }
 
-Model ReverseTranslator::translateWorkspace(const Workspace & workspace, ProgressBar* progressBar )
+Model ReverseTranslator::translateWorkspace(const Workspace & workspace, ProgressBar* progressBar, bool clearLogSink )
 {
+  if (clearLogSink){
+    m_logSink.resetStringStream();
+  }
+
+  m_logSink.setChannelRegex(boost::regex("openstudio\\.energyplus\\.ReverseTranslator"));
+
   // check input
   if (workspace.iddFileType() != IddFileType::EnergyPlus){
     LOG(Error, "Cannot translate Workspace with IddFileType = '" << workspace.iddFileType().valueName() << "'");
@@ -139,11 +163,10 @@ Model ReverseTranslator::translateWorkspace(const Workspace & workspace, Progres
 
   m_untranslatedIdfObjects.clear();
 
-  m_logSink.resetStringStream();
-
   // if multiple runperiod objects in idf, remove them all
   vector<WorkspaceObject> runPeriods = m_workspace.getObjectsByType(IddObjectType::RunPeriod);
   if (runPeriods.size() > 1){
+    LOG(Warn, "Multiple RunPeriod objects detected, removing all RunPeriod objects.");
     for(auto & runPeriod : runPeriods)
     {
       runPeriod.remove();
@@ -306,9 +329,17 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateAirTerminalSingleDuctConstantVolumeReheat(workspaceObject );
       break;
     }
+
   case openstudio::IddObjectType::AirTerminal_SingleDuct_Uncontrolled :
     {
-      //modelObject = translateAirTerminalSingleDuctUncontrolled(workspaceObject );
+      // We map this to ATU:CV:NoReheat which is the new name
+      modelObject = translateAirTerminalSingleDuctConstantVolumeNoReheat(workspaceObject );
+      break;
+    }
+
+  case openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat :
+    {
+      modelObject = translateAirTerminalSingleDuctConstantVolumeNoReheat(workspaceObject );
       break;
     }
   case openstudio::IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat :
@@ -378,6 +409,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateConstruction(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::Construction_AirBoundary:
+  {
+    modelObject = translateConstructionAirBoundary(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::Controller_OutdoorAir :
     {
       //modelObject = translateControllerOutdoorAir(workspaceObject);
@@ -585,6 +621,16 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateFenestrationSurfaceDetailed(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::Foundation_Kiva :
+    {
+      modelObject = translateFoundationKiva(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::Foundation_Kiva_Settings :
+    {
+      modelObject = translateFoundationKivaSettings(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::Generator_MicroTurbine :
     {
       modelObject = translateGeneratorMicroTurbine(workspaceObject);
@@ -728,6 +774,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translatePeople(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::PerformancePrecisionTradeoffs :
+    {
+      modelObject = translatePerformancePrecisionTradeoffs(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::Refrigeration_Case :
     {
       // modelObject = translateRefrigerationCase(workspaceObject);
@@ -767,6 +818,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     {
       modelObject = translateScheduleDayHourly(workspaceObject);
       break;
+    }
+  case openstudio::IddObjectType::Schedule_File:
+    {
+    modelObject = translateScheduleFile(workspaceObject);
+    break;
     }
   case openstudio::IddObjectType::Schedule_Day_Interval :
     {
@@ -883,6 +939,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       //modelObject = translateSurfaceConvectionAlgorithmOutside(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::SurfaceProperty_ExposedFoundationPerimeter :
+    {
+      modelObject = translateSurfacePropertyExposedFoundationPerimeter(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint :
     {
       modelObject = translateThermostatSetpointDualSetpoint(workspaceObject);
@@ -893,14 +954,37 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateTimestep(workspaceObject);
       break;
     }
-  case openstudio::IddObjectType::UtilityCost_Charge_Simple :
-    {
-      break; // no-op
-    }
-  case openstudio::IddObjectType::UtilityCost_Qualify :
-    {
-      break; // no-op
-    }
+
+   // TODO: once UtilityCost objects are wrapped (and ReverseTranslated)
+  //case openstudio::IddObjectType::OS_UtilityCost_Charge_Block:
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Charge_Simple :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Computation :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Qualify :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Ratchet :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Tariff :
+    //{
+      //break; // no-op
+    //}
+  //case openstudio::IddObjectType::UtilityCost_Variable :
+    //{
+      //break; // no-op
+    //}
+
   case openstudio::IddObjectType::Version :
    {
      modelObject = translateVersion(workspaceObject );
@@ -979,6 +1063,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::ZoneMixing:
   {
     modelObject = translateZoneMixing(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName:
+  {
+    modelObject = translateZonePropertyUserViewFactorsBySurfaceName(workspaceObject);
     break;
   }
   case openstudio::IddObjectType::ZoneVentilation_DesignFlowRate :
