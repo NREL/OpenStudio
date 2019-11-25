@@ -23357,7 +23357,7 @@ OS:ZoneVentilation:WindandStackOpenArea,
        \type real
        \minimum 0
        \maximum 1
-       \default Autocalculate
+       \default autocalculate
   N3 , \field Effective Angle
        \note This field is defined as normal angle of the opening area and is used when input
        \note field Opening Effectiveness = Autocalculate.
@@ -23383,7 +23383,7 @@ OS:ZoneVentilation:WindandStackOpenArea,
        \autocalculatable
        \minimum 0.0
        \maximum 1.0
-       \default Autocalculate
+       \default autocalculate
   N6 , \field Minimum Indoor Temperature
        \note This is the indoor temperature below which ventilation is shutoff.
        \units C
