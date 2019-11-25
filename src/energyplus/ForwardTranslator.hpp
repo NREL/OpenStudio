@@ -492,6 +492,18 @@ class ENERGYPLUS_API ForwardTranslator {
     */
   void setExcludeLCCObjects(bool excludeLCCObjects);
 
+  /** If excludeSQliteOutputReport, do not include the Output:Sqlite object.
+   *  Use this at your own risks */
+  void setExcludeSQliteOutputReport(bool excludeSQliteOutputReport);
+
+  /** If excludeHTMLOutputReport, do not include the Output:Table:SummaryReports object.
+   *  Use this at your own risks */
+  void setExcludeHTMLOutputReport(bool excludeHTMLOutputReport);
+
+  /** If excludeVariableDictionary, do not include the Output:VariableDictionary object.
+   *  Use this at your own risks */
+  void setExcludeVariableDictionary(bool excludeVariableDictionary);
+
  private:
 
   REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
@@ -1436,10 +1448,11 @@ class ENERGYPLUS_API ForwardTranslator {
 
   // temp code
   bool m_keepRunControlSpecialDays;
-
   bool m_ipTabularOutput;
-
   bool m_excludeLCCObjects;
+  bool m_excludeSQliteOutputReport; // exclude Output:Sqlite
+  bool m_excludeHTMLOutputReport;   // exclude Output:Table:SummaryReports
+  bool m_excludeVariableDictionary; // exclude Output:VariableDictionary
 };
 
 namespace detail
