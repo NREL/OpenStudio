@@ -1598,6 +1598,9 @@ set(${target_name}_src
   ZoneVentilationDesignFlowRate.hpp
   ZoneVentilationDesignFlowRate_Impl.hpp
   ZoneVentilationDesignFlowRate.cpp
+  ZoneVentilationWindandStackOpenArea.hpp
+  ZoneVentilationWindandStackOpenArea_Impl.hpp
+  ZoneVentilationWindandStackOpenArea.cpp
 )
 
 set(${target_name}_swig_src
@@ -2042,6 +2045,7 @@ set(${target_name}_test_src
   test/ZoneMixing_GTest.cpp
   test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   test/ZoneVentilationDesignFlowRate_GTest.cpp
+  test/ZoneVentilationWindandStackOpenArea_GTest.cpp
 )
 
 set(${target_name}_test_depends

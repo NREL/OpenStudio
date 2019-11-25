@@ -507,6 +507,7 @@
 #include "ZoneMixing.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "ZoneVentilationDesignFlowRate.hpp"
+#include "ZoneVentilationWindandStackOpenArea.hpp"
 
 // include all concrete ModelObject Impls too
 #include "AdditionalProperties_Impl.hpp"
@@ -986,5 +987,6 @@
 #include "ZoneMixing_Impl.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 #include "ZoneVentilationDesignFlowRate_Impl.hpp"
+#include "ZoneVentilationWindandStackOpenArea_Impl.hpp"
 
 #endif // MODEL_CONCRETEMODELOBJECTS_HPP
