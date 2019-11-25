@@ -221,7 +221,7 @@ TEST_F(IddFixture,IddFactory_Units) {
   unsupported.push_back(boost::regex("W/\\(\\(m3/s\\)-Pa\\)"));
   unsupported.push_back(boost::regex("W/m2 or deg C"));
   unsupported.push_back(boost::regex("W/m2, W or deg C"));
-  
+
   IddObjectVector objects = IddFactory::instance().getObjects(IddFileType(IddFileType::WholeFactory));
   StringSet goodUnits;
   StringSet badUnits;
@@ -405,4 +405,28 @@ TEST_F(IddFixture,IddFactory_OpenStudioUnits_SubTest3) {
     }
   }
   EXPECT_TRUE(found);
+}
+
+/*
+ *Enforce that in the OpenStudio.idd we have zero `\type external-list`, these should be replaced by `\type alpha` and moved as memo:
+ *  ```
+ *  \type alpha
+ *  \memo type external-list
+ *  \memo external-list autoRDDmeter
+ *  ```
+ *  cf #3770
+ */
+TEST_F(IddFixture,IddFactory_OpenStudio_EnforceNoExternalList) {
+
+  IddObjectVector objects = IddFactory::instance().getObjects(IddFileType(IddFileType::OpenStudio));
+  for (const IddObject& object : objects) {
+    IddFieldVector fields = object.nonextensibleFields();
+    IddFieldVector temp = object.extensibleGroup();
+    fields.insert(fields.end(), temp.begin(), temp.end());
+    for (const IddField& field : fields) {
+      EXPECT_NE(IddFieldType(IddFieldType::ExternalListType), field.properties().type)
+        << "Failed for " << object.name() << " at Field '" << field.name()
+        << "', replace `\\type external-list` it with `\\type alpha` and move external-list as 'memo'";
+    }
+  }
 }
