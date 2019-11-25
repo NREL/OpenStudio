@@ -43,6 +43,8 @@
 #include "../../model/ZoneHVACIdealLoadsAirSystem_Impl.hpp"
 #include "../../model/ZoneVentilationDesignFlowRate.hpp"
 #include "../../model/ZoneVentilationDesignFlowRate_Impl.hpp"
+#include "../../model/ZoneVentilationWindandStackOpenArea.hpp"
+#include "../../model/ZoneVentilationWindandStackOpenArea_Impl.hpp"
 #include "../../model/SizingZone.hpp"
 #include "../../model/SizingZone_Impl.hpp"
 #include "../../model/Schedule.hpp"
@@ -597,17 +599,17 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
 
   auto zoneEquipment = modelObject.equipment();
 
-  // In OS ZoneVentilationDesignFlowRate is considered zone equipment,
-  // but for the E+ perspective it is not so we have to remove them,
-  // and treat them differently.
-  auto isZoneVentilationDesignFlowRate = [](const ModelObject & mo) {
-    return (mo.iddObjectType() == ZoneVentilationDesignFlowRate::iddObjectType());
+  // In OS ZoneVentilationDesignFlowRate and ZoneVentilationWindandStackOpenArea are considered zone equipment,
+  // but for the E+ perspective it is not so we have to remove them and treat them differently.
+  auto isZoneVentilationObject = [](const ModelObject & mo) {
+    return ((mo.iddObjectType() == ZoneVentilationDesignFlowRate::iddObjectType()) ||
+            (mo.iddObjectType() == ZoneVentilationWindandStackOpenArea::iddObjectType()));
   };
 
   std::vector<model::ModelObject> zoneVentilationObjects;
-  std::copy_if(zoneEquipment.begin(),zoneEquipment.end(),std::back_inserter(zoneVentilationObjects),isZoneVentilationDesignFlowRate);
+  std::copy_if(zoneEquipment.begin(),zoneEquipment.end(),std::back_inserter(zoneVentilationObjects),isZoneVentilationObject);
 
-  auto zoneVentilationBegin = std::remove_if(zoneEquipment.begin(),zoneEquipment.end(),isZoneVentilationDesignFlowRate);
+  auto zoneVentilationBegin = std::remove_if(zoneEquipment.begin(),zoneEquipment.end(),isZoneVentilationObject);
   zoneEquipment.erase(zoneVentilationBegin,zoneEquipment.end());
 
   // translate thermostat and/or humidistat
@@ -713,7 +715,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
     m_idfObjects.push_back(idealLoadsAirSystem);
   }
 
-  // ZoneVentilationDesignFlowRate does not go on equipment connections or associated list
+  // ZoneVentilationDesignFlowRate and ZoneVentilationWindandStackOpenArea do not go on equipment connections or associated list
   for( auto & zone_vent : zoneVentilationObjects ) {
     translateAndMapModelObject(zone_vent);
   }

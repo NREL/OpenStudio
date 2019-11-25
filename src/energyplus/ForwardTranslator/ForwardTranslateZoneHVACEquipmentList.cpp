@@ -39,6 +39,8 @@
 #include "../../model/RefrigerationAirChiller_Impl.hpp"
 #include "../../model/ZoneVentilationDesignFlowRate.hpp"
 #include "../../model/ZoneVentilationDesignFlowRate_Impl.hpp"
+#include "../../model/ZoneVentilationWindandStackOpenArea.hpp"
+#include "../../model/ZoneVentilationWindandStackOpenArea_Impl.hpp"
 #include "../../model/AirLoopHVACReturnPlenum.hpp"
 #include "../../model/AirLoopHVACReturnPlenum_Impl.hpp"
 #include "../../utilities/idd/IddEnums.hpp"
@@ -65,9 +67,10 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
     return boost::none;
   }
 
-  // If there is nothing but ZoneVentilationDesignFlowRate then stop
-  // We don't want a zone hvac equipment list in the idf
-  if( subsetCastVector<model::ZoneVentilationDesignFlowRate>(objects).size() == objects.size() ) {
+  // If there is nothing but ZoneVentilationDesignFlowRate or ZoneVentilationWindandStackOpenArea then stop
+  // We don't want a zone hvac equipment list in the idf (these are ZoneHVAC comp in OS but not in E+)
+  if( (subsetCastVector<model::ZoneVentilationDesignFlowRate>(objects).size() +
+       subsetCastVector<model::ZoneVentilationWindandStackOpenArea>(objects).size()) == objects.size() ) {
     return boost::none;
   }
 
@@ -81,7 +84,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
   {
     if (boost::optional<RefrigerationAirChiller> airChiller = elem.optionalCast<RefrigerationAirChiller>()) {
       airChillers.push_back(airChiller.get());
-    } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() ) {
+    } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() || elem.optionalCast<ZoneVentilationWindandStackOpenArea>() ) {
       continue;
     } else {
       stdEquipment.push_back(elem);
@@ -101,8 +104,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
       } else {
         offset++;
       }
-    } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() ) {
-      // ZoneVentilationDesignFlowRate is not ZoneHVAC from E+ perspective
+    } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() || elem.optionalCast<ZoneVentilationWindandStackOpenArea>() ) {
+      // ZoneVentilationDesignFlowRate and ZoneVentilationWindandStackOpenArea are not ZoneHVAC from E+ perspective
       offset++;
     } else {
       coolingMap.insert ( std::pair<ModelObject,unsigned>(elem, priority - offset) );
@@ -122,8 +125,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEquipmentList( Zo
       } else {
         offset++;
       }
-    } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() ) {
-      // ZoneVentilationDesignFlowRate is not ZoneHVAC from E+ perspective
+    } else if( elem.optionalCast<ZoneVentilationDesignFlowRate>() || elem.optionalCast<ZoneVentilationWindandStackOpenArea>() ) {
+      // ZoneVentilationDesignFlowRate and ZoneVentilationWindandStackOpenArea are not ZoneHVAC from E+ perspective
       offset++;
     } else {
       heatingMap.insert ( std::pair<ModelObject,unsigned>(elem,priority - offset) );
