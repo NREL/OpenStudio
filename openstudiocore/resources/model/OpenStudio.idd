@@ -1,4 +1,4 @@
-!IDD_Version 2.9.0
+!IDD_Version 2.9.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2; \field Version Identifier
        \type alpha
-       \default 2.9.0
+       \default 2.9.1
 
 OS:ComponentData,
        \memo Defines the meta-data and contents of a Component, that is, a
