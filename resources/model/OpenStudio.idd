@@ -23339,7 +23339,7 @@ OS:ZoneVentilation:WindandStackOpenArea,
        \units m2
        \type real
        \minimum 0
-       \default 0
+       \required-field
   A3 , \field Opening Area Fraction Schedule Name
        \type object-list
        \object-list ScheduleNames
@@ -23357,7 +23357,7 @@ OS:ZoneVentilation:WindandStackOpenArea,
        \type real
        \minimum 0
        \maximum 1
-       \default autocalculate
+       \required-field
   N3 , \field Effective Angle
        \note This field is defined as normal angle of the opening area and is used when input
        \note field Opening Effectiveness = Autocalculate.
@@ -23365,14 +23365,14 @@ OS:ZoneVentilation:WindandStackOpenArea,
        \units deg
        \minimum 0.0
        \maximum< 360.0
-       \default 0
+       \required-field
   N4 , \field Height Difference
        \note This is the height difference between the midpoint of an opening and
        \note the neutral pressure level.
        \units m
        \type real
        \minimum 0
-       \default 0
+       \required-field
        \note  "DH" in the stack equation.
   N5 , \field Discharge Coefficient for Opening
        \note This is the discharge coefficient used to calculate stack effect.
@@ -23383,14 +23383,14 @@ OS:ZoneVentilation:WindandStackOpenArea,
        \autocalculatable
        \minimum 0.0
        \maximum 1.0
-       \default autocalculate
+       \required-field
   N6 , \field Minimum Indoor Temperature
        \note This is the indoor temperature below which ventilation is shutoff.
        \units C
        \type real
        \minimum -100
        \maximum 100
-       \default -100
+       \required-field
   A4 , \field Minimum Indoor Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
@@ -23402,7 +23402,7 @@ OS:ZoneVentilation:WindandStackOpenArea,
        \type real
        \minimum -100
        \maximum 100
-       \default 100
+       \required-field
   A5 , \field Maximum Indoor Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
@@ -23414,7 +23414,7 @@ OS:ZoneVentilation:WindandStackOpenArea,
        \units deltaC
        \type real
        \minimum -100
-       \default -100
+       \required-field
   A6 , \field Delta Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
@@ -23426,7 +23426,7 @@ OS:ZoneVentilation:WindandStackOpenArea,
        \type real
        \minimum -100
        \maximum 100
-       \default -100
+       \required-field
   A7 , \field Minimum Outdoor Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
@@ -23438,7 +23438,7 @@ OS:ZoneVentilation:WindandStackOpenArea,
        \type real
        \minimum -100
        \maximum 100
-       \default 100
+       \required-field
   A8 , \field Maximum Outdoor Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
@@ -23450,7 +23450,7 @@ OS:ZoneVentilation:WindandStackOpenArea,
        \type real
        \minimum 0
        \maximum 40
-       \default 40
+       \required-field
 
 OS:ZoneHVAC:Baseboard:Convective:Electric,
   A1 , \field Handle
