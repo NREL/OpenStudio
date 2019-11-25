@@ -11945,19 +11945,23 @@ OS:AvailabilityManager:OptimumStart,
        \key ConstantStartTime
        \required-field
   N2,  \field Constant Temperature Gradient during Cooling
-       \units deltaC/hr
+       \units K/hr
+       \ip-units R/hr
        \type real
        \required-field
   N3,  \field Constant Temperature Gradient during Heating
-       \units deltaC/hr
+       \units K/hr
+       \ip-units R/hr
        \type real
        \required-field
   N4,  \field Initial Temperature Gradient during Cooling
-       \units deltaC/hr
+       \units K/hr
+       \ip-units R/hr
        \type real
        \required-field
   N5,  \field Initial Temperature Gradient during Heating
-       \units deltaC/hr
+       \units K/hr
+       \ip-units R/hr
        \type real
        \required-field
   N6,  \field Constant Start Time
