@@ -23321,6 +23321,141 @@ OS:ZoneVentilation:DesignFlowRate,
        \maximum 40
        \required-field
 
+OS:ZoneVentilation:WindandStackOpenArea,
+       \min-fields 8
+       \memo This object is specified as natural ventilation driven by wind and stack effect only:
+       \memo Ventilation Wind = Cw * Opening Area * Schedule * WindSpd
+       \memo Ventilation Stack = Cd * Opening Area * Schedule * SQRT(2*g*DH*(|(Tzone-Todb)|/Tzone))
+       \memo Total Ventilation = SQRT((Ventilation Wind)^2 + (Ventilation Stack)^2)
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference VentilationNames
+  A3 , \field Zone Name
+       \required-field
+       \type object-list
+       \object-list ZoneNames
+  N1 , \field Opening Area
+       \note This is the opening area used to calculate stack effect and wind driven ventilation.
+       \units m2
+       \type real
+       \minimum 0
+       \default 0
+  A4 , \field Opening Area Fraction Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the fraction values applied to the opening area given in the previous
+       \note input field (0.0 - 1.0).
+  N2 , \field Opening Effectiveness
+       \note This field is used to calculate wind driven ventilation.
+       \note  "Cw" in the wind-driven equation and the maximum value is 1.0.
+       \note When the input is Autocalculate, the program calculates Cw based on an angle between
+       \note wind direction and effective angle
+       \note Cw = 0.55 at angle = 0, and Cw = 0.3 at angle=180
+       \note Linear interpolation is used to calculate Cw based on the above two values.
+       \units dimensionless
+       \autocalculatable
+       \type real
+       \minimum 0
+       \maximum 1
+       \default Autocalculate
+  N3 , \field Effective Angle
+       \note This field is defined as normal angle of the opening area and is used when input
+       \note field Opening Effectiveness = Autocalculate.
+       \type real
+       \units deg
+       \minimum 0.0
+       \maximum< 360.0
+       \default 0
+  N4 , \field Height Difference
+       \note This is the height difference between the midpoint of an opening and
+       \note the neutral pressure level.
+       \units m
+       \type real
+       \minimum 0
+       \default 0
+       \note  "DH" in the stack equation.
+  N5 , \field Discharge Coefficient for Opening
+       \note This is the discharge coefficient used to calculate stack effect.
+       \note  "Cd" in the stack equation and the maximum value is 1.0.
+       \note When the input is Autocalculate, the following equation is used to calculate the
+       \note coefficient:
+       \note Cd = 0.4 + 0.0045*|(Tzone-Todb)|
+       \autocalculatable
+       \minimum 0.0
+       \maximum 1.0
+       \default Autocalculate
+  N6 , \field Minimum Indoor Temperature
+       \note This is the indoor temperature below which ventilation is shutoff.
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \default -100
+  A5 , \field Minimum Indoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the indoor temperature versus time below which
+       \note ventilation is shutoff.
+  N7 , \field Maximum Indoor Temperature
+       \note This is the indoor temperature above which ventilation is shutoff.
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \default 100
+  A6 , \field Maximum Indoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the indoor temperature versus time above which
+       \note ventilation is shutoff.
+  N8 , \field Delta Temperature
+       \note This is the temperature differential between indoor and outdoor below
+       \note which ventilation is shutoff.
+       \units deltaC
+       \type real
+       \minimum -100
+       \default -100
+  A7 , \field Delta Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the temperature differential between indoor and outdoor
+       \note versus time below which ventilation is shutoff.
+  N9 , \field Minimum Outdoor Temperature
+       \note This is the outdoor temperature below which ventilation is shutoff.
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \default -100
+  A8 , \field Minimum Outdoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the outdoor temperature versus time below which
+       \note ventilation is shutoff.
+  N10, \field Maximum Outdoor Temperature
+       \note This is the outdoor temperature above which ventilation is shutoff.
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \default 100
+  A9 , \field Maximum Outdoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the outdoor temperature versus time above which
+       \note ventilation is shutoff.
+  N11; \field Maximum Wind Speed
+       \note This is the outdoor wind speed above which ventilation is shutoff.
+       \units m/s
+       \type real
+       \minimum 0
+       \maximum 40
+       \default 40
+
 OS:ZoneHVAC:Baseboard:Convective:Electric,
   A1 , \field Handle
        \type handle
