@@ -59,9 +59,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ZoneVentilationWindandStackOpenArea)
   {
     Workspace w = ft.translateModel(m);
 
-    WorkspaceObjectVector idfObjs(w.getObjectsByType(IddObjectType::ZoneVentilation_WindandStackOpenArea));
-    EXPECT_EQ(0u, idfObjs.size());
-    WorkspaceObject idf_extEq(idfObjs[0]);
+    WorkspaceObjectVector idf_zones(w.getObjectsByType(IddObjectType::ZoneVentilation_WindandStackOpenArea));
+    EXPECT_EQ(0u, idf_zones.size());
   }
 
   ThermalZone z(m);
@@ -111,11 +110,11 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ZoneVentilationWindandStackOpenArea)
     Workspace w = ft.translateModel(m);
 
     WorkspaceObjectVector idf_zones(w.getObjectsByType(IddObjectType::Zone));
-    EXPECT_EQ(1u, idf_zones.size());
+    ASSERT_EQ(1u, idf_zones.size());
     WorkspaceObject idf_zone(idf_zones[0]);
 
     WorkspaceObjectVector idf_zvs(w.getObjectsByType(IddObjectType::ZoneVentilation_WindandStackOpenArea));
-    EXPECT_EQ(1u, idf_zvs.size());
+    ASSERT_EQ(1u, idf_zvs.size());
     WorkspaceObject idf_zv(idf_zvs[0]);
 
     // No ZoneHVACEquipmentList
@@ -140,7 +139,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ZoneVentilationWindandStackOpenArea)
 
     EXPECT_EQ(zv.deltaTemperature(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperature).get());
     EXPECT_EQ(zv.deltaTemperatureSchedule().get().nameString(),
-              idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperature).get());
+              idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperatureScheduleName).get());
 
     EXPECT_EQ(zv.minimumOutdoorTemperature(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperature).get());
     EXPECT_EQ(zv.minimumOutdoorTemperatureSchedule().get().nameString(),
