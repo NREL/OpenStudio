@@ -626,6 +626,7 @@ set(${target_name}_test_src
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
   Test/ZoneHVACTerminalUnitVariableRefrigerantFlow_GTest.cpp
   Test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
+  Test/ZoneVentilationWindandStackOpenArea_GTest.cpp
 )
 
 set(${target_name}_swig_src
