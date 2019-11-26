@@ -1075,6 +1075,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateZoneVentilationDesignFlowRate(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::ZoneVentilation_WindandStackOpenArea :
+    {
+      modelObject = translateZoneVentilationWindandStackOpenArea(workspaceObject);
+      break;
+    }
   default:
     {
       break; // no-op

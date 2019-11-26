@@ -532,7 +532,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateZoneMixing.cpp
   ReverseTranslator/ReverseTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
   ReverseTranslator/ReverseTranslateZoneVentilationDesignFlowRate.cpp
-  # TODO/ ReverseTranslator/ReverseTranslateZoneVentilationWindandStackOpenArea.cpp
+  ReverseTranslator/ReverseTranslateZoneVentilationWindandStackOpenArea.cpp
 )
 
 set(${target_name}_test_src
