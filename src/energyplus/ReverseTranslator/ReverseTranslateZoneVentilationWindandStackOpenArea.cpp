@@ -54,8 +54,22 @@ OptionalModelObject ReverseTranslator::translateZoneVentilationWindandStackOpenA
     return boost::none;
   }
 
-  return boost::none;
+  // Start by checking if the WorkspaceObject has a ThermalZone before you even initialize a ModelObject
+  boost::optional<ThermalZone> _zone;
+  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::ZoneName);
+  if (target){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (boost::optional<Space> _space = modelObject->optionalCast<Space>()) {
+        _zone = _space->thermalZone();
+      }
+    }
+  }
 
+  if(!_zone.has_value()) {
+    LOG(Error, "Zone not found for workspace object " << workspaceObject.briefDescription() << ", it will not be Reverse Translated.");
+    return boost::none;
+  }
 
   openstudio::model::ZoneVentilationWindandStackOpenArea ventilation(m_model);
 
@@ -64,23 +78,7 @@ OptionalModelObject ReverseTranslator::translateZoneVentilationWindandStackOpenA
     ventilation.setName(*s);
   }
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::ZoneName);
-  bool hasZone = false;
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (boost::optional<Space> _space = modelObject->optionalCast<Space>()) {
-        if (boost::optional<ThermalZone> _zone = _space->thermalZone()) {
-          ventilation.addToThermalZone(_zone.get());
-          hasZone = true;
-        }
-      }
-    }
-  }
-  if (!hasZone) {
-    LOG(Error, "Flow/Area value not found for workspace object " << workspaceObject.briefDescription());
-    return boost::none;
-  }
+  ventilation.addToThermalZone(_zone.get());
 
   OptionalDouble _d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::OpeningArea);
   if (_d) {
