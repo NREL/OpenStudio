@@ -35,6 +35,7 @@
 #include "../ZoneVentilationWindandStackOpenArea_Impl.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../Schedule.hpp"
+#include "../ThermalZone.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -195,3 +196,17 @@ TEST_F(ModelFixture, ZoneVentilationWindandStackOpenArea_GettersSetters) {
 
 
 } // End of Getter_Setters test
+
+TEST_F(ModelFixture, ZoneVentilationWindandStackOpenArea_AddToThermalZone) {
+
+  Model m;
+  ThermalZone z(m);
+  ZoneVentilationWindandStackOpenArea zv(m);
+  EXPECT_TRUE(zv.addToThermalZone(z));
+  ASSERT_TRUE(zv.thermalZone());
+  EXPECT_EQ(z, zv.thermalZone().get());
+
+  zv.removeFromThermalZone();
+  EXPECT_FALSE(zv.thermalZone());
+
+}
