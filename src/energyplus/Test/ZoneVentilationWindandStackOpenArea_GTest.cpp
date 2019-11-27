@@ -36,18 +36,22 @@
 #include "../../model/Model.hpp"
 
 #include "../../model/ZoneVentilationWindandStackOpenArea.hpp"
+#include "../../model/ZoneVentilationWindandStackOpenArea_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/ScheduleConstant.hpp"
 
 #include <utilities/idd/ZoneVentilation_WindandStackOpenArea_FieldEnums.hxx>
+#include <utilities/idd/Schedule_Constant_FieldEnums.hxx>
+
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ZoneVentilationWindandStackOpenArea)
+TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea)
 {
   ForwardTranslator ft;
 
@@ -181,14 +185,75 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ZoneVentilationWindandStackOpenArea)
 
 }
 
-// TODO: write RT test
-//TEST_F(EnergyPlusFixture,ReverseTranslator_ZoneVentilationWindandStackOpenArea)
-//{
-  //StrictnessLevel level(StrictnessLevel::Draft);
-  //IddFileType iddFileType(IddFileType::EnergyPlus);
-  //Workspace workspace(level, iddFileType);
+TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneVentilationWindandStackOpenArea)
+{
+  StrictnessLevel level(StrictnessLevel::Draft);
+  IddFileType iddFileType(IddFileType::EnergyPlus);
+  Workspace workspace(level, iddFileType);
 
-  //IdfObject idf_zv(IddObjectType::ZoneVentilation_WindandStackOpenArea);
-  //idf_zv.setName("My ZV WindAndStackOpenArea");
+  IdfObject idf_zone(IddObjectType::Zone);
+  idf_zone.setName("Space-1");
 
-//}
+  IdfObject idf_zv(IddObjectType::ZoneVentilation_WindandStackOpenArea);
+  idf_zv.setName("My ZoneVentilationWindAndStackOpenArea");
+  EXPECT_TRUE(idf_zv.setString(ZoneVentilation_WindandStackOpenAreaFields::ZoneName, idf_zone.nameString()));
+  EXPECT_TRUE(idf_zv.setDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningArea, 10.5));
+  // Opening Area Fraction Schedule: leave blank
+
+  // Opening Effectiveness: autocalculate is default in Ctor
+  EXPECT_TRUE(idf_zv.setDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness, 0.8));
+
+  EXPECT_TRUE(idf_zv.setDouble(ZoneVentilation_WindandStackOpenAreaFields::EffectiveAngle, 180.0));
+
+  // Height Difference: Leave blank (expect zero)
+
+  // Discharge Coef: autocalculate
+  EXPECT_TRUE(idf_zv.setString(ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening, "Autocalculate"));
+
+  // Minimum Indoor Temperature
+  EXPECT_TRUE(idf_zv.setDouble(ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperature, -20.0));
+
+  // Minimum Indoor Temperature Schedule Name
+  IdfObject idf_minIndoorTempSch(IddObjectType::Schedule_Constant);
+  idf_minIndoorTempSch.setName("minIndoorTempSch");
+  EXPECT_TRUE(idf_minIndoorTempSch.setDouble(Schedule_ConstantFields::HourlyValue, -20.0));
+  EXPECT_TRUE(idf_zv.setString(ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperatureScheduleName, idf_minIndoorTempSch.nameString()));
+
+  IdfObjectVector objects;
+  objects.push_back(idf_zone);
+  objects.push_back(idf_zv);
+  objects.push_back(idf_minIndoorTempSch);
+  EXPECT_EQ(3u,workspace.addObjects(objects).size());
+
+  ReverseTranslator rt;
+  Model m = rt.translateWorkspace(workspace);
+
+  Schedule alwaysOnDiscreteSchedule = m.alwaysOnDiscreteSchedule();
+
+  ASSERT_EQ(1u, m.getModelObjects<ThermalZone>().size());
+  ThermalZone zone = m.getModelObjects<ThermalZone>()[0];
+
+  ASSERT_EQ(1u, m.getModelObjects<ZoneVentilationWindandStackOpenArea>().size());
+  ZoneVentilationWindandStackOpenArea zv = m.getModelObjects<ZoneVentilationWindandStackOpenArea>()[0];
+
+  EXPECT_EQ("My ZoneVentilationWindAndStackOpenArea", zv.name().get());
+  EXPECT_EQ(10.5, zv.openingArea());
+  EXPECT_EQ(alwaysOnDiscreteSchedule, zv.openingAreaFractionSchedule());
+
+  EXPECT_FALSE(zv.isOpeningEffectivenessAutocalculated());
+  ASSERT_TRUE(zv.openingEffectiveness());
+  EXPECT_EQ(0.8, zv.openingEffectiveness().get());
+
+  EXPECT_EQ(180.0, zv.effectiveAngle());
+
+  EXPECT_EQ(0.0, zv.heightDifference());
+
+  EXPECT_TRUE(zv.isDischargeCoefficientforOpeningAutocalculated());
+
+  EXPECT_EQ(-20, zv.minimumIndoorTemperature());
+  ASSERT_TRUE(zv.minimumIndoorTemperatureSchedule());
+  EXPECT_EQ("minIndoorTempSch", zv.minimumIndoorTemperatureSchedule()->nameString());
+
+  ASSERT_EQ(1u, zone.equipment().size());
+  EXPECT_EQ(zv, zone.equipment()[0]);
+}
