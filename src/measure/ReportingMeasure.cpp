@@ -40,7 +40,7 @@ namespace measure {
 
 ReportingMeasure::~ReportingMeasure() {}
 
-std::vector<OSArgument> ReportingMeasure::arguments() const {
+std::vector<OSArgument> ReportingMeasure::arguments(const openstudio::model::Model& model) const {
   return OSArgumentVector();
 }
 

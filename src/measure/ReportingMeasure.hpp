@@ -39,6 +39,10 @@ namespace openstudio {
 
   class IdfObject;
 
+namespace model {
+  class Model;
+}
+
 namespace measure {
 
 /** ReportingMeasure is an abstract base class for UserScripts that generate reports. */
@@ -58,7 +62,7 @@ class MEASURE_API ReportingMeasure : public OSMeasure {
    *  to this script's run method. The same basic steps should happen in applications with non-
    *  interactive scripts, but in that case an entity other than an OSRunner may be in charge of
    *  collecting user arguments. The base class implementation returns an empty vector. */
-  virtual std::vector<OSArgument> arguments() const;
+  virtual std::vector<OSArgument> arguments(const openstudio::model::Model& model) const;
 
   /** Returns the outputs for this script. The base class implementation returns an empty vector. */
   virtual std::vector<OSOutput> outputs() const;
