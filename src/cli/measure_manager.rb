@@ -74,7 +74,7 @@ class MeasureInfoBinding
     return result
   end
 end
-          
+
 class MeasureManager
 
   attr_reader :osms, :measures, :measure_info
@@ -283,10 +283,10 @@ class MeasureManager
       # see if there are updates, want to make sure to perform both checks so do outside of conditional
       file_updates = result.checkForUpdatesFiles # checks if any files have been updated
       xml_updates = result.checkForUpdatesXML # only checks if xml as loaded has been changed since last save
-      
+
       readme_in_path = File.join(measure_dir, "README.md.erb")
       readme_out_path = File.join(measure_dir, "README.md")
-      
+
       readme_out_of_date = false
       if File.exists?(readme_in_path) && !File.exists?(readme_out_path)
         readme_out_of_date = true
@@ -307,10 +307,10 @@ class MeasureManager
         # try to load the ruby measure
         info = get_measure_info(measure_dir, result, "", OpenStudio::Model::OptionalModel.new, OpenStudio::OptionalWorkspace.new)
         info.update(result)
-        
+
         # update README.md.erb
         if File.exists?(readme_in_path)
-          
+
           begin
             # delete README.md if it exists
             File.delete(readme_out_path) if File.exists?(readme_out_path)
@@ -319,9 +319,9 @@ class MeasureManager
             File.open(readme_in_path, 'r') do |file|
               readme_in = file.read
             end
-            
+
             result_hash = measure_hash(measure_dir, result, info)
-            
+
             renderer = ERB.new(readme_in)
             result_binding = MeasureInfoBinding.new(info, result_hash)
             readme_out = renderer.result(result_binding.get_binding)
@@ -336,16 +336,16 @@ class MeasureManager
                 file.flush
               end
             end
-            
+
             # update the files
             result.checkForUpdatesFiles
-            
+
           rescue => e
             # update error in info
             info = OpenStudio::Ruleset::RubyUserScriptInfo.new(e.message)
             info.update(result)
           end
-          
+
           # check for file updates
           file_updates = result.checkForUpdatesFiles
         end
