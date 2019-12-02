@@ -270,16 +270,21 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooledDefinition_approachtemperature
 
   ElectricEquipmentITEAirCooledDefinition definition(model);
   ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled(definition);
-  ScheduleCompact supplydeltasch(model, 5);
-  ScheduleCompact returndeltasch(model, -5);
+  ScheduleCompact supplydeltasch(model, 5.0);
+  ScheduleCompact returndeltasch(model, -5.0);
 
   EXPECT_EQ(7u, model.numObjects());
 
-  ASSERT_TRUE(definition.setAirFlowCalculationMethod("FlowControlWithApproachTemperatures"));
-  ASSERT_EQ("FlowControlWithApproachTemperatures", definition.airFlowCalculationMethod());
-  ASSERT_TRUE(definition.setSupplyTemperatureDifferenceSchedule(supplydeltasch));
-  ASSERT_TRUE(definition.setReturnTemperatureDifferenceSchedule(returndeltasch));
+  EXPECT_TRUE(definition.setAirFlowCalculationMethod("FlowControlWithApproachTemperatures"));
+  EXPECT_EQ("FlowControlWithApproachTemperatures", definition.airFlowCalculationMethod());
+  EXPECT_TRUE(definition.setSupplyTemperatureDifferenceSchedule(supplydeltasch));
+  EXPECT_TRUE(definition.setReturnTemperatureDifferenceSchedule(returndeltasch));
 
-  model.save(toPath("./ITE8.osm"), true);
+  ASSERT_TRUE(definition.supplyTemperatureDifferenceSchedule());
+  EXPECT_EQ(supplydeltasch, definition.supplyTemperatureDifferenceSchedule().get());
+  ASSERT_TRUE(definition.returnTemperatureDifferenceSchedule());
+  EXPECT_EQ(returndeltasch, definition.returnTemperatureDifferenceSchedule().get());
+
+  // model.save(toPath("./ITE8.osm"), true);
 
 }
