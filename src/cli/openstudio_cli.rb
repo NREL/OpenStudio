@@ -413,8 +413,8 @@ def parse_main_args(main_args)
     $logger.info "Setting BUNDLE_PATH to ':/ruby/2.5.0/'"
     ENV['BUNDLE_PATH'] = ':/ruby/2.5.0/'
 
-  end  
-  
+  end
+
   if main_args.include? '--bundle_without'
     option_index = main_args.index '--bundle_without'
     path_index = option_index + 1
@@ -424,15 +424,15 @@ def parse_main_args(main_args)
 
     $logger.info "Setting BUNDLE_WITHOUT to #{bundle_without}"
     ENV['BUNDLE_WITHOUT'] = bundle_without
-  
+
   elsif ENV['BUNDLE_WITHOUT']
     # no argument but env var is set
     $logger.info "ENV['BUNDLE_WITHOUT'] set to '#{ENV['BUNDLE_WITHOUT']}'"
-  
+
   elsif use_bundler
     # bundle was requested but bundle_path was not provided
     $logger.warn "Bundle activated but ENV['BUNDLE_WITHOUT'] is not set"
-    
+
     # match configuration in build_openstudio_gems
     $logger.info "Setting BUNDLE_WITHOUT to 'test'"
     ENV['BUNDLE_WITHOUT'] = 'test'
@@ -500,7 +500,7 @@ def parse_main_args(main_args)
   if use_bundler
 
     current_dir = Dir.pwd
-    
+
     original_arch = nil
     if RbConfig::CONFIG['arch'] =~ /x64-mswin64/
       # assume that system ruby of 'x64-mingw32' architecture was used to create bundle
@@ -508,9 +508,9 @@ def parse_main_args(main_args)
       $logger.info "Temporarily replacing arch '#{original_arch}' with 'x64-mingw32' for Bundle"
       RbConfig::CONFIG['arch'] = 'x64-mingw32'
     end
-  
-   
-   
+
+
+
     # require bundler
     # have to do some forward declaration and pre-require to get around autoload cycles
     require 'bundler/errors'
@@ -529,19 +529,19 @@ def parse_main_args(main_args)
     require 'bundler/dsl'
     require 'bundler/uri_credentials_filter'
     require 'bundler'
-    
+
     begin
       # activate bundled gems
       # bundler will look in:
       # 1) ENV["BUNDLE_GEMFILE"]
       # 2) find_file("Gemfile", "gems.rb")
       #require 'bundler/setup'
-      
+
       groups = Bundler.definition.groups
       keep_groups = []
       without_groups = ENV['BUNDLE_WITHOUT']
       $logger.info "without_groups = #{without_groups}"
-      groups.each do |g| 
+      groups.each do |g|
         $logger.info "g = #{g}"
         if without_groups.include?(g.to_s)
           $logger.info "Bundling without group '#{g}'"
@@ -549,17 +549,17 @@ def parse_main_args(main_args)
           keep_groups << g
       end
       end
-      
+
       $logger.info "Bundling with groups [#{keep_groups.join(',')}]"
-      
+
       remaining_specs = []
       Bundler.definition.specs_for(keep_groups).each {|s| remaining_specs << s.name}
-      
+
       $logger.info "Specs to be included [#{remaining_specs.join(',')}]"
-        
-      Bundler.setup(*keep_groups) 
+
+      Bundler.setup(*keep_groups)
       #Bundler.require(*keep_groups)
-      
+
     #rescue Bundler::BundlerError => e
 
       #$logger.info e.backtrace.join("\n")
@@ -572,7 +572,7 @@ def parse_main_args(main_args)
         $logger.info "Restoring arch '#{original_arch}'"
         RbConfig::CONFIG['arch'] = original_arch
       end
-    
+
       Dir.chdir(current_dir)
     end
 
@@ -584,7 +584,7 @@ def parse_main_args(main_args)
     begin
       # DLM: test code, useful for testing from command line using system ruby
       #Gem::Specification.each do |spec|
-      #  if /openstudio/.match(spec.name) 
+      #  if /openstudio/.match(spec.name)
       #    original_embedded_gems[spec.name] = spec
       #  end
       #end
@@ -637,10 +637,10 @@ def parse_main_args(main_args)
         return false
       end
 
-    ensure 
+    ensure
       Dir.chdir(current_dir)
     end
-    
+
   end # use_bundler
 
   # Handle -e commands
@@ -1300,6 +1300,17 @@ class Measure
             workspace = value.clone(true)
           end
 
+        elsif measure_type == 'ReportingMeasure'
+          # New in 3.0.0, it does take a model path
+          value = measure_manager.get_model(model_path, true)
+          if value.nil?
+            $logger.error("Cannot load model from '#{model_path}'")
+            return 1
+          else
+            model = value[0].clone(true).to_Model
+            workspace = value[1].clone(true)
+          end
+
         else
           $logger.error("Measure type '#{measure_type}' does not take a model path")
           return 1
@@ -1340,13 +1351,13 @@ class Measure
       #end
 
       runner = OpenStudioMeasureTester::Runner.new(directory)
-      result = runner.run_all(Dir.pwd) 
-      
+      result = runner.run_all(Dir.pwd)
+
       if result != 0
         $logger.error("Measure tester returned errors")
         return 1
       end
-    
+
     elsif options[:start_server]
 
       require_relative 'measure_manager_server'
