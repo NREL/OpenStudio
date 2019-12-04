@@ -23,7 +23,7 @@ num=$(git diff $PR_BRANCH_NAME $TARGET_BRANCH_NAME --name-only | grep '.*\.\(cpp
 
 if [ $num -eq 0 ]
 then
-    echo "No files of type (cpp, c, hpp, h) changed. Skipping clang-formatting""
+    echo "No files of type (cpp, c, hpp, h) changed. Skipping clang-formatting"
   exit 0
 fi
 
