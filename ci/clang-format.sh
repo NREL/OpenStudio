@@ -9,7 +9,6 @@ display_usage() {
   echo -e "\nUsage:\ PR_BRANCH_NAME TARGET_BRANCH_NAME \n"
 }
 
-
 if [  $# -le 1 ]
 then
   display_usage
@@ -19,7 +18,14 @@ fi
 PR_BRANCH_NAME=$1
 TARGET_BRANCH_NAME=$2
 
-# gather files that have changed and pipe to clang-format
+# first find if any files changed
+num=$(git diff $PR_BRANCH_NAME $TARGET_BRANCH_NAME --name-only | grep '.*\.\(cpp\|c\|hpp\|h\)$' | wc -l | tr -d '[:space:]')
+
+if [ $num -eq 0 ]
+then
+  echo "No files of typed cpp, c, hpp, h changed"
+  exit 0
+fi
 
 git diff $PR_BRANCH_NAME $TARGET_BRANCH_NAME --name-only | grep '.*\.\(cpp\|c\|hpp\|h\)$' | xargs clang-format -style=file -i -fallback-style=none
 
