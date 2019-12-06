@@ -283,6 +283,7 @@ namespace detail {
     }
 
     // If existing, get it, otherwise Push an extensible group. ModelExtensibleGroup cannot be default-constructed, so use a ternary operator
+
     // Given that we will potentially push many extensible groups
     // (number of viewFactors to add in a Zone = x^2 where x is number of surfaces + subsurfaces + internalMass)
     // we will suffer from going through the internal checks in WorkspaceObject, especially in setPointer,
