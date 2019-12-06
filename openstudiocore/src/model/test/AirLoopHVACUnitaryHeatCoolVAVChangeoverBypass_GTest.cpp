@@ -52,7 +52,7 @@
 #include "../CurveBiquadratic_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
-#include "../utilities/core/Compare.hpp"
+#include "../../utilities/core/Compare.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;

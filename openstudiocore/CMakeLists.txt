@@ -8,7 +8,7 @@ if(CCACHE_PROGRAM)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
-project(OpenStudio VERSION 2.9.0)
+project(OpenStudio VERSION 2.9.1)
 
 include(ExternalProject)
 include(CPackComponent)
@@ -23,6 +23,43 @@ if(NOT ${CMAKE_VERSION} VERSION_LESS "3.0")
   if(NOT ${CMAKE_VERSION} VERSION_LESS "3.1")
     cmake_policy(SET CMP0054 NEW)
   endif()
+endif()
+
+###############################################################################
+#                                  N I N J A                                  #
+###############################################################################
+# Ninja support: has to be atop for it to take effect before anything else is done
+# Add Color Output if Using Ninja
+macro(AddCXXFlagIfSupported flag test)
+  CHECK_CXX_COMPILER_FLAG(${flag} ${test})
+  if(${${test}})
+    message("adding ${flag}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+  endif()
+endmacro()
+
+if("Ninja" STREQUAL ${CMAKE_GENERATOR})
+  # Will be passed to OpenStudio.in to deal with the Win32 case
+  set(NINJA TRUE)
+  # Clang
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    AddCXXFlagIfSupported(-fcolor-diagnostics COMPILER_SUPPORTS_fcolor-diagnostics)
+  endif()
+
+  # g++
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    # For some reason it doesn't say its supported, but it works...
+    # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
+    message(STATUS "Ninja: Forcing -fdiagnostics-color=always")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+  endif()
+endif()
+
+# Xcode/Ninja generators undefined MAKE
+if(CMAKE_GENERATOR MATCHES "Make")
+  set(MAKE "$(MAKE)")
+else()
+  set(MAKE make)
 endif()
 
 ###############################################################################
@@ -235,7 +272,8 @@ if(WIN32)
   add_definitions(-DNOMINMAX)
 endif()
 
-if(MSVC)
+# /MP is useless for ninja (and nmake), and gets passed to rc.exe which will fatal out.
+if(MSVC AND NOT NINJA)
   # Build with Multiple Processes
   set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
   mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
@@ -310,12 +348,16 @@ if(MSVC)
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
 
   # create compiler processes on all effective processors
-  if(BUILD_WITH_MULTIPLE_PROCESSES)
+  # /MP is useless for ninja and will cause problems. BUILD_WITH_MULTIPLE_PROCESSES shouldn't have been set if ninja but let's be safe
+  if(BUILD_WITH_MULTIPLE_PROCESSES AND NOT NINJA)
     add_definitions(/MP)
   endif()
 
   #Enable warning on thread un-safe static member initialization - DLM: we have been bit by this many times
-  add_definitions(/w44640)
+  # TODO: JM 2019-09-19: Disabling for now
+  # Using the righ flag (/w14460 and not the previously mispelled /w44640) will make compilation fail with many warnings treated as error,
+  # eg: IddRegex.cpp all scoped `const static std::string result` inside functions will issue that and make it fatal
+  # add_definitions(/w14640)
 
   # ignore decorated name length exceeded
   add_definitions(/wd4503)
@@ -341,29 +383,6 @@ if(MSVC)
 
 endif()
 
-# Add Color Output if Using Ninja
-macro(AddCXXFlagIfSupported flag test)
-   CHECK_CXX_COMPILER_FLAG(${flag} ${test})
-   if( ${${test}} )
-      message("adding ${flag}")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
-   endif()
-endmacro()
-
-if("Ninja" STREQUAL ${CMAKE_GENERATOR})
-  # Clang
-  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    AddCXXFlagIfSupported(-fcolor-diagnostics COMPILER_SUPPORTS_fcolor-diagnostics)
-  endif()
-
-  # g++
-  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    # For some reason it doesn't say its supported, but it works...
-    # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
-    message(STATUS "Forcing -fdiagnostics-color=always")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
-  endif()
-endif()
 ##############################################################################
 
 
@@ -418,8 +437,7 @@ elseif(WIN32)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    ## TODO: update md5 hash, but not present on GitHub as .zip, only .exe for now at least
-    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_a2cbd995acd1928a7baa18407bb8e949)
+    set(ENERGYPLUS_EXPECTED_HASH 82c29e996334dba0cbcbde003ed34e3d)
   endif()
   if(EXISTS "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${CMAKE_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -534,8 +552,8 @@ if(NOT EXISTS ${RUBY_INSTALL_DIR})
       set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_static_2.tar.gz")
       set(RUBY_ZIP_EXPECTED_MD5 "74cc63d6f997097b8e650999a1da717f")
     else()
-      set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_32_static_2.tar.gz")
-      set(RUBY_ZIP_EXPECTED_MD5 "DOES_NOT_EXIST_4c2055305b105b0c8210697aaa596419")
+      set(RUBY_ZIP_FILENAME "ruby_2_2_4_msvc2013_32_static.tar.gz")
+      set(RUBY_ZIP_EXPECTED_MD5 "4c2055305b105b0c8210697aaa596419")
     endif()
   elseif( APPLE )
     set(RUBY_ZIP_FILENAME "ruby_2_2_4_osx_static.tar.gz")
@@ -737,14 +755,6 @@ if( BUILD_DVIEW )
 endif()
 
 # SWIG
-
-# Xcode/Ninja generators undefined MAKE
-if(CMAKE_GENERATOR MATCHES "Make")
-  set(MAKE "$(MAKE)")
-else()
-  set(MAKE make)
-endif()
-
 
 # using forked version of SWIG at https://github.com/macumber/swig/tree/openstudio_swig_3_0_12
 if(UNIX)
@@ -1090,6 +1100,12 @@ list(APPEND QT_INCLUDES ${Qt5PrintSupport_INCLUDE_DIRS})
 
 if( UNIX )
   list(APPEND QT_INCLUDES ${Qt5XcbQpa_INCLUDE_DIRS})
+endif()
+
+
+if( APPLE )
+    set(QT_SQLDRIVERS_PATHNAME ${QT_INSTALL_DIR}/plugins/sqldrivers)
+    file(COPY "${QT_SQLDRIVERS_PATHNAME}" DESTINATION "${CMAKE_BINARY_DIR}/Products/")
 endif()
 
 set(CMAKE_AUTOMOC OFF)

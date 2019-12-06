@@ -92,7 +92,7 @@ boost::optional<openstudio::FileLogSink> IlluminanceMapFixture::logFile;
 // *** BEGIN TESTS ***
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlot)
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlot)
 {
   if (!Application::instance().hasApplication()){
     Application::instance().application(true);
@@ -186,7 +186,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesCount)
 }
 
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeries)
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlotSeries)
 {
   if (!Application::instance().hasApplication()){
     Application::instance().application(true);
@@ -203,7 +203,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeries)
   }
 }
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlotSeriesOpt)
 {
   if (!Application::instance().hasApplication()){
     Application::instance().application(true);
@@ -226,7 +226,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
   }
 }
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapMatrixBaseline)
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapMatrixBaseline)
 {
   if (!Application::instance().hasApplication()){
     Application::instance().application(true);

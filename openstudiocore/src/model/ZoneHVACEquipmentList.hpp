@@ -145,7 +145,7 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
    *  Returns false when equipement is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
+  bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
   /** Set the Sequential Heating Fraction Schedule Constant of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
@@ -157,7 +157,7 @@ class MODEL_API ZoneHVACEquipmentList : public ModelObject {
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, const Schedule& schedule);
+  bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
   protected:
 

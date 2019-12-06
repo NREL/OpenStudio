@@ -207,10 +207,9 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     if (construction.isModelPartition() && (construction.numLayers() == 1)) {
       MaterialVector layers = construction.layers();
       OS_ASSERT(layers.size() == 1u);
-      bool isAirWall = layers[0].optionalCast<AirWallMaterial>();
 
       // if this is an old style air wall
-      if (isAirWall)
+      if (layers[0].optionalCast<AirWallMaterial>())
       {
         ConstructionAirBoundary newConstruction(model);
         newConstruction.setName(construction.nameString() + "_ConstructionAirBoundary");
@@ -3482,7 +3481,6 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
   result.push_back(IddObjectType::OS_ShadingSurface);
 
-  result.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
   result.push_back(IddObjectType::OS_ZoneProperty_UserViewFactors_BySurfaceName);
 
   result.push_back(IddObjectType::OS_Daylighting_Control);
@@ -3680,10 +3678,11 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_DefaultConstructionSet);
   iddObjectTypes.push_back(IddObjectType::OS_DefaultScheduleSet);
 
-  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);
-  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
-  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);
-  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
+  // Translated by the object it references directly
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);      // Surface, SubSurface,
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);   // Surface, SubSurface,
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter); // Surface Only
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);     // Surface, SubSurface, or InternalMass
 
   for (const IddObjectType& iddObjectType : iddObjectTypes){
 
