@@ -95,8 +95,6 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
     boost::optional<DaylightingControl> daylightingControl = zone->primaryDaylightingControl();
     if (daylightingControl) {
       idfObject.setString(WindowShadingControlFields::DaylightingControlObjectName, daylightingControl->nameString());
-    } else {
-      LOG(Warn, "Cannot find DaylightingControl for " << modelObject.briefDescription());
     }
   } else {
     LOG(Error, "Cannot find ThermalZone for " << modelObject.briefDescription());
