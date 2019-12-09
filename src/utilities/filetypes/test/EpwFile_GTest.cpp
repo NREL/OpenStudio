@@ -97,12 +97,11 @@ TEST(Filetypes, EpwFile_Data)
     std::vector<EpwDataPoint> data = epwFile.data();
     EXPECT_EQ(8760,data.size());
     // The last data point should be for the last hour 12/31/1996, with a dry bulb temp of 4C and pressure 81100
+    // Gets reported as "1997-Jan-01 00:00:00"
     openstudio::DateTime dateTime = data[8759].dateTime();
     EXPECT_EQ(1, dateTime.date().monthOfYear().value());
     EXPECT_EQ(1, dateTime.date().dayOfMonth());
-    // Stopgap test until things are straightened out with years
-    EXPECT_EQ(2010, dateTime.date().year());
-    //EXPECT_EQ(1997, dateTime.date().year());
+    EXPECT_EQ(1997, dateTime.date().year());
     EXPECT_EQ(0, dateTime.time().hours());
     EXPECT_EQ(0, dateTime.time().minutes());
     EXPECT_EQ(0, dateTime.time().seconds());
@@ -296,9 +295,7 @@ TEST(Filetypes, EpwFile_Design_DoubleRead)
     openstudio::DateTime dateTime = data[8759].dateTime();
     EXPECT_EQ(1, dateTime.date().monthOfYear().value());
     EXPECT_EQ(1, dateTime.date().dayOfMonth());
-    // Stopgap test until things are straightened out with years
-    EXPECT_EQ(2010, dateTime.date().year());
-    //EXPECT_EQ(1997, dateTime.date().year());
+    EXPECT_EQ(1997, dateTime.date().year());
     EXPECT_EQ(0, dateTime.time().hours());
     EXPECT_EQ(0, dateTime.time().minutes());
     EXPECT_EQ(0, dateTime.time().seconds());
@@ -487,9 +484,7 @@ TEST(Filetypes, EpwFile_Data_DoubleRead)
     openstudio::DateTime dateTime = data[8759].dateTime();
     EXPECT_EQ(1, dateTime.date().monthOfYear().value());
     EXPECT_EQ(1, dateTime.date().dayOfMonth());
-    // Stopgap test until things are straightened out with years
-    EXPECT_EQ(2010, dateTime.date().year());
-    //EXPECT_EQ(1997, dateTime.date().year());
+    EXPECT_EQ(1997, dateTime.date().year());
     EXPECT_EQ(0, dateTime.time().hours());
     EXPECT_EQ(0, dateTime.time().minutes());
     EXPECT_EQ(0, dateTime.time().seconds());
@@ -542,20 +537,47 @@ TEST(Filetypes, EpwFile_LeapTimeSeries)
     data = epwFile.data();
     EXPECT_EQ(8784, data.size());
 
+    EXPECT_TRUE(epwFile.isActual());
+
     boost::optional<int> _epwDataPointBaseYear = data[0].date().baseYear();
-    EXPECT_TRUE(_epwDataPointBaseYear);
-
-    boost::optional<TimeSeries> _t;
-    ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
-    EXPECT_TRUE(_t);
-
     ASSERT_TRUE(_epwDataPointBaseYear);
     EXPECT_EQ(2012, _epwDataPointBaseYear.get());
 
+    boost::optional<TimeSeries> _t;
+    ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
     ASSERT_TRUE(_t);
+    // isActal is true, so it should be a timeSeries with the actual year
     boost::optional<int> _timeSeriesBaseYear = _t->firstReportDateTime().date().baseYear();
     ASSERT_TRUE(_timeSeriesBaseYear);
     EXPECT_EQ(2012, _timeSeriesBaseYear.get());
+  } catch (...) {
+    ASSERT_TRUE(false);
+  }
+}
+
+TEST(Filetypes, EpwFile_NonActualTimeSeries)
+{
+  try {
+    path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
+    EpwFile epwFile(p);
+    EXPECT_EQ(p, epwFile.path());
+    // Ask for data
+    std::vector<EpwDataPoint> data = epwFile.data();
+    EXPECT_EQ(8760, data.size());
+
+    EXPECT_FALSE(epwFile.isActual());
+
+    // It should have a baseYear as a DataPoint
+    boost::optional<int> _epwDataPointBaseYear = data[0].date().baseYear();
+    ASSERT_TRUE(_epwDataPointBaseYear);
+    EXPECT_EQ(1999, _epwDataPointBaseYear.get());
+
+    boost::optional<TimeSeries> _t;
+    ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
+    ASSERT_TRUE(_t);
+    // But it shouldn't when getting a TimeSeries, since it's a TMY file
+    boost::optional<int> _timeSeriesBaseYear = _t->firstReportDateTime().date().baseYear();
+    EXPECT_FALSE(_timeSeriesBaseYear);
   } catch (...) {
     ASSERT_TRUE(false);
   }
