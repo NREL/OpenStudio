@@ -4592,7 +4592,7 @@ namespace openstudio{
       int month = std::stoi(split[0]);
       int day = std::stoi(split[1]);
       if(split.size() == 3) {
-        int year = std::stoi(split[1]);
+        int year = std::stoi(split[2]);
         m_startDate = Date(monthOfYear(month), day, year);
         m_startDateActualYear = year;
       } else {
@@ -4613,7 +4613,7 @@ namespace openstudio{
       int month = std::stoi(split[0]);
       int day = std::stoi(split[1]);
       if(split.size() == 3) {
-        int year = std::stoi(split[1]);
+        int year = std::stoi(split[2]);
         m_endDate = Date(monthOfYear(month), day, year);
         m_endDateActualYear = year;
       } else {
