@@ -527,6 +527,40 @@ TEST(Filetypes, EpwFile_NoDesign)
   }
 }
 
+TEST(Filetypes, EpwFile_LeapTimeSeries)
+{
+  try {
+    path p = resourcesPath() / toPath("utilities/Filetypes/leapday-test.epw");
+    EpwFile epwFile(p);
+    EXPECT_EQ(p, epwFile.path());
+    // Ask for data
+    std::vector<EpwDataPoint> data = epwFile.data();
+    EXPECT_EQ(8784, data.size());
+    // Ask for the design conditions, but there aren't any
+    std::vector<EpwDesignCondition> designs = epwFile.designConditions();
+    EXPECT_EQ(0, designs.size());
+    data = epwFile.data();
+    EXPECT_EQ(8784, data.size());
+
+    boost::optional<int> _epwDataPointBaseYear = data[0].date().baseYear();
+    EXPECT_TRUE(_epwDataPointBaseYear);
+
+    boost::optional<TimeSeries> _t;
+    ASSERT_NO_THROW(_t = epwFile.getTimeSeries("Dry Bulb Temperature"));
+    EXPECT_TRUE(_t);
+
+    ASSERT_TRUE(_epwDataPointBaseYear);
+    EXPECT_EQ(2012, _epwDataPointBaseYear.get());
+
+    ASSERT_TRUE(_t);
+    boost::optional<int> _timeSeriesBaseYear = _t->firstReportDateTime().date().baseYear();
+    ASSERT_TRUE(_timeSeriesBaseYear);
+    EXPECT_EQ(2012, _timeSeriesBaseYear.get());
+  } catch (...) {
+    ASSERT_TRUE(false);
+  }
+}
+
 TEST(Filetypes, EpwFile_International_Data)
 {
   try{
