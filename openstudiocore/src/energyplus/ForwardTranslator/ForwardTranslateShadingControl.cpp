@@ -91,10 +91,22 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
   }
   idfObject.setString(WindowShadingControlFields::ZoneName, zoneName);
 
+  // Read this now, since we'll use it to test if a Warn is needed
+  std::string shadingControlType = modelObject.shadingControlType();
+  idfObject.setString(WindowShadingControlFields::ShadingControlType, shadingControlType);
+
   if (zone) {
     boost::optional<DaylightingControl> daylightingControl = zone->primaryDaylightingControl();
     if (daylightingControl) {
       idfObject.setString(WindowShadingControlFields::DaylightingControlObjectName, daylightingControl->nameString());
+    } else {
+      // Warn only if a Shading Control Type that relies on DaylightingControl object is used
+      // We would probably need to warn if "Glare Control Is Active" was "Yes",
+      // but there's no setter in Model API and we default it to "No" later in this file
+      if (istringEqual("MeetDaylightIlluminanceSetpoint", shadingControlType) || istringEqual("OnIfHighGlare", shadingControlType)) {
+        LOG(Warn, "Cannot find DaylightingControl for " << modelObject.briefDescription()
+               << ", while the Shading Control Type is '" << shadingControlType << "'.");
+      }
     }
   } else {
     LOG(Error, "Cannot find ThermalZone for " << modelObject.briefDescription());
@@ -123,9 +135,6 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
   }else if (shadingMaterial){
     idfObject.setString(WindowShadingControlFields::ShadingDeviceMaterialName, shadingMaterial->name().get());
   }
-
-  std::string shadingControlType = modelObject.shadingControlType();
-  idfObject.setString(WindowShadingControlFields::ShadingControlType, shadingControlType);
 
   boost::optional<Schedule> schedule = modelObject.schedule();
   if (schedule){
