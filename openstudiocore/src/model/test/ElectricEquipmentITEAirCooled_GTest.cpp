@@ -264,5 +264,27 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_inletportlist) {
 
 }
 
-// life cycle cost
+// test ITE approach temperature schedule
+TEST_F(ModelFixture, ElectricEquipmentITEAirCooledDefinition_approachtemperatureschedule) {
+  Model model;
 
+  ElectricEquipmentITEAirCooledDefinition definition(model);
+  ElectricEquipmentITEAirCooled electricEquipmentITEAirCooled(definition);
+  ScheduleCompact supplydeltasch(model, 5.0);
+  ScheduleCompact returndeltasch(model, -5.0);
+
+  EXPECT_EQ(7u, model.numObjects());
+
+  EXPECT_TRUE(definition.setAirFlowCalculationMethod("FlowControlWithApproachTemperatures"));
+  EXPECT_EQ("FlowControlWithApproachTemperatures", definition.airFlowCalculationMethod());
+  EXPECT_TRUE(definition.setSupplyTemperatureDifferenceSchedule(supplydeltasch));
+  EXPECT_TRUE(definition.setReturnTemperatureDifferenceSchedule(returndeltasch));
+
+  ASSERT_TRUE(definition.supplyTemperatureDifferenceSchedule());
+  EXPECT_EQ(supplydeltasch, definition.supplyTemperatureDifferenceSchedule().get());
+  ASSERT_TRUE(definition.returnTemperatureDifferenceSchedule());
+  EXPECT_EQ(returndeltasch, definition.returnTemperatureDifferenceSchedule().get());
+
+  // model.save(toPath("./ITE8.osm"), true);
+
+}

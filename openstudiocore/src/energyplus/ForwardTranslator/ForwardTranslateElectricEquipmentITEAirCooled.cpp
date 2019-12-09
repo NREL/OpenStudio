@@ -81,7 +81,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
 
   ElectricEquipmentITEAirCooledDefinition definition = modelObject.electricEquipmentITEAirCooledDefinition();
 
-  // Pre-process: 
+  // Pre-process:
   // (1) assign to zone; (2) connect the supply air node (3) apply contraints
   // ITE object that is assigned to space type in OS has been switched to separate spaces in ForwardTranslator
   boost::optional<Space> space = modelObject.space();
@@ -127,14 +127,20 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
 
     // Contraint #2:The FlowControlWithApproachTemperatures only applies to ITE zones with single duct VAV terminal unit.
     if (istringEqual(thisMethod, "FlowControlWithApproachTemperatures")) {
+      bool isTerminalOk = false;
       if (thermalZone) {
         auto terminal = thermalZone->airLoopHVACTerminal();
         if (terminal) {
-          if (!terminal->optionalCast<AirTerminalSingleDuctVAVReheat>() && !terminal->optionalCast<AirTerminalSingleDuctVAVNoReheat>()) {
-            LOG(Warn, modelObject.briefDescription() << " The FlowControlWithApproachTemperatures only applies to ITE zones with single duct VAV terminal unit.");
-            return boost::none;
+          if (terminal->optionalCast<AirTerminalSingleDuctVAVReheat>() || terminal->optionalCast<AirTerminalSingleDuctVAVNoReheat>()) {
+            isTerminalOk = true;
           }
         }
+      }
+
+      if (!isTerminalOk) {
+        LOG(Error, modelObject.briefDescription() << " will not be translated. "
+                   " The FlowControlWithApproachTemperatures only applies to ITE zones with single duct VAV terminal unit.");
+        return boost::none;
       }
     }
 
@@ -148,13 +154,13 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
   idfObject.setString(ElectricEquipment_ITE_AirCooledFields::Name, modelObject.name().get());
 
   idfObject.setString(ElectricEquipment_ITE_AirCooledFields::AirFlowCalculationMethod, definition.airFlowCalculationMethod());
-  
+
   idfObject.setString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputCalculationMethod, definition.designPowerInputCalculationMethod());
 
   // To match other equipment objects, the Number of Units field was dropped. Users can just use multiplier for both Watts/Area and Watts/Unit definitions
   // this is to get rid of the warning message for leaving the Number of Units field blank.
   idfObject.setDouble(ElectricEquipment_ITE_AirCooledFields::NumberofUnits, 1.0);
-  
+
   double multiplier = modelObject.multiplier();
 
   OptionalDouble d = definition.wattsperUnit();
@@ -171,7 +177,7 @@ boost::optional<IdfObject> ForwardTranslator::translateElectricEquipmentITEAirCo
   if (designPowerInputSchedule){
     idfObject.setString(ElectricEquipment_ITE_AirCooledFields::DesignPowerInputScheduleName, designPowerInputSchedule->name().get());
   }
-  
+
   boost::optional<Schedule> cPULoadingSchedule = modelObject.cPULoadingSchedule();
   if (cPULoadingSchedule){
     idfObject.setString(ElectricEquipment_ITE_AirCooledFields::CPULoadingScheduleName, cPULoadingSchedule->name().get());
