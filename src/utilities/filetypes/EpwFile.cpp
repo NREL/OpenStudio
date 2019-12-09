@@ -1641,7 +1641,7 @@ namespace openstudio{
 
   Date EpwDataPoint::date() const
   {
-    return Date(MonthOfYear(m_month), m_day); // , m_year);
+    return Date(MonthOfYear(m_month), m_day, m_year);
   }
 
   void EpwDataPoint::setDate(Date date)
