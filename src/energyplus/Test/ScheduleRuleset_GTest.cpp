@@ -44,12 +44,15 @@
 #include "../../model/ScheduleWeek_Impl.hpp"
 #include "../../model/ScheduleYear.hpp"
 #include "../../model/ScheduleYear_Impl.hpp"
+#include "../../model/ScheduleDay.hpp"
+#include "../../model/ScheduleDay_Impl.hpp"
 #include "../../model/YearDescription.hpp"
 #include "../../model/YearDescription_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/Schedule_Year_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Week_Compact_FieldEnums.hxx>
+#include <utilities/idd/Schedule_Week_Daily_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <sstream>
@@ -268,4 +271,39 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug2322)
   //std::stringstream ss;
   //ss << workspace;
   //std::string s = ss.str();
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243)
+{
+  Model model;
+  ScheduleRuleset scheduleRuleset(model);
+
+  ASSERT_EQ(1u, model.getModelObjects<ScheduleRuleset>().size());
+  ASSERT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
+
+  // annual weekday rule
+  ScheduleRule rule1(scheduleRuleset);
+  rule1.setApplySunday(true);
+  rule1.setApplyMonday(true);
+  rule1.setApplyTuesday(true);
+  rule1.setApplyWednesday(true);
+  rule1.setApplyThursday(true);
+  rule1.setApplyFriday(true);
+  rule1.setApplySaturday(true);
+  rule1.setStartDate(Date(1,1));
+  rule1.setEndDate(Date(12,31));
+
+  ASSERT_EQ(1u, model.getModelObjects<ScheduleRule>().size());
+  ASSERT_EQ(2u, model.getModelObjects<ScheduleDay>().size());
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Year).size());
+  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily).size());
+  EXPECT_EQ("Schedule Day 1", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
+  EXPECT_EQ("Schedule Day 1", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
+  EXPECT_EQ("Schedule Day 1", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
+  EXPECT_EQ("Schedule Day 1", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
+  EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
 }
