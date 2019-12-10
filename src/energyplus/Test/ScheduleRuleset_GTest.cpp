@@ -301,9 +301,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243)
 
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Year).size());
   ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily).size());
-  EXPECT_EQ("Schedule Day 1", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
-  EXPECT_EQ("Schedule Day 1", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
-  EXPECT_EQ("Schedule Day 1", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
-  EXPECT_EQ("Schedule Day 1", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
+  EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
+  EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
+  EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
+  EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
   EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
 }
