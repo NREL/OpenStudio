@@ -453,8 +453,10 @@ std::vector<std::string> PeopleDefinition::meanRadiantTemperatureCalculationType
 }
 
 std::vector<std::string> PeopleDefinition::thermalComfortModelTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_People_DefinitionExtensibleFields::ThermalComfortModelType);
+  IddObject obj = IddFactory::instance().getObject(iddObjectType()).get();
+  // Return IddKeyNames in extensible portion
+  return getIddKeyNames(obj,
+                        obj.numFields() + OS_People_DefinitionExtensibleFields::ThermalComfortModelType);
 }
 
 std::string PeopleDefinition::numberofPeopleCalculationMethod() const {

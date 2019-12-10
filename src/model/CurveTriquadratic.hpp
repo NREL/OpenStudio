@@ -76,6 +76,7 @@ class MODEL_API CurveTriquadratic : public Curve {
   /** @name Getters */
   //@{
 
+  // TODO: Instead of having optionals, we could just default them to zero...
   boost::optional<double> coefficient1Constant() const;
 
   boost::optional<double> coefficient2xPOW2() const;

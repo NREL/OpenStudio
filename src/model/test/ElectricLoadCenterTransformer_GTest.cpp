@@ -169,13 +169,13 @@ TEST_F(ModelFixture, ElectricLoadCenterTransformer_Extensible)
   EXPECT_TRUE(elct.getMeter(1));
   EXPECT_TRUE(elct.getMeter(2));
   EXPECT_EQ(meter3.nameString(), elct.getMeter(2).get());
-  //remove 2nd
-  EXPECT_TRUE(elct.eraseMeter(2));
+  //remove 2nd (0-indexed)
+  EXPECT_TRUE(elct.eraseMeter(1));
   EXPECT_EQ(2u, elct.meters().size());
   EXPECT_TRUE(elct.getMeter(0));
   EXPECT_TRUE(elct.getMeter(1));
   EXPECT_FALSE(elct.getMeter(2));
-  //meter3 is now in the second slot
+  //meter3 is now in the second slot (0-indexed)
   EXPECT_EQ(meter3.nameString(), elct.getMeter(1).get());
   //remove all
   elct.eraseMeters();
