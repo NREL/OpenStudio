@@ -2314,7 +2314,7 @@ OS:Material,
        \required-field
        \units J/kg-K
        \ip-units Btu/lb-R
-       \minimum> 0
+       \minimum 100
   N5, \field Thermal Absorptance
        \type real
        \minimum> 0
