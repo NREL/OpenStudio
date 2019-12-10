@@ -214,6 +214,18 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
           OS_ASSERT(false);
       }
 
+      // JJR: the first week rule has non default day schedule for
+      // jan1 set on all days of week prior to jan1 start day of week
+      if(date == jan1){
+        sundaySchedule = daySchedule;
+        mondaySchedule = daySchedule;
+        tuesdaySchedule = daySchedule;
+        wednesdaySchedule = daySchedule;
+        thursdaySchedule = daySchedule;
+        fridaySchedule = daySchedule;
+        saturdaySchedule = daySchedule;
+      }
+
       // update week schedules each saturday
       if((date.dayOfWeek().value() == DayOfWeek::Saturday)){
 
