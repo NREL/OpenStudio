@@ -281,7 +281,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243)
   ASSERT_EQ(1u, model.getModelObjects<ScheduleRuleset>().size());
   ASSERT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
 
-  // annual weekday rule
   ScheduleRule rule1(scheduleRuleset);
   rule1.setApplySunday(true);
   rule1.setApplyMonday(true);
@@ -300,7 +299,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243)
   Workspace workspace = ft.translateModel(model);
 
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Year).size());
-  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily).size());
+  EXPECT_EQ("Schedule Ruleset 1 Week Rule - Jan1-Dec31", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].nameString());
   EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
   EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
   EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
