@@ -852,8 +852,14 @@ DATA PERIODS,1,1,Data,Sunday, 1/ 1,1/1
 
   _epwFile = EpwFile::loadFromString(epwFileStringWithHolidaysDaylightSavings);
   ASSERT_TRUE(_epwFile);
-  EXPECT_FALSE(_epwFile->daylightSavingStartDate());
-  EXPECT_FALSE(_epwFile->daylightSavingEndDate());
+  // Daylight: 4/29,10/28
+  ASSERT_TRUE(_epwFile->daylightSavingStartDate());
+  Date expectedStartDate(openstudio::monthOfYear(4), 29);
+  EXPECT_EQ(expectedStartDate, _epwFile->daylightSavingStartDate().get());
+  ASSERT_TRUE(_epwFile->daylightSavingEndDate());
+  Date expectedEndDate(openstudio::monthOfYear(10), 28);
+  EXPECT_EQ(expectedEndDate, _epwFile->daylightSavingEndDate().get());
+
   holidays = _epwFile->holidays();
   EXPECT_FALSE(holidays.empty());
   EXPECT_EQ(9u, holidays.size());
