@@ -54,119 +54,33 @@ class MODEL_API OpaqueMaterial : public Material {
   /** @name Getters */
   //@{
 
-  /** Thermal conductivity of the Material in W/m*K. Throws openstudio::Exception if unavailable.
-   *
-   *  Attribute name: 'thermalConductivity' */
-  double thermalConductivity() const;
-
   /** Thermal conductance of the Material in W/m^2*K. Throws openstudio::Exception if unavailable.
    *
    *  Attribute name: 'thermalConductance' */
   double thermalConductance() const;
-
-  /** Thermal resistivity of the Material in m*K/W. Throws openstudio::Exception if unavailable.
-   *
-   *  Attribute name: 'thermalResistivity'. */
-  double thermalResistivity() const;
 
   /** Thermal resistance of the Material in m^2*K/W. Throws openstudio::Exception if unavailable.
    *
    *  Attribute name: 'thermalResistance'. */
   double thermalResistance() const;
 
-  /** Thermal absorptance of the Material (dimensionless fraction).
-   *
-   *  Attribute name: 'thermalAbsorptance' */
-  double thermalAbsorptance() const;
-
-  /** Thermal reflectance of the Material (dimensionless fraction).
-   *
-   *  Attribute name: 'thermalReflectance' */
-  boost::optional<double> thermalReflectance() const;
-
-  /** Solar absorptance of the Material (dimensionless fraction).
-   *
-   *  Attribute name: 'solarAbsorptance' */
-  double solarAbsorptance() const;
-
-  /** Solar reflectance of the Material (dimensionless fraction).
-   *
-   *  Attribute name: 'solarReflectance' */
-  boost::optional<double> solarReflectance() const;
-
-  /** Visible absorptance of the Material (dimensionless fraction).
-   *
-   *  Attribute name: 'visibleAbsorptance' */
-  double visibleAbsorptance() const;
-
-  /** Visible reflectance of the Material (dimensionless fraction).
-   *
-   *  Attribute name: 'visibleReflectance' */
-  boost::optional<double> visibleReflectance() const;
-
   //@}
   /** @name Setters */
   //@{
-
-  /** Set the thermal conductivity (W/m*K).
-   *
-   *  Attribute name: 'thermalConductivity' */
-  bool setThermalConductivity(double value);
 
   /** Set the thermal conductance (W/m^2*K).
    *
    *  Attribute name: 'thermalConductance' */
   bool setThermalConductance(double value);
 
-  /** Set the thermal resistivity (m*K/W).
-   *
-   *  Attribute name: 'thermalResistivity' */
-  bool setThermalResistivity(double value);
-
   /** Set the thermal resistance (m^2*K/W).
    *
    *  Attribute name: 'thermalResistance' */
   bool setThermalResistance(double value);
 
-  /** Set the thermal absorptance (dimensionless fraction).
-   *
-   *  Attribute name: 'thermalAbsorptance' */
-  bool setThermalAbsorptance(double value);
-
-  /** Set the thermal reflectance (dimensionless fraction).
-   *
-   *  Attribute name: 'thermalReflectance' */
-  bool setThermalReflectance(boost::optional<double> value);
-
-  /** Set the solar absorptance (dimensionless fraction).
-   *
-   *  Attribute name: 'solarAbsorptance' */
-  bool setSolarAbsorptance(boost::optional<double> value);
-
-  /** Set the solar reflectance (dimensionless fraction).
-   *
-   *  Attribute name: 'solarReflectance' */
-  bool setSolarReflectance(boost::optional<double> value);
-
-  /** Set the visible absorptance (dimensionless fraction).
-   *
-   *  Attribute name: 'visibleAbsorptance' */
-  bool setVisibleAbsorptance(boost::optional<double> value);
-
-  /** Set the visible reflectance (dimensionless fraction).
-   *
-   *  Attribute name: 'visibleReflectance' */
-  bool setVisibleReflectance(boost::optional<double> value);
-
   //@}
   /** @name Queries */
   //@{
-
-  /** Energy it takes to raise the temperature of this material 1 K (J/m^2*K). Equal to
-   *  specificHeat() * density() * thickness().
-   *
-   *  Attribute name: 'heatCapacity' */
-  boost::optional<double> heatCapacity() const;
 
   //@}
  protected:
