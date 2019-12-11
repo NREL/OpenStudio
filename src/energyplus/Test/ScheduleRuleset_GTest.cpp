@@ -44,12 +44,14 @@
 #include "../../model/ScheduleWeek_Impl.hpp"
 #include "../../model/ScheduleYear.hpp"
 #include "../../model/ScheduleYear_Impl.hpp"
+#include "../../model/ScheduleDay.hpp"
 #include "../../model/YearDescription.hpp"
 #include "../../model/YearDescription_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/Schedule_Year_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Week_Compact_FieldEnums.hxx>
+#include <utilities/idd/Schedule_Week_Daily_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <sstream>
@@ -268,4 +270,88 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug2322)
   //std::stringstream ss;
   //ss << workspace;
   //std::string s = ss.str();
+}
+
+TEST_F(EnergyPlusFixture,ForwardTranslator_SpecialDays)
+{
+
+  Model model;
+  model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
+  EXPECT_TRUE(yd.setDayofWeekforStartDay("Sunday"));
+
+  ScheduleRuleset scheduleRuleset(model);
+  scheduleRuleset.setName("Schedule Ruleset");
+  ScheduleDay defaultDaySchedule = scheduleRuleset.defaultDaySchedule();
+  defaultDaySchedule.setName("Default Day Schedule");
+
+  // Add Special Days schedules
+  scheduleRuleset.setSummerDesignDaySchedule(defaultDaySchedule);
+  ScheduleDay summerDesignDaySchedule = scheduleRuleset.summerDesignDaySchedule();
+  summerDesignDaySchedule.setName("Summer Design Day Schedule");
+
+  scheduleRuleset.setWinterDesignDaySchedule(defaultDaySchedule);
+  ScheduleDay winterDesignDaySchedule = scheduleRuleset.winterDesignDaySchedule();
+  winterDesignDaySchedule.setName("Winter Design Day Schedule");
+
+  scheduleRuleset.setHolidaySchedule(defaultDaySchedule);
+  ScheduleDay holidaySchedule = scheduleRuleset.holidaySchedule();
+  holidaySchedule.setName("Holiday Schedule");
+
+
+  // annual weekday rule
+  ScheduleRule weekdayRule(scheduleRuleset);
+  weekdayRule.setName("All Year Weekdays Rule");
+  ScheduleDay weekdaySchedule = weekdayRule.daySchedule();
+  weekdaySchedule.setName("Weekdays Schedule");
+  weekdayRule.setApplySunday(false);
+  weekdayRule.setApplyMonday(true);
+  weekdayRule.setApplyTuesday(true);
+  weekdayRule.setApplyWednesday(true);
+  weekdayRule.setApplyThursday(true);
+  weekdayRule.setApplyFriday(true);
+  weekdayRule.setApplySaturday(false);
+
+  // annual weekend rule
+  ScheduleRule weekendRule(scheduleRuleset);
+  weekendRule.setName("All Year Weekends Rule");
+  ScheduleDay weekendSchedule = weekendRule.daySchedule();
+  weekendSchedule.setName("Weekends Schedule");
+  weekendRule.setApplyMonday(false);
+  weekendRule.setApplyTuesday(false);
+  weekendRule.setApplyWednesday(false);
+  weekendRule.setApplyThursday(false);
+  weekendRule.setApplyFriday(false);
+  weekendRule.setApplySaturday(true);
+  weekendRule.setApplySunday(true);
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
+  ASSERT_EQ(1u, scheduleYears.size());
+  std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
+  ASSERT_EQ(1u, extensibleGroups.size());
+  std::vector<WorkspaceObject> scheduleWeekDailys = workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily);
+  ASSERT_EQ(1u, scheduleWeekDailys.size());
+  WorkspaceObject scheduleWeekDaily(scheduleWeekDailys[0]);
+
+  // Weekdays
+  EXPECT_EQ(weekdaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
+  EXPECT_EQ(weekdaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
+  EXPECT_EQ(weekdaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
+  EXPECT_EQ(weekdaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
+  EXPECT_EQ(weekdaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
+
+  // Weekends
+  EXPECT_EQ(weekendSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
+  EXPECT_EQ(weekendSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
+
+  // Special Days
+  EXPECT_EQ(holidaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::HolidaySchedule_DayName).get());
+  EXPECT_EQ(summerDesignDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SummerDesignDaySchedule_DayName).get());
+  EXPECT_EQ(winterDesignDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::WinterDesignDaySchedule_DayName).get());
+  // Not Exposed yet
+  EXPECT_EQ(defaultDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay1Schedule_DayName).get());
+  EXPECT_EQ(defaultDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::CustomDay2Schedule_DayName).get());
+
 }
