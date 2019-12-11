@@ -85,16 +85,16 @@ class MODEL_API ScheduleRule : public ParentObject {
   bool applyMonday() const;
 
   bool applyTuesday() const;
- 
+
   bool applyWednesday() const;
 
   bool applyThursday() const;
- 
+
   bool applyFriday() const;
 
   bool applySaturday() const;
 
-  //bool applyHoliday() const;
+  // Note: there is no applyHoliday, instead that's implemented at the ScheduleRule's level
 
   std::string dateSpecificationType() const;
 
@@ -141,11 +141,7 @@ class MODEL_API ScheduleRule : public ParentObject {
 
   void setApplySaturdayNoFail(bool applySaturday);
 
-  //bool setApplyHoliday(bool applyHoliday);
-
-  //void setApplyHolidayNoFail(bool applyHoliday);
-
-  /// Sets the start date of the date range, will delete any specific dates specified.
+/// Sets the start date of the date range, will delete any specific dates specified.
   /// A start date > end date indicates that the range wraps around the year.
   bool setStartDate(const openstudio::Date& date);
 

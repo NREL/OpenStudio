@@ -199,13 +199,6 @@ namespace detail {
     OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
-/*
-  bool ScheduleRule_Impl::applyHoliday() const {
-    boost::optional<std::string> value = getString(OS_Schedule_RuleFields::ApplyHoliday,true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Yes");
-  }
-*/
 
   std::string ScheduleRule_Impl::dateSpecificationType() const {
     boost::optional<std::string> value = getString(OS_Schedule_RuleFields::DateSpecificationType,true);
@@ -346,23 +339,6 @@ namespace detail {
     OS_ASSERT(result);
     return result;
   }
-/*
-  bool ScheduleRule_Impl::setApplyHoliday(bool applyHoliday) {
-    bool result = false;
-    if (applyHoliday) {
-      result = setString(OS_Schedule_RuleFields::ApplyHoliday, "Yes");
-    } else {
-      result = setString(OS_Schedule_RuleFields::ApplyHoliday, "No");
-    }
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool ScheduleRule_Impl::setDateSpecificationType(std::string dateSpecificationType) {
-    bool result = setString(OS_Schedule_RuleFields::DateSpecificationType, dateSpecificationType);
-    return result;
-  }
-  */
 
   bool ScheduleRule_Impl::setStartDate(const openstudio::Date& date) {
     bool result = setString(OS_Schedule_RuleFields::DateSpecificationType, "DateRange");
@@ -689,11 +665,6 @@ bool ScheduleRule::applyFriday() const {
 bool ScheduleRule::applySaturday() const {
   return getImpl<detail::ScheduleRule_Impl>()->applySaturday();
 }
-/*
-bool ScheduleRule::applyHoliday() const {
-  return getImpl<detail::ScheduleRule_Impl>()->applyHoliday();
-}
-*/
 
 boost::optional<openstudio::Date> ScheduleRule::startDate() const
 {
@@ -781,25 +752,13 @@ void ScheduleRule::setApplySaturdayNoFail(bool applySaturday) {
   OS_ASSERT(result);
 }
 
-/*
-bool ScheduleRule::setApplyHoliday(bool applyHoliday) {
-  return getImpl<detail::ScheduleRule_Impl>()->setApplyHoliday(applyHoliday);
-}
-
-void ScheduleRule::setApplyHolidayNoFail(bool applyHoliday) {
-  bool result = getImpl<detail::ScheduleRule_Impl>()->setApplyHoliday(applyHoliday);
-}
-*/
-
 bool ScheduleRule::setStartDate(const openstudio::Date& date) {
   return getImpl<detail::ScheduleRule_Impl>()->setStartDate(date);
 }
 
-
 bool ScheduleRule::setEndDate(const openstudio::Date& date) {
   return getImpl<detail::ScheduleRule_Impl>()->setEndDate(date);
 }
-
 
 bool ScheduleRule::addSpecificDate(const openstudio::Date& date) {
   return getImpl<detail::ScheduleRule_Impl>()->addSpecificDate(date);
