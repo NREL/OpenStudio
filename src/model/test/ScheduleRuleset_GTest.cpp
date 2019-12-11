@@ -67,8 +67,10 @@ TEST_F(ModelFixture, ScheduleRuleset)
   ASSERT_NO_THROW(schedule.defaultDaySchedule());
   ASSERT_NO_THROW(schedule.summerDesignDaySchedule());
   ASSERT_NO_THROW(schedule.winterDesignDaySchedule());
+  ASSERT_NO_THROW(schedule.holidaySchedule());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
 
   // one default schedule created
   EXPECT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
@@ -809,7 +811,7 @@ TEST_F(ModelFixture, ScheduleRuleset_InsertObjects)
   EXPECT_FALSE(addedObjects.empty());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_DesignDays)
+TEST_F(ModelFixture, ScheduleRuleset_SpecialDays)
 {
   Model model;
   ScheduleTypeLimits typeLimits(model);
@@ -821,6 +823,7 @@ TEST_F(ModelFixture, ScheduleRuleset_DesignDays)
 
   EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleDay>().size());
 
+  // For each of these, the setter clones the original schedule
   ScheduleDay winterSchedule(model);
   schedule.setWinterDesignDaySchedule(winterSchedule);
   EXPECT_NE(winterSchedule.handle(), schedule.winterDesignDaySchedule().handle());
@@ -829,11 +832,16 @@ TEST_F(ModelFixture, ScheduleRuleset_DesignDays)
   schedule.setSummerDesignDaySchedule(summerSchedule);
   EXPECT_NE(summerSchedule.handle(), schedule.summerDesignDaySchedule().handle());
 
-  EXPECT_EQ(5u, model.getConcreteModelObjects<ScheduleDay>().size());
+  ScheduleDay holidaySchedule(model);
+  schedule.setHolidaySchedule(holidaySchedule);
+  EXPECT_NE(holidaySchedule.handle(), schedule.holidaySchedule().handle());
+
+  // DefaultDay, the 3 schedules we created, and the 3 clones made by setters = 7
+  EXPECT_EQ(7u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   schedule.remove();
 
-  EXPECT_EQ(2u, model.getConcreteModelObjects<ScheduleDay>().size());
+  EXPECT_EQ(3u, model.getConcreteModelObjects<ScheduleDay>().size());
   EXPECT_FALSE(winterSchedule.handle().isNull());
   EXPECT_FALSE(summerSchedule.handle().isNull());
 }
