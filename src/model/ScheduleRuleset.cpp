@@ -93,6 +93,12 @@ namespace detail {
       OS_ASSERT(test);
     }
 
+    if (!isHolidayScheduleDefaulted()) {
+      ModelObject newHolidaySchedule = holidaySchedule().clone(model);
+      test = newScheduleRuleset.setPointer(OS_Schedule_RulesetFields::HolidayScheduleName,newHolidaySchedule.handle());
+      OS_ASSERT(test);
+    }
+
     for (ScheduleRule scheduleRule : scheduleRules()) {
       ModelObject newScheduleRule = scheduleRule.clone(model);
       test = newScheduleRule.setParent(newScheduleRuleset);
@@ -111,6 +117,9 @@ namespace detail {
     }
     if (!isWinterDesignDayScheduleDefaulted()) {
       daySchedules.push_back(winterDesignDaySchedule());
+    }
+    if (!isHolidayScheduleDefaulted()) {
+      daySchedules.push_back(holidaySchedule());
     }
     auto it = result.begin();
     while (it != result.end()) {
@@ -141,6 +150,10 @@ namespace detail {
 
     if (!this->isWinterDesignDayScheduleDefaulted()){
       result.push_back(this->winterDesignDaySchedule());
+    }
+
+    if (!this->isHolidayScheduleDefaulted()){
+      result.push_back(this->holidaySchedule());
     }
 
     for (ScheduleRule scheduleRule : this->scheduleRules()){
@@ -189,6 +202,10 @@ namespace detail {
         result = winterDesignDaySchedule().setScheduleTypeLimits(scheduleTypeLimits);
         OS_ASSERT(result);
       }
+      if (!isHolidayScheduleDefaulted()) {
+        result = holidaySchedule().setScheduleTypeLimits(scheduleTypeLimits);
+        OS_ASSERT(result);
+      }
       ScheduleRuleVector rules = scheduleRules();
       for (const ScheduleRule& rule : rules) {
         result = rule.daySchedule().setScheduleTypeLimits(scheduleTypeLimits);
@@ -211,6 +228,10 @@ namespace detail {
       }
       if (!isWinterDesignDayScheduleDefaulted()) {
         result = winterDesignDaySchedule().resetScheduleTypeLimits();
+        OS_ASSERT(result);
+      }
+      if (!isHolidayScheduleDefaulted()) {
+        result = holidaySchedule().resetScheduleTypeLimits();
         OS_ASSERT(result);
       }
       ScheduleRuleVector rules = scheduleRules();
@@ -258,6 +279,20 @@ namespace detail {
   bool ScheduleRuleset_Impl::isWinterDesignDayScheduleDefaulted() const
   {
     return this->isEmpty(OS_Schedule_RulesetFields::WinterDesignDayScheduleName);
+  }
+
+  ScheduleDay ScheduleRuleset_Impl::holidaySchedule() const
+  {
+    OptionalScheduleDay result = getObject<ScheduleRuleset>().getModelObjectTarget<ScheduleDay>(OS_Schedule_RulesetFields::HolidayScheduleName);
+    if (result){
+      return *result;
+    }
+    return this->defaultDaySchedule();
+  }
+
+  bool ScheduleRuleset_Impl::isHolidayScheduleDefaulted() const
+  {
+    return this->isEmpty(OS_Schedule_RulesetFields::HolidayScheduleName);
   }
 
   bool ScheduleRuleset_Impl::setSummerDesignDaySchedule(const ScheduleDay& schedule)
@@ -331,6 +366,43 @@ namespace detail {
       winterDesignDaySchedule.remove();
     }
     bool test = this->setString(OS_Schedule_RulesetFields::WinterDesignDayScheduleName, "");
+    OS_ASSERT(test);
+  }
+
+  bool ScheduleRuleset_Impl::setHolidaySchedule(const ScheduleDay& schedule)
+  {
+    if (OptionalScheduleTypeLimits candidateLimits = schedule.scheduleTypeLimits()) {
+      if (OptionalScheduleTypeLimits parentLimits = scheduleTypeLimits()) {
+        if (!isCompatible(*parentLimits,*candidateLimits)) {
+          return false;
+        }
+      }
+      else {
+        return false;
+      }
+    }
+
+    if (!this->isHolidayScheduleDefaulted()){
+      ScheduleDay holidaySchedule = this->holidaySchedule();
+      holidaySchedule.remove();
+    }
+    ModelObject clone = schedule.clone();
+    bool result = setPointer(OS_Schedule_RulesetFields::HolidayScheduleName, clone.handle());
+    OS_ASSERT(result);
+    if (OptionalScheduleTypeLimits limits = scheduleTypeLimits()) {
+      result = holidaySchedule().setScheduleTypeLimits(*limits);
+      OS_ASSERT(result);
+    }
+    return result;
+  }
+
+  void ScheduleRuleset_Impl::resetHolidaySchedule()
+  {
+    if (!this->isHolidayScheduleDefaulted()){
+      ScheduleDay holidaySchedule = this->holidaySchedule();
+      holidaySchedule.remove();
+    }
+    bool test = this->setString(OS_Schedule_RulesetFields::HolidayScheduleName, "");
     OS_ASSERT(test);
   }
 
@@ -546,6 +618,16 @@ bool ScheduleRuleset::isWinterDesignDayScheduleDefaulted() const
   return getImpl<detail::ScheduleRuleset_Impl>()->isWinterDesignDayScheduleDefaulted();
 }
 
+ScheduleDay ScheduleRuleset::holidaySchedule() const
+{
+  return getImpl<detail::ScheduleRuleset_Impl>()->holidaySchedule();
+}
+
+bool ScheduleRuleset::isHolidayScheduleDefaulted() const
+{
+  return getImpl<detail::ScheduleRuleset_Impl>()->isHolidayScheduleDefaulted();
+}
+
 bool ScheduleRuleset::setSummerDesignDaySchedule(const ScheduleDay& schedule)
 {
   return getImpl<detail::ScheduleRuleset_Impl>()->setSummerDesignDaySchedule(schedule);
@@ -564,6 +646,16 @@ bool ScheduleRuleset::setWinterDesignDaySchedule(const ScheduleDay& schedule)
 void ScheduleRuleset::resetWinterDesignDaySchedule()
 {
   return getImpl<detail::ScheduleRuleset_Impl>()->resetWinterDesignDaySchedule();
+}
+
+bool ScheduleRuleset::setHolidaySchedule(const ScheduleDay& schedule)
+{
+  return getImpl<detail::ScheduleRuleset_Impl>()->setHolidaySchedule(schedule);
+}
+
+void ScheduleRuleset::resetHolidaySchedule()
+{
+  return getImpl<detail::ScheduleRuleset_Impl>()->resetHolidaySchedule();
 }
 
 std::vector<ScheduleRule> ScheduleRuleset::scheduleRules() const
