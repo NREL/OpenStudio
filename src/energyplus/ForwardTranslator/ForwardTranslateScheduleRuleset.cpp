@@ -148,6 +148,8 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
     ScheduleDay defaultDaySchedule = modelObject.defaultDaySchedule();
     ScheduleDay summerDesignDaySchedule = modelObject.summerDesignDaySchedule();
     ScheduleDay winterDesignDaySchedule = modelObject.winterDesignDaySchedule();
+    // ScheduleRuleset is the one carrying the Holiday Schedule
+    ScheduleDay holidayDaySchedule = modelObject.holidaySchedule();
 
     // initialize day of week schedules
     ScheduleDay sundaySchedule = defaultDaySchedule;
@@ -159,7 +161,6 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
     ScheduleDay saturdaySchedule = defaultDaySchedule;
 
     // these are not yet exposed
-    ScheduleDay holidayDaySchedule = defaultDaySchedule;
     ScheduleDay customDay1Schedule = defaultDaySchedule;
     ScheduleDay customDay2Schedule = defaultDaySchedule;
 
@@ -230,9 +231,11 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
         weekSchedule->thursdaySchedule = thursdaySchedule.name().get();
         weekSchedule->fridaySchedule = fridaySchedule.name().get();
         weekSchedule->saturdaySchedule = saturdaySchedule.name().get();
+        // from Schedule:Ruleset
         weekSchedule->holidayDaySchedule = holidayDaySchedule.name().get();
         weekSchedule->summerDesignDaySchedule = summerDesignDaySchedule.name().get();
         weekSchedule->winterDesignDaySchedule = winterDesignDaySchedule.name().get();
+        // Not exposed yet
         weekSchedule->customDay1Schedule = customDay1Schedule.name().get();
         weekSchedule->customDay2Schedule = customDay2Schedule.name().get();
 
@@ -396,10 +399,12 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
   ScheduleDay defaultDaySchedule = modelObject.defaultDaySchedule();
   ScheduleDay summerDesignDaySchedule = modelObject.summerDesignDaySchedule();
   ScheduleDay winterDesignDaySchedule = modelObject.winterDesignDaySchedule();
+  ScheduleDay holidayDaySchedule = modelObject.holidaySchedule();
 
   translateAndMapModelObject(defaultDaySchedule);
   translateAndMapModelObject(summerDesignDaySchedule);
   translateAndMapModelObject(winterDesignDaySchedule);
+  translateAndMapModelObject(holidayDaySchedule);
 
   // translate schedule rules, these are returned in order
   for (ScheduleRule scheduleRule : modelObject.scheduleRules()){
