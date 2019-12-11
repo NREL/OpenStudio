@@ -65,25 +65,9 @@ namespace detail {
     : OpaqueMaterial_Impl(other,model,keepHandle)
   {}
 
-  double AirGap_Impl::thickness() const {
-    return 0.0;
-  }
-
-  double AirGap_Impl::thermalConductivity() const {
-    LOG_AND_THROW("Unable to convert thermal resistance to thermal conductivity for AirGap "
-      << briefDescription() << ".");
-    return 0.0;
-  }
-
   double AirGap_Impl::thermalConductance() const {
     OS_ASSERT(thermalResistance());
     return 1.0/thermalResistance();
-  }
-
-  double AirGap_Impl::thermalResistivity() const {
-    LOG_AND_THROW("Unable to convert thermal resistance to thermal resistivity for AirGap "
-      << briefDescription() << ".");
-    return 0.0;
   }
 
   double AirGap_Impl::thermalResistance() const {
@@ -92,40 +76,6 @@ namespace detail {
       LOG_AND_THROW("Thermal resistance is not set for AirGap " << briefDescription() << ".");
     }
     return *od;
-  }
-
-  double AirGap_Impl::thermalAbsorptance() const {
-    OptionalDouble od(0.0);
-    return *od;
-  }
-
-  OptionalDouble AirGap_Impl::thermalReflectance() const {
-    OptionalDouble od(0.0);
-    return od;
-  }
-
-  double AirGap_Impl::solarAbsorptance() const {
-    OptionalDouble od(0.0);
-    return *od;
-  }
-
-  OptionalDouble AirGap_Impl::solarReflectance() const {
-    OptionalDouble od(0.0);
-    return od;
-  }
-
-  double AirGap_Impl::visibleTransmittance() const {
-    return 1.0;
-  }
-
-  double AirGap_Impl::visibleAbsorptance() const {
-    OptionalDouble od(0.0);
-    return *od;
-  }
-
-  OptionalDouble AirGap_Impl::visibleReflectance() const {
-    OptionalDouble od(0.0);
-    return od;
   }
 
   const std::vector<std::string>& AirGap_Impl::outputVariableNames() const
@@ -138,48 +88,12 @@ namespace detail {
     return AirGap::iddObjectType();
   }
 
-  bool AirGap_Impl::setThickness(double value) {
-    return false;
-  }
-
-  bool AirGap_Impl::setThermalConductivity(double value) {
-    return false;
-  }
-
   bool AirGap_Impl::setThermalConductance(double value) {
     return setThermalResistance(1.0/value);
   }
 
-  bool AirGap_Impl::setThermalResistivity(double value) {
-    return false;
-  }
-
   bool AirGap_Impl::setThermalResistance(double value) {
     return setDouble(OS_Material_AirGapFields::ThermalResistance,value);
-  }
-
-  bool AirGap_Impl::setThermalAbsorptance(double value) {
-    return false;
-  }
-
-  bool AirGap_Impl::setThermalReflectance(OptionalDouble value) {
-    return false;
-  }
-
-  bool AirGap_Impl::setSolarAbsorptance(OptionalDouble value) {
-    return false;
-  }
-
-  bool AirGap_Impl::setSolarReflectance(OptionalDouble value) {
-    return false;
-  }
-
-  bool AirGap_Impl::setVisibleAbsorptance(OptionalDouble value) {
-    return false;
-  }
-
-  bool AirGap_Impl::setVisibleReflectance(OptionalDouble value) {
-    return false;
   }
 
   bool AirGap_Impl::setThermalResistance(boost::optional<double> thermalResistance) {
@@ -219,6 +133,10 @@ AirGap::AirGap(const Model& model,
 
 IddObjectType AirGap::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Material_AirGap);
+}
+
+double AirGap::thermalConductance() const {
+  return getImpl<detail::AirGap_Impl>()->thermalConductance();
 }
 
 double AirGap::thermalResistance() const {

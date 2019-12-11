@@ -69,6 +69,18 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    /** The conductance of the material in W/m^2*K. */
+    virtual double thermalConductance() const override;
+
+    /** The resistance of the material in m^2*K/W. */
+    double thermalResistance() const override;
+
+    /** Sets the conductance of the material in W/m^2*K, if possible. */
+    virtual bool setThermalConductance(double value) override;
+
+    /** Sets the resistance of the material in m^2*K/W, if possible. */
+    virtual bool setThermalResistance(double value) override;
+
     //@}
     /** @name Getters */
     //@{
@@ -100,19 +112,13 @@ namespace detail {
     std::string roughness() const;
 
     /** Get the thickness of the material. */
-    virtual double thickness() const override;
+    double thickness() const;
 
     /** The conductivitiy of the material in W/m*K. */
-    virtual double thermalConductivity() const override;
-
-    /** The conductance of the material in W/m^2*K. */
-    virtual double thermalConductance() const override;
+    double thermalConductivity() const;
 
     /** The resistivity of the material in m*K/W. */
-    virtual double thermalResistivity() const override;
-
-    /** The resistance of the material in m^2*K/W. */
-    double thermalResistance() const override;
+    double thermalResistivity() const;
 
     /** Density of dry soil (kg/m^3). */
     double density() const;
@@ -120,23 +126,21 @@ namespace detail {
     /** Specific heat of dry soil (J/kg*K). */
     double specificHeat() const;
 
-    virtual double thermalTransmittance() const;
+    double thermalAbsorptance() const;
 
-    virtual double thermalAbsorptance() const override;
+    boost::optional<double> thermalReflectance() const;
 
-    virtual boost::optional<double> thermalReflectance() const override;
+    double solarTransmittance() const;
 
-    virtual double solarTransmittance() const;
+    double solarAbsorptance() const;
 
-    virtual double solarAbsorptance() const override;
+    boost::optional<double> solarReflectance() const;
 
-    virtual boost::optional<double> solarReflectance() const override;
+    double visibleTransmittance();
 
-    virtual double visibleTransmittance() const;
+    double visibleAbsorptance() const;
 
-    virtual double visibleAbsorptance() const override;
-
-    virtual boost::optional<double> visibleReflectance() const override;
+    boost::optional<double> visibleReflectance() const;
 
     /** Maximum moisture content of the soil layer by volume fraction. */
     double saturationVolumetricMoistureContent() const;
@@ -202,19 +206,13 @@ namespace detail {
     bool setRoughness(const std::string& value);
 
     /** Set thickness to value (m). */
-    virtual bool setThickness(double value) override;
+    bool setThickness(double value);
 
     /** Sets the conductivity of the material in W/m*K, if possible. */
-    virtual bool setThermalConductivity(double value) override;
-
-    /** Sets the conductance of the material in W/m^2*K, if possible. */
-    virtual bool setThermalConductance(double value) override;
+    bool setThermalConductivity(double value);
 
     /** Sets the resistivity of the material in m*K/W, if possible. */
-    virtual bool setThermalResistivity(double value) override;
-
-    /** Sets the resistance of the material in m^2*K/W, if possible. */
-    virtual bool setThermalResistance(double value) override;
+    bool setThermalResistivity(double value);
 
     /** Set density of dry soil (kg/m^3). */
     bool setDensity(double value);
@@ -222,23 +220,21 @@ namespace detail {
     /** Set specific heat of dry soil (J/kg*K). */
     bool setSpecificHeat(double value);
 
-    virtual bool setThermalTransmittance(double value);
+    bool setThermalAbsorptance(boost::optional<double> value);
 
-    virtual bool setThermalAbsorptance(boost::optional<double> value);
+    bool setThermalReflectance(boost::optional<double> value);
 
-    virtual bool setThermalReflectance(boost::optional<double> value) override;
+    bool setSolarTransmittance(double value);
 
-    virtual bool setSolarTransmittance(double value);
+    bool setSolarAbsorptance(boost::optional<double> value);
 
-    virtual bool setSolarAbsorptance(boost::optional<double> value) override;
+    bool setSolarReflectance(boost::optional<double> value);
 
-    virtual bool setSolarReflectance(boost::optional<double> value) override;
+    bool setVisibleTransmittance(double value);
 
-    virtual bool setVisibleTransmittance(double value);
+    bool setVisibleAbsorptance(boost::optional<double> value);
 
-    virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
-
-    virtual bool setVisibleReflectance(boost::optional<double> value) override;
+    bool setVisibleReflectance(boost::optional<double> value);
 
     /** Set the maximum moisture content of the soil layer by volume fraction. */
     bool setSaturationVolumetricMoistureContent(double value);
@@ -279,7 +275,7 @@ namespace detail {
 
     void resetSpecificHeatofDrySoil();
 
-    bool setThermalAbsorptance(double thermalAbsorptance) override;
+    bool setThermalAbsorptance(double thermalAbsorptance);
 
     void resetThermalAbsorptance();
 
@@ -311,7 +307,7 @@ namespace detail {
 
     /** Energy it takes to raise the temperature of this material 1 K (J/m^2*K). Equal to
      *  specificHeat() * density() * thickness(). */
-    virtual boost::optional<double> heatCapacity() const override;
+    boost::optional<double> heatCapacity() const;
 
     //@}
     /** @name Other */

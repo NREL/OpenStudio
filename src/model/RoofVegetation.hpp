@@ -216,6 +216,8 @@ class MODEL_API RoofVegetation : public OpaqueMaterial {
 
   bool setThermalAbsorptance(double thermalAbsorptance);
 
+  bool setThermalAbsorptance(boost::optional<double> value);
+
   void resetThermalAbsorptance();
 
   bool setSolarAbsorptance(double solarAbsorptance);
@@ -239,6 +241,16 @@ class MODEL_API RoofVegetation : public OpaqueMaterial {
   void resetInitialVolumetricMoistureContentoftheSoilLayer();
 
   void resetMoistureDiffusionCalculationMethod();
+
+  //@}
+  /** @name Queries */
+  //@{
+
+  /** Energy it takes to raise the temperature of this material 1 K (J/m^2*K). Equal to
+   *  specificHeat() * density() * thickness().
+   *
+   *  Attribute name: 'heatCapacity' */
+  boost::optional<double> heatCapacity() const;
 
   //@}
   /** @name Other */

@@ -62,14 +62,19 @@ class MODEL_API AirGap : public OpaqueMaterial {
   /** @name Getters */
   //@{
 
-  double thermalResistance() const;
+  double thermalConductance() const;
 
+  double thermalResistance() const;
 
   //@}
   /** @name Setters */
   //@{
 
+  bool setThermalConductance(double thermalConductance);
+
   bool setThermalResistance(double thermalResistance);
+
+  bool setThermalResistance(boost::optional<double> thermalResistance);
 
   // Resets the thermal resistance to the default of 0.1 m2-K/W
   void resetThermalResistance();

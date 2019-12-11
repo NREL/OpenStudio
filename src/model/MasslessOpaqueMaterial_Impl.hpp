@@ -69,35 +69,35 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    /** The conductance of the material in W/m^2*K. */
+    virtual double thermalConductance() const override;
+
+    /** The resistance of the material in m^2*K/W. */
+    virtual double thermalResistance() const override;
+
+    /** Sets the conductance of the material in W/m^2*K, if possible. */
+    virtual bool setThermalConductance(double value) override;
+
+    /** Sets the resistance of the material in m^2*K/W, if possible. */
+    virtual bool setThermalResistance(double value) override;
+
     //@}
     /** @name Getters */
     //@{
 
     std::string roughness() const;
 
-    /** The conductivitiy of the material in W/m*K. */
-    virtual double thermalConductivity() const override;
+    double thermalAbsorptance() const;
 
-    /** The conductance of the material in W/m^2*K. */
-    virtual double thermalConductance() const override;
+    boost::optional<double> thermalReflectance() const;
 
-    /** The resistivity of the material in m*K/W. */
-    virtual double thermalResistivity() const override;
+    double solarAbsorptance() const;
 
-    /** The resistance of the material in m^2*K/W. */
-    virtual double thermalResistance() const override;
+    boost::optional<double> solarReflectance() const;
 
-    virtual double thermalAbsorptance() const override;
+    double visibleAbsorptance() const;
 
-    virtual boost::optional<double> thermalReflectance() const override;
-
-    virtual double solarAbsorptance() const override;
-
-    virtual boost::optional<double> solarReflectance() const override;
-
-    virtual double visibleAbsorptance() const override;
-
-    virtual boost::optional<double> visibleReflectance() const override;
+    boost::optional<double> visibleReflectance() const;
 
     bool isThermalAbsorptanceDefaulted() const;
 
@@ -105,47 +105,25 @@ namespace detail {
 
     bool isVisibleAbsorptanceDefaulted() const;
 
-    double conductivity() const;
-
-    double density() const;
-
-    double specificHeat() const;
-
-
     //@}
     /** @name Setters */
     //@{
 
     bool setRoughness(std::string roughness);
 
-    /** Set thickness to value (m). */
-    virtual bool setThickness(double value) override;
+    bool setThermalAbsorptance(boost::optional<double> value);
 
-    /** Sets the conductivity of the material in W/m*K, if possible. */
-    virtual bool setThermalConductivity(double value) override;
+    bool setThermalReflectance(boost::optional<double> value);
 
-    /** Sets the conductance of the material in W/m^2*K, if possible. */
-    virtual bool setThermalConductance(double value) override;
+    bool setSolarAbsorptance(boost::optional<double> value);
 
-    /** Sets the resistivity of the material in m*K/W, if possible. */
-    virtual bool setThermalResistivity(double value) override;
+    bool setSolarReflectance(boost::optional<double> value);
 
-    /** Sets the resistance of the material in m^2*K/W, if possible. */
-    virtual bool setThermalResistance(double value) override;
+    bool setVisibleAbsorptance(boost::optional<double> value);
 
-    virtual bool setThermalAbsorptance(boost::optional<double> value);
+    bool setVisibleReflectance(boost::optional<double> value);
 
-    virtual bool setThermalReflectance(boost::optional<double> value) override;
-
-    virtual bool setSolarAbsorptance(boost::optional<double> value) override;
-
-    virtual bool setSolarReflectance(boost::optional<double> value) override;
-
-    virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
-
-    virtual bool setVisibleReflectance(boost::optional<double> value) override;
-
-    bool setThermalAbsorptance(double thermalAbsorptance) override;
+    bool setThermalAbsorptance(double thermalAbsorptance);
 
     void resetThermalAbsorptance();
 
@@ -156,13 +134,6 @@ namespace detail {
     bool setVisibleAbsorptance(double visibleAbsorptance);
 
     void resetVisibleAbsorptance();
-
-    bool setConductivity(double conductivity);
-
-    bool setDensity(double density);
-
-    bool setSpecificHeat(double specificHeat);
-
 
     //@}
     /** @name Other */

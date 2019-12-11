@@ -67,6 +67,8 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
 
   std::string roughness() const;
 
+  double thermalConductance() const;
+
   double thermalResistance() const;
 
   boost::optional<double> thermalAbsorptance() const;
@@ -81,20 +83,27 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
 
   bool isVisibleAbsorptanceDefaulted() const;
 
-  double conductivity() const;
-
-  double density() const;
-
-  double specificHeat() const;
-
-
   //@}
   /** @name Setters */
   //@{
 
   bool setRoughness(std::string roughness);
 
+  bool setThermalConductance(double thermalConductance);
+
   bool setThermalResistance(double thermalResistance);
+
+  bool setThermalAbsorptance(boost::optional<double> value);
+
+  bool setThermalReflectance(boost::optional<double> value);
+
+  bool setSolarAbsorptance(boost::optional<double> value);
+
+  bool setSolarReflectance(boost::optional<double> value);
+
+  bool setVisibleAbsorptance(boost::optional<double> value);
+
+  bool setVisibleReflectance(boost::optional<double> value);
 
   bool setThermalAbsorptance(double thermalAbsorptance);
 
@@ -107,13 +116,6 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
   bool setVisibleAbsorptance(double visibleAbsorptance);
 
   void resetVisibleAbsorptance();
-
-  bool setConductivity(double conductivity);
-
-  bool setDensity(double density);
-
-  bool setSpecificHeat(double specificHeat);
-
 
   //@}
   /** @name Other */

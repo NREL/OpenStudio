@@ -73,69 +73,27 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    double thermalResistance() const override;
-
-    virtual double thickness() const override;
-
-    /** The conductivitiy of the material in W/m*K. Always throws because no real thickness, which
-     *  is needed for conversion. */
-    virtual double thermalConductivity() const override;
-
     /** The conductance of the material in W/m^2*K. Always throws because no real thickness, which
      *  is needed for conversion. */
     virtual double thermalConductance() const override;
 
-    /** The resistivity of the material in m*K/W. Always throws because no real thickness, which
-     *  is needed for conversion. */
-    virtual double thermalResistivity() const override;
-
-    virtual double thermalAbsorptance() const override;
-
-    virtual boost::optional<double> thermalReflectance() const override;
-
-    virtual double solarAbsorptance() const override;
-
-    virtual boost::optional<double> solarReflectance() const override;
-
-    virtual double visibleTransmittance() const;
-
-    virtual double visibleAbsorptance() const override;
-
-    virtual boost::optional<double> visibleReflectance() const override;
+    /** The resistance of the material in m^2*K/W. */
+    virtual double thermalResistance() const override;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setThermalResistance(boost::optional<double> thermalResistance);
-
-    void resetThermalResistance();
-
-    virtual bool setThickness(double value) override;
-
-    /** Sets the conductivity of the material in W/m*K, if possible. Always returns false. */
-    virtual bool setThermalConductivity(double value) override;
-
     /** Sets the conductance of the material in W/m^2*K, if possible. */
     virtual bool setThermalConductance(double value) override;
-
-    /** Sets the resistivity of the material in m*K/W, if possible. */
-    virtual bool setThermalResistivity(double value) override;
 
     /** Sets the resistance of the material in m^2*K/W, if possible. */
     virtual bool setThermalResistance(double value) override;
 
-    virtual bool setThermalAbsorptance(double value) override;
+    /** Sets the resistance of the material in m^2*K/W, if possible. */
+    bool setThermalResistance(boost::optional<double> thermalResistance);
 
-    virtual bool setThermalReflectance(boost::optional<double> value) override;
-
-    virtual bool setSolarAbsorptance(boost::optional<double> value) override;
-
-    virtual bool setSolarReflectance(boost::optional<double> value) override;
-
-    virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
-
-    virtual bool setVisibleReflectance(boost::optional<double> value) override;
+    void resetThermalResistance();
 
     //@}
     /** @name Other */

@@ -101,12 +101,9 @@ namespace detail {
   }
 
   double StandardOpaqueMaterial_Impl::thermalConductivity() const {
-    OptionalDouble od = getDouble(OS_MaterialFields::Conductivity,true);
-    if (!od) {
-      LOG_AND_THROW("Thermal conductivity is not set for StandardOpaqueMaterial "
-          << briefDescription() << ".");
-    }
-    return *od;
+    boost::optional<double> value = getDouble(OS_MaterialFields::Conductivity,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   double StandardOpaqueMaterial_Impl::thermalConductance() const {
@@ -211,8 +208,9 @@ namespace detail {
     return result;
   }
 
-  bool StandardOpaqueMaterial_Impl::setThermalConductivity(double value) {
-    return setDouble(OS_MaterialFields::Conductivity,value);
+  bool StandardOpaqueMaterial_Impl::setThermalConductivity(double conductivity) {
+    bool result = setDouble(OS_MaterialFields::Conductivity, conductivity);
+    return result;
   }
 
   bool StandardOpaqueMaterial_Impl::setThermalConductance(double value) {

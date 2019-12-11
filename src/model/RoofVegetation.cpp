@@ -155,10 +155,6 @@ namespace detail {
     return *od;
   }
 
-  double RoofVegetation_Impl::thermalTransmittance() const {
-    return 0.0;
-  }
-
   double RoofVegetation_Impl::thermalAbsorptance() const {
     boost::optional<double> value = getDouble(OS_Material_RoofVegetationFields::ThermalAbsorptance,true);
     OS_ASSERT(value);
@@ -171,10 +167,6 @@ namespace detail {
     return result;
   }
 
-  double RoofVegetation_Impl::solarTransmittance() const {
-    return 0.0;
-  }
-
   OptionalDouble RoofVegetation_Impl::solarReflectance() const {
     OptionalDouble result;
     OptionalDouble od = solarAbsorptance();
@@ -182,10 +174,6 @@ namespace detail {
       result = (1.0 - *od);
     }
     return result;
-  }
-
-  double RoofVegetation_Impl::visibleTransmittance() const {
-    return 0.0;
   }
 
   double RoofVegetation_Impl::visibleAbsorptance() const {
@@ -321,10 +309,6 @@ namespace detail {
     return setDouble(OS_Material_RoofVegetationFields::SpecificHeatofDrySoil,value);
   }
 
-  bool RoofVegetation_Impl::setThermalTransmittance(double value) {
-    return false;
-  }
-
   bool RoofVegetation_Impl::setThermalAbsorptance(OptionalDouble value) {
     if( !value ) {
       return setString(OS_Material_RoofVegetationFields::ThermalAbsorptance, "");
@@ -340,10 +324,6 @@ namespace detail {
     return setThermalAbsorptance(od);
   }
 
-  bool RoofVegetation_Impl::setSolarTransmittance(double value) {
-    return false;
-  }
-
   bool RoofVegetation_Impl::setSolarAbsorptance(OptionalDouble value) {
     if( !value ) {
       return setString(OS_Material_RoofVegetationFields::SolarAbsorptance, "");
@@ -357,10 +337,6 @@ namespace detail {
     }
     OptionalDouble od = (1.0 - *value);
     return setSolarAbsorptance(od);
-  }
-
-  bool RoofVegetation_Impl::setVisibleTransmittance(double value) {
-    return false;
   }
 
   bool RoofVegetation_Impl::setVisibleAbsorptance(OptionalDouble value) {
@@ -920,6 +896,10 @@ bool RoofVegetation::setInitialVolumetricMoistureConent(double value) {
 
 bool RoofVegetation::setMoistureDiffusionCalculationMethod(const std::string& value) {
   return getImpl<detail::RoofVegetation_Impl>()->setMoistureDiffusionCalculationMethod(value);
+}
+
+boost::optional<double> RoofVegetation::heatCapacity() const {
+  return getImpl<detail::RoofVegetation_Impl>()->heatCapacity();
 }
 
 void RoofVegetation::resetMinimumStomatalResistance() {
