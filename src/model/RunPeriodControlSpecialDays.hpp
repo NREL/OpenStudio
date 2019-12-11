@@ -66,6 +66,15 @@ class MODEL_API RunPeriodControlSpecialDays : public ModelObject {
 
   virtual ~RunPeriodControlSpecialDays() {}
 
+  /** @name Static Methods */
+  //@{
+
+  static std::vector<std::string> specialDayTypeValues();
+
+  // Forwards to specialDayTypeValues()
+  static std::vector<std::string> validSpecialDayTypeValues();
+
+
   //@}
   /** @name Getters */
   //@{

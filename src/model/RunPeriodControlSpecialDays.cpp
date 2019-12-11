@@ -36,6 +36,7 @@
 
 #include <utilities/idd/OS_RunPeriodControl_SpecialDays_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 #include "../utilities/time/Date.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -259,6 +260,15 @@ RunPeriodControlSpecialDays::RunPeriodControlSpecialDays(const openstudio::NthDa
   OS_ASSERT(getImpl<detail::RunPeriodControlSpecialDays_Impl>());
   getImpl<detail::RunPeriodControlSpecialDays_Impl>()->setStartDate(nth, dayOfWeek, monthOfYear);
   Date test = this->startDate();
+}
+
+std::vector<std::string> RunPeriodControlSpecialDays::specialDayTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_RunPeriodControl_SpecialDaysFields::SpecialDayType);
+}
+
+std::vector<std::string> RunPeriodControlSpecialDays::validSpecialDayTypeValues() {
+  return specialDayTypeValues();
 }
 
 Date RunPeriodControlSpecialDays::startDate() const
