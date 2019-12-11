@@ -875,6 +875,7 @@ DATA PERIODS,1,1,Data,Sunday, 1/ 1,1/1
   for (const EpwHoliday& holiday: holidays) {
     EXPECT_EQ(expectedResult[i].first, holiday.holidayName());
     EXPECT_EQ(expectedResult[i].second, holiday.holidayDateString());
+    ++i;
   }
 
 }
