@@ -499,6 +499,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   }
 
 
+  // TODO: is it time to uncomment that?
   // temp code
   if (!m_keepRunControlSpecialDays){
     // DLM: we will not translate these objects until we support holidays in the GUI
