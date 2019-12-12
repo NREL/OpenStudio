@@ -61,7 +61,7 @@ namespace model {
 namespace osversion {
 
   /** Helper class meant to replace std::pair<IdfObject, IdfObject> that maps objects that have been significantly refactor (old, new) */
-  class RefactoredObjectData {
+  class OSVERSION_API RefactoredObjectData {
    public:
     RefactoredObjectData(const IdfObject& old, const IdfObject& newObject);
 

@@ -1,8 +1,5 @@
 set(target_name openstudio_model)
 
-include_directories(${PROJECT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 set(${target_name}_src
   mainpage.hpp
   ModelAPI.hpp
@@ -1642,12 +1639,18 @@ embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiomodel)
 source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
 set(${target_name}_depends
-  openstudio_utilities
+  ${openstudio_utilities_depends}
 )
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
+ 
 
-add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
+add_library(${target_name} OBJECT ${${target_name}_src} ${EMBEDDED_OUTPUT})
 
-target_link_libraries(${target_name} "${${target_name}_depends}")
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
+target_compile_definitions(${target_name} PRIVATE openstudio_model_EXPORTS SHARED_OS_LIBS)
+target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
+add_dependencies(${target_name} GenerateIddFactoryRun)
+
 
 if(BUILD_SHARED_LIBS)
   install(TARGETS ${target_name}
@@ -1656,6 +1659,7 @@ if(BUILD_SHARED_LIBS)
     ARCHIVE DESTINATION lib
   )
 endif()
+
 
 set(${target_name}_test_src
   test/AdditionalProperties_GTest.cpp
@@ -2066,7 +2070,7 @@ set(${target_name}_test_src
 )
 
 set(${target_name}_test_depends
-  ${${target_name}_depends}
+  openstudiolib
 )
 
 CREATE_SRC_GROUPS("${${target_name}_test_src}")

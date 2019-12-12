@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.14.0)
 cmake_policy(SET CMP0048 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -196,12 +196,6 @@ option(BUILD_PACKAGE "Build package" OFF)
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
 
-# Build shared OS libraries
-option(BUILD_SHARED_LIBS "Build OS libs as shared libraries.  Currently not tested." OFF)
-
-if(BUILD_SHARED_LIBS)
-  add_definitions("-DSHARED_OS_LIBS")
-endif()
 
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -266,8 +260,14 @@ if(BUILD_V8_BINDINGS)
   option(BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON)
 endif()
 
-# Use PCH
-option(USE_PCH "Use precompiled headers" OFF)
+option(USE_LTO "Use Link-Time-Optimization" OFF)
+
+if (USE_LTO)
+  include(CheckIPOSupported)
+
+  check_ipo_supported()
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+endif()
 
 if(WIN32)
   add_definitions(-DNOMINMAX)
@@ -418,6 +418,9 @@ if(MSVC)
   # we will not rely on exporting templates instead all libraries must
   # be linked against the same runtime
   add_definitions(/wd4251)
+
+  # ignore base class not dll-exported error
+  add_definitions(/wd4275)
 
   add_definitions(/bigobj)
 
@@ -856,6 +859,7 @@ set(project_directories
   osversion
   measure
   sdd
+  lib
   cli
   install_utility
 )
@@ -863,11 +867,12 @@ set(project_directories
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
 
-add_subdirectory(ruby)
-
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
 endforeach()
+
+add_subdirectory(ruby)
+
 
 # csharp, after loading projects
 if(BUILD_CSHARP_BINDINGS)
@@ -1239,6 +1244,11 @@ cpack_add_component(Radiance
   DESCRIPTION "Full Radiance installation"
 )
 
+cpack_add_component(CPPAPI
+  DISPLAY_NAME "C++ API"
+  DESCRIPTION "Libraries and headers for OpenStudio C++ API"
+)
+
 cpack_ifw_configure_component(CLI
   SCRIPT src/cli/install_operations.qs
   REQUIRES_ADMIN_RIGHTS
@@ -1294,4 +1304,26 @@ if( BUILD_NUGET_PACKAGE )
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
   )
 endif()
+
+
+if (MSVC)
+  if (NOT USE_LTO)
+    message(WARNING "Suppressing 121,000+ linker warnings, see src/lib/CMakeLists.txt for details")
+    # The actual solution to this is to use the new openstudio_EXPORTS preprocessor
+    # definition and make all of the libs truely one large lib with a single set of exports
+    # the problem is that somehow using this now causes the openstudio_model.lib to grow too large
+    # and we get a linker error
+
+    # The alternative is to suppress these warnings.
+    # The problem is that we are using export/import of symbols between function calls
+    # within the same library. This may result in less efficient function calls.
+
+    # The potential inefficiency goes away if we use LTO linking
+    target_link_libraries(openstudiolib PRIVATE -IGNORE:4217,4049)
+    target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
+    target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
+  endif()
+endif()
+
+
 

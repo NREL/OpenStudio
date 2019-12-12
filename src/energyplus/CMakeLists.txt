@@ -1,8 +1,5 @@
 set(target_name openstudio_energyplus)
 
-include_directories(${PROJECT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 set(${target_name}_src
   EnergyPlusAPI.hpp
   mainpage.hpp
@@ -630,9 +627,6 @@ set(${target_name}_swig_src
   EnergyPlus.i
 )
 
-set(${target_name}_depends
-  openstudio_model
-)
 
 set(FILES
   "${CMAKE_CURRENT_SOURCE_DIR}/Resources/LCCusePriceEscalationDataSet2011.idf"
@@ -668,20 +662,22 @@ include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${FILES}" "${EMBEDDED_PATHS}" OUTPUT energyplus)
 
 set(${target_name}_depends
-  openstudio_model
+  ${openstudio_model_depends}
+)
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
+
+add_library(${target_name} OBJECT ${${target_name}_src} ${OUTPUT})
+
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
+target_compile_definitions(${target_name} PRIVATE openstudio_energyplus_EXPORTS SHARED_OS_LIBS)
+target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
+add_dependencies(${target_name} GenerateIddFactoryRun)
+
+
+set(${target_name}_test_depends
+  openstudiolib
 )
 
-add_library(${target_name} ${${target_name}_src} ${OUTPUT})
-
-target_link_libraries(${target_name} ${${target_name}_depends})
-
-# No need to install static lib
-#if(NOT APPLE)
-#  install(TARGETS ${target_name}
-#    RUNTIME DESTINATION bin
-#    LIBRARY DESTINATION lib
-#  )
-#endif()
 
 CREATE_SRC_GROUPS("${${target_name}_src}")
 #CREATE_SRC_GROUPS("${${target_name}_test_src}")
@@ -689,7 +685,7 @@ CREATE_SRC_GROUPS("${${target_name}_src}")
 
 if(BUILD_TESTING)
 
-  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
   
   add_dependencies(${target_name}_tests
     ResultsViewer_resources

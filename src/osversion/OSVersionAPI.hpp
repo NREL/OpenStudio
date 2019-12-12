@@ -31,7 +31,7 @@
 #define OSVERSION_OSVERSIONAPI_HPP
 
   #if (_WIN32 || _MSC_VER) && SHARED_OS_LIBS
-    #ifdef openstudio_osversion_EXPORTS
+    #if defined(openstudio_osversion_EXPORTS) || defined(openstudio_EXPORTS)
       #define OSVERSION_API __declspec(dllexport)
     #else
       #define OSVERSION_API __declspec(dllimport)

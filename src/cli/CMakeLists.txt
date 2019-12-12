@@ -277,9 +277,11 @@ target_link_libraries(ruby_libs PUBLIC CONAN_PKG::openstudio_ruby)
 target_link_libraries(ruby_libs PUBLIC additional_ruby_libs)
 
 
-target_link_libraries(openstudio init_openstudio ruby_libs)
+target_link_libraries(openstudio PRIVATE init_openstudio ruby_libs ${ALL_RUBY_BINDING_TARGETS})
 
 target_link_libraries(openstudio
+ PRIVATE
+ openstudio_utilities
  openstudio_airflow
  openstudio_model
  openstudio_energyplus
@@ -302,15 +304,15 @@ target_link_libraries(openstudio
 
 if (UNIX AND NOT APPLE)
   target_link_libraries(additional_ruby_libs dl crypt)
-  target_link_libraries(openstudio "icui18n" "icuuc" "gmp")
+  target_link_libraries(openstudio PRIVATE "icui18n" "icuuc" "gmp")
 elseif(WIN32)
-  target_link_libraries(openstudio wsock32 ws2_32 Dbghelp Shlwapi Iphlpapi)
+  target_link_libraries(openstudio PRIVATE wsock32 ws2_32 Dbghelp Shlwapi Iphlpapi)
   set_target_properties(openstudio PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
 endif()
 
 if( APPLE )
-  target_link_libraries(openstudio ${COREFOUNDATION_LIBRARY})
+  target_link_libraries(openstudio PRIVATE ${COREFOUNDATION_LIBRARY})
 endif()
 
 

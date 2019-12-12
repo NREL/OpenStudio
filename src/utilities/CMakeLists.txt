@@ -2,10 +2,6 @@
 
 set(target_name openstudio_utilities)
 
-include_directories(${PROJECT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/idd)
-
 include(idd/CMakeLists.txt)
 include(idf/CMakeLists.txt)
 include(sql/CMakeLists.txt)
@@ -394,8 +390,6 @@ set(${target_name}_swig_src
   units/QuantityConverter.i
 )
 
-#include subdir for pch
-add_subdirectory(pch)
 
 set(${target_name}_depends
   CONAN_PKG::sqlite3
@@ -427,29 +421,23 @@ elseif(APPLE)
 endif()
 
 add_library(${target_name}
+  OBJECT
   ${${target_name}_src}
 )
-add_dependencies("${target_name}" GenerateIddFactoryRun)
+add_dependencies(${target_name} GenerateIddFactoryRun)
 
-target_link_libraries(${target_name} ${${target_name}_depends})
 
-if(BUILD_SHARED_LIBS)
-  #target_compile_definitions(${target_name} PUBLIC openstudio_utilities_EXPORTS)
-else()
-  target_compile_definitions(${target_name} PUBLIC openstudio_utilities_EXPORTS)
-endif()
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
-#install(TARGETS ${target_name}
-#  EXPORT openstudio
-#  RUNTIME DESTINATION bin
-#  LIBRARY DESTINATION lib
-#  ARCHIVE DESTINATION lib
-#)
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
+target_compile_definitions(${target_name} PRIVATE openstudio_utilities_EXPORTS SHARED_OS_LIBS)
+target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
+target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR}/src)
 
 if(BUILD_TESTING)
-  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
-  add_dependencies("${target_name}_tests" openstudio_model_resources)
-  add_dependencies("${target_name}_tests" openstudio_energyplus_resources)
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib)
+  add_dependencies(${target_name}_tests openstudio_model_resources)
+  add_dependencies(${target_name}_tests openstudio_energyplus_resources)
 endif()
 
 CREATE_SRC_GROUPS("${${target_name}_swig_src}")

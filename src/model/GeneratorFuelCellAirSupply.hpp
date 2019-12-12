@@ -44,7 +44,7 @@ class GeneratorFuelCell;
 
 
 /** This class implements a constituent */
-class AirSupplyConstituent {
+class MODEL_API AirSupplyConstituent {
  public:
   AirSupplyConstituent(std::string constituentName, double molarFraction);
 
@@ -62,7 +62,7 @@ class AirSupplyConstituent {
 };
 
 // Overload operator<<
-std::ostream& operator<< (std::ostream& out, const openstudio::model::AirSupplyConstituent& constituent);
+MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::AirSupplyConstituent& constituent);
 
 namespace detail {
 

@@ -49,7 +49,7 @@ namespace detail {
 } // detail
 
 /** This class implements a single point of a viewFactors, meant to replace std::pair<PlanarSurface, double> */
-class ViewFactorData {
+class MODEL_API ViewFactorData {
  public:
   ViewFactorData(const PlanarSurface& s, double y);
 
@@ -62,7 +62,7 @@ class ViewFactorData {
 };
 
 // Overload operator<<
-std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactorData& vf);
+MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactorData& vf);
 
 /** AirflowNetworkDuctViewFactors is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkDuctViewFactors'. */
 class MODEL_API AirflowNetworkDuctViewFactors : public ModelObject {

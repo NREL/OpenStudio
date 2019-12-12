@@ -48,7 +48,7 @@ namespace measure {
   // we add std::monostate to allow the variant to be empty basically
   typedef std::variant<std::monostate, bool, double, int, std::string, openstudio::path> OSArgumentVariant;
 
-  std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg);
+  MEASURE_API std::ostream& operator<<(std::ostream& os, const OSArgumentVariant& arg);
 
 /** \class OSArgumentType
  *  \brief Listing of OSArgument data types. Quantity type is deprecated (will map to Double instead).

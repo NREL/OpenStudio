@@ -1,9 +1,5 @@
 include(CMakeParseArguments)
 
-if(NOT USE_PCH)
-  macro(AddPCH TARGET_NAME)
-  endmacro()
-endif()
 
 # Add google tests macro
 macro(ADD_GOOGLE_TESTS executable)
@@ -57,19 +53,7 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
 
     CREATE_SRC_GROUPS("${SRC}")
 
-    if(TARGET ${BASE_NAME})
-      get_target_property(BASE_NAME_TYPE ${BASE_NAME} TYPE)
-      if("${BASE_NAME_TYPE}" STREQUAL "EXECUTABLE")
-        # don't link base name
-        set(ALL_DEPENDENCIES ${DEPENDENCIES})
-      else()
-        # also link base name
-        set(ALL_DEPENDENCIES ${BASE_NAME} ${DEPENDENCIES})
-      endif()
-    else()
-      # don't link base name
-      set(ALL_DEPENDENCIES ${DEPENDENCIES})
-    endif()
+    set(ALL_DEPENDENCIES ${DEPENDENCIES})
 
     target_link_libraries(${BASE_NAME}_tests
       CONAN_PKG::gtest
@@ -80,8 +64,6 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
     if(TARGET "${BASE_NAME}_resources")
       add_dependencies("${BASE_NAME}_tests" "${BASE_NAME}_resources")
     endif()
-
-    AddPCH(${BASE_NAME}_tests)
 
     ## suppress deprecated warnings in unit tests
     if(UNIX)
@@ -301,12 +283,10 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   include_directories(${PROJECT_SOURCE_DIR})
 
   add_library(
-    ${swig_target} STATIC
+    ${swig_target} OBJECT
     ${SWIG_WRAPPER}
   )
 
-
-  AddPCH(${swig_target})
 
   # run rdoc
   if(BUILD_DOCUMENTATION)
@@ -359,7 +339,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   #endif()
   set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
   set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
-  target_link_libraries(${swig_target} ${PARENT_TARGET})
+  target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends})
   target_include_directories(${swig_target} PRIVATE ${RUBY_INCLUDE_DIRS})
   add_dependencies(${swig_target} ${PARENT_TARGET})
 
@@ -662,10 +642,10 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     #target_link_libraries(${swig_target} ${PARENT_TARGET})
 
     #ADD_DEPENDENCIES("${swig_target}" "${PARENT_TARGET}_resources")
-    add_dependencies(${SWIG_TARGET} ${PARENT_TARGET})
+    #    add_dependencies(${SWIG_TARGET} ${PARENT_TARGET})
 
     # add this target to a "global" variable so csharp tests can require these
-    list(APPEND ALL_CSHARP_BINDING_DEPENDS "${PARENT_TARGET}")
+    list(APPEND ALL_CSHARP_BINDING_DEPENDS "${${PARENT_TARGET}_depends}")
     set(ALL_CSHARP_BINDING_DEPENDS "${ALL_CSHARP_BINDING_DEPENDS}" PARENT_SCOPE)
 
     list(APPEND ALL_CSHARP_WRAPPER_FILES "${SWIG_WRAPPER_FULL_PATH}")

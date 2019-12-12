@@ -1,6 +1,3 @@
-include_directories(${PROJECT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 set(target_name openstudio_airflow)
 
 set(${target_name}_src
@@ -69,19 +66,31 @@ set(${target_name}_swig_src
 set(${target_name}_depends
   ${Boost_LIBRARIES}
   ${CMAKE_THREAD_LIBS}
-  openstudio_utilities
-  openstudio_model
-  openstudio_osversion
+  ${openstudio_utilities_depends}
+  ${openstudio_model_depends}
+  ${openstudio_osversion_depends}
 )
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
 add_library(${target_name}
+  OBJECT
   ${${target_name}_src}
   ${EMBEDDED_OUTPUT}
 )
-target_link_libraries(${target_name} ${${target_name}_depends})
+
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
+target_compile_definitions(${target_name} PRIVATE openstudio_airflow_EXPORTS SHARED_OS_LIBS)
+target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
+add_dependencies(${target_name} GenerateIddFactoryRun)
+
+
+set(${target_name}_test_depends
+  openstudiolib
+)
+
 
 if(BUILD_TESTING)
-  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
   add_dependencies(${target_name}_tests openstudio_airflow_resources)
 endif()
 
