@@ -168,9 +168,6 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
     openstudio::Date jan1 = yd.makeDate(MonthOfYear::Jan, 1);
     openstudio::Date dec31 = yd.makeDate(MonthOfYear::Dec, 31);
 
-    // this is the current date we are at in the year
-    openstudio::Date date = jan1;
-
     // this is the week schedule for the week ending on the last saturday before the current date
     boost::optional<WeekScheduleStruct> weekSchedule;
 
@@ -180,8 +177,43 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
     // this is the saturday on which lastWeekSchedule ends
     openstudio::Date lastDate;
 
+    // Scan the first week to initialize the schedules
+    std::vector<ScheduleDay> daySchedules = modelObject.getDaySchedules(jan1, jan1 + Time(6));
+    // this is the current date we are at in the year
+    openstudio::Date date = jan1;
+    for (ScheduleDay& daySchedule : daySchedules) {
+      switch(date.dayOfWeek().value()){
+        case DayOfWeek::Sunday:
+          sundaySchedule = daySchedule;
+          break;
+        case DayOfWeek::Monday:
+          mondaySchedule = daySchedule;
+          break;
+        case DayOfWeek::Tuesday:
+          tuesdaySchedule = daySchedule;
+          break;
+        case DayOfWeek::Wednesday:
+          wednesdaySchedule = daySchedule;
+          break;
+        case DayOfWeek::Thursday:
+          thursdaySchedule = daySchedule;
+          break;
+        case DayOfWeek::Friday:
+          fridaySchedule = daySchedule;
+          break;
+        case DayOfWeek::Saturday:
+          saturdaySchedule = daySchedule;
+          break;
+        default:
+          OS_ASSERT(false);
+      }
+      date += Time(1);
+    }
+
     // iterate over the schedule for each day of the year
-    std::vector<ScheduleDay> daySchedules = modelObject.getDaySchedules(jan1, dec31);
+    daySchedules = modelObject.getDaySchedules(jan1, dec31);
+    // this is the current date we are at in the year
+    date = jan1;
     for (ScheduleDay& daySchedule : daySchedules){
 
       // translate the day schedule
@@ -212,18 +244,6 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
           break;
         default:
           OS_ASSERT(false);
-      }
-
-      // JJR: the first week rule has non default day schedule for
-      // jan1 set on all days of week prior to jan1 start day of week
-      if(date == jan1){
-        sundaySchedule = daySchedule;
-        mondaySchedule = daySchedule;
-        tuesdaySchedule = daySchedule;
-        wednesdaySchedule = daySchedule;
-        thursdaySchedule = daySchedule;
-        fridaySchedule = daySchedule;
-        saturdaySchedule = daySchedule;
       }
 
       // update week schedules each saturday
