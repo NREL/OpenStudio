@@ -40252,10 +40252,10 @@ SolarCollector:FlatPlate:Water,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference-class-name validPlantEquipmentTypes ! remove?
-       \reference validPlantEquipmentNames ! remove?
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
+       \reference-class-name validPlantEquipmentTypes ! Need to be able to place it on PlantEquipmentList
+       \reference validPlantEquipmentNames ! Need to be able to place it on PlantEquipmentList
   A2 , \field SolarCollectorPerformance Name
        \required-field
        \type object-list
@@ -40284,6 +40284,8 @@ SolarCollector:FlatPlate:PhotovoltaicThermal,
        \reference validOASysEquipmentNames
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
+       \reference-class-name validPlantEquipmentTypes ! Need to be able to place it on PlantEquipmentList
+       \reference validPlantEquipmentNames ! Need to be able to place it on PlantEquipmentList
   A2 , \field Surface Name
        \required-field
        \type object-list
@@ -40351,6 +40353,8 @@ SolarCollector:IntegralCollectorStorage,
        \type alpha
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
+       \reference-class-name validPlantEquipmentTypes ! Need to be able to place it on PlantEquipmentList
+       \reference validPlantEquipmentNames ! Need to be able to place it on PlantEquipmentList
   A2 , \field IntegralCollectorStorageParameters Name
        \required-field
        \type object-list

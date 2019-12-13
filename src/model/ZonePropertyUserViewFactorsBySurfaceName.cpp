@@ -176,13 +176,16 @@ namespace detail {
   boost::optional<unsigned> ZonePropertyUserViewFactorsBySurfaceName_Impl::viewFactorIndex(const ViewFactor& t_viewFactor) const {
     boost::optional<unsigned> result;
 
-    auto egs = extensibleGroups();
-    auto from = t_viewFactor.fromSurface().nameString();
-    auto to = t_viewFactor.toSurface().nameString();
+    // Find with custom predicate, checking handle equality between the toSurface and the fromSurface pairs
+    // We do it with extensibleGroups() (rather than viewFactors()) and getString to avoid overhead
+    // of manipulating actual model objects (getTarget, then create a ViewFactor wrapper, get handle convert to string...) and speed up the routine
+    auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
+    auto from = toString(t_viewFactor.fromSurface().handle());
+    auto to = toString(t_viewFactor.toSurface().handle());
     auto it = std::find_if(egs.begin(), egs.end(),
-      [&](const IdfExtensibleGroup& eg) {
-        return ((eg.getString(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName) == from) && 
-           (eg.getString(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName) == to));
+      [&](const WorkspaceExtensibleGroup& eg) {
+        return ((eg.getField(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName) == from) &&
+           (eg.getField(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName) == to));
       });
 
     // If found, we compute the index by using std::distance between the start of vector and the iterator returned by std::find_if
@@ -280,6 +283,11 @@ namespace detail {
     }
 
     // If existing, get it, otherwise Push an extensible group. ModelExtensibleGroup cannot be default-constructed, so use a ternary operator
+    // Given that we will potentially push many extensible groups
+    // (number of viewFactors to add in a Zone = x^2 where x is number of surfaces + subsurfaces + internalMass)
+    // we will suffer from going through the internal checks in WorkspaceObject, especially in setPointer,
+    // and performance will be roughly O(n^2) when adding viewFactors.
+    // So to improve the performance we pushExtensible group without validity check, and call setPointer without validity check (`isValid`)
     std::vector<std::string> temp;
     ModelExtensibleGroup eg = (_existingIndex
                                 ? getExtensibleGroup(_existingIndex.get()).cast<ModelExtensibleGroup>()
