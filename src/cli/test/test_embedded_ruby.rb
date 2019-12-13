@@ -193,10 +193,11 @@ class EmbeddedRuby_Test < Minitest::Test
   end
   
   def test_openssl
-    require 'openssl'
-    s = OpenSSL::PKey::RSA.new 2048
-    #puts s
-    assert(true)
+    if not RUBY_PLATFORM.include?('darwin')
+      require 'openssl'
+      s = OpenSSL::PKey::RSA.new 2048
+      assert(true)
+    end
   end
   
   def test_parallel

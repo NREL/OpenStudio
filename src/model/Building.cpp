@@ -44,6 +44,8 @@
 #include "DefaultConstructionSet_Impl.hpp"
 #include "DefaultScheduleSet.hpp"
 #include "DefaultScheduleSet_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "ShadingSurface.hpp"
@@ -588,6 +590,36 @@ namespace detail {
   boost::optional<DefaultScheduleSet> Building_Impl::defaultScheduleSet() const
   {
     return getObject<ModelObject>().getModelObjectTarget<DefaultScheduleSet>(OS_BuildingFields::DefaultScheduleSetName);
+  }
+
+  boost::optional<Schedule> Building_Impl::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const
+  {
+    boost::optional<Schedule> result;
+    boost::optional<DefaultScheduleSet> defaultScheduleSet;
+    boost::optional<SpaceType> spaceType;
+
+    // first check this object (building)
+    defaultScheduleSet = this->defaultScheduleSet();
+    if (defaultScheduleSet){
+      result = defaultScheduleSet->getDefaultSchedule(defaultScheduleType);
+      if (result){
+        return result;
+      }
+    }
+
+
+    // then check building's space type
+    if (boost::optional<SpaceType> spaceType = this->spaceType()) {
+      defaultScheduleSet = spaceType->defaultScheduleSet();
+      if (defaultScheduleSet){
+        result = defaultScheduleSet->getDefaultSchedule(defaultScheduleType);
+        if (result){
+          return result;
+        }
+      }
+    }
+
+    return boost::none;
   }
 
   bool Building_Impl::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet)
@@ -1254,6 +1286,10 @@ void Building::resetDefaultConstructionSet()
 boost::optional<DefaultScheduleSet> Building::defaultScheduleSet() const
 {
   return getImpl<detail::Building_Impl>()->defaultScheduleSet();
+}
+
+boost::optional<Schedule> Building::getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const {
+  return getImpl<detail::Building_Impl>()->getDefaultSchedule(defaultScheduleType);
 }
 
 bool Building::setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet)

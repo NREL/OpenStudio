@@ -107,6 +107,9 @@ ForwardTranslator::ForwardTranslator()
   m_keepRunControlSpecialDays = false;
   m_ipTabularOutput = false;
   m_excludeLCCObjects = false;
+  m_excludeSQliteOutputReport = false;
+  m_excludeHTMLOutputReport = false;
+  m_excludeVariableDictionary = false;
 }
 
 Workspace ForwardTranslator::translateModel( const Model & model, ProgressBar* progressBar )
@@ -172,6 +175,18 @@ void ForwardTranslator::setIPTabularOutput(bool isIP)
 void ForwardTranslator::setExcludeLCCObjects(bool excludeLCCObjects)
 {
   m_excludeLCCObjects = excludeLCCObjects;
+}
+
+void ForwardTranslator::setExcludeSQliteOutputReport(bool excludeSQliteOutputReport) {
+  m_excludeSQliteOutputReport = excludeSQliteOutputReport;
+}
+
+void ForwardTranslator::setExcludeHTMLOutputReport(bool excludeHTMLOutputReport) {
+  m_excludeHTMLOutputReport = excludeHTMLOutputReport;
+}
+
+void ForwardTranslator::setExcludeVariableDictionary(bool excludeVariableDictionary) {
+  m_excludeVariableDictionary = excludeVariableDictionary;
 }
 
 Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool fullModelTranslation )
@@ -3480,7 +3495,6 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
   result.push_back(IddObjectType::OS_ShadingSurface);
 
-  result.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
   result.push_back(IddObjectType::OS_ZoneProperty_UserViewFactors_BySurfaceName);
 
   result.push_back(IddObjectType::OS_Daylighting_Control);
@@ -3678,10 +3692,11 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_DefaultConstructionSet);
   iddObjectTypes.push_back(IddObjectType::OS_DefaultScheduleSet);
 
-  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);
-  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);
-  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);
-  iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);
+  // Translated by the object it references directly
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);      // Surface, SubSurface,
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);   // Surface, SubSurface,
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter); // Surface Only
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);     // Surface, SubSurface, or InternalMass
 
   for (const IddObjectType& iddObjectType : iddObjectTypes){
 
@@ -4464,27 +4479,33 @@ void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Mod
 
 void ForwardTranslator::createStandardOutputRequests()
 {
-  IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
-  m_idfObjects.push_back(tableStyle);
-  tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator,"HTML");
-  if( m_ipTabularOutput )
-  {
-    tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion,"InchPound");
+  if (!m_excludeHTMLOutputReport) {
+    IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
+    m_idfObjects.push_back(tableStyle);
+    tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator,"HTML");
+    if( m_ipTabularOutput )
+    {
+      tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion,"InchPound");
+    }
+
+    IdfObject outputTableSummaryReport(IddObjectType::Output_Table_SummaryReports);
+    IdfExtensibleGroup eg = outputTableSummaryReport.pushExtensibleGroup();
+    eg.setString(Output_Table_SummaryReportsExtensibleFields::ReportName,"AllSummary");
+    m_idfObjects.push_back(outputTableSummaryReport);
   }
 
-  IdfObject outputTableSummaryReport(IddObjectType::Output_Table_SummaryReports);
-  IdfExtensibleGroup eg = outputTableSummaryReport.pushExtensibleGroup();
-  eg.setString(Output_Table_SummaryReportsExtensibleFields::ReportName,"AllSummary");
-  m_idfObjects.push_back(outputTableSummaryReport);
+  if (!m_excludeVariableDictionary) {
+    IdfObject rddRequest(IddObjectType::Output_VariableDictionary);
+    rddRequest.setString(Output_VariableDictionaryFields::KeyField, "IDF");
+    rddRequest.setString(Output_VariableDictionaryFields::SortOption, "Unsorted");
+    m_idfObjects.push_back(rddRequest);
+  }
 
-  IdfObject rddRequest(IddObjectType::Output_VariableDictionary);
-  rddRequest.setString(Output_VariableDictionaryFields::KeyField, "IDF");
-  rddRequest.setString(Output_VariableDictionaryFields::SortOption, "Unsorted");
-  m_idfObjects.push_back(rddRequest);
-
-  IdfObject sqliteOutput(IddObjectType::Output_SQLite);
-  sqliteOutput.setString(Output_SQLiteFields::OptionType,"SimpleAndTabular");
-  m_idfObjects.push_back(sqliteOutput);
+  if (!m_excludeSQliteOutputReport) {
+    IdfObject sqliteOutput(IddObjectType::Output_SQLite);
+    sqliteOutput.setString(Output_SQLiteFields::OptionType,"SimpleAndTabular");
+    m_idfObjects.push_back(sqliteOutput);
+  }
 
   // ensure at least one life cycle cost exists to prevent crash in E+ 8
   unsigned numCosts = 0;

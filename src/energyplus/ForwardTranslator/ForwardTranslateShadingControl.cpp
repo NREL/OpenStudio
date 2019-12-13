@@ -51,11 +51,10 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::ShadingControl & modelObject )
-{
+boost::optional<IdfObject> ForwardTranslator::translateShadingControl(model::ShadingControl& modelObject) {
   // after pre-processing in ForwardTranslator, all ShadingControls should only reference subsurfaces in a single zone
   // additionally, the additional property "Shading Control Sequence Number" is set as an integer
-  
+
   std::vector<SubSurface> subSurfaces = modelObject.subSurfaces();
 
   if (subSurfaces.empty()) {
@@ -91,12 +90,22 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
   }
   idfObject.setString(WindowShadingControlFields::ZoneName, zoneName);
 
+  // Read this now, since we'll use it to test if a Warn is needed
+  std::string shadingControlType = modelObject.shadingControlType();
+  idfObject.setString(WindowShadingControlFields::ShadingControlType, shadingControlType);
+
   if (zone) {
     boost::optional<DaylightingControl> daylightingControl = zone->primaryDaylightingControl();
     if (daylightingControl) {
       idfObject.setString(WindowShadingControlFields::DaylightingControlObjectName, daylightingControl->nameString());
     } else {
-      LOG(Warn, "Cannot find DaylightingControl for " << modelObject.briefDescription());
+      // Warn only if a Shading Control Type that relies on DaylightingControl object is used
+      // We would probably need to warn if "Glare Control Is Active" was "Yes",
+      // but there's no setter in Model API and we default it to "No" later in this file
+      if (istringEqual("MeetDaylightIlluminanceSetpoint", shadingControlType) || istringEqual("OnIfHighGlare", shadingControlType)) {
+        LOG(Warn, "Cannot find DaylightingControl for " << modelObject.briefDescription() << ", while the Shading Control Type is '"
+                                                        << shadingControlType << "'.");
+      }
     }
   } else {
     LOG(Error, "Cannot find ThermalZone for " << modelObject.briefDescription());
@@ -112,35 +121,32 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
   idfObject.setString(WindowShadingControlFields::MultipleSurfaceControlType, "Group");
 
   std::string shadingType = modelObject.shadingType();
-  if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)){
+  if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)) {
     idfObject.setString(WindowShadingControlFields::ShadingType, "InteriorBlind");
-  } else{
+  } else {
     idfObject.setString(WindowShadingControlFields::ShadingType, shadingType);
   }
 
   boost::optional<Construction> construction = modelObject.construction();
   boost::optional<ShadingMaterial> shadingMaterial = modelObject.shadingMaterial();
-  if (construction){
+  if (construction) {
     idfObject.setString(WindowShadingControlFields::ConstructionwithShadingName, construction->name().get());
-  }else if (shadingMaterial){
+  } else if (shadingMaterial) {
     idfObject.setString(WindowShadingControlFields::ShadingDeviceMaterialName, shadingMaterial->name().get());
   }
 
-  std::string shadingControlType = modelObject.shadingControlType();
-  idfObject.setString(WindowShadingControlFields::ShadingControlType, shadingControlType);
-
   boost::optional<Schedule> schedule = modelObject.schedule();
-  if (schedule){
+  if (schedule) {
     idfObject.setString(WindowShadingControlFields::ScheduleName, schedule->name().get());
     idfObject.setString(WindowShadingControlFields::ShadingControlIsScheduled, "Yes");
-  }else{
+  } else {
     idfObject.setString(WindowShadingControlFields::ShadingControlIsScheduled, "No");
   }
 
   boost::optional<double> setpoint = modelObject.setpoint();
-  if (istringEqual("OnIfHighSolarOnWindow", shadingControlType)){
-    if (!setpoint){
-      setpoint = 100; // W/m2
+  if (istringEqual("OnIfHighSolarOnWindow", shadingControlType)) {
+    if (!setpoint) {
+      setpoint = 100;  // W/m2
     }
     OS_ASSERT(setpoint);
     idfObject.setDouble(WindowShadingControlFields::Setpoint, *setpoint);
@@ -164,7 +170,6 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl( model::Sh
   return idfObject;
 }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio
