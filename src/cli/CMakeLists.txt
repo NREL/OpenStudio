@@ -228,6 +228,9 @@ if(WIN32)
 endif()
 
 if(WIN32)
+
+  remove_definitions(/bigobj)
+
   add_executable(openstudio
     main.cpp
     "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
