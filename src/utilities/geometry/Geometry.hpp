@@ -72,6 +72,10 @@ namespace openstudio{
   /// return distance between two points
   UTILITIES_API double getDistance(const Point3d& point1, const Point3d& point2);
 
+  /// return distance squared between two points
+  /// faster than getDistance; can be used to compare distances
+  UTILITIES_API double getDistanceSquared(const Point3d& point1, const Point3d& point2);
+
   /// return distance between a point and a line segment
   /// returns 0 if lineSegment does not have length 2
   UTILITIES_API double getDistancePointToLineSegment(const Point3d& point, const std::vector<Point3d>& lineSegment);
