@@ -49,6 +49,7 @@ class Space;
 class SpaceType;
 class DefaultConstructionSet;
 class DefaultScheduleSet;
+class DefaultScheduleType;
 class ThermalZone;
 class Building;
 
@@ -115,6 +116,8 @@ namespace detail {
 
     bool relocatable() const;
     bool isRelocatableDefaulted() const;
+
+    boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
 
     //@}
     /** @name Setters */
