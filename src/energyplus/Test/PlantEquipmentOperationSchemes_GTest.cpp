@@ -36,14 +36,15 @@
 #include "../../model/PlantLoop.hpp"
 #include "../../model/Node.hpp"
 
-
 #include "../../model/HeatExchangerFluidToFluid.hpp"
 #include "../../model/WaterHeaterMixed.hpp"
 #include "../../model/WaterHeaterStratified.hpp"
 
-
 #include "../../model/BoilerHotWater.hpp"
 #include "../../model/ChillerElectricEIR.hpp"
+#include "../../model/SolarCollectorFlatPlateWater.hpp"
+#include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
+#include "../../model/SolarCollectorIntegralCollectorStorage.hpp"
 
 #include <utilities/idd/PlantLoop_FieldEnums.hxx>
 #include <utilities/idd/PlantEquipmentOperationSchemes_FieldEnums.hxx>
@@ -407,4 +408,68 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Water
 
     idf_eg = idf_peq_list.extensibleGroups()[2];
     ASSERT_EQ(wh_s.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+}
+
+/*
+ * #3761: assert than all solar collectors can properly end up on a PlantEquipmentList
+ */
+TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_SolarCollectors) {
+
+    boost::optional<WorkspaceObject> _wo;
+
+    Model m;
+
+    PlantLoop use_loop(m);
+    use_loop.setName("Use Loop");
+
+    SolarCollectorFlatPlateWater collector_flatplate_water(m);
+    SolarCollectorFlatPlatePhotovoltaicThermal collector_flatplate_pvt(m);
+    SolarCollectorIntegralCollectorStorage collector_integralcollectorstorage(m);
+
+    use_loop.addSupplyBranchForComponent(collector_flatplate_water);
+    use_loop.addSupplyBranchForComponent(collector_flatplate_pvt);
+    use_loop.addSupplyBranchForComponent(collector_integralcollectorstorage);
+
+    ForwardTranslator forwardTranslator;
+    Workspace w = forwardTranslator.translateModel(m);
+
+
+    // Get the Use Loop, and find its plant operation scheme
+    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, use_loop.name().get());
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_use_loop = _wo.get();
+    WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+
+    // Should have created a Heating Load one only
+    ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+
+    // Get the Operation Scheme
+    _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_op_scheme = _wo.get();
+
+    // Get the Plant Equipment List of this HeatingLoad scheme
+    // There should only be one Load Range
+    ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+    // Load range 1
+    w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_peq_list = _wo.get();
+
+    // Should have the three solar collectors on it, with the name properly filled out
+    ASSERT_EQ(3u, idf_peq_list.extensibleGroups().size());
+    IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
+    EXPECT_EQ("SolarCollector:FlatPlate:Water", idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
+    EXPECT_EQ(collector_flatplate_water.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+
+    idf_eg = idf_peq_list.extensibleGroups()[1];
+    EXPECT_EQ("SolarCollector:FlatPlate:PhotovoltaicThermal", idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
+    EXPECT_EQ(collector_flatplate_pvt.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+
+    idf_eg = idf_peq_list.extensibleGroups()[2];
+    EXPECT_EQ("SolarCollector:IntegralCollectorStorage", idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
+    EXPECT_EQ(collector_integralcollectorstorage.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 }

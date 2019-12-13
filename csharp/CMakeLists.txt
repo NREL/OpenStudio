@@ -71,11 +71,17 @@ if(MSVC)
 
   # the main OpenStudio dll
   set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/$(ConfigurationName)/OpenStudio.dll")
+  set(CONFIG_ARGS "/p:Configuration=$(ConfigurationName)")
+
+  if(NINJA)
+    set(CONFIG_ARGS "/p:Configuration=${CMAKE_BUILD_TYPE}")
+    set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.dll")
+  endif()
 
   # custom command to make OPENSTUDIO_CSHARP_DLL
   add_custom_command(
     OUTPUT ${OPENSTUDIO_CSHARP_DLL}
-    COMMAND "MSBuild" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj" "/p:Configuration=$(ConfigurationName)"
+    COMMAND "MSBuild" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj" "${CONFIG_ARGS}"
     DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
   )
 

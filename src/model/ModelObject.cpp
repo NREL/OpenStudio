@@ -677,6 +677,10 @@ namespace detail {
     }
     bool result = checkOrAssignScheduleTypeLimits(className,scheduleDisplayName,schedule);
     if (!result) {
+      if (boost::optional<ScheduleTypeLimits> scheduleTypeLimits = schedule.scheduleTypeLimits()) {
+        LOG(Warn, "For " << briefDescription() << " cannot set Schedule " << scheduleDisplayName << "=" << schedule.nameString()
+               << " because it has an incompatible ScheduleTypeLimits");
+      }
       return result;
     }
     return setPointer(index,schedule.handle());

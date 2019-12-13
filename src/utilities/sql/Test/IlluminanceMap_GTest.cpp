@@ -91,7 +91,7 @@ boost::optional<openstudio::FileLogSink> IlluminanceMapFixture::logFile;
 // *** BEGIN TESTS ***
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlot)
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlot)
 {
   openstudio::DateTime dateTime(Date(MonthOfYear::Jul, 21), Time(0.5));
 
@@ -179,7 +179,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesCount)
 }
 
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeries)
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlotSeries)
 {
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
@@ -190,7 +190,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeries)
   ASSERT_FALSE(illuminanceMapReportIndicesDates.empty());
 }
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapPlotSeriesOpt)
 {
   const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
 
@@ -207,7 +207,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotSeriesOpt)
   sqlFile.illuminanceMap(illuminanceMapReportIndicesDates[0].first, x, y, illuminance);
 }
 
-TEST_F(IlluminanceMapFixture, IlluminanceMapMatrixBaseline)
+TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapMatrixBaseline)
 {
   Vector x(9);
   Vector y(9);
