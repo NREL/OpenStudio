@@ -151,6 +151,136 @@ TEST_F(ModelFixture, ScheduleRule)
   EXPECT_FALSE(rule.containsDate(yd.makeDate(MonthOfYear::Dec, 27)));
 }
 
+TEST_F(ModelFixture, ScheduleRule_Convenience)
+{
+  Model model;
+
+  model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
+  yd.setCalendarYear(2009);
+
+  ScheduleRuleset ruleset(model);
+  ScheduleRule rule(ruleset);
+
+  ASSERT_EQ(1u, ruleset.scheduleRules().size());
+  EXPECT_EQ(rule.handle(), ruleset.scheduleRules()[0].handle());
+
+  // test defaults
+  EXPECT_FALSE(rule.applyMonday());
+  EXPECT_FALSE(rule.applyTuesday());
+  EXPECT_FALSE(rule.applyWednesday());
+  EXPECT_FALSE(rule.applyThursday());
+  EXPECT_FALSE(rule.applyFriday());
+  EXPECT_FALSE(rule.applySaturday());
+  EXPECT_FALSE(rule.applySunday());
+
+  EXPECT_FALSE(rule.applyWeekdays());
+  EXPECT_FALSE(rule.applyWeekends());
+  EXPECT_FALSE(rule.applyAllDays());
+
+  EXPECT_TRUE(rule.setApplyMonday(true));
+  EXPECT_FALSE(rule.applyWeekdays());
+  EXPECT_FALSE(rule.applyWeekends());
+  EXPECT_FALSE(rule.applyAllDays());
+
+  EXPECT_TRUE(rule.setApplyWeekdays(true));
+  EXPECT_TRUE(rule.applyMonday());
+  EXPECT_TRUE(rule.applyTuesday());
+  EXPECT_TRUE(rule.applyWednesday());
+  EXPECT_TRUE(rule.applyThursday());
+  EXPECT_TRUE(rule.applyFriday());
+  EXPECT_FALSE(rule.applySaturday());
+  EXPECT_FALSE(rule.applySunday());
+
+  EXPECT_TRUE(rule.applyWeekdays());
+  EXPECT_FALSE(rule.applyWeekends());
+  EXPECT_FALSE(rule.applyAllDays());
+
+
+  EXPECT_TRUE(rule.setApplyWeekdays(false));
+  EXPECT_FALSE(rule.applyMonday());
+  EXPECT_FALSE(rule.applyTuesday());
+  EXPECT_FALSE(rule.applyWednesday());
+  EXPECT_FALSE(rule.applyThursday());
+  EXPECT_FALSE(rule.applyFriday());
+  EXPECT_FALSE(rule.applySaturday());
+  EXPECT_FALSE(rule.applySunday());
+
+  EXPECT_FALSE(rule.applyWeekdays());
+  EXPECT_FALSE(rule.applyWeekends());
+  EXPECT_FALSE(rule.applyAllDays());
+
+
+  EXPECT_TRUE(rule.setApplyWeekends(true));
+  EXPECT_FALSE(rule.applyMonday());
+  EXPECT_FALSE(rule.applyTuesday());
+  EXPECT_FALSE(rule.applyWednesday());
+  EXPECT_FALSE(rule.applyThursday());
+  EXPECT_FALSE(rule.applyFriday());
+  EXPECT_TRUE(rule.applySaturday());
+  EXPECT_TRUE(rule.applySunday());
+
+  EXPECT_FALSE(rule.applyWeekdays());
+  EXPECT_TRUE(rule.applyWeekends());
+  EXPECT_FALSE(rule.applyAllDays());
+
+
+  EXPECT_TRUE(rule.setApplyWeekdays(true));
+  EXPECT_TRUE(rule.applyMonday());
+  EXPECT_TRUE(rule.applyTuesday());
+  EXPECT_TRUE(rule.applyWednesday());
+  EXPECT_TRUE(rule.applyThursday());
+  EXPECT_TRUE(rule.applyFriday());
+  EXPECT_TRUE(rule.applySaturday());
+  EXPECT_TRUE(rule.applySunday());
+
+  EXPECT_TRUE(rule.applyWeekdays());
+  EXPECT_TRUE(rule.applyWeekends());
+  EXPECT_TRUE(rule.applyAllDays());
+
+
+  EXPECT_TRUE(rule.setApplyWeekends(false));
+  EXPECT_TRUE(rule.applyMonday());
+  EXPECT_TRUE(rule.applyTuesday());
+  EXPECT_TRUE(rule.applyWednesday());
+  EXPECT_TRUE(rule.applyThursday());
+  EXPECT_TRUE(rule.applyFriday());
+  EXPECT_FALSE(rule.applySaturday());
+  EXPECT_FALSE(rule.applySunday());
+
+  EXPECT_TRUE(rule.applyWeekdays());
+  EXPECT_FALSE(rule.applyWeekends());
+  EXPECT_FALSE(rule.applyAllDays());
+
+
+  EXPECT_TRUE(rule.setApplyAllDays(false));
+  EXPECT_FALSE(rule.applyMonday());
+  EXPECT_FALSE(rule.applyTuesday());
+  EXPECT_FALSE(rule.applyWednesday());
+  EXPECT_FALSE(rule.applyThursday());
+  EXPECT_FALSE(rule.applyFriday());
+  EXPECT_FALSE(rule.applySaturday());
+  EXPECT_FALSE(rule.applySunday());
+
+  EXPECT_FALSE(rule.applyWeekdays());
+  EXPECT_FALSE(rule.applyWeekends());
+  EXPECT_FALSE(rule.applyAllDays());
+
+
+  EXPECT_TRUE(rule.setApplyAllDays(true));
+  EXPECT_TRUE(rule.applyMonday());
+  EXPECT_TRUE(rule.applyTuesday());
+  EXPECT_TRUE(rule.applyWednesday());
+  EXPECT_TRUE(rule.applyThursday());
+  EXPECT_TRUE(rule.applyFriday());
+  EXPECT_TRUE(rule.applySaturday());
+  EXPECT_TRUE(rule.applySunday());
+
+  EXPECT_TRUE(rule.applyWeekdays());
+  EXPECT_TRUE(rule.applyWeekends());
+  EXPECT_TRUE(rule.applyAllDays());
+}
+
+
 /*
 January
 

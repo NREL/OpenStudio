@@ -284,11 +284,16 @@ namespace openstudio{
     return result;
   }
 
-  double getDistance(const Point3d& point1, const Point3d& point2) {
+  double getDistanceSquared(const Point3d& point1, const Point3d& point2) {
     double dx = point1.x() - point2.x();
     double dy = point1.y() - point2.y();
     double dz = point1.z() - point2.z();
-    double result = std::sqrt(dx*dx + dy*dy + dz*dz);
+    double result = dx*dx + dy*dy + dz*dz;
+    return result;
+  }
+
+  double getDistance(const Point3d& point1, const Point3d& point2) {
+    double result = std::sqrt(getDistanceSquared(point1, point2));
     return result;
   }
 

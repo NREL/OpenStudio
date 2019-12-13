@@ -1,4 +1,4 @@
-!IDD_Version 3.0.0-rc1
+!IDD_Version 2.9.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2; \field Version Identifier
        \type alpha
-       \default 3.0.0
+       \default 2.9.1
 
 OS:ComponentData,
        \memo Defines the meta-data and contents of a Component, that is, a
@@ -1176,9 +1176,6 @@ OS:Site:WaterMainsTemperature,
        \required-field
        \key Schedule
        \key Correlation
-       \key CorrelationFromWeatherFile
-       \note If calculation method is CorrelationFromWeatherFile, the two numeric input
-       \note fields are ignored. Instead, EnergyPlus calculates them from weather file.
   A3, \field Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
@@ -2314,7 +2311,7 @@ OS:Material,
        \required-field
        \units J/kg-K
        \ip-units Btu/lb-R
-       \minimum 100
+       \minimum> 0
   N5, \field Thermal Absorptance
        \type real
        \minimum> 0
@@ -11984,23 +11981,19 @@ OS:AvailabilityManager:OptimumStart,
        \key ConstantStartTime
        \required-field
   N2,  \field Constant Temperature Gradient during Cooling
-       \units K/hr
-       \ip-units R/hr
+       \units deltaC/hr
        \type real
        \required-field
   N3,  \field Constant Temperature Gradient during Heating
-       \units K/hr
-       \ip-units R/hr
+       \units deltaC/hr
        \type real
        \required-field
   N4,  \field Initial Temperature Gradient during Cooling
-       \units K/hr
-       \ip-units R/hr
+       \units deltaC/hr
        \type real
        \required-field
   N5,  \field Initial Temperature Gradient during Heating
-       \units K/hr
-       \ip-units R/hr
+       \units deltaC/hr
        \type real
        \required-field
   N6,  \field Constant Start Time
@@ -23833,7 +23826,6 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \note Total length of pipe embedded in surface
         \units m
         \minimum> 0
-        \autosizable
         \required-field
    A5 , \field Temperature Control Type
         \note Temperature used to control system
@@ -23854,8 +23846,6 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \object-list CoilCoolingLowTempRadiantConstantFlow
    N3 , \field Rated Flow Rate
         \units m3/s
-        \ip-units gal/min
-        \autosizable
    A8 , \field Pump Flow Rate Schedule Name
         \note Modifies the Rated Flow Rate of the pump on a time basis
         \note the default is that the pump is ON and runs according to its other
@@ -24201,13 +24191,13 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \object-list ScheduleNames
 
 OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
-  A1 ,  \field Handle
-        \type handle
-        \required-field
+  A1, \field Handle
+       \type handle
+       \required-field
   A2 ,  \field Name
         \type alpha
         \reference ZoneTerminalUnitNames
-        \reference ConnectionObject
+       \reference ConnectionObject
   A3 ,  \field Terminal Unit Availability schedule
         \required-field
         \type object-list
@@ -24274,7 +24264,7 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \required-field
         \type object-list
         \object-list FansCVandOnOff
-  A9 ,  \field Outside Air Mixer
+  A9,  \field Outside Air Mixer
         \type object-list
         \object-list OutdoorAirMixers
         \note If this field is blank, and outside air mixer is not used.
@@ -24298,40 +24288,11 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \type real
         \units W
         \minimum 0
-  N10,  \field Rated Total Heating Capacity Sizing Ratio
+  N10; \field Rated Total Heating Capacity Sizing Ratio
         \required-field
-        \type real
-        \units W/W
-        \minimum 1.0
-        \note If this terminal unit's heating coil is autosized, the heating capacity is sized
-        \note to be equal to the cooling capacity multiplied by this sizing ratio.
-        \note This input applies to the terminal unit heating coil and overrides the sizing
-        \note ratio entered in the AirConditioner:VariableRefrigerantFlow object.
-  A12,  \field Availability Manager List Name
-        \note Enter the name of an AvailabilityManagerAssignmentList object.
-        \type object-list
-        \object-list SystemAvailabilityManagerLists
-  A13,  \field Design Specification ZoneHVAC Sizing Object Name
-        \note Enter the name of a DesignSpecificationZoneHVACSizing object.
-        \type object-list
-        \object-list DesignSpecificationZoneHVACSizingName
-  A14,  \field Supplemental Heating Coil Name
-        \type object-list
-        \object-list HeatingCoilName
-        \note Needs to match in the supplemental heating coil object.
-  N11,  \field Maximum Supply Air Temperature from Supplemental Heater
-        \type real
-        \units C
-        \autosizable
-        \required-field
-        \note Supply air temperature from the supplemental heater will not exceed this value.
-  N12;  \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
-        \type real
-        \maximum 21.0
-        \units C
-        \required-field
-        \note Supplemental heater will not operate when outdoor temperature exceeds this value.
-
+       \type real
+       \units W/W
+       \minimum 1.0
 
 OS:ZoneHVAC:WaterToAirHeatPump,
         \min-fields 25
@@ -29776,10 +29737,9 @@ OS:Output:Meter,
   A2, \field Name
        \note Form is EnergyUseType:..., e.g. Electricity:* for all Electricity meters
        \note or EndUse:..., e.g. GeneralLights:* for all General Lights
+       \type external-list
        \required-field
-       \type alpha
-       \memo type external-list
-       \memo external-list autoRDDmeter
+       \external-list autoRDDmeter
   A3, \field Reporting Frequency
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
        \note RunPeriod, Environment, and Annual are the same
@@ -29823,10 +29783,9 @@ OS:Output:Variable,
        \type alpha
        \default *
   A4, \field Variable Name
+       \type external-list
        \required-field
-       \type alpha
-       \memo type external-list
-       \memo external-list autoRDDvariable
+       \external-list autoRDDvariable
   A5, \field Reporting Frequency
        \note Detailed lists every instance (i.e. HVAC variable timesteps)
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
@@ -31575,9 +31534,8 @@ OS:ExternalInterface:FunctionalMockupUnitImport:From:Variable,
        \type alpha
   A4 , \field Output:Variable Name
        \required-field
-       \type alpha
-       \memo type external-list
-       \memo external-list autoRDDvariable
+       \type external-list
+       \external-list autoRDDvariable
   A5 , \field FMU File Name
        \required-field
        \retaincase
@@ -31710,9 +31668,8 @@ OS:ExternalInterface:FunctionalMockupUnitExport:From:Variable,
        \type alpha
   A4 , \field Output:Variable Name
        \required-field
-       \type alpha
-       \memo type external-list
-       \memo external-list autoRDDvariable
+       \type external-list
+       \external-list autoRDDvariable
   A5 ; \field FMU Variable Name
        \required-field
        \type alpha
