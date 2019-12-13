@@ -140,7 +140,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.7.2")] = &VersionTranslator::update_2_7_1_to_2_7_2;
   m_updateMethods[VersionString("2.9.0")] = &VersionTranslator::update_2_8_1_to_2_9_0;
   m_updateMethods[VersionString("2.9.1")] = &VersionTranslator::update_2_9_0_to_2_9_1;
-  m_updateMethods[VersionString("3.0.0")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("3.0.0")] = &VersionTranslator::update_2_9_1_to_3_0_0;
+  //m_updateMethods[VersionString("3.0.1")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -291,6 +292,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.8.1"));
   m_startVersions.push_back(VersionString("2.9.0"));
   m_startVersions.push_back(VersionString("2.9.1"));
+  //m_startVersions.push_back(VersionString("3.0.0"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm,
@@ -4858,6 +4860,51 @@ std::string VersionTranslator::update_2_9_0_to_2_9_1(const IdfFile& idf_2_9_0, c
 
       // Applicability Schedule
       newObject.setString(2, alwaysOnDiscreteSchedule->getString(0).get());
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    // No-op
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+
+}
+
+std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, const IddFileAndFactoryWrapper& idd_3_0_0) {
+  std::stringstream ss;
+  boost::optional<std::string> value;
+
+  ss << idf_2_9_1.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_3_0_0.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_2_8_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:Material") {
+      auto iddObject = idd_3_0_0.getObject("OS:Material");
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i != 6) {
+            newObject.setString(i, value.get());
+          } else {
+            // Specific Heat
+            if (value.get() < 100) {
+              newObject.setString(i, 1400.0);
+              LOG(Warn,"Updated Specific Heat for OS:Material named '" << object.iddObject().name()
+                   << "' from " << value.get() << " to 1400.0.");
+            } else {
+              newObject.setString(i, value.get());
+            }
+          }
+        }
+      }
 
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
