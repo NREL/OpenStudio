@@ -50,6 +50,7 @@
 #include "../../model/YearDescription_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include <utilities/idd/Schedule_Year_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Week_Compact_FieldEnums.hxx>
 #include <utilities/idd/Schedule_Week_Daily_FieldEnums.hxx>
@@ -276,21 +277,33 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug2322)
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243)
 {
   Model model;
+
+  // Make start day a Wednesday, before fix it would create a rule for Jan1-Jan4 as a result
+  model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
+  EXPECT_TRUE(yd.setDayofWeekforStartDay("Wednesday"));
+
   ScheduleRuleset scheduleRuleset(model);
+  scheduleRuleset.setName("Schedule Ruleset");
+  ScheduleDay defaultDaySchedule = scheduleRuleset.defaultDaySchedule();
+  defaultDaySchedule.setName("Default Day Schedule");
 
   ASSERT_EQ(1u, model.getModelObjects<ScheduleRuleset>().size());
   ASSERT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
 
-  ScheduleRule rule1(scheduleRuleset);
-  rule1.setApplySunday(true);
-  rule1.setApplyMonday(true);
-  rule1.setApplyTuesday(true);
-  rule1.setApplyWednesday(true);
-  rule1.setApplyThursday(true);
-  rule1.setApplyFriday(true);
-  rule1.setApplySaturday(true);
-  rule1.setStartDate(Date(1,1));
-  rule1.setEndDate(Date(12,31));
+  ScheduleRule rule(scheduleRuleset);
+  rule.setName("All Days Rule");
+  ScheduleDay ruleSchedule = rule.daySchedule();
+  ruleSchedule.setName("All Days Schedule");
+
+  rule.setApplySunday(true);
+  rule.setApplyMonday(true);
+  rule.setApplyTuesday(true);
+  rule.setApplyWednesday(true);
+  rule.setApplyThursday(true);
+  rule.setApplyFriday(true);
+  rule.setApplySaturday(true);
+  rule.setStartDate(Date(1,1));
+  rule.setEndDate(Date(12,31));
 
   ASSERT_EQ(1u, model.getModelObjects<ScheduleRule>().size());
   ASSERT_EQ(2u, model.getModelObjects<ScheduleDay>().size());
@@ -298,12 +311,214 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243)
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Year).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily).size());
-  EXPECT_EQ("Schedule Ruleset 1 Week Rule - Jan1-Dec31", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].nameString());
-  EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
-  EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
-  EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
-  EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
-  EXPECT_EQ("Schedule Day 2", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
+  std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
+  ASSERT_EQ(1u, scheduleYears.size());
+  std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
+  ASSERT_EQ(1u, extensibleGroups.size());
+
+  // 1/1 to 12/31
+  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
+  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
+  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
+  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
+  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
+  EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
+  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
+  EXPECT_EQ(31, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
+
+  std::vector<WorkspaceObject> scheduleWeekDailys = workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily);
+  ASSERT_EQ(1u, scheduleWeekDailys.size());
+  WorkspaceObject scheduleWeekDaily(scheduleWeekDailys[0]);
+
+  EXPECT_EQ("Schedule Ruleset Week Rule - Jan1-Dec31", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].nameString());
+
+  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
+
+}
+
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_2)
+{
+  Model model;
+
+  // Make start day a Wednesday, before fix it would create a rule for Jan1-Jan4 as a result
+  model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
+  EXPECT_TRUE(yd.setDayofWeekforStartDay("Wednesday"));
+
+  ScheduleRuleset scheduleRuleset(model);
+  scheduleRuleset.setName("Schedule Ruleset");
+  ScheduleDay defaultDaySchedule = scheduleRuleset.defaultDaySchedule();
+  defaultDaySchedule.setName("Default Day Schedule");
+
+  ASSERT_EQ(1u, model.getModelObjects<ScheduleRuleset>().size());
+  ASSERT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
+
+  ScheduleRule rule(scheduleRuleset);
+  rule.setName("All Days Except Mon and Wed Rule");
+  ScheduleDay ruleSchedule = rule.daySchedule();
+  ruleSchedule.setName("All Days Except Mon and Wed Schedule");
+
+  rule.setApplySunday(true);
+  rule.setApplyMonday(false);
+  rule.setApplyTuesday(true);
+  rule.setApplyWednesday(false);
+  rule.setApplyThursday(true);
+  rule.setApplyFriday(true);
+  rule.setApplySaturday(true);
+
+  ASSERT_EQ(1u, model.getModelObjects<ScheduleRule>().size());
+  ASSERT_EQ(2u, model.getModelObjects<ScheduleDay>().size());
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
+  ASSERT_EQ(1u, scheduleYears.size());
+  std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
+  ASSERT_EQ(1u, extensibleGroups.size());
+
+  // 1/1 to 12/31
+  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth));
+  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartMonth).get());
+  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay));
+  EXPECT_EQ(1, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::StartDay).get());
+  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth));
+  EXPECT_EQ(12, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndMonth).get());
+  ASSERT_TRUE(extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay));
+  EXPECT_EQ(31, extensibleGroups[0].getInt(Schedule_YearExtensibleFields::EndDay).get());
+
+  std::vector<WorkspaceObject> scheduleWeekDailys = workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily);
+  ASSERT_EQ(1u, scheduleWeekDailys.size());
+  WorkspaceObject scheduleWeekDaily(scheduleWeekDailys[0]);
+
+  EXPECT_EQ("Schedule Ruleset Week Rule - Jan1-Dec31", workspace.getObjectsByType(IddObjectType::Schedule_Week_Daily)[0].nameString());
+
+  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
+  EXPECT_EQ(defaultDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
+  EXPECT_EQ(defaultDaySchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), scheduleWeekDaily.getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
+
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_3)
+{
+  Model model;
+
+  // Make start day a Wednesday, before fix it would create a rule for Jan1-Jan4 as a result
+  model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
+  EXPECT_TRUE(yd.setDayofWeekforStartDay("Wednesday"));
+
+  ScheduleRuleset scheduleRuleset(model);
+  scheduleRuleset.setName("Schedule Ruleset");
+  ScheduleDay defaultDaySchedule = scheduleRuleset.defaultDaySchedule();
+  defaultDaySchedule.setName("Default Day Schedule");
+
+  ASSERT_EQ(1u, model.getModelObjects<ScheduleRuleset>().size());
+  ASSERT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
+
+  ScheduleRule rule(scheduleRuleset);
+  rule.setName("1/3 - 12/29 Days Except Mon and Wed Rule");
+  rule.setStartDate(Date(1, 3));
+  rule.setEndDate(Date(12, 29));
+  ScheduleDay ruleSchedule = rule.daySchedule();
+  ruleSchedule.setName("All Days Except Mon and Wed Schedule");
+  rule.setApplySunday(true);
+  rule.setApplyMonday(true);
+  rule.setApplyTuesday(true);
+  rule.setApplyWednesday(true);
+  rule.setApplyThursday(true);
+  rule.setApplyFriday(true);
+  rule.setApplySaturday(true);
+
+  ASSERT_EQ(1u, model.getModelObjects<ScheduleRule>().size());
+  ASSERT_EQ(2u, model.getModelObjects<ScheduleDay>().size());
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> scheduleYears = workspace.getObjectsByType(IddObjectType::Schedule_Year);
+  ASSERT_EQ(1u, scheduleYears.size());
+  std::vector<IdfExtensibleGroup> extensibleGroups = scheduleYears[0].extensibleGroups();
+  ASSERT_EQ(3u, extensibleGroups.size());
+  std::vector<WorkspaceExtensibleGroup> workspaceExtensibleGroups = subsetCastVector<WorkspaceExtensibleGroup>(extensibleGroups);
+
+
+  // 1/1 to 1/4 (Starts on Wednesday, ends on Saturday like all rules)
+  WorkspaceExtensibleGroup w_eg(workspaceExtensibleGroups[0]);
+  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::StartMonth));
+  EXPECT_EQ(1, w_eg.getInt(Schedule_YearExtensibleFields::StartMonth).get());
+  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::StartDay));
+  EXPECT_EQ(1, w_eg.getInt(Schedule_YearExtensibleFields::StartDay).get());
+  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::EndMonth));
+  EXPECT_EQ(1, w_eg.getInt(Schedule_YearExtensibleFields::EndMonth).get());
+  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::EndDay));
+  EXPECT_EQ(4, w_eg.getInt(Schedule_YearExtensibleFields::EndDay).get());
+
+  boost::optional<WorkspaceObject> _scheduleWeekDaily1 = w_eg.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
+  // Rule doesn't kick in for two days, so Wednesday and Thursday
+  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
+  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
+  // Business as usual here
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily1->getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
+
+
+  // Main one: should apply to all day
+  // 1/5 to 12/27
+  w_eg = workspaceExtensibleGroups[1];
+  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::StartMonth));
+  EXPECT_EQ(1, w_eg.getInt(Schedule_YearExtensibleFields::StartMonth).get());
+  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::StartDay));
+  EXPECT_EQ(5, w_eg.getInt(Schedule_YearExtensibleFields::StartDay).get());
+  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::EndMonth));
+  EXPECT_EQ(12, w_eg.getInt(Schedule_YearExtensibleFields::EndMonth).get());
+  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::EndDay));
+  EXPECT_EQ(27, w_eg.getInt(Schedule_YearExtensibleFields::EndDay).get());
+
+  boost::optional<WorkspaceObject> _scheduleWeekDaily2 = w_eg.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily2->getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
+
+
+  // Last week
+  w_eg = workspaceExtensibleGroups[2];
+  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::StartMonth));
+  EXPECT_EQ(12, w_eg.getInt(Schedule_YearExtensibleFields::StartMonth).get());
+  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::StartDay));
+  EXPECT_EQ(28, w_eg.getInt(Schedule_YearExtensibleFields::StartDay).get());
+  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::EndMonth));
+  EXPECT_EQ(12, w_eg.getInt(Schedule_YearExtensibleFields::EndMonth).get());
+  ASSERT_TRUE(w_eg.getInt(Schedule_YearExtensibleFields::EndDay));
+  EXPECT_EQ(31, w_eg.getInt(Schedule_YearExtensibleFields::EndDay).get());
+
+  // Year ends on a wednesday, rule doesn't apply to last two days
+  // so tuesday and wednesday should be default
+  boost::optional<WorkspaceObject> _scheduleWeekDaily3 = w_eg.getTarget(Schedule_YearExtensibleFields::Schedule_WeekName);
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::SundaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::MondaySchedule_DayName).get());
+  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::TuesdaySchedule_DayName).get());
+  EXPECT_EQ(defaultDaySchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::WednesdaySchedule_DayName).get());
+  // Past end of year...
+  // TODO: not sure that makes sense, it should probably be default
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::ThursdaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::FridaySchedule_DayName).get());
+  EXPECT_EQ(ruleSchedule.nameString(), _scheduleWeekDaily3->getString(Schedule_Week_DailyFields::SaturdaySchedule_DayName).get());
+
 }
