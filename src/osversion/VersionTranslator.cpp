@@ -4882,27 +4882,32 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
   IdfFile targetIdf(idd_3_0_0.iddFile());
   ss << targetIdf.versionObject().get();
 
-  for (const IdfObject& object : idf_2_8_1.objects()) {
+  for (const IdfObject& object : idf_2_9_1.objects()) {
     auto iddname = object.iddObject().name();
 
     if (iddname == "OS:Material") {
       auto iddObject = idd_3_0_0.getObject("OS:Material");
       IdfObject newObject(iddObject.get());
 
-      for (size_t i = 0; i < object.numFields(); ++i) {
-        if ((value = object.getString(i))) {
-          if (i != 6) {
-            newObject.setString(i, value.get());
-          } else {
-            // Specific Heat
-            if (value.get() < 100) {
-              newObject.setString(i, 1400.0);
-              LOG(Warn,"Updated Specific Heat for OS:Material named '" << object.iddObject().name()
-                   << "' from " << value.get() << " to 1400.0.");
-            } else {
-              newObject.setString(i, value.get());
-            }
-          }
+      newObject.setString(0, object.getString(0).get());
+      newObject.setString(1, object.getString(1).get());
+      newObject.setString(2, object.getString(2).get());
+      newObject.setDouble(3, object.getDouble(3).get());
+      newObject.setDouble(4, object.getDouble(4).get());
+      newObject.setDouble(5, object.getDouble(5).get());
+
+      boost::optional<double> value = object.getDouble(6);
+      if (value.get() < 100.0) {
+        newObject.setDouble(6, 1400.0);
+        LOG(Warn,"Updated Specific Heat for OS:Material named '" << object.iddObject().name()
+             << "' from " << value.get() << " to 1400.0.");
+      } else {
+        newObject.setDouble(6, value.get());
+      }
+      
+      for (size_t i = 7; i < object.numFields(); ++i) {
+        if ((value = object.getDouble(i))) {
+          newObject.setDouble(i, value.get());
         }
       }
 
