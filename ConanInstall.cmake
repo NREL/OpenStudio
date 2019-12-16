@@ -49,7 +49,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   elseif (APPLE)
     # No-op
   else()
-    list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
+    # No-op: jsoncpp is fine in 1.9.2, it uses fPIC (not use_pic) and defaults to true
   endif()
 
   if (BUILD_TESTING)

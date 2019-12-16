@@ -403,7 +403,7 @@ add_subdirectory(pch)
 set(${target_name}_depends
   CONAN_PKG::sqlite3
   CONAN_PKG::jsoncpp
-  CONAN_PKG::zlib
+  CONAN_PKG::ZLIB
   CONAN_PKG::fmt
   CONAN_PKG::pugixml
   CONAN_PKG::boost_filesystem
