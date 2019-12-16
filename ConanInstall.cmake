@@ -78,13 +78,13 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     #boost_log/${BOOST_VERSION}@bincrafters/stable
     #boost_numeric_ublas/${BOOST_VERSION}@bincrafters/stable
     #boost_functional/${BOOST_VERSION}@bincrafters/stable
-    boost_geometry/${BOOST_VERSION}@bincrafters/stable
+    #boost_geometry/${BOOST_VERSION}@bincrafters/stable
     pugixml/1.10@bincrafters/stable
     jsoncpp/1.9.2
     zlib/1.2.11
     fmt/6.0.0
     sqlite3/3.30.1 # Or 3.29.0
-    cpprestsdk/2.10.14@jmarrec/testing # TODO:Temp @bincrafters/stable
+    cpprestsdk/2.10.14@jmarrec/testing # TODO:Temp @bincrafters/stable (need bincrafters/testing, which isn't on bintray.)
     websocketpp/0.8.1@jmarrec/stable
     # websocketpp/0.8.1@jmarrec/stable # TODO: Temp to avoid hitting https://github.com/bincrafters/community/issues/1069
     geographiclib/1.49@bincrafters/stable
