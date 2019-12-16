@@ -64,31 +64,36 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_cmake_run(REQUIRES
     ${CONAN_READLINE}
     ${CONAN_QT}
-    openssl/1.1.1d # or openssl/1.1.0l
+    openssl/1.1.0l # ruby 2.5.5 won't work with 1.1.1d, so use 1.1.0l here to try to force every package to align on the same as ruby
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    openstudio_ruby/2.5.5@nrel/stable
-    boost_asio/${BOOST_VERSION}@bincrafters/stable
-    boost_program_options/${BOOST_VERSION}@bincrafters/stable
-    boost_regex/${BOOST_VERSION}@bincrafters/stable
-    boost_filesystem/${BOOST_VERSION}@bincrafters/stable
-    boost_crc/${BOOST_VERSION}@bincrafters/stable
-    boost_algorithm/${BOOST_VERSION}@bincrafters/stable
-    boost_uuid/${BOOST_VERSION}@bincrafters/stable
-    boost_log/${BOOST_VERSION}@bincrafters/stable
-    boost_numeric_ublas/${BOOST_VERSION}@bincrafters/stable
-    boost_functional/${BOOST_VERSION}@bincrafters/stable
+    openstudio_ruby/2.5.5@jmarrec/testing    # TODO: Temp #@nrel/stable
+    boost/1.71.0
+    #boost_asio/${BOOST_VERSION}@bincrafters/stable
+    #boost_program_options/${BOOST_VERSION}@bincrafters/stable
+    #boost_regex/${BOOST_VERSION}@bincrafters/stable
+    #boost_filesystem/${BOOST_VERSION}@bincrafters/stable
+    #boost_crc/${BOOST_VERSION}@bincrafters/stable
+    #boost_algorithm/${BOOST_VERSION}@bincrafters/stable
+    #boost_uuid/${BOOST_VERSION}@bincrafters/stable
+    #boost_log/${BOOST_VERSION}@bincrafters/stable
+    #boost_numeric_ublas/${BOOST_VERSION}@bincrafters/stable
+    #boost_functional/${BOOST_VERSION}@bincrafters/stable
     boost_geometry/${BOOST_VERSION}@bincrafters/stable
     pugixml/1.10@bincrafters/stable
     jsoncpp/1.9.2
     zlib/1.2.11
     fmt/6.0.0
     sqlite3/3.30.1 # Or 3.29.0
-    cpprestsdk/2.10.14@bincrafters/stable
+    cpprestsdk/2.10.14@jmarrec/testing # TODO:Temp @bincrafters/stable
     websocketpp/0.8.1@jmarrec/stable
     # websocketpp/0.8.1@jmarrec/stable # TODO: Temp to avoid hitting https://github.com/bincrafters/community/issues/1069
     geographiclib/1.49@bincrafters/stable
     swig_installer/4.0.1@bincrafters/stable
     ${CONAN_GTEST}
+
+    # Override to avoid dependency mismatches
+    bzip2/1.0.8
+
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
     OPTIONS ${CONAN_OPTIONS}
     BUILD ${CONAN_BUILD}
