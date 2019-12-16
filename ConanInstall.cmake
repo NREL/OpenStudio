@@ -23,7 +23,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   include(${CMAKE_BINARY_DIR}/conan.cmake)
 
-  conan_check(VERSION 1.0.0 REQUIRED)
+  conan_check(VERSION 1.20.0 REQUIRED)
 
   message(STATUS "openstudio: RUNNING CONAN")
 
@@ -53,7 +53,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   endif()
 
   if (BUILD_TESTING)
-    set(CONAN_GTEST "gtest/1.8.1@bincrafters/stable")
+    set(CONAN_GTEST "gtest/1.10.0") # or 1.8.1?
   else()
     set(CONAN_GTEST "")
   endif()
@@ -64,7 +64,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_cmake_run(REQUIRES
     ${CONAN_READLINE}
     ${CONAN_QT}
-    OpenSSL/1.1.0g@conan/stable
+    openssl/1.1.1d # or openssl/1.1.0l
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
     openstudio_ruby/2.5.5@nrel/stable
     boost_asio/${BOOST_VERSION}@bincrafters/stable
@@ -78,13 +78,14 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     boost_numeric_ublas/${BOOST_VERSION}@bincrafters/stable
     boost_functional/${BOOST_VERSION}@bincrafters/stable
     boost_geometry/${BOOST_VERSION}@bincrafters/stable
-    pugixml/1.9@bincrafters/stable
-    jsoncpp/1.8.4@theirix/stable
-    zlib/1.2.11@conan/stable
-    fmt/5.2.1@bincrafters/stable
-    sqlite3/3.27.2@bincrafters/stable
-    cpprestsdk/2.10.13@bincrafters/stable
-    websocketpp/0.8.1@jmarrec/stable # TODO: Temp to avoid hitting https://github.com/bincrafters/community/issues/1069
+    pugixml/1.10@bincrafters/stable
+    jsoncpp/1.9.2
+    zlib/1.2.11
+    fmt/6.0.0
+    sqlite3/3.30.1 # Or 3.29.0
+    cpprestsdk/2.10.14@bincrafters/stable
+    websocketpp/0.8.1@jmarrec/stable
+    # websocketpp/0.8.1@jmarrec/stable # TODO: Temp to avoid hitting https://github.com/bincrafters/community/issues/1069
     geographiclib/1.49@bincrafters/stable
     swig_installer/4.0.1@bincrafters/stable
     ${CONAN_GTEST}
