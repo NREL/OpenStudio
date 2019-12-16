@@ -31,9 +31,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     URL https://api.bintray.com/conan/bincrafters/public-conan)
   conan_add_remote(NAME nrel
     URL https://api.bintray.com/conan/commercialbuilding/nrel)
-
-  # conan_add_remote(NAME jmarrec
-  #   URL https://api.bintray.com/conan/jmarrec/testing)
+  # TODO: Temp
+  conan_add_remote(NAME jmarrec
+    URL https://api.bintray.com/conan/jmarrec/testing)
 
   # Convenience variable to set a consistent version for individual boost packages
   set(BOOST_VERSION "1.69.0")
@@ -84,7 +84,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     fmt/5.2.1@bincrafters/stable
     sqlite3/3.27.2@bincrafters/stable
     cpprestsdk/2.10.13@bincrafters/stable
-    websocketpp/0.8.1@bincrafters/stable
+    websocketpp/0.8.1@jmarrec/stable # TODO: Temp to avoid hitting https://github.com/bincrafters/community/issues/1069
     geographiclib/1.49@bincrafters/stable
     swig_installer/4.0.1@bincrafters/stable
     ${CONAN_GTEST}
@@ -93,7 +93,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     BUILD ${CONAN_BUILD}
     # Passes `-u, --update`    to conan install: Check updates exist from upstream remotes
     # That and build=outdated should ensure we track the right
-    # UPDATE ## TODO: Temporarily disable this to avoid hitting https://github.com/bincrafters/community/issues/1069
+    UPDATE
   )
 
   set(CONAN_OPENSTUDIO_ALREADY_RUN TRUE)
