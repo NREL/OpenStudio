@@ -36,7 +36,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     URL https://api.bintray.com/conan/jmarrec/testing)
 
   # Convenience variable to set a consistent version for individual boost packages
-  set(BOOST_VERSION "1.69.0")
+  # set(BOOST_VERSION "1.69.0")
 
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
   # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
@@ -84,8 +84,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     zlib/1.2.11
     fmt/6.0.0
     sqlite3/3.30.1 # Or 3.29.0
-    cpprestsdk/2.10.14@jmarrec/testing # TODO:Temp @bincrafters/stable (need bincrafters/testing, which isn't on bintray.)
-    websocketpp/0.8.1@jmarrec/testing # TODO: temp, needed to fork it to allow support for boost 1.70+
+    cpprestsdk/2.10.14@jmarrec/stable # TODO:Temp @bincrafters/stable (need bincrafters/testing, which isn't on bintray which includes boost/1.71.0 since that's what I enabled support for on websocketpp (was merged to bincrafters stable/0.8.1). Also enabled MSVC 19 support
+    websocketpp/0.8.1@bincrafters/stable
     geographiclib/1.49@bincrafters/stable
     swig_installer/4.0.1@bincrafters/stable
     ${CONAN_GTEST}
