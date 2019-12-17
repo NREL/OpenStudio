@@ -85,8 +85,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     fmt/6.0.0
     sqlite3/3.30.1 # Or 3.29.0
     cpprestsdk/2.10.14@jmarrec/testing # TODO:Temp @bincrafters/stable (need bincrafters/testing, which isn't on bintray.)
-    websocketpp/0.8.1@jmarrec/stable
-    # websocketpp/0.8.1@jmarrec/stable # TODO: Temp to avoid hitting https://github.com/bincrafters/community/issues/1069
+    websocketpp/0.8.1@bincrafters/stable
     geographiclib/1.49@bincrafters/stable
     swig_installer/4.0.1@bincrafters/stable
     ${CONAN_GTEST}
