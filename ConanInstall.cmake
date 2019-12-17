@@ -23,7 +23,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   include(${CMAKE_BINARY_DIR}/conan.cmake)
 
-  conan_check(VERSION 1.0.0 REQUIRED)
+  conan_check(VERSION 1.20.0 REQUIRED)
 
   message(STATUS "openstudio: RUNNING CONAN")
 
@@ -88,6 +88,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     geographiclib/1.49@bincrafters/stable
     swig_installer/4.0.1@bincrafters/stable
     ${CONAN_GTEST}
+    # Override to avoid dependency mismatches
+    bzip2/1.0.8
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
     OPTIONS ${CONAN_OPTIONS}
     BUILD ${CONAN_BUILD}
