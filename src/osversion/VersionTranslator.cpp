@@ -4889,25 +4889,25 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       auto iddObject = idd_3_0_0.getObject("OS:Material");
       IdfObject newObject(iddObject.get());
 
-      newObject.setString(0, object.getString(0).get());
-      newObject.setString(1, object.getString(1).get());
-      newObject.setString(2, object.getString(2).get());
-      newObject.setDouble(3, object.getDouble(3).get());
-      newObject.setDouble(4, object.getDouble(4).get());
-      newObject.setDouble(5, object.getDouble(5).get());
-
-      boost::optional<double> value = object.getDouble(6);
-      if (value.get() < 100.0) {
-        newObject.setDouble(6, 1400.0);
-        LOG(Warn,"Updated Specific Heat for OS:Material named '" << object.iddObject().name()
-             << "' from " << value.get() << " to 1400.0.");
-      } else {
-        newObject.setDouble(6, value.get());
-      }
-      
-      for (size_t i = 7; i < object.numFields(); ++i) {
-        if ((value = object.getDouble(i))) {
-          newObject.setDouble(i, value.get());
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        // Specific Heat
+        if (i == 6) {
+        // This field is required so it should always be initialized
+          if (boost::optional<double> _value = object.getDouble(6)) {
+            if (_value.get() == 0.1) {
+              LOG(Warn,"Updated Specific Heat for OS:Material named '" << object.iddObject().name()
+                    << "' from " << value.get() << " to the new default of 1400.0.");
+              newObject.setDouble(6, 1400.0);
+            } else if (_value.get() < 100) {
+              LOG(Warn,"Updated Specific Heat for OS:Material named '" << object.iddObject().name()
+                    << "' from " << value.get() << " to the new minimum of 100.0.");
+              newObject.setDouble(6, 100.0);
+            } else {
+              newObject.setDouble(6, _value.get());
+            }
+          }
+        } else if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
         }
       }
 
