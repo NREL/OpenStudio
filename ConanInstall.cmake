@@ -92,7 +92,6 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
     # Override to avoid dependency mismatches
     bzip2/1.0.8
-
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
     OPTIONS ${CONAN_OPTIONS}
     BUILD ${CONAN_BUILD}
