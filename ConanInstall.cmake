@@ -36,7 +36,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     URL https://api.bintray.com/conan/jmarrec/testing)
 
   # Convenience variable to set a consistent version for individual boost packages
-  # set(BOOST_VERSION "1.69.0")
+  # set(BOOST_VERSION "1.71.0")
 
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
   # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
@@ -44,16 +44,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # 'outdated' also acts like 'missing': if no binary, will build them.
   list(APPEND CONAN_BUILD "outdated")
 
-  if (MSVC)
-    # No-op
-  elseif (APPLE)
-    # No-op
-  else()
-    # No-op: jsoncpp is fine in 1.9.2, it uses fPIC (not use_pic) and defaults to true
-  endif()
-
   if (BUILD_TESTING)
-    set(CONAN_GTEST "gtest/1.10.0") # or 1.8.1?
+    set(CONAN_GTEST "gtest/1.10.0")
   else()
     set(CONAN_GTEST "")
   endif()
@@ -64,9 +56,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_cmake_run(REQUIRES
     ${CONAN_READLINE}
     ${CONAN_QT}
-    openssl/1.1.0l # ruby 2.5.5 won't work with 1.1.1d, so use 1.1.0l here to try to force every package to align on the same as ruby
+    openssl/1.1.0l # ruby 2.5.5 won't work with 1.1.1x, so use 1.1.0l here to try to force every package to align on the same as ruby
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    openstudio_ruby/2.5.5@jmarrec/testing    # TODO: Temp #@nrel/stable
+    openstudio_ruby/2.5.5@nrel/testing    # TODO: Temp #@nrel/stable
     boost/1.71.0
     #boost_asio/${BOOST_VERSION}@bincrafters/stable
     #boost_program_options/${BOOST_VERSION}@bincrafters/stable
@@ -83,7 +75,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     jsoncpp/1.9.2
     zlib/1.2.11
     fmt/6.0.0
-    sqlite3/3.30.1 # Or 3.29.0
+    sqlite3/3.30.1
     cpprestsdk/2.10.14@jmarrec/stable # TODO:Temp @bincrafters/stable (need bincrafters/testing, which isn't on bintray which includes boost/1.71.0 since that's what I enabled support for on websocketpp (was merged to bincrafters stable/0.8.1). Also enabled MSVC 19 support
     websocketpp/0.8.1@bincrafters/stable
     geographiclib/1.49@bincrafters/stable
