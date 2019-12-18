@@ -58,7 +58,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     ${CONAN_QT}
     openssl/1.1.0l # ruby 2.5.5 won't work with 1.1.1x, so use 1.1.0l here to try to force every package to align on the same as ruby
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    openstudio_ruby/2.5.5@nrel/testing    # TODO: Temp #@nrel/stable
+    openstudio_ruby/2.5.5@nrel/stable    # TODO: Temp #@nrel/stable
     boost/1.71.0
     #boost_asio/${BOOST_VERSION}@bincrafters/stable
     #boost_program_options/${BOOST_VERSION}@bincrafters/stable
