@@ -31,9 +31,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     URL https://api.bintray.com/conan/bincrafters/public-conan)
   conan_add_remote(NAME nrel
     URL https://api.bintray.com/conan/commercialbuilding/nrel)
-  # TODO: Temp
-  conan_add_remote(NAME jmarrec
-    URL https://api.bintray.com/conan/jmarrec/testing)
+  #conan_add_remote(NAME jmarrec
+  #  URL https://api.bintray.com/conan/jmarrec/testing)
 
   # Convenience variable to set a consistent version for individual boost packages
   # set(BOOST_VERSION "1.71.0")
@@ -76,7 +75,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     zlib/1.2.11
     fmt/6.0.0
     sqlite3/3.30.1
-    cpprestsdk/2.10.14@jmarrec/stable # TODO:Temp @bincrafters/stable (need bincrafters/testing, which isn't on bintray which includes boost/1.71.0 since that's what I enabled support for on websocketpp (was merged to bincrafters stable/0.8.1). Also enabled MSVC 19 support
+    cpprestsdk/2.10.14@bincrafters/stable
     websocketpp/0.8.1@bincrafters/stable
     geographiclib/1.49@bincrafters/stable
     swig_installer/4.0.1@bincrafters/stable
