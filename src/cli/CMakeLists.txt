@@ -24,7 +24,6 @@ endif()
 message("Searching for ruby modules in '${MODULE_ROOT}/lib/**/*.rb'")
 file(GLOB_RECURSE  EXTENSION_RB  FOLLOW_SYMLINKS "${MODULE_ROOT}/lib/**/*.rb")
 
-
 foreach( _FILE ${EXTENSION_RB} )
   file(RELATIVE_PATH LOCATION ${MODULE_ROOT}/lib ${_FILE})
   list(APPEND FILES ${_FILE})
@@ -32,23 +31,23 @@ foreach( _FILE ${EXTENSION_RB} )
 endforeach()
 
 set(GEMFILE_FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock")
-file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.rb")
-file(GLOB_RECURSE ERB_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.erb")
-file(GLOB_RECURSE JS_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.js")
-file(GLOB_RECURSE CSS_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.css")
-file(GLOB_RECURSE GIF_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.gif")
-file(GLOB_RECURSE PNG_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.png")
-file(GLOB_RECURSE HTML_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.html")
-file(GLOB_RECURSE IDF_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.idf")
-file(GLOB_RECURSE OSM_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.osm")
-file(GLOB_RECURSE EPW_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.epw")
-file(GLOB_RECURSE DDY_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.ddy")
-file(GLOB_RECURSE STAT_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.stat")
-file(GLOB_RECURSE CSV_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.csv")
-file(GLOB_RECURSE JSON_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.json")
-file(GLOB_RECURSE SPEC_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.gemspec")
-file(GLOB_RECURSE GZ_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.gz")
-file(GLOB_RECURSE YML_FILES FOLLOW_SYMLINKS "${PROJECT_BINARY_DIR}/openstudio-gems/**/*.yml")
+file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.rb")
+file(GLOB_RECURSE ERB_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.erb")
+file(GLOB_RECURSE JS_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.js")
+file(GLOB_RECURSE CSS_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.css")
+file(GLOB_RECURSE GIF_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.gif")
+file(GLOB_RECURSE PNG_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.png")
+file(GLOB_RECURSE HTML_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.html")
+file(GLOB_RECURSE IDF_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.idf")
+file(GLOB_RECURSE OSM_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.osm")
+file(GLOB_RECURSE EPW_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.epw")
+file(GLOB_RECURSE DDY_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.ddy")
+file(GLOB_RECURSE STAT_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.stat")
+file(GLOB_RECURSE CSV_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.csv")
+file(GLOB_RECURSE JSON_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.json")
+file(GLOB_RECURSE SPEC_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.gemspec")
+file(GLOB_RECURSE GZ_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.gz")
+file(GLOB_RECURSE YML_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.yml")
 file(GLOB_RECURSE OS_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/**/*.rb") # DLM: this is temporary, these files should live somewhere else and be included in the shared Ruby lib
 
 foreach( _FILE ${GEMFILE_FILES} )
@@ -190,7 +189,12 @@ set_source_files_properties(EmbeddedScripting.i
   PROPERTIES CPLUSPLUS true
 )
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories(${CMAKE_CURRENT_BINARY_DIR} 
+  ${PROJECT_BINARY_DIR} 
+  ${PROJECT_SOURCE_DIR} 
+  ${CMAKE_CURRENT_SOURCE_DIR} 
+  ${OPENSTUDIO_GEMS_DIR}
+)
 
 # Must call CMake itself in order to set the SWIG_LIB env var for add_custom_command
 add_custom_command(
@@ -284,6 +288,8 @@ target_link_libraries(ruby_libs PUBLIC additional_ruby_libs)
 
 target_link_libraries(openstudio init_openstudio ruby_libs)
 
+include("${OPENSTUDIO_GEMS_DIR}/export-extensions.cmake")
+
 target_link_libraries(openstudio
  openstudio_airflow
  openstudio_model
@@ -294,6 +300,7 @@ target_link_libraries(openstudio
  openstudio_isomodel
  openstudio_gbxml
  openstudio_radiance
+ ${ruby_extension_libs}
 )
 
 # Change to CONAN_PKG::OpenSSL vs OPENSSL_CRYPTO_LIBRARY if this is needed.

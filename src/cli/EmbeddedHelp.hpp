@@ -38,6 +38,10 @@
 #include <windows.h>
 #endif
 
+extern "C" {
+  void Init_pycall();
+}
+
 namespace embedded_help {
 
   inline std::string applicationFilePath() {
@@ -54,6 +58,11 @@ namespace embedded_help {
     }
 #endif
     return std::string();
+  }
+
+  inline void initPycall() {
+    Init_pycall();
+    rb_provide("pycall.so");
   }
 }
 

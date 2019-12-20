@@ -53,6 +53,7 @@ module Kernel
   $LOAD_PATH << ':/ruby/2.5.0'
   $LOAD_PATH << ':/ruby/2.5.0/x86_64-darwin16'
   $LOAD_PATH << ':/ruby/2.5.0/x64-mswin64_140'
+  $LOAD_PATH << ':/ruby/2.5.0/bundler/gems/pycall.rb-3e377dff0f93/lib'
   # DLM: now done in embedded gem initialization section in openstudio_cli.rb
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
@@ -117,12 +118,11 @@ module Kernel
 
     s = OpenStudio::preprocess_ruby_script(s)
 
-    result = eval(s,BINDING,path)
+    result = Kernel::eval(s,BINDING,path)
     
     current_directory = Dir.pwd 
     if original_directory != current_directory
       Dir.chdir(original_directory)
-      puts "Directory changed from '#{original_directory}' to '#{current_directory}' while require_embedded_absolute '#{path}', result = #{result}, restoring original_directory"
       STDOUT.flush
     end
     
