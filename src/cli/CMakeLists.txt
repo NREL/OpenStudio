@@ -215,6 +215,7 @@ add_custom_command(
           "-fvirtual"
           "-I${PROJECT_SOURCE_DIR}/src"
           "-I${PROJECT_BINARY_DIR}/src"
+          "-I${OPENSTUDIO_GEMS_DIR}"
           "-D_WINDOWS"
           "-Fmicrosoft"
           "${CMAKE_CURRENT_SOURCE_DIR}/EmbeddedScripting.i"

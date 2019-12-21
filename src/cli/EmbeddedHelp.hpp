@@ -38,9 +38,11 @@
 #include <windows.h>
 #endif
 
-extern "C" {
-  void Init_pycall();
-}
+#ifdef SWIG
+%include <ext-init.hpp>
+#else
+#include <ext-init.hpp>
+#endif
 
 namespace embedded_help {
 
@@ -60,10 +62,6 @@ namespace embedded_help {
     return std::string();
   }
 
-  inline void initPycall() {
-    Init_pycall();
-    rb_provide("pycall.so");
-  }
 }
 
 #endif // CLI_EMBEDDEDHELP_HPP
