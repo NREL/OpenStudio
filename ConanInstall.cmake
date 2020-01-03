@@ -31,12 +31,11 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     URL https://api.bintray.com/conan/bincrafters/public-conan)
   conan_add_remote(NAME nrel
     URL https://api.bintray.com/conan/commercialbuilding/nrel)
-  # TODO: Temp
-  conan_add_remote(NAME jmarrec
-    URL https://api.bintray.com/conan/jmarrec/testing)
+  #conan_add_remote(NAME jmarrec
+  #  URL https://api.bintray.com/conan/jmarrec/testing)
 
   # Convenience variable to set a consistent version for individual boost packages
-  set(BOOST_VERSION "1.69.0")
+  # set(BOOST_VERSION "1.71.0")
 
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
   # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
@@ -44,16 +43,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # 'outdated' also acts like 'missing': if no binary, will build them.
   list(APPEND CONAN_BUILD "outdated")
 
-  if (MSVC)
-    # No-op
-  elseif (APPLE)
-    # No-op
-  else()
-    list(APPEND CONAN_OPTIONS "jsoncpp:use_pic=True")
-  endif()
-
   if (BUILD_TESTING)
-    set(CONAN_GTEST "gtest/1.8.1@bincrafters/stable")
+    set(CONAN_GTEST "gtest/1.10.0")
   else()
     set(CONAN_GTEST "")
   endif()
@@ -64,30 +55,32 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_cmake_run(REQUIRES
     ${CONAN_READLINE}
     ${CONAN_QT}
-    OpenSSL/1.1.0g@conan/stable
+    openssl/1.1.0l # ruby 2.5.5 won't work with 1.1.1x, so use 1.1.0l here to try to force every package to align on the same as ruby
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    openstudio_ruby/2.5.5@nrel/stable
-    boost_asio/${BOOST_VERSION}@bincrafters/stable
-    boost_program_options/${BOOST_VERSION}@bincrafters/stable
-    boost_regex/${BOOST_VERSION}@bincrafters/stable
-    boost_filesystem/${BOOST_VERSION}@bincrafters/stable
-    boost_crc/${BOOST_VERSION}@bincrafters/stable
-    boost_algorithm/${BOOST_VERSION}@bincrafters/stable
-    boost_uuid/${BOOST_VERSION}@bincrafters/stable
-    boost_log/${BOOST_VERSION}@bincrafters/stable
-    boost_numeric_ublas/${BOOST_VERSION}@bincrafters/stable
-    boost_functional/${BOOST_VERSION}@bincrafters/stable
-    boost_geometry/${BOOST_VERSION}@bincrafters/stable
-    pugixml/1.9@bincrafters/stable
-    jsoncpp/1.8.4@theirix/stable
-    zlib/1.2.11@conan/stable
-    fmt/5.2.1@bincrafters/stable
-    sqlite3/3.27.2@bincrafters/stable
-    cpprestsdk/2.10.13@bincrafters/stable
-    websocketpp/0.8.1@jmarrec/stable # TODO: Temp to avoid hitting https://github.com/bincrafters/community/issues/1069
+    openstudio_ruby/2.5.5@nrel/stable    # TODO: Temp #@nrel/stable
+    boost/1.71.0
+    #boost_asio/${BOOST_VERSION}@bincrafters/stable
+    #boost_program_options/${BOOST_VERSION}@bincrafters/stable
+    #boost_regex/${BOOST_VERSION}@bincrafters/stable
+    #boost_filesystem/${BOOST_VERSION}@bincrafters/stable
+    #boost_crc/${BOOST_VERSION}@bincrafters/stable
+    #boost_algorithm/${BOOST_VERSION}@bincrafters/stable
+    #boost_uuid/${BOOST_VERSION}@bincrafters/stable
+    #boost_log/${BOOST_VERSION}@bincrafters/stable
+    #boost_numeric_ublas/${BOOST_VERSION}@bincrafters/stable
+    #boost_functional/${BOOST_VERSION}@bincrafters/stable
+    #boost_geometry/${BOOST_VERSION}@bincrafters/stable
+    pugixml/1.10@bincrafters/stable
+    jsoncpp/1.9.2
+    zlib/1.2.11
+    fmt/6.0.0
+    sqlite3/3.30.1
+    cpprestsdk/2.10.14@bincrafters/stable
+    websocketpp/0.8.1@bincrafters/stable
     geographiclib/1.49@bincrafters/stable
     swig_installer/4.0.1@bincrafters/stable
     ${CONAN_GTEST}
+
     # Override to avoid dependency mismatches
     bzip2/1.0.8
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS

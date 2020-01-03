@@ -229,6 +229,8 @@ endif()
 
 if(WIN32)
 
+  # This is really just about RC but instead of spending hours trying to figure how to disable /bigobj just for that part,
+  # I removed the definition altogether and didn't hit any issue.
   remove_definitions(/bigobj)
 
   add_executable(openstudio
