@@ -402,20 +402,21 @@ add_subdirectory(pch)
 
 set(${target_name}_depends
   CONAN_PKG::sqlite3
-  CONAN_PKG::jsoncpp
-  CONAN_PKG::zlib
+  CONAN_PKG::JsonCpp
+  CONAN_PKG::ZLIB
   CONAN_PKG::fmt
   CONAN_PKG::pugixml
-  CONAN_PKG::boost_filesystem
-  CONAN_PKG::boost_crc
-  CONAN_PKG::boost_regex
-  CONAN_PKG::boost_algorithm
-  CONAN_PKG::boost_uuid
-  CONAN_PKG::boost_log
-  CONAN_PKG::boost_program_options
-  CONAN_PKG::boost_numeric_ublas
-  CONAN_PKG::boost_functional
-  CONAN_PKG::boost_geometry
+  CONAN_PKG::Boost
+  #CONAN_PKG::boost_filesystem
+  #CONAN_PKG::boost_crc
+  #CONAN_PKG::boost_regex
+  #CONAN_PKG::boost_algorithm
+  #CONAN_PKG::boost_uuid
+  #CONAN_PKG::boost_log
+  #CONAN_PKG::boost_program_options
+  #CONAN_PKG::boost_numeric_ublas
+  #CONAN_PKG::boost_functional
+  #CONAN_PKG::boost_geometry
   CONAN_PKG::cpprestsdk
   CONAN_PKG::OpenSSL
   CONAN_PKG::geographiclib

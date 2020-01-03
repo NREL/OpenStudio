@@ -38,7 +38,7 @@ using namespace openstudio;
 const double EPSILON = 1E-10;
 
 class LineLinear2d // Geometry line in linear form. General form: Ax + By + C = 0;
-{ 
+{
 public:
   double A = 0.0;
   double B = 0.0;
@@ -258,7 +258,7 @@ public:
       return boost::none;
     }
 
-    // I0 = S1_P0 + sI * u; 
+    // I0 = S1_P0 + sI * u;
     // compute S1 intersect point
     Point3d I0 = s1p0 + sI * u;
     return I0;
@@ -515,14 +515,14 @@ private:
       LOG_AND_THROW("Could not find vertex.");
     }
     int vsize = vertices.size();
-    int pos = std::distance(vertices.begin(), it);
+    auto pos = std::distance(vertices.begin(), it);
     pos += offset;
     if (pos < 0) {
       pos += vertices.size();
     } else if (pos >= vsize) {
       pos -= vertices.size();
     }
-    return pos;
+    return static_cast<int>(pos);
   }
 };
 
@@ -538,7 +538,7 @@ public:
     if (it == nodes.end()) {
       LOG_AND_THROW("Could not find node in nodes.")
     }
-    return (it - nodes.begin());
+    return static_cast<unsigned>(it - nodes.begin());
   }
 
   bool isEnd(std::shared_ptr<FaceNode> vertex) {
@@ -580,13 +580,13 @@ public:
 
   friend std::ostream& operator<<(std::ostream& os, const Face& f) {
     os << "Face [size=" << f.nodes.size() << ", edge=";
-    
+
     if (f.edge) {
       os << *f.edge;
     } else {
       os << "null";
     }
-    
+
     os << ", closed=" << f.closed << "]";
 
     return os;
@@ -594,7 +594,7 @@ public:
 
 private:
   REGISTER_LOGGER("utilities.Face");
-  
+
 };
 
 class QueueEvent
@@ -719,7 +719,7 @@ public:
   {
     TYPE_EDGE = 0, TYPE_SPLIT = 1, TYPE_SINGLE_EDGE = 2
   };
-  
+
   enum ChainMode
   {
     MODE_EDGE = 0, MODE_SPLIT = 1, MODE_CLOSED_EDGE = 2
@@ -1144,7 +1144,7 @@ void initSlav(std::vector<Point3d>& polygon, std::vector< std::vector< std::shar
 
   for (std::shared_ptr<Edge> edge : edges) {
     std::shared_ptr<Edge> nextEdge = edge->next;
-      
+
     std::shared_ptr<Ray2d> bisector(new Ray2d(calcBisector(edge->end, edge, nextEdge)));
 
     edge->bisectorNext = bisector;
@@ -1736,7 +1736,7 @@ std::vector<LevelEvent> groupLevelEvents(std::vector< std::shared_ptr<QueueEvent
         levelEvents[j]->addEventToGroup(parentGroup);
         levelEvents.erase(levelEvents.begin() + j);
         j--;
-      } 
+      }
 
     }
 
@@ -2333,7 +2333,7 @@ void multiEdgeEvent(LevelEvent& event, std::vector< std::vector< std::shared_ptr
 
   int lavIndex = Vertex::getLavIndex(prevVertex, sLav);
   auto it = std::find(sLav[lavIndex].begin(), sLav[lavIndex].end(), prevVertex);
-  int pos = std::distance(sLav[lavIndex].begin(), it);
+  auto pos = std::distance(sLav[lavIndex].begin(), it);
   if (pos == 0) {
     sLav[lavIndex].push_back(edgeVertex);
   } else {
@@ -2464,14 +2464,14 @@ std::vector<Point3d> getGableTopAndBottomVertices(std::vector<Point3d>& surface)
     ret.push_back(surface[2]); // top
     ret.push_back(surface[0]); // bottom
     ret.push_back(surface[1]); // bottom
-  } 
+  }
   return ret;
 }
 
 int getOppositeGableIndex(std::vector< std::vector<Point3d> >& surfaces, std::vector<unsigned> connectedSurfaces, unsigned gableIndexNum) {
   // Obtain opposite gable index relative to gableIndexNum
   if (connectedSurfaces.size() < 4) {
-    // There must be at least 4 connected surfaces (including gableIndexNum) for 
+    // There must be at least 4 connected surfaces (including gableIndexNum) for
     // there to be an opposite gable.
     return -1;
   }
@@ -2797,7 +2797,7 @@ std::vector< std::vector<Point3d> > doShedRoof(std::vector<Point3d>& polygon, do
     }
   }
 
-  // Reduce all vertex distances by minimum vertex distance. Combined with 
+  // Reduce all vertex distances by minimum vertex distance. Combined with
   // roofPitchDegrees, this defines the height of the shed roof vertex.
   double roofSlope = tan(degToRad(roofPitchDegrees));
   for (auto element : distances) {
