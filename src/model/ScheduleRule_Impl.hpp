@@ -162,6 +162,15 @@ namespace detail {
     /// Returns whether or not this rule covers each given date.
     std::vector<bool> containsDates(const std::vector<openstudio::Date>& dates);
 
+    // Convenience methods
+    bool applyAllDays() const;
+    bool applyWeekdays() const;
+    bool applyWeekends() const;
+
+    bool setApplyAllDays(bool applyAllDays);
+    bool setApplyWeekdays(bool applyWeekdays);
+    bool setApplyWeekends(bool applyWeekends);
+
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.ScheduleRule");

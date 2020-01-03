@@ -69,6 +69,43 @@ if(POLICY CMP0077)
 endif()
 
 ###############################################################################
+#                                  N I N J A                                  #
+###############################################################################
+# Ninja support: has to be atop for it to take effect before anything else is done
+# Add Color Output if Using Ninja
+macro(AddCXXFlagIfSupported flag test)
+  CHECK_CXX_COMPILER_FLAG(${flag} ${test})
+  if(${${test}})
+    message("adding ${flag}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+  endif()
+endmacro()
+
+if("Ninja" STREQUAL ${CMAKE_GENERATOR})
+  # Will be passed to OpenStudio.in to deal with the Win32 case
+  set(NINJA TRUE)
+  # Clang
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    AddCXXFlagIfSupported(-fcolor-diagnostics COMPILER_SUPPORTS_fcolor-diagnostics)
+  endif()
+
+  # g++
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    # For some reason it doesn't say its supported, but it works...
+    # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
+    message(STATUS "Ninja: Forcing -fdiagnostics-color=always")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+  endif()
+endif()
+
+# Xcode/Ninja generators undefined MAKE
+if(CMAKE_GENERATOR MATCHES "Make")
+  set(MAKE "$(MAKE)")
+else()
+  set(MAKE make)
+endif()
+
+###############################################################################
 # Project version information
 set(PROJECT_VERSION_BUILD "Unknown" CACHE STRING "Build number") # git sha
 find_package(Git)
@@ -273,7 +310,7 @@ if(WIN32)
   add_definitions(-DNOMINMAX)
 endif()
 
-if(MSVC)
+if(MSVC AND NOT NINJA)
   # Build with Multiple Processes
   set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
   mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
@@ -404,12 +441,16 @@ if(MSVC)
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
 
   # create compiler processes on all effective processors
-  if(BUILD_WITH_MULTIPLE_PROCESSES)
+  # /MP is useless for ninja and will cause problems. BUILD_WITH_MULTIPLE_PROCESSES shouldn't have been set if ninja but let's be safe
+  if(BUILD_WITH_MULTIPLE_PROCESSES AND NOT NINJA)
     add_definitions(/MP)
   endif()
 
-  #Enable warning on thread un-safe static member initialization - DLM: we have been bit by this many times
-  add_definitions(/w44640)
+  # Enable warning on thread un-safe static member initialization - DLM: we have been bit by this many times
+  # TODO: JM 2019-09-19: Disabling for now
+  # Using the righg flag (/w14460 and not the previously mispelled /w44640) will make compilation fail with many warnings treated as error,
+  # eg: IddRegex.cpp all scoped `const static std::string result` inside functions will issue that and make it fatal
+  # add_definitions(/w14640)
 
   # ignore decorated name length exceeded
   add_definitions(/wd4503)
@@ -437,37 +478,6 @@ if(MSVC)
   add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
   add_definitions(-D_SILENCE_FPOS_SEEKPOS_DEPRECATION_WARNING)
 
-endif()
-
-# Add Color Output if Using Ninja
-macro(AddCXXFlagIfSupported flag test)
-  CHECK_CXX_COMPILER_FLAG(${flag} ${test})
-  if(${${test}})
-    message("adding ${flag}")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
-  endif()
-endmacro()
-
-if("Ninja" STREQUAL ${CMAKE_GENERATOR})
-  # Clang
-  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    AddCXXFlagIfSupported(-fcolor-diagnostics COMPILER_SUPPORTS_fcolor-diagnostics)
-  endif()
-
-  # g++
-  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    # For some reason it doesn't say its supported, but it works...
-    # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
-    message(STATUS "Ninja: Forcing -fdiagnostics-color=always")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
-  endif()
-endif()
-
-# Xcode/Ninja generators undefined MAKE
-if(CMAKE_GENERATOR MATCHES "Make")
-  set(MAKE "$(MAKE)")
-else()
-  set(MAKE make)
 endif()
 
 ##############################################################################
@@ -675,8 +685,8 @@ endif()
 
 # build and release openstudio gems at https://github.com/NREL/OpenStudio-gems
 # upload the openstudio-gems-DATE.tar.gz to the dependencies location on s3, then update the MD5sum and url below
-set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20191015.tar.gz")
-set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d907c406a53d8b52c79f4179beebf6af")
+set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20191212.tar.gz")
+set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "141ebfd95a434e87548eead81b54290b")
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
   file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
