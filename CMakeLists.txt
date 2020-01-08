@@ -695,7 +695,7 @@ if(UNIX)
 elseif(WIN32)
   if(CMAKE_CL_64)
     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200107-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "7997b00bdb1560f1b684bfc5d9f1d561")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "36df4e400f40d960a17aa86f134c0ca5")
   endif()
 endif()
 
