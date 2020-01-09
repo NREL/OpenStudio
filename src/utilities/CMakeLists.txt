@@ -402,11 +402,12 @@ add_subdirectory(pch)
 
 set(${target_name}_depends
   CONAN_PKG::sqlite3
-  CONAN_PKG::JsonCpp
-  CONAN_PKG::ZLIB
+  CONAN_PKG::jsoncpp
+  CONAN_PKG::zlib
   CONAN_PKG::fmt
   CONAN_PKG::pugixml
-  CONAN_PKG::Boost
+  CONAN_PKG::boost
+  #If we use the boost modular package:
   #CONAN_PKG::boost_filesystem
   #CONAN_PKG::boost_crc
   #CONAN_PKG::boost_regex
@@ -418,6 +419,7 @@ set(${target_name}_depends
   #CONAN_PKG::boost_functional
   #CONAN_PKG::boost_geometry
   CONAN_PKG::cpprestsdk
+  # TODO: this may change to lowercase
   CONAN_PKG::OpenSSL
   CONAN_PKG::geographiclib
 )
