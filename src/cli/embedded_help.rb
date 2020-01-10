@@ -53,6 +53,7 @@ module Kernel
   $LOAD_PATH << ':/ruby/2.5.0'
   $LOAD_PATH << ':/ruby/2.5.0/x86_64-darwin16'
   $LOAD_PATH << ':/ruby/2.5.0/x64-mswin64_140'
+  $LOAD_PATH << ':/ruby/2.5.0/bundler/gems/pycall.rb-3d4041b8fb9d/lib'
   # DLM: now done in embedded gem initialization section in openstudio_cli.rb
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
@@ -64,34 +65,46 @@ module Kernel
 
   def require path
     original_directory = Dir.pwd
-    rb_path = path
+    path_with_extension = path
 
     if path.include? 'openstudio/energyplus/find_energyplus'
       return false
     end
     
-  
     extname = File.extname(path)
-    if extname.empty? or extname != '.rb'
-      rb_path = path + '.rb'
+
+    if extname.empty? #or extname != '.rb'
+      path_with_extension = path + '.rb'
     end
 
-    if rb_path.to_s.chars.first == ':'
-       if $LOADED.include?(rb_path) then
-         return true
-      else
-        return require_embedded_absolute(rb_path)
+    if extname == '.so' or extname == '.dll'
+      basename = File.basename(path, '.*')
+      initmethod = "init_#{basename}".to_sym
+      if $LOADED.include?(path)
+        return true;
+      elsif EmbeddedScripting.private_method_defined? initmethod
+        $LOADED << path
+        EmbeddedScripting.send(initmethod) 
+        return true;
       end
-    elsif rb_path == 'openstudio.rb'
-      return true
     else
-      $LOAD_PATH.each do |p|
-        if p.to_s.chars.first == ':' then
-          embedded_path = p + '/' + rb_path
-          if $LOADED.include?(embedded_path) then
-            return true
-          elsif EmbeddedScripting::hasFile(embedded_path) then
-            return require_embedded_absolute(embedded_path)
+      if path_with_extension.to_s.chars.first == ':'
+        if $LOADED.include?(path_with_extension)
+           return true
+        else
+          return require_embedded_absolute(path_with_extension)
+        end
+      elsif path_with_extension == 'openstudio.rb'
+        return true
+      else
+        $LOAD_PATH.each do |p|
+          if p.to_s.chars.first == ':'
+            embedded_path = p + '/' + path_with_extension
+            if $LOADED.include?(embedded_path)
+              return true
+            elsif EmbeddedScripting::hasFile(embedded_path)
+              return require_embedded_absolute(embedded_path)
+            end
           end
         end
       end
@@ -117,12 +130,11 @@ module Kernel
 
     s = OpenStudio::preprocess_ruby_script(s)
 
-    result = eval(s,BINDING,path)
+    result = Kernel::eval(s,BINDING,path)
     
     current_directory = Dir.pwd 
     if original_directory != current_directory
       Dir.chdir(original_directory)
-      puts "Directory changed from '#{original_directory}' to '#{current_directory}' while require_embedded_absolute '#{path}', result = #{result}, restoring original_directory"
       STDOUT.flush
     end
     

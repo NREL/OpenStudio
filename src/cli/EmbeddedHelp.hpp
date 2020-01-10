@@ -38,6 +38,12 @@
 #include <windows.h>
 #endif
 
+#ifdef SWIG
+%include <ext-init.hpp>
+#else
+#include <ext-init.hpp>
+#endif
+
 namespace embedded_help {
 
   inline std::string applicationFilePath() {
@@ -55,6 +61,7 @@ namespace embedded_help {
 #endif
     return std::string();
   }
+
 }
 
 #endif // CLI_EMBEDDEDHELP_HPP
