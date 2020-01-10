@@ -184,8 +184,8 @@ namespace detail {
     auto to = toString(t_viewFactor.toSurface().handle());
     auto it = std::find_if(egs.begin(), egs.end(),
       [&](const WorkspaceExtensibleGroup& eg) {
-        return ((eg.getField(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName) == from) &&
-           (eg.getField(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName) == to));
+        return ((eg.getField(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::FromSurfaceName).get() == from) &&
+                (eg.getField(OS_ZoneProperty_UserViewFactors_BySurfaceNameExtensibleFields::ToSurfaceName).get() == to));
       });
 
     // If found, we compute the index by using std::distance between the start of vector and the iterator returned by std::find_if
