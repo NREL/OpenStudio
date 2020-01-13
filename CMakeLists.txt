@@ -1150,7 +1150,6 @@ elseif(UNIX)
   set(CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/)
   # These two will set the .deb install path correctly
   set(CPACK_SET_DESTDIR ON)
-  # CPACK_INSTALL_PREFIX is undocumented / leftover
   set(CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/)
   # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio,
   # UNLESS it's from the OpenStudioApplication
