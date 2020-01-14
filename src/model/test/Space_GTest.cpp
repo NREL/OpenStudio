@@ -40,6 +40,7 @@
 #include "../SpaceType_Impl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
+#include "../BuildingStory.hpp"
 #include "../ScheduleCompact.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
@@ -1535,6 +1536,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   std::vector<Point3d> vertices;
 
   // bottom floor
+  BuildingStory bottomStory(m);
 
   // bottom core
   vertices.clear();
@@ -1545,6 +1547,8 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   boost::optional<Space> bottomCore = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomCore);
   bottomCore->setZOrigin(0);
+  bottomCore->setBuildingStory(bottomStory);
+  bottomCore->setName("bottomCore");
 
   // bottom top
   vertices.clear();
@@ -1555,6 +1559,8 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   boost::optional<Space> bottomTop = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomTop);
   bottomTop->setZOrigin(0);
+  bottomTop->setBuildingStory(bottomStory);
+  bottomTop->setName("bottomTop");
 
   // bottom right
   vertices.clear();
@@ -1565,6 +1571,8 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   boost::optional<Space> bottomRight = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomRight);
   bottomRight->setZOrigin(0);
+  bottomRight->setBuildingStory(bottomStory);
+  bottomRight->setName("bottomRight");
 
   // bottom bottom
   vertices.clear();
@@ -1575,6 +1583,8 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   boost::optional<Space> bottomBottom = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomBottom);
   bottomBottom->setZOrigin(0);
+  bottomBottom->setBuildingStory(bottomStory);
+  bottomBottom->setName("bottomBottom");
 
   // bottom left
   vertices.clear();
@@ -1585,8 +1595,11 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   boost::optional<Space> bottomLeft = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomLeft);
   bottomLeft->setZOrigin(0);
+  bottomLeft->setBuildingStory(bottomStory);
+  bottomLeft->setName("bottomLeft");
 
   // top floor
+  BuildingStory topStory(m);
 
   // top core
   vertices.clear();
@@ -1597,6 +1610,8 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   boost::optional<Space> topCore = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topCore);
   topCore->setZOrigin(3);
+  topCore->setBuildingStory(topStory);
+  topCore->setName("topCore");
 
   // top top
   vertices.clear();
@@ -1607,6 +1622,8 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   boost::optional<Space> topTop = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topTop);
   topTop->setZOrigin(3);
+  topTop->setBuildingStory(topStory);
+  topTop->setName("topTop");
 
   // top right
   vertices.clear();
@@ -1617,6 +1634,8 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   boost::optional<Space> topRight = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topRight);
   topRight->setZOrigin(3);
+  topRight->setBuildingStory(topStory);
+  topRight->setName("topRight");
 
   // top bottom
   vertices.clear();
@@ -1627,6 +1646,8 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   boost::optional<Space> topBottom = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topBottom);
   topBottom->setZOrigin(3);
+  topBottom->setBuildingStory(topStory);
+  topBottom->setName("topBottom");
 
   // top left
   vertices.clear();
@@ -1637,6 +1658,8 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   boost::optional<Space> topLeft = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topLeft);
   topLeft->setZOrigin(3);
+  topLeft->setBuildingStory(topStory);
+  topLeft->setName("topLeft");
 
   // create thermal zones
   std::vector<Space> spaces = m.getConcreteModelObjects<Space>();
@@ -1644,6 +1667,26 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
     ThermalZone z(m);
     space.setThermalZone(z);
   }
+
+  // Rename surfaces to be able to debug what's going on
+  for (auto& space: spaces) {
+    int n_floors = 0;
+    int n_walls = 0;
+    int n_roofs = 0;
+    for (auto& surface: space.surfaces()) {
+      if (istringEqual("Floor", surface.surfaceType())) {
+        surface.setName(space.nameString() + " Floor " + std::to_string(n_floors++));
+      } else if (istringEqual("RoofCeiling", surface.surfaceType())) {
+        surface.setName(space.nameString() + " RoofCeiling " + std::to_string(n_roofs++));
+      } else if (istringEqual("Wall", surface.surfaceType())) {
+        surface.setName(space.nameString() + " Wall " + std::to_string(n_walls++));
+      }
+    }
+  }
+
+  // TODO: Temp
+  openstudio::path outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate1_before_intersect.osm");
+  m.save(outpath, true);
 
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
@@ -1683,6 +1726,8 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   EXPECT_NEAR(exteriorRoofArea, 825.8048, 0.01);
   EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
 
+  outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate1_after_intersect.osm");
+  m.save(outpath, true);
   //m.save("intersect1.osm", true);
 }
 
