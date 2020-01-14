@@ -32,6 +32,6 @@ ln -sf @CPACK_INSTALL_PREFIX@/bin/openstudio /usr/local/bin/openstudio-@OPENSTUD
 #cp "@CPACK_INSTALL_PREFIX@/Temp/icons/osc_256.png" "/usr/share/icons/hicolor/256x256/mimetypes/application-x-openstudio-component.png"
 
 # Delete the Temp directory
-rm -Rf "@CPACK_INSTALL_PREFIX@/Temp"
+# rm -Rf "@CPACK_INSTALL_PREFIX@/Temp"
 
 exit 0;
