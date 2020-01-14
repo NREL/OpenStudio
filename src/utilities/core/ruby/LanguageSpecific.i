@@ -59,6 +59,28 @@
   #endif
 %}
 
+// Override that to always return UTF8
+%fragment("SWIG_FromCharPtrAndSize","header",fragment="SWIG_pchar_descriptor") {
+SWIGINTERNINLINE VALUE
+SWIG_FromCharPtrAndSize(const char* carray, size_t size)
+{
+  if (carray) {
+    if (size > LONG_MAX) {
+      swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
+      return pchar_descriptor ? SWIG_NewPointerObj(%const_cast(carray,char *), pchar_descriptor, 0) : Qnil;
+    } else {
+      // return rb_str_new(carray, %numeric_cast(size,long));
+      return rb_utf8_str_new(carray, %numeric_cast(size,long));
+    }
+  } else {
+    return Qnil;
+  }
+}
+}
+
+
+// TODO: pretty sure SWIG 4.0's implementation is better than this now
+// cf share/swig/4.0.1/ruby/std_wstring.i and share/swig/4.0.1/ruby/rubywstrings.swg
 // wrap wstring
 %fragment("SWIG_AsWCharPtrAndSize","header",fragment="<wchar.h>",fragment="SWIG_pwchar_descriptor") {
 SWIGINTERN int
@@ -71,7 +93,7 @@ SWIG_AsWCharPtrAndSize(VALUE obj, wchar_t **cptr, size_t *psize, int *alloc)
     char *cstr = STR2CSTR(obj);
     %#endif
 
-  std::string tempStr1(cstr);
+    std::string tempStr1(cstr);
     std::wstring tempStr(tempStr1.begin(), tempStr1.end());
 
     size_t size = tempStr.size() + 1;
@@ -105,7 +127,7 @@ SWIG_FromWCharPtrAndSize(const wchar_t * carray, size_t size)
 {
   if (carray) {
 
-  std::wstring tempStr1(carray);
+    std::wstring tempStr1(carray);
     std::string tempStr(tempStr1.begin(), tempStr1.end());
 
     if (tempStr.size() > LONG_MAX) {
