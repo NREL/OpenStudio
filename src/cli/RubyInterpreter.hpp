@@ -711,7 +711,7 @@ class RubyInterpreter
       //std::vector<std::string> rubyArgs;
 
 
-      //rubyArgs.emplace_back("-EUTF-8");
+      //rubyArgs.emplace_back("-EUTF-8:UTF-8");
 
       //for (const auto &p : t_includePaths) {
       //  addIncludePath(rubyArgs, p);
