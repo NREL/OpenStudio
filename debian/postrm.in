@@ -1,0 +1,42 @@
+#!/bin/sh
+# prerm script
+#
+# Removes necessary stuff that was created by postinst
+# I use rm -f to avoid having this script fail in case the file was already deleted...
+
+# Removing symlinks makes perfect sense, they'll be broken anyways
+rm -f /usr/local/bin/openstudio
+rm -f /usr/local/bin/openstudio-@OPENSTUDIO_VERSION@
+
+first_osapporsdk_found=$(dpkg -l | grep '^ii  openstudio' | head -1 | awk '{print $2}')
+n_osapporsdks=$(dpkg -l | grep '^ii  openstudio' | awk '{print $2}' | wc -l)
+# echo "Found $n_osapporsdks installations of openstudio/openstudioapplication, first found: $first_osapporsdk_found"
+
+
+if [ "$n_osapporsdks" -gt "0" ]; then
+  echo "Detected another installation of openstudio/openstudioapplication. You will need to recreate the symbolic links, example follows:"
+  echo "ln -sf /usr/local/$first_osapporsdk_found/bin/openstudio /usr/local/bin/openstudio"
+else
+  echo "No Other openstudio/openstudioapplication installation found. Removed symlinks."
+  echo ""
+
+  # If we want to deal with mimetype and icons for OpenStudio Model / Component
+  # rm -f /usr/share/mime/application/x-openstudio.xml
+
+  ## OpenStudio Model
+  #rm -f "/usr/share/icons/hicolor/16x16/mimetypes/application-x-openstudio.png"
+  #rm -f "/usr/share/icons/hicolor/32x32/mimetypes/application-x-openstudio.png"
+  #rm -f "/usr/share/icons/hicolor/64x64/mimetypes/application-x-openstudio.png"
+  #rm -f "/usr/share/icons/hicolor/128x128/mimetypes/application-x-openstudio.png"
+  #rm -f "/usr/share/icons/hicolor/256x256/mimetypes/application-x-openstudio.png"
+
+  ## OpenStudio Component
+  #rm -f "/usr/share/icons/hicolor/16x16/mimetypes/application-x-openstudio-component.png"
+  #rm -f "/usr/share/icons/hicolor/32x32/mimetypes/application-x-openstudio-component.png"
+  #rm -f "/usr/share/icons/hicolor/64x64/mimetypes/application-x-openstudio-component.png"
+  #rm -f "/usr/share/icons/hicolor/128x128/mimetypes/application-x-openstudio-component.png"
+  #rm -f "/usr/share/icons/hicolor/256x256/mimetypes/application-x-openstudio-component.png"
+
+fi;
+
+exit 0;

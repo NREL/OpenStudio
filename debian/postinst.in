@@ -1,0 +1,37 @@
+#!/bin/sh
+# Author: Julien Marrec
+
+# Exit immediately if a command exits with a non-zero status
+set -e
+
+# Create symlinks
+ln -sf @CPACK_INSTALL_PREFIX@/bin/openstudio /usr/local/bin/openstudio
+ln -sf @CPACK_INSTALL_PREFIX@/bin/openstudio /usr/local/bin/openstudio-@OPENSTUDIO_VERSION@
+
+# If we want to deal with mimetype and icons for OpenStudio Model / Component
+#cp @CPACK_INSTALL_PREFIX@/Temp/x-openstudio.xml /usr/share/mime/application
+
+#mkdir -p /usr/share/icons/hicolor/16x16/mimetypes
+#mkdir -p /usr/share/icons/hicolor/32x32/mimetypes
+#mkdir -p /usr/share/icons/hicolor/64x64/mimetypes
+#mkdir -p /usr/share/icons/hicolor/128x128/mimetypes
+#mkdir -p /usr/share/icons/hicolor/256x256/mimetypes
+
+## OpenStudio Model
+#cp "@CPACK_INSTALL_PREFIX@/Temp/icons/osm_16.png" "/usr/share/icons/hicolor/16x16/mimetypes/application-x-openstudio.png"
+#cp "@CPACK_INSTALL_PREFIX@/Temp/icons/osm_32.png" "/usr/share/icons/hicolor/32x32/mimetypes/application-x-openstudio.png"
+#cp "@CPACK_INSTALL_PREFIX@/Temp/icons/osm_64.png" "/usr/share/icons/hicolor/64x64/mimetypes/application-x-openstudio.png"
+#cp "@CPACK_INSTALL_PREFIX@/Temp/icons/osm_128.png" "/usr/share/icons/hicolor/128x128/mimetypes/application-x-openstudio.png"
+#cp "@CPACK_INSTALL_PREFIX@/Temp/icons/osm_256.png" "/usr/share/icons/hicolor/256x256/mimetypes/application-x-openstudio.png"
+
+## OpenStudio Component
+#cp "@CPACK_INSTALL_PREFIX@/Temp/icons/osc_16.png" "/usr/share/icons/hicolor/16x16/mimetypes/application-x-openstudio-component.png"
+#cp "@CPACK_INSTALL_PREFIX@/Temp/icons/osc_32.png" "/usr/share/icons/hicolor/32x32/mimetypes/application-x-openstudio-component.png"
+#cp "@CPACK_INSTALL_PREFIX@/Temp/icons/osc_64.png" "/usr/share/icons/hicolor/64x64/mimetypes/application-x-openstudio-component.png"
+#cp "@CPACK_INSTALL_PREFIX@/Temp/icons/osc_128.png" "/usr/share/icons/hicolor/128x128/mimetypes/application-x-openstudio-component.png"
+#cp "@CPACK_INSTALL_PREFIX@/Temp/icons/osc_256.png" "/usr/share/icons/hicolor/256x256/mimetypes/application-x-openstudio-component.png"
+
+# Delete the Temp directory
+rm -Rf "@CPACK_INSTALL_PREFIX@/Temp"
+
+exit 0;
