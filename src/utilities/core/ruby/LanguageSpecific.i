@@ -113,7 +113,9 @@ SWIG_FromWCharPtrAndSize(const wchar_t * carray, size_t size)
       return pwchar_descriptor ?
                 SWIG_NewPointerObj(%const_cast(carray,wchar_t *), pwchar_descriptor, 0) : Qnil;
     } else {
-      return rb_str_new(tempStr.c_str(), %numeric_cast(tempStr.size(),long));
+      // return rb_str_new(tempStr.c_str(), %numeric_cast(tempStr.size(),long));
+      // Always s UTF-8
+      return rb_utf8_str_new(tempStr.c_str(), %numeric_cast(tempStr.size(),long));
     }
   } else {
     return Qnil;

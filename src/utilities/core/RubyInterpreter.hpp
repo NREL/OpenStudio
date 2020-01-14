@@ -897,8 +897,9 @@ end # module OpenStudio
         // the description is translated into a C++ exception, which is thrown as an openstudio::RubyException.
         void evalString(const std::string &t_str)
         {
-
-          VALUE val = rb_str_new2(t_str.c_str());
+          // VALUE val = rb_str_new2(t_str.c_str());
+          // Always as UTF-8
+          VALUE val = rb_utf8_str_new(t_str.c_str(), t_str.size())
           int error;
 
           // save and restore the current working directory in case the call to ruby upsets it
@@ -1129,7 +1130,9 @@ end # module OpenStudio
 
         VALUE newPointerObj(std::string *s)
         {
-          return rb_str_new2(s->c_str());
+          // return rb_str_new2(s->c_str());
+          // Always as UTF-8
+          return rb_utf8_str_new(s->c_str(), s->size());
         }
 
 

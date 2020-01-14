@@ -42,7 +42,7 @@ extern "C" {
   void Init_openstudioosversion(void);
   void Init_openstudioutilitiesdata(void);
   void Init_openstudioutilitiessql(void);
-  void Init_openstudiogbxml(void); 
+  void Init_openstudiogbxml(void);
   void Init_openstudiomodelgenerators(void);
   void Init_openstudioradiance(void);
   void Init_openstudioutilitiestime(void);
@@ -378,8 +378,9 @@ static VALUE evaluateSimpleImpl(VALUE arg)
 
 void evalString(const std::string &t_str)
 {
-
-  VALUE val = rb_str_new2(t_str.c_str());
+  // VALUE val = rb_str_new2(t_str.c_str());
+  // Always as UTF-8
+  VALUE val = rb_utf8_str_new(t_str.c_str(), t_str.size());
   int error;
 
   rb_protect(evaluateSimpleImpl,val,&error);
