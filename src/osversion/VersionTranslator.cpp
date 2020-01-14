@@ -4895,11 +4895,11 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
         // This field is required so it should always be initialized
           if (boost::optional<double> _value = object.getDouble(6)) {
             if (_value.get() == 0.1) {
-              LOG(Warn,"Updated Specific Heat for OS:Material named '" << object.iddObject().name()
+              LOG(Warn,"Updated Specific Heat for OS:Material named '" << object.nameString()
                     << "' from " << value.get() << " to the new default of 1400.0.");
               newObject.setDouble(6, 1400.0);
             } else if (_value.get() < 100) {
-              LOG(Warn,"Updated Specific Heat for OS:Material named '" << object.iddObject().name()
+              LOG(Warn,"Updated Specific Heat for OS:Material named '" << object.nameString()
                     << "' from " << value.get() << " to the new minimum of 100.0.");
               newObject.setDouble(6, 100.0);
             } else {
