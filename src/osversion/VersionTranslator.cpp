@@ -4905,6 +4905,9 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
             } else {
               newObject.setDouble(6, _value.get());
             }
+          } else {
+            // Let's be safe
+            newObject.setDouble(6, 1400.0);
           }
         } else if ((value = object.getString(i))) {
             newObject.setString(i, value.get());
