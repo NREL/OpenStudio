@@ -623,7 +623,7 @@ namespace openstudio
           openstudio::path rubypath = openstudio::getOpenStudioEmbeddedRubyPath();
 
           rubyArgs.emplace_back("OpenStudio");
-          rubyArgs.emplace_back("-EUTF-8");
+          rubyArgs.emplace_back("-EUTF-8:UTF-8");
 
           addIncludePath(rubyArgs, t_moduleSearchPath);
           addIncludePath(rubyArgs, t_rubyIncludePath);
