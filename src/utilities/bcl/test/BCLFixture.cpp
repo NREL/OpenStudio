@@ -38,23 +38,35 @@ using openstudio::FileLogSink;
 
 void BCLFixture::SetUp() {
 
-  if (LocalBCL::instance().prodAuthKey().empty()) {
+  // Use a unique libraryPath to avoid concurrent access issues when running tests in parallel
+  // This gets the name of the test that's being run (eg 'RemoteBCLTest')
+  std::string currentTestName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
+  currentLocalBCLPath = resourcesPath() / toPath("utilities/BCL") / toPath(currentTestName);
+
+  // Initialize the LocalBCL Singleton at the given library path
+  LocalBCL& bcl = LocalBCL::instance(currentLocalBCLPath);
+
+  if (bcl.prodAuthKey().empty()) {
     prodAuthKey = defaultProdAuthKey;
-    LocalBCL::instance().setProdAuthKey(prodAuthKey);
+    bcl.setProdAuthKey(prodAuthKey);
   } else {
-    prodAuthKey = LocalBCL::instance().prodAuthKey();
+    prodAuthKey = bcl.prodAuthKey();
   }
 
   // TODO Uncomment after network error handling is in place
   /*if (LocalBCL::instance().devAuthKey().empty()) {
     devAuthKey = defaultDevAuthKey;
-    LocalBCL::instance().setDevAuthKey(devAuthKey);
+    bcl.setDevAuthKey(devAuthKey);
   } else {
-    devAuthKey = LocalBCL::instance().devAuthKey();
+    devAuthKey = bcl.devAuthKey();
   }*/
 }
 
-void BCLFixture::TearDown() {}
+void BCLFixture::TearDown() {
+
+  openstudio::filesystem::remove_all(currentLocalBCLPath);
+
+}
 
 void BCLFixture::SetUpTestCase() {
   // set up logging

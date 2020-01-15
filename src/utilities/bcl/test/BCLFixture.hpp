@@ -39,10 +39,10 @@
 
 class BCLFixture : public ::testing::Test {
  protected:
-  // initialize for each test
+  // initialize for each test: create unique library path to call LocalBCL::instance(currentLocalBCLPath)
   virtual void SetUp() override;
 
-  // tear down after each test
+  // tear down after each test: delete currentLocalBCLPath
   virtual void TearDown() override;
 
   // initialize static members
@@ -60,6 +60,9 @@ class BCLFixture : public ::testing::Test {
   static std::string defaultProdAuthKey;
   static std::string defaultDevAuthKey;
   static boost::optional<openstudio::FileLogSink> logFile;
+
+  // Unique path to the current test's BCL location
+  openstudio::path currentLocalBCLPath;
 
   virtual ~BCLFixture() {}
 };

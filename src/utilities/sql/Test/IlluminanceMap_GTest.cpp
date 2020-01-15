@@ -55,7 +55,7 @@ protected:
 
     // This gets the name of the test that's being run (eg 'QtGUI_IlluminanceMapPlot')
     std::string currentTestName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
-    openstudio::path currentSqlPath = resourcesPath() / toPath("utilities/SqlFile") / toPath(currentTestName + ".sql");
+    currentSqlPath = resourcesPath() / toPath("utilities/SqlFile") / toPath(currentTestName + ".sql");
     // Copy the original SqlFile to a unique one
     openstudio::filesystem::copy_file(oriSqlPath, currentSqlPath, openstudio::filesystem::copy_option::overwrite_if_exists);
 
@@ -64,7 +64,11 @@ protected:
   }
 
   // tear down after for each test
-  virtual void TearDown() override {}
+  virtual void TearDown() override {
+
+    // Delete the sql file we copied
+    openstudio::filesystem::remove(currentSqlPath);
+  }
 
   // initialize static members
   static void SetUpTestCase()
