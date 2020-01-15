@@ -403,7 +403,29 @@ TEST_F(ModelFixture, UndoAdd)
 }
 */
 
-TEST_F(ModelFixture, ExampleModel)
+class ExampleModelFixture : public ModelFixture {
+ protected:
+  // By default, SetUp() inherits the behavior of ModelFixture::SetUp(). In both cases, nothing to be done
+
+  void addPathToCleanUp(const openstudio::path& p) { m_cleanUpPaths.push_back(p); }
+
+  // We override the teardown to make sure we clean up any files we output to the root directory
+  void TearDown() override {
+
+    for (const openstudio::path& p: m_cleanUpPaths) {
+      if(openstudio::filesystem::exists(p)){
+        openstudio::filesystem::remove(p);
+      }
+    }
+    // Call ModelFixture::TearDown, which does nothing (right now)
+    ModelFixture::TearDown();
+  }
+
+ private:
+    std::vector<openstudio::path> m_cleanUpPaths;
+};
+
+TEST_F(ExampleModelFixture, ExampleModel)
 {
   Model model = exampleModel();
 
@@ -435,15 +457,12 @@ TEST_F(ModelFixture, ExampleModel)
   }
 }
 
-TEST_F(ModelFixture, ExampleModel_Save)
+TEST_F(ExampleModelFixture, ExampleModel_Save)
 {
   Model model = exampleModel();
 
   openstudio::path path = toPath("./ExampleModel_Save.osm");
-  if(openstudio::filesystem::exists(path)){
-    openstudio::filesystem::remove(path);
-  }
-
+  addPathToCleanUp(path);
   EXPECT_TRUE(model.save(path, true));
 
   boost::optional<Model> model2 = Model::load(path);
@@ -452,9 +471,10 @@ TEST_F(ModelFixture, ExampleModel_Save)
   EXPECT_EQ(model.numObjects(), model2->numObjects());
 }
 
-TEST_F(ModelFixture, ExampleModel_StagedLoad) {
+TEST_F(ExampleModelFixture, ExampleModel_StagedLoad) {
   Model model = exampleModel();
-  openstudio::path path = toPath("./example.osm");
+  openstudio::path path = toPath("./ExampleModel_StagedLoad.osm");
+  addPathToCleanUp(path);
   model.save(path,true);
 
   IdfFile idf = IdfFile::load(path,IddFileType::OpenStudio).get();
@@ -466,18 +486,14 @@ TEST_F(ModelFixture, ExampleModel_StagedLoad) {
   EXPECT_FALSE(zones[0].spaces().empty());
 }
 
-TEST_F(ModelFixture, ExampleModel_ReloadTwoTimes)
+TEST_F(ExampleModelFixture, ExampleModel_ReloadTwoTimes)
 {
   Model model = exampleModel();
 
   openstudio::path path1 = toPath("./ExampleModel_ReloadTwoTimes1.osm");
-  if(openstudio::filesystem::exists(path1)){
-    openstudio::filesystem::remove(path1);
-  }
   openstudio::path path2 = toPath("./ExampleModel_ReloadTwoTimes2.osm");
-  if(openstudio::filesystem::exists(path2)){
-    openstudio::filesystem::remove(path2);
-  }
+  addPathToCleanUp(path1);
+  addPathToCleanUp(path2);
 
   EXPECT_TRUE(model.save(path1, true));
   EXPECT_TRUE(model.save(path2, true));
