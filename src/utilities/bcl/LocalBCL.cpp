@@ -139,11 +139,13 @@ namespace openstudio{
   LocalBCL &LocalBCL::instance(const path& libraryPath)
   {
     std::shared_ptr<LocalBCL> &ptr = instanceInternal();
-    if (ptr) {
+    if (ptr == nullptr) {
+      // Doesn't exist yet: no problem, just go ahead and create it
       ptr = std::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
     }
     else
     {
+      // Try to avoid doing something if the canonical path asked matches the one we have in store
       openstudio::path canLibraryPath(libraryPath);
       // If libraryPath is an existing dir, take the canonical path, so that it matches what we stored in the Ctor
       if (openstudio::filesystem::is_directory(canLibraryPath) && openstudio::filesystem::exists(canLibraryPath)) {
