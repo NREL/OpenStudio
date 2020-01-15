@@ -49,8 +49,19 @@ using namespace openstudio;
 class IlluminanceMapFixture : public ::testing::Test {
 protected:
 
-  // initialize for each test
-  virtual void SetUp() override {}
+  // initialize for each test: make a unique copy of the SqlFile and open that one, to avoid conflicts when multiple tests try to access it at the
+  // same time
+  virtual void SetUp() override {
+
+    // This gets the name of the test that's being run (eg 'QtGUI_IlluminanceMapPlot')
+    std::string currentTestName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
+    openstudio::path currentSqlPath = resourcesPath() / toPath("utilities/SqlFile") / toPath(currentTestName + ".sql");
+    // Copy the original SqlFile to a unique one
+    openstudio::filesystem::copy_file(oriSqlPath, currentSqlPath, openstudio::filesystem::copy_option::overwrite_if_exists);
+
+    sqlFile = SqlFile(currentSqlPath);
+    ASSERT_TRUE(sqlFile.connectionOpen());
+  }
 
   // tear down after for each test
   virtual void TearDown() override {}
@@ -61,10 +72,10 @@ protected:
     logFile = FileLogSink(toPath("./IlluminanceMapFixture.log"));
     logFile->setLogLevel(Info);
 
-    openstudio::path path;
-    path = resourcesPath() / toPath("energyplus/Daylighting_School/eplusout.sql");
-    sqlFile = SqlFile(path);
-    ASSERT_TRUE(sqlFile.connectionOpen());
+    oriSqlPath = resourcesPath() / toPath("energyplus/Daylighting_School/eplusout.sql");
+    //We aren't going to open it up here, because if you call ctest, it runs *independent* instances of google tests (--gtest_filter=test_name)
+    // and we risk getting conflicts since the sql file is meant to be open read-only and exclusive.
+    // Instead, we'll create a new unique connection to the db in the SetUp
   }
 
   // tear down static members
@@ -79,13 +90,17 @@ protected:
 public:
 
   // sql files
-  static SqlFile sqlFile;
+  SqlFile sqlFile;
+
   static boost::optional<openstudio::FileLogSink> logFile;
+  static openstudio::path oriSqlPath;
+
+  openstudio::path currentSqlPath;
 };
 
 // define static storage
-SqlFile IlluminanceMapFixture::sqlFile;
 boost::optional<openstudio::FileLogSink> IlluminanceMapFixture::logFile;
+openstudio::path IlluminanceMapFixture::oriSqlPath;
 
 ///////////////////////////////////////////////////////////////////////////////
 // *** BEGIN TESTS ***
