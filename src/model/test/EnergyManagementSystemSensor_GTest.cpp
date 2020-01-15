@@ -175,7 +175,7 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
   sensor2.setName("residential_mini_split_unit_2_vrf_energy_sensor");
   sensor2.setKeyName("living zone|unit 2 Multi Split Heat Pump");
 
-  model.save(toPath("./EMS_sensortest.osm"), true);
+  // model.save(toPath("./EMS_sensortest.osm"), true);
 
   outvar1.remove();
   EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
@@ -201,7 +201,7 @@ TEST_F(ModelFixture, EMSSensorDelete) {
   EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
   // 1 avm in the model
   EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
-  model.save(toPath("./EMS_sensor_delete_test.osm"), true);
+  // model.save(toPath("./EMS_sensor_delete_test.osm"), true);
 
   avm.remove();
   // 0 avm in the model

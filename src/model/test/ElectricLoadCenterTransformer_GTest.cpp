@@ -102,7 +102,7 @@ TEST_F(ModelFixture, ElectricLoadCenterTransformer_Constructor)
   EXPECT_EQ(0u, elct.meters().size());
   EXPECT_FALSE(elct.getMeter(0));
 
-  model.save(toPath("./ELCT_ctor.osm"), true);
+  // model.save(toPath("./ELCT_ctor.osm"), true);
 }
 TEST_F(ModelFixture, ElectricLoadCenterTransformer_ModelObjects)
 {
@@ -129,7 +129,7 @@ TEST_F(ModelFixture, ElectricLoadCenterTransformer_ModelObjects)
   elct.resetZone();
   EXPECT_FALSE(elct.zone());
 
-  model.save(toPath("./ELCT_modelobject.osm"), true);
+  // model.save(toPath("./ELCT_modelobject.osm"), true);
 }
 TEST_F(ModelFixture, ElectricLoadCenterTransformer_Extensible)
 {
@@ -181,6 +181,6 @@ TEST_F(ModelFixture, ElectricLoadCenterTransformer_Extensible)
   elct.eraseMeters();
   EXPECT_EQ(0u, elct.meters().size());
 
-  model.save(toPath("./ELCT_extensible.osm"), true);
+  // model.save(toPath("./ELCT_extensible.osm"), true);
 }
 

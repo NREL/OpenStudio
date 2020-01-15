@@ -147,7 +147,6 @@ TEST_F(ModelFixture,CoilWaterHeatingAirToWaterHeatPump)
       EXPECT_FALSE(curve.handle().isNull());
     }
 
-    m.save("/Users/kbenne/tabletest.idf",true);
   }
 }
 

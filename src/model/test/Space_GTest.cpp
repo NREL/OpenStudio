@@ -737,7 +737,7 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest)
   SpaceVector spaces = model.getModelObjects<Space>();
   matchSurfaces(spaces);
 
-  model.save(toPath("./Space_SurfaceMatch_LargeTest.osm"), true);
+  // model.save(toPath("./Space_SurfaceMatch_LargeTest.osm"), true);
 }
 
 TEST_F(ModelFixture, Space_FindSurfaces)
