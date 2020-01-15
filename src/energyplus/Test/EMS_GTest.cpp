@@ -306,6 +306,64 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS) {
 }
 
 
+TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS_explicit)
+{
+  ReverseTranslator reverseTranslator;
+
+  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  OptionalWorkspaceObject _i_zone1 = w.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(_i_zone1);
+  EXPECT_TRUE(_i_zone1->setName("Zone1"));
+  OptionalWorkspaceObject _i_zone2 = w.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(_i_zone2);
+  EXPECT_TRUE(_i_zone2->setName("Zone2"));
+
+  OptionalWorkspaceObject _i_outvar = w.addObject(IdfObject(IddObjectType::Output_Variable));
+  ASSERT_TRUE(_i_outvar);
+  EXPECT_TRUE(_i_outvar->setString(Output_VariableFields::VariableName, "Site Outdoor Air Drybulb Temperature"));
+
+  OptionalWorkspaceObject _i_emsSensor = w.addObject(IdfObject(IddObjectType::EnergyManagementSystem_Sensor));
+  ASSERT_TRUE(_i_emsSensor);
+  EXPECT_TRUE(_i_emsSensor->setName("OATdb_Sensor"));
+  EXPECT_TRUE(_i_emsSensor->setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName,
+                                   "Site Outdoor Air Drybulb Temperature"));
+
+  // To avoid other warnings, we add required objects
+  OptionalWorkspaceObject _i_globalGeometryRules = w.addObject(IdfObject(IddObjectType::GlobalGeometryRules));
+  ASSERT_TRUE(_i_globalGeometryRules);
+
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::StartingVertexPosition, "UpperLeftCorner");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::VertexEntryDirection, "Counterclockwise");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::CoordinateSystem, "Relative");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, "Relative");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, "Relative");
+
+  OptionalWorkspaceObject _i_building = w.addObject(IdfObject(IddObjectType::Building));
+  ASSERT_TRUE(_i_building);
+
+
+  // w.save(toPath("./EMS_sensor1.idf"), true);
+
+  {
+    ASSERT_NO_THROW(reverseTranslator.translateWorkspace(w));
+    Model model = reverseTranslator.translateWorkspace(w);
+    EXPECT_TRUE(reverseTranslator.errors().empty());
+    EXPECT_TRUE(reverseTranslator.warnings().empty());
+
+    std::vector<openstudio::model::EnergyManagementSystemSensor> emsSensors = model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>();
+    ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>().size());
+
+    openstudio::model::EnergyManagementSystemSensor emsSensor1 = model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>()[0];
+    EXPECT_EQ(_i_emsSensor->nameString(), emsSensor1.nameString());
+    EXPECT_EQ("OATdb_Sensor", emsSensor1.nameString());
+    boost::optional<openstudio::model::OutputVariable> _outvar = emsSensor1.outputVariable();
+    ASSERT_TRUE(_outvar);
+    EXPECT_EQ("Site Outdoor Air Drybulb Temperature", _outvar->variableName());
+    EXPECT_EQ(_i_emsSensor->getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName).get(), _outvar->variableName());
+  }
+}
+
+
 Model prepareSensor2_EMS() {
 
   Model model;
