@@ -35,6 +35,7 @@
 #include "../core/FilesystemHelpers.hpp"
 #include "../time/DateTime.hpp"
 
+#include <sstream>
 #include <pugixml.hpp>
 
 namespace openstudio{
@@ -313,7 +314,7 @@ namespace openstudio{
     }
 
     // added in schema version 3
-    m_xmlChecksum = subelement.text().as_string();
+    m_xmlChecksum = element.child("xml_checksum").text().as_string();
 
   }
 
