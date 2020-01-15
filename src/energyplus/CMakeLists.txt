@@ -590,6 +590,7 @@ set(${target_name}_test_src
   Test/FuelCell_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
+  Test/HeatPumpWaterToWaterEquationFit_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
   Test/IlluminanceMap_GTest.cpp
   Test/InteriorPartitionSurface_GTest.cpp
@@ -690,7 +691,7 @@ CREATE_SRC_GROUPS("${${target_name}_src}")
 if(BUILD_TESTING)
 
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
-  
+
   add_dependencies(${target_name}_tests
     ResultsViewer_resources
     openstudio_energyplus_resources
