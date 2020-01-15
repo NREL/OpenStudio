@@ -12,6 +12,9 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 
+// We ignore that, should instead call ZoneHVACEquipment::addToThermalZone to avoid issues
+%ignore openstudio::model::ThermalZone::addEquipment;
+
 %{
   #include <model/HVACTemplates.hpp>
 %}
