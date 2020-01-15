@@ -103,7 +103,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
   //pcud.setMainModelProgramCallingManager(mainPCM);
   boost::optional<EnergyManagementSystemProgramCallingManager> initPCM = pcud.plantInitializationProgramCallingManager();
   boost::optional<EnergyManagementSystemProgramCallingManager> simPCM = pcud.plantSimulationProgramCallingManager();
-  
+
   pcud.setAmbientZone(tz);
 
   EnergyManagementSystemActuator dvfrActuator = pcud.designVolumeFlowRateActuator().get();
@@ -151,7 +151,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
   ASSERT_TRUE(object.getString(PlantComponent_UserDefinedFields::PlantConnection1OutletNodeName, false));
   EXPECT_EQ(outname, object.getString(PlantComponent_UserDefinedFields::PlantConnection1OutletNodeName, false).get());
 
-  m.save(toPath("./PlantComponentUserDefined.osm"), true);
-  w.save(toPath("./PlantComponentUserDefined.idf"), true);
+  // m.save(toPath("./PlantComponentUserDefined.osm"), true);
+  // w.save(toPath("./PlantComponentUserDefined.idf"), true);
 
 }

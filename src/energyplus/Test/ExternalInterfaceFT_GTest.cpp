@@ -149,8 +149,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterface) {
   ASSERT_TRUE(object.getString(ExternalInterfaceFields::NameofExternalInterface, false));
   EXPECT_EQ("FunctionalMockupUnitImport", object.getString(ExternalInterfaceFields::NameofExternalInterface, false).get());
 
-  model.save(toPath("./ExternalInterface.osm"), true);
-  workspace.save(toPath("./ExternalInterface.idf"), true);
+  // model.save(toPath("./ExternalInterface.osm"), true);
+  // workspace.save(toPath("./ExternalInterface.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceActuator) {
@@ -187,8 +187,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceActuator) {
   ASSERT_TRUE(object.getDouble(ExternalInterface_ActuatorFields::OptionalInitialValue, false));
   EXPECT_EQ(1.0, object.getDouble(ExternalInterface_ActuatorFields::OptionalInitialValue, false).get());
 
-  model.save(toPath("./ExternalInterfaceActuator.osm"), true);
-  workspace.save(toPath("./ExternalInterfaceActuator.idf"), true);
+  // model.save(toPath("./ExternalInterfaceActuator.osm"), true);
+  // workspace.save(toPath("./ExternalInterfaceActuator.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceVariable) {
@@ -208,8 +208,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceVariable) {
   ASSERT_TRUE(object.getDouble(ExternalInterface_VariableFields::InitialValue, false));
   EXPECT_EQ(10.0, object.getDouble(ExternalInterface_VariableFields::InitialValue, false).get());
 
-  model.save(toPath("./ExternalInterfaceVariable.osm"), true);
-  workspace.save(toPath("./ExternalInterfaceVariable.idf"), true);
+  // model.save(toPath("./ExternalInterfaceVariable.osm"), true);
+  // workspace.save(toPath("./ExternalInterfaceVariable.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceSchedule) {
@@ -235,8 +235,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceSchedule) {
   ASSERT_TRUE(object.getDouble(ExternalInterface_ScheduleFields::InitialValue, false));
   EXPECT_EQ(10.0, object.getDouble(ExternalInterface_ScheduleFields::InitialValue, false).get());
 
-  model.save(toPath("./ExternalInterfaceSchedule.osm"), true);
-  workspace.save(toPath("./ExternalInterfaceSchedule.idf"), true);
+  // model.save(toPath("./ExternalInterfaceSchedule.osm"), true);
+  // workspace.save(toPath("./ExternalInterfaceSchedule.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitImport) {
@@ -259,8 +259,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   ASSERT_TRUE(object.getDouble(ExternalInterface_FunctionalMockupUnitImportFields::FMULoggingOn, false));
   EXPECT_EQ(0, object.getDouble(ExternalInterface_FunctionalMockupUnitImportFields::FMULoggingOn, false).get());
 
-  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImport.osm"), true);
-  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImport.idf"), true);
+  // model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImport.osm"), true);
+  // workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImport.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitExportFromVariable) {
@@ -286,8 +286,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::FMUVariableName, false));
   EXPECT_EQ(fMUVariableName, object.getString(ExternalInterface_FunctionalMockupUnitExport_From_VariableFields::FMUVariableName, false).get());
 
-  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportFromVariable.osm"), true);
-  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportFromVariable.idf"), true);
+  // model.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportFromVariable.osm"), true);
+  // workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportFromVariable.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitExportToActuator) {
@@ -324,8 +324,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   ASSERT_TRUE(object.getDouble(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::InitialValue, false));
   EXPECT_EQ(10.0, object.getDouble(ExternalInterface_FunctionalMockupUnitExport_To_ActuatorFields::InitialValue, false).get());
 
-  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToActuator.osm"), true);
-  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToActuator.idf"), true);
+  // model.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToActuator.osm"), true);
+  // workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToActuator.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitExportToVariable) {
@@ -347,8 +347,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   ASSERT_TRUE(object.getDouble(ExternalInterface_FunctionalMockupUnitExport_To_VariableFields::InitialValue, false));
   EXPECT_EQ(10.0, object.getDouble(ExternalInterface_FunctionalMockupUnitExport_To_VariableFields::InitialValue, false).get());
 
-  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToVariable.osm"), true);
-  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToVariable.idf"), true);
+  // model.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToVariable.osm"), true);
+  // workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToVariable.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitExportToSchedule) {
@@ -374,8 +374,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   ASSERT_TRUE(object.getDouble(ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::InitialValue, false));
   EXPECT_EQ(10.0, object.getDouble(ExternalInterface_FunctionalMockupUnitExport_To_ScheduleFields::InitialValue, false).get());
 
-  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToSchedule.osm"), true);
-  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToSchedule.idf"), true);
+  // model.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToSchedule.osm"), true);
+  // workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitExportToSchedule.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitImportFromVariable) {
@@ -410,8 +410,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   ASSERT_TRUE(object.getString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUVariableName, false));
   EXPECT_EQ(fMUVariableName, object.getString(ExternalInterface_FunctionalMockupUnitImport_From_VariableFields::FMUVariableName, false).get());
 
-  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportFromVariable.osm"), true);
-  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportFromVariable.idf"), true);
+  // model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportFromVariable.osm"), true);
+  // workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportFromVariable.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitImportToVariable) {
@@ -444,8 +444,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   ASSERT_TRUE(object.getDouble(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::InitialValue, false));
   EXPECT_EQ(10.0, object.getDouble(ExternalInterface_FunctionalMockupUnitImport_To_VariableFields::InitialValue, false).get());
 
-  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToVariable.osm"), true);
-  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToVariable.idf"), true);
+  // model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToVariable.osm"), true);
+  // workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToVariable.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitImportToSchedule) {
@@ -478,8 +478,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   ASSERT_TRUE(object.getDouble(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::InitialValue, false));
   EXPECT_EQ(10.0, object.getDouble(ExternalInterface_FunctionalMockupUnitImport_To_ScheduleFields::InitialValue, false).get());
 
-  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToSchedule.osm"), true);
-  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToSchedule.idf"), true);
+  // model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToSchedule.osm"), true);
+  // workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToSchedule.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUnitImportToActuator) {
@@ -521,6 +521,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExternalInterfaceFunctionalMockupUni
   ASSERT_TRUE(object.getDouble(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::InitialValue, false));
   EXPECT_EQ(10.0, object.getDouble(ExternalInterface_FunctionalMockupUnitImport_To_ActuatorFields::InitialValue, false).get());
 
-  model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToActuator.osm"), true);
-  workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToActuator.idf"), true);
+  // model.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToActuator.osm"), true);
+  // workspace.save(toPath("./ExternalInterfaceFunctionalMockupUnitImportToActuator.idf"), true);
 }

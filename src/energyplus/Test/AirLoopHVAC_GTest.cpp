@@ -193,8 +193,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Non
   // Check that the loop availability schedule ended up in the Fan Schedules
   ASSERT_TRUE(CheckFanSchedules(w));
 
-  m.save(toPath("./AirLoopHVAC_AVM_None.osm"), true);
-  w.save(toPath("./AirLoopHVAC_AVM_None.idf"), true);
+  // m.save(toPath("./AirLoopHVAC_AVM_None.osm"), true);
+  // w.save(toPath("./AirLoopHVAC_AVM_None.idf"), true);
 
 }
 
@@ -220,8 +220,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Nig
   // Check that the loop availability schedule ended up in the Fan Schedules
   ASSERT_TRUE(CheckFanSchedules(w));
 
-  m.save(toPath("./AirLoopHVAC_AVM_NightCycle.osm"), true);
-  w.save(toPath("./AirLoopHVAC_AVM_NightCycle.idf"), true);
+  // m.save(toPath("./AirLoopHVAC_AVM_NightCycle.osm"), true);
+  // w.save(toPath("./AirLoopHVAC_AVM_NightCycle.idf"), true);
 
 }
 
@@ -248,8 +248,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Sch
   // Check that the loop availability schedule ended up in the Fan Schedules
   ASSERT_TRUE(CheckFanSchedules(w));
 
-  m.save(toPath("./AirLoopHVAC_AVM_ScheduledOn.osm"), true);
-  w.save(toPath("./AirLoopHVAC_AVM_ScheduledOn.idf"), true);
+  // m.save(toPath("./AirLoopHVAC_AVM_ScheduledOn.osm"), true);
+  // w.save(toPath("./AirLoopHVAC_AVM_ScheduledOn.idf"), true);
 
 }
 
@@ -285,8 +285,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Nig
   // Check that the loop availability schedule ended up in the Fan Schedules
   ASSERT_TRUE(CheckFanSchedules(w));
 
-  m.save(toPath("./AirLoopHVAC_AVM_NightCycle_ScheduledOn.osm"), true);
-  w.save(toPath("./AirLoopHVAC_AVM_NightCycle_ScheduledOn.idf"), true);
+  // m.save(toPath("./AirLoopHVAC_AVM_NightCycle_ScheduledOn.osm"), true);
+  // w.save(toPath("./AirLoopHVAC_AVM_NightCycle_ScheduledOn.idf"), true);
 
 }
 

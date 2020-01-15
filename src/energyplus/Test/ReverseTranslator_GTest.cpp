@@ -155,11 +155,11 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_DaylightingOffice)
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save( resourcesPath() / toPath("energyplus/Daylighting_Office/in.osm"), true);
+  // model.save( resourcesPath() / toPath("energyplus/Daylighting_Office/in.osm"), true);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  workspace.save( resourcesPath() / toPath("energyplus/Daylighting_Office/in2.idf"), true);
+  // workspace.save( resourcesPath() / toPath("energyplus/Daylighting_Office/in2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture,ReverseTranslator_BestestEx)
@@ -171,11 +171,11 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_BestestEx)
 
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save( resourcesPath() / toPath("energyplus/BestestEx/in.osm"), true);
+  // model.save( resourcesPath() / toPath("energyplus/BestestEx/in.osm"), true);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  workspace.save( resourcesPath() / toPath("energyplus/BestestEx/in2.idf"), true);
+  // workspace.save( resourcesPath() / toPath("energyplus/BestestEx/in2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture,ReverseTranslator_SimpleRelativeTest)
@@ -186,11 +186,11 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_SimpleRelativeTest)
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save( resourcesPath() / toPath("energyplus/SimpleSurfaces/SimpleSurfaces_Relative.osm"), true);
+  // model.save( resourcesPath() / toPath("energyplus/SimpleSurfaces/SimpleSurfaces_Relative.osm"), true);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  workspace.save( resourcesPath() / toPath("energyplus/SimpleSurfaces/SimpleSurfaces_Relative2.idf"), true);
+  // workspace.save( resourcesPath() / toPath("energyplus/SimpleSurfaces/SimpleSurfaces_Relative2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture,ReverseTranslator_Building)
@@ -648,11 +648,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleFile) {
 
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save( resourcesPath() / toPath("energyplus/ScheduleFile/in.osm"), true);
+  // model.save( resourcesPath() / toPath("energyplus/ScheduleFile/in.osm"), true);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  workspace.save( resourcesPath() / toPath("energyplus/ScheduleFile/in2.idf"), true);
+  // workspace.save( resourcesPath() / toPath("energyplus/ScheduleFile/in2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {

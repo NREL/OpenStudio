@@ -84,7 +84,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_Hourly)
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
   // Write out the schedule - keep this around for now
-  //workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_Hourly.idf"), true);
+  // workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_Hourly.idf"), true);
 
   // Check the contents of the output
   unsigned N = objects[0].numFields();
@@ -197,7 +197,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
   // Write out the schedule -  keep this around for now
-  //workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted.idf"), true);
+  // workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted.idf"), true);
 
   // Check the contents of the output
   unsigned N = objects[0].numFields();
@@ -306,7 +306,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_20hours)
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
   // Write out the schedule - keep this around for now
-  //workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_20hours.idf"), true);
+  // workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_20hours.idf"), true);
 
   // Check the contents of the output
   unsigned N = objects[0].numFields();
@@ -434,7 +434,7 @@ TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleFixedInterval_TwoPo
   boost::regex throughRegex("^Through:\\s*(.*)/\\s*(.*)\\s*");
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
-  workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_ThreePoint.idf"), true);
+  // workspace.save(toPath("./ForwardTranslator_ScheduleFixedInterval_ThreePoint.idf"), true);
 
   unsigned N = objects[0].numFields();
   boost::optional<Date> lastDateThrough;
@@ -523,8 +523,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleFixedInterval_TranslatetoSche
   boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(timeseries, model);
   ASSERT_TRUE(scheduleInterval);
   EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
-  ScheduleFixedInterval scheduleFixedInterval = scheduleInterval->optionalCast<ScheduleFixedInterval>().get();  
-  
+  ScheduleFixedInterval scheduleFixedInterval = scheduleInterval->optionalCast<ScheduleFixedInterval>().get();
+
   // Set translate to Schedule:File
   scheduleFixedInterval.setTranslatetoScheduleFile(true);
   EXPECT_TRUE(scheduleFixedInterval.translatetoScheduleFile());
@@ -568,7 +568,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ScheduleVariableInterval_Hourly)
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
   // Write out the schedule - keep this around for now
-  //workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_Hourly.idf"), true);
+  // workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_Hourly.idf"), true);
 
   // Check the contents of the output
   unsigned N = objects[0].numFields();
@@ -682,7 +682,7 @@ TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleVariableInterval_Ho
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
   // Write out the schedule - keep this around for now
-  workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_Hourly_Shifted.idf"), true);
+  // workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_Hourly_Shifted.idf"), true);
 
   // Check the contents of the output
   unsigned N = objects[0].numFields();
@@ -1168,7 +1168,7 @@ TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleVariableInterval_Da
   boost::regex untilRegex("^Until:\\s*(.*):(.*)\\s*");
 
   // Write out the schedule - keep this around for now
-  workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_DaysTimeSeries.idf"), true);
+  // workspace.save(toPath("./ForwardTranslator_ScheduleVariableInterval_DaysTimeSeries.idf"), true);
 
   // Check the contents of the output
   unsigned N = objects[0].numFields();

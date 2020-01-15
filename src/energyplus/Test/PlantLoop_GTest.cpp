@@ -104,8 +104,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_AvailabilityManagers_None)
   WorkspaceObjectVector idfObjs(w.getObjectsByType(IddObjectType::AvailabilityManagerAssignmentList));
   ASSERT_EQ(0u, idfObjs.size());
 
-  m.save(toPath("./PlantLoop_AVM_None.osm"), true);
-  w.save(toPath("./PlantLoop_AVM_None.idf"), true);
+  // m.save(toPath("./PlantLoop_AVM_None.osm"), true);
+  // w.save(toPath("./PlantLoop_AVM_None.idf"), true);
 
 }
 
@@ -133,8 +133,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_AvailabilityManagers_Sched
   IdfExtensibleGroup eg = idf_avm.extensibleGroups()[0];
   ASSERT_EQ("AvailabilityManager:ScheduledOn", eg.getString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType).get());
 
-  m.save(toPath("./PlantLoop_AVM_ScheduledOn.osm"), true);
-  w.save(toPath("./PlantLoop_AVM_ScheduledOn.idf"), true);
+  // m.save(toPath("./PlantLoop_AVM_ScheduledOn.osm"), true);
+  // w.save(toPath("./PlantLoop_AVM_ScheduledOn.idf"), true);
 
 }
 
@@ -171,8 +171,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantLoop_AvailabilityManagers_Sched
   eg = idf_avm.extensibleGroups()[1];
   ASSERT_EQ("AvailabilityManager:ScheduledOff", eg.getString(AvailabilityManagerAssignmentListExtensibleFields::AvailabilityManagerObjectType).get());
 
-  m.save(toPath("./PlantLoop_AVM_ScheduledOnOff.osm"), true);
-  w.save(toPath("./PlantLoop_AVM_ScheduledOnOff.idf"), true);
+  // m.save(toPath("./PlantLoop_AVM_ScheduledOnOff.osm"), true);
+  // w.save(toPath("./PlantLoop_AVM_ScheduledOnOff.idf"), true);
 
 }
 

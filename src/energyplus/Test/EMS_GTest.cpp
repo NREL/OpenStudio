@@ -187,6 +187,8 @@
 #include <utilities/idd/OS_Material_FieldEnums.hxx>
 #include <utilities/idd/OS_Material_AirGap_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
+#include <utilities/idd/Output_Variable_FieldEnums.hxx>
+#include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -202,42 +204,6 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-
-TEST_F(EnergyPlusFixture,ForwardTranslatorSensor1_EMS) {
-
-  Model model;
-
-  Building building = model.getUniqueModelObject<Building>();
-
-  ThermalZone zone1(model);
-  ThermalZone zone2(model);
-
-  // add Site Outdoor Air Drybulb Temperature
-  OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
-
-  // add sensor
-  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
-  OATdbSensor.setName("OATdb Sensor");
-  //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
-
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor).size());
-
-  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor)[0];
-  WorkspaceObject outvar = workspace.getObjectsByType(IddObjectType::Output_Variable)[0];
-
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Name, false));
-  EXPECT_EQ("OATdb_Sensor", object.getString(EnergyManagementSystem_SensorFields::Name, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
-  EXPECT_EQ("", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
-  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
-  EXPECT_EQ("Site Outdoor Air Drybulb Temperature", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
-
-  model.save(toPath("./EMS_sensor1.osm"), true);
-  workspace.save(toPath("./EMS_sensor1.idf"), true);
-}
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorSensorRename_EMS) {
 
@@ -281,30 +247,75 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensorRename_EMS) {
 
   EXPECT_EQ("New Coil Name", object.nameString());
 
-  model.save(toPath("./EMS_sensorRename.osm"), true);
-  workspace.save(toPath("./EMS_sensorRename.idf"), true);
+  // model.save(toPath("./EMS_sensorRename.osm"), true);
+  // workspace.save(toPath("./EMS_sensorRename.idf"), true);
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS) {
-
-  openstudio::path idfPath = toPath("./EMS_sensor1.idf");
-  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
-  ASSERT_TRUE(idfFile);
-  Workspace inWorkspace(*idfFile);
-  ReverseTranslator reverseTranslator;
-  Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_sensor1T.osm"), true);
-
-}
-
-TEST_F(EnergyPlusFixture, ForwardTranslatorSensor2_EMS) {
-
+Model prepareSensor1_EMS() {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
 
   ThermalZone zone1(model);
   ThermalZone zone2(model);
+
+  // add Site Outdoor Air Drybulb Temperature
+  OutputVariable siteOutdoorAirDrybulbTemperature("Site Outdoor Air Drybulb Temperature", model);
+
+  // add sensor
+  EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
+  OATdbSensor.setName("OATdb Sensor");
+  //OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+
+  return model;
+}
+
+TEST_F(EnergyPlusFixture,ForwardTranslatorSensor1_EMS) {
+
+  Model model = prepareSensor1_EMS();
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor).size());
+
+  WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Sensor)[0];
+  WorkspaceObject outvar = workspace.getObjectsByType(IddObjectType::Output_Variable)[0];
+
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Name, false));
+  EXPECT_EQ("OATdb_Sensor", object.getString(EnergyManagementSystem_SensorFields::Name, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
+  EXPECT_EQ("", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
+  ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
+  EXPECT_EQ("Site Outdoor Air Drybulb Temperature", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
+
+  // model.save(toPath("./EMS_sensor1.osm"), true);
+  // workspace.save(toPath("./EMS_sensor1.idf"), true);
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS) {
+
+  Model model = prepareSensor1_EMS();
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
+  ReverseTranslator reverseTranslator;
+  Model m = reverseTranslator.translateWorkspace(workspace);
+  // m.save(toPath("./EMS_sensor1T.osm"), true);
+}
+
+
+Model prepareSensor2_EMS() {
+
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+
+  ThermalZone zone1(model);
+  zone1.setName("Zone 1");
+  ThermalZone zone2(model);
+  zone2.setName("Zone 2");
 
   // add Zone Lights Electric Power to both zones
   OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
@@ -314,6 +325,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensor2_EMS) {
   lights.setName("Light Sensor");
  // lights.setOutputVariable(lightsElectricPower);
   lights.setKeyName(zone1.name().get());
+
+  return model;
+
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorSensor2_EMS) {
+
+  Model model = prepareSensor2_EMS();
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -326,33 +345,36 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensor2_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Name, false));
   EXPECT_EQ("Light_Sensor", object.getString(EnergyManagementSystem_SensorFields::Name, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
-  EXPECT_EQ(zone1.name().get(), object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
+  EXPECT_EQ("Zone 1", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
   EXPECT_EQ("Zone Lights Electric Power", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
 
-  model.save(toPath("./EMS_sensor2.osm"), true);
-  workspace.save(toPath("./EMS_sensor2.idf"), true);
+  // model.save(toPath("./EMS_sensor2.osm"), true);
+  // workspace.save(toPath("./EMS_sensor2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorSensor2_EMS) {
 
-  openstudio::path idfPath = toPath("./EMS_sensor2.idf");
-  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
-  ASSERT_TRUE(idfFile);
-  Workspace inWorkspace(*idfFile);
+  Model model = prepareSensor1_EMS();
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
   ReverseTranslator reverseTranslator;
-  Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_sensor2T.osm"), true);
+  Model m = reverseTranslator.translateWorkspace(workspace);
+  // m.save(toPath("./EMS_sensor2T.osm"), true);
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslatorSensoronMeter_EMS) {
+
+Model prepareSensoronMeter_EMS() {
 
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
 
   ThermalZone zone1(model);
+  zone1.setName("Zone 1");
   ThermalZone zone2(model);
+  zone2.setName("Zone 2");
 
   // create meter
   OutputMeter meter(model);
@@ -363,6 +385,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensoronMeter_EMS) {
   EnergyManagementSystemSensor meter_sensor(model, meter);
   meter_sensor.setName("meter sensor");
   //meter_sensor.setOutputMeter(meter);
+
+
+  return model;
+}
+TEST_F(EnergyPlusFixture, ForwardTranslatorSensoronMeter_EMS) {
+
+  Model model = prepareSensoronMeter_EMS();
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -379,19 +408,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensoronMeter_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
   EXPECT_EQ("test meter", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
 
-  model.save(toPath("./EMS_sensor_meter.osm"), true);
-  workspace.save(toPath("./EMS_sensor_meter.idf"), true);
+  // model.save(toPath("./EMS_sensor_meter.osm"), true);
+  // workspace.save(toPath("./EMS_sensor_meter.idf"), true);
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslatorSensor_Meter_EMS) {
+TEST_F(EnergyPlusFixture, ReverseTranslatorSensoronMeter_EMS) {
 
-  openstudio::path idfPath = toPath("./EMS_sensor_meter.idf");
-  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
-  ASSERT_TRUE(idfFile);
-  Workspace inWorkspace(*idfFile);
+  Model model = prepareSensoronMeter_EMS();
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
+
   ReverseTranslator reverseTranslator;
-  Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_sensor_meterT.osm"), true);
+  Model m = reverseTranslator.translateWorkspace(workspace);
+  // m.save(toPath("./EMS_sensor_meterT.osm"), true);
 
 }
 TEST_F(EnergyPlusFixture, ForwardReverseTranslatorActuator_EMS) {
@@ -436,16 +466,12 @@ TEST_F(EnergyPlusFixture, ForwardReverseTranslatorActuator_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
   EXPECT_EQ(fanControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
 
-  model.save(toPath("./EMS_example.osm"), true);
-  workspace.save(toPath("./EMS_example.idf"), true);
+  // model.save(toPath("./EMS_example.osm"), true);
+  // workspace.save(toPath("./EMS_example.idf"), true);
 
-  openstudio::path idfPath = toPath("./EMS_example.idf");
-  OptionalIdfFile idfFile = IdfFile::load(idfPath, IddFileType::EnergyPlus);
-  ASSERT_TRUE(idfFile);
-  Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
-  Model modelT = reverseTranslator.translateWorkspace(inWorkspace);
-  modelT.save(toPath("./EMS_exampleT.osm"), true);
+  Model modelT = reverseTranslator.translateWorkspace(workspace);
+  // modelT.save(toPath("./EMS_exampleT.osm"), true);
 
 }
 
@@ -485,8 +511,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWeatherActuator_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
   EXPECT_EQ(controlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
 
-  model.save(toPath("./EMS_weatheractuator.osm"), true);
-  workspace.save(toPath("./EMS_weatheractuator.idf"), true);
+  // model.save(toPath("./EMS_weatheractuator.osm"), true);
+  // workspace.save(toPath("./EMS_weatheractuator.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorWeatherActuator2_EMS) {
@@ -526,8 +552,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWeatherActuator2_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
   EXPECT_EQ(controlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
 
-  model.save(toPath("./EMS_weatheractuator2.osm"), true);
-  workspace.save(toPath("./EMS_weatheractuator2.idf"), true);
+  // model.save(toPath("./EMS_weatheractuator2.osm"), true);
+  // workspace.save(toPath("./EMS_weatheractuator2.idf"), true);
 }
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_Space_EMS) {
   Model model;
@@ -574,8 +600,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_Space_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
   EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
 
-  model.save(toPath("./EMS_example.osm"), true);
-  workspace.save(toPath("./EMS_example.idf"), true);
+  // model.save(toPath("./EMS_example.osm"), true);
+  // workspace.save(toPath("./EMS_example.idf"), true);
 }
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType_EMS) {
   Model model;
@@ -622,8 +648,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
   EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
 
-  model.save(toPath("./EMS_example.osm"), true);
-  workspace.save(toPath("./EMS_example.idf"), true);
+  // model.save(toPath("./EMS_example.osm"), true);
+  // workspace.save(toPath("./EMS_example.idf"), true);
 }
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_Space2_EMS) {
   Model model;
@@ -669,8 +695,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_Space2_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
   EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
 
-  model.save(toPath("./EMS_example.osm"), true);
-  workspace.save(toPath("./EMS_example.idf"), true);
+  // model.save(toPath("./EMS_example.osm"), true);
+  // workspace.save(toPath("./EMS_example.idf"), true);
 }
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType2_EMS) {
   Model model;
@@ -717,8 +743,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType2_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
   EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
 
-  model.save(toPath("./EMS_example.osm"), true);
-  workspace.save(toPath("./EMS_example.idf"), true);
+  // model.save(toPath("./EMS_example.osm"), true);
+  // workspace.save(toPath("./EMS_example.idf"), true);
 }
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad3_EMS) {
   Model model;
@@ -752,8 +778,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad3_EMS) {
   // should now be 0 since the actuator should not translate since the SpaceLoad got deleted on FT
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
-  model.save(toPath("./EMS_example.osm"), true);
-  workspace.save(toPath("./EMS_example.idf"), true);
+  // model.save(toPath("./EMS_example.osm"), true);
+  // workspace.save(toPath("./EMS_example.idf"), true);
 }
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceTypes_EMS) {
   Model model;
@@ -809,8 +835,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceTypes_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false));
   EXPECT_EQ(ControlType, object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentControlType, false).get());
 
-  model.save(toPath("./EMS_multi_spaces_spacetypes.osm"), true);
-  workspace.save(toPath("./EMS_multi_spaces_spacetypes.idf"), true);
+  // model.save(toPath("./EMS_multi_spaces_spacetypes.osm"), true);
+  // workspace.save(toPath("./EMS_multi_spaces_spacetypes.idf"), true);
 }
 TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   Model model;
@@ -864,7 +890,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   EXPECT_EQ(line1_test, lines.get()[0]);
   EXPECT_EQ(line2_test, lines.get()[1]);
 
-  model.save(toPath("./EMS_program.osm"), true);
+  // model.save(toPath("./EMS_program.osm"), true);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -876,7 +902,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgram_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ProgramFields::Name, false));
   EXPECT_EQ("Fan_Constant_Volume_1Pressure_Rise_Program_by_Body", object.getString(EnergyManagementSystem_ProgramFields::Name, false).get());
 
-  workspace.save(toPath("./EMS_program.idf"), true);
+  // workspace.save(toPath("./EMS_program.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorProgram_EMS) {
@@ -887,7 +913,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgram_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_programT.osm"), true);
+  // model.save(toPath("./EMS_programT.osm"), true);
 
 }
 
@@ -943,7 +969,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSubroutine_EMS) {
   EXPECT_EQ(line1_test, lines.get()[0]);
   EXPECT_EQ(line2_test, lines.get()[1]);
 
-  model.save(toPath("./EMS_subroutine.osm"), true);
+  // model.save(toPath("./EMS_subroutine.osm"), true);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -955,7 +981,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSubroutine_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SubroutineFields::Name, false));
   EXPECT_EQ("Fan_Constant_Volume_1Pressure_Rise_Program_by_Body", object.getString(EnergyManagementSystem_SubroutineFields::Name, false).get());
 
-  workspace.save(toPath("./EMS_subroutine.idf"), true);
+  // workspace.save(toPath("./EMS_subroutine.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorSubroutine_EMS) {
@@ -966,7 +992,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSubroutine_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_subroutineT.osm"), true);
+  // model.save(toPath("./EMS_subroutineT.osm"), true);
 
 }
 
@@ -1123,8 +1149,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorProgramCallingManager_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ProgramCallingManagerFields::Name, false));
   EXPECT_EQ("Best Program Calling Manager", object.getString(EnergyManagementSystem_ProgramCallingManagerFields::Name, false).get());
 
-  model.save(toPath("./EMS_PCM.osm"), true);
-  workspace.save(toPath("./EMS_PCM.idf"), true);
+  // model.save(toPath("./EMS_PCM.osm"), true);
+  // workspace.save(toPath("./EMS_PCM.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorProgramCallingManager_EMS) {
@@ -1135,7 +1161,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramCallingManager_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_PCMT.osm"), true);
+  // model.save(toPath("./EMS_PCMT.osm"), true);
 
 }
 
@@ -1165,8 +1191,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutput_EMS) {
   ASSERT_TRUE(object.getString(Output_EnergyManagementSystemFields::EMSRuntimeLanguageDebugOutputLevel, false));
   EXPECT_EQ("None", object.getString(Output_EnergyManagementSystemFields::EMSRuntimeLanguageDebugOutputLevel, false).get());
 
-  model.save(toPath("./EMS_output.osm"), true);
-  workspace.save(toPath("./EMS_output.idf"), true);
+  // model.save(toPath("./EMS_output.osm"), true);
+  // workspace.save(toPath("./EMS_output.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorOutput_EMS) {
@@ -1177,7 +1203,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorOutput_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_outputT.osm"), true);
+  // model.save(toPath("./EMS_outputT.osm"), true);
 
 }
 
@@ -1201,8 +1227,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGlobalVariable_EMS) {
   //ASSERT_TRUE(object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false));
   //EXPECT_EQ(var.nameString(), object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false).get());
 
-  model.save(toPath("./EMS_GlobalVariable.osm"), true);
-  workspace.save(toPath("./EMS_GlobalVariable.idf"), true);
+  // model.save(toPath("./EMS_GlobalVariable.osm"), true);
+  // workspace.save(toPath("./EMS_GlobalVariable.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorGlobalVariable_EMS) {
@@ -1213,7 +1239,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorGlobalVariable_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_GlobalVariableT.osm"), true);
+  // model.save(toPath("./EMS_GlobalVariableT.osm"), true);
 
 }
 
@@ -1226,7 +1252,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorGlobalVariable2_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_GlobalVariable2T.osm"), true);
+  // model.save(toPath("./EMS_GlobalVariable2T.osm"), true);
 
 }
 */
@@ -1266,8 +1292,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable_EMS) {
   //ASSERT_TRUE(object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false));
   //EXPECT_EQ(var.nameString(), object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false).get());
 
-  //model.save(toPath("./EMS_OutputVariable.osm"), true);
-  //workspace.save(toPath("./EMS_OutputVariable.idf"), true);
+  // model.save(toPath("./EMS_OutputVariable.osm"), true);
+  // workspace.save(toPath("./EMS_OutputVariable.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable2_EMS) {
@@ -1299,8 +1325,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorOutputVariable2_EMS) {
   //ASSERT_TRUE(object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false));
   //EXPECT_EQ(var.nameString(), object.getString(EnergyManagementSystem_GlobalVariableExtensibleFields::ErlVariableName, false).get());
 
-  model.save(toPath("./EMS_OutputVariable.osm"), true);
-  workspace.save(toPath("./EMS_OutputVariable.idf"), true);
+  // model.save(toPath("./EMS_OutputVariable.osm"), true);
+  // workspace.save(toPath("./EMS_OutputVariable.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorOutputVariable_EMS) {
@@ -1311,7 +1337,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorOutputVariable_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_OutputVariableT.osm"), true);
+  // model.save(toPath("./EMS_OutputVariableT.osm"), true);
 
 }
 TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable_EMS) {
@@ -1340,8 +1366,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable_EMS) {
   ASSERT_TRUE(object.getDouble(EnergyManagementSystem_TrendVariableFields::NumberofTimestepstobeLogged, false));
   EXPECT_EQ(2, object.getDouble(EnergyManagementSystem_TrendVariableFields::NumberofTimestepstobeLogged, false).get());
 
-  model.save(toPath("./EMS_TrendVariable.osm"), true);
-  workspace.save(toPath("./EMS_TrendVariable.idf"), true);
+  // model.save(toPath("./EMS_TrendVariable.osm"), true);
+  // workspace.save(toPath("./EMS_TrendVariable.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorTrendVariable_EMS) {
@@ -1352,7 +1378,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTrendVariable_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_TrendVariableT.osm"), true);
+  // model.save(toPath("./EMS_TrendVariableT.osm"), true);
 
 }
 
@@ -1375,8 +1401,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorInternalVariable_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_InternalVariableFields::InternalDataType, false));
   EXPECT_EQ("TestName", object.getString(EnergyManagementSystem_InternalVariableFields::InternalDataType, false).get());
 
-  model.save(toPath("./EMS_InternalVariable.osm"), true);
-  workspace.save(toPath("./EMS_InternalVariable.idf"), true);
+  // model.save(toPath("./EMS_InternalVariable.osm"), true);
+  // workspace.save(toPath("./EMS_InternalVariable.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorInternalVariable2_EMS) {
@@ -1400,8 +1426,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorInternalVariable2_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_InternalVariableFields::InternalDataType, false));
   EXPECT_EQ("Zone Air Volume", object.getString(EnergyManagementSystem_InternalVariableFields::InternalDataType, false).get());
 
-  model.save(toPath("./EMS_InternalVariable2.osm"), true);
-  workspace.save(toPath("./EMS_InternalVariable2.idf"), true);
+  // model.save(toPath("./EMS_InternalVariable2.osm"), true);
+  // workspace.save(toPath("./EMS_InternalVariable2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorInternalVariable_EMS) {
@@ -1412,7 +1438,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorInternalVariable_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_InternalVariableT.osm"), true);
+  // model.save(toPath("./EMS_InternalVariableT.osm"), true);
 
 
 }
@@ -1442,8 +1468,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorConstructionIndexVariable_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName, false));
   EXPECT_EQ(construction.nameString(), object.getString(EnergyManagementSystem_ConstructionIndexVariableFields::ConstructionObjectName, false).get());
 
-  model.save(toPath("./EMS_constructiontest.osm"), true);
-  workspace.save(toPath("./EMS_constructiontest.idf"), true);
+  // model.save(toPath("./EMS_constructiontest.osm"), true);
+  // workspace.save(toPath("./EMS_constructiontest.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorConstructionIndexVariable_EMS) {
@@ -1454,7 +1480,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorConstructionIndexVariable_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_constructiontestT.osm"), true);
+  // model.save(toPath("./EMS_constructiontestT.osm"), true);
 
 
 }
@@ -1475,8 +1501,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorCurveOrTableIndexVariable_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_CurveOrTableIndexVariableFields::CurveorTableObjectName, false));
   EXPECT_EQ(c1.nameString(), object.getString(EnergyManagementSystem_CurveOrTableIndexVariableFields::CurveorTableObjectName, false).get());
 
-  model.save(toPath("./EMS_curvetest.osm"), true);
-  workspace.save(toPath("./EMS_curvetest.idf"), true);
+  // model.save(toPath("./EMS_curvetest.osm"), true);
+  // workspace.save(toPath("./EMS_curvetest.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorCurveOrTableIndexVariable_EMS) {
@@ -1487,7 +1513,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorCurveOrTableIndexVariable_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_curvetestT.osm"), true);
+  // model.save(toPath("./EMS_curvetestT.osm"), true);
 
 }
 
@@ -1545,8 +1571,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable_EMS) {
   //ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::Units, false));
   //EXPECT_EQ("", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::Units, false).get());
 
-  model.save(toPath("./EMS_meteredoutvar.osm"), true);
-  workspace.save(toPath("./EMS_meteredoutvar.idf"), true);
+  // model.save(toPath("./EMS_meteredoutvar.osm"), true);
+  // workspace.save(toPath("./EMS_meteredoutvar.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable2_EMS) {
@@ -1604,8 +1630,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable2_EMS) {
   //ASSERT_TRUE(object.getString(EnergyManagementSystem_MeteredOutputVariableFields::Units, false));
   //EXPECT_EQ("", object.getString(EnergyManagementSystem_MeteredOutputVariableFields::Units, false).get());
 
-  model.save(toPath("./EMS_meteredoutvar2.osm"), true);
-  workspace.save(toPath("./EMS_meteredoutvar2.idf"), true);
+  // model.save(toPath("./EMS_meteredoutvar2.osm"), true);
+  // workspace.save(toPath("./EMS_meteredoutvar2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorMeteredOutputVariable_EMS) {
@@ -1616,7 +1642,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorMeteredOutputVariable_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_meteredoutvarT.osm"), true);
+  // model.save(toPath("./EMS_meteredoutvarT.osm"), true);
 
 }
 
@@ -1664,8 +1690,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTrendVariable2_EMS) {
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
-  model.save(toPath("./EMS_TrendVariable2.osm"), true);
-  workspace.save(toPath("./EMS_TrendVariable2.idf"), true);
+  // model.save(toPath("./EMS_TrendVariable2.osm"), true);
+  // workspace.save(toPath("./EMS_TrendVariable2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorTrendVariable2_EMS) {
@@ -1676,7 +1702,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTrendVariable2_EMS) {
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save(toPath("./EMS_TrendVariable2T.osm"), true);
+  // model.save(toPath("./EMS_TrendVariable2T.osm"), true);
 
 }
 
