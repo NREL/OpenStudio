@@ -97,8 +97,6 @@ namespace detail {
 
     boost::optional<Curve> normalizedBoilerEfficiencyCurve() const;
 
-    boost::optional<double> designWaterOutletTemperature() const;
-
     boost::optional<double> designWaterFlowRate() const;
 
     bool isDesignWaterFlowRateAutosized() const;
@@ -114,10 +112,6 @@ namespace detail {
     double optimumPartLoadRatio() const;
 
     bool isOptimumPartLoadRatioDefaulted() const;
-
-    // TODO: Handle Non-Extensible IddField Boiler Water Inlet Node Name.
-
-    // TODO: Handle Non-Extensible IddField Boiler Water Outlet Node Name.
 
     double waterOutletUpperTemperatureLimit() const;
 
@@ -162,10 +156,6 @@ namespace detail {
 
     void resetNormalizedBoilerEfficiencyCurve();
 
-    bool setDesignWaterOutletTemperature(boost::optional<double> designWaterOutletTemperature);
-
-    void resetDesignWaterOutletTemperature();
-
     bool setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate);
 
     void resetDesignWaterFlowRate();
@@ -183,10 +173,6 @@ namespace detail {
     bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
 
     void resetOptimumPartLoadRatio();
-
-    // TODO: Handle Non-Extensible IddField Boiler Water Inlet Node Name.
-
-    // TODO: Handle Non-Extensible IddField Boiler Water Outlet Node Name.
 
     bool setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit);
 
