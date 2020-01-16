@@ -4925,10 +4925,10 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       for (size_t i = 0; i < object.numFields(); ++i) {
         // 6: Reference Chilled Water Flow Rate: used to default to autosize in IDD, now required
         if (i == 6) {
-        // This field is now required so it should always be initialized
-          if ((value = object.getString(i))) {
-            newObject.setString(i, value.get());
+          if (boost::optional<double> _value = object.getDouble(i)) {
+            newObject.setDouble(i, _value.get());
           } else {
+            // If not a double, it's Autosize (either hard-set, or by default from 2.9.1 IDD)
             newObject.setString(i, "Autosize");
           }
 
