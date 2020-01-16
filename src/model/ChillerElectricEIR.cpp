@@ -830,10 +830,12 @@ ChillerElectricEIR::ChillerElectricEIR(const Model& model,
   OS_ASSERT(setCoolingCapacityFunctionOfTemperature(CCFofT));
   OS_ASSERT(setElectricInputToCoolingOutputRatioFunctionOfTemperature(EItoCORFofT));
   OS_ASSERT(setElectricInputToCoolingOutputRatioFunctionOfPLR(EItoCORFofPLR));
-  autosizeReferenceCapacity();
   OS_ASSERT(setReferenceCOP(5.5f));
 
-  setDesignHeatRecoveryWaterFlowRate(0.0);
+  autosizeReferenceCapacity();
+  autosizeReferenceChilledWaterFlowRate();
+  // autosizeReferenceCondenserFluidFlowRate();
+  autosizeDesignHeatRecoveryWaterFlowRate();
 
   setSizingFactor(1.0);
 
@@ -887,9 +889,14 @@ ChillerElectricEIR::ChillerElectricEIR(const Model& model)
   setElectricInputToCoolingOutputRatioFunctionOfTemperature(eirToCorfOfT);
   setElectricInputToCoolingOutputRatioFunctionOfPLR(eirToCorfOfPlr);
 
-  autosizeReferenceCapacity();
+
   OS_ASSERT(setReferenceCOP(5.5f));
-  setDesignHeatRecoveryWaterFlowRate(0.0);
+
+  autosizeReferenceCapacity();
+  autosizeReferenceChilledWaterFlowRate();
+  // autosizeReferenceCondenserFluidFlowRate();
+  autosizeDesignHeatRecoveryWaterFlowRate();
+
   setSizingFactor(1.0);
   setBasinHeaterCapacity(0.0);
   setBasinHeaterSetpointTemperature(10.0);
