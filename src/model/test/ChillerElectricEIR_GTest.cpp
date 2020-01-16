@@ -515,3 +515,167 @@ TEST_F(ModelFixture, ChillerElectricEIR_CondenserType)
   ASSERT_FALSE(ch.setCondenserType("WaterCooled"));
 
 }
+
+TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections)
+{
+  model::Model model;
+  model::ChillerElectricEIR chiller(model);
+
+  // Chilled Water Loop: on the supply side
+  {
+    model::PlantLoop chwLoop(model);
+    auto node = chwLoop.supplyOutletNode();
+    EXPECT_TRUE(chiller.addToNode(node));
+    auto plant = chiller.plantLoop();
+    EXPECT_TRUE(plant);
+    if( plant ) {
+      EXPECT_EQ(chwLoop.handle(),plant->handle());
+    }
+    // PlantLoop has 5 components on the supply side by default (3 Nodes, One splitter, One mixer)
+    EXPECT_EQ(7u,chwLoop.supplyComponents().size());
+
+    // test the convenience function
+    auto plant_bis = chiller.chilledWaterLoop();
+    EXPECT_TRUE(plant_bis);
+    if( plant ) {
+      EXPECT_EQ(chwLoop.handle(),plant_bis->handle());
+    }
+
+  }
+
+  // Condenser Loop: on the demand side
+  {
+    model::PlantLoop cndwLoop(model);
+    auto node = cndwLoop.demandInletNode();
+    EXPECT_TRUE(chiller.addToNode(node));
+    auto plant = chiller.secondaryPlantLoop();
+    EXPECT_TRUE(plant);
+    if( plant ) {
+      EXPECT_EQ(cndwLoop.handle(),plant->handle());
+    }
+
+    EXPECT_EQ(7u,cndwLoop.demandComponents().size());
+
+    // test the convenience function
+    auto plant_bis = chiller.condenserWaterLoop();
+    EXPECT_TRUE(plant_bis);
+    if( plant ) {
+      EXPECT_EQ(cndwLoop.handle(),plant_bis->handle());
+    }
+  }
+
+  // Heat Recovery Loop: on the supply side
+  {
+    model::PlantLoop hrLoop(model);
+    auto node = hrLoop.supplyOutletNode();
+    EXPECT_TRUE(chiller.addToTertiaryNode(node));
+    auto plant = chiller.tertiaryPlantLoop();
+    EXPECT_TRUE(plant);
+    if( plant ) {
+      EXPECT_EQ(hrLoop.handle(),plant->handle());
+    }
+    // test the convenience function
+    auto plant_bis = chiller.heatRecoveryLoop();
+    EXPECT_TRUE(plant_bis);
+    if( plant ) {
+      EXPECT_EQ(hrLoop.handle(),plant_bis->handle());
+    }
+
+    EXPECT_EQ(7u,hrLoop.supplyComponents().size());
+
+    EXPECT_TRUE( chiller.removeFromTertiaryPlantLoop() );
+    plant = chiller.tertiaryPlantLoop();
+    EXPECT_FALSE(plant);
+    EXPECT_EQ(5u, hrLoop.demandComponents().size());
+  }
+}
+
+
+/* I overriden the base class WaterToWaterComponent addToNode() and addToTertiaryNode()
+ * addToNode will call addToTertiaryNode behind the scenes when needed
+ * that is if you try to add it to the supply side of a plant loop when it already has a chilled water loop
+ * it should add it to the tertiary(=HR) loop
+ * This should work with addSupplyBranchForComponent too
+ * AddToTertiaryNode is overriden to not work when trying to add to a demand side node */
+TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride)
+{
+  model::Model model;
+  model::ChillerElectricEIR chiller(model);
+
+  model::PlantLoop chwLoop(model);
+
+  model::PlantLoop chwLoop2(model);
+  auto c_supply_node2 = chwLoop2.supplyOutletNode();
+
+  model::PlantLoop cndwLoop(model);
+
+  model::PlantLoop hrLoop(model);
+  auto h_supply_node = hrLoop.supplyOutletNode();
+  auto h_demand_node = hrLoop.demandInletNode();
+
+
+  // Connect to the chw loop
+  EXPECT_TRUE(chwLoop.addSupplyBranchForComponent(chiller));
+  ASSERT_TRUE(chiller.chilledWaterLoop());
+  EXPECT_EQ(chwLoop, chiller.chilledWaterLoop().get());
+
+  EXPECT_FALSE(chiller.condenserWaterLoop());
+  EXPECT_FALSE(chiller.heatRecoveryLoop());
+
+
+  // Connect to the source loop
+  EXPECT_TRUE(cndwLoop.addDemandBranchForComponent(chiller));
+
+  ASSERT_TRUE(chiller.chilledWaterLoop());
+  EXPECT_EQ(chwLoop, chiller.chilledWaterLoop().get());
+
+  ASSERT_TRUE(chiller.condenserWaterLoop());
+  EXPECT_EQ(cndwLoop, chiller.condenserWaterLoop().get());
+
+  EXPECT_FALSE(chiller.heatRecoveryLoop());
+
+
+  // Have a chw loop and no hr loop: should connect the hr loop
+  EXPECT_TRUE(hrLoop.addSupplyBranchForComponent(chiller));
+  ASSERT_TRUE(chiller.chilledWaterLoop());
+  EXPECT_EQ(chwLoop, chiller.chilledWaterLoop().get());
+  ASSERT_TRUE(chiller.condenserWaterLoop());
+  EXPECT_EQ(cndwLoop, chiller.condenserWaterLoop().get());
+  ASSERT_TRUE(chiller.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, chiller.heatRecoveryLoop().get());
+
+
+  // Have a chw loop and a hr loop: should reconnect the cooling loop
+  // Try with addToNode instead
+  EXPECT_TRUE(chiller.addToNode(c_supply_node2));
+
+  ASSERT_TRUE(chiller.chilledWaterLoop());
+  EXPECT_EQ(chwLoop2, chiller.chilledWaterLoop().get());
+
+  ASSERT_TRUE(chiller.condenserWaterLoop());
+  EXPECT_EQ(cndwLoop, chiller.condenserWaterLoop().get());
+
+  ASSERT_TRUE(chiller.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, chiller.heatRecoveryLoop().get());
+
+
+  // Disconnect the tertiary (hr) loop
+  EXPECT_TRUE(chiller.removeFromTertiaryPlantLoop());
+  EXPECT_FALSE(chiller.heatRecoveryLoop());
+
+  // Shouldn't accept tertiary connection to the demand side
+  EXPECT_FALSE(chiller.addToTertiaryNode(h_demand_node));
+
+  // Try addToNode to the heating plant loop, should work to connect the hr loop
+  EXPECT_TRUE(chiller.addToNode(h_supply_node));
+
+  ASSERT_TRUE(chiller.chilledWaterLoop());
+  EXPECT_EQ(chwLoop2, chiller.chilledWaterLoop().get());
+
+  ASSERT_TRUE(chiller.condenserWaterLoop());
+  EXPECT_EQ(cndwLoop, chiller.condenserWaterLoop().get());
+
+  ASSERT_TRUE(chiller.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, chiller.heatRecoveryLoop().get());
+
+}
