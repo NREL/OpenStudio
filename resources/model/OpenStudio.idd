@@ -12859,6 +12859,7 @@ OS:Chiller:Electric:EIR,
        \type real
        \minimum 0.0
        \maximum 1.0
+       \required-field
   A15, \field Heat Recovery Inlet High Temperature Limit Schedule Name
        \note This optional schedule of temperatures will turn off heat recovery if inlet exceeds the value
        \type object-list
