@@ -158,9 +158,9 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   bool isCondenserFanPowerRatioDefaulted() const;
 
-  double compressorMotorEfficiency() const;
+  double fractionofCompressorElectricConsumptionRejectedbyCondenser() const;
 
-  bool isCompressorMotorEfficiencyDefaulted() const;
+  bool isFractionofCompressorElectricConsumptionRejectedbyCondenserDefaulted() const;
 
   double leavingChilledWaterLowerTemperatureLimit() const;
 
@@ -271,9 +271,9 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   void resetCondenserFanPowerRatio();
 
-  bool setCompressorMotorEfficiency(double compressorMotorEfficiency);
+  bool setFractionofCompressorElectricConsumptionRejectedbyCondenser(double fractionofCompressorElectricConsumptionRejectedbyCondenser);
 
-  void resetCompressorMotorEfficiency();
+  void resetFractionofCompressorElectricConsumptionRejectedbyCondenser();
 
   bool setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit);
 

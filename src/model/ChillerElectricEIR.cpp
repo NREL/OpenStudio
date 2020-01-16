@@ -251,14 +251,14 @@ namespace detail {
     return isEmpty(OS_Chiller_Electric_EIRFields::CondenserFanPowerRatio);
   }
 
-  double ChillerElectricEIR_Impl::compressorMotorEfficiency() const {
-    boost::optional<double> value = getDouble(OS_Chiller_Electric_EIRFields::CompressorMotorEfficiency,true);
+  double ChillerElectricEIR_Impl::fractionofCompressorElectricConsumptionRejectedbyCondenser() const {
+    boost::optional<double> value = getDouble(OS_Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool ChillerElectricEIR_Impl::isCompressorMotorEfficiencyDefaulted() const {
-    return isEmpty(OS_Chiller_Electric_EIRFields::CompressorMotorEfficiency);
+  bool ChillerElectricEIR_Impl::isFractionofCompressorElectricConsumptionRejectedbyCondenserDefaulted() const {
+    return isEmpty(OS_Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser);
   }
 
   double ChillerElectricEIR_Impl::leavingChilledWaterLowerTemperatureLimit() const {
@@ -520,13 +520,13 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ChillerElectricEIR_Impl::setCompressorMotorEfficiency(double compressorMotorEfficiency)
+  bool ChillerElectricEIR_Impl::setFractionofCompressorElectricConsumptionRejectedbyCondenser(double fractionofCompressorElectricConsumptionRejectedbyCondenser)
   {
-    return setDouble(OS_Chiller_Electric_EIRFields::CompressorMotorEfficiency, compressorMotorEfficiency);
+    return setDouble(OS_Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser, fractionofCompressorElectricConsumptionRejectedbyCondenser);
   }
 
-  void ChillerElectricEIR_Impl::resetCompressorMotorEfficiency() {
-    bool result = setString(OS_Chiller_Electric_EIRFields::CompressorMotorEfficiency, "");
+  void ChillerElectricEIR_Impl::resetFractionofCompressorElectricConsumptionRejectedbyCondenser() {
+    bool result = setString(OS_Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser, "");
     OS_ASSERT(result);
   }
 
@@ -1043,12 +1043,12 @@ bool ChillerElectricEIR::isCondenserFanPowerRatioDefaulted() const {
   return getImpl<detail::ChillerElectricEIR_Impl>()->isCondenserFanPowerRatioDefaulted();
 }
 
-double ChillerElectricEIR::compressorMotorEfficiency() const {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->compressorMotorEfficiency();
+double ChillerElectricEIR::fractionofCompressorElectricConsumptionRejectedbyCondenser() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->fractionofCompressorElectricConsumptionRejectedbyCondenser();
 }
 
-bool ChillerElectricEIR::isCompressorMotorEfficiencyDefaulted() const {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->isCompressorMotorEfficiencyDefaulted();
+bool ChillerElectricEIR::isFractionofCompressorElectricConsumptionRejectedbyCondenserDefaulted() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->isFractionofCompressorElectricConsumptionRejectedbyCondenserDefaulted();
 }
 
 double ChillerElectricEIR::leavingChilledWaterLowerTemperatureLimit() const {
@@ -1211,12 +1211,12 @@ void ChillerElectricEIR::resetCondenserFanPowerRatio() {
   getImpl<detail::ChillerElectricEIR_Impl>()->resetCondenserFanPowerRatio();
 }
 
-bool ChillerElectricEIR::setCompressorMotorEfficiency(double compressorMotorEfficiency) {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->setCompressorMotorEfficiency(compressorMotorEfficiency);
+bool ChillerElectricEIR::setFractionofCompressorElectricConsumptionRejectedbyCondenser(double fractionofCompressorElectricConsumptionRejectedbyCondenser) {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->setFractionofCompressorElectricConsumptionRejectedbyCondenser(fractionofCompressorElectricConsumptionRejectedbyCondenser);
 }
 
-void ChillerElectricEIR::resetCompressorMotorEfficiency() {
-  getImpl<detail::ChillerElectricEIR_Impl>()->resetCompressorMotorEfficiency();
+void ChillerElectricEIR::resetFractionofCompressorElectricConsumptionRejectedbyCondenser() {
+  getImpl<detail::ChillerElectricEIR_Impl>()->resetFractionofCompressorElectricConsumptionRejectedbyCondenser();
 }
 
 bool ChillerElectricEIR::setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit) {
