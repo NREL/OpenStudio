@@ -13259,6 +13259,7 @@ OS:Chiller:Absorption:Indirect,
   N11, \field Design Generator Fluid Flow Rate
        \type real
        \units m3/s
+       \ip-units gal/min
        \autosizable
        \required-field
        \note  For variable flow this is the max flow and for constant flow this is the flow.
@@ -13404,6 +13405,7 @@ OS:Chiller:Absorption,
        \type real
        \autosizable
        \units m3/s
+       \ip-units gal/min
        \minimum> 0.0
        \required-field
   N17, \field Degree of Subcooling in Steam Generator
