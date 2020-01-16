@@ -287,8 +287,13 @@ namespace detail {
     return value.get();
   }
 
-  bool ChillerElectricEIR_Impl::isDesignHeatRecoveryWaterFlowRateDefaulted() const {
-    return isEmpty(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate);
+  bool ChillerElectricEIR_Impl::isDesignHeatRecoveryWaterFlowRateAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "Autosize");
+    }
+    return result;
   }
 
   double ChillerElectricEIR_Impl::sizingFactor() const {
@@ -560,8 +565,8 @@ namespace detail {
     return setDouble(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate, designHeatRecoveryWaterFlowRate);
   }
 
-  void ChillerElectricEIR_Impl::resetDesignHeatRecoveryWaterFlowRate() {
-    bool result = setString(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate, "");
+  void ChillerElectricEIR_Impl::autosizeDesignHeatRecoveryWaterFlowRate() {
+    bool result = setString(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate, "Autosize");
     OS_ASSERT(result);
   }
 
@@ -1059,8 +1064,8 @@ double ChillerElectricEIR::designHeatRecoveryWaterFlowRate() const {
   return getImpl<detail::ChillerElectricEIR_Impl>()->designHeatRecoveryWaterFlowRate();
 }
 
-bool ChillerElectricEIR::isDesignHeatRecoveryWaterFlowRateDefaulted() const {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->isDesignHeatRecoveryWaterFlowRateDefaulted();
+bool ChillerElectricEIR::isDesignHeatRecoveryWaterFlowRateAutosized() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->isDesignHeatRecoveryWaterFlowRateAutosized();
 }
 
 double ChillerElectricEIR::sizingFactor() const {
@@ -1227,8 +1232,8 @@ bool ChillerElectricEIR::setDesignHeatRecoveryWaterFlowRate(double designHeatRec
   return getImpl<detail::ChillerElectricEIR_Impl>()->setDesignHeatRecoveryWaterFlowRate(designHeatRecoveryWaterFlowRate);
 }
 
-void ChillerElectricEIR::resetDesignHeatRecoveryWaterFlowRate() {
-  getImpl<detail::ChillerElectricEIR_Impl>()->resetDesignHeatRecoveryWaterFlowRate();
+void ChillerElectricEIR::autosizeDesignHeatRecoveryWaterFlowRate() {
+  getImpl<detail::ChillerElectricEIR_Impl>()->autosizeDesignHeatRecoveryWaterFlowRate();
 }
 
 bool ChillerElectricEIR::setSizingFactor(double sizingFactor) {

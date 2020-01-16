@@ -145,7 +145,7 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   double designHeatRecoveryWaterFlowRate() const;
 
-  bool isDesignHeatRecoveryWaterFlowRateDefaulted() const;
+  bool isDesignHeatRecoveryWaterFlowRateAutosized() const;
 
   double sizingFactor() const;
 
@@ -252,7 +252,7 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   bool setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate);
 
-  void resetDesignHeatRecoveryWaterFlowRate();
+  void autosizeDesignHeatRecoveryWaterFlowRate();
 
   bool setSizingFactor(double sizingFactor);
 
