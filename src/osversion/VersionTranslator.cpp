@@ -4917,6 +4917,26 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else if (iddname == "OS:Boiler:HotWater") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Deleted Field 7: Design Water Outlet Temperature
+      for (size_t i = 0; i < object.numFields(); ++i) {
+         if ((value = object.getString(i))) {
+          if (i < 7) {
+            // 0-6 Unchanged
+            newObject.setString(i, value.get());
+          } else if (i > 7) {
+            // 8-End shifted -1
+            newObject.setString(i-1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     // No-op
     } else {
       ss << object;
