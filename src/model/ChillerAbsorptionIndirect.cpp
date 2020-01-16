@@ -549,6 +549,21 @@ namespace detail {
     return OS_Chiller_Absorption_IndirectFields::GeneratorOutletNode;
   }
 
+  /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
+  boost::optional<PlantLoop> ChillerAbsorptionIndirect_Impl::chilledWaterLoop() const {
+    return WaterToWaterComponent_Impl::plantLoop();
+  }
+
+  /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
+  boost::optional<PlantLoop> ChillerAbsorptionIndirect_Impl::condenserWaterLoop() const {
+    return WaterToWaterComponent_Impl::secondaryPlantLoop();
+  }
+
+  /** Convenience Function to return the Heat Recovery Loop **/
+  boost::optional<PlantLoop> ChillerAbsorptionIndirect_Impl::generatorLoop() const {
+    return WaterToWaterComponent_Impl::tertiaryPlantLoop();
+  }
+
   boost::optional<double> ChillerAbsorptionIndirect_Impl::autosizedNominalCapacity() const {
     return getAutosizedValue("Design Size Nominal Capacity", "W");
   }
@@ -952,6 +967,19 @@ bool ChillerAbsorptionIndirect::setDegreeofSubcoolinginSteamCondensateLoop(doubl
 
 bool ChillerAbsorptionIndirect::setSizingFactor(double sizingFactor) {
   return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->setSizingFactor(sizingFactor);
+}
+
+// Convenience functions
+boost::optional<PlantLoop> ChillerAbsorptionIndirect::chilledWaterLoop() const {
+  return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->chilledWaterLoop();
+}
+
+boost::optional<PlantLoop> ChillerAbsorptionIndirect::condenserWaterLoop() const {
+  return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->condenserWaterLoop();
+}
+
+boost::optional<PlantLoop> ChillerAbsorptionIndirect::generatorLoop() const {
+  return getImpl<detail::ChillerAbsorptionIndirect_Impl>()->generatorLoop();
 }
 
 /// @cond
