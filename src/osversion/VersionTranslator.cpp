@@ -4864,27 +4864,6 @@ std::string VersionTranslator::update_2_9_0_to_2_9_1(const IdfFile& idf_2_9_0, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
-    } else if (iddname == "OS:Schedule:Rule") {
-      auto iddObject = idd_3_0_0.getObject(iddname);
-      IdfObject newObject(iddObject.get());
-
-      // Removed field 12: Apply Holiday
-      for (size_t i = 0; i < object.numFields(); ++i) {
-        if ((value = object.getString(i))) {
-          if (i < 12) {
-            newObject.setString(i, value.get());
-          } else if (i > 12) {
-            newObject.setString(i-1, value.get());
-          } // i == 12: skip
-        }
-      }
-
-      m_refactored.push_back(RefactoredObjectData(object, newObject));
-      ss << newObject;
-
-    // Note: OS:ScheduleRuleset got a new optional field at the end, so no-op
-    // } else if (iddname == "OS:Schedule:Ruleset") {
-
     // No-op
     } else {
       ss << object;
@@ -4937,6 +4916,27 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
 
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
+
+    } else if (iddname == "OS:Schedule:Rule") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Removed field 12: Apply Holiday
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 12) {
+            newObject.setString(i, value.get());
+          } else if (i > 12) {
+            newObject.setString(i-1, value.get());
+          } // i == 12: skip
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    // Note: OS:ScheduleRuleset got a new optional field at the end, so no-op
+    // } else if (iddname == "OS:Schedule:Ruleset") {
 
     // No-op
     } else {
