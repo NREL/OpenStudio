@@ -814,6 +814,49 @@ namespace detail {
     return setString(OS_Chiller_Electric_EIRFields::EndUseSubcategory,endUseSubcategory);
   }
 
+double ChillerElectricEIR_Impl::condenserHeatRecoveryRelativeCapacityFraction() const {
+  boost::optional<double> value = getDouble(OS_Chiller_Electric_EIRFields::CondenserHeatRecoveryRelativeCapacityFraction, true);
+  OS_ASSERT(value);
+  return value.get();
+}
+
+bool ChillerElectricEIR_Impl::setCondenserHeatRecoveryRelativeCapacityFraction(double condenserHeatRecoveryRelativeCapacityFraction) {
+  bool result = setDouble(OS_Chiller_Electric_EIRFields::CondenserHeatRecoveryRelativeCapacityFraction, condenserHeatRecoveryRelativeCapacityFraction);
+  // OS_ASSERT(result);
+  return result;
+}
+
+boost::optional<Schedule> ChillerElectricEIR_Impl::heatRecoveryInletHighTemperatureLimitSchedule() const
+{
+  return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName);
+}
+
+// TODO: ScheduleTypeLimits
+bool ChillerElectricEIR_Impl::setHeatRecoveryInletHighTemperatureLimitSchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName,
+                              "ChillerElectricEIR",
+                              "Heat Recovery Inlet High Temperature Limit",
+                              schedule);
+    return result;
+}
+
+void ChillerElectricEIR_Impl::resetHeatRecoveryInletHighTemperatureLimitSchedule() {
+  bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName, "");
+  OS_ASSERT(result);
+}
+
+boost::optional<Node> ChillerElectricEIR_Impl::heatRecoveryLeavingTemperatureSetpointNode() const {
+  return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Chiller_Electric_EIRFields::HeatRecoveryLeavingTemperatureSetpointNodeName);
+}
+
+bool ChillerElectricEIR_Impl::setHeatRecoveryLeavingTemperatureSetpointNode(const Node& node) {
+  return setPointer(OS_Chiller_Electric_EIRFields::HeatRecoveryLeavingTemperatureSetpointNodeName, node.handle());
+}
+
+void ChillerElectricEIR_Impl::resetHeatRecoveryLeavingTemperatureSetpointNode() {
+  bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryLeavingTemperatureSetpointNodeName, "");
+  OS_ASSERT(result);
+}
 
 } // detail
 
@@ -842,6 +885,10 @@ ChillerElectricEIR::ChillerElectricEIR(const Model& model,
   setBasinHeaterSetpointTemperature(10.0);
 
   resetBasinHeaterSchedule();
+
+  setCondenserHeatRecoveryRelativeCapacityFraction(1.0);
+  resetHeatRecoveryLeavingTemperatureSetpointNode();
+  resetHeatRecoveryInletHighTemperatureLimitSchedule();
 
   setEndUseSubcategory("General");
 
@@ -899,6 +946,9 @@ ChillerElectricEIR::ChillerElectricEIR(const Model& model)
   setBasinHeaterCapacity(0.0);
   setBasinHeaterSetpointTemperature(10.0);
   resetBasinHeaterSchedule();
+  setCondenserHeatRecoveryRelativeCapacityFraction(1.0);
+  resetHeatRecoveryLeavingTemperatureSetpointNode();
+  resetHeatRecoveryInletHighTemperatureLimitSchedule();
 
   setEndUseSubcategory("General");
 
@@ -1299,6 +1349,37 @@ boost::optional<PlantLoop> ChillerElectricEIR::condenserWaterLoop() const {
 
 boost::optional<PlantLoop> ChillerElectricEIR::heatRecoveryLoop() const {
   return getImpl<detail::ChillerElectricEIR_Impl>()->heatRecoveryLoop();
+}
+
+double ChillerElectricEIR::condenserHeatRecoveryRelativeCapacityFraction() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->condenserHeatRecoveryRelativeCapacityFraction();
+}
+
+bool ChillerElectricEIR::setCondenserHeatRecoveryRelativeCapacityFraction(double condenserHeatRecoveryRelativeCapacityFraction) {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->setCondenserHeatRecoveryRelativeCapacityFraction(condenserHeatRecoveryRelativeCapacityFraction);
+}
+
+boost::optional<Schedule> ChillerElectricEIR::heatRecoveryInletHighTemperatureLimitSchedule() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->heatRecoveryInletHighTemperatureLimitSchedule();
+}
+
+bool ChillerElectricEIR::setHeatRecoveryInletHighTemperatureLimitSchedule(Schedule& s) {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->setHeatRecoveryInletHighTemperatureLimitSchedule(s);
+}
+
+void ChillerElectricEIR::resetHeatRecoveryInletHighTemperatureLimitSchedule() {
+  getImpl<detail::ChillerElectricEIR_Impl>()->resetHeatRecoveryInletHighTemperatureLimitSchedule();
+}
+
+boost::optional<Node> ChillerElectricEIR::heatRecoveryLeavingTemperatureSetpointNode() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->heatRecoveryLeavingTemperatureSetpointNode();
+}
+
+bool ChillerElectricEIR::setHeatRecoveryLeavingTemperatureSetpointNode(const Node& node) {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->setHeatRecoveryLeavingTemperatureSetpointNode(node);
+}
+void ChillerElectricEIR::resetHeatRecoveryLeavingTemperatureSetpointNode() {
+  getImpl<detail::ChillerElectricEIR_Impl>()->resetHeatRecoveryLeavingTemperatureSetpointNode();
 }
 
 /// @cond

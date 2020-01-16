@@ -37,8 +37,9 @@ namespace model {
 
 class ChillerElectricEIR;
 class CurveBiquadratic;
-class  CurveQuadratic;
+class CurveQuadratic;
 class Schedule;
+class Node;
 
 namespace detail {
 
@@ -188,11 +189,11 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   boost::optional<Schedule> basinHeaterSchedule() const;
 
-  boost::optional<double> autosizedReferenceCapacity() const ;
+  double condenserHeatRecoveryRelativeCapacityFraction() const;
 
-  boost::optional<double> autosizedReferenceChilledWaterFlowRate() const ;
+  boost::optional<Schedule> heatRecoveryInletHighTemperatureLimitSchedule() const;
 
-  boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
+  boost::optional<Node> heatRecoveryLeavingTemperatureSetpointNode() const;
 
   std::string endUseSubcategory() const;
 
@@ -204,6 +205,12 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   /** Convenience Function to return the Heat Recovery Loop **/
   boost::optional<PlantLoop> heatRecoveryLoop() const;
+
+  boost::optional<double> autosizedReferenceCapacity() const ;
+
+  boost::optional<double> autosizedReferenceChilledWaterFlowRate() const ;
+
+  boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
 
   //@}
   /** @name Setters */
@@ -303,21 +310,15 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   void resetBasinHeaterSchedule();
 
-  bool setEndUseSubcategory(const std::string & endUseSubcategory);
+  bool setCondenserHeatRecoveryRelativeCapacityFraction(double condenserHeatRecoveryRelativeCapacityFraction);
 
-  // TODO
-  /*
-   *N18, \field Condenser Heat Recovery Relative Capacity Fraction
-   *     \note This optional field is the fraction of total rejected heat that can be recovered at full load
-   *     \type real
-   *     \minimum 0.0
-   *     \maximum 1.0
-   *A15, \field Heat Recovery Inlet High Temperature Limit Schedule Name
-   *     \note This optional schedule of temperatures will turn off heat recovery if inlet exceeds the value
-   *     \type object-list
-   *     \object-list ScheduleNames
-   *A16, \field Heat Recovery Leaving Temperature Setpoint Node Name
-   */
+  bool setHeatRecoveryInletHighTemperatureLimitSchedule(Schedule& s);
+  void resetHeatRecoveryInletHighTemperatureLimitSchedule();
+
+  bool setHeatRecoveryLeavingTemperatureSetpointNode(const Node& node);
+  void resetHeatRecoveryLeavingTemperatureSetpointNode();
+
+  bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
   //@}
  protected:
