@@ -89,19 +89,13 @@ namespace detail {
 
     virtual double thermalAbsorptance() const override;
 
-    virtual boost::optional<double> thermalReflectance() const override;
+    bool isThermalAbsorptanceDefaulted() const;
 
     virtual double solarAbsorptance() const override;
 
-    virtual boost::optional<double> solarReflectance() const override;
+    bool isSolarAbsorptanceDefaulted() const;
 
     virtual double visibleAbsorptance() const override;
-
-    virtual boost::optional<double> visibleReflectance() const override;
-
-    bool isThermalAbsorptanceDefaulted() const;
-
-    bool isSolarAbsorptanceDefaulted() const;
 
     bool isVisibleAbsorptanceDefaulted() const;
 
@@ -110,9 +104,6 @@ namespace detail {
     //@{
 
     bool setRoughness(std::string roughness);
-
-    /** Set thickness to value (m). */
-    virtual bool setThickness(double value) override;
 
     /** Sets the conductivity of the material in W/m*K, if possible. */
     virtual bool setThermalConductivity(double value) override;
@@ -126,27 +117,15 @@ namespace detail {
     /** Sets the resistance of the material in m^2*K/W, if possible. */
     virtual bool setThermalResistance(double value) override;
 
-    virtual bool setThermalAbsorptance(boost::optional<double> value);
-
-    virtual bool setThermalReflectance(boost::optional<double> value) override;
-
-    virtual bool setSolarAbsorptance(boost::optional<double> value) override;
-
-    virtual bool setSolarReflectance(boost::optional<double> value) override;
-
-    virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
-
-    virtual bool setVisibleReflectance(boost::optional<double> value) override;
-
-    bool setThermalAbsorptance(double thermalAbsorptance) override;
+    virtual bool setThermalAbsorptance(boost::optional<double> value) override;
 
     void resetThermalAbsorptance();
 
-    bool setSolarAbsorptance(double solarAbsorptance);
+    virtual bool setSolarAbsorptance(boost::optional<double> value) override;
 
     void resetSolarAbsorptance();
 
-    bool setVisibleAbsorptance(double visibleAbsorptance);
+    virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
 
     void resetVisibleAbsorptance();
 
