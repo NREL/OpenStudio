@@ -12790,8 +12790,9 @@ OS:Chiller:Electric:EIR,
        \note Fraction of compressor electrical energy that must be rejected by the condenser.
        \note Enter a value of 1.0 when modeling hermetic chillers.
        \note For open chillers, enter the compressor motor efficiency.
-       \minimum 0
-       \maximum 1
+       \note This value should be greater than 0.6 for practical applications.
+       \minimum> 0.0
+       \maximum 1.0
        \default 1.0
   N13, \field Leaving Chilled Water Lower Temperature Limit
        \type real
@@ -12815,6 +12816,7 @@ OS:Chiller:Electric:EIR,
        \units m3/s
        \minimum 0.0
        \default 0.0
+       \autosizable
        \ip-units gal/min
   A12, \field Heat Recovery Inlet Node Name
        \type object-list
