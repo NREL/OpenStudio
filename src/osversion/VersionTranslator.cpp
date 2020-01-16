@@ -4951,6 +4951,14 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
             newObject.setString(i, "Autosize");
           }
 
+        // 31: Condenser Heat Recovery Relative Capacity Fraction => now required, defaults to 1.0
+        } else if (i == 31) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+            newObject.setDouble(i, _value.get());
+          } else {
+            newObject.setDouble(i, 1.0);
+          }
+
         // All other fields: unchanged
         } else if ((value = object.getString(i))) {
             newObject.setString(i, value.get());
