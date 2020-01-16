@@ -140,7 +140,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.7.2")] = &VersionTranslator::update_2_7_1_to_2_7_2;
   m_updateMethods[VersionString("2.9.0")] = &VersionTranslator::update_2_8_1_to_2_9_0;
   m_updateMethods[VersionString("2.9.1")] = &VersionTranslator::update_2_9_0_to_2_9_1;
-  m_updateMethods[VersionString("3.0.0")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("3.0.0")] = &VersionTranslator::update_2_9_1_to_3_0_0;
+  //m_updateMethods[VersionString("3.0.1")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -291,6 +292,7 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.8.1"));
   m_startVersions.push_back(VersionString("2.9.0"));
   m_startVersions.push_back(VersionString("2.9.1"));
+  //m_startVersions.push_back(VersionString("3.0.0"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm,
@@ -4882,6 +4884,59 @@ std::string VersionTranslator::update_2_9_0_to_2_9_1(const IdfFile& idf_2_9_0, c
 
     // Note: OS:ScheduleRuleset got a new optional field at the end, so no-op
     // } else if (iddname == "OS:Schedule:Ruleset") {
+
+    // No-op
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+
+}
+
+std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, const IddFileAndFactoryWrapper& idd_3_0_0) {
+  std::stringstream ss;
+  boost::optional<std::string> value;
+
+  ss << idf_2_9_1.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_3_0_0.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_2_9_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:Material") {
+      auto iddObject = idd_3_0_0.getObject("OS:Material");
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        // Specific Heat
+        if (i == 6) {
+        // This field is required so it should always be initialized
+          if (boost::optional<double> _value = object.getDouble(6)) {
+            if (_value.get() == 0.1) {
+              LOG(Warn,"Updated Specific Heat for OS:Material named '" << object.nameString()
+                    << "' from " << value.get() << " to the new default of 1400.0.");
+              newObject.setDouble(6, 1400.0);
+            } else if (_value.get() < 100) {
+              LOG(Warn,"Updated Specific Heat for OS:Material named '" << object.nameString()
+                    << "' from " << value.get() << " to the new minimum of 100.0.");
+              newObject.setDouble(6, 100.0);
+            } else {
+              newObject.setDouble(6, _value.get());
+            }
+          } else {
+            // Let's be safe
+            newObject.setDouble(6, 1400.0);
+          }
+        } else if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
 
     // No-op
     } else {

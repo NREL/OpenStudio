@@ -23,7 +23,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   include(${CMAKE_BINARY_DIR}/conan.cmake)
 
-  conan_check(VERSION 1.20.0 REQUIRED)
+  conan_check(VERSION 1.21.0 REQUIRED)
 
   message(STATUS "openstudio: RUNNING CONAN")
 

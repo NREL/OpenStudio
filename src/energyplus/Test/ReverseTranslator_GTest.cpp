@@ -321,7 +321,7 @@ TEST_F(EnergyPlusFixture,ReverseTranslatorTest_TranslateStandardOpaqueMaterial)
   idfObject.setString(2, "0.012");  // Thickness
   idfObject.setString(3, "3.2");    // Conductivity
   idfObject.setString(4, "2.5");    // Density
-  idfObject.setString(5, "2.04");   // Specific Heat
+  idfObject.setString(5, "1400.0");   // Specific Heat
   idfObject.setString(6, "0.8");    // Thermal Absorptance
   idfObject.setString(7, "0.6");    // Solar Absorptance
   idfObject.setString(8, "0.6");    // Visible Absorptance
@@ -342,7 +342,7 @@ TEST_F(EnergyPlusFixture,ReverseTranslatorTest_TranslateStandardOpaqueMaterial)
   EXPECT_EQ( 0.012, mat.thickness());
   EXPECT_EQ( 3.2, mat.thermalConductivity());
   EXPECT_EQ( 2.5, mat.density());
-  EXPECT_EQ( 2.04, mat.specificHeat());
+  EXPECT_EQ( 1400.0, mat.specificHeat());
   EXPECT_EQ( 0.8, mat.thermalAbsorptance());
   EXPECT_EQ( 0.6, mat.solarAbsorptance());
   EXPECT_EQ( 0.6, mat.visibleAbsorptance());
