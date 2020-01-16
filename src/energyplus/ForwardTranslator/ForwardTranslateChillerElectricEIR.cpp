@@ -324,8 +324,17 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   }
 
   // Condenser Heat Recovery Relative Capacity Fraction
+  idfObject.setDouble(Chiller_Electric_EIRFields::CondenserHeatRecoveryRelativeCapacityFraction, modelObject.condenserHeatRecoveryRelativeCapacityFraction());
+
   // Heat Recovery Inlet High Temperature Limit Schedule Name
+  if (auto _schedule = modelObject.heatRecoveryInletHighTemperatureLimitSchedule()) {
+    idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName, _schedule->name().get());
+  }
+
   // Heat Recovery Leaving Temperature Setpoint Node Name
+  if (auto _node = modelObject.heatRecoveryLeavingTemperatureSetpointNode()) {
+    idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryLeavingTemperatureSetpointNodeName, _node->name().get());
+  }
 
   // End Use Subcategory
   if( (s = modelObject.endUseSubcategory()) ) {
