@@ -28,7 +28,11 @@
 ***********************************************************************************************************************/
 
 #include "ChillerAbsorption.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "ChillerAbsorption_Impl.hpp"
+#include "Node.hpp"
+#include "PlantLoop.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Chiller_Absorption_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -397,6 +401,53 @@ namespace detail {
 
   unsigned ChillerAbsorption_Impl::tertiaryOutletPort() const {
     return OS_Chiller_AbsorptionFields::GeneratorOutletNodeName;
+  }
+
+  bool ChillerAbsorption_Impl::addToNode(Node & node)
+  {
+
+    boost::optional<PlantLoop> t_plantLoop = node.plantLoop();
+
+    // If trying to add to a node that is on the supply side of a plant loop
+    if( t_plantLoop ) {
+      if( t_plantLoop->supplyComponent(node.handle()) ) {
+        // If there is already a chilled water Plant Loop
+        boost::optional<PlantLoop> chwLoop = this->chilledWaterLoop();
+        if (chwLoop) {
+          // And it's not the same as the node's loop
+          if (t_plantLoop.get() != chwLoop.get()) {
+            // And if there is no generator loop (tertiary)
+            boost::optional<PlantLoop> hrLoop = this->generatorLoop();
+            if (!hrLoop) {
+              // Then try to add it to the tertiary one
+              LOG(Warn, "Calling addToTertiaryNode to connect it to the tertiary (=heat recovery) loop for " << briefDescription());
+              return this->addToTertiaryNode(node);
+            }
+          }
+        }
+      }
+    }
+
+    // All other cases, call the base class implementation
+    return WaterToWaterComponent_Impl::addToNode(node);
+  }
+
+  bool ChillerAbsorption_Impl::addToTertiaryNode(Node & node)
+  {
+    auto _model = node.model();
+    auto t_plantLoop = node.plantLoop();
+
+    // Only accept adding to a node that is on a supply side of a plant loop
+    // Since tertiary here = heat recovery loop (heating)
+    if( t_plantLoop ) {
+      if( t_plantLoop->supplyComponent(node.handle()) ) {
+        // Call base class method which accepts both supply and demand
+        return WaterToWaterComponent_Impl::addToTertiaryNode(node);
+      } else {
+         LOG(Info, "Cannot connect the tertiary (=heat recovery) loop to the demand side for " << briefDescription());
+      }
+    }
+    return false;
   }
 
   /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/

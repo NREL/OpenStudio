@@ -78,6 +78,19 @@ namespace detail {
     virtual unsigned tertiaryInletPort() const override;
     virtual unsigned tertiaryOutletPort() const override;
 
+    /* This function will perform a check if trying to add it to a node that is on the supply side of a plant loop.
+     * If:
+     *     - the node is on the supply side of a loop
+     *     - the node isn't on the current chilled water loop itself
+     *     - the chiller doesn't already have a generator (tertiary) loop,
+     * then it tries to add it to the Tertiary loop.
+     * In all other cases, it will call the base class' method WaterToWaterComponent_Impl::addToNode()
+     */
+    virtual bool addToNode(Node & node) override;
+
+    /* Restricts addToTertiaryNode to a node that is on the supply side of a plant loop (tertiary = generator (heating) Loop) */
+    virtual bool addToTertiaryNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{

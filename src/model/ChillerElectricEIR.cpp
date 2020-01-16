@@ -37,7 +37,7 @@
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Node.hpp"
-#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -682,7 +682,7 @@ namespace detail {
     // If trying to add to a node that is on the supply side of a plant loop
     if( t_plantLoop ) {
       if( t_plantLoop->supplyComponent(node.handle()) ) {
-        // If there is already a cooling Plant Loop
+        // If there is already a chilled water Plant Loop
         boost::optional<PlantLoop> chwLoop = this->chilledWaterLoop();
         if (chwLoop) {
           // And it's not the same as the node's loop
