@@ -281,10 +281,8 @@ namespace detail {
     return isEmpty(OS_Chiller_Electric_EIRFields::ChillerFlowMode);
   }
 
-  double ChillerElectricEIR_Impl::designHeatRecoveryWaterFlowRate() const {
-    boost::optional<double> value = getDouble(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<double> ChillerElectricEIR_Impl::designHeatRecoveryWaterFlowRate() const {
+    return getDouble(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,true);
   }
 
   bool ChillerElectricEIR_Impl::isDesignHeatRecoveryWaterFlowRateAutosized() const {
@@ -1067,7 +1065,7 @@ bool ChillerElectricEIR::isChillerFlowModeDefaulted() const {
   return getImpl<detail::ChillerElectricEIR_Impl>()->isChillerFlowModeDefaulted();
 }
 
-double ChillerElectricEIR::designHeatRecoveryWaterFlowRate() const {
+boost::optional<double> ChillerElectricEIR::designHeatRecoveryWaterFlowRate() const {
   return getImpl<detail::ChillerElectricEIR_Impl>()->designHeatRecoveryWaterFlowRate();
 }
 

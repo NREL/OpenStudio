@@ -143,7 +143,7 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   bool isChillerFlowModeDefaulted() const;
 
-  double designHeatRecoveryWaterFlowRate() const;
+  boost::optional<double> designHeatRecoveryWaterFlowRate() const;
 
   bool isDesignHeatRecoveryWaterFlowRateAutosized() const;
 
