@@ -107,7 +107,7 @@ namespace detail {
     /** Sets the resistance of the material in m^2*K/W, if possible. */
     virtual bool setThermalResistance(double value) = 0;
 
-    virtual bool setThermalAbsorptance(double value) = 0;
+    virtual bool setThermalAbsorptance(boost::optional<double> value) = 0;
 
     virtual bool setThermalReflectance(boost::optional<double> value) = 0;
 

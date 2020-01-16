@@ -131,7 +131,7 @@ class MODEL_API OpaqueMaterial : public Material {
   /** Set the thermal absorptance (dimensionless fraction).
    *
    *  Attribute name: 'thermalAbsorptance' */
-  bool setThermalAbsorptance(double value);
+  bool setThermalAbsorptance(boost::optional<double> value);
 
   /** Set the thermal reflectance (dimensionless fraction).
    *

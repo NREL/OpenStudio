@@ -89,13 +89,19 @@ namespace detail {
 
     virtual double thermalAbsorptance() const override;
 
-    bool isThermalAbsorptanceDefaulted() const;
+    virtual boost::optional<double> thermalReflectance() const override;
 
     virtual double solarAbsorptance() const override;
 
-    bool isSolarAbsorptanceDefaulted() const;
+    virtual boost::optional<double> solarReflectance() const override;
 
     virtual double visibleAbsorptance() const override;
+
+    virtual boost::optional<double> visibleReflectance() const override;
+
+    bool isThermalAbsorptanceDefaulted() const;
+
+    bool isSolarAbsorptanceDefaulted() const;
 
     bool isVisibleAbsorptanceDefaulted() const;
 
@@ -104,6 +110,9 @@ namespace detail {
     //@{
 
     bool setRoughness(std::string roughness);
+
+    /** Set thickness to value (m). */
+    virtual bool setThickness(double value) override;
 
     /** Sets the conductivity of the material in W/m*K, if possible. */
     virtual bool setThermalConductivity(double value) override;
@@ -119,13 +128,25 @@ namespace detail {
 
     virtual bool setThermalAbsorptance(boost::optional<double> value) override;
 
-    void resetThermalAbsorptance();
+    virtual bool setThermalReflectance(boost::optional<double> value) override;
 
     virtual bool setSolarAbsorptance(boost::optional<double> value) override;
 
-    void resetSolarAbsorptance();
+    virtual bool setSolarReflectance(boost::optional<double> value) override;
 
     virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
+
+    virtual bool setVisibleReflectance(boost::optional<double> value) override;
+
+    bool setThermalAbsorptance(double thermalAbsorptance) override;
+
+    void resetThermalAbsorptance();
+
+    bool setSolarAbsorptance(double solarAbsorptance);
+
+    void resetSolarAbsorptance();
+
+    bool setVisibleAbsorptance(double visibleAbsorptance);
 
     void resetVisibleAbsorptance();
 

@@ -67,8 +67,6 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
 
   std::string roughness() const;
 
-  double thermalResistance() const;
-
   boost::optional<double> thermalAbsorptance() const;
 
   bool isThermalAbsorptanceDefaulted() const;
@@ -86,8 +84,6 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
   //@{
 
   bool setRoughness(std::string roughness);
-
-  bool setThermalResistance(double thermalResistance);
 
   bool setThermalAbsorptance(double thermalAbsorptance);
 

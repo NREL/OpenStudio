@@ -129,7 +129,7 @@ bool OpaqueMaterial::setThermalResistance(double value) {
   return getImpl<detail::OpaqueMaterial_Impl>()->setThermalResistance(value);
 }
 
-bool OpaqueMaterial::setThermalAbsorptance(double value) {
+bool OpaqueMaterial::setThermalAbsorptance(boost::optional<double> value) {
   return getImpl<detail::OpaqueMaterial_Impl>()->setThermalAbsorptance(value);
 }
 

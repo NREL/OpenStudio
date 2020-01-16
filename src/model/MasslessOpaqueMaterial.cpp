@@ -67,6 +67,16 @@ namespace detail {
     : OpaqueMaterial_Impl(other,model,keepHandle)
   {}
 
+  const std::vector<std::string>& MasslessOpaqueMaterial_Impl::outputVariableNames() const
+  {
+    static std::vector<std::string> result;
+    return result;
+  }
+
+  IddObjectType MasslessOpaqueMaterial_Impl::iddObjectType() const {
+    return MasslessOpaqueMaterial::iddObjectType();
+  }
+
   std::string MasslessOpaqueMaterial_Impl::roughness() const {
     boost::optional<std::string> value = getString(OS_Material_NoMassFields::Roughness,true);
     OS_ASSERT(value);
@@ -89,6 +99,12 @@ namespace detail {
     return 0.0;
   }
 
+  double MasslessOpaqueMaterial_Impl::thermalResistance() const {
+    boost::optional<double> value = getDouble(OS_Material_NoMassFields::ThermalResistance,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
   double MasslessOpaqueMaterial_Impl::thermalAbsorptance() const {
     boost::optional<double> value = getDouble(OS_Material_NoMassFields::ThermalAbsorptance,true);
     OS_ASSERT(value);
@@ -102,6 +118,12 @@ namespace detail {
       result = (1.0 - *od);
     }
     return result;
+  }
+
+  double MasslessOpaqueMaterial_Impl::solarAbsorptance() const {
+    boost::optional<double> value = getDouble(OS_Material_NoMassFields::SolarAbsorptance,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   OptionalDouble MasslessOpaqueMaterial_Impl::solarReflectance() const {
@@ -128,14 +150,21 @@ namespace detail {
     return result;
   }
 
-  const std::vector<std::string>& MasslessOpaqueMaterial_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    return result;
+  bool MasslessOpaqueMaterial_Impl::isThermalAbsorptanceDefaulted() const {
+    return isEmpty(OS_Material_NoMassFields::ThermalAbsorptance);
   }
 
-  IddObjectType MasslessOpaqueMaterial_Impl::iddObjectType() const {
-    return MasslessOpaqueMaterial::iddObjectType();
+  bool MasslessOpaqueMaterial_Impl::isSolarAbsorptanceDefaulted() const {
+    return isEmpty(OS_Material_NoMassFields::SolarAbsorptance);
+  }
+
+  bool MasslessOpaqueMaterial_Impl::isVisibleAbsorptanceDefaulted() const {
+    return isEmpty(OS_Material_NoMassFields::VisibleAbsorptance);
+  }
+
+  bool MasslessOpaqueMaterial_Impl::setRoughness(std::string roughness) {
+    bool result = setString(OS_Material_NoMassFields::Roughness, roughness);
+    return result;
   }
 
   bool MasslessOpaqueMaterial_Impl::setThickness(double value) {
@@ -152,6 +181,11 @@ namespace detail {
 
   bool MasslessOpaqueMaterial_Impl::setThermalResistivity(double value) {
     return false;
+  }
+
+  bool MasslessOpaqueMaterial_Impl::setThermalResistance(double thermalResistance) {
+    bool result = setDouble(OS_Material_NoMassFields::ThermalResistance, thermalResistance);
+    return result;
   }
 
   bool MasslessOpaqueMaterial_Impl::setThermalAbsorptance(OptionalDouble value) {
@@ -197,40 +231,6 @@ namespace detail {
     }
     OptionalDouble od = (1.0 - *value);
     return setVisibleAbsorptance(od);
-  }
-
-  double MasslessOpaqueMaterial_Impl::thermalResistance() const {
-    boost::optional<double> value = getDouble(OS_Material_NoMassFields::ThermalResistance,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool MasslessOpaqueMaterial_Impl::isThermalAbsorptanceDefaulted() const {
-    return isEmpty(OS_Material_NoMassFields::ThermalAbsorptance);
-  }
-
-  double MasslessOpaqueMaterial_Impl::solarAbsorptance() const {
-    boost::optional<double> value = getDouble(OS_Material_NoMassFields::SolarAbsorptance,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool MasslessOpaqueMaterial_Impl::isSolarAbsorptanceDefaulted() const {
-    return isEmpty(OS_Material_NoMassFields::SolarAbsorptance);
-  }
-
-  bool MasslessOpaqueMaterial_Impl::isVisibleAbsorptanceDefaulted() const {
-    return isEmpty(OS_Material_NoMassFields::VisibleAbsorptance);
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setRoughness(std::string roughness) {
-    bool result = setString(OS_Material_NoMassFields::Roughness, roughness);
-    return result;
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setThermalResistance(double thermalResistance) {
-    bool result = setDouble(OS_Material_NoMassFields::ThermalResistance, thermalResistance);
-    return result;
   }
 
   bool MasslessOpaqueMaterial_Impl::setThermalAbsorptance(double thermalAbsorptance) {
@@ -314,10 +314,6 @@ boost::optional<double> MasslessOpaqueMaterial::visibleAbsorptance() const {
   return result;
 }
 
-double MasslessOpaqueMaterial::thermalResistance() const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->thermalResistance();
-}
-
 bool MasslessOpaqueMaterial::isThermalAbsorptanceDefaulted() const {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->isThermalAbsorptanceDefaulted();
 }
@@ -332,10 +328,6 @@ bool MasslessOpaqueMaterial::isVisibleAbsorptanceDefaulted() const {
 
 bool MasslessOpaqueMaterial::setRoughness(std::string roughness) {
   return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setRoughness(roughness);
-}
-
-bool MasslessOpaqueMaterial::setThermalResistance(double thermalResistance) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setThermalResistance(thermalResistance);
 }
 
 bool MasslessOpaqueMaterial::setThermalAbsorptance(double thermalAbsorptance) {
