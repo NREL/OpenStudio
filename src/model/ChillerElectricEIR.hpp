@@ -123,14 +123,6 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   bool isMinimumUnloadingRatioDefaulted() const;
 
-  std::string chilledWaterInletNodeName() const;
-
-  std::string chilledWaterOutletNodeName() const;
-
-  boost::optional<std::string> condenserInletNodeName() const;
-
-  boost::optional<std::string> condenserOutletNodeName() const;
-
   std::string condenserType() const;
 
   bool isCondenserTypeDefaulted() const;
@@ -154,10 +146,6 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
   double designHeatRecoveryWaterFlowRate() const;
 
   bool isDesignHeatRecoveryWaterFlowRateDefaulted() const;
-
-  boost::optional<std::string> heatRecoveryInletNodeName() const;
-
-  boost::optional<std::string> heatRecoveryOutletNodeName() const;
 
   double sizingFactor() const;
 
@@ -233,22 +221,6 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   void resetMinimumUnloadingRatio();
 
-  bool setChilledWaterInletNodeName(std::string chilledWaterInletNodeName);
-
-  bool setChilledWaterOutletNodeName(std::string chilledWaterOutletNodeName);
-
-  bool setCondenserInletNodeName(boost::optional<std::string> condenserInletNodeName);
-
-  bool setCondenserInletNodeName(std::string condenserInletNodeName);
-
-  void resetCondenserInletNodeName();
-
-  bool setCondenserOutletNodeName(boost::optional<std::string> condenserOutletNodeName);
-
-  bool setCondenserOutletNodeName(std::string condenserOutletNodeName);
-
-  void resetCondenserOutletNodeName();
-
   bool setCondenserType(std::string condenserType);
 
   void resetCondenserType();
@@ -272,18 +244,6 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
   bool setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate);
 
   void resetDesignHeatRecoveryWaterFlowRate();
-
-  bool setHeatRecoveryInletNodeName(boost::optional<std::string> heatRecoveryInletNodeName);
-
-  bool setHeatRecoveryInletNodeName(std::string heatRecoveryInletNodeName);
-
-  void resetHeatRecoveryInletNodeName();
-
-  bool setHeatRecoveryOutletNodeName(boost::optional<std::string> heatRecoveryOutletNodeName);
-
-  bool setHeatRecoveryOutletNodeName(std::string heatRecoveryOutletNodeName);
-
-  void resetHeatRecoveryOutletNodeName();
 
   bool setSizingFactor(double sizingFactor);
 
