@@ -72,21 +72,34 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   virtual const std::vector<std::string> & outputVariableNames() const override;
 
-  virtual bool addToNode(Node & node) override;
-
-  virtual bool removeFromSecondaryPlantLoop() override;
-
+  // chilledWaterLoop
   virtual unsigned supplyInletPort() const override;
-
   virtual unsigned supplyOutletPort() const override;
 
+  // condenserWaterLoop
   virtual unsigned demandInletPort() const override;
-
   virtual unsigned demandOutletPort() const override;
 
+  // heatRecoveryLoop
   virtual unsigned tertiaryInletPort() const override;
-
   virtual unsigned tertiaryOutletPort() const override;
+
+  /* This function will perform a check if trying to add it to a node that is on the supply side of a plant loop.
+   * If:
+   *     - the node is on the supply side of a loop
+   *     - the node isn't on the current chilled water loop itself
+   *     - the chiller doesn't already have a heat recovery (tertiary) loop,
+   * then it tries to add it to the Tertiary loop.
+   * In all other cases, it will call the base class' method WaterToWaterComponent_Impl::addToNode()
+   * If this is connecting to the demand side of a loop, will set the chiller condenserType to WaterCooled
+   */
+  virtual bool addToNode(Node & node) override;
+
+  /* Restricts addToTertiaryNode to a node that is on the supply side of a plant loop (tertiary = Heating Loop) */
+  virtual bool addToTertiaryNode(Node & node) override;
+
+  /** Override to switch the condenser type to 'AirCooled' **/
+  virtual bool removeFromSecondaryPlantLoop() override;
 
   virtual void autosize() override;
 
@@ -182,6 +195,15 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
   boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
 
   std::string endUseSubcategory() const;
+
+  /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
+  boost::optional<PlantLoop> chilledWaterLoop() const;
+
+  /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
+  boost::optional<PlantLoop> condenserWaterLoop() const;
+
+  /** Convenience Function to return the Heat Recovery Loop **/
+  boost::optional<PlantLoop> heatRecoveryLoop() const;
 
   //@}
   /** @name Setters */

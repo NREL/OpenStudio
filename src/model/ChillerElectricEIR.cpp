@@ -659,16 +659,73 @@ namespace detail {
     return result;
   }
 
+  /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
+  boost::optional<PlantLoop> ChillerElectricEIR_Impl::chilledWaterLoop() const {
+    return WaterToWaterComponent_Impl::plantLoop();
+  }
+
+  /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
+  boost::optional<PlantLoop> ChillerElectricEIR_Impl::condenserWaterLoop() const {
+    return WaterToWaterComponent_Impl::secondaryPlantLoop();
+  }
+
+  /** Convenience Function to return the Heat Recovery Loop **/
+  boost::optional<PlantLoop> ChillerElectricEIR_Impl::heatRecoveryLoop() const {
+    return WaterToWaterComponent_Impl::tertiaryPlantLoop();
+  }
+
   bool ChillerElectricEIR_Impl::addToNode(Node & node)
   {
+
+    boost::optional<PlantLoop> t_plantLoop = node.plantLoop();
+
+    // If trying to add to a node that is on the supply side of a plant loop
+    if( t_plantLoop ) {
+      if( t_plantLoop->supplyComponent(node.handle()) ) {
+        // If there is already a cooling Plant Loop
+        boost::optional<PlantLoop> chwLoop = this->chilledWaterLoop();
+        if (chwLoop) {
+          // And it's not the same as the node's loop
+          if (t_plantLoop.get() != chwLoop.get()) {
+            // And if there is no heatRecoveryLoop (tertiary)
+            boost::optional<PlantLoop> hrLoop = this->heatRecoveryLoop();
+            if (!hrLoop) {
+              // Then try to add it to the tertiary one
+              LOG(Warn, "Calling addToTertiaryNode to connect it to the tertiary (=heat recovery) loop for " << briefDescription());
+              return this->addToTertiaryNode(node);
+            }
+          }
+        }
+      }
+    }
+
+    // All other cases, call the base class implementation
     // Connect the component
     bool ok = WaterToWaterComponent_Impl::addToNode(node);
 
     // If there's a secondary plant loop, switch the condenser type to "WaterCooled"
-    if (this->secondaryPlantLoop()) {
+    if (this->condenserWaterLoop()) {
       this->setCondenserType("WaterCooled");
     }
     return ok;
+  }
+
+  bool ChillerElectricEIR_Impl::addToTertiaryNode(Node & node)
+  {
+    auto _model = node.model();
+    auto t_plantLoop = node.plantLoop();
+
+    // Only accept adding to a node that is on a supply side of a plant loop
+    // Since tertiary here = heat recovery loop (heating)
+    if( t_plantLoop ) {
+      if( t_plantLoop->supplyComponent(node.handle()) ) {
+        // Call base class method which accepts both supply and demand
+        return WaterToWaterComponent_Impl::addToTertiaryNode(node);
+      } else {
+         LOG(Info, "Cannot connect the tertiary (=heat recovery) loop to the demand side for " << briefDescription());
+      }
+    }
+    return false;
   }
 
   bool ChillerElectricEIR_Impl::removeFromSecondaryPlantLoop()
@@ -1219,6 +1276,19 @@ std::string ChillerElectricEIR::endUseSubcategory() const {
 
 bool ChillerElectricEIR::setEndUseSubcategory(const std::string & endUseSubcategory) {
   return getImpl<detail::ChillerElectricEIR_Impl>()->setEndUseSubcategory(endUseSubcategory);
+}
+
+// Convenience functions
+boost::optional<PlantLoop> ChillerElectricEIR::chilledWaterLoop() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->chilledWaterLoop();
+}
+
+boost::optional<PlantLoop> ChillerElectricEIR::condenserWaterLoop() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->condenserWaterLoop();
+}
+
+boost::optional<PlantLoop> ChillerElectricEIR::heatRecoveryLoop() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->heatRecoveryLoop();
 }
 
 /// @cond
