@@ -278,12 +278,8 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
     idfObject.setString(Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName,_curve->name().get());
   }
 
-  if( (value = modelObject.sizingFactor()) ) {
-    idfObject.setDouble(Chiller_Electric_EIRFields::SizingFactor,value.get());
-  }
 
   // DesignHeatRecoveryWaterFlowRate
-
 
   // HeatRecoveryInletNodeName
   if( boost::optional<ModelObject> mo = modelObject.tertiaryInletModelObject() )
@@ -304,9 +300,21 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   }
 
   // Sizing Factor
+  if( (value = modelObject.sizingFactor()) ) {
+    idfObject.setDouble(Chiller_Electric_EIRFields::SizingFactor,value.get());
+  }
+
   // Basin Heater Capacity
+  idfObject.setDouble(Chiller_Electric_EIRFields::BasinHeaterCapacity, modelObject.basinHeaterCapacity());
+
   // Basin Heater Setpoint Temperature
+  idfObject.setDouble(Chiller_Electric_EIRFields::BasinHeaterSetpointTemperature, modelObject.basinHeaterSetpointTemperature());
+
   // Basin Heater Operating Schedule Name
+  if (auto _schedule = modelObject.basinHeaterSchedule()) {
+    idfObject.setString(Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName, _schedule->name().get());
+  }
+
   // Condenser Heat Recovery Relative Capacity Fraction
   // Heat Recovery Inlet High Temperature Limit Schedule Name
   // Heat Recovery Leaving Temperature Setpoint Node Name
