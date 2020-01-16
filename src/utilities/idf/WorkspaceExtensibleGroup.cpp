@@ -65,7 +65,7 @@ std::vector<unsigned> WorkspaceExtensibleGroup::getSourceFieldIndices(const Hand
 
 boost::optional<std::string> WorkspaceExtensibleGroup::getField(unsigned index) const {
   if (!isValid(index)) { return boost::none; }
-  return m_impl->IdfObject_Impl::getString(mf_toIndex(index),false);
+  return getImpl<detail::WorkspaceObject_Impl>()->getField(mf_toIndex(index));
 }
 
 // SETTERS

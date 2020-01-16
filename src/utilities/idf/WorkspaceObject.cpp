@@ -220,7 +220,33 @@ namespace detail {
   }
 
   boost::optional<std::string> WorkspaceObject_Impl::getField(unsigned index) const {
-    return IdfObject_Impl::getString(index,false,false);
+    boost::optional<std::string> result;
+
+    // IdfObject_Impl::getString won't work if this is a source field... since m_fields will be blank
+    // So we handle that case too
+
+    // If it's a source field:
+    if (canBeSource(index) && (index < numFields())) {
+      if (!initialized()) {
+        return boost::none;
+      }
+
+      if (m_sourceData) {
+        // find index and return target if handle not null
+        auto fpIt = getConstIteratorAtFieldIndex<SourceData>(m_sourceData->pointers,index);
+        if (fpIt != m_sourceData->pointers.end()) {
+          Handle th = fpIt->targetHandle;
+          if (!th.isNull()) {
+            result = openstudio::toString(th);
+          }
+        }
+      }
+    } else {
+      // If not source, then call getString
+      result = IdfObject_Impl::getString(index,false,false);
+    }
+
+    return result;
   }
 
   OptionalWorkspaceObject WorkspaceObject_Impl::getTarget(unsigned index) const {
