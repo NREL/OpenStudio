@@ -244,7 +244,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
     EXPECT_TRUE(openstudio::filesystem::exists(path));
 
     const auto time = openstudio::filesystem::last_write_time_as_time_t(path);
-    EXPECT_GT(time, startTime);
+    EXPECT_GE(time, startTime);
   }
 
   // Find in local library
@@ -258,7 +258,7 @@ TEST_F(BCLFixture, RemoteBCLTest2)
     EXPECT_TRUE(openstudio::filesystem::exists(path));
 
     const auto time = openstudio::filesystem::last_write_time_as_time_t(path);
-    EXPECT_GT(time, startTime);
+    EXPECT_GE(time, startTime);
   }
 
   // read all attributes, look for "OpenStudio Type"
@@ -278,8 +278,8 @@ TEST_F(BCLFixture, RemoteBCLTest2)
   EXPECT_EQ(1u, oscFiles.size());
   openstudio::path oscPath = toPath(oscFiles[0]);
   EXPECT_TRUE(openstudio::filesystem::exists(oscPath));
-  
-  // DLM: the real loading procedure would be to run this through the version translator 
+
+  // DLM: the real loading procedure would be to run this through the version translator
   // since we are in utilities we can only test that it is an idf
   // This will fail on Windows if the path is greater than MAX_PATH
   boost::optional<VersionString> version = IdfFile::loadVersionOnly(oscPath);
