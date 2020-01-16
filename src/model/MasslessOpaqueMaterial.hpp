@@ -81,13 +81,6 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
 
   bool isVisibleAbsorptanceDefaulted() const;
 
-  double conductivity() const;
-
-  double density() const;
-
-  double specificHeat() const;
-
-
   //@}
   /** @name Setters */
   //@{
@@ -107,13 +100,6 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
   bool setVisibleAbsorptance(double visibleAbsorptance);
 
   void resetVisibleAbsorptance();
-
-  bool setConductivity(double conductivity);
-
-  bool setDensity(double density);
-
-  bool setSpecificHeat(double specificHeat);
-
 
   //@}
   /** @name Other */

@@ -93,7 +93,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_Material_NoMassFields::ThermalAbsorptance,true);
     OS_ASSERT(value);
     return value.get();
-
   }
 
   OptionalDouble MasslessOpaqueMaterial_Impl::thermalReflectance() const {
@@ -118,7 +117,6 @@ namespace detail {
     boost::optional<double> value = getDouble(OS_Material_NoMassFields::VisibleAbsorptance,true);
     OS_ASSERT(value);
     return value.get();
-
   }
 
   OptionalDouble MasslessOpaqueMaterial_Impl::visibleReflectance() const {
@@ -269,45 +267,6 @@ namespace detail {
     return MasslessOpaqueMaterial::roughnessValues();
   }
 
-  double MasslessOpaqueMaterial_Impl::conductivity() const {
-    OptionalDouble od = getDouble(OS_MaterialFields::Conductivity,true);
-    if (!od) {
-      LOG_AND_THROW("Thermal conductivity is not set for MasslessOpaqueMaterial "
-          << briefDescription() << ".");
-    }
-    return *od;
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setConductivity(double value) {
-    return setDouble(OS_MaterialFields::Conductivity,value);
-  }
-
-  double MasslessOpaqueMaterial_Impl::density() const {
-    OptionalDouble od = getDouble(OS_MaterialFields::Density,true);
-    if (!od) {
-      LOG_AND_THROW("Density is not set for MasslessOpaqueMaterial "
-          << briefDescription() << ".");
-    }
-    return *od;
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setDensity(double value) {
-    return setDouble(OS_MaterialFields::Density,value);
-  }
-
-  double MasslessOpaqueMaterial_Impl::specificHeat() const {
-    OptionalDouble od = getDouble(OS_MaterialFields::SpecificHeat,true);
-    if (!od) {
-      LOG_AND_THROW("Specific heat is not set for MasslessOpaqueMaterial "
-          << briefDescription() << ".");
-    }
-    return *od;
-  }
-
-  bool MasslessOpaqueMaterial_Impl::setSpecificHeat(double value) {
-    return setDouble(OS_MaterialFields::SpecificHeat,value);
-  }
-
 } // detail
 
 MasslessOpaqueMaterial::MasslessOpaqueMaterial(const Model& model,
@@ -401,30 +360,6 @@ bool MasslessOpaqueMaterial::setVisibleAbsorptance(double visibleAbsorptance) {
 
 void MasslessOpaqueMaterial::resetVisibleAbsorptance() {
   getImpl<detail::MasslessOpaqueMaterial_Impl>()->resetVisibleAbsorptance();
-}
-
-double MasslessOpaqueMaterial::conductivity() const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->conductivity();
-}
-
-bool MasslessOpaqueMaterial::setConductivity(double value) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setConductivity(value);
-}
-
-double MasslessOpaqueMaterial::density() const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->density();
-}
-
-bool MasslessOpaqueMaterial::setDensity(double value) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setDensity(value);
-}
-
-double MasslessOpaqueMaterial::specificHeat() const {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->specificHeat();
-}
-
-bool MasslessOpaqueMaterial::setSpecificHeat(double value) {
-  return getImpl<detail::MasslessOpaqueMaterial_Impl>()->setSpecificHeat(value);
 }
 
 /// @cond

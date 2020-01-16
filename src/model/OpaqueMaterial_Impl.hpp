@@ -42,21 +42,6 @@ namespace detail {
 
   class MODEL_API OpaqueMaterial_Impl : public Material_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
 
     // Construct completely new object.

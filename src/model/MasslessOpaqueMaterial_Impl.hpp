@@ -105,13 +105,6 @@ namespace detail {
 
     bool isVisibleAbsorptanceDefaulted() const;
 
-    double conductivity() const;
-
-    double density() const;
-
-    double specificHeat() const;
-
-
     //@}
     /** @name Setters */
     //@{
@@ -156,13 +149,6 @@ namespace detail {
     bool setVisibleAbsorptance(double visibleAbsorptance);
 
     void resetVisibleAbsorptance();
-
-    bool setConductivity(double conductivity);
-
-    bool setDensity(double density);
-
-    bool setSpecificHeat(double specificHeat);
-
 
     //@}
     /** @name Other */
