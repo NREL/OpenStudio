@@ -221,8 +221,7 @@ SiteWaterMainsTemperature::SiteWaterMainsTemperature(const Model& model)
   : ModelObject(SiteWaterMainsTemperature::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SiteWaterMainsTemperature_Impl>());
-  // TODO: switch this to CorrelationFromWeatherFile to match E+. Can be done at OS 3.0
-  bool ok = setCalculationMethod("Schedule");
+  bool ok = setCalculationMethod("CorrelationFromWeatherFile");
   OS_ASSERT(ok);
 }
 
