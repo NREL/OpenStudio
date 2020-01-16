@@ -37,6 +37,7 @@
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Node.hpp"
+#include "Node_Impl.hpp"
 #include "PlantLoop.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
@@ -103,7 +104,9 @@ namespace detail {
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
     if (std::find(b,e,OS_Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName) != e)
     {
-      result.push_back(ScheduleTypeKey("ChillerElectricEIR","Basin Heater"));
+      result.push_back(ScheduleTypeKey("ChillerElectricEIR","Basin Heater Operating"));
+    } else if (std::find(b,e,OS_Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName) != e) {
+      result.push_back(ScheduleTypeKey("ChillerElectricEIR", "Heat Recovery Inlet High Temperature Limit"));
     }
     return result;
   }
