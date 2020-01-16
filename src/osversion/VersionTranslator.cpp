@@ -4917,6 +4917,49 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+
+    } else if (iddname == "OS:Chiller:Electric:EIR") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        // 6: Reference Chilled Water Flow Rate: used to default to autosize in IDD, now required
+        if (i == 6) {
+        // This field is now required so it should always be initialized
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          } else {
+            newObject.setString(i, "Autosize");
+          }
+
+        // 24: Design Heat Recovery Water Flow Rate: was already required, and used to default to 0.0 in CTOR:
+        //     * Technically we could get away doing nothing here.
+        //     * Instead we'll check if the value is 0.0 (old ctor default) and that it's not connected to a HR Loop
+        //       by checking field 25 ('Heat Recovery Inlet Node Name'), in which case we switch it to Autosize
+        } else if (i == 24) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+            newObject.setDouble(i, _value.get());
+
+            // Unless it was 0.0 (default ctor) and not connected to a HR loop, then switch it to Autosize
+            if (_value.get() == 0.0) {
+              if (!object.getString(25).has_value()) {
+                newObject.setString(i, "Autosize");
+              }
+            }
+          } else {
+            // Should never get here, but just in case...
+            newObject.setString(i, "Autosize");
+          }
+
+        // All other fields: unchanged
+        } else if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     // No-op
     } else {
       ss << object;
