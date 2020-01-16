@@ -12696,7 +12696,7 @@ OS:Chiller:Electric:EIR,
        \minimum> 0
        \autosizable
        \ip-units gal/min
-       \default autosize
+       \required-field
   N6, \field Reference Condenser Fluid Flow Rate
        \type real
        \units m3/s
@@ -12815,9 +12815,9 @@ OS:Chiller:Electric:EIR,
        \note Heat recovery is only available with Condenser Type = WaterCooled.
        \units m3/s
        \minimum 0.0
-       \default 0.0
        \autosizable
        \ip-units gal/min
+       \required-field
   A12, \field Heat Recovery Inlet Node Name
        \type object-list
        \object-list ConnectionNames
