@@ -226,7 +226,7 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   // CompressorMotorEfficiency
   // Changed to Fraction of Compressor Electric Consumption Rejected by Condenser in E+ version 8.0
 
-  if( (value = modelObject.compressorMotorEfficiency()) )
+  if( (value = modelObject.fractionofCompressorElectricConsumptionRejectedbyCondenser()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser,value.get());
   }
@@ -282,6 +282,9 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
     idfObject.setDouble(Chiller_Electric_EIRFields::SizingFactor,value.get());
   }
 
+  // DesignHeatRecoveryWaterFlowRate
+
+
   // HeatRecoveryInletNodeName
   if( boost::optional<ModelObject> mo = modelObject.tertiaryInletModelObject() )
   {
@@ -300,6 +303,14 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
     }
   }
 
+  // Sizing Factor
+  // Basin Heater Capacity
+  // Basin Heater Setpoint Temperature
+  // Basin Heater Operating Schedule Name
+  // Condenser Heat Recovery Relative Capacity Fraction
+  // Heat Recovery Inlet High Temperature Limit Schedule Name
+  // Heat Recovery Leaving Temperature Setpoint Node Name
+
   // End Use Subcategory
   if( (s = modelObject.endUseSubcategory()) ) {
     idfObject.setString(Chiller_Electric_EIRFields::EndUseSubcategory,s.get());
@@ -307,22 +318,6 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
 
   return boost::optional<IdfObject>(idfObject);
 }
-
-//OPENSTUDIO_ENUM( Chiller_Electric_EIRFields,
-//  ((Name)(Name))
-//  ((CoolingCapacityFunctionofTemperatureCurveName)(Cooling Capacity Function of Temperature Curve Name))
-//  ((ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName)(Electric Input to Cooling Output Ratio Function of Temperature Curve Name))
-//  ((ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName)(Electric Input to Cooling Output Ratio Function of Fan Coil Part Load Ratio Curve Name))
-//  ((CondenserInletNodeName)(Condenser Inlet Node Name))
-//  ((CondenserOutletNodeName)(Condenser Outlet Node Name))
-//  ((DesignHeatRecoveryWaterFlowRate)(Design Heat Recovery Water Flow Rate))
-//  ((HeatRecoveryInletNodeName)(Heat Recovery Inlet Node Name))
-//  ((HeatRecoveryOutletNodeName)(Heat Recovery Outlet Node Name))
-//  ((SizingFactor)(Sizing Factor))
-//  ((BasinHeaterCapacity)(Basin Heater Capacity))
-//  ((BasinHeaterSetpointTemperature)(Basin Heater Setpoint Temperature))
-//  ((BasinHeaterOperatingScheduleName)(Basin Heater Operating Schedule Name))
-//);
 
 } // energyplus
 
