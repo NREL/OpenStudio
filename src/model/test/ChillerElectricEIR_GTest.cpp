@@ -623,7 +623,7 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride)
   EXPECT_FALSE(chiller.heatRecoveryLoop());
 
 
-  // Connect to the source loop
+  // Connect to the condenser loop
   EXPECT_TRUE(cndwLoop.addDemandBranchForComponent(chiller));
 
   ASSERT_TRUE(chiller.chilledWaterLoop());
@@ -666,7 +666,7 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride)
   // Shouldn't accept tertiary connection to the demand side
   EXPECT_FALSE(chiller.addToTertiaryNode(h_demand_node));
 
-  // Try addToNode to the heating plant loop, should work to connect the hr loop
+  // Try addToNode to the hr plant loop, should work to connect the hr loop
   EXPECT_TRUE(chiller.addToNode(h_supply_node));
 
   ASSERT_TRUE(chiller.chilledWaterLoop());
