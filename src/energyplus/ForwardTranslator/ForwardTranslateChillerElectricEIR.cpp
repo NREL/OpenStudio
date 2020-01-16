@@ -280,6 +280,14 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
 
 
   // DesignHeatRecoveryWaterFlowRate
+  if( modelObject.isDesignHeatRecoveryWaterFlowRateAutosized() )
+  {
+    idfObject.setString(Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,"Autosize");
+  }
+  else if( (value = modelObject.designHeatRecoveryWaterFlowRate()) )
+  {
+    idfObject.setDouble(Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,value.get());
+  }
 
   // HeatRecoveryInletNodeName
   if( boost::optional<ModelObject> mo = modelObject.tertiaryInletModelObject() )
