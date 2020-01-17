@@ -723,6 +723,9 @@ set(${target_name}_src
   FanOnOff.hpp
   FanOnOff_Impl.hpp
   FanOnOff.cpp
+  FanSystemModel.hpp
+  FanSystemModel_Impl.hpp
+  FanSystemModel.cpp
   FanVariableVolume.hpp
   FanVariableVolume_Impl.hpp
   FanVariableVolume.cpp
@@ -1848,6 +1851,7 @@ set(${target_name}_test_src
   test/FanConstantVolume_GTest.cpp
   test/FanZoneExhaust_GTest.cpp
   test/FanOnOff_GTest.cpp
+  test/FanSystemModel_GTest.cpp
   test/FenestrationMaterial_GTest.cpp
   test/FloorplanJSForwardTranslator_GTest.cpp
   test/FluidCoolerSingleSpeed_GTest.cpp
