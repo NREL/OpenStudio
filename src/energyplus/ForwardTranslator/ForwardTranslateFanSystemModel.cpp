@@ -36,6 +36,7 @@
 #include "../../model/Curve.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"

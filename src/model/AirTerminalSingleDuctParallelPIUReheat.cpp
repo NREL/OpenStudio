@@ -378,8 +378,9 @@ namespace detail {
   {
     bool isTypeCorrect = false;
 
-    if( hvacComponent.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume )
-    {
+    if (hvacComponent.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) {
+      isTypeCorrect = true;
+    } else if (hvacComponent.iddObjectType() == IddObjectType::OS_Fan_SystemModel) {
       isTypeCorrect = true;
     }
 
