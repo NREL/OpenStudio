@@ -714,7 +714,7 @@ AirLoopHVACUnitaryHeatPumpAirToAir::AirLoopHVACUnitaryHeatPumpAirToAir( const Mo
 
   ok = setSupplyAirFan(supplyFan);
   if (!ok) {
-    remove();
+    remove(); // Funny thing: you can't remove it, because it'll call children, which will try to get the supplyAirFan, which will not work and hit an OS_ASSERT...
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s supply fan to "
                   << supplyFan.briefDescription() << ".");
   }

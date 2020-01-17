@@ -69,6 +69,7 @@
 #include "../ZoneHVACBaseboardConvectiveElectric.hpp"
 #include "../ZoneHVACLowTemperatureRadiantElectric.hpp"
 #include "../AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
+#include "../FanOnOff.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -365,8 +366,8 @@ TEST_F(ModelFixture,FanSystemModel_containingHVACComponent_AirLoopHVACUnitaryHea
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanSystemModel fan = FanSystemModel(m);
-
+  FanSystemModel fan(m);
+  FanOnOff fanOnOff(m);
   CurveBiquadratic c1(m);
   CurveQuadratic c2(m);
   CurveBiquadratic c3(m);
@@ -377,7 +378,8 @@ TEST_F(ModelFixture,FanSystemModel_containingHVACComponent_AirLoopHVACUnitaryHea
   CoilCoolingDXSingleSpeed coolingCoil(m, s, c1, c2, c3, c4, c5);
   CoilHeatingElectric supplementalHeatingCoil(m, s);
 
-  ASSERT_ANY_THROW(AirLoopHVACUnitaryHeatPumpAirToAir airLoopHVACUnitaryHeatPumpAirToAir(m, s, fan, heatingCoil, coolingCoil, supplementalHeatingCoil));
+  AirLoopHVACUnitaryHeatPumpAirToAir unitary(m, s, fanOnOff, heatingCoil, coolingCoil, supplementalHeatingCoil);
+  EXPECT_FALSE(unitary.setSupplyAirFan(fan));
 
 }
 
