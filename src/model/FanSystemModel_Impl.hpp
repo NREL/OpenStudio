@@ -72,6 +72,8 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual std::vector<ModelObject> children() const override;
+
     virtual unsigned inletPort() const override;
 
     virtual unsigned outletPort() const override;
@@ -184,6 +186,7 @@ namespace detail {
 
     bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
+    // TODO: This API sucks, should probably use add/removeSpeeds to push extensible groups
     bool setNumberofSpeeds(int numberofSpeeds);
 
     //@}

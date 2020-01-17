@@ -104,6 +104,16 @@ namespace detail {
     return result;
   }
 
+
+  std::vector<ModelObject> FanSystemModel_Impl::children() const
+  {
+    std::vector<ModelObject> result;
+    if (boost::optional<Curve> intermediate = electricPowerFunctionofFlowFractionCurve()) {
+      result.push_back(*intermediate);
+    }
+    return result;
+  }
+
   Schedule FanSystemModel_Impl::availabilitySchedule() const {
     boost::optional<Schedule> value = optionalAvailabilitySchedule();
     if (!value) {
