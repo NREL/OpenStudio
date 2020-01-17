@@ -63,6 +63,8 @@ module Kernel
   alias :original_require :require
   alias :original_open :open
 
+  RUBY_FILE_EXTS = ['.rb', '.so', '.dll']
+
   def require path
     original_directory = Dir.pwd
     path_with_extension = path
@@ -73,7 +75,7 @@ module Kernel
     
     extname = File.extname(path)
 
-    if extname.empty? #or extname != '.rb'
+    if extname.empty? or ! RUBY_FILE_EXTS.include? extname
       path_with_extension = path + '.rb'
     end
 
