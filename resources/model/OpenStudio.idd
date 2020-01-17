@@ -20093,13 +20093,16 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \type object-list
        \object-list WaterStorageTankNames
 
-Fan:SystemModel,
+OS:Fan:SystemModel,
        \memo Versatile simple fan that can be used in variable air volume, constant volume, on-off cycling, two-speed or multi-speed applications.
        \memo Performance at different flow rates, or speed levels, is determined using separate performance curve or table
        \memo or prescribed power fractions at discrete speed levels for two-speed or multi-speed fans.
-       \min-fields 14
+       \min-fields 15
        \extensible:2
-  A1 , \field Name
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
        \required-field
        \reference Fans
        \reference FansCV
@@ -20107,35 +20110,32 @@ Fan:SystemModel,
        \reference FansVAV
        \reference FansCVandVAV
        \reference FansCVandOnOffandVAV
-       \reference-class-name validBranchEquipmentTypes
-       \reference validBranchEquipmentNames
-       \reference-class-name validOASysEquipmentTypes
-       \reference validOASysEquipmentNames
-  A2 , \field Availability Schedule Name
+  A3 , \field Availability Schedule Name
        \note Availability schedule name for this fan. Schedule value > 0 means the fan is available.
        \note If this field is blank, the fan is always available.
        \type object-list
+       \required-field
        \object-list ScheduleNames
-  A3 , \field Air Inlet Node Name
-       \type node
-       \required-field
-  A4 , \field Air Outlet Node Name
-       \type node
-       \required-field
+  A4 , \field Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A5 , \field Air Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
   N1 , \field Design Maximum Air Flow Rate
        \required-field
        \type real
        \units m3/s
        \minimum> 0.0
        \autosizable
-  A5 , \field Speed Control Method
+  A6 , \field Speed Control Method
        \type choice
        \key Continuous
        \key Discrete
-       \default Discrete
+       \required-field
   N2 , \field Electric Power Minimum Flow Rate Fraction
        \type real
-       \default 0.2
+       \required-field
        \minimum 0.0
        \maximum 1.0
   N3 , \field Design Pressure Rise
@@ -20146,27 +20146,28 @@ Fan:SystemModel,
        \required-field
   N4 , \field Motor Efficiency
        \type real
-       \default 0.9
+       \required-field
        \minimum> 0.0
        \maximum 1.0
   N5 , \field Motor In Air Stream Fraction
        \note 0.0 means fan motor outside of air stream, 1.0 means motor inside of air stream
        \type real
-       \default 1.0
+       \required-field
        \minimum 0.0
        \maximum 1.0
   N6 , \field Design Electric Power Consumption
        \type real
        \units W
        \autosizable
+       \required-field
        \note Fan power consumption at maximum air flow rate.
        \note If autosized the method used to scale power is chosen in the following field
-  A6 , \field Design Power Sizing Method
+  A7 , \field Design Power Sizing Method
        \type choice
        \key PowerPerFlow
        \key PowerPerFlowPerPressure
        \key TotalEfficiencyAndPressure
-       \default PowerPerFlowPerPressure
+       \required-field
   N7 , \field Electric Power Per Unit Flow Rate
        \type real
        \units W/(m3/s)
@@ -20175,13 +20176,12 @@ Fan:SystemModel,
        \type real
        \units W/((m3/s)-Pa)
        \ip-units W/((ft3/min)-inH2O)
-       \default 1.66667
   N9,  \field Fan Total Efficiency
        \type real
-       \default 0.7
+       \required-field
        \minimum> 0.0
        \maximum 1.0
-  A7 , \field Electric Power Function of Flow Fraction Curve Name
+  A8 , \field Electric Power Function of Flow Fraction Curve Name
        \note independent variable is normalized flow rate, current flow divided by Design Maximum Air Flow Rate.
        \note dependent variable is modification factor multiplied by Design Power Consumption.
        \note This field is required if Speed Control Method is set to Continuous or if the Number of Speeds is greater than 1 and Speed Electric Power Fraction fields are not used.
@@ -20197,17 +20197,17 @@ Fan:SystemModel,
        \type real
        \minimum 0.0
        \maximum 1.0
-  A8 , \field Motor Loss Zone Name
-        \note optional, if used fan motor heat losses that not added to air stream are transferred to zone as internal gains
-        \type object-list
-        \object-list ZoneNames
+  A9 , \field Motor Loss Zone Name
+       \note optional, if used fan motor heat losses that not added to air stream are transferred to zone as internal gains
+       \type object-list
+       \object-list ThermalZoneNames
   N12, \field Motor Loss Radiative Fraction
-        \note optional. If zone identified in previous field then this determines
-        \note the split between convection and radiation for the fan motor's skin losses
-        \type real
-        \minimum 0.0
-        \maximum 1.0
-  A9 , \field End-Use Subcategory
+       \note optional. If zone identified in previous field then this determines
+       \note the split between convection and radiation for the fan motor's skin losses
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  A10, \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
@@ -20217,38 +20217,13 @@ Fan:SystemModel,
        \note Speed need to be arranged in increasing order in remaining field sets.
        \note If set to 1, or omitted, and Speed Control Method is Discrete then constant fan speed is the design maximum.
        \type integer
-       \default 1
   N14, \field Speed 1 Flow Fraction
        \begin-extensible
        \type real
        \minimum 0.0
        \maximum 1.0
-  N15, \field Speed 1 Electric Power Fraction
+  N15; \field Speed 1 Electric Power Fraction
        \note if left blank then use Electric Power Function of Flow Fraction Curve
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  N16, \field Speed 2 Flow Fraction
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  N17, \field Speed 2 Electric Power Fraction
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  N18, \field Speed 3 Flow Fraction
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  N19, \field Speed 3 Electric Power Fraction
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  N20, \field Speed n Flow Fraction
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-  N21; \field Speed n Electric Power Fraction
        \type real
        \minimum 0.0
        \maximum 1.0
