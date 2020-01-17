@@ -1864,6 +1864,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateFanOnOff(fan);
       break;
     }
+  case openstudio::IddObjectType::OS_Fan_SystemModel :
+    {
+      model::FanSystemModel fan = modelObject.cast<FanSystemModel>();
+      retVal = translateFanSystemModel(fan);
+      break;
+    }
   case openstudio::IddObjectType::OS_Fan_VariableVolume :
     {
       model::FanVariableVolume fan = modelObject.cast<FanVariableVolume>();

@@ -225,6 +225,7 @@ class ExternalInterfaceSchedule;
 class ExternalInterfaceVariable;
 class FanConstantVolume;
 class FanOnOff;
+class FanSystemModel;
 class FanVariableVolume;
 class FanZoneExhaust;
 class FFactorGroundFloorConstruction;
@@ -892,6 +893,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateFanConstantVolume( model::FanConstantVolume & modelObject );
 
   boost::optional<IdfObject> translateFanOnOff( model::FanOnOff & modelObject );
+
+  boost::optional<IdfObject> translateFanSystemModel( model::FanSystemModel & modelObject );
 
   boost::optional<IdfObject> translateFanVariableVolume( model::FanVariableVolume & modelObject );
 

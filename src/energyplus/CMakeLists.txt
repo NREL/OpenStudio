@@ -174,6 +174,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateExternalInterfaceVariable.cpp
   ForwardTranslator/ForwardTranslateFanConstantVolume.cpp
   ForwardTranslator/ForwardTranslateFanOnOff.cpp
+  ForwardTranslator/ForwardTranslateFanSystemModel.cpp
   ForwardTranslator/ForwardTranslateFanVariableVolume.cpp
   ForwardTranslator/ForwardTranslateFanZoneExhaust.cpp
   ForwardTranslator/ForwardTranslateFFactorGroundFloorConstruction.cpp
@@ -690,7 +691,7 @@ CREATE_SRC_GROUPS("${${target_name}_src}")
 if(BUILD_TESTING)
 
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
-  
+
   add_dependencies(${target_name}_tests
     ResultsViewer_resources
     openstudio_energyplus_resources
