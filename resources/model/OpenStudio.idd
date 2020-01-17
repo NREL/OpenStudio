@@ -20160,6 +20160,7 @@ OS:Fan:SystemModel,
        \units W
        \autosizable
        \required-field
+       \minimum> 0.0
        \note Fan power consumption at maximum air flow rate.
        \note If autosized the method used to scale power is chosen in the following field
   A7 , \field Design Power Sizing Method
@@ -20173,11 +20174,13 @@ OS:Fan:SystemModel,
        \units W/(m3/s)
        \ip-units W/(ft3/min)
        \required-field
+       \minimum> 0.0
   N8 , \field Electric Power Per Unit Flow Rate Per Unit Pressure
        \type real
        \units W/((m3/s)-Pa)
        \ip-units W/((ft3/min)-inH2O)
        \required-field
+       \minimum> 0.0
   N9,  \field Fan Total Efficiency
        \type real
        \required-field
@@ -20194,6 +20197,7 @@ OS:Fan:SystemModel,
        \type real
        \units Pa
        \ip-units inH2O
+       \minimum> 0.0
   N11, \field Night Ventilation Mode Flow Fraction
        \note Fraction of Design Maximum Air Flow Rate to use when in night mode using AvailabilityManager:NightVentilation
        \type real
@@ -20221,6 +20225,7 @@ OS:Fan:SystemModel,
        \note If set to 1, or omitted, and Speed Control Method is Discrete then constant fan speed is the design maximum.
        \type integer
        \required-field
+       \minimum 1
   N14, \field Speed 1 Flow Fraction
        \begin-extensible
        \type real
