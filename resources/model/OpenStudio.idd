@@ -20217,6 +20217,7 @@ OS:Fan:SystemModel,
        \note Speed need to be arranged in increasing order in remaining field sets.
        \note If set to 1, or omitted, and Speed Control Method is Discrete then constant fan speed is the design maximum.
        \type integer
+       \required-field
   N14, \field Speed 1 Flow Fraction
        \begin-extensible
        \type real
