@@ -20191,7 +20191,8 @@ OS:Fan:SystemModel,
        \note dependent variable is modification factor multiplied by Design Power Consumption.
        \note This field is required if Speed Control Method is set to Continuous or if the Number of Speeds is greater than 1 and Speed Electric Power Fraction fields are not used.
        \type object-list
-       \object-list UnivariateCurves
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
   N10, \field Night Ventilation Mode Pressure Rise
        \note Total system fan pressure rise at the fan when in night mode using AvailabilityManager:NightVentilation
        \type real
