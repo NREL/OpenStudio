@@ -20172,10 +20172,12 @@ OS:Fan:SystemModel,
        \type real
        \units W/(m3/s)
        \ip-units W/(ft3/min)
+       \required-field
   N8 , \field Electric Power Per Unit Flow Rate Per Unit Pressure
        \type real
        \units W/((m3/s)-Pa)
        \ip-units W/((ft3/min)-inH2O)
+       \required-field
   N9,  \field Fan Total Efficiency
        \type real
        \required-field
