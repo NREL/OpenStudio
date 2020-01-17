@@ -37,6 +37,8 @@
 #include "FanVariableVolume_Impl.hpp"
 #include "FanOnOff.hpp"
 #include "FanOnOff_Impl.hpp"
+#include "FanSystemModel.hpp"
+#include "FanSystemModel_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Node.hpp"
@@ -673,8 +675,11 @@ namespace detail {
 
   bool AirTerminalSingleDuctParallelPIUReheat_Impl::setFanAvailabilitySchedule(Schedule & schedule) {
     auto component = fan();
+    // TODO: from E+ 9.2.0 IDD: \note Fan type must be Fan:SystemModel or Fan:ConstantVolume
     if( auto constantFan = component.optionalCast<FanConstantVolume>() ) {
       return constantFan->setAvailabilitySchedule(schedule);
+    } else if(  auto systemModelFan = component.optionalCast<FanSystemModel>() ) {
+      return systemModelFan->setAvailabilitySchedule(schedule);
     } else if(  auto onOffFan = component.optionalCast<FanOnOff>() ) {
       return onOffFan->setAvailabilitySchedule(schedule);
     } else if( auto variableFan = component.optionalCast<FanVariableVolume>() ) {

@@ -38,6 +38,8 @@
 #include "FanVariableVolume_Impl.hpp"
 #include "FanOnOff.hpp"
 #include "FanOnOff_Impl.hpp"
+#include "FanSystemModel.hpp"
+#include "FanSystemModel_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVACOutdoorAirSystem.hpp"
 #include "PlantLoop.hpp"
@@ -299,6 +301,9 @@ void SetpointManagerMixedAir::updateFanInletOutletNodes(AirLoopHVAC & airLoopHVA
     }
     else if( boost::optional<FanOnOff> onOffFan = supplyComponent.optionalCast<FanOnOff>() ) {
       fans.insert(fans.begin(), *onOffFan);
+    }
+    else if( boost::optional<FanSystemModel> systemModelFan = supplyComponent.optionalCast<FanSystemModel>() ) {
+      fans.insert(fans.begin(), *systemModelFan);
     }
   }
 

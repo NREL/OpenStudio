@@ -47,6 +47,9 @@
   %ignore openstudio::model::FanOnOff::airflowNetworkFan;
   %ignore openstudio::model::FanVariableVolume::getAirflowNetworkFan;
   %ignore openstudio::model::FanVariableVolume::airflowNetworkFan;
+  // Doesn't support Fan:SystemModel yet
+  // %ignore openstudio::model::FanSystemModel::getAirflowNetworkFan;
+  // %ignore openstudio::model::FanSystemModel::airflowNetworkFan;
 
   // ignore generator objects for now, add back in with partial classes in ModelGenerators.i (swigged after us)
   %ignore openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic;
@@ -131,6 +134,7 @@ MODELOBJECT_TEMPLATES(EvaporativeFluidCoolerSingleSpeed);
 MODELOBJECT_TEMPLATES(EvaporativeFluidCoolerTwoSpeed);
 MODELOBJECT_TEMPLATES(FanConstantVolume);
 MODELOBJECT_TEMPLATES(FanOnOff);
+MODELOBJECT_TEMPLATES(FanSystemModel);
 MODELOBJECT_TEMPLATES(FanVariableVolume);
 MODELOBJECT_TEMPLATES(FluidCoolerSingleSpeed);
 MODELOBJECT_TEMPLATES(FluidCoolerTwoSpeed);
@@ -207,6 +211,7 @@ SWIG_MODELOBJECT(EvaporativeFluidCoolerSingleSpeed,1);
 SWIG_MODELOBJECT(EvaporativeFluidCoolerTwoSpeed,1);
 SWIG_MODELOBJECT(FanConstantVolume,1);
 SWIG_MODELOBJECT(FanOnOff,1);
+SWIG_MODELOBJECT(FanSystemModel,1);
 SWIG_MODELOBJECT(FanVariableVolume,1);
 SWIG_MODELOBJECT(FluidCoolerSingleSpeed,1);
 SWIG_MODELOBJECT(FluidCoolerTwoSpeed,1);
