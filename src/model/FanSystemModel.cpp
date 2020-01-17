@@ -30,19 +30,21 @@
 #include "FanSystemModel.hpp"
 #include "FanSystemModel_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
+#include "Model.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "UnivariateFunctions.hpp"
-#include "UnivariateFunctions_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
+#include "SetpointManagerMixedAir.hpp"
+
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -81,10 +83,9 @@ namespace detail {
 
   const std::vector<std::string>& FanSystemModel_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-    }
-    return result;
+
+    static std::vector<std::string> results{"Fan Electric Power", "Fan Rise in Air Temperature", "Fan Electric Energy", "Fan Air Mass Flow Rate"};
+    return results;
   }
 
   IddObjectType FanSystemModel_Impl::iddObjectType() const {
@@ -93,7 +94,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> FanSystemModel_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -112,12 +112,8 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<Connection> FanSystemModel_Impl::airInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Fan_SystemModelFields::AirInletNodeName);
-  }
-
-  boost::optional<Connection> FanSystemModel_Impl::airOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_Fan_SystemModelFields::AirOutletNodeName);
+  boost::optional<Schedule> FanSystemModel_Impl::optionalAvailabilitySchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Fan_SystemModelFields::AvailabilityScheduleName);
   }
 
   boost::optional<double> FanSystemModel_Impl::designMaximumAirFlowRate() const {
@@ -134,7 +130,8 @@ namespace detail {
   }
 
   boost::optional <double> FanSystemModel_Impl::autosizedDesignMaximumAirFlowRate() {
-    return getAutosizedValue("TODO_CHECK_SQL Design Maximum Air Flow Rate", "m3/s");
+    // TODO: double check
+    return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
   }
 
   std::string FanSystemModel_Impl::speedControlMethod() const {
@@ -190,12 +187,16 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<double> FanSystemModel_Impl::electricPowerPerUnitFlowRate() const {
-    return getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRate,true);
+  double FanSystemModel_Impl::electricPowerPerUnitFlowRate() const {
+    boost::optional<double> value = getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRate,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
-  boost::optional<double> FanSystemModel_Impl::electricPowerPerUnitFlowRatePerUnitPressure() const {
-    return getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRatePerUnitPressure,true);
+  double FanSystemModel_Impl::electricPowerPerUnitFlowRatePerUnitPressure() const {
+    boost::optional<double> value = getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRatePerUnitPressure,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   double FanSystemModel_Impl::fanTotalEfficiency() const {
@@ -204,8 +205,8 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<UnivariateFunctions> FanSystemModel_Impl::electricPowerFunctionofFlowFractionCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<UnivariateFunctions>(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName);
+  boost::optional<Curve> FanSystemModel_Impl::electricPowerFunctionofFlowFractionCurve() const {
+    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName);
   }
 
   boost::optional<double> FanSystemModel_Impl::nightVentilationModePressureRise() const {
@@ -220,8 +221,10 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Fan_SystemModelFields::MotorLossZoneName);
   }
 
-  boost::optional<double> FanSystemModel_Impl::motorLossRadiativeFraction() const {
-    return getDouble(OS_Fan_SystemModelFields::MotorLossRadiativeFraction,true);
+  double FanSystemModel_Impl::motorLossRadiativeFraction() const {
+    boost::optional<double> value = getDouble(OS_Fan_SystemModelFields::MotorLossRadiativeFraction,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   std::string FanSystemModel_Impl::endUseSubcategory() const {
@@ -230,12 +233,10 @@ namespace detail {
     return value.get();
   }
 
-  bool FanSystemModel_Impl::isEndUseSubcategoryDefaulted() const {
-    return isEmpty(OS_Fan_SystemModelFields::EndUseSubcategory);
-  }
-
-  boost::optional<int> FanSystemModel_Impl::numberofSpeeds() const {
-    return getInt(OS_Fan_SystemModelFields::NumberofSpeeds,true);
+  int FanSystemModel_Impl::numberofSpeeds() const {
+    boost::optional<int> value = getInt(OS_Fan_SystemModelFields::NumberofSpeeds,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   bool FanSystemModel_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -246,24 +247,31 @@ namespace detail {
     return result;
   }
 
-  bool FanSystemModel_Impl::setAirInletNode(const Connection& connection) {
-    bool result = setPointer(OS_Fan_SystemModelFields::AirInletNodeName, connection.handle());
-    return result;
+  unsigned FanSystemModel_Impl::inletPort() const
+  {
+    return OS_Fan_SystemModelFields::AirInletNodeName;
   }
 
-  void FanSystemModel_Impl::resetAirInletNode() {
-    bool result = setString(OS_Fan_SystemModelFields::AirInletNodeName, "");
-    OS_ASSERT(result);
+  unsigned FanSystemModel_Impl::outletPort() const
+  {
+    return OS_Fan_SystemModelFields::AirOutletNodeName;
   }
 
-  bool FanSystemModel_Impl::setAirOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_Fan_SystemModelFields::AirOutletNodeName, connection.handle());
-    return result;
-  }
+  bool FanSystemModel_Impl::addToNode(Node & node)
+  {
+    auto oaSystem = node.airLoopHVACOutdoorAirSystem();
+    auto airLoop = node.airLoopHVAC();
 
-  void FanSystemModel_Impl::resetAirOutletNode() {
-    bool result = setString(OS_Fan_SystemModelFields::AirOutletNodeName, "");
-    OS_ASSERT(result);
+    if( (airLoop && airLoop->supplyComponent(node.handle())) || (oaSystem && oaSystem->component(node.handle())) ) {
+      if( StraightComponent_Impl::addToNode(node) ) {
+        if ( airLoop ) {
+          SetpointManagerMixedAir::updateFanInletOutletNodes(airLoop.get());
+        }
+        return true;
+      }
+    }
+
+    return false;
   }
 
   bool FanSystemModel_Impl::setDesignMaximumAirFlowRate(double designMaximumAirFlowRate) {
@@ -303,7 +311,8 @@ namespace detail {
 
   bool FanSystemModel_Impl::setDesignElectricPowerConsumption(double designElectricPowerConsumption) {
     bool result = setDouble(OS_Fan_SystemModelFields::DesignElectricPowerConsumption, designElectricPowerConsumption);
-    OS_ASSERT(result);
+    // OS_ASSERT(result); // shouldn't accept < 0
+    return result;
   }
 
   void FanSystemModel_Impl::autosizeDesignElectricPowerConsumption() {
@@ -318,22 +327,14 @@ namespace detail {
 
   bool FanSystemModel_Impl::setElectricPowerPerUnitFlowRate(double electricPowerPerUnitFlowRate) {
     bool result = setDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRate, electricPowerPerUnitFlowRate);
-    OS_ASSERT(result);
-  }
-
-  void FanSystemModel_Impl::resetElectricPowerPerUnitFlowRate() {
-    bool result = setString(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRate, "");
-    OS_ASSERT(result);
+    // OS_ASSERT(result); // shouldn't accept < 0
+    return result;
   }
 
   bool FanSystemModel_Impl::setElectricPowerPerUnitFlowRatePerUnitPressure(double electricPowerPerUnitFlowRatePerUnitPressure) {
     bool result = setDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRatePerUnitPressure, electricPowerPerUnitFlowRatePerUnitPressure);
-    OS_ASSERT(result);
-  }
-
-  void FanSystemModel_Impl::resetElectricPowerPerUnitFlowRatePerUnitPressure() {
-    bool result = setString(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRatePerUnitPressure, "");
-    OS_ASSERT(result);
+    // OS_ASSERT(result); // shouldn't accept < 0
+    return result;
   }
 
   bool FanSystemModel_Impl::setFanTotalEfficiency(double fanTotalEfficiency) {
@@ -341,19 +342,19 @@ namespace detail {
     return result;
   }
 
-  bool FanSystemModel_Impl::setElectricPowerFunctionofFlowFractionCurve(const UnivariateFunctions& univariateFunctions) {
-    bool result = setPointer(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName, univariateFunctions.handle());
+  bool FanSystemModel_Impl::setElectricPowerFunctionofFlowFractionCurve(const Curve& curve) {
+    bool result = setPointer(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName, curve.handle());
     return result;
   }
 
   void FanSystemModel_Impl::resetElectricPowerFunctionofFlowFractionCurve() {
     bool result = setString(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName, "");
-    OS_ASSERT(result);
   }
 
   bool FanSystemModel_Impl::setNightVentilationModePressureRise(double nightVentilationModePressureRise) {
     bool result = setDouble(OS_Fan_SystemModelFields::NightVentilationModePressureRise, nightVentilationModePressureRise);
-    OS_ASSERT(result);
+    // OS_ASSERT(result); // shouldn't accept < 0
+    return result;
   }
 
   void FanSystemModel_Impl::resetNightVentilationModePressureRise() {
@@ -386,29 +387,16 @@ namespace detail {
     return result;
   }
 
-  void FanSystemModel_Impl::resetMotorLossRadiativeFraction() {
-    bool result = setString(OS_Fan_SystemModelFields::MotorLossRadiativeFraction, "");
-    OS_ASSERT(result);
-  }
-
   bool FanSystemModel_Impl::setEndUseSubcategory(const std::string& endUseSubcategory) {
     bool result = setString(OS_Fan_SystemModelFields::EndUseSubcategory, endUseSubcategory);
     OS_ASSERT(result);
-  }
-
-  void FanSystemModel_Impl::resetEndUseSubcategory() {
-    bool result = setString(OS_Fan_SystemModelFields::EndUseSubcategory, "");
-    OS_ASSERT(result);
+    return result;
   }
 
   bool FanSystemModel_Impl::setNumberofSpeeds(int numberofSpeeds) {
     bool result = setInt(OS_Fan_SystemModelFields::NumberofSpeeds, numberofSpeeds);
-    OS_ASSERT(result);
-  }
-
-  void FanSystemModel_Impl::resetNumberofSpeeds() {
-    bool result = setString(OS_Fan_SystemModelFields::NumberofSpeeds, "");
-    OS_ASSERT(result);
+    // OS_ASSERT(result); // shouldn't accept < 0
+    return result;
   }
 
   void FanSystemModel_Impl::autosize() {
@@ -430,10 +418,6 @@ namespace detail {
 
   }
 
-  boost::optional<Schedule> FanSystemModel_Impl::optionalAvailabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Fan_SystemModelFields::AvailabilityScheduleName);
-  }
-
 } // detail
 
 FanSystemModel::FanSystemModel(const Model& model)
@@ -441,8 +425,6 @@ FanSystemModel::FanSystemModel(const Model& model)
 {
   OS_ASSERT(getImpl<detail::FanSystemModel_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
-  //     OS_Fan_SystemModelFields::AvailabilityScheduleName
   bool ok = true;
   // ok = setAvailabilitySchedule();
   OS_ASSERT(ok);
@@ -462,6 +444,40 @@ FanSystemModel::FanSystemModel(const Model& model)
   // ok = setDesignPowerSizingMethod();
   OS_ASSERT(ok);
   // ok = setFanTotalEfficiency();
+  OS_ASSERT(ok);
+
+  auto availabilitySchedule = model.alwaysOnDiscreteSchedule();
+  ok = setAvailabilitySchedule(availabilitySchedule);
+  OS_ASSERT(ok);
+
+  autosizeDesignMaximumAirFlowRate();
+
+  ok = setDesignPressureRise(500.0); // Completely abritrary
+  OS_ASSERT(ok);
+  ok = setSpeedControlMethod("Discrete");
+  OS_ASSERT(ok);
+  ok = setElectricPowerMinimumFlowRateFraction(0.2);
+  OS_ASSERT(ok);
+  ok = setMotorEfficiency(0.9);
+  OS_ASSERT(ok);
+  ok = setMotorInAirStreamFraction(1.0);
+  OS_ASSERT(ok);
+
+  autosizeDesignElectricPowerConsumption();
+
+  ok = setElectricPowerPerUnitFlowRate(1.66667); // TODO
+  OS_ASSERT(ok);
+  ok = setElectricPowerPerUnitFlowRatePerUnitPressure(1.66667);
+  OS_ASSERT(ok);
+  ok = setDesignPowerSizingMethod("PowerPerFlowPerPressure");
+  OS_ASSERT(ok);
+  ok = setFanTotalEfficiency(0.7);
+  OS_ASSERT(ok);
+  ok = setMotorLossRadiativeFraction(0.0);
+  OS_ASSERT(ok);
+  ok = setEndUseSubcategory("General");
+  OS_ASSERT(ok);
+  ok = setNumberofSpeeds(1);
   OS_ASSERT(ok);
 }
 
@@ -483,14 +499,6 @@ Schedule FanSystemModel::availabilitySchedule() const {
   return getImpl<detail::FanSystemModel_Impl>()->availabilitySchedule();
 }
 
-boost::optional<Connection> FanSystemModel::airInletNode() const {
-  return getImpl<detail::FanSystemModel_Impl>()->airInletNode();
-}
-
-boost::optional<Connection> FanSystemModel::airOutletNode() const {
-  return getImpl<detail::FanSystemModel_Impl>()->airOutletNode();
-}
-
 boost::optional<double> FanSystemModel::designMaximumAirFlowRate() const {
   return getImpl<detail::FanSystemModel_Impl>()->designMaximumAirFlowRate();
 }
@@ -500,7 +508,7 @@ bool FanSystemModel::isDesignMaximumAirFlowRateAutosized() const {
 }
 
   boost::optional <double> FanSystemModel::autosizedDesignMaximumAirFlowRate() {
-    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedDesignMaximumAirFlowRate();
+    return getImpl<detail::FanSystemModel_Impl>()->autosizedDesignMaximumAirFlowRate();
   }
 
 std::string FanSystemModel::speedControlMethod() const {
@@ -532,18 +540,18 @@ bool FanSystemModel::isDesignElectricPowerConsumptionAutosized() const {
 }
 
   boost::optional <double> FanSystemModel::autosizedDesignElectricPowerConsumption() {
-    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizedDesignElectricPowerConsumption();
+    return getImpl<detail::FanSystemModel_Impl>()->autosizedDesignElectricPowerConsumption();
   }
 
 std::string FanSystemModel::designPowerSizingMethod() const {
   return getImpl<detail::FanSystemModel_Impl>()->designPowerSizingMethod();
 }
 
-boost::optional<double> FanSystemModel::electricPowerPerUnitFlowRate() const {
+double FanSystemModel::electricPowerPerUnitFlowRate() const {
   return getImpl<detail::FanSystemModel_Impl>()->electricPowerPerUnitFlowRate();
 }
 
-boost::optional<double> FanSystemModel::electricPowerPerUnitFlowRatePerUnitPressure() const {
+double FanSystemModel::electricPowerPerUnitFlowRatePerUnitPressure() const {
   return getImpl<detail::FanSystemModel_Impl>()->electricPowerPerUnitFlowRatePerUnitPressure();
 }
 
@@ -551,7 +559,7 @@ double FanSystemModel::fanTotalEfficiency() const {
   return getImpl<detail::FanSystemModel_Impl>()->fanTotalEfficiency();
 }
 
-boost::optional<UnivariateFunctions> FanSystemModel::electricPowerFunctionofFlowFractionCurve() const {
+boost::optional<Curve> FanSystemModel::electricPowerFunctionofFlowFractionCurve() const {
   return getImpl<detail::FanSystemModel_Impl>()->electricPowerFunctionofFlowFractionCurve();
 }
 
@@ -567,7 +575,7 @@ boost::optional<ThermalZone> FanSystemModel::motorLossZone() const {
   return getImpl<detail::FanSystemModel_Impl>()->motorLossZone();
 }
 
-boost::optional<double> FanSystemModel::motorLossRadiativeFraction() const {
+double FanSystemModel::motorLossRadiativeFraction() const {
   return getImpl<detail::FanSystemModel_Impl>()->motorLossRadiativeFraction();
 }
 
@@ -575,32 +583,12 @@ std::string FanSystemModel::endUseSubcategory() const {
   return getImpl<detail::FanSystemModel_Impl>()->endUseSubcategory();
 }
 
-bool FanSystemModel::isEndUseSubcategoryDefaulted() const {
-  return getImpl<detail::FanSystemModel_Impl>()->isEndUseSubcategoryDefaulted();
-}
-
-boost::optional<int> FanSystemModel::numberofSpeeds() const {
+int FanSystemModel::numberofSpeeds() const {
   return getImpl<detail::FanSystemModel_Impl>()->numberofSpeeds();
 }
 
 bool FanSystemModel::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::FanSystemModel_Impl>()->setAvailabilitySchedule(schedule);
-}
-
-bool FanSystemModel::setAirInletNode(const Connection& connection) {
-  return getImpl<detail::FanSystemModel_Impl>()->setAirInletNode(connection);
-}
-
-void FanSystemModel::resetAirInletNode() {
-  getImpl<detail::FanSystemModel_Impl>()->resetAirInletNode();
-}
-
-bool FanSystemModel::setAirOutletNode(const Connection& connection) {
-  return getImpl<detail::FanSystemModel_Impl>()->setAirOutletNode(connection);
-}
-
-void FanSystemModel::resetAirOutletNode() {
-  getImpl<detail::FanSystemModel_Impl>()->resetAirOutletNode();
 }
 
 bool FanSystemModel::setDesignMaximumAirFlowRate(double designMaximumAirFlowRate) {
@@ -631,8 +619,8 @@ bool FanSystemModel::setMotorInAirStreamFraction(double motorInAirStreamFraction
   return getImpl<detail::FanSystemModel_Impl>()->setMotorInAirStreamFraction(motorInAirStreamFraction);
 }
 
-void FanSystemModel::setDesignElectricPowerConsumption(double designElectricPowerConsumption) {
-  getImpl<detail::FanSystemModel_Impl>()->setDesignElectricPowerConsumption(designElectricPowerConsumption);
+bool FanSystemModel::setDesignElectricPowerConsumption(double designElectricPowerConsumption) {
+  return getImpl<detail::FanSystemModel_Impl>()->setDesignElectricPowerConsumption(designElectricPowerConsumption);
 }
 
 void FanSystemModel::autosizeDesignElectricPowerConsumption() {
@@ -643,36 +631,28 @@ bool FanSystemModel::setDesignPowerSizingMethod(const std::string& designPowerSi
   return getImpl<detail::FanSystemModel_Impl>()->setDesignPowerSizingMethod(designPowerSizingMethod);
 }
 
-void FanSystemModel::setElectricPowerPerUnitFlowRate(double electricPowerPerUnitFlowRate) {
-  getImpl<detail::FanSystemModel_Impl>()->setElectricPowerPerUnitFlowRate(electricPowerPerUnitFlowRate);
+bool FanSystemModel::setElectricPowerPerUnitFlowRate(double electricPowerPerUnitFlowRate) {
+  return getImpl<detail::FanSystemModel_Impl>()->setElectricPowerPerUnitFlowRate(electricPowerPerUnitFlowRate);
 }
 
-void FanSystemModel::resetElectricPowerPerUnitFlowRate() {
-  getImpl<detail::FanSystemModel_Impl>()->resetElectricPowerPerUnitFlowRate();
-}
-
-void FanSystemModel::setElectricPowerPerUnitFlowRatePerUnitPressure(double electricPowerPerUnitFlowRatePerUnitPressure) {
-  getImpl<detail::FanSystemModel_Impl>()->setElectricPowerPerUnitFlowRatePerUnitPressure(electricPowerPerUnitFlowRatePerUnitPressure);
-}
-
-void FanSystemModel::resetElectricPowerPerUnitFlowRatePerUnitPressure() {
-  getImpl<detail::FanSystemModel_Impl>()->resetElectricPowerPerUnitFlowRatePerUnitPressure();
+bool FanSystemModel::setElectricPowerPerUnitFlowRatePerUnitPressure(double electricPowerPerUnitFlowRatePerUnitPressure) {
+  return getImpl<detail::FanSystemModel_Impl>()->setElectricPowerPerUnitFlowRatePerUnitPressure(electricPowerPerUnitFlowRatePerUnitPressure);
 }
 
 bool FanSystemModel::setFanTotalEfficiency(double fanTotalEfficiency) {
   return getImpl<detail::FanSystemModel_Impl>()->setFanTotalEfficiency(fanTotalEfficiency);
 }
 
-bool FanSystemModel::setElectricPowerFunctionofFlowFractionCurve(const UnivariateFunctions& univariateFunctions) {
-  return getImpl<detail::FanSystemModel_Impl>()->setElectricPowerFunctionofFlowFractionCurve(univariateFunctions);
+bool FanSystemModel::setElectricPowerFunctionofFlowFractionCurve(const Curve& curve) {
+  return getImpl<detail::FanSystemModel_Impl>()->setElectricPowerFunctionofFlowFractionCurve(curve);
 }
 
 void FanSystemModel::resetElectricPowerFunctionofFlowFractionCurve() {
   getImpl<detail::FanSystemModel_Impl>()->resetElectricPowerFunctionofFlowFractionCurve();
 }
 
-void FanSystemModel::setNightVentilationModePressureRise(double nightVentilationModePressureRise) {
-  getImpl<detail::FanSystemModel_Impl>()->setNightVentilationModePressureRise(nightVentilationModePressureRise);
+bool FanSystemModel::setNightVentilationModePressureRise(double nightVentilationModePressureRise) {
+  return getImpl<detail::FanSystemModel_Impl>()->setNightVentilationModePressureRise(nightVentilationModePressureRise);
 }
 
 void FanSystemModel::resetNightVentilationModePressureRise() {
@@ -699,24 +679,12 @@ bool FanSystemModel::setMotorLossRadiativeFraction(double motorLossRadiativeFrac
   return getImpl<detail::FanSystemModel_Impl>()->setMotorLossRadiativeFraction(motorLossRadiativeFraction);
 }
 
-void FanSystemModel::resetMotorLossRadiativeFraction() {
-  getImpl<detail::FanSystemModel_Impl>()->resetMotorLossRadiativeFraction();
+bool FanSystemModel::setEndUseSubcategory(const std::string& endUseSubcategory) {
+  return getImpl<detail::FanSystemModel_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
-void FanSystemModel::setEndUseSubcategory(const std::string& endUseSubcategory) {
-  getImpl<detail::FanSystemModel_Impl>()->setEndUseSubcategory(endUseSubcategory);
-}
-
-void FanSystemModel::resetEndUseSubcategory() {
-  getImpl<detail::FanSystemModel_Impl>()->resetEndUseSubcategory();
-}
-
-void FanSystemModel::setNumberofSpeeds(int numberofSpeeds) {
-  getImpl<detail::FanSystemModel_Impl>()->setNumberofSpeeds(numberofSpeeds);
-}
-
-void FanSystemModel::resetNumberofSpeeds() {
-  getImpl<detail::FanSystemModel_Impl>()->resetNumberofSpeeds();
+bool FanSystemModel::setNumberofSpeeds(int numberofSpeeds) {
+  return getImpl<detail::FanSystemModel_Impl>()->setNumberofSpeeds(numberofSpeeds);
 }
 
 /// @cond
