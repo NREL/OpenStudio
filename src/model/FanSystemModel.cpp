@@ -41,6 +41,26 @@
 #include "ThermalZone_Impl.hpp"
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
+#include "ZoneHVACFourPipeFanCoil.hpp"
+#include "ZoneHVACFourPipeFanCoil_Impl.hpp"
+#include "ZoneHVACUnitHeater.hpp"
+#include "ZoneHVACUnitHeater_Impl.hpp"
+#include "ZoneHVACUnitVentilator.hpp"
+#include "ZoneHVACUnitVentilator_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "WaterHeaterHeatPump.hpp"
+#include "WaterHeaterHeatPump_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_Impl.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
+#include "ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
+#include "ZoneHVACWaterToAirHeatPump.hpp"
+#include "ZoneHVACWaterToAirHeatPump_Impl.hpp"
 #include "SetpointManagerMixedAir.hpp"
 
 #include "ScheduleTypeLimits.hpp"
@@ -283,6 +303,115 @@ namespace detail {
 
     return false;
   }
+
+  boost::optional<HVACComponent> FanSystemModel_Impl::containingHVACComponent() const
+  {
+    // TODO: I probably didn't capture every possible type...
+
+    auto t_handle = handle();
+
+    // AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
+    {
+      if( boost::optional<HVACComponent> fan = airLoopHVACUnitarySystem.supplyFan() )
+      {
+        if( fan->handle() == t_handle )
+        {
+          return airLoopHVACUnitarySystem;
+        }
+      }
+    }
+
+    // WaterHeaterHeatPump
+    {
+      auto hpwhs = model().getConcreteModelObjects<WaterHeaterHeatPump>();
+      for( const auto & hpwh : hpwhs ) {
+        if( hpwh.fan().handle() == t_handle ) {
+          return hpwh;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+    std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+
+    for( const auto & bypassSystem : bypassSystems )
+    {
+      if( boost::optional<HVACComponent> fan = bypassSystem.supplyAirFan() )
+      {
+        if( fan->handle() == t_handle )
+        {
+          return bypassSystem;
+        }
+      }
+    }
+
+    // AirLoopHVACUnitaryHeatPumpAirToAir: not accepted (yet?)
+
+    return boost::none;
+  }
+
+  boost::optional<ZoneHVACComponent> FanSystemModel_Impl::containingZoneHVACComponent() const
+  {
+    // TODO: I probably didn't capture every possible type...
+    // ZoneHVAC:EnergyRecoveryVentilator for sure
+
+    std::vector<ZoneHVACComponent> zoneHVACComponent = this->model().getModelObjects<ZoneHVACComponent>();
+    for( const auto & elem : zoneHVACComponent )
+    {
+      switch(elem.iddObject().type().value())
+      {
+      case openstudio::IddObjectType::OS_ZoneHVAC_FourPipeFanCoil :
+        {
+          ZoneHVACFourPipeFanCoil component = elem.cast<ZoneHVACFourPipeFanCoil>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
+          break;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalHeatPump :
+        {
+          ZoneHVACPackagedTerminalHeatPump component = elem.cast<ZoneHVACPackagedTerminalHeatPump>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
+          break;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner :
+        {
+          ZoneHVACPackagedTerminalAirConditioner component = elem.cast<ZoneHVACPackagedTerminalAirConditioner>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
+          break;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_TerminalUnit_VariableRefrigerantFlow :
+        {
+          ZoneHVACTerminalUnitVariableRefrigerantFlow component = elem.cast<ZoneHVACTerminalUnitVariableRefrigerantFlow>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
+          break;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_WaterToAirHeatPump :
+        {
+          ZoneHVACWaterToAirHeatPump component = elem.cast<ZoneHVACWaterToAirHeatPump>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
+          break;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_UnitHeater :
+        {
+          ZoneHVACUnitHeater component = elem.cast<ZoneHVACUnitHeater>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
+          break;
+        }
+      case openstudio::IddObjectType::OS_ZoneHVAC_UnitVentilator :
+        {
+          ZoneHVACUnitVentilator component = elem.cast<ZoneHVACUnitVentilator>();
+          if (component.supplyAirFan().handle() == this->handle()) return elem;
+          break;
+        }
+      default:
+        {
+          break;
+        }
+      }
+    }
+    return boost::none; }
 
   bool FanSystemModel_Impl::setDesignMaximumAirFlowRate(double designMaximumAirFlowRate) {
     bool result = setDouble(OS_Fan_SystemModelFields::DesignMaximumAirFlowRate, designMaximumAirFlowRate);

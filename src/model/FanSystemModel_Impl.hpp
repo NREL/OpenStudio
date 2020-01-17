@@ -199,6 +199,11 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.FanSystemModel");
 
     boost::optional<Schedule> optionalAvailabilitySchedule() const;
+
+    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
   };
 
 } // detail
