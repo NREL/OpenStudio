@@ -20093,7 +20093,170 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \type object-list
        \object-list WaterStorageTankNames
 
+Fan:SystemModel,
+       \memo Versatile simple fan that can be used in variable air volume, constant volume, on-off cycling, two-speed or multi-speed applications.
+       \memo Performance at different flow rates, or speed levels, is determined using separate performance curve or table
+       \memo or prescribed power fractions at discrete speed levels for two-speed or multi-speed fans.
+       \min-fields 14
+       \extensible:2
+  A1 , \field Name
+       \required-field
+       \reference Fans
+       \reference FansCV
+       \reference FansCVandOnOff
+       \reference FansVAV
+       \reference FansCVandVAV
+       \reference FansCVandOnOffandVAV
+       \reference-class-name validBranchEquipmentTypes
+       \reference validBranchEquipmentNames
+       \reference-class-name validOASysEquipmentTypes
+       \reference validOASysEquipmentNames
+  A2 , \field Availability Schedule Name
+       \note Availability schedule name for this fan. Schedule value > 0 means the fan is available.
+       \note If this field is blank, the fan is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A3 , \field Air Inlet Node Name
+       \type node
+       \required-field
+  A4 , \field Air Outlet Node Name
+       \type node
+       \required-field
+  N1 , \field Design Maximum Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  A5 , \field Speed Control Method
+       \type choice
+       \key Continuous
+       \key Discrete
+       \default Discrete
+  N2 , \field Electric Power Minimum Flow Rate Fraction
+       \type real
+       \default 0.2
+       \minimum 0.0
+       \maximum 1.0
+  N3 , \field Design Pressure Rise
+       \type real
+       \minimum> 0.0
+       \units Pa
+       \ip-units inH2O
+       \required-field
+  N4 , \field Motor Efficiency
+       \type real
+       \default 0.9
+       \minimum> 0.0
+       \maximum 1.0
+  N5 , \field Motor In Air Stream Fraction
+       \note 0.0 means fan motor outside of air stream, 1.0 means motor inside of air stream
+       \type real
+       \default 1.0
+       \minimum 0.0
+       \maximum 1.0
+  N6 , \field Design Electric Power Consumption
+       \type real
+       \units W
+       \autosizable
+       \note Fan power consumption at maximum air flow rate.
+       \note If autosized the method used to scale power is chosen in the following field
+  A6 , \field Design Power Sizing Method
+       \type choice
+       \key PowerPerFlow
+       \key PowerPerFlowPerPressure
+       \key TotalEfficiencyAndPressure
+       \default PowerPerFlowPerPressure
+  N7 , \field Electric Power Per Unit Flow Rate
+       \type real
+       \units W/(m3/s)
+       \ip-units W/(ft3/min)
+  N8 , \field Electric Power Per Unit Flow Rate Per Unit Pressure
+       \type real
+       \units W/((m3/s)-Pa)
+       \ip-units W/((ft3/min)-inH2O)
+       \default 1.66667
+  N9,  \field Fan Total Efficiency
+       \type real
+       \default 0.7
+       \minimum> 0.0
+       \maximum 1.0
+  A7 , \field Electric Power Function of Flow Fraction Curve Name
+       \note independent variable is normalized flow rate, current flow divided by Design Maximum Air Flow Rate.
+       \note dependent variable is modification factor multiplied by Design Power Consumption.
+       \note This field is required if Speed Control Method is set to Continuous or if the Number of Speeds is greater than 1 and Speed Electric Power Fraction fields are not used.
+       \type object-list
+       \object-list UnivariateFunctions
+  N10, \field Night Ventilation Mode Pressure Rise
+       \note Total system fan pressure rise at the fan when in night mode using AvailabilityManager:NightVentilation
+       \type real
+       \units Pa
+       \ip-units inH2O
+  N11, \field Night Ventilation Mode Flow Fraction
+       \note Fraction of Design Maximum Air Flow Rate to use when in night mode using AvailabilityManager:NightVentilation
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  A8 , \field Motor Loss Zone Name
+        \note optional, if used fan motor heat losses that not added to air stream are transferred to zone as internal gains
+        \type object-list
+        \object-list ZoneNames
+  N12, \field Motor Loss Radiative Fraction
+        \note optional. If zone identified in previous field then this determines
+        \note the split between convection and radiation for the fan motor's skin losses
+        \type real
+        \minimum 0.0
+        \maximum 1.0
+  A9 , \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
+  N13, \field Number of Speeds
+       \note number of different speed levels available when Speed Control Method is set to Discrete
+       \note Speed need to be arranged in increasing order in remaining field sets.
+       \note If set to 1, or omitted, and Speed Control Method is Discrete then constant fan speed is the design maximum.
+       \type integer
+       \default 1
+  N14, \field Speed 1 Flow Fraction
+       \begin-extensible
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  N15, \field Speed 1 Electric Power Fraction
+       \note if left blank then use Electric Power Function of Flow Fraction Curve
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  N16, \field Speed 2 Flow Fraction
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  N17, \field Speed 2 Electric Power Fraction
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  N18, \field Speed 3 Flow Fraction
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  N19, \field Speed 3 Electric Power Fraction
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  N20, \field Speed n Flow Fraction
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  N21; \field Speed n Electric Power Fraction
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+
 OS:Fan:ConstantVolume,
+       \memo Constant volume fan that is intended to operate continuously based on a time schedule.
+       \memo This fan will not cycle on and off based on cooling/heating load or other control
+       \memo signals.
        \min-fields 10
   A1, \field Handle
        \type handle
@@ -20108,6 +20271,8 @@ OS:Fan:ConstantVolume,
        \reference FansCVandOnOffandVAV
        \reference ConnectionObject
   A3, \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
        \type object-list
        \required-field
        \object-list ScheduleNames
@@ -20146,11 +20311,14 @@ OS:Fan:ConstantVolume,
        \required-field
        \object-list ConnectionNames
   A6; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default General
 
 OS:Fan:VariableVolume,
+       \memo Variable air volume fan where the electric power input varies according to a
+       \memo performance curve as a function of flow fraction.
        \min-fields 18
   A1, \field Handle
        \type handle
@@ -20165,6 +20333,8 @@ OS:Fan:VariableVolume,
        \reference FansCVandOnOffandVAV
        \reference ConnectionObject
   A3, \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
        \type object-list
        \required-field
        \object-list ScheduleNames
@@ -20230,11 +20400,15 @@ OS:Fan:VariableVolume,
        \required-field
        \object-list ConnectionNames
   A6; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default General
 
 OS:Fan:OnOff,
+       \memo Constant volume fan that is intended to cycle on and off based on cooling/heating load
+       \memo or other control signals. This fan can also operate continuously like
+       \memo Fan:ConstantVolume.
        \min-fields 13
   A1, \field Handle
        \type handle
@@ -20250,6 +20424,8 @@ OS:Fan:OnOff,
        \reference FansCVandOnOffandVAV
        \reference ConnectionObject
   A3, \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
        \type object-list
        \required-field
        \object-list ScheduleNames
@@ -20295,6 +20471,7 @@ OS:Fan:OnOff,
        \type object-list
        \object-list QuadraticCubicCurves
   A8; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default General
