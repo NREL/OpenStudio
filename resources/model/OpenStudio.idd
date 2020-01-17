@@ -20209,6 +20209,7 @@ OS:Fan:SystemModel,
        \type real
        \minimum 0.0
        \maximum 1.0
+       \required-field
   A10, \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
