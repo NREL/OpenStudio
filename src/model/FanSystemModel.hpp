@@ -37,11 +37,8 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Connection;
-class Connection;
-class UnivariateFunctions;
+class Curve;
 class ThermalZone;
 
 namespace detail {
@@ -71,19 +68,10 @@ class MODEL_API FanSystemModel : public StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule availabilitySchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> airInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  boost::optional<Connection> airOutletNode() const;
-
   boost::optional<double> designMaximumAirFlowRate() const;
-
   bool isDesignMaximumAirFlowRateAutosized() const;
-
   boost::optional <double> autosizedDesignMaximumAirFlowRate();
 
   std::string speedControlMethod() const;
@@ -97,59 +85,38 @@ class MODEL_API FanSystemModel : public StraightComponent {
   double motorInAirStreamFraction() const;
 
   boost::optional<double> designElectricPowerConsumption() const;
-
   bool isDesignElectricPowerConsumptionAutosized() const;
-
   boost::optional <double> autosizedDesignElectricPowerConsumption();
 
   std::string designPowerSizingMethod() const;
 
-  boost::optional<double> electricPowerPerUnitFlowRate() const;
+  double electricPowerPerUnitFlowRate() const;
 
-  boost::optional<double> electricPowerPerUnitFlowRatePerUnitPressure() const;
+  double electricPowerPerUnitFlowRatePerUnitPressure() const;
 
   double fanTotalEfficiency() const;
 
-  // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-  boost::optional<UnivariateFunctions> electricPowerFunctionofFlowFractionCurve() const;
+  boost::optional<Curve> electricPowerFunctionofFlowFractionCurve() const;
 
   boost::optional<double> nightVentilationModePressureRise() const;
 
   boost::optional<double> nightVentilationModeFlowFraction() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
   boost::optional<ThermalZone> motorLossZone() const;
 
-  boost::optional<double> motorLossRadiativeFraction() const;
+  double motorLossRadiativeFraction() const;
 
   std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
-
-  boost::optional<int> numberofSpeeds() const;
-
-  // TODO: Handle this object's extensible fields.
+  int numberofSpeeds() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirInletNode(const Connection& connection);
-
-  void resetAirInletNode();
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setAirOutletNode(const Connection& connection);
-
-  void resetAirOutletNode();
-
   bool setDesignMaximumAirFlowRate(double designMaximumAirFlowRate);
-
   void autosizeDesignMaximumAirFlowRate();
 
   bool setSpeedControlMethod(const std::string& speedControlMethod);
@@ -163,52 +130,33 @@ class MODEL_API FanSystemModel : public StraightComponent {
   bool setMotorInAirStreamFraction(double motorInAirStreamFraction);
 
   bool setDesignElectricPowerConsumption(double designElectricPowerConsumption);
-
   void autosizeDesignElectricPowerConsumption();
 
   bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
 
   bool setElectricPowerPerUnitFlowRate(double electricPowerPerUnitFlowRate);
 
-  void resetElectricPowerPerUnitFlowRate();
-
   bool setElectricPowerPerUnitFlowRatePerUnitPressure(double electricPowerPerUnitFlowRatePerUnitPressure);
-
-  void resetElectricPowerPerUnitFlowRatePerUnitPressure();
 
   bool setFanTotalEfficiency(double fanTotalEfficiency);
 
-  // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-  bool setElectricPowerFunctionofFlowFractionCurve(const UnivariateFunctions& univariateFunctions);
-
+  bool setElectricPowerFunctionofFlowFractionCurve(const Curve& univariateFunctions);
   void resetElectricPowerFunctionofFlowFractionCurve();
 
   bool setNightVentilationModePressureRise(double nightVentilationModePressureRise);
-
   void resetNightVentilationModePressureRise();
 
   bool setNightVentilationModeFlowFraction(double nightVentilationModeFlowFraction);
-
   void resetNightVentilationModeFlowFraction();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
   bool setMotorLossZone(const ThermalZone& thermalZone);
-
   void resetMotorLossZone();
 
   bool setMotorLossRadiativeFraction(double motorLossRadiativeFraction);
 
-  void resetMotorLossRadiativeFraction();
-
   bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-  void resetEndUseSubcategory();
-
   bool setNumberofSpeeds(int numberofSpeeds);
-
-  void resetNumberofSpeeds();
-
-  // TODO: Handle this object's extensible fields.
 
   //@}
   /** @name Other */

@@ -36,11 +36,8 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
 class Schedule;
-class Connection;
-class Connection;
-class UnivariateFunctions;
+class Curve;
 class ThermalZone;
 
 namespace detail {
@@ -75,18 +72,21 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual unsigned inletPort() const override;
+
+    virtual unsigned outletPort() const override;
+
+    virtual bool addToNode(Node & node) override;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
     //@}
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     Schedule availabilitySchedule() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> airInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> airOutletNode() const;
 
     boost::optional<double> designMaximumAirFlowRate() const;
 
@@ -112,49 +112,31 @@ namespace detail {
 
     std::string designPowerSizingMethod() const;
 
-    boost::optional<double> electricPowerPerUnitFlowRate() const;
+    double electricPowerPerUnitFlowRate() const;
 
-    boost::optional<double> electricPowerPerUnitFlowRatePerUnitPressure() const;
+    double electricPowerPerUnitFlowRatePerUnitPressure() const;
 
     double fanTotalEfficiency() const;
 
-    // TODO: Check return type. From object lists, some candidates are: UnivariateFunctions.
-    boost::optional<UnivariateFunctions> electricPowerFunctionofFlowFractionCurve() const;
+    boost::optional<Curve> electricPowerFunctionofFlowFractionCurve() const;
 
     boost::optional<double> nightVentilationModePressureRise() const;
 
     boost::optional<double> nightVentilationModeFlowFraction() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> motorLossZone() const;
 
-    boost::optional<double> motorLossRadiativeFraction() const;
+    double motorLossRadiativeFraction() const;
 
     std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
-
-    boost::optional<int> numberofSpeeds() const;
-
-    // TODO: Handle this object's extensible fields.
+    int numberofSpeeds() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
     bool setAvailabilitySchedule(Schedule& schedule);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAirInletNode(const Connection& connection);
-
-    void resetAirInletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAirOutletNode(const Connection& connection);
-
-    void resetAirOutletNode();
 
     bool setDesignMaximumAirFlowRate(double designMaximumAirFlowRate);
 
@@ -178,16 +160,11 @@ namespace detail {
 
     bool setElectricPowerPerUnitFlowRate(double electricPowerPerUnitFlowRate);
 
-    void resetElectricPowerPerUnitFlowRate();
-
     bool setElectricPowerPerUnitFlowRatePerUnitPressure(double electricPowerPerUnitFlowRatePerUnitPressure);
-
-    void resetElectricPowerPerUnitFlowRatePerUnitPressure();
 
     bool setFanTotalEfficiency(double fanTotalEfficiency);
 
-    // TODO: Check argument type. From object lists, some candidates are: UnivariateFunctions.
-    bool setElectricPowerFunctionofFlowFractionCurve(const UnivariateFunctions& univariateFunctions);
+    bool setElectricPowerFunctionofFlowFractionCurve(const Curve& univariateFunctions);
 
     void resetElectricPowerFunctionofFlowFractionCurve();
 
@@ -199,28 +176,15 @@ namespace detail {
 
     void resetNightVentilationModeFlowFraction();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
     bool setMotorLossZone(const ThermalZone& thermalZone);
 
     void resetMotorLossZone();
 
     bool setMotorLossRadiativeFraction(double motorLossRadiativeFraction);
 
-    void resetMotorLossRadiativeFraction();
-
     bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-    void resetEndUseSubcategory();
-
     bool setNumberofSpeeds(int numberofSpeeds);
-
-    void resetNumberofSpeeds();
-
-    virtual void autosize() override;
-
-    virtual void applySizingValues() override;
-
-    // TODO: Handle this object's extensible fields.
 
     //@}
     /** @name Other */
@@ -231,10 +195,6 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.FanSystemModel");
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
     boost::optional<Schedule> optionalAvailabilitySchedule() const;
   };
 
