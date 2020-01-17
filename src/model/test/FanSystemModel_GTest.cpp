@@ -58,6 +58,8 @@
 #include "../CoilHeatingDXSingleSpeed.hpp"
 #include "../CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
 #include "../CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
+#include "../CoilCoolingDXVariableRefrigerantFlow.hpp"
+#include "../CoilHeatingDXVariableRefrigerantFlow.hpp"
 #include "../ZoneHVACWaterToAirHeatPump.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../ZoneHVACFourPipeFanCoil.hpp"
@@ -316,17 +318,21 @@ TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACUnitHeate
 
   boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
   EXPECT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), zoneHVACUnitHeater.handle());
+
 }
 
 TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACTerminalUnitVariableRefrigerantFlow)
 {
   Model m;
-  ZoneHVACTerminalUnitVariableRefrigerantFlow zoneHVACTerminalUnitVariableRefrigerantFlow(m);
 
-  std::vector<FanSystemModel> fans = m.getModelObjects<FanSystemModel>();
-  EXPECT_EQ(1, fans.size());
+  CoilCoolingDXVariableRefrigerantFlow coolingCoil(m);
+  CoilHeatingDXVariableRefrigerantFlow heatingCoil(m);
+  FanSystemModel fan(m);
 
-  boost::optional<ZoneHVACComponent> component = fans[0].containingZoneHVACComponent();
+  ZoneHVACTerminalUnitVariableRefrigerantFlow zoneHVACTerminalUnitVariableRefrigerantFlow(m, coolingCoil, heatingCoil, fan);
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
   ASSERT_TRUE(component);
   EXPECT_EQ(component.get().handle(), zoneHVACTerminalUnitVariableRefrigerantFlow.handle());
 }
@@ -371,11 +377,8 @@ TEST_F(ModelFixture,FanSystemModel_containingHVACComponent_AirLoopHVACUnitaryHea
   CoilCoolingDXSingleSpeed coolingCoil(m, s, c1, c2, c3, c4, c5);
   CoilHeatingElectric supplementalHeatingCoil(m, s);
 
-  AirLoopHVACUnitaryHeatPumpAirToAir airLoopHVACUnitaryHeatPumpAirToAir(m, s, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
+  ASSERT_ANY_THROW(AirLoopHVACUnitaryHeatPumpAirToAir airLoopHVACUnitaryHeatPumpAirToAir(m, s, fan, heatingCoil, coolingCoil, supplementalHeatingCoil));
 
-  boost::optional<HVACComponent> component = fan.containingHVACComponent();
-  ASSERT_TRUE(component);
-  EXPECT_EQ(component.get().handle(), airLoopHVACUnitaryHeatPumpAirToAir.handle());
 }
 
 TEST_F(ModelFixture, FanOnOff_Clone_SameModel)
