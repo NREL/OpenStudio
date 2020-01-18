@@ -142,8 +142,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExampleModel) {
   EXPECT_EQ(0u, forwardTranslator.errors().size());
   EXPECT_EQ(1u,workspace.getObjectsByType(IddObjectType::Version).size());
 
-  model.save(toPath("./example.osm"), true);
-  workspace.save(toPath("./example.idf"), true);
+  // model.save(toPath("./example.osm"), true);
+  // workspace.save(toPath("./example.idf"), true);
 }
 
 

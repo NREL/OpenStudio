@@ -315,6 +315,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     { "SolarCollectorPerformancePhotovoltaicThermalSimple", "Thermal Conversion Efficiency", "thermalConversionEfficiencySchedule", true, "", 0.0, 1.0 },
     {"SurfacePropertyConvectionCoefficients", "Convection Coefficient 1", "convectionCoefficient1Schedule", true, "", 0.1, 1000},
     {"SurfacePropertyConvectionCoefficients", "Convection Coefficient 2", "convectionCoefficient2Schedule", true, "", 0.1, 1000},
+    {"SurfacePropertyOtherSideCoefficients","Constant Temperature","constantTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"SpaceInfiltrationDesignFlowRate","Infiltration","schedule",true,"",0.0,1.0},
     {"SpaceInfiltrationEffectiveLeakageArea","Infiltration","schedule",true,"",0.0,1.0},
     {"SteamEquipment","Steam Equipment","schedule",true,"",0.0,1.0},

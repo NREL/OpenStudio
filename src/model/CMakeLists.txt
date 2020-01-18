@@ -2019,6 +2019,7 @@ set(${target_name}_test_src
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  test/SurfacePropertyOtherSideCoefficients_GTest.cpp
   test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp

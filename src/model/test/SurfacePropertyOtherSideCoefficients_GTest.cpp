@@ -27,61 +27,26 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "BCLFixture.hpp"
+#include <algorithm>
+#include <gtest/gtest.h>
 
-#include "../LocalBCL.hpp"
+#include "ModelFixture.hpp"
 
-using openstudio::LocalBCL;
-using openstudio::Logger;
-using openstudio::toPath;
-using openstudio::FileLogSink;
+#include "../SurfacePropertyOtherSideCoefficients.hpp"
+#include "../SurfacePropertyOtherSideCoefficients_Impl.hpp"
+#include "../Surface.hpp"
+#include "../Schedule.hpp"
+#include "../ScheduleConstant.hpp"
 
-void BCLFixture::SetUp() {
+using namespace openstudio;
+using namespace openstudio::model;
 
-  // Use a unique libraryPath to avoid concurrent access issues when running tests in parallel
-  // This gets the name of the test that's being run (eg 'RemoteBCLTest')
-  std::string currentTestName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
-  currentLocalBCLPath = resourcesPath() / toPath("utilities/BCL") / toPath(currentTestName);
+// Test for #3848
+TEST_F(ModelFixture, SurfacePropertyOtherSideCoefficients_ScheduleTypeLimits) {
 
-  // Initialize the LocalBCL Singleton at the given library path
-  LocalBCL& bcl = LocalBCL::instance(currentLocalBCLPath);
-
-  if (bcl.prodAuthKey().empty()) {
-    prodAuthKey = defaultProdAuthKey;
-    bcl.setProdAuthKey(prodAuthKey);
-  } else {
-    prodAuthKey = bcl.prodAuthKey();
-  }
-
-  // TODO Uncomment after network error handling is in place
-  /*if (LocalBCL::instance().devAuthKey().empty()) {
-    devAuthKey = defaultDevAuthKey;
-    bcl.setDevAuthKey(devAuthKey);
-  } else {
-    devAuthKey = bcl.devAuthKey();
-  }*/
-}
-
-void BCLFixture::TearDown() {
-
-  openstudio::filesystem::remove_all(currentLocalBCLPath);
+  Model m;
+  SurfacePropertyOtherSideCoefficients sp(m);
+  Schedule alwaysOn = m.alwaysOnDiscreteSchedule();
+  ASSERT_NO_THROW(sp.setConstantTemperatureSchedule(alwaysOn));
 
 }
-
-void BCLFixture::SetUpTestCase() {
-  // set up logging
-  logFile = FileLogSink(toPath("./BCLFixture.log"));
-  logFile->setLogLevel(Info);
-}
-
-void BCLFixture::TearDownTestCase() {
-  logFile->disable();
-}
-
-std::string BCLFixture::prodAuthKey;
-std::string BCLFixture::devAuthKey;
-
-// these are Dan's API keys labelled under "Testing", delete when there is a better way to do this
-std::string BCLFixture::defaultProdAuthKey("2da842aa2d457703d8fdcb5c53080ace");
-std::string BCLFixture::defaultDevAuthKey("e8051bca77787c0df16cbe13452e7580");
-boost::optional<openstudio::FileLogSink> BCLFixture::logFile;

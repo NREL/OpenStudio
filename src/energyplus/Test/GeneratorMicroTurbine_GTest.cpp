@@ -182,8 +182,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop)
   ASSERT_EQ("WaterHeater:Mixed", eg2.getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
   EXPECT_EQ(waterHeater.name().get(), eg2.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 
-  model.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop.osm"), true);
-  workspace.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop.idf"), true);
+  // model.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop.osm"), true);
+  // workspace.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_PlantLoop.idf"), true);
 
 }
 //test orphaning the generator before FT
@@ -232,7 +232,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGeneratorMicroTurbine_ELCD_Orphan)
   //ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::WaterHeater_Mixed).size());
   ASSERT_EQ(0u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution).size());
 
-  //model.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_orhpan.osm"), true);
-  //workspace.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_orphan.idf"), true);
+  // model.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_orhpan.osm"), true);
+  // workspace.save(toPath("./ForwardTranslatorGeneratorMicroTurbine_ELCD_orphan.idf"), true);
 
 }
