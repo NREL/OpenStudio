@@ -194,9 +194,7 @@ TEST_F(ModelFixture, FanSystemModel_GettersSetters) {
   EXPECT_TRUE(fan.setEndUseSubcategory("My Fan"));
   EXPECT_EQ("My Fan", fan.endUseSubcategory());
 
-  // Number of Speeds: Integer
-  EXPECT_TRUE(fan.setNumberofSpeeds(3));
-  EXPECT_EQ(3, fan.numberofSpeeds());
+  // Speed is tested in its own test
 
 } // End of Getter_Setters test
 
@@ -391,7 +389,7 @@ TEST_F(ModelFixture,FanSystemModel_containingHVACComponent_AirLoopHVACUnitaryHea
 
 }
 
-TEST_F(ModelFixture, FanOnOff_Clone_SameModel)
+TEST_F(ModelFixture, FanSystemModel_Clone_SameModel)
 {
   Model m;
   FanSystemModel fan = FanSystemModel(m);
@@ -420,7 +418,7 @@ TEST_F(ModelFixture, FanOnOff_Clone_SameModel)
   EXPECT_EQ(fan.electricPowerFunctionofFlowFractionCurve().get(), fanClone.electricPowerFunctionofFlowFractionCurve().get());
 }
 
-TEST_F(ModelFixture, FanOnOff_Clone_OtherModel)
+TEST_F(ModelFixture, FanSystemModel_Clone_OtherModel)
 {
   Model m;
   FanSystemModel fan = FanSystemModel(m);
@@ -462,4 +460,84 @@ TEST_F(ModelFixture, FanOnOff_Clone_OtherModel)
   ASSERT_TRUE(fanClone.electricPowerFunctionofFlowFractionCurve());
   EXPECT_NE(fan.electricPowerFunctionofFlowFractionCurve().get().handle(), fanClone.electricPowerFunctionofFlowFractionCurve().get().handle());
 
+}
+
+TEST_F(ModelFixture, FanSystemModelSpeed) {
+
+  FanSystemModelSpeed speed(0.5, 0.45);
+  EXPECT_EQ(0.5, speed.flowFraction());
+  EXPECT_EQ(0.45, speed.electricPowerFraction());
+
+  ASSERT_THROW(FanSystemModelSpeed(-0.1, 0.45), openstudio::Exception);
+  ASSERT_THROW(FanSystemModelSpeed(1.1, 0.45), openstudio::Exception);
+  ASSERT_THROW(FanSystemModelSpeed(0.5, -0.1), openstudio::Exception);
+  ASSERT_THROW(FanSystemModelSpeed(0.5, 1.1), openstudio::Exception);
+
+}
+
+TEST_F(ModelFixture, FanSystemModel_Speeds)
+{
+  Model m;
+  FanSystemModel fan = FanSystemModel(m);
+
+  // If no extensible groups, same as having one speed (= the design one)
+  EXPECT_EQ(0, fan.numExtensibleGroups());
+  EXPECT_EQ(1, fan.numberofSpeeds());
+
+  EXPECT_TRUE(fan.addSpeed(0.45, 0.5));
+  EXPECT_EQ(1, fan.numExtensibleGroups());
+  EXPECT_EQ(1, fan.numberofSpeeds());
+
+  EXPECT_TRUE(fan.addSpeed(0.15, 0.7));
+  EXPECT_EQ(2, fan.numExtensibleGroups());
+  EXPECT_EQ(2, fan.numberofSpeeds());
+
+  // This should have been sorted...
+  std::vector<FanSystemModelSpeed> speeds = fan.speeds();
+  EXPECT_EQ(2, speeds.size());
+  EXPECT_EQ(0.15, speeds[0].flowFraction());
+  EXPECT_EQ(0.7, speeds[0].electricPowerFraction());
+  EXPECT_EQ(0.45, speeds[1].flowFraction());
+  EXPECT_EQ(0.5, speeds[1].electricPowerFraction());
+
+  EXPECT_TRUE(fan.addSpeed(FanSystemModelSpeed(0.75, 0.8)));
+  EXPECT_EQ(3, fan.numExtensibleGroups());
+  EXPECT_EQ(3, fan.numberofSpeeds());
+  speeds = fan.speeds();
+  EXPECT_EQ(3, speeds.size());
+  EXPECT_EQ(0.15, speeds[0].flowFraction());
+  EXPECT_EQ(0.7, speeds[0].electricPowerFraction());
+  EXPECT_EQ(0.45, speeds[1].flowFraction());
+  EXPECT_EQ(0.5, speeds[1].electricPowerFraction());
+  EXPECT_EQ(0.75, speeds[2].flowFraction());
+  EXPECT_EQ(0.8, speeds[2].electricPowerFraction());
+
+  fan.removeSpeed(1);
+  EXPECT_EQ(2, fan.numExtensibleGroups());
+  EXPECT_EQ(2, fan.numberofSpeeds());
+  speeds = fan.speeds();
+  EXPECT_EQ(2, speeds.size());
+  EXPECT_EQ(0.15, speeds[0].flowFraction());
+  EXPECT_EQ(0.7, speeds[0].electricPowerFraction());
+  EXPECT_EQ(0.75, speeds[1].flowFraction());
+  EXPECT_EQ(0.8, speeds[1].electricPowerFraction());
+
+  fan.removeAllSpeeds();
+  EXPECT_EQ(0, fan.numExtensibleGroups());
+  EXPECT_EQ(0, fan.speeds().size());
+  EXPECT_EQ(1, fan.numberofSpeeds());
+
+  // Use the setSpeeds, which should sort too
+  speeds.push_back(FanSystemModelSpeed(0.35, 0.72));
+  EXPECT_TRUE(fan.setSpeeds(speeds));
+  EXPECT_EQ(3, fan.numExtensibleGroups());
+  EXPECT_EQ(3, fan.numberofSpeeds());
+  speeds = fan.speeds();
+  EXPECT_EQ(3, speeds.size());
+  EXPECT_EQ(0.15, speeds[0].flowFraction());
+  EXPECT_EQ(0.7, speeds[0].electricPowerFraction());
+  EXPECT_EQ(0.35, speeds[1].flowFraction());
+  EXPECT_EQ(0.72, speeds[1].electricPowerFraction());
+  EXPECT_EQ(0.75, speeds[2].flowFraction());
+  EXPECT_EQ(0.8, speeds[2].electricPowerFraction());
 }
