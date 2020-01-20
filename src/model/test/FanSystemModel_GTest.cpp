@@ -205,27 +205,35 @@ TEST_F(ModelFixture,FanSystemModel_addToNode)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanSystemModel testObject = FanSystemModel(m);
+  FanSystemModel fan = FanSystemModel(m);
 
   AirLoopHVAC airLoop(m);
 
   Node supplyOutletNode = airLoop.supplyOutletNode();
+  EXPECT_FALSE(fan.airLoopHVAC());
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_TRUE(fan.addToNode(supplyOutletNode));
+  EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size() );
+  EXPECT_TRUE(fan.airLoopHVAC());
 
-  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
-
-  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
-
-  EXPECT_FALSE(testObject.addToNode(inletNode));
+  Node demandNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+  EXPECT_FALSE(fan.addToNode(demandNode));
+  // 5u: inlet splitter node mixer outlet.
   EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
+  EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size() );
+  EXPECT_TRUE(fan.airLoopHVAC());
+
+  EXPECT_TRUE(fan.removeFromLoop());
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_FALSE(fan.airLoopHVAC());
 
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
-  EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
+  EXPECT_FALSE(fan.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
 
   Node demandOutletNode = plantLoop.demandOutletNode();
-  EXPECT_FALSE(testObject.addToNode(demandOutletNode));
+  EXPECT_FALSE(fan.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 }
 
