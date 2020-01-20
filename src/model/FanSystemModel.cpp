@@ -84,16 +84,47 @@
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
 
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Fan_SystemModel_FieldEnums.hxx>
-
 #include "../utilities/units/Unit.hpp"
-
 #include "../utilities/core/Assert.hpp"
+
+#include <algorithm>
 
 namespace openstudio {
 namespace model {
+
+FanSystemModelSpeed::FanSystemModelSpeed(double t_flowFraction, double t_electricPowerFraction)
+  : m_flowFraction(t_flowFraction), m_electricPowerFraction(t_electricPowerFraction) {
+
+  if ((m_flowFraction < 0) || (m_flowFraction > 1)) {
+    LOG_AND_THROW("Unable to create FanSystemModelSpeed, Flow Fraction (" << m_flowFraction << ") is outside the range [0, 1]");
+  }
+  if ((m_electricPowerFraction < 0) || (m_electricPowerFraction > 1)) {
+    LOG_AND_THROW("Unable to create FanSystemModelSpeed, Electric Power Fraction (" << m_electricPowerFraction << ") is outside the range [0, 1]");
+  }
+}
+
+double FanSystemModelSpeed::flowFraction() const {
+  return m_flowFraction;
+}
+
+double FanSystemModelSpeed::electricPowerFraction() const {
+  return m_electricPowerFraction;
+}
+
+bool FanSystemModelSpeed::operator<(const FanSystemModelSpeed& other) const {
+  return (m_flowFraction < other.m_flowFraction);
+}
+
+
+std::ostream& operator<< (std::ostream& out, const openstudio::model::FanSystemModelSpeed& speed) {
+  out << "[" << speed.flowFraction() << ", " << speed.electricPowerFraction() << "]";
+  return out;
+}
 
 namespace detail {
 
@@ -277,12 +308,6 @@ namespace detail {
 
   std::string FanSystemModel_Impl::endUseSubcategory() const {
     boost::optional<std::string> value = getString(OS_Fan_SystemModelFields::EndUseSubcategory,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  int FanSystemModel_Impl::numberofSpeeds() const {
-    boost::optional<int> value = getInt(OS_Fan_SystemModelFields::NumberofSpeeds,true);
     OS_ASSERT(value);
     return value.get();
   }
@@ -633,9 +658,149 @@ namespace detail {
     return result;
   }
 
-  bool FanSystemModel_Impl::setNumberofSpeeds(int numberofSpeeds) {
-    bool result = setInt(OS_Fan_SystemModelFields::NumberofSpeeds, numberofSpeeds);
-    // OS_ASSERT(result); // shouldn't accept < 0
+  //bool FanSystemModel_Impl::setNumberofSpeeds(int numberofSpeeds) {
+    //bool result = setInt(OS_Fan_SystemModelFields::NumberofSpeeds, numberofSpeeds);
+    //// OS_ASSERT(result); // shouldn't accept < 0
+    //return result;
+  //}
+
+
+  unsigned FanSystemModel_Impl::numberofSpeeds() const {
+    // number of different speed levels available when Speed Control Method is set to Discrete
+    // note Speed need to be arranged in increasing order in remaining field sets.
+    // If set to 1, or omitted, and Speed Control Method is Discrete then constant fan speed is the design maximum.
+    return std::max<unsigned>(1, numExtensibleGroups());
+  }
+
+  boost::optional<unsigned> FanSystemModel_Impl::speedIndex(const FanSystemModelSpeed& t_speed) const {
+    boost::optional<unsigned> result;
+
+    // Find with custom predicate, checking handle equality between the toSurface and the fromSurface pairs
+    // We do it with extensibleGroups() (rather than viewFactors()) and getString to avoid overhead
+    // of manipulating actual model objects (getTarget, then create a ViewFactor wrapper, get handle convert to string...) and speed up the routine
+    auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
+    auto flowFraction = toString(t_speed.flowFraction());
+    auto it = std::find_if(egs.begin(), egs.end(),
+      [&](const WorkspaceExtensibleGroup& eg) {
+        return (eg.getField(OS_Fan_SystemModelExtensibleFields::SpeedFlowFraction).get() == flowFraction);
+      });
+
+    // If found, we compute the index by using std::distance between the start of vector and the iterator returned by std::find_if
+    if (it != egs.end()) {
+      result = std::distance(egs.begin(), it);
+    }
+
+    return result;
+  }
+
+  std::vector<FanSystemModelSpeed> FanSystemModel_Impl::speeds() const {
+
+    std::vector<FanSystemModelSpeed> result;
+
+    for (const auto & group : extensibleGroups()) {
+      boost::optional<double> _flowFraction = group.getDouble(OS_Fan_SystemModelExtensibleFields::SpeedFlowFraction);
+      boost::optional<double> _electricPowerFraction = group.getDouble(OS_Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction);
+      if (_flowFraction.has_value() && _electricPowerFraction.has_value()) {
+        result.push_back(FanSystemModelSpeed(_flowFraction.get(), _electricPowerFraction.get()));
+      } else {
+        // Shouldn't happen
+        OS_ASSERT(false);
+      }
+    }
+
+    return result;
+  }
+
+  boost::optional<FanSystemModelSpeed> FanSystemModel_Impl::getSpeed(unsigned speedIndex) const {
+
+    boost::optional<FanSystemModelSpeed> result;
+
+    unsigned n = numberofSpeeds();
+    if (speedIndex >= n) {
+      LOG(Error, "Asked to get FanSystemModelSpeed with index " << speedIndex << ", but "
+          << briefDescription() << " has just " << n << " Speeds.");
+      return result;
+    }
+
+    IdfExtensibleGroup group = getExtensibleGroup(speedIndex);
+    boost::optional<double> _flowFraction = group.getDouble(OS_Fan_SystemModelExtensibleFields::SpeedFlowFraction);
+    boost::optional<double> _electricPowerFraction = group.getDouble(OS_Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction);
+    if (_flowFraction.has_value() && _electricPowerFraction.has_value()) {
+      result = FanSystemModelSpeed(_flowFraction.get(), _electricPowerFraction.get());
+    } else {
+      // Shouldn't happen
+      OS_ASSERT(false);
+    }
+
+    return result;
+  }
+
+  bool FanSystemModel_Impl::addSpeedPrivate(double flowFraction, double electricPowerFraction) {
+    bool result;
+    // Push an extensible group
+    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    bool temp = eg.setDouble(OS_Fan_SystemModelExtensibleFields::SpeedFlowFraction, flowFraction);
+    bool ok = eg.setDouble(OS_Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, electricPowerFraction);
+    if (temp && ok) {
+      result = true;
+    } else {
+      // Something went wrong, which shouldn't happen really.
+      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      result = false;
+    }
+    return result;
+  }
+
+
+  bool FanSystemModel_Impl::addSpeed(const FanSystemModelSpeed& speed) {
+    bool result;
+
+    // Speeds need to be sorted...
+    std::vector<FanSystemModelSpeed> s = speeds();
+    s.push_back(speed);
+    return setSpeeds(s);
+  }
+
+  // Overloads, it creates a FanSystemModelSpeed wrapper, then call `addSpeed(const FanSystemModelSpeed&)`
+  bool FanSystemModel_Impl::addSpeed(double flowFraction, double electricPowerFraction) {
+    // Make a speed (which will check for validity), and then call the above function
+    return addSpeed(FanSystemModelSpeed(flowFraction, electricPowerFraction));
+  }
+
+  bool FanSystemModel_Impl::removeSpeed(unsigned speedIndex) {
+    bool result;
+
+    unsigned n = numberofSpeeds();
+    if (speedIndex < n) {
+      getObject<ModelObject>().eraseExtensibleGroup(speedIndex);
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }
+
+
+  void FanSystemModel_Impl::removeAllSpeeds() {
+    getObject<ModelObject>().clearExtensibleGroups();
+  }
+
+  // Directly set the speeds from a vector, will delete any existing speeds, will sort the speeds by flow fraction too as required
+  bool FanSystemModel_Impl::setSpeeds(const std::vector<FanSystemModelSpeed>& speeds) {
+
+    // Ok, now we clear
+    this->clearExtensibleGroups();
+
+    std::vector<std::pair<double, double>> speedVecPair;
+    for (const FanSystemModelSpeed& sp: speeds) {
+      speedVecPair.push_back(std::make_pair(sp.flowFraction(), sp.electricPowerFraction()));
+    }
+    std::sort(speedVecPair.begin(), speedVecPair.end());
+    bool result = true;
+    for (const auto& speed: speedVecPair) {
+      result &= addSpeedPrivate(speed.first, speed.second);
+    }
+
     return result;
   }
 
@@ -697,8 +862,6 @@ FanSystemModel::FanSystemModel(const Model& model)
   ok = setMotorLossRadiativeFraction(0.0);
   OS_ASSERT(ok);
   ok = setEndUseSubcategory("General");
-  OS_ASSERT(ok);
-  ok = setNumberofSpeeds(1);
   OS_ASSERT(ok);
 }
 
@@ -804,10 +967,6 @@ std::string FanSystemModel::endUseSubcategory() const {
   return getImpl<detail::FanSystemModel_Impl>()->endUseSubcategory();
 }
 
-int FanSystemModel::numberofSpeeds() const {
-  return getImpl<detail::FanSystemModel_Impl>()->numberofSpeeds();
-}
-
 bool FanSystemModel::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::FanSystemModel_Impl>()->setAvailabilitySchedule(schedule);
 }
@@ -904,9 +1063,47 @@ bool FanSystemModel::setEndUseSubcategory(const std::string& endUseSubcategory) 
   return getImpl<detail::FanSystemModel_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
-bool FanSystemModel::setNumberofSpeeds(int numberofSpeeds) {
-  return getImpl<detail::FanSystemModel_Impl>()->setNumberofSpeeds(numberofSpeeds);
+//bool FanSystemModel::setNumberofSpeeds(int numberofSpeeds) {
+  //return getImpl<detail::FanSystemModel_Impl>()->setNumberofSpeeds(numberofSpeeds);
+//}
+
+unsigned FanSystemModel::numberofSpeeds() const {
+  return getImpl<detail::FanSystemModel_Impl>()->numberofSpeeds();
 }
+
+std::vector<FanSystemModelSpeed> FanSystemModel::speeds() const {
+  return getImpl<detail::FanSystemModel_Impl>()->speeds();
+}
+
+boost::optional<unsigned> FanSystemModel::speedIndex(const FanSystemModelSpeed& speed) const {
+  return getImpl<detail::FanSystemModel_Impl>()->speedIndex(speed);
+}
+
+boost::optional<FanSystemModelSpeed> FanSystemModel::getSpeed(unsigned speedIndex) const {
+  return getImpl<detail::FanSystemModel_Impl>()->getSpeed(speedIndex);
+}
+
+bool FanSystemModel::addSpeed(const FanSystemModelSpeed& speed) {
+  return getImpl<detail::FanSystemModel_Impl>()->addSpeed(speed);
+}
+
+// Overloads, it creates a FanSystemModelSpeed wrapper, then call `addSpeed(const FanSystemModelSpeed&)`
+bool FanSystemModel::addSpeed(double flowFraction, double electricPowerFraction) {
+  return getImpl<detail::FanSystemModel_Impl>()->addSpeed(flowFraction, electricPowerFraction);
+}
+
+bool FanSystemModel::removeSpeed(unsigned speedIndex) {
+  return getImpl<detail::FanSystemModel_Impl>()->removeSpeed(speedIndex);
+}
+
+void FanSystemModel::removeAllSpeeds() {
+  getImpl<detail::FanSystemModel_Impl>()->removeAllSpeeds();
+}
+
+bool FanSystemModel::setSpeeds(const std::vector<FanSystemModelSpeed>& speeds) {
+  return getImpl<detail::FanSystemModel_Impl>()->setSpeeds(speeds);
+}
+
 
 /// @cond
 FanSystemModel::FanSystemModel(std::shared_ptr<detail::FanSystemModel_Impl> impl)

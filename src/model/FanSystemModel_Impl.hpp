@@ -39,6 +39,7 @@ namespace model {
 class Schedule;
 class Curve;
 class ThermalZone;
+class FanSystemModelSpeed;
 
 namespace detail {
 
@@ -132,11 +133,30 @@ namespace detail {
 
     std::string endUseSubcategory() const;
 
-    int numberofSpeeds() const;
+    unsigned numberofSpeeds() const;
+    std::vector<FanSystemModelSpeed> speeds() const;
+
+    /** Find a given speed by the flowFraction (key) */
+    boost::optional<unsigned> speedIndex(const FanSystemModelSpeed& speed) const;
+
+    boost::optional<FanSystemModelSpeed> getSpeed(unsigned speedIndex) const;
 
     //@}
     /** @name Setters */
     //@{
+
+    /** If a speed group is already present (= the flowFraction already exists) (cf `speedIndex()`), it will Warn and override the electricPowerFraction value */
+    bool addSpeed(const FanSystemModelSpeed& speed);
+
+    // Overloads, it creates a FanSystemModelSpeed wrapper, then call `addSpeed(const FanSystemModelSpeed&)`
+    bool addSpeed(double flowFraction, double electricPowerFraction);
+
+    bool removeSpeed(unsigned speedIndex);
+
+    void removeAllSpeeds();
+
+    // Directly set the speeds from a vector, will delete any existing speeds
+    bool setSpeeds(const std::vector<FanSystemModelSpeed>& speeds);
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
@@ -186,9 +206,6 @@ namespace detail {
 
     bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-    // TODO: This API sucks, should probably use add/removeSpeeds to push extensible groups
-    bool setNumberofSpeeds(int numberofSpeeds);
-
     //@}
     /** @name Other */
     //@{
@@ -204,6 +221,7 @@ namespace detail {
 
     virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
+    bool addSpeedPrivate(double flowFraction, double electricPowerFraction);
   };
 
 } // detail
