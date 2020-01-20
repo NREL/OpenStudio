@@ -47,6 +47,28 @@ namespace detail {
 
 } // detail
 
+/** This class implements a speed */
+class FanSystemModelSpeed {
+  public:
+    /* Only accepts ModelObjects that are of type Surface, Subsurface or InternalMass, will throw otherwise */
+    FanSystemModelSpeed(double flowFraction, double electricPowerFraction);
+
+    double flowFraction() const;
+    double electricPowerFraction() const;
+
+    // this operator is to support sorting of TableMultiVariableLookupPoint in the order required by EnergyPlus Table:Lookup object
+    bool operator<(const FanSystemModelSpeed& other) const;
+
+  private:
+    double m_flowFraction;
+    double m_electricPowerFraction;
+    REGISTER_LOGGER("openstudio.model.FanSystemModelSpeed");
+};
+
+// Overload operator<<
+std::ostream& operator<< (std::ostream& out, const openstudio::model::FanSystemModelSpeed& speed);
+
+
 /** FanSystemModel is a StraightComponent that wraps the OpenStudio IDD object 'OS:Fan:SystemModel'. */
 class MODEL_API FanSystemModel : public StraightComponent {
  public:
@@ -108,11 +130,31 @@ class MODEL_API FanSystemModel : public StraightComponent {
 
   std::string endUseSubcategory() const;
 
-  int numberofSpeeds() const;
+  unsigned numberofSpeeds() const;
+  std::vector<FanSystemModelSpeed> speeds() const;
+
+  /** Find a given speed by the flowFraction (key) */
+  boost::optional<unsigned> speedIndex(const FanSystemModelSpeed& speed) const;
+
+  boost::optional<FanSystemModelSpeed> getSpeed(unsigned speedIndex) const;
 
   //@}
   /** @name Setters */
   //@{
+
+  /** If a speed group is already present (= the flowFraction already exists) (cf `speedIndex()`), it will Warn and override the electricPowerFraction value */
+  bool addSpeed(const FanSystemModelSpeed& speed);
+
+  // Overloads, it creates a FanSystemModelSpeed wrapper, then call `addSpeed(const FanSystemModelSpeed&)`
+  bool addSpeed(double flowFraction, double electricPowerFraction);
+
+  bool removeSpeed(unsigned speedIndex);
+
+  void removeAllSpeeds();
+
+  // Directly set the speeds from a vector, will delete any existing speeds. Will sort out the speeds too, ascending by flowFraction
+  bool setSpeeds(const std::vector<FanSystemModelSpeed>& speeds);
+
 
   bool setAvailabilitySchedule(Schedule& schedule);
 
@@ -155,8 +197,6 @@ class MODEL_API FanSystemModel : public StraightComponent {
   bool setMotorLossRadiativeFraction(double motorLossRadiativeFraction);
 
   bool setEndUseSubcategory(const std::string& endUseSubcategory);
-
-  bool setNumberofSpeeds(int numberofSpeeds);
 
   //@}
   /** @name Other */
