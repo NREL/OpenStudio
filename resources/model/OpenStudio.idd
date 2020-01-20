@@ -20110,6 +20110,7 @@ OS:Fan:SystemModel,
        \reference FansVAV
        \reference FansCVandVAV
        \reference FansCVandOnOffandVAV
+       \reference ConnectionObject
   A3 , \field Availability Schedule Name
        \note Availability schedule name for this fan. Schedule value > 0 means the fan is available.
        \note If this field is blank, the fan is always available.
