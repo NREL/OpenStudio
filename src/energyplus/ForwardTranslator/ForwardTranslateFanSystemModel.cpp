@@ -41,6 +41,7 @@
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -178,10 +179,18 @@ boost::optional<IdfObject> ForwardTranslator::translateFanSystemModel( FanSystem
   // End-Use Subcategory: Required String
   idfObject.setString(Fan_SystemModelFields::EndUseSubcategory, modelObject.endUseSubcategory());
 
+  // Speeds
+  std::vector<FanSystemModelSpeed> speeds = modelObject.speeds();
+  if (!speeds.empty()) {
+    for (const FanSystemModelSpeed& speed : speeds) {
+      auto eg = idfObject.pushExtensibleGroup();
+      eg.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, speed.flowFraction());
+      eg.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, speed.electricPowerFraction());
+    }
+  }
+
   // Number of Speeds: Required Integer
   idfObject.setInt(Fan_SystemModelFields::NumberofSpeeds, modelObject.numberofSpeeds());
-
-  // TODO: Handle extensible groups here
 
   return idfObject;
 }
