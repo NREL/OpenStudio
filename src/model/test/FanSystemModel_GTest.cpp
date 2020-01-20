@@ -167,7 +167,7 @@ TEST_F(ModelFixture, FanSystemModel_GettersSetters) {
   fan.resetElectricPowerFunctionofFlowFractionCurve();
   EXPECT_FALSE(fan.electricPowerFunctionofFlowFractionCurve());
   CurveBiquadratic badCurve(m);
-  EXPECT_TRUE(fan.setElectricPowerFunctionofFlowFractionCurve(badCurve));
+  EXPECT_FALSE(fan.setElectricPowerFunctionofFlowFractionCurve(badCurve));
   EXPECT_FALSE(fan.electricPowerFunctionofFlowFractionCurve());
 
   // Night Ventilation Mode Pressure Rise: Optional Double
