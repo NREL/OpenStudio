@@ -4917,6 +4917,27 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else  if (iddname == "OS:ZoneHVAC:UnitHeater") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        // Maximum Hot Water Flow Rate: this wasn't explicitly set as autosize in Ctor as it should have been
+        if (i == 9) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+              newObject.setDouble(i, _value.get());
+          } else {
+            // If not a double, either blank or actual autosize => set to autosize
+            newObject.setString(i, "autosize");
+          }
+        } else if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     // No-op
     } else {
       ss << object;
