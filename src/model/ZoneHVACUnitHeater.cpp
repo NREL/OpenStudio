@@ -493,11 +493,16 @@ ZoneHVACUnitHeater::ZoneHVACUnitHeater(const Model& model,
 
   autosizeMaximumSupplyAirFlowRate();
 
-  setFanControlType("OnOff");
+  ok = setFanControlType("OnOff");
+  OS_ASSERT(ok);
 
-  setMinimumHotWaterFlowRate(0.0);
+  autosizeMaximumHotWaterFlowRate();
 
-  setHeatingConvergenceTolerance(0.001);
+  ok = setMinimumHotWaterFlowRate(0.0);
+  OS_ASSERT(ok);
+
+  ok = setHeatingConvergenceTolerance(0.001);
+  OS_ASSERT(ok);
 
   setString(OS_ZoneHVAC_UnitHeaterFields::AvailabilityManagerListName,"");
 }
