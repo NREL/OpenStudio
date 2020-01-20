@@ -92,7 +92,7 @@ TEST_F(ModelFixture, EMSMeteredOutputVariable)
   meteredoutvar.setEndUseSubcategory("Madeup");
   EXPECT_EQ("Madeup", meteredoutvar.endUseSubcategory());
 
-  model.save(toPath("./EMS_meteredoutvar.osm"), true);
+  // model.save(toPath("./EMS_meteredoutvar.osm"), true);
 
   // add output variable sensor
   EnergyManagementSystemMeteredOutputVariable outvar_sen(model, OATdbSensor);
