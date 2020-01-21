@@ -73,7 +73,7 @@
   elseif(APPLE)
     install(FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" DESTINATION Java/openstudio/)
   else()
-    install(FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" DESTINATION lib/openstudio-${OPENSTUDIO_VERSION}/java)
+    install(FILES "${JAVA_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.jar" DESTINATION lib/openstudio-${OpenStudio_VERSION}/java)
   endif()
 
   # Hand run commands we are replicating here
