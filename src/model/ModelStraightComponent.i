@@ -47,9 +47,8 @@
   %ignore openstudio::model::FanOnOff::airflowNetworkFan;
   %ignore openstudio::model::FanVariableVolume::getAirflowNetworkFan;
   %ignore openstudio::model::FanVariableVolume::airflowNetworkFan;
-  // Doesn't support Fan:SystemModel yet
-  // %ignore openstudio::model::FanSystemModel::getAirflowNetworkFan;
-  // %ignore openstudio::model::FanSystemModel::airflowNetworkFan;
+  %ignore openstudio::model::FanSystemModel::getAirflowNetworkFan;
+  %ignore openstudio::model::FanSystemModel::airflowNetworkFan;
 
   // ignore generator objects for now, add back in with partial classes in ModelGenerators.i (swigged after us)
   %ignore openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal::generatorPhotovoltaic;
