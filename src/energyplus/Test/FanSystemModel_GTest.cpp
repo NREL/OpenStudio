@@ -31,6 +31,7 @@
 #include "EnergyPlusFixture.hpp"
 
 #include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
 #include "../../model/FanSystemModel.hpp"
 
@@ -53,6 +54,8 @@
 #include <utilities/idd/AirLoopHVAC_FieldEnums.hxx>
 #include <utilities/idd/BranchList_FieldEnums.hxx>
 #include <utilities/idd/Branch_FieldEnums.hxx>
+#include <utilities/idd/Schedule_Constant_FieldEnums.hxx>
+#include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
@@ -242,7 +245,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel) {
 }
 
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel_AirLoopHVAC) {
 
   ForwardTranslator ft;
 
@@ -292,3 +295,138 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC) {
             fan.outletModelObject().get().nameString());
 }
 
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
+
+  ReverseTranslator reverseTranslator;
+
+  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  OptionalWorkspaceObject _i_fan = w.addObject(IdfObject(IddObjectType::Fan_SystemModel));
+  ASSERT_TRUE(_i_fan);
+  _i_fan->setName("My FanSystemModel");
+
+  OptionalWorkspaceObject _i_sch = w.addObject(IdfObject(IddObjectType::Schedule_Constant));
+  ASSERT_TRUE(_i_sch);
+
+  IdfObject idf_sch(IddObjectType::Schedule_Constant);
+  _i_sch->setName("FanAndCoilAvailSched");
+  EXPECT_TRUE(_i_sch->setDouble(Schedule_ConstantFields::HourlyValue, 1.0));
+  EXPECT_TRUE(_i_fan->setPointer(Fan_SystemModelFields::AvailabilityScheduleName, _i_sch->handle()));
+
+  EXPECT_TRUE(_i_fan->setString(Fan_SystemModelFields::DesignMaximumAirFlowRate, "AUTOSIZE"));
+  EXPECT_TRUE(_i_fan->setString(Fan_SystemModelFields::SpeedControlMethod, "Discrete"));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_SystemModelFields::ElectricPowerMinimumFlowRateFraction, 0.0));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_SystemModelFields::DesignPressureRise, 75.0));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_SystemModelFields::MotorEfficiency, 0.9));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_SystemModelFields::MotorInAirStreamFraction, 1.0));
+  EXPECT_TRUE(_i_fan->setString(Fan_SystemModelFields::DesignElectricPowerConsumption, "AUTOSIZE"));
+  EXPECT_TRUE(_i_fan->setString(Fan_SystemModelFields::DesignPowerSizingMethod, "TotalEfficiencyAndPressure"));
+  EXPECT_TRUE(_i_fan->setDouble(Fan_SystemModelFields::FanTotalEfficiency, 0.5));
+  EXPECT_TRUE(_i_fan->setString(Fan_SystemModelFields::EndUseSubcategory, "FanEndUse"));
+  EXPECT_TRUE(_i_fan->setInt(Fan_SystemModelFields::NumberofSpeeds, 3));
+
+  WorkspaceExtensibleGroup eg1 = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  EXPECT_TRUE(eg1.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, 0.33));
+  EXPECT_TRUE(eg1.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, 0.12));
+
+  WorkspaceExtensibleGroup eg2 = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  EXPECT_TRUE(eg2.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, 0.66));
+  EXPECT_TRUE(eg2.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, 0.51));
+
+  WorkspaceExtensibleGroup eg3 = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  EXPECT_TRUE(eg3.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, 1.0));
+  EXPECT_TRUE(eg3.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, 1.0));
+
+
+
+  //   Fan:SystemModel,
+  //     Zone1FanCoilFan,         !- Name
+  //     FanAndCoilAvailSched,    !- Availability Schedule Name
+  //     Zone1FanCoilOAMixerOutletNode,  !- Air Inlet Node Name
+  //     Zone1FanCoilFanOutletNode,  !- Air Outlet Node Name
+  //     AUTOSIZE,                !- Design Maximum Air Flow Rate {m3/s}
+  //     Discrete,                !- Speed Control Method
+  //     0.0,                     !- Electric Power Minimum Flow Rate Fraction
+  //     75.0,                    !- Design Pressure Rise {Pa}
+  //     0.9,                     !- Motor Efficiency
+  //     1.0,                     !- Motor In Air Stream Fraction
+  //     AUTOSIZE,                !- Design Electric Power Consumption {W}
+  //     TotalEfficiencyAndPressure,  !- Design Power Sizing Method
+  //     ,                        !- Electric Power Per Unit Flow Rate {W/(m3/s)}
+  //     ,                        !- Electric Power Per Unit Flow Rate Per Unit Pressure {W/((m3/s)-Pa)}
+  //     0.50,                    !- Fan Total Efficiency
+  //     ,                        !- Electric Power Function of Flow Fraction Curve Name
+  //     ,                        !- Night Ventilation Mode Pressure Rise {Pa}
+  //     ,                        !- Night Ventilation Mode Flow Fraction
+  //     ,                        !- Motor Loss Zone Name
+  //     ,                        !- Motor Loss Radiative Fraction
+  //     FanEndUse,                 !- End-Use Subcategory
+  //     3,                       !- Number of Speeds
+  //     0.33,                    !- Speed 1 Flow Fraction
+  //     0.12,                    !- Speed 1 Electric Power Fraction
+  //     0.66,                    !- Speed 2 Flow Fraction
+  //     0.51,                    !- Speed 2 Electric Power Fraction
+  //     1.0,                     !- Speed 3 Flow Fraction
+  //     1.0;                     !- Speed 3 Electric Power Fraction
+
+
+    // To avoid other warnings, we add required objects
+  OptionalWorkspaceObject _i_globalGeometryRules = w.addObject(IdfObject(IddObjectType::GlobalGeometryRules));
+  ASSERT_TRUE(_i_globalGeometryRules);
+
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::StartingVertexPosition, "UpperLeftCorner");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::VertexEntryDirection, "Counterclockwise");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::CoordinateSystem, "Relative");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::DaylightingReferencePointCoordinateSystem, "Relative");
+  _i_globalGeometryRules->setString(openstudio::GlobalGeometryRulesFields::RectangularSurfaceCoordinateSystem, "Relative");
+
+  OptionalWorkspaceObject _i_building = w.addObject(IdfObject(IddObjectType::Building));
+  ASSERT_TRUE(_i_building);
+
+  {
+    ASSERT_NO_THROW(reverseTranslator.translateWorkspace(w));
+    Model model = reverseTranslator.translateWorkspace(w);
+    EXPECT_TRUE(reverseTranslator.errors().empty());
+    EXPECT_TRUE(reverseTranslator.warnings().empty());
+
+    std::vector<openstudio::model::FanSystemModel> fans = model.getModelObjects<openstudio::model::FanSystemModel>();
+    ASSERT_EQ(static_cast<unsigned>(1), fans.size());
+    FanSystemModel fan = fans[0];
+
+
+    EXPECT_EQ("Zone1FanCoilFan", fan.nameString());
+    EXPECT_EQ("FanAndCoilAvailSched", fan.availabilitySchedule().nameString());
+    EXPECT_TRUE(fan.isDesignMaximumAirFlowRateAutosized());
+    EXPECT_EQ("Discrete", fan.speedControlMethod());
+    EXPECT_EQ(0.0, fan.electricPowerMinimumFlowRateFraction());
+    EXPECT_EQ(75.0, fan.designPressureRise());
+    EXPECT_EQ(0.9, fan.motorEfficiency());
+    EXPECT_EQ(1.0, fan.motorInAirStreamFraction());
+    EXPECT_TRUE(fan.isDesignElectricPowerConsumptionAutosized());
+    EXPECT_EQ("TotalEfficiencyAndPressure", fan.designPowerSizingMethod());
+
+    // from Ctor
+    EXPECT_EQ(840.0, fan.electricPowerPerUnitFlowRate());
+    EXPECT_EQ(1.6667, fan.electricPowerPerUnitFlowRatePerUnitPressure());
+
+    EXPECT_EQ(0.5, fan.fanTotalEfficiency());
+    EXPECT_FALSE(fan.electricPowerFunctionofFlowFractionCurve());
+    EXPECT_FALSE(fan.nightVentilationModePressureRise());
+    EXPECT_FALSE(fan.nightVentilationModeFlowFraction());
+    EXPECT_FALSE(fan.motorLossZone());
+    // from Ctor
+    EXPECT_EQ(0.0, fan.motorLossRadiativeFraction());
+
+    EXPECT_EQ(3, fan.numExtensibleGroups());
+    EXPECT_EQ(3, fan.numberofSpeeds());
+    std::vector<FanSystemModelSpeed> speeds = fan.speeds();
+    EXPECT_EQ(3, speeds.size());
+    EXPECT_EQ(0.33, speeds[0].flowFraction());
+    EXPECT_EQ(0.12, speeds[0].electricPowerFraction());
+    EXPECT_EQ(0.66, speeds[1].flowFraction());
+    EXPECT_EQ(0.51, speeds[1].electricPowerFraction());
+    EXPECT_EQ(1.00, speeds[2].flowFraction());
+    EXPECT_EQ(1.00, speeds[2].electricPowerFraction());
+
+  }
+}
