@@ -616,6 +616,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       //modelObject = translateFanConstantVolume(workspaceObject );
       break;
     }
+  case openstudio::IddObjectType::Fan_SystemModel :
+    {
+      modelObject = translateFanSystemModel(workspaceObject );
+      break;
+    }
   case openstudio::IddObjectType::FenestrationSurface_Detailed :
     {
       modelObject = translateFenestrationSurfaceDetailed(workspaceObject);

@@ -189,10 +189,12 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateFanConstantVolume(const WorkspaceObject & workspaceObject);
 
+  boost::optional<model::ModelObject> translateFanSystemModel(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateFenestrationSurfaceDetailed(const WorkspaceObject & workspaceObject);
-  
+
   boost::optional<model::ModelObject> translateFoundationKivaSettings(const WorkspaceObject & workspaceObject);
-  
+
   boost::optional<model::ModelObject> translateFoundationKiva(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateGasEquipment(const WorkspaceObject & workspaceObject);
@@ -236,7 +238,7 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateOutputVariable( const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translatePeople(const WorkspaceObject & workspaceObject);
-  
+
   boost::optional<model::ModelObject> translatePerformancePrecisionTradeoffs(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateSizingPeriodDesignDay(const WorkspaceObject & workspaceObject);
@@ -302,7 +304,7 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateSurfaceConvectionAlgorithmInside(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateSurfaceConvectionAlgorithmOutside(const WorkspaceObject & workspaceObject);
-  
+
   boost::optional<model::ModelObject> translateSurfacePropertyExposedFoundationPerimeter(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateThermostatSetpointDualSetpoint(const WorkspaceObject & workspaceObject);
