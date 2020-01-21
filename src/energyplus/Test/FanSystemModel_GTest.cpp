@@ -430,4 +430,41 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
     EXPECT_EQ(1.00, speeds[2].electricPowerFraction());
 
   }
+
+  WorkspaceExtensibleGroup invalid_eg = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+  EXPECT_TRUE(invalid_eg.setDouble(Fan_SystemModelExtensibleFields::SpeedFlowFraction, 1.5)); // Should be [0, 1]
+  EXPECT_TRUE(invalid_eg.setDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction, 1.0));
+
+  // Right now, numberofSpeeds is still set to 3, so this group will be ignored, with a warning
+  {
+    ASSERT_NO_THROW(reverseTranslator.translateWorkspace(w));
+    Model model = reverseTranslator.translateWorkspace(w);
+    EXPECT_EQ(0, reverseTranslator.errors().size());
+    EXPECT_EQ(1, reverseTranslator.warnings().size());
+
+    std::vector<openstudio::model::FanSystemModel> fans = model.getModelObjects<openstudio::model::FanSystemModel>();
+    ASSERT_EQ(static_cast<unsigned>(1), fans.size());
+    FanSystemModel fan = fans[0];
+
+    EXPECT_EQ(3, fan.numExtensibleGroups());
+    EXPECT_EQ(3, fan.numberofSpeeds());
+  }
+
+  // Ok, this time the invalid group will be processed
+  EXPECT_TRUE(_i_fan->setInt(Fan_SystemModelFields::NumberofSpeeds, 4));
+  {
+    // I don't want it to throw, it should log an error, and ignore that speed
+    ASSERT_NO_THROW(reverseTranslator.translateWorkspace(w));
+    Model model = reverseTranslator.translateWorkspace(w);
+    EXPECT_EQ(1, reverseTranslator.errors().size());
+    EXPECT_TRUE(reverseTranslator.warnings().empty());
+
+    std::vector<openstudio::model::FanSystemModel> fans = model.getModelObjects<openstudio::model::FanSystemModel>();
+    ASSERT_EQ(static_cast<unsigned>(1), fans.size());
+    FanSystemModel fan = fans[0];
+
+    EXPECT_EQ(3, fan.numExtensibleGroups());
+    EXPECT_EQ(3, fan.numberofSpeeds());
+  }
+
 }

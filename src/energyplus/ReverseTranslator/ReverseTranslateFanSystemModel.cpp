@@ -207,11 +207,11 @@ boost::optional<ModelObject> ReverseTranslator::translateFanSystemModel( const W
     boost::optional<double> _electricPowerFraction = extensibleGroups[i].getDouble(Fan_SystemModelExtensibleFields::SpeedElectricPowerFraction);
     if(_flowFraction.has_value() && _electricPowerFraction.has_value()) {
 
-      // try to create a S, which will throw in case wrong type, or wrong double value. Here we let it slide though
+      // try to create a Speed, which will throw in case wrong type, or wrong double value. Here we let it slide though
         try {
           speeds.push_back(FanSystemModelSpeed(_flowFraction.get(), _electricPowerFraction.get()));
         } catch (...) {
-          // The ViewFactor Ctor threw, so there's a wrong type, or a wrong double
+          // The Speed Ctor threw, so there's a wrong type, or a wrong double
           LOG(Error, "Could not create Speed " << i << " in FanSystemModel " << modelObject.nameString());
         }
 
