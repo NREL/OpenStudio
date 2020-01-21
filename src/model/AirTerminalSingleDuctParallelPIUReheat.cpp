@@ -387,7 +387,7 @@ namespace detail {
     if( isTypeCorrect ) {
       return setPointer(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanName,hvacComponent.handle());
     } else {
-      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume, not '" << hvacComponent.iddObjectType().valueName()
+      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume or FanSystemModel, not '" << hvacComponent.iddObjectType().valueName()
              << "') for " << briefDescription());
       return false;
     }

@@ -1129,6 +1129,15 @@ bool FanSystemModel::setSpeeds(const std::vector<FanSystemModelSpeed>& speeds) {
   return getImpl<detail::FanSystemModel_Impl>()->setSpeeds(speeds);
 }
 
+AirflowNetworkFan FanSystemModel::getAirflowNetworkFan()
+{
+  return getImpl<detail::FanSystemModel_Impl>()->getAirflowNetworkFan();
+}
+
+boost::optional<AirflowNetworkFan> FanSystemModel::airflowNetworkFan() const
+{
+  return getImpl<detail::FanSystemModel_Impl>()->airflowNetworkFan();
+}
 
 /// @cond
 FanSystemModel::FanSystemModel(std::shared_ptr<detail::FanSystemModel_Impl> impl)
