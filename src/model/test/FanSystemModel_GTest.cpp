@@ -213,6 +213,8 @@ TEST_F(ModelFixture,FanSystemModel_addToNode)
   EXPECT_TRUE(fan.addToNode(supplyOutletNode));
   EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size() );
   EXPECT_TRUE(fan.airLoopHVAC());
+  ASSERT_TRUE(airLoop.supplyFan());
+  EXPECT_EQ(fan, airLoop.supplyFan().get());
 
   Node demandNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
   EXPECT_FALSE(fan.addToNode(demandNode));
