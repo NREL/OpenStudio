@@ -40,6 +40,7 @@ namespace model {
 class Schedule;
 class Curve;
 class ThermalZone;
+class AirflowNetworkFan;
 
 namespace detail {
 
@@ -201,6 +202,9 @@ class MODEL_API FanSystemModel : public StraightComponent {
   //@}
   /** @name Other */
   //@{
+
+  AirflowNetworkFan getAirflowNetworkFan();
+  boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
 
   //@}
  protected:

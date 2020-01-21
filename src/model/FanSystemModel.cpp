@@ -79,6 +79,9 @@
 #include "WaterHeaterHeatPumpWrappedCondenser.hpp"
 #include "WaterHeaterHeatPumpWrappedCondenser_Impl.hpp"
 
+#include "AirflowNetworkFan.hpp"
+#include "AirflowNetworkFan_Impl.hpp"
+
 #include "SetpointManagerMixedAir.hpp"
 
 #include "ScheduleTypeLimits.hpp"
@@ -821,6 +824,28 @@ namespace detail {
       setDesignElectricPowerConsumption(val.get());
     }
 
+  }
+
+  AirflowNetworkFan FanSystemModel_Impl::getAirflowNetworkFan()
+  {
+    auto opt = airflowNetworkFan();
+    if (opt) {
+      return opt.get();
+    }
+    return AirflowNetworkFan(model(), handle());
+  }
+
+  boost::optional<AirflowNetworkFan> FanSystemModel_Impl::airflowNetworkFan() const
+  {
+    std::vector<AirflowNetworkFan> myAFNitems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkFan>(AirflowNetworkFan::iddObjectType());
+    auto count = myAFNitems.size();
+    if (count == 1) {
+      return myAFNitems[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetworkFan attached, returning first.");
+      return myAFNitems[0];
+    }
+    return boost::none;
   }
 
 } // detail
