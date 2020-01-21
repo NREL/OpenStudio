@@ -20221,19 +20221,18 @@ OS:Fan:SystemModel,
        \type alpha
        \retaincase
        \default General
-  N13, \field Number of Speeds
-       \note number of different speed levels available when Speed Control Method is set to Discrete
+  N13, \field Speed 1 Flow Fraction
+       \note number of different speed levels is inferred from the number of extensible groups you provide
+       \note This is meant to be used when Speed Control Method is set to Discrete
        \note Speed need to be arranged in increasing order in remaining field sets.
-       \note If set to 1, or omitted, and Speed Control Method is Discrete then constant fan speed is the design maximum.
-       \type integer
-       \required-field
-       \minimum 1
-  N14, \field Speed 1 Flow Fraction
+       \note If no extensible groups (speeds) are specified, and Speed Control Method is Discrete,
+       \note then constant fan speed is the design maximum.
        \begin-extensible
        \type real
        \minimum 0.0
        \maximum 1.0
-  N15; \field Speed 1 Electric Power Fraction
+       \required-field
+  N14; \field Speed 1 Electric Power Fraction
        \note if left blank then use Electric Power Function of Flow Fraction Curve
        \type real
        \minimum 0.0
