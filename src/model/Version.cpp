@@ -81,6 +81,16 @@ namespace detail {
     return setString(OS_VersionFields::VersionIdentifier,s);;
   }
 
+  boost::optional<std::string> Version_Impl::prereleaseIdentifier() const
+  {
+    return getString(OS_VersionFields::PrereleaseIdentifier, false, true);
+  }
+
+  bool Version_Impl::setPrereleaseIdentifier(const std::string& s)
+  {
+    return setString(OS_VersionFields::PrereleaseIdentifier,s);;
+  }
+
   // return the parent object in the hierarchy
   boost::optional<ParentObject> Version_Impl::parent() const
   {
@@ -107,6 +117,11 @@ Version::Version(const Model& model)
 {
   OS_ASSERT(getImpl<detail::Version_Impl>());
   setVersionIdentifier( openStudioVersion() );
+
+  std::string preReleaseTag = openStudioVersionPrerelease();
+  if (!preReleaseTag.empty()) {
+    setPrereleaseIdentifier(preReleaseTag);
+  }
 }
 
 // constructor
@@ -121,6 +136,15 @@ std::string Version::versionIdentifier() const {
 bool Version::setVersionIdentifier(const std::string& s)
 {
   return getImpl<detail::Version_Impl>()->setVersionIdentifier(s);
+}
+
+boost::optional<std::string> Version::prereleaseIdentifier() const {
+  return getImpl<detail::Version_Impl>()->prereleaseIdentifier();
+}
+
+bool Version::setPrereleaseIdentifier(const std::string& s)
+{
+  return getImpl<detail::Version_Impl>()->setPrereleaseIdentifier(s);
 }
 
 IddObjectType Version::iddObjectType() {

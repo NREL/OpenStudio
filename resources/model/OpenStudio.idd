@@ -38,9 +38,11 @@ OS:Version,
   A1, \field Handle
        \type handle
        \required-field
-  A2; \field Version Identifier
+  A2, \field Version Identifier
        \type alpha
        \default 3.0.0
+  A3; \field Prerelease Identifier
+       \type alpha
 
 OS:ComponentData,
        \memo Defines the meta-data and contents of a Component, that is, a
