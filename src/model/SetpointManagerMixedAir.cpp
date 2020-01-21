@@ -107,6 +107,10 @@ bool SetpointManagerMixedAir_Impl::addToNode(Node & node)
         else if( boost::optional<FanConstantVolume> constantFan = it->optionalCast<FanConstantVolume>() ) {
           fans.insert(fans.begin(), *constantFan);
         }
+        // TODO: FanOnOff?
+        else if( boost::optional<FanSystemModel> systemModelFan = it->optionalCast<FanSystemModel>() ) {
+          fans.insert(fans.begin(), *systemModelFan);
+        }
       }
 
       if( !fans.empty() ) {
