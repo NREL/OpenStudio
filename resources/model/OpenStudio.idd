@@ -4742,12 +4742,7 @@ OS:Schedule:Rule,
        \default No
        \key Yes
        \key No
-  A12, \field Apply Holiday
-       \type choice
-       \default No
-       \key Yes
-       \key No
-  A13, \field Date Specification Type
+  A12, \field Date Specification Type
        \type choice
        \default DateRange
        \key DateRange
@@ -4804,7 +4799,10 @@ OS:Schedule:Ruleset,
   A5, \field Summer Design Day Schedule Name
        \type object-list
        \object-list DayScheduleNames
-  A6; \field Winter Design Day Schedule Name
+  A6, \field Winter Design Day Schedule Name
+       \type object-list
+       \object-list DayScheduleNames
+  A7; \field Holiday Schedule Name
        \type object-list
        \object-list DayScheduleNames
 
