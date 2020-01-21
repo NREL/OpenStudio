@@ -77,6 +77,8 @@
 #include "../../model/PerformancePrecisionTradeoffs_Impl.hpp"
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
+#include "../../model/StandardGlazing.hpp"
+#include "../../model/StandardGlazing_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -967,4 +969,24 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList)
       << "Expected space2 to have a SpaceType '" << _spaceType2->nameString() << "', but it has '" << _space2->spaceType()->nameString() << "'";
 
   }
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject(openstudio::IddObjectType::WindowMaterial_Glazing);
+  idfObject.setName("CLEAR 6MM");
+  idfObject.setString(WindowMaterial_GlazingFields::OpticalDataType, "SpectralAverage");
+
+  openstudio::WorkspaceObject epWindowMaterialGlazing = workspace.addObject(idfObject).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<StandardGlazing> standardGlazings = model.getModelObjects<StandardGlazing>();
+  ASSERT_EQ(1u, standardGlazings.size());
+  StandardGlazing standardGlazing = standardGlazings[0];
+  EXPECT_EQ(standardGlazing.name().get(), "CLEAR 6MM");
+  EXPECT_EQ(standardGlazing.opticalDataType(), "SpectralAverage");
 }
