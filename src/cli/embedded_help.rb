@@ -63,6 +63,8 @@ module Kernel
   alias :original_require :require
   alias :original_open :open
 
+  RUBY_FILE_EXTS = ['.rb', '.so', '.dll']
+
   def require path
     original_directory = Dir.pwd
     path_with_extension = path
@@ -70,10 +72,12 @@ module Kernel
     if path.include? 'openstudio/energyplus/find_energyplus'
       return false
     end
-    
+
+    # Returns the extension
+    # (the portion of file name in path starting from the last period).
     extname = File.extname(path)
 
-    if extname.empty? #or extname != '.rb'
+    if extname.empty? or ! RUBY_FILE_EXTS.include? extname
       path_with_extension = path + '.rb'
     end
 
@@ -84,7 +88,7 @@ module Kernel
         return true;
       elsif EmbeddedScripting.private_method_defined? initmethod
         $LOADED << path
-        EmbeddedScripting.send(initmethod) 
+        EmbeddedScripting.send(initmethod)
         return true;
       end
     else
@@ -111,33 +115,33 @@ module Kernel
     end
 
     result = original_require path
-    
-    current_directory = Dir.pwd 
+
+    current_directory = Dir.pwd
     if original_directory != current_directory
       Dir.chdir(original_directory)
       puts "Directory changed from '#{original_directory}' to '#{current_directory}' while requiring '#{path}', result = #{result}, restoring original_directory"
       STDOUT.flush
     end
-    
+
     return result
   end
 
   def require_embedded_absolute path
     original_directory = Dir.pwd
-    
+
     $LOADED << path
     s = EmbeddedScripting::getFileAsString(path)
 
     s = OpenStudio::preprocess_ruby_script(s)
 
     result = Kernel::eval(s,BINDING,path)
-    
-    current_directory = Dir.pwd 
+
+    current_directory = Dir.pwd
     if original_directory != current_directory
       Dir.chdir(original_directory)
       STDOUT.flush
     end
-    
+
     return result
   end
 
