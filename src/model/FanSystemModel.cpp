@@ -851,7 +851,7 @@ FanSystemModel::FanSystemModel(const Model& model)
 
   autosizeDesignElectricPowerConsumption();
 
-  ok = setElectricPowerPerUnitFlowRate(1.66667); // TODO
+  ok = setElectricPowerPerUnitFlowRate(840.0); // TODO
   OS_ASSERT(ok);
   ok = setElectricPowerPerUnitFlowRatePerUnitPressure(1.66667);
   OS_ASSERT(ok);
