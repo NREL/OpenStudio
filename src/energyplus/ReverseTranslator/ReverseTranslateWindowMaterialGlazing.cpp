@@ -56,7 +56,7 @@ boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGlazing(
 
   optS = workspaceObject.getString(WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName);
   if (optS) {
-    standardGlazing.setWindowGlassSpectralDataSetName(*optS);
+    standardGlazing.setWindowGlassSpectralDataSetName(*optS); // TODO: remove the *?
   }
 
   OptionalDouble d = workspaceObject.getDouble(WindowMaterial_GlazingFields::Thickness);
