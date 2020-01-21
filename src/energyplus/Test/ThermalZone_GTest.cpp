@@ -774,6 +774,28 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_Daylighting)
 
 }
 
+TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_Daylighting_2)
+{
+  Model m;
+
+  ThermalZone z(m);
+  Space space1(m);
+  space1.setThermalZone(z);
+
+  DaylightingControl d_pri(m);
+  d_pri.setThetaRotationAroundYAxis(90.0);
+  d_pri.setPhiRotationAroundZAxis(180.0);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
+  ASSERT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_d(idfObjs[0]);
+
+  EXPECT_EQ(d_pri.phiRotationAroundZAxis, idf_d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
+}
+
 TEST_F(EnergyPlusFixture,ForwardTranslator_LoadDistributionScheme)
 {
   // Create a model with a space and thermalZone
