@@ -74,6 +74,16 @@ namespace openstudio {
   }
 }
 
+// extend classes
+%extend openstudio::model::FanSystemModelSpeed {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 %ignore std::vector<openstudio::model::GFunction>::vector(size_type);
 %ignore std::vector<openstudio::model::GFunction>::resize(size_type);
 %template(GFunctionVector) std::vector<openstudio::model::GFunction>;
@@ -133,6 +143,7 @@ MODELOBJECT_TEMPLATES(EvaporativeFluidCoolerSingleSpeed);
 MODELOBJECT_TEMPLATES(EvaporativeFluidCoolerTwoSpeed);
 MODELOBJECT_TEMPLATES(FanConstantVolume);
 MODELOBJECT_TEMPLATES(FanOnOff);
+MODELOBJECT_TEMPLATES(FanSystemModelSpeed); // SWIG the helper class I implemented to add speeds
 MODELOBJECT_TEMPLATES(FanSystemModel);
 MODELOBJECT_TEMPLATES(FanVariableVolume);
 MODELOBJECT_TEMPLATES(FluidCoolerSingleSpeed);
