@@ -34,6 +34,7 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/FanSystemModel.hpp"
+#include "../../model/FanSystemModel_Impl.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/Node.hpp"
@@ -303,7 +304,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
   Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_fan = w.addObject(IdfObject(IddObjectType::Fan_SystemModel));
   ASSERT_TRUE(_i_fan);
-  _i_fan->setName("My FanSystemModel");
+  _i_fan->setName("Zone1FanCoilFan");
 
   OptionalWorkspaceObject _i_sch = w.addObject(IdfObject(IddObjectType::Schedule_Constant));
   ASSERT_TRUE(_i_sch);
@@ -407,7 +408,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
 
     // from Ctor
     EXPECT_EQ(840.0, fan.electricPowerPerUnitFlowRate());
-    EXPECT_EQ(1.6667, fan.electricPowerPerUnitFlowRatePerUnitPressure());
+    EXPECT_EQ(1.66667, fan.electricPowerPerUnitFlowRatePerUnitPressure());
 
     EXPECT_EQ(0.5, fan.fanTotalEfficiency());
     EXPECT_FALSE(fan.electricPowerFunctionofFlowFractionCurve());
