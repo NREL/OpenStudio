@@ -95,7 +95,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel) {
   EXPECT_TRUE(fan.setDesignElectricPowerConsumption(3112.8));
 
   // Design Power Sizing Method: Required String
-  EXPECT_EQ("TotalEfficiencyAndPressure", fan.designPowerSizingMethod());
+  EXPECT_TRUE(fan.setDesignPowerSizingMethod("TotalEfficiencyAndPressure"));
 
   // Electric Power Per Unit Flow Rate: Required Double
   EXPECT_TRUE(fan.setElectricPowerPerUnitFlowRate(1254.0));

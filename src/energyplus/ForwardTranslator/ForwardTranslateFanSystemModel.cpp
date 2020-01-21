@@ -147,8 +147,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanSystemModel( FanSystem
 
   // Electric Power Function of Flow Fraction Curve Name: Optional Object
   if (boost::optional<Curve> _curve = modelObject.electricPowerFunctionofFlowFractionCurve()) {
-    boost::optional<IdfObject> _idf_curve = translateAndMapModelObject(_curve.get());
-    if ( _idf_curve && _idf_curve->name()) {
+    if (boost::optional<IdfObject> _idf_curve = translateAndMapModelObject(_curve.get())) {
       idfObject.setString(Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName, _idf_curve->name().get());
     }
   }
@@ -167,7 +166,9 @@ boost::optional<IdfObject> ForwardTranslator::translateFanSystemModel( FanSystem
 
   // Motor Loss Zone Name: Optional Object
   if (boost::optional<ThermalZone> _z = modelObject.motorLossZone()) {
-    idfObject.setString(Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName, _z->nameString());
+    if (boost::optional<IdfObject> _idf_z = translateAndMapModelObject(_z.get())) {
+      idfObject.setString(Fan_SystemModelFields::MotorLossZoneName, _idf_z->nameString());
+    }
   }
 
   // Motor Loss Radiative Fraction: Optional Double
