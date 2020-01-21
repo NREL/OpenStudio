@@ -22,12 +22,22 @@ string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
 # CPack package version does not support extended patch version
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 
+# README: what's the difference between all these versions?
+
+# The "OpenStudio_VERSION" ones should be used in CMakeLists.txt
+# * OpenStudio_VERSION: includes the prerelease tag if any: '3.0.0-rc1'
+# * OpenStudio_VERSION_PATCH: Patch + prelrease tag if any
+
+# The "OPENSTUDIO_VERSION" ones should only be used in OpenStudio.in (aside from using the the long version for naming the installer)
+# * OPENSTUDIO_VERSION: just major.minor.patch: '3.0.0'
+# * OPENSTUDIO_LONG_VERSION: includes prelrease and build sha: "3.0.0-rc1+ejfbxhza'
+
 # Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles
-string(APPEND PROJECT_VERSION "-beta")
-string(APPEND OpenStudio_VERSION "-beta")
-string(APPEND PROJECT_VERSION_PATCH "-beta")
-string(APPEND OpenStudio_VERSION_PATCH "-beta")
+# Remember to use the leading dash: eg "-beta", "-rc1"
+set(PROJECT_VERSION_PRERELEASE "-beta")
+string(APPEND OpenStudio_VERSION "${PROJECT_VERSION_PRERELEASE}")
+string(APPEND OpenStudio_VERSION_PATCH "${PROJECT_VERSION_PRERELEASE}")
 
 # The PROJECT_SOURCE_DIR here is OpenStudio/, which we will use instead of using CMAKE_SOURCE_DIR
 set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -145,13 +155,14 @@ endif()
 get_directory_property(hasParent PARENT_DIRECTORY)
 
 
-# OpenStudio version
+# OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
-set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}+${PROJECT_VERSION_BUILD}")
+# Long version, include prerelease and build metadata. eg '3.0.0-rc1+6383a191dc' (if you have a prerelease), or '3.0.0+6383a191dc' for an official release
+set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${PROJECT_VERSION_PRERELEASE}+${PROJECT_VERSION_BUILD}")
 # Export to parent scope
 if(hasParent)
   set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}" PARENT_SCOPE)
-  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}+${PROJECT_VERSION_BUILD}" PARENT_SCOPE)
+  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${PROJECT_VERSION_PRERELEASE}+${PROJECT_VERSION_BUILD}" PARENT_SCOPE)
 endif()
 
 # EnergyPlus Idd version
@@ -1051,15 +1062,15 @@ if(BUILD_DOCUMENTATION)
     endif()
     add_custom_command(TARGET ALL_DOXYGEN
       POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OPENSTUDIO_VERSION}-doc.zip
-      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-doc.zip * -r -x!*.cfg -x!*.tag -x!*.map -x!*.md5
-      COMMAND ${PROJECT_BINARY_DIR}/7za d OpenStudio-${OPENSTUDIO_VERSION}-doc.zip index.html
+      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OpenStudio_VERSION}-doc.zip
+      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OpenStudio_VERSION}-doc.zip * -r -x!*.cfg -x!*.tag -x!*.map -x!*.md5
+      COMMAND ${PROJECT_BINARY_DIR}/7za d OpenStudio-${OpenStudio_VERSION}-doc.zip index.html
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc
     )
     add_custom_command(TARGET ALL_RDOC
       POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip
-      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip * -r
+      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OpenStudio_VERSION}-rdoc.zip
+      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OpenStudio_VERSION}-rdoc.zip * -r
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/rdoc
     )
   endif()
@@ -1094,7 +1105,7 @@ set(all_exe_targets
 
 if(UNIX AND NOT APPLE)
   foreach(targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
-    set_target_properties(${targ} PROPERTIES VERSION ${OPENSTUDIO_VERSION})
+    set_target_properties(${targ} PROPERTIES VERSION ${OpenStudio_VERSION})
   endforeach()
 endif()
 
@@ -1103,7 +1114,7 @@ configure_file("${PROJECT_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
 
 
 if(UNIX AND NOT APPLE)
-  set(examplesdir share/openstudio-${OPENSTUDIO_VERSION}/examples)
+  set(examplesdir share/openstudio-${OpenStudio_VERSION}/examples)
 else()
   set(examplesdir Examples)
 endif()
@@ -1131,7 +1142,7 @@ endif()
 set(CPACK_PACKAGE_VENDOR "National Renewable Energy Laboratory")
 set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
+set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH}) # This one includes the prerelease tag if any
 # set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
 
 # Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
