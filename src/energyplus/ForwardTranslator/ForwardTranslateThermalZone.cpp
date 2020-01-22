@@ -472,7 +472,7 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
       }
 
       // glare
-      double glareAngle = -openstudio::radToDeg(primaryDaylightingControl->phiRotationAroundZAxis());
+      double glareAngle = primaryDaylightingControl->phiRotationAroundZAxis();
       daylightingControlObject.setDouble(
           Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis,
           glareAngle);

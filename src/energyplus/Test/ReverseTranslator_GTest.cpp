@@ -77,6 +77,8 @@
 #include "../../model/PerformancePrecisionTradeoffs_Impl.hpp"
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
+#include "../../model/DaylightingControl.hpp"
+#include "../../model/DaylightingControl_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -99,6 +101,8 @@
 #include <utilities/idd/PerformancePrecisionTradeoffs_FieldEnums.hxx>
 #include <utilities/idd/ZoneList_FieldEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
+#include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
+#include <utilities/idd/Daylighting_ReferencePoint_FieldEnums.hxx>
 
 #include "../../utilities/time/Time.hpp"
 
@@ -967,4 +971,42 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList)
       << "Expected space2 to have a SpaceType '" << _spaceType2->nameString() << "', but it has '" << _space2->spaceType()->nameString() << "'";
 
   }
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject3(openstudio::IddObjectType::Daylighting_ReferencePoint);
+  idfObject3.setName("Reference Point 1");
+  idfObject3.setDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint, 15);
+  idfObject3.setDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint, 16.05);
+  idfObject3.setDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, 0);
+
+  openstudio::WorkspaceObject epDaylightingReferencePoint1 = workspace.addObject(idfObject3).get();
+
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::Daylighting_Controls);
+  idfObject1.setDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis, 180.0);
+  IdfExtensibleGroup group1 = idfObject1.pushExtensibleGroup();
+  group1.setString(0, "Reference Point 1");
+  group1.setDouble(1, 1);
+  group1.setDouble(2, 500);
+
+  openstudio::WorkspaceObject epDaylightingControls = workspace.addObject(idfObject1).get();
+
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::Zone);
+
+  openstudio::WorkspaceObject epZone = workspace.addObject(idfObject2).get();
+
+  EXPECT_TRUE(epDaylightingControls.setPointer(Daylighting_ControlsFields::ZoneName, epZone.handle()));
+  EXPECT_TRUE(epDaylightingReferencePoint1.setPointer(Daylighting_ReferencePointFields::ZoneName, epZone.handle()));
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<DaylightingControl> daylightingControls = model.getModelObjects<DaylightingControl>();
+  ASSERT_EQ(1u, daylightingControls.size());
+  DaylightingControl daylightingControl = daylightingControls[0];
+  EXPECT_EQ(daylightingControl.name().get(), "Reference Point 1");
+  EXPECT_EQ(daylightingControl.phiRotationAroundZAxis(), 180.0);
 }
