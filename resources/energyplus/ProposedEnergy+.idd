@@ -58852,7 +58852,7 @@ LifeCycleCost:UsePriceEscalation,
         \memo annual supplement to NIST Handbook 135 in Tables Ca-1 to Ca-5 and are included in an
         \memo EnergyPlus dataset file.
         \extensible:1
-   A1,  \field LCC Price Escalation Name
+   A1,  \field Name
         \required-field
         \type alpha
         \note The identifier used for the object. The name usually identifies the location (such as the
