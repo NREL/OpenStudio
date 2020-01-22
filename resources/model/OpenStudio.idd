@@ -9897,6 +9897,102 @@ OS:AirLoopHVAC:OutdoorAirSystem,
        \required-field
        \object-list ConnectionNames
 
+AirLoopHVAC:DedicatedOutdoorAirSystem,
+       \extensible:1 Just duplicate last field and comments (changing numbering, please)
+       \min-fields 11
+       \memo Defines a central forced air system to provide dedicated outdoor air to multiple
+       \memo AirLoopHVACs.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \required-field
+       \type alpha
+       \reference DOASAirLoops
+  A3, \field AirLoopHVAC:OutdoorAirSystem Name
+       \note Enter the name of an AirLoopHVAC:OutdoorAirSystem object.
+       \type object-list
+       \object-list validBranchEquipmentNames
+  A4, \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  A5, \field AirLoopHVAC:Mixer Name
+       \note Name of AirLoopHVAC:Mixer.
+       \object-list AirLoopHVACMixerNames
+       \required-field
+  A6, \field AirLoopHVAC:Splitter Name
+       \note Name of AirLoopHVAC:Splitter.
+       \object-list AirLoopHVACSplitterNames
+       \required-field
+  N1, \field Preheat Design Temperature
+       \required-field
+       \type real
+       \units C
+  N2, \field Preheat Design Humidity Ratio
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+  N3, \field Precool Design Temperature
+       \required-field
+       \type real
+       \units C
+  N4, \field Precool Design Humidity Ratio
+       \required-field
+       \type real
+       \units kgWater/kgDryAir
+  N5, \field Number of AirLoopHVAC
+       \required-field
+       \type integer
+       \note Enter the number of the AirLoopHAVC served by AirLoopHVAC:DedicatedOutdoorAirSystem
+  A7; \field AirLoopHVAC 1 Name
+       \note The rest of fields are extensible. It requires AirLoopHVAC names served by
+       \note an AirLoopHVAC:DedicatedOutdoorAirSystem.
+       \begin-extensible
+       \type object-list
+       \object-list AirPrimaryLoops
+
+OS:AirLoopHVAC:Mixer,
+       \extensible:1 - Just duplicate last field and comments (changing numbering, please)
+       \memo Mix N inlet air streams from Relief Air Stream Node in OutdoorAir:Mixer objects
+       \memo served by AirLoopHVAC objects listed in AirLoopHVAC:DedicatedOutdoorAirSystem into one
+       \memo (currently 10 as default, but extensible). Node names cannot
+       \memo be duplicated within a single mixer list.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \required-field
+       \reference AirLoopHVACMixerNames
+  A3, \field Outlet Node Name
+       \required-field
+       \type node
+  A4; \field Inlet 1 Node Name
+       \begin-extensible
+       \required-field
+       \type node
+
+OS:AirLoopHVAC:Splitter,
+       \extensible:1 Just duplicate last field and comments (changing numbering, please)
+       \memo Split one air stream from AirLoopHVAC:DedicatedOutdoorAirSystem outlet node into N
+       \memo outlet streams (currently 10 as default, but extensible).  Node names
+       \memo should be Outdoor Air Stream Node Name in OutdoorAir:Mixer objects served by
+       \memo AirLoopHVAC objects listed in AirLoopHVAC:DedicatedOutdoorAirSystem.
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2, \field Name
+       \required-field
+       \reference AirLoopHVACSplitterNames
+  A3, \field Inlet Node Name
+       \required-field
+       \type node
+  A4; \field Outlet 1 Node Name
+       \begin-extensible
+       \required-field
+       \type node
+
 OS:AirLoopHVAC:ReturnPlenum,
        \extensible:1 Just duplicate last field and comments (changing numbering, please)
        \min-fields 1
