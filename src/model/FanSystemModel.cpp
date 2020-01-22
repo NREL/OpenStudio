@@ -756,8 +756,6 @@ namespace detail {
 
 
   bool FanSystemModel_Impl::addSpeed(const FanSystemModelSpeed& speed) {
-    bool result;
-
     // Speeds need to be sorted...
     std::vector<FanSystemModelSpeed> s = speeds();
     s.push_back(speed);
