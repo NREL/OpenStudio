@@ -724,7 +724,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_Daylighting)
   Space space1(m);
   space1.setThermalZone(z);
 
-
   Point3dVector points;
   points.push_back(Point3d(0, 0, 0));
   points.push_back(Point3d(0, 1, 0));
@@ -772,28 +771,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_Daylighting)
   ASSERT_TRUE(sp);
   ASSERT_EQ(d_sec.illuminanceSetpoint(), sp.get());
 
-}
-
-TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_Daylighting_2)
-{
-  Model m;
-
-  ThermalZone z(m);
-  Space space1(m);
-  space1.setThermalZone(z);
-
-  DaylightingControl d_pri(m);
-  d_pri.setThetaRotationAroundYAxis(90.0);
-  d_pri.setPhiRotationAroundZAxis(180.0);
-
-  ForwardTranslator ft;
-  Workspace w = ft.translateModel(m);
-
-  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
-  ASSERT_EQ(1u, idfObjs.size());
-  WorkspaceObject idf_d(idfObjs[0]);
-
-  EXPECT_EQ(d_pri.phiRotationAroundZAxis, idf_d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
 }
 
 TEST_F(EnergyPlusFixture,ForwardTranslator_LoadDistributionScheme)
