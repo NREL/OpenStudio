@@ -22,23 +22,6 @@ string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
 # CPack package version does not support extended patch version
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 
-# README: what's the difference between all these versions?
-
-# The "OpenStudio_VERSION" ones should be used in CMakeLists.txt
-# * OpenStudio_VERSION: includes the prerelease tag if any: '3.0.0-rc1'
-# * OpenStudio_VERSION_PATCH: Patch + prelrease tag if any
-
-# The "OPENSTUDIO_VERSION" ones should only be used in OpenStudio.in (aside from using the the long version for naming the installer)
-# * OPENSTUDIO_VERSION: just major.minor.patch: '3.0.0'
-# * OPENSTUDIO_LONG_VERSION: includes prelrease and build sha: "3.0.0-rc1+ejfbxhza'
-
-# Modify the more specific variables as needed to indicate prerelease, etc
-# Keep in beta in-between release cycles
-# Remember to use the leading dash: eg "-beta", "-rc1"
-set(PROJECT_VERSION_PRERELEASE "-beta")
-string(APPEND OpenStudio_VERSION "${PROJECT_VERSION_PRERELEASE}")
-string(APPEND OpenStudio_VERSION_PATCH "${PROJECT_VERSION_PRERELEASE}")
-
 # The PROJECT_SOURCE_DIR here is OpenStudio/, which we will use instead of using CMAKE_SOURCE_DIR
 set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 # We will use BINARY_DIR instead of CMAKE_BINARY_DIR to allow this to be built as a submodule
@@ -129,6 +112,7 @@ if(NOT GIT_FOUND)
 endif()
 
 if(GIT_FOUND)
+  # Git SHA (length 10)
   execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--short=10" "HEAD"
                   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
                   TIMEOUT 10
@@ -139,6 +123,19 @@ if(GIT_FOUND)
   if(${RESULT} EQUAL 0 AND NOT "${GIT_VERSION}" EQUAL "${PROJECT_VERSION_BUILD}")
     set(PROJECT_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha
   endif()
+
+  # Git branch name
+  execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--abbrev-ref" "HEAD"
+                  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+                  TIMEOUT 10
+                  RESULT_VARIABLE RESULT
+                  OUTPUT_VARIABLE GIT_BRANCH
+                  ERROR_QUIET
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
+  if(${RESULT} EQUAL 0 AND NOT "${GIT_BRANCH}" EQUAL "${PROJECT_GIT_BRANCH}")
+    set(PROJECT_GIT_BRANCH ${GIT_BRANCH} CACHE STRING "Git Branch Name" FORCE)
+  endif()
+
 
   get_filename_component(GIT_DIR "${GIT_EXECUTABLE}" DIRECTORY)
 else()
@@ -154,15 +151,45 @@ endif()
 # Check if scope has a parent
 get_directory_property(hasParent PARENT_DIRECTORY)
 
+# README: what's the difference between all these versions?
+
+# The "OpenStudio_VERSION" ones should be used in CMakeLists.txt
+# * OpenStudio_VERSION: includes the prerelease tag if any: '3.0.0-rc1'
+# * OpenStudio_VERSION_PATCH: Patch + prelrease tag if any
+
+# The "OPENSTUDIO_VERSION" ones should only be used in OpenStudio.in (aside from using the the long version for naming the installer)
+# * OPENSTUDIO_VERSION: just major.minor.patch: '3.0.0'
+# * OPENSTUDIO_LONG_VERSION: includes prelrease and build sha: "3.0.0-rc1+ejfbxhza'
+
+# TODO: Modify the more specific variables as needed to indicate prerelease, etc
+# Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
+set(PROJECT_VERSION_PRERELEASE "beta")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
-# Long version, include prerelease and build metadata. eg '3.0.0-rc1+6383a191dc' (if you have a prerelease), or '3.0.0+6383a191dc' for an official release
-set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${PROJECT_VERSION_PRERELEASE}+${PROJECT_VERSION_BUILD}")
+
+if (NOT "${PROJECT_VERSION_PRERELEASE}" STREQUAL "")
+  message(STATUS "We have a prerelease tag set to '${PROJECT_VERSION_PRERELEASE}'")
+  if("${PROJECT_GIT_BRANCH}" STREQUAL "master")
+    message(AUTHOR_WARNING "You are building branch 'master', perhaps you shouldn't have included a pre-release tag")
+  endif()
+  string(APPEND OpenStudio_VERSION "-${PROJECT_VERSION_PRERELEASE}")
+  string(APPEND OpenStudio_VERSION_PATCH "-${PROJECT_VERSION_PRERELEASE}")
+  # Long version, include prerelease and build metadata. eg '3.0.0-rc1+6383a191dc'
+  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}-${PROJECT_VERSION_PRERELEASE}+${PROJECT_VERSION_BUILD}")
+else()
+  message(STATUS "We do not have a prerelease tag")
+  if(NOT "${PROJECT_GIT_BRANCH}" STREQUAL "master")
+    message(AUTHOR_WARNING "You are building another branch than master but you do not have a prerelease tag, consider adding one such as 'beta'")
+  endif()
+  # Long version, include build metadata. eg '3.0.0+6383a191dc' for an official release
+  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}+${PROJECT_VERSION_BUILD}")
+endif()
+
 # Export to parent scope
 if(hasParent)
-  set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}" PARENT_SCOPE)
-  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${PROJECT_VERSION_PRERELEASE}+${PROJECT_VERSION_BUILD}" PARENT_SCOPE)
+  set(OPENSTUDIO_VERSION "${OPENSTUDIO_VERSION}" PARENT_SCOPE)
+  set(OPENSTUDIO_LONG_VERSION "${OPENSTUDIO_LONG_VERSION}" PARENT_SCOPE)
 endif()
 
 # EnergyPlus Idd version
