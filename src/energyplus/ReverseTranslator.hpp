@@ -189,6 +189,8 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateFanConstantVolume(const WorkspaceObject & workspaceObject);
 
+  boost::optional<model::ModelObject> translateFanSystemModel(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateFenestrationSurfaceDetailed(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateFoundationKivaSettings(const WorkspaceObject & workspaceObject);
