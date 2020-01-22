@@ -691,6 +691,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateMaterialNoMass(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::MaterialProperty_GlazingSpectralData:
+    {
+      modelObject = translateMaterialPropertyGlazingSpectralData(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::Meter_Custom :
     {
       modelObject = translateMeterCustom(workspaceObject);

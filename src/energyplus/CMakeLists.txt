@@ -468,6 +468,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateMaterial.cpp
   ReverseTranslator/ReverseTranslateMaterialAirGap.cpp
   ReverseTranslator/ReverseTranslateMaterialNoMass.cpp
+  ReverseTranslator/ReverseTranslateMaterialPropertyGlazingSpectralData.cpp
   ReverseTranslator/ReverseTranslateMeterCustom.cpp
   ReverseTranslator/ReverseTranslateMeterCustomDecrement.cpp
   ReverseTranslator/ReverseTranslateOtherEquipment.cpp
@@ -613,6 +614,7 @@ set(${target_name}_test_src
   Test/Space_GTest.cpp
   Test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   Test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
+  Test/StandardGlazing_GTest.cpp
   Test/SubSurface_GTest.cpp
   Test/Surface_GTest.cpp
   Test/SurfacePropertyConvectionCoefficients.cpp
