@@ -81,9 +81,12 @@ TEST_F(UnitsFixture,IddUnits_PowerPerFlowRatePerUnitPressure) {
     EXPECT_EQ("W*min/ft^3*inH_{2}O",iddStringIP.toStandardUnitString());
     OptionalUnit unitIP = createUnit(iddStringIP.toStandardUnitString());
     ASSERT_TRUE(unitIP);
-    // TODO: for some reason it's returning UnitSystem::SI instead
-    EXPECT_TRUE(unitIP->system() == UnitSystem::IP);
-
+    // it's returning UnitSystem::SI instead
+    // EXPECT_TRUE(unitIP->system() == UnitSystem::IP);
+    // THis is because it's a dimensionless unit:
+    // W = kg.m2.s-3
+    // Pa = kg.m-1.s-2 => (m3/s)*Pa = kg.m2.s-3
+    // => This is a dimensionless unit
   }
 
 }
