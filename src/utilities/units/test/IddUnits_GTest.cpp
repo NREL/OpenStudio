@@ -62,3 +62,28 @@ TEST_F(UnitsFixture,IddUnits_Grams) {
   EXPECT_TRUE(unit->system() == UnitSystem::SI);
   EXPECT_EQ(-3,unit->scale().exponent);
 }
+
+TEST_F(UnitsFixture,IddUnits_PowerPerFlowRatePerUnitPressure) {
+  {
+    IddUnitString iddString("W/((m3/s)-Pa)");
+    OptionalUnit unit = createUnit(iddString.toStandardUnitString());
+    EXPECT_FALSE(unit);
+  }
+
+  {
+    IddUnitString iddString("W-s/m3-Pa");
+    EXPECT_EQ("W*s/m^3*Pa",iddString.toStandardUnitString());
+    OptionalUnit unit = createUnit(iddString.toStandardUnitString());
+    ASSERT_TRUE(unit);
+    EXPECT_TRUE(unit->system() == UnitSystem::SI);
+
+    IddUnitString iddStringIP("W-min/ft3-inH2O");
+    EXPECT_EQ("W*min/ft^3*inH_{2}O",iddStringIP.toStandardUnitString());
+    OptionalUnit unitIP = createUnit(iddStringIP.toStandardUnitString());
+    ASSERT_TRUE(unitIP);
+    // TODO: for some reason it's returning UnitSystem::SI instead
+    EXPECT_TRUE(unitIP->system() == UnitSystem::IP);
+
+  }
+
+}
