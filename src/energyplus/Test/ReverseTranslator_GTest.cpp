@@ -79,6 +79,8 @@
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 #include "../../model/StandardGlazing.hpp"
 #include "../../model/StandardGlazing_Impl.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -101,6 +103,7 @@
 #include <utilities/idd/PerformancePrecisionTradeoffs_FieldEnums.hxx>
 #include <utilities/idd/ZoneList_FieldEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
+#include <utilities/idd/WindowMaterial_Glazing_FieldEnums.hxx>
 
 #include "../../utilities/time/Time.hpp"
 
@@ -989,4 +992,53 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing) {
   StandardGlazing standardGlazing = standardGlazings[0];
   EXPECT_EQ(standardGlazing.name().get(), "CLEAR 6MM");
   EXPECT_EQ(standardGlazing.opticalDataType(), "SpectralAverage");
+  EXPECT_FALSE(standardGlazing.windowGlassSpectralDataSet());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_MaterialPropertyGlazingSpectralData) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_GlazingSpectralData);
+
+  openstudio::WorkspaceObject epSpectralData = workspace.addObject(idfObject).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<MaterialPropertyGlazingSpectralData> spectralDatas = model.getModelObjects<MaterialPropertyGlazingSpectralData>();
+  ASSERT_EQ(1u, spectralDatas.size());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing_2) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::WindowMaterial_Glazing);
+  idfObject1.setName("CLEAR 8MM");
+
+  openstudio::WorkspaceObject epWindowMaterialGlazing = workspace.addObject(idfObject1).get();
+
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::MaterialProperty_GlazingSpectralData);
+
+  openstudio::WorkspaceObject epMaterialPropertyGlazingSpectralData = workspace.addObject(idfObject2).get();
+
+  EXPECT_TRUE(epWindowMaterialGlazing.setPointer(WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName, epMaterialPropertyGlazingSpectralData.handle()));
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<StandardGlazing> standardGlazings = model.getModelObjects<StandardGlazing>();
+  ASSERT_EQ(1u, standardGlazings.size());
+  StandardGlazing standardGlazing = standardGlazings[0];
+
+  std::vector<MaterialPropertyGlazingSpectralData> spectralDatas = model.getModelObjects<MaterialPropertyGlazingSpectralData>();
+  ASSERT_EQ(1u, spectralDatas.size());
+  MaterialPropertyGlazingSpectralData spectralData = spectralDatas[0];
+
+  EXPECT_EQ(standardGlazing.name().get(), "CLEAR 8MM");
+  EXPECT_EQ(standardGlazing.opticalDataType(), "Spectral");
+  EXPECT_TRUE(standardGlazing.windowGlassSpectralDataSet());
+  EXPECT_TRUE(standardGlazing.windowGlassSpectralDataSetName());
+  EXPECT_EQ(standardGlazing.windowGlassSpectralDataSet().get().name().get(), spectralData.name().get());
 }
