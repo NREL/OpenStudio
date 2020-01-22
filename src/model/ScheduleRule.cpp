@@ -340,6 +340,30 @@ namespace detail {
     return result;
   }
 
+  bool ScheduleRule_Impl::applyWeekdays() const { return (this->applyMonday() && this->applyTuesday() && this-applyWednesday() && this->applyThursday() && this->applyFriday());
+  }
+
+  bool ScheduleRule_Impl::applyWeekends() const {
+    return (this->applySaturday() && this->applySunday());
+  }
+
+  bool ScheduleRule_Impl::applyAllDays() const {
+    return (this->applyWeekdays() && this->applyWeekends());
+  }
+
+  bool ScheduleRule_Impl::setApplyWeekdays(bool applyWeekdays) {
+    return (this->setApplyMonday(applyWeekdays) && this->setApplyTuesday(applyWeekdays) &&
+            this-setApplyWednesday(applyWeekdays) && this->setApplyThursday(applyWeekdays) && this->setApplyFriday(applyWeekdays));
+  }
+
+  bool ScheduleRule_Impl::setApplyWeekends(bool applyWeekends) {
+    return (this->setApplySaturday(applyWeekends) && this->setApplySunday(applyWeekends));
+  }
+
+  bool ScheduleRule_Impl::setApplyAllDays(bool applyAllDays) {
+    return (this->setApplyWeekdays(applyAllDays) && this->setApplyWeekends(applyAllDays));
+  }
+
   bool ScheduleRule_Impl::setStartDate(const openstudio::Date& date) {
     bool result = setString(OS_Schedule_RuleFields::DateSpecificationType, "DateRange");
     OS_ASSERT(result);
@@ -750,6 +774,30 @@ bool ScheduleRule::setApplySaturday(bool applySaturday) {
 void ScheduleRule::setApplySaturdayNoFail(bool applySaturday) {
   bool result = getImpl<detail::ScheduleRule_Impl>()->setApplySaturday(applySaturday);
   OS_ASSERT(result);
+}
+
+bool ScheduleRule::applyWeekdays() const {
+  return getImpl<detail::ScheduleRule_Impl>()->applyWeekdays();
+}
+
+bool ScheduleRule::setApplyWeekdays(bool applyWeekdays) {
+  return getImpl<detail::ScheduleRule_Impl>()->setApplyWeekdays(applyWeekdays);
+}
+
+bool ScheduleRule::applyWeekends() const {
+  return getImpl<detail::ScheduleRule_Impl>()->applyWeekends();
+}
+
+bool ScheduleRule::setApplyWeekends(bool applyWeekends) {
+  return getImpl<detail::ScheduleRule_Impl>()->setApplyWeekends(applyWeekends);
+}
+
+bool ScheduleRule::applyAllDays() const {
+  return getImpl<detail::ScheduleRule_Impl>()->applyAllDays();
+}
+
+bool ScheduleRule::setApplyAllDays(bool applyAllDays) {
+  return getImpl<detail::ScheduleRule_Impl>()->setApplyAllDays(applyAllDays);
 }
 
 bool ScheduleRule::setStartDate(const openstudio::Date& date) {

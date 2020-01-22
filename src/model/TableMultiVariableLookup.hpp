@@ -61,7 +61,7 @@ class TableMultiVariableLookupPoint {
 
   // this operator is to support sorting of TableMultiVariableLookupPoint in the order required by EnergyPlus Table:Lookup object
   bool operator<(const TableMultiVariableLookupPoint& other) const;
- 
+
  private:
   std::vector<double> m_x;
   double m_y;
@@ -305,7 +305,7 @@ class MODEL_API TableMultiVariableLookup : public Curve {
   std::vector<TableMultiVariableLookupPoint> points() const;
 
   // Directly set the points from a vector, will delete any existing points
-  bool setPoints(const std::vector<TableMultiVariableLookupPoint>& points);;
+  bool setPoints(const std::vector<TableMultiVariableLookupPoint>& points);
 
   boost::optional<double> yValue(const std::vector<double> & xValues) const;
 

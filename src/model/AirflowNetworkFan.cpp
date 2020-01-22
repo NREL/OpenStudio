@@ -30,13 +30,14 @@
 #include "AirflowNetworkFan.hpp"
 #include "AirflowNetworkFan_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "FanConstantVolume.hpp"
 #include "FanConstantVolume_Impl.hpp"
 #include "FanVariableVolume.hpp"
 #include "FanVariableVolume_Impl.hpp"
 #include "FanOnOff.hpp"
 #include "FanOnOff_Impl.hpp"
+#include "FanSystemModel.hpp"
+#include "FanSystemModel_Impl.hpp"
 #include "StraightComponent.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
@@ -97,6 +98,11 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<FanOnOff>(OS_AirflowNetworkFanFields::FanName);
   }
 
+  boost::optional<FanSystemModel> AirflowNetworkFan_Impl::fanSystemModel() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<FanSystemModel>(OS_AirflowNetworkFanFields::FanName);
+  }
+
   boost::optional<ModelObject> AirflowNetworkFan_Impl::componentModelObject() const
   {
     return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_AirflowNetworkFanFields::FanName);
@@ -136,6 +142,11 @@ boost::optional<FanVariableVolume> AirflowNetworkFan::fanVariableVolume() const
 boost::optional<FanOnOff> AirflowNetworkFan::fanOnOff() const
 {
   return getImpl<detail::AirflowNetworkFan_Impl>()->fanOnOff();
+}
+
+boost::optional<FanSystemModel> AirflowNetworkFan::fanSystemModel() const
+{
+  return getImpl<detail::AirflowNetworkFan_Impl>()->fanSystemModel();
 }
 
 void AirflowNetworkFan::resetFan()
