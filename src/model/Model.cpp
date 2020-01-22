@@ -2893,6 +2893,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(Facility);
   REGISTER_CONSTRUCTOR(FanConstantVolume);
   REGISTER_CONSTRUCTOR(FanOnOff);
+  REGISTER_CONSTRUCTOR(FanSystemModel);
   REGISTER_CONSTRUCTOR(FanVariableVolume);
   REGISTER_CONSTRUCTOR(FanZoneExhaust);
   REGISTER_CONSTRUCTOR(FFactorGroundFloorConstruction);
@@ -3381,6 +3382,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(Facility);
   REGISTER_COPYCONSTRUCTORS(FanConstantVolume);
   REGISTER_COPYCONSTRUCTORS(FanOnOff);
+  REGISTER_COPYCONSTRUCTORS(FanSystemModel);
   REGISTER_COPYCONSTRUCTORS(FanVariableVolume);
   REGISTER_COPYCONSTRUCTORS(FanZoneExhaust);
   REGISTER_COPYCONSTRUCTORS(FFactorGroundFloorConstruction);

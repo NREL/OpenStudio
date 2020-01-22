@@ -44,6 +44,7 @@
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_UnitVentilator_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -172,6 +173,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitVentilator( Z
       {
         _supplyAirFan->setString(Fan_VariableVolumeFields::AirInletNodeName,mixedAirNodeName );
         _supplyAirFan->setString(Fan_VariableVolumeFields::AirOutletNodeName,fanOutletNodeName );
+      }
+      else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_SystemModel )
+      {
+
+        _supplyAirFan->setString(Fan_SystemModelFields::AirInletNodeName,mixedAirNodeName );
+        _supplyAirFan->setString(Fan_SystemModelFields::AirOutletNodeName,fanOutletNodeName );
       }
     }
   }

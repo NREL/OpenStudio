@@ -510,23 +510,15 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFan( HVACComponent & hvacComponent )
+  bool ZoneHVACPackagedTerminalHeatPump_Impl::setSupplyAirFan( HVACComponent & fan )
   {
-    bool isAllowedType = false;
-
-    if( hvacComponent.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume )
+    if ((fan.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) ||
+        (fan.iddObjectType() == IddObjectType::OS_Fan_OnOff) ||
+        (fan.iddObjectType() == IddObjectType::OS_Fan_SystemModel))
     {
-      isAllowedType = true;
-    }
-    else if( hvacComponent.iddObjectType() == IddObjectType::OS_Fan_OnOff )
-    {
-      isAllowedType = true;
-    }
-
-    if( isAllowedType ) {
-      return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanName,hvacComponent.handle());
+      return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanName,fan.handle());
     } else {
-      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume or FanOnOff, not '" << hvacComponent.iddObjectType().valueName()
+      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume, FanOnOff or FanSystemModel, not '" << fan.iddObjectType().valueName()
              << "') for " << briefDescription());
       return false;
     }

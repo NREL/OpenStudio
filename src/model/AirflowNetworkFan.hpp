@@ -40,7 +40,7 @@ class StraightComponent;
 class FanConstantVolume;
 class FanVariableVolume;
 class FanOnOff;
-
+class FanSystemModel;
 
 namespace detail {
 
@@ -48,6 +48,7 @@ namespace detail {
   class FanConstantVolume_Impl;
   class FanVariableVolume_Impl;
   class FanOnOff_Impl;
+  class FanSystemModel_Impl;
 
 } // detail
 
@@ -70,6 +71,7 @@ class MODEL_API AirflowNetworkFan : public AirflowNetworkComponent
   boost::optional<FanConstantVolume> fanConstantVolume() const;
   boost::optional<FanVariableVolume> fanVariableVolume() const;
   boost::optional<FanOnOff> fanOnOff() const;
+  boost::optional<FanSystemModel> fanSystemModel() const;
 
   //@}
   /** @name Setters */
@@ -91,6 +93,7 @@ class MODEL_API AirflowNetworkFan : public AirflowNetworkComponent
   friend class detail::FanConstantVolume_Impl;
   friend class detail::FanVariableVolume_Impl;
   friend class detail::FanOnOff_Impl;
+  friend class detail::FanSystemModel_Impl;
 
   void resetFan();
 

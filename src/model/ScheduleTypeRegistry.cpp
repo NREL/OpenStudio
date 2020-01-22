@@ -246,6 +246,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ExteriorWaterEquipment","Exterior WaterEquipment","schedule",true,"",0.0,1.0},
     {"FanConstantVolume","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanOnOff","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"FanSystemModel","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanVariableVolume","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanZoneExhaust","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"FanZoneExhaust","Flow Fraction","flowFractionSchedule",true,"Dimensionless",0.0,1.0},

@@ -42,6 +42,7 @@
 #include <utilities/idd/AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
@@ -338,6 +339,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     } else if( _fan->iddObject().type() == IddObjectType::Fan_OnOff ) {
       _fan->setString(Fan_OnOffFields::AirInletNodeName,fanInletNodeName);
       _fan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
+    } else if( _fan->iddObject().type() == IddObjectType::Fan_SystemModel ) {
+      _fan->setString(Fan_SystemModelFields::AirInletNodeName,fanInletNodeName);
+      _fan->setString(Fan_SystemModelFields::AirOutletNodeName,fanOutletNodeName);
     }
   }
 
