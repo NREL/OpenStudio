@@ -436,8 +436,13 @@ boost::optional<VersionString> IdfFile::loadVersionOnly(std::istream& is) {
   OS_ASSERT(!idf.versionObject());
   idf.m_load(is,nullptr,true);
   if (OptionalIdfObject oVersionObject = idf.versionObject()) {
-    unsigned n = oVersionObject->numFields();
-    std::string versionString = oVersionObject->getString(n - 1,true).get();
+    unsigned n = oVersionObject->numFields() - 1; // Last Field of Object
+    // Added a prerelease field for OS:Version only... so need to differentiate
+    if (oVersionObject->iddObject().type() == IddObjectType::OS_Version) {
+      n -= 1; // penultimate, as ultimate = Prerelease tag
+    }
+    std::string versionString = oVersionObject->getString(n,true).get();
+
     if (!versionString.empty()) {
       result = VersionString(versionString);
     }
