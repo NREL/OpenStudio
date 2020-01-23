@@ -2893,6 +2893,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(Facility);
   REGISTER_CONSTRUCTOR(FanConstantVolume);
   REGISTER_CONSTRUCTOR(FanOnOff);
+  REGISTER_CONSTRUCTOR(FanSystemModel);
   REGISTER_CONSTRUCTOR(FanVariableVolume);
   REGISTER_CONSTRUCTOR(FanZoneExhaust);
   REGISTER_CONSTRUCTOR(FFactorGroundFloorConstruction);
@@ -3152,6 +3153,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(ZoneMixing);
   REGISTER_CONSTRUCTOR(ZonePropertyUserViewFactorsBySurfaceName);
   REGISTER_CONSTRUCTOR(ZoneVentilationDesignFlowRate);
+  REGISTER_CONSTRUCTOR(ZoneVentilationWindandStackOpenArea);
 
 #define REGISTER_COPYCONSTRUCTORS(_className) \
   m_copyMap[_className::iddObjectType()] = [](openstudio::model::detail::Model_Impl * m, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>& ptr, bool keepHandle) { \
@@ -3380,6 +3382,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(Facility);
   REGISTER_COPYCONSTRUCTORS(FanConstantVolume);
   REGISTER_COPYCONSTRUCTORS(FanOnOff);
+  REGISTER_COPYCONSTRUCTORS(FanSystemModel);
   REGISTER_COPYCONSTRUCTORS(FanVariableVolume);
   REGISTER_COPYCONSTRUCTORS(FanZoneExhaust);
   REGISTER_COPYCONSTRUCTORS(FFactorGroundFloorConstruction);
@@ -3639,6 +3642,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(ZoneMixing);
   REGISTER_COPYCONSTRUCTORS(ZonePropertyUserViewFactorsBySurfaceName);
   REGISTER_COPYCONSTRUCTORS(ZoneVentilationDesignFlowRate);
+  REGISTER_COPYCONSTRUCTORS(ZoneVentilationWindandStackOpenArea);
 }
 
 const detail::Model_Impl::ModelObjectCreator detail::Model_Impl::modelObjectCreator;

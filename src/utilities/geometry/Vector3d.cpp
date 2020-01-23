@@ -110,6 +110,11 @@ namespace openstudio{
     return (m_storage == other.m_storage);
   }
 
+  /// check inequality
+  bool Vector3d::operator!=(const Vector3d& other) const {
+    return (m_storage != other.m_storage);
+  }
+
   /// ostream operator
   std::ostream& operator<<(std::ostream& os, const Vector3d& vec)
   {
@@ -174,6 +179,16 @@ namespace openstudio{
       result = true;
     }
     return result;
+  }
+
+  /// orthogonal right
+  Vector3d Vector3d::orthogonalRight() const {
+    return Vector3d(m_storage[1], -m_storage[0], m_storage[2]);
+  }
+
+  /// orthogonal left
+  Vector3d Vector3d::orthogonalLeft() const {
+    return Vector3d(-m_storage[1], m_storage[0], m_storage[2]);
   }
 
   /// dot product with another Vector3d

@@ -102,6 +102,11 @@ namespace openstudio{
     return (m_storage == other.m_storage);
   }
 
+  /// check inequality
+  bool Point3d::operator!=(const Point3d& other) const {
+    return (m_storage != other.m_storage);
+  }
+
   /// ostream operator
   std::ostream& operator<<(std::ostream& os, const Point3d& point)
   {

@@ -142,8 +142,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExampleModel) {
   EXPECT_EQ(0u, forwardTranslator.errors().size());
   EXPECT_EQ(1u,workspace.getObjectsByType(IddObjectType::Version).size());
 
-  model.save(toPath("./example.osm"), true);
-  workspace.save(toPath("./example.idf"), true);
+  // model.save(toPath("./example.osm"), true);
+  // workspace.save(toPath("./example.idf"), true);
 }
 
 
@@ -328,7 +328,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateStandardOpaqueMaterial) 
   mat.setThickness(0.0125);
   mat.setThermalConductivity(0.5);
   mat.setDensity(3.5);
-  mat.setSpecificHeat(2.5);
+  mat.setSpecificHeat(1400.0);
   mat.setThermalAbsorptance(0.9);
   mat.setSolarAbsorptance(0.7);
   mat.setVisibleAbsorptance(0.7);
@@ -348,7 +348,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateStandardOpaqueMaterial) 
   EXPECT_EQ( 0.0125, *(matIdf.getDouble(2)) );
   EXPECT_EQ( 0.5, *(matIdf.getDouble(3)) );
   EXPECT_EQ( 3.5, *(matIdf.getDouble(4)) );
-  EXPECT_EQ( 2.5, *(matIdf.getDouble(5)) );
+  EXPECT_EQ( 1400.0, *(matIdf.getDouble(5)) );
   EXPECT_EQ( 0.9, *(matIdf.getDouble(6)) );
   EXPECT_EQ( 0.7, *(matIdf.getDouble(7)) );
   EXPECT_EQ( 0.7, *(matIdf.getDouble(8)) );

@@ -446,6 +446,7 @@ def parse_main_args(main_args)
 
   Gem.paths.path << ':/ruby/2.5.0/gems/'
   Gem.paths.path << ':/ruby/2.5.0/bundler/gems/'
+  Gem::Deprecate.skip = true
 
   # find all the embedded gems
   original_embedded_gems = {}

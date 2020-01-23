@@ -106,6 +106,12 @@ namespace detail {
     /// Returns true if the winter design day is defaulted.
     bool isWinterDesignDayScheduleDefaulted() const;
 
+    /// Returns the holiday schedule.
+    ScheduleDay holidaySchedule() const;
+
+    /// Returns true if the holiday schedule is defaulted.
+    bool isHolidayScheduleDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -121,6 +127,12 @@ namespace detail {
 
     /// Resets the winter design day schedule.
     void resetWinterDesignDaySchedule();
+
+    /// Sets the holiday schedule.
+    bool setHolidaySchedule(const ScheduleDay& schedule);
+
+    /// Resets the holiday schedule.
+    void resetHolidaySchedule();
 
     //@}
     /** @name Other */

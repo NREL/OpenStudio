@@ -48,6 +48,7 @@
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -162,9 +163,13 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctSeri
   {
     idfObject.setString(AirTerminal_SingleDuct_SeriesPIU_ReheatFields::FanName,_fan->name().get());
 
-    _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,mixerOutletNodeName);
-
-    _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName);
+    if (_fan->iddObject().type() == IddObjectType::Fan_ConstantVolume) {
+      _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName, mixerOutletNodeName);
+      _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName, fanOutletNodeName);
+    } else if (_fan->iddObject().type() == IddObjectType::Fan_SystemModel) {
+      _fan->setString(Fan_SystemModelFields::AirInletNodeName, mixerOutletNodeName);
+      _fan->setString(Fan_SystemModelFields::AirOutletNodeName, fanOutletNodeName);
+    }
   }
 
   // ReheatCoilName

@@ -1,35 +1,15 @@
 .idea
 .ruby-version
 .bundle
-.vs
 test_gems
 test_fails.txt
-# Ignore build folders, no matter where in the tree they might be
-build/
-build_debug/
-build-debug/
-build-meta/
-build_release/
-build-release/
-build_64/
-build-64/
-build-relwithdebinfo/
-build_relwithdebinfo/
-build_profile/
-build-profile/
-core-build/
-super-build/
-super-build-release/
-/super-build-shared/
-/super-build-static/
-
-*.sublime-workspace
-
-*.sublime-project
-cmake-build-debug
+# Ignore build folders (at root level only)
+/build*/
 
 developer/msvc/Visualizers/all_concat.natvis
 .vscode/
 .vs/
+*.sublime-workspace
+*.sublime-projet
 *.cache
 

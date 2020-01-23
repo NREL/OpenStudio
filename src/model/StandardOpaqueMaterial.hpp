@@ -49,12 +49,12 @@ class MODEL_API StandardOpaqueMaterial : public OpaqueMaterial {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit  StandardOpaqueMaterial(const Model& model,
-                           std::string roughness = "Smooth",
-                           double thickness = 0.1,
-                           double conductivity = 0.1,
-                           double density = 0.1,
-                           double specificHeat = 0.1);
+  explicit StandardOpaqueMaterial(const Model& model,
+                                  std::string roughness = "Smooth",
+                                  double thickness = 0.1,
+                                  double conductivity = 0.1,
+                                  double density = 0.1,
+                                  double specificHeat = 1400);
 
   virtual ~StandardOpaqueMaterial() {}
 

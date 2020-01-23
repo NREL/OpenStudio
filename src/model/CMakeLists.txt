@@ -720,6 +720,9 @@ set(${target_name}_src
   FanOnOff.hpp
   FanOnOff_Impl.hpp
   FanOnOff.cpp
+  FanSystemModel.hpp
+  FanSystemModel_Impl.hpp
+  FanSystemModel.cpp
   FanVariableVolume.hpp
   FanVariableVolume_Impl.hpp
   FanVariableVolume.cpp
@@ -1595,6 +1598,9 @@ set(${target_name}_src
   ZoneVentilationDesignFlowRate.hpp
   ZoneVentilationDesignFlowRate_Impl.hpp
   ZoneVentilationDesignFlowRate.cpp
+  ZoneVentilationWindandStackOpenArea.hpp
+  ZoneVentilationWindandStackOpenArea_Impl.hpp
+  ZoneVentilationWindandStackOpenArea.cpp
 )
 
 set(${target_name}_swig_src
@@ -1852,6 +1858,7 @@ set(${target_name}_test_src
   test/FanConstantVolume_GTest.cpp
   test/FanZoneExhaust_GTest.cpp
   test/FanOnOff_GTest.cpp
+  test/FanSystemModel_GTest.cpp
   test/FenestrationMaterial_GTest.cpp
   test/FloorplanJSForwardTranslator_GTest.cpp
   test/FluidCoolerSingleSpeed_GTest.cpp
@@ -2023,6 +2030,7 @@ set(${target_name}_test_src
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  test/SurfacePropertyOtherSideCoefficients_GTest.cpp
   test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
@@ -2067,6 +2075,7 @@ set(${target_name}_test_src
   test/ZoneMixing_GTest.cpp
   test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   test/ZoneVentilationDesignFlowRate_GTest.cpp
+  test/ZoneVentilationWindandStackOpenArea_GTest.cpp
 )
 
 set(${target_name}_test_depends

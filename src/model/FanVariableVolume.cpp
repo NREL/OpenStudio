@@ -27,8 +27,6 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "FanConstantVolume.hpp"
-#include "FanConstantVolume_Impl.hpp"
 #include "FanVariableVolume.hpp"
 #include "FanVariableVolume_Impl.hpp"
 #include "AirLoopHVAC.hpp"

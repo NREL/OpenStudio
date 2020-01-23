@@ -534,7 +534,7 @@ int main(int argc, char *argv[])
     #endif
 
     // openstudio
-     init_openstudio_internal();
+    init_openstudio_internal();
   }
 
   // DLM: this will interpret any strings passed on the command line as UTF-8
@@ -544,8 +544,6 @@ int main(int argc, char *argv[])
 
   // chop off the first argument which is the exe path/name
   ruby_set_argv(argc - 1,argv + 1);
-
-  // DLM: we could restore external encoding here, argv is already tagged with encoding
 
   try{
     rubyInterpreter.evalString(R"(

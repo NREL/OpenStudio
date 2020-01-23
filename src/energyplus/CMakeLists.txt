@@ -171,6 +171,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateExternalInterfaceVariable.cpp
   ForwardTranslator/ForwardTranslateFanConstantVolume.cpp
   ForwardTranslator/ForwardTranslateFanOnOff.cpp
+  ForwardTranslator/ForwardTranslateFanSystemModel.cpp
   ForwardTranslator/ForwardTranslateFanVariableVolume.cpp
   ForwardTranslator/ForwardTranslateFanZoneExhaust.cpp
   ForwardTranslator/ForwardTranslateFFactorGroundFloorConstruction.cpp
@@ -390,6 +391,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateZoneMixing.cpp
   ForwardTranslator/ForwardTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
   ForwardTranslator/ForwardTranslateZoneVentilationDesignFlowRate.cpp
+  ForwardTranslator/ForwardTranslateZoneVentilationWindandStackOpenArea.cpp
   ForwardTranslator/CreateAirLoopHVACSupplyPath.cpp
   ForwardTranslator/CreateAirLoopHVACReturnPath.cpp
 
@@ -452,6 +454,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateExteriorFuelEquipment.cpp
   ReverseTranslator/ReverseTranslateExteriorWaterEquipment.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
+  ReverseTranslator/ReverseTranslateFanSystemModel.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
   ReverseTranslator/ReverseTranslateFoundationKiva.cpp
   ReverseTranslator/ReverseTranslateFoundationKivaSettings.cpp
@@ -528,6 +531,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateZoneMixing.cpp
   ReverseTranslator/ReverseTranslateZonePropertyUserViewFactorsBySurfaceName.cpp
   ReverseTranslator/ReverseTranslateZoneVentilationDesignFlowRate.cpp
+  ReverseTranslator/ReverseTranslateZoneVentilationWindandStackOpenArea.cpp
 )
 
 set(${target_name}_test_src
@@ -584,6 +588,7 @@ set(${target_name}_test_src
   Test/ExternalInterfaceFT_GTest.cpp
   Test/FanConstantVolume_GTest.cpp
   Test/FanVariableVolume_GTest.cpp
+  Test/FanSystemModel_GTest.cpp
   Test/FuelCell_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
@@ -621,6 +626,7 @@ set(${target_name}_test_src
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
   Test/ZoneHVACTerminalUnitVariableRefrigerantFlow_GTest.cpp
   Test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
+  Test/ZoneVentilationWindandStackOpenArea_GTest.cpp
 )
 
 set(${target_name}_swig_src
@@ -686,7 +692,7 @@ CREATE_SRC_GROUPS("${${target_name}_src}")
 if(BUILD_TESTING)
 
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
-  
+
   add_dependencies(${target_name}_tests
     ResultsViewer_resources
     openstudio_energyplus_resources

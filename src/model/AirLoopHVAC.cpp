@@ -43,8 +43,8 @@
 #include "FanConstantVolume_Impl.hpp"
 #include "FanVariableVolume.hpp"
 #include "FanVariableVolume_Impl.hpp"
-#include "FanOnOff.hpp"
-#include "FanOnOff_Impl.hpp"
+#include "FanSystemModel.hpp"
+#include "FanSystemModel_Impl.hpp"
 #include "SizingSystem.hpp"
 #include "SizingSystem_Impl.hpp"
 #include "Node.hpp"
@@ -1435,6 +1435,11 @@ namespace detail {
       auto variableVolumeFans = subsetCastVector<FanVariableVolume>(comps);
       if( ! variableVolumeFans.empty() ) {
         result = variableVolumeFans.back();
+      } else {
+        auto systemModelFans = subsetCastVector<FanSystemModel>(comps);
+        if( ! systemModelFans.empty() ) {
+          result = systemModelFans.back();
+        }
       }
     }
 
