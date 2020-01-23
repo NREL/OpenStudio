@@ -436,12 +436,16 @@ boost::optional<VersionString> IdfFile::loadVersionOnly(std::istream& is) {
   OS_ASSERT(!idf.versionObject());
   idf.m_load(is,nullptr,true);
   if (OptionalIdfObject oVersionObject = idf.versionObject()) {
-    unsigned n = oVersionObject->numFields() - 1; // Last Field of Object
-    // Added a prerelease field for OS:Version only... so need to differentiate
-    if (oVersionObject->iddObject().type() == IddObjectType::OS_Version) {
-      n -= 1; // penultimate, as ultimate = Prerelease tag
+    unsigned n = oVersionObject->numFields();
+    // Note: oVersionObject->iddObject().type() == Catchall, so m_fields[0] is either "OS:Version" or "Version"
+    // Added a prerelease field for OS:Version only... I could explicitly test if OS:Version, but it has more fields than the E+ one,
+    // so testing if n==4 is enough, and will be faster
+    // if (openstudio::istringEqual("OS:VERSION", oVersionObject->getString(0, false).get())) {
+    if (n == 4) { // This is m_fields.size, which includes "OS:Version" itself. So if n == 4, you do have a prerelease tag
+      --n; // penultimate, as ultimate = Prerelease tag
     }
-    std::string versionString = oVersionObject->getString(n,true).get();
+
+    std::string versionString = oVersionObject->getString(n - 1,true).get();
 
     if (!versionString.empty()) {
       result = VersionString(versionString);
