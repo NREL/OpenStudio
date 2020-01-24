@@ -9972,6 +9972,7 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
         \required-field
         \type object-list
         \object-list FansCVandOnOff
+        \note Accepts only Fan:ConstantVolume, Fan:Off, but not Fan:SystemModel
    A8,  \field Supply Air Fan Placement
         \required-field
         \type choice
@@ -10236,6 +10237,10 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir,
        \type object-list
        \required-field
        \object-list FansCVandOnOff
+       \note Accepts only Fan:ConstantVolume, Fan:Off, but not Fan:SystemModel
+       \note Fan:ConstantVolume only works with continuous fan operating mode (i.e. fan
+       \note operating mode schedule values are greater than 0 or the fan operating mode
+       \note schedule name field is left blank).
   A8, \field Heating Coil Name
        \note Needs to match in the DX heating coil object
        \type object-list
@@ -10360,6 +10365,7 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
    A10, \field Supply Air Fan
         \type object-list
         \object-list FansCVandOnOff
+        \object-list FansSystemModel
         \required-field
    A11, \field Supply Air Fan Placement
         \required-field
@@ -10483,8 +10489,18 @@ OS:AirLoopHVAC:UnitarySystem,
        \note Enter the node name used as the outlet air node for the unitary system.
   A9, \field Supply Fan Name
        \type object-list
-       \object-list FansCVandOnOffandVAV
+       \object-list Fans
        \note Enter the name of the supply air fan if included in the unitary system.
+       \note Fan:ConstantVolume only works with continuous fan operating mode (i.e. supply
+       \note air fan operating mode schedule values greater than 0).
+       \note Specify a Fan:SystemModel or a Fan:OnOff object when the Supply Air Fan Operating Mode Schedule Name
+       \note input field above is left blank.
+       \note Specify a Fan:SystemModel or a Fan:VariableVolume when modeling VAV systems which used setpoint based control
+       \note if the fan is included in the unitary system object.
+       \note The ComponentModel fan type may be substituted for the ConstantVolume or VariableVolume
+       \note fan types when more detailed fan modeling is required.
+       \note The variable or constant volume fan may be specified on the branch instead of contained
+       \note within the unitary system object (i.e., this field may be blank for certain configurations).
   A10, \field Fan Placement
        \type choice
        \key BlowThrough
@@ -11101,10 +11117,11 @@ OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
        \type object-list
        \object-list ZoneMixers
   A9,  \field Fan Name
-       \note Fan type must be Fan:ConstantVolume
+       \note Fan type must be Fan:SystemModel or Fan:ConstantVolume
        \required-field
        \type object-list
        \object-list FansCV
+       \object-list FansSystemModel
   A10, \field Reheat Coil Name
        \required-field
        \type object-list
@@ -11175,9 +11192,10 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \type object-list
        \object-list ZoneMixers
   A9, \field Fan Name
-       \note Fan type must be Fan:ConstantVolume
+       \note Fan type must be Fan:SystemModel or Fan:ConstantVolume
        \type object-list
        \object-list FansCV
+       \object-list FansSystemModel
   A11, \field Reheat Coil Name
        \type object-list
        \object-list HeatingCoilName
@@ -16303,7 +16321,6 @@ OS:Coil:Heating:DX:SingleSpeed,
   N5, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \units C
-       \minimum -20
        \default -8.0
   N6, \field Maximum Outdoor Dry-Bulb Temperature for Defrost Operation
        \type real
@@ -20103,11 +20120,7 @@ OS:Fan:SystemModel,
   A2 , \field Name
        \required-field
        \reference Fans
-       \reference FansCV
-       \reference FansCVandOnOff
-       \reference FansVAV
-       \reference FansCVandVAV
-       \reference FansCVandOnOffandVAV
+       \reference FansSystemModel
        \reference ConnectionObject
   A3 , \field Availability Schedule Name
        \note Availability schedule name for this fan. Schedule value > 0 means the fan is available.
@@ -20400,10 +20413,9 @@ OS:Fan:OnOff,
        \type alpha
        \required-field
        \reference Fans
-       \reference FansOnOff
-       \reference FansCV
        \reference FansCVandOnOff
-       \reference FansCVandVAV
+       \reference FansOnOff
+       \reference FansOnOffandVAV
        \reference FansCVandOnOffandVAV
        \reference ConnectionObject
   A3, \field Availability Schedule Name
@@ -24042,6 +24054,14 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \required-field
         \type object-list
         \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
+        \note Fan type must be according to capacity control method (see I/O)
+        \note For ConstantFanVariableFlow a Fan:OnOff or Fan:ConstantVolume is valid.
+        \note For CyclingFan a Fan:OnOff is valid.
+        \note For VariableFanVariableFlow or VariableFanConstantFlow a Fan:VariableVolume is valid.
+        \note For ASHRAE90.1 a Fan:OnOff or Fan:VariableVolume is valid.
+        \note Fan:SystemModel is valid for all capacity control methods.
+        \note The fan's inlet node should be the same as the outdoor air mixer's mixed air node.
    A11, \field Cooling Coil Name
         \required-field
         \type object-list
@@ -24320,6 +24340,8 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \type object-list
        \required-field
        \object-list FansCVandOnOff
+       \object-list FansSystemModel
+       \note Fan:ConstantVolume only works with fan operating mode is continuous.
   A9, \field Heating Coil Name
        \note Needs to match in the DX Heating Coil object.
        \type object-list
@@ -24467,6 +24489,10 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \type object-list
        \required-field
        \object-list FansCVandOnOff
+       \object-list FansSystemModel
+       \note Fan:ConstantVolume only works when continuous fan operation is used the entire
+       \note simulation (all supply air fan operating mode schedule values are greater than 0).
+       \note If any fan operating mode schedule values are 0 a Fan:SystemModel or Fan:OnOff object must be used.
   A9, \field Heating Coil Name
        \note Needs to match in the heating coil object.
        \type object-list
@@ -24564,7 +24590,14 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
   A8 ,  \field Supply Air Fan
         \required-field
         \type object-list
-        \object-list FansCVandOnOff
+        \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
+        \note Supply Air Fan Object Type must be Fan:SystemModel, Fan:OnOff, or Fan:ConstantVolume
+        \note if AirConditioner:VariableRefrigerantFlow is used to model VRF outdoor unit
+        \note Supply Air Fan Object Type must be Fan:SystemModel or Fan:VariableVolume if
+        \note AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl or
+        \note AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR
+        \note is used to model VRF outdoor unit
   A9 ,  \field Outside Air Mixer
         \type object-list
         \object-list OutdoorAirMixers
@@ -24698,10 +24731,11 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \units m3/s
         \minimum 0
    A7,  \field Supply Air Fan Name
-        \note Needs to match Fan:OnOff object
         \required-field
         \type object-list
-        \object-list FansCVandOnOff
+        \object-list FansOnOff
+        \object-list FansSystemModel
+        \note Needs to match Fan:SystemModel or Fan:OnOff object
    A8, \field Heating Coil Name
         \note  Needs to match in the water-to-air heatpump heating coil object
         \type object-list
@@ -24820,8 +24854,8 @@ OS:ZoneHVAC:UnitHeater,
        \required-field
        \type object-list
        \object-list FansCVandOnOffandVAV
-       \note Allowable fan types are Fan:ConstantVolume, Fan:OnOff and
-       \note Fan:VariableVolume
+       \object-list FansSystemModel
+       \note Allowable fan types are Fan:ConstantVolume, Fan:OnOff, Fan:VariableVolume and Fan:SystemModel
   N1 , \field Maximum Supply Air Flow Rate
        \note Must be less than or equal to fan size.
        \type real
@@ -24959,14 +24993,16 @@ OS:ZoneHVAC:EnergyRecoveryVentilator,
         \note This flow rate must match the supply fan air flow rate.
   A5 ,  \field Supply Air Fan Name
         \required-field
-        \note Fan type must be Fan:OnOff
+        \note Fan type must be Fan:OnOff or Fan:SystemModel
         \type object-list
         \object-list FansOnOff
+        \object-list FansSystemModel
   A6 ,  \field Exhaust Air Fan Name
         \required-field
-        \note Fan type must be Fan:OnOff
+        \note Fan type must be Fan:OnOff or Fan:SystemModel
         \type object-list
         \object-list FansOnOff
+        \object-list FansSystemModel
   A7 ,  \field Controller Name
         \note Enter the name of a ZoneHVAC:EnergyRecoveryVentilator:Controller object.
         \type object-list
@@ -25126,6 +25162,8 @@ OS:ZoneHVAC:UnitVentilator,
         \required-field
         \type object-list
         \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
+        \note Allowable fan types are Fan:ConstantVolume, Fan:OnOff, Fan:VariableVolume, and Fan:SystemModel
    A10, \field Supply Air Fan Operating Mode Schedule Name
         \type object-list
         \object-list ScheduleNames
@@ -25691,7 +25729,10 @@ OS:WaterHeater:HeatPump,
        \required-field
        \type object-list
        \object-list FansOnOff
-       \note Needs to match the name used in the corresponding Fan:OnOff object.
+       \object-list FansSystemModel
+       \note Needs to match the name used in the corresponding Fan:SystemModel or Fan:OnOff object.
+       \note Specify the type of fan used by this heat pump water heater. The only
+       \note valid choices are Fan:SystemModel or Fan:OnOff.
   A16, \field Fan Placement
        \type choice
        \key BlowThrough
@@ -26127,7 +26168,10 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
        \required-field
        \type object-list
        \object-list FansOnOff
-       \note Needs to match the name used in the corresponding Fan:OnOff object.
+       \object-list FansSystemModel
+       \note Needs to match the name used in the corresponding Fan:SystemModel or Fan:OnOff object.
+       \note Specify the type of fan used by this heat pump water heater. The only
+       \note valid choices are Fan:SystemModel or Fan:OnOff.
   A16, \field Fan Placement
        \type choice
        \key BlowThrough
@@ -31503,6 +31547,7 @@ OS:AirflowNetworkFan,
       \required-field
       \type object-list
       \object-list FansCVandOnOffandVAV
+      \object-list FansSystemModel
       \note Enter the name of the fan in the primary air loop.
 
 OS:AirflowNetworkEquivalentDuct,
