@@ -156,9 +156,13 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEnergyRecoveryVen
       // Exhaust Air Fan Inlet and Outlet Nodes
       if( _exhaustAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
       {
-
         _exhaustAirFan->setString(Fan_OnOffFields::AirInletNodeName,exhaustFanInletNodeName );
         _exhaustAirFan->setString(Fan_OnOffFields::AirOutletNodeName,exhaustFanOutletNodeName );
+      } else if (_exhaustAirFan->iddObject().type() == IddObjectType::Fan_SystemModel) {
+        _exhaustAirFan->setString(Fan_SystemModelFields::AirInletNodeName,exhaustFanInletNodeName );
+        _exhaustAirFan->setString(Fan_SystemModelFields::AirOutletNodeName,exhaustFanOutletNodeName );
+      } else {
+        LOG(Error, modelObject.briefDescription() << " is attached to an unsupported type of fan: " << exhaustAirFan.briefDescription() );
       }
     }
   }
