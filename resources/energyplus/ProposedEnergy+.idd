@@ -746,7 +746,7 @@ ZoneAirMassFlowConservation,
        \memo infiltration object mass flow rates.
        \memo If either mixing or infiltration is active, then the zone air mass flow
        \memo balance calculation will attempt to enforce conservation of mass for each zone.
-       \memo If mixing is No and infiltration is None, then the zone air mass flow
+       \memo If mixing is "No" and infiltration is "None", then the zone air mass flow
        \memo calculation defaults to assume self-balanced simple flow mixing and infiltration objects.
        \unique-object
        \min-fields 3
@@ -4213,7 +4213,7 @@ WindowMaterial:Blind:EquivalentLayer,
   N3 , \field Slat Crown
        \note Perpendicular length between the cord and the curve.
        \note Slat is assumed to be rectangular in cross section
-       \note and flat. Crown=0.0625xSlat width
+       \note and flat. Crown=0.0625x"Slat width"
        \type real
        \units m
        \minimum 0
@@ -4724,11 +4724,10 @@ WindowMaterial:Gap:EquivalentLayer,
        \key Sealed
        \key VentedIndoor
        \key VentedOutdoor
-       \reference GapVentTypeName
        \note Sealed means the gap is enclosed and gas tight, i.e., no venting to indoor or
        \note outdoor environment.  VentedIndoor means the gap is vented to indoor environment, and
        \note VentedOutdoor means the gap is vented to the outdoor environment. The gap types
-       \note VentedIndoor and VentedOutdoor are used with gas type Air only.
+       \note VentedIndoor and VentedOutdoor are used with gas type "Air" only.
   N2 , \field Conductivity Coefficient A
        \units W/m-K
        \type real
@@ -24433,11 +24432,11 @@ ZoneHVAC:UnitHeater,
         \key Yes
         \key No
         \note This choice field allows the user to define how the unit heater will operate
-        \note under no heating load or cooling conditions. If the No is selected, then
+        \note under "no heating load" or cooling conditions. If the "No" is selected, then
         \note the fan will not run unless there is a heating load. If the fan does not run,
         \note this effectively shuts the unit heater system off when there is no heating load.
-        \note If the Yes is selected, the unit heater is available and has a ConstantVolume
-        \note fan, or has an OnOff fan with Supply Air Fan Operating Mode Schedule value
+        \note If the "Yes" is selected, the unit heater is available and has a ConstantVolume
+        \note fan, or has an OnOff fan with "Supply Air Fan Operating Mode Schedule" value
         \note greater than zero, then the fan will always run regardless of the zone load.
    N2 , \field Maximum Hot Water or Steam Flow Rate
         \note Not used when heating coil is gas or electric
@@ -45033,7 +45032,7 @@ EvaporativeFluidCooler:SingleSpeed,
        \default 0.008
        \units percent
        \note Rate of drift loss as a percentage of circulating spray water flow rate
-       \note Default value for this field is under investigation. For now Cooling towers drift loss
+       \note Default value for this field is under investigation. For now Cooling tower's drift loss
        \note percent default value is taken here.
   A8 , \field Blowdown Calculation Mode
        \type choice
@@ -45048,7 +45047,7 @@ EvaporativeFluidCooler:SingleSpeed,
        \note Blowdown is water intentionally drained from the basin in order to offset the build
        \note up of solids in the water that would otherwise occur because of evaporation.
        \note Ratio of solids in the blowdown water to solids in the make up water.
-       \note Default value for this field is under investigation. For now Cooling towers
+       \note Default value for this field is under investigation. For now Cooling tower's
        \note Blowdown Concentration Ratio percent default value is taken here.
   A9 , \field Blowdown Makeup Water Usage Schedule Name
        \type object-list
@@ -45274,7 +45273,7 @@ EvaporativeFluidCooler:TwoSpeed,
        \type real
        \units percent
        \default 0.008
-       \note Default value is under investigation. For now cooling towers default value is taken.
+       \note Default value is under investigation. For now cooling tower's default value is taken.
   A7 , \field Blowdown Calculation Mode
        \type choice
        \key ConcentrationRatio
@@ -45288,7 +45287,7 @@ EvaporativeFluidCooler:TwoSpeed,
        \note Blowdown is water intentionally drained from the Evaporative Fluid Cooler in order to offset the
        \note build up of solids in the water that would otherwise occur because of evaporation.
        \note Ratio of solids in the blowdown water to solids in the make up water.
-       \note Default value is under investigation. For now cooling towers default value is taken.
+       \note Default value is under investigation. For now cooling tower's default value is taken.
   A8 , \field Blowdown Makeup Water Usage Schedule Name
        \type object-list
        \object-list ScheduleNames
