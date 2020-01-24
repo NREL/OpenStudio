@@ -38664,8 +38664,8 @@ AirLoopHVAC:OutdoorAirSystem:EquipmentList,
        \begin-extensible
        \required-field
        \note TODO: reference-class-name not supported
-       !\type object-list
-       !\object-list validOASysEquipmentTypes
+       \note type object-list
+       \note object-list validOASysEquipmentTypes
   A3 ; \field Component 1 Name
        \required-field
        \type object-list
@@ -38956,8 +38956,8 @@ Branch,
         \begin-extensible
         \required-field
         \note TODO: reference-class-name not supported
-        !\type object-list
-        !\object-list validBranchEquipmentTypes
+        \note type object-list
+        \note object-list validBranchEquipmentTypes
    A4,  \field Component 1 Name
         \required-field
         \type object-list
@@ -48093,8 +48093,8 @@ PlantEquipmentList,
   A2 , \field Equipment 1 Object Type
        \begin-extensible
        \note TODO: reference-class-name not supported
-       !\type object-list
-       !\object-list validPlantEquipmentTypes
+       \note type object-list
+       \note object-list validPlantEquipmentTypes
   A3 ; \field Equipment 1 Name
        \type object-list
        \object-list validPlantEquipmentNames
@@ -48115,8 +48115,8 @@ CondenserEquipmentList,
   A2 , \field Equipment 1 Object Type
        \begin-extensible
        \note TODO: reference-class-name not supported
-       !\type object-list
-       !\object-list validCondenserEquipmentTypes
+       \note type object-list
+       \note object-list validCondenserEquipmentTypes
   A3 ; \field Equipment 1 Name
        \type object-list
        \object-list validCondenserEquipmentNames
