@@ -47,12 +47,19 @@ IddUnitString::IddUnitString (const std::string &s)
 
   // basic replacements
   m_converted = boost::regex_replace(m_converted,boost::regex("-"),"*");
-  if (!boost::regex_search(m_converted,boost::regex("H2O"))) {
-    m_converted = boost::regex_replace(m_converted,boost::regex("([2-9]+)"),"^\\1");
-  }
-  else {
-    m_converted = boost::regex_replace(m_converted,boost::regex("H2O"),"H_{2}O");
-  }
+
+  // If H2O, convert to H_{2}O
+  m_converted = boost::regex_replace(m_converted,boost::regex("H2O"),"H_{2}O");
+
+  // Now, replace numbers by exponents, excluding the stuff that's preceding by curly brace `{` or a litteral `^`
+  // I use a negative lookbehind for that condition. Standard regex flavor: (?<![{\^])([2-9]+)
+  // The entire regex can be tested in regular flavor using this:
+  //    "(?<![{\^])([2-9]+)"
+  // ft3 => ft^3
+  // ft^3 => no match
+  // inH_{2}O => no match
+  m_converted = boost::regex_replace(m_converted,boost::regex("(?<![\\^\\{])([2-9]+)"),"^\\1");
+
   m_converted = boost::regex_replace(m_converted,boost::regex("deltaC"),"K");
   m_converted = boost::regex_replace(m_converted,boost::regex("minutes"),"min");
   m_converted = boost::regex_replace(m_converted,boost::regex("dimensionless"),"");

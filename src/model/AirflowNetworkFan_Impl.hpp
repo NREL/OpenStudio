@@ -40,6 +40,7 @@ class StraightComponent;
 class FanConstantVolume;
 class FanVariableVolume;
 class FanOnOff;
+class FanSystemModel;
 
 namespace detail {
 
@@ -88,6 +89,8 @@ namespace detail {
     boost::optional<FanConstantVolume> fanConstantVolume() const;
     boost::optional<FanVariableVolume> fanVariableVolume() const;
     boost::optional<FanOnOff> fanOnOff() const;
+    boost::optional<FanSystemModel> fanSystemModel() const;
+
 
     //@}
     /** @name Setters */

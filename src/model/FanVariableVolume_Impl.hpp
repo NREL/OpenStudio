@@ -39,6 +39,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class AirflowNetworkFan;
 
 namespace detail {
 

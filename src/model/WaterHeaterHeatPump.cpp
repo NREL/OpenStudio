@@ -37,6 +37,7 @@
 #include "WaterHeaterStratified_Impl.hpp"
 #include "FanOnOff.hpp"
 #include "FanOnOff_Impl.hpp"
+// #include "FanSystemModel.hpp"
 #include "CoilWaterHeatingAirToWaterHeatPump.hpp"
 #include "CoilWaterHeatingAirToWaterHeatPump_Impl.hpp"
 #include "Schedule.hpp"

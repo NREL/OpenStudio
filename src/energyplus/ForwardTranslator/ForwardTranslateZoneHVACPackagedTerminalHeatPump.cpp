@@ -46,6 +46,7 @@
 #include <utilities/idd/ZoneHVAC_PackagedTerminalHeatPump_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
@@ -255,6 +256,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
           _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,mixedAirNodeName);
           _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
         }
+        else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_SystemModel )
+        {
+          _supplyAirFan->setString(Fan_SystemModelFields::AirInletNodeName,mixedAirNodeName);
+          _supplyAirFan->setString(Fan_SystemModelFields::AirOutletNodeName,fanOutletNodeName);
+        }
       } else {
         if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
         {
@@ -266,8 +272,14 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
           _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,airInletNodeName);
           _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
         }
+        else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_SystemModel )
+        {
+          _supplyAirFan->setString(Fan_SystemModelFields::AirInletNodeName,airInletNodeName);
+          _supplyAirFan->setString(Fan_SystemModelFields::AirOutletNodeName,fanOutletNodeName);
+        }
       }
     } else {
+      // Drawthrough position
       if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_ConstantVolume )
       {
         _supplyAirFan->setString(Fan_ConstantVolumeFields::AirInletNodeName,heatingCoilOutletNodeName);
@@ -277,6 +289,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
       {
         _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,heatingCoilOutletNodeName);
         _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
+      }
+      else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_SystemModel )
+      {
+        _supplyAirFan->setString(Fan_SystemModelFields::AirInletNodeName,heatingCoilOutletNodeName);
+        _supplyAirFan->setString(Fan_SystemModelFields::AirOutletNodeName,fanOutletNodeName);
       }
     }
   }

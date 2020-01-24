@@ -142,7 +142,7 @@ boost::optional<IdfObject> ForwardTranslator::translateFanOnOff( FanOnOff & mode
 
   // A5 , Field Air Outlet Node Name
 
-  if( boost::optional<ModelObject> ouletModelObject = modelObject.inletModelObject() )
+  if( boost::optional<ModelObject> ouletModelObject = modelObject.outletModelObject() )
   {
     if( boost::optional<Node> ouletNode = ouletModelObject->optionalCast<Node>() )
     {
