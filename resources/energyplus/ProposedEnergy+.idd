@@ -355,7 +355,7 @@
 !      hr
 !      J/J
 !      kg/kg
-!      kg-H2O/kg-air
+!      kgWater/kgDryAir
 !      kmol
 !      kmol/s
 !      m3/m3
@@ -490,7 +490,7 @@ Building,
        \key Urban
        \default Suburbs
   N2 , \field Loads Convergence Tolerance Value
-       \note Loads Convergence Tolerance Value is a fraction of load
+       \note Loads Convergence Tolerance Value is a change in load from one warmup day to the next
        \type real
        \minimum> 0.0
        \maximum .5
@@ -519,6 +519,8 @@ Building,
   N5 ; \field Minimum Number of Warmup Days
        \note The minimum number of warmup days that produce enough temperature and flux history
        \note to start EnergyPlus simulation for all reference buildings was suggested to be 6.
+       \note However this can lead to excessive run times as warmup days can be repeated needlessly.
+       \note For faster execution rely on the convergence criteria to detect when warmup is complete.
        \note When this field is greater than the maximum warmup days defined previous field
        \note the maximum number of warmup days will be reset to the minimum value entered here.
        \note Warmup days will be set to be the value you entered when it is less than the default 6.
@@ -1225,7 +1227,6 @@ SizingPeriod:WeatherFileConditionType,
        \memo details on these periods, see AuxiliaryPrograms document.
   A1 , \field Name
        \required-field
-       \reference DesignDays
        \reference RunPeriodsAndDesignDays
        \note user supplied name for reporting
   A2 , \field Period Selection
@@ -2498,7 +2499,6 @@ Schedule:Day:Interval,
        \required-field
        \type alpha
        \reference DayScheduleNames
-       \reference ScheduleAndDayScheduleNames
   A2 , \field Schedule Type Limits Name
        \type object-list
        \object-list ScheduleTypeLimitsNames
@@ -2543,8 +2543,8 @@ Schedule:Day:List,
        \minimum 1
        \maximum 60
   N2;  \field Value 1
-       \default 0.0
        \begin-extensible
+       \default 0.0
 
 Schedule:Week:Daily,
   \min-fields 13
@@ -5269,7 +5269,7 @@ Construction:InternalSource,
        \units m
        \note uniform spacing between tubes or resistance wires in direction
        \note perpendicular to main intended direction of heat transfer
-  A2 ; \field Layer
+  A2 ; \field Outside Layer
        \required-field
        \type object-list
        \object-list MaterialName
@@ -5922,6 +5922,7 @@ RoofCeiling:Detailed,
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
        \reference RadiantSurfaceNames
+       \reference AllShadingAndHTSurfNames
   A2 , \field Construction Name
        \required-field
        \note To be matched with a construction in this input file
@@ -6818,7 +6819,6 @@ Window:Interzone,
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
        \reference AllShadingAndHTSurfNames
-       \reference RadGroupAndSurfNames
   A2 , \field Construction Name
        \required-field
        \note To be matched with a construction in this input file
@@ -6914,7 +6914,6 @@ GlazedDoor:Interzone,
        \reference OutFaceEnvNames
        \reference AllHeatTranAngFacNames
        \reference AllShadingAndHTSurfNames
-       \reference RadGroupAndSurfNames
   A2 , \field Construction Name
        \required-field
        \note To be matched with a construction in this input file
@@ -12019,7 +12018,6 @@ ZoneContaminantSourceAndSink:Generic:CutoffModel,
   A1 , \field Name
        \required-field
        \type alpha
-       \reference GenericContaminantGenerationNames
   A2 , \field Zone Name
        \required-field
        \type object-list
@@ -25545,6 +25543,8 @@ ZoneHVAC:CoolingPanel:RadiantConvective:Water,
        \min-fields 18
   A1 , \field Name
        \required-field
+       \reference-class-name validBranchEquipmentTypes
+       \reference validBranchEquipmentNames
        \reference ZoneEquipmentNames
   A2 , \field Availability Schedule Name
        \required-field
@@ -31117,7 +31117,6 @@ Coil:Heating:DX:VariableSpeed,
    \extensible:7
    \min-fields 25
    \max-fields 88
-        \memo This object is used for variable speed DX coil in heating mode using performance curves.
    A1,  \field Name
         \required-field
         \type alpha
@@ -48090,7 +48089,7 @@ PlantEquipmentList,
   A2 , \field Equipment 1 Object Type
        \begin-extensible
        \note type object-list
-       \note object-list validPlantEquipmentTypes not currently supported
+       \note TODO: object-list validPlantEquipmentTypes not currently supported
   A3 ; \field Equipment 1 Name
        \type object-list
        \object-list validPlantEquipmentNames
@@ -48111,7 +48110,7 @@ CondenserEquipmentList,
   A2 , \field Equipment 1 Object Type
        \begin-extensible
        \note type object-list
-       \note object-list validCondenserEquipmentTypes not currently supported
+       \note TODO: object-list validCondenserEquipmentTypes not currently supported
   A3 ; \field Equipment 1 Name
        \type object-list
        \object-list validCondenserEquipmentNames
