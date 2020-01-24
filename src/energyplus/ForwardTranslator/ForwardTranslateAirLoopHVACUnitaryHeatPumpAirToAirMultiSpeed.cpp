@@ -340,8 +340,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
       _fan->setString(Fan_OnOffFields::AirInletNodeName,fanInletNodeName);
       _fan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
     } else if( _fan->iddObject().type() == IddObjectType::Fan_SystemModel ) {
+      // This isn't supported by E+ right now
       _fan->setString(Fan_SystemModelFields::AirInletNodeName,fanInletNodeName);
       _fan->setString(Fan_SystemModelFields::AirOutletNodeName,fanOutletNodeName);
+      OS_ASSERT(false);
     }
   }
 
