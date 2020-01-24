@@ -14466,7 +14466,8 @@ AirflowNetwork:Distribution:Component:Fan,
  A1 , \field Fan Name
       \required-field
       \type object-list
-      \object-list Fans
+      \object-list FansCVandOnOffandVAV
+      \object-list FansSystemModel
       \reference AirflowNetworkComponentNames
       \note Enter the name of the fan in the primary air loop.
  A2 ; \field Supply Fan Object Type
@@ -23230,6 +23231,7 @@ ZoneHVAC:FourPipeFanCoil,
         \required-field
         \type object-list
         \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
    A11, \field Cooling Coil Object Type
         \required-field
         \type choice
@@ -23362,6 +23364,7 @@ ZoneHVAC:WindowAirConditioner,
         \note and fan type Fan:OnOff is used with cycling Fan.
         \type object-list
         \object-list FansCVandOnOff
+        \object-list FansSystemModel
    A9,  \field Cooling Coil Object Type
         \required-field
         \type choice
@@ -23505,6 +23508,7 @@ ZoneHVAC:PackagedTerminalAirConditioner,
         \required-field
         \type object-list
         \object-list FansCVandOnOff
+        \object-list FansSystemModel
         \note Needs to match in the fan object.
    A9 , \field Heating Coil Object Type
         \required-field
@@ -23677,6 +23681,7 @@ ZoneHVAC:PackagedTerminalHeatPump,
         \required-field
         \type object-list
         \object-list FansCVandOnOff
+        \object-list FansSystemModel
         \note Needs to match a fan object.
    A9 , \field Heating Coil Object Type
         \required-field
@@ -23879,6 +23884,7 @@ ZoneHVAC:WaterToAirHeatPump,
         \required-field
         \type object-list
         \object-list FansOnOff
+        \object-list FansSystemModel
         \note Needs to match Fan:SystemModel or Fan:OnOff object
    A9,  \field Heating Coil Object Type
         \required-field
@@ -24131,11 +24137,13 @@ ZoneHVAC:EnergyRecoveryVentilator,
         \note Fan type must be Fan:OnOff or Fan:SystemModel
         \type object-list
         \object-list FansOnOff
+        \object-list FansSystemModel
   A5 ,  \field Exhaust Air Fan Name
         \required-field
         \note Fan type must be Fan:OnOff or Fan:SystemModel
         \type object-list
         \object-list FansOnOff
+        \object-list FansSystemModel
   A6 ,  \field Controller Name
         \note Enter the name of a ZoneHVAC:EnergyRecoveryVentilator:Controller object.
         \type object-list
@@ -24315,8 +24323,8 @@ ZoneHVAC:UnitVentilator,
    A12, \field Supply Air Fan Name
         \required-field
         \type object-list
-        \object-list FansCVandVAV
         \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
    A13, \field Coil Option
         \required-field
         \type choice
@@ -24394,7 +24402,8 @@ ZoneHVAC:UnitHeater,
    A6 , \field Supply Air Fan Name
         \required-field
         \type object-list
-        \object-list FansCVandVAV
+        \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
    N1 , \field Maximum Supply Air Flow Rate
         \required-field
         \units m3/s
@@ -24981,16 +24990,18 @@ ZoneHVAC:OutdoorAirUnit,
        \note Allowable fan types are Fan:SystemModel and Fan:ConstantVolume and Fan:VariableVolume
        \type object-list
        \object-list FansCVandVAV
+       \object-list FansSystemModel
   A6, \field Supply Fan Placement
       \type choice
       \key BlowThrough
       \key DrawThrough
       \default DrawThrough
    A7, \field Exhaust Fan Name
-       \note Allowable fan types are Fan:ConstantVolume and
+       \note Allowable fan types are Fan:SystemModel and Fan:ConstantVolume and Fan:VariableVolume
        \note Fan:VariableVolume
        \type object-list
        \object-list FansCVandVAV
+       \object-list FansSystemModel
    N2, \field Exhaust Air Flow Rate
        \units m3/s
        \autosizable
@@ -25158,6 +25169,7 @@ ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \required-field
         \type object-list
         \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
   A9 ,  \field Outside Air Mixer Object Type
         \type choice
         \key OutdoorAir:Mixer
@@ -26412,6 +26424,7 @@ ZoneHVAC:VentilatedSlab,
        \note Allowable fan types are Fan:SystemModel and Fan:ConstantVolume
        \type object-list
        \object-list FansCV
+       \object-list FansSystemModel
   A26, \field Coil Option Type
        \required-field
        \type choice
@@ -26905,6 +26918,7 @@ AirTerminal:SingleDuct:VAV:Reheat:VariableSpeedFan,
        \required-field
        \type object-list
        \object-list FansVAV
+       \object-list FansSystemModel
   A7,  \field Heating Coil Object Type
        \required-field
        \type choice
@@ -27080,6 +27094,7 @@ AirTerminal:SingleDuct:SeriesPIU:Reheat,
        \note Fan type must be Fan:SystemModel or Fan:ConstantVolume
        \type object-list
        \object-list FansCV
+       \object-list FansSystemModel
   A9,  \field Reheat Coil Object Type
        \required-field
        \type choice
@@ -27162,6 +27177,7 @@ AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \note Fan type must be Fan:SystemModel or Fan:ConstantVolume
        \type object-list
        \object-list FansCV
+       \object-list FansSystemModel
   A9,  \field Reheat Coil Object Type
        \required-field
        \type choice
@@ -27938,11 +27954,7 @@ Fan:SystemModel,
   A1 , \field Name
        \required-field
        \reference Fans
-       \reference FansCV
-       \reference FansCVandOnOff
-       \reference FansVAV
-       \reference FansCVandVAV
-       \reference FansCVandOnOffandVAV
+       \reference FansSystemModel
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
        \reference-class-name validOASysEquipmentTypes
@@ -28308,7 +28320,7 @@ Fan:ZoneExhaust,
 FanPerformance:NightVentilation,
        \memo Specifies an alternate set of performance parameters for a fan. These alternate
        \memo parameters are used when a system manager (such as AvailabilityManager:NightVentilation)
-       \memo sets a specified flow rate.  May be used with any type of fan except not with
+       \memo sets a specified flow rate.  May be used with Fan:ConstantVolume, Fan:VariableVolume and
        \memo Fan:ComponentModel. If the fan model senses that a fixed flow rate has been set, it
        \memo will use these alternate performance parameters. It is assumed that the fan will
        \memo run at a fixed speed in the alternate mode.
@@ -28316,6 +28328,7 @@ FanPerformance:NightVentilation,
        \required-field
        \type object-list
        \object-list FansCVandVAV
+       \object-list FansComponentModel
   N1 , \field Fan Total Efficiency
        \type real
        \required-field
@@ -28349,6 +28362,7 @@ Fan:ComponentModel,
   A1 , \field Name
        \required-field
        \reference Fans
+       \reference FansComponentModel
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
        \reference-class-name validOASysEquipmentTypes
@@ -34592,6 +34606,7 @@ Dehumidifier:Desiccant:NoFans,
        \note Name of fan object for regeneration air
        \type object-list
        \object-list FansCVandVAV
+       \object-list FansSystemModel
   A12, \field Performance Model Type
        \note Specifies whether the default performance model or user-specified
        \note curves should be used to model the performance.  The default model
@@ -34721,6 +34736,7 @@ Dehumidifier:Desiccant:System,
        \required-field
        \type object-list
        \object-list FansOnOffandVAV
+       \object-list FansSystemModel
   A8,  \field Regeneration Air Fan Placement
        \type choice
        \key BlowThrough
@@ -36007,6 +36023,7 @@ AirLoopHVAC:Unitary:Furnace:HeatCool,
         \required-field
         \type object-list
         \object-list CoolingCoilsDXSingleSpeed
+        \object-list CoolingCoilsDXVariableSpeed
    A14, \field Dehumidification Control Type
         \type choice
         \key None
@@ -36691,6 +36708,7 @@ AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
         \required-field
         \type object-list
         \object-list FansCVandOnOff
+        \object-list FansSystemModel
         \note Enter the name of the supply air fan used in this unitary system.
    A12, \field Supply Air Fan Placement
         \required-field
@@ -47083,6 +47101,7 @@ WaterHeater:HeatPump:PumpedCondenser,
        \required-field
        \type object-list
        \object-list FansOnOff
+       \object-list FansSystemModel
        \note Needs to match the name used in the corresponding Fan:SystemModel or Fan:OnOff object.
   A24, \field Fan Placement
        \type choice
@@ -47334,6 +47353,7 @@ WaterHeater:HeatPump:WrappedCondenser,
        \required-field
        \type object-list
        \object-list FansOnOff
+       \object-list FansSystemModel
        \note Needs to match the name used in the corresponding Fan:SystemModel or Fan:OnOff object.
   A22, \field Fan Placement
        \type choice
@@ -56034,11 +56054,13 @@ FaultModel:Fouling:AirFilter,
        \key Fan:OnOff
        \key Fan:ConstantVolume
        \key Fan:VariableVolume
+       \key Fan:SystemModel
    A3, \field Fan Name
        \note Enter the name of a fan object
        \required-field
        \type object-list
        \object-list FansCVandOnOffandVAV
+       \object-list FansSystemModel
    A4, \field Availability Schedule Name
        \type object-list
        \object-list ScheduleNames
