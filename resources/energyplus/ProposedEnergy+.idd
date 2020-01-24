@@ -48209,8 +48209,7 @@ PlantEquipmentOperation:OutdoorDryBulb,
    A2 ;\field Range 1 Equipment List Name
         \required-field
         \type object-list
-        \object-list PlantAndCondenserEquipmentLists ! remove?
-        \object-list CondenserEquipmentLists
+        \object-list PlantAndCondenserEquipmentLists
 
 
 PlantEquipmentOperation:OutdoorWetBulb,
@@ -48239,8 +48238,7 @@ PlantEquipmentOperation:OutdoorWetBulb,
    A2 ;\field Range 1 Equipment List Name
         \required-field
         \type object-list
-        \object-list PlantAndCondenserEquipmentLists ! remove?
-        \object-list CondenserEquipmentLists
+        \object-list PlantAndCondenserEquipmentLists
 
 PlantEquipmentOperation:OutdoorRelativeHumidity,
        \memo Plant equipment operation scheme for outdoor relative humidity range operation.
@@ -48268,8 +48266,7 @@ PlantEquipmentOperation:OutdoorRelativeHumidity,
    A2 ;\field Range 1 Equipment List Name
         \required-field
         \type object-list
-        \object-list PlantAndCondenserEquipmentLists ! remove?
-        \object-list CondenserEquipmentLists
+        \object-list PlantAndCondenserEquipmentLists
 
 PlantEquipmentOperation:OutdoorDewpoint,
        \memo Plant equipment operation scheme for outdoor dewpoint temperature range operation.
@@ -48297,8 +48294,7 @@ PlantEquipmentOperation:OutdoorDewpoint,
    A2 ;\field Range 1 Equipment List Name
         \required-field
         \type object-list
-        \object-list PlantAndCondenserEquipmentLists ! remove?
-        \object-list CondenserEquipmentLists
+        \object-list PlantAndCondenserEquipmentLists
 
 PlantEquipmentOperation:ComponentSetpoint,
        \memo Plant equipment operation scheme for component setpoint operation. Specifies one or
@@ -48702,8 +48698,7 @@ PlantEquipmentOperation:OutdoorDryBulbDifference,
    A3 ;\field Range 1 Equipment List Name
        \required-field
        \type object-list
-       \object-list PlantAndCondenserEquipmentLists ! remove?
-       \object-list CondenserEquipmentLists
+       \object-list PlantAndCondenserEquipmentLists
 
 PlantEquipmentOperation:OutdoorWetBulbDifference,
        \memo Plant equipment operation scheme for outdoor wet-bulb temperature difference
@@ -48735,8 +48730,7 @@ PlantEquipmentOperation:OutdoorWetBulbDifference,
    A3 ;\field Range 1 Equipment List Name
        \required-field
        \type object-list
-       \object-list PlantAndCondenserEquipmentLists ! remove?
-       \object-list CondenserEquipmentLists
+       \object-list PlantAndCondenserEquipmentLists
 
 
 PlantEquipmentOperation:OutdoorDewpointDifference,
@@ -48769,8 +48763,7 @@ PlantEquipmentOperation:OutdoorDewpointDifference,
    A3 ;\field Range 1 Equipment List Name
        \required-field
        \type object-list
-       \object-list PlantAndCondenserEquipmentLists ! remove?
-       \object-list CondenserEquipmentLists
+       \object-list PlantAndCondenserEquipmentLists
 
 
 PlantEquipmentOperationSchemes,
