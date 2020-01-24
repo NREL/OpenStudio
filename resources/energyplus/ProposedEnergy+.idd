@@ -351,6 +351,7 @@
 !      deg
 !      dimensionless
 !      eV
+!      hh:mm
 !      hr
 !      J/J
 !      kg/kg
@@ -5417,17 +5418,17 @@ Construction:ComplexFenestrationState,
        \type object-list
        \object-list DataMatrices
        \required-field
-  A10, \field Layer Name
+  A10, \field Outside Layer Name
        \required-field
        \type object-list
        \object-list CFSGlazingName
        \object-list WindowComplexShades
        \begin-extensible
-  A11, \field Layer Directional Front Absoptance Matrix Name
+  A11, \field Outside Layer Directional Front Absoptance Matrix Name
        \required-field
        \type object-list
        \object-list DataMatrices
-  A12, \field Layer Directional Back Absoptance Matrix Name
+  A12, \field Outside Layer Directional Back Absoptance Matrix Name
        \required-field
        \type object-list
        \object-list DataMatrices
@@ -5863,6 +5864,7 @@ Wall:Detailed,
        \note specify current surface name for internal partition separating like zones
        \note If Zone, specify the name of the corresponding zone and
        \note the program will generate the corresponding interzone surface
+       \note If Foundation, specify the name of the corresponding Foundation object and
        \note If OtherSideCoefficients, specify name of SurfaceProperty:OtherSideCoefficients
        \note If OtherSideConditionsModel, specify name of SurfaceProperty:OtherSideConditionsModel
   A6 , \field Sun Exposure
@@ -5907,7 +5909,7 @@ Wall:Detailed,
        \type real
 
 RoofCeiling:Detailed,
-  \memo Allows for detailed entry of wall heat transfer surfaces.
+  \memo Allows for detailed entry of roof/ceiling heat transfer surfaces.
   \extensible:3 -- duplicate last set of x,y,z coordinates (last 3 fields), remembering to remove ; from "inner" fields.
   \min-fields 18
   \format vertices
@@ -11343,7 +11345,7 @@ GasEquipment,
   N3 , \field Power per Person
        \type real
        \minimum 0
-       \units W/Person
+       \units W/person
        \ip-units Btu/h-person
   N4 , \field Fraction Latent
        \type real
@@ -11420,7 +11422,7 @@ HotWaterEquipment,
   N3 , \field Power per Person
        \type real
        \minimum 0
-       \units W/Person
+       \units W/person
        \ip-units Btu/h-person
   N4 , \field Fraction Latent
        \type real
@@ -11484,7 +11486,7 @@ SteamEquipment,
   N3 , \field Power per Person
        \type real
        \minimum 0
-       \units W/Person
+       \units W/person
        \ip-units Btu/h-person
   N4 , \field Fraction Latent
        \type real
@@ -11563,7 +11565,7 @@ OtherEquipment,
        \ip-units Btu/h-ft2
   N3 , \field Power per Person
        \type real
-       \units W/Person
+       \units W/person
        \ip-units Btu/h-person
   N4 , \field Fraction Latent
        \type real
@@ -23948,6 +23950,8 @@ ZoneHVAC:WaterToAirHeatPump,
         \type real
         \units C
         \autosizable
+        \default autosize
+        \note Supply air temperature from the supplemental heater will not exceed this value.
    N12, \field Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation
         \type real
         \maximum 21.0
@@ -30760,7 +30764,6 @@ Coil:Heating:DX:SingleSpeed,
        \note only required if ReverseCycle defrost strategy is specified
   N5 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
-       \minimum -20.0
        \default -8.0
        \units C
   N6 , \field Outdoor Dry-Bulb Temperature to Turn On Compressor
@@ -30975,7 +30978,6 @@ Coil:Heating:DX:MultiSpeed,
        \key Electricity
        \key NaturalGas
        \key Propane
-       \key PropaneGas
        \key Diesel
        \key Gasoline
        \key FuelOil#1
@@ -36000,8 +36002,7 @@ AirLoopHVAC:Unitary:Furnace:HeatCool,
         \key Coil:Cooling:DX:SingleSpeed
         \key Coil:Cooling:DX:VariableSpeed
         \key CoilSystem:Cooling:DX:HeatExchangerAssisted
-        \note  Only works with DX cooling coil types or
-        \note Coil:Cooling:DX:VariableSpeed.
+        \note  Only works with DX cooling coil types
    A13, \field Cooling Coil Name
         \required-field
         \type object-list
@@ -39803,8 +39804,8 @@ Pump:ConstantSpeed,
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
        \default 1.282051282
-       \note units W/((m3/s)-Pa)
-       \note ip-units W/((gal/min)-ftH20)
+       \units W-s/m3-Pa
+       \ip-units W-min/gal-ftH2O
        \minimum> 0
   A9;  \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
@@ -39898,8 +39899,8 @@ Pump:VariableSpeed:Condensate,
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
        \default 1.282051282
-       \note units W/((m3/s)-Pa)
-       \note ip-units W/((gal/min)-ftH20)
+       \units W-s/m3-Pa
+       \ip-units W-min/gal-ftH2O
        \minimum> 0
   A7;  \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
@@ -39998,8 +39999,8 @@ HeaderedPumps:ConstantSpeed,
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
        \default 1.282051282
-       \note units W/((m3/s)-Pa)
-       \note ip-units W/((gal/min)-ftH20)
+       \units W-s/m3-Pa
+       \ip-units W-min/gal-ftH2O
        \minimum> 0
   A9;  \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
@@ -40111,8 +40112,8 @@ HeaderedPumps:VariableSpeed,
        \type real
        \note Used to size Design Power Consumption from design flow rate for head and motor efficiency
        \default 1.282051282
-       \note units W/((m3/s)-Pa)
-       \note ip-units W/((gal/min)-ftH20)
+       \units W-s/m3-Pa
+       \ip-units W-min/gal-ftH2O
        \minimum> 0
   A9;  \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
@@ -40826,14 +40827,17 @@ Boiler:Steam,
        \key OtherFuel1
        \key OtherFuel2
   N1 , \field Maximum Operating Pressure
+       \required-field
        \units Pa
        \default 160000
   N2 , \field Theoretical Efficiency
+       \required-field
        \type real
        \minimum> 0.0
        \maximum 1.0
        \default 0.8
   N3 , \field Design Outlet Steam Temperature
+       \required-field
        \units C
        \default 100
   N4 , \field Nominal Capacity
@@ -42606,6 +42610,7 @@ HeatPump:WaterToWater:EIR:Cooling,
    N1,  \field Load Side Reference Flow Rate
         \note This component is currently a constant-flow device, meaning it will always
         \note try to request the full design flow from the central plant manager.
+        \required-field
         \type real
         \minimum> 0.0
         \units m3/s
@@ -42613,6 +42618,7 @@ HeatPump:WaterToWater:EIR:Cooling,
         \autosizable
         \default autosize
    N2,  \field Source Side Reference Flow Rate
+        \required-field
         \type real
         \minimum> 0.0
         \units m3/s
@@ -42620,17 +42626,20 @@ HeatPump:WaterToWater:EIR:Cooling,
         \autosizable
         \default autosize
    N3,  \field Reference Capacity
+        \required-field
         \type real
         \minimum> 0.0
         \units W
         \autosizable
         \default autosize
    N4,  \field Reference Coefficient of Performance
+        \required-field
         \type real
         \minimum> 0.0
         \default 7.5
         \units W/W
    N5,  \field Sizing Factor
+        \required-field
         \note Multiplies the autosized capacity and flow rates
         \type real
         \minimum> 0.0
@@ -42694,6 +42703,7 @@ HeatPump:WaterToWater:EIR:Heating,
    N1,  \field Load Side Reference Flow Rate
         \note This component is currently a constant-flow device, meaning it will always
         \note try to request the full design flow from the central plant manager.
+        \required-field
         \type real
         \minimum> 0.0
         \units m3/s
@@ -42701,6 +42711,7 @@ HeatPump:WaterToWater:EIR:Heating,
         \autosizable
         \default autosize
    N2,  \field Source Side Reference Flow Rate
+        \required-field
         \type real
         \minimum> 0.0
         \units m3/s
@@ -42708,18 +42719,21 @@ HeatPump:WaterToWater:EIR:Heating,
         \autosizable
         \default autosize
    N3,  \field Reference Capacity
+        \required-field
         \type real
         \minimum> 0.0
         \units W
         \autosizable
         \default autosize
    N4,  \field Reference Coefficient of Performance
+        \required-field
         \type real
         \minimum> 0.0
         \default 7.5
         \units W/W
    N5,  \field Sizing Factor
         \note Multiplies the autosized capacity and flow rates
+        \required-field
         \type real
         \minimum> 0.0
         \default 1.0
@@ -45002,7 +45016,7 @@ EvaporativeFluidCooler:SingleSpeed,
        \default 0.008
        \units percent
        \note Rate of drift loss as a percentage of circulating spray water flow rate
-       \note Default value for this field in under investigation. For now Cooling towers drift loss
+       \note Default value for this field is under investigation. For now Cooling towers drift loss
        \note percent default value is taken here.
   A8 , \field Blowdown Calculation Mode
        \type choice
@@ -45017,7 +45031,7 @@ EvaporativeFluidCooler:SingleSpeed,
        \note Blowdown is water intentionally drained from the basin in order to offset the build
        \note up of solids in the water that would otherwise occur because of evaporation.
        \note Ratio of solids in the blowdown water to solids in the make up water.
-       \note Default value for this field in under investigation. For now Cooling towers
+       \note Default value for this field is under investigation. For now Cooling towers
        \note Blowdown Concentration Ratio percent default value is taken here.
   A9 , \field Blowdown Makeup Water Usage Schedule Name
        \type object-list
@@ -46835,8 +46849,8 @@ WaterHeater:Sizing,
        \minimum 1
   N6 , \field Storage Capacity per Person
        \type real
-       \units m3/Person
-       \ip-units gal/Person
+       \units m3/person
+       \ip-units gal/person
        \note Only used for Design Mode = PerPerson
        \minimum 0.0
   N7 , \field Recovery Capacity per Person
