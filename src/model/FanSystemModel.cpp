@@ -212,8 +212,7 @@ namespace detail {
   }
 
   boost::optional <double> FanSystemModel_Impl::autosizedDesignMaximumAirFlowRate() {
-    // TODO: double check
-    return getAutosizedValue("Design Size Maximum Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Design Maximum Air Flow Rate", "m3/s");
   }
 
   std::string FanSystemModel_Impl::speedControlMethod() const {
@@ -260,7 +259,7 @@ namespace detail {
   }
 
   boost::optional <double> FanSystemModel_Impl::autosizedDesignElectricPowerConsumption() {
-    return getAutosizedValue("TODO_CHECK_SQL Design Electric Power Consumption", "W");
+    return getAutosizedValue("Design Electric Power Consumption", "W");
   }
 
   std::string FanSystemModel_Impl::designPowerSizingMethod() const {
