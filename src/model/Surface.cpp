@@ -924,8 +924,6 @@ namespace detail {
     if (test){
       test = this->setString(OS_SurfaceFields::OutsideBoundaryCondition, "OtherSideCoefficients");
       OS_ASSERT(test);
-      this->assignDefaultSunExposure();
-      this->assignDefaultWindExposure();
     }
     return test;
   }
