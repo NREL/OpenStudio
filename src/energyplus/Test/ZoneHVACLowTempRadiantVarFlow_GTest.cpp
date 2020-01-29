@@ -167,7 +167,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Crash_no_constructions) 
   PlantLoop clg_loop(m);
   PlantLoop htg_loop(m);
 
-  Workspace w = ft.translateModel(m);
+  ASSERT_NO_THROW(ft.translateModel(m));
 
   // Make a radiant low temperature system
   Schedule alwaysOn = m.alwaysOnDiscreteSchedule();

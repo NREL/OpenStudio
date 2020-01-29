@@ -193,7 +193,7 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
 
 }
 
-TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_surfacs) {
+TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_surfaces) {
 
   Model m;
 
@@ -211,10 +211,6 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_surfacs) {
   // make a zone, add the space
   ThermalZone z(m);
   _space1->setThermalZone(z);
-
-  // make some plant loops
-  PlantLoop clg_loop(m);
-  PlantLoop htg_loop(m);
 
   // Make a radiant low temperature system
   ScheduleConstant availabilitySched(m);
@@ -241,6 +237,7 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_surfacs) {
   CoilHeatingLowTempRadiantConstFlow htg_coil(m,heatingHighWaterTempSched,heatingLowWaterTempSched,heatingHighControlTempSched,heatingLowControlTempSched);
 
   ZoneHVACLowTempRadiantConstFlow testRad(m, availabilitySched, htg_coil,clg_coil);
+  EXPECT_TRUE(testRad.setRadiantSurfaceType("AllSurfaces"));
   EXPECT_TRUE(testRad.addToThermalZone(z));
 
   // The surfaces don't have any constructions assigned
@@ -264,6 +261,5 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_surfacs) {
 
   // The surfaces have constructions, with  internal source
   ASSERT_NO_THROW(testRad.surfaces());
-  EXPECT_EQ(5u, testRad.surfaces().size());
+  EXPECT_EQ(6u, testRad.surfaces().size());
 }
-
