@@ -30,7 +30,7 @@ foreach( _FILE ${EXTENSION_RB} )
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
-set(GEMFILE_FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock")
+set(GEMFILE_FILES "${OPENSTUDIO_GEMS_DIR}/openstudio-gems.gemspec" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock")
 file(GLOB_RECURSE RB_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.rb")
 file(GLOB_RECURSE ERB_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.erb")
 file(GLOB_RECURSE JS_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.js")
@@ -189,10 +189,10 @@ set_source_files_properties(EmbeddedScripting.i
   PROPERTIES CPLUSPLUS true
 )
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR} 
-  ${PROJECT_BINARY_DIR} 
-  ${PROJECT_SOURCE_DIR} 
-  ${CMAKE_CURRENT_SOURCE_DIR} 
+include_directories(${CMAKE_CURRENT_BINARY_DIR}
+  ${PROJECT_BINARY_DIR}
+  ${PROJECT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}
   ${OPENSTUDIO_GEMS_DIR}
 )
 

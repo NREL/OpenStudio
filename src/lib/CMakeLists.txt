@@ -42,17 +42,7 @@ target_link_libraries(
 target_link_libraries(
  openstudiolib
  INTERFACE
- CONAN_PKG::boost_core
- CONAN_PKG::boost_filesystem
- CONAN_PKG::boost_crc
- CONAN_PKG::boost_regex
- CONAN_PKG::boost_algorithm
- CONAN_PKG::boost_uuid
- CONAN_PKG::boost_log
- CONAN_PKG::boost_program_options
- CONAN_PKG::boost_numeric_ublas
- CONAN_PKG::boost_functional
- CONAN_PKG::boost_geometry
+ CONAN_PKG::boost
  CONAN_PKG::jsoncpp
  CONAN_PKG::cpprestsdk
  CONAN_PKG::OpenSSL
@@ -95,8 +85,8 @@ export(TARGETS
          openstudio_radiance
          openstudio_utilities
          openstudiolib
-         #         openstudiolib_static 
-       NAMESPACE "openstudio::" 
+         #         openstudiolib_static
+       NAMESPACE "openstudio::"
        FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
        )
 
@@ -105,10 +95,11 @@ install(TARGETS openstudiolib
         DESTINATION lib
         COMPONENT "CPPAPI"
         INCLUDES DESTINATION include
+          include/openstudio
         )
 
 # `install(EXPORT)` is for installation package
-install(EXPORT openstudio 
+install(EXPORT openstudio
         DESTINATION lib/cmake/openstudio
         NAMESPACE "openstudio::"
         COMPONENT "CPPAPI"
@@ -116,12 +107,13 @@ install(EXPORT openstudio
 
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/"
                   "${PROJECT_BINARY_DIR}/src/"
-        DESTINATION include
+        DESTINATION include/openstudio
         COMPONENT "CPPAPI"
-        FILES_MATCHING 
+        FILES_MATCHING
         PATTERN "*.h"
         PATTERN "*.hpp"
         PATTERN "*.hxx"
+        PATTERN "*.i"
         )
 
 

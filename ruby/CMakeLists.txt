@@ -98,9 +98,16 @@ if (APPLE)
   )
 endif()
 
-install(TARGETS openstudio_rb DESTINATION Ruby COMPONENT "RubyAPI")
+install(TARGETS openstudio_rb
+  EXPORT openstudio
+  DESTINATION Ruby
+  COMPONENT "RubyAPI"
+  INCLUDES DESTINATION include include/openstudio
+)
 install(FILES openstudio.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(DIRECTORY openstudio DESTINATION Ruby COMPONENT "RubyAPI")
+
+
 ###############################################################################
 #                        T E S T I N G:   C T E S T S                         #
 ###############################################################################
