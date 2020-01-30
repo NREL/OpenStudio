@@ -94,7 +94,7 @@ namespace model {
 
     // If both are the same canonical paths, we do nothing
     if (src == dest) {
-      LOG_FREE(Warn, "replaceDir", "Refusing to copy directory '" << toString(sourceDir) << "' only itself '" << toString(destinationDir)
+      LOG_FREE(Warn, "replaceDir", "Refusing to copy directory '" << toString(sourceDir) << "' on itself '" << toString(destinationDir)
           << "' canonical path: '" << toString(src) << "'");
       return true; // there is no error, just nothing to do
     }
@@ -113,7 +113,7 @@ namespace model {
         try {
           openstudio::filesystem::remove_all(dest);
         } catch (const std::exception &e) {
-          LOG_FREE(Error, "replaceDir", "Destination directory could not be removed: " << toString(dest) << "error: " << e.what());
+          LOG_FREE(Error, "replaceDir", "Destination directory could not be removed: " << toString(dest) << ", error: " << e.what());
           return false;
         }
       } else {
@@ -123,11 +123,16 @@ namespace model {
     }
 
     // Now we recreate it, and it must work!
-    if (!openstudio::filesystem::create_directory(dest))
-    {
-      LOG_FREE(Error, "replaceDir", "Could not create destination directory: " << toString(dest));
+    try {
+      if (!openstudio::filesystem::create_directory(dest))
+      {
+        LOG_FREE(Error, "replaceDir", "Could not create destination directory: " << toString(dest));
+        return false;
+      }
+    } catch (const std::exception& e) {
+      LOG_FREE(Error, "replaceDir", "Failed to create destination directory: " << toString(dest)  << ", error: " << e.what());
       return false;
-    }
+   }
 
     bool result = true;
     for (const auto& dirEnt : openstudio::filesystem::recursive_directory_iterator{src})
