@@ -45,7 +45,7 @@ target_link_libraries(
  CONAN_PKG::boost
  CONAN_PKG::jsoncpp
  CONAN_PKG::cpprestsdk
- CONAN_PKG::OpenSSL
+ CONAN_PKG::openssl
  CONAN_PKG::pugixml
 )
 
