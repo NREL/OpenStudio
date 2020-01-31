@@ -402,8 +402,7 @@ set(${target_name}_depends
   CONAN_PKG::pugixml
   CONAN_PKG::boost
   CONAN_PKG::cpprestsdk
-  # TODO: this may change to lowercase
-  CONAN_PKG::OpenSSL
+  CONAN_PKG::openssl
   CONAN_PKG::geographiclib
 )
 
