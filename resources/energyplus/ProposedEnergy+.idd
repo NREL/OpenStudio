@@ -44146,7 +44146,7 @@ CoolingTower:VariableSpeed:Merkel,
   N6 , \field Design Water Flow Rate per Unit of Nominal Capacity
        \note This field is only used if the previous is set to autocalculate and performance input method is NominalCapacity
        \units m3/s-W
-       \ip-units gal/min-W
+       \ip-units gal-h/min-Btu
        \default 5.382E-8
        \type real
   N7 , \field Design Air Flow Rate
@@ -56052,7 +56052,7 @@ FaultModel:Fouling:AirFilter,
        \key Fan:OnOff
        \key Fan:ConstantVolume
        \key Fan:VariableVolume
-       \key Fan:SystemModel
+       \note Support for Fan:SystemModel is pending
    A3, \field Fan Name
        \note Enter the name of a fan object
        \required-field
