@@ -98,6 +98,13 @@ if (APPLE)
   )
 endif()
 
+#export(TARGETS
+#  openstudio_rb
+#  NAMESPACE "openstudio::"
+#  FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
+#)
+
+
 install(TARGETS openstudio_rb
   EXPORT openstudio
   DESTINATION Ruby

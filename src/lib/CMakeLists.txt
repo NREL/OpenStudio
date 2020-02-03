@@ -72,24 +72,6 @@ target_include_directories(
   $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/src>
   )
 
-# `export` command is only for use within the build tree
-export(TARGETS
-         openstudio_airflow
-         openstudio_model
-         openstudio_energyplus
-         openstudio_measure
-         openstudio_osversion
-         openstudio_sdd
-         openstudio_isomodel
-         openstudio_gbxml
-         openstudio_radiance
-         openstudio_utilities
-         openstudiolib
-         #         openstudiolib_static
-       NAMESPACE "openstudio::"
-       FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
-       )
-
 install(TARGETS openstudiolib
         EXPORT openstudio
         DESTINATION lib
