@@ -329,7 +329,7 @@ if( APPLE )
 endif()
 
 
-install(TARGETS openstudio DESTINATION bin COMPONENT "CLI")
+install(TARGETS openstudio EXPORT openstudio DESTINATION bin COMPONENT "CLI")
 
 install(FILES openstudio_cli.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES measure_manager.rb DESTINATION Ruby COMPONENT "RubyAPI")
