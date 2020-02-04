@@ -168,12 +168,6 @@ endforeach()
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/embedded_help.rb")
 list(APPEND EMBEDDED_PATHS "embedded_help.rb")
 
-#list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/scope_test.rb")
-#list(APPEND EMBEDDED_PATHS "scope_test.rb")
-
-#list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio.rb")
-#list(APPEND EMBEDDED_PATHS "openstudio.rb")
-
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_cli.rb")
 list(APPEND EMBEDDED_PATHS "openstudio_cli.rb")
 
@@ -269,8 +263,6 @@ else()
   set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-unused-variable" )
 endif()
 
-
-
 add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
 # We are setting up a set of artificial dependencies here so that
@@ -281,11 +273,9 @@ add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 # being built by this project
 # TODO: Continue to make the conan deps more robust and get this sorted out
 add_library(additional_ruby_libs empty.cpp)
-
 add_library(ruby_libs empty.cpp)
 target_link_libraries(ruby_libs PUBLIC CONAN_PKG::openstudio_ruby)
 target_link_libraries(ruby_libs PUBLIC additional_ruby_libs)
-
 
 target_link_libraries(openstudio PRIVATE init_openstudio ruby_libs ${ALL_RUBY_BINDING_TARGETS})
 
@@ -306,15 +296,6 @@ target_link_libraries(openstudio
  ${ruby_extension_libs}
 )
 
-# Change to CONAN_PKG::openssl vs OPENSSL_CRYPTO_LIBRARY if this is needed.
-# link CLI with ruby static library, ruby bindings (openstudio.so) are linked to dynamic ruby
-#if (APPLE)
-#  target_link_libraries(openstudio
-#    ${OPENSSL_CRYPTO_LIBRARY}
-#    ${OPENSSL_SSL_LIBRARY}
-#  )
-#endif()
-
 if (UNIX AND NOT APPLE)
   target_link_libraries(additional_ruby_libs dl crypt)
   target_link_libraries(openstudio PRIVATE "icui18n" "icuuc" "gmp")
@@ -328,9 +309,7 @@ if( APPLE )
   target_link_libraries(openstudio PRIVATE ${COREFOUNDATION_LIBRARY})
 endif()
 
-
 install(TARGETS openstudio EXPORT openstudio DESTINATION bin COMPONENT "CLI")
-
 install(FILES openstudio_cli.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES measure_manager.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(FILES measure_manager_server.rb DESTINATION Ruby COMPONENT "RubyAPI")
