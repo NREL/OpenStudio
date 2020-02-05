@@ -30236,11 +30236,11 @@ OS:Output:DebuggingData,
   A2 , \field Report Debugging Data
        \key Yes
        \key No
-       \default No
+       \required-field
   A3 ; \field Report During Warmup
        \key Yes
        \key No
-       \default No
+       \required-field
 
 OS:Output:JSON,
        \memo Output from EnergyPlus can be written to JSON format files.
@@ -30257,17 +30257,17 @@ OS:Output:JSON,
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A4 , \field Output CBOR
        \type choice
        \key Yes
        \key No
-       \default No
+       \required-field
   A5 ; \field Output MessagePack
        \type choice
        \key Yes
        \key No
-       \default No
+       \required-field
 
 OS:Output:EnergyManagementSystem,
    \memo This object is used to control the output produced by the Energy Management System
