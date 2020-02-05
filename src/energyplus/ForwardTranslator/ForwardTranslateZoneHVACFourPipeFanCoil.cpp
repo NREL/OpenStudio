@@ -45,6 +45,7 @@
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
@@ -143,6 +144,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACFourPipeFanCoil(
         {
           _supplyAirFan->setString(Fan_VariableVolumeFields::AirInletNodeName,fanInletNodeName );
           _supplyAirFan->setString(Fan_VariableVolumeFields::AirOutletNodeName,fanOutletNodeName );
+        }
+        else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_SystemModel )
+        {
+          _supplyAirFan->setString(Fan_SystemModelFields::AirInletNodeName,fanInletNodeName );
+          _supplyAirFan->setString(Fan_SystemModelFields::AirOutletNodeName,fanOutletNodeName );
         }
       }
     }

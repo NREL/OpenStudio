@@ -55,12 +55,16 @@ class MODEL_API Version : public ModelObject {
 
   std::string versionIdentifier() const;
 
+  boost::optional<std::string> prereleaseIdentifier() const;
+
+
   //@}
  protected:
   /** @name Setters */
   //@{
 
   bool setVersionIdentifier(const std::string& s);
+  bool setPrereleaseIdentifier(const std::string& s);
 
   //@}
 

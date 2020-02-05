@@ -42,6 +42,7 @@
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EnergyRecoveryVentilator_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EnergyRecoveryVentilator_Controller_FieldEnums.hxx>
@@ -133,11 +134,14 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACEnergyRecoveryVen
       // SupplyAirFanName
       idfObject.setString(ZoneHVAC_EnergyRecoveryVentilatorFields::SupplyAirFanName,_supplyAirFan->name().get() );
       // Supply Air Fan Inlet and Outlet Nodes
-      if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff )
-      {
-
+      if (_supplyAirFan->iddObject().type() == IddObjectType::Fan_OnOff) {
         _supplyAirFan->setString(Fan_OnOffFields::AirInletNodeName,supplyFanInletNodeName );
         _supplyAirFan->setString(Fan_OnOffFields::AirOutletNodeName,zoneInletNode->name().get() );
+      } else if (_supplyAirFan->iddObject().type() == IddObjectType::Fan_SystemModel) {
+        _supplyAirFan->setString(Fan_SystemModelFields::AirInletNodeName,supplyFanInletNodeName );
+        _supplyAirFan->setString(Fan_SystemModelFields::AirOutletNodeName,zoneInletNode->name().get() );
+      } else {
+        LOG(Error, modelObject.briefDescription() << " is attached to an unsupported type of fan: " << supplyAirFan.briefDescription() );
       }
     }
   }
