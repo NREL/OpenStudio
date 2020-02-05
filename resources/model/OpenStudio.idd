@@ -30210,7 +30210,7 @@ OS:Output:Diagnostics,
   A1,  \field Handle
        \type handle
        \required-field
-  A2 , \field Key 1
+  A2;  \field Key 1
        \begin-extensible
        \type choice
        \key DisplayAllWarnings
@@ -30233,12 +30233,12 @@ OS:Output:DebuggingData,
   A1,  \field Handle
        \type handle
        \required-field
-  A2 , \field Report Debugging Data
+  A2,  \field Report Debugging Data
        \type choice
        \key Yes
        \key No
        \required-field
-  A3 ; \field Report During Warmup
+  A3;  \field Report During Warmup
        \type choice
        \key Yes
        \key No
@@ -30250,22 +30250,22 @@ OS:Output:JSON,
   A1,  \field Handle
        \type handle
        \required-field
-  A2 , \field Option Type
+  A2,  \field Option Type
        \required-field
        \type choice
        \key TimeSeries
        \key TimeSeriesAndTabular
-  A3 , \field Output JSON
+  A3,  \field Output JSON
        \type choice
        \key Yes
        \key No
        \required-field
-  A4 , \field Output CBOR
+  A4,  \field Output CBOR
        \type choice
        \key Yes
        \key No
        \required-field
-  A5 ; \field Output MessagePack
+  A5;  \field Output MessagePack
        \type choice
        \key Yes
        \key No
