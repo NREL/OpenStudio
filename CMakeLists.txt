@@ -22,13 +22,6 @@ string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
 # CPack package version does not support extended patch version
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 
-# The PROJECT_SOURCE_DIR here is OpenStudio/, which we will use instead of using CMAKE_SOURCE_DIR
-set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-# We will use BINARY_DIR instead of CMAKE_BINARY_DIR to allow this to be built as a submodule
-set(PROJECT_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
-
-#MESSAGE(FATAL_ERROR "CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}, BINARY_DIR=${BINARY_DIR}, PROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}, CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}, CMAKE_BINARY_DIR=${CMAKE_BINARY_DIR}")
-
 # Set a default build type if none was specified
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Setting build type to 'Release' as none was specified.")
@@ -42,7 +35,6 @@ if ( APPLE )
   find_library(SECURITY_FRAMEWORK Security)
 endif()
 
-include(ExternalProject)
 include(CPackComponent)
 include(CheckCXXCompilerFlag)
 
@@ -263,16 +255,8 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 # Requires: EnergyPlus
 option(BUILD_TESTING "Build testing targets" OFF)
 
-# Build package
-# Requires: EnergyPlus, Radiance
-# TODO: this option is actually unused...
-# TODO: In any case, should core still produce a package or only in OpenStudioApplication?
-option(BUILD_PACKAGE "Build package" OFF)
-
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
-
-
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
@@ -397,8 +381,6 @@ if(hasParent)
   set(RUBY_INCLUDE_DIRS "${RUBY_INCLUDE_DIRS}" PARENT_SCOPE)
 endif()
 
-
-
 ###############################################################################
 # CMake control
 
@@ -426,7 +408,6 @@ if(BUILD_TESTING)
   enable_testing()
   include(CTest)
 endif()
-
 
 ###############################################################################
 
@@ -722,7 +703,6 @@ if(WIN32)
   endif()
 endif()
 
-
 # openstudio gems
 # CI will build and upload openstudio gems to s3 at https://github.com/NREL/OpenStudio-gems
 # need to  update the MD5sum for each platform and url below
@@ -740,9 +720,6 @@ elseif(WIN32)
     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "aafc33b93196fe0fe7e66ee598a00365")
   endif()
 endif()
-
-
-
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 set(OPENSTUDIO_GEMS_DIR "${PROJECT_BINARY_DIR}/openstudio-gems")
@@ -851,40 +828,12 @@ if(BUILD_PYTHON_BINDINGS)
   set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
 endif()
 
-
-# Required dependencies
-
 # Threading library
 find_package(Threads)
 if(UNIX)
   set(CMAKE_THREAD_LIBS "${CMAKE_THREAD_LIBS_INIT}" CACHE STRING "Thread library used.")
   mark_as_advanced(CMAKE_THREAD_LIBS)
 endif()
-
-# Zlib
-# include_directories(SYSTEM src/zlib)
-# add_subdirectory(src/zlib)
-# make sure zconf.h can be found
-# include_directories(${PROJECT_BINARY_DIR}/src/zlib)
-
-#if(BUILD_TESTING)
-#  # force gtest to build as a static library no matter what, otherwise we get error about undefined death test symbols when building shared libs
-#  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
-#  set(BUILD_SHARED_LIBS OFF)
-#
-#  # Google test library
-#  set(gtest_force_shared_crt ON CACHE BOOL "gtest_force_shared_crt" FORCE) # in case we are linking with shared or static os libraries
-#  set(gtest_build_tests OFF CACHE BOOL "gtest_build_tests" FORCE)
-#  set(gtest_build_samples OFF CACHE BOOL "gtest_build_samples" FORCE)
-#  set(gtest_disable_pthreads OFF CACHE BOOL "gtest_disable_pthreads" FORCE)
-#  add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
-#  include_directories(SYSTEM src/google_test/include)
-#  add_subdirectory(src/google_test)
-#
-#  # restore BUILD_SHARED_LIBS
-#  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
-#endif()
-
 
 ###############################################################################
 # Add to include path
@@ -1113,8 +1062,6 @@ endif()
 ###############################################################################
 # Export targets and generate OpenStudioCoreConfig.cmake
 
-set(TARGETS_FILE ${PROJECT_BINARY_DIR}/OpenStudioTargets.cmake)
-
 set(all_lib_targets
   openstudio_osversion
   openstudio_model
@@ -1143,7 +1090,6 @@ endif()
 
 configure_file("${PROJECT_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
   "${PROJECT_BINARY_DIR}/OpenStudioCoreConfig.cmake" @ONLY)
-
 
 if(UNIX AND NOT APPLE)
   set(examplesdir share/openstudio-${OpenStudio_VERSION}/examples)
@@ -1313,7 +1259,6 @@ export(TARGETS
          openstudio_utilities
          openstudiolib
          openstudio_rb
-         #         openstudiolib_static
        NAMESPACE "openstudio::"
        FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
        )
