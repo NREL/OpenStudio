@@ -70,17 +70,17 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    std::string reportDebuggingData() const;
+    bool reportDebuggingData() const;
 
-    std::string reportDuringWarmup() const;
+    bool reportDuringWarmup() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    void setReportDebuggingData(const std::string& reportDebuggingData);
+    bool setReportDebuggingData(bool reportDebuggingData);
 
-    void setReportDuringWarmup(const std::string& reportDuringWarmup);
+    bool setReportDuringWarmup(bool reportDuringWarmup);
 
     //@}
     /** @name Other */

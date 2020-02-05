@@ -76,25 +76,25 @@ namespace detail {
   }
 
   std::string OutputJSON_Impl::optionType() const {
-    boost::optional<std::string> value = getString(OS_Output_JSONFields::OptionType,true);
+    boost::optional<std::string> value = getString(OS_Output_JSONFields::OptionType, true);
     OS_ASSERT(value);
     return value.get();
   }
 
   bool OutputJSON_Impl::outputJSON() const {
-    boost::optional<std::string> value = getString(OS_Output_JSONFields::OutputJSON,true);
+    boost::optional<std::string> value = getString(OS_Output_JSONFields::OutputJSON, true);
     OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
   bool OutputJSON_Impl::outputCBOR() const {
-    boost::optional<std::string> value = getString(OS_Output_JSONFields::OutputCBOR,true);
+    boost::optional<std::string> value = getString(OS_Output_JSONFields::OutputCBOR, true);
     OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
 
   bool OutputJSON_Impl::outputMessagePack() const {
-    boost::optional<std::string> value = getString(OS_Output_JSONFields::OutputMessagePack,true);
+    boost::optional<std::string> value = getString(OS_Output_JSONFields::OutputMessagePack, true);
     OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
@@ -104,7 +104,7 @@ namespace detail {
     return result;
   }
 
-  void OutputJSON_Impl::setOutputJSON(bool outputJSON) {
+  bool OutputJSON_Impl::setOutputJSON(bool outputJSON) {
     bool result = false;
     if (outputJSON) {
       result = setBooleanFieldValue(OS_Output_JSONFields::OutputJSON, "Yes");
@@ -112,9 +112,10 @@ namespace detail {
       result = setBooleanFieldValue(OS_Output_JSONFields::OutputJSON, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
-  void OutputJSON_Impl::setOutputCBOR(bool outputCBOR) {
+  bool OutputJSON_Impl::setOutputCBOR(bool outputCBOR) {
     bool result = false;
     if (outputCBOR) {
       result = setBooleanFieldValue(OS_Output_JSONFields::OutputCBOR, "Yes");
@@ -122,9 +123,10 @@ namespace detail {
       result = setBooleanFieldValue(OS_Output_JSONFields::OutputCBOR, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
-  void OutputJSON_Impl::setOutputMessagePack(bool outputMessagePack) {
+  bool OutputJSON_Impl::setOutputMessagePack(bool outputMessagePack) {
     bool result = false;
     if (outputMessagePack) {
       result = setBooleanFieldValue(OS_Output_JSONFields::OutputMessagePack, "Yes");
@@ -132,6 +134,7 @@ namespace detail {
       result = setBooleanFieldValue(OS_Output_JSONFields::OutputMessagePack, "No");
     }
     OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -165,16 +168,16 @@ bool OutputJSON::setOptionType(const std::string& optionType) {
   return getImpl<detail::OutputJSON_Impl>()->setOptionType(optionType);
 }
 
-void OutputJSON::setOutputJSON(bool outputJSON) {
-  getImpl<detail::OutputJSON_Impl>()->setOutputJSON(outputJSON);
+bool OutputJSON::setOutputJSON(bool outputJSON) {
+  return getImpl<detail::OutputJSON_Impl>()->setOutputJSON(outputJSON);
 }
 
-void OutputJSON::setOutputCBOR(bool outputCBOR) {
-  getImpl<detail::OutputJSON_Impl>()->setOutputCBOR(outputCBOR);
+bool OutputJSON::setOutputCBOR(bool outputCBOR) {
+  return getImpl<detail::OutputJSON_Impl>()->setOutputCBOR(outputCBOR);
 }
 
-void OutputJSON::setOutputMessagePack(bool outputMessagePack) {
-  getImpl<detail::OutputJSON_Impl>()->setOutputMessagePack(outputMessagePack);
+bool OutputJSON::setOutputMessagePack(bool outputMessagePack) {
+  return getImpl<detail::OutputJSON_Impl>()->setOutputMessagePack(outputMessagePack);
 }
 
 /// @cond
@@ -183,7 +186,12 @@ OutputJSON::OutputJSON(std::shared_ptr<detail::OutputJSON_Impl> impl)
 {}
 OutputJSON::OutputJSON(Model& model)
   : ModelObject(OutputJSON::iddObjectType(),model)
-{}
+{
+  // Same defaults as EnergyPlus IDD
+  setOutputJSON(true);
+  setOutputCBOR(false);
+  setOutputMessagePack(false);
+}
 
 /// @endcond
 

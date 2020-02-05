@@ -84,11 +84,11 @@ namespace detail {
 
     bool setOptionType(const std::string& optionType);
 
-    void setOutputJSON(bool outputJSON);
+    bool setOutputJSON(bool outputJSON);
 
-    void setOutputCBOR(bool outputCBOR);
+    bool setOutputCBOR(bool outputCBOR);
 
-    void setOutputMessagePack(bool outputMessagePack);
+    bool setOutputMessagePack(bool outputMessagePack);
 
     //@}
     /** @name Other */

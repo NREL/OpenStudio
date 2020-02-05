@@ -74,26 +74,38 @@ namespace detail {
     return OutputDebuggingData::iddObjectType();
   }
 
-  std::string OutputDebuggingData_Impl::reportDebuggingData() const {
-    boost::optional<std::string> value = getString(OS_Output_DebuggingDataFields::ReportDebuggingData,true);
+  bool OutputDebuggingData_Impl::reportDebuggingData() const {
+    boost::optional<std::string> value = getString(OS_Output_DebuggingDataFields::ReportDebuggingData, true);
     OS_ASSERT(value);
-    return value.get();
+    return openstudio::istringEqual(value.get(), "Yes");
   }
 
-  std::string OutputDebuggingData_Impl::reportDuringWarmup() const {
-    boost::optional<std::string> value = getString(OS_Output_DebuggingDataFields::ReportDuringWarmup,true);
+  bool OutputDebuggingData_Impl::reportDuringWarmup() const {
+    boost::optional<std::string> value = getString(OS_Output_DebuggingDataFields::ReportDuringWarmup, true);
     OS_ASSERT(value);
-    return value.get();
+    return openstudio::istringEqual(value.get(), "Yes");
   }
 
-  void OutputDebuggingData_Impl::setReportDebuggingData(const std::string& reportDebuggingData) {
-    bool result = setString(OS_Output_DebuggingDataFields::ReportDebuggingData, reportDebuggingData);
+  bool OutputDebuggingData_Impl::setReportDebuggingData(bool reportDebuggingData) {
+    bool result = false;
+    if (reportDebuggingData) {
+      result = setBooleanFieldValue(OS_Output_DebuggingDataFields::ReportDebuggingData, "Yes");
+    } else {
+      result = setBooleanFieldValue(OS_Output_DebuggingDataFields::ReportDebuggingData, "No");
+    }
     OS_ASSERT(result);
+    return result;
   }
 
-  void OutputDebuggingData_Impl::setReportDuringWarmup(const std::string& reportDuringWarmup) {
-    bool result = setString(OS_Output_DebuggingDataFields::ReportDuringWarmup, reportDuringWarmup);
+  bool OutputDebuggingData_Impl::setReportDuringWarmup(bool reportDuringWarmup) {
+    bool result = false;
+    if (reportDuringWarmup) {
+      result = setBooleanFieldValue(OS_Output_DebuggingDataFields::ReportDuringWarmup, "Yes");
+    } else {
+      result = setBooleanFieldValue(OS_Output_DebuggingDataFields::ReportDuringWarmup, "No");
+    }
     OS_ASSERT(result);
+    return result;
   }
 
 } // detail
@@ -102,20 +114,20 @@ IddObjectType OutputDebuggingData::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Output_DebuggingData);
 }
 
-std::string OutputDebuggingData::reportDebuggingData() const {
+bool OutputDebuggingData::reportDebuggingData() const {
   return getImpl<detail::OutputDebuggingData_Impl>()->reportDebuggingData();
 }
 
-std::string OutputDebuggingData::reportDuringWarmup() const {
+bool OutputDebuggingData::reportDuringWarmup() const {
   return getImpl<detail::OutputDebuggingData_Impl>()->reportDuringWarmup();
 }
 
-void OutputDebuggingData::setReportDebuggingData(const std::string& reportDebuggingData) {
-  getImpl<detail::OutputDebuggingData_Impl>()->setReportDebuggingData(reportDebuggingData);
+bool OutputDebuggingData::setReportDebuggingData(bool reportDebuggingData) {
+  return getImpl<detail::OutputDebuggingData_Impl>()->setReportDebuggingData(reportDebuggingData);
 }
 
-void OutputDebuggingData::setReportDuringWarmup(const std::string& reportDuringWarmup) {
-  getImpl<detail::OutputDebuggingData_Impl>()->setReportDuringWarmup(reportDuringWarmup);
+bool OutputDebuggingData::setReportDuringWarmup(bool reportDuringWarmup) {
+  return getImpl<detail::OutputDebuggingData_Impl>()->setReportDuringWarmup(reportDuringWarmup);
 }
 
 /// @cond
@@ -124,7 +136,10 @@ OutputDebuggingData::OutputDebuggingData(std::shared_ptr<detail::OutputDebugging
 {}
 OutputDebuggingData::OutputDebuggingData(Model& model)
   : ModelObject(OutputDebuggingData::iddObjectType(),model)
-{}
+{
+  setReportDebuggingData(false);
+  setReportDuringWarmup(false);
+}
 
 /// @endcond
 
