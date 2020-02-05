@@ -231,7 +231,10 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputControlReportingTolerances.cpp
   ForwardTranslator/ForwardTranslateOutputMeter.cpp
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
+  ForwardTranslator/ForwardTranslateOutputDebuggingData.cpp
+  ForwardTranslator/ForwardTranslateOutputDiagnostics.cpp
   ForwardTranslator/ForwardTranslateOutputEnergyManagementSystem.cpp
+  ForwardTranslator/ForwardTranslateOutputJSON.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePerformancePrecisionTradeoffs.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceEquivalentOneDiode.cpp
@@ -473,7 +476,10 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateMeterCustom.cpp
   ReverseTranslator/ReverseTranslateMeterCustomDecrement.cpp
   ReverseTranslator/ReverseTranslateOtherEquipment.cpp
+  ReverseTranslator/ReverseTranslateOutputDebuggingData.cpp
+  ReverseTranslator/ReverseTranslateOutputDiagnostics.cpp
   ReverseTranslator/ReverseTranslateOutputEnergyManagementSystem.cpp
+  ReverseTranslator/ReverseTranslateOutputJSON.cpp
   ReverseTranslator/ReverseTranslateOutputIlluminanceMap.cpp
   ReverseTranslator/ReverseTranslateOutputMeter.cpp
   ReverseTranslator/ReverseTranslateOutputMeterCumulative.cpp
@@ -604,6 +610,9 @@ set(${target_name}_test_src
   Test/Lights_GTest.cpp
   Test/Luminaire_GTest.cpp
   Test/Meter_GTest.cpp
+  #Test/OutputDebuggingData_GTest.cpp
+  #Test/OutputDiagnostics_GTest.cpp
+  #Test/OutputJSON_GTest.cpp
   Test/People_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp

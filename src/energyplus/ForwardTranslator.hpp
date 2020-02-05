@@ -280,6 +280,9 @@ class Node;
 class OtherEquipment;
 class OutsideSurfaceConvectionAlgorithm;
 class OutputControlReportingTolerances;
+class OutputDebuggingData;
+class OutputDiagnostics;
+class OutputJSON;
 class OutputMeter;
 class OutputVariable;
 class OutputEnergyManagementSystem;
@@ -999,6 +1002,12 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOutsideSurfaceConvectionAlgorithm( model::OutsideSurfaceConvectionAlgorithm & modelObject );
 
   boost::optional<IdfObject> translateOutputControlReportingTolerances( model::OutputControlReportingTolerances & modelObject );
+
+  boost::optional<IdfObject> translateOutputDebuggingData( model::OutputDebuggingData & modelObject );
+
+  boost::optional<IdfObject> translateOutputDiagnostics( model::OutputDiagnostics & modelObject );
+
+  boost::optional<IdfObject> translateOutputJSON( model::OutputJSON & modelObject );
 
   boost::optional<IdfObject> translateOutputMeter( model::OutputMeter & modelObject );
 
