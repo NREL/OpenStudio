@@ -54,16 +54,29 @@ class MODEL_API OutputDiagnostics : public ModelObject {
 
   static IddObjectType iddObjectType();
 
+  static std::vector<std::string> keyValues();
+  static std::vector<std::string> validkeyValues();
+
   /** @name Getters */
   //@{
 
-  // TODO: Handle this object's extensible fields.
+  std::vector<std::string> keys() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Handle this object's extensible fields.
+  // Return false if key isn't valid or is already present (logs an info in that case too)
+  bool addKey(const std::string& key);
+
+  // Calls clearKeys, then for each k, addKey(k)
+  bool setKeys(const std::vector<std::string>& keys);
+
+  // Just a convenience function to add 'DisplayExtraWarnings' as a key since it's so common
+  bool enableDisplayExtraWarnings();
+
+  // Clears out every key
+  void clearKeys();
 
   //@}
   /** @name Other */
