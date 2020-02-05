@@ -30234,10 +30234,12 @@ OS:Output:DebuggingData,
        \type handle
        \required-field
   A2 , \field Report Debugging Data
+       \type choice
        \key Yes
        \key No
        \required-field
   A3 ; \field Report During Warmup
+       \type choice
        \key Yes
        \key No
        \required-field
