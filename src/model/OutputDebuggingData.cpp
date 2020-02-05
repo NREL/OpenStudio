@@ -78,37 +78,19 @@ namespace detail {
   }
 
   bool OutputDebuggingData_Impl::reportDebuggingData() const {
-    boost::optional<std::string> value = getString(OS_Output_DebuggingDataFields::ReportDebuggingData, true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Yes");
+    return getBooleanFieldValue(OS_Output_DebuggingDataFields::ReportDebuggingData);
   }
 
   bool OutputDebuggingData_Impl::reportDuringWarmup() const {
-    boost::optional<std::string> value = getString(OS_Output_DebuggingDataFields::ReportDuringWarmup, true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Yes");
+    return getBooleanFieldValue(OS_Output_DebuggingDataFields::ReportDuringWarmup);
   }
 
   bool OutputDebuggingData_Impl::setReportDebuggingData(bool reportDebuggingData) {
-    bool result = false;
-    if (reportDebuggingData) {
-      result = setBooleanFieldValue(OS_Output_DebuggingDataFields::ReportDebuggingData, "Yes");
-    } else {
-      result = setBooleanFieldValue(OS_Output_DebuggingDataFields::ReportDebuggingData, "No");
-    }
-    OS_ASSERT(result);
-    return result;
+    return setBooleanFieldValue(OS_Output_DebuggingDataFields::ReportDebuggingData, reportDebuggingData);
   }
 
   bool OutputDebuggingData_Impl::setReportDuringWarmup(bool reportDuringWarmup) {
-    bool result = false;
-    if (reportDuringWarmup) {
-      result = setBooleanFieldValue(OS_Output_DebuggingDataFields::ReportDuringWarmup, "Yes");
-    } else {
-      result = setBooleanFieldValue(OS_Output_DebuggingDataFields::ReportDuringWarmup, "No");
-    }
-    OS_ASSERT(result);
-    return result;
+    return setBooleanFieldValue(OS_Output_DebuggingDataFields::ReportDuringWarmup, reportDuringWarmup);
   }
 
 } // detail

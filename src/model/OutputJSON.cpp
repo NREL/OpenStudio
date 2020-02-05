@@ -85,21 +85,15 @@ namespace detail {
   }
 
   bool OutputJSON_Impl::outputJSON() const {
-    boost::optional<std::string> value = getString(OS_Output_JSONFields::OutputJSON, true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Yes");
+    return getBooleanFieldValue(OS_Output_JSONFields::OutputJSON);
   }
 
   bool OutputJSON_Impl::outputCBOR() const {
-    boost::optional<std::string> value = getString(OS_Output_JSONFields::OutputCBOR, true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Yes");
+    return getBooleanFieldValue(OS_Output_JSONFields::OutputCBOR);
   }
 
   bool OutputJSON_Impl::outputMessagePack() const {
-    boost::optional<std::string> value = getString(OS_Output_JSONFields::OutputMessagePack, true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Yes");
+    return getBooleanFieldValue(OS_Output_JSONFields::OutputMessagePack);
   }
 
   bool OutputJSON_Impl::setOptionType(const std::string& optionType) {
@@ -108,36 +102,15 @@ namespace detail {
   }
 
   bool OutputJSON_Impl::setOutputJSON(bool outputJSON) {
-    bool result = false;
-    if (outputJSON) {
-      result = setBooleanFieldValue(OS_Output_JSONFields::OutputJSON, "Yes");
-    } else {
-      result = setBooleanFieldValue(OS_Output_JSONFields::OutputJSON, "No");
-    }
-    OS_ASSERT(result);
-    return result;
+    return setBooleanFieldValue(OS_Output_JSONFields::OutputJSON, outputJSON);
   }
 
   bool OutputJSON_Impl::setOutputCBOR(bool outputCBOR) {
-    bool result = false;
-    if (outputCBOR) {
-      result = setBooleanFieldValue(OS_Output_JSONFields::OutputCBOR, "Yes");
-    } else {
-      result = setBooleanFieldValue(OS_Output_JSONFields::OutputCBOR, "No");
-    }
-    OS_ASSERT(result);
-    return result;
+    return setBooleanFieldValue(OS_Output_JSONFields::OutputCBOR, outputCBOR);
   }
 
   bool OutputJSON_Impl::setOutputMessagePack(bool outputMessagePack) {
-    bool result = false;
-    if (outputMessagePack) {
-      result = setBooleanFieldValue(OS_Output_JSONFields::OutputMessagePack, "Yes");
-    } else {
-      result = setBooleanFieldValue(OS_Output_JSONFields::OutputMessagePack, "No");
-    }
-    OS_ASSERT(result);
-    return result;
+    return setBooleanFieldValue(OS_Output_JSONFields::OutputMessagePack, outputMessagePack);
   }
 
 } // detail
