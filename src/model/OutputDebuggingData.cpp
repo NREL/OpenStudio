@@ -30,6 +30,9 @@
 #include "OutputDebuggingData.hpp"
 #include "OutputDebuggingData_Impl.hpp"
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Output_DebuggingData_FieldEnums.hxx>
 
