@@ -63,9 +63,7 @@ boost::optional<ModelObject> ReverseTranslator::translateOutputDiagnostics( cons
   }
 
   return result;
-}
 } // End of translate function
 
 } // end namespace energyplus
-
 } // end namespace openstudio
