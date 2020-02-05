@@ -49,20 +49,13 @@ TEST_F(ModelFixture, ClimateZones)
   ClimateZones czs = model.getUniqueModelObject<ClimateZones>();
 
   // default
-  ASSERT_EQ(1u,czs.numClimateZones());
-  ASSERT_EQ(1u,czs.climateZones().size());
-  ClimateZone acz = czs.climateZones()[0];
-  ASSERT_FALSE(acz.empty());
-  EXPECT_EQ(ClimateZones::ashraeInstitutionName(),acz.institution());
-  EXPECT_EQ(ClimateZones::ashraeDocumentName(),acz.documentName());
-  EXPECT_EQ(ClimateZones::ashraeDefaultYear(),acz.year());
-  EXPECT_EQ("",acz.value());
+  ASSERT_EQ(0u,czs.numClimateZones());
+  ASSERT_EQ(0u,czs.climateZones().size());
 
   // after clear
   czs.clear();
   EXPECT_EQ(0u,czs.numClimateZones());
   EXPECT_EQ(0,czs.climateZones().size());
-  EXPECT_TRUE(acz.empty());
 
   // append a climate zone
   ClimateZone cz = czs.appendClimateZone(ClimateZones::cecInstitutionName(),
