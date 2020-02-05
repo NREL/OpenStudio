@@ -1926,9 +1926,9 @@ set(${target_name}_test_src
   test/OpaqueMaterial_GTest.cpp
   test/OtherEquipment_GTest.cpp
   test/OutputControlReportingTolerances_GTest.cpp
-  #test/OutputDebuggingData_GTest.cpp
-  #test/OutputJSON_GTest.cpp
-  #test/OutputDiagnostics_GTest.cpp
+  test/OutputDebuggingData_GTest.cpp
+  test/OutputJSON_GTest.cpp
+  test/OutputDiagnostics_GTest.cpp
   test/OutputEnergyManagementSystem_GTest.cpp
   test/OutputMeter_GTest.cpp
   test/OutputVariable_GTest.cpp
