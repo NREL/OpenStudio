@@ -91,9 +91,9 @@ namespace detail {
   }
 
   bool OutputDiagnostics_Impl::addKey(const std::string& key) {
-    auto keys = this->keys();
-    if (std::find(keys.begin(), keys.end(),
-          [&key](const std::string& k) { return openstudio::istringEqual(k, key); }) != keys.end()) {
+    std::vector<std::string> existingKeys = this->keys();
+    if (std::find_if(existingKeys.begin(), existingKeys.end(),
+          [&key](const std::string& k) { return openstudio::istringEqual(k, key); }) != existingKeys.end()) {
       LOG(Info, "Not adding key '" << key << "' to Output:Diagnostics since it is already present");
       // Return true anyways, it's a success
       return true;
