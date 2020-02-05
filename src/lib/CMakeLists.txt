@@ -80,13 +80,6 @@ install(TARGETS openstudiolib
           include/openstudio
         )
 
-# `install(EXPORT)` is for installation package
-install(EXPORT openstudio
-        DESTINATION lib/cmake/openstudio
-        NAMESPACE "openstudio::"
-        COMPONENT "CPPAPI"
-        FILE openstudioConfig.cmake)
-
 install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/"
                   "${PROJECT_BINARY_DIR}/src/"
         DESTINATION include/openstudio
@@ -97,6 +90,3 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/src/"
         PATTERN "*.hxx"
         PATTERN "*.i"
         )
-
-
-

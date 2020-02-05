@@ -1300,6 +1300,45 @@ if(BUILD_PAT AND APPLE)
   install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
 endif()
 
+export(TARGETS
+         openstudio_airflow
+         openstudio_model
+         openstudio_energyplus
+         openstudio_measure
+         openstudio_osversion
+         openstudio_sdd
+         openstudio_isomodel
+         openstudio_gbxml
+         openstudio_radiance
+         openstudio_utilities
+         openstudiolib
+         openstudio_rb
+         #         openstudiolib_static
+       NAMESPACE "openstudio::"
+       FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
+       )
+
+install(EXPORT openstudio
+        DESTINATION lib/cmake/openstudio
+        NAMESPACE "openstudio::"
+        COMPONENT "CPPAPI"
+        FILE openstudioConfig.cmake)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${PROJECT_BINARY_DIR}/openstudioConfigVersion.cmake"
+  VERSION ${CMAKE_PROJECT_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
+
+install(
+  FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/openstudioConfigVersion.cmake"
+  DESTINATION
+    lib/cmake/openstudio/
+  COMPONENT "CPPAPI"
+)
+
 if (NOT DELAY_INCLUDE_CPACK)
   include(CPack)
 endif()
@@ -1406,24 +1445,4 @@ if (MSVC)
     target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
   endif()
 endif()
-
-export(TARGETS
-         openstudio_airflow
-         openstudio_model
-         openstudio_energyplus
-         openstudio_measure
-         openstudio_osversion
-         openstudio_sdd
-         openstudio_isomodel
-         openstudio_gbxml
-         openstudio_radiance
-         openstudio_utilities
-         openstudiolib
-         openstudio_rb
-         #         openstudiolib_static
-       NAMESPACE "openstudio::"
-       FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
-       )
-
-
 
