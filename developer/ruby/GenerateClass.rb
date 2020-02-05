@@ -134,7 +134,7 @@ if (not options[:className] or not options[:sourceDirectory])
   else
     puts optparse
   end
-  exit
+  exit(0)
 end
 
 # get options out
@@ -183,11 +183,6 @@ cppPublicClass = String.new
 if pImpl
   implHpp << fileHeader << "\n"
 end
-
-gtest = String.new
-gtest << fileHeader << "\n"
-gtest << "#include <gtest/gtest.h>\n\n"
-saveGTest = false
 
 aux = String.new
 saveAux = false
@@ -533,10 +528,10 @@ end
 
 
 # CREATE TESTS
-originalSize = gtest.size
-gtest << methodGenerator.gtest
-saveGTest = true if (gtest.size > originalSize)
-
+gtest = String.new
+gtest << fileHeader << "\n"
+gtest << methodGenerator.gtestIncludes
+gtest << methodGenerator.gtestGetterSetters
 
 # CREATE AUXILLIARY CODE
 originalSize = aux.size
@@ -560,13 +555,11 @@ if pImpl
   end
 end
 
-if saveGTest
-  if not File.directory?(outputDirectory + "/test")
-    Dir.mkdir(outputDirectory + "/test")
-  end
-  File.open((outputDirectory + "/test/" + className + "_GTest.cpp"),"w") do |file|
-    file.write(gtest)
-  end
+if not File.directory?(outputDirectory + "/test")
+  Dir.mkdir(outputDirectory + "/test")
+end
+File.open((outputDirectory + "/test/" + className + "_GTest.cpp"),"w") do |file|
+  file.write(gtest)
 end
 
 if saveAux

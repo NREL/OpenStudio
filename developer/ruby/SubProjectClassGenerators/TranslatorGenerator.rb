@@ -255,7 +255,7 @@ class TranslatorGenerator
         #result << "  if (" << assignment << " = "<< field.getterAccessor << "(" << field.fieldEnum << ")) {\n"
         #result << "    modelObject." << field.setterName << "(" << assignment << ");\n"
         # Instead, I don't use global optional vars
-        result << "  if (" << field.getterReturnType(true) << " _" << field.getterName << " = "<< field.getterAccessor << "(" << field.fieldEnum << ")) {\n"
+        result << "  if (" << field.getterReturnType(true) << " _" << field.getterName << " = " << "workspaceObject." << field.getterAccessor << "(" << field.fieldEnum << ")) {\n"
         result << "    modelObject." << field.setterName << "(_" << field.getterName << ".get());\n"
 
 
@@ -273,12 +273,9 @@ class TranslatorGenerator
     # Assign result and return
     result << "  result = modelObject;\n"
     result << "  return result;\n"
-    result << "}\n"
-
 
     # Close method
     result << "} // End of translate function\n"
-
 
     return result
   end
@@ -292,11 +289,11 @@ class TranslatorGenerator
     result = String.new
 
     # Method name
-    result << "boost::optional<ModelObject> ForwardTranslator::translate" << @className << "( const " << @className << "& modelObject )\n"
+    result << "boost::optional<IdfObject> ForwardTranslator::translate" << @className << "( model::" << @className << "& modelObject )\n"
     result << "{\n"
 
     # High level variables
-    result << "  boost::optional<ModelObject> result;\n"
+    result << "  boost::optional<WorkspaceObject> result;\n"
     if @hasObjectFields
       result << "  boost::optional<WorkspaceObject> _wo;\n"
       result << "  boost::optional<ModelObject> _mo;\n"
@@ -310,7 +307,10 @@ class TranslatorGenerator
     # Instantiate the model object
     result << "\n"
     result << "  // Instantiate an IdfObject of the class to store the values,\n"
-    result << "  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::" << @iddObjectType.valueName << ", modelObject);\n\n"
+    result << "  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::" << @iddObjectType.valueName << ", modelObject);\n"
+    result << "  // If it doesn't have a name, or if you aren't sure you are going to want to return it\n"
+    result << "  // IdfObject idfObject( openstudio::IddObjectType::" << @iddObjectType.valueName << " );\n"
+    result << "  // m_idfObjects.push_back(idfObject);\n\n"
 
     result << "  // TODO: Note JM 2018-10-17\n"
     result << "  // You are responsible for implementing any additional logic based on choice fields, etc.\n"
@@ -399,20 +399,11 @@ class TranslatorGenerator
 
 
         elsif field.isBooleanChoice?
-          # We have to check is "Yes", in which case we use true
           result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " Boolean\n"
-          result << "  if (" << field.getterReturnType(true) << " _" << field.getterName << " = "<< field.getterAccessor << "(" << field.fieldEnum << ", true)) {\n"
-          result << "    if(istringEqual(\"Yes\", _" << field.getterName << ".get())) {\n"
-          result << "      modelObject." << field.setterName << "(true);\n"
-          result << "    } else {\n"
-          result << "      modelObject." << field.setterName << "(false);\n"
-          result << "    }\n"
-          if field.isRequired?
-            result << "  } else {\n"
-            result << '    LOG(Error, "For " << workspaceObject.briefDescription()'
-            result << " << \", cannot find required property '" << field.name << "'\");" << "\n"
-            result << "    return result;\n"
-          end
+          result << "  if (modelObject." << field.getterName << "()) {\n"
+          result << "    idfObject.setString(" << field.fieldEnum << ", \"Yes\");\n"
+          result << "  } else {\n"
+          result << "    idfObject.setString(" << field.fieldEnum << ", \"No\");\n"
           result << "  }\n"
         else
 
@@ -453,8 +444,6 @@ class TranslatorGenerator
     # Assign result and return
     result << "  result = modelObject;\n"
     result << "  return result;\n"
-    result << "}\n"
-
 
     # Close method
     result << "} // End of translate function\n"
@@ -467,7 +456,7 @@ class TranslatorGenerator
   # @param None
   # @return [None] creates the file
   def write_reverse_translator
-    file_path = File.join(File.dirname(__FILE__), "../../../openstudiocore/src/energyplus/ReverseTranslator/ReverseTranslate#{@className}.cpp")
+    file_path = File.join(File.dirname(__FILE__), "../../../src/energyplus/ReverseTranslator/ReverseTranslate#{@className}.cpp")
     file_path = File.expand_path(file_path)
 
     result = String.new
@@ -480,8 +469,7 @@ class TranslatorGenerator
     result << generateReverseTranslateFunction()
 
     # Footer
-    result << "\n" << "} // end namespace energyplus" << "\n"
-
+    result << "\n" << "} // end namespace energyplus"
     result << "\n" << "} // end namespace openstudio"
 
     File.open(file_path, "w") do |file|
@@ -496,7 +484,7 @@ class TranslatorGenerator
   # @param None
   # @return [None] creates the file
   def write_forward_translator
-    file_path = File.join(File.dirname(__FILE__), "../../../openstudiocore/src/energyplus/ForwardTranslator/ForwardTranslate#{@className}_test.cpp")
+    file_path = File.join(File.dirname(__FILE__), "../../../src/energyplus/ForwardTranslator/ForwardTranslate#{@className}.cpp")
     file_path = File.expand_path(file_path)
 
     result = String.new
@@ -509,8 +497,7 @@ class TranslatorGenerator
     result << generateForwardTranslateFunction()
 
     # Footer
-    result << "\n" << "} // end namespace energyplus" << "\n"
-
+    result << "\n" << "} // end namespace energyplus"
     result << "\n" << "} // end namespace openstudio"
 
     File.open(file_path, "w") do |file|
