@@ -55,7 +55,7 @@ class MODEL_API OutputDiagnostics : public ModelObject {
   static IddObjectType iddObjectType();
 
   static std::vector<std::string> keyValues();
-  static std::vector<std::string> validkeyValues();
+  static std::vector<std::string> validKeyValues();
 
   /** @name Getters */
   //@{
@@ -66,7 +66,7 @@ class MODEL_API OutputDiagnostics : public ModelObject {
   /** @name Setters */
   //@{
 
-  // Return false if key isn't valid or is already present (logs an info in that case too)
+  // Return false if key isn't valid. If is already present, not added twice (ensures unicity) and logs an info in that case too
   bool addKey(const std::string& key);
 
   // Calls clearKeys, then for each k, addKey(k)

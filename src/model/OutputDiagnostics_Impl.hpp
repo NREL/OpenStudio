@@ -76,7 +76,7 @@ namespace detail {
     /** @name Setters */
     //@{
 
-    // Return false if key isn't valid or is already present (logs an info in that case too)
+    // Return false if key isn't valid. If is already present, not added twice (ensures unicity) and logs an info in that case too
     bool addKey(const std::string& key);
 
     // Calls clearKeys, then for each k, addKey(k)
@@ -93,7 +93,6 @@ namespace detail {
     /** @name Other */
     //@{
 
-    std::vector<
     //@}
    protected:
    private:
