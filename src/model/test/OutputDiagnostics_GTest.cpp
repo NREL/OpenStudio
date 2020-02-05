@@ -49,7 +49,7 @@ TEST_F(ModelFixture, OutputDiagnostics_GettersSetters) {
   EXPECT_TRUE(mo.addKey("DisplayZoneAirHeatBalanceOffBalance"));
   ASSERT_EQ(2u, mo.keys().size());
   EXPECT_EQ("DisplayExtraWarnings", mo.keys()[0]);
-  EXPECT_EQ("DisplayZoneAirHeatBalanceOffBalance", mo.keys()[0]);
+  EXPECT_EQ("DisplayZoneAirHeatBalanceOffBalance", mo.keys()[1]);
 
   // Adding a key that already exists returns true, but doesn't duplicate it
   EXPECT_TRUE(mo.addKey("DisplayZoneAirHeatBalanceOffBalance"));

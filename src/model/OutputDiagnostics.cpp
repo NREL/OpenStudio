@@ -100,7 +100,12 @@ namespace detail {
     }
 
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    return eg.setString(OS_Output_DiagnosticsExtensibleFields::Key, key);
+    bool result = eg.setString(OS_Output_DiagnosticsExtensibleFields::Key, key);
+    if (!result) {
+      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+    }
+
+    return result;
   }
 
   bool OutputDiagnostics_Impl::setKeys(const std::vector<std::string>& keys) {
