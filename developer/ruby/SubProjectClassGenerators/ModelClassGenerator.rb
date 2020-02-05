@@ -90,6 +90,10 @@ class ModelObjectField
     return (@iddField.properties.type == "ObjectListType".to_IddFieldType)
   end
 
+  def isNode?
+    return (@iddField.properties.type == "node".to_IddFieldType)
+  end
+
   def isSchedule?
     result = false
     @iddField.properties.objectLists.each { |objectList|
@@ -235,7 +239,12 @@ class ModelObjectField
     return result
   end
 
-  def getterReturnType
+  # Compute return type
+  # @param forceOptional [Bool, or nil]: whether to force optional return type.
+  # Useful for the reverse translator
+  # if nil, will check optionalGetter
+  # @return result [String]: the getter return type
+  def getterReturnType(forceOptional=nil)
     result = nil
     if isInteger?
       result = "int"
@@ -249,10 +258,18 @@ class ModelObjectField
       end
     elsif isObjectList?
       result = objectListClassName
+    elsif isNode?
+      result = "Node"
     end
 
-    if result and optionalGetter?
-      result = "boost::optional<" + result + ">"
+    if result
+      if forceOptional.nil?
+        if optionalGetter?
+          result = "boost::optional<" + result + ">"
+        end
+      elsif forceOptional
+        result = "boost::optional<" + result + ">"
+      end
     end
 
     raise "Unexpected field type " + @iddField.properties.type.valueName + "." if not result
@@ -270,6 +287,8 @@ class ModelObjectField
       result = "getString"
     elsif isObjectList?
       result = "getObject<ModelObject>().getModelObjectTarget<" + objectListClassName + ">"
+    elsif isNode?
+      result = "getObject<ModelObject>().getModelObjectTarget<Node>"
     end
     return result
   end
@@ -482,7 +501,7 @@ class ModelClassGenerator < SubProjectClassGenerator
       result << "#include <utilities/idd/" << @iddObjectType.valueName << "_FieldEnums.hxx>\n\n"
 
       if @hasRealFields
-		result << "#include \"../utilities/units/Unit.hpp\"\n\n"
+        result << "#include \"../utilities/units/Unit.hpp\"\n\n"
       end
 
       result << "#include \"../utilities/core/Assert.hpp\"\n\n"
@@ -745,7 +764,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.setCanFail?
           result << "  bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         else
-          result << "  void " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
+          # Note: JM 2018-10-17: even if the setter can't fail, we return bool
+          result << "  bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         end
 
         if field.hasReset?
@@ -861,7 +881,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.setCanFail?
           result << "    bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         else
-          result << "    void " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
+          # Note: JM 2018-10-17: even if the setter can't fail, we return bool
+          result << "    bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         end
 
         if field.hasReset?
@@ -1044,7 +1065,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.setCanFail?
           result << "  bool "
         else
-          result << "  void "
+          # Note: JM 2018-10-17: even if the setter can't fail, we return bool
+          result << "  bool "
         end
 
         result << @className << "_Impl::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
