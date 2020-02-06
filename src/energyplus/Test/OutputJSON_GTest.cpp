@@ -35,7 +35,7 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/OutputJSON.hpp"
-#include "../../model/OUtputJSON_Impl.hpp"
+#include "../../model/OutputJSON_Impl.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"

@@ -35,7 +35,7 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/OutputDiagnostics.hpp"
-#include "../../model/OUtputDiagnostics_Impl.hpp"
+#include "../../model/OutputDiagnostics_Impl.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"

@@ -35,7 +35,7 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/OutputDebuggingData.hpp"
-#include "../../model/OUtputDebuggingData_Impl.hpp"
+#include "../../model/OutputDebuggingData_Impl.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
