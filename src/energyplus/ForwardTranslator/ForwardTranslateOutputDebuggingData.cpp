@@ -44,10 +44,11 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateOutputDebuggingData( model::OutputDebuggingData& modelObject )
 {
-  IdfObject idfObject( openstudio::IddObjectType::OutputControl_ReportingTolerances );
+  IdfObject idfObject( openstudio::IddObjectType::Output_DebuggingData );
   m_idfObjects.push_back(idfObject);
 
-  // This stuff is stored as double in E+ which is an error... So if true = 1, else nothing
+  // This stuff is stored as double in E+ right now... So if true = 1, else nothing
+  // cf https://github.com/NREL/EnergyPlus/issues/7740
 
   // Report Debugging Data
   if (modelObject.reportDebuggingData()) {

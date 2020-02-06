@@ -73,7 +73,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputDiagnostics) {
   {
     std::vector<std::string> keys({"ReportDuringWarmup", "ReportDetailedWarmupConvergence", "ReportDuringHVACSizingSimulation"});
     EXPECT_TRUE(outputDiagnostics.setKeys(keys));
-    EXPECT_EQ(3u, outputDiagnostics.keys().size())
+    EXPECT_EQ(3u, outputDiagnostics.keys().size());
 
     Workspace w = ft.translateModel(m);
 
@@ -113,7 +113,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDiagnostics) {
       EXPECT_TRUE(eg.setString(Output_DiagnosticsExtensibleFields::Key, key));
     }
 
-    EXPECT_EQ(4u, _i_outputDiagnostics.->extensibleGroups().size());
+    EXPECT_EQ(4u, _i_outputDiagnostics->extensibleGroups().size());
 
     Model m = rt.translateWorkspace(w);
 

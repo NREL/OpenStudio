@@ -70,9 +70,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputDebuggingData) {
 
     WorkspaceObject idf_debugging(idfObjs[0]);
 
-    // E+ uses a numeric field to store this..
-    EXPECT_EQ(1.0, idf_debugging.getDouble(Output_DebuggingDataFields::ReportDebuggingData).get());
-    EXPECT_EQ(0.0, idf_debugging.getDouble(Output_DebuggingDataFields::ReportDuringWarmup).get());
+    // E+ uses a numeric field to store this.. I'm using getInt to avoid float comparisons
+    EXPECT_EQ(1, idf_debugging.getInt(Output_DebuggingDataFields::ReportDebuggingData).get());
+    EXPECT_EQ("", idf_debugging.getString(Output_DebuggingDataFields::ReportDuringWarmup).get());
   }
 
   {
@@ -87,8 +87,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputDebuggingData) {
     WorkspaceObject idf_debugging(idfObjs[0]);
 
     // E+ uses a numeric field to store this..
-    EXPECT_EQ(0.0, idf_debugging.getDouble(Output_DebuggingDataFields::ReportDebuggingData).get());
-    EXPECT_EQ(1.0, idf_debugging.getDouble(Output_DebuggingDataFields::ReportDuringWarmup).get());
+    EXPECT_EQ("", idf_debugging.getString(Output_DebuggingDataFields::ReportDebuggingData).get());
+    EXPECT_EQ(1, idf_debugging.getInt(Output_DebuggingDataFields::ReportDuringWarmup).get());
   }
 }
 
@@ -97,14 +97,15 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDebuggingData) {
   ReverseTranslator rt;
 
   Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
-  OptionalWorkspaceObject _i_outputDebuggingData = w.addObject(IdfObject(IddObjectType::Output_DebuggingData));
-  ASSERT_TRUE(_i_outputDebuggingData);
 
   // Not there, Model shouldn't have it either
   {
     Model m = rt.translateWorkspace(w);
     EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputDebuggingData>());
   }
+
+  OptionalWorkspaceObject _i_outputDebuggingData = w.addObject(IdfObject(IddObjectType::Output_DebuggingData));
+  ASSERT_TRUE(_i_outputDebuggingData);
 
   {
     EXPECT_TRUE(_i_outputDebuggingData->setDouble(Output_DebuggingDataFields::ReportDebuggingData, 1.0));
@@ -120,7 +121,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDebuggingData) {
 
   {
     EXPECT_TRUE(_i_outputDebuggingData->setDouble(Output_DebuggingDataFields::ReportDebuggingData, 0.0)); // Anything but 1.0 is false
-    EXPECT_TRUE(_i_outputDebuggingData->setString(Output_DebuggingDataFields::ReportDuringWarmup, 1.0));
+    EXPECT_TRUE(_i_outputDebuggingData->setDouble(Output_DebuggingDataFields::ReportDuringWarmup, 1.0));
 
     Model m = rt.translateWorkspace(w);
 

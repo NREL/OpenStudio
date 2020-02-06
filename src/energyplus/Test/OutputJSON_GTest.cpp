@@ -59,18 +59,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputJSON) {
   // Get the unique object
   OutputJSON outputJSON = m.getUniqueModelObject<OutputJSON>();
 
-  // All false: not translated
-  {
-    EXPECT_TRUE(outputJSON.setOutputJSON(false));
-    EXPECT_TRUE(outputJSON.setOutputCBOR(false));
-    EXPECT_TRUE(outputJSON.setOutputMessagePack(false));
-
-    Workspace w = ft.translateModel(m);
-
-    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_JSON);
-    EXPECT_EQ(0u, idfObjs.size());
-  }
-
   // Check all cases where a single output request is True so we know we assigned the fields correctly
   auto boolToString = [](bool b) { return b ? "Yes" : "No";};
 
@@ -102,12 +90,13 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputJSON) {
   ReverseTranslator rt;
 
   Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
-  OptionalWorkspaceObject _i_outputJSON = w.addObject(IdfObject(IddObjectType::Output_JSON));
-  ASSERT_TRUE(_i_outputJSON);
 
   // Not there, Model shouldn't have it either
   Model m = rt.translateWorkspace(w);
   EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputJSON>());
+
+  OptionalWorkspaceObject _i_outputJSON = w.addObject(IdfObject(IddObjectType::Output_JSON));
+  ASSERT_TRUE(_i_outputJSON);
 
   auto boolToString = [](bool b) { return b ? "Yes" : "No";};
 
