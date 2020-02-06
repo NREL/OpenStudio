@@ -30075,8 +30075,8 @@ OS:Output:Meter,
        \memo external-list autoRDDmeter
   A3, \field Reporting Frequency
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
-       \note RunPeriod, Environment, and Annual are the same
-       \note RunPeriod, Environment, and Annual are synonymous
+       \note RunPeriod and Environment are the same
+       \note RunPeriod and Environment are synonymous
        \type choice
        \default Hourly
        \key Timestep
@@ -30123,8 +30123,8 @@ OS:Output:Variable,
   A5, \field Reporting Frequency
        \note Detailed lists every instance (i.e. HVAC variable timesteps)
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
-       \note RunPeriod, Environment, and Annual are the same
-       \note RunPeriod, Environment, and Annual are synonymous
+       \note RunPeriod and Environment are the same
+       \note RunPeriod and Environment are synonymous
        \type choice
        \default Hourly
        \key Detailed
