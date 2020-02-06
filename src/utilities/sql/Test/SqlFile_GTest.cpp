@@ -497,7 +497,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
 
-  { // RunPeriod - synonymous with Environment and Annual
+  { // RunPeriod - synonymous with Environment
     openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "RunPeriod", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
     ts = sqlFile->timeSeries(availableEnvPeriods[0], "Run Period", "Zone Mean Air Temperature", "Main Zone");
@@ -507,10 +507,6 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     ts = sqlFile->timeSeries(availableEnvPeriods[0], "Environment", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
     ts = sqlFile->timeSeries(availableEnvPeriods[0], "Environment", "Zone Mean Air Temperature", "MAIN ZONE");
-    EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Annual", "Zone Mean Air Temperature", "Main Zone");
-    EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Annual", "Zone Mean Air Temperature", "MAIN ZONE");
     EXPECT_TRUE(ts);
     ts = sqlFile->timeSeries(availableEnvPeriods[0], "RunPeriod", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
