@@ -66,6 +66,9 @@ protected:
   // tear down after for each test
   virtual void TearDown() override {
 
+    // Close the sqlFile
+    sqlFile.close();
+
     // Delete the sql file we copied
     openstudio::filesystem::remove(currentSqlPath);
   }
