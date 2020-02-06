@@ -10,6 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
   # Support Unix Makefiles and Ninja
+  message(STATUS "Using CCACHE")
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
