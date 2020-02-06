@@ -34,22 +34,24 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/OutputJSON.hpp"
-#include "../../model/OUtputJSON_Impl.hpp"
+#include "../../model/OutputDiagnostics.hpp"
+#include "../../model/OUtputDiagnostics_Impl.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
-#include <utilities/idd/Output_JSON_FieldEnums.hxx>
+#include <utilities/idd/Output_Diagnostics_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_OutputJSON) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_OutputDiagnostics) {
 
   ForwardTranslator ft;
 
@@ -57,77 +59,72 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputJSON) {
   Model m;
 
   // Get the unique object
-  OutputJSON outputJSON = m.getUniqueModelObject<OutputJSON>();
+  OutputDiagnostics outputDiagnostics = m.getUniqueModelObject<OutputDiagnostics>();
 
-  // All false: not translated
+  EXPECT_TRUE(outputDiagnostics.keys().empty());
+  // No keys: not translated
   {
-    EXPECT_TRUE(outputJSON.setOutputJSON(false));
-    EXPECT_TRUE(outputJSON.setOutputCBOR(false));
-    EXPECT_TRUE(outputJSON.setOutputMessagePack(false));
-
     Workspace w = ft.translateModel(m);
 
-    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_JSON);
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_Diagnostics);
     EXPECT_EQ(0u, idfObjs.size());
   }
 
-  // Check all cases where a single output request is True so we know we assigned the fields correctly
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
-
-  for (int i = 0; i < 3; ++i) {
-    bool status[] = {false, false, false};
-    status[i] = true;
-    bool json = status[0];
-    bool cbor = status[1];
-    bool msgpack = status[2];
-    EXPECT_TRUE(outputJSON.setOutputJSON(json));
-    EXPECT_TRUE(outputJSON.setOutputCBOR(cbor));
-    EXPECT_TRUE(outputJSON.setOutputMessagePack(msgpack));
+  {
+    std::vector<std::string> keys({"ReportDuringWarmup", "ReportDetailedWarmupConvergence", "ReportDuringHVACSizingSimulation"});
+    EXPECT_TRUE(outputDiagnostics.setKeys(keys));
+    EXPECT_EQ(3u, outputDiagnostics.keys().size())
 
     Workspace w = ft.translateModel(m);
 
-    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_JSON);
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_Diagnostics);
     ASSERT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_diagnostics(idfObjs[0]);
 
-    WorkspaceObject idf_json(idfObjs[0]);
 
-    EXPECT_EQ(boolToString(json), idf_json.getString(Output_JSONFields::OutputJSON).get());
-    EXPECT_EQ(boolToString(cbor), idf_json.getString(Output_JSONFields::OutputCBOR).get());
-    EXPECT_EQ(boolToString(msgpack), idf_json.getString(Output_JSONFields::OutputMessagePack).get());
+    ASSERT_EQ(3u, idf_diagnostics.extensibleGroups().size());
+    for (int i = 0; i < 3; ++i) {
+      EXPECT_EQ(keys[i], idf_diagnostics.extensibleGroups()[i].getString(Output_DiagnosticsExtensibleFields::Key).get());
+    }
   }
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_OutputJSON) {
+TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDiagnostics) {
 
   ReverseTranslator rt;
 
   Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
-  OptionalWorkspaceObject _i_outputJSON = w.addObject(IdfObject(IddObjectType::Output_JSON));
-  ASSERT_TRUE(_i_outputJSON);
+  OptionalWorkspaceObject _i_outputDiagnostics = w.addObject(IdfObject(IddObjectType::Output_Diagnostics));
+  ASSERT_TRUE(_i_outputDiagnostics);
 
   // Not there, Model shouldn't have it either
-  Model m = rt.translateWorkspace(w);
-  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputJSON>());
+  {
+    Model m = rt.translateWorkspace(w);
+    EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputDiagnostics>());
+  }
 
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
+  {
+    std::vector<std::string> keys({"ReportDuringWarmup", "ReportDetailedWarmupConvergence",
+                                  // Oops, this one is twice
+                                  "ReportDuringHVACSizingSimulation", "ReportDuringHVACSizingSimulation"});
 
-  for (int i = 0; i < 3; ++i) {
-    bool status[] = {false, false, false};
-    status[i] = true;
-    bool json = status[0];
-    bool cbor = status[1];
-    bool msgpack = status[2];
+    for (const auto key: keys) {
+      IdfExtensibleGroup eg = _i_outputDiagnostics->pushExtensibleGroup();
+      EXPECT_TRUE(eg.setString(Output_DiagnosticsExtensibleFields::Key, key));
+    }
 
-    EXPECT_TRUE(_i_outputJSON->setString(Output_JSONFields::OutputJSON, boolToString(json)));
-    EXPECT_TRUE(_i_outputJSON->setString(Output_JSONFields::OutputCBOR, boolToString(cbor)));
-    EXPECT_TRUE(_i_outputJSON->setString(Output_JSONFields::OutputMessagePack, boolToString(msgpack)));
+    EXPECT_EQ(4u, _i_outputDiagnostics.->extensibleGroups().size());
 
     Model m = rt.translateWorkspace(w);
 
     // Get the unique object
-    OutputJSON outputJSON = m.getUniqueModelObject<OutputJSON>();
-    EXPECT_EQ(json, outputJSON.outputJSON());
-    EXPECT_EQ(cbor, outputJSON.outputCBOR());
-    EXPECT_EQ(msgpack, outputJSON.outputMessagePack());
+    OutputDiagnostics outputDiagnostics = m.getUniqueModelObject<OutputDiagnostics>();
+
+    // Should have three keys, one was duplicate
+    ASSERT_EQ(3u, outputDiagnostics.keys().size());
+    for (int i = 0; i < 3; ++i) {
+      EXPECT_EQ(keys[i], outputDiagnostics.keys()[i]);
+    }
   }
 }
+

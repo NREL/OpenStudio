@@ -34,22 +34,22 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/OutputJSON.hpp"
-#include "../../model/OUtputJSON_Impl.hpp"
+#include "../../model/OutputDebuggingData.hpp"
+#include "../../model/OUtputDebuggingData_Impl.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
 
-#include <utilities/idd/Output_JSON_FieldEnums.hxx>
+#include <utilities/idd/Output_DebuggingData_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_OutputJSON) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_OutputDebuggingData) {
 
   ForwardTranslator ft;
 
@@ -57,77 +57,76 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputJSON) {
   Model m;
 
   // Get the unique object
-  OutputJSON outputJSON = m.getUniqueModelObject<OutputJSON>();
+  OutputDebuggingData outputDebuggingData = m.getUniqueModelObject<OutputDebuggingData>();
 
-  // All false: not translated
   {
-    EXPECT_TRUE(outputJSON.setOutputJSON(false));
-    EXPECT_TRUE(outputJSON.setOutputCBOR(false));
-    EXPECT_TRUE(outputJSON.setOutputMessagePack(false));
+    EXPECT_TRUE(outputDebuggingData.setReportDebuggingData(true));
+    EXPECT_TRUE(outputDebuggingData.setReportDuringWarmup(false));
 
     Workspace w = ft.translateModel(m);
 
-    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_JSON);
-    EXPECT_EQ(0u, idfObjs.size());
-  }
-
-  // Check all cases where a single output request is True so we know we assigned the fields correctly
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
-
-  for (int i = 0; i < 3; ++i) {
-    bool status[] = {false, false, false};
-    status[i] = true;
-    bool json = status[0];
-    bool cbor = status[1];
-    bool msgpack = status[2];
-    EXPECT_TRUE(outputJSON.setOutputJSON(json));
-    EXPECT_TRUE(outputJSON.setOutputCBOR(cbor));
-    EXPECT_TRUE(outputJSON.setOutputMessagePack(msgpack));
-
-    Workspace w = ft.translateModel(m);
-
-    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_JSON);
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_DebuggingData);
     ASSERT_EQ(1u, idfObjs.size());
 
-    WorkspaceObject idf_json(idfObjs[0]);
+    WorkspaceObject idf_debugging(idfObjs[0]);
 
-    EXPECT_EQ(boolToString(json), idf_json.getString(Output_JSONFields::OutputJSON).get());
-    EXPECT_EQ(boolToString(cbor), idf_json.getString(Output_JSONFields::OutputCBOR).get());
-    EXPECT_EQ(boolToString(msgpack), idf_json.getString(Output_JSONFields::OutputMessagePack).get());
+    // E+ uses a numeric field to store this..
+    EXPECT_EQ(1.0, idf_debugging.getDouble(Output_DebuggingDataFields::ReportDebuggingData).get());
+    EXPECT_EQ(0.0, idf_debugging.getDouble(Output_DebuggingDataFields::ReportDuringWarmup).get());
+  }
+
+  {
+    EXPECT_TRUE(outputDebuggingData.setReportDebuggingData(false));
+    EXPECT_TRUE(outputDebuggingData.setReportDuringWarmup(true));
+
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_DebuggingData);
+    ASSERT_EQ(1u, idfObjs.size());
+
+    WorkspaceObject idf_debugging(idfObjs[0]);
+
+    // E+ uses a numeric field to store this..
+    EXPECT_EQ(0.0, idf_debugging.getDouble(Output_DebuggingDataFields::ReportDebuggingData).get());
+    EXPECT_EQ(1.0, idf_debugging.getDouble(Output_DebuggingDataFields::ReportDuringWarmup).get());
   }
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_OutputJSON) {
+TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDebuggingData) {
 
   ReverseTranslator rt;
 
   Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
-  OptionalWorkspaceObject _i_outputJSON = w.addObject(IdfObject(IddObjectType::Output_JSON));
-  ASSERT_TRUE(_i_outputJSON);
+  OptionalWorkspaceObject _i_outputDebuggingData = w.addObject(IdfObject(IddObjectType::Output_DebuggingData));
+  ASSERT_TRUE(_i_outputDebuggingData);
 
   // Not there, Model shouldn't have it either
-  Model m = rt.translateWorkspace(w);
-  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputJSON>());
+  {
+    Model m = rt.translateWorkspace(w);
+    EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputDebuggingData>());
+  }
 
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
-
-  for (int i = 0; i < 3; ++i) {
-    bool status[] = {false, false, false};
-    status[i] = true;
-    bool json = status[0];
-    bool cbor = status[1];
-    bool msgpack = status[2];
-
-    EXPECT_TRUE(_i_outputJSON->setString(Output_JSONFields::OutputJSON, boolToString(json)));
-    EXPECT_TRUE(_i_outputJSON->setString(Output_JSONFields::OutputCBOR, boolToString(cbor)));
-    EXPECT_TRUE(_i_outputJSON->setString(Output_JSONFields::OutputMessagePack, boolToString(msgpack)));
+  {
+    EXPECT_TRUE(_i_outputDebuggingData->setDouble(Output_DebuggingDataFields::ReportDebuggingData, 1.0));
+    EXPECT_TRUE(_i_outputDebuggingData->setString(Output_DebuggingDataFields::ReportDuringWarmup, "")); // empty is false
 
     Model m = rt.translateWorkspace(w);
 
     // Get the unique object
-    OutputJSON outputJSON = m.getUniqueModelObject<OutputJSON>();
-    EXPECT_EQ(json, outputJSON.outputJSON());
-    EXPECT_EQ(cbor, outputJSON.outputCBOR());
-    EXPECT_EQ(msgpack, outputJSON.outputMessagePack());
+    OutputDebuggingData outputDebuggingData = m.getUniqueModelObject<OutputDebuggingData>();
+    EXPECT_TRUE(outputDebuggingData.reportDebuggingData());
+    EXPECT_FALSE(outputDebuggingData.reportDuringWarmup());
+  }
+
+  {
+    EXPECT_TRUE(_i_outputDebuggingData->setDouble(Output_DebuggingDataFields::ReportDebuggingData, 0.0)); // Anything but 1.0 is false
+    EXPECT_TRUE(_i_outputDebuggingData->setString(Output_DebuggingDataFields::ReportDuringWarmup, 1.0));
+
+    Model m = rt.translateWorkspace(w);
+
+    // Get the unique object
+    OutputDebuggingData outputDebuggingData = m.getUniqueModelObject<OutputDebuggingData>();
+    EXPECT_FALSE(outputDebuggingData.reportDebuggingData());
+    EXPECT_TRUE(outputDebuggingData.reportDuringWarmup());
   }
 }

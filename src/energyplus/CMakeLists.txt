@@ -610,8 +610,8 @@ set(${target_name}_test_src
   Test/Lights_GTest.cpp
   Test/Luminaire_GTest.cpp
   Test/Meter_GTest.cpp
-  #Test/OutputDebuggingData_GTest.cpp
-  #Test/OutputDiagnostics_GTest.cpp
+  Test/OutputDebuggingData_GTest.cpp
+  Test/OutputDiagnostics_GTest.cpp
   Test/OutputJSON_GTest.cpp
   Test/People_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
