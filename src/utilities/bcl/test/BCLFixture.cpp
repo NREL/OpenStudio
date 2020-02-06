@@ -64,8 +64,10 @@ void BCLFixture::SetUp() {
 
 void BCLFixture::TearDown() {
 
-  openstudio::filesystem::remove_all(currentLocalBCLPath);
-
+  LocalBCL::close();
+  try {
+    openstudio::filesystem::remove_all(currentLocalBCLPath);
+  }
 }
 
 void BCLFixture::SetUpTestCase() {

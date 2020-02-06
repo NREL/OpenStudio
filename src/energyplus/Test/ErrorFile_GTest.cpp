@@ -90,6 +90,10 @@ TEST_F(EnergyPlusFixture,ErrorFile_WarningsAndSevere)
   openstudio::path path = resourcesPath() / openstudio::toPath("energyplus/ErrorFiles/WarningsAndSevere.err");
 
   ErrorFile errorFile(path);
+  //openstudio::filesystem::ifstream f(path);
+  //if (f.is_open()) {
+    //EXPECT_TRUE(false) << f.rdbuf();
+  //}
   ASSERT_EQ(static_cast<unsigned>(46), errorFile.warnings().size()) << "Number of warnings mistmatch for error file at '" << path << "'.";
   EXPECT_EQ("Output:PreprocessorMessage=\"EPXMLPreProc2\" has the following Warning conditions:\n Requested glazing exceeds available area for\n B6CCD5_window_1.  Reducing sill height to fit.",
             errorFile.warnings()[0]);
