@@ -152,6 +152,7 @@ namespace openstudio{
         canLibraryPath = openstudio::filesystem::canonical(canLibraryPath);
       }
       if (ptr->libraryPath() != canLibraryPath) {
+        ptr->closeConnection();
         ptr.reset();
         ptr = std::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
       }
@@ -167,17 +168,26 @@ namespace openstudio{
 
   void LocalBCL::close()
   {
+    // Close the connection to the database if needed
+    instanceInternal()->closeConnection();
+    // reset pointer
     instanceInternal().reset();
   }
 
-  LocalBCL::~LocalBCL()
+  bool LocalBCL::closeConnection()
   {
     // Close the connection to the database if needed
     if (m_connectionOpen) {
       sqlite3_close(m_db);
       m_connectionOpen = false;
     }
+    return true;
+  }
 
+  LocalBCL::~LocalBCL()
+  {
+    // Close the connection to the database if needed
+    closeConnection();
   }
 
   bool LocalBCL::initializeLocalDb()

@@ -54,6 +54,7 @@ class BCLFixture : public ::testing::Test {
   // set up logging
   REGISTER_LOGGER("BCLFixture");
 
+ public:
   // Note: storage for static variables must be defined in a separate .cpp file
   static std::string prodAuthKey;
   static std::string devAuthKey;
@@ -63,8 +64,6 @@ class BCLFixture : public ::testing::Test {
 
   // Unique path to the current test's BCL location
   openstudio::path currentLocalBCLPath;
-
-  virtual ~BCLFixture() {}
 };
 
 #endif // UTILITIES_BCL_TEST_BCLFIXTURE_HPP
