@@ -152,6 +152,7 @@ namespace openstudio{
         canLibraryPath = openstudio::filesystem::canonical(canLibraryPath);
       }
       if (ptr->libraryPath() != canLibraryPath) {
+        // TODO: same comment as in LocalBCL::close, can we be sure that ptr.reset() actually ends up calling the dtor?
         ptr->closeConnection();
         ptr.reset();
         ptr = std::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
@@ -168,7 +169,10 @@ namespace openstudio{
 
   void LocalBCL::close()
   {
-    // Close the connection to the database if needed
+    // Close the connection to the database if needed.
+    // TODO: something is bugging me here. why are we using a std::shared_ptr and not unique_ptr?
+    // shared_ptr -> reset() should destroy the object (which calls closeConnection) if it's only reference left, which it should...
+    // TODO: probabably not needed
     instanceInternal()->closeConnection();
     // reset pointer
     instanceInternal().reset();
