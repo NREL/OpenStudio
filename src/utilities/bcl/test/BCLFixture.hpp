@@ -55,11 +55,14 @@ class BCLFixture : public ::testing::Test {
   REGISTER_LOGGER("BCLFixture");
 
  public:
+
+  // This is assigned in SetUp, per test, so doesn't have to be static
+  std::string prodAuthKey;
+  std::string devAuthKey;
+
   // Note: storage for static variables must be defined in a separate .cpp file
-  static std::string prodAuthKey;
-  static std::string devAuthKey;
-  static std::string defaultProdAuthKey;
-  static std::string defaultDevAuthKey;
+  const static std::string defaultProdAuthKey;
+  const static std::string defaultDevAuthKey;
   static boost::optional<openstudio::FileLogSink> logFile;
 
   // Unique path to the current test's BCL location

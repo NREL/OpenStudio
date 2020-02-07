@@ -43,6 +43,12 @@ void BCLFixture::SetUp() {
   std::string currentTestName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
   currentLocalBCLPath = resourcesPath() / toPath("utilities/BCL") / toPath(currentTestName);
 
+  // If for some reason (like CTRL+C) the previous pass didn't get cleaned up, do it
+  try {
+    openstudio::filesystem::remove_all(currentLocalBCLPath);
+  } catch (...) {  }
+
+
   // Initialize the LocalBCL Singleton at the given library path
   LocalBCL& bcl = LocalBCL::instance(currentLocalBCLPath);
 
@@ -80,10 +86,8 @@ void BCLFixture::TearDownTestSuite() {
   logFile->disable();
 }
 
-std::string BCLFixture::prodAuthKey;
-std::string BCLFixture::devAuthKey;
-
-// these are Dan's API keys labelled under "Testing", delete when there is a better way to do this
-std::string BCLFixture::defaultProdAuthKey("2da842aa2d457703d8fdcb5c53080ace");
-std::string BCLFixture::defaultDevAuthKey("e8051bca77787c0df16cbe13452e7580");
+// define static storage
 boost::optional<openstudio::FileLogSink> BCLFixture::logFile;
+// these are Dan's API keys labelled under "Testing", delete when there is a better way to do this
+const std::string BCLFixture::defaultProdAuthKey("2da842aa2d457703d8fdcb5c53080ace");
+const std::string BCLFixture::defaultDevAuthKey("e8051bca77787c0df16cbe13452e7580");
