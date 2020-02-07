@@ -82,7 +82,7 @@ namespace energyplus {
 
     // matches[1], warning/error type
     // matches[2], rest of line
-    boost::regex warningOrError("^\\s*\\**\\s+\\*\\*\\s*([^\\s\\*]+)\\s*\\*\\*(.*)$");
+    boost::regex warningOrError("^\\s*\\**\\s+\\*\\*\\s*([[:alpha:]]+)\\s*\\*\\*(.*)$");
 
     // matches[1], rest of line
     boost::regex warningOrErrorContinue("^\\s*\\**\\s+\\*\\*\\s*~~~\\s*\\*\\*(.*)$");
