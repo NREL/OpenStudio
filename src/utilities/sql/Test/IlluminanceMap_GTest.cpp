@@ -74,7 +74,7 @@ protected:
   }
 
   // initialize static members
-  static void SetUpTestCase()
+  static void SetUpTestSuite()
   {
     logFile = FileLogSink(toPath("./IlluminanceMapFixture.log"));
     logFile->setLogLevel(Info);
@@ -86,7 +86,7 @@ protected:
   }
 
   // tear down static members
-  static void TearDownTestCase()
+  static void TearDownTestSuite()
   {
     logFile->disable();
   }

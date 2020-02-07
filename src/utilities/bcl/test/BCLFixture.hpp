@@ -46,10 +46,10 @@ class BCLFixture : public ::testing::Test {
   virtual void TearDown() override;
 
   // initialize static members
-  static void SetUpTestCase();
+  static void SetUpTestSuite();
 
   // tear down static members
-  static void TearDownTestCase();
+  static void TearDownTestSuite();
 
   // set up logging
   REGISTER_LOGGER("BCLFixture");

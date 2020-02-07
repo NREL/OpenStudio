@@ -70,13 +70,13 @@ void BCLFixture::TearDown() {
   } catch (...) {  }
 }
 
-void BCLFixture::SetUpTestCase() {
+void BCLFixture::SetUpTestSuite() {
   // set up logging
   logFile = FileLogSink(toPath("./BCLFixture.log"));
   logFile->setLogLevel(Info);
 }
 
-void BCLFixture::TearDownTestCase() {
+void BCLFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

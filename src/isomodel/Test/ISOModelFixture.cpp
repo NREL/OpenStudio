@@ -35,13 +35,13 @@ void ISOModelFixture::SetUp() {}
 
 void ISOModelFixture::TearDown() {}
 
-void ISOModelFixture::SetUpTestCase() {
+void ISOModelFixture::SetUpTestSuite() {
   // set up logging
   openstudio::Logger::instance().standardOutLogger().disable();
   logFile = std::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./ISOModelFixture.log")));
 }
 
-void ISOModelFixture::TearDownTestCase() {
+void ISOModelFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

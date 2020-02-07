@@ -42,13 +42,13 @@ void DataFixture::TearDown() {
 }
 
 // initialize static members
-void DataFixture::SetUpTestCase() {
+void DataFixture::SetUpTestSuite() {
   logFile = FileLogSink(toPath("./DataFixture.log"));
   logFile->setLogLevel(Info);
 }
 
 // tear down static members
-void DataFixture::TearDownTestCase() {
+void DataFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

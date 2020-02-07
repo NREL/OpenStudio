@@ -35,14 +35,14 @@ void SDDFixture::SetUp() {}
 
 void SDDFixture::TearDown() {}
 
-void SDDFixture::SetUpTestCase() {
+void SDDFixture::SetUpTestSuite() {
   // set up logging
   openstudio::Logger::instance().standardOutLogger().disable();
   logFile = std::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./SDDFixture.log")));
   logFile->setLogLevel(Info);
 }
 
-void SDDFixture::TearDownTestCase() {
+void SDDFixture::TearDownTestSuite() {
   logFile->disable();
 }
 
