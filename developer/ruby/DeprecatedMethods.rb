@@ -15,7 +15,7 @@ DEPRECATED_MD_PATH = File.join(File.dirname(__FILE__), 'deprecated_methods.md')
 # It greps for 'project(OpenStudio VERSION X.Y.Z)
 # It will raise if something goes wrong
 #
-# @param cmake_path [String] The path to openstudiocore CMakeLists.txt
+# @param cmake_path [String] The path to sdk core CMakeLists.txt
 # @return [String] the resulting version, eg "2.8.0".
 def parse_version_from_cmakelist(cmake_path)
   version_line = nil
@@ -43,7 +43,7 @@ end
 def parse_new_deprecated(known_deprecated, os_version_str)
   new_deprecated = []
   old_deprecated = []
-  Dir.glob( File.join(ROOT_DIR, "openstudiocore/src/**/*.hpp") ) do |p|
+  Dir.glob( File.join(ROOT_DIR, "src/**/*.hpp") ) do |p|
 
     class_name = File.basename(p).sub('.hpp', '')
     content = File.read(p)
@@ -138,7 +138,7 @@ def output_to_markdown(new_table)
 
 end
 
-cmake_path = File.join(ROOT_DIR, 'openstudiocore/CMakeLists.txt')
+cmake_path = File.join(ROOT_DIR, 'CMakeLists.txt')
 os_version_str = parse_version_from_cmakelist(cmake_path)
 
 
