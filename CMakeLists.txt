@@ -847,6 +847,13 @@ include_directories("${PROJECT_BINARY_DIR}/src/")
 ###############################################################################
 
 ###############################################################################
+# RPATH settings
+# Conan set this to true, which is not the cmake default and not what we want
+# for the openstudio targets
+set(CMAKE_SKIP_RPATH FALSE)
+###############################################################################
+
+###############################################################################
 # Add project sub directories
 
 if(MSVC)
