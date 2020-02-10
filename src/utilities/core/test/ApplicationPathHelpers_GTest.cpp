@@ -215,12 +215,14 @@ TEST(ApplicationPathHelpers, Simple_test_forThisModule) {
     // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
 #if defined(_WIN32)
   #if _DEBUG
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/openstudio_utilities_tests.exe");
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/libopenstudiolib.dll");
   #else
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/openstudio_utilities_tests.exe");
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/libopenstudiolib.dll");
   #endif
+#elif __APPLE__
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/libopenstudiolib.dylib");
 #else
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/libopenstudiolib.so");
 #endif
     expectedOpenstudioModulePath = completeAndNormalize(expectedOpenstudioModulePath);
     EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
