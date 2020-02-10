@@ -72,7 +72,7 @@ struct WeekScheduleStruct{
   std::string thursdaySchedule;
   std::string fridaySchedule;
   std::string saturdaySchedule;
-  std::string holidayDaySchedule;
+  std::string holidaySchedule;
   std::string summerDesignDaySchedule;
   std::string winterDesignDaySchedule;
   std::string customDay1Schedule;
@@ -100,7 +100,7 @@ struct WeekScheduleStruct{
             thursdaySchedule == other.thursdaySchedule &&
             fridaySchedule == other.fridaySchedule &&
             saturdaySchedule == other.saturdaySchedule &&
-            holidayDaySchedule == other.holidayDaySchedule &&
+            holidaySchedule == other.holidaySchedule &&
             summerDesignDaySchedule == other.summerDesignDaySchedule &&
             winterDesignDaySchedule == other.winterDesignDaySchedule &&
             customDay1Schedule == other.customDay1Schedule &&
@@ -118,7 +118,7 @@ struct WeekScheduleStruct{
     weekSchedule.setString(Schedule_Week_DailyFields::ThursdaySchedule_DayName, thursdaySchedule);
     weekSchedule.setString(Schedule_Week_DailyFields::FridaySchedule_DayName, fridaySchedule);
     weekSchedule.setString(Schedule_Week_DailyFields::SaturdaySchedule_DayName, saturdaySchedule);
-    weekSchedule.setString(Schedule_Week_DailyFields::HolidaySchedule_DayName, holidayDaySchedule);
+    weekSchedule.setString(Schedule_Week_DailyFields::HolidaySchedule_DayName, holidaySchedule);
     weekSchedule.setString(Schedule_Week_DailyFields::SummerDesignDaySchedule_DayName, summerDesignDaySchedule);
     weekSchedule.setString(Schedule_Week_DailyFields::WinterDesignDaySchedule_DayName, winterDesignDaySchedule);
     weekSchedule.setString(Schedule_Week_DailyFields::CustomDay1Schedule_DayName, customDay1Schedule);
@@ -149,6 +149,8 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
     ScheduleDay defaultDaySchedule = modelObject.defaultDaySchedule();
     ScheduleDay summerDesignDaySchedule = modelObject.summerDesignDaySchedule();
     ScheduleDay winterDesignDaySchedule = modelObject.winterDesignDaySchedule();
+    // ScheduleRuleset is the one carrying the Holiday Schedule
+    ScheduleDay holidaySchedule = modelObject.holidaySchedule();
 
     // initialize day of week schedules
     ScheduleDay sundaySchedule = defaultDaySchedule;
@@ -160,7 +162,6 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
     ScheduleDay saturdaySchedule = defaultDaySchedule;
 
     // these are not yet exposed
-    ScheduleDay holidayDaySchedule = defaultDaySchedule;
     ScheduleDay customDay1Schedule = defaultDaySchedule;
     ScheduleDay customDay2Schedule = defaultDaySchedule;
 
@@ -243,9 +244,11 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
         weekSchedule->thursdaySchedule = thursdaySchedule.name().get();
         weekSchedule->fridaySchedule = fridaySchedule.name().get();
         weekSchedule->saturdaySchedule = saturdaySchedule.name().get();
-        weekSchedule->holidayDaySchedule = holidayDaySchedule.name().get();
+        // from Schedule:Ruleset
+        weekSchedule->holidaySchedule = holidaySchedule.name().get();
         weekSchedule->summerDesignDaySchedule = summerDesignDaySchedule.name().get();
         weekSchedule->winterDesignDaySchedule = winterDesignDaySchedule.name().get();
+        // Not exposed yet
         weekSchedule->customDay1Schedule = customDay1Schedule.name().get();
         weekSchedule->customDay2Schedule = customDay2Schedule.name().get();
 
@@ -309,7 +312,7 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
         weekSchedule->thursdaySchedule = thursdaySchedule.name().get();
         weekSchedule->fridaySchedule = fridaySchedule.name().get();
         weekSchedule->saturdaySchedule = saturdaySchedule.name().get();
-        weekSchedule->holidayDaySchedule = holidayDaySchedule.name().get();
+        weekSchedule->holidaySchedule = holidaySchedule.name().get();
         weekSchedule->summerDesignDaySchedule = summerDesignDaySchedule.name().get();
         weekSchedule->winterDesignDaySchedule = winterDesignDaySchedule.name().get();
         weekSchedule->customDay1Schedule = customDay1Schedule.name().get();
@@ -409,10 +412,12 @@ boost::optional<IdfObject> ForwardTranslator::translateScheduleRuleset( Schedule
   ScheduleDay defaultDaySchedule = modelObject.defaultDaySchedule();
   ScheduleDay summerDesignDaySchedule = modelObject.summerDesignDaySchedule();
   ScheduleDay winterDesignDaySchedule = modelObject.winterDesignDaySchedule();
+  ScheduleDay holidaySchedule = modelObject.holidaySchedule();
 
   translateAndMapModelObject(defaultDaySchedule);
   translateAndMapModelObject(summerDesignDaySchedule);
   translateAndMapModelObject(winterDesignDaySchedule);
+  translateAndMapModelObject(holidaySchedule);
 
   // translate schedule rules, these are returned in order
   for (ScheduleRule scheduleRule : modelObject.scheduleRules()){

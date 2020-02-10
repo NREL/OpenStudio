@@ -37,6 +37,7 @@
 #include <resources.hxx>
 
 #include <sstream>
+#include <fstream>
 
 using openstudio::energyplus::ErrorFile;
 
@@ -89,7 +90,11 @@ TEST_F(EnergyPlusFixture,ErrorFile_WarningsAndSevere)
   openstudio::path path = resourcesPath() / openstudio::toPath("energyplus/ErrorFiles/WarningsAndSevere.err");
 
   ErrorFile errorFile(path);
-  ASSERT_EQ(static_cast<unsigned>(46), errorFile.warnings().size());
+  openstudio::filesystem::ifstream f(path);
+  if (f.is_open()) {
+    EXPECT_TRUE(false) << f.rdbuf();
+  }
+  ASSERT_EQ(static_cast<unsigned>(46), errorFile.warnings().size()) << "Number of warnings mistmatch for error file at '" << path << "'.";
   EXPECT_EQ("Output:PreprocessorMessage=\"EPXMLPreProc2\" has the following Warning conditions:\n Requested glazing exceeds available area for\n B6CCD5_window_1.  Reducing sill height to fit.",
             errorFile.warnings()[0]);
   EXPECT_EQ(static_cast<unsigned>(8), errorFile.severeErrors().size());
@@ -103,7 +108,7 @@ TEST_F(EnergyPlusFixture,ErrorFile_WarningsAndCrash)
   openstudio::path path = resourcesPath() / openstudio::toPath("energyplus/ErrorFiles/WarningsAndCrash.err");
 
   ErrorFile errorFile(path);
-  ASSERT_EQ(static_cast<unsigned>(9), errorFile.warnings().size());
+  ASSERT_EQ(static_cast<unsigned>(9), errorFile.warnings().size()) << "Number of warnings mistmatch for error file at '" << path << "'.";;
   EXPECT_EQ("Output:PreprocessorMessage=\"EPXMLPreProc2\" has the following Warning condition:\n Reordered Verts for ULC convention",
             errorFile.warnings()[0]);
   EXPECT_EQ("In AirLoopHVAC RTU9_CAV there is unbalanced exhaust air flow.\n  During Warmup, Environment=FORT_WORTH TX USA TMY2-03927 WMO#=722596, at Simulation time=01/01 11:00 - 11:15\n   Unless there is balancing infiltration / ventilation air flow, this will result in\n   load due to induced outdoor air being neglected in the simulation.",

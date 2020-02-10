@@ -99,7 +99,7 @@ end
 
 
 
-model_dir = "../../openstudiocore/src/model/"
+model_dir = "../../src/model/"
 
 puts
 puts "***************************************************"

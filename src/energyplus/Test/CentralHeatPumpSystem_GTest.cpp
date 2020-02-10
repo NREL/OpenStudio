@@ -459,8 +459,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentOp
 
   }
 
-  m.save(toPath("./ft_central_hp.osm"), true);
-  w.save(toPath("./ft_central_hp.idf"), true);
+  // m.save(toPath("./ft_central_hp.osm"), true);
+  // w.save(toPath("./ft_central_hp.idf"), true);
 
 }
 

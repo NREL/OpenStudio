@@ -203,7 +203,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkEquivalentDuct)
 
   EXPECT_EQ(std::string("Airflow Network Distribution Linkage 1"), links[0].getString(0));
 
-  workspace.save(toPath("./AirflowNetworkLinkage.idf"), true);
+  // workspace.save(toPath("./AirflowNetworkLinkage.idf"), true);
 
 }
 

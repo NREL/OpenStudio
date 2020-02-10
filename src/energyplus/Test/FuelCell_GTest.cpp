@@ -193,8 +193,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorFuelCell) {
   //expect site water mains
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Site_WaterMainsTemperature).size());
 
-  model.save(toPath("./fuelcell.osm"), true);
-  workspace.save(toPath("./fuelcell.idf"), true);
+  // model.save(toPath("./fuelcell.osm"), true);
+  // workspace.save(toPath("./fuelcell.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell2) {
@@ -237,9 +237,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell2) {
   // Expect stack cooler since it is linked to a FuelCell
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_StackCooler).size());
 
-
-  model.save(toPath("./fuelcell2.osm"), true);
-  workspace.save(toPath("./fuelcell2.idf"), true);
+  // model.save(toPath("./fuelcell2.osm"), true);
+  // workspace.save(toPath("./fuelcell2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell3) {
@@ -288,10 +287,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell3) {
   // Here we didn't, so we don't expect a Stack Cooler
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Generator_FuelCell_StackCooler).size());
 
-
-
-  model.save(toPath("./fuelcell3.osm"), true);
-  workspace.save(toPath("./fuelcell3.idf"), true);
+  // model.save(toPath("./fuelcell3.osm"), true);
+  // workspace.save(toPath("./fuelcell3.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell4) {
@@ -339,7 +336,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorFuelCell4) {
   //no water mains expected
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Site_WaterMainsTemperature).size());
 
-
-  model.save(toPath("./fuelcell4.osm"), true);
-  workspace.save(toPath("./fuelcell4.idf"), true);
+  // model.save(toPath("./fuelcell4.osm"), true);
+  // workspace.save(toPath("./fuelcell4.idf"), true);
 }

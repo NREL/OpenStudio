@@ -22,12 +22,6 @@ string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
 # CPack package version does not support extended patch version
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 
-# Modify the more specific variables as needed to indicate prerelease, etc
-string(APPEND PROJECT_VERSION "-rc1")
-string(APPEND OpenStudio_VERSION "-rc1")
-string(APPEND PROJECT_VERSION_PATCH "-rc1")
-string(APPEND OpenStudio_VERSION_PATCH "-rc1")
-
 # The PROJECT_SOURCE_DIR here is OpenStudio/, which we will use instead of using CMAKE_SOURCE_DIR
 set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 # We will use BINARY_DIR instead of CMAKE_BINARY_DIR to allow this to be built as a submodule
@@ -118,6 +112,7 @@ if(NOT GIT_FOUND)
 endif()
 
 if(GIT_FOUND)
+  # Git SHA (length 10)
   execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--short=10" "HEAD"
                   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
                   TIMEOUT 10
@@ -128,6 +123,19 @@ if(GIT_FOUND)
   if(${RESULT} EQUAL 0 AND NOT "${GIT_VERSION}" EQUAL "${PROJECT_VERSION_BUILD}")
     set(PROJECT_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha
   endif()
+
+  # Git branch name
+  execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--abbrev-ref" "HEAD"
+                  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+                  TIMEOUT 10
+                  RESULT_VARIABLE RESULT
+                  OUTPUT_VARIABLE GIT_BRANCH
+                  ERROR_QUIET
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
+  if(${RESULT} EQUAL 0 AND NOT "${GIT_BRANCH}" EQUAL "${PROJECT_GIT_BRANCH}")
+    set(PROJECT_GIT_BRANCH ${GIT_BRANCH} CACHE STRING "Git Branch Name" FORCE)
+  endif()
+
 
   get_filename_component(GIT_DIR "${GIT_EXECUTABLE}" DIRECTORY)
 else()
@@ -143,14 +151,45 @@ endif()
 # Check if scope has a parent
 get_directory_property(hasParent PARENT_DIRECTORY)
 
+# README: what's the difference between all these versions?
 
-# OpenStudio version
+# The "OpenStudio_VERSION" ones should be used in CMakeLists.txt
+# * OpenStudio_VERSION: includes the prerelease tag if any: '3.0.0-rc1'
+# * OpenStudio_VERSION_PATCH: Patch + prelrease tag if any
+
+# The "OPENSTUDIO_VERSION" ones should only be used in OpenStudio.in (aside from using the the long version for naming the installer)
+# * OPENSTUDIO_VERSION: just major.minor.patch: '3.0.0'
+# * OPENSTUDIO_LONG_VERSION: includes prelrease and build sha: "3.0.0-rc1+ejfbxhza'
+
+# TODO: Modify the more specific variables as needed to indicate prerelease, etc
+# Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
+set(PROJECT_VERSION_PRERELEASE "beta")
+
+# OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
-set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}+${PROJECT_VERSION_BUILD}")
+
+if (NOT "${PROJECT_VERSION_PRERELEASE}" STREQUAL "")
+  message(STATUS "We have a prerelease tag set to '${PROJECT_VERSION_PRERELEASE}'")
+  if("${PROJECT_GIT_BRANCH}" STREQUAL "master")
+    message(AUTHOR_WARNING "You are building branch 'master', perhaps you shouldn't have included a pre-release tag")
+  endif()
+  string(APPEND OpenStudio_VERSION "-${PROJECT_VERSION_PRERELEASE}")
+  string(APPEND OpenStudio_VERSION_PATCH "-${PROJECT_VERSION_PRERELEASE}")
+  # Long version, include prerelease and build metadata. eg '3.0.0-rc1+6383a191dc'
+  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}-${PROJECT_VERSION_PRERELEASE}+${PROJECT_VERSION_BUILD}")
+else()
+  message(STATUS "We do not have a prerelease tag")
+  if(NOT "${PROJECT_GIT_BRANCH}" STREQUAL "master")
+    message(AUTHOR_WARNING "You are building another branch than master but you do not have a prerelease tag, consider adding one such as 'beta'")
+  endif()
+  # Long version, include build metadata. eg '3.0.0+6383a191dc' for an official release
+  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}+${PROJECT_VERSION_BUILD}")
+endif()
+
 # Export to parent scope
 if(hasParent)
-  set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}" PARENT_SCOPE)
-  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}+${PROJECT_VERSION_BUILD}" PARENT_SCOPE)
+  set(OPENSTUDIO_VERSION "${OPENSTUDIO_VERSION}" PARENT_SCOPE)
+  set(OPENSTUDIO_LONG_VERSION "${OPENSTUDIO_LONG_VERSION}" PARENT_SCOPE)
 endif()
 
 # EnergyPlus Idd version
@@ -1050,15 +1089,15 @@ if(BUILD_DOCUMENTATION)
     endif()
     add_custom_command(TARGET ALL_DOXYGEN
       POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OPENSTUDIO_VERSION}-doc.zip
-      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-doc.zip * -r -x!*.cfg -x!*.tag -x!*.map -x!*.md5
-      COMMAND ${PROJECT_BINARY_DIR}/7za d OpenStudio-${OPENSTUDIO_VERSION}-doc.zip index.html
+      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OpenStudio_VERSION}-doc.zip
+      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OpenStudio_VERSION}-doc.zip * -r -x!*.cfg -x!*.tag -x!*.map -x!*.md5
+      COMMAND ${PROJECT_BINARY_DIR}/7za d OpenStudio-${OpenStudio_VERSION}-doc.zip index.html
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc
     )
     add_custom_command(TARGET ALL_RDOC
       POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip
-      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip * -r
+      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OpenStudio_VERSION}-rdoc.zip
+      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OpenStudio_VERSION}-rdoc.zip * -r
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/rdoc
     )
   endif()
@@ -1093,7 +1132,7 @@ set(all_exe_targets
 
 if(UNIX AND NOT APPLE)
   foreach(targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
-    set_target_properties(${targ} PROPERTIES VERSION ${OPENSTUDIO_VERSION})
+    set_target_properties(${targ} PROPERTIES VERSION ${OpenStudio_VERSION})
   endforeach()
 endif()
 
@@ -1102,7 +1141,7 @@ configure_file("${PROJECT_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
 
 
 if(UNIX AND NOT APPLE)
-  set(examplesdir share/openstudio-${OPENSTUDIO_VERSION}/examples)
+  set(examplesdir share/openstudio-${OpenStudio_VERSION}/examples)
 else()
   set(examplesdir Examples)
 endif()
@@ -1130,7 +1169,7 @@ endif()
 set(CPACK_PACKAGE_VENDOR "National Renewable Energy Laboratory")
 set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
+set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH}) # This one includes the prerelease tag if any
 # set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
 
 # Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
@@ -1151,14 +1190,29 @@ elseif(UNIX)
   # These two will set the .deb install path correctly
   set(CPACK_SET_DESTDIR ON)
   set(CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/)
-  # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio
-  # Add an arbitrary link (broken) at build/openstudio (if build/ is your build folder) that already points to the **future** /usr/local/openstudio-x.y.z/bin/openstudio
-  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio ${CMAKE_CURRENT_BINARY_DIR}/openstudio)
-  # Plus a versioned one
-  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION})
-  # Have this link be installed with the .deb package in /usr/local/bin
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
+
+  # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio,
+  # UNLESS it's from the OpenStudioApplication
+  if (NOT hasParent)
+    # # Add an arbitrary link (broken) at build/openstudio (if build/ is your build folder) that already points to the **future** /usr/local/openstudio-x.y.z/bin/openstudio
+    # execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}/bin/openstudio ${CMAKE_CURRENT_BINARY_DIR}/openstudio)
+    # # Plus a versioned one
+    # execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}/bin/openstudio ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION})
+    # # Have this link be installed with the .deb package in /usr/local/bin
+    # install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
+    # install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
+
+    # We use a postinstallation script so we don't get conflicts when we have OSApp installed first (or another OpenStudio (sdk) version)
+    set(POSTINST_FILE "${PROJECT_BINARY_DIR}/postinst")
+    set(POSTRM_FILE "${PROJECT_BINARY_DIR}/postrm")
+    configure_file(${PROJECT_SOURCE_DIR}/debian/postinst.in ${POSTINST_FILE} @ONLY)
+    configure_file(${PROJECT_SOURCE_DIR}/debian/postrm.in ${POSTRM_FILE} @ONLY)
+    execute_process(COMMAND chmod 755 "${POSTINST_FILE}")
+    execute_process(COMMAND chmod 755 "${POSTRM_FILE}")
+
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CPACK_DEBIAN_BIN_PACKAGE_CONTROL_EXTRA};${POSTINST_FILE};${POSTRM_FILE}")
+
+  endif()
 
   # TODO: for now since Mac and Windows installers aren't doing it for core, not doing it for Unix either.
   ## Copy the icons

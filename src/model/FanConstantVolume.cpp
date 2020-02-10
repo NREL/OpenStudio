@@ -29,8 +29,6 @@
 
 #include "FanConstantVolume.hpp"
 #include "FanConstantVolume_Impl.hpp"
-#include "FanVariableVolume.hpp"
-#include "FanVariableVolume_Impl.hpp"
 #include "AirLoopHVAC.hpp"
 #include "AirLoopHVAC_Impl.hpp"
 #include "ZoneHVACComponent.hpp"

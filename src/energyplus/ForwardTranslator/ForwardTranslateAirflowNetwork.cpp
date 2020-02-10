@@ -81,6 +81,7 @@
 #include "../../model/FanConstantVolume.hpp"
 #include "../../model/FanVariableVolume.hpp"
 #include "../../model/FanOnOff.hpp"
+#include "../../model/FanSystemModel.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/AirLoopHVACZoneMixer.hpp"
 #include "../../model/AirLoopHVACZoneSplitter.hpp"
@@ -469,20 +470,23 @@ boost::optional<IdfObject> ForwardTranslator::translateAirflowNetworkFan( Airflo
 {
   IdfObject idfObject(IddObjectType::AirflowNetwork_Distribution_Component_Fan);
 
-
-  if (modelObject.fanConstantVolume()) {
-    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanConstantVolume().get().nameString());
+  if (boost::optional<FanConstantVolume> _fan = modelObject.fanConstantVolume()) {
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, _fan->nameString());
     idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::SupplyFanObjectType, "Fan:ConstantVolume");
     m_idfObjects.push_back(idfObject);
-  } else if (modelObject.fanVariableVolume()) {
-    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanVariableVolume().get().nameString());
+  } else if (boost::optional<FanVariableVolume> _fan = modelObject.fanVariableVolume()) {
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, _fan->nameString());
     idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::SupplyFanObjectType, "Fan:VariableVolume");
     m_idfObjects.push_back(idfObject);
-  } else if (modelObject.fanOnOff()) {
-    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, modelObject.fanOnOff().get().nameString());
+  } else if (boost::optional<FanOnOff> _fan = modelObject.fanOnOff()) {
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, _fan->nameString());
     idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::SupplyFanObjectType, "Fan:OnOff");
     m_idfObjects.push_back(idfObject);
-  } else {
+  } else if (boost::optional<FanSystemModel> _fan = modelObject.fanSystemModel()) {
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::FanName, _fan->nameString());
+    idfObject.setString(AirflowNetwork_Distribution_Component_FanFields::SupplyFanObjectType, "Fan:SystemModel");
+    m_idfObjects.push_back(idfObject);
+  }else {
     // Warning or error?
   }
 

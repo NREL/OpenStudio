@@ -265,7 +265,7 @@ TEST_F(ModelFixture, EMSProgram_EMSProgram2) {
   program_10.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone             1");
   EXPECT_EQ("____________My_(!@#$^&*()least)(*&^$#@!)_favorite_zone_____________2", program_10.nameString());
 
-  model.save(toPath("./EMS_nametest.osm"), true);
+  // model.save(toPath("./EMS_nametest.osm"), true);
 }
 
 TEST_F(ModelFixture, EMSProgramUid_EMSProgramUid) {
@@ -321,7 +321,7 @@ TEST_F(ModelFixture, EMSProgramUid_EMSProgramUid) {
   EXPECT_EQ(line1_test, lines.get()[0]);
   EXPECT_EQ(line2_test, lines.get()[1]);
 
-  model.save(toPath("./EMS_programUID.osm"), true);
+  // model.save(toPath("./EMS_programUID.osm"), true);
 
   EXPECT_EQ(3, fan_program_1.referencedObjects().size());
   EXPECT_EQ(true, (fan_program_1.referencedObjects()[0].nameString() == fanName) || (fan_program_1.referencedObjects()[0].nameString() == "OATdb_Sensor"));
