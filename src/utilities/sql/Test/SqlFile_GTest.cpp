@@ -521,6 +521,22 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
 
+  { // Annual
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Annual", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Annual", "Zone Mean Air Temperature", "MAIN ZONE");
+    EXPECT_TRUE(ts);
+
+    unsigned N = ts->daysFromFirstReport().size();
+
+    ASSERT_GT(N, 0u);
+    ASSERT_EQ(N, ts->values().size());
+    EXPECT_EQ(N, 1u);
+    EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime());
+    EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+  }
+
   { // Bad key name
     openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Zone that does not exist");
     EXPECT_FALSE(ts);
