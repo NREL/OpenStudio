@@ -9990,7 +9990,6 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
         \object-list HeatingCoilsDXMultiSpeed
    N1 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
         \type real
-        \minimum -20.0
         \units C
         \required-field
    A11, \field Cooling Coil
@@ -16305,7 +16304,6 @@ OS:Coil:Heating:DX:SingleSpeed,
   N5, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \units C
-       \minimum -20
        \default -8.0
   N6, \field Maximum Outdoor Dry-Bulb Temperature for Defrost Operation
        \type real
@@ -17299,7 +17297,6 @@ OS:Coil:Heating:DX:VariableSpeed,
    N4,  \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
         \required-field
         \type real
-        \minimum -50.0
         \units C
    N5,  \field Outdoor Dry-Bulb Temperature to Turn On Compressor
         \type real
@@ -24339,7 +24336,6 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \note in the DX Heating Coil object.
        \type real
        \units C
-       \minimum -20
        \default -8.0
   A10, \field Cooling Coil Name
        \note Needs to match in the DX Cooling Coil object.
