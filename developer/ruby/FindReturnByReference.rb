@@ -1,6 +1,6 @@
 
 messages = []
-Dir.glob( File.dirname(__FILE__) + "/../../openstudiocore/src/**/*.hpp") do |p|
+Dir.glob( File.dirname(__FILE__) + "/../../src/**/*.hpp") do |p|
 
   if /litesql/.match(p)
     next
