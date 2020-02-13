@@ -72,7 +72,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputDebuggingData) {
 
     // E+ uses a numeric field to store this.. I'm using getInt to avoid float comparisons
     EXPECT_EQ(1, idf_debugging.getInt(Output_DebuggingDataFields::ReportDebuggingData).get());
-    EXPECT_EQ("", idf_debugging.getString(Output_DebuggingDataFields::ReportDuringWarmup).get());
+    EXPECT_EQ(0, idf_debugging.getInt(Output_DebuggingDataFields::ReportDuringWarmup).get());
   }
 
   {
@@ -87,7 +87,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputDebuggingData) {
     WorkspaceObject idf_debugging(idfObjs[0]);
 
     // E+ uses a numeric field to store this..
-    EXPECT_EQ("", idf_debugging.getString(Output_DebuggingDataFields::ReportDebuggingData).get());
+    EXPECT_EQ(0, idf_debugging.getInt(Output_DebuggingDataFields::ReportDebuggingData).get());
     EXPECT_EQ(1, idf_debugging.getInt(Output_DebuggingDataFields::ReportDuringWarmup).get());
   }
 }
