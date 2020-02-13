@@ -98,6 +98,7 @@
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/SetpointManager_MixedAir_FieldEnums.hxx>
 #include <utilities/idd/UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -678,6 +679,11 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
     {
       _fan->setString(Fan_OnOffFields::AirInletNodeName,inletNodeName);
       _fan->setString(Fan_OnOffFields::AirOutletNodeName,outletNodeName);
+    }
+    else if( _fan->iddObject().type() == IddObjectType::Fan_SystemModel )
+    {
+      _fan->setString(Fan_SystemModelFields::AirInletNodeName,inletNodeName);
+      _fan->setString(Fan_SystemModelFields::AirOutletNodeName,outletNodeName);
     }
 
     fixSPMsForUnitarySystem(modelObject,inletNodeName,outletNodeName);

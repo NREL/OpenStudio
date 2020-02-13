@@ -38,6 +38,7 @@
 #include "HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "FanOnOff.hpp"
+// #include "FanSystemModel.hpp"
 #include "ZoneHVACEnergyRecoveryVentilatorController.hpp"
 #include "ZoneHVACEnergyRecoveryVentilatorController_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"

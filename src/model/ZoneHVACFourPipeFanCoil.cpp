@@ -465,25 +465,31 @@ namespace detail {
     bool isAllowedType = false;
 
 
-    if( istringEqual(capacityControlMethod(),"ConstantFanVariableFlow"))
-    {
-      if( fan.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume || fan.iddObjectType() == IddObjectType::OS_Fan_OnOff)
+    if( fan.iddObjectType() == IddObjectType::OS_Fan_SystemModel) {
+      // One fan to rule them all!
+      isAllowedType = true;
+
+    } else {
+      if( istringEqual(capacityControlMethod(),"ConstantFanVariableFlow"))
       {
-        isAllowedType = true;
+        if( fan.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume || fan.iddObjectType() == IddObjectType::OS_Fan_OnOff)
+        {
+          isAllowedType = true;
+        }
       }
-    }
-    else if( istringEqual(capacityControlMethod(),"CyclingFan"))
-    {
-      if( fan.iddObjectType() == IddObjectType::OS_Fan_OnOff)
+      else if( istringEqual(capacityControlMethod(),"CyclingFan"))
       {
-        isAllowedType = true;
+        if( fan.iddObjectType() == IddObjectType::OS_Fan_OnOff)
+        {
+          isAllowedType = true;
+        }
       }
-    }
-    else if( istringEqual(capacityControlMethod(),"VariableFanVariableFlow") || istringEqual(capacityControlMethod(),"VariableFanConstantFlow"))
-    {
-      if( fan.iddObjectType() == IddObjectType::OS_Fan_VariableVolume)
+      else if( istringEqual(capacityControlMethod(),"VariableFanVariableFlow") || istringEqual(capacityControlMethod(),"VariableFanConstantFlow"))
       {
-        isAllowedType = true;
+        if( fan.iddObjectType() == IddObjectType::OS_Fan_VariableVolume)
+        {
+          isAllowedType = true;
+        }
       }
     }
 
@@ -865,7 +871,8 @@ ZoneHVACFourPipeFanCoil::ZoneHVACFourPipeFanCoil(const Model& model,
     setCapacityControlMethod("CyclingFan");
   }
 
-  else if ( supplyAirFan.iddObjectType() == IddObjectType::OS_Fan_VariableVolume)
+  else if ( ( supplyAirFan.iddObjectType() == IddObjectType::OS_Fan_VariableVolume) ||
+            ( supplyAirFan.iddObjectType() == IddObjectType::OS_Fan_SystemModel) )
   {
     setCapacityControlMethod("VariableFanVariableFlow");
   }

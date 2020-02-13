@@ -83,12 +83,15 @@ namespace detail {
 
     std::string versionIdentifier() const;
 
+    boost::optional<std::string> prereleaseIdentifier() const;
+
     //@}
     /** @name Setters */
     //@{
 
     bool setVersionIdentifier(const std::string& s);
 
+    bool setPrereleaseIdentifier(const std::string& s);
     //@}
    private:
     REGISTER_LOGGER("openstudio.model.Version");

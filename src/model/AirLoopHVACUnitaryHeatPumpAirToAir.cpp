@@ -52,6 +52,8 @@
 #include "FanConstantVolume_Impl.hpp"
 #include "FanOnOff.hpp"
 #include "FanOnOff_Impl.hpp"
+#include "FanSystemModel.hpp"
+#include "FanSystemModel_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
 
@@ -404,7 +406,14 @@ namespace detail {
 
   bool AirLoopHVACUnitaryHeatPumpAirToAir_Impl::setSupplyAirFan( HVACComponent & hvacComponent )
   {
-    if( ! hvacComponent.optionalCast<FanConstantVolume>() && ! hvacComponent.optionalCast<FanOnOff>() ) { return false; };
+    // TODO: Doesn't support Fan:SystemModel yet
+    if( ! hvacComponent.optionalCast<FanConstantVolume>() &&
+        ! hvacComponent.optionalCast<FanOnOff>() // &&
+        // ! hvacComponent.optionalCast<FanSystemModel>()
+      )
+    {
+      return false;
+    };
 
     return setPointer(OS_AirLoopHVAC_UnitaryHeatPump_AirToAirFields::SupplyAirFanName,hvacComponent.handle());;
   }
@@ -713,7 +722,7 @@ AirLoopHVACUnitaryHeatPumpAirToAir::AirLoopHVACUnitaryHeatPumpAirToAir( const Mo
 
   ok = setSupplyAirFan(supplyFan);
   if (!ok) {
-    remove();
+    remove(); // Funny thing: you can't remove it, because it'll call children, which will try to get the supplyAirFan, which will not work and hit an OS_ASSERT...
     LOG_AND_THROW("Unable to set " << briefDescription() << "'s supply fan to "
                   << supplyFan.briefDescription() << ".");
   }

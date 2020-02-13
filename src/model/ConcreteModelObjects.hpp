@@ -247,6 +247,7 @@
 #include "Facility.hpp"
 #include "FanConstantVolume.hpp"
 #include "FanOnOff.hpp"
+#include "FanSystemModel.hpp"
 #include "FanVariableVolume.hpp"
 #include "FanZoneExhaust.hpp"
 #include "FFactorGroundFloorConstruction.hpp"
@@ -507,6 +508,7 @@
 #include "ZoneMixing.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "ZoneVentilationDesignFlowRate.hpp"
+#include "ZoneVentilationWindandStackOpenArea.hpp"
 
 // include all concrete ModelObject Impls too
 #include "AdditionalProperties_Impl.hpp"
@@ -726,6 +728,7 @@
 #include "Facility_Impl.hpp"
 #include "FanConstantVolume_Impl.hpp"
 #include "FanOnOff_Impl.hpp"
+#include "FanSystemModel_Impl.hpp"
 #include "FanVariableVolume_Impl.hpp"
 #include "FanZoneExhaust_Impl.hpp"
 #include "FFactorGroundFloorConstruction_Impl.hpp"
@@ -986,5 +989,6 @@
 #include "ZoneMixing_Impl.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 #include "ZoneVentilationDesignFlowRate_Impl.hpp"
+#include "ZoneVentilationWindandStackOpenArea_Impl.hpp"
 
 #endif // MODEL_CONCRETEMODELOBJECTS_HPP

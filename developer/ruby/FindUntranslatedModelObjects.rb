@@ -1,6 +1,6 @@
 
 concrete_model_objects = []
-File.open( File.dirname(__FILE__) + "/../../openstudiocore/src/model/ConcreteModelObjects.hpp") do |f|
+File.open( File.dirname(__FILE__) + "/../../src/model/ConcreteModelObjects.hpp") do |f|
   while line = f.gets
     if m = /^#include\s+\"(.*)\.hpp\"/.match(line)
       if !/Impl$/.match(m[1])
@@ -14,7 +14,7 @@ translator_methods = []
 headers = false
 if headers
   # work on hpp
-  File.open( File.dirname(__FILE__) + "/../../openstudiocore/src/energyplus/ForwardTranslator.hpp") do |f|
+  File.open( File.dirname(__FILE__) + "/../../src/energyplus/ForwardTranslator.hpp") do |f|
     while line = f.gets
       if m = /translate(.*)\s*\(/i.match(line)
         translator_methods << m[1].to_s
@@ -23,7 +23,7 @@ if headers
   end
 else
   # work on cpp
-  File.open( File.dirname(__FILE__) + "/../../openstudiocore/src/energyplus/ForwardTranslator.cpp") do |f|
+  File.open( File.dirname(__FILE__) + "/../../src/energyplus/ForwardTranslator.cpp") do |f|
     while line = f.gets
       if m = /case.*OS_(\S*)\s*:/i.match(line)
         name = m[1].to_s.gsub('_','')

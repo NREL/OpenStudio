@@ -475,6 +475,20 @@ private:
   std::string m_liquidPrecipitationQuantity; // units hr, missing 99
 };
 
+class UTILITIES_API EpwHoliday {
+
+  public:
+    EpwHoliday(const std::string& holidayName, const std::string& holidayDateString)
+      : m_holidayName(holidayName), m_holidayDateString(holidayDateString) { };
+
+    std::string holidayName() const { return m_holidayName; };
+    std::string holidayDateString() const { return m_holidayDateString; };
+
+  private:
+    std::string m_holidayName;
+    std::string m_holidayDateString;
+};
+
 /** EpwDesignCondition is one line from the EPW file. All floating point numbers are stored as strings,
 * but are checked as numbers.
 */
@@ -935,6 +949,10 @@ public:
   /// Returns true if the data period "records per hour" input matches the data point values
   bool minutesMatch() const;
 
+  boost::optional<Date> daylightSavingStartDate() const;
+  boost::optional<Date> daylightSavingEndDate() const;
+  std::vector<EpwHoliday> holidays() const;
+
 private:
 
   EpwFile();
@@ -942,6 +960,7 @@ private:
   bool parseLocation(const std::string& line);
   bool parseDesignConditions(const std::string& line);
   bool parseDataPeriod(const std::string& line);
+  bool parseHolidaysDaylightSavings(const std::string& line);
 
   // configure logging
   REGISTER_LOGGER("openstudio.EpwFile");
@@ -965,6 +984,11 @@ private:
   boost::optional<int> m_endDateActualYear;
   std::vector<EpwDataPoint> m_data;
   std::vector<EpwDesignCondition> m_designs;
+
+  bool m_leapYearObserved;
+  boost::optional<Date> m_daylightSavingStartDate;
+  boost::optional<Date> m_daylightSavingEndDate;
+  std::vector<EpwHoliday> m_holidays;
 
   bool m_isActual;
 

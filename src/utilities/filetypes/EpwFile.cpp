@@ -4267,23 +4267,24 @@ namespace openstudio{
       }
 
       switch(i) {
-        case 0:
+        case 0:  // LOCATION,
           result = result && parseLocation(line);
           break;
-        case 1:
+        case 1:  // DESIGN CONDITIONS
           result = result && parseDesignConditions(line);
           break;
-        case 2:
+        case 2:  // TYPICAL/EXTREME PERIODS
           break;
-        case 3:
+        case 3:  // GROUND TEMPERATURES
           break;
-        case 4:
+        case 4:  // HOLIDAYS/DAYLIGHT SAVINGS
+          result = result && parseHolidaysDaylightSavings(line);
           break;
-        case 5:
+        case 5:  // COMMENTS 1
           break;
-        case 6:
+        case 6:  // COMMENTS 2
           break;
-        case 7:
+        case 7:  // DATA PERIODS
           result = result && parseDataPeriod(line);
           break;
         default:
@@ -4527,6 +4528,122 @@ namespace openstudio{
       }
     }
     return true;
+  }
+
+  bool EpwFile::parseHolidaysDaylightSavings(const std::string& line) {
+
+    // HOLIDAYS/DAYLIGHT SAVINGS,No, 4/29,10/28,9,Hol:001, 1/ 1,Hol:002, 2/19,Hol:003, 5/28,Hol:004, 7/ 4,Hol:005, 9/ 3,Hol:006,10/ 8,Hol:007,11/12,Hol:008,11/22,Hol:009,12/25
+    // specified, leapYearObserved, daylightSavingStartDay, daylightSavingEndDay, numberOfHolidays, FieldSet:<holidayName , holidayDay>
+
+    std::vector<std::string> split = splitString(line, ',');
+    std::string specifier =  split[0]; boost::trim(specifier);
+    if (!istringEqual(specifier, "HOLIDAYS/DAYLIGHT SAVINGS")) {
+      LOG(Error, "Missing 'HOLIDAYS/DAYLIGHT SAVINGS' specifier in EPW file '" << m_path << "'");
+      return false;
+    }
+
+    std::string leapYearObserved =  split[1]; boost::trim(leapYearObserved);
+    if (istringEqual("Yes", leapYearObserved)) {
+      m_leapYearObserved = true;
+    } else {
+      m_leapYearObserved = false;
+    }
+
+    std::string daylightSavingStartDay =  split[2]; boost::trim(daylightSavingStartDay);
+    std::string daylightSavingEndDay = split[3]; boost::trim(daylightSavingEndDay);
+
+    bool processDaylightDates = true;
+    if (daylightSavingStartDay == "0") {
+      LOG(Debug, "No Daylightings Saving start Date");
+      processDaylightDates = false;
+    } else {
+      if (daylightSavingEndDay == "0") {
+        LOG(Error, "No Daylightings Saving End Date, skipping.");
+        processDaylightDates = false;
+      } else {
+
+        try{
+          // Parse start month and day, optional year
+          std::vector<std::string> dateSplit = splitString(daylightSavingStartDay, '/');
+          if(dateSplit.size() != 2 && dateSplit.size() != 3) {
+            LOG(Error, "Bad data Daylight Savings Start Day format '" << daylightSavingStartDay << "' in EPW file '" << m_path << "'");
+            return false;
+          }
+          int month = std::stoi(dateSplit[0]);
+          int day = std::stoi(dateSplit[1]);
+          if(dateSplit.size() == 3) {
+            int year = std::stoi(dateSplit[1]);
+            m_daylightSavingStartDate = Date(monthOfYear(month), day, year);
+          } else {
+            m_daylightSavingStartDate = Date(monthOfYear(month), day);
+          }
+        } catch(...) {
+          LOG(Error, "Failed to parse Daylight Savings Start Day '" << daylightSavingStartDay << "' in EPW file '" << m_path << "'");
+          return false;
+        }
+      }
+    }
+
+    if (processDaylightDates) {
+
+      try{
+        // Parse end month and day, optional year
+        std::vector<std::string> dateSplit = splitString(daylightSavingEndDay, '/');
+        if(dateSplit.size() != 2 && dateSplit.size() != 3) {
+          LOG(Error, "Bad data Daylight Savings End Day format '" << daylightSavingEndDay << "' in EPW file '" << m_path << "'");
+          return false;
+        }
+        int month = std::stoi(dateSplit[0]);
+        int day = std::stoi(dateSplit[1]);
+        if(dateSplit.size() == 3) {
+          int year = std::stoi(dateSplit[1]);
+          m_daylightSavingEndDate = Date(monthOfYear(month), day, year);
+        } else {
+          m_daylightSavingEndDate = Date(monthOfYear(month), day);
+        }
+      } catch(...) {
+        LOG(Error, "Failed to parse Daylight Savings End Day '" << daylightSavingEndDay << "' in EPW file '" << m_path << "'");
+        return false;
+      }
+
+    }
+
+    std::string numberOfHolidays = split[4]; boost::trim(numberOfHolidays);
+    int nHolidays = 0;
+    try{
+      nHolidays = std::stoi(numberOfHolidays);
+    } catch(...) {
+      LOG(Error, "Non-integral number of holidays in EPW file '" << m_path << "'");
+      return false;
+    }
+
+    for (int i = 5; i < 5 + (2*nHolidays); i += 2) {
+      std::string holidayName = split[i]; boost::trim(holidayName);
+      std::string holidayDay = split[i+1]; boost::trim(holidayDay);
+      // Need to parse the dates?
+
+      if (holidayName.empty() || holidayDay.empty()) {
+        LOG(Error, "Empty Holiday Day or Day for entry " << i << ": (holidayName, holidayDay) = ("
+                 << holidayName << ", " << holidayDay << "). Skipping.");
+        continue;
+      }
+      m_holidays.push_back(EpwHoliday(holidayName, holidayDay));
+    }
+
+    return true;
+
+  }
+
+  boost::optional<Date> EpwFile::daylightSavingStartDate() const {
+    return m_daylightSavingStartDate;
+  }
+
+  boost::optional<Date> EpwFile::daylightSavingEndDate() const {
+    return m_daylightSavingEndDate;
+  }
+
+  std::vector<EpwHoliday> EpwFile::holidays() const {
+    return m_holidays;
   }
 
   bool EpwFile::parseDataPeriod(const std::string& line)

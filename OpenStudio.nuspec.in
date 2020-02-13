@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>OpenStudio</id>
-    <version>@OPENSTUDIO_VERSION@</version>
+    <version>@OpenStudio_VERSION@</version>
     <authors>NREL</authors>
     <owners>NREL</owners>
     <licenseUrl>http://github.com/NREL/OpenStudio/blob/develop/LICENSE.md</licenseUrl>
@@ -10,7 +10,7 @@
     <description>Whole building energy simulation</description>
     <tags>OpenStudio EnergyPlus Simulation Modeling</tags>
     <references>
-	    <reference file="OpenStudio.dll" />
+        <reference file="OpenStudio.dll" />
     </references>
   </metadata>
   <files>

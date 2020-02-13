@@ -45,14 +45,13 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
-#include "../../model/FanOnOff.hpp"
-#include "../../model/FanOnOff_Impl.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/WaterHeater_HeatPump_PumpedCondenser_FieldEnums.hxx>
 #include <utilities/idd/Coil_WaterHeating_AirToWaterHeatPump_Pumped_FieldEnums.hxx>
 #include <utilities/idd/WaterHeater_Mixed_FieldEnums.hxx>
 #include <utilities/idd/WaterHeater_Stratified_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -370,9 +369,12 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
     if( auto idf = translateAndMapModelObject(mo) ) {
       idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::FanName,idf->name().get());
       idfObject.setString(WaterHeater_HeatPump_PumpedCondenserFields::FanObjectType,idf->iddObject().name());
-      if( mo.iddObjectType() == model::FanOnOff::iddObjectType() ) {
+      if( mo.iddObjectType() == IddObjectType::OS_Fan_OnOff ) {
         idf->setString(Fan_OnOffFields::AirInletNodeName,fanInletNodeName);
         idf->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
+      } else if( mo.iddObjectType() == IddObjectType::OS_Fan_SystemModel ) {
+        idf->setString(Fan_SystemModelFields::AirInletNodeName,fanInletNodeName);
+        idf->setString(Fan_SystemModelFields::AirOutletNodeName,fanOutletNodeName);
       } else {
         LOG(Error, modelObject.briefDescription() << " is attached to an unsupported type of fan: " << mo.briefDescription() );
       }
