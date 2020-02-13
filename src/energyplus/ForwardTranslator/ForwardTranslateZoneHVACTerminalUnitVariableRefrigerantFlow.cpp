@@ -58,6 +58,7 @@
 #include "../../utilities/math/FloatCompare.hpp"
 #include <utilities/idd/ZoneHVAC_TerminalUnit_VariableRefrigerantFlow_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableRefrigerantFlow_FieldEnums.hxx>
@@ -370,12 +371,15 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACTerminalUnitVaria
       fanOutletNodeName = outletNodeName;
     }
 
-    if( fan.iddObject().type() == model::FanOnOff::iddObjectType() ) {
+    if( fan.iddObject().type() == IddObjectType::OS_Fan_OnOff ) {
       _fan->setString(Fan_OnOffFields::AirInletNodeName,fanInletNodeName);
       _fan->setString(Fan_OnOffFields::AirOutletNodeName,fanOutletNodeName);
-    } else if( fan.iddObject().type() == model::FanConstantVolume::iddObjectType() ) {
+    } else if( fan.iddObject().type() == IddObjectType::OS_Fan_ConstantVolume) {
       _fan->setString(Fan_ConstantVolumeFields::AirInletNodeName,fanInletNodeName);
       _fan->setString(Fan_ConstantVolumeFields::AirOutletNodeName,fanOutletNodeName);
+    } else if( fan.iddObject().type() == IddObjectType::OS_Fan_SystemModel) {
+      _fan->setString(Fan_SystemModelFields::AirInletNodeName,fanInletNodeName);
+      _fan->setString(Fan_SystemModelFields::AirOutletNodeName,fanOutletNodeName);
     } else {
       LOG(Error, "VRF named " << modelObject.name().get() << " uses an unsupported fan type.");
     }

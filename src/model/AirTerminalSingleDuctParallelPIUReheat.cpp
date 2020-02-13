@@ -37,6 +37,8 @@
 #include "FanVariableVolume_Impl.hpp"
 #include "FanOnOff.hpp"
 #include "FanOnOff_Impl.hpp"
+#include "FanSystemModel.hpp"
+#include "FanSystemModel_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Node.hpp"
@@ -376,15 +378,16 @@ namespace detail {
   {
     bool isTypeCorrect = false;
 
-    if( hvacComponent.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume )
-    {
+    if (hvacComponent.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) {
+      isTypeCorrect = true;
+    } else if (hvacComponent.iddObjectType() == IddObjectType::OS_Fan_SystemModel) {
       isTypeCorrect = true;
     }
 
     if( isTypeCorrect ) {
       return setPointer(OS_AirTerminal_SingleDuct_ParallelPIU_ReheatFields::FanName,hvacComponent.handle());
     } else {
-      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume, not '" << hvacComponent.iddObjectType().valueName()
+      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume or FanSystemModel, not '" << hvacComponent.iddObjectType().valueName()
              << "') for " << briefDescription());
       return false;
     }
@@ -673,8 +676,11 @@ namespace detail {
 
   bool AirTerminalSingleDuctParallelPIUReheat_Impl::setFanAvailabilitySchedule(Schedule & schedule) {
     auto component = fan();
+    // TODO: from E+ 9.2.0 IDD: \note Fan type must be Fan:SystemModel or Fan:ConstantVolume
     if( auto constantFan = component.optionalCast<FanConstantVolume>() ) {
       return constantFan->setAvailabilitySchedule(schedule);
+    } else if(  auto systemModelFan = component.optionalCast<FanSystemModel>() ) {
+      return systemModelFan->setAvailabilitySchedule(schedule);
     } else if(  auto onOffFan = component.optionalCast<FanOnOff>() ) {
       return onOffFan->setAvailabilitySchedule(schedule);
     } else if( auto variableFan = component.optionalCast<FanVariableVolume>() ) {

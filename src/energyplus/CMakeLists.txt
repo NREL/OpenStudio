@@ -174,6 +174,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateExternalInterfaceVariable.cpp
   ForwardTranslator/ForwardTranslateFanConstantVolume.cpp
   ForwardTranslator/ForwardTranslateFanOnOff.cpp
+  ForwardTranslator/ForwardTranslateFanSystemModel.cpp
   ForwardTranslator/ForwardTranslateFanVariableVolume.cpp
   ForwardTranslator/ForwardTranslateFanZoneExhaust.cpp
   ForwardTranslator/ForwardTranslateFFactorGroundFloorConstruction.cpp
@@ -456,6 +457,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateExteriorFuelEquipment.cpp
   ReverseTranslator/ReverseTranslateExteriorWaterEquipment.cpp
   ReverseTranslator/ReverseTranslateFanConstantVolume.cpp
+  ReverseTranslator/ReverseTranslateFanSystemModel.cpp
   ReverseTranslator/ReverseTranslateFenestrationSurfaceDetailed.cpp
   ReverseTranslator/ReverseTranslateFoundationKiva.cpp
   ReverseTranslator/ReverseTranslateFoundationKivaSettings.cpp
@@ -590,6 +592,7 @@ set(${target_name}_test_src
   Test/ExternalInterfaceFT_GTest.cpp
   Test/FanConstantVolume_GTest.cpp
   Test/FanVariableVolume_GTest.cpp
+  Test/FanSystemModel_GTest.cpp
   Test/FuelCell_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp

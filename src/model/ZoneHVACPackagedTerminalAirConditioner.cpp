@@ -457,21 +457,13 @@ namespace detail {
 
   bool ZoneHVACPackagedTerminalAirConditioner_Impl::setSupplyAirFan( HVACComponent & fan )
   {
-    bool isAllowedType = false;
-
-    if( fan.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume )
+    if( (fan.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) ||
+        (fan.iddObjectType() == IddObjectType::OS_Fan_OnOff) ||
+        (fan.iddObjectType() == IddObjectType::OS_Fan_SystemModel))
     {
-      isAllowedType = true;
-    }
-    else if( fan.iddObjectType() == IddObjectType::OS_Fan_OnOff )
-    {
-      isAllowedType = true;
-    }
-
-    if( isAllowedType ) {
       return setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFanName,fan.handle());
     } else {
-      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume or FanOnOff, not '" << fan.iddObjectType().valueName()
+      LOG(Warn, "Invalid Fan Type (expected FanConstantVolume, FanOnOff or FanSystemModel, not '" << fan.iddObjectType().valueName()
              << "') for " << briefDescription());
       return false;
     }

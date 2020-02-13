@@ -808,7 +808,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         endforeach()
       ")
     else()
-      install(TARGETS ${swig_target} DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}/java")
+      install(TARGETS ${swig_target} DESTINATION "lib/openstudio-${OpenStudio_VERSION}/java")
     endif()
   endif()
 
@@ -948,7 +948,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         endif()
       ")
     else()
-      install(TARGETS ${swig_target} DESTINATION "lib/openstudio-${OPENSTUDIO_VERSION}/${V8_TYPE}")
+      install(TARGETS ${swig_target} DESTINATION "lib/openstudio-${OpenStudio_VERSION}/${V8_TYPE}")
     endif()
   endif()
 

@@ -4,14 +4,41 @@
 // Support for Ninja on Windows (Ninja isn't multi-configuration while MSVC is)
 #cmakedefine NINJA
 
+// Return the version in MAJOR.MINOR.PATCH format (eg '3.0.0')
 inline std::string openStudioVersion()
 {
   return "${OPENSTUDIO_VERSION}";
 }
 
+// Includes prerelease tag if any, and build sha, eg: '3.0.0-rc1+baflkdhsia'
 inline std::string openStudioLongVersion()
 {
   return "${OPENSTUDIO_LONG_VERSION}";
+}
+
+inline std::string openStudioVersionMajor()
+{
+  return "${PROJECT_VERSION_MAJOR}";
+}
+
+inline std::string openStudioVersionMinor()
+{
+  return "${PROJECT_VERSION_MINOR}";
+}
+
+inline std::string openStudioVersionPatch()
+{
+  return "${PROJECT_VERSION_PATCH}";
+}
+
+inline std::string openStudioVersionPrerelease()
+{
+  return "${PROJECT_VERSION_PRERELEASE}";
+}
+
+inline std::string openStudioVersionBuildSHA()
+{
+  return "${PROJECT_VERSION_BUILD}";
 }
 
 inline int energyPlusVersionMajor()

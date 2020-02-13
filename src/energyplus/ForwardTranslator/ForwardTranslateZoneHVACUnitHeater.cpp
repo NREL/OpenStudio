@@ -42,6 +42,7 @@
 #include <utilities/idd/ZoneHVAC_UnitHeater_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_VariableVolume_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
@@ -156,6 +157,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACUnitHeater(
       {
         _supplyAirFan->setString(Fan_VariableVolumeFields::AirInletNodeName,*s);
         _supplyAirFan->setString(Fan_VariableVolumeFields::AirOutletNodeName,fanOutletNodeName);
+      }
+      else if( _supplyAirFan->iddObject().type() == IddObjectType::Fan_SystemModel )
+      {
+        _supplyAirFan->setString(Fan_SystemModelFields::AirInletNodeName,*s);
+        _supplyAirFan->setString(Fan_SystemModelFields::AirOutletNodeName,fanOutletNodeName);
       }
     }
   }

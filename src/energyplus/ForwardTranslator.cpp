@@ -499,6 +499,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   }
 
 
+  // TODO: is it time to uncomment that?
   // temp code
   if (!m_keepRunControlSpecialDays){
     // DLM: we will not translate these objects until we support holidays in the GUI
@@ -1862,6 +1863,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::FanOnOff fan = modelObject.cast<FanOnOff>();
       retVal = translateFanOnOff(fan);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Fan_SystemModel :
+    {
+      model::FanSystemModel fan = modelObject.cast<FanSystemModel>();
+      retVal = translateFanSystemModel(fan);
       break;
     }
   case openstudio::IddObjectType::OS_Fan_VariableVolume :

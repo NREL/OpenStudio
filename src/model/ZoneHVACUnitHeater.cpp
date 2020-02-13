@@ -486,18 +486,33 @@ ZoneHVACUnitHeater::ZoneHVACUnitHeater(const Model& model,
   }
 
   ok = setSupplyAirFan(supplyAirFan);
-  OS_ASSERT(ok);
+  if (!ok)
+  {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Supply Air Fan to "
+                << supplyAirFan.briefDescription() << ".");
+  }
 
   ok = setHeatingCoil(heatingCoil);
-  OS_ASSERT(ok);
+  if (!ok)
+  {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Heating Coil to "
+                << supplyAirFan.briefDescription() << ".");
+  }
 
   autosizeMaximumSupplyAirFlowRate();
 
-  setFanControlType("OnOff");
+  ok = setFanControlType("OnOff");
+  OS_ASSERT(ok);
 
-  setMinimumHotWaterFlowRate(0.0);
+  autosizeMaximumHotWaterFlowRate();
 
-  setHeatingConvergenceTolerance(0.001);
+  ok = setMinimumHotWaterFlowRate(0.0);
+  OS_ASSERT(ok);
+
+  ok = setHeatingConvergenceTolerance(0.001);
+  OS_ASSERT(ok);
 
   setString(OS_ZoneHVAC_UnitHeaterFields::AvailabilityManagerListName,"");
 }
