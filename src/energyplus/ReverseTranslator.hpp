@@ -223,6 +223,12 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateMeterCustomDecrement(const WorkspaceObject & workspaceObject);
 
+  boost::optional<model::ModelObject> translateOutputDebuggingData(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateOutputDiagnostics(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateOutputJSON(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateOtherEquipment(const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translateOutputEnergyManagementSystem(const WorkspaceObject & workspaceObject);

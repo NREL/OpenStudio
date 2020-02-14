@@ -962,6 +962,15 @@ set(${target_name}_src
   OutputControlReportingTolerances.hpp
   OutputControlReportingTolerances_Impl.hpp
   OutputControlReportingTolerances.cpp
+  OutputDebuggingData.hpp
+  OutputDebuggingData_Impl.hpp
+  OutputDebuggingData.cpp
+  OutputJSON.hpp
+  OutputJSON_Impl.hpp
+  OutputJSON.cpp
+  OutputDiagnostics.hpp
+  OutputDiagnostics_Impl.hpp
+  OutputDiagnostics.cpp
   OutputEnergyManagementSystem.cpp
   OutputEnergyManagementSystem.hpp
   OutputEnergyManagementSystem_Impl.hpp
@@ -1917,6 +1926,9 @@ set(${target_name}_test_src
   test/OpaqueMaterial_GTest.cpp
   test/OtherEquipment_GTest.cpp
   test/OutputControlReportingTolerances_GTest.cpp
+  test/OutputDebuggingData_GTest.cpp
+  test/OutputJSON_GTest.cpp
+  test/OutputDiagnostics_GTest.cpp
   test/OutputEnergyManagementSystem_GTest.cpp
   test/OutputMeter_GTest.cpp
   test/OutputVariable_GTest.cpp
