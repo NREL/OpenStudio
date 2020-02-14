@@ -27,67 +27,60 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_VERSION_HPP
-#define MODEL_VERSION_HPP
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
 
-#include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-namespace openstudio {
-namespace model {
-namespace detail {
-  class Version_Impl;
+#include "../../model/Model.hpp"
+#include "../../model/StandardGlazing.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData.hpp"
+
+#include <utilities/idd/WindowMaterial_Glazing_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
+#include <resources.hxx>
+
+#include <sstream>
+
+using namespace openstudio::energyplus;
+using namespace openstudio::model;
+using namespace openstudio;
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_WindowMaterialGlazing_SpectralAverage)
+{
+  Model model;
+
+  StandardGlazing standardGlazing(model);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(model);
+
+  WorkspaceObjectVector idfObjs(w.getObjectsByType(IddObjectType::WindowMaterial_Glazing));
+  ASSERT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_windowMaterialGlazing(idfObjs[0]);
+
+  EXPECT_EQ("SpectralAverage", idf_windowMaterialGlazing.getString(WindowMaterial_GlazingFields::OpticalDataType).get());
 }
 
-class MODEL_API Version : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //{
+TEST_F(EnergyPlusFixture, ForwardTranslator_WindowMaterialGlazing_Spectral)
+{
+  Model model;
 
-  virtual ~Version() {}
+  StandardGlazing standardGlazing(model);
+  MaterialPropertyGlazingSpectralData spectralData(model);
+  spectralData.setName("Glazing Spectral Data");
+  standardGlazing.setWindowGlassSpectralDataSet(spectralData);
 
-  //@}
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(model);
 
-  static IddObjectType iddObjectType();
+  WorkspaceObjectVector idfObjs(w.getObjectsByType(IddObjectType::WindowMaterial_Glazing));
+  ASSERT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_windowMaterialGlazing(idfObjs[0]);
 
-  /** @name Getters */
-  //{
-
-  std::string versionIdentifier() const;
-
-  boost::optional<std::string> prereleaseIdentifier() const;
-
-
-  //@}
- protected:
-  /** @name Setters */
-  //@{
-
-  bool setVersionIdentifier(const std::string& s);
-  bool setPrereleaseIdentifier(const std::string& s);
-
-  //@}
-
-  // constructor
-  explicit Version(const Model& model);
-
-  typedef detail::Version_Impl ImplType;
-
-  friend class detail::Model_Impl;
-  friend class openstudio::IdfObject;
-  friend class Model;
-
-  // constructor
-  explicit Version(std::shared_ptr<detail::Version_Impl> impl);
-
- private:
-  REGISTER_LOGGER("openstudio.model.RunPeriod");
-};
-
-/** \relates Version */
-typedef boost::optional<Version> OptionalVersion;
-
+  EXPECT_EQ("Spectral", idf_windowMaterialGlazing.getString(WindowMaterial_GlazingFields::OpticalDataType).get());
+  EXPECT_TRUE(idf_windowMaterialGlazing.getString(WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName));
+  EXPECT_EQ(spectralData.name().get(), idf_windowMaterialGlazing.getString(WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName).get());
 }
-}
-
-#endif

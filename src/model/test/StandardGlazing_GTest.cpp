@@ -73,7 +73,7 @@ TEST_F(ModelFixture, StandardGlazing_GettersSetters)
   EXPECT_FALSE(standardGlazing.setOpticalDataType("BadChoice"));
   EXPECT_EQ("Spectral", standardGlazing.opticalDataType());
   EXPECT_TRUE(standardGlazing.setOpticalDataType("SpectralAverage"));
-
+  EXPECT_EQ("SpectralAverage", standardGlazing.opticalDataType());
 
 
   // Window Glass Spectral Data Set Name: Optional Object

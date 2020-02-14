@@ -27,67 +27,45 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_VERSION_HPP
-#define MODEL_VERSION_HPP
+#include "../ReverseTranslator.hpp"
 
-#include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData_Impl.hpp"
+
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
+#include <utilities/idd/MaterialProperty_GlazingSpectralData_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/IddEnums.hxx>
+
+#include "../../utilities/core/Assert.hpp"
+
+using namespace openstudio::model;
 
 namespace openstudio {
-namespace model {
-namespace detail {
-  class Version_Impl;
+namespace energyplus {
+
+boost::optional<ModelObject> ReverseTranslator::translateMaterialPropertyGlazingSpectralData(const WorkspaceObject& workspaceObject)
+{
+
+  openstudio::model::MaterialPropertyGlazingSpectralData glazingSpectralData(m_model);
+
+  // get extensible groups for spectral data fields
+  for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
+    WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+    OptionalDouble wavelength = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Wavelength);
+    OptionalDouble transmittance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Transmittance);
+    OptionalDouble frontReflectance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::FrontReflectance);
+    OptionalDouble backReflectance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::BackReflectance);
+
+    // add the spectral data field
+    glazingSpectralData.addSpectralDataField(*wavelength, *transmittance, *frontReflectance, *backReflectance);
+  }
+
+  return glazingSpectralData;
 }
 
-class MODEL_API Version : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //{
+} // energyplus
 
-  virtual ~Version() {}
+} // openstudio
 
-  //@}
-
-  static IddObjectType iddObjectType();
-
-  /** @name Getters */
-  //{
-
-  std::string versionIdentifier() const;
-
-  boost::optional<std::string> prereleaseIdentifier() const;
-
-
-  //@}
- protected:
-  /** @name Setters */
-  //@{
-
-  bool setVersionIdentifier(const std::string& s);
-  bool setPrereleaseIdentifier(const std::string& s);
-
-  //@}
-
-  // constructor
-  explicit Version(const Model& model);
-
-  typedef detail::Version_Impl ImplType;
-
-  friend class detail::Model_Impl;
-  friend class openstudio::IdfObject;
-  friend class Model;
-
-  // constructor
-  explicit Version(std::shared_ptr<detail::Version_Impl> impl);
-
- private:
-  REGISTER_LOGGER("openstudio.model.RunPeriod");
-};
-
-/** \relates Version */
-typedef boost::optional<Version> OptionalVersion;
-
-}
-}
-
-#endif

@@ -419,8 +419,7 @@ set(${target_name}_depends
   #CONAN_PKG::boost_functional
   #CONAN_PKG::boost_geometry
   CONAN_PKG::cpprestsdk
-  # TODO: this may change to lowercase
-  CONAN_PKG::OpenSSL
+  CONAN_PKG::openssl
   CONAN_PKG::geographiclib
 )
 
