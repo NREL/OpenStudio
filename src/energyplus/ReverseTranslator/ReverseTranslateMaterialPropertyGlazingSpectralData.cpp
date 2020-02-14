@@ -27,107 +27,45 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_MASSLESSOPAQUEMATERIAL_HPP
-#define MODEL_MASSLESSOPAQUEMATERIAL_HPP
+#include "../ReverseTranslator.hpp"
 
-#include "ModelAPI.hpp"
-#include "OpaqueMaterial.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData_Impl.hpp"
+
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
+#include <utilities/idd/MaterialProperty_GlazingSpectralData_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/IddEnums.hxx>
+
+#include "../../utilities/core/Assert.hpp"
+
+using namespace openstudio::model;
 
 namespace openstudio {
+namespace energyplus {
 
+boost::optional<ModelObject> ReverseTranslator::translateMaterialPropertyGlazingSpectralData(const WorkspaceObject& workspaceObject)
+{
 
-namespace model {
+  openstudio::model::MaterialPropertyGlazingSpectralData glazingSpectralData(m_model);
 
-namespace detail {
+  // get extensible groups for spectral data fields
+  for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
+    WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+    OptionalDouble wavelength = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Wavelength);
+    OptionalDouble transmittance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::Transmittance);
+    OptionalDouble frontReflectance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::FrontReflectance);
+    OptionalDouble backReflectance = workspaceGroup.getDouble(MaterialProperty_GlazingSpectralDataExtensibleFields::BackReflectance);
 
-  class MasslessOpaqueMaterial_Impl;
+    // add the spectral data field
+    glazingSpectralData.addSpectralDataField(*wavelength, *transmittance, *frontReflectance, *backReflectance);
+  }
 
-} // detail
+  return glazingSpectralData;
+}
 
-/** MasslessOpaqueMaterial is a OpaqueMaterial that wraps the OpenStudio IDD object 'OS:Material:NoMass'. */
-class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+} // energyplus
 
-  explicit MasslessOpaqueMaterial(const Model& model,
-    std::string roughness = "Smooth",
-    double thermalResistance = 0.1);
-
-  virtual ~MasslessOpaqueMaterial() {}
-
-  //@}
-
-  static IddObjectType iddObjectType();
-
-  static std::vector<std::string> roughnessValues();
-
-  /** @name Getters */
-  //@{
-
-  std::string roughness() const;
-
-  double thermalResistance() const;
-
-  boost::optional<double> thermalAbsorptance() const;
-
-  bool isThermalAbsorptanceDefaulted() const;
-
-  boost::optional<double> solarAbsorptance() const;
-
-  bool isSolarAbsorptanceDefaulted() const;
-
-  boost::optional<double> visibleAbsorptance() const;
-
-  bool isVisibleAbsorptanceDefaulted() const;
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  bool setRoughness(std::string roughness);
-
-  bool setThermalResistance(double thermalResistance);
-
-  bool setThermalAbsorptance(double thermalAbsorptance);
-
-  void resetThermalAbsorptance();
-
-  bool setSolarAbsorptance(double solarAbsorptance);
-
-  void resetSolarAbsorptance();
-
-  bool setVisibleAbsorptance(double visibleAbsorptance);
-
-  void resetVisibleAbsorptance();
-
-  //@}
-  /** @name Other */
-  //@{
-
-  //@}
- protected:
-  /// @cond
-  typedef detail::MasslessOpaqueMaterial_Impl ImplType;
-
-  explicit MasslessOpaqueMaterial(std::shared_ptr<detail::MasslessOpaqueMaterial_Impl> impl);
-
-  friend class detail::MasslessOpaqueMaterial_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.MasslessOpaqueMaterial");
-};
-
-/** \relates MasslessOpaqueMaterial*/
-typedef boost::optional<MasslessOpaqueMaterial> OptionalMasslessOpaqueMaterial;
-
-/** \relates MasslessOpaqueMaterial*/
-typedef std::vector<MasslessOpaqueMaterial> MasslessOpaqueMaterialVector;
-
-} // model
 } // openstudio
 
-#endif // MODEL_MASSLESSOPAQUEMATERIAL_HPP
