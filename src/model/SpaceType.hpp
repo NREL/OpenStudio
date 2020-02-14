@@ -59,7 +59,7 @@ class DesignSpecificationOutdoorAir;
 
 namespace detail {
 
-  class SpaceType_Impl;
+  class MODEL_API SpaceType_Impl;
 
 } // detail
 
