@@ -467,12 +467,12 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalZone( ThermalZone 
         LOG(Warn, "Rotation of " << primaryDaylightingControl->psiRotationAroundXAxis() << " degrees about X axis not mapped for OS:Daylighting:Control " << primaryDaylightingControl->name().get());
       }
 
-      if (primaryDaylightingControl->phiRotationAroundZAxis() != 0.0){
-        LOG(Warn, "Rotation of " << primaryDaylightingControl->phiRotationAroundZAxis() << " degrees about Z axis not mapped for OS:Daylighting:Control " << primaryDaylightingControl->name().get());
+      if (primaryDaylightingControl->thetaRotationAroundYAxis() != 0.0){
+        LOG(Warn, "Rotation of " << primaryDaylightingControl->thetaRotationAroundYAxis() << " degrees about Y axis not mapped for OS:Daylighting:Control " << primaryDaylightingControl->name().get());
       }
 
       // glare
-      double glareAngle = -openstudio::radToDeg(primaryDaylightingControl->thetaRotationAroundYAxis());
+      double glareAngle = primaryDaylightingControl->phiRotationAroundZAxis();
       daylightingControlObject.setDouble(
           Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis,
           glareAngle);

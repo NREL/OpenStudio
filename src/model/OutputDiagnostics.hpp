@@ -27,79 +27,56 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_MASSLESSOPAQUEMATERIAL_HPP
-#define MODEL_MASSLESSOPAQUEMATERIAL_HPP
+#ifndef MODEL_OUTPUTDIAGNOSTICS_HPP
+#define MODEL_OUTPUTDIAGNOSTICS_HPP
 
-#include "ModelAPI.hpp"
-#include "OpaqueMaterial.hpp"
+#include <model/ModelAPI.hpp>
+#include "ModelObject.hpp"
 
 namespace openstudio {
-
-
 namespace model {
 
 namespace detail {
 
-  class MasslessOpaqueMaterial_Impl;
+  class OutputDiagnostics_Impl;
 
 } // detail
 
-/** MasslessOpaqueMaterial is a OpaqueMaterial that wraps the OpenStudio IDD object 'OS:Material:NoMass'. */
-class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
+/** OutputDiagnostics is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:Diagnostics'. */
+class MODEL_API OutputDiagnostics : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  explicit MasslessOpaqueMaterial(const Model& model,
-    std::string roughness = "Smooth",
-    double thermalResistance = 0.1);
-
-  virtual ~MasslessOpaqueMaterial() {}
+  virtual ~OutputDiagnostics() {}
 
   //@}
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> roughnessValues();
+  static std::vector<std::string> keyValues();
+  static std::vector<std::string> validKeyValues();
 
   /** @name Getters */
   //@{
 
-  std::string roughness() const;
-
-  double thermalResistance() const;
-
-  boost::optional<double> thermalAbsorptance() const;
-
-  bool isThermalAbsorptanceDefaulted() const;
-
-  boost::optional<double> solarAbsorptance() const;
-
-  bool isSolarAbsorptanceDefaulted() const;
-
-  boost::optional<double> visibleAbsorptance() const;
-
-  bool isVisibleAbsorptanceDefaulted() const;
+  std::vector<std::string> keys() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setRoughness(std::string roughness);
+  // Return false if key isn't valid. If is already present, not added twice (ensures unicity) and logs an info in that case too
+  bool addKey(const std::string& key);
 
-  bool setThermalResistance(double thermalResistance);
+  // Calls clearKeys, then for each k, addKey(k)
+  bool setKeys(const std::vector<std::string>& keys);
 
-  bool setThermalAbsorptance(double thermalAbsorptance);
+  // Just a convenience function to add 'DisplayExtraWarnings' as a key since it's so common
+  bool enableDisplayExtraWarnings();
 
-  void resetThermalAbsorptance();
-
-  bool setSolarAbsorptance(double solarAbsorptance);
-
-  void resetSolarAbsorptance();
-
-  bool setVisibleAbsorptance(double visibleAbsorptance);
-
-  void resetVisibleAbsorptance();
+  // Clears out every key
+  void clearKeys();
 
   //@}
   /** @name Other */
@@ -108,26 +85,29 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
   //@}
  protected:
   /// @cond
-  typedef detail::MasslessOpaqueMaterial_Impl ImplType;
+  typedef detail::OutputDiagnostics_Impl ImplType;
 
-  explicit MasslessOpaqueMaterial(std::shared_ptr<detail::MasslessOpaqueMaterial_Impl> impl);
+  explicit OutputDiagnostics(std::shared_ptr<detail::OutputDiagnostics_Impl> impl);
 
-  friend class detail::MasslessOpaqueMaterial_Impl;
+  friend class detail::OutputDiagnostics_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
+  explicit OutputDiagnostics(Model& model);
+
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.model.MasslessOpaqueMaterial");
+  REGISTER_LOGGER("openstudio.model.OutputDiagnostics");
 };
 
-/** \relates MasslessOpaqueMaterial*/
-typedef boost::optional<MasslessOpaqueMaterial> OptionalMasslessOpaqueMaterial;
+/** \relates OutputDiagnostics*/
+typedef boost::optional<OutputDiagnostics> OptionalOutputDiagnostics;
 
-/** \relates MasslessOpaqueMaterial*/
-typedef std::vector<MasslessOpaqueMaterial> MasslessOpaqueMaterialVector;
+/** \relates OutputDiagnostics*/
+typedef std::vector<OutputDiagnostics> OutputDiagnosticsVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_MASSLESSOPAQUEMATERIAL_HPP
+#endif // MODEL_OUTPUTDIAGNOSTICS_HPP
+

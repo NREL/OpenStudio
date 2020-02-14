@@ -27,107 +27,83 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_MASSLESSOPAQUEMATERIAL_HPP
-#define MODEL_MASSLESSOPAQUEMATERIAL_HPP
+#ifndef MODEL_OUTPUTJSON_IMPL_HPP
+#define MODEL_OUTPUTJSON_IMPL_HPP
 
-#include "ModelAPI.hpp"
-#include "OpaqueMaterial.hpp"
+#include <model/ModelAPI.hpp>
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
-
-
 namespace model {
 
 namespace detail {
 
-  class MasslessOpaqueMaterial_Impl;
+  /** OutputJSON_Impl is a ModelObject_Impl that is the implementation class for OutputJSON.*/
+  class MODEL_API OutputJSON_Impl : public ModelObject_Impl {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
+
+    OutputJSON_Impl(const IdfObject& idfObject,
+                    Model_Impl* model,
+                    bool keepHandle);
+
+    OutputJSON_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                    Model_Impl* model,
+                    bool keepHandle);
+
+    OutputJSON_Impl(const OutputJSON_Impl& other,
+                    Model_Impl* model,
+                    bool keepHandle);
+
+    virtual ~OutputJSON_Impl() {}
+
+    //@}
+    /** @name Virtual Methods */
+    //@{
+
+    virtual const std::vector<std::string>& outputVariableNames() const override;
+
+    virtual IddObjectType iddObjectType() const override;
+
+    //@}
+    /** @name Getters */
+    //@{
+
+    std::string optionType() const;
+
+    bool outputJSON() const;
+
+    bool outputCBOR() const;
+
+    bool outputMessagePack() const;
+
+    //@}
+    /** @name Setters */
+    //@{
+
+    bool setOptionType(const std::string& optionType);
+
+    bool setOutputJSON(bool outputJSON);
+
+    bool setOutputCBOR(bool outputCBOR);
+
+    bool setOutputMessagePack(bool outputMessagePack);
+
+    //@}
+    /** @name Other */
+    //@{
+
+    //@}
+   protected:
+   private:
+    REGISTER_LOGGER("openstudio.model.OutputJSON");
+  };
 
 } // detail
-
-/** MasslessOpaqueMaterial is a OpaqueMaterial that wraps the OpenStudio IDD object 'OS:Material:NoMass'. */
-class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
-
-  explicit MasslessOpaqueMaterial(const Model& model,
-    std::string roughness = "Smooth",
-    double thermalResistance = 0.1);
-
-  virtual ~MasslessOpaqueMaterial() {}
-
-  //@}
-
-  static IddObjectType iddObjectType();
-
-  static std::vector<std::string> roughnessValues();
-
-  /** @name Getters */
-  //@{
-
-  std::string roughness() const;
-
-  double thermalResistance() const;
-
-  boost::optional<double> thermalAbsorptance() const;
-
-  bool isThermalAbsorptanceDefaulted() const;
-
-  boost::optional<double> solarAbsorptance() const;
-
-  bool isSolarAbsorptanceDefaulted() const;
-
-  boost::optional<double> visibleAbsorptance() const;
-
-  bool isVisibleAbsorptanceDefaulted() const;
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  bool setRoughness(std::string roughness);
-
-  bool setThermalResistance(double thermalResistance);
-
-  bool setThermalAbsorptance(double thermalAbsorptance);
-
-  void resetThermalAbsorptance();
-
-  bool setSolarAbsorptance(double solarAbsorptance);
-
-  void resetSolarAbsorptance();
-
-  bool setVisibleAbsorptance(double visibleAbsorptance);
-
-  void resetVisibleAbsorptance();
-
-  //@}
-  /** @name Other */
-  //@{
-
-  //@}
- protected:
-  /// @cond
-  typedef detail::MasslessOpaqueMaterial_Impl ImplType;
-
-  explicit MasslessOpaqueMaterial(std::shared_ptr<detail::MasslessOpaqueMaterial_Impl> impl);
-
-  friend class detail::MasslessOpaqueMaterial_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.MasslessOpaqueMaterial");
-};
-
-/** \relates MasslessOpaqueMaterial*/
-typedef boost::optional<MasslessOpaqueMaterial> OptionalMasslessOpaqueMaterial;
-
-/** \relates MasslessOpaqueMaterial*/
-typedef std::vector<MasslessOpaqueMaterial> MasslessOpaqueMaterialVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_MASSLESSOPAQUEMATERIAL_HPP
+#endif // MODEL_OUTPUTJSON_IMPL_HPP
+

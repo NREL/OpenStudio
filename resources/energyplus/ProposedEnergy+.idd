@@ -59925,22 +59925,11 @@ FuelFactors,
         \object-list ScheduleNames
 
 Output:Diagnostics,
+    \extensible:1
     \memo Special keys to produce certain warning messages or effect certain simulation characteristics.
-  A1 , \field Key 1
-       \type choice
-       \key DisplayAllWarnings
-       \key DisplayExtraWarnings
-       \key DisplayUnusedSchedules
-       \key DisplayUnusedObjects
-       \key DisplayAdvancedReportVariables
-       \key DisplayZoneAirHeatBalanceOffBalance
-       \key DoNotMirrorDetachedShading
-       \key DoNotMirrorAttachedShading
-       \key DisplayWeatherMissingDataWarnings
-       \key ReportDuringWarmup
-       \key ReportDetailedWarmupConvergence
-       \key ReportDuringHVACSizingSimulation
-  A2 ; \field Key 2
+    \unique-object
+  A1 ; \field Key 1
+       \begin-extensible
        \type choice
        \key DisplayAllWarnings
        \key DisplayExtraWarnings

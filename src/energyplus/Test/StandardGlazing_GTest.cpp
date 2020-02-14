@@ -34,14 +34,10 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/DaylightingControl.hpp"
-#include "../../model/DaylightingControl_Impl.hpp"
-#include "../../model/Space.hpp"
-#include "../../model/Space_Impl.hpp"
-#include "../../model/ThermalZone.hpp"
-#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/StandardGlazing.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData.hpp"
 
-#include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
+#include <utilities/idd/WindowMaterial_Glazing_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
@@ -52,78 +48,39 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_NoZone)
-{
-  Model model;
-  ThermalZone thermalZone(model);
-  Space space(model);
-  space.setThermalZone(thermalZone);
-  DaylightingControl daylightingControl(model);
-  daylightingControl.setSpace(space);
-
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-
-  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
-}
-
-TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_OneControl)
-{
-  Model model;
-  ThermalZone thermalZone(model);
-  Space space(model);
-  space.setThermalZone(thermalZone);
-  DaylightingControl daylightingControl(model);
-  daylightingControl.setSpace(space);
-
-  EXPECT_TRUE(thermalZone.setPrimaryDaylightingControl(daylightingControl));
-
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
-}
-
-TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_TwoControl)
-{
-  Model model;
-  ThermalZone thermalZone(model);
-  Space space(model);
-  space.setThermalZone(thermalZone);
-  DaylightingControl daylightingControl1(model);
-  daylightingControl1.setSpace(space);
-  DaylightingControl daylightingControl2(model);
-  daylightingControl2.setSpace(space);
-
-  EXPECT_TRUE(thermalZone.setPrimaryDaylightingControl(daylightingControl1));
-  EXPECT_TRUE(thermalZone.setSecondaryDaylightingControl(daylightingControl2));
-
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
-}
-
-TEST_F(EnergyPlusFixture,ForwardTranslator_DaylightingControl_3216)
+TEST_F(EnergyPlusFixture, ForwardTranslator_WindowMaterialGlazing_SpectralAverage)
 {
   Model model;
 
-  ThermalZone thermalZone(model);
-  Space space(model);
-  space.setThermalZone(thermalZone);
-
-  DaylightingControl daylightingControl(model);
-  daylightingControl.setThetaRotationAroundYAxis(90.0);
-  daylightingControl.setPhiRotationAroundZAxis(180.0);
-
-  EXPECT_TRUE(thermalZone.setPrimaryDaylightingControl(daylightingControl));
+  StandardGlazing standardGlazing(model);
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(model);
 
-  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
+  WorkspaceObjectVector idfObjs(w.getObjectsByType(IddObjectType::WindowMaterial_Glazing));
   ASSERT_EQ(1u, idfObjs.size());
-  WorkspaceObject idf_d(idfObjs[0]);
+  WorkspaceObject idf_windowMaterialGlazing(idfObjs[0]);
 
-  EXPECT_EQ(daylightingControl.phiRotationAroundZAxis(), idf_d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
+  EXPECT_EQ("SpectralAverage", idf_windowMaterialGlazing.getString(WindowMaterial_GlazingFields::OpticalDataType).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_WindowMaterialGlazing_Spectral)
+{
+  Model model;
+
+  StandardGlazing standardGlazing(model);
+  MaterialPropertyGlazingSpectralData spectralData(model);
+  spectralData.setName("Glazing Spectral Data");
+  standardGlazing.setWindowGlassSpectralDataSet(spectralData);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(model);
+
+  WorkspaceObjectVector idfObjs(w.getObjectsByType(IddObjectType::WindowMaterial_Glazing));
+  ASSERT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_windowMaterialGlazing(idfObjs[0]);
+
+  EXPECT_EQ("Spectral", idf_windowMaterialGlazing.getString(WindowMaterial_GlazingFields::OpticalDataType).get());
+  EXPECT_TRUE(idf_windowMaterialGlazing.getString(WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName));
+  EXPECT_EQ(spectralData.name().get(), idf_windowMaterialGlazing.getString(WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName).get());
 }

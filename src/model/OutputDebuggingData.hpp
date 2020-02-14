@@ -27,79 +27,47 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_MASSLESSOPAQUEMATERIAL_HPP
-#define MODEL_MASSLESSOPAQUEMATERIAL_HPP
+#ifndef MODEL_OUTPUTDEBUGGINGDATA_HPP
+#define MODEL_OUTPUTDEBUGGINGDATA_HPP
 
-#include "ModelAPI.hpp"
-#include "OpaqueMaterial.hpp"
+#include <model/ModelAPI.hpp>
+#include "ModelObject.hpp"
 
 namespace openstudio {
-
-
 namespace model {
 
 namespace detail {
 
-  class MasslessOpaqueMaterial_Impl;
+  class OutputDebuggingData_Impl;
 
 } // detail
 
-/** MasslessOpaqueMaterial is a OpaqueMaterial that wraps the OpenStudio IDD object 'OS:Material:NoMass'. */
-class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
+/** OutputDebuggingData is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:DebuggingData'. */
+class MODEL_API OutputDebuggingData : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  explicit MasslessOpaqueMaterial(const Model& model,
-    std::string roughness = "Smooth",
-    double thermalResistance = 0.1);
-
-  virtual ~MasslessOpaqueMaterial() {}
+  virtual ~OutputDebuggingData() {}
 
   //@}
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> roughnessValues();
-
   /** @name Getters */
   //@{
 
-  std::string roughness() const;
+  bool reportDebuggingData() const;
 
-  double thermalResistance() const;
-
-  boost::optional<double> thermalAbsorptance() const;
-
-  bool isThermalAbsorptanceDefaulted() const;
-
-  boost::optional<double> solarAbsorptance() const;
-
-  bool isSolarAbsorptanceDefaulted() const;
-
-  boost::optional<double> visibleAbsorptance() const;
-
-  bool isVisibleAbsorptanceDefaulted() const;
+  bool reportDuringWarmup() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setRoughness(std::string roughness);
+  bool setReportDebuggingData(bool reportDebuggingData);
 
-  bool setThermalResistance(double thermalResistance);
-
-  bool setThermalAbsorptance(double thermalAbsorptance);
-
-  void resetThermalAbsorptance();
-
-  bool setSolarAbsorptance(double solarAbsorptance);
-
-  void resetSolarAbsorptance();
-
-  bool setVisibleAbsorptance(double visibleAbsorptance);
-
-  void resetVisibleAbsorptance();
+  bool setReportDuringWarmup(bool reportDuringWarmup);
 
   //@}
   /** @name Other */
@@ -108,26 +76,29 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
   //@}
  protected:
   /// @cond
-  typedef detail::MasslessOpaqueMaterial_Impl ImplType;
+  typedef detail::OutputDebuggingData_Impl ImplType;
 
-  explicit MasslessOpaqueMaterial(std::shared_ptr<detail::MasslessOpaqueMaterial_Impl> impl);
+  explicit OutputDebuggingData(std::shared_ptr<detail::OutputDebuggingData_Impl> impl);
 
-  friend class detail::MasslessOpaqueMaterial_Impl;
+  friend class detail::OutputDebuggingData_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
+  explicit OutputDebuggingData(Model& model);
+
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.model.MasslessOpaqueMaterial");
+  REGISTER_LOGGER("openstudio.model.OutputDebuggingData");
 };
 
-/** \relates MasslessOpaqueMaterial*/
-typedef boost::optional<MasslessOpaqueMaterial> OptionalMasslessOpaqueMaterial;
+/** \relates OutputDebuggingData*/
+typedef boost::optional<OutputDebuggingData> OptionalOutputDebuggingData;
 
-/** \relates MasslessOpaqueMaterial*/
-typedef std::vector<MasslessOpaqueMaterial> MasslessOpaqueMaterialVector;
+/** \relates OutputDebuggingData*/
+typedef std::vector<OutputDebuggingData> OutputDebuggingDataVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_MASSLESSOPAQUEMATERIAL_HPP
+#endif // MODEL_OUTPUTDEBUGGINGDATA_HPP
+

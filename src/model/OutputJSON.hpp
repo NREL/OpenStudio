@@ -27,79 +27,57 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_MASSLESSOPAQUEMATERIAL_HPP
-#define MODEL_MASSLESSOPAQUEMATERIAL_HPP
+#ifndef MODEL_OUTPUTJSON_HPP
+#define MODEL_OUTPUTJSON_HPP
 
-#include "ModelAPI.hpp"
-#include "OpaqueMaterial.hpp"
+#include <model/ModelAPI.hpp>
+#include "ModelObject.hpp"
 
 namespace openstudio {
-
-
 namespace model {
 
 namespace detail {
 
-  class MasslessOpaqueMaterial_Impl;
+  class OutputJSON_Impl;
 
 } // detail
 
-/** MasslessOpaqueMaterial is a OpaqueMaterial that wraps the OpenStudio IDD object 'OS:Material:NoMass'. */
-class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
+/** OutputJSON is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:JSON'. */
+class MODEL_API OutputJSON : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  explicit MasslessOpaqueMaterial(const Model& model,
-    std::string roughness = "Smooth",
-    double thermalResistance = 0.1);
-
-  virtual ~MasslessOpaqueMaterial() {}
+  virtual ~OutputJSON() {}
 
   //@}
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> roughnessValues();
+  static std::vector<std::string> optionTypeValues();
 
   /** @name Getters */
   //@{
 
-  std::string roughness() const;
+  std::string optionType() const;
 
-  double thermalResistance() const;
+  bool outputJSON() const;
 
-  boost::optional<double> thermalAbsorptance() const;
+  bool outputCBOR() const;
 
-  bool isThermalAbsorptanceDefaulted() const;
-
-  boost::optional<double> solarAbsorptance() const;
-
-  bool isSolarAbsorptanceDefaulted() const;
-
-  boost::optional<double> visibleAbsorptance() const;
-
-  bool isVisibleAbsorptanceDefaulted() const;
+  bool outputMessagePack() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setRoughness(std::string roughness);
+  bool setOptionType(const std::string& optionType);
 
-  bool setThermalResistance(double thermalResistance);
+  bool setOutputJSON(bool outputJSON);
 
-  bool setThermalAbsorptance(double thermalAbsorptance);
+  bool setOutputCBOR(bool outputCBOR);
 
-  void resetThermalAbsorptance();
-
-  bool setSolarAbsorptance(double solarAbsorptance);
-
-  void resetSolarAbsorptance();
-
-  bool setVisibleAbsorptance(double visibleAbsorptance);
-
-  void resetVisibleAbsorptance();
+  bool setOutputMessagePack(bool outputMessagePack);
 
   //@}
   /** @name Other */
@@ -108,26 +86,29 @@ class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
   //@}
  protected:
   /// @cond
-  typedef detail::MasslessOpaqueMaterial_Impl ImplType;
+  typedef detail::OutputJSON_Impl ImplType;
 
-  explicit MasslessOpaqueMaterial(std::shared_ptr<detail::MasslessOpaqueMaterial_Impl> impl);
+  explicit OutputJSON(std::shared_ptr<detail::OutputJSON_Impl> impl);
 
-  friend class detail::MasslessOpaqueMaterial_Impl;
+  friend class detail::OutputJSON_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
+  explicit OutputJSON(Model& model);
+
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.model.MasslessOpaqueMaterial");
+  REGISTER_LOGGER("openstudio.model.OutputJSON");
 };
 
-/** \relates MasslessOpaqueMaterial*/
-typedef boost::optional<MasslessOpaqueMaterial> OptionalMasslessOpaqueMaterial;
+/** \relates OutputJSON*/
+typedef boost::optional<OutputJSON> OptionalOutputJSON;
 
-/** \relates MasslessOpaqueMaterial*/
-typedef std::vector<MasslessOpaqueMaterial> MasslessOpaqueMaterialVector;
+/** \relates OutputJSON*/
+typedef std::vector<OutputJSON> OutputJSONVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_MASSLESSOPAQUEMATERIAL_HPP
+#endif // MODEL_OUTPUTJSON_HPP
+

@@ -30202,6 +30202,75 @@ OS:Meter:CustomDecrement,
         \begin-extensible
    A6;  \field Output Variable or Meter Name
 
+
+OS:Output:Diagnostics,
+       \memo Special keys to produce certain warning messages or effect certain simulation characteristics.
+       \unique-object
+       \extensible:1
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2;  \field Key 1
+       \begin-extensible
+       \type choice
+       \key DisplayAllWarnings
+       \key DisplayExtraWarnings
+       \key DisplayUnusedSchedules
+       \key DisplayUnusedObjects
+       \key DisplayAdvancedReportVariables
+       \key DisplayZoneAirHeatBalanceOffBalance
+       \key DoNotMirrorDetachedShading
+       \key DoNotMirrorAttachedShading
+       \key DisplayWeatherMissingDataWarnings
+       \key ReportDuringWarmup
+       \key ReportDetailedWarmupConvergence
+       \key ReportDuringHVACSizingSimulation
+
+OS:Output:DebuggingData,
+       \memo switch eplusout.dbg file on or off
+       \unique-object
+       \format singleLine
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Report Debugging Data
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A3;  \field Report During Warmup
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+
+OS:Output:JSON,
+       \memo Output from EnergyPlus can be written to JSON format files.
+       \unique-object
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Option Type
+       \required-field
+       \type choice
+       \key TimeSeries
+       \key TimeSeriesAndTabular
+  A3,  \field Output JSON
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A4,  \field Output CBOR
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A5;  \field Output MessagePack
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+
 OS:Output:EnergyManagementSystem,
    \memo This object is used to control the output produced by the Energy Management System
    \unique-object
