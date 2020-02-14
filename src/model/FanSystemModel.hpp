@@ -49,7 +49,7 @@ namespace detail {
 } // detail
 
 /** This class implements a speed */
-class FanSystemModelSpeed {
+class MODEL_API FanSystemModelSpeed {
   public:
     /* Only accepts ModelObjects that are of type Surface, Subsurface or InternalMass, will throw otherwise */
     FanSystemModelSpeed(double flowFraction, double electricPowerFraction);

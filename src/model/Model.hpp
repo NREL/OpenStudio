@@ -518,25 +518,25 @@ MODEL_API void addExampleModelObjects(Model& model);
 
 // Template specializations for getUniqueModelObject to use caching
 template <>
-Building Model::getUniqueModelObject<Building>();
+MODEL_API Building Model::getUniqueModelObject<Building>();
 
 template <>
-FoundationKivaSettings Model::getUniqueModelObject<FoundationKivaSettings>();
+MODEL_API FoundationKivaSettings Model::getUniqueModelObject<FoundationKivaSettings>();
 
 template <>
-LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>();
+MODEL_API LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>();
 
 template <>
-PerformancePrecisionTradeoffs Model::getUniqueModelObject<PerformancePrecisionTradeoffs>();
+MODEL_API PerformancePrecisionTradeoffs Model::getUniqueModelObject<PerformancePrecisionTradeoffs>();
 
 template <>
-RunPeriod Model::getUniqueModelObject<RunPeriod>();
+MODEL_API RunPeriod Model::getUniqueModelObject<RunPeriod>();
 
 template <>
-YearDescription Model::getUniqueModelObject<YearDescription>();
+MODEL_API YearDescription Model::getUniqueModelObject<YearDescription>();
 
 template <>
-WeatherFile Model::getUniqueModelObject<WeatherFile>();
+MODEL_API WeatherFile Model::getUniqueModelObject<WeatherFile>();
 
 } // model
 } // openstudio
