@@ -28,7 +28,7 @@
 
 #include <gtest/gtest.h>
 #include "../RoofGeometry.hpp"
-#include "../RoofGeometry.cpp"
+#include "../RoofGeometry_Details.hpp"
 #include "../Intersection.hpp"
 #include "../Point3d.hpp"
 #include "GeometryFixture.hpp"
