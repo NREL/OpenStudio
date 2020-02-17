@@ -67,7 +67,7 @@ class MODEL_API FanSystemModelSpeed {
 };
 
 // Overload operator<<
-std::ostream& operator<< (std::ostream& out, const openstudio::model::FanSystemModelSpeed& speed);
+MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::FanSystemModelSpeed& speed);
 
 
 /** FanSystemModel is a StraightComponent that wraps the OpenStudio IDD object 'OS:Fan:SystemModel'. */
