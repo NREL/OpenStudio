@@ -23,26 +23,26 @@ set(${target_name}_swig_src
 )
 
 set(${target_name}_depends
-  openstudio_model
-  openstudio_energyplus
+  ${openstudio_energyplus_depends}
 )
-add_library(${target_name} ${${target_name}_src})
-target_link_libraries(${target_name} ${${target_name}_depends})
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
-#No need to install static library
-#if(NOT APPLE)
-#install(TARGETS ${target_name}
-#  RUNTIME DESTINATION bin
-#  LIBRARY DESTINATION lib
-#)
-#endif()
+add_library(${target_name} OBJECT ${${target_name}_src})
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
+target_compile_definitions(${target_name} PRIVATE openstudio_gbxml_EXPORTS SHARED_OS_LIBS)
+add_dependencies(${target_name} GenerateIddFactoryRun)
+
+
+set(${target_name}_test_depends
+  openstudiolib
+)
 
 #CREATE_SRC_GROUPS("${${target_name}_src}")
 #CREATE_SRC_GROUPS("${${target_name}_test_src}")
 #CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
 if(BUILD_TESTING)
-  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
   add_dependencies(${target_name}_tests openstudio_gbxml_resources)
 endif()
 

@@ -31,7 +31,7 @@
 #define ISOMODEL_ISOMODELAPI_HPP
 
   #if (_WIN32 || _MSC_VER) && SHARED_OS_LIBS
-    #ifdef openstudio_isomodel_EXPORTS
+    #if defined(openstudio_isomodel_EXPORTS) || defined(openstudio_EXPORTS)
       #define ISOMODEL_API __declspec(dllexport)
     #else
       #define ISOMODEL_API __declspec(dllimport)

@@ -1,6 +1,3 @@
-include_directories(${PROJECT_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 set(target_name openstudio_radiance)
 
 set(${target_name}_src
@@ -61,22 +58,22 @@ source_group(embedded FILES ${EMBEDDED_OUTPUT})
 
 
 set(${target_name}_depends
-  openstudio_model
+  ${openstudio_model_depends}
+)
+set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
+
+add_library(${target_name} OBJECT ${${target_name}_src} ${EMBEDDED_OUTPUT})
+target_compile_definitions(${target_name} PRIVATE openstudio_radiance_EXPORTS SHARED_OS_LIBS)
+target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
+target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
+add_dependencies(${target_name} GenerateIddFactoryRun)
+
+
+set(${target_name}_test_depends
+  openstudiolib
 )
 
-add_library(${target_name} ${${target_name}_src} ${EMBEDDED_OUTPUT})
-
-target_link_libraries(${target_name} ${${target_name}_depends})
-
-# No need to install static library
-#if(NOT APPLE)
-#  install(TARGETS ${target_name}
-#    RUNTIME DESTINATION bin
-#    LIBRARY DESTINATION lib
-#  )
-#endif()
-
-CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_depends}")
+CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 
 MAKE_SWIG_TARGET(OpenStudioRadiance radiance "${CMAKE_CURRENT_SOURCE_DIR}/Radiance.i" "${${target_name}_swig_src}" ${target_name} OpenStudioModel)
 

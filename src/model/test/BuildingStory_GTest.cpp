@@ -35,7 +35,7 @@
 #include "../BuildingStory_Impl.hpp"
 
 #include "../Building.hpp"
-#include "../SpaceType.cpp"
+#include "../SpaceType.hpp"
 #include "../DefaultScheduleSet.hpp"
 #include "../ScheduleConstant.hpp"
 

@@ -31,7 +31,7 @@
 #define MEASURE_MEASUREAPI_HPP
 
   #if (_WIN32 || _MSC_VER) && SHARED_OS_LIBS
-    #ifdef openstudio_measure_EXPORTS
+    #if defined(openstudio_measure_EXPORTS) || defined(openstudio_EXPORTS)
       #define MEASURE_API __declspec(dllexport)
     #else
       #define MEASURE_API __declspec(dllimport)

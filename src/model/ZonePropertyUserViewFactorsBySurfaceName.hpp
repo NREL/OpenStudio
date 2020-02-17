@@ -57,7 +57,7 @@ namespace detail {
 
 
 /** This class implements a view factor */
-class ViewFactor {
+class MODEL_API ViewFactor {
   public:
     /* Only accepts ModelObjects that are of type Surface, Subsurface or InternalMass, will throw otherwise */
     ViewFactor(const ModelObject& fromSurface, const ModelObject& toSurface, double viewFactor);
@@ -75,7 +75,7 @@ class ViewFactor {
 };
 
 // Overload operator<<
-std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactor& viewFactor);
+MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactor& viewFactor);
 
 /** ZonePropertyUserViewFactorsBySurfaceName is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneProperty:UserViewFactors:bySurfaceName'. */
 class MODEL_API ZonePropertyUserViewFactorsBySurfaceName : public ModelObject {

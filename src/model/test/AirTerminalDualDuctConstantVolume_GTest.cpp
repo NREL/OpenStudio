@@ -43,7 +43,7 @@
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
 #include "../Schedule.hpp"
-#include "../ScheduleCompact.cpp"
+#include "../ScheduleCompact.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
