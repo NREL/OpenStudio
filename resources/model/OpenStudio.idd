@@ -30307,7 +30307,7 @@ OS:Output:Table:SummaryReports,
        \memo There should be as many fields (A) in this object as there are keys in the following (minus
        \memo AllSummary+AllMonthly+AllSummaryAndMonthly)
        \extensible:1
-       \min-fields 2
+       \min-fields 1
        \unique-object
    A1, \field Handle
        \type handle
@@ -30315,7 +30315,6 @@ OS:Output:Table:SummaryReports,
    A2; \field Report Name 1
        \begin-extensible
        \type choice
-       \default AllSummary
        \key AllSummary
        \key AllSummaryAndSizingPeriod
        \key AllMonthly
