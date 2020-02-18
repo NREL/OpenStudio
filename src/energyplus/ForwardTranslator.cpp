@@ -2448,6 +2448,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateOutputEnergyManagementSystem(outputEnergyManagementSystem);
     break;
   }
+  case openstudio::IddObjectType::OS_Output_Table_SummaryReports:
+  {
+    model::OutputTableSummaryReports summaryReports = modelObject.cast<OutputTableSummaryReports>();
+    retVal = translateOutputTableSummaryReports(summaryReports);
+    break;
+  }
   case openstudio::IddObjectType::OS_People :
     {
       model::People people = modelObject.cast<People>();
