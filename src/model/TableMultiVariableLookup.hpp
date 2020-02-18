@@ -47,7 +47,7 @@ namespace detail {
 
 
 /** This class implements a single point of a TableMultiVariableLookup */
-class TableMultiVariableLookupPoint {
+class MODEL_API TableMultiVariableLookupPoint {
  public:
   TableMultiVariableLookupPoint(std::vector<double> x, double y);
   TableMultiVariableLookupPoint(double x1, double yValue);
@@ -68,7 +68,7 @@ class TableMultiVariableLookupPoint {
 };
 
 // Overload operator<<
-std::ostream& operator<< (std::ostream& out, const openstudio::model::TableMultiVariableLookupPoint& point);
+MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::TableMultiVariableLookupPoint& point);
 
 
 /** TableMultiVariableLookup is a Curve that wraps the OpenStudio IDD object 'OS:Table:MultiVariableLookup'. */

@@ -724,7 +724,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ThermalZone_Daylighting)
   Space space1(m);
   space1.setThermalZone(z);
 
-
   Point3dVector points;
   points.push_back(Point3d(0, 0, 0));
   points.push_back(Point3d(0, 1, 0));

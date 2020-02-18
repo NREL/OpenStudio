@@ -190,7 +190,7 @@ OptionalModelObject ReverseTranslator::translateDaylightingControls( const Works
 
     d = workspaceObject.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis);
     if (d){
-      daylightingControl.setThetaRotationAroundYAxis(-degToRad(*d));
+      daylightingControl.setPhiRotationAroundZAxis(*d);
     }
 
     d = workspaceObject.getDouble(Daylighting_ControlsFields::MaximumAllowableDiscomfortGlareIndex);

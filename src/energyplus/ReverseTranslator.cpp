@@ -696,6 +696,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateMaterialNoMass(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::MaterialProperty_GlazingSpectralData:
+    {
+      modelObject = translateMaterialPropertyGlazingSpectralData(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::Meter_Custom :
     {
       modelObject = translateMeterCustom(workspaceObject);
@@ -723,9 +728,24 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     {
       break; // no-op
     }
+  case openstudio::IddObjectType::Output_DebuggingData:
+  {
+    modelObject = translateOutputDebuggingData(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::Output_Diagnostics:
+  {
+    modelObject = translateOutputDiagnostics(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::Output_EnergyManagementSystem:
   {
     modelObject = translateOutputEnergyManagementSystem(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::Output_JSON:
+  {
+    modelObject = translateOutputJSON(workspaceObject);
     break;
   }
   case openstudio::IddObjectType::Output_IlluminanceMap :

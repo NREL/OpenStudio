@@ -215,93 +215,16 @@ TEST(ApplicationPathHelpers, Simple_test_forThisModule) {
     // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
 #if defined(_WIN32)
   #if _DEBUG
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/openstudio_utilities_tests.exe");
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/libopenstudiolib.dll");
   #else
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/openstudio_utilities_tests.exe");
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/libopenstudiolib.dll");
   #endif
+#elif __APPLE__
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/libopenstudiolib.dylib");
 #else
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/libopenstudiolib.so");
 #endif
     expectedOpenstudioModulePath = completeAndNormalize(expectedOpenstudioModulePath);
     EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
 }
 
-int launch_another_instance_from_symlink(const path& symlink_path) {
-  std::string cmd = toString(symlink_path.filename()) + " --gtest_filter=*PathWhenSymlinkInPath_Run*";
-  return std::system(cmd.c_str());
-}
-
-TEST(ApplicationPathHelpers, PathWhenSymlinkInPath_Setup) {
-
-  if (!IsElevated()) {
-    SKIP(PathWhenSymlinkInPath_Setup);
-  }
-
-  openstudio::path symlink_path_dir = getApplicationBuildDirectory() / toPath("Testing/Temporary");
-#if defined(_WIN32)
-  openstudio::path symlink_path = symlink_path_dir / "openstudio_utilities_tests_symlink.exe";
-#else
-  openstudio::path symlink_path = symlink_path_dir / "openstudio_utilities_tests_symlink";
-#endif
-  openstudio::filesystem::create_directories(symlink_path_dir);
-
-#if defined(_WIN32)
-  #if _DEBUG
-    openstudio::path openstudioUtilitiesTestPath = getApplicationBuildDirectory() / toPath("Products/Debug/openstudio_utilities_tests.exe");
-  #else
-    openstudio::path openstudioUtilitiesTestPath = getApplicationBuildDirectory() / toPath("Products/Release/openstudio_utilities_tests.exe");
-  #endif
-#else
-    openstudio::path openstudioUtilitiesTestPath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
-#endif
-
-  if (exists(symlink_path)) {
-    boost::filesystem::remove(symlink_path);
-  }
-  boost::filesystem::create_symlink(openstudioUtilitiesTestPath, symlink_path);
-
-  auto current_path = std::getenv("PATH");
-  std::string new_path = toString(symlink_path_dir) + openstudio::pathDelimiter() + current_path;
-
-  setenv("PATH", new_path.c_str(), 1);
-  setenv("PathWhenSymlinkInPath_Setup", "true", 1);
-
-  // We run a system call to the symlink name (not its path), with a gtest_filter set to PathWhenSymlinkInPath_Run
-  // and we ensure we actually can get the right executable. We check the return code to make sure it worked (in case it can't find the symlink for
-  // eg)
-  auto future = std::async(launch_another_instance_from_symlink, symlink_path);
-  EXPECT_EQ(0, future.get());
-
-  unsetenv("PathWhenSymlinkInPath_Setup");
-  setenv("PATH", current_path, 1);
-}
-
-TEST(ApplicationPathHelpers, PathWhenSymlinkInPath_Run) {
-
-  // If you want to see more info, uncomment the logger lines
-  // openstudio::Logger::instance().standardOutLogger().enable();
-  // openstudio::Logger::instance().standardOutLogger().setLogLevel(Trace);
-
-  //EXPECT_TRUE(false) << std::getenv("PATH");
-  //EXPECT_TRUE(false) << std::getenv("PathWhenSymlinkInPath_Setup");
-  if (std::getenv("PathWhenSymlinkInPath_Setup")) {
-    path openstudioModulePath = getOpenStudioModule();
-    EXPECT_TRUE(exists(openstudioModulePath));
-     // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
-#if defined(_WIN32)
-  #if _DEBUG
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/openstudio_utilities_tests.exe");
-  #else
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/openstudio_utilities_tests.exe");
-  #endif
-#else
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/openstudio_utilities_tests");
-#endif
-
-    expectedOpenstudioModulePath = completeAndNormalize(expectedOpenstudioModulePath);
-    EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
-  }
-
-  // openstudio::Logger::instance().standardOutLogger().disable();
-
-}

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.14.0)
 cmake_policy(SET CMP0048 NEW)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -22,20 +22,6 @@ string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
 # CPack package version does not support extended patch version
 set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
 
-# Modify the more specific variables as needed to indicate prerelease, etc
-# Keep in beta in-between release cycles
-string(APPEND PROJECT_VERSION "-beta")
-string(APPEND OpenStudio_VERSION "-beta")
-string(APPEND PROJECT_VERSION_PATCH "-beta")
-string(APPEND OpenStudio_VERSION_PATCH "-beta")
-
-# The PROJECT_SOURCE_DIR here is OpenStudio/, which we will use instead of using CMAKE_SOURCE_DIR
-set(PROJECT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-# We will use BINARY_DIR instead of CMAKE_BINARY_DIR to allow this to be built as a submodule
-set(PROJECT_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
-
-#MESSAGE(FATAL_ERROR "CMAKE_CURRENT_SOURCE_DIR=${CMAKE_CURRENT_SOURCE_DIR}, BINARY_DIR=${BINARY_DIR}, PROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}, CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}, CMAKE_BINARY_DIR=${CMAKE_BINARY_DIR}")
-
 # Set a default build type if none was specified
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Setting build type to 'Release' as none was specified.")
@@ -49,7 +35,6 @@ if ( APPLE )
   find_library(SECURITY_FRAMEWORK Security)
 endif()
 
-include(ExternalProject)
 include(CPackComponent)
 include(CheckCXXCompilerFlag)
 
@@ -119,6 +104,7 @@ if(NOT GIT_FOUND)
 endif()
 
 if(GIT_FOUND)
+  # Git SHA (length 10)
   execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--short=10" "HEAD"
                   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
                   TIMEOUT 10
@@ -129,6 +115,19 @@ if(GIT_FOUND)
   if(${RESULT} EQUAL 0 AND NOT "${GIT_VERSION}" EQUAL "${PROJECT_VERSION_BUILD}")
     set(PROJECT_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha
   endif()
+
+  # Git branch name
+  execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--abbrev-ref" "HEAD"
+                  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+                  TIMEOUT 10
+                  RESULT_VARIABLE RESULT
+                  OUTPUT_VARIABLE GIT_BRANCH
+                  ERROR_QUIET
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
+  if(${RESULT} EQUAL 0 AND NOT "${GIT_BRANCH}" EQUAL "${PROJECT_GIT_BRANCH}")
+    set(PROJECT_GIT_BRANCH ${GIT_BRANCH} CACHE STRING "Git Branch Name" FORCE)
+  endif()
+
 
   get_filename_component(GIT_DIR "${GIT_EXECUTABLE}" DIRECTORY)
 else()
@@ -144,14 +143,45 @@ endif()
 # Check if scope has a parent
 get_directory_property(hasParent PARENT_DIRECTORY)
 
+# README: what's the difference between all these versions?
 
-# OpenStudio version
+# The "OpenStudio_VERSION" ones should be used in CMakeLists.txt
+# * OpenStudio_VERSION: includes the prerelease tag if any: '3.0.0-rc1'
+# * OpenStudio_VERSION_PATCH: Patch + prelrease tag if any
+
+# The "OPENSTUDIO_VERSION" ones should only be used in OpenStudio.in (aside from using the the long version for naming the installer)
+# * OPENSTUDIO_VERSION: just major.minor.patch: '3.0.0'
+# * OPENSTUDIO_LONG_VERSION: includes prelrease and build sha: "3.0.0-rc1+ejfbxhza'
+
+# TODO: Modify the more specific variables as needed to indicate prerelease, etc
+# Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
+set(PROJECT_VERSION_PRERELEASE "beta")
+
+# OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
-set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}+${PROJECT_VERSION_BUILD}")
+
+if (NOT "${PROJECT_VERSION_PRERELEASE}" STREQUAL "")
+  message(STATUS "We have a prerelease tag set to '${PROJECT_VERSION_PRERELEASE}'")
+  if("${PROJECT_GIT_BRANCH}" STREQUAL "master")
+    message(AUTHOR_WARNING "You are building branch 'master', perhaps you shouldn't have included a pre-release tag")
+  endif()
+  string(APPEND OpenStudio_VERSION "-${PROJECT_VERSION_PRERELEASE}")
+  string(APPEND OpenStudio_VERSION_PATCH "-${PROJECT_VERSION_PRERELEASE}")
+  # Long version, include prerelease and build metadata. eg '3.0.0-rc1+6383a191dc'
+  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}-${PROJECT_VERSION_PRERELEASE}+${PROJECT_VERSION_BUILD}")
+else()
+  message(STATUS "We do not have a prerelease tag")
+  if(NOT "${PROJECT_GIT_BRANCH}" STREQUAL "master")
+    message(AUTHOR_WARNING "You are building another branch than master but you do not have a prerelease tag, consider adding one such as 'beta'")
+  endif()
+  # Long version, include build metadata. eg '3.0.0+6383a191dc' for an official release
+  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}+${PROJECT_VERSION_BUILD}")
+endif()
+
 # Export to parent scope
 if(hasParent)
-  set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}" PARENT_SCOPE)
-  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}+${PROJECT_VERSION_BUILD}" PARENT_SCOPE)
+  set(OPENSTUDIO_VERSION "${OPENSTUDIO_VERSION}" PARENT_SCOPE)
+  set(OPENSTUDIO_LONG_VERSION "${OPENSTUDIO_LONG_VERSION}" PARENT_SCOPE)
 endif()
 
 # EnergyPlus Idd version
@@ -225,22 +255,8 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 # Requires: EnergyPlus
 option(BUILD_TESTING "Build testing targets" OFF)
 
-# Build package
-# Requires: EnergyPlus, Radiance
-# TODO: this option is actually unused...
-# TODO: In any case, should core still produce a package or only in OpenStudioApplication?
-option(BUILD_PACKAGE "Build package" OFF)
-
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
-
-# Build shared OS libraries
-option(BUILD_SHARED_LIBS "Build OS libs as shared libraries.  Currently not tested." OFF)
-
-if(BUILD_SHARED_LIBS)
-  add_definitions("-DSHARED_OS_LIBS")
-endif()
-
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
@@ -304,8 +320,14 @@ if(BUILD_V8_BINDINGS)
   option(BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON)
 endif()
 
-# Use PCH
-option(USE_PCH "Use precompiled headers" OFF)
+option(USE_LTO "Use Link-Time-Optimization" OFF)
+
+if (USE_LTO)
+  include(CheckIPOSupported)
+
+  check_ipo_supported()
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+endif()
 
 if(WIN32)
   add_definitions(-DNOMINMAX)
@@ -359,8 +381,6 @@ if(hasParent)
   set(RUBY_INCLUDE_DIRS "${RUBY_INCLUDE_DIRS}" PARENT_SCOPE)
 endif()
 
-
-
 ###############################################################################
 # CMake control
 
@@ -388,7 +408,6 @@ if(BUILD_TESTING)
   enable_testing()
   include(CTest)
 endif()
-
 
 ###############################################################################
 
@@ -460,6 +479,9 @@ if(MSVC)
   # we will not rely on exporting templates instead all libraries must
   # be linked against the same runtime
   add_definitions(/wd4251)
+
+  # ignore base class not dll-exported error
+  add_definitions(/wd4275)
 
   add_definitions(/bigobj)
 
@@ -681,7 +703,6 @@ if(WIN32)
   endif()
 endif()
 
-
 # openstudio gems
 # CI will build and upload openstudio gems to s3 at https://github.com/NREL/OpenStudio-gems
 # need to  update the MD5sum for each platform and url below
@@ -699,9 +720,6 @@ elseif(WIN32)
     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "aafc33b93196fe0fe7e66ee598a00365")
   endif()
 endif()
-
-
-
 
 set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
 set(OPENSTUDIO_GEMS_DIR "${PROJECT_BINARY_DIR}/openstudio-gems")
@@ -810,40 +828,12 @@ if(BUILD_PYTHON_BINDINGS)
   set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
 endif()
 
-
-# Required dependencies
-
 # Threading library
 find_package(Threads)
 if(UNIX)
   set(CMAKE_THREAD_LIBS "${CMAKE_THREAD_LIBS_INIT}" CACHE STRING "Thread library used.")
   mark_as_advanced(CMAKE_THREAD_LIBS)
 endif()
-
-# Zlib
-# include_directories(SYSTEM src/zlib)
-# add_subdirectory(src/zlib)
-# make sure zconf.h can be found
-# include_directories(${PROJECT_BINARY_DIR}/src/zlib)
-
-#if(BUILD_TESTING)
-#  # force gtest to build as a static library no matter what, otherwise we get error about undefined death test symbols when building shared libs
-#  set(TEMP_BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS})
-#  set(BUILD_SHARED_LIBS OFF)
-#
-#  # Google test library
-#  set(gtest_force_shared_crt ON CACHE BOOL "gtest_force_shared_crt" FORCE) # in case we are linking with shared or static os libraries
-#  set(gtest_build_tests OFF CACHE BOOL "gtest_build_tests" FORCE)
-#  set(gtest_build_samples OFF CACHE BOOL "gtest_build_samples" FORCE)
-#  set(gtest_disable_pthreads OFF CACHE BOOL "gtest_disable_pthreads" FORCE)
-#  add_definitions(-DGTEST_HAS_TR1_TUPLE=0)
-#  include_directories(SYSTEM src/google_test/include)
-#  add_subdirectory(src/google_test)
-#
-#  # restore BUILD_SHARED_LIBS
-#  set(BUILD_SHARED_LIBS ${TEMP_BUILD_SHARED_LIBS})
-#endif()
-
 
 ###############################################################################
 # Add to include path
@@ -854,6 +844,13 @@ include_directories("${PROJECT_SOURCE_DIR}/src/")
 # Project binary directory
 include_directories("${PROJECT_BINARY_DIR}/src/")
 
+###############################################################################
+
+###############################################################################
+# RPATH settings
+# Conan set this to true, which is not the cmake default and not what we want
+# for the openstudio targets
+set(CMAKE_SKIP_RPATH FALSE)
 ###############################################################################
 
 ###############################################################################
@@ -885,6 +882,7 @@ set(project_directories
   osversion
   measure
   sdd
+  lib
   cli
   install_utility
 )
@@ -892,11 +890,12 @@ set(project_directories
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
 
-add_subdirectory(ruby)
-
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
 endforeach()
+
+add_subdirectory(ruby)
+
 
 # csharp, after loading projects
 if(BUILD_CSHARP_BINDINGS)
@@ -1051,15 +1050,15 @@ if(BUILD_DOCUMENTATION)
     endif()
     add_custom_command(TARGET ALL_DOXYGEN
       POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OPENSTUDIO_VERSION}-doc.zip
-      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-doc.zip * -r -x!*.cfg -x!*.tag -x!*.map -x!*.md5
-      COMMAND ${PROJECT_BINARY_DIR}/7za d OpenStudio-${OPENSTUDIO_VERSION}-doc.zip index.html
+      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OpenStudio_VERSION}-doc.zip
+      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OpenStudio_VERSION}-doc.zip * -r -x!*.cfg -x!*.tag -x!*.map -x!*.md5
+      COMMAND ${PROJECT_BINARY_DIR}/7za d OpenStudio-${OpenStudio_VERSION}-doc.zip index.html
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc
     )
     add_custom_command(TARGET ALL_RDOC
       POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip
-      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OPENSTUDIO_VERSION}-rdoc.zip * -r
+      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OpenStudio_VERSION}-rdoc.zip
+      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OpenStudio_VERSION}-rdoc.zip * -r
       WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/rdoc
     )
   endif()
@@ -1069,8 +1068,6 @@ endif()
 
 ###############################################################################
 # Export targets and generate OpenStudioCoreConfig.cmake
-
-set(TARGETS_FILE ${PROJECT_BINARY_DIR}/OpenStudioTargets.cmake)
 
 set(all_lib_targets
   openstudio_osversion
@@ -1094,16 +1091,15 @@ set(all_exe_targets
 
 if(UNIX AND NOT APPLE)
   foreach(targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
-    set_target_properties(${targ} PROPERTIES VERSION ${OPENSTUDIO_VERSION})
+    set_target_properties(${targ} PROPERTIES VERSION ${OpenStudio_VERSION})
   endforeach()
 endif()
 
 configure_file("${PROJECT_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
   "${PROJECT_BINARY_DIR}/OpenStudioCoreConfig.cmake" @ONLY)
 
-
 if(UNIX AND NOT APPLE)
-  set(examplesdir share/openstudio-${OPENSTUDIO_VERSION}/examples)
+  set(examplesdir share/openstudio-${OpenStudio_VERSION}/examples)
 else()
   set(examplesdir Examples)
 endif()
@@ -1131,7 +1127,7 @@ endif()
 set(CPACK_PACKAGE_VENDOR "National Renewable Energy Laboratory")
 set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH})
+set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH}) # This one includes the prerelease tag if any
 # set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
 
 # Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
@@ -1152,14 +1148,29 @@ elseif(UNIX)
   # These two will set the .deb install path correctly
   set(CPACK_SET_DESTDIR ON)
   set(CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/)
-  # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio
-  # Add an arbitrary link (broken) at build/openstudio (if build/ is your build folder) that already points to the **future** /usr/local/openstudio-x.y.z/bin/openstudio
-  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio ${CMAKE_CURRENT_BINARY_DIR}/openstudio)
-  # Plus a versioned one
-  execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}bin/openstudio ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION})
-  # Have this link be installed with the .deb package in /usr/local/bin
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
+
+  # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio,
+  # UNLESS it's from the OpenStudioApplication
+  if (NOT hasParent)
+    # # Add an arbitrary link (broken) at build/openstudio (if build/ is your build folder) that already points to the **future** /usr/local/openstudio-x.y.z/bin/openstudio
+    # execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}/bin/openstudio ${CMAKE_CURRENT_BINARY_DIR}/openstudio)
+    # # Plus a versioned one
+    # execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}/bin/openstudio ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION})
+    # # Have this link be installed with the .deb package in /usr/local/bin
+    # install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
+    # install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
+
+    # We use a postinstallation script so we don't get conflicts when we have OSApp installed first (or another OpenStudio (sdk) version)
+    set(POSTINST_FILE "${PROJECT_BINARY_DIR}/postinst")
+    set(POSTRM_FILE "${PROJECT_BINARY_DIR}/postrm")
+    configure_file(${PROJECT_SOURCE_DIR}/debian/postinst.in ${POSTINST_FILE} @ONLY)
+    configure_file(${PROJECT_SOURCE_DIR}/debian/postrm.in ${POSTRM_FILE} @ONLY)
+    execute_process(COMMAND chmod 755 "${POSTINST_FILE}")
+    execute_process(COMMAND chmod 755 "${POSTRM_FILE}")
+
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CPACK_DEBIAN_BIN_PACKAGE_CONTROL_EXTRA};${POSTINST_FILE};${POSTRM_FILE}")
+
+  endif()
 
   # TODO: for now since Mac and Windows installers aren't doing it for core, not doing it for Unix either.
   ## Copy the icons
@@ -1242,6 +1253,44 @@ if(BUILD_PAT AND APPLE)
   install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
 endif()
 
+export(TARGETS
+         openstudio_airflow
+         openstudio_model
+         openstudio_energyplus
+         openstudio_measure
+         openstudio_osversion
+         openstudio_sdd
+         openstudio_isomodel
+         openstudio_gbxml
+         openstudio_radiance
+         openstudio_utilities
+         openstudiolib
+         openstudio_rb
+       NAMESPACE "openstudio::"
+       FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
+       )
+
+install(EXPORT openstudio
+        DESTINATION lib/cmake/openstudio
+        NAMESPACE "openstudio::"
+        COMPONENT "CPPAPI"
+        FILE openstudioConfig.cmake)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${PROJECT_BINARY_DIR}/openstudioConfigVersion.cmake"
+  VERSION ${CMAKE_PROJECT_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
+
+install(
+  FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/openstudioConfigVersion.cmake"
+  DESTINATION
+    lib/cmake/openstudio/
+  COMPONENT "CPPAPI"
+)
+
 if (NOT DELAY_INCLUDE_CPACK)
   include(CPack)
 endif()
@@ -1266,6 +1315,11 @@ cpack_add_component(EnergyPlus
 cpack_add_component(Radiance
   DISPLAY_NAME "Radiance"
   DESCRIPTION "Full Radiance installation"
+)
+
+cpack_add_component(CPPAPI
+  DISPLAY_NAME "C++ API"
+  DESCRIPTION "Libraries and headers for OpenStudio C++ API"
 )
 
 cpack_ifw_configure_component(CLI
@@ -1322,5 +1376,25 @@ if( BUILD_NUGET_PACKAGE )
     DEPENDS csharp_sdk
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
   )
+endif()
+
+
+if (MSVC)
+  if (NOT USE_LTO)
+    message(WARNING "Suppressing 121,000+ linker warnings, see src/lib/CMakeLists.txt for details")
+    # The actual solution to this is to use the new openstudio_EXPORTS preprocessor
+    # definition and make all of the libs truely one large lib with a single set of exports
+    # the problem is that somehow using this now causes the openstudio_model.lib to grow too large
+    # and we get a linker error
+
+    # The alternative is to suppress these warnings.
+    # The problem is that we are using export/import of symbols between function calls
+    # within the same library. This may result in less efficient function calls.
+
+    # The potential inefficiency goes away if we use LTO linking
+    target_link_libraries(openstudiolib PRIVATE -IGNORE:4217,4049)
+    target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
+    target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
+  endif()
 endif()
 

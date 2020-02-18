@@ -31,7 +31,7 @@
 #define GBXML_GBXMLAPI_HPP
 
   #if (_WIN32 || _MSC_VER) && SHARED_OS_LIBS
-    #ifdef openstudio_gbxml_EXPORTS
+    #if defined(openstudio_gbxml_EXPORTS) || defined(openstudio_EXPORTS)
       #define GBXML_API __declspec(dllexport)
     #else
       #define GBXML_API __declspec(dllimport)
