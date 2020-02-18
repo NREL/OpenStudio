@@ -229,6 +229,8 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateOutputJSON(const WorkspaceObject & workspaceObject);
 
+  boost::optional<model::ModelObject> translateOutputTableSummaryReports(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateOtherEquipment(const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translateOutputEnergyManagementSystem(const WorkspaceObject & workspaceObject);
