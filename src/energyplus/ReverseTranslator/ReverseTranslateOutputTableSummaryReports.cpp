@@ -51,11 +51,17 @@ OptionalModelObject ReverseTranslator::translateOutputTableSummaryReports const 
     return boost::none;
   }
 
-  OutputTableSummaryReports summaryReports = m_model.getUniqueModelObject<OutputTableSummaryReports>();
+  OutputTableSummaryReports outputTableSummaryReports = m_model.getUniqueModelObject<OutputTableSummaryReports>();
 
+  for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
+    WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+    std::string summaryReport = workspaceGroup.getString(Output_Table_SummaryReportsExtensibleFields::ReportName);
+    
+    // add the summary report
+    outputTableSummaryReports.addSummaryReport(summaryReport);
+  }
 
-
-  return summaryReports;
+  return outputTableSummaryReports;
 }
 
 } // energyplus

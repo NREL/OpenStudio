@@ -52,8 +52,13 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputTableSummaryReports
 
   m_idfObjects.push_back(idfObject);
 
-
-
+  std::vector<std::string> summaryReports = modelObject.summaryReports();
+  if (!summaryReports.empty()) {
+    for (std::string summaryReport : summaryReports) {
+      auto eg = idfObject.pushExtensibleGroup();
+      eg.setString(Output_Table_SummaryReportsExtensibleFields::ReportName, summaryReport);
+    }
+  }
 
   return boost::optional<IdfObject>(idfObject);
 }
