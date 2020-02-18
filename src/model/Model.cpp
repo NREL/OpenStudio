@@ -1004,7 +1004,8 @@ namespace detail {
   {
     Handle dummy;
     clearCachedBuilding(dummy);
-    clearCachedFoundationKivaSettingsOutputTableSummaryReportsFoundationKivaSettings(dummy);
+    clearCachedFoundationKivaSettings(dummy);
+    clearCachedOutputTableSummaryReports(dummy);
     clearCachedLifeCycleCostParameters(dummy);
     clearCachedRunPeriod(dummy);
     clearCachedYearDescription(dummy);
