@@ -49,7 +49,7 @@ namespace detail {
 } // detail
 
 /** This class implements a speed */
-class FanSystemModelSpeed {
+class MODEL_API FanSystemModelSpeed {
   public:
     /* Only accepts ModelObjects that are of type Surface, Subsurface or InternalMass, will throw otherwise */
     FanSystemModelSpeed(double flowFraction, double electricPowerFraction);
@@ -67,7 +67,7 @@ class FanSystemModelSpeed {
 };
 
 // Overload operator<<
-std::ostream& operator<< (std::ostream& out, const openstudio::model::FanSystemModelSpeed& speed);
+MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::FanSystemModelSpeed& speed);
 
 
 /** FanSystemModel is a StraightComponent that wraps the OpenStudio IDD object 'OS:Fan:SystemModel'. */
