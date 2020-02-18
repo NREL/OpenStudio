@@ -275,6 +275,21 @@ namespace detail {
     return m_cachedFoundationKivaSettings;
   }
 
+  boost::optional<OutputTableSummaryReports> Model_Impl::outputTableSummaryReports() const
+  {
+    if (m_cachedOutputTableSummaryReports){
+      return m_cachedOutputTableSummaryReports;
+    }
+
+    boost::optional<OutputTableSummaryReports> result = this->model().getOptionalUniqueModelObject<OutputTableSummaryReports>();
+    if (result){
+      m_cachedOutputTableSummaryReports = result;
+      result->getImpl<OutputTableSummaryReports_Impl>().get()->OutputTableSummaryReports_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputTableSummaryReports>(const_cast<openstudio::model::detail::Model_Impl *>(this));
+    }
+
+    return m_cachedOutputTableSummaryReports;
+  }
+
   boost::optional<LifeCycleCostParameters> Model_Impl::lifeCycleCostParameters() const
   {
     if (m_cachedLifeCycleCostParameters){
@@ -989,7 +1004,7 @@ namespace detail {
   {
     Handle dummy;
     clearCachedBuilding(dummy);
-    clearCachedFoundationKivaSettings(dummy);
+    clearCachedFoundationKivaSettingsOutputTableSummaryReportsFoundationKivaSettings(dummy);
     clearCachedLifeCycleCostParameters(dummy);
     clearCachedRunPeriod(dummy);
     clearCachedYearDescription(dummy);
@@ -1005,6 +1020,11 @@ namespace detail {
   void Model_Impl::clearCachedFoundationKivaSettings(const Handle &)
   {
     m_cachedFoundationKivaSettings.reset();
+  }
+
+  void Model_Impl::clearCachedOutputTableSummaryReports(const Handle &)
+  {
+    m_cachedOutputTableSummaryReports.reset();
   }
 
   void Model_Impl::clearCachedLifeCycleCostParameters(const Handle &handle)
@@ -1187,6 +1207,11 @@ boost::optional<Building> Model::building() const
 boost::optional<FoundationKivaSettings> Model::foundationKivaSettings() const
 {
   return getImpl<detail::Model_Impl>()->foundationKivaSettings();
+}
+
+boost::optional<OutputTableSummaryReports> Model::outputTableSummaryReports() const
+{
+  return getImpl<detail::Model_Impl>()->outputTableSummaryReports();
 }
 
 boost::optional<PerformancePrecisionTradeoffs> Model::performancePrecisionTradeoffs() const
@@ -2598,6 +2623,16 @@ FoundationKivaSettings Model::getUniqueModelObject<FoundationKivaSettings>() {
 }
 
 template <>
+OutputTableSummaryReports Model::getUniqueModelObject<OutputTableSummaryReports>() {
+  if (boost::optional<OutputTableSummaryReports> _b = outputTableSummaryReports()) {
+    return _b.get();
+  } else {
+    return OutputTableSummaryReports(*this);
+  }
+}
+
+
+template <>
 LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>() {
   if (boost::optional<LifeCycleCostParameters> _l = lifeCycleCostParameters()) {
     return _l.get();
@@ -2966,6 +3001,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(OutputJSON);
   REGISTER_CONSTRUCTOR(OutputMeter);
   REGISTER_CONSTRUCTOR(OutputVariable);
+  REGISTER_CONSTRUCTOR(OutputTableSummaryReports);
   REGISTER_CONSTRUCTOR(OutsideSurfaceConvectionAlgorithm);
   REGISTER_CONSTRUCTOR(People);
   REGISTER_CONSTRUCTOR(PeopleDefinition);
@@ -3458,6 +3494,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(OutputJSON);
   REGISTER_COPYCONSTRUCTORS(OutputMeter);
   REGISTER_COPYCONSTRUCTORS(OutputVariable);
+  REGISTER_COPYCONSTRUCTORS(OutputTableSummaryReports);
   REGISTER_COPYCONSTRUCTORS(OutsideSurfaceConvectionAlgorithm);
   REGISTER_COPYCONSTRUCTORS(People);
   REGISTER_COPYCONSTRUCTORS(PeopleDefinition);
