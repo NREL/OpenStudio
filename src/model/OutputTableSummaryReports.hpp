@@ -53,16 +53,31 @@ class MODEL_API OutputTableSummaryReports : public ModelObject {
 
   //@}
 
-  static IddObjectType iddObjectType();
+  static IddObjectType iddObjectType();  
 
   /** @name Getters */
   //@{
 
+  void removeSummaryReport(int groupIndex);
+
+  void removeAllSummaryReports();
+
+  std::vector<std::string> summaryReports() const;
+
+  unsigned int numberofSummaryReports() const;
+
+  /** If a summaryReport group is already present (cf `summaryReportIndex()`), it will Warn */
+  boost::optional<unsigned> summaryReportIndex(std::string summaryReport) const;
+
+  boost::optional<std::string> getSummaryReport(unsigned groupIndex) const;
 
   //@}
   /** @name Setters */
   //@{
 
+  bool addSummaryReport(std::string summaryReport);
+
+  bool addSummaryReports(std::vector<std::string> &summaryReports);
 
   //@}
   /** @name Other */

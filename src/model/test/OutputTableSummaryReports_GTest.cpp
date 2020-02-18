@@ -50,7 +50,7 @@ TEST_F(ModelFixture, OutputTableSummaryReports_OutputTableSummaryReports) {
       Model model;
       
       // create an output table summary reports object to use
-      OutputTableSummaryReports summaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
+      OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
       
       exit(0);
     },
@@ -62,32 +62,51 @@ TEST_F(ModelFixture, OutputTableSummaryReports_OutputTableSummaryReports) {
   Model model;
   
   // create an output table summary reports object to use
-  OutputTableSummaryReports summaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
+  OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
 
-
-
-
+  ASSERT_EQUAL(0, outputTableSummaryReports.numberofSummaryReports);
 }
 
-// test setting and getting
-TEST_F(ModelFixture, OutputTableSummaryReports_SetGetFields) {    
-  // create a model to use
+// check summary reports
+TEST_F(ModelFixture, OutputTableSummaryReports_SummaryReports) {
   Model model;
+  OutputTableSummaryReports outputTableSummaryReports(model);
   
-  // create an output table summary reports object to use
-  OutputTableSummaryReports summaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
+  outputTableSummaryReports.removeAllSummaryReports();
   
-  // set the fields
+  EXPECT_EQ(0, outputTableSummaryReports.numberofSummaryReports());
+  ASSERT_TRUE(outputTableSummaryReports.addSummaryReport("AnnualBuildingUtilityPerformanceSummary"));
+  EXPECT_EQ(1, outputTableSummaryReports.numberofSummaryReports());
+  ASSERT_TRUE(outputTableSummaryReports.addSummaryReport("InputVerificationandResultsSummary"));
+  EXPECT_EQ(2, outputTableSummaryReports.numberofSummaryReports());
+  ASSERT_TRUE(outputTableSummaryReports.addSummaryReport("SourceEnergyEndUseComponentsSummary"));
+  EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
+  ASSERT_TRUE(outputTableSummaryReports.addSummaryReport("SourceEnergyEndUseComponentsSummary"));
+  EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
+
+  outputTableSummaryReports.removeCustomBlock(1);
+  EXPECT_EQ(2, outputTableSummaryReports.numberofSummaryReports());
   
+  // check that remaining reports moved correctly
+  std::vector<std::string> summaryReports = outputTableSummaryReports.summaryReports();
+  EXPECT_EQ("AnnualBuildingUtilityPerformanceSummary", summaryReports[0].nameString());
+  EXPECT_EQ("SourceEnergyEndUseComponentsSummary", summaryReports[1].depth());
   
+  // more remove checking
+  outputTableSummaryReports.removeAllSummaryReports();
+  EXPECT_EQ(0, outputTableSummaryReports.numberofSummaryReports());
+  outputTableSummaryReports.removeCustomBlock(0);
+  EXPECT_EQ(0, outputTableSummaryReports.numberofSummaryReports());
   
-  // check the fields
-  
-  
-  
-  // reset them one by one
-  
-  
+  // check bulk-adding custom blocks
+  std::vector<std::string> summaryReportsToAdd;
+  std::string summaryReport1 = "SurfaceShadowingSummary";
+  summaryReportsToAdd.push_back(summaryReport1);
+  std::string summaryReport2 = "ShadingSummary";
+  summaryReportsToAdd.push_back(summaryReport2);
+  ASSERT_TRUE(outputTableSummaryReports.addSummaryReports(summaryReportsToAdd));
+  EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
+  EXPECT_EQ(3, outputTableSummaryReports.summaryReports().size());
 }
 
 // test cloning it
@@ -97,17 +116,26 @@ TEST_F(ModelFixture, OutputTableSummaryReports_Clone)
   Model model;
 
   // create an output table summary reports object to use
-  OutputTableSummaryReports summaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
+  OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
 
+  // change some of the fields
+  outputTableSummaryReports.addSummaryReport("ClimaticDataSummary");
 
+  // clone it into the same model
+  OutputTableSummaryReports outputTableSummaryReportsClone = outputTableSummaryReports.clone(model).cast<OutputTableSummaryReports>();
+  ASSERT_EQUAL(1, outputTableSummaryReportsClone.numberofSummaryReports());
 
+  // clone it into a different model
+  Model model2;
+  OutputTableSummaryReports outputTableSummaryReportsClone2 = outputTableSummaryReports.clone(model2).cast<OutputTableSummaryReports>();
+  ASSERT_EQUAL(1, outputTableSummaryReportsClone2.numberofSummaryReports());
 }
 
 // check that remove works
 TEST_F(ModelFixture, OutputTableSummaryReports_Remove) {
   Model model;
   auto size = model.modelObjects().size();
-  OutputTableSummaryReports summaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
-  EXPECT_FALSE(summaryReports.remove().empty());
+  OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
+  EXPECT_FALSE(outputTableSummaryReports.remove().empty());
   EXPECT_EQ(size, model.modelObjects().size());
 }

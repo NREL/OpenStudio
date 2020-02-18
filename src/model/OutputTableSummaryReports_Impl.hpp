@@ -69,17 +69,31 @@ namespace detail {
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override; 
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
     //@{
 
+    bool removeSummaryReport(unsigned groupIndex);
+
+    void removeAllSummaryReports();
+
+    std::vector<std::string> summaryReports() const;
+
+    unsigned int numberofSummaryReports() const;
+
+    boost::optional<unsigned> summaryReportIndex(std::string summaryReport);
+
+    boost::optional<std::string> getSummaryReport(unsigned groupIndex) const;
 
     //@}
     /** @name Setters */
     //@{
 
+    bool addSummaryReport(std::string summaryReport);
+
+    bool addSummaryReports(const std::vector<std::string> &summaryReports);
 
     //@}
     /** @name Other */
