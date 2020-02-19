@@ -35,10 +35,13 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
+#include "ModelExtensibleGroup.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Output_Table_SummaryReports_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include <algorithm>
 
 namespace openstudio {
 namespace model {
@@ -67,11 +70,6 @@ namespace detail {
     : ModelObject_Impl(other,model,keepHandle)
   {}
 
-  boost::optional<ParentObject> OutputTableSummaryReports_Impl::parent() const {
-    boost::optional<Site> result = this->model().getOptionalUniqueModelObject<Site>();
-    return boost::optional<ParentObject>(result);
-  }
-
   const std::vector<std::string>& OutputTableSummaryReports_Impl::outputVariableNames() const
   {
     static std::vector<std::string> result;
@@ -96,7 +94,6 @@ namespace detail {
       return true;
     }
 
-    bool result;
     // Push an extensible group
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     bool result = eg.setString(OS_Output_Table_SummaryReportsExtensibleFields::ReportName, summaryReport);
@@ -130,7 +127,7 @@ namespace detail {
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
     
     for (const auto & group : groups) {
-      boost::optional<std::string> summaryReport = group.cast<WorkspaceExtensibleGroup>().getDouble(OS_Output_Table_SummaryReportsExtensibleFields::ReportName);
+      boost::optional<std::string> summaryReport = group.cast<WorkspaceExtensibleGroup>().getString(OS_Output_Table_SummaryReportsExtensibleFields::ReportName);
       
       if (summaryReport) {
         result.push_back(summaryReport.get());
@@ -140,7 +137,7 @@ namespace detail {
     return result;
   }
 
-  bool OutputTableSummaryReports_Impl::addSummaryReports(std::vector<std::string> &summaryReports) {
+  bool OutputTableSummaryReports_Impl::addSummaryReports(std::vector<std::string> summaryReports) {
     unsigned int num = numberofSummaryReports();
     for (std::string summaryReport : summaryReports) {
       addSummaryReport(summaryReport);
@@ -171,7 +168,7 @@ namespace detail {
 
     ModelExtensibleGroup group = getExtensibleGroup(groupIndex).cast<ModelExtensibleGroup>();
 
-    boost::optional<std::string> _summaryReport = eg.getField(OS_Output_Table_SummaryReportsExtensibleFields::ReportName);
+    boost::optional<std::string> _summaryReport = group.getString(OS_Output_Table_SummaryReportsExtensibleFields::ReportName);
 
     if (!_summaryReport) {
       LOG(Error, "Could not retrieve ReportName for extensible group " << group.groupIndex() << ".");
@@ -202,11 +199,11 @@ void OutputTableSummaryReports::removeAllSummaryReports() {
   return getImpl<detail::OutputTableSummaryReports_Impl>()->removeAllSummaryReports();
 }
 
-std::vector<CustomBlock> OutputTableSummaryReports::summaryReports() const {
-  return getImpl<detail::OutputTableSummaryReports_Impl>()->customBlocks();
+std::vector<std::string> OutputTableSummaryReports::summaryReports() const {
+  return getImpl<detail::OutputTableSummaryReports_Impl>()->summaryReports();
 }
 
-bool OutputTableSummaryReports::addSummaryReport(std::vector<std::string> summaryReports) {
+bool OutputTableSummaryReports::addSummaryReports(std::vector<std::string> summaryReports) {
   return getImpl<detail::OutputTableSummaryReports_Impl>()->addSummaryReports(summaryReports);
 }
 

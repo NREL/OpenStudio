@@ -33,6 +33,7 @@
 #include "ComponentWatcher.hpp"
 #include "Building.hpp"
 #include "FoundationKivaSettings.hpp"
+#include "OutputTableSummaryReports.hpp"
 #include "LifeCycleCostParameters.hpp"
 #include "RunPeriod.hpp"
 #include "YearDescription.hpp"
@@ -145,6 +146,10 @@ namespace detail {
     /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
     boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
+
+    /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputTableSummaryReports>(). */
+    boost::optional<OutputTableSummaryReports> outputTableSummaryReports() const;
 
     /** Get the PerformancePrecisionTradeoffs object if there is one, this implementation uses a cached reference to the PerformancePrecisionTradeoffs
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>(). */
@@ -303,6 +308,7 @@ namespace detail {
 
     mutable boost::optional<Building> m_cachedBuilding;
     mutable boost::optional<FoundationKivaSettings> m_cachedFoundationKivaSettings;
+    mutable boost::optional<OutputTableSummaryReports> m_cachedOutputTableSummaryReports;
     mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
     mutable boost::optional<PerformancePrecisionTradeoffs> m_cachedPerformancePrecisionTradeoffs;
     mutable boost::optional<RunPeriod> m_cachedRunPeriod;
@@ -313,6 +319,7 @@ namespace detail {
     void clearCachedData();
     void clearCachedBuilding(const Handle& handle);
     void clearCachedFoundationKivaSettings(const Handle& handle);
+    void clearCachedOutputTableSummaryReports(const Handle& handle);
     void clearCachedLifeCycleCostParameters(const Handle& handle);
     void clearCachedPerformancePrecisionTradeoffs(const Handle& handle);
     void clearCachedRunPeriod(const Handle& handle);

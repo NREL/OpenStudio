@@ -64,13 +64,13 @@ TEST_F(ModelFixture, OutputTableSummaryReports_OutputTableSummaryReports) {
   // create an output table summary reports object to use
   OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
 
-  ASSERT_EQUAL(0, outputTableSummaryReports.numberofSummaryReports);
+  ASSERT_EQ(0, outputTableSummaryReports.numberofSummaryReports());
 }
 
 // check summary reports
 TEST_F(ModelFixture, OutputTableSummaryReports_SummaryReports) {
   Model model;
-  OutputTableSummaryReports outputTableSummaryReports(model);
+  OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
   
   outputTableSummaryReports.removeAllSummaryReports();
   
@@ -84,29 +84,29 @@ TEST_F(ModelFixture, OutputTableSummaryReports_SummaryReports) {
   ASSERT_TRUE(outputTableSummaryReports.addSummaryReport("SourceEnergyEndUseComponentsSummary"));
   EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
 
-  outputTableSummaryReports.removeCustomBlock(1);
+  outputTableSummaryReports.removeSummaryReport(1);
   EXPECT_EQ(2, outputTableSummaryReports.numberofSummaryReports());
   
   // check that remaining reports moved correctly
   std::vector<std::string> summaryReports = outputTableSummaryReports.summaryReports();
-  EXPECT_EQ("AnnualBuildingUtilityPerformanceSummary", summaryReports[0].nameString());
-  EXPECT_EQ("SourceEnergyEndUseComponentsSummary", summaryReports[1].depth());
+  EXPECT_EQ("AnnualBuildingUtilityPerformanceSummary", summaryReports[0]);
+  EXPECT_EQ("SourceEnergyEndUseComponentsSummary", summaryReports[1]);
   
   // more remove checking
   outputTableSummaryReports.removeAllSummaryReports();
   EXPECT_EQ(0, outputTableSummaryReports.numberofSummaryReports());
-  outputTableSummaryReports.removeCustomBlock(0);
+  outputTableSummaryReports.removeSummaryReport(0);
   EXPECT_EQ(0, outputTableSummaryReports.numberofSummaryReports());
   
-  // check bulk-adding custom blocks
+  // check bulk-adding summary reports
   std::vector<std::string> summaryReportsToAdd;
   std::string summaryReport1 = "SurfaceShadowingSummary";
   summaryReportsToAdd.push_back(summaryReport1);
   std::string summaryReport2 = "ShadingSummary";
   summaryReportsToAdd.push_back(summaryReport2);
   ASSERT_TRUE(outputTableSummaryReports.addSummaryReports(summaryReportsToAdd));
-  EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
-  EXPECT_EQ(3, outputTableSummaryReports.summaryReports().size());
+  EXPECT_EQ(2, outputTableSummaryReports.numberofSummaryReports());
+  EXPECT_EQ(2, outputTableSummaryReports.summaryReports().size());
 }
 
 // test cloning it
@@ -123,12 +123,12 @@ TEST_F(ModelFixture, OutputTableSummaryReports_Clone)
 
   // clone it into the same model
   OutputTableSummaryReports outputTableSummaryReportsClone = outputTableSummaryReports.clone(model).cast<OutputTableSummaryReports>();
-  ASSERT_EQUAL(1, outputTableSummaryReportsClone.numberofSummaryReports());
+  ASSERT_EQ(1, outputTableSummaryReportsClone.numberofSummaryReports());
 
   // clone it into a different model
   Model model2;
   OutputTableSummaryReports outputTableSummaryReportsClone2 = outputTableSummaryReports.clone(model2).cast<OutputTableSummaryReports>();
-  ASSERT_EQUAL(1, outputTableSummaryReportsClone2.numberofSummaryReports());
+  ASSERT_EQ(1, outputTableSummaryReportsClone2.numberofSummaryReports());
 }
 
 // check that remove works

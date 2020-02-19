@@ -65,8 +65,6 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual boost::optional<ParentObject> parent() const override;
-
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
@@ -83,7 +81,7 @@ namespace detail {
 
     unsigned int numberofSummaryReports() const;
 
-    boost::optional<unsigned> summaryReportIndex(std::string summaryReport);
+    boost::optional<unsigned> summaryReportIndex(std::string summaryReport) const;
 
     boost::optional<std::string> getSummaryReport(unsigned groupIndex) const;
 
@@ -93,7 +91,7 @@ namespace detail {
 
     bool addSummaryReport(std::string summaryReport);
 
-    bool addSummaryReports(const std::vector<std::string> &summaryReports);
+    bool addSummaryReports(const std::vector<std::string> summaryReports);
 
     //@}
     /** @name Other */

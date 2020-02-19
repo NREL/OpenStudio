@@ -77,7 +77,7 @@ class MODEL_API OutputTableSummaryReports : public ModelObject {
 
   bool addSummaryReport(std::string summaryReport);
 
-  bool addSummaryReports(std::vector<std::string> &summaryReports);
+  bool addSummaryReports(std::vector<std::string> summaryReports);
 
   //@}
   /** @name Other */
