@@ -33,6 +33,8 @@
 #include "../../model/OutputTableSummaryReports.hpp"
 #include "../../model/OutputTableSummaryReports_Impl.hpp"
 
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
 #include <utilities/idd/Output_Table_SummaryReports_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -58,6 +60,9 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputTableSummaryReports
       auto eg = idfObject.pushExtensibleGroup();
       eg.setString(Output_Table_SummaryReportsExtensibleFields::ReportName, summaryReport);
     }
+  } else {
+    auto eg = idfObject.pushExtensibleGroup();
+    eg.setString(Output_Table_SummaryReportsExtensibleFields::ReportName, "AllSummary");
   }
 
   return boost::optional<IdfObject>(idfObject);

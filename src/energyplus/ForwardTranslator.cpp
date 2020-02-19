@@ -555,6 +555,13 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
     translateAndMapModelObject(*runPeriod);
 
+    // ensure that output table summary reports exists
+    boost::optional<model::OutputTableSummaryReports> summaryReports = model.getOptionalUniqueModelObject<model::OutputTableSummaryReports>();
+    if (!summaryReports){
+      summaryReports = model.getUniqueModelObject<model::OutputTableSummaryReports>();
+    }
+    translateAndMapModelObject(*summaryReports);
+
     // add a global geometry rules object
     IdfObject globalGeometryRules(openstudio::IddObjectType::GlobalGeometryRules);
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::StartingVertexPosition, "UpperLeftCorner");
@@ -4527,11 +4534,6 @@ void ForwardTranslator::createStandardOutputRequests()
     {
       tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion,"InchPound");
     }
-
-    IdfObject outputTableSummaryReport(IddObjectType::Output_Table_SummaryReports);
-    IdfExtensibleGroup eg = outputTableSummaryReport.pushExtensibleGroup();
-    eg.setString(Output_Table_SummaryReportsExtensibleFields::ReportName,"AllSummary");
-    m_idfObjects.push_back(outputTableSummaryReport);
   }
 
   if (!m_excludeVariableDictionary) {
@@ -4566,7 +4568,6 @@ void ForwardTranslator::createStandardOutputRequests()
     idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, 0.0);
     idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
   }
-
 }
 
 IdfObject ForwardTranslator::createAndRegisterIdfObject(const IddObjectType& idfObjectType,

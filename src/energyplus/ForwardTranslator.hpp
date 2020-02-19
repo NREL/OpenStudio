@@ -1016,7 +1016,7 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateOutputEnergyManagementSystem(model::OutputEnergyManagementSystem & modelObject );
 
-  boost::optional<IdfObject> translateOutputTableSummaryReports(model::OutputTableSummaryReports & modelObject);
+  boost::optional<IdfObject> translateOutputTableSummaryReports(model::OutputTableSummaryReports & modelObject );
 
   boost::optional<IdfObject> translatePeople( model::People & modelObject );
 

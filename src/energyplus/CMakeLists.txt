@@ -613,6 +613,7 @@ set(${target_name}_test_src
   Test/OutputDebuggingData_GTest.cpp
   Test/OutputDiagnostics_GTest.cpp
   Test/OutputJSON_GTest.cpp
+  Test/OutputTableSummaryReports_GTest.cpp
   Test/People_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp

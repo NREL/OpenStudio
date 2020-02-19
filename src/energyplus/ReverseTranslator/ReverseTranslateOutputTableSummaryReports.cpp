@@ -32,6 +32,8 @@
 #include "../../model/OutputTableSummaryReports.hpp"
 #include "../../model/OutputTableSummaryReports_Impl.hpp"
 
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 #include <utilities/idd/Output_Table_SummaryReports_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -44,7 +46,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateOutputTableSummaryReports const WorkspaceObject & workspaceObject )
+OptionalModelObject ReverseTranslator::translateOutputTableSummaryReports( const WorkspaceObject & workspaceObject )
 {
   if( workspaceObject.iddObject().type() != IddObjectType::Output_Table_SummaryReports ){
     LOG(Error, "WorkspaceObject is not IddObjectType: OutputTableSummaryReports");
@@ -55,10 +57,10 @@ OptionalModelObject ReverseTranslator::translateOutputTableSummaryReports const 
 
   for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
     WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
-    std::string summaryReport = workspaceGroup.getString(Output_Table_SummaryReportsExtensibleFields::ReportName);
+    OptionalString summaryReport = workspaceGroup.getString(Output_Table_SummaryReportsExtensibleFields::ReportName);
     
     // add the summary report
-    outputTableSummaryReports.addSummaryReport(summaryReport);
+    outputTableSummaryReports.addSummaryReport(*summaryReport);
   }
 
   return outputTableSummaryReports;
