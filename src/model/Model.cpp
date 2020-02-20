@@ -2960,7 +2960,10 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(OtherEquipment);
   REGISTER_CONSTRUCTOR(OtherEquipmentDefinition);
   REGISTER_CONSTRUCTOR(OutputControlReportingTolerances);
+  REGISTER_CONSTRUCTOR(OutputDebuggingData);
+  REGISTER_CONSTRUCTOR(OutputDiagnostics);
   REGISTER_CONSTRUCTOR(OutputEnergyManagementSystem);
+  REGISTER_CONSTRUCTOR(OutputJSON);
   REGISTER_CONSTRUCTOR(OutputMeter);
   REGISTER_CONSTRUCTOR(OutputVariable);
   REGISTER_CONSTRUCTOR(OutsideSurfaceConvectionAlgorithm);
@@ -3449,7 +3452,10 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(OtherEquipment);
   REGISTER_COPYCONSTRUCTORS(OtherEquipmentDefinition);
   REGISTER_COPYCONSTRUCTORS(OutputControlReportingTolerances);
+  REGISTER_COPYCONSTRUCTORS(OutputDebuggingData);
+  REGISTER_COPYCONSTRUCTORS(OutputDiagnostics);
   REGISTER_COPYCONSTRUCTORS(OutputEnergyManagementSystem);
+  REGISTER_COPYCONSTRUCTORS(OutputJSON);
   REGISTER_COPYCONSTRUCTORS(OutputMeter);
   REGISTER_COPYCONSTRUCTORS(OutputVariable);
   REGISTER_COPYCONSTRUCTORS(OutsideSurfaceConvectionAlgorithm);

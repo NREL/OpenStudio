@@ -2412,6 +2412,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateOutputControlReportingTolerances(outputControl);
       break;
     }
+  case openstudio::IddObjectType::OS_Output_DebuggingData :
+    {
+      auto mo = modelObject.cast<OutputDebuggingData>();
+      retVal = translateOutputDebuggingData(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Output_Diagnostics :
+    {
+      auto mo = modelObject.cast<OutputDiagnostics>();
+      retVal = translateOutputDiagnostics(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Output_JSON :
+    {
+      auto mo = modelObject.cast<OutputJSON>();
+      retVal = translateOutputJSON(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_Output_Meter :
     {
       model::OutputMeter meter = modelObject.cast<OutputMeter>();
@@ -3463,6 +3481,9 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneAirMassFlowConservation);
   result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
   result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
+  result.push_back(IddObjectType::OS_Output_DebuggingData);
+  result.push_back(IddObjectType::OS_Output_Diagnostics);
+  result.push_back(IddObjectType::OS_Output_JSON);
   result.push_back(IddObjectType::OS_PerformancePrecisionTradeoffs);
 
   result.push_back(IddObjectType::OS_Site);
