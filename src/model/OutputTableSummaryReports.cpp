@@ -90,8 +90,8 @@ namespace detail {
     if (_existingIndex) {
       boost::optional<std::string> _summaryReport = getSummaryReport(_existingIndex.get());
       OS_ASSERT(_summaryReport);
-      LOG(Warn, "For " << briefDescription() << ", SummaryReport already exists.");
-      return true;
+      LOG(Warn, "For " << briefDescription() << ", summary report '" << summaryReport << "' already exists.");
+      return false;
     }
 
     // Push an extensible group
@@ -100,6 +100,9 @@ namespace detail {
     if (result) {
       return true;
     } else {
+      // Something went wrong, probably the summary report name isn't in the list of possible choices
+      // So erase the new extensible group
+      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
       return false;
     }
   }
