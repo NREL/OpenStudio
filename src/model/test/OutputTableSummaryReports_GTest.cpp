@@ -81,8 +81,16 @@ TEST_F(ModelFixture, OutputTableSummaryReports_SummaryReports) {
   EXPECT_EQ(2, outputTableSummaryReports.numberofSummaryReports());
   ASSERT_TRUE(outputTableSummaryReports.addSummaryReport("SourceEnergyEndUseComponentsSummary"));
   EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
-  ASSERT_TRUE(outputTableSummaryReports.addSummaryReport("SourceEnergyEndUseComponentsSummary"));
+  ASSERT_FALSE(outputTableSummaryReports.addSummaryReport("SourceEnergyEndUseComponentsSummary"));
   EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
+  ASSERT_FALSE(outputTableSummaryReports.addSummaryReport("MadeUpSummaryReport"));
+  EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
+  EXPECT_THROW(outputTableSummaryReports.getSummaryReport(3), openstudio::Exception);
+  ASSERT_TRUE(outputTableSummaryReports.getSummaryReport(2));
+  EXPECT_EQ("SourceEnergyEndUseComponentsSummary", outputTableSummaryReports.getSummaryReport(2).get());
+  ASSERT_FALSE(outputTableSummaryReports.summaryReportIndex("AnotherMadeUpSummaryReport"));
+  ASSERT_TRUE(outputTableSummaryReports.summaryReportIndex("SourceEnergyEndUseComponentsSummary"));
+  EXPECT_EQ(2, outputTableSummaryReports.summaryReportIndex("SourceEnergyEndUseComponentsSummary").get());
 
   outputTableSummaryReports.removeSummaryReport(1);
   EXPECT_EQ(2, outputTableSummaryReports.numberofSummaryReports());
