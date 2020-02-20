@@ -394,6 +394,13 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   std::vector<std::string> availableEnvPeriods = sqlFile->availableEnvPeriods();
   ASSERT_FALSE(availableEnvPeriods.empty());
   EXPECT_EQ(static_cast<unsigned>(3), availableEnvPeriods.size());
+  std::string availableEnvPeriod;
+  for (int i = 0; i < availableEnvPeriods.size(); i++)
+  {
+    if (availableEnvPeriods[i].find("CONDNS") == std::string::npos) {
+      availableEnvPeriod = availableEnvPeriods[i];
+    }
+  }
 
    // Since v8.9.0, E+ includes the Year into the SQL. 5ZoneAirCooled has 2013
   unsigned year = 2013;
@@ -401,15 +408,14 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   Date dec31 = sqlFile->hasYear() ? Date(MonthOfYear::Dec, 31, year) : Date(MonthOfYear::Dec, 31);
   Date jan31 = sqlFile->hasYear() ? Date(MonthOfYear::Jan, 31, year) : Date(MonthOfYear::Jan, 31);
 
-
   { // Detailed
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Detailed", "Zone Mean Air Temperature", "Main Zone");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Detailed", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "HVAC System Timestep", "Zone Mean Air Temperature", "Main Zone");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "HVAC System Timestep", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "HVAC System Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "HVAC System Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Detailed", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Detailed", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -426,13 +432,13 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   }
 
   { // Timestep
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Timestep", "Zone Mean Air Temperature", "Main Zone");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Timestep", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Zone Timestep", "Zone Mean Air Temperature", "Main Zone");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Zone Timestep", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Zone Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Zone Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -448,9 +454,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   }
 
   { // Hourly
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Main Zone");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Hourly", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Hourly", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -466,9 +472,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   }
 
   { // Daily
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Daily", "Zone Mean Air Temperature", "Main Zone");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Daily", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Daily", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Daily", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -482,9 +488,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   }
 
   { // Monthly
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Monthly", "Zone Mean Air Temperature", "Main Zone");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Monthly", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Monthly", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Monthly", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -498,17 +504,17 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   }
 
   { // RunPeriod - synonymous with Environment
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "RunPeriod", "Zone Mean Air Temperature", "Main Zone");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "RunPeriod", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Run Period", "Zone Mean Air Temperature", "Main Zone");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Run Period", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Run Period", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Run Period", "Zone Mean Air Temperature", "MAIN ZONE");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Environment", "Zone Mean Air Temperature", "Main Zone");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Environment", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Environment", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Environment", "Zone Mean Air Temperature", "MAIN ZONE");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "RunPeriod", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "RunPeriod", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -522,9 +528,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   }
 
   { // Annual
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Annual", "Zone Mean Air Temperature", "Main Zone");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Annual", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Annual", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Annual", "Zone Mean Air Temperature", "MAIN ZONE");
     EXPECT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -538,7 +544,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   }
 
   { // Bad key name
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Zone that does not exist");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Hourly", "Zone Mean Air Temperature", "Zone that does not exist");
     EXPECT_FALSE(ts);
   }
 }
