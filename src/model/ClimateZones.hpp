@@ -165,35 +165,12 @@ class MODEL_API ClimateZones : public ModelObject {
   /** Return the ClimateZone defintions for institution (e.g. "ASHRAE" or "CEC"). */
   std::vector<ClimateZone> getClimateZones(const std::string& institution) const;
 
-  /** Return the active ClimateZone definition. If no ClimateZone is designated as active, the
-   *  return value will be .empty(). The active climate zone is the one that will be accessed
-   *  by the standardsinterface::OpenStudioStandardsInterface, perhaps in the course of applying a
-   *  ruleset::StandardsRuleset using a rulesengine::OpenStudioRulesEngine. */
-  //ClimateZone activeClimateZone() const;
-
-  /** Return the active ClimateZone value. If no ClimateZone is designated as active, the return
-   *  value will be .empty(). The active climate zone is the one that will be accessed by the
-   *  standardsinterface::OpenStudioStandardsInterface, perhaps in the course of applying a
-   *  ruleset::StandardsRuleset using a rulesengine::OpenStudioRulesEngine. */
-  //std::string activeClimateZoneValue() const;
-
   //@}
   /** @name Setters */
   //@{
 
   /** Clear all ClimateZone definitions. */
   bool clear();
-
-  /** Sets the active ClimateZone to be one defined by institution. If there are no such
-   *  definitions, this method is equivalent to appendClimateZone(institution). If there are
-   *  multiple climate zones associated with institution, the first one is set as active and
-   *  a warning is logged. The return value of this method should never be .empty(). */
-  //ClimateZone setActiveClimateZone(const std::string& institution);
-
-  /** Sets the active ClimateZone to be one defined by institution and year. If there are no such
-   *  definitions, this method is equivalent to appendClimateZone(institution,year). The return
-   *  value of this method should never be .empty(). */
-  //ClimateZone setActiveClimateZone(const std::string& institution,unsigned year);
 
   /** Sets the ClimateZone definition for institution to value and returns the modified (or
    *  created) ClimateZone. If there are no definitions for institution, this method is equivalent

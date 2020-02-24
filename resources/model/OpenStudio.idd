@@ -771,27 +771,17 @@ OS:RadianceParameters,
 OS:ClimateZones,
        \unique-object
        \extensible:4
-       \min-fields 7
   A1, \field Handle
        \type handle
        \required-field
-  A2, \field Active Institution
-       \deprecated
-       \type alpha
-       \default ASHRAE
-  N1, \field Active Year
-       \deprecated
-       \type integer
-       \minimum 0
-       \default 2006
-  A3, \field Climate Zone Institution Name
+  A2, \field Climate Zone Institution Name
        \type alpha
        \begin-extensible
        \default ASHRAE
-  A4, \field Climate Zone Document Name
+  A3, \field Climate Zone Document Name
        \type alpha
        \default ANSI/ASHRAE Standard 169
-  N2, \field Climate Zone Document Year
+  N1, \field Climate Zone Document Year
        \type integer
        \minimum 0
        \default 2006
