@@ -1641,7 +1641,7 @@ namespace openstudio{
 
   Date EpwDataPoint::date() const
   {
-    return Date(MonthOfYear(m_month), m_day); // , m_year);
+    return Date(MonthOfYear(m_month), m_day, m_year);
   }
 
   void EpwDataPoint::setDate(Date date)
@@ -4069,11 +4069,16 @@ namespace openstudio{
       dates.push_back(DateTime()); // Use a placeholder to avoid an insert
       std::vector<double> values;
       for(unsigned int i=0;i<m_data.size();i++) {
-        DateTime dateTime=m_data[i].dateTime();
+        DateTime dateTime = m_data[i].dateTime();
         // Time time=m_data[i].time();
         boost::optional<double> value = m_data[i].getField(id);
         if(value) {
-          dates.push_back(DateTime(dateTime));
+          if (isActual()) {
+            dates.push_back(DateTime(dateTime));
+          } else {
+            // Strip year
+            dates.push_back(DateTime(Date(dateTime.date().monthOfYear(), dateTime.date().dayOfMonth()), dateTime.time()));
+          }
           values.push_back(value.get());
         }
       }
@@ -4709,7 +4714,7 @@ namespace openstudio{
       int month = std::stoi(split[0]);
       int day = std::stoi(split[1]);
       if(split.size() == 3) {
-        int year = std::stoi(split[1]);
+        int year = std::stoi(split[2]);
         m_startDate = Date(monthOfYear(month), day, year);
         m_startDateActualYear = year;
       } else {
@@ -4730,7 +4735,7 @@ namespace openstudio{
       int month = std::stoi(split[0]);
       int day = std::stoi(split[1]);
       if(split.size() == 3) {
-        int year = std::stoi(split[1]);
+        int year = std::stoi(split[2]);
         m_endDate = Date(monthOfYear(month), day, year);
         m_endDateActualYear = year;
       } else {
