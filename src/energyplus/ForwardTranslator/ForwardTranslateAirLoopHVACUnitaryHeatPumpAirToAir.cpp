@@ -287,7 +287,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     }
     else if( _fan->iddObject().type() == IddObjectType::Fan_SystemModel )
     {
+      // This isn't supported by E+ right now
       _fan->setString(Fan_SystemModelFields::AirInletNodeName,airInletNodeName.get());
+      OS_ASSERT(false);
     }
   }
 
@@ -313,7 +315,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     }
     else if( _fan->iddObject().type() == IddObjectType::Fan_SystemModel )
     {
+      // This isn't supported by E+ right now
       _fan->setString(Fan_SystemModelFields::AirOutletNodeName,nodeName);
+      OS_ASSERT(false);
     }
 
     _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,nodeName);
