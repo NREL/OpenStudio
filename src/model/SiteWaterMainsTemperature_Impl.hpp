@@ -44,18 +44,6 @@ namespace detail {
   /** SiteWaterMainsTemperature_Impl is a ModelObject_Impl that is the implementation class for SiteWaterMainsTemperature.*/
   class MODEL_API SiteWaterMainsTemperature_Impl : public ModelObject_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
-
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -95,7 +83,6 @@ namespace detail {
     boost::optional<double> annualAverageOutdoorAirTemperature() const;
 
     boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures() const;
-
 
     //@}
     /** @name Setters */
