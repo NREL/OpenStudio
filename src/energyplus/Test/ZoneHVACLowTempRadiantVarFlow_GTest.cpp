@@ -50,12 +50,13 @@
 #include "../../model/Model.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
+#include "../../model/PlantLoop.hpp"
 #include "../../model/ScheduleConstant.hpp"
-#include "../../model/ScheduleConstant_Impl.hpp"
+#include "../../model/Schedule.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
-#include "../../model/StandardOpaqueMaterial_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
 
 #include <utilities/idd/ZoneHVAC_LowTemperatureRadiant_VariableFlow_FieldEnums.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -141,4 +142,46 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions)
 
 }
 
+// Test for #3866
+TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Crash_no_constructions) {
 
+  ForwardTranslator ft;
+
+  Model m;
+
+  // make a space with some surfaces
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
+
+  boost::optional<Space> _space1 = Space::fromFloorPrint(points, 3, m);
+  ASSERT_TRUE(_space1);
+
+  // make a zone, add the space
+  ThermalZone z(m);
+  _space1->setThermalZone(z);
+
+  // make some plant loops
+  PlantLoop clg_loop(m);
+  PlantLoop htg_loop(m);
+
+  ASSERT_NO_THROW(ft.translateModel(m));
+
+  // Make a radiant low temperature system
+  Schedule alwaysOn = m.alwaysOnDiscreteSchedule();
+
+  ScheduleConstant htg_sch(m);
+  CoilHeatingLowTempRadiantVarFlow htg_coil(m, htg_sch);
+  EXPECT_TRUE(htg_loop.addDemandBranchForComponent(htg_coil));
+
+  ScheduleConstant clg_sch(m);
+  CoilCoolingLowTempRadiantVarFlow clg_coil(m, clg_sch);
+  EXPECT_TRUE(clg_loop.addDemandBranchForComponent(clg_coil));
+
+  ZoneHVACLowTempRadiantVarFlow testRad(m, alwaysOn, htg_coil,clg_coil);
+  EXPECT_TRUE(testRad.addToThermalZone(z));
+
+  ASSERT_NO_THROW(ft.translateModel(m));
+}
