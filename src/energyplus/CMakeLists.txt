@@ -599,6 +599,7 @@ set(${target_name}_test_src
   Test/FuelCell_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
+  Test/HeatPumpWaterToWaterEquationFit_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
   Test/IlluminanceMap_GTest.cpp
   Test/InteriorPartitionSurface_GTest.cpp
