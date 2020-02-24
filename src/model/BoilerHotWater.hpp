@@ -82,10 +82,6 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   boost::optional<Curve> normalizedBoilerEfficiencyCurve() const;
 
-  /** As of EnergyPlus version 9.0.0 this field is no longer used
-   */
-  boost::optional<double> designWaterOutletTemperature() const;
-
   boost::optional<double> designWaterFlowRate() const;
 
   bool isDesignWaterFlowRateAutosized() const;
@@ -101,10 +97,6 @@ class MODEL_API BoilerHotWater : public StraightComponent {
   double optimumPartLoadRatio() const;
 
   bool isOptimumPartLoadRatioDefaulted() const;
-
-  // TODO: Handle Non-Extensible IddField Boiler Water Inlet Node Name.
-
-  // TODO: Handle Non-Extensible IddField Boiler Water Outlet Node Name.
 
   double waterOutletUpperTemperatureLimit() const;
 
@@ -145,12 +137,6 @@ class MODEL_API BoilerHotWater : public StraightComponent {
 
   void resetNormalizedBoilerEfficiencyCurve();
 
-  /** As of EnergyPlus version 9.0.0 this field is no longer used
-   */
-  bool setDesignWaterOutletTemperature(double designWaterOutletTemperature);
-
-  void resetDesignWaterOutletTemperature();
-
   bool setDesignWaterFlowRate(double designWaterFlowRate);
 
   void resetDesignWaterFlowRate();
@@ -168,10 +154,6 @@ class MODEL_API BoilerHotWater : public StraightComponent {
   bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
 
   void resetOptimumPartLoadRatio();
-
-  // TODO: Handle Non-Extensible IddField Boiler Water Inlet Node Name.
-
-  // TODO: Handle Non-Extensible IddField Boiler Water Outlet Node Name.
 
   bool setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit);
 
