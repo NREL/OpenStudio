@@ -48,7 +48,8 @@ OPENSTUDIO_ENUM(ReportingFrequency,
           ((Hourly))
           ((Daily))
           ((Monthly))
-          ((RunPeriod)) );
+          ((RunPeriod))
+          ((Annual)) );
  *  \endcode */
 OPENSTUDIO_ENUM(ReportingFrequency,
           ((Detailed)(HVAC System Timestep)(1))
@@ -56,7 +57,8 @@ OPENSTUDIO_ENUM(ReportingFrequency,
           ((Hourly))
           ((Daily))
           ((Monthly))
-          ((RunPeriod)(Run Period)));
+          ((RunPeriod)(Run Period))
+          ((Annual)));
 
 typedef boost::optional<ReportingFrequency> OptionalReportingFrequency;
 typedef std::vector<ReportingFrequency> ReportingFrequencyVector;
