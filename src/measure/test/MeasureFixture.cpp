@@ -106,7 +106,7 @@ void MeasureFixture::SetUp(){}
 
 void MeasureFixture::TearDown() {}
 
-void MeasureFixture::SetUpTestCase() {
+void MeasureFixture::SetUpTestSuite() {
   // set up logging
   logFile = openstudio::FileLogSink(openstudio::toPath("./MeasureFixture.log"));
   logFile->setLogLevel(Info);
@@ -118,7 +118,7 @@ void MeasureFixture::SetUpTestCase() {
   openstudio::filesystem::create_directories(p);
 }
 
-void MeasureFixture::TearDownTestCase() {
+void MeasureFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

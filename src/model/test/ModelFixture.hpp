@@ -50,10 +50,10 @@ class ModelFixture : public ::testing::Test {
   virtual void TearDown() override;
 
   // initialize static members
-  static void SetUpTestCase();
+  static void SetUpTestSuite();
 
   // tear down static members
-  static void TearDownTestCase();
+  static void TearDownTestSuite();
 
   // test that the given iddField is a boolean Yes/No choice field
   void testBooleanIddField(const openstudio::IddField& iddField,

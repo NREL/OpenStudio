@@ -40,7 +40,7 @@ void IdfFixture::SetUp() {}
 
 void IdfFixture::TearDown() {}
 
-void IdfFixture::SetUpTestCase() {
+void IdfFixture::SetUpTestSuite() {
   // set up logging
   logFile = FileLogSink(toPath("./IdfFixture.log"));
   logFile->setLogLevel(Info);
@@ -68,7 +68,7 @@ void IdfFixture::SetUpTestCase() {
   LOG(Info, "EnergyPlus ImfFile contains " << imfFile.numSections() << " sections.");
 }
 
-void IdfFixture::TearDownTestCase() {
+void IdfFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

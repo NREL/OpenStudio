@@ -39,7 +39,7 @@ void SqlFileFixture::SetUp() {}
 
 void SqlFileFixture::TearDown() {}
 
-void SqlFileFixture::SetUpTestCase()
+void SqlFileFixture::SetUpTestSuite()
 {
   logFile = FileLogSink(toPath("./SqlFileFixture.log"));
   logFile->setLogLevel(Debug);
@@ -56,7 +56,7 @@ void SqlFileFixture::SetUpTestCase()
 
 }
 
-void SqlFileFixture::TearDownTestCase() {
+void SqlFileFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

@@ -174,8 +174,9 @@ namespace openstudio{
 
     std::string formatString(double d, unsigned prec = 15);
 
-
     static std::shared_ptr<LocalBCL> &instanceInternal();
+
+    bool closeConnection();
 
     openstudio::path m_libraryPath;
     const openstudio::path m_dbName;

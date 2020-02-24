@@ -35,7 +35,7 @@ void AirflowFixture::SetUp() {}
 
 void AirflowFixture::TearDown() {}
 
-void AirflowFixture::SetUpTestCase() {
+void AirflowFixture::SetUpTestSuite() {
   // set up logging
   openstudio::Logger::instance().standardOutLogger().disable();
   //openstudio::Logger::instance().standardOutLogger().enable();
@@ -43,7 +43,7 @@ void AirflowFixture::SetUpTestCase() {
   logFile = std::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./AirflowFixture.log")));
 }
 
-void AirflowFixture::TearDownTestCase() {
+void AirflowFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

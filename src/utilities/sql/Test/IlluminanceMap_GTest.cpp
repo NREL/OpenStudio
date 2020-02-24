@@ -66,12 +66,15 @@ protected:
   // tear down after for each test
   virtual void TearDown() override {
 
+    // Close the sqlFile
+    sqlFile.close();
+
     // Delete the sql file we copied
     openstudio::filesystem::remove(currentSqlPath);
   }
 
   // initialize static members
-  static void SetUpTestCase()
+  static void SetUpTestSuite()
   {
     logFile = FileLogSink(toPath("./IlluminanceMapFixture.log"));
     logFile->setLogLevel(Info);
@@ -83,7 +86,7 @@ protected:
   }
 
   // tear down static members
-  static void TearDownTestCase()
+  static void TearDownTestSuite()
   {
     logFile->disable();
   }

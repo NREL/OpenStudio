@@ -57,14 +57,14 @@ protected:
   virtual void TearDown() {}
 
   // initialize static members
-  static void SetUpTestCase()
+  static void SetUpTestSuite()
   {
     openstudio::filesystem::wpath path = ep_resources_path()/L"Daylighting/wp_6_1_12_1_.out";
     outFile = IlluminanceMap::create(path);
   }
 
   // tear down static members
-  static void TearDownTestCase() {}
+  static void TearDownTestSuite() {}
 
 public:
   // pointer to IlluminanceMap

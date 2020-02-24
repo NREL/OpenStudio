@@ -55,7 +55,7 @@ void UnitsFixture::TearDown() {
 }
 
 // initialize static members
-void UnitsFixture::SetUpTestCase()
+void UnitsFixture::SetUpTestSuite()
 {
   logFile = FileLogSink(toPath("./UnitsFixture.log"));
   logFile->setLogLevel(Debug);
@@ -72,7 +72,7 @@ void UnitsFixture::SetUpTestCase()
 }
 
 // tear down static members
-void UnitsFixture::TearDownTestCase() {
+void UnitsFixture::TearDownTestSuite() {
   logFile->disable();
 }
 
