@@ -101,14 +101,14 @@ void GeometryFixture::TearDown() {
 }
 
 // initialize static members
-void GeometryFixture::SetUpTestCase()
+void GeometryFixture::SetUpTestSuite()
 {
   logFile = FileLogSink(toPath("./GeometryFixture.log"));
   logFile->setLogLevel(Debug);
 }
 
 // tear down static members
-void GeometryFixture::TearDownTestCase()
+void GeometryFixture::TearDownTestSuite()
 {
   logFile->disable();
 }

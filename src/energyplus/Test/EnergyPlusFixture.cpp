@@ -40,7 +40,7 @@ void EnergyPlusFixture::SetUp() {}
 
 void EnergyPlusFixture::TearDown() {}
 
-void EnergyPlusFixture::SetUpTestCase() {
+void EnergyPlusFixture::SetUpTestSuite() {
   // set up logging
   logFile = FileLogSink(toPath("./EnergyPlusFixture.log"));
   logFile->setLogLevel(Trace);
@@ -76,7 +76,7 @@ void EnergyPlusFixture::SetUpTestCase() {
 
 }
 
-void EnergyPlusFixture::TearDownTestCase() {
+void EnergyPlusFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

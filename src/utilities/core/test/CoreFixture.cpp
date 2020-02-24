@@ -32,14 +32,14 @@
 using openstudio::FileLogSink;
 using openstudio::toPath;
 
-void CoreFixture::SetUpTestCase()
+void CoreFixture::SetUpTestSuite()
 {
   // set up logging
   logFile = FileLogSink(toPath("./CoreFixture.log"));
   logFile->setLogLevel(Info);
 }
 
-void CoreFixture::TearDownTestCase() {
+void CoreFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

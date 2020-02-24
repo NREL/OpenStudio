@@ -46,7 +46,7 @@ void OSVersionFixture::SetUp() {}
 
 void OSVersionFixture::TearDown() {}
 
-void OSVersionFixture::SetUpTestCase() {
+void OSVersionFixture::SetUpTestSuite() {
   // set up logging
   logFile = FileLogSink(toPath("./OSVersionFixture.log"));
   logFile->setLogLevel(Debug);
@@ -68,7 +68,7 @@ void OSVersionFixture::SetUpTestCase() {
   iddFile.save(thisVersionPath / toPath("OpenStudio.idd"),true);
 }
 
-void OSVersionFixture::TearDownTestCase() {
+void OSVersionFixture::TearDownTestSuite() {
   logFile->disable();
 }
 
