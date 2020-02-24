@@ -1907,6 +1907,7 @@ set(${target_name}_test_src
   test/InternalMass_GTest.cpp
 ##  test/LoadProfilePlant_GTest.cpp
   test/LifeCycleCostParameters_GTest.cpp
+  test/LifeCycleCostUsePriceEscalation_GTest.cpp
   test/LightingDesignDay_GTest.cpp
   test/LightingSimulationControl_GTest.cpp
   test/LightingSimulationZone_GTest.cpp
