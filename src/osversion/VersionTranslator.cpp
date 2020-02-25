@@ -4917,6 +4917,67 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else if (iddname == "OS:Schedule:Rule") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Removed field 12: Apply Holiday
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 12) {
+            newObject.setString(i, value.get());
+          } else if (i > 12) {
+            newObject.setString(i-1, value.get());
+          } // i == 12: skip
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    // Note: OS:ScheduleRuleset got a new optional field at the end, so no-op
+    // } else if (iddname == "OS:Schedule:Ruleset") {
+
+    } else  if (iddname == "OS:ZoneHVAC:UnitHeater") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        // Maximum Hot Water Flow Rate: this wasn't explicitly set as autosize in Ctor as it should have been
+        if (i == 9) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+              newObject.setDouble(i, _value.get());
+          } else {
+            // If not a double, either blank or actual autosize => set to autosize
+            newObject.setString(i, "autosize");
+          }
+        } else if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Boiler:HotWater") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Deleted Field 7: Design Water Outlet Temperature
+      for (size_t i = 0; i < object.numFields(); ++i) {
+         if ((value = object.getString(i))) {
+          if (i < 7) {
+            // 0-6 Unchanged
+            newObject.setString(i, value.get());
+          } else if (i > 7) {
+            // 8-End shifted -1
+            newObject.setString(i-1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
 
     } else if (iddname == "OS:Chiller:Electric:EIR") {
       auto iddObject = idd_3_0_0.getObject(iddname);

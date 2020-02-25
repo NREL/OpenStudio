@@ -411,11 +411,7 @@ namespace detail {
     template <typename T>
     void removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep);
 
-    // Relies on utilties/StandardsJSON since it's used in several places
-    // Here we store a Json::Value rather than the StandardsJSON because we only care about the "space_types" primaryKey
-    // Not the whole StandardsJSON
-    static Json::Value m_standardsArr;
-    void parseStandardsJSON() const;
+    static const Json::Value &getStandardsJSON();
   };
 
 } // detail

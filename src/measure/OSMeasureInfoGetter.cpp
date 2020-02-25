@@ -312,7 +312,7 @@ std::string infoExtractorRubyFunction() {
   ss << "  workspace = optionalWorkspace.get if not optionalWorkspace.empty?" << std::endl;
   ss << "  if type == \"report\"" << std::endl;
   ss << "    measureType = OpenStudio::MeasureType.new(\"ReportingMeasure\")" << std::endl;
-  ss << "    args = measure.arguments()" << std::endl;
+  ss << "    args = measure.arguments(model)" << std::endl;
   ss << "    outputs = measure.outputs()" << std::endl;
   ss << "  elsif type == \"model\"" << std::endl;
   ss << "    measureType = OpenStudio::MeasureType.new(\"ModelMeasure\")" << std::endl;

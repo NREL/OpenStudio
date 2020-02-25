@@ -225,6 +225,7 @@ class ExternalInterfaceSchedule;
 class ExternalInterfaceVariable;
 class FanConstantVolume;
 class FanOnOff;
+class FanSystemModel;
 class FanVariableVolume;
 class FanZoneExhaust;
 class FFactorGroundFloorConstruction;
@@ -279,6 +280,9 @@ class Node;
 class OtherEquipment;
 class OutsideSurfaceConvectionAlgorithm;
 class OutputControlReportingTolerances;
+class OutputDebuggingData;
+class OutputDiagnostics;
+class OutputJSON;
 class OutputMeter;
 class OutputVariable;
 class OutputEnergyManagementSystem;
@@ -444,6 +448,7 @@ class ZoneHVACWaterToAirHeatPump;
 class ZoneMixing;
 class ZonePropertyUserViewFactorsBySurfaceName;
 class ZoneVentilationDesignFlowRate;
+class ZoneVentilationWindandStackOpenArea;
 }
 
 namespace energyplus {
@@ -893,6 +898,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateFanOnOff( model::FanOnOff & modelObject );
 
+  boost::optional<IdfObject> translateFanSystemModel( model::FanSystemModel & modelObject );
+
   boost::optional<IdfObject> translateFanVariableVolume( model::FanVariableVolume & modelObject );
 
   boost::optional<IdfObject> translateFanZoneExhaust( model::FanZoneExhaust & modelObject );
@@ -995,6 +1002,12 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOutsideSurfaceConvectionAlgorithm( model::OutsideSurfaceConvectionAlgorithm & modelObject );
 
   boost::optional<IdfObject> translateOutputControlReportingTolerances( model::OutputControlReportingTolerances & modelObject );
+
+  boost::optional<IdfObject> translateOutputDebuggingData( model::OutputDebuggingData & modelObject );
+
+  boost::optional<IdfObject> translateOutputDiagnostics( model::OutputDiagnostics & modelObject );
+
+  boost::optional<IdfObject> translateOutputJSON( model::OutputJSON & modelObject );
 
   boost::optional<IdfObject> translateOutputMeter( model::OutputMeter & modelObject );
 
@@ -1327,6 +1340,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> createAirLoopHVACSupplyPath( const model::Node & demandInletNode );
 
   boost::optional<IdfObject> translateZoneVentilationDesignFlowRate( model::ZoneVentilationDesignFlowRate & modelObject );
+
+  boost::optional<IdfObject> translateZoneVentilationWindandStackOpenArea( model::ZoneVentilationWindandStackOpenArea & modelObject );
 
   boost::optional<IdfObject> createAirLoopHVACSupplyPath( model::AirLoopHVAC & airLoopHVAC );
 

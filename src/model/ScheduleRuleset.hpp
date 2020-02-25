@@ -91,6 +91,12 @@ class MODEL_API ScheduleRuleset : public Schedule {
   /// Returns true if the winter design day is defaulted; false if it is explicitly set.
   bool isWinterDesignDayScheduleDefaulted() const;
 
+  /// Returns the holiday schedule, which may be the same ScheduleDay as defaultDaySchedule().
+  ScheduleDay holidaySchedule() const;
+
+  /// Returns true if the holiday schedule is defaulted; false if it is explicitly set.
+  bool isHolidayScheduleDefaulted() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -112,6 +118,14 @@ class MODEL_API ScheduleRuleset : public Schedule {
   /// Resets the winter design day schedule. Calls remove on any existing non-default winter
   /// design day schedule.
   void resetWinterDesignDaySchedule();
+
+  /// Sets the holiday schedule if ScheduleTypeLimits are compatible. Calls remove
+  /// on any existing non-default holiday schedule. Clones schedule and parents the
+  /// clone, but does not call remove on the original schedule.
+  bool setHolidaySchedule(const ScheduleDay& schedule);
+
+  /// Resets the holiday schedule. Calls remove on any existing non-default holiday schedule.
+  void resetHolidaySchedule();
 
   //@}
   /** @name Other */

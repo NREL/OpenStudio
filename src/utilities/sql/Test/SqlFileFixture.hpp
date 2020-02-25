@@ -48,10 +48,10 @@ class SqlFileFixture : public ::testing::Test {
   virtual void TearDown() override;
 
   // initialize static members
-  static void SetUpTestCase();
+  static void SetUpTestSuite();
 
   // tear down static members
-  static void TearDownTestCase();
+  static void TearDownTestSuite();
 
   // Tolerance defaults to 0.001=0.1%
   ::testing::AssertionResult IsWithinRelativeTolerance(double expectedValue, double actualValue, double tolerance=0.001);

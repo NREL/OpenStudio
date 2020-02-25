@@ -48,10 +48,10 @@ class EnergyPlusFixture : public ::testing::Test {
   virtual void TearDown() override;
 
   /// initialize static members
-  static void SetUpTestCase();
+  static void SetUpTestSuite();
 
   /// tear down static members
-  static void TearDownTestCase();
+  static void TearDownTestSuite();
 
   REGISTER_LOGGER("EnergyPlusFixture");
 

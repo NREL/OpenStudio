@@ -31,16 +31,21 @@
 
 #include "../../model/StandardGlazing.hpp"
 #include "../../model/StandardGlazing_Impl.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData_Impl.hpp"
 
 #include <utilities/idd/WindowMaterial_Glazing_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/IddEnums.hxx>
+
+#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGlazing(
-    const WorkspaceObject& workspaceObject)
+boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGlazing(const WorkspaceObject& workspaceObject)
 {
   OptionalModelObject result;
   StandardGlazing standardGlazing(m_model);
@@ -54,9 +59,14 @@ boost::optional<ModelObject> ReverseTranslator::translateWindowMaterialGlazing(
     standardGlazing.setOpticalDataType(*optS);
   }
 
-  optS = workspaceObject.getString(WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName);
-  if (optS) {
-    standardGlazing.setWindowGlassSpectralDataSetName(*optS);
+  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName);
+  if (target){
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (modelObject->optionalCast<MaterialPropertyGlazingSpectralData>()){
+        standardGlazing.setWindowGlassSpectralDataSet(modelObject->cast<MaterialPropertyGlazingSpectralData>());
+      }
+    }
   }
 
   OptionalDouble d = workspaceObject.getDouble(WindowMaterial_GlazingFields::Thickness);

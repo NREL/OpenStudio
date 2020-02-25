@@ -44,6 +44,7 @@
 #include <utilities/idd/AirLoopHVAC_UnitaryHeatPump_AirToAir_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
+#include <utilities/idd/Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
@@ -284,6 +285,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     {
       _fan->setString(Fan_OnOffFields::AirInletNodeName,airInletNodeName.get());
     }
+    else if( _fan->iddObject().type() == IddObjectType::Fan_SystemModel )
+    {
+      // This isn't supported by E+ right now
+      _fan->setString(Fan_SystemModelFields::AirInletNodeName,airInletNodeName.get());
+      OS_ASSERT(false);
+    }
   }
 
   //if( airOutletNodeName && _heatingCoil )
@@ -305,6 +312,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     else if( _fan->iddObject().type() == IddObjectType::Fan_OnOff )
     {
       _fan->setString(Fan_OnOffFields::AirOutletNodeName,nodeName);
+    }
+    else if( _fan->iddObject().type() == IddObjectType::Fan_SystemModel )
+    {
+      // This isn't supported by E+ right now
+      _fan->setString(Fan_SystemModelFields::AirOutletNodeName,nodeName);
+      OS_ASSERT(false);
     }
 
     _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,nodeName);

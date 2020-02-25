@@ -47,7 +47,7 @@ namespace detail {
 
 
 /** This class implements a single point of a TableMultiVariableLookup */
-class TableMultiVariableLookupPoint {
+class MODEL_API TableMultiVariableLookupPoint {
  public:
   TableMultiVariableLookupPoint(std::vector<double> x, double y);
   TableMultiVariableLookupPoint(double x1, double yValue);
@@ -61,14 +61,14 @@ class TableMultiVariableLookupPoint {
 
   // this operator is to support sorting of TableMultiVariableLookupPoint in the order required by EnergyPlus Table:Lookup object
   bool operator<(const TableMultiVariableLookupPoint& other) const;
- 
+
  private:
   std::vector<double> m_x;
   double m_y;
 };
 
 // Overload operator<<
-std::ostream& operator<< (std::ostream& out, const openstudio::model::TableMultiVariableLookupPoint& point);
+MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::TableMultiVariableLookupPoint& point);
 
 
 /** TableMultiVariableLookup is a Curve that wraps the OpenStudio IDD object 'OS:Table:MultiVariableLookup'. */
@@ -305,7 +305,7 @@ class MODEL_API TableMultiVariableLookup : public Curve {
   std::vector<TableMultiVariableLookupPoint> points() const;
 
   // Directly set the points from a vector, will delete any existing points
-  bool setPoints(const std::vector<TableMultiVariableLookupPoint>& points);;
+  bool setPoints(const std::vector<TableMultiVariableLookupPoint>& points);
 
   boost::optional<double> yValue(const std::vector<double> & xValues) const;
 

@@ -56,7 +56,7 @@ namespace openstudio
     *   Objects in current OpenStudio Model may map to 0-1 objects in new OpenStudio Model.  If an object in the new OpenStudio Model
     *   does not correspond to an object in the current OpenStudio Model it is assumed to be a new object.
     */
-    MODEL_API class ModelMerger
+    class MODEL_API ModelMerger
     {
     public:
       ModelMerger();

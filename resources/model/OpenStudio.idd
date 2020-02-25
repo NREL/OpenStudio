@@ -1,4 +1,4 @@
-!IDD_Version 3.0.0-rc1
+!IDD_Version 3.0.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -38,9 +38,11 @@ OS:Version,
   A1, \field Handle
        \type handle
        \required-field
-  A2; \field Version Identifier
+  A2, \field Version Identifier
        \type alpha
        \default 3.0.0
+  A3; \field Prerelease Identifier
+       \type alpha
 
 OS:ComponentData,
        \memo Defines the meta-data and contents of a Component, that is, a
@@ -769,27 +771,17 @@ OS:RadianceParameters,
 OS:ClimateZones,
        \unique-object
        \extensible:4
-       \min-fields 7
   A1, \field Handle
        \type handle
        \required-field
-  A2, \field Active Institution
-       \deprecated
-       \type alpha
-       \default ASHRAE
-  N1, \field Active Year
-       \deprecated
-       \type integer
-       \minimum 0
-       \default 2006
-  A3, \field Climate Zone Institution Name
+  A2, \field Climate Zone Institution Name
        \type alpha
        \begin-extensible
        \default ASHRAE
-  A4, \field Climate Zone Document Name
+  A3, \field Climate Zone Document Name
        \type alpha
        \default ANSI/ASHRAE Standard 169
-  N2, \field Climate Zone Document Year
+  N1, \field Climate Zone Document Year
        \type integer
        \minimum 0
        \default 2006
@@ -4742,12 +4734,7 @@ OS:Schedule:Rule,
        \default No
        \key Yes
        \key No
-  A12, \field Apply Holiday
-       \type choice
-       \default No
-       \key Yes
-       \key No
-  A13, \field Date Specification Type
+  A12, \field Date Specification Type
        \type choice
        \default DateRange
        \key DateRange
@@ -4804,7 +4791,10 @@ OS:Schedule:Ruleset,
   A5, \field Summer Design Day Schedule Name
        \type object-list
        \object-list DayScheduleNames
-  A6; \field Winter Design Day Schedule Name
+  A6, \field Winter Design Day Schedule Name
+       \type object-list
+       \object-list DayScheduleNames
+  A7; \field Holiday Schedule Name
        \type object-list
        \object-list DayScheduleNames
 
@@ -9974,6 +9964,7 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
         \required-field
         \type object-list
         \object-list FansCVandOnOff
+        \note Accepts only Fan:ConstantVolume, Fan:Off, but not Fan:SystemModel
    A8,  \field Supply Air Fan Placement
         \required-field
         \type choice
@@ -10238,6 +10229,10 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir,
        \type object-list
        \required-field
        \object-list FansCVandOnOff
+       \note Accepts only Fan:ConstantVolume, Fan:Off, but not Fan:SystemModel
+       \note Fan:ConstantVolume only works with continuous fan operating mode (i.e. fan
+       \note operating mode schedule values are greater than 0 or the fan operating mode
+       \note schedule name field is left blank).
   A8, \field Heating Coil Name
        \note Needs to match in the DX heating coil object
        \type object-list
@@ -10362,6 +10357,7 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
    A10, \field Supply Air Fan
         \type object-list
         \object-list FansCVandOnOff
+        \object-list FansSystemModel
         \required-field
    A11, \field Supply Air Fan Placement
         \required-field
@@ -10485,8 +10481,18 @@ OS:AirLoopHVAC:UnitarySystem,
        \note Enter the node name used as the outlet air node for the unitary system.
   A9, \field Supply Fan Name
        \type object-list
-       \object-list FansCVandOnOffandVAV
+       \object-list Fans
        \note Enter the name of the supply air fan if included in the unitary system.
+       \note Fan:ConstantVolume only works with continuous fan operating mode (i.e. supply
+       \note air fan operating mode schedule values greater than 0).
+       \note Specify a Fan:SystemModel or a Fan:OnOff object when the Supply Air Fan Operating Mode Schedule Name
+       \note input field above is left blank.
+       \note Specify a Fan:SystemModel or a Fan:VariableVolume when modeling VAV systems which used setpoint based control
+       \note if the fan is included in the unitary system object.
+       \note The ComponentModel fan type may be substituted for the ConstantVolume or VariableVolume
+       \note fan types when more detailed fan modeling is required.
+       \note The variable or constant volume fan may be specified on the branch instead of contained
+       \note within the unitary system object (i.e., this field may be blank for certain configurations).
   A10, \field Fan Placement
        \type choice
        \key BlowThrough
@@ -11103,10 +11109,11 @@ OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
        \type object-list
        \object-list ZoneMixers
   A9,  \field Fan Name
-       \note Fan type must be Fan:ConstantVolume
+       \note Fan type must be Fan:SystemModel or Fan:ConstantVolume
        \required-field
        \type object-list
        \object-list FansCV
+       \object-list FansSystemModel
   A10, \field Reheat Coil Name
        \required-field
        \type object-list
@@ -11177,9 +11184,10 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \type object-list
        \object-list ZoneMixers
   A9, \field Fan Name
-       \note Fan type must be Fan:ConstantVolume
+       \note Fan type must be Fan:SystemModel or Fan:ConstantVolume
        \type object-list
        \object-list FansCV
+       \object-list FansSystemModel
   A11, \field Reheat Coil Name
        \type object-list
        \object-list HeatingCoilName
@@ -12292,7 +12300,7 @@ OS:Boiler:HotWater,
        \memo curves are generated by fitting catalog data to polynomial equations.
        \memo A constant efficiency boiler may be modeled by leaving the normalized
        \memo boiler efficiency curve name input blank.
-       \min-fields 14
+       \min-fields 13
   A1, \field Handle
        \type handle
        \required-field
@@ -12315,16 +12323,16 @@ OS:Boiler:HotWater,
        \key OtherFuel2
   N1, \field Nominal Capacity
        \type real
-       \autosizable
        \units W
-       \minimum 0
+       \autosizable
+       \minimum 0.0
        \default autosize
   N2, \field Nominal Thermal Efficiency
-       \note Based on the higher heating value of fuel.
        \type real
-       \minimum> 0
-       \maximum 1
+       \minimum> 0.0
+       \maximum 1.0
        \default 0.8
+       \note Based on the higher heating value of fuel.
   A4, \field Efficiency Curve Temperature Evaluation Variable
        \type choice
        \key EnteringBoiler
@@ -12343,28 +12351,24 @@ OS:Boiler:HotWater,
        \note T = boiler water temperature (either entering or leaving).
        \type object-list
        \object-list AllCurves
-  N3, \field Design Water Outlet Temperature
+  N3, \field Design Water Flow Rate
        \type real
-       \units C
-       \default 82.0
-  N4, \field Design Water Flow Rate
-       \type real
-       \autosizable
        \units m3/s
+       \autosizable
        \ip-units gal/min
-       \minimum 0
+       \minimum 0.0
        \default autosize
-  N5, \field Minimum Part Load Ratio
+  N4, \field Minimum Part Load Ratio
        \type real
-       \minimum 0
+       \minimum 0.0
        \default 0.0
-  N6, \field Maximum Part Load Ratio
+  N5, \field Maximum Part Load Ratio
        \type real
-       \minimum 0
+       \minimum 0.0
        \default 1.0
-  N7, \field Optimum Part Load Ratio
+  N6, \field Optimum Part Load Ratio
        \type real
-       \minimum 0
+       \minimum 0.0
        \default 1.0
   A6, \field Boiler Water Inlet Node Name
        \type object-list
@@ -12374,26 +12378,30 @@ OS:Boiler:HotWater,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  N8, \field Water Outlet Upper Temperature Limit
+  N7, \field Water Outlet Upper Temperature Limit
        \type real
        \units C
        \default 99.9
   A8, \field Boiler Flow Mode
-       \note Sets this boiler to either a variable or constant flow simulation
+       \note Select operating mode for fluid flow through the boiler. "NotModulated" is for
+       \note either variable or constant pumping with flow controlled by the external plant system.
+       \note "ConstantFlow" is for constant pumping with flow controlled by boiler to operate at
+       \note full design flow rate.  "LeavingSetpointModulated" is for variable pumping with flow
+       \note controlled by boiler to vary flow to target a leaving temperature setpoint.
        \type choice
        \key ConstantFlow
        \key LeavingSetpointModulated
        \key NotModulated
        \default NotModulated
-  N9, \field Parasitic Electric Load
+  N8, \field Parasitic Electric Load
        \type real
        \units W
-       \minimum 0
+       \minimum 0.0
        \default 0.0
-  N10, \field Sizing Factor
+  N9, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
-       \minimum> 0
+       \minimum> 0.0
        \default 1.0
   A9 ; \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
@@ -16316,7 +16324,6 @@ OS:Coil:Heating:DX:SingleSpeed,
   N5, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \units C
-       \minimum -20
        \default -8.0
   N6, \field Maximum Outdoor Dry-Bulb Temperature for Defrost Operation
        \type real
@@ -20104,7 +20111,151 @@ OS:EvaporativeFluidCooler:TwoSpeed,
        \type object-list
        \object-list WaterStorageTankNames
 
+OS:Fan:SystemModel,
+       \memo Versatile simple fan that can be used in variable air volume, constant volume, on-off cycling, two-speed or multi-speed applications.
+       \memo Performance at different flow rates, or speed levels, is determined using separate performance curve or table
+       \memo or prescribed power fractions at discrete speed levels for two-speed or multi-speed fans.
+       \min-fields 15
+       \extensible:2
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference Fans
+       \reference FansSystemModel
+       \reference ConnectionObject
+  A3 , \field Availability Schedule Name
+       \note Availability schedule name for this fan. Schedule value > 0 means the fan is available.
+       \note If this field is blank, the fan is always available.
+       \type object-list
+       \required-field
+       \object-list ScheduleNames
+  A4 , \field Air Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A5 , \field Air Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  N1 , \field Design Maximum Air Flow Rate
+       \required-field
+       \type real
+       \units m3/s
+       \minimum> 0.0
+       \autosizable
+  A6 , \field Speed Control Method
+       \type choice
+       \key Continuous
+       \key Discrete
+       \required-field
+  N2 , \field Electric Power Minimum Flow Rate Fraction
+       \type real
+       \required-field
+       \minimum 0.0
+       \maximum 1.0
+  N3 , \field Design Pressure Rise
+       \type real
+       \minimum> 0.0
+       \units Pa
+       \ip-units inH2O
+       \required-field
+  N4 , \field Motor Efficiency
+       \type real
+       \required-field
+       \minimum> 0.0
+       \maximum 1.0
+  N5 , \field Motor In Air Stream Fraction
+       \note 0.0 means fan motor outside of air stream, 1.0 means motor inside of air stream
+       \type real
+       \required-field
+       \minimum 0.0
+       \maximum 1.0
+  N6 , \field Design Electric Power Consumption
+       \type real
+       \units W
+       \autosizable
+       \required-field
+       \minimum> 0.0
+       \note Fan power consumption at maximum air flow rate.
+       \note If autosized the method used to scale power is chosen in the following field
+  A7 , \field Design Power Sizing Method
+       \type choice
+       \key PowerPerFlow
+       \key PowerPerFlowPerPressure
+       \key TotalEfficiencyAndPressure
+       \required-field
+  N7 , \field Electric Power Per Unit Flow Rate
+       \type real
+       \units W/(m3/s)
+       \ip-units W/(ft3/min)
+       \required-field
+       \minimum> 0.0
+  N8 , \field Electric Power Per Unit Flow Rate Per Unit Pressure
+       \type real
+       \units W-s/m3-Pa
+       \ip-units W-min/ft3-inH2O
+       \required-field
+       \minimum> 0.0
+  N9,  \field Fan Total Efficiency
+       \type real
+       \required-field
+       \minimum> 0.0
+       \maximum 1.0
+  A8 , \field Electric Power Function of Flow Fraction Curve Name
+       \note independent variable is normalized flow rate, current flow divided by Design Maximum Air Flow Rate.
+       \note dependent variable is modification factor multiplied by Design Power Consumption.
+       \note This field is required if Speed Control Method is set to Continuous or if the Number of Speeds is greater than 1 and Speed Electric Power Fraction fields are not used.
+       \type object-list
+       \object-list UniVariateCurves
+       \object-list UniVariateTables
+  N10, \field Night Ventilation Mode Pressure Rise
+       \note Total system fan pressure rise at the fan when in night mode using AvailabilityManager:NightVentilation
+       \type real
+       \units Pa
+       \ip-units inH2O
+       \minimum> 0.0
+  N11, \field Night Ventilation Mode Flow Fraction
+       \note Fraction of Design Maximum Air Flow Rate to use when in night mode using AvailabilityManager:NightVentilation
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+  A9 , \field Motor Loss Zone Name
+       \note optional, if used fan motor heat losses that not added to air stream are transferred to zone as internal gains
+       \type object-list
+       \object-list ThermalZoneNames
+  N12, \field Motor Loss Radiative Fraction
+       \note optional. If zone identified in previous field then this determines
+       \note the split between convection and radiation for the fan motor's skin losses
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+  A10, \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
+  N13, \field Speed 1 Flow Fraction
+       \note number of different speed levels is inferred from the number of extensible groups you provide
+       \note This is meant to be used when Speed Control Method is set to Discrete
+       \note Speed need to be arranged in increasing order in remaining field sets.
+       \note If no extensible groups (speeds) are specified, and Speed Control Method is Discrete,
+       \note then constant fan speed is the design maximum.
+       \begin-extensible
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+  N14; \field Speed 1 Electric Power Fraction
+       \note if left blank then use Electric Power Function of Flow Fraction Curve
+       \type real
+       \minimum 0.0
+       \maximum 1.0
+
 OS:Fan:ConstantVolume,
+       \memo Constant volume fan that is intended to operate continuously based on a time schedule.
+       \memo This fan will not cycle on and off based on cooling/heating load or other control
+       \memo signals.
        \min-fields 10
   A1, \field Handle
        \type handle
@@ -20119,6 +20270,8 @@ OS:Fan:ConstantVolume,
        \reference FansCVandOnOffandVAV
        \reference ConnectionObject
   A3, \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
        \type object-list
        \required-field
        \object-list ScheduleNames
@@ -20157,11 +20310,14 @@ OS:Fan:ConstantVolume,
        \required-field
        \object-list ConnectionNames
   A6; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default General
 
 OS:Fan:VariableVolume,
+       \memo Variable air volume fan where the electric power input varies according to a
+       \memo performance curve as a function of flow fraction.
        \min-fields 18
   A1, \field Handle
        \type handle
@@ -20176,6 +20332,8 @@ OS:Fan:VariableVolume,
        \reference FansCVandOnOffandVAV
        \reference ConnectionObject
   A3, \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
        \type object-list
        \required-field
        \object-list ScheduleNames
@@ -20241,11 +20399,15 @@ OS:Fan:VariableVolume,
        \required-field
        \object-list ConnectionNames
   A6; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default General
 
 OS:Fan:OnOff,
+       \memo Constant volume fan that is intended to cycle on and off based on cooling/heating load
+       \memo or other control signals. This fan can also operate continuously like
+       \memo Fan:ConstantVolume.
        \min-fields 13
   A1, \field Handle
        \type handle
@@ -20254,13 +20416,14 @@ OS:Fan:OnOff,
        \type alpha
        \required-field
        \reference Fans
-       \reference FansOnOff
-       \reference FansCV
        \reference FansCVandOnOff
-       \reference FansCVandVAV
+       \reference FansOnOff
+       \reference FansOnOffandVAV
        \reference FansCVandOnOffandVAV
        \reference ConnectionObject
   A3, \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
        \type object-list
        \required-field
        \object-list ScheduleNames
@@ -20306,6 +20469,7 @@ OS:Fan:OnOff,
        \type object-list
        \object-list QuadraticCubicCurves
   A8; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
        \retaincase
        \default General
@@ -23375,6 +23539,137 @@ OS:ZoneVentilation:DesignFlowRate,
        \maximum 40
        \required-field
 
+OS:ZoneVentilation:WindandStackOpenArea,
+       \min-fields 8
+       \memo This object is specified as natural ventilation driven by wind and stack effect only:
+       \memo Ventilation Wind = Cw * Opening Area * Schedule * WindSpd
+       \memo Ventilation Stack = Cd * Opening Area * Schedule * SQRT(2*g*DH*(|(Tzone-Todb)|/Tzone))
+       \memo Total Ventilation = SQRT((Ventilation Wind)^2 + (Ventilation Stack)^2)
+  A1 , \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference VentilationNames
+  N1 , \field Opening Area
+       \note This is the opening area used to calculate stack effect and wind driven ventilation.
+       \units m2
+       \type real
+       \minimum 0
+       \required-field
+  A3 , \field Opening Area Fraction Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the fraction values applied to the opening area given in the previous
+       \note input field (0.0 - 1.0).
+  N2 , \field Opening Effectiveness
+       \note This field is used to calculate wind driven ventilation.
+       \note  "Cw" in the wind-driven equation and the maximum value is 1.0.
+       \note When the input is Autocalculate, the program calculates Cw based on an angle between
+       \note wind direction and effective angle
+       \note Cw = 0.55 at angle = 0, and Cw = 0.3 at angle=180
+       \note Linear interpolation is used to calculate Cw based on the above two values.
+       \units dimensionless
+       \autocalculatable
+       \type real
+       \minimum 0
+       \maximum 1
+       \required-field
+  N3 , \field Effective Angle
+       \note This field is defined as normal angle of the opening area and is used when input
+       \note field Opening Effectiveness = Autocalculate.
+       \type real
+       \units deg
+       \minimum 0.0
+       \maximum< 360.0
+       \required-field
+  N4 , \field Height Difference
+       \note This is the height difference between the midpoint of an opening and
+       \note the neutral pressure level.
+       \units m
+       \type real
+       \minimum 0
+       \required-field
+       \note  "DH" in the stack equation.
+  N5 , \field Discharge Coefficient for Opening
+       \note This is the discharge coefficient used to calculate stack effect.
+       \note  "Cd" in the stack equation and the maximum value is 1.0.
+       \note When the input is Autocalculate, the following equation is used to calculate the
+       \note coefficient:
+       \note Cd = 0.4 + 0.0045*|(Tzone-Todb)|
+       \autocalculatable
+       \minimum 0.0
+       \maximum 1.0
+       \required-field
+  N6 , \field Minimum Indoor Temperature
+       \note This is the indoor temperature below which ventilation is shutoff.
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \required-field
+  A4 , \field Minimum Indoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the indoor temperature versus time below which
+       \note ventilation is shutoff.
+  N7 , \field Maximum Indoor Temperature
+       \note This is the indoor temperature above which ventilation is shutoff.
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \required-field
+  A5 , \field Maximum Indoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the indoor temperature versus time above which
+       \note ventilation is shutoff.
+  N8 , \field Delta Temperature
+       \note This is the temperature differential between indoor and outdoor below
+       \note which ventilation is shutoff.
+       \units deltaC
+       \type real
+       \minimum -100
+       \required-field
+  A6 , \field Delta Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the temperature differential between indoor and outdoor
+       \note versus time below which ventilation is shutoff.
+  N9 , \field Minimum Outdoor Temperature
+       \note This is the outdoor temperature below which ventilation is shutoff.
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \required-field
+  A7 , \field Minimum Outdoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the outdoor temperature versus time below which
+       \note ventilation is shutoff.
+  N10, \field Maximum Outdoor Temperature
+       \note This is the outdoor temperature above which ventilation is shutoff.
+       \units C
+       \type real
+       \minimum -100
+       \maximum 100
+       \required-field
+  A8 , \field Maximum Outdoor Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note This schedule contains the outdoor temperature versus time above which
+       \note ventilation is shutoff.
+  N11; \field Maximum Wind Speed
+       \note This is the outdoor wind speed above which ventilation is shutoff.
+       \units m/s
+       \type real
+       \minimum 0
+       \maximum 40
+       \required-field
+
 OS:ZoneHVAC:Baseboard:Convective:Electric,
   A1 , \field Handle
        \type handle
@@ -23762,6 +24057,14 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \required-field
         \type object-list
         \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
+        \note Fan type must be according to capacity control method (see I/O)
+        \note For ConstantFanVariableFlow a Fan:OnOff or Fan:ConstantVolume is valid.
+        \note For CyclingFan a Fan:OnOff is valid.
+        \note For VariableFanVariableFlow or VariableFanConstantFlow a Fan:VariableVolume is valid.
+        \note For ASHRAE90.1 a Fan:OnOff or Fan:VariableVolume is valid.
+        \note Fan:SystemModel is valid for all capacity control methods.
+        \note The fan's inlet node should be the same as the outdoor air mixer's mixed air node.
    A11, \field Cooling Coil Name
         \required-field
         \type object-list
@@ -24040,6 +24343,8 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \type object-list
        \required-field
        \object-list FansCVandOnOff
+       \object-list FansSystemModel
+       \note Fan:ConstantVolume only works with fan operating mode is continuous.
   A9, \field Heating Coil Name
        \note Needs to match in the DX Heating Coil object.
        \type object-list
@@ -24187,6 +24492,10 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \type object-list
        \required-field
        \object-list FansCVandOnOff
+       \object-list FansSystemModel
+       \note Fan:ConstantVolume only works when continuous fan operation is used the entire
+       \note simulation (all supply air fan operating mode schedule values are greater than 0).
+       \note If any fan operating mode schedule values are 0 a Fan:SystemModel or Fan:OnOff object must be used.
   A9, \field Heating Coil Name
        \note Needs to match in the heating coil object.
        \type object-list
@@ -24284,7 +24593,14 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
   A8 ,  \field Supply Air Fan
         \required-field
         \type object-list
-        \object-list FansCVandOnOff
+        \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
+        \note Supply Air Fan Object Type must be Fan:SystemModel, Fan:OnOff, or Fan:ConstantVolume
+        \note if AirConditioner:VariableRefrigerantFlow is used to model VRF outdoor unit
+        \note Supply Air Fan Object Type must be Fan:SystemModel or Fan:VariableVolume if
+        \note AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl or
+        \note AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR
+        \note is used to model VRF outdoor unit
   A9 ,  \field Outside Air Mixer
         \type object-list
         \object-list OutdoorAirMixers
@@ -24418,10 +24734,11 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \units m3/s
         \minimum 0
    A7,  \field Supply Air Fan Name
-        \note Needs to match Fan:OnOff object
         \required-field
         \type object-list
-        \object-list FansCVandOnOff
+        \object-list FansOnOff
+        \object-list FansSystemModel
+        \note Needs to match Fan:SystemModel or Fan:OnOff object
    A8, \field Heating Coil Name
         \note  Needs to match in the water-to-air heatpump heating coil object
         \type object-list
@@ -24540,8 +24857,8 @@ OS:ZoneHVAC:UnitHeater,
        \required-field
        \type object-list
        \object-list FansCVandOnOffandVAV
-       \note Allowable fan types are Fan:ConstantVolume, Fan:OnOff and
-       \note Fan:VariableVolume
+       \object-list FansSystemModel
+       \note Allowable fan types are Fan:ConstantVolume, Fan:OnOff, Fan:VariableVolume and Fan:SystemModel
   N1 , \field Maximum Supply Air Flow Rate
        \note Must be less than or equal to fan size.
        \type real
@@ -24679,14 +24996,16 @@ OS:ZoneHVAC:EnergyRecoveryVentilator,
         \note This flow rate must match the supply fan air flow rate.
   A5 ,  \field Supply Air Fan Name
         \required-field
-        \note Fan type must be Fan:OnOff
+        \note Fan type must be Fan:OnOff or Fan:SystemModel
         \type object-list
         \object-list FansOnOff
+        \object-list FansSystemModel
   A6 ,  \field Exhaust Air Fan Name
         \required-field
-        \note Fan type must be Fan:OnOff
+        \note Fan type must be Fan:OnOff or Fan:SystemModel
         \type object-list
         \object-list FansOnOff
+        \object-list FansSystemModel
   A7 ,  \field Controller Name
         \note Enter the name of a ZoneHVAC:EnergyRecoveryVentilator:Controller object.
         \type object-list
@@ -24846,6 +25165,8 @@ OS:ZoneHVAC:UnitVentilator,
         \required-field
         \type object-list
         \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
+        \note Allowable fan types are Fan:ConstantVolume, Fan:OnOff, Fan:VariableVolume, and Fan:SystemModel
    A10, \field Supply Air Fan Operating Mode Schedule Name
         \type object-list
         \object-list ScheduleNames
@@ -25411,7 +25732,10 @@ OS:WaterHeater:HeatPump,
        \required-field
        \type object-list
        \object-list FansOnOff
-       \note Needs to match the name used in the corresponding Fan:OnOff object.
+       \object-list FansSystemModel
+       \note Needs to match the name used in the corresponding Fan:SystemModel or Fan:OnOff object.
+       \note Specify the type of fan used by this heat pump water heater. The only
+       \note valid choices are Fan:SystemModel or Fan:OnOff.
   A16, \field Fan Placement
        \type choice
        \key BlowThrough
@@ -25847,7 +26171,10 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
        \required-field
        \type object-list
        \object-list FansOnOff
-       \note Needs to match the name used in the corresponding Fan:OnOff object.
+       \object-list FansSystemModel
+       \note Needs to match the name used in the corresponding Fan:SystemModel or Fan:OnOff object.
+       \note Specify the type of fan used by this heat pump water heater. The only
+       \note valid choices are Fan:SystemModel or Fan:OnOff.
   A16, \field Fan Placement
        \type choice
        \key BlowThrough
@@ -29793,8 +30120,8 @@ OS:Output:Meter,
        \memo external-list autoRDDmeter
   A3, \field Reporting Frequency
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
-       \note RunPeriod, Environment, and Annual are the same
-       \note RunPeriod, Environment, and Annual are synonymous
+       \note RunPeriod and Environment are the same
+       \note RunPeriod and Environment are synonymous
        \type choice
        \default Hourly
        \key Timestep
@@ -29841,8 +30168,8 @@ OS:Output:Variable,
   A5, \field Reporting Frequency
        \note Detailed lists every instance (i.e. HVAC variable timesteps)
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
-       \note RunPeriod, Environment, and Annual are the same
-       \note RunPeriod, Environment, and Annual are synonymous
+       \note RunPeriod and Environment are the same
+       \note RunPeriod and Environment are synonymous
        \type choice
        \default Hourly
        \key Detailed
@@ -29919,6 +30246,75 @@ OS:Meter:CustomDecrement,
    A5,  \field Key Name
         \begin-extensible
    A6;  \field Output Variable or Meter Name
+
+
+OS:Output:Diagnostics,
+       \memo Special keys to produce certain warning messages or effect certain simulation characteristics.
+       \unique-object
+       \extensible:1
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2;  \field Key 1
+       \begin-extensible
+       \type choice
+       \key DisplayAllWarnings
+       \key DisplayExtraWarnings
+       \key DisplayUnusedSchedules
+       \key DisplayUnusedObjects
+       \key DisplayAdvancedReportVariables
+       \key DisplayZoneAirHeatBalanceOffBalance
+       \key DoNotMirrorDetachedShading
+       \key DoNotMirrorAttachedShading
+       \key DisplayWeatherMissingDataWarnings
+       \key ReportDuringWarmup
+       \key ReportDetailedWarmupConvergence
+       \key ReportDuringHVACSizingSimulation
+
+OS:Output:DebuggingData,
+       \memo switch eplusout.dbg file on or off
+       \unique-object
+       \format singleLine
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Report Debugging Data
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A3;  \field Report During Warmup
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+
+OS:Output:JSON,
+       \memo Output from EnergyPlus can be written to JSON format files.
+       \unique-object
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Option Type
+       \required-field
+       \type choice
+       \key TimeSeries
+       \key TimeSeriesAndTabular
+  A3,  \field Output JSON
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A4,  \field Output CBOR
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A5;  \field Output MessagePack
+       \type choice
+       \key Yes
+       \key No
+       \required-field
 
 OS:Output:EnergyManagementSystem,
    \memo This object is used to control the output produced by the Energy Management System
@@ -31223,6 +31619,7 @@ OS:AirflowNetworkFan,
       \required-field
       \type object-list
       \object-list FansCVandOnOffandVAV
+      \object-list FansSystemModel
       \note Enter the name of the fan in the primary air loop.
 
 OS:AirflowNetworkEquivalentDuct,

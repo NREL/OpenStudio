@@ -37,6 +37,8 @@
 #include "FanConstantVolume_Impl.hpp"
 #include "FanOnOff.hpp"
 #include "FanOnOff_Impl.hpp"
+#include "FanSystemModel.hpp"
+#include "FanSystemModel_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "PortList.hpp"
@@ -492,8 +494,11 @@ namespace detail {
 
   bool AirTerminalSingleDuctSeriesPIUReheat_Impl::setFanAvailabilitySchedule(Schedule & schedule) {
     auto component = fan();
+    // TODO: from E+ 9.2.0 IDD: \note Fan type must be Fan:SystemModel or Fan:ConstantVolume
     if( auto constantFan = component.optionalCast<FanConstantVolume>() ) {
       return constantFan->setAvailabilitySchedule(schedule);
+    } else if(  auto systemModelFan = component.optionalCast<FanSystemModel>() ) {
+      return systemModelFan->setAvailabilitySchedule(schedule);
     } else if(  auto onOffFan = component.optionalCast<FanOnOff>() ) {
       return onOffFan->setAvailabilitySchedule(schedule);
     } else if( auto variableFan = component.optionalCast<FanVariableVolume>() ) {
@@ -632,8 +637,20 @@ AirTerminalSingleDuctSeriesPIUReheat::AirTerminalSingleDuctSeriesPIUReheat(const
 {
   OS_ASSERT(getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>());
 
-  setFan(fan);
+  bool ok = setFan(fan);
+  if (!ok)
+  {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Fan to "
+                << fan.briefDescription() << ".");
+  }
   setReheatCoil(reheatCoil);
+  if (!ok)
+  {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Reheat Coil to "
+                << reheatCoil.briefDescription() << ".");
+  }
 
   autosizeMaximumAirFlowRate();
   autosizeMaximumPrimaryAirFlowRate();

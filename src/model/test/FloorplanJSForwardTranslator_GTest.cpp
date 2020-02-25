@@ -469,7 +469,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue3267) {
     model = rt.modelFromThreeJS(threeScene);
   }
   ASSERT_TRUE(model);
-  model->save("FloorplanJSForwardTranslator_Issue3267.osm", true);
+  // model->save("FloorplanJSForwardTranslator_Issue3267.osm", true);
 
   // check the model
   ASSERT_EQ(2u, model->getConcreteModelObjects<Space>().size());
@@ -579,7 +579,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_MultistoryShadingRotation) {
     model = rt.modelFromThreeJS(threeScene);
   }
   ASSERT_TRUE(model);
-  model->save("FloorplanJSForwardTranslator_MultistoryShadingRotation.osm", true);
+  // model->save("FloorplanJSForwardTranslator_MultistoryShadingRotation.osm", true);
 
   // check the model
   ASSERT_EQ(2u, model->getConcreteModelObjects<Space>().size());

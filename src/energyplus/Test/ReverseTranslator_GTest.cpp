@@ -77,6 +77,12 @@
 #include "../../model/PerformancePrecisionTradeoffs_Impl.hpp"
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "../../model/ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
+#include "../../model/StandardGlazing.hpp"
+#include "../../model/StandardGlazing_Impl.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData.hpp"
+#include "../../model/MaterialPropertyGlazingSpectralData_Impl.hpp"
+#include "../../model/DaylightingControl.hpp"
+#include "../../model/DaylightingControl_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -99,6 +105,9 @@
 #include <utilities/idd/PerformancePrecisionTradeoffs_FieldEnums.hxx>
 #include <utilities/idd/ZoneList_FieldEnums.hxx>
 #include <utilities/idd/GlobalGeometryRules_FieldEnums.hxx>
+#include <utilities/idd/WindowMaterial_Glazing_FieldEnums.hxx>
+#include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
+#include <utilities/idd/Daylighting_ReferencePoint_FieldEnums.hxx>
 
 #include "../../utilities/time/Time.hpp"
 
@@ -155,11 +164,11 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_DaylightingOffice)
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save( resourcesPath() / toPath("energyplus/Daylighting_Office/in.osm"), true);
+  // model.save( resourcesPath() / toPath("energyplus/Daylighting_Office/in.osm"), true);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  workspace.save( resourcesPath() / toPath("energyplus/Daylighting_Office/in2.idf"), true);
+  // workspace.save( resourcesPath() / toPath("energyplus/Daylighting_Office/in2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture,ReverseTranslator_BestestEx)
@@ -171,11 +180,11 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_BestestEx)
 
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save( resourcesPath() / toPath("energyplus/BestestEx/in.osm"), true);
+  // model.save( resourcesPath() / toPath("energyplus/BestestEx/in.osm"), true);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  workspace.save( resourcesPath() / toPath("energyplus/BestestEx/in2.idf"), true);
+  // workspace.save( resourcesPath() / toPath("energyplus/BestestEx/in2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture,ReverseTranslator_SimpleRelativeTest)
@@ -186,11 +195,11 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_SimpleRelativeTest)
   Workspace inWorkspace(*idfFile);
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save( resourcesPath() / toPath("energyplus/SimpleSurfaces/SimpleSurfaces_Relative.osm"), true);
+  // model.save( resourcesPath() / toPath("energyplus/SimpleSurfaces/SimpleSurfaces_Relative.osm"), true);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  workspace.save( resourcesPath() / toPath("energyplus/SimpleSurfaces/SimpleSurfaces_Relative2.idf"), true);
+  // workspace.save( resourcesPath() / toPath("energyplus/SimpleSurfaces/SimpleSurfaces_Relative2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture,ReverseTranslator_Building)
@@ -648,11 +657,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleFile) {
 
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
-  model.save( resourcesPath() / toPath("energyplus/ScheduleFile/in.osm"), true);
+  // model.save( resourcesPath() / toPath("energyplus/ScheduleFile/in.osm"), true);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  workspace.save( resourcesPath() / toPath("energyplus/ScheduleFile/in2.idf"), true);
+  // workspace.save( resourcesPath() / toPath("energyplus/ScheduleFile/in2.idf"), true);
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
@@ -967,4 +976,111 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList)
       << "Expected space2 to have a SpaceType '" << _spaceType2->nameString() << "', but it has '" << _space2->spaceType()->nameString() << "'";
 
   }
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject(openstudio::IddObjectType::WindowMaterial_Glazing);
+  idfObject.setName("CLEAR 6MM");
+  idfObject.setString(WindowMaterial_GlazingFields::OpticalDataType, "SpectralAverage");
+
+  openstudio::WorkspaceObject epWindowMaterialGlazing = workspace.addObject(idfObject).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<StandardGlazing> standardGlazings = model.getModelObjects<StandardGlazing>();
+  ASSERT_EQ(1u, standardGlazings.size());
+  StandardGlazing standardGlazing = standardGlazings[0];
+  EXPECT_EQ(standardGlazing.name().get(), "CLEAR 6MM");
+  EXPECT_EQ(standardGlazing.opticalDataType(), "SpectralAverage");
+  EXPECT_FALSE(standardGlazing.windowGlassSpectralDataSet());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_MaterialPropertyGlazingSpectralData) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_GlazingSpectralData);
+
+  openstudio::WorkspaceObject epSpectralData = workspace.addObject(idfObject).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<MaterialPropertyGlazingSpectralData> spectralDatas = model.getModelObjects<MaterialPropertyGlazingSpectralData>();
+  ASSERT_EQ(1u, spectralDatas.size());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing_2) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::WindowMaterial_Glazing);
+  idfObject1.setName("CLEAR 8MM");
+
+  openstudio::WorkspaceObject epWindowMaterialGlazing = workspace.addObject(idfObject1).get();
+
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::MaterialProperty_GlazingSpectralData);
+
+  openstudio::WorkspaceObject epMaterialPropertyGlazingSpectralData = workspace.addObject(idfObject2).get();
+
+  EXPECT_TRUE(epWindowMaterialGlazing.setPointer(WindowMaterial_GlazingFields::WindowGlassSpectralDataSetName, epMaterialPropertyGlazingSpectralData.handle()));
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<StandardGlazing> standardGlazings = model.getModelObjects<StandardGlazing>();
+  ASSERT_EQ(1u, standardGlazings.size());
+  StandardGlazing standardGlazing = standardGlazings[0];
+
+  std::vector<MaterialPropertyGlazingSpectralData> spectralDatas = model.getModelObjects<MaterialPropertyGlazingSpectralData>();
+  ASSERT_EQ(1u, spectralDatas.size());
+  MaterialPropertyGlazingSpectralData spectralData = spectralDatas[0];
+
+  EXPECT_EQ(standardGlazing.name().get(), "CLEAR 8MM");
+  EXPECT_EQ(standardGlazing.opticalDataType(), "Spectral");
+  EXPECT_TRUE(standardGlazing.windowGlassSpectralDataSet());
+  EXPECT_TRUE(standardGlazing.windowGlassSpectralDataSetName());
+  EXPECT_EQ(standardGlazing.windowGlassSpectralDataSet().get().name().get(), spectralData.name().get());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject3(openstudio::IddObjectType::Daylighting_ReferencePoint);
+  idfObject3.setName("Reference Point 1");
+  idfObject3.setDouble(Daylighting_ReferencePointFields::XCoordinateofReferencePoint, 15);
+  idfObject3.setDouble(Daylighting_ReferencePointFields::YCoordinateofReferencePoint, 16.05);
+  idfObject3.setDouble(Daylighting_ReferencePointFields::ZCoordinateofReferencePoint, 0);
+
+  openstudio::WorkspaceObject epDaylightingReferencePoint1 = workspace.addObject(idfObject3).get();
+
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::Daylighting_Controls);
+  idfObject1.setDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis, 180.0);
+  IdfExtensibleGroup group1 = idfObject1.pushExtensibleGroup();
+  group1.setString(0, "Reference Point 1");
+  group1.setDouble(1, 1);
+  group1.setDouble(2, 500);
+
+  openstudio::WorkspaceObject epDaylightingControls = workspace.addObject(idfObject1).get();
+
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::Zone);
+
+  openstudio::WorkspaceObject epZone = workspace.addObject(idfObject2).get();
+
+  EXPECT_TRUE(epDaylightingControls.setPointer(Daylighting_ControlsFields::ZoneName, epZone.handle()));
+  EXPECT_TRUE(epDaylightingReferencePoint1.setPointer(Daylighting_ReferencePointFields::ZoneName, epZone.handle()));
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<DaylightingControl> daylightingControls = model.getModelObjects<DaylightingControl>();
+  ASSERT_EQ(1u, daylightingControls.size());
+  DaylightingControl daylightingControl = daylightingControls[0];
+  EXPECT_EQ(daylightingControl.name().get(), "Reference Point 1");
+  EXPECT_EQ(daylightingControl.phiRotationAroundZAxis(), 180.0);
 }

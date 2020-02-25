@@ -247,6 +247,7 @@
 #include "Facility.hpp"
 #include "FanConstantVolume.hpp"
 #include "FanOnOff.hpp"
+#include "FanSystemModel.hpp"
 #include "FanVariableVolume.hpp"
 #include "FanZoneExhaust.hpp"
 #include "FFactorGroundFloorConstruction.hpp"
@@ -315,7 +316,10 @@
 #include "OtherEquipment.hpp"
 #include "OtherEquipmentDefinition.hpp"
 #include "OutputControlReportingTolerances.hpp"
+#include "OutputDebuggingData.hpp"
+#include "OutputDiagnostics.hpp"
 #include "OutputEnergyManagementSystem.hpp"
+#include "OutputJSON.hpp"
 #include "OutputMeter.hpp"
 #include "OutputVariable.hpp"
 #include "OutsideSurfaceConvectionAlgorithm.hpp"
@@ -507,6 +511,7 @@
 #include "ZoneMixing.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName.hpp"
 #include "ZoneVentilationDesignFlowRate.hpp"
+#include "ZoneVentilationWindandStackOpenArea.hpp"
 
 // include all concrete ModelObject Impls too
 #include "AdditionalProperties_Impl.hpp"
@@ -726,6 +731,7 @@
 #include "Facility_Impl.hpp"
 #include "FanConstantVolume_Impl.hpp"
 #include "FanOnOff_Impl.hpp"
+#include "FanSystemModel_Impl.hpp"
 #include "FanVariableVolume_Impl.hpp"
 #include "FanZoneExhaust_Impl.hpp"
 #include "FFactorGroundFloorConstruction_Impl.hpp"
@@ -794,7 +800,10 @@
 #include "OtherEquipment_Impl.hpp"
 #include "OtherEquipmentDefinition_Impl.hpp"
 #include "OutputControlReportingTolerances_Impl.hpp"
+#include "OutputDebuggingData_Impl.hpp"
+#include "OutputDiagnostics_Impl.hpp"
 #include "OutputEnergyManagementSystem_Impl.hpp"
+#include "OutputJSON_Impl.hpp"
 #include "OutputMeter_Impl.hpp"
 #include "OutputVariable_Impl.hpp"
 #include "OutsideSurfaceConvectionAlgorithm_Impl.hpp"
@@ -986,5 +995,6 @@
 #include "ZoneMixing_Impl.hpp"
 #include "ZonePropertyUserViewFactorsBySurfaceName_Impl.hpp"
 #include "ZoneVentilationDesignFlowRate_Impl.hpp"
+#include "ZoneVentilationWindandStackOpenArea_Impl.hpp"
 
 #endif // MODEL_CONCRETEMODELOBJECTS_HPP

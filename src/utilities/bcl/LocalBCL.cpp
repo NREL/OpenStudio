@@ -139,17 +139,21 @@ namespace openstudio{
   LocalBCL &LocalBCL::instance(const path& libraryPath)
   {
     std::shared_ptr<LocalBCL> &ptr = instanceInternal();
-    if (ptr) {
+    if (ptr == nullptr) {
+      // Doesn't exist yet: no problem, just go ahead and create it
       ptr = std::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
     }
     else
     {
+      // Try to avoid doing something if the canonical path asked matches the one we have in store
       openstudio::path canLibraryPath(libraryPath);
       // If libraryPath is an existing dir, take the canonical path, so that it matches what we stored in the Ctor
       if (openstudio::filesystem::is_directory(canLibraryPath) && openstudio::filesystem::exists(canLibraryPath)) {
         canLibraryPath = openstudio::filesystem::canonical(canLibraryPath);
       }
       if (ptr->libraryPath() != canLibraryPath) {
+        // TODO: same comment as in LocalBCL::close, can we be sure that ptr.reset() actually ends up calling the dtor?
+        ptr->closeConnection();
         ptr.reset();
         ptr = std::shared_ptr<LocalBCL>(new LocalBCL(libraryPath));
       }
@@ -165,17 +169,29 @@ namespace openstudio{
 
   void LocalBCL::close()
   {
+    // Close the connection to the database if needed.
+    // TODO: something is bugging me here. why are we using a std::shared_ptr and not unique_ptr?
+    // shared_ptr -> reset() should destroy the object (which calls closeConnection) if it's only reference left, which it should...
+    // TODO: probabably not needed
+    instanceInternal()->closeConnection();
+    // reset pointer
     instanceInternal().reset();
   }
 
-  LocalBCL::~LocalBCL()
+  bool LocalBCL::closeConnection()
   {
     // Close the connection to the database if needed
     if (m_connectionOpen) {
       sqlite3_close(m_db);
       m_connectionOpen = false;
     }
+    return true;
+  }
 
+  LocalBCL::~LocalBCL()
+  {
+    // Close the connection to the database if needed
+    closeConnection();
   }
 
   bool LocalBCL::initializeLocalDb()

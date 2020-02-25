@@ -38,6 +38,7 @@ namespace model {
 
 class Schedule;
 class Curve;
+class AirflowNetworkFan;
 
 namespace detail {
 

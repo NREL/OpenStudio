@@ -53,7 +53,7 @@ namespace openstudio
     *   After conversion a map of handles from the ThreeJS JSON to new handles in the returned OpenStudio Model can be retreived.
     *   This map is useful if merging the translated OpenStudio Model with an existing OpenStudio Model.
     */
-    MODEL_API class ThreeJSReverseTranslator
+    class MODEL_API ThreeJSReverseTranslator
     {
     public:
 

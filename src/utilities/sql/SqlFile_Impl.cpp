@@ -2482,6 +2482,9 @@ namespace openstudio{
           unsigned month = sqlite3_column_int(sqlStmtPtr, b++);
           unsigned day = sqlite3_column_int(sqlStmtPtr, b++);
           unsigned intervalMinutes = sqlite3_column_int(sqlStmtPtr, b++); // used for run periods
+          if (reportingFrequency == ReportingFrequency::Annual){
+            intervalMinutes = 8760; // used for annual periods
+          }
 
           if ((version.major() == 8) && (version.minor() == 3)){
             // workaround for bug in E+ 8.3, issue #1692

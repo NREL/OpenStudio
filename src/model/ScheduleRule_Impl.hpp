@@ -105,7 +105,7 @@ namespace detail {
 
     bool applySaturday() const;
 
-    //bool applyHoliday() const;
+    // Note: there is no applyHoliday, instead that's implemented at the ScheduleRule's level
 
     std::string dateSpecificationType() const;
 
@@ -139,8 +139,6 @@ namespace detail {
     bool setApplyFriday(bool applyFriday);
 
     bool setApplySaturday(bool applySaturday);
-
-    //bool setApplyHoliday(bool applyHoliday);
 
     /// Sets the start date of the date range, will delete any specific dates specified.
     /// A start date > end date indicates that the range wraps around the year.

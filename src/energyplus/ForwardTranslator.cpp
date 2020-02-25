@@ -499,6 +499,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   }
 
 
+  // TODO: is it time to uncomment that?
   // temp code
   if (!m_keepRunControlSpecialDays){
     // DLM: we will not translate these objects until we support holidays in the GUI
@@ -1864,6 +1865,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateFanOnOff(fan);
       break;
     }
+  case openstudio::IddObjectType::OS_Fan_SystemModel :
+    {
+      model::FanSystemModel fan = modelObject.cast<FanSystemModel>();
+      retVal = translateFanSystemModel(fan);
+      break;
+    }
   case openstudio::IddObjectType::OS_Fan_VariableVolume :
     {
       model::FanVariableVolume fan = modelObject.cast<FanVariableVolume>();
@@ -2403,6 +2410,24 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     {
       model::OutputControlReportingTolerances outputControl = modelObject.cast<OutputControlReportingTolerances>();
       retVal = translateOutputControlReportingTolerances(outputControl);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Output_DebuggingData :
+    {
+      auto mo = modelObject.cast<OutputDebuggingData>();
+      retVal = translateOutputDebuggingData(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Output_Diagnostics :
+    {
+      auto mo = modelObject.cast<OutputDiagnostics>();
+      retVal = translateOutputDiagnostics(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Output_JSON :
+    {
+      auto mo = modelObject.cast<OutputJSON>();
+      retVal = translateOutputJSON(mo);
       break;
     }
   case openstudio::IddObjectType::OS_Output_Meter :
@@ -3360,6 +3385,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateZoneVentilationDesignFlowRate(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_ZoneVentilation_WindandStackOpenArea :
+    {
+      auto mo = modelObject.cast<ZoneVentilationWindandStackOpenArea>();
+      retVal = translateZoneVentilationWindandStackOpenArea(mo);
+      break;
+    }
   //If no case statement log a warning
   default:
     {
@@ -3450,6 +3481,9 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneAirMassFlowConservation);
   result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
   result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
+  result.push_back(IddObjectType::OS_Output_DebuggingData);
+  result.push_back(IddObjectType::OS_Output_Diagnostics);
+  result.push_back(IddObjectType::OS_Output_JSON);
   result.push_back(IddObjectType::OS_PerformancePrecisionTradeoffs);
 
   result.push_back(IddObjectType::OS_Site);

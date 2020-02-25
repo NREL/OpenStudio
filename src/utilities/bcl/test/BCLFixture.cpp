@@ -38,38 +38,56 @@ using openstudio::FileLogSink;
 
 void BCLFixture::SetUp() {
 
-  if (LocalBCL::instance().prodAuthKey().empty()) {
+  // Use a unique libraryPath to avoid concurrent access issues when running tests in parallel
+  // This gets the name of the test that's being run (eg 'RemoteBCLTest')
+  std::string currentTestName = ::testing::UnitTest::GetInstance()->current_test_info()->name();
+  currentLocalBCLPath = resourcesPath() / toPath("utilities/BCL") / toPath(currentTestName);
+
+  // If for some reason (like CTRL+C) the previous pass didn't get cleaned up, do it
+  try {
+    openstudio::filesystem::remove_all(currentLocalBCLPath);
+  } catch (...) {  }
+
+
+  // Initialize the LocalBCL Singleton at the given library path
+  LocalBCL& bcl = LocalBCL::instance(currentLocalBCLPath);
+
+  if (bcl.prodAuthKey().empty()) {
     prodAuthKey = defaultProdAuthKey;
-    LocalBCL::instance().setProdAuthKey(prodAuthKey);
+    bcl.setProdAuthKey(prodAuthKey);
   } else {
-    prodAuthKey = LocalBCL::instance().prodAuthKey();
+    prodAuthKey = bcl.prodAuthKey();
   }
 
   // TODO Uncomment after network error handling is in place
   /*if (LocalBCL::instance().devAuthKey().empty()) {
     devAuthKey = defaultDevAuthKey;
-    LocalBCL::instance().setDevAuthKey(devAuthKey);
+    bcl.setDevAuthKey(devAuthKey);
   } else {
-    devAuthKey = LocalBCL::instance().devAuthKey();
+    devAuthKey = bcl.devAuthKey();
   }*/
 }
 
-void BCLFixture::TearDown() {}
+void BCLFixture::TearDown() {
 
-void BCLFixture::SetUpTestCase() {
+  LocalBCL::close();
+  try {
+    openstudio::filesystem::remove_all(currentLocalBCLPath);
+  } catch (...) {  }
+}
+
+void BCLFixture::SetUpTestSuite() {
   // set up logging
   logFile = FileLogSink(toPath("./BCLFixture.log"));
   logFile->setLogLevel(Info);
 }
 
-void BCLFixture::TearDownTestCase() {
+void BCLFixture::TearDownTestSuite() {
   logFile->disable();
 }
 
-std::string BCLFixture::prodAuthKey;
-std::string BCLFixture::devAuthKey;
-
-// these are Dan's API keys labelled under "Testing", delete when there is a better way to do this
-std::string BCLFixture::defaultProdAuthKey("2da842aa2d457703d8fdcb5c53080ace");
-std::string BCLFixture::defaultDevAuthKey("e8051bca77787c0df16cbe13452e7580");
+// define static storage
 boost::optional<openstudio::FileLogSink> BCLFixture::logFile;
+// these are Dan's API keys labelled under "Testing", delete when there is a better way to do this
+const std::string BCLFixture::defaultProdAuthKey("2da842aa2d457703d8fdcb5c53080ace");
+const std::string BCLFixture::defaultDevAuthKey("e8051bca77787c0df16cbe13452e7580");

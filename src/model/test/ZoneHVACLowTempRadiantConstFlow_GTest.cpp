@@ -47,6 +47,9 @@
 #include "../StandardOpaqueMaterial_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
+#include "../Space.hpp"
+#include "../Construction.hpp"
+#include "../ConstructionWithInternalSource.hpp"
 
 #include "../../utilities/units/Unit.hpp"
 
@@ -190,3 +193,73 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
 
 }
 
+TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_surfaces) {
+
+  Model m;
+
+  // make a space with some surfaces
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
+
+  boost::optional<Space> _space1 = Space::fromFloorPrint(points, 3, m);
+  ASSERT_TRUE(_space1);
+  EXPECT_EQ(6u, _space1->surfaces().size());
+
+  // make a zone, add the space
+  ThermalZone z(m);
+  _space1->setThermalZone(z);
+
+  // Make a radiant low temperature system
+  ScheduleConstant availabilitySched(m);
+  ScheduleConstant coolingHighWaterTempSched(m);
+  ScheduleConstant coolingLowWaterTempSched(m);
+  ScheduleConstant coolingHighControlTempSched(m);
+  ScheduleConstant coolingLowControlTempSched(m);
+  ScheduleConstant heatingHighWaterTempSched(m);
+  ScheduleConstant heatingLowWaterTempSched(m);
+  ScheduleConstant heatingHighControlTempSched(m);
+  ScheduleConstant heatingLowControlTempSched(m);
+
+  availabilitySched.setValue(1.0);
+  coolingHighWaterTempSched.setValue(15.0);
+  coolingLowWaterTempSched.setValue(10.0);
+  coolingHighControlTempSched.setValue(26.0);
+  coolingLowControlTempSched.setValue(22.0);
+  heatingHighWaterTempSched.setValue(50.0);
+  heatingLowWaterTempSched.setValue(30.0);
+  heatingHighControlTempSched.setValue(21.0);
+  heatingLowControlTempSched.setValue(15.0);
+
+  CoilCoolingLowTempRadiantConstFlow clg_coil(m,coolingHighWaterTempSched,coolingLowWaterTempSched,coolingHighControlTempSched,coolingLowControlTempSched);
+  CoilHeatingLowTempRadiantConstFlow htg_coil(m,heatingHighWaterTempSched,heatingLowWaterTempSched,heatingHighControlTempSched,heatingLowControlTempSched);
+
+  ZoneHVACLowTempRadiantConstFlow testRad(m, availabilitySched, htg_coil,clg_coil);
+  EXPECT_TRUE(testRad.setRadiantSurfaceType("AllSurfaces"));
+  EXPECT_TRUE(testRad.addToThermalZone(z));
+
+  // The surfaces don't have any constructions assigned
+  ASSERT_NO_THROW(testRad.surfaces());
+  EXPECT_EQ(0u, testRad.surfaces().size());
+
+  Construction c(m);
+  for (auto& s: _space1->surfaces()) {
+    s.setConstruction(c);
+  }
+
+  // The surfaces have constructions, but not internal source
+  ASSERT_NO_THROW(testRad.surfaces());
+  EXPECT_EQ(0u, testRad.surfaces().size());
+
+
+  ConstructionWithInternalSource cInternalSource(m);
+  for (auto& s: _space1->surfaces()) {
+    s.setConstruction(cInternalSource);
+  }
+
+  // The surfaces have constructions, with  internal source
+  ASSERT_NO_THROW(testRad.surfaces());
+  EXPECT_EQ(6u, testRad.surfaces().size());
+}

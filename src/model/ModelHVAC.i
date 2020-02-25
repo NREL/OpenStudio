@@ -12,6 +12,9 @@
 %import <model/ModelResources.i>
 %import <model/ModelGeometry.i>
 
+// We ignore that, should instead call ZoneHVACEquipment::addToThermalZone to avoid issues
+%ignore openstudio::model::ThermalZone::addEquipment;
+
 %{
   #include <model/HVACTemplates.hpp>
 %}
@@ -157,6 +160,7 @@ MODELOBJECT_TEMPLATES(CoolingTowerPerformanceYorkCalc);
 MODELOBJECT_TEMPLATES(UnitarySystemPerformanceMultispeed);
 MODELOBJECT_TEMPLATES(ZoneMixing);
 MODELOBJECT_TEMPLATES(ZoneVentilationDesignFlowRate);
+MODELOBJECT_TEMPLATES(ZoneVentilationWindandStackOpenArea);
 MODELOBJECT_TEMPLATES(WaterHeaterMixed);
 MODELOBJECT_TEMPLATES(WaterHeaterStratified);
 MODELOBJECT_TEMPLATES(WaterUseEquipmentDefinition);
@@ -266,6 +270,7 @@ SWIG_MODELOBJECT(CoolingTowerPerformanceCoolTools, 1);
 SWIG_MODELOBJECT(UnitarySystemPerformanceMultispeed, 1);
 SWIG_MODELOBJECT(ZoneMixing, 1);
 SWIG_MODELOBJECT(ZoneVentilationDesignFlowRate, 1);
+SWIG_MODELOBJECT(ZoneVentilationWindandStackOpenArea, 1);
 SWIG_MODELOBJECT(WaterHeaterMixed, 1);
 SWIG_MODELOBJECT(WaterHeaterStratified, 1);
 SWIG_MODELOBJECT(WaterUseEquipmentDefinition, 1);
