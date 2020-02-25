@@ -55,6 +55,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_NoOutputTa
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
+  // If the model doesn't have an OutputTableSummaryReports, we expect the historical behavior of adding the "AllSummary" report
   std::vector<WorkspaceObject> idf_outputTableSummaryReports = workspace.getObjectsByType(IddObjectType::Output_Table_SummaryReports);
   ASSERT_EQ(1u, idf_outputTableSummaryReports.size());
   WorkspaceObject idf_outputTableSummaryReport(idf_outputTableSummaryReports[0]);

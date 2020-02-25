@@ -75,20 +75,23 @@ TEST_F(ModelFixture, OutputTableSummaryReports_SummaryReports) {
   outputTableSummaryReports.removeAllSummaryReports();
 
   EXPECT_EQ(0, outputTableSummaryReports.numberofSummaryReports());
-  ASSERT_TRUE(outputTableSummaryReports.addSummaryReport("AnnualBuildingUtilityPerformanceSummary"));
+  EXPECT_TRUE(outputTableSummaryReports.addSummaryReport("AnnualBuildingUtilityPerformanceSummary"));
   EXPECT_EQ(1, outputTableSummaryReports.numberofSummaryReports());
-  ASSERT_TRUE(outputTableSummaryReports.addSummaryReport("InputVerificationandResultsSummary"));
+  EXPECT_TRUE(outputTableSummaryReports.addSummaryReport("InputVerificationandResultsSummary"));
   EXPECT_EQ(2, outputTableSummaryReports.numberofSummaryReports());
-  ASSERT_TRUE(outputTableSummaryReports.addSummaryReport("SourceEnergyEndUseComponentsSummary"));
+  EXPECT_TRUE(outputTableSummaryReports.addSummaryReport("SourceEnergyEndUseComponentsSummary"));
   EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
-  ASSERT_FALSE(outputTableSummaryReports.addSummaryReport("SourceEnergyEndUseComponentsSummary"));
+  // Shouldn't work, already added once
+  EXPECT_FALSE(outputTableSummaryReports.addSummaryReport("SourceEnergyEndUseComponentsSummary"));
   EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
-  ASSERT_FALSE(outputTableSummaryReports.addSummaryReport("MadeUpSummaryReport"));
+  // Shouldn't work, not a valid choice
+  EXPECT_FALSE(outputTableSummaryReports.addSummaryReport("MadeUpSummaryReport"));
   EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
   EXPECT_THROW(outputTableSummaryReports.getSummaryReport(3), openstudio::Exception);
-  ASSERT_TRUE(outputTableSummaryReports.getSummaryReport(2));
+  EXPECT_TRUE(outputTableSummaryReports.getSummaryReport(2));
   EXPECT_EQ("SourceEnergyEndUseComponentsSummary", outputTableSummaryReports.getSummaryReport(2).get());
-  ASSERT_FALSE(outputTableSummaryReports.summaryReportIndex("AnotherMadeUpSummaryReport"));
+
+  EXPECT_FALSE(outputTableSummaryReports.summaryReportIndex("MadeUpSummaryReport"));
   ASSERT_TRUE(outputTableSummaryReports.summaryReportIndex("SourceEnergyEndUseComponentsSummary"));
   EXPECT_EQ(2, outputTableSummaryReports.summaryReportIndex("SourceEnergyEndUseComponentsSummary").get());
 
@@ -97,6 +100,7 @@ TEST_F(ModelFixture, OutputTableSummaryReports_SummaryReports) {
 
   // check that remaining reports moved correctly
   std::vector<std::string> summaryReports = outputTableSummaryReports.summaryReports();
+  ASSERT_EQ(2, summaryReports.size());
   EXPECT_EQ("AnnualBuildingUtilityPerformanceSummary", summaryReports[0]);
   EXPECT_EQ("SourceEnergyEndUseComponentsSummary", summaryReports[1]);
 
@@ -112,9 +116,12 @@ TEST_F(ModelFixture, OutputTableSummaryReports_SummaryReports) {
   summaryReportsToAdd.push_back(summaryReport1);
   std::string summaryReport2 = "ShadingSummary";
   summaryReportsToAdd.push_back(summaryReport2);
-  ASSERT_TRUE(outputTableSummaryReports.addSummaryReports(summaryReportsToAdd));
+  EXPECT_TRUE(outputTableSummaryReports.addSummaryReports(summaryReportsToAdd));
   EXPECT_EQ(2, outputTableSummaryReports.numberofSummaryReports());
-  EXPECT_EQ(2, outputTableSummaryReports.summaryReports().size());
+  summaryReports = outputTableSummaryReports.summaryReports();
+  ASSERT_EQ(2, summaryReports.size());
+  EXPECT_EQ("SurfaceShadowingSummary", summaryReports[0]);
+  EXPECT_EQ("ShadingSummary", summaryReports[1]);
 }
 
 // test cloning it
@@ -131,12 +138,18 @@ TEST_F(ModelFixture, OutputTableSummaryReports_Clone)
 
   // clone it into the same model
   OutputTableSummaryReports outputTableSummaryReportsClone = outputTableSummaryReports.clone(model).cast<OutputTableSummaryReports>();
+  // UniqueModelObject: should be the same as the original
+  EXPECT_EQ(outputTableSummaryReports, outputTableSummaryReportsClone);
   ASSERT_EQ(1, outputTableSummaryReportsClone.numberofSummaryReports());
+  EXPECT_EQ("ClimaticDataSummary", outputTableSummaryReportsClone.summaryReports()[0]);
+
 
   // clone it into a different model
   Model model2;
   OutputTableSummaryReports outputTableSummaryReportsClone2 = outputTableSummaryReports.clone(model2).cast<OutputTableSummaryReports>();
   ASSERT_EQ(1, outputTableSummaryReportsClone2.numberofSummaryReports());
+  EXPECT_EQ("ClimaticDataSummary", outputTableSummaryReportsClone2.summaryReports()[0]);
+
 }
 
 // check that remove works
