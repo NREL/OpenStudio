@@ -82,6 +82,9 @@ class MODEL_API OutputTableSummaryReports : public ModelObject {
 
   void removeAllSummaryReports();
 
+  // Just a convenience function to **add** 'AllSummary' as a Report Name since it's so common
+  bool enableAllSummaryReport();
+
   //@}
   /** @name Other */
   //@{

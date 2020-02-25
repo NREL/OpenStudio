@@ -121,6 +121,10 @@ namespace detail {
     return result;
   }
 
+  bool OutputTableSummaryReports_Impl::enableAllSummaryReport() {
+    addSummaryReport("AllSummary");
+  }
+
   void OutputTableSummaryReports_Impl::removeAllSummaryReports() {
     getObject<ModelObject>().clearExtensibleGroups();
   }
@@ -228,6 +232,10 @@ boost::optional<unsigned> OutputTableSummaryReports::summaryReportIndex(const st
 
 boost::optional<std::string> OutputTableSummaryReports::getSummaryReport(unsigned groupIndex) const {
   return getImpl<detail::OutputTableSummaryReports_Impl>()->getSummaryReport(groupIndex);
+}
+
+bool OutputTableSummaryReports::enableAllSummaryReport() {
+  return getImpl<detail::OutputTableSummaryReports_Impl>()->enableAllSummaryReport();
 }
 
 /// @cond

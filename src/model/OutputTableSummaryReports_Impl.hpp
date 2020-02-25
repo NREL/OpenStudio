@@ -93,6 +93,9 @@ namespace detail {
 
     void removeAllSummaryReports();
 
+    // Just a convenience function to add 'AllSummary' as a key since it's so common
+    bool enableAllSummaryReport();
+
     //@}
     /** @name Other */
     //@{
