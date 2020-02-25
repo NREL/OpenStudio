@@ -63,7 +63,7 @@ class MODEL_API OutputTableSummaryReports : public ModelObject {
   unsigned int numberofSummaryReports() const;
 
   /** If a summaryReport group is already present (cf `summaryReportIndex()`), it will Warn */
-  boost::optional<unsigned> summaryReportIndex(std::string summaryReport) const;
+  boost::optional<unsigned> summaryReportIndex(const std::string& summaryReport) const;
 
   boost::optional<std::string> getSummaryReport(unsigned groupIndex) const;
 
@@ -71,9 +71,9 @@ class MODEL_API OutputTableSummaryReports : public ModelObject {
   /** @name Setters */
   //@{
 
-  bool addSummaryReport(std::string summaryReport);
+  bool addSummaryReport(const std::string& summaryReport);
 
-  bool addSummaryReports(std::vector<std::string> summaryReports);
+  bool addSummaryReports(const std::vector<std::string>& summaryReports);
 
   bool removeSummaryReport(int groupIndex);
 

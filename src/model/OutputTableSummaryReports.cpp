@@ -84,7 +84,7 @@ namespace detail {
     return numExtensibleGroups();
   }
 
-  bool OutputTableSummaryReports_Impl::addSummaryReport(std::string summaryReport) {
+  bool OutputTableSummaryReports_Impl::addSummaryReport(const std::string& summaryReport) {
     // Check if summaryReport already exists
     boost::optional<unsigned> _existingIndex = summaryReportIndex(summaryReport);
     if (_existingIndex) {
@@ -140,7 +140,7 @@ namespace detail {
     return result;
   }
 
-  bool OutputTableSummaryReports_Impl::addSummaryReports(std::vector<std::string> summaryReports) {
+  bool OutputTableSummaryReports_Impl::addSummaryReports(const std::vector<std::string>& summaryReports) {
     unsigned int num = numberofSummaryReports();
     for (std::string summaryReport : summaryReports) {
       addSummaryReport(summaryReport);
@@ -148,7 +148,7 @@ namespace detail {
     return true;
   }
 
-  boost::optional<unsigned> OutputTableSummaryReports_Impl::summaryReportIndex(std::string summaryReport) const {
+  boost::optional<unsigned> OutputTableSummaryReports_Impl::summaryReportIndex(const std::string& summaryReport) const {
     boost::optional<unsigned> result;
 
     auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
@@ -190,7 +190,7 @@ unsigned int OutputTableSummaryReports::numberofSummaryReports() const {
   return getImpl<detail::OutputTableSummaryReports_Impl>()->numberofSummaryReports();
 }
 
-bool OutputTableSummaryReports::addSummaryReport(std::string summaryReport) {
+bool OutputTableSummaryReports::addSummaryReport(const std::string& summaryReport) {
   return getImpl<detail::OutputTableSummaryReports_Impl>()->addSummaryReport(summaryReport);
 }
 
@@ -206,11 +206,11 @@ std::vector<std::string> OutputTableSummaryReports::summaryReports() const {
   return getImpl<detail::OutputTableSummaryReports_Impl>()->summaryReports();
 }
 
-bool OutputTableSummaryReports::addSummaryReports(std::vector<std::string> summaryReports) {
+bool OutputTableSummaryReports::addSummaryReports(const std::vector<std::string>& summaryReports) {
   return getImpl<detail::OutputTableSummaryReports_Impl>()->addSummaryReports(summaryReports);
 }
 
-boost::optional<unsigned> OutputTableSummaryReports::summaryReportIndex(std::string summaryReport) const {
+boost::optional<unsigned> OutputTableSummaryReports::summaryReportIndex(const std::string& summaryReport) const {
   return getImpl<detail::OutputTableSummaryReports_Impl>()->summaryReportIndex(summaryReport);
 }
 
