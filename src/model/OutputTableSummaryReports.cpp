@@ -191,15 +191,15 @@ IddObjectType OutputTableSummaryReports::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Output_Table_SummaryReports);
 }
 
-std::vector<std::string> OutputTableSummaryReports::reportNameValues() {
+std::vector<std::string> OutputTableSummaryReports::summaryReportValues() {
   IddObject obj = IddFactory::instance().getObject(iddObjectType()).get();
   // Return IddKeyNames in extensible portion
   return getIddKeyNames(obj,
                         obj.numFields() + OS_Output_Table_SummaryReportsExtensibleFields::ReportName);
 }
 
-std::vector<std::string> OutputTableSummaryReports::validReportNameValues() {
-  return reportNameValues();
+std::vector<std::string> OutputTableSummaryReports::validSummaryReportValues() {
+  return summaryReportValues();
 }
 
 unsigned int OutputTableSummaryReports::numberofSummaryReports() const {

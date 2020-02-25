@@ -55,8 +55,8 @@ class MODEL_API OutputTableSummaryReports : public ModelObject {
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> reportNameValues();
-  static std::vector<std::string> validReportNameValues();
+  static std::vector<std::string> summaryReportValues();
+  static std::vector<std::string> validSummaryReportValues();
 
   /** @name Getters */
   //@{

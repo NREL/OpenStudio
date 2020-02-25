@@ -160,3 +160,14 @@ TEST_F(ModelFixture, OutputTableSummaryReports_Remove) {
   EXPECT_FALSE(outputTableSummaryReports.remove().empty());
   EXPECT_EQ(size, model.modelObjects().size());
 }
+
+TEST_F(ModelFixture, OutputTableSummaryReports_OtherMethods) {
+  Model model;
+  OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
+
+  ASSERT_TRUE(outputTableSummaryReports.enableAllSummaryReports());
+  EXPECT_EQ("AllSummary", outputTableSummaryReports.summaryReports()[0]);
+
+  EXPECT_TRUE(outputTableSummaryReports.summaryReportValues().size() > 0);
+  EXPECT_TRUE(outputTableSummaryReports.validSummaryReportValues().size() > 0);
+}
