@@ -37,6 +37,7 @@
 
 #include "ModelExtensibleGroup.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Output_Table_SummaryReports_FieldEnums.hxx>
 
@@ -184,6 +185,17 @@ namespace detail {
 
 IddObjectType OutputTableSummaryReports::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Output_Table_SummaryReports);
+}
+
+std::vector<std::string> OutputTableSummaryReports::reportNames() {
+  IddObject obj = IddFactory::instance().getObject(iddObjectType()).get();
+  // Return IddKeyNames in extensible portion
+  return getIddKeyNames(obj,
+                        obj.numFields() + OS_Output_Table_SummaryReportsExtensibleFields::ReportName);
+}
+
+std::vector<std::string> OutputTableSummaryReports::validReportNames() {
+  return reportNames();
 }
 
 unsigned int OutputTableSummaryReports::numberofSummaryReports() const {
