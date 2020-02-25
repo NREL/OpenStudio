@@ -41,8 +41,8 @@ namespace detail {
 
   /** OutputTableSummaryReports_Impl is a ModelObject_Impl that is the implementation class for OutputTableSummaryReports.*/
   class MODEL_API OutputTableSummaryReports_Impl : public ModelObject_Impl {
-  
-  public:
+
+   public:
 
     /** @name Constructors and Destructors */
     //@{
@@ -73,10 +73,6 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    bool removeSummaryReport(unsigned groupIndex);
-
-    void removeAllSummaryReports();
-
     std::vector<std::string> summaryReports() const;
 
     unsigned int numberofSummaryReports() const;
@@ -92,6 +88,10 @@ namespace detail {
     bool addSummaryReport(std::string summaryReport);
 
     bool addSummaryReports(const std::vector<std::string> summaryReports);
+
+    bool removeSummaryReport(unsigned groupIndex);
+
+    void removeAllSummaryReports();
 
     //@}
     /** @name Other */

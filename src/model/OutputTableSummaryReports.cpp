@@ -109,7 +109,7 @@ namespace detail {
 
   bool OutputTableSummaryReports_Impl::removeSummaryReport(unsigned groupIndex) {
     bool result;
-    
+
     unsigned int num = numberofSummaryReports();
     if (groupIndex < num) {
       getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
@@ -119,24 +119,24 @@ namespace detail {
     }
     return result;
   }
-  
+
   void OutputTableSummaryReports_Impl::removeAllSummaryReports() {
     getObject<ModelObject>().clearExtensibleGroups();
   }
 
   std::vector<std::string> OutputTableSummaryReports_Impl::summaryReports() const {
     std::vector<std::string> result;
-    
+
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
-    
+
     for (const auto & group : groups) {
       boost::optional<std::string> summaryReport = group.cast<WorkspaceExtensibleGroup>().getString(OS_Output_Table_SummaryReportsExtensibleFields::ReportName);
-      
+
       if (summaryReport) {
         result.push_back(summaryReport.get());
       }
     }
-    
+
     return result;
   }
 
@@ -145,7 +145,7 @@ namespace detail {
     for (std::string summaryReport : summaryReports) {
       addSummaryReport(summaryReport);
     }
-    return true;    
+    return true;
   }
 
   boost::optional<unsigned> OutputTableSummaryReports_Impl::summaryReportIndex(std::string summaryReport) const {
@@ -194,8 +194,8 @@ bool OutputTableSummaryReports::addSummaryReport(std::string summaryReport) {
   return getImpl<detail::OutputTableSummaryReports_Impl>()->addSummaryReport(summaryReport);
 }
 
-void OutputTableSummaryReports::removeSummaryReport(int groupIndex) {
-  getImpl<detail::OutputTableSummaryReports_Impl>()->removeSummaryReport(groupIndex);
+bool OutputTableSummaryReports::removeSummaryReport(int groupIndex) {
+  return getImpl<detail::OutputTableSummaryReports_Impl>()->removeSummaryReport(groupIndex);
 }
 
 void OutputTableSummaryReports::removeAllSummaryReports() {

@@ -83,7 +83,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_DefaultOut
   ASSERT_EQ(s, "AllSummary");
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports1) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_UserSpecified) {
   Model model;
 
   OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
@@ -92,8 +92,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports1) {
   EXPECT_TRUE(outputTableSummaryReports.addSummaryReport("SystemSummary"));
   EXPECT_TRUE(outputTableSummaryReports.addSummaryReport("AdaptiveComfortSummary"));
 
-  EXPECT_TRUE(!outputTableSummaryReports.summaryReports().empty());
-  EXPECT_EQ(4u, outputTableSummaryReports.summaryReports().size());  
+  EXPECT_EQ(4u, outputTableSummaryReports.summaryReports().size());
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
@@ -105,14 +104,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports1) {
   ASSERT_EQ(4u, idf_outputTableSummaryReport.numExtensibleGroups());
   IdfExtensibleGroup eg1 = idf_outputTableSummaryReport.extensibleGroups()[0];
   std::string s1 = eg1.getString(Output_Table_SummaryReportsExtensibleFields::ReportName).get();
-  ASSERT_EQ(s1, "ComponentSizingSummary");
+  EXPECT_EQ(s1, "ComponentSizingSummary");
   IdfExtensibleGroup eg2 = idf_outputTableSummaryReport.extensibleGroups()[1];
   std::string s2 = eg2.getString(Output_Table_SummaryReportsExtensibleFields::ReportName).get();
-  ASSERT_EQ(s2, "OutdoorAirSummary");
+  EXPECT_EQ(s2, "OutdoorAirSummary");
   IdfExtensibleGroup eg3 = idf_outputTableSummaryReport.extensibleGroups()[2];
   std::string s3 = eg3.getString(Output_Table_SummaryReportsExtensibleFields::ReportName).get();
-  ASSERT_EQ(s3, "SystemSummary");
+  EXPECT_EQ(s3, "SystemSummary");
   IdfExtensibleGroup eg4 = idf_outputTableSummaryReport.extensibleGroups()[3];
   std::string s4 = eg4.getString(Output_Table_SummaryReportsExtensibleFields::ReportName).get();
-  ASSERT_EQ(s4, "AdaptiveComfortSummary");
+  EXPECT_EQ(s4, "AdaptiveComfortSummary");
 }

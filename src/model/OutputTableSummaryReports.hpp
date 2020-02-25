@@ -53,14 +53,10 @@ class MODEL_API OutputTableSummaryReports : public ModelObject {
 
   //@}
 
-  static IddObjectType iddObjectType();  
+  static IddObjectType iddObjectType();
 
   /** @name Getters */
   //@{
-
-  void removeSummaryReport(int groupIndex);
-
-  void removeAllSummaryReports();
 
   std::vector<std::string> summaryReports() const;
 
@@ -79,15 +75,19 @@ class MODEL_API OutputTableSummaryReports : public ModelObject {
 
   bool addSummaryReports(std::vector<std::string> summaryReports);
 
+  bool removeSummaryReport(int groupIndex);
+
+  void removeAllSummaryReports();
+
   //@}
   /** @name Other */
   //@{
 
   //@}
  protected:
- 
+
   explicit OutputTableSummaryReports(Model& model);
- 
+
   /// @cond
   typedef detail::OutputTableSummaryReports_Impl ImplType;
 

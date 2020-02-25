@@ -48,19 +48,19 @@ TEST_F(ModelFixture, OutputTableSummaryReports_OutputTableSummaryReports) {
     {
       // create a model to use
       Model model;
-      
+
       // create an output table summary reports object to use
       OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
-      
+
       exit(0);
     },
     ::testing::ExitedWithCode(0),
     ""
   );
-    
+
   // create a model to use
   Model model;
-  
+
   // create an output table summary reports object to use
   OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
 
@@ -71,9 +71,9 @@ TEST_F(ModelFixture, OutputTableSummaryReports_OutputTableSummaryReports) {
 TEST_F(ModelFixture, OutputTableSummaryReports_SummaryReports) {
   Model model;
   OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
-  
+
   outputTableSummaryReports.removeAllSummaryReports();
-  
+
   EXPECT_EQ(0, outputTableSummaryReports.numberofSummaryReports());
   ASSERT_TRUE(outputTableSummaryReports.addSummaryReport("AnnualBuildingUtilityPerformanceSummary"));
   EXPECT_EQ(1, outputTableSummaryReports.numberofSummaryReports());
@@ -94,18 +94,18 @@ TEST_F(ModelFixture, OutputTableSummaryReports_SummaryReports) {
 
   outputTableSummaryReports.removeSummaryReport(1);
   EXPECT_EQ(2, outputTableSummaryReports.numberofSummaryReports());
-  
+
   // check that remaining reports moved correctly
   std::vector<std::string> summaryReports = outputTableSummaryReports.summaryReports();
   EXPECT_EQ("AnnualBuildingUtilityPerformanceSummary", summaryReports[0]);
   EXPECT_EQ("SourceEnergyEndUseComponentsSummary", summaryReports[1]);
-  
+
   // more remove checking
   outputTableSummaryReports.removeAllSummaryReports();
   EXPECT_EQ(0, outputTableSummaryReports.numberofSummaryReports());
   outputTableSummaryReports.removeSummaryReport(0);
   EXPECT_EQ(0, outputTableSummaryReports.numberofSummaryReports());
-  
+
   // check bulk-adding summary reports
   std::vector<std::string> summaryReportsToAdd;
   std::string summaryReport1 = "SurfaceShadowingSummary";

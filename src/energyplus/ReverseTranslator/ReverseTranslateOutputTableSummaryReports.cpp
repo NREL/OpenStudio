@@ -58,7 +58,7 @@ OptionalModelObject ReverseTranslator::translateOutputTableSummaryReports( const
   for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
     WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
     OptionalString summaryReport = workspaceGroup.getString(Output_Table_SummaryReportsExtensibleFields::ReportName);
-    
+
     // add the summary report
     outputTableSummaryReports.addSummaryReport(*summaryReport);
   }
