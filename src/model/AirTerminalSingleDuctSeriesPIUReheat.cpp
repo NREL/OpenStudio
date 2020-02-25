@@ -637,8 +637,20 @@ AirTerminalSingleDuctSeriesPIUReheat::AirTerminalSingleDuctSeriesPIUReheat(const
 {
   OS_ASSERT(getImpl<detail::AirTerminalSingleDuctSeriesPIUReheat_Impl>());
 
-  setFan(fan);
+  bool ok = setFan(fan);
+  if (!ok)
+  {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Fan to "
+                << fan.briefDescription() << ".");
+  }
   setReheatCoil(reheatCoil);
+  if (!ok)
+  {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s Reheat Coil to "
+                << reheatCoil.briefDescription() << ".");
+  }
 
   autosizeMaximumAirFlowRate();
   autosizeMaximumPrimaryAirFlowRate();

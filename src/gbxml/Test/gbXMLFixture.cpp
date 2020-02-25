@@ -35,13 +35,13 @@ void gbXMLFixture::SetUp() {}
 
 void gbXMLFixture::TearDown() {}
 
-void gbXMLFixture::SetUpTestCase() {
+void gbXMLFixture::SetUpTestSuite() {
   // set up logging
   openstudio::Logger::instance().standardOutLogger().disable();
   logFile = std::shared_ptr<openstudio::FileLogSink>(new openstudio::FileLogSink(openstudio::toPath("./gbXMLFixture.log")));
 }
 
-void gbXMLFixture::TearDownTestCase() {
+void gbXMLFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

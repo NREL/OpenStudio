@@ -73,10 +73,6 @@ namespace detail {
 
     std::vector<ClimateZone> getClimateZones(const std::string& institution) const;
 
-    //ClimateZone activeClimateZone() const;
-
-    //std::string activeClimateZoneValue() const;
-
     // return the parent object in the hierarchy
     virtual boost::optional<ParentObject> parent() const override;
 
@@ -90,10 +86,6 @@ namespace detail {
     //@{
 
     bool clear();
-
-    //ClimateZone setActiveClimateZone(const std::string& institution);
-
-    //ClimateZone setActiveClimateZone(const std::string& institution,unsigned year);
 
     ClimateZone setClimateZone(const std::string& institution,
                                const std::string& value);

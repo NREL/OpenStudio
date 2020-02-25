@@ -33,7 +33,7 @@
 using openstudio::FileLogSink;
 using openstudio::toPath;
 
-void IddFixture::SetUpTestCase()
+void IddFixture::SetUpTestSuite()
 {
   // set up logging
   logFile = FileLogSink(toPath("./IddFixture.log"));
@@ -53,7 +53,7 @@ void IddFixture::SetUpTestCase()
   LOG(Info, "OpenStudio IddFile load time (from IddFactory) = " << iddLoadTime);
 }
 
-void IddFixture::TearDownTestCase() {
+void IddFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

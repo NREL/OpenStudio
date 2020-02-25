@@ -46,25 +46,27 @@ class BCLFixture : public ::testing::Test {
   virtual void TearDown() override;
 
   // initialize static members
-  static void SetUpTestCase();
+  static void SetUpTestSuite();
 
   // tear down static members
-  static void TearDownTestCase();
+  static void TearDownTestSuite();
 
   // set up logging
   REGISTER_LOGGER("BCLFixture");
 
+ public:
+
+  // This is assigned in SetUp, per test, so doesn't have to be static
+  std::string prodAuthKey;
+  std::string devAuthKey;
+
   // Note: storage for static variables must be defined in a separate .cpp file
-  static std::string prodAuthKey;
-  static std::string devAuthKey;
-  static std::string defaultProdAuthKey;
-  static std::string defaultDevAuthKey;
+  const static std::string defaultProdAuthKey;
+  const static std::string defaultDevAuthKey;
   static boost::optional<openstudio::FileLogSink> logFile;
 
   // Unique path to the current test's BCL location
   openstudio::path currentLocalBCLPath;
-
-  virtual ~BCLFixture() {}
 };
 
 #endif // UTILITIES_BCL_TEST_BCLFIXTURE_HPP

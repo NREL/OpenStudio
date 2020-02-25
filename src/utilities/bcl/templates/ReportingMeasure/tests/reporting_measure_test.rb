@@ -80,13 +80,13 @@ class ReportingMeasureNameTest < Minitest::Test
     model = model.get
     model.addObjects(request_model.objects)
     model.save(model_out_path(test_name), true)
-    
+
     if ENV['OPENSTUDIO_TEST_NO_CACHE_SQLFILE']
       if File.exist?(sql_path(test_name))
         FileUtils.rm_f(sql_path(test_name))
       end
     end
-    
+
     setup_test_2(test_name, epw_path)
   end
 
@@ -94,8 +94,11 @@ class ReportingMeasureNameTest < Minitest::Test
     # create an instance of the measure
     measure = ReportingMeasureName.new
 
+    # Make an empty model
+    model = OpenStudio::Model::Model.new
+
     # get arguments and test that they are what we are expecting
-    arguments = measure.arguments()
+    arguments = measure.arguments(model)
     assert_equal(0, arguments.size)
   end
 
@@ -109,8 +112,11 @@ class ReportingMeasureNameTest < Minitest::Test
     osw = OpenStudio::WorkflowJSON.new
     runner = OpenStudio::Measure::OSRunner.new(osw)
 
+    # Make an empty model
+    model = OpenStudio::Model::Model.new
+
     # get arguments
-    arguments = measure.arguments()
+    arguments = measure.arguments(model)
     argument_map = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments)
 
     # get the energyplus output requests, this will be done automatically by OS App and PAT

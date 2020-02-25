@@ -54,14 +54,14 @@ protected:
   virtual void TearDown() override {}
 
   // initialize static members
-  static void SetUpTestCase()
+  static void SetUpTestSuite()
   {
     openstudio::path path = resourcesPath() / toPath("radiance/Daylighting/annual_day.ill");
     outFile = AnnualIlluminanceMap(path);
   }
 
   // tear down static members
-  static void TearDownTestCase() {}
+  static void TearDownTestSuite() {}
 
 public:
   // pointer to AnnualIlluminanceMap

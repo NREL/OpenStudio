@@ -29,7 +29,7 @@
 
 #include <gtest/gtest.h>
 
-#include <model/test/ModelFixture.hpp>
+#include "ModelFixture.hpp"
 
 #include "../FanSystemModel.hpp"
 #include "../FanSystemModel_Impl.hpp"
@@ -60,12 +60,28 @@
 #include "../CoilHeatingWaterToAirHeatPumpEquationFit.hpp"
 #include "../CoilCoolingDXVariableRefrigerantFlow.hpp"
 #include "../CoilHeatingDXVariableRefrigerantFlow.hpp"
-#include "../ZoneHVACWaterToAirHeatPump.hpp"
-#include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
+
+#include "../AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass.hpp"
+#include "../AirLoopHVACUnitarySystem.hpp"
+
+#include "../AirflowNetworkFan.hpp"
+
+#include "../AirTerminalSingleDuctSeriesPIUReheat.hpp"
+#include "../AirTerminalSingleDuctParallelPIUReheat.hpp"
+
+#include "../WaterHeaterHeatPump.hpp"
+#include "../WaterHeaterHeatPumpWrappedCondenser.hpp"
+
+#include "../ZoneHVACEnergyRecoveryVentilator.hpp"
 #include "../ZoneHVACFourPipeFanCoil.hpp"
+#include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../ZoneHVACPackagedTerminalHeatPump.hpp"
 #include "../ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "../ZoneHVACUnitHeater.hpp"
+#include "../ZoneHVACUnitVentilator.hpp"
+#include "../ZoneHVACWaterToAirHeatPump.hpp"
+
+// Stuff that's not supported
 #include "../ZoneHVACBaseboardConvectiveElectric.hpp"
 #include "../ZoneHVACLowTemperatureRadiantElectric.hpp"
 #include "../AirLoopHVACUnitaryHeatPumpAirToAir.hpp"
@@ -198,12 +214,12 @@ TEST_F(ModelFixture, FanSystemModel_GettersSetters) {
 
 } // End of Getter_Setters test
 
-
+// OS:AirLoopHVAC
 TEST_F(ModelFixture,FanSystemModel_addToNode)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanSystemModel fan = FanSystemModel(m);
+  FanSystemModel fan(m);
 
   AirLoopHVAC airLoop(m);
 
@@ -237,28 +253,129 @@ TEST_F(ModelFixture,FanSystemModel_addToNode)
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 }
 
-TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACWaterToAirHeatPump)
+
+/********************************************************************************************************************
+*                                        H V A C    C O M P O N E N T S                                             *
+********************************************************************************************************************/
+
+// OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass
+TEST_F(ModelFixture, FanSystemModel_containingHVACComponent_AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanSystemModel fan = FanSystemModel(m);
+  FanSystemModel fan(m);
+  CoilHeatingElectric heatingCoil(m,s);
+  CoilCoolingDXSingleSpeed coolingCoil(m);
+  AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass unitary(m,fan,coolingCoil,heatingCoil);
 
-  CoilHeatingWaterToAirHeatPumpEquationFit heatingCoil(m);
-  CoilCoolingWaterToAirHeatPumpEquationFit coolingCoil(m);
-  CoilHeatingElectric supplementalHeatingCoil(m, s);
+  boost::optional<HVACComponent> component = fan.containingHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), unitary.handle());
+}
 
-  ZoneHVACWaterToAirHeatPump zoneHVACWaterToAirHeatPump(m, s, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
+// OS:AirLoopHVAC:UnitarySystem
+TEST_F(ModelFixture, FanSystemModel_containingHVACComponent_AirLoopHVACUnitarySystem)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  AirLoopHVACUnitarySystem unitary(m);
+  FanSystemModel fan(m);
+  CoilHeatingElectric heatingCoil(m);
+  CoilHeatingElectric suppHeatingCoil(m);
+  CoilCoolingWater coolingCoil(m);
+
+  EXPECT_TRUE(unitary.setSupplyFan(fan));
+  boost::optional<HVACComponent> component = fan.containingHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), unitary.handle());
+}
+
+// OS:AirTerminal:SingleDuct:SeriesPIU:Reheat
+TEST_F(ModelFixture, FanSystemModel_containingHVACComponent_AirTerminalSingleDuctSeriesPIUReheat)
+{
+  Model m;
+  FanSystemModel fan(m);
+  CoilHeatingElectric reheatCoil(m);
+  AirTerminalSingleDuctSeriesPIUReheat piu(m, fan, reheatCoil);
+
+  boost::optional<HVACComponent> component = fan.containingHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), piu.handle());
+}
+
+// OS:AirTerminal:SingleDuct:ParallelPIU:Reheat
+TEST_F(ModelFixture, FanSystemModel_containingHVACComponent_AirTerminalSingleDuctParallelPIUReheat)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanSystemModel fan(m);
+  CoilHeatingElectric reheatCoil(m);
+  AirTerminalSingleDuctParallelPIUReheat piu(m, s, fan, reheatCoil);
+
+  boost::optional<HVACComponent> component = fan.containingHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), piu.handle());
+}
+
+
+/********************************************************************************************************************
+*                                 Z O N E    H V A C    C O M P O N E N T S                                         *
+********************************************************************************************************************/
+
+//OS:WaterHeater:HeatPump
+TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_WaterHeaterHeatPump)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanSystemModel fan(m);
+
+  WaterHeaterHeatPump hpwh(m);
+
+  EXPECT_TRUE(hpwh.setFan(fan));
 
   boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
   ASSERT_TRUE(component);
-  EXPECT_EQ(component.get().handle(), zoneHVACWaterToAirHeatPump.handle());
+  EXPECT_EQ(component.get().handle(), hpwh.handle());
+}
+//OS:WaterHeater:HeatPump:WrappedCondenser
+TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_WaterHeaterHeatPumpWrappedCondenser)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanSystemModel fan(m);
+
+  WaterHeaterHeatPumpWrappedCondenser hpwh(m);
+
+  EXPECT_TRUE(hpwh.setFan(fan));
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), hpwh.handle());
 }
 
+
+// OS:ZoneHVAC:EnergyRecoveryVentilator
+TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACEnergyRecoveryVentilator)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanSystemModel fan(m);
+
+  ZoneHVACEnergyRecoveryVentilator zoneHVACEnergyRecoveryVentilator(m);
+
+  EXPECT_TRUE(zoneHVACEnergyRecoveryVentilator.setSupplyAirFan(fan));
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), zoneHVACEnergyRecoveryVentilator.handle());
+}
+
+// OS:ZoneHVAC:FourPipeFanCoil
 TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACFourPipeFanCoil)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanSystemModel fan = FanSystemModel(m);
+  FanSystemModel fan(m);
 
   CoilHeatingWater heatingCoil(m, s);
   CoilCoolingWater coolingCoil(m, s);
@@ -270,20 +387,14 @@ TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACFourPipeF
   EXPECT_EQ(component.get().handle(), zoneHVACFourPipeFanCoil.handle());
 }
 
+// OS:ZoneHVAC:PackagedTerminalAirConditioner
 TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACPackagedTerminalAirConditioner)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanSystemModel fan = FanSystemModel(m);
-
-  CurveBiquadratic c1(m);
-  CurveQuadratic c2(m);
-  CurveBiquadratic c3(m);
-  CurveQuadratic c4(m);
-  CurveQuadratic c5(m);
-
-  CoilHeatingWater heatingCoil(m, s);
-  CoilCoolingDXSingleSpeed coolingCoil(m, s, c1, c2, c3, c4, c5);
+  FanSystemModel fan(m);
+  CoilHeatingDXSingleSpeed heatingCoil(m);
+  CoilCoolingDXSingleSpeed coolingCoil(m);
 
   ZoneHVACPackagedTerminalAirConditioner zoneHVACPackagedTerminalAirConditioner(m, s, fan, heatingCoil, coolingCoil);
 
@@ -292,21 +403,15 @@ TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACPackagedT
   EXPECT_EQ(component.get().handle(), zoneHVACPackagedTerminalAirConditioner.handle());
 }
 
+// OS:ZoneHVAC:PackagedTerminalHeatPump
 TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACPackagedTerminalHeatPump)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanSystemModel fan = FanSystemModel(m);
-
-  CurveBiquadratic c1(m);
-  CurveQuadratic c2(m);
-  CurveBiquadratic c3(m);
-  CurveQuadratic c4(m);
-  CurveQuadratic c5(m);
-
-  CoilHeatingDXSingleSpeed heatingCoil(m, s, c1, c2, c3, c4, c5);
-  CoilCoolingDXSingleSpeed coolingCoil(m, s, c1, c2, c3, c4, c5);
-  CoilHeatingElectric supplementalHeatingCoil(m, s);
+  FanSystemModel fan(m);
+  CoilHeatingDXSingleSpeed heatingCoil(m);
+  CoilCoolingDXSingleSpeed coolingCoil(m);
+  CoilHeatingElectric supplementalHeatingCoil(m);
 
   ZoneHVACPackagedTerminalHeatPump zoneHVACPackagedTerminalHeatPump(m, s, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
 
@@ -315,22 +420,7 @@ TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACPackagedT
   EXPECT_EQ(component.get().handle(), zoneHVACPackagedTerminalHeatPump.handle());
 }
 
-TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACUnitHeater)
-{
-  Model m;
-  Schedule s = m.alwaysOnDiscreteSchedule();
-  FanSystemModel fan = FanSystemModel(m);
-
-  CoilHeatingWater heatingCoil(m, s);
-
-  ZoneHVACUnitHeater zoneHVACUnitHeater(m, s, fan, heatingCoil);
-
-  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
-  EXPECT_TRUE(component);
-  EXPECT_EQ(component.get().handle(), zoneHVACUnitHeater.handle());
-
-}
-
+// OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow
 TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACTerminalUnitVariableRefrigerantFlow)
 {
   Model m;
@@ -346,11 +436,64 @@ TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACTerminalU
   EXPECT_EQ(component.get().handle(), zoneHVACTerminalUnitVariableRefrigerantFlow.handle());
 }
 
+// OS:ZoneHVAC:UnitHeater
+TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACUnitHeater)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanSystemModel fan(m);
+
+  CoilHeatingWater heatingCoil(m, s);
+
+  ZoneHVACUnitHeater zoneHVACUnitHeater(m, s, fan, heatingCoil);
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+  EXPECT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), zoneHVACUnitHeater.handle());
+}
+
+// OS:ZoneHVAC:UnitVentilator
+TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACUnitVentilator)
+{
+  Model m;
+  FanSystemModel fan(m);
+
+  ZoneHVACUnitVentilator zoneHVACUnitVentilator(m,fan);
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+  EXPECT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), zoneHVACUnitVentilator.handle());
+}
+
+
+// OS:ZoneHVAC:WaterToAirHeatPump
+TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACWaterToAirHeatPump)
+{
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+  FanSystemModel fan(m);
+
+  CoilHeatingWaterToAirHeatPumpEquationFit heatingCoil(m);
+  CoilCoolingWaterToAirHeatPumpEquationFit coolingCoil(m);
+  CoilHeatingElectric supplementalHeatingCoil(m, s);
+
+  ZoneHVACWaterToAirHeatPump zoneHVACWaterToAirHeatPump(m, s, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
+
+  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
+  ASSERT_TRUE(component);
+  EXPECT_EQ(component.get().handle(), zoneHVACWaterToAirHeatPump.handle());
+}
+
+/********************************************************************************************************************
+*                                 N O T    S U P P O R T E D                                                        *
+********************************************************************************************************************/
+
+// Obviously, this shouldn't do!
 TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACBaseboardConvectiveElectric)
 {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  FanSystemModel fan = FanSystemModel(m);
+  FanSystemModel fan(m);
 
   ZoneHVACBaseboardConvectiveElectric zoneHVACBaseboardConvectiveElectric(m);
 
@@ -358,18 +501,7 @@ TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACBaseboard
   EXPECT_FALSE(component);
 }
 
-TEST_F(ModelFixture,FanSystemModel_containingZoneHVACComponent_ZoneHVACLowTemperatureRadiantElectric)
-{
-  Model m;
-  Schedule s = m.alwaysOnDiscreteSchedule();
-  FanSystemModel fan = FanSystemModel(m);
-
-  ZoneHVACLowTemperatureRadiantElectric zoneHVACLowTemperatureRadiantElectric(m, s, s);
-
-  boost::optional<ZoneHVACComponent> component = fan.containingZoneHVACComponent();
-  EXPECT_FALSE(component);
-}
-
+// Not supported by E+
 TEST_F(ModelFixture,FanSystemModel_containingHVACComponent_AirLoopHVACUnitaryHeatPumpAirToAir)
 {
   Model m;
@@ -394,7 +526,7 @@ TEST_F(ModelFixture,FanSystemModel_containingHVACComponent_AirLoopHVACUnitaryHea
 TEST_F(ModelFixture, FanSystemModel_Clone_SameModel)
 {
   Model m;
-  FanSystemModel fan = FanSystemModel(m);
+  FanSystemModel fan(m);
   EXPECT_TRUE(fan.setDesignPressureRise(999.0));
   EXPECT_TRUE(fan.setFanTotalEfficiency(0.99));
   EXPECT_TRUE(fan.setDesignMaximumAirFlowRate(999.0));
@@ -423,7 +555,7 @@ TEST_F(ModelFixture, FanSystemModel_Clone_SameModel)
 TEST_F(ModelFixture, FanSystemModel_Clone_OtherModel)
 {
   Model m;
-  FanSystemModel fan = FanSystemModel(m);
+  FanSystemModel fan(m);
   EXPECT_TRUE(fan.setDesignPressureRise(999.0));
   EXPECT_TRUE(fan.setFanTotalEfficiency(0.99));
   EXPECT_TRUE(fan.setDesignMaximumAirFlowRate(999.0));
@@ -480,7 +612,7 @@ TEST_F(ModelFixture, FanSystemModelSpeed) {
 TEST_F(ModelFixture, FanSystemModel_Speeds)
 {
   Model m;
-  FanSystemModel fan = FanSystemModel(m);
+  FanSystemModel fan(m);
 
   // If no extensible groups, same as having one speed (= the design one)
   EXPECT_EQ(0, fan.numExtensibleGroups());

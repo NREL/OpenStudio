@@ -182,26 +182,28 @@ namespace detail {
         //loop through all the surfaces in this space
         for (const Surface& surface : space.surfaces()){
 
-          //skip surfaces whose construction is not internal source
-          if(boost::optional<ConstructionWithInternalSource> construction = surface.construction()->optionalCast<ConstructionWithInternalSource>()){
+          //skip surfaces who do not have a construction, or whose construction is not internal source
+          if (boost::optional<ConstructionBase> _constructionBase = surface.construction()) {
+            if(boost::optional<ConstructionWithInternalSource> _construction = _constructionBase->optionalCast<ConstructionWithInternalSource>()){
 
-            //TODO change this to not optional when idd change is made
-            //get the strings for requested surface types and current surface type
-            std::string surfGrpName = this->radiantSurfaceType().get();
-            std::string surfaceType = surface.surfaceType();
+              //TODO change this to not optional when idd change is made
+              //get the strings for requested surface types and current surface type
+              std::string surfGrpName = this->radiantSurfaceType().get();
+              std::string surfaceType = surface.surfaceType();
 
-            //if the current surface is of the type requested, add it to the vector of surfaces
-            if(istringEqual("RoofCeiling", surfaceType) && istringEqual("Ceilings",surfGrpName)){
-              surfaces.push_back(surface);
-            }
-            else if(istringEqual("Floor", surfaceType) && istringEqual("Floors",surfGrpName)){
-              surfaces.push_back(surface);
-            }
-            else if((istringEqual("Floor", surfaceType) || istringEqual("RoofCeiling", surfaceType)) && istringEqual("CeilingsandFloors",surfGrpName)){
-              surfaces.push_back(surface);
-            }
-            else if(istringEqual("AllSurfaces",surfGrpName)){
-              surfaces.push_back(surface);
+              //if the current surface is of the type requested, add it to the vector of surfaces
+              if(istringEqual("RoofCeiling", surfaceType) && istringEqual("Ceilings",surfGrpName)){
+                surfaces.push_back(surface);
+              }
+              else if(istringEqual("Floor", surfaceType) && istringEqual("Floors",surfGrpName)){
+                surfaces.push_back(surface);
+              }
+              else if((istringEqual("Floor", surfaceType) || istringEqual("RoofCeiling", surfaceType)) && istringEqual("CeilingsandFloors",surfGrpName)){
+                surfaces.push_back(surface);
+              }
+              else if(istringEqual("AllSurfaces",surfGrpName)){
+                surfaces.push_back(surface);
+              }
             }
           }
         }

@@ -42,7 +42,7 @@ void ModelFixture::SetUp() {}
 
 void ModelFixture::TearDown() {}
 
-void ModelFixture::SetUpTestCase() {
+void ModelFixture::SetUpTestSuite() {
   // set up logging
   logFile = FileLogSink(toPath("./ModelTestFixture.log"));
   logFile->setLogLevel(Debug);
@@ -52,7 +52,7 @@ void ModelFixture::SetUpTestCase() {
   openstudio::filesystem::create_directory(resourcesPath()/toPath("model"));
 }
 
-void ModelFixture::TearDownTestCase()
+void ModelFixture::TearDownTestSuite()
 {
   logFile->disable();
 }
