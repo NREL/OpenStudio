@@ -85,6 +85,8 @@ A number of API-breaking changes have been implemented in OpenStudio 3.0:
 * #3875 - Add OutputDiagnostics, OutputDebuggingData and OutputJSON to model SDK
 * **TODO @joseph-robertson to add notes about #3853 (MasslessOpaqueMaterial)**
 * **TODO: GEM STUFF? Perhaps that could be in its own paragraph though. Topics: Native Gems, Ruby 2.5.x, Bundler >= 2.1.x**
+* #3796 - Reporting Measure: you can now pass `model` to the `arguments()` method of a reporting measure, for easier setup of output variables.
+
 
 ## Minor changes:
 
