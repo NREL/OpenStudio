@@ -155,7 +155,7 @@ namespace detail {
     auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
     auto it = std::find_if(egs.begin(), egs.end(),
       [&](const WorkspaceExtensibleGroup& eg) {
-        return (eg.getField(OS_Output_Table_SummaryReportsExtensibleFields::ReportName).get() == summaryReport);
+        return openstudio::istringEqual(summaryReport, eg.getField(OS_Output_Table_SummaryReportsExtensibleFields::ReportName).get());
       });
 
     // If found, we compute the index by using std::distance between the start of vector and the iterator returned by std::find_if
