@@ -50,9 +50,7 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateOutputTableSummaryReports( OutputTableSummaryReports & modelObject )
 {
-  IdfObject idfObject(openstudio::IddObjectType::Output_Table_SummaryReports);
-
-  m_idfObjects.push_back(idfObject);
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Output_Table_SummaryReports, modelObject);
 
   std::vector<std::string> summaryReports = modelObject.summaryReports();
   if (!summaryReports.empty()) {

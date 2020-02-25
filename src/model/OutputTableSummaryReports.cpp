@@ -122,7 +122,7 @@ namespace detail {
   }
 
   bool OutputTableSummaryReports_Impl::enableAllSummaryReport() {
-    addSummaryReport("AllSummary");
+    return addSummaryReport("AllSummary");
   }
 
   void OutputTableSummaryReports_Impl::removeAllSummaryReports() {

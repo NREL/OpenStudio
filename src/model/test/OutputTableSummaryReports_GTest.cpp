@@ -143,13 +143,11 @@ TEST_F(ModelFixture, OutputTableSummaryReports_Clone)
   ASSERT_EQ(1, outputTableSummaryReportsClone.numberofSummaryReports());
   EXPECT_EQ("ClimaticDataSummary", outputTableSummaryReportsClone.summaryReports()[0]);
 
-
   // clone it into a different model
   Model model2;
   OutputTableSummaryReports outputTableSummaryReportsClone2 = outputTableSummaryReports.clone(model2).cast<OutputTableSummaryReports>();
   ASSERT_EQ(1, outputTableSummaryReportsClone2.numberofSummaryReports());
   EXPECT_EQ("ClimaticDataSummary", outputTableSummaryReportsClone2.summaryReports()[0]);
-
 }
 
 // check that remove works
@@ -165,7 +163,7 @@ TEST_F(ModelFixture, OutputTableSummaryReports_OtherMethods) {
   Model model;
   OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
 
-  ASSERT_TRUE(outputTableSummaryReports.enableAllSummaryReports());
+  ASSERT_TRUE(outputTableSummaryReports.enableAllSummaryReport());
   EXPECT_EQ("AllSummary", outputTableSummaryReports.summaryReports()[0]);
 
   EXPECT_TRUE(outputTableSummaryReports.summaryReportValues().size() > 0);

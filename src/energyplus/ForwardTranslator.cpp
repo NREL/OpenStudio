@@ -556,12 +556,12 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     translateAndMapModelObject(*runPeriod);
 
     // ensure that output table summary reports exists
-    boost::optional<model::OutputTableSummaryReports> outputTableSummaryReports = model.getOptionalUniqueModelObject<model::OutputTableSummaryReports>();
-    if (!outputTableSummaryReports) {
-      outputTableSummaryReports = model.getUniqueModelObject<model::OutputTableSummaryReports>();
+    boost::optional<model::OutputTableSummaryReports> optOutputTableSummaryReports = model.getOptionalUniqueModelObject<model::OutputTableSummaryReports>();
+    if (!optOutputTableSummaryReports) {
+      OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<model::OutputTableSummaryReports>();
       outputTableSummaryReports.addSummaryReport("AllSummary");
+      translateAndMapModelObject(outputTableSummaryReports);
     }
-    translateAndMapModelObject(*outputTableSummaryReports);
 
     // add a global geometry rules object
     IdfObject globalGeometryRules(openstudio::IddObjectType::GlobalGeometryRules);
@@ -3498,6 +3498,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Output_DebuggingData);
   result.push_back(IddObjectType::OS_Output_Diagnostics);
   result.push_back(IddObjectType::OS_Output_JSON);
+  result.push_back(IddObjectType::OS_Output_Table_SummaryReports);
   result.push_back(IddObjectType::OS_PerformancePrecisionTradeoffs);
 
   result.push_back(IddObjectType::OS_Site);
