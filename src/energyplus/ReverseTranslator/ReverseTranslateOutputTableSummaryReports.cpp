@@ -63,6 +63,11 @@ OptionalModelObject ReverseTranslator::translateOutputTableSummaryReports( const
     outputTableSummaryReports.addSummaryReport(*summaryReport);
   }
 
+  std::vector<std::string> summaryReports = outputTableSummaryReports.summaryReports();
+  if (summaryReports.empty()) {
+    return boost::none;
+  }
+
   return outputTableSummaryReports;
 }
 

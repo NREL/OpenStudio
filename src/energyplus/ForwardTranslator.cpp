@@ -556,11 +556,12 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     translateAndMapModelObject(*runPeriod);
 
     // ensure that output table summary reports exists
-    boost::optional<model::OutputTableSummaryReports> summaryReports = model.getOptionalUniqueModelObject<model::OutputTableSummaryReports>();
-    if (!summaryReports){
-      summaryReports = model.getUniqueModelObject<model::OutputTableSummaryReports>();
+    boost::optional<model::OutputTableSummaryReports> outputTableSummaryReports = model.getOptionalUniqueModelObject<model::OutputTableSummaryReports>();
+    if (!outputTableSummaryReports) {
+      outputTableSummaryReports = model.getUniqueModelObject<model::OutputTableSummaryReports>();
+      outputTableSummaryReports.addSummaryReport("AllSummary");
     }
-    translateAndMapModelObject(*summaryReports);
+    translateAndMapModelObject(*outputTableSummaryReports);
 
     // add a global geometry rules object
     IdfObject globalGeometryRules(openstudio::IddObjectType::GlobalGeometryRules);

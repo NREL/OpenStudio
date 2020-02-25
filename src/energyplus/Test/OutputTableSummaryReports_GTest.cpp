@@ -66,7 +66,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_NoOutputTa
   ASSERT_EQ(s, "AllSummary");
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_DefaultOutputTableSummaryReports) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_NoAddedSummaryReports) {
   Model model;
 
   OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
@@ -78,10 +78,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_DefaultOut
   ASSERT_EQ(1u, idf_outputTableSummaryReports.size());
   WorkspaceObject idf_outputTableSummaryReport(idf_outputTableSummaryReports[0]);
 
-  ASSERT_EQ(1u, idf_outputTableSummaryReport.numExtensibleGroups());
-  IdfExtensibleGroup eg = idf_outputTableSummaryReport.extensibleGroups()[0];
-  std::string s = eg.getString(Output_Table_SummaryReportsExtensibleFields::ReportName).get();
-  ASSERT_EQ(s, "AllSummary");
+  ASSERT_EQ(0u, idf_outputTableSummaryReport.numExtensibleGroups());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_UserSpecified) {
