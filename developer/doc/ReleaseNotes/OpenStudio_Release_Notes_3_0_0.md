@@ -86,7 +86,13 @@ A number of API-breaking changes have been implemented in OpenStudio 3.0:
 * **TODO @joseph-robertson to add notes about #3853 (MasslessOpaqueMaterial)**
 * **TODO: GEM STUFF? Perhaps that could be in its own paragraph though. Topics: Native Gems, Ruby 2.5.x, Bundler >= 2.1.x**
 * #3796 - Reporting Measure: you can now pass `model` to the `arguments()` method of a reporting measure, for easier setup of output variables.
-
+* #3847 - Chiller:Electric:EIR node API refactor, ChillerAbsorption/ChillerAbsorption tertiary node refactor
+    * `ChillerElectricEIR::designHeatRecoveryWaterFlowRate()` now returns an `OptionalDouble` instead of a `double` since it can be now be autosized
+    * `ChillerElectricEIR` no longer has getter/setters that set/return std::string for Node Names. It also wraps two new E+ fields: "Condenser Heat Recovery Relative Capacity Fraction", "Heat Recovery Inlet High Temperature Limit Schedule Name" and "Heat Recovery Leaving Temperature Setpoint Node Name"
+    * Added missing Tertiary nodes for `ChillerAbsorption`
+    * For `ChillerAbsoprtion`, `ChillerAbsoprtionIndirect`, `ChillerElectricEIR`: 
+        * `addToTertiaryNode` overriden to only allow supply side connection.
+        * `addToNode` overriden to connect to tertiary loop if primary loop is already connected, and Node to connect to is on the supply side of a different plant loop than the current primary loop
 
 ## Minor changes:
 
