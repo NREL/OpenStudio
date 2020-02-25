@@ -1282,6 +1282,7 @@ namespace detail {
       bool test = this->setSunExposure("SunExposed", driverMethod);
       OS_ASSERT(test);
     }else if (istringEqual("Surface", this->outsideBoundaryCondition()) ||
+              istringEqual("OtherSideCoefficients", this->outsideBoundaryCondition()) ||
               istringEqual("Adiabatic", this->outsideBoundaryCondition()) ||
               istringEqual("Ground", this->outsideBoundaryCondition()) ||
               istringEqual("GroundFCfactorMethod", this->outsideBoundaryCondition()) ||
@@ -1319,6 +1320,7 @@ namespace detail {
       bool test = this->setWindExposure("WindExposed", driverMethod);
       OS_ASSERT(test);
     } else if (istringEqual("Surface", this->outsideBoundaryCondition()) ||
+               istringEqual("OtherSideCoefficients", this->outsideBoundaryCondition()) ||
                istringEqual("Adiabatic", this->outsideBoundaryCondition()) ||
                istringEqual("Ground", this->outsideBoundaryCondition()) ||
                istringEqual("GroundFCfactorMethod", this->outsideBoundaryCondition()) ||
