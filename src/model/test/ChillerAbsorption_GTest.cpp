@@ -180,6 +180,9 @@ TEST_F(ModelFixture, ChillerAbsorption_PlantLoopConnections_addToNodeOverride)
   EXPECT_EQ(generatorLoop, chiller.generatorLoop().get());
   // This should have switched the generator heat source type to "HotWater"
   EXPECT_EQ("HotWater", chiller.generatorHeatSourceType());
+  // And Disallow switching to "Steam"
+  EXPECT_FALSE(chiller.setGeneratorHeatSourceType("Steam"));
+  EXPECT_EQ("HotWater", chiller.generatorHeatSourceType());
 
   // Have a condenser loop and a generator loop: should reconnect the condenser loop
   // Try with addToNode instead
