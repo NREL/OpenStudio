@@ -450,6 +450,7 @@ namespace detail {
         if (ok) {
           LOG(Info, "Setting Generator Heat Source Type to 'HotWater' for " << briefDescription());
           this->setGeneratorHeatSourceType("HotWater");
+          return true;
         }
       } else {
          LOG(Info, "Tertiary Loop (Generator Loop) connections can only be placed on the Demand side (of a Heating Loop), for " << briefDescription());
