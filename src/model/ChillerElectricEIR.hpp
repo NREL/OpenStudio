@@ -170,15 +170,6 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   std::string endUseSubcategory() const;
 
-  /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
-  boost::optional<PlantLoop> chilledWaterLoop() const;
-
-  /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
-  boost::optional<PlantLoop> condenserWaterLoop() const;
-
-  /** Convenience Function to return the Heat Recovery Loop **/
-  boost::optional<PlantLoop> heatRecoveryLoop() const;
-
   //@}
   /** @name Setters */
   //@{
@@ -287,11 +278,24 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
+  //@}
+  /** @name Other */
+  //@{
+  //
   boost::optional<double> autosizedReferenceCapacity() const ;
 
   boost::optional<double> autosizedReferenceChilledWaterFlowRate() const ;
 
   boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
+
+  /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
+  boost::optional<PlantLoop> chilledWaterLoop() const;
+
+  /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
+  boost::optional<PlantLoop> condenserWaterLoop() const;
+
+  /** Convenience Function to return the Heat Recovery Loop (chiller on demand side - tertiary) **/
+  boost::optional<PlantLoop> heatRecoveryLoop() const;
 
   //@}
  protected:

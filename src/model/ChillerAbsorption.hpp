@@ -188,7 +188,7 @@ class MODEL_API ChillerAbsorption : public WaterToWaterComponent {
   /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
   boost::optional<PlantLoop> condenserWaterLoop() const;
 
-  /** Convenience Function to return the Generator Loop (chiller on the demand side) **/
+  /** Convenience Function to return the Generator Loop (chiller on the demand side  - tertiary) **/
   boost::optional<PlantLoop> generatorLoop() const;
 
   //@}

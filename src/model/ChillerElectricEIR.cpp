@@ -685,19 +685,17 @@ namespace detail {
 
     boost::optional<PlantLoop> t_plantLoop = node.plantLoop();
 
-    // If trying to add to a node that is on the supply side of a plant loop
+    // If trying to add to a node that is on the demand side of a plant loop
     if( t_plantLoop ) {
-      if( t_plantLoop->supplyComponent(node.handle()) ) {
-        // If there is already a chilled water Plant Loop
-        boost::optional<PlantLoop> chwLoop = this->chilledWaterLoop();
-        if (chwLoop) {
+      if( t_plantLoop->demandComponent(node.handle()) ) {
+        // If there is already a condenser water Plant Loop
+        if (boost::optional<PlantLoop> cndLoop = this->condenserWaterLoop()) {
           // And it's not the same as the node's loop
-          if (t_plantLoop.get() != chwLoop.get()) {
-            // And if there is no heatRecoveryLoop (tertiary)
-            boost::optional<PlantLoop> hrLoop = this->heatRecoveryLoop();
-            if (!hrLoop) {
+          if (t_plantLoop.get() != cndLoop.get()) {
+            // And if there is no generator loop (tertiary)
+            if (!this->heatRecoveryLoop().is_initialized()) {
               // Then try to add it to the tertiary one
-              LOG(Warn, "Calling addToTertiaryNode to connect it to the tertiary (=heat recovery) loop for " << briefDescription());
+              LOG(Warn, "Calling addToTertiaryNode to connect it to the tertiary (=Heat Recovery Loop) loop for " << briefDescription());
               return this->addToTertiaryNode(node);
             }
           }
@@ -721,14 +719,14 @@ namespace detail {
     auto _model = node.model();
     auto t_plantLoop = node.plantLoop();
 
-    // Only accept adding to a node that is on a supply side of a plant loop
+    // Only accept adding to a node that is on a demand side of a plant loop
     // Since tertiary here = heat recovery loop (heating)
     if( t_plantLoop ) {
-      if( t_plantLoop->supplyComponent(node.handle()) ) {
+      if( t_plantLoop->demandComponent(node.handle()) ) {
         // Call base class method which accepts both supply and demand
         return WaterToWaterComponent_Impl::addToTertiaryNode(node);
       } else {
-         LOG(Info, "Cannot connect the tertiary (=heat recovery) loop to the demand side for " << briefDescription());
+         LOG(Info, "Tertiary Loop (Heat Recovery Loop) connections can only be placed on the Demand side (of a Heating Loop), for " << briefDescription());
       }
     }
     return false;
