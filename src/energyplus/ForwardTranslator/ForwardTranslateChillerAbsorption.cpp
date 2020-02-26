@@ -91,6 +91,14 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerAbsorption( Chille
     }
   }
 
+  if( auto mo = modelObject.tertiaryInletModelObject() ) {
+    idfObject.setString(Chiller_AbsorptionFields::GeneratorInletNodeName,mo->name().get());
+  }
+
+  if( auto mo = modelObject.tertiaryOutletModelObject() ) {
+    idfObject.setString(Chiller_AbsorptionFields::GeneratorOutletNodeName,mo->name().get());
+  }
+
   if( modelObject.isNominalCapacityAutosized() ) {
     idfObject.setString(Chiller_AbsorptionFields::NominalCapacity,"Autosize");
   } else if( auto value = modelObject.nominalCapacity() ) {
