@@ -124,15 +124,6 @@ class MODEL_API ChillerAbsorptionIndirect : public WaterToWaterComponent {
 
   double sizingFactor() const;
 
-  /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
-  boost::optional<PlantLoop> chilledWaterLoop() const;
-
-  /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
-  boost::optional<PlantLoop> condenserWaterLoop() const;
-
-  /** Convenience Function to return the Generator Loop **/
-  boost::optional<PlantLoop> generatorLoop() const;
-
   //@}
   /** @name Setters */
   //@{
@@ -209,7 +200,14 @@ class MODEL_API ChillerAbsorptionIndirect : public WaterToWaterComponent {
 
   boost::optional<double> autosizedDesignGeneratorFluidFlowRate() const ;
 
+  /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
+  boost::optional<PlantLoop> chilledWaterLoop() const;
 
+  /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
+  boost::optional<PlantLoop> condenserWaterLoop() const;
+
+  /** Convenience Function to return the Generator Loop (chiller on the demand side) **/
+  boost::optional<PlantLoop> generatorLoop() const;
 
   //@}
  protected:
