@@ -37,6 +37,8 @@
 
 #include "../SiteWaterMainsTemperature.hpp"
 #include "../SiteWaterMainsTemperature_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 
 using namespace openstudio::model;
 
@@ -47,7 +49,7 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_SiteWaterMainsTemperature)
   ASSERT_EXIT (
     {
       // create a model to use
-      Model m;
+      Model model;
 
       // create a site water mains temperature object to use
       SiteWaterMainsTemperature siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
@@ -64,10 +66,10 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_SiteWaterMainsTemperature)
   // create a site water mains temperature object to use
   SiteWaterMainsTemperature siteWater = model.getUniqueModelObject<SiteWaterMainsTemperature>();
 
-  ASSERT_EQ("CorrelationFromWeatherFile", siteWater.calculationMethod());
-  ASSERT_FALSE(siteWater.temperatureSchedule());
-  ASSERT_FALSE(siteWater.annualAverageOutdoorAirTemperature());
-  ASSERT_FALSE(siteWater.maximumDifferenceInMonthlyAverageOutdoorAirTemperatures());
+  EXPECT_EQ("CorrelationFromWeatherFile", siteWater.calculationMethod());
+  EXPECT_FALSE(siteWater.temperatureSchedule());
+  EXPECT_FALSE(siteWater.annualAverageOutdoorAirTemperature());
+  EXPECT_FALSE(siteWater.maximumDifferenceInMonthlyAverageOutdoorAirTemperatures());
 }
 
 // test setting and getting
@@ -84,11 +86,11 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_SetGetFields) {
   siteWater.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(60);
   
   // check the fields
-  ASSERT_EQ("Correlation", siteWater.calculationMethod());
+  EXPECT_EQ("Correlation", siteWater.calculationMethod());
   ASSERT_TRUE(siteWater.annualAverageOutdoorAirTemperature());
-  ASSERT_EQ(50, siteWater.annualAverageOutdoorAirTemperature().get());
+  EXPECT_EQ(50, siteWater.annualAverageOutdoorAirTemperature().get());
   ASSERT_TRUE(siteWater.maximumDifferenceInMonthlyAverageOutdoorAirTemperatures());
-  ASSERT_EQ(60, siteWater.maximumDifferenceInMonthlyAverageOutdoorAirTemperatures().get());
+  EXPECT_EQ(60, siteWater.maximumDifferenceInMonthlyAverageOutdoorAirTemperatures().get());
 
   // reset them one by one
   siteWater.resetAnnualAverageOutdoorAirTemperature();
@@ -98,17 +100,20 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_SetGetFields) {
   EXPECT_FALSE(siteWater.maximumDifferenceInMonthlyAverageOutdoorAirTemperatures());
 
   // check more
-  Schedule s = m.alwaysOnDiscreteSchedule();
-  siteWater.setCalculationSchedule(s);
-  ASSERT_EQ("Schedule", siteWater.calculationMethod());
+  ScheduleConstant schedule(model);
+  schedule.setValue(21.111);
+  siteWater.setTemperatureSchedule(schedule);
+  EXPECT_EQ("Schedule", siteWater.calculationMethod());
   ASSERT_TRUE(siteWater.temperatureSchedule());
-  ASSERT_EQ(s.name().get(), siteWater.temperatureSchedule().get().name());
+  EXPECT_EQ(schedule.name().get(), siteWater.temperatureSchedule().get().name());
   siteWater.setCalculationMethod("Correlation");
-  ASSERT_TRUE(siteWater.annualAverageOutdoorAirTemperature());
-  ASSERT_TRUE(siteWater.maximumDifferenceInMonthlyAverageOutdoorAirTemperatures());
+  EXPECT_TRUE(siteWater.temperatureSchedule());
+  EXPECT_FALSE(siteWater.annualAverageOutdoorAirTemperature());
+  EXPECT_FALSE(siteWater.maximumDifferenceInMonthlyAverageOutdoorAirTemperatures());
   siteWater.setCalculationMethod("CorrelationFromWeatherFile");
-  ASSERT_FALSE(siteWater.annualAverageOutdoorAirTemperature());
-  ASSERT_FALSE(siteWater.maximumDifferenceInMonthlyAverageOutdoorAirTemperatures());
+  EXPECT_TRUE(siteWater.temperatureSchedule());
+  EXPECT_FALSE(siteWater.annualAverageOutdoorAirTemperature());
+  EXPECT_FALSE(siteWater.maximumDifferenceInMonthlyAverageOutdoorAirTemperatures());
 }
 
 // test cloning it
@@ -125,14 +130,16 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_Clone)
 
   // clone it into the same model
   SiteWaterMainsTemperature siteWaterClone = siteWater.clone(model).cast<SiteWaterMainsTemperature>();
+  // UniqueModelObject: should be the same as the original
+  EXPECT_EQ(siteWater, siteWaterClone);
   ASSERT_TRUE(siteWaterClone.annualAverageOutdoorAirTemperature());
-  ASSERT_TRUE(45, siteWaterClone.annualAverageOutdoorAirTemperature.get());
+  EXPECT_EQ(45, siteWaterClone.annualAverageOutdoorAirTemperature().get());
 
   // clone it into a different model
   Model model2;
   SiteWaterMainsTemperature siteWaterClone2 = siteWaterClone.clone(model2).cast<SiteWaterMainsTemperature>();
   ASSERT_TRUE(siteWaterClone2.annualAverageOutdoorAirTemperature());
-  ASSERT_TRUE(45, siteWaterClone2.annualAverageOutdoorAirTemperature.get());
+  EXPECT_EQ(45, siteWaterClone2.annualAverageOutdoorAirTemperature().get());
 }
 
 // check that remove works
