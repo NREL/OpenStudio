@@ -351,8 +351,14 @@ namespace detail {
   }
 
   bool ChillerAbsorption_Impl::setGeneratorHeatSourceType(std::string generatorHeatSourceType) {
-    bool result = setString(OS_Chiller_AbsorptionFields::GeneratorHeatSourceType, generatorHeatSourceType);
-    return result;
+    bool ok = false;
+    if( istringEqual("Steam", generatorHeatSourceType) && (this->generatorLoop()) ) {
+      // We don't support Steam loops in OS right now
+      LOG(Warn, "Cannot set generatorHeatSourceType to 'Steam' as chiller '"  << this->name() << "' is connected to a generatorLoop");
+    } else {
+      ok = setString(OS_Chiller_AbsorptionFields::GeneratorHeatSourceType, generatorHeatSourceType);
+    }
+    return ok;
   }
 
   bool ChillerAbsorption_Impl::setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate) {
@@ -440,12 +446,27 @@ namespace detail {
     if( t_plantLoop ) {
       if( t_plantLoop->demandComponent(node.handle()) ) {
         // Call base class method which accepts both supply and demand
-        return WaterToWaterComponent_Impl::addToTertiaryNode(node);
+        bool ok = WaterToWaterComponent_Impl::addToTertiaryNode(node);
+        if (ok) {
+          LOG(Info, "Setting Generator Heat Source Type to 'HotWater' for " << briefDescription());
+          this->setGeneratorHeatSourceType("HotWater");
+        }
       } else {
          LOG(Info, "Tertiary Loop (Generator Loop) connections can only be placed on the Demand side (of a Heating Loop), for " << briefDescription());
       }
     }
     return false;
+  }
+
+  bool ChillerAbsorption_Impl::removeFromTertiaryPlantLoop()
+  {
+    // Disconnect the component
+    bool ok = WaterToWaterComponent_Impl::removeFromTertiaryPlantLoop();
+    if (ok) {
+      // Switch the Generator Heat Source Type to "Steam"
+      this->setGeneratorHeatSourceType("Steam");
+    }
+    return ok;
   }
 
   /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/

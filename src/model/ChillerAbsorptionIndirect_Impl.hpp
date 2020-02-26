@@ -90,8 +90,12 @@ namespace detail {
      */
     virtual bool addToNode(Node & node) override;
 
-    /* Restricts addToTertiaryNode to a node that is on the demand side of a plant loop (tertiary = generator (heating) Loop) */
+    /* Restricts addToTertiaryNode to a node that is on the supply side of a plant loop (tertiary = generator (heating) Loop)
+     * Will also set the Generator Heat Source Type to 'HotWater' */
     virtual bool addToTertiaryNode(Node & node) override;
+
+    /** Override to switch the Generator Heat Source Type to 'Steam' **/
+    virtual bool removeFromTertiaryPlantLoop() override;
 
     virtual std::vector<ModelObject> children() const override;
 
@@ -211,7 +215,6 @@ namespace detail {
 
     bool setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(const Curve& curve);
 
-    // TODO: This needs to be set automatically based on plant loop connected to it
     bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
 
     bool setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);

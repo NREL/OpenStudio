@@ -114,7 +114,7 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
   */
   boost::optional<PlantLoop> tertiaryPlantLoop() const;
 
-  bool removeFromTertiaryPlantLoop();
+  virtual bool removeFromTertiaryPlantLoop();
 
   virtual bool addToTertiaryNode(Node & node);
 

@@ -172,6 +172,7 @@ class MODEL_API ChillerAbsorptionIndirect : public WaterToWaterComponent {
 
   bool setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(const Curve& curve);
 
+  // Will not accept "Steam" if chiller is connected to a Generator Loop as we do not support Steam Loops (yet)
   bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
 
   bool setDesignGeneratorFluidFlowRate(double designGeneratorFluidFlowRate);

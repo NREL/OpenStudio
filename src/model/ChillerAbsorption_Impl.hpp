@@ -88,8 +88,12 @@ namespace detail {
      */
     virtual bool addToNode(Node & node) override;
 
-    /* Restricts addToTertiaryNode to a node that is on the supply side of a plant loop (tertiary = generator (heating) Loop) */
+    /* Restricts addToTertiaryNode to a node that is on the supply side of a plant loop (tertiary = generator (heating) Loop)
+     * Will also set the Generator Heat Source Type to 'HotWater' */
     virtual bool addToTertiaryNode(Node & node) override;
+
+    /** Override to switch the Generator Heat Source Type to 'Steam' **/
+    virtual bool removeFromTertiaryPlantLoop() override;
 
     virtual void autosize() override;
 
