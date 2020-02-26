@@ -4959,6 +4959,26 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else if (iddname == "OS:ClimateZones") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Deleted Field 1 & 2 (0-indexed): 'Active Institution' and 'Active Year'
+      for (size_t i = 0; i < object.numFields(); ++i) {
+         if ((value = object.getString(i))) {
+          if (i < 1) {
+            // 0 Unchanged
+            newObject.setString(i, value.get());
+          } else if (i > 2) {
+            // 3-End shifted -2
+            newObject.setString(i-2, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     } else if (iddname == "OS:Boiler:HotWater") {
       auto iddObject = idd_3_0_0.getObject(iddname);
       IdfObject newObject(iddObject.get());
