@@ -69,15 +69,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_NoAddedSum
   Model model;
 
   OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
+  EXPECT_EQ(0u, outputTableSummaryReports.numberofSummaryReports());
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
+  // We have an explicitly-instantiated object, with zero report => shouldn't be translated at all
   std::vector<WorkspaceObject> idf_outputTableSummaryReports = workspace.getObjectsByType(IddObjectType::Output_Table_SummaryReports);
-  ASSERT_EQ(1u, idf_outputTableSummaryReports.size());
-  WorkspaceObject idf_outputTableSummaryReport(idf_outputTableSummaryReports[0]);
-
-  EXPECT_EQ(0u, idf_outputTableSummaryReport.numExtensibleGroups());
+  EXPECT_EQ(0u, idf_outputTableSummaryReports.size());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_UserSpecified) {
