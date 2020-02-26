@@ -64,7 +64,7 @@ TEST_F(ModelFixture, OutputTableSummaryReports_OutputTableSummaryReports) {
   // create an output table summary reports object to use
   OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
 
-  ASSERT_EQ(0, outputTableSummaryReports.numberofSummaryReports());
+  EXPECT_EQ(0, outputTableSummaryReports.numberofSummaryReports());
 }
 
 // check summary reports
@@ -163,7 +163,8 @@ TEST_F(ModelFixture, OutputTableSummaryReports_OtherMethods) {
   Model model;
   OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<OutputTableSummaryReports>();
 
-  ASSERT_TRUE(outputTableSummaryReports.enableAllSummaryReport());
+  EXPECT_TRUE(outputTableSummaryReports.enableAllSummaryReport());
+  ASSERT_EQ(1, outputTableSummaryReports.numberofSummaryReports());
   EXPECT_EQ("AllSummary", outputTableSummaryReports.summaryReports()[0]);
 
   EXPECT_TRUE(outputTableSummaryReports.summaryReportValues().size() > 0);

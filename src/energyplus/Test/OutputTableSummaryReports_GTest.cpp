@@ -62,8 +62,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_NoOutputTa
 
   ASSERT_EQ(1u, idf_outputTableSummaryReport.numExtensibleGroups());
   IdfExtensibleGroup eg = idf_outputTableSummaryReport.extensibleGroups()[0];
-  std::string s = eg.getString(Output_Table_SummaryReportsExtensibleFields::ReportName).get();
-  ASSERT_EQ(s, "AllSummary");
+  EXPECT_EQ("AllSummary", eg.getString(Output_Table_SummaryReportsExtensibleFields::ReportName).get());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_NoAddedSummaryReports) {
@@ -78,7 +77,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_NoAddedSum
   ASSERT_EQ(1u, idf_outputTableSummaryReports.size());
   WorkspaceObject idf_outputTableSummaryReport(idf_outputTableSummaryReports[0]);
 
-  ASSERT_EQ(0u, idf_outputTableSummaryReport.numExtensibleGroups());
+  EXPECT_EQ(0u, idf_outputTableSummaryReport.numExtensibleGroups());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_OutputTableSummaryReports_UserSpecified) {
