@@ -84,36 +84,6 @@ namespace idfRegex {
   // Match line with '##enddef' preceded and followed only by whitespace
   UTILITIES_API const boost::regex & imfSectionEnd();
 
-  namespace detail {
-
-    struct IdfRegexInitializer : StaticInitializer<IdfRegexInitializer>
-    {
-      static void initialize()
-      {
-        newLinestring();
-        optionalNewLinestring();
-        commentOnlyLine();
-        contentAndCommentLine();
-        objectEnd();
-        objectTypeAndName();
-        line();
-        autosize();
-        autocalculate();
-        imfSection();
-        imfSectionEnd();
-      }
-    };
-
-    struct MakeSureIdfRegexInitializerIsInitialized
-    {
-      MakeSureIdfRegexInitializerIsInitialized()
-      {
-      }
-
-      IdfRegexInitializer m_i;
-    };
-  }
-
 } // idfRegex
 } // openstudio
 

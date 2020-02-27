@@ -70,31 +70,6 @@ namespace commentRegex {
    *  style Idd/Idf comments. The regex does not contain any sub-expressions. */
   UTILITIES_API const boost::regex &editorCommentWhitespaceOnlyBlock();
 
-  namespace detail {
-    struct CommentRegexInitializer : StaticInitializer<CommentRegexInitializer>
-    {
-      static void initialize()
-      {
-        whitespaceOnlyLine();
-        commentWhitespaceOnlyLine();
-        editorCommentWhitespaceOnlyLine();
-        whitespaceOnlyBlock();
-        commentWhitespaceOnlyBlock();
-        editorCommentWhitespaceOnlyBlock();
-      }
-    };
-
-    struct MakeSureCommentRegexInitializerIsInitialized
-    {
-      MakeSureCommentRegexInitializerIsInitialized()
-      {
-      }
-
-      CommentRegexInitializer m_i;
-    };
-
-  }
-
 
 } // commentRegex
 } // openstudio

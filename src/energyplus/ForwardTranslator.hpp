@@ -1459,8 +1459,6 @@ class ENERGYPLUS_API ForwardTranslator {
 
   ProgressBar* m_progressBar;
 
-  friend struct detail::ForwardTranslatorInitializer;
-
   // temp code
   bool m_keepRunControlSpecialDays;
   bool m_ipTabularOutput;
@@ -1470,25 +1468,6 @@ class ENERGYPLUS_API ForwardTranslator {
   bool m_excludeVariableDictionary; // exclude Output:VariableDictionary
 };
 
-namespace detail
-{
-  struct ForwardTranslatorInitializer : StaticInitializer<ForwardTranslatorInitializer>
-  {
-    static void initialize()
-    {
-      ForwardTranslator::iddObjectsToTranslate();
-    }
-  };
-
-  struct MakeSureForwardTranslatorInitializerIsInitialized
-  {
-    MakeSureForwardTranslatorInitializerIsInitialized()
-    {
-    }
-
-    ForwardTranslatorInitializer m_i;
-  };
-}
 
 } // energyplus
 
