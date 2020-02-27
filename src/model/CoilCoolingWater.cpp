@@ -84,7 +84,7 @@ namespace detail {
 
   const std::vector<std::string>& CoilCoolingWater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Cooling Coil Total Cooling Energy",
       "Cooling Coil Sensible Cooling Energy",
       "Cooling Coil Total Cooling Rate",

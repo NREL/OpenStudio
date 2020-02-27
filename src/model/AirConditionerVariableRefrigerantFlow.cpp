@@ -91,7 +91,7 @@ namespace detail {
 
   const std::vector<std::string>& AirConditionerVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{ "VRF Heat Pump Total Cooling Rate",
+    static const std::vector<std::string> result{ "VRF Heat Pump Total Cooling Rate",
       "VRF Heat Pump Total Heating Rate",
       "VRF Heat Pump Cooling COP",
       "VRF Heat Pump Heating COP",

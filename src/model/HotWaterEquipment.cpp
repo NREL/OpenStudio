@@ -75,7 +75,7 @@ namespace detail {
 
   const std::vector<std::string>& HotWaterEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Hot Water Equipment District Heating Rate",
       "Hot Water Equipment District Heating Energy",
       "Hot Water Equipment Radiant Heating Energy",

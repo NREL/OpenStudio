@@ -73,7 +73,7 @@ namespace detail {
 
   const std::vector<std::string>& WaterUseEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Water Use Equipment Hot Water Mass Flow Rate",
       "Water Use Equipment Cold Water Mass Flow Rate",
       "Water Use Equipment Total Mass Flow Rate",

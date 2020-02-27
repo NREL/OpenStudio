@@ -73,7 +73,7 @@ namespace detail {
 
   const std::vector<std::string>& EvaporativeCoolerIndirectResearchSpecial_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Evaporative Cooler Total Stage Effectiveness",
       "Evaporative Cooler Part Load Ratio",
       "Evaporative Cooler Dewpoint Bound Status",
@@ -810,4 +810,4 @@ EvaporativeCoolerIndirectResearchSpecial::EvaporativeCoolerIndirectResearchSpeci
   }
 
 } // model
-} // openstudio
+} // openstudio

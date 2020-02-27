@@ -69,7 +69,7 @@ namespace detail {
 
   const std::vector<std::string>& GroundHeatExchangerVertical_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Ground Heat Exchanger Average Borehole Temperature",
       "Ground Heat Exchanger Heat Transfer Rate",
       "Ground Heat Exchanger Inlet Temperature",

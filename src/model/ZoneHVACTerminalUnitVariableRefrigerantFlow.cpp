@@ -81,7 +81,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone VRF Air Terminal Total Cooling Rate",
       "Zone VRF Air Terminal Total Cooling Energy",
       "Zone VRF Air Terminal Sensible Cooling Rate",

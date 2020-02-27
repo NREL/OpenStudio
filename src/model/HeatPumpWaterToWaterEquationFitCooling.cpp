@@ -66,7 +66,7 @@ namespace detail {
 
   const std::vector<std::string>& HeatPumpWaterToWaterEquationFitCooling_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Water to Water Heat Pump Electric Energy",
       "Water to Water Heat Pump Load Side Heat Transfer Energy",
       "Water to Water Heat Pump Source Side Heat Transfer Energy",

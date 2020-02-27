@@ -72,7 +72,7 @@ namespace detail {
   const std::vector<std::string>& ChillerAbsorptionIndirect_Impl::outputVariableNames() const
   {
     // static until ModelObject return type is changed for outputvariableNames
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
 
     // Common variables
     "Chiller Electric Power",

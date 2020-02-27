@@ -70,7 +70,7 @@ namespace detail {
 
   const std::vector<std::string>& OtherEquipmentDefinition_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
       // Not appropriate: output is listed in OtherEquipment instead
     return result;
   }

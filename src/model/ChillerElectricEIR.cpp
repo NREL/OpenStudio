@@ -73,7 +73,7 @@ namespace detail {
 
   const std::vector<std::string> & ChillerElectricEIR_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Chiller Electric Power",
       "Chiller Electric Energy",
       "Chiller Evaporator Cooling Rate",

@@ -165,7 +165,7 @@ namespace detail {
 
   const std::vector<std::string>& ScheduleRuleset_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Schedule Value"
     };
     return result;

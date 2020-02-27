@@ -102,11 +102,13 @@ namespace openstudio{
 
       std::pair<LoggerMapType::iterator, bool> inserted = m_loggerMap.insert(newPair);
 
+//      std::clog << "LogChannel: " << logChannel << " : " << &inserted.first->second << " Thread: " << std::this_thread::get_id << '\n';
       return inserted.first->second;
 
     }
 
-    return it->second;
+//     std::clog << "LogChannel: " << logChannel << " : " << &it->second << " Thread: " << std::this_thread::get_id << '\n';;
+     return it->second;
   }
 
   bool LoggerSingleton::findSink(boost::shared_ptr<LogSinkBackend> sink)

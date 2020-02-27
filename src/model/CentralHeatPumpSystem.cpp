@@ -84,7 +84,7 @@ namespace detail {
 
   const std::vector<std::string>& CentralHeatPumpSystem_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Chiller Heater System Cooling Electric Power",
       "Chiller Heater System Cooling Electric Energy",
       "Chiller Heater System Heating Electric Power",

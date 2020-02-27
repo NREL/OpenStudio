@@ -78,7 +78,7 @@ namespace detail {
 
   const std::vector<std::string>& WaterUseConnections_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Water Use Connections Hot Water Mass Flow Rate",
       "Water Use Connections Cold Water Mass Flow Rate",
       "Water Use Connections Total Mass Flow Rate",
@@ -300,7 +300,7 @@ WaterUseConnections::WaterUseConnections(const Model& model)
 }
 
 IddObjectType WaterUseConnections::iddObjectType() {
-  static IddObjectType result(IddObjectType::OS_WaterUse_Connections);
+  static const IddObjectType result(IddObjectType::OS_WaterUse_Connections);
   return result;
 }
 

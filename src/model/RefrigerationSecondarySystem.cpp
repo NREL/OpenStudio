@@ -83,7 +83,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationSecondarySystem_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // TODO: implement checks
       // FOR SECONDARY SYSTEMS SERVING CASES AND/OR WALKINS:
       "Refrigeration Secondary Loop Pump Electric Power",

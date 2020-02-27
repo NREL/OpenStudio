@@ -82,12 +82,13 @@ namespace detail {
   AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::AirTerminalSingleDuctConstantVolumeCooledBeam_Impl(
   const AirTerminalSingleDuctConstantVolumeCooledBeam_Impl& other,Model_Impl* model,bool keepHandle)
     : StraightComponent_Impl(other,model,keepHandle)
-  {}
-  const std::vector<std::string>&
-
-AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+  }
+
+  const std::vector<std::string>&
+  AirTerminalSingleDuctConstantVolumeCooledBeam_Impl::outputVariableNames() const
+  {
+    static const std::vector<std::string> result{
       // These apply to all AirTerminals
       "Zone Air Terminal Sensible Heating Energy",
       "Zone Air Terminal Sensible Heating Rate",

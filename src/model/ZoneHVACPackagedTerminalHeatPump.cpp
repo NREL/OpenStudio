@@ -119,7 +119,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACPackagedTerminalHeatPump_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Packaged Terminal Heat Pump Total Heating Rate",
       "Zone Packaged Terminal Heat Pump Total Heating Energy",
       "Zone Packaged Terminal Heat Pump Total Cooling Rate",

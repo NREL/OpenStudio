@@ -133,7 +133,7 @@ namespace detail {
   }
 
   const std::vector<std::string>& ClimateZones_Impl::outputVariableNames() const {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 
@@ -348,32 +348,32 @@ ClimateZone::ClimateZone(std::shared_ptr<detail::ClimateZones_Impl> impl,unsigne
 // ClimateZones
 
 std::string ClimateZones::ashraeInstitutionName() {
-  static std::string result("ASHRAE");
+  static const std::string result("ASHRAE");
   return result;
 }
 
 std::string ClimateZones::ashraeDocumentName() {
-  static std::string result("ANSI/ASHRAE Standard 169");
+  static const std::string result("ANSI/ASHRAE Standard 169");
   return result;
 }
 
 unsigned ClimateZones::ashraeDefaultYear() {
-  static unsigned result(2006);
+  static const unsigned result(2006);
   return result;
 }
 
 std::string ClimateZones::cecInstitutionName() {
-  static std::string result("CEC");
+  static const std::string result("CEC");
   return result;
 }
 
 std::string ClimateZones::cecDocumentName() {
-  static std::string result("California Climate Zone Descriptions");
+  static const std::string result("California Climate Zone Descriptions");
   return result;
 }
 
 unsigned ClimateZones::cecDefaultYear() {
-  static unsigned result(1995);
+  static const unsigned result(1995);
   return result;
 }
 

@@ -77,7 +77,7 @@ namespace detail {
 
   const std::vector<std::string>& ScheduleFile_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     if (result.empty()){
     }
     return result;
@@ -131,7 +131,7 @@ namespace detail {
   }
 
   char ScheduleFile_Impl::columnSeparatorChar() const {
-    static std::unordered_map<std::string, char> lookup({ { "Comma", ',' }, { "Tab", '\t' }, {"Fixed", ' ' }, { "Space", ' ' }, { "Semicolon", ';' } });
+    static const std::unordered_map<std::string, char> lookup({ { "Comma", ',' }, { "Tab", '\t' }, {"Fixed", ' ' }, { "Space", ' ' }, { "Semicolon", ';' } });
     boost::optional<std::string> value = getString(OS_Schedule_FileFields::ColumnSeparator, true);
     OS_ASSERT(value);
     auto it = lookup.find(value.get());

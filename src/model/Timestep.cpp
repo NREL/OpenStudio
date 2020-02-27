@@ -85,7 +85,7 @@ namespace detail {
   // TODO: remove
   const std::vector<std::string>& Timestep_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
       // Not appropriate: no specific output
     return result;
   }

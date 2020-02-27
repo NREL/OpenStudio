@@ -78,7 +78,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationAirChiller_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Refrigeration Zone Air Chiller Total Cooling Rate",
       "Refrigeration Zone Air Chiller Total Cooling Energy",
       "Refrigeration Zone Air Chiller Sensible Cooling Rate",

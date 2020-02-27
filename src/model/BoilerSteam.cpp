@@ -67,7 +67,7 @@ namespace detail {
 
   const std::vector<std::string>& BoilerSteam_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Boiler Heating Rate",
       "Boiler Heating Energy",
       "Boiler Steam Inlet Temperature",

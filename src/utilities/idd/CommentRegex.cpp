@@ -33,32 +33,32 @@ namespace openstudio {
 namespace commentRegex {
 
 const boost::regex &whitespaceOnlyLine() {
-  const static boost::regex result("^[\\h]*$");
+  static const boost::regex result("^[\\h]*$");
   return result;
 }
 
 const boost::regex &commentWhitespaceOnlyLine() {
-  const static boost::regex result("^[\\h]*(?:!([^\\n\\r\\v]*))?$");
+  static const boost::regex result("^[\\h]*(?:!([^\\n\\r\\v]*))?$");
   return result;
 }
 
 const boost::regex &editorCommentWhitespaceOnlyLine() {
-  const static boost::regex result("^[\\h]*(?:!-([^\\n\\r\\v]*))?$");
+  static const boost::regex result("^[\\h]*(?:!-([^\\n\\r\\v]*))?$");
   return result;
 }
 
 const boost::regex &whitespaceOnlyBlock() {
-  const static boost::regex result("[\\s]*");
+  static const boost::regex result("[\\s]*");
   return result;
 }
 
 const boost::regex &commentWhitespaceOnlyBlock() {
-  const static boost::regex result("(?:^[\\h]*(?:![^\\v\\n]*)?[\\v\\n]?)*");
+  static const boost::regex result("(?:^[\\h]*(?:![^\\v\\n]*)?[\\v\\n]?)*");
   return result;
 }
 
 const boost::regex &editorCommentWhitespaceOnlyBlock() {
-  const static boost::regex result("(?:^[\\h]*(?:!-[^\\v\\n]*)?[\\v\\n]?)*");
+  static const boost::regex result("(?:^[\\h]*(?:!-[^\\v\\n]*)?[\\v\\n]?)*");
   return result;
 }
 

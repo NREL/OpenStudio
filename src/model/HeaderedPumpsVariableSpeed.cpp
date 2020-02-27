@@ -73,7 +73,7 @@ namespace detail {
 
   const std::vector<std::string>& HeaderedPumpsVariableSpeed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Pump Electric Power",
       "Pump Electric Energy",
       "Pump Shaft Power",

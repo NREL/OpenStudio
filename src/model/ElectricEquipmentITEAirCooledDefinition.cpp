@@ -77,7 +77,7 @@ namespace detail {
 
   const std::vector<std::string>& ElectricEquipmentITEAirCooledDefinition_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     // Not appropriate: output is listed in ElectricEquipment instead
     return result;
   }

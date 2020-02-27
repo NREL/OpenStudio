@@ -67,7 +67,7 @@ namespace detail {
   // TODO: remove
   const std::vector<std::string>& WaterUseEquipmentDefinition_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
       // Not appropriate: output is listed in WaterUseEquipment instead
     return result;
   }

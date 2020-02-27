@@ -78,7 +78,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationCondenserEvaporativeCooled_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Refrigeration System Condenser Fan Electric Power",
       "Refrigeration System Condenser Fan Electric Consumption",
 

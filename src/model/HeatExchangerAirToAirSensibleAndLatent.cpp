@@ -78,7 +78,7 @@ namespace detail {
 
   const std::vector<std::string>& HeatExchangerAirToAirSensibleAndLatent_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Heat Exchanger Sensible Heating Rate",
       "Heat Exchanger Sensible Heating Energy",
       "Heat Exchanger Latent Gain Rate",

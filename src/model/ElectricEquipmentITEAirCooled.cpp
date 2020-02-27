@@ -81,7 +81,7 @@ namespace detail {
 
   const std::vector<std::string>& ElectricEquipmentITEAirCooled_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // IT Equipment
       "ITE CPU Electric Power ",
       "ITE Fan Electric Power ",

@@ -126,7 +126,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACPackagedTerminalAirConditioner_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Packaged Terminal Air Conditioner Total Heating Rate",
       "Zone Packaged Terminal Air Conditioner Total Heating Energy",
       "Zone Packaged Terminal Air Conditioner Total Cooling Rate",

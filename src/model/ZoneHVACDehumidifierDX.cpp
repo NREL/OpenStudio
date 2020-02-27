@@ -76,7 +76,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACDehumidifierDX_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Dehumidifier Sensible Heating Rate",
       "Zone Dehumidifier Sensible Heating Energy",
       "Zone Dehumidifier Removed Water Mass Flow Rate",

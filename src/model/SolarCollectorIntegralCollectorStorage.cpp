@@ -96,7 +96,7 @@ namespace detail {
 
   const std::vector<std::string>& SolarCollectorIntegralCollectorStorage_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Solar Collector Storage Water Temperature",
       "Solar Collector Absorber Plate Temperature",
       "Solar Collector Overall Top Heat Loss Coefficient",

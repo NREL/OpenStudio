@@ -140,7 +140,7 @@ namespace detail {
 
   const std::vector<std::string>& AirLoopHVAC_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Air System Simulation Cycle On Off Status",
       "HVAC System Solver Iteration Count",
       "Air System Solver Iteration Count",

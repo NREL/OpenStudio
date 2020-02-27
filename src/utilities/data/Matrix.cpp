@@ -285,7 +285,7 @@ namespace openstudio{
     // ETH@20100120. What library does this come from? The user should be able to seed the
     // generator independently of this function.
     // seed random number generator
-    static std::minstd_rand generator(42u);
+    thread_local std::minstd_rand generator(42u);
 
     // define distribution
     boost::uniform_real<> dist(a,b);

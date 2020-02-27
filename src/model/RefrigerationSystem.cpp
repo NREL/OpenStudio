@@ -91,7 +91,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationSystem_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // TODO: Implement checks
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE CASES AND/OR WALKINS:
       "Refrigeration System Total Compressor Electric Power",

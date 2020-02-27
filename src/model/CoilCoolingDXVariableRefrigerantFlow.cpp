@@ -79,7 +79,7 @@ namespace detail {
   const std::vector<std::string>& CoilCoolingDXVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
     // static for now, need to change if storage tank is implemented
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Cooling Coil Total Cooling Rate",
       "Cooling Coil Total Cooling Energy",
       "Cooling Coil Sensible Cooling Rate",

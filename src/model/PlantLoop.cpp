@@ -101,7 +101,7 @@ PlantLoop_Impl::PlantLoop_Impl(const PlantLoop_Impl& other,
 
   const std::vector<std::string>& PlantLoop_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Plant Supply Side Cooling Demand Rate",
       "Plant Supply Side Heating Demand Rate",
       "Plant Supply Side Inlet Mass Flow Rate",

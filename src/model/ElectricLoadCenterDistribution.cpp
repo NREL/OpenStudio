@@ -87,7 +87,7 @@ namespace detail {
 
   const std::vector<std::string>& ElectricLoadCenterDistribution_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Electric Load Center Requested Electric Power",
       "Electric Load Center Produced Electric Power",
       "Electric Load Center Produced Electric Energy",

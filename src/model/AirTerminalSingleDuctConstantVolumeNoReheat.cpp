@@ -79,7 +79,7 @@ namespace detail{
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& AirTerminalSingleDuctConstantVolumeNoReheat_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Air Terminal Sensible Heating Energy",
       "Zone Air Terminal Sensible Cooling Energy",
       "Zone Air Terminal Sensible Heating Rate",

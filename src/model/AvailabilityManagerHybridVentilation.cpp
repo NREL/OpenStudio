@@ -75,7 +75,7 @@ namespace detail {
 
   const std::vector<std::string>& AvailabilityManagerHybridVentilation_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Availability Manager Hybrid Ventilation Control Mode",
       "Availability Manager Hybrid Ventilation Control Status",
       "Hybrid Ventilation Control HVAC System Operation Elapsed Time",

@@ -82,7 +82,7 @@ namespace detail {
 
   const std::vector<std::string>& ElectricLoadCenterStorageConverter_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Converter AC to DC Efficiency",
       "Converter AC Input Electric Power",
       "Converter AC Input Electric Energy",

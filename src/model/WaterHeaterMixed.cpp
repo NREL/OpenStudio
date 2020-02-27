@@ -80,7 +80,7 @@ namespace detail {
 
   const std::vector<std::string>& WaterHeaterMixed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Water Heater Tank Temperature",
       "Water Heater Final Tank Temperature",
       "Water Heater Heat Loss Rate",

@@ -75,7 +75,7 @@ namespace detail {
 
   const std::vector<std::string>& Lights_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Lights Electric Power",
       "Lights Radiant Heat Gain",
       "Lights Radiant Heating Rate",

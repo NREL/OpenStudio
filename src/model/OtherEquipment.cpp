@@ -76,7 +76,7 @@ namespace detail {
 
   const std::vector<std::string>& OtherEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Other Equipment Fuel Rate",
       "Other Equipment Fuel Energy",
       "Other Equipment Radiant Heating Energy",

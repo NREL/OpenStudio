@@ -71,7 +71,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationSubcoolerMechanical_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // TODO: implement checks
       // FOR SUBCOOLERS ON SYSTEMS SERVING CASES AND/OR WALKINS:
       "Refrigeration System Mechanical Subcooler Heat Transfer Rate",

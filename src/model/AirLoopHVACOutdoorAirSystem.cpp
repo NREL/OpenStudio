@@ -104,7 +104,7 @@ namespace detail {
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& AirLoopHVACOutdoorAirSystem_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     // Not Appropriate: No variables available
     // The impact of using outside air/mechanical ventilation is described in the section: Outdoor Air Ventilation Outputs.
     return result;

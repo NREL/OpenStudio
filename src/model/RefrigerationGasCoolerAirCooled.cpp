@@ -75,7 +75,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationGasCoolerAirCooled_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Refrigeration Transcritical System Gas Cooler Heat Transfer Rate",
       "Refrigeration Transcritical System Gas Cooler Heat Transfer Energy",
       "Refrigeration Transcritical System Gas Cooler Fan Electric Power",

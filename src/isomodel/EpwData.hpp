@@ -43,13 +43,13 @@
 namespace openstudio {
 namespace isomodel {
 
-const int DBT = 0;
-const int DPT = 1;
-const int RH = 2;
-const int EGH = 3;
-const int EB = 4;
-const int ED = 5;
-const int WSPD = 6;
+constexpr int DBT = 0;
+constexpr int DPT = 1;
+constexpr int RH = 2;
+constexpr int EGH = 3;
+constexpr int EB = 4;
+constexpr int ED = 5;
+constexpr int WSPD = 6;
 
 
 class EpwData

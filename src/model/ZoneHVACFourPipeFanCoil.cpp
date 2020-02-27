@@ -136,7 +136,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACFourPipeFanCoil_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Fan Coil Heating Rate",
       "Fan Coil Heating Energy",
       "Fan Coil Total Cooling Rate",

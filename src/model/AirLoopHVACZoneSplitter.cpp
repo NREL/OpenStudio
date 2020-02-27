@@ -78,7 +78,7 @@ namespace detail{
 
   const std::vector<std::string>& AirLoopHVACZoneSplitter_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     // Not Appropriate: No variables available
     return result;
   }

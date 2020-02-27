@@ -80,7 +80,7 @@ namespace detail {
 
   const std::vector<std::string>& OutputMeter_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 
@@ -474,7 +474,7 @@ IddObjectType OutputMeter::iddObjectType() {
 boost::regex OutputMeter::meterRegex()
 {
   // DLM: Must put more specific terms, e.g. HeatingCoils, before less specific terms, e.g. Heating
-  const static boost::regex result("^(.*?)?:?(InteriorLights|ExteriorLights|InteriorEquipment|ExteriorEquipment|Fans|Pumps|HeatingCoils|Heating|CoolingCoils|Cooling|HeatRejection|Humidifier|HeatRecoveryForCooling|HeatRecoveryForHeating|HeatRecovery|WaterSystems|Cogeneration|Refrigeration|Chillers|Boilers|Baseboard)?:?(Electricity|Gasoline|Gas|Diesel|Coal|FuelOil_1|FuelOil_2|Propane|Water|Steam|DistrictCooling|DistrictHeating|EnergyTransfer)?:?(Facility|Building|HVAC|Zone|System|Plant)?:?([^:]*?)?$");
+  static const boost::regex result("^(.*?)?:?(InteriorLights|ExteriorLights|InteriorEquipment|ExteriorEquipment|Fans|Pumps|HeatingCoils|Heating|CoolingCoils|Cooling|HeatRejection|Humidifier|HeatRecoveryForCooling|HeatRecoveryForHeating|HeatRecovery|WaterSystems|Cogeneration|Refrigeration|Chillers|Boilers|Baseboard)?:?(Electricity|Gasoline|Gas|Diesel|Coal|FuelOil_1|FuelOil_2|Propane|Water|Steam|DistrictCooling|DistrictHeating|EnergyTransfer)?:?(Facility|Building|HVAC|Zone|System|Plant)?:?([^:]*?)?$");
   return result;
 }
 

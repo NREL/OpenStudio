@@ -71,7 +71,7 @@ namespace detail {
 
   const std::vector<std::string>& CoilWaterHeatingAirToWaterHeatPump_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // As of EnergyPlus version 8.4.0 this object maps to Coil:WaterHeating:AirToWaterHeatPump:Pumped in idf format.
       // TODO: Make sure this is right (it's Cooling, I expected Heating...)
       // Taken from the I/O for v 8.7

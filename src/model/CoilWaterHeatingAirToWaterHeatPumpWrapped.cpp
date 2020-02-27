@@ -70,7 +70,7 @@ namespace detail {
 
   const std::vector<std::string>& CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // TODO: make sure this is right (cooling, not heating)
       // Taken directly from the I/O for E+ 8.7
       "Cooling Coil Total Cooling Rate",

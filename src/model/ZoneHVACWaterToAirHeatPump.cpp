@@ -168,7 +168,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACWaterToAirHeatPump_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Water to Air Heat Pump Total Heating Rate",
       "Zone Water to Air Heat Pump Total Heating Energy",
       "Zone Water to Air Heat Pump Total Cooling Rate",
