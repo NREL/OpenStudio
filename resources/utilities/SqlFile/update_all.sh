@@ -6,9 +6,10 @@ curl_token="-H \"Authorization: token $token\""
 
 # All versions you want to run
 declare -a all_versions=("8.5.0" "8.6.0" "8.7.0" "8.8.0" "8.9.0" "9.0.1" "9.1.0")
+# declare -a all_versions=("9.3.0")
 
-# declare -a all_versions=("9.1.0")
-
+# DO NOT RERUN IF SQL ALREADY THERE
+rerun_if_already_there=false
 
 if [ ! -f USA_CO_Golden-NREL.724666_TMY3.epw ]; then
   wget https://github.com/NREL/EnergyPlus/raw/develop/weather/USA_CO_Golden-NREL.724666_TMY3.epw
@@ -17,6 +18,14 @@ fi;
 
 for ep_version in "${all_versions[@]}"; do
   ep_version_dash=$(echo $ep_version | sed -r 's/\./-/g')
+
+  sql_file=1ZoneEvapCooler-V$ep_version_dash.sql
+  if [ -f "$sql_file" ]; then
+    if [[ "$rerun_if_already_there" == false ]]; then
+      echo "Already found $sql_file, skipping"
+      continue
+    fi
+  fi
 
   # Special case
   if [ "$ep_version" == "9.1.0" ]; then
@@ -110,4 +119,22 @@ for ep_version in "${all_versions[@]}"; do
     $ep_exe -w USA_CO_Golden-NREL.724666_TMY3.epw -d out-$ep_version $idf_file
     mv out-$ep_version/eplusout.sql 1ZoneEvapCooler-V$ep_version_dash.sql
   fi
+done
+
+
+cmakelists=$(readlink -f "$(pwd)/../../CMakeLists.txt")
+echo "Add in $cmakelists:"
+for ep_version in "${all_versions[@]}"; do
+  ep_version_dash=$(echo $ep_version | sed -r 's/\./-/g')
+  sql_file=1ZoneEvapCooler-V$ep_version_dash.sql
+  echo "  utilities/SqlFile/$sql_file"
+done
+
+sql_gtest=$(readlink -f "../../../src/utilities/sql/Test/SqlFile_GTest.cpp")
+echo "Add in $sql_gtest:"
+echo "In TEST_F(SqlFileFixture, Regressions):"
+for ep_version in "${all_versions[@]}"; do
+  ep_version_dash=$(echo $ep_version | sed -r 's/\./-/g')
+  sql_file=1ZoneEvapCooler-V$ep_version_dash.sql
+  echo "  regressionTestSqlFile(\"$sql_file\", 43.28, 20, 20);"
 done
