@@ -495,6 +495,13 @@ namespace openstudio{
       // v8.9.0 added the year tag
       if (version < VersionString(8, 9)) {
         m_hasYear = false;
+        } else if (version < VersionString(9 ,0)) {
+          // Check if zero
+          boost::optional<int> maxYear = execAndReturnFirstInt("SELECT MAX(Year) FROM Time");
+          if (!maxYear.is_initialized() || maxYear.get() <= 0) {
+            LOG(Warn, "Using EnergyPlusVersion version " << version.str() << " which should have 'Year' field, but it's always zero");
+            m_hasYear = false;
+          }
       }
 
       return true;
