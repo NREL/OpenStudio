@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -259,7 +259,7 @@ TEST(Compare,VersionString) {
 
 TEST(Compare, VersionString_SemVer) {
 
-	// not allowable in semantic versioning but allowed for backwards compatibility
+  // not allowable in semantic versioning but allowed for backwards compatibility
   VersionString v31("3.1");
   EXPECT_EQ(3, v31.major());
   EXPECT_EQ(1, v31.minor());
@@ -267,35 +267,35 @@ TEST(Compare, VersionString_SemVer) {
   EXPECT_EQ("", v31.patchString());
   EXPECT_EQ("", v31.buildString());
 
-	VersionString v310("3.1.0");
-	EXPECT_EQ(3, v310.major());
-	EXPECT_EQ(1, v310.minor());
-	ASSERT_TRUE(v310.patch());
-	EXPECT_EQ(0, v310.patch().get());
-	EXPECT_EQ("", v310.patchString());
-	EXPECT_EQ("", v310.buildString());
+  VersionString v310("3.1.0");
+  EXPECT_EQ(3, v310.major());
+  EXPECT_EQ(1, v310.minor());
+  ASSERT_TRUE(v310.patch());
+  EXPECT_EQ(0, v310.patch().get());
+  EXPECT_EQ("", v310.patchString());
+  EXPECT_EQ("", v310.buildString());
 
-	VersionString v310rc1("3.1.0-rc1");
-	EXPECT_EQ(3, v310rc1.major());
-	EXPECT_EQ(1, v310rc1.minor());
-	ASSERT_TRUE(v310rc1.patch());
-	EXPECT_EQ(0, v310rc1.patch().get());
-	EXPECT_EQ("rc1", v310rc1.patchString());
-	EXPECT_EQ("", v310rc1.buildString());
+  VersionString v310rc1("3.1.0-rc1");
+  EXPECT_EQ(3, v310rc1.major());
+  EXPECT_EQ(1, v310rc1.minor());
+  ASSERT_TRUE(v310rc1.patch());
+  EXPECT_EQ(0, v310rc1.patch().get());
+  EXPECT_EQ("rc1", v310rc1.patchString());
+  EXPECT_EQ("", v310rc1.buildString());
 
-	VersionString v310sha("3.1.0+b2cad10881576015005245c7b2e089ff66ef437d");
-	EXPECT_EQ(3, v310sha.major());
-	EXPECT_EQ(1, v310sha.minor());
-	ASSERT_TRUE(v310sha.patch());
-	EXPECT_EQ(0, v310sha.patch().get());
-	EXPECT_EQ("", v310sha.patchString());
-	EXPECT_EQ("b2cad10881576015005245c7b2e089ff66ef437d", v310sha.buildString());
+  VersionString v310sha("3.1.0+b2cad10881576015005245c7b2e089ff66ef437d");
+  EXPECT_EQ(3, v310sha.major());
+  EXPECT_EQ(1, v310sha.minor());
+  ASSERT_TRUE(v310sha.patch());
+  EXPECT_EQ(0, v310sha.patch().get());
+  EXPECT_EQ("", v310sha.patchString());
+  EXPECT_EQ("b2cad10881576015005245c7b2e089ff66ef437d", v310sha.buildString());
 
-	VersionString v310rc1sha("3.1.0-rc1+b2cad10881576015005245c7b2e089ff66ef437d");
-	EXPECT_EQ(3, v310rc1sha.major());
-	EXPECT_EQ(1, v310rc1sha.minor());
-	ASSERT_TRUE(v310rc1sha.patch());
-	EXPECT_EQ(0, v310rc1sha.patch().get());
-	EXPECT_EQ("rc1", v310rc1sha.patchString());
-	EXPECT_EQ("b2cad10881576015005245c7b2e089ff66ef437d", v310rc1sha.buildString());
+  VersionString v310rc1sha("3.1.0-rc1+b2cad10881576015005245c7b2e089ff66ef437d");
+  EXPECT_EQ(3, v310rc1sha.major());
+  EXPECT_EQ(1, v310rc1sha.minor());
+  ASSERT_TRUE(v310rc1sha.patch());
+  EXPECT_EQ(0, v310rc1sha.patch().get());
+  EXPECT_EQ("rc1", v310rc1sha.patchString());
+  EXPECT_EQ("b2cad10881576015005245c7b2e089ff66ef437d", v310rc1sha.buildString());
 }
