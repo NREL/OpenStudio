@@ -248,4 +248,19 @@ TEST_F(IlluminanceMapFixture, QtGUI_IlluminanceMapMatrixBaseline)
   }
 }
 
+TEST_F(IlluminanceMapFixture, IlluminanceMap_Year) {
 
+  // Starting E+ 9.2.0
+  EXPECT_TRUE(sqlFile.hasIlluminanceMapYear());
+
+  const std::string& mapName = "CLASSROOM ILLUMINANCE MAP";
+
+  std::vector< std::pair<int, DateTime> > illuminanceMapReportIndicesDates;
+  // list of hourly reports for the illuminance map
+  illuminanceMapReportIndicesDates = sqlFile.illuminanceMapHourlyReportIndicesDates(mapName);
+
+  openstudio::DateTime& firstDateTime = illuminanceMapReportIndicesDates[0].second;
+  EXPECT_TRUE(firstDateTime.date().baseYear());
+  EXPECT_EQ(2017, firstDateTime.date().baseYear().get());
+
+}

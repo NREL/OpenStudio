@@ -104,8 +104,11 @@ class UTILITIES_API SqlFile {
   /// \returns true if the sqlfile is of a version that's in our supported range
   bool supportedVersion() const;
 
-  // Check if the SQLFile contains the 'Year' field (E+ >= 8.9.0)
+  // Check if the SQLFile contains the 'Year' field (Added in E+ 8.9.0, but perhaps not working for 8.9.0 itself)
   bool hasYear() const;
+
+  // Check if the SqlFile contains 'Year' field for DaylightMapHourlyReports (added Year in 9.2.0)
+  bool hasIlluminanceMapYear() const;
 
   /// close the file
   bool close();
