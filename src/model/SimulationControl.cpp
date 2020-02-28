@@ -569,6 +569,48 @@ namespace detail{
     return result;
   }
 
+  bool SimulationControl_Impl::doHVACSizingSimulationforSizingPeriods() const {
+    boost::optional<std::string> value = getString(OS_SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "Yes");
+  }
+
+  bool SimulationControl_Impl::isDoHVACSizingSimulationforSizingPeriodsDefaulted() const {
+    return isEmpty(OS_SimulationControlFields::DoHVACSizingSimulationforSizingPeriods);
+  }
+
+  bool SimulationControl_Impl::setDoHVACSizingSimulationforSizingPeriods(bool doHVACSizingSimulationforSizingPeriods) {
+    bool result = setBooleanFieldValue(OS_SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, doHVACSizingSimulationforSizingPeriods);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void SimulationControl_Impl::resetDoHVACSizingSimulationforSizingPeriods() {
+    bool result = setString(OS_SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, "");
+    OS_ASSERT(result);
+  }
+
+
+  int SimulationControl_Impl::maximumNumberofHVACSizingSimulationPasses() const {
+    boost::optional<int> value = getInt(OS_SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool SimulationControl_Impl::isMaximumNumberofHVACSizingSimulationPassesDefaulted() const {
+    return isEmpty(OS_SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses);
+  }
+
+  bool SimulationControl_Impl::setMaximumNumberofHVACSizingSimulationPasses(int maximumNumberofHVACSizingSimulationPasses) {
+    bool result = setInt(OS_SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, maximumNumberofHVACSizingSimulationPasses);
+    return result;
+  }
+
+  void SimulationControl_Impl::resetMaximumNumberofHVACSizingSimulationPasses() {
+    bool result = setString(OS_SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, "");
+    OS_ASSERT(result);
+  }
+
 } // detail
 
 SimulationControl::SimulationControl( const Model& model ):
@@ -837,6 +879,43 @@ std::vector<std::string> SimulationControl::partialYearEnvironmentPeriods() cons
 
 std::vector<std::string> SimulationControl::repeatedIntervalEnvironmentPeriods() const {
   return getImpl<detail::SimulationControl_Impl>()->repeatedIntervalEnvironmentPeriods();
+}
+
+bool SimulationControl::doHVACSizingSimulationforSizingPeriods() const {
+  return getImpl<detail::SimulationControl_Impl>()->doHVACSizingSimulationforSizingPeriods();
+}
+
+bool SimulationControl::isDoHVACSizingSimulationforSizingPeriodsDefaulted() const {
+  return getImpl<detail::SimulationControl_Impl>()->isDoHVACSizingSimulationforSizingPeriodsDefaulted();
+}
+
+bool SimulationControl::setDoHVACSizingSimulationforSizingPeriods(bool doHVACSizingSimulationforSizingPeriods) {
+  return getImpl<detail::SimulationControl_Impl>()->setDoHVACSizingSimulationforSizingPeriods(doHVACSizingSimulationforSizingPeriods);
+}
+
+void SimulationControl::setDoHVACSizingSimulationforSizingPeriodsNoFail(bool doHVACSizingSimulationforSizingPeriods) {
+  bool result = getImpl<detail::SimulationControl_Impl>()->setDoHVACSizingSimulationforSizingPeriods(doHVACSizingSimulationforSizingPeriods);
+  OS_ASSERT(result);
+}
+
+void SimulationControl::resetDoHVACSizingSimulationforSizingPeriods() {
+  getImpl<detail::SimulationControl_Impl>()->resetDoHVACSizingSimulationforSizingPeriods();
+}
+
+int SimulationControl::maximumNumberofHVACSizingSimulationPasses() const {
+  return getImpl<detail::SimulationControl_Impl>()->maximumNumberofHVACSizingSimulationPasses();
+}
+
+bool SimulationControl::isMaximumNumberofHVACSizingSimulationPassesDefaulted() const {
+  return getImpl<detail::SimulationControl_Impl>()->isMaximumNumberofHVACSizingSimulationPassesDefaulted();
+}
+
+bool SimulationControl::setMaximumNumberofHVACSizingSimulationPasses(int maximumNumberofHVACSizingSimulationPasses) {
+  return getImpl<detail::SimulationControl_Impl>()->setMaximumNumberofHVACSizingSimulationPasses(maximumNumberofHVACSizingSimulationPasses);
+}
+
+void SimulationControl::resetMaximumNumberofHVACSizingSimulationPasses() {
+  getImpl<detail::SimulationControl_Impl>()->resetMaximumNumberofHVACSizingSimulationPasses();
 }
 
 }
