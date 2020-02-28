@@ -26,6 +26,7 @@ for ep_version in "${all_versions[@]}"; do
   echo ""
   echo "$ep_version"
 
+  # If Idf file isn't there, get it, and do the necessary replacements
   idf_file="1ZoneEvapCooler-V$ep_version_dash.idf"
   if [ ! -f $idf_file ]; then
     wget https://raw.githubusercontent.com/NREL/EnergyPlus/v$ep_version/testfiles/1ZoneEvapCooler.idf
@@ -39,50 +40,74 @@ for ep_version in "${all_versions[@]}"; do
 
   fi;
 
+  # If not already installed, get it from GitHub
+  ep_exe=$(find /usr/local/EnergyPlus-$ep_version_dash -name "energyplus")
+  if [ -z "$ep_exe" ]; then
 
-  echo "curl https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("tar.gz")) | .browser_download_url'"
-  tar_gz_link=$(curl -H "Authorization: token $token" https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("tar.gz")) | .browser_download_url')
-  if [ -z "$tar_gz_link" ]; then
-    echo "curl https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("sh")) | .browser_download_url'"
-    sh_link=$(curl -H "Authorization: token $token" https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("sh")) | .browser_download_url')
-    # sh_name=${sh_link##*/}
-    echo $sh_link
-    sh_name=$(basename -- $sh_link)
+    # Prefer using the tar.gz (doesn't require install via sh, which needs sudo generally speaking, and more importantly needs manual input)
+    # Starting 8.8.0, tar.gz is available.
+    echo "curl https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("tar.gz")) | .browser_download_url'"
+    tar_gz_link=$(curl -H "Authorization: token $token" https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("tar.gz")) | .browser_download_url')
+    if [ -z "$tar_gz_link" ]; then
+      echo "curl https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("sh")) | .browser_download_url'"
+      sh_link=$(curl -H "Authorization: token $token" https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("sh")) | .browser_download_url')
+      # sh_name=${sh_link##*/}
+      echo $sh_link
+      sh_name=$(basename -- $sh_link)
 
-    if [ ! -f $sh_name ]; then
-      echo "Downloading $sh_link"
-      wget $sh_link
+      if [ ! -f $sh_name ]; then
+        echo "Downloading $sh_link"
+        wget $sh_link
+      else
+        echo "$sh_name already exists"
+      fi
+
+      # Install: need user input
+      chmod +x $sh_name
+      sudo ./$sh_name
+
+      ep_exe=$(find /usr/local/EnergyPlus-$ep_version_dash -name "energyplus")
+      if [ -z "$ep_exe" ]; then
+        echo "Couldn't find Eplus EXE for just-installed $ep_version"
+      fi
+
+
     else
-      echo "$sh_name already exists"
+
+      #tar_gz_name=${tar_gz_link##*/}
+      tar_gz_name=$(basename -- $tar_gz_link)
+      if [ ! -f $tar_gz_name ]; then
+        echo "Downloading $tar_gz_link"
+        wget $tar_gz_link
+      else
+        echo "$tar_gz_name already exists"
+      fi
+
+      folder_name=${tar_gz_name%.tar.gz}
+      if [ ! -d $folder_name ]; then
+        echo "Extracting $tar_gz_name"
+        tar xfz "$tar_gz_name"
+      else
+        echo "Already found $folder_name"
+      fi
+
+      ep_exe=$(find $folder_name/ -name "energyplus")
+
+      if [ -z "$ep_exe" ]; then
+        echo "Couldn't find Eplus EXE from tar.gz for $ep_version"
+      else
+        ep_exe="$(pwd)/$ep_exe"
+      fi
     fi
-
-    chmod +x $sh_name
-
   else
-    #tar_gz_name=${tar_gz_link##*/}
-    tar_gz_name=$(basename -- $tar_gz_link)
-    if [ ! -f $tar_gz_name ]; then
-      echo "Downloading $tar_gz_link"
-      wget $tar_gz_link
-    else
-      echo "$tar_gz_name already exists"
-    fi
+    echo "Found already installed $ep_version at $ep_exe"
+  fi
 
-    folder_name=${tar_gz_name%.tar.gz}
-    if [ ! -d $folder_name ]; then
-      echo "Extracting $tar_gz_name"
-      tar xfz "$tar_gz_name"
-    else
-      echo "Already found $folder_name"
-    fi
-
-    ep_exe=$(find $folder_name/ -name "energyplus")
-    if [ -z "$ep_exe" ]; then
-      echo "Couldn't find Eplus EXE"
-    else
-      ep_exe="$(pwd)/$ep_exe"
-      $ep_exe -w USA_CO_Golden-NREL.724666_TMY3.epw -d out-$ep_version $idf_file
-      mv out-$ep_version/eplusout.sql 1ZoneEvapCooler-V$ep_version_dash.sql
-    fi
+  if [ -z "$ep_exe" ]; then
+    echo "Couldn't find Eplus EXE for $ep_version"
+  else
+    # Run simulation
+    $ep_exe -w USA_CO_Golden-NREL.724666_TMY3.epw -d out-$ep_version $idf_file
+    mv out-$ep_version/eplusout.sql 1ZoneEvapCooler-V$ep_version_dash.sql
   fi
 done
