@@ -129,7 +129,9 @@ OptionalModelObject ReverseTranslator::translateSimulationControl( const Workspa
   if(optS)
   {
     if (openstudio::istringEqual("Yes", optS.get())) {
-      simCon.setRunSimulationforWeatherFileRunPeriods(true);
+      simCon.setDoHVACSizingSimulationforSizingPeriods(true);
+    } else {
+      simCon.setDoHVACSizingSimulationforSizingPeriods(false);
     }
   }
 

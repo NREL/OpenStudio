@@ -117,8 +117,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SimulationControl_Logic) {
     EXPECT_EQ("No", idf_simCon.getString(SimulationControlFields::DoPlantSizingCalculation, false).get());
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::RunSimulationforSizingPeriods, false).get());
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::RunSimulationforWeatherFileRunPeriods, false).get());
-    EXPECT_EQ("", idf_simCon.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, false).get());
-    EXPECT_EQ("", idf_simCon.getString(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false).get());
+
+    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, false, false));
+    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false, false));
   }
 
   // Add a plantLoop, and a SizingPeriod, so it forces DoPlantSizingCalculation
@@ -140,8 +141,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SimulationControl_Logic) {
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::DoPlantSizingCalculation, false).get());
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::RunSimulationforSizingPeriods, false).get());
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::RunSimulationforWeatherFileRunPeriods, false).get());
-    EXPECT_EQ("", idf_simCon.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, false).get());
-    EXPECT_EQ("", idf_simCon.getString(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false).get());
+    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, false, false));
+    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false, false));
   }
 
   // Set the SizingPlant to "Coincident" => should force the "DoHVACSizingSimulationforSizingPeriods"
@@ -160,7 +161,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SimulationControl_Logic) {
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::RunSimulationforWeatherFileRunPeriods, false).get());
     // Now it's 'Yes' automagically
     EXPECT_EQ("Yes", idf_simCon.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, false).get());
-    EXPECT_EQ("", idf_simCon.getString(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false).get());
+    EXPECT_FALSE(idf_simCon.getString(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false, false));
   }
 
   // Check if the new Integer is translated too

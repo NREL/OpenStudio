@@ -133,10 +133,14 @@ boost::optional<IdfObject> ForwardTranslator::translateSimulationControl( Simula
     {
       simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"Yes");
     } else {
-      simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"No");
+      if (!modelObject.isDoZoneSizingCalculationDefaulted()) {
+        simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"No");
+      }
     }
   } else {
-    simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"No");
+    if (!modelObject.isDoZoneSizingCalculationDefaulted()) {
+      simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"No");
+    }
   }
 
   if (!modelObject.isMaximumNumberofHVACSizingSimulationPassesDefaulted()) {
