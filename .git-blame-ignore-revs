@@ -1,0 +1,106 @@
+# This file includes the list of commits to exclude from `git blame`.
+# These are chores, like upgrading copyrights, or running any kind of automated tools like clang-format.
+#
+# How-to:
+# * Use only full 40-character hashes
+# * Here's an example of a way to grep the commit history to find commits to exclude:
+# ```
+# git log --all --reverse --grep='copyright' --pretty='format:# %C(auto) %s [%an, %as]%n%H%n' >> .git-blame-ignore-revs
+#
+# ```
+# Note: On older git (like 2.17 which is default in 18.04, without `sudo add-apt-repository ppa:git-core/ppa`),
+# '%as' (date in YYYY-MM-DD)  doesn't work, use '%ai' instead
+
+# * Locally, you can do `$ git config blame.ignoreRevsFile .git-blame-ignore-revs`
+# * Add to the bottom of the list, so we keep everything in chronological order (oldest to newest)
+
+
+#  Updating all copyrights to 2014 [Alex Swindler, 2013-12-30]
+116f39e814d13d1797356dfbe026fafde051adb7
+
+#  Adding missing copyrights, fixed incorrect copyrights Added missing include guards, fixed duplicate include guards Standardized and fixed all existing include guards Fixed all applicable relative includes Replaced BOOST_STATIC_ASSERT with static_assert Replaced boost::tuple with std::tuple Fixed typos [Alex Swindler, 2014-05-28]
+8a68ad74f872cede4a985047c66fe4272d81536d
+
+#  Fixing include guards / copyrights [Alex Swindler, 2014-07-23]
+9780843f14edb9c891c71f94390232d189b29cf7
+
+#  Fixing include guards/copyrights [Alex Swindler, 2014-10-16]
+7030f5401a5eaf476a6dc8a24e6fcae2f6d8a1b4
+
+#  Cleaning up copyrights/includes [Alex Swindler, 2015-02-26]
+ffdc3e8d0607de9c497e2b5d2315770f7bf341a0
+
+#  Updating copyrights [Alex Swindler, 2016-01-11]
+a477c2f00aa05e37813d0aedab3ddbaf8d2881be
+
+#  Update copyright dates. [Evan Weaver, 2016-02-03]
+09911cac745122c2b642201f395df56af34be8fb
+
+#  Adding in copyright [Ry Horsey, 2016-04-08]
+ed09549bf3a2e0f66aeaaeff221f101575af723e
+
+#  Updated copyright license, removed unused license.txt files [Alex Swindler, 2016-09-27]
+8e27dad5c9d3cfd72fdac6733b48b310e8dea506
+
+#  Updating copyright.txt [Dan Macumber, 2016-09-27]
+2a0b65bc1f77913dd3e3025bb210653fa2ec7cba
+
+#  Updated another copyright [Alex Swindler, 2016-09-28]
+c61c3fd86be4928df3d148f2e12f0446f38a8f7f
+
+#  Adding missing copyrights [Dan Macumber, 2016-09-28]
+313f2893d5f329a8bec6dbe91b65ddd7a7cbbd0d
+
+#  Updated copyrights [Alex Swindler, 2017-01-03]
+72e4961a2d6547dcb40be48f722345b5691e3a74
+
+#  Realized copyrights were out of date [Julien Marrec, 2017-11-29]
+06b8005480d6b7864929bc711c255042d987a843
+
+#  Updated copyrights [Alex Swindler, 2018-01-05]
+553516614161dda1c9117f671e9584e24675bf28
+
+#  Update copyright.txt [Dan Macumber, 2018-03-15]
+7fc339096e6e11c0d2c542e020797452f9757f60
+
+#  Update copyright and license on all source files [Dan Macumber, 2018-03-15]
+43991e7b8943f2875326d625b4786028dc7ff8ba
+
+#  Revert "Update copyright and license on all source files" [Dan Macumber, 2018-03-15]
+1cb330a44de63d33c46606a9c4d94ccc504f623d
+
+#  Only apply copyright to our files [Dan Macumber, 2018-03-16]
+eb5a0c9f5b5c317900438b58e847bc00c70a8b76
+
+#  Modifying copyright in new file [Dan Macumber, 2018-03-21]
+2401ff85117676c0b8448c469bc227438f1d9f9b
+
+#  Update to add "and other contributors" to the copyright, install license and copyright files.  Will need to update copyright on all files after release. [Dan Macumber, 2018-03-28]
+afa781124c3b35a554d6077cdec57593fab95db9
+
+#  Merge pull request #3319 from NREL/update_copyright [Dan Macumber, 2018-10-19]
+0bcaadd2f34e3afefc5b2bbfff51995b6e5d125e
+
+#  Automatically fixed relative includes, include guards, and copyrights [Alex Swindler, 2018-10-26]
+ef32bef94388a132293687dcddffd3ae2ec7348d
+
+#  Updated copyright language in dialogs and properties [Alex Swindler, 2018-11-01]
+7242fb4c8fbd071cda4a8f0c68e5773ca28ba156
+
+#  Merge pull request #3331 from NREL/consistent-copyrights [Dan Macumber, 2018-11-01]
+639f289cf417735c5a9a6bc78cae674da7fc429b
+
+#  Updated copyrights [Alex Swindler, 2018-12-31]
+482a3873d083b2f7e50c7ae92bfcfb8a7117853b
+
+#  Consistent copyrights [Alex Swindler, 2018-12-31]
+33b92572e26d09357d9ec28b4dd8f0cd9205ab33
+
+#  Updated copyrights [Alex Swindler, 2019-01-02]
+e077c7edfa6c94bb37aeb0e31f40b69ed2740223
+
+#  Merge remote-tracking branch 'remotes/origin/develop3-copyright' into develop3 [Dan Macumber, 2019-01-03]
+b2d77f6923934f6cabe86560d46ef37002f1732b
+
+#  Updated copyrights for 2020 [Alex Swindler, 2020-02-28]
+1a0500de74b83093e22892a1f3ff3b67b799e648
