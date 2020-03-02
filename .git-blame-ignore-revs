@@ -20,6 +20,9 @@ c3a44f5d935a274d1d833323933d7df7f53e21dc
 # Updating all copyrights to 2014 [Alex Swindler, 2013-12-30]
 116f39e814d13d1797356dfbe026fafde051adb7
 
+# Implementing clang-modernize changes This adds auto, nullptr, and range-based for loops.  Many of the loops were not done automatically This also fixes some bugs (Does not include changes to openstudio_lib yet - clang-modernize crashed) [Alex Swindler, 2014-05-20]
+6e339134ada8da3a549e8e08ab97fb54350831a8
+
 # Adding missing copyrights, fixed incorrect copyrights Added missing include guards, fixed duplicate include guards Standardized and fixed all existing include guards Fixed all applicable relative includes Replaced BOOST_STATIC_ASSERT with static_assert Replaced boost::tuple with std::tuple Fixed typos [Alex Swindler, 2014-05-28]
 8a68ad74f872cede4a985047c66fe4272d81536d
 
@@ -34,6 +37,15 @@ c3a44f5d935a274d1d833323933d7df7f53e21dc
 
 # Cleaning up copyrights/includes [Alex Swindler, 2015-02-26]
 ffdc3e8d0607de9c497e2b5d2315770f7bf341a0
+
+# Implementing clang-modernize improvements [Alex Swindler, 2015-05-15]
+ec74b515ff25128bdfe8431ce87e44432222c798
+
+# Fixing issues revealed by clang-modernize changes [Alex Swindler, 2015-05-19]
+# 851e2157732c26216efb2a9525eeec61c2d6a9f7
+
+# Implementing clang-modernize improvements [Alex Swindler, 2015-05-20]
+01d88afb7adea7d8aeb0c91150e2b6e434430e44
 
 # Fixing physical line endings in git storage Mixed -> LF Windows -> LF BOM -> removed [Alex Swindler, 2015-09-30]
 3b0d232b5f99a2a331804a8f9762f32a99b1a56b
