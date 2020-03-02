@@ -168,6 +168,8 @@ namespace detail {
 
     boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
+    boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const;
+
     //@}
     /** @name Setters */
     //@{

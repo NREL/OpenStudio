@@ -795,7 +795,11 @@ namespace openstudio{
 
       bool isSupportedVersion() const;
 
+      // Sql got "year" in 8.9.0 and working for 9.0.1
       bool hasYear() const;
+
+      // DaylightMapHourlyReports added Year in 9.2.0
+      bool hasIlluminanceMapYear() const;
 
     private:
 
@@ -837,6 +841,8 @@ namespace openstudio{
       bool m_supportedVersion;
 
       bool m_hasYear;
+
+      bool m_hasIlluminanceMapYear;
 
       REGISTER_LOGGER("openstudio.energyplus.SqlFile");
     };
