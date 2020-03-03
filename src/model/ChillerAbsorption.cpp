@@ -28,7 +28,11 @@
 ***********************************************************************************************************************/
 
 #include "ChillerAbsorption.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "ChillerAbsorption_Impl.hpp"
+#include "Node.hpp"
+#include "PlantLoop.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Chiller_Absorption_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -347,8 +351,14 @@ namespace detail {
   }
 
   bool ChillerAbsorption_Impl::setGeneratorHeatSourceType(std::string generatorHeatSourceType) {
-    bool result = setString(OS_Chiller_AbsorptionFields::GeneratorHeatSourceType, generatorHeatSourceType);
-    return result;
+    bool ok = false;
+    if( istringEqual("Steam", generatorHeatSourceType) && (this->generatorLoop()) ) {
+      // We don't support Steam loops in OS right now
+      LOG(Warn, "Cannot set generatorHeatSourceType to 'Steam' as chiller '"  << this->name() << "' is connected to a generatorLoop");
+    } else {
+      ok = setString(OS_Chiller_AbsorptionFields::GeneratorHeatSourceType, generatorHeatSourceType);
+    }
+    return ok;
   }
 
   bool ChillerAbsorption_Impl::setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate) {
@@ -389,6 +399,90 @@ namespace detail {
 
   unsigned ChillerAbsorption_Impl::demandOutletPort() const {
     return OS_Chiller_AbsorptionFields::CondenserOutletNodeName;
+  }
+
+  unsigned ChillerAbsorption_Impl::tertiaryInletPort() const {
+    return OS_Chiller_AbsorptionFields::GeneratorInletNodeName;
+  }
+
+  unsigned ChillerAbsorption_Impl::tertiaryOutletPort() const {
+    return OS_Chiller_AbsorptionFields::GeneratorOutletNodeName;
+  }
+
+  bool ChillerAbsorption_Impl::addToNode(Node & node)
+  {
+
+    boost::optional<PlantLoop> t_plantLoop = node.plantLoop();
+
+    // If trying to add to a node that is on the demand side of a plant loop
+    if( t_plantLoop ) {
+      if( t_plantLoop->demandComponent(node.handle()) ) {
+        // If there is already a condenser water Plant Loop
+        if (boost::optional<PlantLoop> cndLoop = this->condenserWaterLoop()) {
+          // And it's not the same as the node's loop
+          if (t_plantLoop.get() != cndLoop.get()) {
+            // And if there is no generator loop (tertiary)
+            if (!this->generatorLoop().is_initialized()) {
+              // Then try to add it to the tertiary one
+              LOG(Warn, "Calling addToTertiaryNode to connect it to the tertiary (=Generator Loop) loop for " << briefDescription());
+              return this->addToTertiaryNode(node);
+            }
+          }
+        }
+      }
+    }
+
+    // All other cases, call the base class implementation
+    return WaterToWaterComponent_Impl::addToNode(node);
+  }
+
+  bool ChillerAbsorption_Impl::addToTertiaryNode(Node & node)
+  {
+    auto _model = node.model();
+    auto t_plantLoop = node.plantLoop();
+
+    // Only accept adding to a node that is on a demand side of a plant loop
+    // Since tertiary here = generator loop (heating)
+    if( t_plantLoop ) {
+      if( t_plantLoop->demandComponent(node.handle()) ) {
+        // Call base class method which accepts both supply and demand
+        bool ok = WaterToWaterComponent_Impl::addToTertiaryNode(node);
+        if (ok) {
+          LOG(Info, "Setting Generator Heat Source Type to 'HotWater' for " << briefDescription());
+          this->setGeneratorHeatSourceType("HotWater");
+          return true;
+        }
+      } else {
+         LOG(Info, "Tertiary Loop (Generator Loop) connections can only be placed on the Demand side (of a Heating Loop), for " << briefDescription());
+      }
+    }
+    return false;
+  }
+
+  bool ChillerAbsorption_Impl::removeFromTertiaryPlantLoop()
+  {
+    // Disconnect the component
+    bool ok = WaterToWaterComponent_Impl::removeFromTertiaryPlantLoop();
+    if (ok) {
+      // Switch the Generator Heat Source Type to "Steam"
+      this->setGeneratorHeatSourceType("Steam");
+    }
+    return ok;
+  }
+
+  /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
+  boost::optional<PlantLoop> ChillerAbsorption_Impl::chilledWaterLoop() const {
+    return WaterToWaterComponent_Impl::plantLoop();
+  }
+
+  /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
+  boost::optional<PlantLoop> ChillerAbsorption_Impl::condenserWaterLoop() const {
+    return WaterToWaterComponent_Impl::secondaryPlantLoop();
+  }
+
+  /** Convenience Function to return the Heat Recovery Loop (chiller on demand side) **/
+  boost::optional<PlantLoop> ChillerAbsorption_Impl::generatorLoop() const {
+    return WaterToWaterComponent_Impl::tertiaryPlantLoop();
   }
 
   boost::optional<double> ChillerAbsorption_Impl::autosizedNominalCapacity() const {
@@ -688,6 +782,19 @@ bool ChillerAbsorption::setDegreeofSubcoolinginSteamGenerator(double degreeofSub
 
 bool ChillerAbsorption::setSizingFactor(double sizingFactor) {
   return getImpl<detail::ChillerAbsorption_Impl>()->setSizingFactor(sizingFactor);
+}
+
+// Convenience functions
+boost::optional<PlantLoop> ChillerAbsorption::chilledWaterLoop() const {
+  return getImpl<detail::ChillerAbsorption_Impl>()->chilledWaterLoop();
+}
+
+boost::optional<PlantLoop> ChillerAbsorption::condenserWaterLoop() const {
+  return getImpl<detail::ChillerAbsorption_Impl>()->condenserWaterLoop();
+}
+
+boost::optional<PlantLoop> ChillerAbsorption::generatorLoop() const {
+  return getImpl<detail::ChillerAbsorption_Impl>()->generatorLoop();
 }
 
 /// @cond

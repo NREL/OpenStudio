@@ -38,8 +38,10 @@ class ClimateZones_Test < MiniTest::Unit::TestCase
     model = OpenStudio::Model::Model.new
 
     climateZones = model.getClimateZones
+    assert_equal(0, climateZones.numClimateZones)
+    climateZones.pushExtensibleGroup # same as the old Ctor
 
-    assert_equal(1,climateZones.numClimateZones)
+    assert_equal(1, climateZones.numClimateZones)
     individualZones = climateZones.climateZones
     assert_equal(1,individualZones.size)
     defaultZone = individualZones[0]

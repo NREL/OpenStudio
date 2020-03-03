@@ -4959,6 +4959,26 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else if (iddname == "OS:ClimateZones") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Deleted Field 1 & 2 (0-indexed): 'Active Institution' and 'Active Year'
+      for (size_t i = 0; i < object.numFields(); ++i) {
+         if ((value = object.getString(i))) {
+          if (i < 1) {
+            // 0 Unchanged
+            newObject.setString(i, value.get());
+          } else if (i > 2) {
+            // 3-End shifted -2
+            newObject.setString(i-2, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     } else if (iddname == "OS:Boiler:HotWater") {
       auto iddObject = idd_3_0_0.getObject(iddname);
       IdfObject newObject(iddObject.get());
@@ -4973,6 +4993,56 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
             // 8-End shifted -1
             newObject.setString(i-1, value.get());
           }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Chiller:Electric:EIR") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        // 6: Reference Chilled Water Flow Rate: used to default to autosize in IDD, now required
+        if (i == 6) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+            newObject.setDouble(i, _value.get());
+          } else {
+            // If not a double, it's Autosize (either hard-set, or by default from 2.9.1 IDD)
+            newObject.setString(i, "Autosize");
+          }
+
+        // 24: Design Heat Recovery Water Flow Rate: was already required, and used to default to 0.0 in CTOR:
+        //     * Technically we could get away doing nothing here.
+        //     * Instead we'll check if the value is 0.0 (old ctor default) and that it's not connected to a HR Loop
+        //       by checking field 25 ('Heat Recovery Inlet Node Name'), in which case we switch it to Autosize
+        } else if (i == 24) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+            newObject.setDouble(i, _value.get());
+
+            // Unless it was 0.0 (default ctor) and not connected to a HR loop, then switch it to Autosize
+            if (_value.get() == 0.0) {
+              if (!object.getString(25).has_value()) {
+                newObject.setString(i, "Autosize");
+              }
+            }
+          } else {
+            // Should never get here, but just in case...
+            newObject.setString(i, "Autosize");
+          }
+
+        // 31: Condenser Heat Recovery Relative Capacity Fraction => now required, defaults to 1.0
+        } else if (i == 31) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+            newObject.setDouble(i, _value.get());
+          } else {
+            newObject.setDouble(i, 1.0);
+          }
+
+        // All other fields: unchanged
+        } else if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
         }
       }
 

@@ -125,6 +125,21 @@ OptionalModelObject ReverseTranslator::translateSimulationControl( const Workspa
     }
   }
 
+  optS = workspaceObject.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods);
+  if(optS)
+  {
+    if (openstudio::istringEqual("Yes", optS.get())) {
+      simCon.setDoHVACSizingSimulationforSizingPeriods(true);
+    } else {
+      simCon.setDoHVACSizingSimulationforSizingPeriods(false);
+    }
+  }
+
+  // Don't return default
+  if (boost::optional<int> _i = workspaceObject.getInt(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false)) {
+    simCon.setMaximumNumberofHVACSizingSimulationPasses(_i.get());
+  }
+
   result = simCon;
   return result;
 }

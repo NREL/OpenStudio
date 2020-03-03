@@ -35,6 +35,8 @@
 #include "../../model/SimulationControl.hpp"
 #include "../../model/SizingPeriod.hpp"
 #include "../../model/SizingPeriod_Impl.hpp"
+#include "../../model/SizingPlant.hpp"
+#include "../../model/SizingPlant_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
 #include <utilities/idd/SimulationControl_FieldEnums.hxx>
@@ -118,6 +120,31 @@ boost::optional<IdfObject> ForwardTranslator::translateSimulationControl( Simula
   else
   {
     simCon.setString(openstudio::SimulationControlFields::RunSimulationforWeatherFileRunPeriods,"No");
+  }
+
+  if( modelObject.doHVACSizingSimulationforSizingPeriods() ) {
+    simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"Yes");
+  } else if (numSizingPeriods > 0) {
+    // Sizing:Plant I/O: "The use of 'Coincident' sizing option requires that the object
+    // be set to YES for the input field called Do HVAC Sizing Simulation for Sizing Periods"
+    std::vector<PlantLoop> plantLoops = modelObject.model().getConcreteModelObjects<PlantLoop>();
+    if (std::any_of(plantLoops.begin(), plantLoops.end(),
+          [](const PlantLoop& p) { return openstudio::istringEqual("Coincident", p.sizingPlant().sizingOption()); }))
+    {
+      simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"Yes");
+    } else {
+      if (!modelObject.isDoZoneSizingCalculationDefaulted()) {
+        simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"No");
+      }
+    }
+  } else {
+    if (!modelObject.isDoZoneSizingCalculationDefaulted()) {
+      simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"No");
+    }
+  }
+
+  if (!modelObject.isMaximumNumberofHVACSizingSimulationPassesDefaulted()) {
+    simCon.setInt(openstudio::SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, modelObject.maximumNumberofHVACSizingSimulationPasses());
   }
 
   // other fields mapped to Building

@@ -1733,4 +1733,12 @@ bool SqlFile::hasYear() const {
   return true;
 }
 
+bool SqlFile::hasIlluminanceMapYear() const {
+  if (m_impl) {
+    return m_impl->hasIlluminanceMapYear();
+  }
+
+  return true;
+}
+
 } // openstudio

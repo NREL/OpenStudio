@@ -386,6 +386,23 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   EXPECT_EQ(expected.minor(), actual.minor());
   EXPECT_EQ(expected.patch(), actual.patch());
 
+  // Check if the SqlFile has the 'Year' field
+  if (expected >= VersionString(9, 0)) {
+    EXPECT_TRUE(sqlFile->hasYear());
+  } else if (expected < VersionString(8, 9)) {
+    EXPECT_FALSE(sqlFile->hasYear());
+  } else {
+    // For 8.9.0, seems that it has the 'Year' field but it's always zero...
+    EXPECT_FALSE(sqlFile->hasYear()) << "Failed for " << name;
+  }
+
+  // Check if the SqlFile has the 'Year' field for IlluminanceMap, which was added later in 9.2.0
+  if (expected < VersionString(9,2)) {
+    EXPECT_FALSE(sqlFile->hasIlluminanceMapYear());
+  } else {
+    EXPECT_TRUE(sqlFile->hasIlluminanceMapYear());
+  }
+
   ASSERT_TRUE(sqlFile->hoursSimulated());
   EXPECT_EQ(8760.0, sqlFile->hoursSimulated().get()) << name;
   ASSERT_TRUE(sqlFile->netSiteEnergy());
@@ -562,6 +579,13 @@ TEST_F(SqlFileFixture, Regressions) {
   regressionTestSqlFile("1ZoneEvapCooler-V8-2-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V8-3-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V8-4-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-5-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-6-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-7-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-8-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-9-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V9-0-1.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V9-1-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V9-2-0.sql", 43.28, 20, 20);
 }
 

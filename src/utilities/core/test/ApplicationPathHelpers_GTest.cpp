@@ -215,9 +215,9 @@ TEST(ApplicationPathHelpers, Simple_test_forThisModule) {
     // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
 #if defined(_WIN32)
   #if _DEBUG
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/libopenstudiolib.dll");
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/openstudiolib.dll");
   #else
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/libopenstudiolib.dll");
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/openstudiolib.dll");
   #endif
 #elif __APPLE__
     openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/libopenstudiolib.dylib");

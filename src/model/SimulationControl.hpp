@@ -121,6 +121,12 @@ class MODEL_API SimulationControl : public ParentObject {
 
   bool isMinimumNumberofWarmupDaysDefaulted() const;
 
+  bool doHVACSizingSimulationforSizingPeriods() const;
+  bool isDoHVACSizingSimulationforSizingPeriodsDefaulted() const;
+
+  int maximumNumberofHVACSizingSimulationPasses() const;
+  bool isMaximumNumberofHVACSizingSimulationPassesDefaulted() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -174,6 +180,13 @@ class MODEL_API SimulationControl : public ParentObject {
   bool setMinimumNumberofWarmupDays(int minimumNumberofWarmupDays);
 
   void resetMinimumNumberofWarmupDays();
+
+  bool setDoHVACSizingSimulationforSizingPeriods(bool doHVACSizingSimulationforSizingPeriods);
+  void setDoHVACSizingSimulationforSizingPeriodsNoFail(bool doHVACSizingSimulationforSizingPeriods);
+  void resetDoHVACSizingSimulationforSizingPeriods();
+
+  bool setMaximumNumberofHVACSizingSimulationPasses(int maximumNumberofHVACSizingSimulationPasses);
+  void resetMaximumNumberofHVACSizingSimulationPasses();
 
   //@}
 
