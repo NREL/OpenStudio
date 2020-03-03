@@ -37,8 +37,9 @@ namespace model {
 
 class ChillerElectricEIR;
 class CurveBiquadratic;
-class  CurveQuadratic;
+class CurveQuadratic;
 class Schedule;
+class Node;
 
 namespace detail {
 
@@ -72,21 +73,34 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   virtual const std::vector<std::string> & outputVariableNames() const override;
 
-  virtual bool addToNode(Node & node) override;
-
-  virtual bool removeFromSecondaryPlantLoop() override;
-
+  // chilledWaterLoop
   virtual unsigned supplyInletPort() const override;
-
   virtual unsigned supplyOutletPort() const override;
 
+  // condenserWaterLoop
   virtual unsigned demandInletPort() const override;
-
   virtual unsigned demandOutletPort() const override;
 
+  // heatRecoveryLoop
   virtual unsigned tertiaryInletPort() const override;
-
   virtual unsigned tertiaryOutletPort() const override;
+
+  /* This function will perform a check if trying to add it to a node that is on the demand side of a plant loop.
+   * If:
+   *     - the node is on the demand side of a loop
+   *     - the node isn't on the current condenser water loop itself
+   *     - the chiller doesn't already have a heat recovery (tertiary) loop,
+   * then it tries to add it to the Tertiary loop.
+   * In all other cases, it will call the base class' method WaterToWaterComponent_Impl::addToNode()
+   * If this is connecting to the demand side of a loop (not tertiary), will set the chiller condenserType to WaterCooled
+   */
+  virtual bool addToNode(Node & node) override;
+
+  /* Restricts addToTertiaryNode to a node that is on the demand side of a plant loop (tertiary = Heat Recovery Loop) */
+  virtual bool addToTertiaryNode(Node & node) override;
+
+  /** Override to switch the condenser type to 'AirCooled' **/
+  virtual bool removeFromSecondaryPlantLoop() override;
 
   virtual void autosize() override;
 
@@ -137,14 +151,6 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   bool isMinimumUnloadingRatioDefaulted() const;
 
-  std::string chilledWaterInletNodeName() const;
-
-  std::string chilledWaterOutletNodeName() const;
-
-  boost::optional<std::string> condenserInletNodeName() const;
-
-  boost::optional<std::string> condenserOutletNodeName() const;
-
   std::string condenserType() const;
 
   bool isCondenserTypeDefaulted() const;
@@ -153,9 +159,9 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   bool isCondenserFanPowerRatioDefaulted() const;
 
-  double compressorMotorEfficiency() const;
+  double fractionofCompressorElectricConsumptionRejectedbyCondenser() const;
 
-  bool isCompressorMotorEfficiencyDefaulted() const;
+  bool isFractionofCompressorElectricConsumptionRejectedbyCondenserDefaulted() const;
 
   double leavingChilledWaterLowerTemperatureLimit() const;
 
@@ -165,13 +171,9 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   bool isChillerFlowModeDefaulted() const;
 
-  double designHeatRecoveryWaterFlowRate() const;
+  boost::optional<double> designHeatRecoveryWaterFlowRate() const;
 
-  bool isDesignHeatRecoveryWaterFlowRateDefaulted() const;
-
-  boost::optional<std::string> heatRecoveryInletNodeName() const;
-
-  boost::optional<std::string> heatRecoveryOutletNodeName() const;
+  bool isDesignHeatRecoveryWaterFlowRateAutosized() const;
 
   double sizingFactor() const;
 
@@ -187,11 +189,11 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   boost::optional<Schedule> basinHeaterSchedule() const;
 
-  boost::optional<double> autosizedReferenceCapacity() const ;
+  double condenserHeatRecoveryRelativeCapacityFraction() const;
 
-  boost::optional<double> autosizedReferenceChilledWaterFlowRate() const ;
+  boost::optional<Schedule> heatRecoveryInletHighTemperatureLimitSchedule() const;
 
-  boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
+  boost::optional<Node> heatRecoveryLeavingTemperatureSetpointNode() const;
 
   std::string endUseSubcategory() const;
 
@@ -253,22 +255,6 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   void resetMinimumUnloadingRatio();
 
-  bool setChilledWaterInletNodeName(std::string chilledWaterInletNodeName);
-
-  bool setChilledWaterOutletNodeName(std::string chilledWaterOutletNodeName);
-
-  bool setCondenserInletNodeName(boost::optional<std::string> condenserInletNodeName);
-
-  bool setCondenserInletNodeName(std::string condenserInletNodeName);
-
-  void resetCondenserInletNodeName();
-
-  bool setCondenserOutletNodeName(boost::optional<std::string> condenserOutletNodeName);
-
-  bool setCondenserOutletNodeName(std::string condenserOutletNodeName);
-
-  void resetCondenserOutletNodeName();
-
   bool setCondenserType(std::string condenserType);
 
   void resetCondenserType();
@@ -277,9 +263,9 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   void resetCondenserFanPowerRatio();
 
-  bool setCompressorMotorEfficiency(double compressorMotorEfficiency);
+  bool setFractionofCompressorElectricConsumptionRejectedbyCondenser(double fractionofCompressorElectricConsumptionRejectedbyCondenser);
 
-  void resetCompressorMotorEfficiency();
+  void resetFractionofCompressorElectricConsumptionRejectedbyCondenser();
 
   bool setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit);
 
@@ -291,19 +277,7 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   bool setDesignHeatRecoveryWaterFlowRate(double designHeatRecoveryWaterFlowRate);
 
-  void resetDesignHeatRecoveryWaterFlowRate();
-
-  bool setHeatRecoveryInletNodeName(boost::optional<std::string> heatRecoveryInletNodeName);
-
-  bool setHeatRecoveryInletNodeName(std::string heatRecoveryInletNodeName);
-
-  void resetHeatRecoveryInletNodeName();
-
-  bool setHeatRecoveryOutletNodeName(boost::optional<std::string> heatRecoveryOutletNodeName);
-
-  bool setHeatRecoveryOutletNodeName(std::string heatRecoveryOutletNodeName);
-
-  void resetHeatRecoveryOutletNodeName();
+  void autosizeDesignHeatRecoveryWaterFlowRate();
 
   bool setSizingFactor(double sizingFactor);
 
@@ -321,21 +295,34 @@ class MODEL_API ChillerElectricEIR_Impl : public WaterToWaterComponent_Impl
 
   void resetBasinHeaterSchedule();
 
+  bool setCondenserHeatRecoveryRelativeCapacityFraction(double condenserHeatRecoveryRelativeCapacityFraction);
+
+  bool setHeatRecoveryInletHighTemperatureLimitSchedule(Schedule& s);
+  void resetHeatRecoveryInletHighTemperatureLimitSchedule();
+
+  bool setHeatRecoveryLeavingTemperatureSetpointNode(const Node& node);
+  void resetHeatRecoveryLeavingTemperatureSetpointNode();
+
   bool setEndUseSubcategory(const std::string & endUseSubcategory);
 
-  // TODO
-  /*
-   *N18, \field Condenser Heat Recovery Relative Capacity Fraction
-   *     \note This optional field is the fraction of total rejected heat that can be recovered at full load
-   *     \type real
-   *     \minimum 0.0
-   *     \maximum 1.0
-   *A15, \field Heat Recovery Inlet High Temperature Limit Schedule Name
-   *     \note This optional schedule of temperatures will turn off heat recovery if inlet exceeds the value
-   *     \type object-list
-   *     \object-list ScheduleNames
-   *A16, \field Heat Recovery Leaving Temperature Setpoint Node Name
-   */
+  //@}
+  /** @name Other */
+  //@{
+
+  boost::optional<double> autosizedReferenceCapacity() const ;
+
+  boost::optional<double> autosizedReferenceChilledWaterFlowRate() const ;
+
+  boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
+
+  /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
+  boost::optional<PlantLoop> chilledWaterLoop() const;
+
+  /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
+  boost::optional<PlantLoop> condenserWaterLoop() const;
+
+  /** Convenience Function to return the Heat Recovery Loop (chiller on demand side - tertiary) **/
+  boost::optional<PlantLoop> heatRecoveryLoop() const;
 
   //@}
  protected:

@@ -226,7 +226,7 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   // CompressorMotorEfficiency
   // Changed to Fraction of Compressor Electric Consumption Rejected by Condenser in E+ version 8.0
 
-  if( (value = modelObject.compressorMotorEfficiency()) )
+  if( (value = modelObject.fractionofCompressorElectricConsumptionRejectedbyCondenser()) )
   {
     idfObject.setDouble(Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser,value.get());
   }
@@ -278,8 +278,15 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
     idfObject.setString(Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName,_curve->name().get());
   }
 
-  if( (value = modelObject.sizingFactor()) ) {
-    idfObject.setDouble(Chiller_Electric_EIRFields::SizingFactor,value.get());
+
+  // DesignHeatRecoveryWaterFlowRate
+  if( modelObject.isDesignHeatRecoveryWaterFlowRateAutosized() )
+  {
+    idfObject.setString(Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,"Autosize");
+  }
+  else if( (value = modelObject.designHeatRecoveryWaterFlowRate()) )
+  {
+    idfObject.setDouble(Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,value.get());
   }
 
   // HeatRecoveryInletNodeName
@@ -300,6 +307,35 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
     }
   }
 
+  // Sizing Factor
+  if( (value = modelObject.sizingFactor()) ) {
+    idfObject.setDouble(Chiller_Electric_EIRFields::SizingFactor,value.get());
+  }
+
+  // Basin Heater Capacity
+  idfObject.setDouble(Chiller_Electric_EIRFields::BasinHeaterCapacity, modelObject.basinHeaterCapacity());
+
+  // Basin Heater Setpoint Temperature
+  idfObject.setDouble(Chiller_Electric_EIRFields::BasinHeaterSetpointTemperature, modelObject.basinHeaterSetpointTemperature());
+
+  // Basin Heater Operating Schedule Name
+  if (auto _schedule = modelObject.basinHeaterSchedule()) {
+    idfObject.setString(Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName, _schedule->name().get());
+  }
+
+  // Condenser Heat Recovery Relative Capacity Fraction
+  idfObject.setDouble(Chiller_Electric_EIRFields::CondenserHeatRecoveryRelativeCapacityFraction, modelObject.condenserHeatRecoveryRelativeCapacityFraction());
+
+  // Heat Recovery Inlet High Temperature Limit Schedule Name
+  if (auto _schedule = modelObject.heatRecoveryInletHighTemperatureLimitSchedule()) {
+    idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName, _schedule->name().get());
+  }
+
+  // Heat Recovery Leaving Temperature Setpoint Node Name
+  if (auto _node = modelObject.heatRecoveryLeavingTemperatureSetpointNode()) {
+    idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryLeavingTemperatureSetpointNodeName, _node->name().get());
+  }
+
   // End Use Subcategory
   if( (s = modelObject.endUseSubcategory()) ) {
     idfObject.setString(Chiller_Electric_EIRFields::EndUseSubcategory,s.get());
@@ -307,22 +343,6 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
 
   return boost::optional<IdfObject>(idfObject);
 }
-
-//OPENSTUDIO_ENUM( Chiller_Electric_EIRFields,
-//  ((Name)(Name))
-//  ((CoolingCapacityFunctionofTemperatureCurveName)(Cooling Capacity Function of Temperature Curve Name))
-//  ((ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName)(Electric Input to Cooling Output Ratio Function of Temperature Curve Name))
-//  ((ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName)(Electric Input to Cooling Output Ratio Function of Fan Coil Part Load Ratio Curve Name))
-//  ((CondenserInletNodeName)(Condenser Inlet Node Name))
-//  ((CondenserOutletNodeName)(Condenser Outlet Node Name))
-//  ((DesignHeatRecoveryWaterFlowRate)(Design Heat Recovery Water Flow Rate))
-//  ((HeatRecoveryInletNodeName)(Heat Recovery Inlet Node Name))
-//  ((HeatRecoveryOutletNodeName)(Heat Recovery Outlet Node Name))
-//  ((SizingFactor)(Sizing Factor))
-//  ((BasinHeaterCapacity)(Basin Heater Capacity))
-//  ((BasinHeaterSetpointTemperature)(Basin Heater Setpoint Temperature))
-//  ((BasinHeaterOperatingScheduleName)(Basin Heater Operating Schedule Name))
-//);
 
 } // energyplus
 

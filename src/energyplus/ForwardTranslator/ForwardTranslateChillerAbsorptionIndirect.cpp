@@ -212,7 +212,7 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerAbsorptionIndirect
     idfObject.setString(Chiller_Absorption_IndirectFields::GeneratorHeatSourceType,value);
   }
 
-  if( modelObject.tertiaryPlantLoop() ) {
+  if( modelObject.generatorLoop() ) {
     if( modelObject.isDesignGeneratorFluidFlowRateAutosized() ) {
       idfObject.setString(Chiller_Absorption_IndirectFields::DesignGeneratorFluidFlowRate,"Autosize");
     } else if( auto value = modelObject.designGeneratorFluidFlowRate() ) {
