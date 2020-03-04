@@ -422,10 +422,10 @@ OS:SimulationControl,
        \note to start EnergyPlus simulation for all reference buildings was suggested to be 6.
        \note When this field is greater than the maximum warmup days defined previous field
        \note the maximum number of warmup days will be reset to the minimum value entered here.
-       \note Warmup days will be set to be the value you entered when it is less than the default 6.
+       \note Warmup days will be set to be the value you entered when it is less than the default 1.
        \type integer
        \minimum> 0
-       \default 6
+       \default 1
   A8, \field Do HVAC Sizing Simulation for Sizing Periods
       \note If Yes, SizingPeriod:* objects are exectuted additional times for advanced sizing.
       \note Currently limited to use with coincident plant sizing, see Sizing:Plant object
