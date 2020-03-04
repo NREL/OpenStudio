@@ -74,12 +74,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
   ///////////////////////////////////////////////////////////////////////////
   // Field: Fuel Type
   ///////////////////////////////////////////////////////////////////////////
-  if (modelObject.fuelType() == "PropaneGas") {
-    LOG(Warn, "'PropaneGas' is deprecated for Coil_Heating_FuelFields:FuelType, use 'Propane' instead.")
-    idfObject.setString(openstudio::Coil_Heating_FuelFields::FuelType, "Propane");
-  } else {
-    idfObject.setString(openstudio::Coil_Heating_FuelFields::FuelType, modelObject.fuelType());
-  }
+  idfObject.setString(openstudio::Coil_Heating_FuelFields::FuelType, modelObject.fuelType());
 
   ///////////////////////////////////////////////////////////////////////////
 

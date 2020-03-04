@@ -54,7 +54,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGas) {
     coilHeatingGas.setNominalCapacity(1535.0);
     coilHeatingGas.setParasiticElectricLoad(48.0);
     coilHeatingGas.setParasiticGasLoad(51.0);
-    coilHeatingGas.setFuelType("PropaneGas");
+    coilHeatingGas.setFuelType("Propane");
 
     ForwardTranslator forwardTranslator;
     Workspace workspace = forwardTranslator.translateModel(model);

@@ -247,7 +247,7 @@ namespace detail {
     return OptionalDouble();
   }
 
-   // pass in "Electric", "Gas", or "Other"
+   // pass in "Electric", "NaturalGas", or "Other"
   OptionalDouble Facility_Impl::annualTotalCost(const FuelType& fuel) const
   {
     OptionalSqlFile mySqlFile = model().sqlFile();

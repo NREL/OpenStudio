@@ -1046,7 +1046,7 @@ Loop addSHWLoop(Model& model) {
   wh.setIndirectWaterHeatingRecoveryTime(1.5); // 1.5hrs
 
   // Assume gas
-  wh.setHeaterFuelType("Gas");
+  wh.setHeaterFuelType("NaturalGas");
   // Result from running the prototype building for 90.1-2013 HighRiseApartment
   wh.setHeaterThermalEfficiency(0.80154340529419);
 
@@ -1058,8 +1058,8 @@ Loop addSHWLoop(Model& model) {
   // 8742 Btu/hr (from prototype)
   wh.setOffCycleParasiticFuelConsumptionRate(2562);
   wh.setOnCycleParasiticFuelConsumptionRate(2562);
-  wh.setOffCycleParasiticFuelType("Gas");
-  wh.setOnCycleParasiticFuelType("Gas");
+  wh.setOffCycleParasiticFuelType("NaturalGas");
+  wh.setOnCycleParasiticFuelType("NaturalGas");
   wh.setOffCycleLossCoefficienttoAmbientTemperature(6.0);
   wh.setOnCycleLossCoefficienttoAmbientTemperature(6.0);
   wh.setEndUseSubcategory("Service Hot Water Heating");
