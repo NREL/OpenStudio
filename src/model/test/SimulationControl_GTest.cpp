@@ -181,15 +181,15 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
 
 
   // Minimum Number of Warmup Days:  Integer
-  // Check Idd default: 6
+  // Check Idd default: 1 (Used to be 6 before 9.3.0)
   EXPECT_TRUE(simulationControl.isMinimumNumberofWarmupDaysDefaulted());
-  EXPECT_EQ(6, simulationControl.minimumNumberofWarmupDays());
+  EXPECT_EQ(1, simulationControl.minimumNumberofWarmupDays());
   EXPECT_TRUE(simulationControl.setMinimumNumberofWarmupDays(3));
   EXPECT_FALSE(simulationControl.isMinimumNumberofWarmupDaysDefaulted());
   EXPECT_EQ(3, simulationControl.minimumNumberofWarmupDays());
   // Test reset
   simulationControl.resetMinimumNumberofWarmupDays();
-  EXPECT_EQ(6, simulationControl.minimumNumberofWarmupDays());
+  EXPECT_EQ(1, simulationControl.minimumNumberofWarmupDays());
   EXPECT_TRUE(simulationControl.isMinimumNumberofWarmupDaysDefaulted());
 
 

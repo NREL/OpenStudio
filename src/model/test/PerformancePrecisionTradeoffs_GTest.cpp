@@ -92,12 +92,12 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_SetGetFields) {
   performancePrecisionTradeoffs.resetUseCoilDirectSolutions();
   EXPECT_TRUE(performancePrecisionTradeoffs.isUseCoilDirectSolutionsDefaulted());
 
-  EXPECT_TRUE(performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm("CarollMRT"));
+  EXPECT_TRUE(performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm("CarrollMRT"));
   EXPECT_FALSE(performancePrecisionTradeoffs.isZoneRadiantExchangeAlgorithmDefaulted());
-  EXPECT_EQ("CarollMRT", performancePrecisionTradeoffs.zoneRadiantExchangeAlgorithm());
+  EXPECT_EQ("CarrollMRT", performancePrecisionTradeoffs.zoneRadiantExchangeAlgorithm());
   EXPECT_FALSE(performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm("BADENUM"));
   EXPECT_FALSE(performancePrecisionTradeoffs.isZoneRadiantExchangeAlgorithmDefaulted());
-  EXPECT_EQ("CarollMRT", performancePrecisionTradeoffs.zoneRadiantExchangeAlgorithm());
+  EXPECT_EQ("CarrollMRT", performancePrecisionTradeoffs.zoneRadiantExchangeAlgorithm());
   performancePrecisionTradeoffs.resetZoneRadiantExchangeAlgorithm();
   EXPECT_TRUE(performancePrecisionTradeoffs.isZoneRadiantExchangeAlgorithmDefaulted());
   EXPECT_EQ("ScriptF", performancePrecisionTradeoffs.zoneRadiantExchangeAlgorithm());
@@ -136,7 +136,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone)
 
   // change some of the fields
   EXPECT_TRUE(performancePrecisionTradeoffs.setUseCoilDirectSolutions(true));
-  EXPECT_TRUE(performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm("CarollMRT"));
+  EXPECT_TRUE(performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm("CarrollMRT"));
   EXPECT_TRUE(performancePrecisionTradeoffs.setOverrideMode("Advanced"));
   EXPECT_TRUE(performancePrecisionTradeoffs.setMaxZoneTempDiff(0.65));
 
@@ -145,7 +145,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone)
   EXPECT_FALSE(performancePrecisionTradeoffsClone.isUseCoilDirectSolutionsDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffsClone.useCoilDirectSolutions());
   EXPECT_FALSE(performancePrecisionTradeoffsClone.isZoneRadiantExchangeAlgorithmDefaulted());
-  EXPECT_EQ("CarollMRT", performancePrecisionTradeoffsClone.zoneRadiantExchangeAlgorithm());
+  EXPECT_EQ("CarrollMRT", performancePrecisionTradeoffsClone.zoneRadiantExchangeAlgorithm());
   EXPECT_FALSE(performancePrecisionTradeoffsClone.isOverrideModeDefaulted());
   EXPECT_EQ("Advanced", performancePrecisionTradeoffsClone.overrideMode());
   EXPECT_FALSE(performancePrecisionTradeoffsClone.isMaxZoneTempDiffDefaulted());
@@ -157,7 +157,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone)
   EXPECT_FALSE(performancePrecisionTradeoffsClone2.isUseCoilDirectSolutionsDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffsClone2.useCoilDirectSolutions());
   EXPECT_FALSE(performancePrecisionTradeoffsClone2.isZoneRadiantExchangeAlgorithmDefaulted());
-  EXPECT_EQ("CarollMRT", performancePrecisionTradeoffsClone2.zoneRadiantExchangeAlgorithm());
+  EXPECT_EQ("CarrollMRT", performancePrecisionTradeoffsClone2.zoneRadiantExchangeAlgorithm());
   EXPECT_FALSE(performancePrecisionTradeoffsClone2.isOverrideModeDefaulted());
   EXPECT_EQ("Advanced", performancePrecisionTradeoffsClone2.overrideMode());
   EXPECT_FALSE(performancePrecisionTradeoffsClone2.isMaxZoneTempDiffDefaulted());
