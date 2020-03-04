@@ -301,6 +301,7 @@ OS:RunPeriodControl:SpecialDays,
        \key CustomDay1
        \key CustomDay2
 
+! TODO: Major changes in E+
 OS:ShadowCalculation,
        \unique-object
        \min-fields 2
@@ -1221,6 +1222,7 @@ OS:Site:WaterMainsTemperature,
        \units deltaC
        \minimum 0
 
+! TODO: way out of line with E+
 OS:SizingPeriod:DesignDay,
        \min-fields 16
   A1, \field Handle
@@ -29978,8 +29980,8 @@ OS:LifeCycleCost:UsePriceEscalation,
         \key NaturalGas
         \key Steam
         \key Gasoline
-       \key Diesel
-       \key Coal
+        \key Diesel
+        \key Coal
         \key FuelOilNo1
         \key FuelOilNo2
         \key Propane
