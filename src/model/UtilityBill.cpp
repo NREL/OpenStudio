@@ -1327,9 +1327,9 @@ UtilityBill::UtilityBill(const FuelType& fuelType, const Model& model)
   bool test;
   test = setString(OS_UtilityBillFields::FuelType, fuelType.valueName());
   if (!test){
-    LOG(Error, fuelType.valueName());
+    remove();
+    LOG_AND_THROW("Unable to create UtilityBill for FuelType " << fuelType.valueName() << ".");
   }
-  OS_ASSERT(test);
 
   std::vector<std::string> consumptionUnitValues = this->consumptionUnitValues();
   OS_ASSERT(!consumptionUnitValues.empty());
