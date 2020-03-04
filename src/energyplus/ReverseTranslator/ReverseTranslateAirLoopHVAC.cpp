@@ -303,15 +303,11 @@ OptionalModelObject ReverseTranslator::translateAirLoopHVAC( const WorkspaceObje
               //
               if( zoneEquipmentName )
               {
+                // TODO: this block shouldn't happen. Unlike AirTerminal:SingleDuct:Uncontrolled (deprecated in 9.0.0, removed in 9.2.0)
+                // this object cannot be placed directly on a branch and uses a ZoneHVAC:AirDistributionUnit
                 if( istringEqual(optionalString.get(),"AirTerminal:SingleDuct:ConstantVolume:NoReheat") )
                 {
                   _airTerminal = _workspace.getObjectByTypeAndName(IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat,zoneEquipmentName.get());
-
-                  break;
-                }
-                if( istringEqual(optionalString.get(),"AirTerminal:SingleDuct:Uncontrolled") )
-                {
-                  _airTerminal = _workspace.getObjectByTypeAndName(IddObjectType::AirTerminal_SingleDuct_Uncontrolled,zoneEquipmentName.get());
 
                   break;
                 }

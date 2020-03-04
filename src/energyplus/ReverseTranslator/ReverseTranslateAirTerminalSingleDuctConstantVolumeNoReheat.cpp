@@ -44,9 +44,7 @@ namespace energyplus {
 
 OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctConstantVolumeNoReheat( const WorkspaceObject & workspaceObject )
 {
-  // SingleDuctUncontrolled was renamed as SingleDuctConstantVolumeNoReheat in E+ 9.0.0, but both can be used currently
-  if( !( (workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat )
-      || (workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_Uncontrolled ) ) )
+  if((workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat ))
   {
      LOG(Error, "WorkspaceObject is not IddObjectType: AirTerminal_SingleDuct_ConstantVolume_NoReheat");
      return boost::none;

@@ -330,13 +330,6 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       break;
     }
 
-  case openstudio::IddObjectType::AirTerminal_SingleDuct_Uncontrolled :
-    {
-      // We map this to ATU:CV:NoReheat which is the new name
-      modelObject = translateAirTerminalSingleDuctConstantVolumeNoReheat(workspaceObject );
-      break;
-    }
-
   case openstudio::IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat :
     {
       modelObject = translateAirTerminalSingleDuctConstantVolumeNoReheat(workspaceObject );
