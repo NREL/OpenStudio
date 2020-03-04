@@ -4882,6 +4882,57 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
   IdfFile targetIdf(idd_3_0_0.iddFile());
   ss << targetIdf.versionObject().get();
 
+  const std::vector<std::pair<std::string, std::string>> replaceFuelTypes({
+    {"PropaneGas", "Propane"},
+    {"FuelOil#1", "FuelOilNo1"},
+    {"FuelOil#2", "FuelOilNo2"},
+  });
+
+  // TODO:
+  //OS:OtherEquipment (PropaneGas, FuelOils)
+  //OS:Exterior:FuelEquipment
+  //OS:Coil:Cooling:DX:MultiSpeed
+  //OS:Coil:Heating:Gas (Fuel)
+  //OS:AirConditioner:VariableRefrigerantFlow
+  //OS:Boiler:HotWater
+  //OS:Boiler:Steam
+
+  //OS:WaterHeater:Mixed   **THREE FIELDS** (Heater Fuel Type, Off Cycle Parasitic Fuel Type, On Cycle Parasitic Fuel Type)
+  //OS:WaterHeater:Stratified
+
+  //OS:EnergyManagementSystem:MeteredOutputVariable
+
+  //OS:Generator:MicroTurbine
+  //OS:LifeCycleCost:UsePriceEscalation
+
+  //OS:Meter:Custom
+  //OS:Meter:CustomDecrement
+
+
+
+  auto replaceForField = [this, &ss, &replaceFuelTypes](const IdfObject& object, IdfObject& newObject, int fieldIndex, bool registerRefactor) {
+
+      bool hasReplaced = false;
+
+      if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
+        std::string fuelType = _fuelType.get();
+        for (const auto& r: replaceFuelTypes) {
+          if (openstudio::istringEqual(r.first, fuelType)) {
+            newObject.setString(fieldIndex, r.second);
+            hasReplaced = true;
+            break;
+          }
+        }
+      }
+
+      if (hasReplaced && registerRefactor) {
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+      }
+  };
+
+
+
   for (const IdfObject& object : idf_2_9_1.objects()) {
     auto iddname = object.iddObject().name();
 
@@ -4982,6 +5033,8 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
     } else if (iddname == "OS:Boiler:HotWater") {
       auto iddObject = idd_3_0_0.getObject(iddname);
       IdfObject newObject(iddObject.get());
+
+      replaceForField(object, newObject, 3, false);
 
       // Deleted Field 7: Design Water Outlet Temperature
       for (size_t i = 0; i < object.numFields(); ++i) {
