@@ -69,14 +69,14 @@ TEST_F(ModelFixture,CoilHeatingGas) {
   bool isOk = coilHeatingGas.setFuelType("Propane");
   EXPECT_TRUE(isOk);
   EXPECT_EQ(coilHeatingGas.fuelType(), "Propane");
-  isOk = coilHeatingGas.setFuelType("PropaneGas");
+  isOk = coilHeatingGas.setFuelType("Propane");
   EXPECT_TRUE(isOk);
-  EXPECT_EQ(coilHeatingGas.fuelType(), "PropaneGas");
+  EXPECT_EQ(coilHeatingGas.fuelType(), "Propane");
   coilHeatingGas.resetFuelType();
   EXPECT_EQ(coilHeatingGas.fuelType(), "NaturalGas");
 
   std::vector<std::string> validFuelTypes(coilHeatingGas.validFuelTypeValues());
-  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "PropaneGas"), validFuelTypes.end());
+  EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Propane"), validFuelTypes.end());
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "NaturalGas"), validFuelTypes.end());
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Diesel"), validFuelTypes.end());
   EXPECT_EQ(validFuelTypes.size(), 9);

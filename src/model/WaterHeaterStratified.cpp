@@ -127,13 +127,13 @@ namespace detail {
       // } else if (fuelType == "NaturalGas") {
       "Water Heater Gas Rate",
       "Water Heater Gas Energy",
-      // } else if (fuelType == "PropaneGas") {
+      // } else if (fuelType == "Propane") {
       "Water Heater Propane Rate",
       "Water Heater Propane Energy",
-      // } else if (fuelType == "FuelOil#1") {
+      // } else if (fuelType == "FuelOilNo1") {
       "Water Heater FuelOil#1 Rate",
       "Water Heater FuelOil#1 Energy",
-      // } else if (fuelType == "FuelOil#2") {
+      // } else if (fuelType == "FuelOilNo2") {
       "Water Heater FuelOil#2 Rate",
       "Water Heater FuelOil#2 Energy",
       // } else if (fuelType == "Coal") {

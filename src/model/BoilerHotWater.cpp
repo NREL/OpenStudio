@@ -93,13 +93,13 @@ namespace detail {
       // } else if (fuelType == "NaturalGas") {
       "Boiler Gas Rate",
       "Boiler Gas Energy",
-      // } else if (fuelType == "PropaneGas") {
+      // } else if (fuelType == "Propane") {
       "Boiler Propane Rate",
       "Boiler Propane Energy",
-      // } else if (fuelType == "FuelOil#1") {
+      // } else if (fuelType == "FuelOilNo1") {
       "Boiler FuelOil#1 Rate",
       "Boiler FuelOil#1 Energy",
-      // } else if (fuelType == "FuelOil#2") {
+      // } else if (fuelType == "FuelOilNo2") {
       "Boiler FuelOil#2 Rate",
       "Boiler FuelOil#2 Energy",
       // } else if (fuelType == "Coal") {

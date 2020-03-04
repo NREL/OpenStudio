@@ -177,8 +177,8 @@ TEST_F(ModelFixture, GeneratorMicroTurbine_DefaultsSettersGetters) {
   //Fuel Type
   EXPECT_TRUE(mchp.isFuelTypeDefaulted());
   EXPECT_EQ("NaturalGas", mchp.fuelType());
-  mchp.setFuelType("PropaneGas");
-  EXPECT_EQ("PropaneGas", mchp.fuelType());
+  mchp.setFuelType("Propane");
+  EXPECT_EQ("Propane", mchp.fuelType());
   EXPECT_FALSE(mchp.isFuelTypeDefaulted());
   mchp.resetFuelType();
   EXPECT_TRUE(mchp.isFuelTypeDefaulted());
