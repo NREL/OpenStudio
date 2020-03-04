@@ -66,23 +66,39 @@ namespace detail {
 
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override; 
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
     //@{
 
     bool useCoilDirectSolutions() const;
-    
     bool isUseCoilDirectSolutionsDefaulted() const;
+
+    std::string zoneRadiantExchangeAlgorithm() const;
+    bool isZoneRadiantExchangeAlgorithmDefaulted() const;
+
+    std::string overrideMode() const;
+    bool isOverrideModeDefaulted() const;
+
+    double maxZoneTempDiff() const;
+    bool isMaxZoneTempDiffDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
     bool setUseCoilDirectSolutions(bool useCoilDirectSolutions);
-    
     void resetUseCoilDirectSolutions();
+
+    bool setZoneRadiantExchangeAlgorithm(const std::string& zoneRadiantExchangeAlgorithm);
+    void resetZoneRadiantExchangeAlgorithm();
+
+    bool setOverrideMode(const std::string& overrideMode);
+    void resetOverrideMode();
+
+    bool setMaxZoneTempDiff(double maxZoneTempDiff);
+    void resetMaxZoneTempDiff();
 
     //@}
     /** @name Other */

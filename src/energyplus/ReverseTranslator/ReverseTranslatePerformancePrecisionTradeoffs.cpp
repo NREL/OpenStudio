@@ -64,6 +64,19 @@ OptionalModelObject ReverseTranslator::translatePerformancePrecisionTradeoffs( c
     }
   }
 
+  if (optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::OverrideMode)) {
+    performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm(optS.get());
+  }
+
+  if (optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::OverrideMode)) {
+    performancePrecisionTradeoffs.setOverrideMode(optS.get());
+  }
+
+  if (OptionalDouble optD = workspaceObject.getDouble(PerformancePrecisionTradeoffsFields::MaxZoneTempDiff)) {
+    performancePrecisionTradeoffs.setMaxZoneTempDiff(optD.get());
+  }
+
+
   return performancePrecisionTradeoffs;
 }
 

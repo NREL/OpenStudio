@@ -51,11 +51,23 @@ boost::optional<IdfObject> ForwardTranslator::translatePerformancePrecisionTrade
   IdfObject idfObject(openstudio::IddObjectType::PerformancePrecisionTradeoffs);
 
   m_idfObjects.push_back(idfObject);
-  
+
   if ( modelObject.useCoilDirectSolutions() ) {
     idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
   } else {
     idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "No");
+  }
+
+  if (!modelObject.isZoneRadiantExchangeAlgorithmDefaulted()) {
+    idfObject.setString(PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm, modelObject.zoneRadiantExchangeAlgorithm());
+  }
+
+  if (!modelObject.isOverrideModeDefaulted()) {
+    idfObject.setString(PerformancePrecisionTradeoffsFields::OverrideMode, modelObject.overrideMode());
+  }
+
+  if (!modelObject.isMaxZoneTempDiffDefaulted()) {
+    idfObject.setDouble(PerformancePrecisionTradeoffsFields::MaxZoneTempDiff, modelObject.maxZoneTempDiff());
   }
 
   return boost::optional<IdfObject>(idfObject);
