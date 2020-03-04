@@ -29139,7 +29139,7 @@ Coil:Cooling:DX:CurveFit:OperatingMode,
        \note Must be lower than or equal to the highest speed number.
        \note If blank, defaults to the highest speed number used.
        \type integer
-   A4, \field Speed 1 Name
+   A4; \field Speed 1 Name
        \required-field
        \type object-list
        \object-list DXCoolingSpeedNames
