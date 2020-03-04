@@ -1981,7 +1981,7 @@ OS:WeatherProperty:SkyTemperature,
        \key ScheduleValue
        \key DifferenceScheduleDryBulbValue
        \key DifferenceScheduleDewPointValue
-  A4; \field Schedule Name
+  A4, \field Schedule Name
        \note if name matches a SizingPeriod:DesignDay, put in a day schedule of this name
        \note if name is for a SizingPeriod:WeatherFileDays, SizingPeriod:WeatherFileConditionType or
        \note RunPeriod, put in a full year schedule that covers the appropriate days.
@@ -1989,6 +1989,14 @@ OS:WeatherProperty:SkyTemperature,
        \type object-list
        \required-field
        \object-list ScheduleAndDayScheduleNames
+  A5; \field Use Weather File Horizontal IR
+       \note If yes or blank, use Horizontal IR values from weather file when present, otherwise use the specified sky model.
+       \note If no, always use the specified sky model and ignore the horizontal IR values from the weather file.
+       \note For Calculation Type = ScheduleValue, DifferenceScheduleDryBulbValue or DifferenceScheduleDewPointValue, this field is ignored and the scheduled values are used.
+       \type choice
+       \required-field
+       \key Yes
+       \key No
 
 \group OpenStudio Resources
 
