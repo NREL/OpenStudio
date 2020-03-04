@@ -395,6 +395,7 @@ OS:SimulationControl,
        \minimum> 0
        \maximum 0.5
        \default .04
+       \units W
   N2, \field Temperature Convergence Tolerance Value
        \type real
        \units deltaC
@@ -1957,6 +1958,7 @@ OS:WeatherFile,
 
 OS:WeatherProperty:SkyTemperature,
        \memo This object is used to override internal sky temperature calculations.
+       \memo NOTE: not actually used in OpenStudio Model API
        \min-fields 1
   A1, \field Handle
        \type handle
@@ -1968,8 +1970,14 @@ OS:WeatherProperty:SkyTemperature,
        \type object-list
        \object-list RunPeriodsAndDesignDays
   A3, \field Calculation Type
+       \note The field indicates that the sky temperature will be imported from external schedules or calculated by alternative methods other than default.
        \type choice
        \required-field
+       \key ClarkAllen
+       \key Brunt
+       \key Idso
+       \key BerdahlMartin
+       \key ScheduleValue
        \key ScheduleValue
        \key DifferenceScheduleDryBulbValue
        \key DifferenceScheduleDewPointValue
@@ -1977,6 +1985,7 @@ OS:WeatherProperty:SkyTemperature,
        \note if name matches a SizingPeriod:DesignDay, put in a day schedule of this name
        \note if name is for a SizingPeriod:WeatherFileDays, SizingPeriod:WeatherFileConditionType or
        \note RunPeriod, put in a full year schedule that covers the appropriate days.
+       \note Required if Calculation Type is ScheduleValue, DifferenceScheduleDryBulbValue or DifferenceScheduleDewPointValue.
        \type object-list
        \required-field
        \object-list ScheduleAndDayScheduleNames
@@ -6989,9 +6998,9 @@ OS:OtherEquipment,
        \key None
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Diesel
        \key Gasoline
        \key Coal
@@ -7181,9 +7190,9 @@ OS:Exterior:FuelEquipment,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Diesel
        \key Gasoline
        \key Coal
@@ -9444,7 +9453,8 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \key Scheduled
        \required-field
        \note Choose a thermostat control logic scheme. If these control types fail to control zone
-       \note temperature within a reasonable limit, consider using multiple VRF systems
+       \note temperature within a reasonable limit, consider using multiple VRF systems.
+       \note This field is not used when all terminal units are set point controlled.
   A27, \field Thermostat Priority Schedule
        \type object-list
        \object-list ScheduleNames
@@ -9656,11 +9666,11 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
+       \key Propane
        \key Diesel
        \key Gasoline
-       \key FuelOil#1
-       \key FuelOil#2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key OtherFuel1
        \key OtherFuel2
        \required-field
@@ -12326,9 +12336,9 @@ OS:Boiler:HotWater,
        \default NaturalGas
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
@@ -12440,12 +12450,14 @@ OS:Boiler:Steam,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
+       \key OtherFuel1
+       \key OtherFuel2
   N1 , \field Maximum Operating Pressure
        \units kPa
   N2 , \field Theoretical Efficiency
@@ -12570,6 +12582,7 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
         \note This optional field is used to autosize Reference Heating Power Consumption
         \note COP = Reference Heating Capacity / Reference Heating Power Consumption
         \type real
+        \units W/W
         \minimum> 0.0
         \required-field
    N16, \field Sizing Factor
@@ -12666,6 +12679,7 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
         \note This optional field is used to autosize Reference Cooling Power Consumption
         \note COP = Rated Cooling Capacity / Rated Cooling Power Consumption
         \type real
+        \units W/W
         \minimum> 0.0
         \default 8.0
    N16, \field Sizing Factor
@@ -15486,11 +15500,11 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
+       \key Propane
        \key Diesel
        \key Gasoline
-       \key FuelOil#1
-       \key FuelOil#2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key OtherFuel1
        \key OtherFuel2
        \required-field
@@ -16529,15 +16543,13 @@ OS:Coil:Heating:Gas,
        \type real
        \units W
   A8;  \field Fuel Type
-       \note PropaneGas is deprecated in favor of Propane
        \type choice
        \key NaturalGas
        \key Propane
-       \key PropaneGas
        \key Diesel
        \key Gasoline
-       \key FuelOil#1
-       \key FuelOil#2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key OtherFuel1
        \key OtherFuel2
        \default NaturalGas
@@ -17203,11 +17215,11 @@ OS:Coil:Heating:DX:MultiSpeed,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
+       \key Propane
        \key Diesel
        \key Gasoline
-       \key FuelOil#1
-       \key FuelOil#2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key OtherFuel1
        \key OtherFuel2
   N8,  \field Region number for Calculating HSPF
@@ -17540,9 +17552,9 @@ OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
         \maximum 1.0
         \required-field
    N3,  \field Reference Unit Gross Rated Cooling COP
-        \units dimensionless
+        \units W/W
         \type real
-        \minimum 0
+        \minimum> 0.0
         \required-field
    N4,  \field Reference Unit Rated Air Flow Rate
         \units m3/s
@@ -17654,7 +17666,8 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
    N2,  \field Reference Unit Gross Rated Heating COP
         \units dimensionless
         \type real
-        \minimum 0
+        \units W/W
+        \minimum> 0.0
         \required-field
    N3,  \field Reference Unit Rated Air Flow
         \units m3/s
@@ -17800,7 +17813,8 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
    N3,  \field Reference Unit Gross Rated Cooling COP
         \units dimensionless
         \type real
-        \minimum 0
+        \units W/W
+        \minimum> 0.0
         \required-field
    N4,  \field Reference Unit Rated Air Flow Rate
         \units m3/s
@@ -23344,8 +23358,8 @@ OS:ZoneControl:Thermostat:StagedDualSetpoint,
 OS:ZoneHVAC:EquipmentList,
        \min-fields 1
        \extensible:5 Duplicate the five fields Zone Equipment Object Type through Sequential Heating Fraction
-       \memo List equipment in simulation order.  Note that an ZoneHVAC:AirDistributionUnit or
-       \memo AirTerminal:SingleDuct:Uncontrolled object must be listed in this statement if there is a forced
+       \memo List equipment in simulation order.  Note that an ZoneHVAC:AirDistributionUnit
+       \memo object must be listed in this statement if there is a forced
        \memo air system serving the zone from the air loop.
        \memo Equipment is simulated in the order specified by Zone Equipment Cooling Sequence and
        \memo Zone Equipment Heating or No-Load Sequence, depending on the thermostat request.
@@ -24534,6 +24548,11 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \object-list ScheduleNames
 
 OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
+        \memo A terminal unit with variable refrigerant flow (VRF) DX cooling and heating coils
+        \memo (air-to-air heat pump). The VRF terminal units are served by an
+        \memo AirConditioner:VariableRefrigerantFlow or
+        \memo AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:* system.
+        \memo Terminal units can be configured as zone, air loop or outside air system equipment
   A1 ,  \field Handle
         \type handle
         \required-field
@@ -24581,28 +24600,52 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \units m3/s
         \minimum 0.0
         \autosizable
+        \note This field is used only when an oudoor air mixer is included.
+        \note This field is set to zero flow when the VRF terminal unit is connected to
+        \note central dedicated outdoor air through air terminal single duct mixer object.
+        \note When this VRF terminal is used as air loop equipment the autosized flow
+        \note rate will be set to 0 when an outdoor air system is connected to this air loop,
+        \note otherwise the outdoor air flow rate will equal the maximum outdoor air flow rate.
   N6 ,  \field Outdoor Air Flow Rate During Heating Operation
         \required-field
         \type real
         \units m3/s
         \minimum 0.0
         \autosizable
+        \note This field is used only when an oudoor air mixer is included.
+        \note This field is set to zero flow when the VRF terminal unit is connected to
+        \note central dedicated outdoor air through air terminal single duct mixer object.
+        \note When this VRF terminal is used as air loop equipment the autosized flow
+        \note rate will be set to 0 when an outdoor air system is connected to this air loop,
+        \note otherwise the outdoor air flow rate will equal the maximum outdoor air flow rate.
   N7 ,  \field Outdoor Air Flow Rate When No Cooling or Heating is Needed
         \required-field
         \type real
         \units m3/s
         \minimum 0.0
         \autosizable
+        \note This field is used only when an oudoor air mixer is included.
+        \note This field is set to zero flow when the VRF terminal unit is connected to
+        \note central dedicated outdoor air through air terminal single duct mixer object.
+        \note When this VRF terminal is used as air loop equipment the autosized flow
+        \note rate will be set to 0 when an outdoor air system is connected to this air loop,
+        \note otherwise the outdoor air flow rate will equal the maximum outdoor air flow rate.
   A6 ,  \field Supply Air Fan Operating Mode Schedule
         \required-field
         \type object-list
         \object-list ScheduleNames
+        \note Required for zone equipment. Leave blank if terminal unit is used in AirLoopHVAC:OutdoorAirSystem:EquipmentList.
+        \note Also leave blank if terminal unit is used on main AirloopHVAC branch and terminal unit has no fan.
   A7 ,  \field Supply Air Fan placement
         \required-field
         \type choice
         \key BlowThrough
         \key DrawThrough
         \note Select fan placement as either blow through or draw through.
+        \note Required for zone equipment. This field is ignored if the VRF terminal unit is used
+        \note in AirLoopHVAC:OutdoorAirSystem:EquipmentList.
+        \note This field is also ignored if VRF terminal unit is used on main AirloopHVAC branch
+        \note and terminal unit has no fan.
   A8 ,  \field Supply Air Fan
         \required-field
         \type object-list
@@ -24617,7 +24660,12 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
   A9 ,  \field Outside Air Mixer
         \type object-list
         \object-list OutdoorAirMixers
+        \note Currently only one type OutdoorAir:Mixer object is available.
         \note If this field is blank, and outside air mixer is not used.
+        \note This field should be left blank if the VRF terminal unit is connected to
+        \note central dedicated outdoor air through an AirTerminal:SingleDuct:Mixer object.
+        \note This field may also be left blank when the VRF terminal is used in the air
+        \note loop or outdoor air system.
   A10,  \field Cooling Coil
         \type object-list
         \object-list CoolingCoilsDXVarRefrigFlow
@@ -25442,16 +25490,16 @@ OS:WaterHeater:Mixed,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
-       \key Steam
-       \key DistrictHeating
        \key OtherFuel1
        \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
   N8 , \field Heater Thermal Efficiency
        \type real
        \minimum> 0.0
@@ -25468,16 +25516,16 @@ OS:WaterHeater:Mixed,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
-       \key Steam
-       \key DistrictHeating
        \key OtherFuel1
        \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
   N10, \field Off Cycle Parasitic Heat Fraction to Tank
        \type real
        \minimum 0.0
@@ -25492,16 +25540,16 @@ OS:WaterHeater:Mixed,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
-       \key Steam
-       \key DistrictHeating
        \key OtherFuel1
        \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
   N12, \field On Cycle Parasitic Heat Fraction to Tank
        \type real
        \minimum 0.0
@@ -26517,9 +26565,9 @@ OS:WaterHeater:Stratified,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
@@ -26542,9 +26590,9 @@ OS:WaterHeater:Stratified,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
@@ -26572,9 +26620,9 @@ OS:WaterHeater:Stratified,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
@@ -28032,7 +28080,7 @@ OS:Generator:MicroTurbine,
   A7, \field Fuel Type
       \type choice
       \key NaturalGas
-      \key PropaneGas
+      \key Propane
       \default NaturalGas
   N8, \field Fuel Higher Heating Value
       \type real
@@ -29918,18 +29966,22 @@ OS:LifeCycleCost:UsePriceEscalation,
   A3, \field Resource
        \type choice
        \required-field
-       \key Electricity
-       \key NaturalGas
-       \key Steam
-       \key Gasoline
+        \key Electricity
+        \key ElectricityPurchased
+        \key ElectricityProduced
+        \key ElectricitySurplusSold
+        \key ElectricityNet
+        \key NaturalGas
+        \key Steam
+        \key Gasoline
        \key Diesel
        \key Coal
-       \key FuelOil#1
-       \key FuelOil#2
-       \key Propane
-       \key Water
-       \key OtherFuel1
-       \key OtherFuel2
+        \key FuelOilNo1
+        \key FuelOilNo2
+        \key Propane
+        \key OtherFuel1
+        \key OtherFuel2
+        \key Water
   N1, \field Escalation Start Year
        \note This field and the Escalation Start Month define the time that corresponds to Year 1 Escalation
        \note such as 2010 when the escalation rates are applied. This field and the Escalation Start Month
@@ -29973,7 +30025,7 @@ OS:UtilityBill,
        \type choice
        \required-field
        \key Electricity
-       \key Gas
+       \key NaturalGas
        \key Gasoline
        \key Diesel
        \key FuelOil_1
@@ -30216,9 +30268,9 @@ OS:Meter:Custom,
         \type choice
         \key Electricity
         \key NaturalGas
-        \key PropaneGas
-        \key FuelOil#1
-        \key FuelOil#2
+        \key Propane
+        \key FuelOilNo1
+        \key FuelOilNo2
         \key Coal
         \key Diesel
         \key Gasoline
@@ -30244,9 +30296,9 @@ OS:Meter:CustomDecrement,
         \type choice
         \key Electricity
         \key NaturalGas
-        \key PropaneGas
-        \key FuelOil#1
-        \key FuelOil#2
+        \key Propane
+        \key FuelOilNo1
+        \key FuelOilNo2
         \key Coal
         \key Diesel
         \key Gasoline
@@ -30574,8 +30626,8 @@ OS:EnergyManagementSystem:MeteredOutputVariable,
        \key Gasoline
        \key Diesel
        \key Coal
-       \key FuelOil#1
-       \key FuelOil#2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Propane
        \key OtherFuel1
        \key OtherFuel2
