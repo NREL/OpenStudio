@@ -43,9 +43,18 @@ boost::optional<IdfObject> ForwardTranslator::translateShadowCalculation( Shadow
 {
   IdfObject idfObject( openstudio::IddObjectType::ShadowCalculation);
 
-  idfObject.setString(ShadowCalculationFields::CalculationMethod, modelObject.calculationMethod());
+  // TODO: handle new fields
+  // Shading Calculation Method
 
-  idfObject.setInt(ShadowCalculationFields::CalculationFrequency,modelObject.calculationFrequency());
+  // TODO: until I write VT, I handle it here
+  std::string shadingCalculationUpdateFrequencyMethod = modelObject.calculationMethod();
+  if (openstudio::istringEqual("AverageOverDaysInFrequency", shadingCalculationUpdateFrequencyMethod)) {
+    idfObject.setString(ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod, "Periodic");
+  } else {
+    idfObject.setString(ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod, "Timestep");
+  }
+
+  idfObject.setInt(ShadowCalculationFields::ShadingCalculationUpdateFrequency, modelObject.calculationFrequency());
 
   idfObject.setInt(ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations,modelObject.maximumFiguresInShadowOverlapCalculations());
 
@@ -59,6 +68,10 @@ boost::optional<IdfObject> ForwardTranslator::translateShadowCalculation( Shadow
     idfObject.setString(ShadowCalculationFields::SkyDiffuseModelingAlgorithm,*s);
   }
 
+  // TODO
+  // Pixel Counting Resolution
+  // Maximum Number Warmup Days
+  // Begin Environment Reset Mode
   m_idfObjects.push_back(idfObject);
 
   return boost::optional<IdfObject>(idfObject);

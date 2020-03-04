@@ -310,7 +310,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
     IdfExtensibleGroup eg = _controllerMechanicalVentilation->pushExtensibleGroup();
 
     // Thermal Zone Name
-    eg.setString(Controller_MechanicalVentilationExtensibleFields::ZoneName,_thermalZone->name().get());
+    eg.setString(Controller_MechanicalVentilationExtensibleFields::ZoneorZoneListName,_thermalZone->name().get());
 
     // DesignSpecificationOutdoorAir
     std::vector<model::Space> spaces = thermalZone.spaces();

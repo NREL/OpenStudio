@@ -49,14 +49,28 @@ boost::optional<model::ModelObject> ReverseTranslator::translateShadowCalculatio
 {
   OS_ASSERT(workspaceObject.iddObject().type() == IddObjectType::ShadowCalculation);
 
+  // TODO: NEEDS UPDATE TO HANDLE MODIFIED + NEW FIELDS, cf FT
+  // TODO: handle new fields
+  // Shading Calculation Method
+  // Pixel Counting Resolution
+  // Maximum Number Warmup Days
+  // Begin Environment Reset Mode
+
   ShadowCalculation shadowCalculation = m_model.getUniqueModelObject<ShadowCalculation>();
 
-  OptionalString s = workspaceObject.getString(ShadowCalculationFields::CalculationMethod);
+  OptionalString s = workspaceObject.getString(ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod);
   if (s) {
-    shadowCalculation.setCalculationMethod(*s);
+    // TODO: Temp workaround
+    std::string calc = s.get();
+    if (openstudio::istringEqual("Periodic", calc)) {
+      shadowCalculation.setCalculationMethod("AverageOverDaysInFrequency");
+    } else {
+      // Timestep
+      shadowCalculation.setCalculationMethod("TimestepFrequency");
+    }
   }
 
-  OptionalInt i = workspaceObject.getInt(ShadowCalculationFields::CalculationFrequency);
+  OptionalInt i = workspaceObject.getInt(ShadowCalculationFields::ShadingCalculationUpdateFrequency);
   if (i) {
     shadowCalculation.setCalculationFrequency(*i);
   }
