@@ -393,7 +393,7 @@ Version,
       \format singleLine
       \min-fields 1
   A1 ; \field Version Identifier
-      \default 9.2
+      \default 9.3
 
 SimulationControl,
       \unique-object
@@ -60743,3 +60743,4 @@ PythonPlugin:OutputVariable,
        \note Enter a user-defined subcategory for this metered output
        \type alpha
        \retaincase
+
