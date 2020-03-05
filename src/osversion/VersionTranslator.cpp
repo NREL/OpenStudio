@@ -63,6 +63,7 @@
 #include <OpenStudio.hxx>
 
 #include <thread>
+#include <map>
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -4882,61 +4883,96 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
   IdfFile targetIdf(idd_3_0_0.iddFile());
   ss << targetIdf.versionObject().get();
 
-  const std::vector<std::pair<std::string, std::string>> replaceFuelTypes({
-    {"PropaneGas", "Propane"},
+  // Making the map case-insentive by providing a Comparator `IstringCompare`
+  const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap({
     {"FuelOil#1", "FuelOilNo1"},
     {"FuelOil#2", "FuelOilNo2"},
+    {"Gas", "NaturalGas"},
+    {"PropaneGas", "Propane"},
   });
 
-  // TODO:
-  //OS:OtherEquipment (PropaneGas, FuelOils)
-  //OS:Exterior:FuelEquipment
-  //OS:Coil:Cooling:DX:MultiSpeed
-  //OS:Coil:Heating:Gas (Fuel)
-  //OS:AirConditioner:VariableRefrigerantFlow
-  //OS:Boiler:HotWater
-  //OS:Boiler:Steam
+  const std::multimap<std::string, int> fuelTypeRenamesMap({
+      {"OS:OtherEquipment", 6},  // Fuel Type
+      {"OS:Exterior:FuelEquipment", 4},  // Fuel Use Type
+      {"OS:AirConditioner:VariableRefrigerantFlow", 67},  // Fuel Type
+      {"OS:Boiler:Steam", 2},  // Fuel Type
+      {"OS:Coil:Cooling:DX:MultiSpeed", 16},  // Fuel Type
+      {"OS:Coil:Heating:Gas", 11},  // Fuel Type
+      {"OS:Coil:Heating:DX:MultiSpeed", 16},  // Fuel Type
+      {"OS:WaterHeater:Mixed", 11},  // Heater Fuel Type
+      {"OS:WaterHeater:Mixed", 15},  // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Mixed", 18},  // On Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 17},  // Heater Fuel Type
+      {"OS:WaterHeater:Stratified", 20},  // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 24},  // On Cycle Parasitic Fuel Type
+      {"OS:Generator:MicroTurbine", 13},  // Fuel Type
+      {"OS:LifeCycleCost:UsePriceEscalation", 2},  // Resource
+      {"OS:Meter:Custom", 2},  // Fuel Type
+      {"OS:Meter:CustomDecrement", 2},  // Fuel Type
+      {"OS:EnergyManagementSystem:MeteredOutputVariable", 5},  // Resource Type
 
-  //OS:WaterHeater:Mixed   **THREE FIELDS** (Heater Fuel Type, Off Cycle Parasitic Fuel Type, On Cycle Parasitic Fuel Type)
-  //OS:WaterHeater:Stratified
+      // Note JM 2020-03-05: OS:BoilerHotWater is handled in its own block below
+      // {"OS:Boiler:HotWater", 2},  // Fuel Type
+  });
 
-  //OS:EnergyManagementSystem:MeteredOutputVariable
-
-  //OS:Generator:MicroTurbine
-  //OS:LifeCycleCost:UsePriceEscalation
-
-  //OS:Meter:Custom
-  //OS:Meter:CustomDecrement
-
-
-
-  auto replaceForField = [this, &ss, &replaceFuelTypes](const IdfObject& object, IdfObject& newObject, int fieldIndex, bool registerRefactor) {
-
-      bool hasReplaced = false;
-
-      if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
-        std::string fuelType = _fuelType.get();
-        for (const auto& r: replaceFuelTypes) {
-          if (openstudio::istringEqual(r.first, fuelType)) {
-            newObject.setString(fieldIndex, r.second);
-            hasReplaced = true;
-            break;
-          }
-        }
-      }
-
-      if (hasReplaced && registerRefactor) {
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
-        ss << newObject;
-      }
+  auto checkIfReplaceNeeded = [this, replaceFuelTypesMap](const IdfObject& object, int fieldIndex) -> bool {
+    // std::map::contains() only in C++20
+    if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
+      return replaceFuelTypesMap.find(_fuelType.get()) != replaceFuelTypesMap.end();
+    }
+    return false;
   };
 
-
+  auto replaceForField = [this, &ss, &replaceFuelTypesMap](const IdfObject& object, IdfObject& newObject, int fieldIndex) -> void {
+      if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
+        auto it = replaceFuelTypesMap.find(_fuelType.get());
+        if (it != replaceFuelTypesMap.end()) {
+          LOG(Trace, "Replacing " << _fuelType.get() << " with " << it->second << " at fieldIndex " << fieldIndex
+              << " for " << object.nameString());
+          newObject.setString(fieldIndex, it->second);
+        }
+      }
+  };
 
   for (const IdfObject& object : idf_2_9_1.objects()) {
     auto iddname = object.iddObject().name();
 
-    if (iddname == "OS:Material") {
+    if (fuelTypeRenamesMap.find(iddname) != fuelTypeRenamesMap.end()) {
+      LOG(Trace, "Checking for a fuel type rename in Object of type '" << iddname << "' and named '" << object.nameString() << "'");
+      auto rangeFields = fuelTypeRenamesMap.equal_range(iddname);
+      // First pass, find if a replacement is needed
+      bool isReplaceNeeded = false;
+      for (auto it = rangeFields.first; it != rangeFields.second; ++it) {
+        if (checkIfReplaceNeeded(object, it->second)) {
+          isReplaceNeeded = true;
+          break;
+        }
+      }
+      if (isReplaceNeeded) {
+        LOG(Trace, "Replace needed!");
+
+        // Make a new object, and copy evertything in place
+        auto iddObject = idd_3_0_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Then handle the renames
+        for (auto it = rangeFields.first; it != rangeFields.second; ++it) {
+          replaceForField(object, newObject, it->second);
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+      } else {
+        // No-op
+        ss << object;
+      }
+
+    } else if (iddname == "OS:Material") {
       auto iddObject = idd_3_0_0.getObject("OS:Material");
       IdfObject newObject(iddObject.get());
 
@@ -5034,8 +5070,6 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       auto iddObject = idd_3_0_0.getObject(iddname);
       IdfObject newObject(iddObject.get());
 
-      replaceForField(object, newObject, 3, false);
-
       // Deleted Field 7: Design Water Outlet Temperature
       for (size_t i = 0; i < object.numFields(); ++i) {
          if ((value = object.getString(i))) {
@@ -5048,6 +5082,9 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
           }
         }
       }
+
+      // Fuel Type: renames
+      replaceForField(object, newObject, 2);
 
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
