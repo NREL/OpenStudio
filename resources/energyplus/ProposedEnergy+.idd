@@ -60550,7 +60550,7 @@ PythonPlugin:SearchPaths,
    A2, \field Add Current Working Directory to Search Path
        \note Adding the current working directory allows Python to find
        \note plugin scripts in the current directory.
-       \required-field
+       \note required-field disabled as it has a default
        \type choice
        \key Yes
        \key No
@@ -60559,7 +60559,7 @@ PythonPlugin:SearchPaths,
        \note Enabling this will allow Python to find plugin scripts in the
        \note same directory as the running input file, even if that is not
        \note the current working directory.
-       \required-field
+       \note required-field disabled as it has a default
        \type choice
        \key Yes
        \key No
@@ -60589,7 +60589,7 @@ PythonPlugin:Instance,
        \type alpha
        \note This is the name used to represent this plugin in traditional EMS fields
    A2, \field Run During Warmup Days
-       \required-field
+       \note required-field disabled as it has a default
        \note If this field is enabled, the plugin will be executed during warmup days, otherwise it
        \note will only be executed once warmup is completed and the actual run period begins
        \type choice
