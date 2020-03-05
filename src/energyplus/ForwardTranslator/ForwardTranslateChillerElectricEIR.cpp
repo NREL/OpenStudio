@@ -279,31 +279,33 @@ boost::optional<IdfObject> ForwardTranslator::translateChillerElectricEIR( Chill
   }
 
 
-  // DesignHeatRecoveryWaterFlowRate
-  if( modelObject.isDesignHeatRecoveryWaterFlowRateAutosized() )
-  {
-    idfObject.setString(Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,"Autosize");
-  }
-  else if( (value = modelObject.designHeatRecoveryWaterFlowRate()) )
-  {
-    idfObject.setDouble(Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,value.get());
-  }
-
-  // HeatRecoveryInletNodeName
-  if( boost::optional<ModelObject> mo = modelObject.tertiaryInletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
+  // DesignHeatRecoveryWaterFlowRate: If filled, then the Nodes are **required**...
+  if (modelObject.heatRecoveryLoop()) {
+    if( modelObject.isDesignHeatRecoveryWaterFlowRateAutosized() )
     {
-      idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryInletNodeName,node->name().get());
+      idfObject.setString(Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,"Autosize");
     }
-  }
-
-  // HeatRecoveryOutletNodeName
-  if( boost::optional<ModelObject> mo = modelObject.tertiaryOutletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
+    else if( (value = modelObject.designHeatRecoveryWaterFlowRate()) )
     {
-      idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName,node->name().get());
+      idfObject.setDouble(Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,value.get());
+    }
+
+    // HeatRecoveryInletNodeName
+    if( boost::optional<ModelObject> mo = modelObject.tertiaryInletModelObject() )
+    {
+      if( boost::optional<Node> node = mo->optionalCast<Node>() )
+      {
+        idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryInletNodeName,node->name().get());
+      }
+    }
+
+    // HeatRecoveryOutletNodeName
+    if( boost::optional<ModelObject> mo = modelObject.tertiaryOutletModelObject() )
+    {
+      if( boost::optional<Node> node = mo->optionalCast<Node>() )
+      {
+        idfObject.setString(Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName,node->name().get());
+      }
     }
   }
 
