@@ -39,6 +39,7 @@
 
 namespace openstudio {
   class VersionString;
+  class IddFile;
 }
 
 class OSVersionFixture : public ::testing::Test {
@@ -63,6 +64,8 @@ class OSVersionFixture : public ::testing::Test {
   static openstudio::path exampleComponentPath(const openstudio::VersionString& version);
 
   static openstudio::path iddPath(const openstudio::VersionString& version);
+
+  static openstudio::IddFile getOpenStudioIddFileForVersion(const openstudio::VersionString& version);
 
   REGISTER_LOGGER("OSVersionFixture");
 

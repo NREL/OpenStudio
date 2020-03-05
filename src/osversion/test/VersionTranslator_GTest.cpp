@@ -50,10 +50,8 @@
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
-
+#include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/core/Compare.hpp"
-
-
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
@@ -539,3 +537,61 @@ TEST_F(OSVersionFixture,KeepHandles) {
   EXPECT_TRUE(idfObjects[0].handle() == workspaceObjects[0].handle());
 }
 */
+
+TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_fuel.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model);
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_fuel_updated.osm");
+  model->save(outPath, true);
+
+  IddFile oldIddFile = getOpenStudioIddFileForVersion(VersionString(2, 9, 1));
+  OptionalIdfFile _oldIdfFile = IdfFile::load(path, oldIddFile);
+  ASSERT_TRUE(_oldIdfFile);
+
+  // Making the map case-insentive by providing a Comparator `IstringCompare`
+  const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap({
+    {"FuelOil#1", "FuelOilNo1"},
+    {"FuelOil#2", "FuelOilNo2"},
+    {"Gas", "NaturalGas"},
+    {"PropaneGas", "Propane"},
+  });
+
+  const std::multimap<std::string, int> fuelTypeRenamesMap({
+      {"OS:OtherEquipment", 6},  // Fuel Type
+      {"OS:Exterior:FuelEquipment", 4},  // Fuel Use Type
+      {"OS:AirConditioner:VariableRefrigerantFlow", 67},  // Fuel Type
+      {"OS:Boiler:Steam", 2},  // Fuel Type
+      {"OS:Coil:Cooling:DX:MultiSpeed", 16},  // Fuel Type
+      {"OS:Coil:Heating:Gas", 11},  // Fuel Type
+      {"OS:Coil:Heating:DX:MultiSpeed", 16},  // Fuel Type
+      {"OS:WaterHeater:Mixed", 11},  // Heater Fuel Type
+      {"OS:WaterHeater:Mixed", 15},  // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Mixed", 18},  // On Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 17},  // Heater Fuel Type
+      {"OS:WaterHeater:Stratified", 20},  // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 24},  // On Cycle Parasitic Fuel Type
+      {"OS:Generator:MicroTurbine", 13},  // Fuel Type
+      // {"OS:LifeCycleCost:UsePriceEscalation", 2},  // Resource - UNUSED!
+      {"OS:Meter:Custom", 2},  // Fuel Type
+      {"OS:Meter:CustomDecrement", 2},  // Fuel Type
+      {"OS:EnergyManagementSystem:MeteredOutputVariable", 5},  // Resource Type
+      {"OS:Boiler:HotWater", 2},  // Fuel Type
+  });
+
+  for (const auto& mapEntry: fuelTypeRenamesMap) {
+    const std::string iddname = mapEntry.first;
+    const int fieldIndex = mapEntry.second;
+
+    std::string old_fuelType = _oldIdfFile->getObjectsByType(oldIddFile.getObject(iddname).get())[0].getString(fieldIndex).get();
+    // Check that the test model (in 2.9.1), actually has bad starting fuels
+    EXPECT_TRUE(replaceFuelTypesMap.find(old_fuelType) != replaceFuelTypesMap.end());
+
+    std::string new_fuelType = model->getObjectsByType(iddname)[0].getString(fieldIndex).get();
+    EXPECT_NE(old_fuelType, new_fuelType);
+    EXPECT_EQ(replaceFuelTypesMap.at(old_fuelType), new_fuelType);
+  }
+
+}

@@ -92,6 +92,14 @@ openstudio::path OSVersionFixture::iddPath(const openstudio::VersionString& vers
   return versionResourcesPath(version) / toPath("OpenStudio.idd");
 }
 
+openstudio::IddFile OSVersionFixture::getOpenStudioIddFileForVersion(const VersionString& version) {
+  OptionalIddFile iddFile = IddFactory::instance().getIddFile(IddFileType::OpenStudio,version);
+  if (!iddFile) {
+    LOG_AND_THROW("Unable to retrieve OpenStudio Version " << version.str()
+               << " IDD from the IddFactory.");
+  }
+  return iddFile.get();
+}
+
 // static variables
 boost::optional<openstudio::FileLogSink> OSVersionFixture::logFile;
-

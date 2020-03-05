@@ -43,10 +43,32 @@ CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 if(BUILD_TESTING)
 
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
-  
-  #add_dependencies("${target_name}_tests"
-  #  openstudio_osversion_resources
-  #)
+
+  # Glob all OSM files in test/ folder
+  file(GLOB_RECURSE osversion_source_models "${CMAKE_CURRENT_SOURCE_DIR}/test/**/*.osm")
+
+  # Copy them to <build_dir>resources/osversion/
+  foreach( _FILE ${osversion_source_models} )
+    file(RELATIVE_PATH REL_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/test/" ${_FILE})
+    set(TARGET_PATH "${PROJECT_BINARY_DIR}/resources/osversion/${REL_LOCATION}")
+    add_custom_command(
+      OUTPUT "${TARGET_PATH}"
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${_FILE}" "${TARGET_PATH}"
+      DEPENDS "${_FILE}"
+    )
+   list(APPEND osversion_test_models ${TARGET_PATH})
+  endforeach()
+
+  # add target
+  add_custom_target(openstudio_osversion_test_resources
+    DEPENDS ${osversion_test_models}
+    SOURCES ${osversion_test_models}
+    )
+
+  add_dependencies(${target_name}_tests
+    openstudio_osversion_test_resources
+    # openstudio_osversion_resources
+  )
 
 endif()
 
