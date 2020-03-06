@@ -64,11 +64,11 @@ OptionalModelObject ReverseTranslator::translatePerformancePrecisionTradeoffs( c
     }
   }
 
-  if (optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::OverrideMode)) {
+  if ((optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm))) {
     performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm(optS.get());
   }
 
-  if (optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::OverrideMode)) {
+  if ((optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::OverrideMode))) {
     performancePrecisionTradeoffs.setOverrideMode(optS.get());
   }
 
