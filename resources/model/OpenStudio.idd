@@ -301,33 +301,60 @@ OS:RunPeriodControl:SpecialDays,
        \key CustomDay1
        \key CustomDay2
 
-! TODO: Major changes in E+
 OS:ShadowCalculation,
        \unique-object
        \min-fields 2
-  A1, \field Handle
+       \memo This object is used to control details of the solar, shading, and daylighting models
+       \extensible:1
+  A1,  \field Handle
        \type handle
        \required-field
-  N1, \field Calculation Frequency
-       \note 0=Use Default Periodic Calculation|<else> calculate every <value> day
-       \note only really applicable to RunPeriods
-       \note warning issued if >31
+  A2 , \field Shading Calculation Method
+       \note Select between CPU-based polygon clipping method, the GPU-based pixel counting method,
+       \note or importing from external shading data.
+       \note If PixelCounting is selected and GPU hardware (or GPU emulation) is not available, a warning will be
+       \note displayed and EnergyPlus will revert to PolygonClipping.
+       \note If Scheduled is chosen, the External Shading Fraction Schedule Name is required
+       \note in SurfaceProperty:LocalEnvironment.
+       \note If Imported is chosen, the Schedule:File:Shading object is required.
+       \type choice
+       \key PolygonClipping
+       \key PixelCounting
+       \key Scheduled
+       \key Imported
+       \default PolygonClipping
+  A3 , \field Shading Calculation Update Frequency Method
+       \note choose calculation frequency method. note that Timestep is only needed for certain cases
+       \note and can increase execution time significantly.
+       \type choice
+       \key Periodic
+       \key Timestep
+       \default Periodic
+  N1 , \field Shading Calculation Update Frequency
        \type integer
        \minimum 1
        \default 20
-  N2, \field Maximum Figures in Shadow Overlap Calculations
-       \note Number of allowable figures in shadow overlap calculations
+       \note enter number of days
+       \note this field is only used if the previous field is set to Periodic
+       \note warning issued if >31
+  N2 , \field Maximum Figures in Shadow Overlap Calculations
+       \note Number of allowable figures in shadow overlap in PolygonClipping calculations
        \type integer
        \minimum 200
        \default 15000
-  A2, \field Polygon Clipping Algorithm
+  A4 , \field Polygon Clipping Algorithm
        \note Advanced Feature.  Internal default is SutherlandHodgman
        \note Refer to InputOutput Reference and Engineering Reference for more information
        \type choice
        \key ConvexWeilerAtherton
        \key SutherlandHodgman
+       \key SlaterBarskyandSutherlandHodgman
        \default SutherlandHodgman
-  A3, \field Sky Diffuse Modeling Algorithm
+  N3 , \field Pixel Counting Resolution
+       \note Number of pixels in both dimensions of the surface rendering
+       \type integer
+       \default 512
+  A5 , \field Sky Diffuse Modeling Algorithm
        \note Advanced Feature.  Internal default is SimpleSkyDiffuseModeling
        \note If you have shading elements that change transmittance over the
        \note year, you may wish to choose the detailed method.
@@ -336,13 +363,38 @@ OS:ShadowCalculation,
        \key SimpleSkyDiffuseModeling
        \key DetailedSkyDiffuseModeling
        \default SimpleSkyDiffuseModeling
-  A4; \field Calculation Method
-       \note choose calculation method. note that TimestepFrequency is only needed for certain cases
-       \note and can increase execution time significantly.
+  A6 , \field Output External Shading Calculation Results
        \type choice
-       \key AverageOverDaysInFrequency
-       \key TimestepFrequency
-       \default AverageOverDaysInFrequency
+       \key Yes
+       \key No
+       \default No
+       \note If Yes is chosen, the calculated external shading fraction results will be saved to an external CSV file with surface names as the column headers.
+  A6 , \field Disable Self-Shading Within Shading Zone Groups
+       \note If Yes, self-shading will be disabled from all exterior surfaces in a given Shading Zone Group to surfaces within
+       \note the same Shading Zone Group.
+       \note If both Disable Self-Shading Within Shading Zone Groups and Disable Self-Shading From Shading Zone Groups to Other Zones = Yes,
+       \note then all self-shading from exterior surfaces will be disabled.
+       \note If only one of these fields = Yes, then at least one Shading Zone Group must be specified, or this field will be ignored.
+       \note Shading from Shading:* surfaces, overhangs, fins, and reveals will not be disabled.
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A8 , \field Disable Self-Shading From Shading Zone Groups to Other Zones
+       \note If Yes, self-shading will be disabled from all exterior surfaces in a given Shading Zone Group to all other zones in the model.
+       \note If both Disable Self-Shading Within Shading Zone Groups and Disable Self-Shading From Shading Zone Groups to Other Zones = Yes,
+       \note then all self-shading from exterior surfaces will be disabled.
+       \note If only one of these fields = Yes, then at least one Shading Zone Group must be specified, or this field will be ignored.
+       \note Shading from Shading:* surfaces, overhangs, fins, and reveals will not be disabled.
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A9 ; \field Shading Zone Group 1 ZoneList Name
+       \note Specifies a group of zones which are controlled by the Disable Self-Shading fields.
+       \type object-list
+       \object-list ZoneListNames
+       \begin-extensible
 
 OS:SimulationControl,
        \memo Note that the following 3 fields are related to the Sizing:Zone, Sizing:System,
