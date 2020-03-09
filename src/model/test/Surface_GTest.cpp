@@ -756,21 +756,6 @@ TEST_F(ModelFixture, AdjacentSurface_SurfacePropertyOtherSideCoefficients)
   EXPECT_EQ("SunExposed", wall2.sunExposure());
   EXPECT_EQ("WindExposed", wall2.windExposure());
 
-  // Test setSurfacePropertyOtherSideCoefficients again, but make sure that sun and wind exposure are preserved
-  // This time we use none default sun and wind exposure
-  Surface wall3(vertices, model);
-  EXPECT_TRUE(wall3.setSunExposure("NoSun"));
-  EXPECT_TRUE(wall3.setWindExposure("NoWind"));
-  EXPECT_EQ("NoSun", wall3.sunExposure());
-  EXPECT_EQ("NoWind", wall3.windExposure());
-
-  SurfacePropertyOtherSideCoefficients osc2(model);
-  EXPECT_TRUE(wall3.setSurfacePropertyOtherSideCoefficients(osc2));
-  ASSERT_TRUE(wall3.surfacePropertyOtherSideCoefficients());
-  EXPECT_EQ(osc2.handle(), wall3.surfacePropertyOtherSideCoefficients()->handle());
-  EXPECT_EQ("NoSun", wall3.sunExposure());
-  EXPECT_EQ("NoWind", wall3.windExposure());
-
   EXPECT_TRUE(wall1.setAdjacentSurface(wall2));
   ASSERT_TRUE(wall1.adjacentSurface());
   EXPECT_EQ(wall2.handle(), wall1.adjacentSurface()->handle());
