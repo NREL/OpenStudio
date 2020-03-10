@@ -5147,7 +5147,7 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       for (size_t i = 0; i < object.numFields(); ++i)
       {
         value = object.getString(i);
-        if( value )
+        if( value && !value->empty())
         {
           switch (i)
           {
