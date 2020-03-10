@@ -236,7 +236,8 @@ namespace detail {
   }
 
   bool ShadowCalculation_Impl::setDisableSelfShadingFromShadingZoneGroupstoOtherZones(bool disableSelfShadingFromShadingZoneGroupstoOtherZones) {
-    return setBooleanFieldValue(OS_ShadowCalculationFields::DisableSelfShadingFromShadingZoneGroupstoOtherZones, disableSelfShadingFromShadingZoneGroupstoOtherZones);
+    return setBooleanFieldValue(OS_ShadowCalculationFields::DisableSelfShadingFromShadingZoneGroupstoOtherZones,
+                                disableSelfShadingFromShadingZoneGroupstoOtherZones);
   }
 
 
@@ -320,9 +321,17 @@ namespace detail {
   }
 
   void ShadowCalculation_Impl::removeAllShadingZoneGroups() {
-    for (size_t i = 0; i < numberofShadingZoneGroups(); ++i) {
-      removeShadingZoneGroup(i);
+
+    for (auto eg: extensibleGroups()) {
+      ModelExtensibleGroup group = eg.cast<ModelExtensibleGroup>();
+      if (boost::optional<ModelObjectList> _mo_list = group.getModelObjectTarget<ModelObjectList>(OS_ShadowCalculationExtensibleFields::ShadingZoneGroup)) {
+        _mo_list->removeAllModelObjects();
+        _mo_list->remove();
+      }
     }
+
+    clearExtensibleGroups();
+
     OS_ASSERT(numberofShadingZoneGroups() == 0u);
   }
 
@@ -451,7 +460,7 @@ bool ShadowCalculation::disableSelfShadingWithinShadingZoneGroups() const {
   return getImpl<detail::ShadowCalculation_Impl>()->disableSelfShadingWithinShadingZoneGroups();
 }
 bool ShadowCalculation::disableSelfShadingFromShadingZoneGroupstoOtherZones() const {
-  return getImpl<detail::ShadowCalculation_Impl>()->disableSelfShadingWithinShadingZoneGroups();
+  return getImpl<detail::ShadowCalculation_Impl>()->disableSelfShadingFromShadingZoneGroupstoOtherZones();
 }
 
 bool ShadowCalculation::setShadingCalculationMethod(const std::string& shadingCalculationMethod) {
