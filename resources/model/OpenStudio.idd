@@ -322,7 +322,8 @@ OS:ShadowCalculation,
        \key PixelCounting
        \key Scheduled
        \key Imported
-       \default PolygonClipping
+       \required-field
+       \note the default value is PolygonClipping
   A3 , \field Shading Calculation Update Frequency Method
        \note choose calculation frequency method. note that Timestep is only needed for certain cases
        \note and can increase execution time significantly.
@@ -353,7 +354,8 @@ OS:ShadowCalculation,
   N3 , \field Pixel Counting Resolution
        \note Number of pixels in both dimensions of the surface rendering
        \type integer
-       \default 512
+       \required-field
+       \note the default is 512
   A5 , \field Sky Diffuse Modeling Algorithm
        \note Advanced Feature.  Internal default is SimpleSkyDiffuseModeling
        \note If you have shading elements that change transmittance over the
@@ -367,7 +369,8 @@ OS:ShadowCalculation,
        \type choice
        \key Yes
        \key No
-       \default No
+       \required-field
+       \note the default is No
        \note If Yes is chosen, the calculated external shading fraction results will be saved to an external CSV file with surface names as the column headers.
   A6 , \field Disable Self-Shading Within Shading Zone Groups
        \note If Yes, self-shading will be disabled from all exterior surfaces in a given Shading Zone Group to surfaces within
@@ -379,7 +382,8 @@ OS:ShadowCalculation,
        \type choice
        \key Yes
        \key No
-       \default No
+       \required-field
+       \note the default is No
   A8 , \field Disable Self-Shading From Shading Zone Groups to Other Zones
        \note If Yes, self-shading will be disabled from all exterior surfaces in a given Shading Zone Group to all other zones in the model.
        \note If both Disable Self-Shading Within Shading Zone Groups and Disable Self-Shading From Shading Zone Groups to Other Zones = Yes,
@@ -389,11 +393,12 @@ OS:ShadowCalculation,
        \type choice
        \key Yes
        \key No
-       \default No
-  A9 ; \field Shading Zone Group 1 ZoneList Name
+       \required-field
+       \note the default is No
+  A9 ; \field Shading Zone Group
        \note Specifies a group of zones which are controlled by the Disable Self-Shading fields.
        \type object-list
-       \object-list ZoneListNames
+       \object-list ModelObjectLists
        \begin-extensible
 
 OS:SimulationControl,
