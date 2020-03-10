@@ -40,6 +40,8 @@ namespace detail {
   class ShadowCalculation_Impl;
 } // detail
 
+class ThermalZone;
+
 /** ShadowCalculation derives from ModelObject and is an interface to the OpenStudio IDD object named "ShadowCalculation".
  *
  *  ShadowCalculation defines how often shadowing calculations should be performed in EnergyPlus simulations
@@ -57,55 +59,86 @@ class MODEL_API ShadowCalculation : public ModelObject {
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validCalculationMethodValues();
+  static std::vector<std::string> shadingCalculationMethodValues();
+  static std::vector<std::string> validShadingCalculationMethodValues();
 
+  static std::vector<std::string> shadingCalculationUpdateFrequencyMethodValues();
+  static std::vector<std::string> validShadingCalculationUpdateFrequencyMethodValues();
+
+  static std::vector<std::string> polygonClippingAlgorithmValues();
   static std::vector<std::string> validPolygonClippingAlgorithmValues();
 
+  static std::vector<std::string> skyDiffuseModelingAlgorithmValues();
   static std::vector<std::string> validSkyDiffuseModelingAlgorithmValues();
 
   //@}
   /** @name Getters */
   //@{
 
-  std::string calculationMethod() const;
+  // new field
+  std::string shadingCalculationMethod() const;
+  // bool isShadingCalculationMethodDefaulted() const;
 
-  bool isCalculationMethodDefaulted() const;
+  // renamed method, used to be 'calculationMethod'
+  std::string shadingCalculationUpdateFrequencyMethod() const;
+  bool isShadingCalculationUpdateFrequencyMethodDefaulted() const;
 
-  int calculationFrequency() const;
-
-  bool isCalculationFrequencyDefaulted() const;
+  int shadingCalculationUpdateFrequency() const;
+  bool isShadingCalculationUpdateFrequencyDefaulted() const;
 
   int maximumFiguresInShadowOverlapCalculations() const;
-
   bool isMaximumFiguresInShadowOverlapCalculationsDefaulted() const;
 
-  boost::optional<std::string> polygonClippingAlgorithm() const;
+  std::string polygonClippingAlgorithm() const;
 
-  boost::optional<std::string> skyDiffuseModelingAlgorithm() const;
+  int pixelCountingResolution() const;
+
+  std::string skyDiffuseModelingAlgorithm() const;
+
+  bool outputExternalShadingCalculationResults() const;
+
+  bool disableSelfShadingWithinShadingZoneGroups() const;
+
+  bool disableSelfShadingFromShadingZoneGroupstoOtherZones() const;
+
+  unsigned int numberofShadingZoneGroups() const;
+  std::vector<ThermalZone> getShadingZoneGroup(unsigned groupIndex) const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setCalculationMethod(const std::string& calculationMethod);
+  bool setShadingCalculationMethod(const std::string& shadingCalculationMethod);
+  // void resetShadingCalculationMethod();
 
-  void resetCalculationMethod();
+  bool setShadingCalculationUpdateFrequencyMethod(const std::string& shadingCalculationUpdateFrequencyMethod);
+  void resetShadingCalculationUpdateFrequencyMethod();
 
-  bool setCalculationFrequency(int calculationFrequency);
-
-  void resetCalculationFrequency();
+  bool setShadingCalculationUpdateFrequency(int shadingCalculationUpdateFrequency);
+  void resetShadingCalculationUpdateFrequency();
 
   bool setMaximumFiguresInShadowOverlapCalculations(int maximumFiguresInShadowOverlapCalculations);
-
   void resetMaximumFiguresInShadowOverlapCalculations();
 
-  bool setPolygonClippingAlgorithm(std::string polygonClippingAlgorithm);
-
+  bool setPolygonClippingAlgorithm(const std::string& polygonClippingAlgorithm);
   void resetPolygonClippingAlgorithm();
 
-  bool setSkyDiffuseModelingAlgorithm(std::string skyDiffuseModelingAlgorithm);
+  bool setPixelCountingResolution(int pixelCountingResolution);
+  // void resetPixelCountingResolution();
 
+  bool setSkyDiffuseModelingAlgorithm(const std::string& skyDiffuseModelingAlgorithm);
   void resetSkyDiffuseModelingAlgorithm();
+
+  bool setOutputExternalShadingCalculationResults(bool outputExternalShadingCalculationResults);
+
+  bool setDisableSelfShadingWithinShadingZoneGroups(bool disableSelfShadingWithinShadingZoneGroups);
+
+  bool setDisableSelfShadingFromShadingZoneGroupstoOtherZones(bool disableSelfShadingFromShadingZoneGroupstoOtherZones);
+
+
+  bool addShadingZoneGroup(const std::vector<ThermalZone>& thermalZones);
+  bool removeShadingZoneGroup(unsigned groupIndex);
+  void removeAllShadingZoneGroups();
 
   //@}
 

@@ -35,6 +35,9 @@
 namespace openstudio {
 namespace model {
 
+class ThermalZone;
+class ModelObjectList;
+
 namespace detail {
 
   class MODEL_API ShadowCalculation_Impl : public ModelObject_Impl {
@@ -64,57 +67,78 @@ namespace detail {
     // Get all output variable names that could be associated with this object.
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
+    virtual IddObjectType iddObjectType() const override;
+
     /** @name Getters */
     //@{
 
-    std::string calculationMethod() const;
+    std::string shadingCalculationMethod() const;
 
-    bool isCalculationMethodDefaulted() const;
+    std::string shadingCalculationUpdateFrequencyMethod() const;
+    bool isShadingCalculationUpdateFrequencyMethodDefaulted() const;
 
-    int calculationFrequency() const;
-
-    bool isCalculationFrequencyDefaulted() const;
+    int shadingCalculationUpdateFrequency() const;
+    bool isShadingCalculationUpdateFrequencyDefaulted() const;
 
     int maximumFiguresInShadowOverlapCalculations() const;
-
     bool isMaximumFiguresInShadowOverlapCalculationsDefaulted() const;
 
-    boost::optional<std::string> polygonClippingAlgorithm() const;
+    std::string polygonClippingAlgorithm() const;
 
-    boost::optional<std::string> skyDiffuseModelingAlgorithm() const;
+    int pixelCountingResolution() const;
+
+    std::string skyDiffuseModelingAlgorithm() const;
+
+    bool outputExternalShadingCalculationResults() const;
+
+    bool disableSelfShadingWithinShadingZoneGroups() const;
+
+    bool disableSelfShadingFromShadingZoneGroupstoOtherZones() const;
+
+    unsigned int numberofShadingZoneGroups() const;
+    std::vector<ThermalZone> getShadingZoneGroup(unsigned groupIndex) const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setCalculationMethod(const std::string& calculationMethod);
+    bool setShadingCalculationMethod(const std::string& shadingCalculationMethod);
 
-    void resetCalculationMethod();
+    bool setShadingCalculationUpdateFrequencyMethod(const std::string& shadingCalculationUpdateFrequencyMethod);
+    void resetShadingCalculationUpdateFrequencyMethod();
 
-    bool setCalculationFrequency(int calculationFrequency);
+    bool setShadingCalculationUpdateFrequency(int shadingCalculationUpdateFrequency);
+    void resetShadingCalculationUpdateFrequency();
 
-    void resetCalculationFrequency();
-
-    bool setMaximumFiguresInShadowOverlapCalculations(
-        int maximumFiguresInShadowOverlapCalculations);
-
+    bool setMaximumFiguresInShadowOverlapCalculations(int maximumFiguresInShadowOverlapCalculations);
     void resetMaximumFiguresInShadowOverlapCalculations();
 
-    bool setPolygonClippingAlgorithm(boost::optional<std::string> polygonClippingAlgorithm);
-
+    bool setPolygonClippingAlgorithm(const std::string& polygonClippingAlgorithm);
     void resetPolygonClippingAlgorithm();
 
-    bool setSkyDiffuseModelingAlgorithm(boost::optional<std::string> skyDiffuseModelingAlgorithm);
+    bool setPixelCountingResolution(int pixelCountingResolution);
 
+    bool setSkyDiffuseModelingAlgorithm(const std::string& skyDiffuseModelingAlgorithm);
     void resetSkyDiffuseModelingAlgorithm();
 
-    //@}
+    bool setOutputExternalShadingCalculationResults(bool outputExternalShadingCalculationResults);
 
-    virtual IddObjectType iddObjectType() const override;
+    bool setDisableSelfShadingWithinShadingZoneGroups(bool disableSelfShadingWithinShadingZoneGroups);
+
+    bool setDisableSelfShadingFromShadingZoneGroupstoOtherZones(bool disableSelfShadingFromShadingZoneGroupstoOtherZones);
+
+    bool addShadingZoneGroup(const std::vector<ThermalZone>& thermalZones);
+    bool removeShadingZoneGroup(unsigned groupIndex);
+    void removeAllShadingZoneGroups();
+
+    //@}
 
    private:
 
     REGISTER_LOGGER("openstudio.model.ShadowCalculation");
+
+    boost::optional<ModelObjectList> getShadingZoneGroupModelObjectList(unsigned groupIndex) const;
+
   };
 
 } // detail
