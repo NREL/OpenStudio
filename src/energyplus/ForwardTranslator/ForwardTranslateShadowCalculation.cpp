@@ -98,6 +98,9 @@ boost::optional<IdfObject> ForwardTranslator::translateShadowCalculation( Shadow
       IdfObject zoneList(IddObjectType::ZoneList);
       std::string zoneListName = "ShadowCalculation Shading Zone Group" + std::to_string(i + 1);
       zoneList.setName(zoneListName);
+      // Register it
+      m_idfObjects.push_back(zoneList);
+
       for (const ThermalZone& tz: thermalZones) {
         auto eg = zoneList.pushExtensibleGroup();
         eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
