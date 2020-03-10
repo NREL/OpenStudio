@@ -23124,10 +23124,12 @@ OS:Sizing:Zone,
        \minimum 0
        \default 0.3
   N17, \field Design Zone Air Distribution Effectiveness in Cooling Mode
+       \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \minimum> 0
        \default 1.0
   N18, \field Design Zone Air Distribution Effectiveness in Heating Mode
+       \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \minimum> 0
        \default 1.0
@@ -23150,11 +23152,24 @@ OS:Sizing:Zone,
       \units C
       \autosizable
        \required-field
-  N20;\field Dedicated Outdoor Air High Setpoint Temperature for Design
+  N20,\field Dedicated Outdoor Air High Setpoint Temperature for Design
       \type real
       \units C
       \autosizable
        \required-field
+  N21,\field Zone Secondary Recirculation Fraction
+       \note this field is from the DesignSpecification:ZoneAirDistribution
+       \type real
+       \default 0.0
+       \minimum 0.0
+       \units dimensionless
+  N22;\field Minimum Zone Ventilation Efficiency
+       \note this field is from the DesignSpecification:ZoneAirDistribution
+       \type real
+       \default 0.0
+       \minimum 0.0
+       \maximum 1.0
+       \units dimensionless
 
 OS:Splitter,
        \extensible:1
