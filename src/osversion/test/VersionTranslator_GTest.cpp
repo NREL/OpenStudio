@@ -595,3 +595,144 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
   }
 
 }
+
+TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model);
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_updated.osm");
+  model->save(outPath, true);
+
+/*
+ *  ShadowCalculation sc = model.getUniqueModelObject<ShadowCalculation>();
+ *
+ *  EXPECT_TRUE(sc.isShadingCalculationUpdateFrequencyMethodDefaulted());
+ *  EXPECT_EQ("Periodic", sc.shadingCalculationUpdateFrequencyMethod());
+ */
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:ShadowCalculation").size());
+  WorkspaceObject sc = model->getObjectsByType("OS:ShadowCalculation")[0];
+
+  // 2.9.1
+  //OS:ShadowCalculation,
+  //  {0f93d9e1-bdda-4e2a-829b-e4fff92527d0}, !- Handle
+  //  20,                                     !- Calculation Frequency
+  //  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
+
+  // Shading Calculation Method
+  EXPECT_EQ("PolygonClipping", sc.getString(1, false, true).get());
+  // Shading Calculation Update Frequency Method
+  EXPECT_FALSE(sc.getString(2, false, true));
+  // Shading Calculation Update Frequency
+  EXPECT_EQ(20, sc.getInt(3, false).get());
+  // Maximum Figures in Shadow Overlap Calculations
+  EXPECT_EQ(15000, sc.getInt(4, false).get());
+  // Polygon Clipping Algorithm
+  EXPECT_FALSE(sc.getString(5, false, true));
+  // Pixel Counting Resolution
+  EXPECT_EQ(512, sc.getInt(6, false).get());
+  // Sky Diffuse Modeling Algorithm
+  EXPECT_FALSE(sc.getString(7, false, true));
+  // Output External Shading Calculation Results
+  EXPECT_EQ("No", sc.getString(8, false, true).get());
+  // Disable Self-Shading Within Shading Zone Groups
+  EXPECT_EQ("No", sc.getString(9, false, true).get());
+  // Disable Self-Shading From Shading Zone Groups to Other Zones
+  EXPECT_EQ("No", sc.getString(10, false, true).get());
+  EXPECT_EQ(0u, sc.numExtensibleGroups());
+
+}
+
+TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default_expanded) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_expanded.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model);
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_expanded_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:ShadowCalculation").size());
+  WorkspaceObject sc = model->getObjectsByType("OS:ShadowCalculation")[0];
+
+  // 2.9.1
+  //OS:ShadowCalculation,
+  //  {0f93d9e1-bdda-4e2a-829b-e4fff92527d0}, !- Handle
+  //  20,                                     !- Calculation Frequency
+  //  15000,                                  !- Maximum Figures in Shadow Overlap Calculations
+  //  ,                                       !- Polygon Clipping Algorithm
+  //  ,                                       !- Sky Diffuse Modeling Algorithm
+  //  ;                                       !- Calculation Method
+
+  // Shading Calculation Method
+  EXPECT_EQ("PolygonClipping", sc.getString(1, false, true).get());
+  // Shading Calculation Update Frequency Method
+  EXPECT_FALSE(sc.getString(2, false, true));
+  // Shading Calculation Update Frequency
+  EXPECT_EQ(20, sc.getInt(3, false).get());
+  // Maximum Figures in Shadow Overlap Calculations
+  EXPECT_EQ(15000, sc.getInt(4, false).get());
+  // Polygon Clipping Algorithm
+  EXPECT_FALSE(sc.getString(5, false, true));
+  // Pixel Counting Resolution
+  EXPECT_EQ(512, sc.getInt(6, false).get());
+  // Sky Diffuse Modeling Algorithm
+  EXPECT_FALSE(sc.getString(7, false, true));
+  // Output External Shading Calculation Results
+  EXPECT_EQ("No", sc.getString(8, false, true).get());
+  // Disable Self-Shading Within Shading Zone Groups
+  EXPECT_EQ("No", sc.getString(9, false, true).get());
+  // Disable Self-Shading From Shading Zone Groups to Other Zones
+  EXPECT_EQ("No", sc.getString(10, false, true).get());
+  EXPECT_EQ(0u, sc.numExtensibleGroups());
+
+}
+
+TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_nondefault) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_nondefault.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model);
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_nondefault_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:ShadowCalculation").size());
+  WorkspaceObject sc = model->getObjectsByType("OS:ShadowCalculation")[0];
+
+  // 2.9.1
+  //OS:ShadowCalculation,
+  //  {0f93d9e1-bdda-4e2a-829b-e4fff92527d0}, !- Handle
+  //  19,                                     !- Calculation Frequency
+  //  14999,                                  !- Maximum Figures in Shadow Overlap Calculations
+  //  ConvexWeilerAtherton,                   !- Polygon Clipping Algorithm
+  //  DetailedSkyDiffuseModeling,             !- Sky Diffuse Modeling Algorithm
+  //  AverageOverDaysInFrequency;             !- Calculation Method
+
+  // Shading Calculation Method
+  EXPECT_EQ("PolygonClipping", sc.getString(1, false, true).get());
+  // Shading Calculation Update Frequency Method
+  // AverageOverDaysInFrequency maps to Periodic now
+  EXPECT_EQ("Periodic", sc.getString(2, false, true).get());
+  // Shading Calculation Update Frequency
+  EXPECT_EQ(19, sc.getInt(3, false).get());
+  // Maximum Figures in Shadow Overlap Calculations
+  EXPECT_EQ(14999, sc.getInt(4, false).get());
+  // Polygon Clipping Algorithm
+  EXPECT_EQ("ConvexWeilerAtherton", sc.getString(5, false, true).get());
+  // Pixel Counting Resolution
+  EXPECT_EQ(512, sc.getInt(6, false).get());
+  // Sky Diffuse Modeling Algorithm
+  EXPECT_EQ("DetailedSkyDiffuseModeling", sc.getString(7, false, true).get());
+  // Output External Shading Calculation Results
+  EXPECT_EQ("No", sc.getString(8, false, true).get());
+  // Disable Self-Shading Within Shading Zone Groups
+  EXPECT_EQ("No", sc.getString(9, false, true).get());
+  // Disable Self-Shading From Shading Zone Groups to Other Zones
+  EXPECT_EQ("No", sc.getString(10, false, true).get());
+  EXPECT_EQ(0u, sc.numExtensibleGroups());
+
+}
+

@@ -42,6 +42,8 @@ CREATE_SRC_GROUPS("${${target_name}_swig_src}")
 
 if(BUILD_TESTING)
 
+  # TODO: this isn't working perfectly yet...
+
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 
   # Glob all OSM files in test/ folder
