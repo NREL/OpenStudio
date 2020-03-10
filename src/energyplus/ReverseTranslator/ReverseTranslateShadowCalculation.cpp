@@ -60,19 +60,19 @@ boost::optional<model::ModelObject> ReverseTranslator::translateShadowCalculatio
 
   OptionalString s = workspaceObject.getString(ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod);
   if (s) {
-    // TODO: Temp workaround
+    // TODO: Temp workaround: TODO: REVERT NOW
     std::string calc = s.get();
     if (openstudio::istringEqual("Periodic", calc)) {
-      shadowCalculation.setCalculationMethod("AverageOverDaysInFrequency");
+      shadowCalculation.setShadingCalculationUpdateFrequencyMethod("AverageOverDaysInFrequency");
     } else {
       // Timestep
-      shadowCalculation.setCalculationMethod("TimestepFrequency");
+      shadowCalculation.setShadingCalculationUpdateFrequencyMethod("TimestepFrequency");
     }
   }
 
   OptionalInt i = workspaceObject.getInt(ShadowCalculationFields::ShadingCalculationUpdateFrequency);
   if (i) {
-    shadowCalculation.setCalculationFrequency(*i);
+    shadowCalculation.setShadingCalculationUpdateFrequency(*i);
   }
 
   i = workspaceObject.getInt(ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations);
