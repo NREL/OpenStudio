@@ -93,6 +93,11 @@ A number of API-breaking changes have been implemented in OpenStudio 3.0:
     * For `ChillerAbsoprtion`, `ChillerAbsoprtionIndirect`, `ChillerElectricEIR`: 
         * `addToTertiaryNode` overriden to only allow supply side connection.
         * `addToNode` overriden to connect to tertiary loop if primary loop is already connected, and Node to connect to is on the supply side of a different plant loop than the current primary loop
+* #3913 - E+ 9.3.0: Update ShadowCalculation to match object refactor in EnergyPlus
+    * `ShadowCalculation::calculationMethod` was renamed to `ShadowCalculation::shadingCalculationUpdateFrequencyMethod` (same for setter, defaulted, and reset methods)
+    * `ShadowCalculation::calculationFrequency` was renamed to `ShadowCalculation::shadingCalculationUpdateFrequency` (same for setter, defaulted, and reset methods)
+    * `ShadowCalculation::polygonClippingAlgorithm()` and `ShadowCalculation::skyDiffuseModelingAlgorithm()`: return type changed from `OptionalString` (which was always initialized) to `std::string`
+    * All new fields in E+ 9.3.0 were also added
 
 ## Minor changes:
 
