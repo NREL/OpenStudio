@@ -43,9 +43,12 @@
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/ShadowCalculation_FieldEnums.hxx>
 #include <utilities/idd/OS_ShadowCalculation_FieldEnums.hxx>
+#include <utilities/idd/ZoneList_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
@@ -169,7 +172,35 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadowCalculation) {
     EXPECT_EQ(boolToString(true), idf_sc.getString(ShadowCalculationFields::OutputExternalShadingCalculationResults).get());
     EXPECT_EQ(boolToString(false), idf_sc.getString(ShadowCalculationFields::DisableSelfShadingWithinShadingZoneGroups).get());
     EXPECT_EQ(boolToString(true), idf_sc.getString(ShadowCalculationFields::DisableSelfShadingFromShadingZoneGroupstoOtherZones).get());
+
+
+
+    // Should have 2 zonelists only
+    EXPECT_EQ(2u, w.getObjectsByType(IddObjectType::ZoneList).size());
     ASSERT_EQ(2u, idf_sc.numExtensibleGroups());
+
+    // test the first Shading Zone Group
+    {
+      WorkspaceExtensibleGroup w_eg_shadingGroup = idf_sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+      boost::optional<WorkspaceObject> _i_sc_shadingGroup = w_eg_shadingGroup.getTarget(ShadowCalculationExtensibleFields::ShadingZoneGroupZoneListName);
+      ASSERT_TRUE(_i_sc_shadingGroup);
+      EXPECT_EQ("ZoneList", _i_sc_shadingGroup->iddObject().name());
+      // There should be two zones on the ZoneList
+      ASSERT_EQ(2u, _i_sc_shadingGroup->extensibleGroups().size());
+      EXPECT_EQ(z1.nameString(), _i_sc_shadingGroup->extensibleGroups()[0].getString(ZoneListExtensibleFields::ZoneName).get());
+      EXPECT_EQ(z2.nameString(), _i_sc_shadingGroup->extensibleGroups()[1].getString(ZoneListExtensibleFields::ZoneName).get());
+    }
+
+    // Test the second Shading Zone Group
+    {
+       WorkspaceExtensibleGroup w_eg_shadingGroup = idf_sc.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+      boost::optional<WorkspaceObject> _i_sc_shadingGroup = w_eg_shadingGroup.getTarget(ShadowCalculationExtensibleFields::ShadingZoneGroupZoneListName);
+      ASSERT_TRUE(_i_sc_shadingGroup);
+      EXPECT_EQ("ZoneList", _i_sc_shadingGroup->iddObject().name());
+      // There should be one zone on the ZoneList
+      ASSERT_EQ(1u, _i_sc_shadingGroup->extensibleGroups().size());
+      EXPECT_EQ(z3.nameString(), _i_sc_shadingGroup->extensibleGroups()[0].getString(ZoneListExtensibleFields::ZoneName).get());
+    }
   }
 }
 
