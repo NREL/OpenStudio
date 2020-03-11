@@ -152,6 +152,13 @@ class MODEL_API SizingZone : public ModelObject {
 
   bool isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
 
+  double designZoneSecondaryRecirculationFraction() const;
+
+  bool isDesignZoneSecondaryRecirculationFractionDefaulted() const;
+
+  double designMinimumZoneVentilationEfficiency() const;
+
+  bool isDesignMinimumZoneVentilationEfficiencyDefaulted() const;
 
   //@}
   /** @name Setters */
@@ -242,6 +249,14 @@ class MODEL_API SizingZone : public ModelObject {
   bool setDesignZoneAirDistributionEffectivenessinHeatingMode(double designZoneAirDistributionEffectivenessinHeatingMode);
 
   void resetDesignZoneAirDistributionEffectivenessinHeatingMode();
+
+  bool setDesignZoneSecondaryRecirculationFraction(double designZoneSecondaryRecirculationFraction);
+
+  void resetDesignZoneSecondaryRecirculationFraction();
+
+  bool setDesignMinimumZoneVentilationEfficiency(double designMinimumZoneVentilationEfficiency);
+
+  void resetDesignMinimumZoneVentilationEfficiency();
 
   //@}
   /** @name Other */

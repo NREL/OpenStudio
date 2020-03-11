@@ -163,6 +163,14 @@ namespace detail {
 
     bool isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
 
+    double designZoneSecondaryRecirculationFraction() const;
+
+    bool isDesignZoneSecondaryRecirculationFractionDefaulted() const;
+
+    double designMinimumZoneVentilationEfficiency() const;
+
+    bool isDesignMinimumZoneVentilationEfficiencyDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -254,6 +262,14 @@ namespace detail {
     bool setDesignZoneAirDistributionEffectivenessinHeatingMode(double designZoneAirDistributionEffectivenessinHeatingMode);
 
     void resetDesignZoneAirDistributionEffectivenessinHeatingMode();
+
+    bool setDesignZoneSecondaryRecirculationFraction(double designZoneSecondaryRecirculationFraction);
+
+    void resetDesignZoneSecondaryRecirculationFraction();
+
+    bool setDesignMinimumZoneVentilationEfficiency(double designMinimumZoneVentilationEfficiency);
+
+    void resetDesignMinimumZoneVentilationEfficiency();
 
     //@}
     /** @name Other */

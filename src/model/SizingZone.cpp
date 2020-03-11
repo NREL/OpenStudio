@@ -262,6 +262,26 @@ namespace detail {
     return isEmpty(OS_Sizing_ZoneFields::DesignZoneAirDistributionEffectivenessinHeatingMode);
   }
 
+  double SizingZone_Impl::designZoneSecondaryRecirculationFraction() const {
+    boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::DesignZoneSecondaryRecirculationFraction,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool SizingZone_Impl::isDesignZoneSecondaryRecirculationFractionDefaulted() const {
+    return isEmpty(OS_Sizing_ZoneFields::DesignZoneSecondaryRecirculationFraction);
+  }
+
+  double SizingZone_Impl::designMinimumZoneVentilationEfficiency() const {
+    boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::DesignMinimumZoneVentilationEfficiency,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool SizingZone_Impl::isDesignMinimumZoneVentilationEfficiencyDefaulted() const {
+    return isEmpty(OS_Sizing_ZoneFields::DesignMinimumZoneVentilationEfficiency);
+  }
+
   bool SizingZone_Impl::accountforDedicatedOutdoorAirSystem() const {
     boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem,true);
     OS_ASSERT(value);
@@ -490,6 +510,26 @@ namespace detail {
 
   void SizingZone_Impl::resetDesignZoneAirDistributionEffectivenessinHeatingMode() {
     bool result = setString(OS_Sizing_ZoneFields::DesignZoneAirDistributionEffectivenessinHeatingMode, "");
+    OS_ASSERT(result);
+  }
+
+  bool SizingZone_Impl::setDesignZoneSecondaryRecirculationFraction(double designZoneSecondaryRecirculationFraction) {
+    bool result = setDouble(OS_Sizing_ZoneFields::DesignZoneSecondaryRecirculationFraction, designZoneSecondaryRecirculationFraction);
+    return result;
+  }
+
+  void SizingZone_Impl::resetDesignZoneSecondaryRecirculationFraction() {
+    bool result = setString(OS_Sizing_ZoneFields::DesignZoneSecondaryRecirculationFraction, "");
+    OS_ASSERT(result);
+  }
+
+  bool SizingZone_Impl::setDesignMinimumZoneVentilationEfficiency(double designMinimumZoneVentilationEfficiency) {
+    bool result = setDouble(OS_Sizing_ZoneFields::DesignMinimumZoneVentilationEfficiency, designMinimumZoneVentilationEfficiency);
+    return result;
+  }
+
+  void SizingZone_Impl::resetDesignMinimumZoneVentilationEfficiency() {
+    bool result = setString(OS_Sizing_ZoneFields::DesignMinimumZoneVentilationEfficiency, "");
     OS_ASSERT(result);
   }
 
@@ -941,6 +981,22 @@ bool SizingZone::isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted(
   return getImpl<detail::SizingZone_Impl>()->isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted();
 }
 
+double SizingZone::designZoneSecondaryRecirculationFraction() const {
+  return getImpl<detail::SizingZone_Impl>()->designZoneSecondaryRecirculationFraction();
+}
+
+bool SizingZone::isDesignZoneSecondaryRecirculationFractionDefaulted() const {
+  return getImpl<detail::SizingZone_Impl>()->isDesignZoneSecondaryRecirculationFractionDefaulted();
+}
+
+double SizingZone::designMinimumZoneVentilationEfficiency() const {
+  return getImpl<detail::SizingZone_Impl>()->designMinimumZoneVentilationEfficiency();
+}
+
+bool SizingZone::isDesignMinimumZoneVentilationEfficiencyDefaulted() const {
+  return getImpl<detail::SizingZone_Impl>()->isDesignMinimumZoneVentilationEfficiencyDefaulted();
+}
+
 bool SizingZone::accountforDedicatedOutdoorAirSystem() const {
   return getImpl<detail::SizingZone_Impl>()->accountforDedicatedOutdoorAirSystem();
 }
@@ -1103,6 +1159,22 @@ bool SizingZone::setDesignZoneAirDistributionEffectivenessinHeatingMode(double d
 
 void SizingZone::resetDesignZoneAirDistributionEffectivenessinHeatingMode() {
   getImpl<detail::SizingZone_Impl>()->resetDesignZoneAirDistributionEffectivenessinHeatingMode();
+}
+
+bool SizingZone::setDesignZoneSecondaryRecirculationFraction(double designZoneSecondaryRecirculationFraction) {
+  return getImpl<detail::SizingZone_Impl>()->setDesignZoneSecondaryRecirculationFraction(designZoneSecondaryRecirculationFraction);
+}
+
+void SizingZone::resetDesignZoneSecondaryRecirculationFraction() {
+  getImpl<detail::SizingZone_Impl>()->resetDesignZoneSecondaryRecirculationFraction();
+}
+
+bool SizingZone::setDesignMinimumZoneVentilationEfficiency(double designMinimumZoneVentilationEfficiency) {
+  return getImpl<detail::SizingZone_Impl>()->setDesignMinimumZoneVentilationEfficiency(designMinimumZoneVentilationEfficiency);
+}
+
+void SizingZone::resetDesignMinimumZoneVentilationEfficiency() {
+  getImpl<detail::SizingZone_Impl>()->resetDesignMinimumZoneVentilationEfficiency();
 }
 
 bool SizingZone::setZoneCoolingDesignSupplyAirTemperatureInputMethod(const std::string &value) {
