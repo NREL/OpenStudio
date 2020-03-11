@@ -5208,7 +5208,10 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
           if (i < 22) {
             newObject.setString(i, value.get());
           } else if (i < 24) {
-            newObject.setString(i+4, value.get());
+            // No need to initialize these fields by default especially now that they're at the end
+            if (!value->empty()) {
+              newObject.setString(i+4, value.get());
+            }
           } else {
             newObject.setString(i-2, value.get());
           }
