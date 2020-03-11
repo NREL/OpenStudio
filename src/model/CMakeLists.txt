@@ -1657,7 +1657,7 @@ set(${target_name}_depends
   ${openstudio_utilities_depends}
 )
 set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
- 
+
 
 add_library(${target_name} OBJECT ${${target_name}_src} ${EMBEDDED_OUTPUT})
 
@@ -2089,6 +2089,8 @@ set(${target_name}_test_src
   test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   test/ZoneVentilationDesignFlowRate_GTest.cpp
   test/ZoneVentilationWindandStackOpenArea_GTest.cpp
+
+  test/UniqueModelObject_GTest.cpp
 )
 
 set(${target_name}_test_depends

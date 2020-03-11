@@ -556,6 +556,24 @@ namespace detail {
 
   ModelObject ModelObject_Impl::clone(Model model) const
   {
+    // UniqueModelObject.
+    if (this->iddObject().properties().unique) {
+      Model m = this->model();
+      if (model == m) {
+        // Return self
+        LOG(Info, "Cannot clone a UniqueModelObject into the same model, returning self, for " << briefDescription());
+        return getObject<ModelObject>();
+      } else {
+        // Remove any existing objects (there should really be only one)
+        for (auto& wo: model.getObjectsByType(this->iddObject())) {
+          LOG(Info, "Removing existing UniqueModelObject in the target model: " << wo.briefDescription());
+          wo.remove();
+        }
+      }
+    }
+
+    // Business as usual...
+
     WorkspaceObjectVector result;
 
     // No children because ModelObject.
