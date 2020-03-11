@@ -73,7 +73,6 @@ class MODEL_API SiteWaterMainsTemperature : public ModelObject {
 
   boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures() const;
 
-
   //@}
   /** @name Setters */
   //@{
