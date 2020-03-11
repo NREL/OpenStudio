@@ -69,6 +69,8 @@
 #include "../../model/OtherEquipment_Impl.hpp"
 #include "../../model/FoundationKivaSettings.hpp"
 #include "../../model/FoundationKivaSettings_Impl.hpp"
+#include "../../model/OutputTableSummaryReports.hpp"
+#include "../../model/OutputTableSummaryReports_Impl.hpp"
 #include "../../model/FoundationKiva.hpp"
 #include "../../model/FoundationKiva_Impl.hpp"
 #include "../../model/SurfacePropertyExposedFoundationPerimeter.hpp"
@@ -99,6 +101,7 @@
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/Site_Location_FieldEnums.hxx>
 #include <utilities/idd/Foundation_Kiva_Settings_FieldEnums.hxx>
+#include <utilities/idd/Output_Table_SummaryReports_FieldEnums.hxx>
 #include <utilities/idd/Foundation_Kiva_FieldEnums.hxx>
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/SurfaceProperty_ExposedFoundationPerimeter_FieldEnums.hxx>
@@ -546,6 +549,34 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {
   EXPECT_EQ(0.02, foundationKivaSettings.minimumCellDimension());
   EXPECT_EQ(1.5, foundationKivaSettings.maximumCellGrowthCoefficient());
   EXPECT_EQ("Hourly", foundationKivaSettings.simulationTimestep());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_OutputTableSummaryReports) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  openstudio::IdfObject idfObject(openstudio::IddObjectType::Output_Table_SummaryReports);
+  IdfExtensibleGroup group1 = idfObject.pushExtensibleGroup();
+  group1.setString(0, "LightingSummary");
+  IdfExtensibleGroup group2 = idfObject.pushExtensibleGroup();
+  group2.setString(0, "EquipmentSummary");
+  IdfExtensibleGroup group3 = idfObject.pushExtensibleGroup();
+  group3.setString(0, "HVACSizingSummary");
+
+  openstudio::WorkspaceObject epOutputTableSummaryReports = workspace.addObject(idfObject).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  ASSERT_TRUE(model.getOptionalUniqueModelObject<openstudio::model::OutputTableSummaryReports>());
+
+  openstudio::model::OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<openstudio::model::OutputTableSummaryReports>();
+
+  EXPECT_EQ(3, outputTableSummaryReports.numberofSummaryReports());
+  std::vector<std::string> summaryReports = outputTableSummaryReports.summaryReports();
+  EXPECT_EQ(summaryReports[0], "LightingSummary");
+  EXPECT_EQ(summaryReports[1], "EquipmentSummary");
+  EXPECT_EQ(summaryReports[2], "HVACSizingSummary");
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {

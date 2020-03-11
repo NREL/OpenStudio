@@ -163,6 +163,9 @@ OutputJSON::OutputJSON(std::shared_ptr<detail::OutputJSON_Impl> impl)
 OutputJSON::OutputJSON(Model& model)
   : ModelObject(OutputJSON::iddObjectType(),model)
 {
+  // This is a required-field, so pick one...
+  // might as well default to more (TimeSeriesAndTabular) than less (TimeSeries)
+  setOptionType("TimeSeriesAndTabular");
   // Same defaults as EnergyPlus IDD
   setOutputJSON(true);
   setOutputCBOR(false);

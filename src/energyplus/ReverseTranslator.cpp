@@ -776,7 +776,8 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::Output_Table_SummaryReports :
     {
-      break; // no-op
+      modelObject = translateOutputTableSummaryReports(workspaceObject);
+      break;
     }
   case openstudio::IddObjectType::Output_Variable :
     {

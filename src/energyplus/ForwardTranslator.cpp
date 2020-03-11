@@ -555,6 +555,14 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
     translateAndMapModelObject(*runPeriod);
 
+    // ensure that output table summary reports exists
+    boost::optional<model::OutputTableSummaryReports> optOutputTableSummaryReports = model.getOptionalUniqueModelObject<model::OutputTableSummaryReports>();
+    if (!optOutputTableSummaryReports) {
+      OutputTableSummaryReports outputTableSummaryReports = model.getUniqueModelObject<model::OutputTableSummaryReports>();
+      outputTableSummaryReports.addSummaryReport("AllSummary");
+      translateAndMapModelObject(outputTableSummaryReports);
+    }
+
     // add a global geometry rules object
     IdfObject globalGeometryRules(openstudio::IddObjectType::GlobalGeometryRules);
     globalGeometryRules.setString(openstudio::GlobalGeometryRulesFields::StartingVertexPosition, "UpperLeftCorner");
@@ -2448,6 +2456,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
     retVal = translateOutputEnergyManagementSystem(outputEnergyManagementSystem);
     break;
   }
+  case openstudio::IddObjectType::OS_Output_Table_SummaryReports:
+  {
+    model::OutputTableSummaryReports summaryReports = modelObject.cast<OutputTableSummaryReports>();
+    retVal = translateOutputTableSummaryReports(summaryReports);
+    break;
+  }
   case openstudio::IddObjectType::OS_People :
     {
       model::People people = modelObject.cast<People>();
@@ -3484,6 +3498,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Output_DebuggingData);
   result.push_back(IddObjectType::OS_Output_Diagnostics);
   result.push_back(IddObjectType::OS_Output_JSON);
+  result.push_back(IddObjectType::OS_Output_Table_SummaryReports);
   result.push_back(IddObjectType::OS_PerformancePrecisionTradeoffs);
 
   result.push_back(IddObjectType::OS_Site);
@@ -4521,11 +4536,6 @@ void ForwardTranslator::createStandardOutputRequests()
     {
       tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion,"InchPound");
     }
-
-    IdfObject outputTableSummaryReport(IddObjectType::Output_Table_SummaryReports);
-    IdfExtensibleGroup eg = outputTableSummaryReport.pushExtensibleGroup();
-    eg.setString(Output_Table_SummaryReportsExtensibleFields::ReportName,"AllSummary");
-    m_idfObjects.push_back(outputTableSummaryReport);
   }
 
   if (!m_excludeVariableDictionary) {
@@ -4560,7 +4570,6 @@ void ForwardTranslator::createStandardOutputRequests()
     idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, 0.0);
     idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
   }
-
 }
 
 IdfObject ForwardTranslator::createAndRegisterIdfObject(const IddObjectType& idfObjectType,

@@ -30487,6 +30487,121 @@ OS:Output:EnergyManagementSystem,
        \key Verbose
        \default None
 
+OS:Output:Table:SummaryReports,
+       \memo This object allows the user to call report types that are predefined and will appear with the
+       \memo other tabular reports.  These predefined reports are sensitive to the OutputControl:Table:Style object
+       \memo and appear in the same files as the tabular reports.  The entries for this object is a list
+       \memo of the predefined reports that should appear in the tabular report output file.
+       \memo There should be as many fields (A) in this object as there are keys in the following (minus
+       \memo AllSummary+AllMonthly+AllSummaryAndMonthly)
+       \extensible:1
+       \min-fields 1
+       \unique-object
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2; \field Report Name 1
+       \begin-extensible
+       \type choice
+       \key AllSummary
+       \key AllSummaryAndSizingPeriod
+       \key AllMonthly
+       \key AllSummaryAndMonthly
+       \key AllSummaryMonthlyAndSizingPeriod
+       \key AnnualBuildingUtilityPerformanceSummary
+       \key InputVerificationandResultsSummary
+       \key DemandEndUseComponentsSummary
+       \key SourceEnergyEndUseComponentsSummary
+       \key ClimaticDataSummary
+       \key EquipmentSummary
+       \key EnvelopeSummary
+       \key SurfaceShadowingSummary
+       \key ShadingSummary
+       \key LightingSummary
+       \key HVACSizingSummary
+       \key SystemSummary
+       \key ComponentSizingSummary
+       \key CoilSizingDetails
+       \key OutdoorAirSummary
+       \key ObjectCountSummary
+       \key ComponentCostEconomicsSummary
+       \key AdaptiveComfortSummary
+       \key SensibleHeatGainSummary
+       \key ZoneComponentLoadSummary
+       \key AirLoopComponentLoadSummary
+       \key FacilityComponentLoadSummary
+       \key Standard62.1Summary
+       \key EnergyMeters
+       \key InitializationSummary
+       \key LEEDSummary
+       \key LifeCycleCostReport
+       \key TariffReport
+       \key EconomicResultSummary
+       \key ZoneCoolingSummaryMonthly
+       \key ZoneHeatingSummaryMonthly
+       \key ZoneElectricSummaryMonthly
+       \key SpaceGainsMonthly
+       \key PeakSpaceGainsMonthly
+       \key SpaceGainComponentsAtCoolingPeakMonthly
+       \key EnergyConsumptionElectricityNaturalGasMonthly
+       \key EnergyConsumptionElectricityGeneratedPropaneMonthly
+       \key EnergyConsumptionDieselFuelOilMonthly
+       \key EnergyConsumptionDistrictHeatingCoolingMonthly
+       \key EnergyConsumptionCoalGasolineMonthly
+       \key EnergyConsumptionOtherFuelsMonthly
+       \key EndUseEnergyConsumptionElectricityMonthly
+       \key EndUseEnergyConsumptionNaturalGasMonthly
+       \key EndUseEnergyConsumptionDieselMonthly
+       \key EndUseEnergyConsumptionFuelOilMonthly
+       \key EndUseEnergyConsumptionCoalMonthly
+       \key EndUseEnergyConsumptionPropaneMonthly
+       \key EndUseEnergyConsumptionGasolineMonthly
+       \key EndUseEnergyConsumptionOtherFuelsMonthly
+       \key PeakEnergyEndUseElectricityPart1Monthly
+       \key PeakEnergyEndUseElectricityPart2Monthly
+       \key ElectricComponentsOfPeakDemandMonthly
+       \key PeakEnergyEndUseNaturalGasMonthly
+       \key PeakEnergyEndUseDieselMonthly
+       \key PeakEnergyEndUseFuelOilMonthly
+       \key PeakEnergyEndUseCoalMonthly
+       \key PeakEnergyEndUsePropaneMonthly
+       \key PeakEnergyEndUseGasolineMonthly
+       \key PeakEnergyEndUseOtherFuelsMonthly
+       \key SetpointsNotMetWithTemperaturesMonthly
+       \key ComfortReportSimple55Monthly
+       \key UnglazedTranspiredSolarCollectorSummaryMonthly
+       \key OccupantComfortDataSummaryMonthly
+       \key ChillerReportMonthly
+       \key TowerReportMonthly
+       \key BoilerReportMonthly
+       \key DXReportMonthly
+       \key WindowReportMonthly
+       \key WindowEnergyReportMonthly
+       \key WindowZoneSummaryMonthly
+       \key WindowEnergyZoneSummaryMonthly
+       \key AverageOutdoorConditionsMonthly
+       \key OutdoorConditionsMaximumDryBulbMonthly
+       \key OutdoorConditionsMinimumDryBulbMonthly
+       \key OutdoorConditionsMaximumWetBulbMonthly
+       \key OutdoorConditionsMaximumDewPointMonthly
+       \key OutdoorGroundConditionsMonthly
+       \key WindowACReportMonthly
+       \key WaterHeaterReportMonthly
+       \key GeneratorReportMonthly
+       \key DaylightingReportMonthly
+       \key CoilReportMonthly
+       \key PlantLoopDemandReportMonthly
+       \key FanReportMonthly
+       \key PumpReportMonthly
+       \key CondLoopDemandReportMonthly
+       \key ZoneTemperatureOscillationReportMonthly
+       \key AirLoopSystemEnergyAndWaterUseMonthly
+       \key AirLoopSystemComponentLoadsMonthly
+       \key AirLoopSystemComponentEnergyUseMonthly
+       \key MechanicalVentilationLoadsMonthly
+       \key HeatEmissionsSummary
+       \key HeatEmissionsReportMonthly
+
 \group Energy Management System (EMS)
 
 OS:EnergyManagementSystem:Sensor,

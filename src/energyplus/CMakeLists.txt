@@ -232,6 +232,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputDiagnostics.cpp
   ForwardTranslator/ForwardTranslateOutputEnergyManagementSystem.cpp
   ForwardTranslator/ForwardTranslateOutputJSON.cpp
+  ForwardTranslator/ForwardTranslateOutputTableSummaryReports.cpp
   ForwardTranslator/ForwardTranslatePeople.cpp
   ForwardTranslator/ForwardTranslatePerformancePrecisionTradeoffs.cpp
   ForwardTranslator/ForwardTranslatePhotovoltaicPerformanceEquivalentOneDiode.cpp
@@ -484,6 +485,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateOutputMeterCumulativeMeterFileOnly.cpp
   ReverseTranslator/ReverseTranslateOutputMeterMeterFileOnly.cpp
   ReverseTranslator/ReverseTranslateOutputVariable.cpp
+  ReverseTranslator/ReverseTranslateOutputTableSummaryReports.cpp
   ReverseTranslator/ReverseTranslatePeople.cpp
   ReverseTranslator/ReverseTranslatePerformancePrecisionTradeoffs.cpp
   ReverseTranslator/ReverseTranslateRefrigerationCase.cpp
@@ -612,6 +614,7 @@ set(${target_name}_test_src
   Test/OutputDebuggingData_GTest.cpp
   Test/OutputDiagnostics_GTest.cpp
   Test/OutputJSON_GTest.cpp
+  Test/OutputTableSummaryReports_GTest.cpp
   Test/People_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp
