@@ -423,7 +423,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SizingZone_Impl::setHeatingDesignAirFlowMethod(std::string heatingDesignAirFlowMethod) {
+  bool SizingZone_Impl::setHeatingDesignAirFlowMethod(const std::string& heatingDesignAirFlowMethod) {
     bool result = setString(OS_Sizing_ZoneFields::HeatingDesignAirFlowMethod, heatingDesignAirFlowMethod);
     return result;
   }
@@ -1049,7 +1049,7 @@ void SizingZone::resetCoolingMinimumAirFlowFraction() {
   getImpl<detail::SizingZone_Impl>()->resetCoolingMinimumAirFlowFraction();
 }
 
-bool SizingZone::setHeatingDesignAirFlowMethod(std::string heatingDesignAirFlowMethod) {
+bool SizingZone::setHeatingDesignAirFlowMethod(const std::string& heatingDesignAirFlowMethod) {
   return getImpl<detail::SizingZone_Impl>()->setHeatingDesignAirFlowMethod(heatingDesignAirFlowMethod);
 }
 
