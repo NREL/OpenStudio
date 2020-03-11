@@ -23123,16 +23123,6 @@ OS:Sizing:Zone,
        \type real
        \minimum 0
        \default 0.3
-  N17, \field Design Zone Air Distribution Effectiveness in Cooling Mode
-       \note this field is from the DesignSpecification:ZoneAirDistribution
-       \type real
-       \minimum> 0
-       \default 1.0
-  N18, \field Design Zone Air Distribution Effectiveness in Heating Mode
-       \note this field is from the DesignSpecification:ZoneAirDistribution
-       \type real
-       \minimum> 0
-       \default 1.0
   A6, \field Account for Dedicated Outdoor Air System
       \note account for effect of dedicated outdoor air system supplying air directly to the zone
       \type choice
@@ -23147,23 +23137,33 @@ OS:Sizing:Zone,
       \key NeutralDehumidifiedSupplyAir
       \key ColdSupplyAir
        \required-field
-  N19,\field Dedicated Outdoor Air Low Setpoint Temperature for Design
+  N17,\field Dedicated Outdoor Air Low Setpoint Temperature for Design
       \type real
       \units C
       \autosizable
        \required-field
-  N20,\field Dedicated Outdoor Air High Setpoint Temperature for Design
+  N18,\field Dedicated Outdoor Air High Setpoint Temperature for Design
       \type real
       \units C
       \autosizable
        \required-field
-  N21,\field Zone Secondary Recirculation Fraction
+  N19, \field Design Zone Air Distribution Effectiveness in Cooling Mode
+       \note this field is from the DesignSpecification:ZoneAirDistribution
+       \type real
+       \minimum> 0
+       \default 1.0
+  N20, \field Design Zone Air Distribution Effectiveness in Heating Mode
+       \note this field is from the DesignSpecification:ZoneAirDistribution
+       \type real
+       \minimum> 0
+       \default 1.0
+  N21,\field Design Zone Secondary Recirculation Fraction
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \default 0.0
        \minimum 0.0
        \units dimensionless
-  N22;\field Minimum Zone Ventilation Efficiency
+  N22;\field Design Minimum Zone Ventilation Efficiency
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \default 0.0
