@@ -282,12 +282,12 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
     }
 
     if (!modelObject.isDesignZoneSecondaryRecirculationFractionDefaulted()) {
-      dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode,
+      dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction,
                       modelObject.designZoneSecondaryRecirculationFraction());
     }
 
     if (!modelObject.isDesignMinimumZoneVentilationEfficiencyDefaulted()) {
-      dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode,
+      dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::MinimumZoneVentilationEfficiency,
                       modelObject.designMinimumZoneVentilationEfficiency());
     }
 
