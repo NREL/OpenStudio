@@ -28,6 +28,10 @@
   %ignore openstudio::model::WeatherFile::site;
   %ignore openstudio::model::ClimateZones::site;
 
+  // Note JM 2020-03-11: Ignoring this, will reimplement later in ModelHVAC.i using partial classes
+  %ignore openstudio::model::ShadowCalculation::addShadingZoneGroup;
+  %ignore openstudio::model::ShadowCalculation::getShadingZoneGroup;
+
 #endif
 
 namespace openstudio {
@@ -38,6 +42,7 @@ namespace model {
   class SubSurface;
   class InternalMass;
   class Schedule;
+  class ThermalZone; // For ShadowCalculation::addShadingZoneGroup & getShadingZoneGroup
 }
 }
 

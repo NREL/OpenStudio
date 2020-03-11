@@ -338,6 +338,14 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
           return actuator.setThermalZone(thermalZone);
         }
 
+        // Reimplemented from ModelSimulation.i
+        std::vector<openstudio::model::ThermalZone> getShadingZoneGroup(const openstudio::model::ShadowCalculation& sc, unsigned groupIndex) {
+          return sc.getShadingZoneGroup(groupIndex);
+        }
+        bool addShadingZoneGroup(openstudio::model::ShadowCalculation sc, const std::vector<openstudio::model::ThermalZone>& thermalZones) {
+          return sc.addShadingZoneGroup(thermalZones);
+        }
+
       }
     }
   }
@@ -393,6 +401,16 @@ SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
         this.setThermalZone(thermalZone);
       }
     }
+
+    public partial class ShadowCalculation : ModelObject {
+      public ThermalZoneVector getShadingZoneGroup(uint groupIndex) {
+        return OpenStudio.OpenStudioModelHVAC.getShadingZoneGroup(this, groupIndex);
+      }
+      public bool addShadingZoneGroup(ThermalZoneVector thermalZones) {
+        return OpenStudio.OpenStudioModelHVAC.addShadingZoneGroup(this, thermalZones);
+      }
+    }
+
   %}
 #endif
 

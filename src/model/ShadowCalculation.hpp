@@ -36,11 +36,12 @@
 namespace openstudio {
 namespace model {
 
+// Forward declarations
+class ThermalZone;
+
 namespace detail {
   class ShadowCalculation_Impl;
 } // detail
-
-class ThermalZone;
 
 /** ShadowCalculation derives from ModelObject and is an interface to the OpenStudio IDD object named "ShadowCalculation".
  *
