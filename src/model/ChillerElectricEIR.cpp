@@ -1400,17 +1400,21 @@ ChillerElectricEIR::ChillerElectricEIR(std::shared_ptr<detail::ChillerElectricEI
 
 /// @endcond
 
-  boost::optional<double> ChillerElectricEIR::autosizedReferenceCapacity() const {
-    return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCapacity();
-  }
+boost::optional<double> ChillerElectricEIR::autosizedReferenceCapacity() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCapacity();
+}
 
-  boost::optional<double> ChillerElectricEIR::autosizedReferenceChilledWaterFlowRate() const {
-    return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceChilledWaterFlowRate();
-  }
+boost::optional<double> ChillerElectricEIR::autosizedReferenceChilledWaterFlowRate() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceChilledWaterFlowRate();
+}
 
-  boost::optional<double> ChillerElectricEIR::autosizedReferenceCondenserFluidFlowRate() const {
-    return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCondenserFluidFlowRate();
-  }
+boost::optional<double> ChillerElectricEIR::autosizedReferenceCondenserFluidFlowRate() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCondenserFluidFlowRate();
+}
+
+boost::optional<double> ChillerElectricEIR::autosizedDesignHeatRecoveryWaterFlowRate() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedDesignHeatRecoveryWaterFlowRate();
+}
 
 } // model
 } // openstudio
