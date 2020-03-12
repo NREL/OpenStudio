@@ -5197,6 +5197,33 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else if (iddname == "OS:Sizing:Zone") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // I moved fields 22 & 23 to the end (Design Zone Air Distribution Effectiveness in Cooling|Heating Mode)
+      // to group all fields that belong onto DesignSpecification:ZoneAirDistribution in E+ together
+      for (size_t i = 0; i < object.numFields(); ++i) {
+         if ((value = object.getString(i))) {
+          if (i < 22) {
+            newObject.setString(i, value.get());
+          } else if (i < 24) {
+            // No need to initialize these fields by default especially now that they're at the end
+            if (!value->empty()) {
+              newObject.setString(i+4, value.get());
+            }
+          } else {
+            newObject.setString(i-2, value.get());
+          }
+        }
+      }
+
+      // Two fields were plain added to the end: Design Zone Secondary Recirculation Fraction,
+      // and  Design Minimum Zone Ventilation Efficiency, but both are optional (has default) so no-op there
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     // No-op
     } else {
       ss << object;
