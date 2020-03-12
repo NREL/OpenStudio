@@ -301,33 +301,62 @@ OS:RunPeriodControl:SpecialDays,
        \key CustomDay1
        \key CustomDay2
 
-! TODO: Major changes in E+
 OS:ShadowCalculation,
        \unique-object
        \min-fields 2
-  A1, \field Handle
+       \memo This object is used to control details of the solar, shading, and daylighting models
+       \extensible:1
+  A1,  \field Handle
        \type handle
        \required-field
-  N1, \field Calculation Frequency
-       \note 0=Use Default Periodic Calculation|<else> calculate every <value> day
-       \note only really applicable to RunPeriods
-       \note warning issued if >31
+  A2 , \field Shading Calculation Method
+       \note Select between CPU-based polygon clipping method, the GPU-based pixel counting method,
+       \note or importing from external shading data.
+       \note If PixelCounting is selected and GPU hardware (or GPU emulation) is not available, a warning will be
+       \note displayed and EnergyPlus will revert to PolygonClipping.
+       \note If Scheduled is chosen, the External Shading Fraction Schedule Name is required
+       \note in SurfaceProperty:LocalEnvironment.
+       \note If Imported is chosen, the Schedule:File:Shading object is required.
+       \type choice
+       \key PolygonClipping
+       \key PixelCounting
+       \key Scheduled
+       \key Imported
+       \required-field
+       \note the default value is PolygonClipping
+  A3 , \field Shading Calculation Update Frequency Method
+       \note choose calculation frequency method. note that Timestep is only needed for certain cases
+       \note and can increase execution time significantly.
+       \type choice
+       \key Periodic
+       \key Timestep
+       \default Periodic
+  N1 , \field Shading Calculation Update Frequency
        \type integer
        \minimum 1
        \default 20
-  N2, \field Maximum Figures in Shadow Overlap Calculations
-       \note Number of allowable figures in shadow overlap calculations
+       \note enter number of days
+       \note this field is only used if the previous field is set to Periodic
+       \note warning issued if >31
+  N2 , \field Maximum Figures in Shadow Overlap Calculations
+       \note Number of allowable figures in shadow overlap in PolygonClipping calculations
        \type integer
        \minimum 200
        \default 15000
-  A2, \field Polygon Clipping Algorithm
+  A4 , \field Polygon Clipping Algorithm
        \note Advanced Feature.  Internal default is SutherlandHodgman
        \note Refer to InputOutput Reference and Engineering Reference for more information
        \type choice
        \key ConvexWeilerAtherton
        \key SutherlandHodgman
+       \key SlaterBarskyandSutherlandHodgman
        \default SutherlandHodgman
-  A3, \field Sky Diffuse Modeling Algorithm
+  N3 , \field Pixel Counting Resolution
+       \note Number of pixels in both dimensions of the surface rendering
+       \type integer
+       \required-field
+       \note the default is 512
+  A5 , \field Sky Diffuse Modeling Algorithm
        \note Advanced Feature.  Internal default is SimpleSkyDiffuseModeling
        \note If you have shading elements that change transmittance over the
        \note year, you may wish to choose the detailed method.
@@ -336,13 +365,41 @@ OS:ShadowCalculation,
        \key SimpleSkyDiffuseModeling
        \key DetailedSkyDiffuseModeling
        \default SimpleSkyDiffuseModeling
-  A4; \field Calculation Method
-       \note choose calculation method. note that TimestepFrequency is only needed for certain cases
-       \note and can increase execution time significantly.
+  A6 , \field Output External Shading Calculation Results
        \type choice
-       \key AverageOverDaysInFrequency
-       \key TimestepFrequency
-       \default AverageOverDaysInFrequency
+       \key Yes
+       \key No
+       \required-field
+       \note the default is No
+       \note If Yes is chosen, the calculated external shading fraction results will be saved to an external CSV file with surface names as the column headers.
+  A6 , \field Disable Self-Shading Within Shading Zone Groups
+       \note If Yes, self-shading will be disabled from all exterior surfaces in a given Shading Zone Group to surfaces within
+       \note the same Shading Zone Group.
+       \note If both Disable Self-Shading Within Shading Zone Groups and Disable Self-Shading From Shading Zone Groups to Other Zones = Yes,
+       \note then all self-shading from exterior surfaces will be disabled.
+       \note If only one of these fields = Yes, then at least one Shading Zone Group must be specified, or this field will be ignored.
+       \note Shading from Shading:* surfaces, overhangs, fins, and reveals will not be disabled.
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note the default is No
+  A8 , \field Disable Self-Shading From Shading Zone Groups to Other Zones
+       \note If Yes, self-shading will be disabled from all exterior surfaces in a given Shading Zone Group to all other zones in the model.
+       \note If both Disable Self-Shading Within Shading Zone Groups and Disable Self-Shading From Shading Zone Groups to Other Zones = Yes,
+       \note then all self-shading from exterior surfaces will be disabled.
+       \note If only one of these fields = Yes, then at least one Shading Zone Group must be specified, or this field will be ignored.
+       \note Shading from Shading:* surfaces, overhangs, fins, and reveals will not be disabled.
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note the default is No
+  A9 ; \field Shading Zone Group
+       \note Specifies a group of zones which are controlled by the Disable Self-Shading fields.
+       \type object-list
+       \object-list ModelObjectLists
+       \begin-extensible
 
 OS:SimulationControl,
        \memo Note that the following 3 fields are related to the Sizing:Zone, Sizing:System,
@@ -23066,14 +23123,6 @@ OS:Sizing:Zone,
        \type real
        \minimum 0
        \default 0.3
-  N17, \field Design Zone Air Distribution Effectiveness in Cooling Mode
-       \type real
-       \minimum> 0
-       \default 1.0
-  N18, \field Design Zone Air Distribution Effectiveness in Heating Mode
-       \type real
-       \minimum> 0
-       \default 1.0
   A6, \field Account for Dedicated Outdoor Air System
       \note account for effect of dedicated outdoor air system supplying air directly to the zone
       \type choice
@@ -23088,16 +23137,39 @@ OS:Sizing:Zone,
       \key NeutralDehumidifiedSupplyAir
       \key ColdSupplyAir
        \required-field
-  N19,\field Dedicated Outdoor Air Low Setpoint Temperature for Design
+  N17,\field Dedicated Outdoor Air Low Setpoint Temperature for Design
       \type real
       \units C
       \autosizable
        \required-field
-  N20;\field Dedicated Outdoor Air High Setpoint Temperature for Design
+  N18,\field Dedicated Outdoor Air High Setpoint Temperature for Design
       \type real
       \units C
       \autosizable
        \required-field
+  N19, \field Design Zone Air Distribution Effectiveness in Cooling Mode
+       \note this field is from the DesignSpecification:ZoneAirDistribution
+       \type real
+       \minimum> 0
+       \default 1.0
+  N20, \field Design Zone Air Distribution Effectiveness in Heating Mode
+       \note this field is from the DesignSpecification:ZoneAirDistribution
+       \type real
+       \minimum> 0
+       \default 1.0
+  N21,\field Design Zone Secondary Recirculation Fraction
+       \note this field is from the DesignSpecification:ZoneAirDistribution
+       \type real
+       \default 0.0
+       \minimum 0.0
+       \units dimensionless
+  N22;\field Design Minimum Zone Ventilation Efficiency
+       \note this field is from the DesignSpecification:ZoneAirDistribution
+       \type real
+       \default 0.0
+       \minimum 0.0
+       \maximum 1.0
+       \units dimensionless
 
 OS:Splitter,
        \extensible:1
@@ -30414,6 +30486,121 @@ OS:Output:EnergyManagementSystem,
        \key ErrorsOnly
        \key Verbose
        \default None
+
+OS:Output:Table:SummaryReports,
+       \memo This object allows the user to call report types that are predefined and will appear with the
+       \memo other tabular reports.  These predefined reports are sensitive to the OutputControl:Table:Style object
+       \memo and appear in the same files as the tabular reports.  The entries for this object is a list
+       \memo of the predefined reports that should appear in the tabular report output file.
+       \memo There should be as many fields (A) in this object as there are keys in the following (minus
+       \memo AllSummary+AllMonthly+AllSummaryAndMonthly)
+       \extensible:1
+       \min-fields 1
+       \unique-object
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2; \field Report Name 1
+       \begin-extensible
+       \type choice
+       \key AllSummary
+       \key AllSummaryAndSizingPeriod
+       \key AllMonthly
+       \key AllSummaryAndMonthly
+       \key AllSummaryMonthlyAndSizingPeriod
+       \key AnnualBuildingUtilityPerformanceSummary
+       \key InputVerificationandResultsSummary
+       \key DemandEndUseComponentsSummary
+       \key SourceEnergyEndUseComponentsSummary
+       \key ClimaticDataSummary
+       \key EquipmentSummary
+       \key EnvelopeSummary
+       \key SurfaceShadowingSummary
+       \key ShadingSummary
+       \key LightingSummary
+       \key HVACSizingSummary
+       \key SystemSummary
+       \key ComponentSizingSummary
+       \key CoilSizingDetails
+       \key OutdoorAirSummary
+       \key ObjectCountSummary
+       \key ComponentCostEconomicsSummary
+       \key AdaptiveComfortSummary
+       \key SensibleHeatGainSummary
+       \key ZoneComponentLoadSummary
+       \key AirLoopComponentLoadSummary
+       \key FacilityComponentLoadSummary
+       \key Standard62.1Summary
+       \key EnergyMeters
+       \key InitializationSummary
+       \key LEEDSummary
+       \key LifeCycleCostReport
+       \key TariffReport
+       \key EconomicResultSummary
+       \key ZoneCoolingSummaryMonthly
+       \key ZoneHeatingSummaryMonthly
+       \key ZoneElectricSummaryMonthly
+       \key SpaceGainsMonthly
+       \key PeakSpaceGainsMonthly
+       \key SpaceGainComponentsAtCoolingPeakMonthly
+       \key EnergyConsumptionElectricityNaturalGasMonthly
+       \key EnergyConsumptionElectricityGeneratedPropaneMonthly
+       \key EnergyConsumptionDieselFuelOilMonthly
+       \key EnergyConsumptionDistrictHeatingCoolingMonthly
+       \key EnergyConsumptionCoalGasolineMonthly
+       \key EnergyConsumptionOtherFuelsMonthly
+       \key EndUseEnergyConsumptionElectricityMonthly
+       \key EndUseEnergyConsumptionNaturalGasMonthly
+       \key EndUseEnergyConsumptionDieselMonthly
+       \key EndUseEnergyConsumptionFuelOilMonthly
+       \key EndUseEnergyConsumptionCoalMonthly
+       \key EndUseEnergyConsumptionPropaneMonthly
+       \key EndUseEnergyConsumptionGasolineMonthly
+       \key EndUseEnergyConsumptionOtherFuelsMonthly
+       \key PeakEnergyEndUseElectricityPart1Monthly
+       \key PeakEnergyEndUseElectricityPart2Monthly
+       \key ElectricComponentsOfPeakDemandMonthly
+       \key PeakEnergyEndUseNaturalGasMonthly
+       \key PeakEnergyEndUseDieselMonthly
+       \key PeakEnergyEndUseFuelOilMonthly
+       \key PeakEnergyEndUseCoalMonthly
+       \key PeakEnergyEndUsePropaneMonthly
+       \key PeakEnergyEndUseGasolineMonthly
+       \key PeakEnergyEndUseOtherFuelsMonthly
+       \key SetpointsNotMetWithTemperaturesMonthly
+       \key ComfortReportSimple55Monthly
+       \key UnglazedTranspiredSolarCollectorSummaryMonthly
+       \key OccupantComfortDataSummaryMonthly
+       \key ChillerReportMonthly
+       \key TowerReportMonthly
+       \key BoilerReportMonthly
+       \key DXReportMonthly
+       \key WindowReportMonthly
+       \key WindowEnergyReportMonthly
+       \key WindowZoneSummaryMonthly
+       \key WindowEnergyZoneSummaryMonthly
+       \key AverageOutdoorConditionsMonthly
+       \key OutdoorConditionsMaximumDryBulbMonthly
+       \key OutdoorConditionsMinimumDryBulbMonthly
+       \key OutdoorConditionsMaximumWetBulbMonthly
+       \key OutdoorConditionsMaximumDewPointMonthly
+       \key OutdoorGroundConditionsMonthly
+       \key WindowACReportMonthly
+       \key WaterHeaterReportMonthly
+       \key GeneratorReportMonthly
+       \key DaylightingReportMonthly
+       \key CoilReportMonthly
+       \key PlantLoopDemandReportMonthly
+       \key FanReportMonthly
+       \key PumpReportMonthly
+       \key CondLoopDemandReportMonthly
+       \key ZoneTemperatureOscillationReportMonthly
+       \key AirLoopSystemEnergyAndWaterUseMonthly
+       \key AirLoopSystemComponentLoadsMonthly
+       \key AirLoopSystemComponentEnergyUseMonthly
+       \key MechanicalVentilationLoadsMonthly
+       \key HeatEmissionsSummary
+       \key HeatEmissionsReportMonthly
 
 \group Energy Management System (EMS)
 

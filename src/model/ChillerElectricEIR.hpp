@@ -288,6 +288,8 @@ class MODEL_API ChillerElectricEIR : public WaterToWaterComponent {
 
   boost::optional<double> autosizedReferenceCondenserFluidFlowRate() const ;
 
+  boost::optional<double> autosizedDesignHeatRecoveryWaterFlowRate() const;
+
   /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
   boost::optional<PlantLoop> chilledWaterLoop() const;
 

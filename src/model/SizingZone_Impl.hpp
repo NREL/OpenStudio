@@ -71,6 +71,10 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+
+    virtual std::vector<std::string> emsInternalVariableNames() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -137,14 +141,6 @@ namespace detail {
 
     bool isHeatingMaximumAirFlowFractionDefaulted() const;
 
-    double designZoneAirDistributionEffectivenessinCoolingMode() const;
-
-    bool isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted() const;
-
-    double designZoneAirDistributionEffectivenessinHeatingMode() const;
-
-    bool isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
-
     bool accountforDedicatedOutdoorAirSystem() const;
 
     std::string dedicatedOutdoorAirSystemControlStrategy() const;
@@ -157,17 +153,23 @@ namespace detail {
 
     bool isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized() const;
 
-    boost::optional<double> autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign() const ;
+    // Fields from DesignSpecification:ZoneAirDistribution
 
-    boost::optional<double> autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign() const ;
+    double designZoneAirDistributionEffectivenessinCoolingMode() const;
 
-    void autosize();
+    bool isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted() const;
 
-    void applySizingValues();
+    double designZoneAirDistributionEffectivenessinHeatingMode() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+    bool isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted() const;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+    double designZoneSecondaryRecirculationFraction() const;
+
+    bool isDesignZoneSecondaryRecirculationFractionDefaulted() const;
+
+    double designMinimumZoneVentilationEfficiency() const;
+
+    bool isDesignMinimumZoneVentilationEfficiencyDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -219,7 +221,7 @@ namespace detail {
 
     void resetCoolingMinimumAirFlowFraction();
 
-    bool setHeatingDesignAirFlowMethod(std::string heatingDesignAirFlowMethod);
+    bool setHeatingDesignAirFlowMethod(const std::string& heatingDesignAirFlowMethod);
 
     void resetHeatingDesignAirFlowMethod();
 
@@ -239,14 +241,6 @@ namespace detail {
 
     void resetHeatingMaximumAirFlowFraction();
 
-    bool setDesignZoneAirDistributionEffectivenessinCoolingMode(double designZoneAirDistributionEffectivenessinCoolingMode);
-
-    void resetDesignZoneAirDistributionEffectivenessinCoolingMode();
-
-    bool setDesignZoneAirDistributionEffectivenessinHeatingMode(double designZoneAirDistributionEffectivenessinHeatingMode);
-
-    void resetDesignZoneAirDistributionEffectivenessinHeatingMode();
-
     bool setAccountforDedicatedOutdoorAirSystem(bool accountforDedicatedOutdoorAirSystem);
 
     bool setDedicatedOutdoorAirSystemControlStrategy(std::string dedicatedOutdoorAirSystemControlStrategy);
@@ -259,9 +253,35 @@ namespace detail {
 
     void autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
 
+    // Fields from DesignSpecification:ZoneAirDistribution
+
+    bool setDesignZoneAirDistributionEffectivenessinCoolingMode(double designZoneAirDistributionEffectivenessinCoolingMode);
+
+    void resetDesignZoneAirDistributionEffectivenessinCoolingMode();
+
+    bool setDesignZoneAirDistributionEffectivenessinHeatingMode(double designZoneAirDistributionEffectivenessinHeatingMode);
+
+    void resetDesignZoneAirDistributionEffectivenessinHeatingMode();
+
+    bool setDesignZoneSecondaryRecirculationFraction(double designZoneSecondaryRecirculationFraction);
+
+    void resetDesignZoneSecondaryRecirculationFraction();
+
+    bool setDesignMinimumZoneVentilationEfficiency(double designMinimumZoneVentilationEfficiency);
+
+    void resetDesignMinimumZoneVentilationEfficiency();
+
     //@}
     /** @name Other */
     //@{
+
+    void autosize();
+
+    void applySizingValues();
+
+    boost::optional<double> autosizedDedicatedOutdoorAirLowSetpointTemperatureforDesign() const ;
+
+    boost::optional<double> autosizedDedicatedOutdoorAirHighSetpointTemperatureforDesign() const ;
 
     //@}
    protected:

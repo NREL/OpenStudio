@@ -240,47 +240,58 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
     idfObject.setDouble(Sizing_ZoneFields::HeatingMaximumAirFlowFraction,value.get());
   }
 
-  // DesignZoneAirDistributionEffectivenessinCoolingMode
-  // DesignZoneAirDistributionEffectivenessinHeatingMode
+  // These fields are onto OS:Sizing:Zonne but they are on DesignSpecification:ZoneAirDistribution in E+:
+  // * Design Zone Air Distribution Effectiveness in Cooling Mode
+  // * Design Zone Air Distribution Effectiveness in Heating Mode
+  // * Design Zone Secondary Recirculation Fraction
+  // * Design Minimum Zone Ventilation Efficiency
 
-  boost::optional<double> designZoneAirDistributionEffectivenessinCoolingMode =
-                            modelObject.designZoneAirDistributionEffectivenessinCoolingMode();
-  boost::optional<double> designZoneAirDistributionEffectivenessinHeatingMode =
-                            modelObject.designZoneAirDistributionEffectivenessinHeatingMode();
+  // If any of the DSZAD fields is non-default, then it's worth it to translate it. Otherwise it has no effect.
+  bool isDSZADTranslated = !(
+      modelObject.isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted() &&
+      modelObject.isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted() &&
+      modelObject.isDesignZoneSecondaryRecirculationFractionDefaulted() &&
+      modelObject.isDesignMinimumZoneVentilationEfficiencyDefaulted()
+  );
 
-  std::string designSpecificationZoneAirDistributionName;
-  if( name )
+  // Have to declare it here for scoping, so that we can access it when trying to set it for the Controller:MechanicalVentilation
+  std::string dSZADName;
+
+  if( isDSZADTranslated )
   {
-    designSpecificationZoneAirDistributionName = name.get() +  " Design Spec Zone Air Dist";
-  }
-
-  if( designZoneAirDistributionEffectivenessinCoolingMode ||
-      designZoneAirDistributionEffectivenessinHeatingMode )
-  {
-    IdfObject _designSpecification_ZoneAirDistribution(IddObjectType::DesignSpecification_ZoneAirDistribution);
+    IdfObject dSZAD(IddObjectType::DesignSpecification_ZoneAirDistribution);
 
     if( name )
     {
-      _designSpecification_ZoneAirDistribution.setName(designSpecificationZoneAirDistributionName);
+      dSZADName = name.get() +  " Design Spec Zone Air Dist";
+      dSZAD.setName(dSZADName);
     }
 
-    m_idfObjects.push_back(_designSpecification_ZoneAirDistribution);
+    // register the DSZAD
+    m_idfObjects.push_back(dSZAD);
 
-    if( designZoneAirDistributionEffectivenessinCoolingMode )
-    {
-      _designSpecification_ZoneAirDistribution.setDouble(
-        DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode,
-        designZoneAirDistributionEffectivenessinCoolingMode.get() );
+    // Only translate the non-defaulted fields
+    if (!modelObject.isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted()) {
+      dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode,
+                      modelObject.designZoneAirDistributionEffectivenessinCoolingMode());
     }
 
-    if( designZoneAirDistributionEffectivenessinHeatingMode )
-    {
-      _designSpecification_ZoneAirDistribution.setDouble(
-        DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode,
-        designZoneAirDistributionEffectivenessinHeatingMode.get() );
+    if (!modelObject.isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted()) {
+      dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode,
+                      modelObject.designZoneAirDistributionEffectivenessinHeatingMode());
     }
 
-    idfObject.setString(Sizing_ZoneFields::DesignSpecificationZoneAirDistributionObjectName,_designSpecification_ZoneAirDistribution.name().get());
+    if (!modelObject.isDesignZoneSecondaryRecirculationFractionDefaulted()) {
+      dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction,
+                      modelObject.designZoneSecondaryRecirculationFraction());
+    }
+
+    if (!modelObject.isDesignMinimumZoneVentilationEfficiencyDefaulted()) {
+      dSZAD.setDouble(DesignSpecification_ZoneAirDistributionFields::MinimumZoneVentilationEfficiency,
+                      modelObject.designMinimumZoneVentilationEfficiency());
+    }
+
+    idfObject.setString(Sizing_ZoneFields::DesignSpecificationZoneAirDistributionObjectName, dSZAD.name().get());
   }
 
 
@@ -327,10 +338,9 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
     }
 
     // DesignSpecificationZoneAirDistributionObjectName
-    if( _thermalZone )
+    if( _thermalZone && isDSZADTranslated )
     {
-      eg.setString(Controller_MechanicalVentilationExtensibleFields::DesignSpecificationZoneAirDistributionObjectName,
-                   designSpecificationZoneAirDistributionName);
+      eg.setString(Controller_MechanicalVentilationExtensibleFields::DesignSpecificationZoneAirDistributionObjectName, dSZADName);
     }
   }
 

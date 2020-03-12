@@ -29,8 +29,11 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/ShadowCalculation.hpp"
+
+#include "../../model/ThermalZone.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/ShadowCalculation_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/ZoneList_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -43,35 +46,73 @@ boost::optional<IdfObject> ForwardTranslator::translateShadowCalculation( Shadow
 {
   IdfObject idfObject( openstudio::IddObjectType::ShadowCalculation);
 
-  // TODO: handle new fields
   // Shading Calculation Method
+  idfObject.setString(ShadowCalculationFields::ShadingCalculationMethod, modelObject.shadingCalculationMethod());
 
-  // TODO: until I write VT, I handle it here
-  std::string shadingCalculationUpdateFrequencyMethod = modelObject.calculationMethod();
-  if (openstudio::istringEqual("AverageOverDaysInFrequency", shadingCalculationUpdateFrequencyMethod)) {
-    idfObject.setString(ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod, "Periodic");
-  } else {
-    idfObject.setString(ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod, "Timestep");
-  }
+  // Shading Calculation Update Frequency Method
+  idfObject.setString(ShadowCalculationFields::ShadingCalculationUpdateFrequencyMethod, modelObject.shadingCalculationUpdateFrequencyMethod());
 
-  idfObject.setInt(ShadowCalculationFields::ShadingCalculationUpdateFrequency, modelObject.calculationFrequency());
+  // Shading Calculation Update Frequency
+  idfObject.setInt(ShadowCalculationFields::ShadingCalculationUpdateFrequency, modelObject.shadingCalculationUpdateFrequency());
 
+  // Maximum Figures in Shadow Overlap Calculations
   idfObject.setInt(ShadowCalculationFields::MaximumFiguresinShadowOverlapCalculations,modelObject.maximumFiguresInShadowOverlapCalculations());
 
-  OptionalString s = modelObject.polygonClippingAlgorithm();
-  if (s) {
-    idfObject.setString(ShadowCalculationFields::PolygonClippingAlgorithm,*s);
-  }
+  // Polygon Clipping Algorithm
+  idfObject.setString(ShadowCalculationFields::PolygonClippingAlgorithm, modelObject.polygonClippingAlgorithm());
 
-  s = modelObject.skyDiffuseModelingAlgorithm();
-  if (s) {
-    idfObject.setString(ShadowCalculationFields::SkyDiffuseModelingAlgorithm,*s);
-  }
+  // Sky Diffuse Modeling Algorithm
+  idfObject.setString(ShadowCalculationFields::SkyDiffuseModelingAlgorithm, modelObject.skyDiffuseModelingAlgorithm());
 
-  // TODO
   // Pixel Counting Resolution
-  // Maximum Number Warmup Days
-  // Begin Environment Reset Mode
+  idfObject.setInt(ShadowCalculationFields::PixelCountingResolution, modelObject.pixelCountingResolution());
+
+  // Output External Shading Calculation Results
+  if (modelObject.outputExternalShadingCalculationResults()) {
+    idfObject.setString(ShadowCalculationFields::OutputExternalShadingCalculationResults, "Yes");
+  } else {
+    idfObject.setString(ShadowCalculationFields::OutputExternalShadingCalculationResults, "No");
+  }
+
+  // Disable Self-Shading Within Shading Zone Groups
+  if (modelObject.disableSelfShadingWithinShadingZoneGroups()) {
+    idfObject.setString(ShadowCalculationFields::DisableSelfShadingWithinShadingZoneGroups, "Yes");
+  } else {
+    idfObject.setString(ShadowCalculationFields::DisableSelfShadingWithinShadingZoneGroups, "No");
+  }
+
+  // Disable Self-Shading From Shading Zone Groups to Other Zones
+  if (modelObject.disableSelfShadingFromShadingZoneGroupstoOtherZones()) {
+    idfObject.setString(ShadowCalculationFields::DisableSelfShadingFromShadingZoneGroupstoOtherZones, "Yes");
+  } else {
+    idfObject.setString(ShadowCalculationFields::DisableSelfShadingFromShadingZoneGroupstoOtherZones, "No");
+  }
+
+  // Shading Zone Group (E+:  Shading Zone Group 1 ZoneList Name)
+  // **Extensible** for ZoneLists
+  for (unsigned i = 0; i < modelObject.numberofShadingZoneGroups(); ++i) {
+
+    std::vector<ThermalZone> thermalZones = modelObject.getShadingZoneGroup(i);
+    if (!thermalZones.empty()) {
+
+      IdfObject zoneList(IddObjectType::ZoneList);
+      std::string zoneListName = "ShadowCalculation Shading Zone Group" + std::to_string(i + 1);
+      zoneList.setName(zoneListName);
+      // Register it
+      m_idfObjects.push_back(zoneList);
+
+      for (const ThermalZone& tz: thermalZones) {
+        auto eg = zoneList.pushExtensibleGroup();
+        eg.setString(ZoneListExtensibleFields::ZoneName, tz.name().get());
+      }
+
+      auto eg = idfObject.pushExtensibleGroup();
+      eg.setString(ShadowCalculationExtensibleFields::ShadingZoneGroupZoneListName, zoneListName);
+    }
+
+  }
+
+
   m_idfObjects.push_back(idfObject);
 
   return boost::optional<IdfObject>(idfObject);
@@ -80,4 +121,5 @@ boost::optional<IdfObject> ForwardTranslator::translateShadowCalculation( Shadow
 } // energyplus
 
 } // openstudio
+
 

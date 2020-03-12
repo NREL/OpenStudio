@@ -750,8 +750,8 @@ TEST_F(ModelFixture, AdjacentSurface_SurfacePropertyOtherSideCoefficients)
   EXPECT_FALSE(wall1.adjacentSurface());
   EXPECT_FALSE(wall2.adjacentSurface());
   EXPECT_EQ("OtherSideCoefficients", wall1.outsideBoundaryCondition());
-  EXPECT_EQ("SunExposed", wall1.sunExposure());
-  EXPECT_EQ("WindExposed", wall1.windExposure());
+  EXPECT_EQ("NoSun", wall1.sunExposure());
+  EXPECT_EQ("NoWind", wall1.windExposure());
   EXPECT_EQ("Outdoors", wall2.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", wall2.sunExposure());
   EXPECT_EQ("WindExposed", wall2.windExposure());

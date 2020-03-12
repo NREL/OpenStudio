@@ -5139,6 +5139,91 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else  if (iddname == "OS:ShadowCalculation") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Handle
+      for (size_t i = 0; i < object.numFields(); ++i)
+      {
+        value = object.getString(i);
+        if( value && !value->empty())
+        {
+          switch (i)
+          {
+            case 0: // Handle
+              newObject.setString(0, value.get());
+              break;
+            case 1: // Calculation Frequency => Shading Calculation Update Frequency
+              newObject.setString(3, value.get());
+              break;
+            case 2: // Maximum Figures in Shadow Overlap Calculations
+              newObject.setString(4, value.get());
+              break;
+            case 3: // Polygon Clipping Algorithm
+              newObject.setString(5, value.get());
+              break;
+            case 4: // Polygon Clipping Algorithm
+              newObject.setString(7, value.get());
+              break;
+            case 5: // Calculation Method => Shading Calculation Update Frequency Method + key rename
+              if (openstudio::istringEqual("TimestepFrequency", value.get())) {
+                newObject.setString(2, "Timestep");
+              } else { // AverageOverDaysInFrequency
+                newObject.setString(2, "Periodic");
+              }
+              break;
+            default:
+              LOG(Error, "ShadowCalculation appears to have had more than 6 fields which is impossible");
+              OS_ASSERT(false);
+              break;
+          }
+        }
+      }
+
+      // NEW REQUIRED FIELDS
+
+      // Shading Calculation Method
+      newObject.setString(1, "PolygonClipping");
+      // Pixel Counting Resolution
+      newObject.setInt(6, 512);
+      // Output External Shading Calculation Results
+      newObject.setString(8, "No");
+      // Disable Self-Shading Within Shading Zone Groups
+      newObject.setString(9, "No");
+      // Disable Self-Shading From Shading Zone Groups to Other Zones
+      newObject.setString(10, "No");
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Sizing:Zone") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // I moved fields 22 & 23 to the end (Design Zone Air Distribution Effectiveness in Cooling|Heating Mode)
+      // to group all fields that belong onto DesignSpecification:ZoneAirDistribution in E+ together
+      for (size_t i = 0; i < object.numFields(); ++i) {
+         if ((value = object.getString(i))) {
+          if (i < 22) {
+            newObject.setString(i, value.get());
+          } else if (i < 24) {
+            // No need to initialize these fields by default especially now that they're at the end
+            if (!value->empty()) {
+              newObject.setString(i+4, value.get());
+            }
+          } else {
+            newObject.setString(i-2, value.get());
+          }
+        }
+      }
+
+      // Two fields were plain added to the end: Design Zone Secondary Recirculation Fraction,
+      // and  Design Minimum Zone Ventilation Efficiency, but both are optional (has default) so no-op there
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     // No-op
     } else {
       ss << object;

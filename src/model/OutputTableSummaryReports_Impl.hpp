@@ -27,91 +27,83 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_SITEWATERMAINSTEMPERATURE_IMPL_HPP
-#define MODEL_SITEWATERMAINSTEMPERATURE_IMPL_HPP
+#ifndef MODEL_OUTPUTTABLESUMMARYREPORTS_IMPL_HPP
+#define MODEL_OUTPUTTABLESUMMARYREPORTS_IMPL_HPP
 
+#include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
-
 
 namespace openstudio {
 namespace model {
 
-class Schedule;
-
 namespace detail {
 
-  /** SiteWaterMainsTemperature_Impl is a ModelObject_Impl that is the implementation class for SiteWaterMainsTemperature.*/
-  class MODEL_API SiteWaterMainsTemperature_Impl : public ModelObject_Impl {
+  /** OutputTableSummaryReports_Impl is a ModelObject_Impl that is the implementation class for OutputTableSummaryReports.*/
+  class MODEL_API OutputTableSummaryReports_Impl : public ModelObject_Impl {
 
    public:
+
     /** @name Constructors and Destructors */
     //@{
 
-    SiteWaterMainsTemperature_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
-
-    SiteWaterMainsTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+    OutputTableSummaryReports_Impl(const IdfObject& idfObject,
                                    Model_Impl* model,
                                    bool keepHandle);
 
-    SiteWaterMainsTemperature_Impl(const SiteWaterMainsTemperature_Impl& other,
+    OutputTableSummaryReports_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                    Model_Impl* model,
                                    bool keepHandle);
 
-    virtual ~SiteWaterMainsTemperature_Impl() {}
+    OutputTableSummaryReports_Impl(const OutputTableSummaryReports_Impl& other,
+                                   Model_Impl* model,
+                                   bool keepHandle);
+
+    virtual ~OutputTableSummaryReports_Impl() {}
 
     //@}
     /** @name Virtual Methods */
     //@{
 
-    virtual boost::optional<ParentObject> parent() const override;
-
     virtual const std::vector<std::string>& outputVariableNames() const override;
 
     virtual IddObjectType iddObjectType() const override;
-
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
     //@}
     /** @name Getters */
     //@{
 
-    std::string calculationMethod() const;
+    std::vector<std::string> summaryReports() const;
 
-    boost::optional<Schedule> temperatureSchedule() const;
+    unsigned int numberofSummaryReports() const;
 
-    boost::optional<double> annualAverageOutdoorAirTemperature() const;
+    boost::optional<unsigned> summaryReportIndex(const std::string& summaryReport) const;
 
-    boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures() const;
+    boost::optional<std::string> getSummaryReport(unsigned groupIndex) const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setCalculationMethod(std::string calculationMethod);
+    bool addSummaryReport(const std::string& summaryReport);
 
-    bool setTemperatureSchedule(Schedule& schedule);
+    bool addSummaryReports(const std::vector<std::string>& summaryReports);
 
-    void resetTemperatureSchedule();
+    bool removeSummaryReport(unsigned groupIndex);
 
-    bool setAnnualAverageOutdoorAirTemperature(boost::optional<double> annualAverageOutdoorAirTemperature);
+    void removeAllSummaryReports();
 
-    void resetAnnualAverageOutdoorAirTemperature();
+    // Just a convenience function to add 'AllSummary' as a key since it's so common
+    bool enableAllSummaryReport();
 
-    bool setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
-
-    void resetMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures();
+    //@}
+    /** @name Other */
+    //@{
 
     //@}
    protected:
-
    private:
-    REGISTER_LOGGER("openstudio.model.SiteWaterMainsTemperature");
-
-    std::vector<std::string> calculationMethodValues() const;
-    boost::optional<ModelObject> temperatureScheduleAsModelObject() const;
-
-    bool setTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& temperatureSchedule);
+    REGISTER_LOGGER("openstudio.model.OutputTableSummaryReports");
   };
 
 } // detail
@@ -119,4 +111,4 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_SITEWATERMAINSTEMPERATURE_IMPL_HPP
+#endif // MODEL_OUTPUTTABLESUMMARYREPORTS_IMPL_HPP

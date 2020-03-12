@@ -329,7 +329,7 @@ namespace detail {
     auto indexAndName = indexAndNameOpt.get();
     int index = std::get<0>(indexAndName);
     CoilHeatingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
-    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Total Heating Capacity";
+    std::string sqlField = "Design Size Speed " + std::to_string(index) + " Gross Rated Heating Capacity";
 
     return parentCoil.getAutosizedValue(sqlField, "W");
   }
@@ -343,7 +343,7 @@ namespace detail {
     auto indexAndName = indexAndNameOpt.get();
     int index = std::get<0>(indexAndName);
     CoilHeatingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
-    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Air Flow Rate";
+    std::string sqlField = "Design Size Speed " + std::to_string(index) + " Rated Air Flow Rate";
 
     return parentCoil.getAutosizedValue(sqlField, "m3/s");
   }

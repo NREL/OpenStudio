@@ -780,10 +780,15 @@ namespace detail {
     return getAutosizedValue("Design Size Reference Condenser Fluid Flow Rate", "m3/s");
   }
 
+  boost::optional<double> ChillerElectricEIR_Impl::autosizedDesignHeatRecoveryWaterFlowRate() const {
+    return getAutosizedValue("Design Size Heat Recovery Water Flow Rate", "m3/s");
+  }
+
   void ChillerElectricEIR_Impl::autosize() {
     autosizeReferenceCapacity();
     autosizeReferenceChilledWaterFlowRate();
     autosizeReferenceCondenserFluidFlowRate();
+    autosizeDesignHeatRecoveryWaterFlowRate();
   }
 
   void ChillerElectricEIR_Impl::applySizingValues() {
@@ -801,6 +806,11 @@ namespace detail {
     val = autosizedReferenceCondenserFluidFlowRate();
     if (val) {
       setReferenceCondenserFluidFlowRate(val.get());
+    }
+
+    val = autosizedDesignHeatRecoveryWaterFlowRate();
+    if (val) {
+      setDesignHeatRecoveryWaterFlowRate(val.get());
     }
 
   }
@@ -1390,17 +1400,21 @@ ChillerElectricEIR::ChillerElectricEIR(std::shared_ptr<detail::ChillerElectricEI
 
 /// @endcond
 
-  boost::optional<double> ChillerElectricEIR::autosizedReferenceCapacity() const {
-    return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCapacity();
-  }
+boost::optional<double> ChillerElectricEIR::autosizedReferenceCapacity() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCapacity();
+}
 
-  boost::optional<double> ChillerElectricEIR::autosizedReferenceChilledWaterFlowRate() const {
-    return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceChilledWaterFlowRate();
-  }
+boost::optional<double> ChillerElectricEIR::autosizedReferenceChilledWaterFlowRate() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceChilledWaterFlowRate();
+}
 
-  boost::optional<double> ChillerElectricEIR::autosizedReferenceCondenserFluidFlowRate() const {
-    return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCondenserFluidFlowRate();
-  }
+boost::optional<double> ChillerElectricEIR::autosizedReferenceCondenserFluidFlowRate() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCondenserFluidFlowRate();
+}
+
+boost::optional<double> ChillerElectricEIR::autosizedDesignHeatRecoveryWaterFlowRate() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedDesignHeatRecoveryWaterFlowRate();
+}
 
 } // model
 } // openstudio

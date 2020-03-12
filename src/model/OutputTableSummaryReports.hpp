@@ -27,102 +27,94 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_SITEWATERMAINSTEMPERATURE_HPP
-#define MODEL_SITEWATERMAINSTEMPERATURE_HPP
+#ifndef MODEL_OUTPUTTABLESUMMARYREPORTS_HPP
+#define MODEL_OUTPUTTABLESUMMARYREPORTS_HPP
 
+#include <vector>
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
 namespace openstudio {
 namespace model {
 
-  class Schedule;
-
 namespace detail {
 
-  class SiteWaterMainsTemperature_Impl;
+  class OutputTableSummaryReports_Impl;
 
 } // detail
 
-/** SiteWaterMainsTemperature is a ModelObject that wraps the OpenStudio IDD object
- *  'OS:Site:WaterMainsTemperature'. */
-class MODEL_API SiteWaterMainsTemperature : public ModelObject {
+/** OutputTableSummaryReports is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:Table:SummaryReports'. */
+class MODEL_API OutputTableSummaryReports : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  virtual ~SiteWaterMainsTemperature() {}
+  virtual ~OutputTableSummaryReports() {}
 
   //@}
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> calculationMethodValues();
-
-  /** \deprecated */
-  static std::vector<std::string> validCalculationMethodValues();
+  static std::vector<std::string> summaryReportValues();
+  static std::vector<std::string> validSummaryReportValues();
 
   /** @name Getters */
   //@{
 
-  std::string calculationMethod() const;
+  std::vector<std::string> summaryReports() const;
 
-  boost::optional<Schedule> temperatureSchedule() const;
+  unsigned int numberofSummaryReports() const;
 
-  boost::optional<double> annualAverageOutdoorAirTemperature() const;
+  /** If a summaryReport group is already present (cf `summaryReportIndex()`), it will Warn */
+  boost::optional<unsigned> summaryReportIndex(const std::string& summaryReport) const;
 
-  boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures() const;
+  boost::optional<std::string> getSummaryReport(unsigned groupIndex) const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setCalculationMethod(std::string calculationMethod);
+  bool addSummaryReport(const std::string& summaryReport);
 
-  /** Also sets calculation method to 'Schedule'. */
-  bool setTemperatureSchedule(Schedule& schedule);
+  bool addSummaryReports(const std::vector<std::string>& summaryReports);
 
-  void resetTemperatureSchedule();
+  bool removeSummaryReport(int groupIndex);
 
-  /** Also sets calculation method to 'Correlation'. */
-  bool setAnnualAverageOutdoorAirTemperature(double annualAverageOutdoorAirTemperature);
+  void removeAllSummaryReports();
 
-  /** Also sets calculation method to 'Correlation'. */
-  void resetAnnualAverageOutdoorAirTemperature();
+  // Just a convenience function to **add** 'AllSummary' as a Report Name since it's so common
+  bool enableAllSummaryReport();
 
-  /** Also sets calculation method to 'Correlation'. */
-  bool setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(double maximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
-
-  /** Also sets calculation method to 'Correlation'. */
-  void resetMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures();
+  //@}
+  /** @name Other */
+  //@{
 
   //@}
  protected:
 
+  explicit OutputTableSummaryReports(Model& model);
+
   /// @cond
-  typedef detail::SiteWaterMainsTemperature_Impl ImplType;
+  typedef detail::OutputTableSummaryReports_Impl ImplType;
 
   friend class Model;
   friend class openstudio::IdfObject;
-  friend class detail::SiteWaterMainsTemperature_Impl;
+  friend class detail::OutputTableSummaryReports_Impl;
 
-  explicit SiteWaterMainsTemperature(std::shared_ptr<detail::SiteWaterMainsTemperature_Impl> impl);
-
-  explicit SiteWaterMainsTemperature(const Model& model);
+  explicit OutputTableSummaryReports(std::shared_ptr<detail::OutputTableSummaryReports_Impl> impl);
 
   /// @endcond
  private:
-
-  REGISTER_LOGGER("openstudio.model.SiteWaterMainsTemperature");
+  REGISTER_LOGGER("openstudio.model.OutputTableSummaryReports");
 };
 
-/** \relates SiteWaterMainsTemperature*/
-typedef boost::optional<SiteWaterMainsTemperature> OptionalSiteWaterMainsTemperature;
+/** \relates OutputTableSummaryReports*/
+typedef boost::optional<OutputTableSummaryReports> OptionalOutputTableSummaryReports;
 
-/** \relates SiteWaterMainsTemperature*/
-typedef std::vector<SiteWaterMainsTemperature> SiteWaterMainsTemperatureVector;
+/** \relates OutputTableSummaryReports*/
+typedef std::vector<OutputTableSummaryReports> OutputTableSummaryReportsVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_SITEWATERMAINSTEMPERATURE_HPP
+#endif // MODEL_OUTPUTTABLESUMMARYREPORTS_HPP
