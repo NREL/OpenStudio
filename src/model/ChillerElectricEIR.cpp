@@ -780,10 +780,15 @@ namespace detail {
     return getAutosizedValue("Design Size Reference Condenser Fluid Flow Rate", "m3/s");
   }
 
+  boost::optional<double> ChillerElectricEIR_Impl::autosizedDesignHeatRecoveryWaterFlowRate() const {
+    return getAutosizedValue("Design Size Heat Recovery Water Flow Rate", "m3/s");
+  }
+
   void ChillerElectricEIR_Impl::autosize() {
     autosizeReferenceCapacity();
     autosizeReferenceChilledWaterFlowRate();
     autosizeReferenceCondenserFluidFlowRate();
+    autosizeDesignHeatRecoveryWaterFlowRate();
   }
 
   void ChillerElectricEIR_Impl::applySizingValues() {
@@ -801,6 +806,11 @@ namespace detail {
     val = autosizedReferenceCondenserFluidFlowRate();
     if (val) {
       setReferenceCondenserFluidFlowRate(val.get());
+    }
+
+    val = autosizedDesignHeatRecoveryWaterFlowRate();
+    if (val) {
+      setDesignHeatRecoveryWaterFlowRate(val.get());
     }
 
   }
