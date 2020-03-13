@@ -13,7 +13,7 @@ module OpenStudio
   def self.openstudio_path
     RbConfig.ruby
   end
-  
+
   def self.get_absolute_path(p)
     absolute_path = ""
     if p.to_s.chars.first == ':' then
@@ -71,13 +71,15 @@ module Kernel
     if path.include? 'openstudio/energyplus/find_energyplus'
       return false
     end
-    
-    if path.include? 'json/ext'
+
+    # If ends by `json/ext` we, throw. Could probably just do
+    # `if path.strip == 'json/ext'`
+    if path[/json\/ext$/]
       if RUBY_PLATFORM =~ /mswin/
-        raise LoadError.new("Preventing segfault if native JSON is built as MinGW")
+        raise LoadError.new("Preventing segfault if native JSON is built as MinGW (tried to require #{path}).")
       end
     end
-    
+
     extname = File.extname(path)
     if extname.empty? or extname != '.rb'
       rb_path = path + '.rb'
@@ -227,8 +229,8 @@ module Kernel
           return ""
         end
       end
-    end    
-    
+    end
+
     if block_given?
       # if a block is given, then a new IO is created and closed
       io = original_open(name, *args)
@@ -295,7 +297,7 @@ class IO
     alias :original_read :read
     alias :original_open :open
   end
-  
+
   def self.read(name, *args)
     if name.to_s.chars.first == ':' then
       #puts "self.read(name, *args), name = #{name}, args = #{args}"
@@ -309,15 +311,15 @@ class IO
         puts "IO.read cannot find embedded file '#{absolute_path}' for '#{name}'"
         return ""
       end
-    end    
-    
+    end
+
     #puts "self.original_read, name = #{name}, args = #{args}, block_given? = #{block_given?}"
     #STDOUT.flush
     return original_read(name, *args)
   end
-  
+
   def self.open(name, *args)
-    
+
     if name.to_s.chars.first == ':' then
       #puts "self.open(name, *args), name = #{name}, args = #{args}"
       absolute_path = OpenStudio.get_absolute_path(name)
@@ -352,8 +354,8 @@ class IO
           return ""
         end
       end
-    end    
-    
+    end
+
     if block_given?
       # if a block is given, then a new IO is created and closed
       io = self.original_open(name, *args)
@@ -377,7 +379,7 @@ class File
     alias :original_directory? :directory?
     alias :original_file? :file?
   end
-  
+
   def self.expand_path(file_name, *args)
     if file_name.to_s.chars.first == ':' then
       #puts "self.expand_path(file_name, *args), file_name = #{file_name}, args = #{args}"
@@ -402,14 +404,14 @@ class File
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
       #puts "2 self.absolute_path(file_name, *args), file_name = #{file_name}, args = #{args}"
       #puts "x = #{File.join(args[0], file_name)}"
-      #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}" 
-      #STDOUT.flush      
+      #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}"
+      #STDOUT.flush
       #return original_absolute_path(file_name, *args)
       return OpenStudio.get_absolute_path(File.join(args[0], file_name))
     end
     return original_absolute_path(file_name, *args)
   end
-  
+
   def self.realpath(file_name, *args)
     if file_name.to_s.chars.first == ':' then
       #puts "self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
@@ -418,21 +420,21 @@ class File
     elsif args.size == 1 && args[0].to_s.chars.first == ':' then
       #puts "2 self.realpath(file_name, *args), file_name = #{file_name}, args = #{args}"
       #puts "x = #{File.join(args[0], file_name)}"
-      #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}" 
-      #STDOUT.flush      
+      #puts "y = #{OpenStudio.get_absolute_path(File.join(args[0], file_name))}"
+      #STDOUT.flush
       #return original_realpath(file_name, *args)
       return OpenStudio.get_absolute_path(File.join(args[0], file_name))
     end
     return original_realpath(file_name, *args)
   end
-  
+
   def self.directory?(file_name)
     if file_name.to_s.chars.first == ':' then
       absolute_path = OpenStudio.get_absolute_path(file_name)
       EmbeddedScripting.allFileNamesAsString.split(';').each do |file|
         # true if a file starts with this absolute path
         next unless file.start_with?(absolute_path)
-        
+
         # if this is an exact match because then this is a file not a directory
         return false if (file == absolute_path)
 
@@ -450,7 +452,7 @@ class File
       EmbeddedScripting.allFileNamesAsString.split(';').each do |file|
         # Skip files unless exact match
         next unless (file == absolute_path)
-       
+
         # If here, found a match
         return true
       end
@@ -458,7 +460,7 @@ class File
     end
     return original_file?(file_name)
   end
-  
+
 end
 
 class Dir
@@ -466,17 +468,17 @@ class Dir
     alias :original_glob :glob
     alias :original_chdir :chdir
   end
-  
+
   def self.[](*args)
      if block_given?
       return yield(self.glob(args, 0))
     else
       return self.glob(args, 0)
-    end 
+    end
   end
-  
+
   def self.glob(pattern, *args)
-  
+
     pattern_array = []
     if pattern.is_a? String
       pattern_array = [pattern]
@@ -485,41 +487,41 @@ class Dir
     else
       pattern_array = pattern
     end
-    
+
     #puts "Dir.glob pattern = #{pattern}, pattern_array = #{pattern_array}, args = #{args}"
     override_args_extglob = false
-    
+
     result = []
     pattern_array.each do |pattern|
-      
+
       if pattern.to_s.chars.first == ':'
-      
-        # DLM: seems like this is needed for embedded paths, possibly due to leading ':' character? 
+
+        # DLM: seems like this is needed for embedded paths, possibly due to leading ':' character?
         override_args_extglob = true
-    
+
         #puts "searching embedded files for #{pattern}"
         absolute_pattern = OpenStudio.get_absolute_path(pattern)
         #puts "absolute_pattern #{absolute_pattern}"
-        
+
         # DLM: this does not appear to be swig'd correctly
         #EmbeddedScripting::fileNames.each do |name|
         EmbeddedScripting::allFileNamesAsString.split(';').each do |name|
           absolute_path = OpenStudio.get_absolute_path(name)
-          
-          if override_args_extglob 
-            if File.fnmatch( absolute_pattern, absolute_path, File::FNM_EXTGLOB ) 
+
+          if override_args_extglob
+            if File.fnmatch( absolute_pattern, absolute_path, File::FNM_EXTGLOB )
               #puts "#{absolute_path} is a match!"
               result << absolute_path
             end
           else
-            if File.fnmatch( absolute_pattern, absolute_path, *args ) 
+            if File.fnmatch( absolute_pattern, absolute_path, *args )
               #puts "#{absolute_path} is a match!"
               result << absolute_path
             end
           end
 
         end
-        
+
       else
         if override_args_extglob
           result.concat(self.original_glob(pattern, File::FNM_EXTGLOB))
@@ -528,15 +530,15 @@ class Dir
         end
       end
     end
-    
+
     if block_given?
       return yield(result)
     else
       return result
     end
-    
+
   end
-  
+
   def self.chdir(dir)
     if dir.to_s.chars.first == ':'
       # DLM: yeah sorry, don't know what to do here
@@ -547,13 +549,13 @@ class Dir
         return absolute_path
       end
     end
-    
+
     if block_given?
       return yield(self.original_chdir(dir))
     else
       return self.original_chdir(dir)
     end
-    
+
   end
 end
 
@@ -563,14 +565,14 @@ module FileUtils
     alias :original_cp_r :cp_r
     alias :original_cp :cp
   end
-  
+
   def self.cp_r(src, dest, options = {})
     #puts "cp_r #{src} to #{dest}"
     if src.to_s.chars.first == ':' then
       absolute_path = OpenStudio.get_absolute_path(src)
-      
+
       #puts "cp_r absolute_path = #{absolute_path}"
-      
+
       # Loop through all he files in the embedded system
       matches = []
       EmbeddedScripting.allFileNamesAsString.split(';').each do |file|
@@ -580,12 +582,12 @@ module FileUtils
         # If here, found a match
         matches << file
       end
-      
+
       if matches.count > 0 then
         matches.each do |absolute_path|
           #puts "do copy absolute_path = #{absolute_path}"
           s = EmbeddedScripting::getFileAsString(absolute_path)
-          
+
           new_dest = dest
           if matches.count > 1
             #puts "dest is dir = #{absolute_path}"
@@ -593,7 +595,7 @@ module FileUtils
           end
           #puts "new_dest = #{new_dest}"
           FileUtils.mkdir_p(File.dirname(new_dest))
-          
+
           File.open(new_dest, 'w') do |f|
             f.puts s
           end
@@ -603,26 +605,26 @@ module FileUtils
         puts "FileUtils.cp_r cannot find embedded file '#{absolute_path}' for '#{src}'"
         return false
       end
-    end 
-    
+    end
+
     self.original_cp_r(src, dest, options)
   end
-  
+
   def self.cp(src, dest, options = {})
     #puts "cp #{src} to #{dest}"
     if src.to_s.chars.first == ':' then
       absolute_path = OpenStudio.get_absolute_path(src)
-      
+
       # TODO: if src is a directory
-      
+
       if EmbeddedScripting::hasFile(absolute_path) then
         s = EmbeddedScripting::getFileAsString(absolute_path)
-        
+
         if File.directory?(dest)
           dest = File.join(dest, File.basename(src))
         end
         FileUtils.mkdir_p(File.dirname(dest))
-        
+
         File.open(dest, 'w') do |f|
           f.puts s
         end
@@ -631,14 +633,14 @@ module FileUtils
         puts "FileUtils.cp cannot find embedded file '#{absolute_path}' for '#{src}'"
         return false
       end
-    end 
-    
+    end
+
     self.original_cp(src, dest, options)
-  end  
-  
+  end
+
   def self.copy(src, dest, options = {})
     return self.cp(src, dest, options)
-  end  
+  end
 end
 
 require 'find'
@@ -646,13 +648,13 @@ module Find
   class << self
     alias :original_find :find
   end
-  
-  def self.find(*paths, ignore_error: true)    
+
+  def self.find(*paths, ignore_error: true)
     block_given? or return enum_for(__method__, *paths, ignore_error: ignore_error)
 
     fs_encoding = Encoding.find("filesystem")
 
-    all_paths = paths.collect! do |d| 
+    all_paths = paths.collect! do |d|
 
       # this is overriden to ignore files on embedded file system
       if d.to_s.chars.first == ':'
@@ -661,17 +663,17 @@ module Find
         nil
         next
       end
-      
+
       raise Errno::ENOENT unless File.exist?(d)
       d.dup
     end
-    
+
     # this is overriden to ignore files on embedded file system
-    all_paths.reject! {|x| x.nil?} 
-    
+    all_paths.reject! {|x| x.nil?}
+
     all_paths.each do |path|
       #puts "all_paths path = '#{path}'"
-      #STDOUT.flush  
+      #STDOUT.flush
       path = path.to_path if path.respond_to? :to_path
       enc = path.encoding == Encoding::US_ASCII ? fs_encoding : path.encoding
       ps = [path]
