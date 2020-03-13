@@ -1,4 +1,4 @@
-OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 following conditions are met:
@@ -878,8 +878,8 @@ You can redistribute it and/or modify it under either the terms of the
 
        a) place your modifications in the Public Domain or otherwise
           make them Freely Available, such as by posting said
-	  modifications to Usenet or an equivalent medium, or by allowing
-	  the author to include your modifications in the software.
+          modifications to Usenet or an equivalent medium, or by allowing
+          the author to include your modifications in the software.
 
        b) use the modified software only within your corporation or
           organization.
@@ -893,11 +893,11 @@ You can redistribute it and/or modify it under either the terms of the
      provided that you do at least ONE of the following:
 
        a) distribute the binaries and library files of the software,
-	  together with instructions (in the manual page or equivalent)
-	  on where to get the original distribution.
+          together with instructions (in the manual page or equivalent)
+          on where to get the original distribution.
 
        b) accompany the distribution with the machine-readable source of
-	  the software.
+          the software.
 
        c) give non-standard binaries non-standard names, with
           instructions on where to get the original software distribution.

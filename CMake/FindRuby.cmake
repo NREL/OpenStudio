@@ -87,9 +87,9 @@ if(RUBY_EXECUTABLE  AND NOT  RUBY_VERSION_MAJOR)
       execute_process(COMMAND ${RUBY_EXECUTABLE} -r rbconfig -e "print Config::CONFIG['${RBVAR}']"
         RESULT_VARIABLE _RUBY_SUCCESS
         OUTPUT_VARIABLE _RUBY_OUTPUT
-	ERROR_QUIET)
+        ERROR_QUIET)
     endif()
-	message(STATUS "Ruby exec: ${RUBY_EXECUTABLE} var: '${RBVAR}' value: '${_RUBY_OUTPUT}'")
+    message(STATUS "Ruby exec: ${RUBY_EXECUTABLE} var: '${RBVAR}' value: '${_RUBY_OUTPUT}'")
     set(${OUTVAR} "${_RUBY_OUTPUT}" PARENT_SCOPE)
   endfunction()
 
