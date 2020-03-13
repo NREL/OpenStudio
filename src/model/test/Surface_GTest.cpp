@@ -862,13 +862,13 @@ TEST_F(ModelFixture, SurfacePropertyOtherSideCoefficients)
   ASSERT_TRUE(wall1.surfacePropertyOtherSideCoefficients());
   EXPECT_EQ(osc.handle(), wall1.surfacePropertyOtherSideCoefficients()->handle());
   EXPECT_EQ("OtherSideCoefficients", wall1.outsideBoundaryCondition());
-  EXPECT_EQ("SunExposed", wall1.sunExposure());
-  EXPECT_EQ("WindExposed", wall1.windExposure());
+  EXPECT_EQ("NoSun", wall1.sunExposure());
+  EXPECT_EQ("NoWind", wall1.windExposure());
 
   EXPECT_FALSE(wall1.setOutsideBoundaryCondition("FlibbityGibbit"));
   EXPECT_EQ("OtherSideCoefficients", wall1.outsideBoundaryCondition());
-  EXPECT_EQ("SunExposed", wall1.sunExposure());
-  EXPECT_EQ("WindExposed", wall1.windExposure());
+  EXPECT_EQ("NoSun", wall1.sunExposure());
+  EXPECT_EQ("NoWind", wall1.windExposure());
 
   EXPECT_TRUE(wall1.setOutsideBoundaryCondition("Adiabatic"));
   EXPECT_EQ("Adiabatic", wall1.outsideBoundaryCondition());

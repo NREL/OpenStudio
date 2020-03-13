@@ -1281,19 +1281,19 @@ namespace detail {
     if (istringEqual("Outdoors", outsideBoundaryCondition)){
       bool test = this->setSunExposure("SunExposed", driverMethod);
       OS_ASSERT(test);
-    }else if (istringEqual("Surface", this->outsideBoundaryCondition()) ||
-              istringEqual("OtherSideCoefficients", this->outsideBoundaryCondition()) ||
-              istringEqual("Adiabatic", this->outsideBoundaryCondition()) ||
-              istringEqual("Ground", this->outsideBoundaryCondition()) ||
-              istringEqual("GroundFCfactorMethod", this->outsideBoundaryCondition()) ||
-              istringEqual("GroundSlabPreprocessorAverage", this->outsideBoundaryCondition()) ||
-              istringEqual("GroundSlabPreprocessorCore", this->outsideBoundaryCondition()) ||
-              istringEqual("GroundSlabPreprocessorPerimeter", this->outsideBoundaryCondition()) ||
-              istringEqual("GroundBasementPreprocessorAverageWall", this->outsideBoundaryCondition()) ||
-              istringEqual("GroundBasementPreprocessorAverageFloor", this->outsideBoundaryCondition()) ||
-              istringEqual("GroundBasementPreprocessorUpperWall", this->outsideBoundaryCondition()) ||
-              istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition()) ||
-              istringEqual("Foundation", this->outsideBoundaryCondition())){
+    }else if (istringEqual("Surface", outsideBoundaryCondition) ||
+              istringEqual("OtherSideCoefficients", outsideBoundaryCondition) ||
+              istringEqual("Adiabatic", outsideBoundaryCondition) ||
+              istringEqual("Ground", outsideBoundaryCondition) ||
+              istringEqual("GroundFCfactorMethod", outsideBoundaryCondition) ||
+              istringEqual("GroundSlabPreprocessorAverage", outsideBoundaryCondition) ||
+              istringEqual("GroundSlabPreprocessorCore", outsideBoundaryCondition) ||
+              istringEqual("GroundSlabPreprocessorPerimeter", outsideBoundaryCondition) ||
+              istringEqual("GroundBasementPreprocessorAverageWall", outsideBoundaryCondition) ||
+              istringEqual("GroundBasementPreprocessorAverageFloor", outsideBoundaryCondition) ||
+              istringEqual("GroundBasementPreprocessorUpperWall", outsideBoundaryCondition) ||
+              istringEqual("GroundBasementPreprocessorLowerWall", outsideBoundaryCondition) ||
+              istringEqual("Foundation", outsideBoundaryCondition)){
       bool test = this->setSunExposure("NoSun", driverMethod);
       OS_ASSERT(test);
     }else{
@@ -1319,19 +1319,19 @@ namespace detail {
     if (istringEqual("Outdoors", outsideBoundaryCondition)){
       bool test = this->setWindExposure("WindExposed", driverMethod);
       OS_ASSERT(test);
-    } else if (istringEqual("Surface", this->outsideBoundaryCondition()) ||
-               istringEqual("OtherSideCoefficients", this->outsideBoundaryCondition()) ||
-               istringEqual("Adiabatic", this->outsideBoundaryCondition()) ||
-               istringEqual("Ground", this->outsideBoundaryCondition()) ||
-               istringEqual("GroundFCfactorMethod", this->outsideBoundaryCondition()) ||
-               istringEqual("GroundSlabPreprocessorAverage", this->outsideBoundaryCondition()) ||
-               istringEqual("GroundSlabPreprocessorCore", this->outsideBoundaryCondition()) ||
-               istringEqual("GroundSlabPreprocessorPerimeter", this->outsideBoundaryCondition()) ||
-               istringEqual("GroundBasementPreprocessorAverageWall", this->outsideBoundaryCondition()) ||
-               istringEqual("GroundBasementPreprocessorAverageFloor", this->outsideBoundaryCondition()) ||
-               istringEqual("GroundBasementPreprocessorUpperWall", this->outsideBoundaryCondition()) ||
-               istringEqual("GroundBasementPreprocessorLowerWall", this->outsideBoundaryCondition()) ||
-               istringEqual("Foundation", this->outsideBoundaryCondition())){
+    } else if (istringEqual("Surface", outsideBoundaryCondition) ||
+               istringEqual("OtherSideCoefficients", outsideBoundaryCondition) ||
+               istringEqual("Adiabatic", outsideBoundaryCondition) ||
+               istringEqual("Ground", outsideBoundaryCondition) ||
+               istringEqual("GroundFCfactorMethod", outsideBoundaryCondition) ||
+               istringEqual("GroundSlabPreprocessorAverage", outsideBoundaryCondition) ||
+               istringEqual("GroundSlabPreprocessorCore", outsideBoundaryCondition) ||
+               istringEqual("GroundSlabPreprocessorPerimeter", outsideBoundaryCondition) ||
+               istringEqual("GroundBasementPreprocessorAverageWall", outsideBoundaryCondition) ||
+               istringEqual("GroundBasementPreprocessorAverageFloor", outsideBoundaryCondition) ||
+               istringEqual("GroundBasementPreprocessorUpperWall", outsideBoundaryCondition) ||
+               istringEqual("GroundBasementPreprocessorLowerWall", outsideBoundaryCondition) ||
+               istringEqual("Foundation", outsideBoundaryCondition)){
       bool test = this->setWindExposure("NoWind", driverMethod);
       OS_ASSERT(test);
     } else{
