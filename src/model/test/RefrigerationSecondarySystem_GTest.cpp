@@ -122,8 +122,9 @@ TEST_F(ModelFixture, RefrigerationSecondarySystem_Remove)
   refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
   EXPECT_EQ(0, refrigerationModelObjectLists.size());
 
+  // Curve was used only by this object, so should have been removed
   refrigerationCurveCubics = model.getModelObjects<CurveCubic>();
-  EXPECT_EQ(1, refrigerationCurveCubics.size());
+  EXPECT_EQ(0, refrigerationCurveCubics.size());
 }
 
 TEST_F(ModelFixture, RefrigerationSecondarySystem_CloneOneModelWithDefaultData)

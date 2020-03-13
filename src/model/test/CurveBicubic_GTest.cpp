@@ -31,6 +31,10 @@
 
 #include "ModelFixture.hpp"
 #include "../CurveBicubic.hpp"
+#include "../CurveBicubic_Impl.hpp"
+#include "../RefrigerationCompressor.hpp"
+#include "../RefrigerationCompressor_Impl.hpp"
+#include "../Model.hpp"
 
 #include <cmath>
 
@@ -185,4 +189,43 @@ TEST_F(ModelFixture, CurveBicubic_GetterSetters_evaluate)
   // EXPECT_THROW(curve.evaluate(1.0), openstudio::Exception);
   // EXPECT_THROW(curve.evaluate(1.0, 2.0, 3.0), openstudio::Exception);
 
+}
+
+TEST_F(ModelFixture, CurveBicubic_Remove) {
+
+  Model m;
+  CurveBicubic curve(m);
+  EXPECT_EQ(1u, m.getModelObjects<CurveBicubic>().size());
+
+  curve.remove();
+  EXPECT_EQ(0u, m.getModelObjects<CurveBicubic>().size());
+
+  // This object instantiates 2 CurveBicubic objects
+  RefrigerationCompressor refrigeration(m);
+  EXPECT_EQ(1u, m.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(2u, m.getModelObjects<CurveBicubic>().size());
+  EXPECT_EQ(3u, m.objects().size());
+  // Curves are used only by this object, so we should be able to remove them
+  refrigeration.remove();
+  EXPECT_EQ(0u, m.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(0u, m.getModelObjects<CurveBicubic>().size());
+  EXPECT_EQ(0u, m.objects().size());
+
+
+  refrigeration = RefrigerationCompressor(m);
+  RefrigerationCompressor refrigerationClone = refrigeration.clone(m).cast<RefrigerationCompressor>();
+  // Should have 2 refrigereation objects, but with the same curves
+  EXPECT_EQ(2u, m.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(2u, m.getModelObjects<CurveBicubic>().size());
+  EXPECT_EQ(4u, m.objects().size());
+  // Curves are used by more than the object we want to remove, so they should stay
+  refrigeration.remove();
+  EXPECT_EQ(1u, m.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(2u, m.getModelObjects<CurveBicubic>().size());
+  EXPECT_EQ(3u, m.objects().size());
+  // Last one, should remove them
+  refrigerationClone.remove();
+  EXPECT_EQ(0u, m.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(0u, m.getModelObjects<CurveBicubic>().size());
+  EXPECT_EQ(0u, m.objects().size());
 }

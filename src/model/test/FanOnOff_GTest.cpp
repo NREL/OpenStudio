@@ -128,11 +128,11 @@ TEST_F(ModelFixture, FanOnOff_Remove)
   fans = m.getModelObjects<FanOnOff>();
   EXPECT_EQ(0, fans.size());
 
+  // Both curves were used only by this object, so should have been removed
   curveExponents = m.getModelObjects<CurveExponent>();
-  EXPECT_EQ(1, curveExponents.size());
-
+  EXPECT_EQ(0, curveExponents.size());
   curveCubics = m.getModelObjects<CurveCubic>();
-  EXPECT_EQ(1, curveCubics.size());
+  EXPECT_EQ(0, curveCubics.size());
 }
 
 TEST_F(ModelFixture,FanOnOff_addToNode)

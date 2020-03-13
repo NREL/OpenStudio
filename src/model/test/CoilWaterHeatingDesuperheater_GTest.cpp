@@ -109,8 +109,9 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove1)
     heatRejectionTargets = model.getModelObjects<WaterHeaterMixed>();
     EXPECT_EQ(1, heatRejectionTargets.size());
 
+    // Curve was used only by this object, so should have been removed
     curves = model.getModelObjects<CurveBiquadratic>();
-    EXPECT_EQ(1, curves.size());
+    EXPECT_EQ(0, curves.size());
 
     nodes = model.getModelObjects<Node>();
     EXPECT_EQ(0, nodes.size());
@@ -166,8 +167,9 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove2)
     heatingSources = model.getModelObjects<CoilCoolingWaterToAirHeatPumpEquationFit>();
     EXPECT_EQ(1, heatingSources.size());
 
+    // Curve was used only by this object, so should have been removed
     curves = model.getModelObjects<CurveBiquadratic>();
-    EXPECT_EQ(1, curves.size());
+    EXPECT_EQ(0, curves.size());
 
     nodes = model.getModelObjects<Node>();
     EXPECT_EQ(0, nodes.size());
@@ -223,8 +225,9 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove3)
     heatingSources = model.getModelObjects<CoilCoolingDXMultiSpeed>();
     EXPECT_EQ(1, heatingSources.size());
 
+    // Curve was used only by this object, so should have been removed
     curves = model.getModelObjects<CurveBiquadratic>();
-    EXPECT_EQ(1, curves.size());
+    EXPECT_EQ(0, curves.size());
 
     nodes = model.getModelObjects<Node>();
     EXPECT_EQ(0, nodes.size());
