@@ -379,7 +379,12 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCompressor)
 
   testObject.addCompressor(testCompressor1);
   testObject.addCompressor(testCompressor2);
+  boost::optional<ModelObjectList> compressorList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->compressorList();
+  ASSERT_TRUE(compressorList);
+  EXPECT_EQ(2u, compressorList->size());
+
   testObject.removeCompressor(testCompressor1);
+  EXPECT_EQ(1u, compressorList->size());
 
   std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
   EXPECT_EQ(2, testRefrigerationCompressors.size());
@@ -393,6 +398,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCompressor)
   compressors = testObject.compressors();
   EXPECT_EQ(2, testRefrigerationCompressors.size());
   EXPECT_TRUE(compressors.empty());
+  EXPECT_EQ(0u, compressorList->size());
+
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCompressors)
@@ -404,6 +411,10 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCompressors)
 
   testObject.addCompressor(testCompressor1);
   testObject.addCompressor(testCompressor2);
+  boost::optional<ModelObjectList> compressorList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->compressorList();
+  ASSERT_TRUE(compressorList);
+  EXPECT_EQ(2u, compressorList->size());
+
   testObject.removeAllCompressors();
 
   std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
@@ -412,6 +423,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCompressors)
   std::vector<RefrigerationCompressor> compressors = testObject.compressors();
   EXPECT_TRUE(compressors.empty());
   EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->compressorList());
+  EXPECT_EQ(0u, compressorList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_HighStageCompressors)
@@ -444,7 +456,12 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveHighStageCompressor)
 
   testObject.addHighStageCompressor(testCompressor1);
   testObject.addHighStageCompressor(testCompressor2);
+  boost::optional<ModelObjectList> highStageCompressorList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList();
+  ASSERT_TRUE(highStageCompressorList);
+  EXPECT_EQ(2u, highStageCompressorList->size());
+
   testObject.removeHighStageCompressor(testCompressor1);
+  EXPECT_EQ(1u, highStageCompressorList->size());
 
   std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
   EXPECT_EQ(2, testRefrigerationCompressors.size());
@@ -458,6 +475,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveHighStageCompressor)
   highStageCompressors = testObject.highStageCompressors();
   EXPECT_EQ(2, testRefrigerationCompressors.size());
   EXPECT_TRUE(highStageCompressors.empty());
+  EXPECT_EQ(0u, highStageCompressorList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_RemoveAllHighStageCompressors)
@@ -469,7 +487,12 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllHighStageCompressors)
 
   testObject.addHighStageCompressor(testCompressor1);
   testObject.addHighStageCompressor(testCompressor2);
+  boost::optional<ModelObjectList> highStageCompressorList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList();
+  ASSERT_TRUE(highStageCompressorList);
+  EXPECT_EQ(2u, highStageCompressorList->size());
+
   testObject.removeAllHighStageCompressors();
+  EXPECT_EQ(0u, highStageCompressorList->size());
 
   std::vector<RefrigerationCompressor> testRefrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
   EXPECT_EQ(2, testRefrigerationCompressors.size());
@@ -478,6 +501,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllHighStageCompressors)
   EXPECT_TRUE(highStageCompressors.empty());
   EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList());
 }
+
+
 
 TEST_F(ModelFixture, RefrigerationSystem_Cases)
 {
@@ -519,7 +544,12 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCase)
 
   testObject.addCase(case1);
   testObject.addCase(case2);
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  ASSERT_TRUE(refrigeratedCaseAndWalkInList);
+  EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
+
   testObject.removeCase(case1);
+  EXPECT_EQ(1u, refrigeratedCaseAndWalkInList->size());
 
   std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
   EXPECT_EQ(2, testRefrigerationCases.size());
@@ -533,7 +563,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCase)
   cases = testObject.cases();
   EXPECT_EQ(2, testRefrigerationCases.size());
   EXPECT_TRUE(cases.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCases)
@@ -547,6 +578,10 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCases)
 
   testObject.addCase(case1);
   testObject.addCase(case2);
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  ASSERT_TRUE(refrigeratedCaseAndWalkInList);
+  EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
+
   testObject.removeAllCases();
 
   std::vector<RefrigerationCase> testRefrigerationCases = model.getModelObjects<RefrigerationCase>();
@@ -554,7 +589,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCases)
 
   std::vector<RefrigerationCase> cases = testObject.cases();
   EXPECT_TRUE(cases.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_AirChillers)
@@ -597,7 +633,12 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAirChiller)
 
   testObject.addAirChiller(airChiller1);
   testObject.addAirChiller(airChiller2);
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  ASSERT_TRUE(refrigeratedCaseAndWalkInList);
+  EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
+
   testObject.removeAirChiller(airChiller1);
+  EXPECT_EQ(1u, refrigeratedCaseAndWalkInList->size());
 
   std::vector<RefrigerationAirChiller> testRefrigerationAirChillers = model.getModelObjects<RefrigerationAirChiller>();
   EXPECT_EQ(2, testRefrigerationAirChillers.size());
@@ -611,7 +652,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAirChiller)
   airChillers = testObject.airChillers();
   EXPECT_EQ(2, testRefrigerationAirChillers.size());
   EXPECT_TRUE(airChillers.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_RemoveAllAirChillers)
@@ -625,6 +667,10 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllAirChillers)
 
   testObject.addAirChiller(airChiller1);
   testObject.addAirChiller(airChiller2);
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  ASSERT_TRUE(refrigeratedCaseAndWalkInList);
+  EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
+
   testObject.removeAllAirChillers();
 
   std::vector<RefrigerationAirChiller> testRefrigerationAirChillers = model.getModelObjects<RefrigerationAirChiller>();
@@ -632,7 +678,8 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllAirChillers)
 
   std::vector<RefrigerationAirChiller> airChillers = testObject.airChillers();
   EXPECT_TRUE(airChillers.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_Walkins)
@@ -675,7 +722,12 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveWalkIn)
 
   testObject.addWalkin(walkin1);
   testObject.addWalkin(walkin2);
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  ASSERT_TRUE(refrigeratedCaseAndWalkInList);
+  EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
+
   testObject.removeWalkin(walkin1);
+  EXPECT_EQ(1u, refrigeratedCaseAndWalkInList->size());
 
   std::vector<RefrigerationWalkIn> testRefrigerationWalkIns = model.getModelObjects<RefrigerationWalkIn>();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
@@ -689,7 +741,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveWalkIn)
   walkins = testObject.walkins();
   EXPECT_EQ(2, testRefrigerationWalkIns.size());
   EXPECT_TRUE(walkins.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_RemoveAllWalkIns)
@@ -710,7 +762,9 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllWalkIns)
 
   std::vector<RefrigerationWalkIn> walkins = testObject.walkins();
   EXPECT_TRUE(walkins.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  ASSERT_TRUE(refrigeratedCaseAndWalkInList);
+  EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkins)
@@ -793,6 +847,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCaseAndWalkIn)
   ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
   modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(0, modelObjectList.modelObjects().size());
+  EXPECT_EQ(0u, modelObjectList.size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCasesAndWalkIns)
@@ -832,6 +887,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCasesAndWalkIns)
   ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
   modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList().get();
   EXPECT_EQ(0, modelObjectList.modelObjects().size());
+  EXPECT_EQ(0u, modelObjectList.size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_SecondarySystemLoads)
@@ -843,12 +899,15 @@ TEST_F(ModelFixture, RefrigerationSystem_SecondarySystemLoads)
 
   std::vector<RefrigerationSecondarySystem> secondarySystemLoads = testObject.secondarySystemLoads();
   EXPECT_TRUE(secondarySystemLoads.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+
+  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  ASSERT_TRUE(transferLoadList);
+  EXPECT_EQ(0u, transferLoadList->size());
 
   testObject.addSecondarySystemLoad(secondarySystem1);
   secondarySystemLoads = testObject.secondarySystemLoads();
   EXPECT_EQ(1, secondarySystemLoads.size());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+  EXPECT_EQ(1u, transferLoadList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_AddSecondarySystemLoad)
@@ -871,7 +930,12 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveSecondarySystemLoad)
 
   testObject.addSecondarySystemLoad(secondarySystem1);
   testObject.addSecondarySystemLoad(secondarySystem2);
+  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  ASSERT_TRUE(transferLoadList);
+  EXPECT_EQ(2u, transferLoadList->size());
+
   testObject.removeSecondarySystemLoad(secondarySystem1);
+  EXPECT_EQ(1u, transferLoadList->size());
 
   std::vector<RefrigerationSecondarySystem> testRefrigerationSecondarySystems = model.getModelObjects<RefrigerationSecondarySystem>();
   EXPECT_EQ(2, testRefrigerationSecondarySystems.size());
@@ -885,7 +949,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveSecondarySystemLoad)
   secondarySystemLoads = testObject.secondarySystemLoads();
   EXPECT_EQ(2, testRefrigerationSecondarySystems.size());
   EXPECT_TRUE(secondarySystemLoads.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+  EXPECT_EQ(0u, transferLoadList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_RemoveAllSecondarySystemLoads)
@@ -898,6 +962,10 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllSecondarySystemLoads)
 
   testObject.addSecondarySystemLoad(secondarySystem1);
   testObject.addSecondarySystemLoad(secondarySystem2);
+  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  ASSERT_TRUE(transferLoadList);
+  EXPECT_EQ(2u, transferLoadList->size());
+
   testObject.removeAllSecondarySystemLoads();
 
   std::vector<RefrigerationSecondarySystem> testRefrigerationSecondarySystems = model.getModelObjects<RefrigerationSecondarySystem>();
@@ -905,7 +973,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllSecondarySystemLoads)
 
   std::vector<RefrigerationSecondarySystem> secondarySystemLoads = testObject.secondarySystemLoads();
   EXPECT_TRUE(secondarySystemLoads.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+  EXPECT_EQ(0u, transferLoadList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_CascadeCondenserLoads)
@@ -945,7 +1013,12 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCascadeCondenserLoad)
 
   testObject.addCascadeCondenserLoad(condenserCascade1);
   testObject.addCascadeCondenserLoad(condenserCascade2);
+  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  ASSERT_TRUE(transferLoadList);
+  EXPECT_EQ(2u, transferLoadList->size());
+
   testObject.removeCascadeCondenserLoad(condenserCascade1);
+  EXPECT_EQ(1u, transferLoadList->size());
 
   std::vector<RefrigerationCondenserCascade> testCascadeCondenserLoads = model.getModelObjects<RefrigerationCondenserCascade>();
   EXPECT_EQ(2, testCascadeCondenserLoads.size());
@@ -959,7 +1032,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveCascadeCondenserLoad)
   cascadeCondenserLoads = testObject.cascadeCondenserLoads();
   EXPECT_EQ(2, testCascadeCondenserLoads.size());
   EXPECT_TRUE(cascadeCondenserLoads.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+  EXPECT_EQ(0u, transferLoadList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCascadeCondenserLoads)
@@ -972,6 +1045,10 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCascadeCondenserLoads)
 
   testObject.addCascadeCondenserLoad(condenserCascade1);
   testObject.addCascadeCondenserLoad(condenserCascade2);
+  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  ASSERT_TRUE(transferLoadList);
+  EXPECT_EQ(2u, transferLoadList->size());
+
   testObject.removeAllCascadeCondenserLoads();
 
   std::vector<RefrigerationCondenserCascade> testCascadeCondenserLoads = model.getModelObjects<RefrigerationCondenserCascade>();
@@ -979,7 +1056,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCascadeCondenserLoads)
 
   std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads = testObject.cascadeCondenserLoads();
   EXPECT_TRUE(cascadeCondenserLoads.empty());
-  EXPECT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
+  EXPECT_EQ(0u, transferLoadList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_TransferLoads)
@@ -1002,9 +1079,9 @@ TEST_F(ModelFixture, RefrigerationSystem_TransferLoads)
   secondarySystemLoads = testObject.secondarySystemLoads();
   EXPECT_EQ(1, cascadeCondenserLoads.size());
   EXPECT_EQ(1, secondarySystemLoads.size());
-  ASSERT_TRUE(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList());
-  ModelObjectList modelObjectList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList().get();
-  EXPECT_EQ(2, modelObjectList.modelObjects().size());
+  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  ASSERT_TRUE(transferLoadList);
+  EXPECT_EQ(2u, transferLoadList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_RemoveTransferLoads)
