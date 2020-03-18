@@ -426,6 +426,25 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCompressors)
   EXPECT_EQ(0u, compressorList->size());
 }
 
+TEST_F(ModelFixture, RefrigerationSystem_RemoveCompressor_Child)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+  RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
+
+  testObject.addCompressor(testCompressor1);
+  boost::optional<ModelObjectList> compressorList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->compressorList();
+  ASSERT_TRUE(compressorList);
+  EXPECT_EQ(1u, compressorList->size());
+
+  // Remove child directly, not calling testObject.removeCompressor
+  testCompressor1.remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<RefrigerationCompressor>().size());
+  EXPECT_TRUE(testObject.compressors().empty());
+  // ModelObjectList should not have extensible groups anymore
+  EXPECT_EQ(0u, compressorList->size());
+}
+
 TEST_F(ModelFixture, RefrigerationSystem_HighStageCompressors)
 {
   Model model;
@@ -502,6 +521,24 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllHighStageCompressors)
   EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList());
 }
 
+TEST_F(ModelFixture, RefrigerationSystem_RemoveHighStageCompressor_Child)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+  RefrigerationCompressor testCompressor1 = RefrigerationCompressor(model);
+
+  testObject.addHighStageCompressor(testCompressor1);
+  boost::optional<ModelObjectList> highStageCompressorList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->highStageCompressorList();
+  ASSERT_TRUE(highStageCompressorList);
+  EXPECT_EQ(1u, highStageCompressorList->size());
+
+  // Remove child directly, not calling testObject.removeHighStageCompressor
+  testCompressor1.remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<RefrigerationCompressor>().size());
+  EXPECT_TRUE(testObject.highStageCompressors().empty());
+  // ModelObjectList should not have extensible groups anymore
+  EXPECT_EQ(0u, highStageCompressorList->size());
+}
 
 
 TEST_F(ModelFixture, RefrigerationSystem_Cases)
@@ -590,6 +627,26 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCases)
   std::vector<RefrigerationCase> cases = testObject.cases();
   EXPECT_TRUE(cases.empty());
   EXPECT_NO_THROW(testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList());
+  EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveCase_Child)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+  ScheduleCompact s1(model);
+  RefrigerationCase case1 = RefrigerationCase(model, s1);
+
+  testObject.addCase(case1);
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  ASSERT_TRUE(refrigeratedCaseAndWalkInList);
+  EXPECT_EQ(1u, refrigeratedCaseAndWalkInList->size());
+
+  // Remove child directly, not calling testObject.removeCase
+  case1.remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<RefrigerationCase>().size());
+  EXPECT_TRUE(testObject.cases().empty());
+  // ModelObjectList should not have extensible groups anymore
   EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
@@ -682,6 +739,26 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllAirChillers)
   EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
 }
 
+TEST_F(ModelFixture, RefrigerationSystem_RemoveAirChiller_Child)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+  ScheduleCompact s1(model);
+  RefrigerationAirChiller airChiller1 = RefrigerationAirChiller(model, s1);
+
+  testObject.addAirChiller(airChiller1);
+  boost::optional<ModelObjectList> refrigeratedAirChillerAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  ASSERT_TRUE(refrigeratedAirChillerAndWalkInList);
+  EXPECT_EQ(1u, refrigeratedAirChillerAndWalkInList->size());
+
+  // Remove child directly, not calling testObject.removeAirChiller
+  airChiller1.remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<RefrigerationAirChiller>().size());
+  EXPECT_TRUE(testObject.airChillers().empty());
+  // ModelObjectList should not have extensible groups anymore
+  EXPECT_EQ(0u, refrigeratedAirChillerAndWalkInList->size());
+}
+
 TEST_F(ModelFixture, RefrigerationSystem_Walkins)
 {
   Model model;
@@ -765,6 +842,26 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllWalkIns)
   boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
   ASSERT_TRUE(refrigeratedCaseAndWalkInList);
   EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_RemoveWalkIn_Child)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+  ScheduleCompact wds(model);
+  RefrigerationWalkIn walkin1 = RefrigerationWalkIn(model, wds);
+
+  testObject.addWalkin(walkin1);
+  boost::optional<ModelObjectList> refrigeratedWalkInAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  ASSERT_TRUE(refrigeratedWalkInAndWalkInList);
+  EXPECT_EQ(1u, refrigeratedWalkInAndWalkInList->size());
+
+  // Remove child directly, not calling testObject.removeWalkIn
+  walkin1.remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<RefrigerationWalkIn>().size());
+  EXPECT_TRUE(testObject.cases().empty());
+  // ModelObjectList should not have extensible groups anymore
+  EXPECT_EQ(0u, refrigeratedWalkInAndWalkInList->size());
 }
 
 TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkins)
@@ -976,6 +1073,25 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllSecondarySystemLoads)
   EXPECT_EQ(0u, transferLoadList->size());
 }
 
+TEST_F(ModelFixture, RefrigerationSystem_RemoveSecondarySystemLoad_Child)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+  RefrigerationSecondarySystem secondarySystem1 = RefrigerationSecondarySystem(model);
+
+  testObject.addSecondarySystemLoad(secondarySystem1);
+  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  ASSERT_TRUE(transferLoadList);
+  EXPECT_EQ(1u, transferLoadList->size());
+
+  // Remove child directly, not calling testObject.removeSecondarySystemLoad
+  secondarySystem1.remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<RefrigerationSecondarySystem>().size());
+  EXPECT_TRUE(testObject.secondarySystemLoads().empty());
+  // ModelObjectList should not have extensible groups anymore
+  EXPECT_EQ(0u, transferLoadList->size());
+}
+
 TEST_F(ModelFixture, RefrigerationSystem_CascadeCondenserLoads)
 {
   Model model;
@@ -1056,6 +1172,25 @@ TEST_F(ModelFixture, RefrigerationSystem_RemoveAllCascadeCondenserLoads)
 
   std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads = testObject.cascadeCondenserLoads();
   EXPECT_TRUE(cascadeCondenserLoads.empty());
+  EXPECT_EQ(0u, transferLoadList->size());
+}
+
+TEST_F(ModelFixture, RefrigerationSystem_CascadeCondenserLoad_Child)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+  RefrigerationCondenserCascade condenserCascade1 = RefrigerationCondenserCascade(model);
+
+  testObject.addCascadeCondenserLoad(condenserCascade1);
+  boost::optional<ModelObjectList> transferLoadList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigerationTransferLoadList();
+  ASSERT_TRUE(transferLoadList);
+  EXPECT_EQ(1u, transferLoadList->size());
+
+  // Remove child directly, not calling testObject.removeSecondarySystemLoad
+  condenserCascade1.remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<RefrigerationSecondarySystem>().size());
+  EXPECT_TRUE(testObject.secondarySystemLoads().empty());
+  // ModelObjectList should not have extensible groups anymore
   EXPECT_EQ(0u, transferLoadList->size());
 }
 
