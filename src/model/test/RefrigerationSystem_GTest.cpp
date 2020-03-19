@@ -1428,7 +1428,7 @@ TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkinsList_Unicity)
 }
 
 // Test for #3921
-TEST_F(ModelFixture, RefrigerationSystem_AddCompressorMultipleTimes)
+TEST_F(ModelFixture, DISABLED_RefrigerationSystem_AddCompressorMultipleTimes)
 {
   Model model;
   RefrigerationSystem testObject = RefrigerationSystem(model);
