@@ -1346,6 +1346,7 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser)
   EXPECT_FALSE(testObject.setRefrigerationCondenser(testCompressor));
 }
 
+// Test for #3922
 TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkinsList_Unicity)
 {
   Model model;
@@ -1424,4 +1425,18 @@ TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkinsList_Unicity)
   EXPECT_EQ(2u, testObject.airChillers().size());
   EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
 
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_AddCompressorMultipleTimes)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationCompressor compressor1(model);
+
+  EXPECT_TRUE(testObject.addCompressor(compressor1));
+  EXPECT_TRUE(testObject.addCompressor(compressor1));
+  EXPECT_NO_THROW(testObject.remove());
 }
