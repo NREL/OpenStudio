@@ -361,17 +361,15 @@ namespace detail {
       RefrigerationCompressorVector refrigerationCompressors = refrigerationSystem.compressors();
       if ( !refrigerationCompressors.empty() && std::find(refrigerationCompressors.begin(), refrigerationCompressors.end(), refrigerationCompressor) != refrigerationCompressors.end() ) {
         result.push_back(refrigerationSystem);
+        break;
       } else {
         RefrigerationCompressorVector refrigerationHighStageCompressors = refrigerationSystem.highStageCompressors();
         if ( !refrigerationHighStageCompressors.empty() && std::find(refrigerationHighStageCompressors.begin(), refrigerationHighStageCompressors.end(), refrigerationCompressor) != refrigerationHighStageCompressors.end() ) {
           result.push_back(refrigerationSystem);
+          break;
         }
       }
     }
-
-    // make unique
-    std::sort(result.begin(),result.end());
-    result.erase(std::unique(result.begin(),result.end()),result.end());
 
     return result;
   }
