@@ -441,6 +441,14 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addCase( const RefrigerationCase& refrigerationCase) {
+    // From 9.2 IO ref:
+    // > This list may contain a combination of case and walk-in names OR a list of air chiller names.
+    // > Air chillers may not be included in any list that also includes cases or walk-ins.
+    if (!this->airChillers().empty()) {
+      LOG(Warn, "You cannot mix RefigerationCase/RefrigerationWalkins with RefrigerationAirChillers, occurred for " << briefDescription());
+      return false;
+    }
+
     if( boost::optional<RefrigerationSystem> currentSystem = refrigerationCase.system() )
     {
       currentSystem->removeCase(refrigerationCase);
@@ -460,6 +468,14 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addWalkin( const RefrigerationWalkIn& refrigerationWalkin) {
+    // From 9.2 IO ref:
+    // > This list may contain a combination of case and walk-in names OR a list of air chiller names.
+    // > Air chillers may not be included in any list that also includes cases or walk-ins.
+    if (!this->airChillers().empty()) {
+      LOG(Warn, "You cannot mix RefigerationCase/RefrigerationWalkins with RefrigerationAirChillers, occurred for " << briefDescription());
+      return false;
+    }
+
     if( boost::optional<RefrigerationSystem> currentSystem = refrigerationWalkin.system() )
     {
       currentSystem->removeWalkin(refrigerationWalkin);
@@ -536,6 +552,27 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addAirChiller( const RefrigerationAirChiller& refrigerationAirChiller) {
+
+    // From 9.2 IO ref:
+    // > This list may contain a combination of case and walk-in names OR a list of air chiller names.
+    // > Air chillers may not be included in any list that also includes cases or walk-ins.
+    if( boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList() ) {
+      std::vector<ModelObject> modelObjects = modelObjectList->modelObjects();
+
+      for(const auto & elem : modelObjects) {
+        if (elem.optionalCast<RefrigerationWalkIn>() || elem.optionalCast<RefrigerationCase>()) {
+          LOG(Warn, "You cannot mix RefigerationCase/RefrigerationWalkins with RefrigerationAirChillers, occurred for " << briefDescription());
+          return false;
+        }
+      }
+    }
+
+    // Enforce unicity
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationAirChiller.system() )
+    {
+      currentSystem->removeAirChiller(refrigerationAirChiller);
+    }
+
     boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
     return addTemplate<RefrigerationAirChiller>(refrigerationAirChiller, modelObjectList);
   }
