@@ -1345,3 +1345,83 @@ TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser)
   RefrigerationCompressor testCompressor = RefrigerationCompressor(model);
   EXPECT_FALSE(testObject.setRefrigerationCondenser(testCompressor));
 }
+
+TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkinsList_Unicity)
+{
+  Model model;
+  RefrigerationSystem testObject = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationCase case1(model, s1);
+  RefrigerationWalkIn walkin1(model, s1);
+  RefrigerationAirChiller airChiller1(model, s1);
+
+  boost::optional<ModelObjectList> refrigeratedCaseAndWalkInList = testObject.getImpl<openstudio::model::detail::RefrigerationSystem_Impl>()->refrigeratedCaseAndWalkInList();
+  ASSERT_TRUE(refrigeratedCaseAndWalkInList);
+
+  EXPECT_TRUE(testObject.walkins().empty());
+  EXPECT_TRUE(testObject.cases().empty());
+  EXPECT_TRUE(testObject.airChillers().empty());
+  EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
+
+  // Add the Walkin
+  EXPECT_TRUE(testObject.addWalkin(walkin1));
+  EXPECT_EQ(1u, testObject.walkins().size());
+  EXPECT_EQ(0u, testObject.cases().size());
+  EXPECT_EQ(0u, testObject.airChillers().size());
+  EXPECT_EQ(1u, refrigeratedCaseAndWalkInList->size());
+
+  // Add the Case: OK, not mixed
+  EXPECT_TRUE(testObject.addCase(case1));
+  EXPECT_EQ(1u, testObject.walkins().size());
+  EXPECT_EQ(1u, testObject.cases().size());
+  EXPECT_EQ(0u, testObject.airChillers().size());
+  EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
+
+  // Add the AirChiller: NOT OK, mixed
+  EXPECT_FALSE(testObject.addAirChiller(airChiller1));
+  EXPECT_EQ(1u, testObject.walkins().size());
+  EXPECT_EQ(1u, testObject.cases().size());
+  EXPECT_EQ(0u, testObject.airChillers().size());
+  EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
+
+
+  testObject.removeAllCases();
+  EXPECT_EQ(1u, testObject.walkins().size());
+  EXPECT_EQ(0u, testObject.cases().size());
+  EXPECT_EQ(0u, testObject.airChillers().size());
+  EXPECT_EQ(1u, refrigeratedCaseAndWalkInList->size());
+
+  testObject.removeAllWalkins();
+  EXPECT_EQ(0u, testObject.walkins().size());
+  EXPECT_EQ(0u, testObject.cases().size());
+  EXPECT_EQ(0u, testObject.airChillers().size());
+  EXPECT_EQ(0u, refrigeratedCaseAndWalkInList->size());
+
+
+
+  // Add the AirChiller: OK, can't be mixed
+  EXPECT_TRUE(testObject.addAirChiller(airChiller1));
+  EXPECT_EQ(0u, testObject.walkins().size());
+  EXPECT_EQ(0u, testObject.cases().size());
+  EXPECT_EQ(1u, testObject.airChillers().size());
+  EXPECT_EQ(1u, refrigeratedCaseAndWalkInList->size());
+
+  // Add the case/walkin: not ok
+  EXPECT_FALSE(testObject.addWalkin(walkin1));
+  EXPECT_FALSE(testObject.addCase(case1));
+  EXPECT_EQ(0u, testObject.walkins().size());
+  EXPECT_EQ(0u, testObject.cases().size());
+  EXPECT_EQ(1u, testObject.airChillers().size());
+  EXPECT_EQ(1u, refrigeratedCaseAndWalkInList->size());
+
+  // A second one: OK
+  RefrigerationAirChiller airChiller2(model, s1);
+  // Add the AirChiller: OK, can't be mixed
+  EXPECT_TRUE(testObject.addAirChiller(airChiller2));
+  EXPECT_EQ(0u, testObject.walkins().size());
+  EXPECT_EQ(0u, testObject.cases().size());
+  EXPECT_EQ(2u, testObject.airChillers().size());
+  EXPECT_EQ(2u, refrigeratedCaseAndWalkInList->size());
+
+}
