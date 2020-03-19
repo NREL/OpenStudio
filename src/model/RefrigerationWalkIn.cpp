@@ -158,6 +158,8 @@ namespace detail {
   {
     std::vector<IdfObject> result;
 
+    this->removeFromSystem();
+
     std::shared_ptr<Model_Impl> t_model = model().getImpl<Model_Impl>();
     // t_model->blockSignals(true);
 

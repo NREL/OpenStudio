@@ -175,6 +175,8 @@ namespace detail {
   {
     std::vector<IdfObject> result;
 
+    this->removeFromSystem();
+
     if (boost::optional<RefrigerationDefrostCycleParameters> caseDefrostCycleParameters = this->optionalCaseDefrostCycleParameters()) {
       std::vector<IdfObject> removedDefrostCycleParameters = caseDefrostCycleParameters->remove();
       result.insert(result.end(), removedDefrostCycleParameters.begin(), removedDefrostCycleParameters.end());
