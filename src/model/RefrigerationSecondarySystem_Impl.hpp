@@ -39,6 +39,7 @@ namespace model {
 class ModelObjectList;
 class CurveCubic;
 class ThermalZone;
+class RefrigerationSystem;
 class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationWalkIn;
@@ -154,6 +155,8 @@ namespace detail {
 
     bool isEndUseSubcategoryDefaulted() const;
 
+    std::vector<RefrigerationSystem> systems() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -266,6 +269,8 @@ namespace detail {
     bool setEndUseSubcategory(std::string endUseSubcategory);
 
     void resetEndUseSubcategory();
+
+    void removeFromSystems();
 
     //@}
     /** @name Other */
