@@ -155,7 +155,7 @@ Model ReverseTranslator::translateWorkspace(const Workspace & workspace, Progres
   }
 
   m_model = Model();
-  m_model.setFastNaming(true);
+  m_model.setFastNaming(false);
 
   m_workspace = workspace.clone();
 
