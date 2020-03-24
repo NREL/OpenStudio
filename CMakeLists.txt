@@ -684,34 +684,8 @@ if(NOT UNIX)
   set(PERL_EXE "${PROJECT_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin/perl.exe")
 endif()
 
-# Mingw based ruby lib (only the dll stub library) from Ruby Installer
-# We need this for stand alone ruby bindings
-# target to use with typical ruby installations (those that are not msvc)
-# Only need this on Windows systems
-if(WIN32)
-  if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
-    set(RUBY_MINGW_LIB_ZIP_FILENAME "Ruby250-mingw-install.tar.gz")
-    set(RUBY_MINGW_LIB_ZIP_EXPECTED_MD5 "ce454cfe886b32f7fe829385bc06af1c")
-
-    set(RUBY_MINGW_LIB_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${RUBY_MINGW_LIB_ZIP_FILENAME}")
-    if(EXISTS "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}")
-      file(MD5 "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}" RUBY_MINGW_LIB_ZIP_MD5)
-    endif()
-
-    if(NOT RUBY_MINGW_LIB_ZIP_MD5 STREQUAL RUBY_MINGW_LIB_ZIP_EXPECTED_MD5)
-      message(STATUS "Downloading Ruby Mingw Lib: ${RUBY_MINGW_LIB_ZIP_FILENAME}")
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_MINGW_LIB_ZIP_FILENAME}"
-        ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}
-        INACTIVITY_TIMEOUT 120
-        SHOW_PROGRESS
-        EXPECTED_MD5 ${RUBY_MINGW_LIB_ZIP_EXPECTED_MD5})
-
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
-    endif()
-
-    set(RUBY_MINGW_STUB_LIB "${PROJECT_BINARY_DIR}/Ruby-mingw-install/libx64-msvcrt-ruby250.dll.a")
-  endif()
-endif()
+include(FetchRubyMinGW.cmake)
+FetchRubyMinGW()
 
 # openstudio gems
 # CI will build and upload openstudio gems to s3 at https://github.com/NREL/OpenStudio-gems
@@ -1301,6 +1275,14 @@ write_basic_package_version_file(
 install(
   FILES
     "${CMAKE_CURRENT_BINARY_DIR}/openstudioConfigVersion.cmake"
+  DESTINATION
+    lib/cmake/openstudio/
+  COMPONENT "CPPAPI"
+)
+
+install(
+  FILES
+    "${CMAKE_CURRENT_SOURCE_DIR}/FetchRubyMinGW.cmake"
   DESTINATION
     lib/cmake/openstudio/
   COMPONENT "CPPAPI"
