@@ -28,6 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "RubyInterpreter.hpp"
+#include "prelude_rb.hpp"
 #include "GC_Value.hpp"
 #include "InitMacros.hxx"
 #include "../../ruby/init_openstudio.hpp"
@@ -546,6 +547,7 @@ int main(int argc, char *argv[])
   ruby_set_argv(argc - 1,argv + 1);
 
   try{
+    rubyInterpreter.evalString(prelude_rb);
     rubyInterpreter.evalString(R"(
        begin
          (require 'openstudio_cli')
