@@ -538,18 +538,9 @@ namespace openstudio{
             std::string version_id = columnText(sqlite3_column_text(sqlStmtPtr, 1));
             std::string directory = columnText(sqlite3_column_text(sqlStmtPtr, 2));
 
-            // TODO: replace with remove_trailing_separator once update_depends is merged in
-            // openstudio::path p_directory(directory);
-            // openstudio::path src = m_libraryPath / uid / version_id / p_directory.remove_trailing_separator().filename();
-
-            // remove_trailing_separator works well in 1.68, but isn't there in 1.55
-            const size_t len = directory.size();
-            if (len > 1 && ( directory[len-1] == '\\' || directory[len-1] == '/') ) {
-              directory[len-1] = 0;
-            }
-
+            // Remove trailing separator (`/` or `\`)
             openstudio::path p_directory(directory);
-            openstudio::path src = m_libraryPath / uid / version_id / p_directory.filename();
+            openstudio::path src = m_libraryPath / uid / version_id / p_directory.remove_trailing_separator().filename();
             openstudio::path dest = src.parent_path();
 
             openstudio::filesystem::remove(dest / toPath("DISCLAIMER.txt"));
@@ -629,6 +620,7 @@ namespace openstudio{
         sqlite3_stmt* sqlStmtPtr;
         if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
           LOG(Error, "Unable to prepare version_id Statement");
+          return boost::none;
         }
 
         if (sqlite3_step(sqlStmtPtr) == SQLITE_ROW) {
@@ -641,7 +633,8 @@ namespace openstudio{
         std::string statement = "SELECT version_id FROM Components WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
         sqlite3_stmt* sqlStmtPtr;
         if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
-          LOG(Error, "Unable to prepare version_id Statement");
+          LOG(Error, "Unable to prepare version_id Statement from uid and versionId.");
+          return boost::none;
         }
 
         if (sqlite3_step(sqlStmtPtr) == SQLITE_ROW) {
@@ -668,14 +661,15 @@ namespace openstudio{
 
         std::string statement = "SELECT version_id FROM Measures WHERE uid='" + escape(uid) +"'";
         sqlite3_stmt* sqlStmtPtr;
-        if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
+        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+
+        if (code != SQLITE_OK) {
           LOG(Error, "Unable to prepare version_id Statement");
+          return boost::none;
         }
 
         // We seek the most recent modified one in case we find several, so store that
         boost::optional<DateTime> mostRecentModified;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
 
         // Loop until done (or failed)
         while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -699,7 +693,8 @@ namespace openstudio{
                 mostRecentModified = versionModified;
                 result = measure;
               }
-            }catch(const std::exception&){
+            }catch(const std::exception& e){
+              LOG(Error, "Cannot find BCL measure at '" << m_libraryPath / uid / version_id << "': " << e.what());
             }
 
           }
@@ -724,7 +719,8 @@ namespace openstudio{
           std::string version_id = columnText(sqlite3_column_text(sqlStmtPtr, 0));
           try{
             result = boost::optional<BCLMeasure>(m_libraryPath / uid / version_id);
-          } catch(const std::exception&) {
+          } catch(const std::exception& e) {
+            LOG(Error, "Cannot find BCL measure at '" << m_libraryPath / uid / version_id << "': " << e.what());
           }
         }
         // Finalize statement to prevent memory leak
@@ -745,6 +741,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare components Statement");
+        return allComponents;
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
@@ -786,6 +783,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare measures Statement");
+        return allMeasures;
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
@@ -829,6 +827,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare measureUids Statement");
+        return uids;
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
@@ -839,8 +838,8 @@ namespace openstudio{
         code = sqlite3_step(sqlStmtPtr);
         if (code == SQLITE_ROW)
         {
-            // Get values from SELECT
-            uids.push_back(columnText(sqlite3_column_text(sqlStmtPtr, 0)));
+          // Get values from SELECT
+          uids.push_back(columnText(sqlite3_column_text(sqlStmtPtr, 0)));
         }
         else  // i didn't get a row.  something is wrong so set the exit condition.
         {     // should never get here since i test for all documented return states above
@@ -867,6 +866,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare searchComponents Statement");
+        return results;
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
@@ -917,6 +917,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare searchMeasures Statement");
+        return results;
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
