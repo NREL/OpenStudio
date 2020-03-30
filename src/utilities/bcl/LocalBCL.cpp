@@ -87,6 +87,7 @@ namespace openstudio{
       std::string statement = "SELECT data FROM Settings WHERE name='prodAuthKey'";
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
+        sqlite3_finalize(sqlStmtPtr); // No-op
         LOG_AND_THROW("Unable to prepare m_prodAuthKey Statement");
       }
       if (sqlite3_step(sqlStmtPtr) == SQLITE_ROW) {
@@ -100,6 +101,7 @@ namespace openstudio{
       std::string statement = "SELECT data FROM Settings WHERE name='devAuthKey'";
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
+        sqlite3_finalize(sqlStmtPtr); // No-op
         LOG_AND_THROW("Unable to prepare m_prodAuthKey Statement");
       }
       if (sqlite3_step(sqlStmtPtr) == SQLITE_ROW) {
@@ -296,6 +298,10 @@ namespace openstudio{
     std::string insert_statement = "INSERT INTO Settings VALUES (?, ?)";
     if (sqlite3_prepare_v2(m_db, insert_statement.c_str(), insert_statement.size(), &sqlStmtPtr, nullptr) != SQLITE_OK) {
       LOG(Error, "Error preparing insert statement");
+      // Note JM 2020-03-30: There's no need to call `sqlite3_finalize(sqlStmtPtr);`
+      // if prepare_v2 has failed since you wouldn't have a valid handle, but it's a harmless no-op so for consistency/forcing
+      // us to remember to do it, I do anyways
+      sqlite3_finalize(sqlStmtPtr); // No-op
       return false;
     }
 
@@ -321,7 +327,8 @@ namespace openstudio{
       }
 
       if (errorsFound) {
-        sqlite3_reset(sqlStmtPtr);
+        // must finalize to prevent memory leaks (which resets too)
+        sqlite3_finalize(sqlStmtPtr);
         return false;
       }
 
@@ -345,6 +352,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare dbVersion Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
         return false;
       }
       // If this doesn't return, it may be normal (old version), so don't return / log an error
@@ -365,6 +373,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare dbVersion 1.0/1.1 Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
         return false;
       }
       // If this doesn't return, it may be normal (not the right version), so don't return / log an error
@@ -414,6 +423,7 @@ namespace openstudio{
             std::string insert_statement = "INSERT INTO Settings VALUES (?, ?)";
             if (sqlite3_prepare_v2(m_db, insert_statement.c_str(), insert_statement.size(), &sqlStmtPtr, nullptr) != SQLITE_OK) {
               LOG(Error, "Error preparing insert statement");
+              sqlite3_finalize(sqlStmtPtr); // No-op
               return false;
             }
 
@@ -695,6 +705,7 @@ namespace openstudio{
         sqlite3_stmt* sqlStmtPtr;
         if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
           LOG(Error, "Unable to prepare version_id Statement");
+          sqlite3_finalize(sqlStmtPtr); // No-op
           return boost::none;
         }
 
@@ -709,6 +720,7 @@ namespace openstudio{
         sqlite3_stmt* sqlStmtPtr;
         if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
           LOG(Error, "Unable to prepare version_id Statement from uid and versionId.");
+          sqlite3_finalize(sqlStmtPtr); // No-op
           return boost::none;
         }
 
@@ -737,9 +749,9 @@ namespace openstudio{
         std::string statement = "SELECT version_id FROM Measures WHERE uid='" + escape(uid) +"'";
         sqlite3_stmt* sqlStmtPtr;
         int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-
         if (code != SQLITE_OK) {
           LOG(Error, "Unable to prepare version_id Statement");
+          sqlite3_finalize(sqlStmtPtr); // No-op
           return boost::none;
         }
 
@@ -787,6 +799,7 @@ namespace openstudio{
         std::string statement = "SELECT version_id FROM Measures WHERE uid='" + escape(uid) +"' AND version_id='" + escape(versionId) +"'";
         sqlite3_stmt* sqlStmtPtr;
         if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
+          sqlite3_finalize(sqlStmtPtr); // No-op
           LOG(Error, "Unable to prepare version_id Statement");
         }
 
@@ -816,6 +829,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare components Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
         return allComponents;
       }
 
@@ -858,6 +872,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare measures Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
         return allMeasures;
       }
 
@@ -902,6 +917,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare measureUids Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
         return uids;
       }
 
@@ -941,6 +957,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare searchComponents Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
         return results;
       }
 
@@ -992,6 +1009,7 @@ namespace openstudio{
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
         LOG(Error, "Unable to prepare searchMeasures Statement");
+        sqlite3_finalize(sqlStmtPtr); // No-op
         return results;
       }
 
@@ -1482,8 +1500,8 @@ namespace openstudio{
       std::string statement = "SELECT uid, version_id FROM Attributes WHERE name=? COLLATE NOCASE AND value=? COLLATE NOCASE";
       sqlite3_stmt* sqlStmtPtr;
       if (sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr) != SQLITE_OK) {
-        LOG(Error, "Cannot prepare statement (in searchTerms)");
-        sqlite3_finalize(sqlStmtPtr);
+        LOG(Error, "Cannot prepare statement (in searchTerms): " << statement);
+        sqlite3_finalize(sqlStmtPtr); // No-op
         return UidsType();
       }
 
