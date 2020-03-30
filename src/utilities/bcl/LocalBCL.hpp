@@ -193,6 +193,13 @@ namespace openstudio{
     // Helper function to retrieve a string
     std::string columnText(const unsigned char* column) const;
 
+    // Begins a transaction, checking for return code. If failed, does nothing but logs and returns false
+    bool beginTransaction();
+    // Commit a transaction, checking for return code. If failed, calls rollbackTransaction
+    bool commitTransaction();
+    // Rollback a transaction, checking for return code. If failed, throws.
+    bool rollbackTransaction();
+
     REGISTER_LOGGER("openstudio.bcl.LocalBCL");
   };
 

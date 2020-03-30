@@ -111,6 +111,81 @@ namespace openstudio{
 
   }
 
+  bool LocalBCL::beginTransaction() {
+    if (!m_db) {
+      LOG(Warn, "Cannot begin transaction without an open database");
+      return false;
+    }
+
+    char * err = nullptr;
+    if (sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, &err) != SQLITE_OK) {
+      std::string errstr;
+
+      if (err) {
+        errstr = err;
+        sqlite3_free(err);
+      }
+
+      LOG(Error, "Cannot begin transaction: " << errstr);
+
+      return false;
+    }
+
+    return true;
+  }
+
+  bool LocalBCL::commitTransaction() {
+    if (!m_db) {
+      LOG(Warn, "Cannot commit transaction without an open database");
+      return false;
+    }
+
+    char * err = nullptr;
+    if (sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, &err) != SQLITE_OK) {
+      std::string errstr;
+
+      if (err) {
+        errstr = err;
+        sqlite3_free(err);
+      }
+
+      LOG(Error, "Cannot commit transaction: " << errstr);
+
+      if (rollbackTransaction()) {
+        LOG(Warn, "Rolled back transaction.");
+      }
+
+      return false;
+    }
+
+    return true;
+  }
+
+  bool LocalBCL::rollbackTransaction() {
+    if (!m_db) {
+      LOG(Warn, "Cannot rollback transaction without an open database");
+      return false;
+    }
+
+    char * err = nullptr;
+    if (sqlite3_exec(m_db, "ROLLBACK", nullptr, nullptr, &err) != SQLITE_OK) {
+      std::string errstr;
+
+      if (err) {
+        errstr = err;
+        sqlite3_free(err);
+      }
+
+      // TODO: LOG AND THROW?
+      // LOG(Error, "Cannot Rollback transaction! " << errstr);
+      LOG_AND_THROW("Cannot Rollback Transaction!" << errstr);
+      return false;
+    }
+
+    return true;
+  }
+
+
   openstudio::filesystem::path LocalBCL::dbPath() const
   {
     return m_libraryPath / m_dbName;
