@@ -318,33 +318,35 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   // Actual values
   SqlResults ep_910 = {195052539.91, 27600.69, 427.17, 324.04, 782.87, 3256405.15, 191767000.0};
   SqlResults ep_920 = {194898706.43, 27595.94, 426.75, 324.25, 782.28, 3256577.21, 191613000.0};
+  SqlResults ep_930 = {194906985.51, 27596.57, 426.75, 324.25, 782.28, 3262855.66, 191615000.0};
 
   // =========== Check that you are within relatively normal ranges compared to previous versions  =================
 
-  // Total annual costs for all fuel types. Here I'm explicitly passing a tolerance of 0.1% (which is the default really, so omitting it after)
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.001));
+  for (auto& ep: {ep_910, ep_920}) {
+    // Total annual costs for all fuel types. Here I'm explicitly passing a tolerance of 0.1% (which is the default really, so omitting it after)
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.001));
 
-  // Costs by fuel type
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get()));
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get()));
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get()));
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get()));
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get()));
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get()));
-
+    // Costs by fuel type
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get()));
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get()));
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get()));
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get()));
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get()));
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get()));
+  }
 
   // =========== Check that within our development based on the current E+ version we do not make the results vary (at all)  =================
 
   // Total annual costs for all fuel types
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get());
 
   // Costs by fuel type
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get());
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get());
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get());
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get());
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get());
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get());
 
 
   // These have a relatively high tolerance and shouldn't fail, and they depend on the above values divided by square footage which shouldn't vary
