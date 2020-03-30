@@ -538,6 +538,11 @@ namespace openstudio{
         std::string statement = "SELECT uid, version_id FROM Components WHERE uid IN (SELECT DISTINCT uid FROM Components)";
         sqlite3_stmt* sqlStmtPtr;
         int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+        if (code != SQLITE_OK) {
+          LOG(Error, "Unable to prepare current version Statement: " << statement);
+          sqlite3_finalize(sqlStmtPtr); // No-op
+          return false;
+        }
 
         bool errorsFound = false;
 
@@ -610,6 +615,11 @@ namespace openstudio{
         std::string statement = "SELECT uid, version_id, directory FROM Components";
         sqlite3_stmt* sqlStmtPtr;
         int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+        if (code != SQLITE_OK) {
+          LOG(Error, "Unable to prepare current version Statement: " << statement);
+          sqlite3_finalize(sqlStmtPtr); // No-op
+          return false;
+        }
 
         // Loop until done (or failed)
         while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -748,7 +758,7 @@ namespace openstudio{
         sqlite3_stmt* sqlStmtPtr;
         int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
         if (code != SQLITE_OK) {
-          LOG(Error, "Unable to prepare version_id Statement");
+          LOG(Error, "Unable to prepare version_id Statement: " << statement);
           sqlite3_finalize(sqlStmtPtr); // No-op
           return boost::none;
         }
@@ -832,6 +842,11 @@ namespace openstudio{
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+      if (code != SQLITE_OK) {
+          LOG(Error, "Unable to prepare components Statement: " << statement);
+          sqlite3_finalize(sqlStmtPtr); // No-op
+          return allComponents;
+      }
 
       // Loop until done (or failed)
       while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -875,6 +890,11 @@ namespace openstudio{
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+      if (code != SQLITE_OK) {
+        LOG(Error, "Unable to prepare measures Statement: " << statement);
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return allMeasures;
+      }
 
       // Loop until done (or failed)
       while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -920,6 +940,11 @@ namespace openstudio{
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+      if (code != SQLITE_OK) {
+        LOG(Error, "Unable to prepare measureUids Statement: " << statement);
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return uids;
+      }
 
       // Loop until done (or failed)
       while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -960,6 +985,11 @@ namespace openstudio{
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+      if (code != SQLITE_OK) {
+        LOG(Error, "Unable to prepare searchComponents Statement: " << statement);
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return results;
+      }
 
       // Loop until done (or failed)
       while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -1012,6 +1042,11 @@ namespace openstudio{
       }
 
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+      if (code != SQLITE_OK) {
+        LOG(Error, "Unable to prepare searchMeasures Statement: " << statement);
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return results;
+      }
 
       // Loop until done (or failed)
       while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
@@ -1487,6 +1522,11 @@ namespace openstudio{
       std::string statement = "SELECT DISTINCT uid, version_id FROM " + tableName;
       sqlite3_stmt* sqlStmtPtr;
       int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
+      if (code != SQLITE_OK) {
+        LOG(Error, "Cannot prepare statement (in searchTerms): " << statement);
+        sqlite3_finalize(sqlStmtPtr); // No-op
+        return UidsType();
+      }
 
       // Loop until done (or failed)
       while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY) && (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
