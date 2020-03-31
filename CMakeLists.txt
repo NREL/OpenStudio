@@ -156,7 +156,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "beta")
+set(PROJECT_VERSION_PRERELEASE "rc1")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -191,11 +191,11 @@ set(ENERGYPLUS_VERSION_MINOR 3)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "cc126b865c")
+set(ENERGYPLUS_BUILD_SHA "baff08990c")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.3.0-IOFreeze")
+set(ENERGYPLUS_RELEASE_NAME "v9.3.0")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -534,14 +534,14 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 6110c0476ea4ca1153c0c9c35b2d56a8)
+    set(ENERGYPLUS_EXPECTED_HASH 20c12af58cb9ed8b3c30c206f7123498)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 37c184c785bd34057435f9115109f714)
+    set(ENERGYPLUS_EXPECTED_HASH d146ddaef57b79ca9272cd64bc75babd)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -572,7 +572,7 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH b86fa39a13e4618fea97b0d603c15ff2)
+    set(ENERGYPLUS_EXPECTED_HASH 0d47ac399199de733a6efc548f474f55)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
@@ -692,16 +692,16 @@ FetchRubyMinGW()
 # need to  update the MD5sum for each platform and url below
 if(UNIX)
    if(APPLE)
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200220-darwin.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "f96e0a3734426b2944dc8854b167beb2")
+     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200330-darwin.tar.gz")
+     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "a6e4e892b4db5c6673a16229841fc1cb")
    else()
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200220-linux.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c00d90e76503b1a94b19ec017b765aa4")
+     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200330-linux.tar.gz")
+     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "480a6b53cd3f37d7505b83f48b327f1f")
    endif()
 elseif(WIN32)
   if(CMAKE_CL_64)
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200221-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "44d4e7e05388b584aaf0249e1ff99bb7")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200330-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "2050f76a8e93a61c4c4a8d3ddcd9702e")
   endif()
 endif()
 

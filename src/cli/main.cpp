@@ -134,6 +134,7 @@ extern "C" {
   void Init_objspace(void);
   void Init_parser(void);
   void Init_pathname(void);
+  void Init_prelude(void);
   void Init_psych(void);
   void Init_ripper(void);
   void Init_rmd160(void);
@@ -366,6 +367,8 @@ int main(int argc, char *argv[])
 
     Init_trans_utf_16_32();
     rb_provide("enc/trans/utf_16_32.o");
+
+    Init_prelude();
 
     Init_bigdecimal();
     rb_provide("bigdecimal");
