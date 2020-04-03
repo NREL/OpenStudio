@@ -64,8 +64,32 @@ module Kernel
   alias :original_open :open
 
   RUBY_FILE_EXTS = ['.rb', '.so', '.dll']
+  # Consider moving this map into openstudio-gems project
+  # and maintain this list from there
+  EMBEDDED_EXT_INITS = {\
+    'libll' => 'init_libll',\
+    'liboga' => 'init_liboga',\
+    'sqlite3/sqlite3_native' => 'init_sqlite3_native',\
+    'jaro_winkler_ext' => 'init_jaro_winkler_ext',\
+    'pycall.so' => 'init_pycall', \
+    'pycall.dll' => 'init_pycall'
+  }
+
+  def require_embedded_extension path
+    if EMBEDDED_EXT_INITS.has_key? path
+      $LOADED << path
+      EmbeddedScripting.send(EMBEDDED_EXT_INITS[path])
+      return true
+    else
+      return false
+    end
+  end
 
   def require path
+    if require_embedded_extension path
+      return true
+    end
+
     original_directory = Dir.pwd
     path_with_extension = path
 
@@ -81,34 +105,22 @@ module Kernel
       path_with_extension = path + '.rb'
     end
 
-    if extname == '.so' or extname == '.dll'
-      basename = File.basename(path, '.*')
-      initmethod = "init_#{basename}".to_sym
-      if $LOADED.include?(path)
-        return true;
-      elsif EmbeddedScripting.private_method_defined? initmethod
-        $LOADED << path
-        EmbeddedScripting.send(initmethod)
-        return true;
-      end
-    else
-      if path_with_extension.to_s.chars.first == ':'
-        if $LOADED.include?(path_with_extension)
-           return true
-        else
-          return require_embedded_absolute(path_with_extension)
-        end
-      elsif path_with_extension == 'openstudio.rb'
-        return true
+    if path_with_extension.to_s.chars.first == ':'
+      if $LOADED.include?(path_with_extension)
+         return true
       else
-        $LOAD_PATH.each do |p|
-          if p.to_s.chars.first == ':'
-            embedded_path = p + '/' + path_with_extension
-            if $LOADED.include?(embedded_path)
-              return true
-            elsif EmbeddedScripting::hasFile(embedded_path)
-              return require_embedded_absolute(embedded_path)
-            end
+        return require_embedded_absolute(path_with_extension)
+      end
+    elsif path_with_extension == 'openstudio.rb'
+      return true
+    else
+      $LOAD_PATH.each do |p|
+        if p.to_s.chars.first == ':'
+          embedded_path = p + '/' + path_with_extension
+          if $LOADED.include?(embedded_path)
+            return true
+          elsif EmbeddedScripting::hasFile(embedded_path)
+            return require_embedded_absolute(embedded_path)
           end
         end
       end
