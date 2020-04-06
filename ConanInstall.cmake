@@ -41,6 +41,12 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
   # bump the actual package version when we make changes) than the binaries were built with
   # 'outdated' also acts like 'missing': if no binary, will build them.
+
+  # TODO: TEMP. If MSVC >= 1925 (16.5.1), build boost?
+  #if(NOT MSVC_VERSION VERSION_LESS 1925)
+  #  list(APPEND CONAN_BUILD "boost")
+  #endif()
+
   list(APPEND CONAN_BUILD "outdated")
 
   if (BUILD_TESTING)
@@ -87,8 +93,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     OPTIONS ${CONAN_OPTIONS}
     BUILD ${CONAN_BUILD}
     # Passes `-u, --update`    to conan install: Check updates exist from upstream remotes
-    # That and build=outdated should ensure we track the right
-    UPDATE
+    # That and build=outdated should ensure we track the right openstudio_ruby
+    # Instead, we will pin the RREV for the openstudio_ruby
+    # UPDATE
   )
 
   set(CONAN_OPENSTUDIO_ALREADY_RUN TRUE)
