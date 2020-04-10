@@ -74,16 +74,8 @@ target_link_libraries(
   PRIVATE
   init_openstudio
   ${ALL_RUBY_BINDING_TARGETS}
-  openstudio_utilities
-  openstudio_airflow
-  openstudio_model
-  openstudio_energyplus
-  openstudio_measure
-  openstudio_osversion
-  openstudio_sdd
-  openstudio_isomodel
-  openstudio_gbxml
-  openstudio_radiance
+  PUBLIC
+  openstudiolib
 )
 
 if( WIN32 )
