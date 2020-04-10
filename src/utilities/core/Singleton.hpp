@@ -49,9 +49,7 @@ namespace openstudio {
       static object_type obj;
       return obj;
     }   
-  }
-};
-
+  };
 }  // namespace openstudio
 
 #endif  // UTILITIES_CORE_SINGLETON_HPP
