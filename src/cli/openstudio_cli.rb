@@ -1290,6 +1290,17 @@ class Measure
             model = value[0].clone(true).to_Model
             workspace = value[1].clone(true)
           end
+          
+        elsif measure_type == 'PythonWrapperMeasure'
+
+          value = measure_manager.get_model(model_path, true)
+          if value.nil?
+            $logger.error("Cannot load model from '#{model_path}'")
+            return 1
+          else
+            model = value[0].clone(true).to_Model
+            workspace = value[1].clone(true)
+          end
 
         elsif measure_type == 'EnergyPlusMeasure'
           value = measure_manager.get_idf(model_path, true)

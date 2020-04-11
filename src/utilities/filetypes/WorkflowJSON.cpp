@@ -729,6 +729,13 @@ namespace detail{
       newSteps.insert(newSteps.end(), oldSteps.begin(), oldSteps.end());
     }
 
+	if (measureType == MeasureType::PythonWrapperMeasure){
+		newSteps.insert(newSteps.end(), steps.begin(), steps.end());
+	} else{
+		std::vector<MeasureStep> oldSteps = getMeasureSteps(MeasureType::PythonWrapperMeasure);
+		newSteps.insert(newSteps.end(), oldSteps.begin(), oldSteps.end());
+	}
+
     if (measureType == MeasureType::ReportingMeasure){
       newSteps.insert(newSteps.end(), steps.begin(), steps.end());
     } else{

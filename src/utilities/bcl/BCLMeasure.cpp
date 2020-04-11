@@ -156,8 +156,27 @@ namespace openstudio{
                              boost::none, boost::none);
       arguments.push_back(arg);
 
-    }else if (measureType == MeasureType::UtilityMeasure){
-      measureTemplate = ":/templates/UtilityMeasure/measure.rb";
+    }else if (measureType == MeasureType::PythonWrapperMeasure){
+		measureTemplate = ":/templates/PythonWrapperMeasure/measure.rb";
+		testTemplate = ":/templates/PythonWrapperMeasure/tests/model_measure_test.rb";
+		testOSM = ":/templates/PythonWrapperMeasure/tests/example_model.osm";
+		templateClassName = "PythonWrapperMeasureName";
+
+		createDirectory(dir / toPath("tests"));
+		testOSMPath = dir / toPath("tests/example_model.osm");
+		//TODO -change from space to generic input
+		std::string argName("space_name");
+		std::string argDisplayName("New space name");
+		std::string argDescription("This name will be used as the name of the new space.");
+		std::string argType("String");
+		BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType,
+			boost::none, true, false, boost::none,
+			std::vector<std::string>(), std::vector<std::string>(),
+			boost::none, boost::none);
+		arguments.push_back(arg);
+
+	}else if (measureType == MeasureType::UtilityMeasure){ //not used??
+      measureTemplate = ":/templates/UtilityMeasure/measure.rb";  //does not exist! -blb
       testTemplate = ":/templates/UtilityMeasure/tests/utility_measure_test.rb";
       templateClassName = "UtilityMeasureName";
 
@@ -792,6 +811,8 @@ namespace openstudio{
       result = FileReferenceType::OSM;
     }else if (measureType == MeasureType::EnergyPlusMeasure){
       result = FileReferenceType::IDF;
+    }else if (measureType == MeasureType::PythonWrapperMeasure){  //use OSM for now. -blb
+	  result = FileReferenceType::OSM;
     }else if (measureType == MeasureType::UtilityMeasure){
       // no-op
     }else if (measureType == MeasureType::ReportingMeasure){
@@ -809,6 +830,8 @@ namespace openstudio{
       result = FileReferenceType::OSM;
     }else if (measureType == MeasureType::EnergyPlusMeasure){
       result = FileReferenceType::IDF;
+    }else if (measureType == MeasureType::PythonWrapperMeasure){  //use OSM for now. -blb
+	  result = FileReferenceType::OSM;  
     }else if (measureType == MeasureType::UtilityMeasure){
       // no-op
     }else if (measureType == MeasureType::ReportingMeasure){

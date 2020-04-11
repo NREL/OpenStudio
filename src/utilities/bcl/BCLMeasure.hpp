@@ -46,7 +46,8 @@ namespace openstudio{
   /** \class MeasureType
    *  \brief Enumeration of the types of BCLMeasure, by input file type.
    *  \details ModelMeasures accept OpenStudio Models as input; EnergyPlusMeasures accept
-   *  EnergyPlus IDF files as input; and UtilityMeasures do not operate on any sort of energy
+   *  EnergyPlus IDF files as input; PythonWrapperMeasures can accept Model and possibly FMU in future;
+   *  and UtilityMeasures do not operate on any sort of energy
    *  model. See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
    *  call is:
    *  \code
@@ -60,7 +61,8 @@ namespace openstudio{
   OPENSTUDIO_ENUM( MeasureType,
     ((ModelMeasure)(Model Measure))
     ((EnergyPlusMeasure)(EnergyPlus Measure))
-    ((UtilityMeasure)(Utility Measure))
+    ((PythonWrapperMeasure)(Python Wrapper Measure))
+    ((UtilityMeasure)(Utility Measure))	//I dont think this is used anymore?? -blb
     ((ReportingMeasure)(Reporting Measure))
   );
 
