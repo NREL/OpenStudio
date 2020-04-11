@@ -69,17 +69,38 @@ foreach(OPENSTUDIO_FILE ${OPENSTUDIO_FILES})
   )
 endforeach()
 
+
 target_link_libraries(
   openstudio_rb
   PRIVATE
   init_openstudio
   ${ALL_RUBY_BINDING_TARGETS}
-  PUBLIC
-  openstudiolib
 )
 
 if( WIN32 )
+  # Dynamically link to openstudiolib.dll on Windows only
+  target_link_libraries(
+    openstudio_rb
+    PUBLIC
+    openstudiolib
+  )
   target_link_libraries(openstudio_rb PRIVATE ${RUBY_MINGW_STUB_LIB})
+else()
+  # statically link everywhere else
+  target_link_libraries(
+    openstudio_rb
+    PRIVATE
+    openstudio_utilities
+    openstudio_airflow
+    openstudio_model
+    openstudio_energyplus
+    openstudio_measure
+    openstudio_osversion
+    openstudio_sdd
+    openstudio_isomodel
+    openstudio_gbxml
+    openstudio_radiance
+  )
 endif()
 
 if (APPLE)
