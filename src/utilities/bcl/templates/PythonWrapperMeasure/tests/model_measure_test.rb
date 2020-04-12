@@ -115,7 +115,7 @@ class PythonWrapperMeasureNameTest < Minitest::Test
     assert(result.info.size == 1)
     assert(result.warnings.empty?)
 
-    assert_equal(result.info, "PYCALL test result = 0.0")
+    assert_equal(result.info[0].logMessage, "PYCALL test result = 0.0")
 
     # save the model to test output directory
     output_file_path = "#{File.dirname(__FILE__)}//output/test_output.osm"
