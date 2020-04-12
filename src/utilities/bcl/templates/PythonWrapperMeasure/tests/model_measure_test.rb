@@ -18,10 +18,10 @@ class PythonWrapperMeasureNameTest < Minitest::Test
     measure = PythonWrapperMeasureName.new
 
     # make an empty model
-    model = OpenStudio::Model::Model.new
+    #model = OpenStudio::Model::Model.new
 
     # get arguments and test that they are what we are expecting
-    arguments = measure.arguments(model)
+    arguments = measure.arguments()
     assert_equal(1, arguments.size)
     assert_equal('example_arg', arguments[0].name)
   end
@@ -35,10 +35,10 @@ class PythonWrapperMeasureNameTest < Minitest::Test
     runner = OpenStudio::Measure::OSRunner.new(osw)
 
     # make an empty model
-    model = OpenStudio::Model::Model.new
+    #model = OpenStudio::Model::Model.new
 
     # get arguments
-    arguments = measure.arguments(model)
+    arguments = measure.arguments()
     argument_map = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments)
 
     # create hash of argument values
@@ -55,7 +55,7 @@ class PythonWrapperMeasureNameTest < Minitest::Test
     end
 
     # run the measure
-    measure.run(model, runner, argument_map)
+    measure.run(fmu, runner, argument_map)
     result = runner.result
 
     # show the output
@@ -76,15 +76,15 @@ class PythonWrapperMeasureNameTest < Minitest::Test
     # load the test model
     translator = OpenStudio::OSVersion::VersionTranslator.new
     path = "#{File.dirname(__FILE__)}/example_model.osm"
-    model = translator.loadModel(path)
-    assert(!model.empty?)
-    model = model.get
+    #model = translator.loadModel(path)
+    #assert(!model.empty?)
+    #model = model.get
 
     # store the number of spaces in the seed model
-    num_spaces_seed = model.getSpaces.size
+    #num_spaces_seed = model.getSpaces.size
 
     # get arguments
-    arguments = measure.arguments(model)
+    arguments = measure.arguments()
     argument_map = OpenStudio::Measure.convertOSArgumentVectorToMap(arguments)
 
     # create hash of argument values.
@@ -103,7 +103,7 @@ class PythonWrapperMeasureNameTest < Minitest::Test
     end
 
     # run the measure
-    measure.run(model, runner, argument_map)
+    measure.run(fmu, runner, argument_map)
     result = runner.result
 
     # show the output
@@ -118,7 +118,7 @@ class PythonWrapperMeasureNameTest < Minitest::Test
     assert_equal(result.info[0].logMessage, "PYCALL test result = 0.0")
 
     # save the model to test output directory
-    output_file_path = "#{File.dirname(__FILE__)}//output/test_output.osm"
-    model.save(output_file_path, true)
+    #output_file_path = "#{File.dirname(__FILE__)}//output/test_output.osm"
+    #model.save(output_file_path, true)
   end
 end

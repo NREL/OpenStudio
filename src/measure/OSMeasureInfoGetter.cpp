@@ -327,7 +327,7 @@ std::string infoExtractorRubyFunction() {
   ss << "    outputs = measure.outputs()" << std::endl;
   ss << "  elsif type == \"pythonwrapper\"" << std::endl;
   ss << "    measureType = OpenStudio::MeasureType.new(\"PythonWrapperMeasure\")" << std::endl;
-  ss << "    args = measure.arguments(model)" << std::endl;
+  ss << "    args = measure.arguments()" << std::endl;
   ss << "    outputs = measure.outputs()" << std::endl;
   ss << "  end" << std::endl;
   ss << std::endl;

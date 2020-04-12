@@ -747,14 +747,6 @@ module Ruleset
   end
 
   # support for name deprecated as of 2.0.0
-  class PythonWrapperUserScript < OpenStudio::Measure::PythonWrapperMeasure
-    def initialize
-      OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "ModelUserScript is deprecated, use OpenStudio::Measure::PythonWrapperMeasure instead.")
-      super
-    end
-  end
-
-  # support for name deprecated as of 2.0.0
   class ReportingUserScript < OpenStudio::Measure::ReportingMeasure
     def initialize
       OpenStudio::logFree(OpenStudio::Warn, "OpenStudio.Measure", "ReportingUserScript is deprecated, use OpenStudio::Measure::ReportingMeasure instead.")

@@ -30,6 +30,7 @@
 #include <gtest/gtest.h>
 
 #include "../FileReference.hpp"
+#include "../ZipFile.hpp"
 
 #include <resources.hxx>
 
@@ -49,4 +50,7 @@ TEST(FileReference,Constructor) {
 
   fileReference = FileReference(resourcesPath() / toPath("energyplus/5ZoneAirCooled/in.idf"));
   EXPECT_TRUE(fileReference.fileType() == FileReferenceType::IDF);
+
+  fileReference = FileReference(resourcesPath() / toPath("utilities/Zip/test1.zip"));
+  EXPECT_TRUE(fileReference.fileType() == FileReferenceType::ZIP);
 }

@@ -164,10 +164,9 @@ namespace openstudio{
 
 		createDirectory(dir / toPath("tests"));
 		testOSMPath = dir / toPath("tests/example_model.osm");
-		//TODO -change from space to generic input
-		std::string argName("space_name");
-		std::string argDisplayName("New space name");
-		std::string argDescription("This name will be used as the name of the new space.");
+		std::string argName("example_arg");
+		std::string argDisplayName("example argument");
+		std::string argDescription("This is a placeholder for an argument");
 		std::string argType("String");
 		BCLMeasureArgument arg(argName, argDisplayName, argDescription, argType,
 			boost::none, true, false, boost::none,
@@ -811,8 +810,8 @@ namespace openstudio{
       result = FileReferenceType::OSM;
     }else if (measureType == MeasureType::EnergyPlusMeasure){
       result = FileReferenceType::IDF;
-    }else if (measureType == MeasureType::PythonWrapperMeasure){  //use OSM for now. -blb
-	  result = FileReferenceType::OSM;
+    }else if (measureType == MeasureType::PythonWrapperMeasure){
+	  result = FileReferenceType::ZIP;
     }else if (measureType == MeasureType::UtilityMeasure){
       // no-op
     }else if (measureType == MeasureType::ReportingMeasure){
@@ -830,8 +829,8 @@ namespace openstudio{
       result = FileReferenceType::OSM;
     }else if (measureType == MeasureType::EnergyPlusMeasure){
       result = FileReferenceType::IDF;
-    }else if (measureType == MeasureType::PythonWrapperMeasure){  //use OSM for now. -blb
-	  result = FileReferenceType::OSM;  
+    }else if (measureType == MeasureType::PythonWrapperMeasure){
+	  result = FileReferenceType::ZIP;  
     }else if (measureType == MeasureType::UtilityMeasure){
       // no-op
     }else if (measureType == MeasureType::ReportingMeasure){

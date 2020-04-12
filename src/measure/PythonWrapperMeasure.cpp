@@ -39,7 +39,7 @@ namespace measure {
 PythonWrapperMeasure::~PythonWrapperMeasure()
 {}
 
-std::vector<OSArgument> PythonWrapperMeasure::arguments(const openstudio::model::Model& model) const {
+std::vector<OSArgument> PythonWrapperMeasure::arguments() const {
   return OSArgumentVector();
 }
 
@@ -47,7 +47,7 @@ std::vector<OSOutput> PythonWrapperMeasure::outputs() const {
   return OSOutputVector();
 }
 
-bool PythonWrapperMeasure::run(openstudio::model::Model& model,
+bool PythonWrapperMeasure::run(ZipFile& fmu,
                           OSRunner& runner,
                           const std::map<std::string, OSArgument>& user_arguments) const
 {

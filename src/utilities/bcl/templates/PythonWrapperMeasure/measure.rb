@@ -27,7 +27,7 @@ class PythonWrapperMeasureName < OpenStudio::Measure::PythonWrapperMeasure
   end
 
   # define the arguments that the user will input
-  def arguments(model)
+  def arguments()
     args = OpenStudio::Measure::OSArgumentVector.new
 
     # the name of the space to add to the model
@@ -40,11 +40,11 @@ class PythonWrapperMeasureName < OpenStudio::Measure::PythonWrapperMeasure
   end
 
   # define what happens when the measure is run
-  def run(model, runner, user_arguments)
-    super(model, runner, user_arguments)
+  def run(fmu, runner, user_arguments)
+    super(fmu, runner, user_arguments)
 
     # use the built-in error checking
-    if !runner.validateUserArguments(arguments(model), user_arguments)
+    if !runner.validateUserArguments(arguments(), user_arguments)
       return false
     end
 

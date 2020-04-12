@@ -1298,8 +1298,7 @@ class Measure
             $logger.error("Cannot load model from '#{model_path}'")
             return 1
           else
-            model = value[0].clone(true).to_Model
-            workspace = value[1].clone(true)
+            model = value.clone(true)
           end
 
         elsif measure_type == 'EnergyPlusMeasure'

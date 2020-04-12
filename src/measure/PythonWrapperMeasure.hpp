@@ -34,6 +34,7 @@
 #include "OSMeasure.hpp"
 
 #include "../utilities/core/Logger.hpp"
+#include "../utilities/core/ZipFile.hpp"
 
 namespace openstudio {
 
@@ -60,7 +61,7 @@ class MEASURE_API PythonWrapperMeasure : public OSMeasure {
    *  to this script's run method. The same basic steps should happen in applications with non-
    *  interactive scripts, but in that case an entity other than an OSRunner may be in charge of
    *  collecting user arguments. The base class implementation returns an empty vector. */
-  virtual std::vector<OSArgument> arguments(const openstudio::model::Model& model) const;
+  virtual std::vector<OSArgument> arguments() const;
 
   /** Returns the outputs for this script. The base class implementation returns an empty vector. */
   virtual std::vector<OSOutput> outputs() const;
@@ -74,7 +75,7 @@ class MEASURE_API PythonWrapperMeasure : public OSMeasure {
    *  beginning of derived class implementations of this method. (In C++, that call looks like
    *  PythonWrapperMeasure::run(model, runner, user_arguments). In Ruby that call looks like
    *  super(model, runner, user_arguments). */
-  virtual bool run(openstudio::model::Model& model,
+  virtual bool run(ZipFile& fmu,
                    OSRunner& runner,
                    const std::map<std::string, OSArgument>& user_arguments) const;
 
