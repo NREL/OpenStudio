@@ -27,68 +27,33 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MEASURE_PYTHONWRAPPERMEASURE_HPP
-#define MEASURE_PYTHONWRAPPERMEASURE_HPP
+#include "FMUMeasure.hpp"
 
-#include "MeasureAPI.hpp"
-#include "OSMeasure.hpp"
-
-#include "../utilities/core/Logger.hpp"
-#include "../utilities/core/ZipFile.hpp"
+#include "OSArgument.hpp"
+#include "OSOutput.hpp"
+#include "OSRunner.hpp"
 
 namespace openstudio {
-
-namespace model {
-  class Model;
-}
-
 namespace measure {
 
-/** PythonWrapperMeasure is an abstract base class for UserScripts that use or wrap python and operate on OpenStudio Models or FMUs. */
-class MEASURE_API PythonWrapperMeasure : public OSMeasure {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+FMUMeasure::~FMUMeasure()
+{}
 
-  virtual ~PythonWrapperMeasure();
+std::vector<OSArgument> FMUMeasure::arguments() const {
+  return OSArgumentVector();
+}
 
-  //@}
-  /** @name Getters */
-  //@{
+std::vector<OSOutput> FMUMeasure::outputs() const {
+  return OSOutputVector();
+}
 
-  /** Returns the arguments for this script. In interactive applications, an OSRunner presents
-   *  these arguments to the user to produce an OSArgumentMap of user_arguments that it then passes
-   *  to this script's run method. The same basic steps should happen in applications with non-
-   *  interactive scripts, but in that case an entity other than an OSRunner may be in charge of
-   *  collecting user arguments. The base class implementation returns an empty vector. */
-  virtual std::vector<OSArgument> arguments() const;
-
-  /** Returns the outputs for this script. The base class implementation returns an empty vector. */
-  virtual std::vector<OSOutput> outputs() const;
-
-  //@}
-  /** @name Actions */
-  //@{
-
-  /** Run the script on the given model with the given runner and user_arguments. The base class
-   *  implementation calls runner.prepareForMeasureRun(*this) and should be called at the
-   *  beginning of derived class implementations of this method. (In C++, that call looks like
-   *  PythonWrapperMeasure::run(model, runner, user_arguments). In Ruby that call looks like
-   *  super(model, runner, user_arguments). */
-  virtual bool run(ZipFile& fmu,
-                   OSRunner& runner,
-                   const std::map<std::string, OSArgument>& user_arguments) const;
-
-  //@}
-  //
- protected:
-	 PythonWrapperMeasure() {}
-
- private:
-  REGISTER_LOGGER("openstudio.measure.PythonWrapperMeasure");
-};
+bool FMUMeasure::run(ZipFile& fmu,
+                          OSRunner& runner,
+                          const std::map<std::string, OSArgument>& user_arguments) const
+{
+  runner.prepareForMeasureRun(*this);
+  return true;
+}
 
 } // measure
 } // openstudio
-
-#endif // MEASURE_PYTHONWRAPPERMEASURE_HPP

@@ -156,11 +156,11 @@ namespace openstudio{
                              boost::none, boost::none);
       arguments.push_back(arg);
 
-    }else if (measureType == MeasureType::PythonWrapperMeasure){
-		measureTemplate = ":/templates/PythonWrapperMeasure/measure.rb";
-		testTemplate = ":/templates/PythonWrapperMeasure/tests/model_measure_test.rb";
-		testOSM = ":/templates/PythonWrapperMeasure/tests/example_model.osm";
-		templateClassName = "PythonWrapperMeasureName";
+    }else if (measureType == MeasureType::FMUMeasure){
+		measureTemplate = ":/templates/FMUMeasure/measure.rb";
+		testTemplate = ":/templates/FMUMeasure/tests/model_measure_test.rb";
+		testOSM = ":/templates/FMUMeasure/tests/example_model.osm";
+		templateClassName = "FMUMeasureName";
 
 		createDirectory(dir / toPath("tests"));
 		testOSMPath = dir / toPath("tests/example_model.osm");
@@ -810,7 +810,7 @@ namespace openstudio{
       result = FileReferenceType::OSM;
     }else if (measureType == MeasureType::EnergyPlusMeasure){
       result = FileReferenceType::IDF;
-    }else if (measureType == MeasureType::PythonWrapperMeasure){
+    }else if (measureType == MeasureType::FMUMeasure){
 	  result = FileReferenceType::ZIP;
     }else if (measureType == MeasureType::UtilityMeasure){
       // no-op
@@ -829,7 +829,7 @@ namespace openstudio{
       result = FileReferenceType::OSM;
     }else if (measureType == MeasureType::EnergyPlusMeasure){
       result = FileReferenceType::IDF;
-    }else if (measureType == MeasureType::PythonWrapperMeasure){
+    }else if (measureType == MeasureType::FMUMeasure){
 	  result = FileReferenceType::ZIP;  
     }else if (measureType == MeasureType::UtilityMeasure){
       // no-op

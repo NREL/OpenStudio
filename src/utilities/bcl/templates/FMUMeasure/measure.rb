@@ -6,7 +6,7 @@
 
   require 'pycall/import'
   
-class PythonWrapperMeasureName < OpenStudio::Measure::PythonWrapperMeasure
+class FMUMeasureName < OpenStudio::Measure::FMUMeasure
 
   include PyCall::Import
     
@@ -75,4 +75,4 @@ class PythonWrapperMeasureName < OpenStudio::Measure::PythonWrapperMeasure
 end
 
 # register the measure to be used by the application
-PythonWrapperMeasureName.new.registerWithApplication
+FMUMeasureName.new.registerWithApplication

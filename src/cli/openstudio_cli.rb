@@ -1291,7 +1291,7 @@ class Measure
             workspace = value[1].clone(true)
           end
           
-        elsif measure_type == 'PythonWrapperMeasure'
+        elsif measure_type == 'FMUMeasure'
 
           value = measure_manager.get_model(model_path, true)
           if value.nil?

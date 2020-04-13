@@ -20,8 +20,8 @@ set(${target_name}_src
   OSOutput.hpp
   OSRunner.cpp
   OSRunner.hpp
-  PythonWrapperMeasure.cpp
-  PythonWrapperMeasure.hpp
+  FMUMeasure.cpp
+  FMUMeasure.hpp
   ReportingMeasure.cpp
   ReportingMeasure.hpp
 )
