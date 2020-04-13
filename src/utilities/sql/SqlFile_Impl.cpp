@@ -2504,18 +2504,24 @@ namespace openstudio{
 
           unsigned month = sqlite3_column_int(sqlStmtPtr, b++);
           unsigned day = sqlite3_column_int(sqlStmtPtr, b++);
-          unsigned intervalMinutes = sqlite3_column_int(sqlStmtPtr, b++); // used for run periods
+
+          // In cases where you report the same meter key for eg at Daily and at Timestep frequency
+          // the intervalMinutes will be reported by E+ for the Timestep one, so you get the wrong one for Daily...
+          // And since we can compute this easily, might as well do it
+          unsigned intervalMinutes;
           if (reportingFrequency == ReportingFrequency::Annual){
             intervalMinutes = 8760; // used for annual periods
+          } else if (reportingFrequency == ReportingFrequency::Daily){
+            intervalMinutes = 24 * 60;
+          } else if (reportingFrequency == ReportingFrequency::Monthly){
+            intervalMinutes = day * 24 * 60;
+          } else {
+            intervalMinutes = sqlite3_column_int(sqlStmtPtr, b++); // used for run periods
           }
 
           if ((version.major() == 8) && (version.minor() == 3)){
             // workaround for bug in E+ 8.3, issue #1692
-            if (reportingFrequency == ReportingFrequency::Daily){
-              intervalMinutes = 24 * 60;
-            } else if (reportingFrequency == ReportingFrequency::Monthly){
-              intervalMinutes = day * 24 * 60;
-            } else if (reportingFrequency == ReportingFrequency::RunPeriod){
+            if (reportingFrequency == ReportingFrequency::RunPeriod){
               DateTime firstDateTime = this->firstDateTime(false, dataDictionary.envPeriodIndex);
               DateTime lastDateTime = this->lastDateTime(false, dataDictionary.envPeriodIndex);
               Time deltaT = lastDateTime - firstDateTime;
