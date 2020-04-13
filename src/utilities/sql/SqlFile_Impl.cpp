@@ -2509,14 +2509,19 @@ namespace openstudio{
           // the intervalMinutes will be reported by E+ for the Timestep one, so you get the wrong one for Daily...
           // And since we can compute this easily, might as well do it
           unsigned intervalMinutes;
-          if (reportingFrequency == ReportingFrequency::Annual){
-            intervalMinutes = 8760; // used for annual periods
-          } else if (reportingFrequency == ReportingFrequency::Daily){
+          if (reportingFrequency == ReportingFrequency::Hourly) {
+            intervalMinutes = 60;
+          } else if (reportingFrequency == ReportingFrequency::Daily) {
             intervalMinutes = 24 * 60;
-          } else if (reportingFrequency == ReportingFrequency::Monthly){
+          } else if (reportingFrequency == ReportingFrequency::Monthly) {
             intervalMinutes = day * 24 * 60;
           } else {
+            // If Detailed, Timestep, RunPeriod, or Annual: it varies
             intervalMinutes = sqlite3_column_int(sqlStmtPtr, b++); // used for run periods
+            if ((reportingFrequency == ReportingFrequency::Annual) &&
+                !((intervalMinutes == 365*24*60) || (intervalMinutes != 366*24*60))) {
+              LOG(Error, "For an 'Annual' frequency, expected intervalMinutes to correspond to 365 or 366 days");
+            }
           }
 
           if ((version.major() == 8) && (version.minor() == 3)){
