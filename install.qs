@@ -10,7 +10,7 @@ Controller.prototype.IntroductionPageCallback = function () {
 Controller.prototype.ComponentSelectionPageCallback = function () {
   var widget = gui.currentPageWidget();
   
-  // to install a subset of components, uncomment the code below and edit as neccesary
+  // to install a subset of components, uncomment the code below and edit as necessary
   //widget.deselectAll();
   //widget.selectComponent('SketchUpPlugin');
   //widget.selectComponent('CLI');
