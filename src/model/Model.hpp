@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -60,6 +60,7 @@ class Schedule;
 class Node;
 class SpaceType;
 class FoundationKivaSettings;
+class OutputTableSummaryReports;
 class PerformancePrecisionTradeoffs;
 
 namespace detail {
@@ -118,6 +119,10 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
   boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
+
+  /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputTableSummaryReports>(). */
+  boost::optional<OutputTableSummaryReports> outputTableSummaryReports() const;
 
   /** Get the PerformancePrecisionTradeoffs object if there is one, this implementation uses a cached reference to the PerformancePrecisionTradeoffs
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>(). */
@@ -522,6 +527,9 @@ MODEL_API Building Model::getUniqueModelObject<Building>();
 
 template <>
 MODEL_API FoundationKivaSettings Model::getUniqueModelObject<FoundationKivaSettings>();
+
+template <>
+MODEL_API OutputTableSummaryReports Model::getUniqueModelObject<OutputTableSummaryReports>();
 
 template <>
 MODEL_API LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>();

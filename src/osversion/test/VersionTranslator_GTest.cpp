@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,10 +50,8 @@
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
-
+#include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/core/Compare.hpp"
-
-
 
 #include <resources.hxx>
 #include <OpenStudio.hxx>
@@ -539,3 +537,202 @@ TEST_F(OSVersionFixture,KeepHandles) {
   EXPECT_TRUE(idfObjects[0].handle() == workspaceObjects[0].handle());
 }
 */
+
+TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_fuel.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model);
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_fuel_updated.osm");
+  model->save(outPath, true);
+
+  IddFile oldIddFile = getOpenStudioIddFileForVersion(VersionString(2, 9, 1));
+  OptionalIdfFile _oldIdfFile = IdfFile::load(path, oldIddFile);
+  ASSERT_TRUE(_oldIdfFile);
+
+  // Making the map case-insentive by providing a Comparator `IstringCompare`
+  const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap({
+    {"FuelOil#1", "FuelOilNo1"},
+    {"FuelOil#2", "FuelOilNo2"},
+    {"Gas", "NaturalGas"},
+    {"PropaneGas", "Propane"},
+  });
+
+  const std::multimap<std::string, int> fuelTypeRenamesMap({
+      {"OS:OtherEquipment", 6},  // Fuel Type
+      {"OS:Exterior:FuelEquipment", 4},  // Fuel Use Type
+      {"OS:AirConditioner:VariableRefrigerantFlow", 67},  // Fuel Type
+      {"OS:Boiler:Steam", 2},  // Fuel Type
+      {"OS:Coil:Cooling:DX:MultiSpeed", 16},  // Fuel Type
+      {"OS:Coil:Heating:Gas", 11},  // Fuel Type
+      {"OS:Coil:Heating:DX:MultiSpeed", 16},  // Fuel Type
+      {"OS:WaterHeater:Mixed", 11},  // Heater Fuel Type
+      {"OS:WaterHeater:Mixed", 15},  // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Mixed", 18},  // On Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 17},  // Heater Fuel Type
+      {"OS:WaterHeater:Stratified", 20},  // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 24},  // On Cycle Parasitic Fuel Type
+      {"OS:Generator:MicroTurbine", 13},  // Fuel Type
+      // {"OS:LifeCycleCost:UsePriceEscalation", 2},  // Resource - UNUSED!
+      {"OS:Meter:Custom", 2},  // Fuel Type
+      {"OS:Meter:CustomDecrement", 2},  // Fuel Type
+      {"OS:EnergyManagementSystem:MeteredOutputVariable", 5},  // Resource Type
+      {"OS:Boiler:HotWater", 2},  // Fuel Type
+  });
+
+  for (const auto& mapEntry: fuelTypeRenamesMap) {
+    const std::string iddname = mapEntry.first;
+    const int fieldIndex = mapEntry.second;
+
+    std::string old_fuelType = _oldIdfFile->getObjectsByType(oldIddFile.getObject(iddname).get())[0].getString(fieldIndex).get();
+    // Check that the test model (in 2.9.1), actually has bad starting fuels
+    EXPECT_TRUE(replaceFuelTypesMap.find(old_fuelType) != replaceFuelTypesMap.end());
+
+    std::string new_fuelType = model->getObjectsByType(iddname)[0].getString(fieldIndex).get();
+    EXPECT_NE(old_fuelType, new_fuelType);
+    EXPECT_EQ(replaceFuelTypesMap.at(old_fuelType), new_fuelType);
+  }
+
+}
+
+TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model);
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_updated.osm");
+  model->save(outPath, true);
+
+/*
+ *  ShadowCalculation sc = model.getUniqueModelObject<ShadowCalculation>();
+ *
+ *  EXPECT_TRUE(sc.isShadingCalculationUpdateFrequencyMethodDefaulted());
+ *  EXPECT_EQ("Periodic", sc.shadingCalculationUpdateFrequencyMethod());
+ */
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:ShadowCalculation").size());
+  WorkspaceObject sc = model->getObjectsByType("OS:ShadowCalculation")[0];
+
+  // 2.9.1
+  //OS:ShadowCalculation,
+  //  {0f93d9e1-bdda-4e2a-829b-e4fff92527d0}, !- Handle
+  //  20,                                     !- Calculation Frequency
+  //  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
+
+  // Shading Calculation Method
+  EXPECT_EQ("PolygonClipping", sc.getString(1, false, true).get());
+  // Shading Calculation Update Frequency Method
+  EXPECT_FALSE(sc.getString(2, false, true));
+  // Shading Calculation Update Frequency
+  EXPECT_EQ(20, sc.getInt(3, false).get());
+  // Maximum Figures in Shadow Overlap Calculations
+  EXPECT_EQ(15000, sc.getInt(4, false).get());
+  // Polygon Clipping Algorithm
+  EXPECT_FALSE(sc.getString(5, false, true));
+  // Pixel Counting Resolution
+  EXPECT_EQ(512, sc.getInt(6, false).get());
+  // Sky Diffuse Modeling Algorithm
+  EXPECT_FALSE(sc.getString(7, false, true));
+  // Output External Shading Calculation Results
+  EXPECT_EQ("No", sc.getString(8, false, true).get());
+  // Disable Self-Shading Within Shading Zone Groups
+  EXPECT_EQ("No", sc.getString(9, false, true).get());
+  // Disable Self-Shading From Shading Zone Groups to Other Zones
+  EXPECT_EQ("No", sc.getString(10, false, true).get());
+  EXPECT_EQ(0u, sc.numExtensibleGroups());
+
+}
+
+TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default_expanded) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_expanded.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model);
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_expanded_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:ShadowCalculation").size());
+  WorkspaceObject sc = model->getObjectsByType("OS:ShadowCalculation")[0];
+
+  // 2.9.1
+  //OS:ShadowCalculation,
+  //  {0f93d9e1-bdda-4e2a-829b-e4fff92527d0}, !- Handle
+  //  20,                                     !- Calculation Frequency
+  //  15000,                                  !- Maximum Figures in Shadow Overlap Calculations
+  //  ,                                       !- Polygon Clipping Algorithm
+  //  ,                                       !- Sky Diffuse Modeling Algorithm
+  //  ;                                       !- Calculation Method
+
+  // Shading Calculation Method
+  EXPECT_EQ("PolygonClipping", sc.getString(1, false, true).get());
+  // Shading Calculation Update Frequency Method
+  EXPECT_FALSE(sc.getString(2, false, true));
+  // Shading Calculation Update Frequency
+  EXPECT_EQ(20, sc.getInt(3, false).get());
+  // Maximum Figures in Shadow Overlap Calculations
+  EXPECT_EQ(15000, sc.getInt(4, false).get());
+  // Polygon Clipping Algorithm
+  EXPECT_FALSE(sc.getString(5, false, true));
+  // Pixel Counting Resolution
+  EXPECT_EQ(512, sc.getInt(6, false).get());
+  // Sky Diffuse Modeling Algorithm
+  EXPECT_FALSE(sc.getString(7, false, true));
+  // Output External Shading Calculation Results
+  EXPECT_EQ("No", sc.getString(8, false, true).get());
+  // Disable Self-Shading Within Shading Zone Groups
+  EXPECT_EQ("No", sc.getString(9, false, true).get());
+  // Disable Self-Shading From Shading Zone Groups to Other Zones
+  EXPECT_EQ("No", sc.getString(10, false, true).get());
+  EXPECT_EQ(0u, sc.numExtensibleGroups());
+
+}
+
+TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_nondefault) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_nondefault.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model);
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_nondefault_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:ShadowCalculation").size());
+  WorkspaceObject sc = model->getObjectsByType("OS:ShadowCalculation")[0];
+
+  // 2.9.1
+  //OS:ShadowCalculation,
+  //  {0f93d9e1-bdda-4e2a-829b-e4fff92527d0}, !- Handle
+  //  19,                                     !- Calculation Frequency
+  //  14999,                                  !- Maximum Figures in Shadow Overlap Calculations
+  //  ConvexWeilerAtherton,                   !- Polygon Clipping Algorithm
+  //  DetailedSkyDiffuseModeling,             !- Sky Diffuse Modeling Algorithm
+  //  AverageOverDaysInFrequency;             !- Calculation Method
+
+  // Shading Calculation Method
+  EXPECT_EQ("PolygonClipping", sc.getString(1, false, true).get());
+  // Shading Calculation Update Frequency Method
+  // AverageOverDaysInFrequency maps to Periodic now
+  EXPECT_EQ("Periodic", sc.getString(2, false, true).get());
+  // Shading Calculation Update Frequency
+  EXPECT_EQ(19, sc.getInt(3, false).get());
+  // Maximum Figures in Shadow Overlap Calculations
+  EXPECT_EQ(14999, sc.getInt(4, false).get());
+  // Polygon Clipping Algorithm
+  EXPECT_EQ("ConvexWeilerAtherton", sc.getString(5, false, true).get());
+  // Pixel Counting Resolution
+  EXPECT_EQ(512, sc.getInt(6, false).get());
+  // Sky Diffuse Modeling Algorithm
+  EXPECT_EQ("DetailedSkyDiffuseModeling", sc.getString(7, false, true).get());
+  // Output External Shading Calculation Results
+  EXPECT_EQ("No", sc.getString(8, false, true).get());
+  // Disable Self-Shading Within Shading Zone Groups
+  EXPECT_EQ("No", sc.getString(9, false, true).get());
+  // Disable Self-Shading From Shading Zone Groups to Other Zones
+  EXPECT_EQ("No", sc.getString(10, false, true).get());
+  EXPECT_EQ(0u, sc.numExtensibleGroups());
+
+}
+

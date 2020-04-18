@@ -1,30 +1,30 @@
 #only building C# bindings with Visual Studio
 
 #set(ALL_CSHARP_WRAPPER_FILES
-#	C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesCore_wrap.cxx
-#	C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesIdd_wrap.cxx
-#	C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesIdf_wrap.cxx
-#	C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesBCL_wrap.cxx
-#	C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesData_wrap.cxx
-#	C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesGeometry_wrap.cxx
-#	C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesSql_wrap.cxx
-#	C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesTime_wrap.cxx
-#	C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesUnits_wrap.cxx
-#	C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesFileTypes_wrap.cxx
-#	C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilities_wrap.cxx
-#	C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelCore_wrap.cxx
-#	C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelSimulation_wrap.cxx
-#	C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelResources_wrap.cxx
-#	C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelGeometry_wrap.cxx
-#	C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelHVAC_wrap.cxx
-#	C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelRefrigeration_wrap.cxx
-#	C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelGenerators_wrap.cxx
-#	C:/OpenStudio/build-32/src/model/csharp_OpenStudioModel_wrap.cxx
-#	C:/OpenStudio/build-32/src/energyplus/csharp_OpenStudioEnergyPlus_wrap.cxx
-#	C:/OpenStudio/build-32/src/gbxml/csharp_OpenStudioGBXML_wrap.cxx
-#	C:/OpenStudio/build-32/src/airflow/csharp_OpenStudioAirflow_wrap.cxx
-#	C:/OpenStudio/build-32/src/osversion/csharp_OpenStudioOSVersion_wrap.cxx
-#	C:/OpenStudio/build-32/src/sdd/csharp_OpenStudioSDD_wrap.cxx
+#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesCore_wrap.cxx
+#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesIdd_wrap.cxx
+#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesIdf_wrap.cxx
+#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesBCL_wrap.cxx
+#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesData_wrap.cxx
+#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesGeometry_wrap.cxx
+#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesSql_wrap.cxx
+#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesTime_wrap.cxx
+#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesUnits_wrap.cxx
+#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesFileTypes_wrap.cxx
+#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilities_wrap.cxx
+#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelCore_wrap.cxx
+#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelSimulation_wrap.cxx
+#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelResources_wrap.cxx
+#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelGeometry_wrap.cxx
+#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelHVAC_wrap.cxx
+#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelRefrigeration_wrap.cxx
+#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelGenerators_wrap.cxx
+#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModel_wrap.cxx
+#  C:/OpenStudio/build-32/src/energyplus/csharp_OpenStudioEnergyPlus_wrap.cxx
+#  C:/OpenStudio/build-32/src/gbxml/csharp_OpenStudioGBXML_wrap.cxx
+#  C:/OpenStudio/build-32/src/airflow/csharp_OpenStudioAirflow_wrap.cxx
+#  C:/OpenStudio/build-32/src/osversion/csharp_OpenStudioOSVersion_wrap.cxx
+#  C:/OpenStudio/build-32/src/sdd/csharp_OpenStudioSDD_wrap.cxx
 #)
 
 

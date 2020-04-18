@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -73,8 +73,9 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_Remove)
     refrigerationAirCooledGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
     EXPECT_EQ(0, refrigerationAirCooledGasCoolers.size());
 
+    // Curve was used only by this object, so should have been removed
     ratedTotalHeatRejectionRateCurve = model.getModelObjects<CurveLinear>();
-    EXPECT_EQ(1, ratedTotalHeatRejectionRateCurve.size());
+    EXPECT_EQ(0, ratedTotalHeatRejectionRateCurve.size());
 }
 
 //Test the methods that set and get the fields

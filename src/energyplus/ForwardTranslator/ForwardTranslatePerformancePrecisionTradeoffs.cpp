@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,11 +51,23 @@ boost::optional<IdfObject> ForwardTranslator::translatePerformancePrecisionTrade
   IdfObject idfObject(openstudio::IddObjectType::PerformancePrecisionTradeoffs);
 
   m_idfObjects.push_back(idfObject);
-  
+
   if ( modelObject.useCoilDirectSolutions() ) {
     idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
   } else {
     idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "No");
+  }
+
+  if (!modelObject.isZoneRadiantExchangeAlgorithmDefaulted()) {
+    idfObject.setString(PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm, modelObject.zoneRadiantExchangeAlgorithm());
+  }
+
+  if (!modelObject.isOverrideModeDefaulted()) {
+    idfObject.setString(PerformancePrecisionTradeoffsFields::OverrideMode, modelObject.overrideMode());
+  }
+
+  if (!modelObject.isMaxZoneTempDiffDefaulted()) {
+    idfObject.setDouble(PerformancePrecisionTradeoffsFields::MaxZoneTempDiff, modelObject.maxZoneTempDiff());
   }
 
   return boost::optional<IdfObject>(idfObject);

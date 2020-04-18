@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -556,6 +556,24 @@ namespace detail {
 
   ModelObject ModelObject_Impl::clone(Model model) const
   {
+    // UniqueModelObject.
+    if (this->iddObject().properties().unique) {
+      Model m = this->model();
+      if (model == m) {
+        // Return self
+        LOG(Info, "Cannot clone a UniqueModelObject into the same model, returning self, for " << briefDescription());
+        return getObject<ModelObject>();
+      } else {
+        // Remove any existing objects (there should really be only one)
+        for (auto& wo: model.getObjectsByType(this->iddObject())) {
+          LOG(Info, "Removing existing UniqueModelObject in the target model: " << wo.briefDescription());
+          wo.remove();
+        }
+      }
+    }
+
+    // Business as usual...
+
     WorkspaceObjectVector result;
 
     // No children because ModelObject.

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -181,16 +181,46 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
 
 
   // Minimum Number of Warmup Days:  Integer
-  // Check Idd default: 6
+  // Check Idd default: 1 (Used to be 6 before 9.3.0)
   EXPECT_TRUE(simulationControl.isMinimumNumberofWarmupDaysDefaulted());
-  EXPECT_EQ(6, simulationControl.minimumNumberofWarmupDays());
+  EXPECT_EQ(1, simulationControl.minimumNumberofWarmupDays());
   EXPECT_TRUE(simulationControl.setMinimumNumberofWarmupDays(3));
   EXPECT_FALSE(simulationControl.isMinimumNumberofWarmupDaysDefaulted());
   EXPECT_EQ(3, simulationControl.minimumNumberofWarmupDays());
   // Test reset
   simulationControl.resetMinimumNumberofWarmupDays();
-  EXPECT_EQ(6, simulationControl.minimumNumberofWarmupDays());
+  EXPECT_EQ(1, simulationControl.minimumNumberofWarmupDays());
   EXPECT_TRUE(simulationControl.isMinimumNumberofWarmupDaysDefaulted());
+
+
+  // Do HVAC Sizing Simulation for Sizing Periods:  Boolean
+  // Check Idd default: false
+  EXPECT_TRUE(simulationControl.isDoHVACSizingSimulationforSizingPeriodsDefaulted());
+  EXPECT_FALSE(simulationControl.doHVACSizingSimulationforSizingPeriods());
+  // Test true
+  EXPECT_TRUE(simulationControl.setDoHVACSizingSimulationforSizingPeriods(true));
+  EXPECT_TRUE(simulationControl.doHVACSizingSimulationforSizingPeriods());
+  EXPECT_FALSE(simulationControl.isDoHVACSizingSimulationforSizingPeriodsDefaulted());
+  // Test false
+  EXPECT_TRUE(simulationControl.setDoHVACSizingSimulationforSizingPeriods(false));
+  EXPECT_FALSE(simulationControl.doHVACSizingSimulationforSizingPeriods());
+  // Test reset
+  simulationControl.resetDoHVACSizingSimulationforSizingPeriods();
+  EXPECT_TRUE(simulationControl.isDoHVACSizingSimulationforSizingPeriodsDefaulted());
+  EXPECT_FALSE(simulationControl.doHVACSizingSimulationforSizingPeriods());
+
+
+  // Maximum Number of HVAC Sizing Simulation Passes:  Integer
+  // Check Idd default: 1
+  EXPECT_TRUE(simulationControl.isMaximumNumberofHVACSizingSimulationPassesDefaulted());
+  EXPECT_EQ(1, simulationControl.maximumNumberofHVACSizingSimulationPasses());
+  EXPECT_TRUE(simulationControl.setMaximumNumberofHVACSizingSimulationPasses(12));
+  EXPECT_FALSE(simulationControl.isMaximumNumberofHVACSizingSimulationPassesDefaulted());
+  EXPECT_EQ(12, simulationControl.maximumNumberofHVACSizingSimulationPasses());
+  // Test reset
+  simulationControl.resetMaximumNumberofHVACSizingSimulationPasses();
+  EXPECT_EQ(1, simulationControl.maximumNumberofHVACSizingSimulationPasses());
+  EXPECT_TRUE(simulationControl.isMaximumNumberofHVACSizingSimulationPassesDefaulted());
 
 }
 

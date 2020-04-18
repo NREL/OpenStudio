@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -128,13 +128,13 @@ namespace detail {
       // } else if (fuelType == "NaturalGas") {
       "Water Heater Gas Rate",
       "Water Heater Gas Energy",
-      // } else if (fuelType == "PropaneGas") {
+      // } else if (fuelType == "Propane") {
       "Water Heater Propane Rate",
       "Water Heater Propane Energy",
-      // } else if (fuelType == "FuelOil#1") {
+      // } else if (fuelType == "FuelOilNo1") {
       "Water Heater FuelOil#1 Rate",
       "Water Heater FuelOil#1 Energy",
-      // } else if (fuelType == "FuelOil#2") {
+      // } else if (fuelType == "FuelOilNo2") {
       "Water Heater FuelOil#2 Rate",
       "Water Heater FuelOil#2 Energy",
       // } else if (fuelType == "Coal") {

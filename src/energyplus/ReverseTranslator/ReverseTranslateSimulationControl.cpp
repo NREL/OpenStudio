@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -123,6 +123,21 @@ OptionalModelObject ReverseTranslator::translateSimulationControl( const Workspa
     {
       simCon.setRunSimulationforWeatherFileRunPeriods(true);
     }
+  }
+
+  optS = workspaceObject.getString(SimulationControlFields::DoHVACSizingSimulationforSizingPeriods);
+  if(optS)
+  {
+    if (openstudio::istringEqual("Yes", optS.get())) {
+      simCon.setDoHVACSizingSimulationforSizingPeriods(true);
+    } else {
+      simCon.setDoHVACSizingSimulationforSizingPeriods(false);
+    }
+  }
+
+  // Don't return default
+  if (boost::optional<int> _i = workspaceObject.getInt(SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, false)) {
+    simCon.setMaximumNumberofHVACSizingSimulationPasses(_i.get());
   }
 
   result = simCon;

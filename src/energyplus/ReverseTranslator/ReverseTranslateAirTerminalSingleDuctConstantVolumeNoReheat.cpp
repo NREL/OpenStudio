@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,9 +44,7 @@ namespace energyplus {
 
 OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctConstantVolumeNoReheat( const WorkspaceObject & workspaceObject )
 {
-  // SingleDuctUncontrolled was renamed as SingleDuctConstantVolumeNoReheat in E+ 9.0.0, but both can be used currently
-  if( !( (workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat )
-      || (workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_Uncontrolled ) ) )
+  if((workspaceObject.iddObject().type() != IddObjectType::AirTerminal_SingleDuct_ConstantVolume_NoReheat ))
   {
      LOG(Error, "WorkspaceObject is not IddObjectType: AirTerminal_SingleDuct_ConstantVolume_NoReheat");
      return boost::none;

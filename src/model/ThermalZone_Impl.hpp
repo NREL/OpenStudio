@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -358,10 +358,16 @@ namespace detail {
 
     bool setUseIdealAirLoads(bool useIdealAirLoads);
 
-    bool addToNode(Node & node) override;
-
+    // Handles the logic of connecting the thermal zone to a Node: allowing or disallowing, and adding the equipment (AirTerminal) to the
+    // ZoneEquipmentList as appropriate
+    // Only allows connection to a node that's on the demand branch of an AirLoopHVAC, on the node right before the Demand Mixer, and as long as there
+    // are no other ThermalZones already connected on the branch
     bool addToNodeImpl(Node & node);
 
+    // Calls addToNodeImpl, then removes connections to all pre-existing AirLoopHVAC
+    bool addToNode(Node & node) override;
+
+    // Calls addToNodeImpl, not touching connections to all pre-existing AirLoopHVAC
     bool multiAddToNode(Node & node);
 
     PortList inletPortList() const;

@@ -111,7 +111,7 @@
 ! ZONE_TERMINAL_FAN_STATIC_PRESSURE=300
 ! End WebInterface Parameters
 
-  Version,9.2;
+  Version,9.3;
 
   Timestep,1;
 
@@ -154,8 +154,9 @@
     5;                       !- Maximum HVAC Iterations
 
   ShadowCalculation,
-    AverageOverDaysInFrequency,  !- Calculation Method
-    30;                      !- Calculation Frequency
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    30;                      !- Shading Calculation Update Frequency
 
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
@@ -166,7 +167,7 @@
     AutoBuilt Model: EnergyPlus Example File Generator,  !- Name
     0.0000,                  !- North Axis {deg}
     City,                    !- Terrain
-    0.0400,                  !- Loads Convergence Tolerance Value
+    0.0400,                  !- Loads Convergence Tolerance Value {W}
     0.2000,                  !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -2547,7 +2548,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     .1415762,                !- Heating Maximum Air Flow {m3/s}
-    0.3;                     !- Heating Maximum Air Flow Fraction
+    0.3,                     !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_1_SEC_1,!- Name
@@ -3724,7 +3730,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     .1415762,                !- Heating Maximum Air Flow {m3/s}
-    0.3;                     !- Heating Maximum Air Flow Fraction
+    0.3,                     !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_2_SEC_1,!- Name
@@ -5081,7 +5092,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     .1415762,                !- Heating Maximum Air Flow {m3/s}
-    0.3;                     !- Heating Maximum Air Flow Fraction
+    0.3,                     !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_3_SEC_1,!- Name
@@ -5556,7 +5572,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     .1415762,                !- Heating Maximum Air Flow {m3/s}
-    0.3;                     !- Heating Maximum Air Flow Fraction
+    0.3,                     !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_1_SEC_2,!- Name
@@ -6031,7 +6052,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     .1415762,                !- Heating Maximum Air Flow {m3/s}
-    0.3;                     !- Heating Maximum Air Flow Fraction
+    0.3,                     !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_2_SEC_2,!- Name
@@ -6551,7 +6577,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     .1415762,                !- Heating Maximum Air Flow {m3/s}
-    0.3;                     !- Heating Maximum Air Flow Fraction
+    0.3,                     !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_3_SEC_2,!- Name
@@ -7728,7 +7759,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     .1415762,                !- Heating Maximum Air Flow {m3/s}
-    0.3;                     !- Heating Maximum Air Flow Fraction
+    0.3,                     !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_1_SEC_3,!- Name
@@ -8905,7 +8941,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     .1415762,                !- Heating Maximum Air Flow {m3/s}
-    0.3;                     !- Heating Maximum Air Flow Fraction
+    0.3,                     !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_2_SEC_3,!- Name
@@ -10262,7 +10303,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     .1415762,                !- Heating Maximum Air Flow {m3/s}
-    0.3;                     !- Heating Maximum Air Flow Fraction
+    0.3,                     !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA ZN_1_FLR_3_SEC_3,!- Name
@@ -11823,7 +11869,7 @@
 !
 
   FuelFactors,
-    FuelOil#1,               !- Existing Fuel Resource Name
+    FuelOilNo1,              !- Existing Fuel Resource Name
     kg,                      !- Units of Measure
     ,                        !- Energy per Unit Factor
     1,                       !- Source Energy Factor {J/J}

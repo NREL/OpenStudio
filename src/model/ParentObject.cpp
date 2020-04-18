@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -88,14 +88,16 @@ namespace detail {
 
     // subTree includes this object, make sure to include costs as well
     auto subTree = getRecursiveChildren(getObject<ParentObject>(), true);
-    // drop the Curve instances
+
+    // drop the Curve instances, if they are used by other objects
     // Perhaps this could be done in the getRecursiveChildren, but this way
     // the getRecursiveChildren method might be less surprising
     // This is probably the unique situation where you want to get children minus curves
-    auto isCurve = [](const ModelObject & modelObject) {
-      return modelObject.optionalCast<Curve>();
+    auto isUsedCurve = [](const ModelObject & modelObject) {
+      auto _curve = modelObject.optionalCast<Curve>();
+      return (_curve && _curve->directUseCount() > 1);
     };
-    auto end = std::remove_if(subTree.begin(), subTree.end(), isCurve);
+    auto end = std::remove_if(subTree.begin(), subTree.end(), isUsedCurve);
     std::vector<ModelObject> noCurvesSubTree(subTree.begin(),end);
 
     for (const ModelObject& object : noCurvesSubTree) {

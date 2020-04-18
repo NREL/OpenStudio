@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -577,6 +577,10 @@ namespace detail {
     return getAutosizedValue("Design Size Outdoor Air Flow Rate When No Cooling or Heating is Needed", "m3/s");
   }
 
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {
+    return getAutosizedValue("Design Size Maximum Supply Air Temperature from Supplemental Heater", "C");
+  }
+
   void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::autosize() {
     autosizeSupplyAirFlowRateDuringCoolingOperation();
     autosizeSupplyAirFlowRateWhenNoCoolingisNeeded();
@@ -585,6 +589,7 @@ namespace detail {
     autosizeOutdoorAirFlowRateDuringCoolingOperation();
     autosizeOutdoorAirFlowRateDuringHeatingOperation();
     autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
   }
 
   void ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::applySizingValues() {
@@ -624,6 +629,10 @@ namespace detail {
       setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(val.get());
     }
 
+    val = autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
+    if (val) {
+      setMaximumSupplyAirTemperaturefromSupplementalHeater(val.get());
+    }
   }
 
   std::vector<EMSActuatorNames> ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl::emsActuatorNames() const {
@@ -976,6 +985,10 @@ ZoneHVACTerminalUnitVariableRefrigerantFlow::ZoneHVACTerminalUnitVariableRefrige
 
   boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow::autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const {
     return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+  }
+
+  boost::optional<double> ZoneHVACTerminalUnitVariableRefrigerantFlow::autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const {
+    return getImpl<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl>()->autosizedMaximumSupplyAirTemperaturefromSupplementalHeater();
   }
 
 } // model

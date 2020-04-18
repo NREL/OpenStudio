@@ -10,6 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
   # Support Unix Makefiles and Ninja
+  message(STATUS "Using CCACHE")
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
@@ -155,7 +156,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "beta")
+set(PROJECT_VERSION_PRERELEASE "rc2")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -186,15 +187,15 @@ endif()
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 9)
-set(ENERGYPLUS_VERSION_MINOR 2)
+set(ENERGYPLUS_VERSION_MINOR 3)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "921312fa1d")
+set(ENERGYPLUS_BUILD_SHA "baff08990c")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.2.0")
+set(ENERGYPLUS_RELEASE_NAME "v9.3.0")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -533,14 +534,14 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 49a8eb402738e4146779c15b63b4ad99)
+    set(ENERGYPLUS_EXPECTED_HASH 20c12af58cb9ed8b3c30c206f7123498)
     set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH 91739b15520092e74ff4eed2a2ee1cbd)
+    set(ENERGYPLUS_EXPECTED_HASH d146ddaef57b79ca9272cd64bc75babd)
     set(ENERGYPLUS_PLATFORM "Linux-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
@@ -551,9 +552,15 @@ if(UNIX)
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
 
     if(EXISTS "/etc/redhat-release")
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+           INACTIVITY_TIMEOUT 300 # 5-min timeout
+           SHOW_PROGRESS
+           EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     else()
-      file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" INACTIVITY_TIMEOUT 320 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+      file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+           INACTIVITY_TIMEOUT 300 # 5-min timeout
+           SHOW_PROGRESS
+           EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     endif()
 
     # Remove the old extracted dir if exists
@@ -565,7 +572,7 @@ elseif(WIN32)
   if(CMAKE_CL_64)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH a95da7a01599d4f3379cc9423e38f155)
+    set(ENERGYPLUS_EXPECTED_HASH 0d47ac399199de733a6efc548f474f55)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
@@ -578,7 +585,10 @@ elseif(WIN32)
   if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
 
-    file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip"
+         INACTIVITY_TIMEOUT 300 # 5 minute timeout
+         SHOW_PROGRESS
+         EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
 
     # Remove the old extracted dir if exists
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
@@ -674,50 +684,24 @@ if(NOT UNIX)
   set(PERL_EXE "${PROJECT_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin/perl.exe")
 endif()
 
-# Mingw based ruby lib (only the dll stub library) from Ruby Installer
-# We need this for stand alone ruby bindings
-# target to use with typical ruby installations (those that are not msvc)
-# Only need this on Windows systems
-if(WIN32)
-  if(NOT EXISTS ${RUBY_MINGW_LIB_DIR})
-    set(RUBY_MINGW_LIB_ZIP_FILENAME "Ruby250-mingw-install.tar.gz")
-    set(RUBY_MINGW_LIB_ZIP_EXPECTED_MD5 "ce454cfe886b32f7fe829385bc06af1c")
-
-    set(RUBY_MINGW_LIB_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${RUBY_MINGW_LIB_ZIP_FILENAME}")
-    if(EXISTS "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}")
-      file(MD5 "${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}" RUBY_MINGW_LIB_ZIP_MD5)
-    endif()
-
-    if(NOT RUBY_MINGW_LIB_ZIP_MD5 STREQUAL RUBY_MINGW_LIB_ZIP_EXPECTED_MD5)
-      message(STATUS "Downloading Ruby Mingw Lib: ${RUBY_MINGW_LIB_ZIP_FILENAME}")
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${RUBY_MINGW_LIB_ZIP_FILENAME}"
-        ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH}
-        INACTIVITY_TIMEOUT 120
-        SHOW_PROGRESS
-        EXPECTED_MD5 ${RUBY_MINGW_LIB_ZIP_EXPECTED_MD5})
-
-      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${RUBY_MINGW_LIB_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
-    endif()
-
-    set(RUBY_MINGW_STUB_LIB "${PROJECT_BINARY_DIR}/Ruby-mingw-install/libx64-msvcrt-ruby250.dll.a")
-  endif()
-endif()
+include(FetchRubyMinGW.cmake)
+FetchRubyMinGW()
 
 # openstudio gems
 # CI will build and upload openstudio gems to s3 at https://github.com/NREL/OpenStudio-gems
 # need to  update the MD5sum for each platform and url below
 if(UNIX)
    if(APPLE)
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200107-darwin.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d6e74b25cfbd13ce6fb3fab2ce6fb9b6")
+     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200403-darwin.tar.gz")
+     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "18d34a85f98a73cfb01156058198cbd0")
    else()
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200107-linux.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "171aa36059d329183748068115bca6cb")
+     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200403-linux.tar.gz")
+     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "8792281d9892562251662ebc04b3206a")
    endif()
 elseif(WIN32)
   if(CMAKE_CL_64)
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200109-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "aafc33b93196fe0fe7e66ee598a00365")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200403-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "2f81b786ae571a778de1db0687ada4b6")
   endif()
 endif()
 
@@ -733,7 +717,7 @@ if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
   message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
   file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
     ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
-    INACTIVITY_TIMEOUT 120
+    INACTIVITY_TIMEOUT 300 # 5 minute timeout
     SHOW_PROGRESS
     EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
 
@@ -1208,10 +1192,12 @@ install(FILES "${ENERGYPLUS_IDD}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus
 install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+install(DIRECTORY "${ENERGYPLUS_DIR}/python_standard_lib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 
 if(APPLE)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/Python" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 elseif(WIN32)
   file(GLOB ENERGYPLUS_MSVC_FILES "${ENERGYPLUS_DIR}/msvc*.dll")
   foreach(msvc_file IN LISTS ENERGYPLUS_MSVC_FILES)
@@ -1229,8 +1215,11 @@ elseif(WIN32)
   foreach(msapi_file IN LISTS ENERGYPLUS_MSAPI_FILES)
     install(PROGRAMS "${msapi_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   endforeach()
+  install(PROGRAMS "${ENERGYPLUS_DIR}/python37.dll" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
+elseif(UNIX)
+	install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.6m.so.1.0" DESTINATION ./EnergyPlus/)
 else()
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
@@ -1286,6 +1275,14 @@ write_basic_package_version_file(
 install(
   FILES
     "${CMAKE_CURRENT_BINARY_DIR}/openstudioConfigVersion.cmake"
+  DESTINATION
+    lib/cmake/openstudio/
+  COMPONENT "CPPAPI"
+)
+
+install(
+  FILES
+    "${CMAKE_CURRENT_SOURCE_DIR}/FetchRubyMinGW.cmake"
   DESTINATION
     lib/cmake/openstudio/
   COMPONENT "CPPAPI"

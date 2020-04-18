@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,6 +35,7 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_PerformancePrecisionTradeoffs_FieldEnums.hxx>
 
@@ -82,11 +83,11 @@ namespace detail {
     OS_ASSERT(value);
     return openstudio::istringEqual(value.get(), "Yes");
   }
-  
+
   bool PerformancePrecisionTradeoffs_Impl::isUseCoilDirectSolutionsDefaulted() const {
     return isEmpty(OS_PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions);
   }
-  
+
   bool PerformancePrecisionTradeoffs_Impl::setUseCoilDirectSolutions(bool useCoilDirectSolutions) {
     bool result = false;
     if (useCoilDirectSolutions) {
@@ -102,6 +103,72 @@ namespace detail {
     bool result = setString(OS_PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "");
     OS_ASSERT(result);
   }
+
+
+  std::string PerformancePrecisionTradeoffs_Impl::zoneRadiantExchangeAlgorithm() const {
+    boost::optional<std::string> value = getString(OS_PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool PerformancePrecisionTradeoffs_Impl::isZoneRadiantExchangeAlgorithmDefaulted() const {
+    return isEmpty(OS_PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm);
+  }
+
+  bool PerformancePrecisionTradeoffs_Impl::setZoneRadiantExchangeAlgorithm(const std::string& zoneRadiantExchangeAlgorithm) {
+    bool result = setString(OS_PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm, zoneRadiantExchangeAlgorithm);
+    // OS_ASSERT(result);
+    return result;
+  }
+
+  void PerformancePrecisionTradeoffs_Impl::resetZoneRadiantExchangeAlgorithm() {
+    bool result = setString(OS_PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm, "");
+    OS_ASSERT(result);
+  }
+
+
+  std::string PerformancePrecisionTradeoffs_Impl::overrideMode() const {
+    boost::optional<std::string> value = getString(OS_PerformancePrecisionTradeoffsFields::OverrideMode, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool PerformancePrecisionTradeoffs_Impl::isOverrideModeDefaulted() const {
+    return isEmpty(OS_PerformancePrecisionTradeoffsFields::OverrideMode);
+  }
+
+  bool PerformancePrecisionTradeoffs_Impl::setOverrideMode(const std::string& overrideMode) {
+    bool result = setString(OS_PerformancePrecisionTradeoffsFields::OverrideMode, overrideMode);
+    // OS_ASSERT(result);
+    return result;
+  }
+
+  void PerformancePrecisionTradeoffs_Impl::resetOverrideMode() {
+    bool result = setString(OS_PerformancePrecisionTradeoffsFields::OverrideMode, "");
+    OS_ASSERT(result);
+  }
+
+  double PerformancePrecisionTradeoffs_Impl::maxZoneTempDiff() const {
+    boost::optional<double> value = getDouble(OS_PerformancePrecisionTradeoffsFields::MaxZoneTempDiff, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool PerformancePrecisionTradeoffs_Impl::isMaxZoneTempDiffDefaulted() const {
+    return isEmpty(OS_PerformancePrecisionTradeoffsFields::MaxZoneTempDiff);
+  }
+
+  bool PerformancePrecisionTradeoffs_Impl::setMaxZoneTempDiff(double maxZoneTempDiff) {
+    bool result = setDouble(OS_PerformancePrecisionTradeoffsFields::MaxZoneTempDiff, maxZoneTempDiff);
+    // OS_ASSERT(result);
+    return result;
+  }
+
+  void PerformancePrecisionTradeoffs_Impl::resetMaxZoneTempDiff() {
+    bool result = setString(OS_PerformancePrecisionTradeoffsFields::MaxZoneTempDiff, "");
+    OS_ASSERT(result);
+  }
+
 
 } // detail
 
@@ -125,6 +192,58 @@ void PerformancePrecisionTradeoffs::resetUseCoilDirectSolutions() {
   getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->resetUseCoilDirectSolutions();
 }
 
+// Zone Radiant Exchange Algorithm
+std::string PerformancePrecisionTradeoffs::zoneRadiantExchangeAlgorithm() const {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->zoneRadiantExchangeAlgorithm();
+}
+
+bool PerformancePrecisionTradeoffs::isZoneRadiantExchangeAlgorithmDefaulted() const {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->isZoneRadiantExchangeAlgorithmDefaulted();
+}
+
+bool PerformancePrecisionTradeoffs::setZoneRadiantExchangeAlgorithm(const std::string& zoneRadiantExchangeAlgorithm) {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->setZoneRadiantExchangeAlgorithm(zoneRadiantExchangeAlgorithm);
+}
+
+void PerformancePrecisionTradeoffs::resetZoneRadiantExchangeAlgorithm() {
+  getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->resetZoneRadiantExchangeAlgorithm();
+}
+
+// Override Mode
+std::string PerformancePrecisionTradeoffs::overrideMode() const {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->overrideMode();
+}
+
+bool PerformancePrecisionTradeoffs::isOverrideModeDefaulted() const {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->isOverrideModeDefaulted();
+}
+
+bool PerformancePrecisionTradeoffs::setOverrideMode(const std::string& overrideMode) {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->setOverrideMode(overrideMode);
+}
+
+void PerformancePrecisionTradeoffs::resetOverrideMode() {
+  getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->resetOverrideMode();
+}
+
+// MaxZoneTempDiff
+double PerformancePrecisionTradeoffs::maxZoneTempDiff() const {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->maxZoneTempDiff();
+}
+
+bool PerformancePrecisionTradeoffs::isMaxZoneTempDiffDefaulted() const {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->isMaxZoneTempDiffDefaulted();
+}
+
+bool PerformancePrecisionTradeoffs::setMaxZoneTempDiff(double maxZoneTempDiff) {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->setMaxZoneTempDiff(maxZoneTempDiff);
+}
+
+void PerformancePrecisionTradeoffs::resetMaxZoneTempDiff() {
+  getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->resetMaxZoneTempDiff();
+}
+
+
 /// @cond
 PerformancePrecisionTradeoffs::PerformancePrecisionTradeoffs(std::shared_ptr<detail::PerformancePrecisionTradeoffs_Impl> impl)
   : ModelObject(std::move(impl))
@@ -135,6 +254,24 @@ PerformancePrecisionTradeoffs::PerformancePrecisionTradeoffs(Model& model)
 {}
 
 /// @endcond
+
+std::vector<std::string> PerformancePrecisionTradeoffs::zoneRadiantExchangeAlgorithmValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm);
+}
+
+std::vector<std::string> PerformancePrecisionTradeoffs::validZoneRadiantExchangeAlgorithmValues() {
+  return PerformancePrecisionTradeoffs::zoneRadiantExchangeAlgorithmValues();
+}
+
+std::vector<std::string> PerformancePrecisionTradeoffs::overrideModeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_PerformancePrecisionTradeoffsFields::OverrideMode);
+}
+
+std::vector<std::string> PerformancePrecisionTradeoffs::validOverrideModeValues() {
+  return PerformancePrecisionTradeoffs::overrideModeValues();
+}
 
 } // model
 } // openstudio

@@ -64,3 +64,15 @@ ${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0200 su-alt wds rotat
 ${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0300 multiple windows.idf
 ${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0400 offset window error.idf
 ${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0500 window split into two gap.idf
+${PROJECT_SOURCE_DIR}/energyplus/Resources/LCCusePriceEscalationDataSet2011.idf
+${PROJECT_SOURCE_DIR}/energyplus/Resources/NH3_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/energyplus/Resources/R11_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/energyplus/Resources/R123_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/energyplus/Resources/R12_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/energyplus/Resources/R134a_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/energyplus/Resources/R22_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/energyplus/Resources/R404a_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/energyplus/Resources/R407a_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/energyplus/Resources/R410a_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/energyplus/Resources/R507a_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/energyplus/Resources/R744_FluidPropertiesDataSet.idf

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -458,8 +458,7 @@ namespace detail {
     auto indexAndName = indexAndNameOpt.get();
     int index = std::get<0>(indexAndName);
     CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
-    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Total Cooling Capacity";
-
+    std::string sqlField = "Design Size Speed " + std::to_string(index) + " Gross Rated Total Cooling Capacity";
     return parentCoil.getAutosizedValue(sqlField, "W");
   }
 
@@ -472,7 +471,7 @@ namespace detail {
     auto indexAndName = indexAndNameOpt.get();
     int index = std::get<0>(indexAndName);
     CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
-    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Sensible Heat Ratio";
+    std::string sqlField = "Design Size Speed " + std::to_string(index) + " Rated Sensible Heat Ratio";
 
     return parentCoil.getAutosizedValue(sqlField, "");
   }
@@ -500,7 +499,7 @@ namespace detail {
     auto indexAndName = indexAndNameOpt.get();
     int index = std::get<0>(indexAndName);
     CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
-    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Evaporative Condenser Air Flow Rate";
+    std::string sqlField = "Design Size Speed " + std::to_string(index) + " Evaporative Condenser Air Flow Rate";
 
     return parentCoil.getAutosizedValue(sqlField, "m3/s");
   }
@@ -514,7 +513,7 @@ namespace detail {
     auto indexAndName = indexAndNameOpt.get();
     int index = std::get<0>(indexAndName);
     CoilCoolingDXMultiSpeed parentCoil = std::get<1>(indexAndName);
-    std::string sqlField = "Speed " + std::to_string(index) + " Design Size Rated Evaporative Condenser Pump Power Consumption";
+    std::string sqlField = "Design Size Speed " + std::to_string(index) + " Rated Evaporative Condenser Pump Power Consumption";
 
     return parentCoil.getAutosizedValue(sqlField, "W");
   }

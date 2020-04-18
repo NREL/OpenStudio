@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -74,12 +74,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGas( CoilHeati
   ///////////////////////////////////////////////////////////////////////////
   // Field: Fuel Type
   ///////////////////////////////////////////////////////////////////////////
-  if (modelObject.fuelType() == "PropaneGas") {
-    LOG(Warn, "'PropaneGas' is deprecated for Coil_Heating_FuelFields:FuelType, use 'Propane' instead.")
-    idfObject.setString(openstudio::Coil_Heating_FuelFields::FuelType, "Propane");
-  } else {
-    idfObject.setString(openstudio::Coil_Heating_FuelFields::FuelType, modelObject.fuelType());
-  }
+  idfObject.setString(openstudio::Coil_Heating_FuelFields::FuelType, modelObject.fuelType());
 
   ///////////////////////////////////////////////////////////////////////////
 

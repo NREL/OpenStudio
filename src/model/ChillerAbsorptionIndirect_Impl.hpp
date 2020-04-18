@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -68,12 +68,42 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    // chilledWaterLoop
     virtual unsigned supplyInletPort() const override;
     virtual unsigned supplyOutletPort() const override;
+
+    // condenserWaterLoop
     virtual unsigned demandInletPort() const override;
     virtual unsigned demandOutletPort() const override;
+
+    //generatorLoop
     virtual unsigned tertiaryInletPort() const override;
     virtual unsigned tertiaryOutletPort() const override;
+
+    /* This function will perform a check if trying to add it to a node that is on the demand side of a plant loop.
+     * If:
+     *     - the node is on the demand side of a loop
+     *     - the node isn't on the current condenser water loop itself
+     *     - the chiller doesn't already have a generator (tertiary) loop,
+     * then it tries to add it to the Tertiary loop.
+     * In all other cases, it will call the base class' method WaterToWaterComponent_Impl::addToNode()
+     */
+    virtual bool addToNode(Node & node) override;
+
+    /* Restricts addToTertiaryNode to a node that is on the supply side of a plant loop (tertiary = generator (heating) Loop)
+     * Will also set the Generator Heat Source Type to 'HotWater' */
+    virtual bool addToTertiaryNode(Node & node) override;
+
+    /** Override to switch the Generator Heat Source Type to 'Steam' **/
+    virtual bool removeFromTertiaryPlantLoop() override;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual ModelObject clone(Model model) const override;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
 
     //@}
     /** @name Getters */
@@ -137,20 +167,6 @@ namespace detail {
 
     double sizingFactor() const;
 
-  boost::optional<double> autosizedNominalCapacity() const ;
-
-  boost::optional<double> autosizedNominalPumpingPower() const ;
-
-  boost::optional<double> autosizedDesignChilledWaterFlowRate() const ;
-
-  boost::optional<double> autosizedDesignCondenserWaterFlowRate() const ;
-
-  boost::optional<double> autosizedDesignGeneratorFluidFlowRate() const ;
-
-  virtual void autosize() override;
-
-  virtual void applySizingValues() override;
-
     //@}
     /** @name Setters */
     //@{
@@ -199,7 +215,6 @@ namespace detail {
 
     bool setGeneratorHeatInputCorrectionFunctionofChilledWaterTemperatureCurve(const Curve& curve);
 
-    // TODO: This needs to be set automatically based on plant loop connected to it
     bool setGeneratorHeatSourceType(std::string generatorHeatSourceType);
 
     bool setDesignGeneratorFluidFlowRate(boost::optional<double> designGeneratorFluidFlowRate);
@@ -218,8 +233,24 @@ namespace detail {
     /** @name Other */
     //@{
 
-    std::vector<ModelObject> children() const override;
-    ModelObject clone(Model model) const override;
+    boost::optional<double> autosizedNominalCapacity() const ;
+
+    boost::optional<double> autosizedNominalPumpingPower() const ;
+
+    boost::optional<double> autosizedDesignChilledWaterFlowRate() const ;
+
+    boost::optional<double> autosizedDesignCondenserWaterFlowRate() const ;
+
+    boost::optional<double> autosizedDesignGeneratorFluidFlowRate() const ;
+
+    /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
+    boost::optional<PlantLoop> chilledWaterLoop() const;
+
+    /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
+    boost::optional<PlantLoop> condenserWaterLoop() const;
+
+    /** Convenience Function to return the Generator Loop (chiller on the demand side - tertiary) **/
+    boost::optional<PlantLoop> generatorLoop() const;
 
     //@}
    protected:

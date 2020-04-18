@@ -977,6 +977,9 @@ set(${target_name}_src
   OutputVariable.hpp
   OutputVariable_Impl.hpp
   OutputVariable.cpp
+  OutputTableSummaryReports.hpp
+  OutputTableSummaryReports_Impl.hpp
+  OutputTableSummaryReports.cpp
   OutsideSurfaceConvectionAlgorithm.hpp
   OutsideSurfaceConvectionAlgorithm_Impl.hpp
   OutsideSurfaceConvectionAlgorithm.cpp
@@ -1657,7 +1660,7 @@ set(${target_name}_depends
   ${openstudio_utilities_depends}
 )
 set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
- 
+
 
 add_library(${target_name} OBJECT ${${target_name}_src} ${EMBEDDED_OUTPUT})
 
@@ -1907,6 +1910,7 @@ set(${target_name}_test_src
   test/InternalMass_GTest.cpp
 ##  test/LoadProfilePlant_GTest.cpp
   test/LifeCycleCostParameters_GTest.cpp
+  test/LifeCycleCostUsePriceEscalation_GTest.cpp
   test/LightingDesignDay_GTest.cpp
   test/LightingSimulationControl_GTest.cpp
   test/LightingSimulationZone_GTest.cpp
@@ -1936,6 +1940,7 @@ set(${target_name}_test_src
   test/OutputEnergyManagementSystem_GTest.cpp
   test/OutputMeter_GTest.cpp
   test/OutputVariable_GTest.cpp
+  test/OutputTableSummaryReports_GTest.cpp
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp
   test/PeopleDefinition_GTest.cpp
@@ -2024,6 +2029,7 @@ set(${target_name}_test_src
   test/SiteGroundTemperatureFCfactorMethod_GTest.cpp
   test/SiteGroundTemperatureShallow_GTest.cpp
   test/SiteGroundTemperatureBuildingSurface_GTest.cpp
+  test/SiteWaterMainsTemperature_GTest.cpp
   test/SizingPlant_GTest.cpp
   test/SizingSystem_GTest.cpp
   test/SizingZone_GTest.cpp
@@ -2088,6 +2094,8 @@ set(${target_name}_test_src
   test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   test/ZoneVentilationDesignFlowRate_GTest.cpp
   test/ZoneVentilationWindandStackOpenArea_GTest.cpp
+
+  test/UniqueModelObject_GTest.cpp
 )
 
 set(${target_name}_test_depends

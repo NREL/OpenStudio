@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -174,8 +174,9 @@ namespace openstudio{
 
     std::string formatString(double d, unsigned prec = 15);
 
-
     static std::shared_ptr<LocalBCL> &instanceInternal();
+
+    bool closeConnection();
 
     openstudio::path m_libraryPath;
     const openstudio::path m_dbName;
@@ -191,6 +192,13 @@ namespace openstudio{
 
     // Helper function to retrieve a string
     std::string columnText(const unsigned char* column) const;
+
+    // Begins a transaction, checking for return code. If failed, does nothing but logs and returns false
+    bool beginTransaction();
+    // Commit a transaction, checking for return code. If failed, calls rollbackTransaction
+    bool commitTransaction();
+    // Rollback a transaction, checking for return code. If failed, throws.
+    bool rollbackTransaction();
 
     REGISTER_LOGGER("openstudio.bcl.LocalBCL");
   };

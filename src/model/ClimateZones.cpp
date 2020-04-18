@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -111,20 +111,7 @@ namespace detail {
     }
     return result;
   }
-/*
-  ClimateZone ClimateZones_Impl::activeClimateZone() const {
-    std::string activeInstitution = getString(OS_ClimateZonesFields::ActiveInstitution,true).get();
-    unsigned activeYear = getUnsigned(OS_ClimateZonesFields::ActiveYear,true).get();
-    return getClimateZone(activeInstitution,activeYear);
-  }
 
-  std::string ClimateZones_Impl::activeClimateZoneValue() const {
-    std::string result;
-    ClimateZone cz = activeClimateZone();
-    if (!cz.empty()) { result = cz.value(); }
-    return result;
-  }
-*/
   boost::optional<ParentObject> ClimateZones_Impl::parent() const {
     OptionalParentObject result;
     OptionalSite oSite = site();
@@ -145,40 +132,7 @@ namespace detail {
     clearExtensibleGroups();
     return (numExtensibleGroups() == 0u);
   }
-/*
-  ClimateZone ClimateZones_Impl::setActiveClimateZone(const std::string& institution) {
-    std::shared_ptr<ClimateZones_Impl> p;
-    ClimateZone result(p,numFields());
 
-    ClimateZoneVector czs = getClimateZones(institution);
-    if (czs.empty()) { result = appendClimateZone(institution); }
-    else {
-      if (czs.size() > 1) {
-        LOG(Warn,"Multiple climate zones have institution '" << institution << "'. Setting the first "
-            << "to be active.");
-      }
-      result = czs[0];
-    }
-    OS_ASSERT(!result.empty());
-    bool ok = setString(OS_ClimateZonesFields::ActiveInstitution,result.institution());
-    OS_ASSERT(ok);
-    ok = setUnsigned(OS_ClimateZonesFields::ActiveYear,result.year());
-    OS_ASSERT(ok);
-    return result;
-  }
-
-  ClimateZone ClimateZones_Impl::setActiveClimateZone(const std::string& institution, unsigned year) {
-    ClimateZone result = getClimateZone(institution,year);
-    if (result.empty()) {
-      result = appendClimateZone(institution,year,"");
-    }
-    bool ok = setString(OS_ClimateZonesFields::ActiveInstitution,result.institution());
-    OS_ASSERT(ok);
-    ok = setUnsigned(OS_ClimateZonesFields::ActiveYear,result.year());
-    OS_ASSERT(ok);
-    return result;
-  }
-*/
   ClimateZone ClimateZones_Impl::setClimateZone(const std::string& institution,
                                                 const std::string& value)
   {
@@ -471,27 +425,11 @@ ClimateZone ClimateZones::getClimateZone(const std::string& institution,unsigned
 std::vector<ClimateZone> ClimateZones::getClimateZones(const std::string& institution) const {
   return getImpl<detail::ClimateZones_Impl>()->getClimateZones(institution);
 }
-/*
-ClimateZone ClimateZones::activeClimateZone() const {
-  return getImpl<detail::ClimateZones_Impl>()->activeClimateZone();
-}
 
-std::string ClimateZones::activeClimateZoneValue() const {
-  return getImpl<detail::ClimateZones_Impl>()->activeClimateZoneValue();
-}
-*/
 bool ClimateZones::clear() {
   return getImpl<detail::ClimateZones_Impl>()->clear();
 }
-/*
-ClimateZone ClimateZones::setActiveClimateZone(const std::string& institution) {
-  return getImpl<detail::ClimateZones_Impl>()->setActiveClimateZone(institution);
-}
 
-ClimateZone ClimateZones::setActiveClimateZone(const std::string& institution,unsigned year) {
-  return getImpl<detail::ClimateZones_Impl>()->setActiveClimateZone(institution,year);
-}
-*/
 ClimateZone ClimateZones::setClimateZone(const std::string& institution,
                                          const std::string& value)
 {
@@ -537,12 +475,7 @@ unsigned ClimateZones::numClimateZones() const {
 /// @cond
 ClimateZones::ClimateZones(Model& model)
   : ModelObject(ClimateZones::iddObjectType(),model)
-{
-  // add empty climate zone to define default institution
-  pushExtensibleGroup(StringVector());
-  // Programming note: This line of code cannot be in the _Impl constructor because
-  // pushExtensibleGroup constructs an IdfExtensibleGroup from the _Impl.
-}
+{}
 
 ClimateZones::ClimateZones(std::shared_ptr<detail::ClimateZones_Impl> impl)
   : ModelObject(std::move(impl))

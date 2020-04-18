@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -215,9 +215,9 @@ TEST(ApplicationPathHelpers, Simple_test_forThisModule) {
     // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
 #if defined(_WIN32)
   #if _DEBUG
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/libopenstudiolib.dll");
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/openstudiolib.dll");
   #else
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/libopenstudiolib.dll");
+    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/openstudiolib.dll");
   #endif
 #elif __APPLE__
     openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/libopenstudiolib.dylib");

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,6 +38,7 @@
 #include "Schedule_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -103,7 +104,9 @@ namespace detail {
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
     if (std::find(b,e,OS_Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName) != e)
     {
-      result.push_back(ScheduleTypeKey("ChillerElectricEIR","Basin Heater"));
+      result.push_back(ScheduleTypeKey("ChillerElectricEIR","Basin Heater Operating"));
+    } else if (std::find(b,e,OS_Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName) != e) {
+      result.push_back(ScheduleTypeKey("ChillerElectricEIR", "Heat Recovery Inlet High Temperature Limit"));
     }
     return result;
   }
@@ -231,26 +234,6 @@ namespace detail {
     return isEmpty(OS_Chiller_Electric_EIRFields::MinimumUnloadingRatio);
   }
 
-  std::string ChillerElectricEIR_Impl::chilledWaterInletNodeName() const {
-    boost::optional<std::string> value = getString(OS_Chiller_Electric_EIRFields::ChilledWaterInletNodeName,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string ChillerElectricEIR_Impl::chilledWaterOutletNodeName() const {
-    boost::optional<std::string> value = getString(OS_Chiller_Electric_EIRFields::ChilledWaterOutletNodeName,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<std::string> ChillerElectricEIR_Impl::condenserInletNodeName() const {
-    return getString(OS_Chiller_Electric_EIRFields::CondenserInletNodeName,true);
-  }
-
-  boost::optional<std::string> ChillerElectricEIR_Impl::condenserOutletNodeName() const {
-    return getString(OS_Chiller_Electric_EIRFields::CondenserOutletNodeName,true);
-  }
-
   std::string ChillerElectricEIR_Impl::condenserType() const {
     boost::optional<std::string> value = getString(OS_Chiller_Electric_EIRFields::CondenserType,true);
     OS_ASSERT(value);
@@ -271,14 +254,14 @@ namespace detail {
     return isEmpty(OS_Chiller_Electric_EIRFields::CondenserFanPowerRatio);
   }
 
-  double ChillerElectricEIR_Impl::compressorMotorEfficiency() const {
-    boost::optional<double> value = getDouble(OS_Chiller_Electric_EIRFields::CompressorMotorEfficiency,true);
+  double ChillerElectricEIR_Impl::fractionofCompressorElectricConsumptionRejectedbyCondenser() const {
+    boost::optional<double> value = getDouble(OS_Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser,true);
     OS_ASSERT(value);
     return value.get();
   }
 
-  bool ChillerElectricEIR_Impl::isCompressorMotorEfficiencyDefaulted() const {
-    return isEmpty(OS_Chiller_Electric_EIRFields::CompressorMotorEfficiency);
+  bool ChillerElectricEIR_Impl::isFractionofCompressorElectricConsumptionRejectedbyCondenserDefaulted() const {
+    return isEmpty(OS_Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser);
   }
 
   double ChillerElectricEIR_Impl::leavingChilledWaterLowerTemperatureLimit() const {
@@ -301,22 +284,17 @@ namespace detail {
     return isEmpty(OS_Chiller_Electric_EIRFields::ChillerFlowMode);
   }
 
-  double ChillerElectricEIR_Impl::designHeatRecoveryWaterFlowRate() const {
-    boost::optional<double> value = getDouble(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,true);
-    OS_ASSERT(value);
-    return value.get();
+  boost::optional<double> ChillerElectricEIR_Impl::designHeatRecoveryWaterFlowRate() const {
+    return getDouble(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate,true);
   }
 
-  bool ChillerElectricEIR_Impl::isDesignHeatRecoveryWaterFlowRateDefaulted() const {
-    return isEmpty(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate);
-  }
-
-  boost::optional<std::string> ChillerElectricEIR_Impl::heatRecoveryInletNodeName() const {
-    return getString(OS_Chiller_Electric_EIRFields::HeatRecoveryInletNodeName,true);
-  }
-
-  boost::optional<std::string> ChillerElectricEIR_Impl::heatRecoveryOutletNodeName() const {
-    return getString(OS_Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName,true);
+  bool ChillerElectricEIR_Impl::isDesignHeatRecoveryWaterFlowRateAutosized() const {
+    bool result = false;
+    boost::optional<std::string> value = getString(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate, true);
+    if (value) {
+      result = openstudio::istringEqual(value.get(), "Autosize");
+    }
+    return result;
   }
 
   double ChillerElectricEIR_Impl::sizingFactor() const {
@@ -508,59 +486,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ChillerElectricEIR_Impl::setChilledWaterInletNodeName(std::string chilledWaterInletNodeName) {
-    bool result = setString(OS_Chiller_Electric_EIRFields::ChilledWaterInletNodeName, chilledWaterInletNodeName);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool ChillerElectricEIR_Impl::setChilledWaterOutletNodeName(std::string chilledWaterOutletNodeName) {
-    bool result = setString(OS_Chiller_Electric_EIRFields::ChilledWaterOutletNodeName, chilledWaterOutletNodeName);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool ChillerElectricEIR_Impl::setCondenserInletNodeName(boost::optional<std::string> condenserInletNodeName) {
-    if (condenserInletNodeName) {
-      bool result = setString(OS_Chiller_Electric_EIRFields::CondenserInletNodeName, condenserInletNodeName.get());
-      OS_ASSERT(result);
-      return result;
-    }
-    return false;
-  }
-
-  void ChillerElectricEIR_Impl::resetCondenserInletNodeName() {
-    bool result = setString(OS_Chiller_Electric_EIRFields::CondenserInletNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool ChillerElectricEIR_Impl::setCondenserInletNodeName(std::string condenserInletNodeName) {
-    bool result = setString(OS_Chiller_Electric_EIRFields::CondenserInletNodeName, condenserInletNodeName);
-    OS_ASSERT(result);
-    return result;
-  }
-
-
-  bool ChillerElectricEIR_Impl::setCondenserOutletNodeName(boost::optional<std::string> condenserOutletNodeName) {
-    if (condenserOutletNodeName) {
-      bool result = setString(OS_Chiller_Electric_EIRFields::CondenserOutletNodeName, condenserOutletNodeName.get());
-      OS_ASSERT(result);
-      return result;
-    }
-    return false;
-  }
-
-  void ChillerElectricEIR_Impl::resetCondenserOutletNodeName() {
-    bool result = setString(OS_Chiller_Electric_EIRFields::CondenserOutletNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool ChillerElectricEIR_Impl::setCondenserOutletNodeName(std::string condenserOutletNodeName) {
-    bool result = setString(OS_Chiller_Electric_EIRFields::CondenserOutletNodeName, condenserOutletNodeName);
-    OS_ASSERT(result);
-    return result;
-  }
-
   bool ChillerElectricEIR_Impl::setCondenserType(std::string condenserType)
   {
     bool ok = false;
@@ -596,13 +521,13 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ChillerElectricEIR_Impl::setCompressorMotorEfficiency(double compressorMotorEfficiency)
+  bool ChillerElectricEIR_Impl::setFractionofCompressorElectricConsumptionRejectedbyCondenser(double fractionofCompressorElectricConsumptionRejectedbyCondenser)
   {
-    return setDouble(OS_Chiller_Electric_EIRFields::CompressorMotorEfficiency, compressorMotorEfficiency);
+    return setDouble(OS_Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser, fractionofCompressorElectricConsumptionRejectedbyCondenser);
   }
 
-  void ChillerElectricEIR_Impl::resetCompressorMotorEfficiency() {
-    bool result = setString(OS_Chiller_Electric_EIRFields::CompressorMotorEfficiency, "");
+  void ChillerElectricEIR_Impl::resetFractionofCompressorElectricConsumptionRejectedbyCondenser() {
+    bool result = setString(OS_Chiller_Electric_EIRFields::FractionofCompressorElectricConsumptionRejectedbyCondenser, "");
     OS_ASSERT(result);
   }
 
@@ -641,49 +566,9 @@ namespace detail {
     return setDouble(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate, designHeatRecoveryWaterFlowRate);
   }
 
-  void ChillerElectricEIR_Impl::resetDesignHeatRecoveryWaterFlowRate() {
-    bool result = setString(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate, "");
+  void ChillerElectricEIR_Impl::autosizeDesignHeatRecoveryWaterFlowRate() {
+    bool result = setString(OS_Chiller_Electric_EIRFields::DesignHeatRecoveryWaterFlowRate, "Autosize");
     OS_ASSERT(result);
-  }
-
-  bool ChillerElectricEIR_Impl::setHeatRecoveryInletNodeName(boost::optional<std::string> heatRecoveryInletNodeName) {
-    if (heatRecoveryInletNodeName) {
-      bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryInletNodeName, heatRecoveryInletNodeName.get());
-      OS_ASSERT(result);
-      return result;
-    }
-    return false;
-  }
-
-  void ChillerElectricEIR_Impl::resetHeatRecoveryInletNodeName() {
-    bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryInletNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool ChillerElectricEIR_Impl::setHeatRecoveryInletNodeName(std::string heatRecoveryInletNodeName) {
-    bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryInletNodeName, heatRecoveryInletNodeName);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool ChillerElectricEIR_Impl::setHeatRecoveryOutletNodeName(boost::optional<std::string> heatRecoveryOutletNodeName) {
-    if (heatRecoveryOutletNodeName) {
-      bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName, heatRecoveryOutletNodeName.get());
-      OS_ASSERT(result);
-      return result;
-    }
-    return false;
-  }
-
-  void ChillerElectricEIR_Impl::resetHeatRecoveryOutletNodeName() {
-    bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName, "");
-    OS_ASSERT(result);
-  }
-
-  bool ChillerElectricEIR_Impl::setHeatRecoveryOutletNodeName(std::string heatRecoveryOutletNodeName) {
-    bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryOutletNodeName, heatRecoveryOutletNodeName);
-    OS_ASSERT(result);
-    return result;
   }
 
   bool ChillerElectricEIR_Impl::setSizingFactor(double sizingFactor) {
@@ -780,16 +665,71 @@ namespace detail {
     return result;
   }
 
+  /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
+  boost::optional<PlantLoop> ChillerElectricEIR_Impl::chilledWaterLoop() const {
+    return WaterToWaterComponent_Impl::plantLoop();
+  }
+
+  /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
+  boost::optional<PlantLoop> ChillerElectricEIR_Impl::condenserWaterLoop() const {
+    return WaterToWaterComponent_Impl::secondaryPlantLoop();
+  }
+
+  /** Convenience Function to return the Heat Recovery Loop **/
+  boost::optional<PlantLoop> ChillerElectricEIR_Impl::heatRecoveryLoop() const {
+    return WaterToWaterComponent_Impl::tertiaryPlantLoop();
+  }
+
   bool ChillerElectricEIR_Impl::addToNode(Node & node)
   {
+
+    boost::optional<PlantLoop> t_plantLoop = node.plantLoop();
+
+    // If trying to add to a node that is on the demand side of a plant loop
+    if( t_plantLoop ) {
+      if( t_plantLoop->demandComponent(node.handle()) ) {
+        // If there is already a condenser water Plant Loop
+        if (boost::optional<PlantLoop> cndLoop = this->condenserWaterLoop()) {
+          // And it's not the same as the node's loop
+          if (t_plantLoop.get() != cndLoop.get()) {
+            // And if there is no generator loop (tertiary)
+            if (!this->heatRecoveryLoop().is_initialized()) {
+              // Then try to add it to the tertiary one
+              LOG(Warn, "Calling addToTertiaryNode to connect it to the tertiary (=Heat Recovery Loop) loop for " << briefDescription());
+              return this->addToTertiaryNode(node);
+            }
+          }
+        }
+      }
+    }
+
+    // All other cases, call the base class implementation
     // Connect the component
     bool ok = WaterToWaterComponent_Impl::addToNode(node);
 
     // If there's a secondary plant loop, switch the condenser type to "WaterCooled"
-    if (this->secondaryPlantLoop()) {
+    if (this->condenserWaterLoop()) {
       this->setCondenserType("WaterCooled");
     }
     return ok;
+  }
+
+  bool ChillerElectricEIR_Impl::addToTertiaryNode(Node & node)
+  {
+    auto _model = node.model();
+    auto t_plantLoop = node.plantLoop();
+
+    // Only accept adding to a node that is on a demand side of a plant loop
+    // Since tertiary here = heat recovery loop (heating)
+    if( t_plantLoop ) {
+      if( t_plantLoop->demandComponent(node.handle()) ) {
+        // Call base class method which accepts both supply and demand
+        return WaterToWaterComponent_Impl::addToTertiaryNode(node);
+      } else {
+         LOG(Info, "Tertiary Loop (Heat Recovery Loop) connections can only be placed on the Demand side (of a Heating Loop), for " << briefDescription());
+      }
+    }
+    return false;
   }
 
   bool ChillerElectricEIR_Impl::removeFromSecondaryPlantLoop()
@@ -840,10 +780,15 @@ namespace detail {
     return getAutosizedValue("Design Size Reference Condenser Fluid Flow Rate", "m3/s");
   }
 
+  boost::optional<double> ChillerElectricEIR_Impl::autosizedDesignHeatRecoveryWaterFlowRate() const {
+    return getAutosizedValue("Design Size Heat Recovery Water Flow Rate", "m3/s");
+  }
+
   void ChillerElectricEIR_Impl::autosize() {
     autosizeReferenceCapacity();
     autosizeReferenceChilledWaterFlowRate();
     autosizeReferenceCondenserFluidFlowRate();
+    autosizeDesignHeatRecoveryWaterFlowRate();
   }
 
   void ChillerElectricEIR_Impl::applySizingValues() {
@@ -863,6 +808,11 @@ namespace detail {
       setReferenceCondenserFluidFlowRate(val.get());
     }
 
+    val = autosizedDesignHeatRecoveryWaterFlowRate();
+    if (val) {
+      setDesignHeatRecoveryWaterFlowRate(val.get());
+    }
+
   }
 
   std::string ChillerElectricEIR_Impl::endUseSubcategory() const {
@@ -875,6 +825,49 @@ namespace detail {
     return setString(OS_Chiller_Electric_EIRFields::EndUseSubcategory,endUseSubcategory);
   }
 
+double ChillerElectricEIR_Impl::condenserHeatRecoveryRelativeCapacityFraction() const {
+  boost::optional<double> value = getDouble(OS_Chiller_Electric_EIRFields::CondenserHeatRecoveryRelativeCapacityFraction, true);
+  OS_ASSERT(value);
+  return value.get();
+}
+
+bool ChillerElectricEIR_Impl::setCondenserHeatRecoveryRelativeCapacityFraction(double condenserHeatRecoveryRelativeCapacityFraction) {
+  bool result = setDouble(OS_Chiller_Electric_EIRFields::CondenserHeatRecoveryRelativeCapacityFraction, condenserHeatRecoveryRelativeCapacityFraction);
+  // OS_ASSERT(result);
+  return result;
+}
+
+boost::optional<Schedule> ChillerElectricEIR_Impl::heatRecoveryInletHighTemperatureLimitSchedule() const
+{
+  return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Chiller_Electric_EIRFields::BasinHeaterOperatingScheduleName);
+}
+
+// TODO: ScheduleTypeLimits
+bool ChillerElectricEIR_Impl::setHeatRecoveryInletHighTemperatureLimitSchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName,
+                              "ChillerElectricEIR",
+                              "Heat Recovery Inlet High Temperature Limit",
+                              schedule);
+    return result;
+}
+
+void ChillerElectricEIR_Impl::resetHeatRecoveryInletHighTemperatureLimitSchedule() {
+  bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryInletHighTemperatureLimitScheduleName, "");
+  OS_ASSERT(result);
+}
+
+boost::optional<Node> ChillerElectricEIR_Impl::heatRecoveryLeavingTemperatureSetpointNode() const {
+  return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Chiller_Electric_EIRFields::HeatRecoveryLeavingTemperatureSetpointNodeName);
+}
+
+bool ChillerElectricEIR_Impl::setHeatRecoveryLeavingTemperatureSetpointNode(const Node& node) {
+  return setPointer(OS_Chiller_Electric_EIRFields::HeatRecoveryLeavingTemperatureSetpointNodeName, node.handle());
+}
+
+void ChillerElectricEIR_Impl::resetHeatRecoveryLeavingTemperatureSetpointNode() {
+  bool result = setString(OS_Chiller_Electric_EIRFields::HeatRecoveryLeavingTemperatureSetpointNodeName, "");
+  OS_ASSERT(result);
+}
 
 } // detail
 
@@ -889,14 +882,12 @@ ChillerElectricEIR::ChillerElectricEIR(const Model& model,
   OS_ASSERT(setCoolingCapacityFunctionOfTemperature(CCFofT));
   OS_ASSERT(setElectricInputToCoolingOutputRatioFunctionOfTemperature(EItoCORFofT));
   OS_ASSERT(setElectricInputToCoolingOutputRatioFunctionOfPLR(EItoCORFofPLR));
-  autosizeReferenceCapacity();
   OS_ASSERT(setReferenceCOP(5.5f));
 
-  setDesignHeatRecoveryWaterFlowRate(0.0);
-
-  resetHeatRecoveryInletNodeName();
-
-  resetHeatRecoveryOutletNodeName();
+  autosizeReferenceCapacity();
+  autosizeReferenceChilledWaterFlowRate();
+  // autosizeReferenceCondenserFluidFlowRate();
+  autosizeDesignHeatRecoveryWaterFlowRate();
 
   setSizingFactor(1.0);
 
@@ -905,6 +896,10 @@ ChillerElectricEIR::ChillerElectricEIR(const Model& model,
   setBasinHeaterSetpointTemperature(10.0);
 
   resetBasinHeaterSchedule();
+
+  setCondenserHeatRecoveryRelativeCapacityFraction(1.0);
+  resetHeatRecoveryLeavingTemperatureSetpointNode();
+  resetHeatRecoveryInletHighTemperatureLimitSchedule();
 
   setEndUseSubcategory("General");
 
@@ -950,15 +945,21 @@ ChillerElectricEIR::ChillerElectricEIR(const Model& model)
   setElectricInputToCoolingOutputRatioFunctionOfTemperature(eirToCorfOfT);
   setElectricInputToCoolingOutputRatioFunctionOfPLR(eirToCorfOfPlr);
 
-  autosizeReferenceCapacity();
+
   OS_ASSERT(setReferenceCOP(5.5f));
-  setDesignHeatRecoveryWaterFlowRate(0.0);
-  resetHeatRecoveryInletNodeName();
-  resetHeatRecoveryOutletNodeName();
+
+  autosizeReferenceCapacity();
+  autosizeReferenceChilledWaterFlowRate();
+  // autosizeReferenceCondenserFluidFlowRate();
+  autosizeDesignHeatRecoveryWaterFlowRate();
+
   setSizingFactor(1.0);
   setBasinHeaterCapacity(0.0);
   setBasinHeaterSetpointTemperature(10.0);
   resetBasinHeaterSchedule();
+  setCondenserHeatRecoveryRelativeCapacityFraction(1.0);
+  resetHeatRecoveryLeavingTemperatureSetpointNode();
+  resetHeatRecoveryInletHighTemperatureLimitSchedule();
 
   setEndUseSubcategory("General");
 
@@ -1085,22 +1086,6 @@ bool ChillerElectricEIR::isMinimumUnloadingRatioDefaulted() const {
   return getImpl<detail::ChillerElectricEIR_Impl>()->isMinimumUnloadingRatioDefaulted();
 }
 
-std::string ChillerElectricEIR::chilledWaterInletNodeName() const {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->chilledWaterInletNodeName();
-}
-
-std::string ChillerElectricEIR::chilledWaterOutletNodeName() const {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->chilledWaterOutletNodeName();
-}
-
-boost::optional<std::string> ChillerElectricEIR::condenserInletNodeName() const {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->condenserInletNodeName();
-}
-
-boost::optional<std::string> ChillerElectricEIR::condenserOutletNodeName() const {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->condenserOutletNodeName();
-}
-
 std::string ChillerElectricEIR::condenserType() const {
   return getImpl<detail::ChillerElectricEIR_Impl>()->condenserType();
 }
@@ -1117,12 +1102,12 @@ bool ChillerElectricEIR::isCondenserFanPowerRatioDefaulted() const {
   return getImpl<detail::ChillerElectricEIR_Impl>()->isCondenserFanPowerRatioDefaulted();
 }
 
-double ChillerElectricEIR::compressorMotorEfficiency() const {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->compressorMotorEfficiency();
+double ChillerElectricEIR::fractionofCompressorElectricConsumptionRejectedbyCondenser() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->fractionofCompressorElectricConsumptionRejectedbyCondenser();
 }
 
-bool ChillerElectricEIR::isCompressorMotorEfficiencyDefaulted() const {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->isCompressorMotorEfficiencyDefaulted();
+bool ChillerElectricEIR::isFractionofCompressorElectricConsumptionRejectedbyCondenserDefaulted() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->isFractionofCompressorElectricConsumptionRejectedbyCondenserDefaulted();
 }
 
 double ChillerElectricEIR::leavingChilledWaterLowerTemperatureLimit() const {
@@ -1141,20 +1126,12 @@ bool ChillerElectricEIR::isChillerFlowModeDefaulted() const {
   return getImpl<detail::ChillerElectricEIR_Impl>()->isChillerFlowModeDefaulted();
 }
 
-double ChillerElectricEIR::designHeatRecoveryWaterFlowRate() const {
+boost::optional<double> ChillerElectricEIR::designHeatRecoveryWaterFlowRate() const {
   return getImpl<detail::ChillerElectricEIR_Impl>()->designHeatRecoveryWaterFlowRate();
 }
 
-bool ChillerElectricEIR::isDesignHeatRecoveryWaterFlowRateDefaulted() const {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->isDesignHeatRecoveryWaterFlowRateDefaulted();
-}
-
-boost::optional<std::string> ChillerElectricEIR::heatRecoveryInletNodeName() const {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->heatRecoveryInletNodeName();
-}
-
-boost::optional<std::string> ChillerElectricEIR::heatRecoveryOutletNodeName() const {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->heatRecoveryOutletNodeName();
+bool ChillerElectricEIR::isDesignHeatRecoveryWaterFlowRateAutosized() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->isDesignHeatRecoveryWaterFlowRateAutosized();
 }
 
 double ChillerElectricEIR::sizingFactor() const {
@@ -1277,38 +1254,6 @@ void ChillerElectricEIR::resetMinimumUnloadingRatio() {
   getImpl<detail::ChillerElectricEIR_Impl>()->resetMinimumUnloadingRatio();
 }
 
-bool ChillerElectricEIR::setChilledWaterInletNodeName(std::string chilledWaterInletNodeName) {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->setChilledWaterInletNodeName(chilledWaterInletNodeName);
-}
-
-bool ChillerElectricEIR::setChilledWaterOutletNodeName(std::string chilledWaterOutletNodeName) {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->setChilledWaterOutletNodeName(chilledWaterOutletNodeName);
-}
-
-bool ChillerElectricEIR::setCondenserInletNodeName(boost::optional<std::string> condenserInletNodeName) {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->setCondenserInletNodeName(condenserInletNodeName);
-}
-
-bool ChillerElectricEIR::setCondenserInletNodeName(std::string condenserInletNodeName) {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->setCondenserInletNodeName(condenserInletNodeName);
-}
-
-void ChillerElectricEIR::resetCondenserInletNodeName() {
-  getImpl<detail::ChillerElectricEIR_Impl>()->resetCondenserInletNodeName();
-}
-
-bool ChillerElectricEIR::setCondenserOutletNodeName(boost::optional<std::string> condenserOutletNodeName) {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->setCondenserOutletNodeName(condenserOutletNodeName);
-}
-
-bool ChillerElectricEIR::setCondenserOutletNodeName(std::string condenserOutletNodeName) {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->setCondenserOutletNodeName(condenserOutletNodeName);
-}
-
-void ChillerElectricEIR::resetCondenserOutletNodeName() {
-  getImpl<detail::ChillerElectricEIR_Impl>()->resetCondenserOutletNodeName();
-}
-
 bool ChillerElectricEIR::setCondenserType(std::string condenserType) {
   return getImpl<detail::ChillerElectricEIR_Impl>()->setCondenserType(condenserType);
 }
@@ -1325,12 +1270,12 @@ void ChillerElectricEIR::resetCondenserFanPowerRatio() {
   getImpl<detail::ChillerElectricEIR_Impl>()->resetCondenserFanPowerRatio();
 }
 
-bool ChillerElectricEIR::setCompressorMotorEfficiency(double compressorMotorEfficiency) {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->setCompressorMotorEfficiency(compressorMotorEfficiency);
+bool ChillerElectricEIR::setFractionofCompressorElectricConsumptionRejectedbyCondenser(double fractionofCompressorElectricConsumptionRejectedbyCondenser) {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->setFractionofCompressorElectricConsumptionRejectedbyCondenser(fractionofCompressorElectricConsumptionRejectedbyCondenser);
 }
 
-void ChillerElectricEIR::resetCompressorMotorEfficiency() {
-  getImpl<detail::ChillerElectricEIR_Impl>()->resetCompressorMotorEfficiency();
+void ChillerElectricEIR::resetFractionofCompressorElectricConsumptionRejectedbyCondenser() {
+  getImpl<detail::ChillerElectricEIR_Impl>()->resetFractionofCompressorElectricConsumptionRejectedbyCondenser();
 }
 
 bool ChillerElectricEIR::setLeavingChilledWaterLowerTemperatureLimit(double leavingChilledWaterLowerTemperatureLimit) {
@@ -1353,32 +1298,8 @@ bool ChillerElectricEIR::setDesignHeatRecoveryWaterFlowRate(double designHeatRec
   return getImpl<detail::ChillerElectricEIR_Impl>()->setDesignHeatRecoveryWaterFlowRate(designHeatRecoveryWaterFlowRate);
 }
 
-void ChillerElectricEIR::resetDesignHeatRecoveryWaterFlowRate() {
-  getImpl<detail::ChillerElectricEIR_Impl>()->resetDesignHeatRecoveryWaterFlowRate();
-}
-
-bool ChillerElectricEIR::setHeatRecoveryInletNodeName(boost::optional<std::string> heatRecoveryInletNodeName) {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->setHeatRecoveryInletNodeName(heatRecoveryInletNodeName);
-}
-
-bool ChillerElectricEIR::setHeatRecoveryInletNodeName(std::string heatRecoveryInletNodeName) {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->setHeatRecoveryInletNodeName(heatRecoveryInletNodeName);
-}
-
-void ChillerElectricEIR::resetHeatRecoveryInletNodeName() {
-  getImpl<detail::ChillerElectricEIR_Impl>()->resetHeatRecoveryInletNodeName();
-}
-
-bool ChillerElectricEIR::setHeatRecoveryOutletNodeName(boost::optional<std::string> heatRecoveryOutletNodeName) {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->setHeatRecoveryOutletNodeName(heatRecoveryOutletNodeName);
-}
-
-bool ChillerElectricEIR::setHeatRecoveryOutletNodeName(std::string heatRecoveryOutletNodeName) {
-  return getImpl<detail::ChillerElectricEIR_Impl>()->setHeatRecoveryOutletNodeName(heatRecoveryOutletNodeName);
-}
-
-void ChillerElectricEIR::resetHeatRecoveryOutletNodeName() {
-  getImpl<detail::ChillerElectricEIR_Impl>()->resetHeatRecoveryOutletNodeName();
+void ChillerElectricEIR::autosizeDesignHeatRecoveryWaterFlowRate() {
+  getImpl<detail::ChillerElectricEIR_Impl>()->autosizeDesignHeatRecoveryWaterFlowRate();
 }
 
 bool ChillerElectricEIR::setSizingFactor(double sizingFactor) {
@@ -1428,6 +1349,50 @@ bool ChillerElectricEIR::setEndUseSubcategory(const std::string & endUseSubcateg
   return getImpl<detail::ChillerElectricEIR_Impl>()->setEndUseSubcategory(endUseSubcategory);
 }
 
+// Convenience functions
+boost::optional<PlantLoop> ChillerElectricEIR::chilledWaterLoop() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->chilledWaterLoop();
+}
+
+boost::optional<PlantLoop> ChillerElectricEIR::condenserWaterLoop() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->condenserWaterLoop();
+}
+
+boost::optional<PlantLoop> ChillerElectricEIR::heatRecoveryLoop() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->heatRecoveryLoop();
+}
+
+double ChillerElectricEIR::condenserHeatRecoveryRelativeCapacityFraction() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->condenserHeatRecoveryRelativeCapacityFraction();
+}
+
+bool ChillerElectricEIR::setCondenserHeatRecoveryRelativeCapacityFraction(double condenserHeatRecoveryRelativeCapacityFraction) {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->setCondenserHeatRecoveryRelativeCapacityFraction(condenserHeatRecoveryRelativeCapacityFraction);
+}
+
+boost::optional<Schedule> ChillerElectricEIR::heatRecoveryInletHighTemperatureLimitSchedule() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->heatRecoveryInletHighTemperatureLimitSchedule();
+}
+
+bool ChillerElectricEIR::setHeatRecoveryInletHighTemperatureLimitSchedule(Schedule& s) {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->setHeatRecoveryInletHighTemperatureLimitSchedule(s);
+}
+
+void ChillerElectricEIR::resetHeatRecoveryInletHighTemperatureLimitSchedule() {
+  getImpl<detail::ChillerElectricEIR_Impl>()->resetHeatRecoveryInletHighTemperatureLimitSchedule();
+}
+
+boost::optional<Node> ChillerElectricEIR::heatRecoveryLeavingTemperatureSetpointNode() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->heatRecoveryLeavingTemperatureSetpointNode();
+}
+
+bool ChillerElectricEIR::setHeatRecoveryLeavingTemperatureSetpointNode(const Node& node) {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->setHeatRecoveryLeavingTemperatureSetpointNode(node);
+}
+void ChillerElectricEIR::resetHeatRecoveryLeavingTemperatureSetpointNode() {
+  getImpl<detail::ChillerElectricEIR_Impl>()->resetHeatRecoveryLeavingTemperatureSetpointNode();
+}
+
 /// @cond
 ChillerElectricEIR::ChillerElectricEIR(std::shared_ptr<detail::ChillerElectricEIR_Impl> impl)
   : WaterToWaterComponent(std::move(impl))
@@ -1435,17 +1400,21 @@ ChillerElectricEIR::ChillerElectricEIR(std::shared_ptr<detail::ChillerElectricEI
 
 /// @endcond
 
-  boost::optional<double> ChillerElectricEIR::autosizedReferenceCapacity() const {
-    return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCapacity();
-  }
+boost::optional<double> ChillerElectricEIR::autosizedReferenceCapacity() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCapacity();
+}
 
-  boost::optional<double> ChillerElectricEIR::autosizedReferenceChilledWaterFlowRate() const {
-    return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceChilledWaterFlowRate();
-  }
+boost::optional<double> ChillerElectricEIR::autosizedReferenceChilledWaterFlowRate() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceChilledWaterFlowRate();
+}
 
-  boost::optional<double> ChillerElectricEIR::autosizedReferenceCondenserFluidFlowRate() const {
-    return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCondenserFluidFlowRate();
-  }
+boost::optional<double> ChillerElectricEIR::autosizedReferenceCondenserFluidFlowRate() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedReferenceCondenserFluidFlowRate();
+}
+
+boost::optional<double> ChillerElectricEIR::autosizedDesignHeatRecoveryWaterFlowRate() const {
+  return getImpl<detail::ChillerElectricEIR_Impl>()->autosizedDesignHeatRecoveryWaterFlowRate();
+}
 
 } // model
 } // openstudio

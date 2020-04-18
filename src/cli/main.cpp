@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -134,6 +134,7 @@ extern "C" {
   void Init_objspace(void);
   void Init_parser(void);
   void Init_pathname(void);
+  void Init_prelude(void);
   void Init_psych(void);
   void Init_ripper(void);
   void Init_rmd160(void);
@@ -366,6 +367,8 @@ int main(int argc, char *argv[])
 
     Init_trans_utf_16_32();
     rb_provide("enc/trans/utf_16_32.o");
+
+    Init_prelude();
 
     Init_bigdecimal();
     rb_provide("bigdecimal");

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -318,33 +318,35 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   // Actual values
   SqlResults ep_910 = {195052539.91, 27600.69, 427.17, 324.04, 782.87, 3256405.15, 191767000.0};
   SqlResults ep_920 = {194898706.43, 27595.94, 426.75, 324.25, 782.28, 3256577.21, 191613000.0};
+  SqlResults ep_930 = {194906985.51, 27596.57, 426.75, 324.25, 782.28, 3262855.66, 191615000.0};
 
   // =========== Check that you are within relatively normal ranges compared to previous versions  =================
 
-  // Total annual costs for all fuel types. Here I'm explicitly passing a tolerance of 0.1% (which is the default really, so omitting it after)
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.001));
+  for (auto& ep: {ep_910, ep_920}) {
+    // Total annual costs for all fuel types. Here I'm explicitly passing a tolerance of 0.1% (which is the default really, so omitting it after)
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.001));
 
-  // Costs by fuel type
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get()));
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get()));
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get()));
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get()));
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get()));
-  EXPECT_TRUE(IsWithinRelativeTolerance(ep_910.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get()));
-
+    // Costs by fuel type
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get()));
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get()));
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get()));
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get()));
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get(), 0.002));
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get()));
+  }
 
   // =========== Check that within our development based on the current E+ version we do not make the results vary (at all)  =================
 
   // Total annual costs for all fuel types
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get());
 
   // Costs by fuel type
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get());
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get());
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get());
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get());
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get());
-  EXPECT_DOUBLE_EQ(ep_920.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get());
+  EXPECT_DOUBLE_EQ(ep_930.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get());
 
 
   // These have a relatively high tolerance and shouldn't fail, and they depend on the above values divided by square footage which shouldn't vary
@@ -386,6 +388,23 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   EXPECT_EQ(expected.minor(), actual.minor());
   EXPECT_EQ(expected.patch(), actual.patch());
 
+  // Check if the SqlFile has the 'Year' field
+  if (expected >= VersionString(9, 0)) {
+    EXPECT_TRUE(sqlFile->hasYear());
+  } else if (expected < VersionString(8, 9)) {
+    EXPECT_FALSE(sqlFile->hasYear());
+  } else {
+    // For 8.9.0, seems that it has the 'Year' field but it's always zero...
+    EXPECT_FALSE(sqlFile->hasYear()) << "Failed for " << name;
+  }
+
+  // Check if the SqlFile has the 'Year' field for IlluminanceMap, which was added later in 9.2.0
+  if (expected < VersionString(9,2)) {
+    EXPECT_FALSE(sqlFile->hasIlluminanceMapYear());
+  } else {
+    EXPECT_TRUE(sqlFile->hasIlluminanceMapYear());
+  }
+
   ASSERT_TRUE(sqlFile->hoursSimulated());
   EXPECT_EQ(8760.0, sqlFile->hoursSimulated().get()) << name;
   ASSERT_TRUE(sqlFile->netSiteEnergy());
@@ -394,6 +413,13 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   std::vector<std::string> availableEnvPeriods = sqlFile->availableEnvPeriods();
   ASSERT_FALSE(availableEnvPeriods.empty());
   EXPECT_EQ(static_cast<unsigned>(3), availableEnvPeriods.size());
+  std::string availableEnvPeriod;
+  for (int i = 0; i < availableEnvPeriods.size(); i++)
+  {
+    if (availableEnvPeriods[i].find("CONDNS") == std::string::npos) {
+      availableEnvPeriod = availableEnvPeriods[i];
+    }
+  }
 
    // Since v8.9.0, E+ includes the Year into the SQL. 5ZoneAirCooled has 2013
   unsigned year = 2013;
@@ -401,15 +427,14 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   Date dec31 = sqlFile->hasYear() ? Date(MonthOfYear::Dec, 31, year) : Date(MonthOfYear::Dec, 31);
   Date jan31 = sqlFile->hasYear() ? Date(MonthOfYear::Jan, 31, year) : Date(MonthOfYear::Jan, 31);
 
-
   { // Detailed
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Detailed", "Zone Mean Air Temperature", "Main Zone");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Detailed", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "HVAC System Timestep", "Zone Mean Air Temperature", "Main Zone");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "HVAC System Timestep", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "HVAC System Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "HVAC System Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Detailed", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Detailed", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -426,13 +451,13 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   }
 
   { // Timestep
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Timestep", "Zone Mean Air Temperature", "Main Zone");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Timestep", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Zone Timestep", "Zone Mean Air Temperature", "Main Zone");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Zone Timestep", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Zone Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Zone Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Timestep", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -448,9 +473,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   }
 
   { // Hourly
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Main Zone");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Hourly", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Hourly", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -466,9 +491,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   }
 
   { // Daily
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Daily", "Zone Mean Air Temperature", "Main Zone");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Daily", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Daily", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Daily", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -482,9 +507,9 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   }
 
   { // Monthly
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Monthly", "Zone Mean Air Temperature", "Main Zone");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Monthly", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Monthly", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Monthly", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -497,22 +522,18 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
 
-  { // RunPeriod - synonymous with Environment and Annual
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "RunPeriod", "Zone Mean Air Temperature", "Main Zone");
+  { // RunPeriod - synonymous with Environment
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "RunPeriod", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Run Period", "Zone Mean Air Temperature", "Main Zone");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Run Period", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Run Period", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Run Period", "Zone Mean Air Temperature", "MAIN ZONE");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Environment", "Zone Mean Air Temperature", "Main Zone");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Environment", "Zone Mean Air Temperature", "Main Zone");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Environment", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Environment", "Zone Mean Air Temperature", "MAIN ZONE");
     EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Annual", "Zone Mean Air Temperature", "Main Zone");
-    EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "Annual", "Zone Mean Air Temperature", "MAIN ZONE");
-    EXPECT_TRUE(ts);
-    ts = sqlFile->timeSeries(availableEnvPeriods[0], "RunPeriod", "Zone Mean Air Temperature", "MAIN ZONE");
+    ts = sqlFile->timeSeries(availableEnvPeriod, "RunPeriod", "Zone Mean Air Temperature", "MAIN ZONE");
     ASSERT_TRUE(ts);
 
     unsigned N = ts->daysFromFirstReport().size();
@@ -525,8 +546,24 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
     EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
   }
 
+  { // Annual
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Annual", "Zone Mean Air Temperature", "Main Zone");
+    EXPECT_TRUE(ts);
+    ts = sqlFile->timeSeries(availableEnvPeriod, "Annual", "Zone Mean Air Temperature", "MAIN ZONE");
+    EXPECT_TRUE(ts);
+
+    unsigned N = ts->daysFromFirstReport().size();
+
+    ASSERT_GT(N, 0u);
+    ASSERT_EQ(N, ts->values().size());
+    EXPECT_EQ(N, 1u);
+    EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime());
+    EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[0]);
+    EXPECT_EQ(DateTime(dec31, Time(1, 0, 0, 0)), ts->firstReportDateTime() + ts->daysFromFirstReport()[N - 1]);
+  }
+
   { // Bad key name
-    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriods[0], "Hourly", "Zone Mean Air Temperature", "Zone that does not exist");
+    openstudio::OptionalTimeSeries ts = sqlFile->timeSeries(availableEnvPeriod, "Hourly", "Zone Mean Air Temperature", "Zone that does not exist");
     EXPECT_FALSE(ts);
   }
 }
@@ -544,6 +581,14 @@ TEST_F(SqlFileFixture, Regressions) {
   regressionTestSqlFile("1ZoneEvapCooler-V8-2-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V8-3-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V8-4-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-5-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-6-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-7-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-8-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V8-9-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V9-0-1.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V9-1-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V9-2-0.sql", 43.28, 20, 20);
 }
 
 TEST_F(SqlFileFixture, SqlFile_LeapYear)

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -2075,7 +2075,16 @@ namespace detail {
       auto outletObj = node.outletModelObject();
 
       if( inletObj && outletObj ) {
-        if( (! inletObj->optionalCast<ThermalZone>()) && outletObj->optionalCast<Mixer>() ) {
+        // Rules for allowing connection:
+        // * It must be the last node on the demand branch, meaning the outlet must be the Mixer
+        // * There must not be any ThermalZone on the branch already
+        //     * (If ok, then the inletObj is usually an AirTerminal)
+        //     * In the most common case where not ok, inletObj is a PortList that connects to the ThermalZone
+        //     * inletObj can also be OS:AirLoopHVAC:ReturnPlenum
+        //     * => can't really check if inletObj is a Class, instead we check that the demand branch (between splitter and node) doesn't have a
+        //     ThermalZone already
+        if( (airLoop->demandComponents(airLoop->demandSplitter(), node, IddObjectType::OS_ThermalZone).empty()) &&
+            (outletObj->optionalCast<Mixer>()) ) {
           Node newNode(_model);
           auto thisobj = getObject<ThermalZone>();
           auto _inletPortList = inletPortList();

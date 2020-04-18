@@ -69,7 +69,7 @@
 ! ExtWallConstruction=Wood-Framed and Other
 ! End SimMetaData
 
-  Version,9.2;
+  Version,9.3;
 
   Timestep,6;
 
@@ -128,8 +128,9 @@
     20;                      !- Maximum HVAC Iterations
 
   ShadowCalculation,
-    AverageOverDaysInFrequency,  !- Calculation Method
-    7,                       !- Calculation Frequency
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    7,                       !- Shading Calculation Update Frequency
     15000;                   !- Maximum Figures in Shadow Overlap Calculations
 
   GlobalGeometryRules,
@@ -142,7 +143,7 @@
     Benchmark Quick Service New V1.2_4.0,  !- Name
     0.0000,                  !- North Axis {deg}
     City,                    !- Terrain
-    0.0400,                  !- Loads Convergence Tolerance Value
+    0.0400,                  !- Loads Convergence Tolerance Value {W}
     0.2000,                  !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -2051,7 +2052,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     .1415762,                !- Heating Maximum Air Flow {m3/s}
-    0.3;                     !- Heating Maximum Air Flow Fraction
+    0.3,                     !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Dining,          !- Name
@@ -2097,8 +2103,8 @@
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
     ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
     ,                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 2 Object Type
-    Dining Direct Air,       !- Zone Equipment 2 Name
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 2 Object Type
+    Dining Direct Air ADU,   !- Zone Equipment 2 Name
     2,                       !- Zone Equipment 2 Cooling Sequence
     2,                       !- Zone Equipment 2 Heating or No-Load Sequence
     ,                        !- Zone Equipment 2 Sequential Cooling Fraction Schedule Name
@@ -2114,11 +2120,23 @@
     Dining Exhaust Fan Outlet Node Name,  !- Air Outlet Node Name
     Zone Exhaust Fans;       !- End-Use Subcategory
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Dining Direct Air,       !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    Dining Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    Dining Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    Dining Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Dining Direct Air ADU,   !- Name
+    Dining Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Dining Direct Air,       !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrDining,   !- Name
@@ -2452,7 +2470,12 @@
     0.0,                     !- Heating Design Air Flow Rate {m3/s}
     .002032,                 !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     .1415762,                !- Heating Maximum Air Flow {m3/s}
-    0.3;                     !- Heating Maximum Air Flow Fraction
+    0.3,                     !- Heating Maximum Air Flow Fraction
+    ,                        !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:OutdoorAir,
     SZ DSOA Kitchen,         !- Name
@@ -2498,8 +2521,8 @@
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
     ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
     ,                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 2 Object Type
-    Kitchen Direct Air,      !- Zone Equipment 2 Name
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 2 Object Type
+    Kitchen Direct Air ADU,  !- Zone Equipment 2 Name
     2,                       !- Zone Equipment 2 Cooling Sequence
     2,                       !- Zone Equipment 2 Heating or No-Load Sequence
     ,                        !- Zone Equipment 2 Sequential Cooling Fraction Schedule Name
@@ -2527,11 +2550,23 @@
     Dining,                  !- Source Zone Name
     0.0;                     !- Delta Temperature {deltaC}
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Kitchen Direct Air,      !- Name
     ALWAYS_ON,               !- Availability Schedule Name
-    Kitchen Direct Air Inlet Node Name,  !- Zone Supply Air Node Name
-    AUTOSIZE;                !- Maximum Air Flow Rate {m3/s}
+    Kitchen Direct Air Inlet Node Name ATInlet,  !- Air Inlet Node Name
+    Kitchen Direct Air Inlet Node Name,  !- Air Outlet Node Name
+    AUTOSIZE,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Kitchen Direct Air ADU,  !- Name
+    Kitchen Direct Air Inlet Node Name,  !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Kitchen Direct Air,      !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   SetpointManager:SingleZone:Reheat,
     SupAirTemp MngrKitchen,  !- Name
@@ -3151,7 +3186,7 @@
     Yes,                     !- Demand Controlled Ventilation
     VentilationRateProcedure,!- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
-    Dining,                  !- Zone 1 Name
+    Dining,                  !- Zone or ZoneList 1 Name
     CM DSOA Dining,          !- Design Specification Outdoor Air Object Name 1
     CM DSZAD Dining;         !- Design Specification Zone Air Distribution Object Name 1
 
@@ -3277,7 +3312,7 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_1:1 Supply Air Splitter,  !- Name
     PSZ-AC_1:1 Zone Equipment Inlet Node,  !- Inlet Node Name
-    Dining Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    Dining Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     PSZ-AC_1:1 Return Air Path,  !- Name
@@ -3463,7 +3498,7 @@
     Yes,                     !- Demand Controlled Ventilation
     VentilationRateProcedure,!- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
-    Kitchen,                 !- Zone 1 Name
+    Kitchen,                 !- Zone or ZoneList 1 Name
     CM DSOA Kitchen,         !- Design Specification Outdoor Air Object Name 1
     CM DSZAD Kitchen;        !- Design Specification Zone Air Distribution Object Name 1
 
@@ -3589,7 +3624,7 @@
   AirLoopHVAC:ZoneSplitter,
     PSZ-AC_2:2 Supply Air Splitter,  !- Name
     PSZ-AC_2:2 Zone Equipment Inlet Node,  !- Inlet Node Name
-    Kitchen Direct Air Inlet Node Name;  !- Outlet 1 Node Name
+    Kitchen Direct Air Inlet Node Name ATInlet;  !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     PSZ-AC_2:2 Return Air Path,  !- Name
@@ -4251,7 +4286,7 @@
   !
 
   FuelFactors,
-    FuelOil#1,               !- Existing Fuel Resource Name
+    FuelOilNo1,              !- Existing Fuel Resource Name
     m3,                      !- Units of Measure
     38.656E+09,              !- Energy per Unit Factor
     1.158,                   !- Source Energy Factor {J/J}

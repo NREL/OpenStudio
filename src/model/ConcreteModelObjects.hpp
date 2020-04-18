@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -322,6 +322,7 @@
 #include "OutputJSON.hpp"
 #include "OutputMeter.hpp"
 #include "OutputVariable.hpp"
+#include "OutputTableSummaryReports.hpp"
 #include "OutsideSurfaceConvectionAlgorithm.hpp"
 #include "People.hpp"
 #include "PeopleDefinition.hpp"
@@ -806,6 +807,7 @@
 #include "OutputJSON_Impl.hpp"
 #include "OutputMeter_Impl.hpp"
 #include "OutputVariable_Impl.hpp"
+#include "OutputTableSummaryReports_Impl.hpp"
 #include "OutsideSurfaceConvectionAlgorithm_Impl.hpp"
 #include "People_Impl.hpp"
 #include "PeopleDefinition_Impl.hpp"

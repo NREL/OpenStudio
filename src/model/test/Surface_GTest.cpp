@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -750,8 +750,8 @@ TEST_F(ModelFixture, AdjacentSurface_SurfacePropertyOtherSideCoefficients)
   EXPECT_FALSE(wall1.adjacentSurface());
   EXPECT_FALSE(wall2.adjacentSurface());
   EXPECT_EQ("OtherSideCoefficients", wall1.outsideBoundaryCondition());
-  EXPECT_EQ("SunExposed", wall1.sunExposure());
-  EXPECT_EQ("WindExposed", wall1.windExposure());
+  EXPECT_EQ("NoSun", wall1.sunExposure());
+  EXPECT_EQ("NoWind", wall1.windExposure());
   EXPECT_EQ("Outdoors", wall2.outsideBoundaryCondition());
   EXPECT_EQ("SunExposed", wall2.sunExposure());
   EXPECT_EQ("WindExposed", wall2.windExposure());
@@ -862,13 +862,13 @@ TEST_F(ModelFixture, SurfacePropertyOtherSideCoefficients)
   ASSERT_TRUE(wall1.surfacePropertyOtherSideCoefficients());
   EXPECT_EQ(osc.handle(), wall1.surfacePropertyOtherSideCoefficients()->handle());
   EXPECT_EQ("OtherSideCoefficients", wall1.outsideBoundaryCondition());
-  EXPECT_EQ("SunExposed", wall1.sunExposure());
-  EXPECT_EQ("WindExposed", wall1.windExposure());
+  EXPECT_EQ("NoSun", wall1.sunExposure());
+  EXPECT_EQ("NoWind", wall1.windExposure());
 
   EXPECT_FALSE(wall1.setOutsideBoundaryCondition("FlibbityGibbit"));
   EXPECT_EQ("OtherSideCoefficients", wall1.outsideBoundaryCondition());
-  EXPECT_EQ("SunExposed", wall1.sunExposure());
-  EXPECT_EQ("WindExposed", wall1.windExposure());
+  EXPECT_EQ("NoSun", wall1.sunExposure());
+  EXPECT_EQ("NoWind", wall1.windExposure());
 
   EXPECT_TRUE(wall1.setOutsideBoundaryCondition("Adiabatic"));
   EXPECT_EQ("Adiabatic", wall1.outsideBoundaryCondition());

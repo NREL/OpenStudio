@@ -1,6 +1,6 @@
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,9.2;
+  Version,9.3;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -8,7 +8,7 @@
     Building,                !- Name
     30.0,                    !- North Axis {deg}
     City,                    !- Terrain
-    0.04,                    !- Loads Convergence Tolerance Value
+    0.04,                    !- Loads Convergence Tolerance Value {W}
     0.4,                     !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -40,7 +40,7 @@
     UpperLeftCorner,         !- Starting Vertex Position
     Counterclockwise,        !- Vertex Entry Direction
     Relative,                !- Coordinate System
-    Absolute,                !- Daylighting Reference Point Coordinate System
+    World,                   !- Daylighting Reference Point Coordinate System
     Relative;                !- Rectangular Surface Coordinate System
 
   RunPeriod,

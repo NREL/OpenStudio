@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1327,9 +1327,9 @@ UtilityBill::UtilityBill(const FuelType& fuelType, const Model& model)
   bool test;
   test = setString(OS_UtilityBillFields::FuelType, fuelType.valueName());
   if (!test){
-    LOG(Error, fuelType.valueName());
+    remove();
+    LOG_AND_THROW("Unable to create UtilityBill for FuelType " << fuelType.valueName() << ".");
   }
-  OS_ASSERT(test);
 
   std::vector<std::string> consumptionUnitValues = this->consumptionUnitValues();
   OS_ASSERT(!consumptionUnitValues.empty());

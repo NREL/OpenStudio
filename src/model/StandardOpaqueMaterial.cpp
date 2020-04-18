@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -313,15 +313,15 @@ namespace detail {
   }
 
   std::vector<EMSActuatorNames> StandardOpaqueMaterial_Impl::emsActuatorNames() const {
-	  std::vector<EMSActuatorNames> actuators{ { "Material", "Surface Property Solar Absorptance" },
-      	                                       { "Material", "Surface Property Thermal Absorptance" },
-											   { "Material", "Surface Property Visible Absorptance" }};
-	  return actuators;
+    std::vector<EMSActuatorNames> actuators{ { "Material", "Surface Property Solar Absorptance" },
+                                               { "Material", "Surface Property Thermal Absorptance" },
+                         { "Material", "Surface Property Visible Absorptance" }};
+    return actuators;
   }
 
   std::vector<std::string> StandardOpaqueMaterial_Impl::emsInternalVariableNames() const {
-	  std::vector<std::string> types;
-	  return types;
+    std::vector<std::string> types;
+    return types;
   }
 
 } // detail

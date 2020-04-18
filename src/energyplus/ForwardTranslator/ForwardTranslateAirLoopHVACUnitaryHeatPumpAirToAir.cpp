@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -287,7 +287,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     }
     else if( _fan->iddObject().type() == IddObjectType::Fan_SystemModel )
     {
+      // This isn't supported by E+ right now
       _fan->setString(Fan_SystemModelFields::AirInletNodeName,airInletNodeName.get());
+      OS_ASSERT(false);
     }
   }
 
@@ -313,7 +315,9 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitaryHeatPum
     }
     else if( _fan->iddObject().type() == IddObjectType::Fan_SystemModel )
     {
+      // This isn't supported by E+ right now
       _fan->setString(Fan_SystemModelFields::AirOutletNodeName,nodeName);
+      OS_ASSERT(false);
     }
 
     _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,nodeName);

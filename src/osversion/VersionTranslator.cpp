@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -63,6 +63,7 @@
 #include <OpenStudio.hxx>
 
 #include <thread>
+#include <map>
 
 #include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
@@ -4882,10 +4883,96 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
   IdfFile targetIdf(idd_3_0_0.iddFile());
   ss << targetIdf.versionObject().get();
 
+  // Making the map case-insentive by providing a Comparator `IstringCompare`
+  const std::map<std::string, std::string, openstudio::IstringCompare> replaceFuelTypesMap({
+    {"FuelOil#1", "FuelOilNo1"},
+    {"FuelOil#2", "FuelOilNo2"},
+    {"Gas", "NaturalGas"},
+    {"PropaneGas", "Propane"},
+  });
+
+  const std::multimap<std::string, int> fuelTypeRenamesMap({
+      {"OS:OtherEquipment", 6},  // Fuel Type
+      {"OS:Exterior:FuelEquipment", 4},  // Fuel Use Type
+      {"OS:AirConditioner:VariableRefrigerantFlow", 67},  // Fuel Type
+      {"OS:Boiler:Steam", 2},  // Fuel Type
+      {"OS:Coil:Cooling:DX:MultiSpeed", 16},  // Fuel Type
+      {"OS:Coil:Heating:Gas", 11},  // Fuel Type
+      {"OS:Coil:Heating:DX:MultiSpeed", 16},  // Fuel Type
+      {"OS:WaterHeater:Mixed", 11},  // Heater Fuel Type
+      {"OS:WaterHeater:Mixed", 15},  // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Mixed", 18},  // On Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 17},  // Heater Fuel Type
+      {"OS:WaterHeater:Stratified", 20},  // Off Cycle Parasitic Fuel Type
+      {"OS:WaterHeater:Stratified", 24},  // On Cycle Parasitic Fuel Type
+      {"OS:Generator:MicroTurbine", 13},  // Fuel Type
+      {"OS:LifeCycleCost:UsePriceEscalation", 2},  // Resource
+      {"OS:Meter:Custom", 2},  // Fuel Type
+      {"OS:Meter:CustomDecrement", 2},  // Fuel Type
+      {"OS:EnergyManagementSystem:MeteredOutputVariable", 5},  // Resource Type
+
+      // Note JM 2020-03-05: OS:BoilerHotWater is handled in its own block below
+      // {"OS:Boiler:HotWater", 2},  // Fuel Type
+  });
+
+  auto checkIfReplaceNeeded = [this, replaceFuelTypesMap](const IdfObject& object, int fieldIndex) -> bool {
+    // std::map::contains() only in C++20
+    if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
+      return replaceFuelTypesMap.find(_fuelType.get()) != replaceFuelTypesMap.end();
+    }
+    return false;
+  };
+
+  auto replaceForField = [this, &ss, &replaceFuelTypesMap](const IdfObject& object, IdfObject& newObject, int fieldIndex) -> void {
+      if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
+        auto it = replaceFuelTypesMap.find(_fuelType.get());
+        if (it != replaceFuelTypesMap.end()) {
+          LOG(Trace, "Replacing " << _fuelType.get() << " with " << it->second << " at fieldIndex " << fieldIndex
+              << " for " << object.nameString());
+          newObject.setString(fieldIndex, it->second);
+        }
+      }
+  };
+
   for (const IdfObject& object : idf_2_9_1.objects()) {
     auto iddname = object.iddObject().name();
 
-    if (iddname == "OS:Material") {
+    if (fuelTypeRenamesMap.find(iddname) != fuelTypeRenamesMap.end()) {
+      LOG(Trace, "Checking for a fuel type rename in Object of type '" << iddname << "' and named '" << object.nameString() << "'");
+      auto rangeFields = fuelTypeRenamesMap.equal_range(iddname);
+      // First pass, find if a replacement is needed
+      bool isReplaceNeeded = false;
+      for (auto it = rangeFields.first; it != rangeFields.second; ++it) {
+        if (checkIfReplaceNeeded(object, it->second)) {
+          isReplaceNeeded = true;
+          break;
+        }
+      }
+      if (isReplaceNeeded) {
+        LOG(Trace, "Replace needed!");
+
+        // Make a new object, and copy evertything in place
+        auto iddObject = idd_3_0_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Then handle the renames
+        for (auto it = rangeFields.first; it != rangeFields.second; ++it) {
+          replaceForField(object, newObject, it->second);
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+      } else {
+        // No-op
+        ss << object;
+      }
+
+    } else if (iddname == "OS:Material") {
       auto iddObject = idd_3_0_0.getObject("OS:Material");
       IdfObject newObject(iddObject.get());
 
@@ -4955,6 +5042,184 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
             newObject.setString(i, value.get());
         }
       }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:ClimateZones") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Deleted Field 1 & 2 (0-indexed): 'Active Institution' and 'Active Year'
+      for (size_t i = 0; i < object.numFields(); ++i) {
+         if ((value = object.getString(i))) {
+          if (i < 1) {
+            // 0 Unchanged
+            newObject.setString(i, value.get());
+          } else if (i > 2) {
+            // 3-End shifted -2
+            newObject.setString(i-2, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Boiler:HotWater") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Deleted Field 7: Design Water Outlet Temperature
+      for (size_t i = 0; i < object.numFields(); ++i) {
+         if ((value = object.getString(i))) {
+          if (i < 7) {
+            // 0-6 Unchanged
+            newObject.setString(i, value.get());
+          } else if (i > 7) {
+            // 8-End shifted -1
+            newObject.setString(i-1, value.get());
+          }
+        }
+      }
+
+      // Fuel Type: renames
+      replaceForField(object, newObject, 2);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Chiller:Electric:EIR") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        // 6: Reference Chilled Water Flow Rate: used to default to autosize in IDD, now required
+        if (i == 6) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+            newObject.setDouble(i, _value.get());
+          } else {
+            // If not a double, it's Autosize (either hard-set, or by default from 2.9.1 IDD)
+            newObject.setString(i, "Autosize");
+          }
+
+        // 24: Design Heat Recovery Water Flow Rate: was already required, and used to default to 0.0 in CTOR:
+        //     * Technically we could get away doing nothing here.
+        //     * Instead we'll check if the value is 0.0 (old ctor default) and that it's not connected to a HR Loop
+        //       by checking field 25 ('Heat Recovery Inlet Node Name'), in which case we switch it to Autosize
+        } else if (i == 24) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+            newObject.setDouble(i, _value.get());
+
+            // Unless it was 0.0 (default ctor) and not connected to a HR loop, then switch it to Autosize
+            if (_value.get() == 0.0) {
+              if (!object.getString(25).has_value()) {
+                newObject.setString(i, "Autosize");
+              }
+            }
+          } else {
+            // Should never get here, but just in case...
+            newObject.setString(i, "Autosize");
+          }
+
+        // 31: Condenser Heat Recovery Relative Capacity Fraction => now required, defaults to 1.0
+        } else if (i == 31) {
+          if (boost::optional<double> _value = object.getDouble(i)) {
+            newObject.setDouble(i, _value.get());
+          } else {
+            newObject.setDouble(i, 1.0);
+          }
+
+        // All other fields: unchanged
+        } else if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else  if (iddname == "OS:ShadowCalculation") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // Handle
+      for (size_t i = 0; i < object.numFields(); ++i)
+      {
+        value = object.getString(i);
+        if( value && !value->empty())
+        {
+          switch (i)
+          {
+            case 0: // Handle
+              newObject.setString(0, value.get());
+              break;
+            case 1: // Calculation Frequency => Shading Calculation Update Frequency
+              newObject.setString(3, value.get());
+              break;
+            case 2: // Maximum Figures in Shadow Overlap Calculations
+              newObject.setString(4, value.get());
+              break;
+            case 3: // Polygon Clipping Algorithm
+              newObject.setString(5, value.get());
+              break;
+            case 4: // Polygon Clipping Algorithm
+              newObject.setString(7, value.get());
+              break;
+            case 5: // Calculation Method => Shading Calculation Update Frequency Method + key rename
+              if (openstudio::istringEqual("TimestepFrequency", value.get())) {
+                newObject.setString(2, "Timestep");
+              } else { // AverageOverDaysInFrequency
+                newObject.setString(2, "Periodic");
+              }
+              break;
+            default:
+              LOG(Error, "ShadowCalculation appears to have had more than 6 fields which is impossible");
+              OS_ASSERT(false);
+              break;
+          }
+        }
+      }
+
+      // NEW REQUIRED FIELDS
+
+      // Shading Calculation Method
+      newObject.setString(1, "PolygonClipping");
+      // Pixel Counting Resolution
+      newObject.setInt(6, 512);
+      // Output External Shading Calculation Results
+      newObject.setString(8, "No");
+      // Disable Self-Shading Within Shading Zone Groups
+      newObject.setString(9, "No");
+      // Disable Self-Shading From Shading Zone Groups to Other Zones
+      newObject.setString(10, "No");
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Sizing:Zone") {
+      auto iddObject = idd_3_0_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      // I moved fields 22 & 23 to the end (Design Zone Air Distribution Effectiveness in Cooling|Heating Mode)
+      // to group all fields that belong onto DesignSpecification:ZoneAirDistribution in E+ together
+      for (size_t i = 0; i < object.numFields(); ++i) {
+         if ((value = object.getString(i))) {
+          if (i < 22) {
+            newObject.setString(i, value.get());
+          } else if (i < 24) {
+            // No need to initialize these fields by default especially now that they're at the end
+            if (!value->empty()) {
+              newObject.setString(i+4, value.get());
+            }
+          } else {
+            newObject.setString(i-2, value.get());
+          }
+        }
+      }
+
+      // Two fields were plain added to the end: Design Zone Secondary Recirculation Fraction,
+      // and  Design Minimum Zone Ventilation Efficiency, but both are optional (has default) so no-op there
 
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;

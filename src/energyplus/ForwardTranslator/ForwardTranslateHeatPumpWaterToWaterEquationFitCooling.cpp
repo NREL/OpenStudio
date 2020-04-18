@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,14 +54,11 @@ namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateHeatPumpWaterToWaterEquationFitCooling( HeatPumpWaterToWaterEquationFitCooling & modelObject )
 {
-  IdfObject idfObject(IddObjectType::HeatPump_WaterToWater_EquationFit_Cooling);
+  // createRegisterAndNameIdfObject will add it to m_map, m_idfObjects, and name it
+  // The fact that it is added to m_map will avoid a recursion issue when it has a companion heating coil (both FT methods call each other)
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::HeatPump_WaterToWater_EquationFit_Cooling, modelObject);
+
   boost::optional<double> optvalue;
-
-  m_idfObjects.push_back(idfObject);
-
-  if( auto s = modelObject.name() ) {
-    idfObject.setName(*s);
-  }
 
   if( auto value = modelObject.supplyOutletModelObject() ) {
     idfObject.setString(HeatPump_WaterToWater_EquationFit_CoolingFields::LoadSideOutletNodeName,value->name().get());

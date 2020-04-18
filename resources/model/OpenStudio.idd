@@ -304,29 +304,59 @@ OS:RunPeriodControl:SpecialDays,
 OS:ShadowCalculation,
        \unique-object
        \min-fields 2
-  A1, \field Handle
+       \memo This object is used to control details of the solar, shading, and daylighting models
+       \extensible:1
+  A1,  \field Handle
        \type handle
        \required-field
-  N1, \field Calculation Frequency
-       \note 0=Use Default Periodic Calculation|<else> calculate every <value> day
-       \note only really applicable to RunPeriods
-       \note warning issued if >31
+  A2 , \field Shading Calculation Method
+       \note Select between CPU-based polygon clipping method, the GPU-based pixel counting method,
+       \note or importing from external shading data.
+       \note If PixelCounting is selected and GPU hardware (or GPU emulation) is not available, a warning will be
+       \note displayed and EnergyPlus will revert to PolygonClipping.
+       \note If Scheduled is chosen, the External Shading Fraction Schedule Name is required
+       \note in SurfaceProperty:LocalEnvironment.
+       \note If Imported is chosen, the Schedule:File:Shading object is required.
+       \type choice
+       \key PolygonClipping
+       \key PixelCounting
+       \key Scheduled
+       \key Imported
+       \required-field
+       \note the default value is PolygonClipping
+  A3 , \field Shading Calculation Update Frequency Method
+       \note choose calculation frequency method. note that Timestep is only needed for certain cases
+       \note and can increase execution time significantly.
+       \type choice
+       \key Periodic
+       \key Timestep
+       \default Periodic
+  N1 , \field Shading Calculation Update Frequency
        \type integer
        \minimum 1
        \default 20
-  N2, \field Maximum Figures in Shadow Overlap Calculations
-       \note Number of allowable figures in shadow overlap calculations
+       \note enter number of days
+       \note this field is only used if the previous field is set to Periodic
+       \note warning issued if >31
+  N2 , \field Maximum Figures in Shadow Overlap Calculations
+       \note Number of allowable figures in shadow overlap in PolygonClipping calculations
        \type integer
        \minimum 200
        \default 15000
-  A2, \field Polygon Clipping Algorithm
+  A4 , \field Polygon Clipping Algorithm
        \note Advanced Feature.  Internal default is SutherlandHodgman
        \note Refer to InputOutput Reference and Engineering Reference for more information
        \type choice
        \key ConvexWeilerAtherton
        \key SutherlandHodgman
+       \key SlaterBarskyandSutherlandHodgman
        \default SutherlandHodgman
-  A3, \field Sky Diffuse Modeling Algorithm
+  N3 , \field Pixel Counting Resolution
+       \note Number of pixels in both dimensions of the surface rendering
+       \type integer
+       \required-field
+       \note the default is 512
+  A5 , \field Sky Diffuse Modeling Algorithm
        \note Advanced Feature.  Internal default is SimpleSkyDiffuseModeling
        \note If you have shading elements that change transmittance over the
        \note year, you may wish to choose the detailed method.
@@ -335,13 +365,41 @@ OS:ShadowCalculation,
        \key SimpleSkyDiffuseModeling
        \key DetailedSkyDiffuseModeling
        \default SimpleSkyDiffuseModeling
-  A4; \field Calculation Method
-       \note choose calculation method. note that TimestepFrequency is only needed for certain cases
-       \note and can increase execution time significantly.
+  A6 , \field Output External Shading Calculation Results
        \type choice
-       \key AverageOverDaysInFrequency
-       \key TimestepFrequency
-       \default AverageOverDaysInFrequency
+       \key Yes
+       \key No
+       \required-field
+       \note the default is No
+       \note If Yes is chosen, the calculated external shading fraction results will be saved to an external CSV file with surface names as the column headers.
+  A6 , \field Disable Self-Shading Within Shading Zone Groups
+       \note If Yes, self-shading will be disabled from all exterior surfaces in a given Shading Zone Group to surfaces within
+       \note the same Shading Zone Group.
+       \note If both Disable Self-Shading Within Shading Zone Groups and Disable Self-Shading From Shading Zone Groups to Other Zones = Yes,
+       \note then all self-shading from exterior surfaces will be disabled.
+       \note If only one of these fields = Yes, then at least one Shading Zone Group must be specified, or this field will be ignored.
+       \note Shading from Shading:* surfaces, overhangs, fins, and reveals will not be disabled.
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note the default is No
+  A8 , \field Disable Self-Shading From Shading Zone Groups to Other Zones
+       \note If Yes, self-shading will be disabled from all exterior surfaces in a given Shading Zone Group to all other zones in the model.
+       \note If both Disable Self-Shading Within Shading Zone Groups and Disable Self-Shading From Shading Zone Groups to Other Zones = Yes,
+       \note then all self-shading from exterior surfaces will be disabled.
+       \note If only one of these fields = Yes, then at least one Shading Zone Group must be specified, or this field will be ignored.
+       \note Shading from Shading:* surfaces, overhangs, fins, and reveals will not be disabled.
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+       \note the default is No
+  A9 ; \field Shading Zone Group
+       \note Specifies a group of zones which are controlled by the Disable Self-Shading fields.
+       \type object-list
+       \object-list ModelObjectLists
+       \begin-extensible
 
 OS:SimulationControl,
        \memo Note that the following 3 fields are related to the Sizing:Zone, Sizing:System,
@@ -395,6 +453,7 @@ OS:SimulationControl,
        \minimum> 0
        \maximum 0.5
        \default .04
+       \units W
   N2, \field Temperature Convergence Tolerance Value
        \type real
        \units deltaC
@@ -416,15 +475,28 @@ OS:SimulationControl,
        \type integer
        \minimum> 0
        \default 25
-  N5; \field Minimum Number of Warmup Days
+  N5, \field Minimum Number of Warmup Days
        \note The minimum number of warmup days that produce enough temperature and flux history
        \note to start EnergyPlus simulation for all reference buildings was suggested to be 6.
        \note When this field is greater than the maximum warmup days defined previous field
        \note the maximum number of warmup days will be reset to the minimum value entered here.
-       \note Warmup days will be set to be the value you entered when it is less than the default 6.
+       \note Warmup days will be set to be the value you entered when it is less than the default 1.
        \type integer
        \minimum> 0
-       \default 6
+       \default 1
+  A8, \field Do HVAC Sizing Simulation for Sizing Periods
+      \note If Yes, SizingPeriod:* objects are exectuted additional times for advanced sizing.
+      \note Currently limited to use with coincident plant sizing, see Sizing:Plant object
+      \type choice
+      \key Yes
+      \key No
+      \default No
+  N6; \field Maximum Number of HVAC Sizing Simulation Passes
+      \note the entire set of SizingPeriod:* objects may be repeated to fine tune size results
+      \note this input sets a limit on the number of passes that the sizing algorithms can repeate the set
+      \type integer
+      \minimum 1
+      \default 1
 
 OS:PerformancePrecisionTradeoffs,
        \unique-object
@@ -434,13 +506,38 @@ OS:PerformancePrecisionTradeoffs,
   A1, \field Handle
        \type handle
        \required-field
-  A2; \field Use Coil Direct Solutions
+  A2, \field Use Coil Direct Solutions
       \note If Yes, an analytical or empirical solution will be used to replace iterations in
       \note the coil performance calculations.
       \type choice
       \key Yes
       \key No
       \default No
+  A3, \field Zone Radiant Exchange Algorithm
+      \note Determines which algorithm will be used to solve long wave radiant exchange among surfaces within a zone.
+      \type choice
+      \key ScriptF
+      \key CarrollMRT
+      \default ScriptF
+  A4, \field Override Mode
+      \note The increasing mode number roughly correspond with increased speed. A description of each mode
+      \note are shown in the documentation. When Advanced is selected the N1 field value is used.
+      \type choice
+      \key Normal
+      \key Mode01
+      \key Mode02
+      \key Mode03
+      \key Mode04
+      \key Mode05
+      \key Advanced
+      \default Normal
+  N1; \field MaxZoneTempDiff
+      \note Maximum zone temperature change before HVAC timestep is shortened.
+      \note Only used when Override Mode is set to Advanced
+      \type real
+      \minimum 0.1
+      \maximum 3.0
+      \default 0.3
 
 OS:Sizing:Parameters,
        \unique-object
@@ -771,27 +868,17 @@ OS:RadianceParameters,
 OS:ClimateZones,
        \unique-object
        \extensible:4
-       \min-fields 7
   A1, \field Handle
        \type handle
        \required-field
-  A2, \field Active Institution
-       \deprecated
-       \type alpha
-       \default ASHRAE
-  N1, \field Active Year
-       \deprecated
-       \type integer
-       \minimum 0
-       \default 2006
-  A3, \field Climate Zone Institution Name
+  A2, \field Climate Zone Institution Name
        \type alpha
        \begin-extensible
        \default ASHRAE
-  A4, \field Climate Zone Document Name
+  A3, \field Climate Zone Document Name
        \type alpha
        \default ANSI/ASHRAE Standard 169
-  N2, \field Climate Zone Document Year
+  N1, \field Climate Zone Document Year
        \type integer
        \minimum 0
        \default 2006
@@ -1192,6 +1279,7 @@ OS:Site:WaterMainsTemperature,
        \units deltaC
        \minimum 0
 
+! TODO: way out of line with E+
 OS:SizingPeriod:DesignDay,
        \min-fields 16
   A1, \field Handle
@@ -1954,6 +2042,7 @@ OS:WeatherFile,
 
 OS:WeatherProperty:SkyTemperature,
        \memo This object is used to override internal sky temperature calculations.
+       \memo NOTE: not actually used in OpenStudio Model API
        \min-fields 1
   A1, \field Handle
        \type handle
@@ -1965,18 +2054,33 @@ OS:WeatherProperty:SkyTemperature,
        \type object-list
        \object-list RunPeriodsAndDesignDays
   A3, \field Calculation Type
+       \note The field indicates that the sky temperature will be imported from external schedules or calculated by alternative methods other than default.
        \type choice
        \required-field
+       \key ClarkAllen
+       \key Brunt
+       \key Idso
+       \key BerdahlMartin
+       \key ScheduleValue
        \key ScheduleValue
        \key DifferenceScheduleDryBulbValue
        \key DifferenceScheduleDewPointValue
-  A4; \field Schedule Name
+  A4, \field Schedule Name
        \note if name matches a SizingPeriod:DesignDay, put in a day schedule of this name
        \note if name is for a SizingPeriod:WeatherFileDays, SizingPeriod:WeatherFileConditionType or
        \note RunPeriod, put in a full year schedule that covers the appropriate days.
+       \note Required if Calculation Type is ScheduleValue, DifferenceScheduleDryBulbValue or DifferenceScheduleDewPointValue.
        \type object-list
        \required-field
        \object-list ScheduleAndDayScheduleNames
+  A5; \field Use Weather File Horizontal IR
+       \note If yes or blank, use Horizontal IR values from weather file when present, otherwise use the specified sky model.
+       \note If no, always use the specified sky model and ignore the horizontal IR values from the weather file.
+       \note For Calculation Type = ScheduleValue, DifferenceScheduleDryBulbValue or DifferenceScheduleDewPointValue, this field is ignored and the scheduled values are used.
+       \type choice
+       \required-field
+       \key Yes
+       \key No
 
 \group OpenStudio Resources
 
@@ -6986,9 +7090,9 @@ OS:OtherEquipment,
        \key None
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Diesel
        \key Gasoline
        \key Coal
@@ -7178,9 +7282,9 @@ OS:Exterior:FuelEquipment,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Diesel
        \key Gasoline
        \key Coal
@@ -9441,7 +9545,8 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \key Scheduled
        \required-field
        \note Choose a thermostat control logic scheme. If these control types fail to control zone
-       \note temperature within a reasonable limit, consider using multiple VRF systems
+       \note temperature within a reasonable limit, consider using multiple VRF systems.
+       \note This field is not used when all terminal units are set point controlled.
   A27, \field Thermostat Priority Schedule
        \type object-list
        \object-list ScheduleNames
@@ -9653,11 +9758,11 @@ OS:AirConditioner:VariableRefrigerantFlow,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
+       \key Propane
        \key Diesel
        \key Gasoline
-       \key FuelOil#1
-       \key FuelOil#2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key OtherFuel1
        \key OtherFuel2
        \required-field
@@ -9974,6 +10079,7 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir:MultiSpeed,
         \required-field
         \type object-list
         \object-list FansCVandOnOff
+        \note Accepts only Fan:ConstantVolume, Fan:Off, but not Fan:SystemModel
    A8,  \field Supply Air Fan Placement
         \required-field
         \type choice
@@ -10238,6 +10344,10 @@ OS:AirLoopHVAC:UnitaryHeatPump:AirToAir,
        \type object-list
        \required-field
        \object-list FansCVandOnOff
+       \note Accepts only Fan:ConstantVolume, Fan:Off, but not Fan:SystemModel
+       \note Fan:ConstantVolume only works with continuous fan operating mode (i.e. fan
+       \note operating mode schedule values are greater than 0 or the fan operating mode
+       \note schedule name field is left blank).
   A8, \field Heating Coil Name
        \note Needs to match in the DX heating coil object
        \type object-list
@@ -10362,6 +10472,7 @@ OS:AirLoopHVAC:UnitaryHeatCool:VAVChangeoverBypass,
    A10, \field Supply Air Fan
         \type object-list
         \object-list FansCVandOnOff
+        \object-list FansSystemModel
         \required-field
    A11, \field Supply Air Fan Placement
         \required-field
@@ -10485,8 +10596,18 @@ OS:AirLoopHVAC:UnitarySystem,
        \note Enter the node name used as the outlet air node for the unitary system.
   A9, \field Supply Fan Name
        \type object-list
-       \object-list FansCVandOnOffandVAV
+       \object-list Fans
        \note Enter the name of the supply air fan if included in the unitary system.
+       \note Fan:ConstantVolume only works with continuous fan operating mode (i.e. supply
+       \note air fan operating mode schedule values greater than 0).
+       \note Specify a Fan:SystemModel or a Fan:OnOff object when the Supply Air Fan Operating Mode Schedule Name
+       \note input field above is left blank.
+       \note Specify a Fan:SystemModel or a Fan:VariableVolume when modeling VAV systems which used setpoint based control
+       \note if the fan is included in the unitary system object.
+       \note The ComponentModel fan type may be substituted for the ConstantVolume or VariableVolume
+       \note fan types when more detailed fan modeling is required.
+       \note The variable or constant volume fan may be specified on the branch instead of contained
+       \note within the unitary system object (i.e., this field may be blank for certain configurations).
   A10, \field Fan Placement
        \type choice
        \key BlowThrough
@@ -11103,10 +11224,11 @@ OS:AirTerminal:SingleDuct:SeriesPIU:Reheat,
        \type object-list
        \object-list ZoneMixers
   A9,  \field Fan Name
-       \note Fan type must be Fan:ConstantVolume
+       \note Fan type must be Fan:SystemModel or Fan:ConstantVolume
        \required-field
        \type object-list
        \object-list FansCV
+       \object-list FansSystemModel
   A10, \field Reheat Coil Name
        \required-field
        \type object-list
@@ -11177,9 +11299,10 @@ OS:AirTerminal:SingleDuct:ParallelPIU:Reheat,
        \type object-list
        \object-list ZoneMixers
   A9, \field Fan Name
-       \note Fan type must be Fan:ConstantVolume
+       \note Fan type must be Fan:SystemModel or Fan:ConstantVolume
        \type object-list
        \object-list FansCV
+       \object-list FansSystemModel
   A11, \field Reheat Coil Name
        \type object-list
        \object-list HeatingCoilName
@@ -11442,35 +11565,6 @@ OS:AirTerminal:SingleDuct:ConstantVolume:CooledBeam,
        \minimum 0.0
        \maximum 4.0
        \default Autocalculate
-
-OS:AirTerminal:SingleDuct:Uncontrolled,
-      \memo Central air system terminal unit, single duct, constant volume, no controls other than
-      \memo on/off schedule.
-      \obsolete New=>OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat
-      \min-fields 6
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \type alpha
-       \required-field
-       \reference ConnectionObject
-  A3, \field Availability Schedule Name
-       \type object-list
-       \required-field
-       \object-list ScheduleNames
-  A4, \field Inlet Air Node Name
-       \type object-list
-       \object-list ConnectionNames
-  A5, \field Zone Supply Air Node Name
-       \type object-list
-       \object-list ConnectionNames
-  N1; \field Maximum Air Flow Rate
-       \type real
-       \required-field
-       \autosizable
-       \units m3/s
-       \minimum 0
 
 OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
        \memo Central air system terminal unit, single duct, constant volume, without reheat coil
@@ -12292,7 +12386,7 @@ OS:Boiler:HotWater,
        \memo curves are generated by fitting catalog data to polynomial equations.
        \memo A constant efficiency boiler may be modeled by leaving the normalized
        \memo boiler efficiency curve name input blank.
-       \min-fields 14
+       \min-fields 13
   A1, \field Handle
        \type handle
        \required-field
@@ -12305,9 +12399,9 @@ OS:Boiler:HotWater,
        \default NaturalGas
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
@@ -12315,16 +12409,16 @@ OS:Boiler:HotWater,
        \key OtherFuel2
   N1, \field Nominal Capacity
        \type real
-       \autosizable
        \units W
-       \minimum 0
+       \autosizable
+       \minimum 0.0
        \default autosize
   N2, \field Nominal Thermal Efficiency
-       \note Based on the higher heating value of fuel.
        \type real
-       \minimum> 0
-       \maximum 1
+       \minimum> 0.0
+       \maximum 1.0
        \default 0.8
+       \note Based on the higher heating value of fuel.
   A4, \field Efficiency Curve Temperature Evaluation Variable
        \type choice
        \key EnteringBoiler
@@ -12343,28 +12437,24 @@ OS:Boiler:HotWater,
        \note T = boiler water temperature (either entering or leaving).
        \type object-list
        \object-list AllCurves
-  N3, \field Design Water Outlet Temperature
+  N3, \field Design Water Flow Rate
        \type real
-       \units C
-       \default 82.0
-  N4, \field Design Water Flow Rate
-       \type real
-       \autosizable
        \units m3/s
+       \autosizable
        \ip-units gal/min
-       \minimum 0
+       \minimum 0.0
        \default autosize
-  N5, \field Minimum Part Load Ratio
+  N4, \field Minimum Part Load Ratio
        \type real
-       \minimum 0
+       \minimum 0.0
        \default 0.0
-  N6, \field Maximum Part Load Ratio
+  N5, \field Maximum Part Load Ratio
        \type real
-       \minimum 0
+       \minimum 0.0
        \default 1.0
-  N7, \field Optimum Part Load Ratio
+  N6, \field Optimum Part Load Ratio
        \type real
-       \minimum 0
+       \minimum 0.0
        \default 1.0
   A6, \field Boiler Water Inlet Node Name
        \type object-list
@@ -12374,26 +12464,30 @@ OS:Boiler:HotWater,
        \type object-list
        \required-field
        \object-list ConnectionNames
-  N8, \field Water Outlet Upper Temperature Limit
+  N7, \field Water Outlet Upper Temperature Limit
        \type real
        \units C
        \default 99.9
   A8, \field Boiler Flow Mode
-       \note Sets this boiler to either a variable or constant flow simulation
+       \note Select operating mode for fluid flow through the boiler. "NotModulated" is for
+       \note either variable or constant pumping with flow controlled by the external plant system.
+       \note "ConstantFlow" is for constant pumping with flow controlled by boiler to operate at
+       \note full design flow rate.  "LeavingSetpointModulated" is for variable pumping with flow
+       \note controlled by boiler to vary flow to target a leaving temperature setpoint.
        \type choice
        \key ConstantFlow
        \key LeavingSetpointModulated
        \key NotModulated
        \default NotModulated
-  N9, \field Parasitic Electric Load
+  N8, \field Parasitic Electric Load
        \type real
        \units W
-       \minimum 0
+       \minimum 0.0
        \default 0.0
-  N10, \field Sizing Factor
+  N9, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
-       \minimum> 0
+       \minimum> 0.0
        \default 1.0
   A9 ; \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
@@ -12419,12 +12513,14 @@ OS:Boiler:Steam,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
+       \key OtherFuel1
+       \key OtherFuel2
   N1 , \field Maximum Operating Pressure
        \units kPa
   N2 , \field Theoretical Efficiency
@@ -12549,6 +12645,7 @@ OS:HeatPump:WaterToWater:EquationFit:Heating,
         \note This optional field is used to autosize Reference Heating Power Consumption
         \note COP = Reference Heating Capacity / Reference Heating Power Consumption
         \type real
+        \units W/W
         \minimum> 0.0
         \required-field
    N16, \field Sizing Factor
@@ -12645,6 +12742,7 @@ OS:HeatPump:WaterToWater:EquationFit:Cooling,
         \note This optional field is used to autosize Reference Cooling Power Consumption
         \note COP = Rated Cooling Capacity / Rated Cooling Power Consumption
         \type real
+        \units W/W
         \minimum> 0.0
         \default 8.0
    N16, \field Sizing Factor
@@ -12671,90 +12769,90 @@ OS:Chiller:Electric:EIR,
        \reference ConnectionObject
   N1, \field Reference Capacity
        \type real
-       \required-field
-       \autosizable
        \units W
-       \minimum> 0
+       \required-field
+       \minimum> 0.0
+       \autosizable
   N2, \field Reference COP
        \note Efficiency of the chiller compressor (cooling output/compressor energy input).
        \note Condenser fan power should not be included here.
        \type real
-       \required-field
        \units W/W
-       \minimum> 0
+       \required-field
+       \minimum> 0.0
   N3, \field Reference Leaving Chilled Water Temperature
        \type real
-       \units C
        \default 6.67
+       \units C
   N4, \field Reference Entering Condenser Fluid Temperature
        \type real
-       \units C
        \default 29.4
+       \units C
   N5, \field Reference Chilled Water Flow Rate
        \type real
-       \autosizable
        \units m3/s
-       \ip-units gal/min
        \minimum> 0
-       \default autosize
+       \autosizable
+       \ip-units gal/min
+       \required-field
   N6, \field Reference Condenser Fluid Flow Rate
+       \type real
+       \units m3/s
+       \autosizable
+       \minimum 0.0
+       \ip-units gal/min
+       \default autosize
        \note This field is only used for Condenser Type = AirCooled or EvaporativelyCooled
        \note when Heat Recovery is specified
-       \type real
-       \autosizable
-       \units m3/s
-       \ip-units gal/min
-       \minimum 0
-       \default autosize
   A3, \field Cooling Capacity Function of Temperature Curve Name
        \note Cooling capacity as a function of CW supply temp and entering condenser temp
-       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
-       \note CWS = supply (leaving) chilled water temperature(C)
-       \note ECT = entering condenser fluid temperature(C)
        \type object-list
        \required-field
        \object-list BiquadraticCurves
+       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
+       \note CWS = supply (leaving) chilled water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
   A4, \field Electric Input to Cooling Output Ratio Function of Temperature Curve Name
        \note Electric Input Ratio (EIR) as a function of temperature
        \note EIR = 1/COP
-       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
-       \note CWS = supply (leaving) chilled water temperature(C)
-       \note ECT = entering condenser fluid temperature(C)
        \type object-list
        \required-field
        \object-list BiquadraticCurves
+       \note curve = a + b*CWS + c*CWS**2 + d*ECT + e*ECT**2 + f*CWS*ECT
+       \note CWS = supply (leaving) chilled water temperature(C)
+       \note ECT = entering condenser fluid temperature(C)
   A5, \field Electric Input to Cooling Output Ratio Function of Part Load Ratio Curve Name
        \note Electric Input Ratio (EIR) as a function of Part Load Ratio (PLR)
        \note EIR = 1/COP
-       \note quadratic curve = a + b*PLR + c*PLR**2
-       \note PLR = part load ratio (cooling load/steady state capacity)
        \type object-list
        \required-field
        \object-list QuadraticCurves
+       \note quadratic curve = a + b*PLR + c*PLR**2 is typical, other univariate curves may be used
+       \note PLR = part load ratio (cooling load/steady state capacity)
   N7, \field Minimum Part Load Ratio
+       \type real
        \note Part load ratio below which the chiller starts cycling on/off to meet the load.
        \note Must be less than or equal to Maximum Part Load Ratio.
-       \type real
-       \minimum 0
+       \minimum 0.0
        \default 0.1
   N8, \field Maximum Part Load Ratio
-       \note Maximum allowable part load ratio. Must be greater than or equal to Minimum Part Load Ratio.
        \type real
-       \minimum> 0
+       \note Maximum allowable part load ratio. Must be greater than or equal to Minimum Part Load Ratio.
+       \minimum> 0.0
        \default 1.0
   N9, \field Optimum Part Load Ratio
+       \type real
        \note Optimum part load ratio where the chiller is most efficient.
        \note Must be greater than or equal to the Minimum Part Load Ratio
        \note and less than or equal to the Maximum Part Load Ratio.
-       \type real
-       \minimum> 0
+       \minimum> 0.0
        \default 1.0
   N10, \field Minimum Unloading Ratio
+       \type real
        \note Part load ratio where the chiller can no longer unload and false loading begins.
        \note Minimum unloading ratio must be greater than or equal to the Minimum Part Load Ratio
        \note and less than or equal to the Maximum Part Load Ratio.
-       \type real
-       \minimum 0
+       \minimum 0.0
        \default 0.2
   A6, \field Chilled Water Inlet Node Name
        \type object-list
@@ -12765,51 +12863,59 @@ OS:Chiller:Electric:EIR,
        \required-field
        \object-list ConnectionNames
   A8, \field Condenser Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
        \note Not required if air-cooled or evaporativly-cooled
-       \type object-list
-       \object-list ConnectionNames
   A9, \field Condenser Outlet Node Name
-       \note Not required if air-cooled or evaporatively-cooled
        \type object-list
        \object-list ConnectionNames
+       \note Not required if air-cooled or evaporatively-cooled
   A10, \field Condenser Type
        \type choice
-       \default AirCooled
        \key AirCooled
        \key WaterCooled
        \key EvaporativelyCooled
+       \default AirCooled
   N11, \field Condenser Fan Power Ratio
-       \note Use for air-cooled or evaporatively-cooled condensers.
-       \note Ratio of condenser fan power to reference chiller capacity
        \type real
        \units W/W
-       \minimum 0
+       \minimum 0.0
        \default 0.0
-  N12, \field Compressor Motor Efficiency
-       \note Fraction of compressor electrical energy that must be rejected by the condenser.
-       \note Enter 1.0 or leave this field blank for a hermetic compressor.
+       \note Use for air-cooled or evaporatively-cooled condensers.
+       \note Ratio of condenser fan power to reference chiller capacity
+  N12, \field Fraction of Compressor Electric Consumption Rejected by Condenser
        \type real
-       \minimum 0
-       \maximum 1
+       \note Fraction of compressor electrical energy that must be rejected by the condenser.
+       \note Enter a value of 1.0 when modeling hermetic chillers.
+       \note For open chillers, enter the compressor motor efficiency.
+       \note This value should be greater than 0.6 for practical applications.
+       \minimum> 0.0
+       \maximum 1.0
        \default 1.0
   N13, \field Leaving Chilled Water Lower Temperature Limit
        \type real
-       \units C
        \default 2.0
+       \units C
   A11, \field Chiller Flow Mode
-       \note Sets chilled water flow rate to either constant or variable.
+       \note Select operating mode for fluid flow through the chiller. "NotModulated" is for
+       \note either variable or constant pumping with flow controlled by the external plant system.
+       \note "ConstantFlow" is for constant pumping with flow controlled by chiller to operate at
+       \note full design flow rate.  "LeavingSetpointModulated" is for variable pumping with flow
+       \note controlled by chiller to vary flow to target a leaving temperature setpoint.
        \type choice
        \key ConstantFlow
        \key LeavingSetpointModulated
        \key NotModulated
        \default NotModulated
   N14, \field Design Heat Recovery Water Flow Rate
-       \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
        \type real
+       \note If non-zero, then the heat recovery inlet and outlet node names must be entered.
+       \note Heat recovery is only available with Condenser Type = WaterCooled.
        \units m3/s
+       \minimum 0.0
+       \autosizable
        \ip-units gal/min
-       \minimum 0
-       \default 0.0
+       \required-field
   A12, \field Heat Recovery Inlet Node Name
        \type object-list
        \object-list ConnectionNames
@@ -12819,38 +12925,39 @@ OS:Chiller:Electric:EIR,
   N15, \field Sizing Factor
        \note Multiplies the autosized capacity and flow rates
        \type real
-       \minimum> 0
+       \minimum> 0.0
        \default 1.0
   N16, \field Basin Heater Capacity
+       \type real
+       \units W/K
+       \minimum 0.0
+       \default 0.0
        \note This field is only used for Condenser Type = EvaporativelyCooled and for periods
        \note when the basin heater is available (field Basin Heater Operating Schedule Name).
        \note For this situation, the heater maintains the basin water temperature at the basin heater
        \note setpoint temperature when the outdoor air temperature falls below the setpoint temperature.
        \note The basin heater only operates when the chiller is not operating.
-       \type real
-       \units W/K
-       \minimum 0
-       \default 0.0
   N17, \field Basin Heater Setpoint Temperature
-       \note This field is only used for Condenser Type = EvaporativelyCooled.
-       \note Enter the outdoor dry-bulb temperature when the basin heater turns on.
        \type real
        \units C
-       \minimum 2
+       \minimum 2.0
        \default 2.0
+       \note This field is only used for Condenser Type = EvaporativelyCooled.
+       \note Enter the outdoor dry-bulb temperature when the basin heater turns on.
   A14, \field Basin Heater Operating Schedule Name
+       \type object-list
+       \object-list ScheduleNames
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Schedule values greater than 0 allow the basin heater to operate whenever the outdoor
        \note air dry-bulb temperature is below the basin heater setpoint temperature.
        \note If a schedule name is not entered, the basin heater is allowed to operate
        \note throughout the entire simulation.
-       \type object-list
-       \object-list ScheduleNames
   N18, \field Condenser Heat Recovery Relative Capacity Fraction
        \note This optional field is the fraction of total rejected heat that can be recovered at full load
        \type real
        \minimum 0.0
        \maximum 1.0
+       \required-field
   A15, \field Heat Recovery Inlet High Temperature Limit Schedule Name
        \note This optional schedule of temperatures will turn off heat recovery if inlet exceeds the value
        \type object-list
@@ -13251,6 +13358,7 @@ OS:Chiller:Absorption:Indirect,
   N11, \field Design Generator Fluid Flow Rate
        \type real
        \units m3/s
+       \ip-units gal/min
        \autosizable
        \required-field
        \note  For variable flow this is the max flow and for constant flow this is the flow.
@@ -13396,6 +13504,7 @@ OS:Chiller:Absorption,
        \type real
        \autosizable
        \units m3/s
+       \ip-units gal/min
        \minimum> 0.0
        \required-field
   N17, \field Degree of Subcooling in Steam Generator
@@ -15454,11 +15563,11 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
+       \key Propane
        \key Diesel
        \key Gasoline
-       \key FuelOil#1
-       \key FuelOil#2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key OtherFuel1
        \key OtherFuel2
        \required-field
@@ -16305,7 +16414,6 @@ OS:Coil:Heating:DX:SingleSpeed,
   N5, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \units C
-       \minimum -20
        \default -8.0
   N6, \field Maximum Outdoor Dry-Bulb Temperature for Defrost Operation
        \type real
@@ -16498,15 +16606,13 @@ OS:Coil:Heating:Gas,
        \type real
        \units W
   A8;  \field Fuel Type
-       \note PropaneGas is deprecated in favor of Propane
        \type choice
        \key NaturalGas
        \key Propane
-       \key PropaneGas
        \key Diesel
        \key Gasoline
-       \key FuelOil#1
-       \key FuelOil#2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key OtherFuel1
        \key OtherFuel2
        \default NaturalGas
@@ -17172,11 +17278,11 @@ OS:Coil:Heating:DX:MultiSpeed,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
+       \key Propane
        \key Diesel
        \key Gasoline
-       \key FuelOil#1
-       \key FuelOil#2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key OtherFuel1
        \key OtherFuel2
   N8,  \field Region number for Calculating HSPF
@@ -17509,9 +17615,9 @@ OS:Coil:Cooling:DX:VariableSpeed:SpeedData,
         \maximum 1.0
         \required-field
    N3,  \field Reference Unit Gross Rated Cooling COP
-        \units dimensionless
+        \units W/W
         \type real
-        \minimum 0
+        \minimum> 0.0
         \required-field
    N4,  \field Reference Unit Rated Air Flow Rate
         \units m3/s
@@ -17623,7 +17729,8 @@ OS:Coil:Heating:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
    N2,  \field Reference Unit Gross Rated Heating COP
         \units dimensionless
         \type real
-        \minimum 0
+        \units W/W
+        \minimum> 0.0
         \required-field
    N3,  \field Reference Unit Rated Air Flow
         \units m3/s
@@ -17769,7 +17876,8 @@ OS:Coil:Cooling:WaterToAirHeatPump:VariableSpeedEquationFit:SpeedData,
    N3,  \field Reference Unit Gross Rated Cooling COP
         \units dimensionless
         \type real
-        \minimum 0
+        \units W/W
+        \minimum> 0.0
         \required-field
    N4,  \field Reference Unit Rated Air Flow Rate
         \units m3/s
@@ -20105,11 +20213,7 @@ OS:Fan:SystemModel,
   A2 , \field Name
        \required-field
        \reference Fans
-       \reference FansCV
-       \reference FansCVandOnOff
-       \reference FansVAV
-       \reference FansCVandVAV
-       \reference FansCVandOnOffandVAV
+       \reference FansSystemModel
        \reference ConnectionObject
   A3 , \field Availability Schedule Name
        \note Availability schedule name for this fan. Schedule value > 0 means the fan is available.
@@ -20402,10 +20506,9 @@ OS:Fan:OnOff,
        \type alpha
        \required-field
        \reference Fans
-       \reference FansOnOff
-       \reference FansCV
        \reference FansCVandOnOff
-       \reference FansCVandVAV
+       \reference FansOnOff
+       \reference FansOnOffandVAV
        \reference FansCVandOnOffandVAV
        \reference ConnectionObject
   A3, \field Availability Schedule Name
@@ -23020,14 +23123,6 @@ OS:Sizing:Zone,
        \type real
        \minimum 0
        \default 0.3
-  N17, \field Design Zone Air Distribution Effectiveness in Cooling Mode
-       \type real
-       \minimum> 0
-       \default 1.0
-  N18, \field Design Zone Air Distribution Effectiveness in Heating Mode
-       \type real
-       \minimum> 0
-       \default 1.0
   A6, \field Account for Dedicated Outdoor Air System
       \note account for effect of dedicated outdoor air system supplying air directly to the zone
       \type choice
@@ -23042,16 +23137,39 @@ OS:Sizing:Zone,
       \key NeutralDehumidifiedSupplyAir
       \key ColdSupplyAir
        \required-field
-  N19,\field Dedicated Outdoor Air Low Setpoint Temperature for Design
+  N17,\field Dedicated Outdoor Air Low Setpoint Temperature for Design
       \type real
       \units C
       \autosizable
        \required-field
-  N20;\field Dedicated Outdoor Air High Setpoint Temperature for Design
+  N18,\field Dedicated Outdoor Air High Setpoint Temperature for Design
       \type real
       \units C
       \autosizable
        \required-field
+  N19, \field Design Zone Air Distribution Effectiveness in Cooling Mode
+       \note this field is from the DesignSpecification:ZoneAirDistribution
+       \type real
+       \minimum> 0
+       \default 1.0
+  N20, \field Design Zone Air Distribution Effectiveness in Heating Mode
+       \note this field is from the DesignSpecification:ZoneAirDistribution
+       \type real
+       \minimum> 0
+       \default 1.0
+  N21,\field Design Zone Secondary Recirculation Fraction
+       \note this field is from the DesignSpecification:ZoneAirDistribution
+       \type real
+       \default 0.0
+       \minimum 0.0
+       \units dimensionless
+  N22;\field Design Minimum Zone Ventilation Efficiency
+       \note this field is from the DesignSpecification:ZoneAirDistribution
+       \type real
+       \default 0.0
+       \minimum 0.0
+       \maximum 1.0
+       \units dimensionless
 
 OS:Splitter,
        \extensible:1
@@ -23318,8 +23436,8 @@ OS:ZoneControl:Thermostat:StagedDualSetpoint,
 OS:ZoneHVAC:EquipmentList,
        \min-fields 1
        \extensible:5 Duplicate the five fields Zone Equipment Object Type through Sequential Heating Fraction
-       \memo List equipment in simulation order.  Note that an ZoneHVAC:AirDistributionUnit or
-       \memo AirTerminal:SingleDuct:Uncontrolled object must be listed in this statement if there is a forced
+       \memo List equipment in simulation order.  Note that an ZoneHVAC:AirDistributionUnit
+       \memo object must be listed in this statement if there is a forced
        \memo air system serving the zone from the air loop.
        \memo Equipment is simulated in the order specified by Zone Equipment Cooling Sequence and
        \memo Zone Equipment Heating or No-Load Sequence, depending on the thermostat request.
@@ -24044,6 +24162,14 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \required-field
         \type object-list
         \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
+        \note Fan type must be according to capacity control method (see I/O)
+        \note For ConstantFanVariableFlow a Fan:OnOff or Fan:ConstantVolume is valid.
+        \note For CyclingFan a Fan:OnOff is valid.
+        \note For VariableFanVariableFlow or VariableFanConstantFlow a Fan:VariableVolume is valid.
+        \note For ASHRAE90.1 a Fan:OnOff or Fan:VariableVolume is valid.
+        \note Fan:SystemModel is valid for all capacity control methods.
+        \note The fan's inlet node should be the same as the outdoor air mixer's mixed air node.
    A11, \field Cooling Coil Name
         \required-field
         \type object-list
@@ -24322,6 +24448,8 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \type object-list
        \required-field
        \object-list FansCVandOnOff
+       \object-list FansSystemModel
+       \note Fan:ConstantVolume only works with fan operating mode is continuous.
   A9, \field Heating Coil Name
        \note Needs to match in the DX Heating Coil object.
        \type object-list
@@ -24469,6 +24597,10 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \type object-list
        \required-field
        \object-list FansCVandOnOff
+       \object-list FansSystemModel
+       \note Fan:ConstantVolume only works when continuous fan operation is used the entire
+       \note simulation (all supply air fan operating mode schedule values are greater than 0).
+       \note If any fan operating mode schedule values are 0 a Fan:SystemModel or Fan:OnOff object must be used.
   A9, \field Heating Coil Name
        \note Needs to match in the heating coil object.
        \type object-list
@@ -24494,6 +24626,11 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \object-list ScheduleNames
 
 OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
+        \memo A terminal unit with variable refrigerant flow (VRF) DX cooling and heating coils
+        \memo (air-to-air heat pump). The VRF terminal units are served by an
+        \memo AirConditioner:VariableRefrigerantFlow or
+        \memo AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:* system.
+        \memo Terminal units can be configured as zone, air loop or outside air system equipment
   A1 ,  \field Handle
         \type handle
         \required-field
@@ -24541,36 +24678,72 @@ OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
         \units m3/s
         \minimum 0.0
         \autosizable
+        \note This field is used only when an oudoor air mixer is included.
+        \note This field is set to zero flow when the VRF terminal unit is connected to
+        \note central dedicated outdoor air through air terminal single duct mixer object.
+        \note When this VRF terminal is used as air loop equipment the autosized flow
+        \note rate will be set to 0 when an outdoor air system is connected to this air loop,
+        \note otherwise the outdoor air flow rate will equal the maximum outdoor air flow rate.
   N6 ,  \field Outdoor Air Flow Rate During Heating Operation
         \required-field
         \type real
         \units m3/s
         \minimum 0.0
         \autosizable
+        \note This field is used only when an oudoor air mixer is included.
+        \note This field is set to zero flow when the VRF terminal unit is connected to
+        \note central dedicated outdoor air through air terminal single duct mixer object.
+        \note When this VRF terminal is used as air loop equipment the autosized flow
+        \note rate will be set to 0 when an outdoor air system is connected to this air loop,
+        \note otherwise the outdoor air flow rate will equal the maximum outdoor air flow rate.
   N7 ,  \field Outdoor Air Flow Rate When No Cooling or Heating is Needed
         \required-field
         \type real
         \units m3/s
         \minimum 0.0
         \autosizable
+        \note This field is used only when an oudoor air mixer is included.
+        \note This field is set to zero flow when the VRF terminal unit is connected to
+        \note central dedicated outdoor air through air terminal single duct mixer object.
+        \note When this VRF terminal is used as air loop equipment the autosized flow
+        \note rate will be set to 0 when an outdoor air system is connected to this air loop,
+        \note otherwise the outdoor air flow rate will equal the maximum outdoor air flow rate.
   A6 ,  \field Supply Air Fan Operating Mode Schedule
         \required-field
         \type object-list
         \object-list ScheduleNames
+        \note Required for zone equipment. Leave blank if terminal unit is used in AirLoopHVAC:OutdoorAirSystem:EquipmentList.
+        \note Also leave blank if terminal unit is used on main AirloopHVAC branch and terminal unit has no fan.
   A7 ,  \field Supply Air Fan placement
         \required-field
         \type choice
         \key BlowThrough
         \key DrawThrough
         \note Select fan placement as either blow through or draw through.
+        \note Required for zone equipment. This field is ignored if the VRF terminal unit is used
+        \note in AirLoopHVAC:OutdoorAirSystem:EquipmentList.
+        \note This field is also ignored if VRF terminal unit is used on main AirloopHVAC branch
+        \note and terminal unit has no fan.
   A8 ,  \field Supply Air Fan
         \required-field
         \type object-list
-        \object-list FansCVandOnOff
+        \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
+        \note Supply Air Fan Object Type must be Fan:SystemModel, Fan:OnOff, or Fan:ConstantVolume
+        \note if AirConditioner:VariableRefrigerantFlow is used to model VRF outdoor unit
+        \note Supply Air Fan Object Type must be Fan:SystemModel or Fan:VariableVolume if
+        \note AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl or
+        \note AirConditioner:VariableRefrigerantFlow:FluidTemperatureControl:HR
+        \note is used to model VRF outdoor unit
   A9 ,  \field Outside Air Mixer
         \type object-list
         \object-list OutdoorAirMixers
+        \note Currently only one type OutdoorAir:Mixer object is available.
         \note If this field is blank, and outside air mixer is not used.
+        \note This field should be left blank if the VRF terminal unit is connected to
+        \note central dedicated outdoor air through an AirTerminal:SingleDuct:Mixer object.
+        \note This field may also be left blank when the VRF terminal is used in the air
+        \note loop or outdoor air system.
   A10,  \field Cooling Coil
         \type object-list
         \object-list CoolingCoilsDXVarRefrigFlow
@@ -24700,10 +24873,11 @@ OS:ZoneHVAC:WaterToAirHeatPump,
         \units m3/s
         \minimum 0
    A7,  \field Supply Air Fan Name
-        \note Needs to match Fan:OnOff object
         \required-field
         \type object-list
-        \object-list FansCVandOnOff
+        \object-list FansOnOff
+        \object-list FansSystemModel
+        \note Needs to match Fan:SystemModel or Fan:OnOff object
    A8, \field Heating Coil Name
         \note  Needs to match in the water-to-air heatpump heating coil object
         \type object-list
@@ -24822,8 +24996,8 @@ OS:ZoneHVAC:UnitHeater,
        \required-field
        \type object-list
        \object-list FansCVandOnOffandVAV
-       \note Allowable fan types are Fan:ConstantVolume, Fan:OnOff and
-       \note Fan:VariableVolume
+       \object-list FansSystemModel
+       \note Allowable fan types are Fan:ConstantVolume, Fan:OnOff, Fan:VariableVolume and Fan:SystemModel
   N1 , \field Maximum Supply Air Flow Rate
        \note Must be less than or equal to fan size.
        \type real
@@ -24961,14 +25135,16 @@ OS:ZoneHVAC:EnergyRecoveryVentilator,
         \note This flow rate must match the supply fan air flow rate.
   A5 ,  \field Supply Air Fan Name
         \required-field
-        \note Fan type must be Fan:OnOff
+        \note Fan type must be Fan:OnOff or Fan:SystemModel
         \type object-list
         \object-list FansOnOff
+        \object-list FansSystemModel
   A6 ,  \field Exhaust Air Fan Name
         \required-field
-        \note Fan type must be Fan:OnOff
+        \note Fan type must be Fan:OnOff or Fan:SystemModel
         \type object-list
         \object-list FansOnOff
+        \object-list FansSystemModel
   A7 ,  \field Controller Name
         \note Enter the name of a ZoneHVAC:EnergyRecoveryVentilator:Controller object.
         \type object-list
@@ -25128,6 +25304,8 @@ OS:ZoneHVAC:UnitVentilator,
         \required-field
         \type object-list
         \object-list FansCVandOnOffandVAV
+        \object-list FansSystemModel
+        \note Allowable fan types are Fan:ConstantVolume, Fan:OnOff, Fan:VariableVolume, and Fan:SystemModel
    A10, \field Supply Air Fan Operating Mode Schedule Name
         \type object-list
         \object-list ScheduleNames
@@ -25390,16 +25568,16 @@ OS:WaterHeater:Mixed,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
-       \key Steam
-       \key DistrictHeating
        \key OtherFuel1
        \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
   N8 , \field Heater Thermal Efficiency
        \type real
        \minimum> 0.0
@@ -25416,16 +25594,16 @@ OS:WaterHeater:Mixed,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
-       \key Steam
-       \key DistrictHeating
        \key OtherFuel1
        \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
   N10, \field Off Cycle Parasitic Heat Fraction to Tank
        \type real
        \minimum 0.0
@@ -25440,16 +25618,16 @@ OS:WaterHeater:Mixed,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
-       \key Steam
-       \key DistrictHeating
        \key OtherFuel1
        \key OtherFuel2
+       \key Steam
+       \key DistrictHeating
   N12, \field On Cycle Parasitic Heat Fraction to Tank
        \type real
        \minimum 0.0
@@ -25693,7 +25871,10 @@ OS:WaterHeater:HeatPump,
        \required-field
        \type object-list
        \object-list FansOnOff
-       \note Needs to match the name used in the corresponding Fan:OnOff object.
+       \object-list FansSystemModel
+       \note Needs to match the name used in the corresponding Fan:SystemModel or Fan:OnOff object.
+       \note Specify the type of fan used by this heat pump water heater. The only
+       \note valid choices are Fan:SystemModel or Fan:OnOff.
   A16, \field Fan Placement
        \type choice
        \key BlowThrough
@@ -26129,7 +26310,10 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
        \required-field
        \type object-list
        \object-list FansOnOff
-       \note Needs to match the name used in the corresponding Fan:OnOff object.
+       \object-list FansSystemModel
+       \note Needs to match the name used in the corresponding Fan:SystemModel or Fan:OnOff object.
+       \note Specify the type of fan used by this heat pump water heater. The only
+       \note valid choices are Fan:SystemModel or Fan:OnOff.
   A16, \field Fan Placement
        \type choice
        \key BlowThrough
@@ -26459,9 +26643,9 @@ OS:WaterHeater:Stratified,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
@@ -26484,9 +26668,9 @@ OS:WaterHeater:Stratified,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
@@ -26514,9 +26698,9 @@ OS:WaterHeater:Stratified,
        \type choice
        \key Electricity
        \key NaturalGas
-       \key PropaneGas
-       \key FuelOil#1
-       \key FuelOil#2
+       \key Propane
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Coal
        \key Diesel
        \key Gasoline
@@ -27974,7 +28158,7 @@ OS:Generator:MicroTurbine,
   A7, \field Fuel Type
       \type choice
       \key NaturalGas
-      \key PropaneGas
+      \key Propane
       \default NaturalGas
   N8, \field Fuel Higher Heating Value
       \type real
@@ -29860,18 +30044,22 @@ OS:LifeCycleCost:UsePriceEscalation,
   A3, \field Resource
        \type choice
        \required-field
-       \key Electricity
-       \key NaturalGas
-       \key Steam
-       \key Gasoline
-       \key Diesel
-       \key Coal
-       \key FuelOil#1
-       \key FuelOil#2
-       \key Propane
-       \key Water
-       \key OtherFuel1
-       \key OtherFuel2
+        \key Electricity
+        \key ElectricityPurchased
+        \key ElectricityProduced
+        \key ElectricitySurplusSold
+        \key ElectricityNet
+        \key NaturalGas
+        \key Steam
+        \key Gasoline
+        \key Diesel
+        \key Coal
+        \key FuelOilNo1
+        \key FuelOilNo2
+        \key Propane
+        \key OtherFuel1
+        \key OtherFuel2
+        \key Water
   N1, \field Escalation Start Year
        \note This field and the Escalation Start Month define the time that corresponds to Year 1 Escalation
        \note such as 2010 when the escalation rates are applied. This field and the Escalation Start Month
@@ -30075,8 +30263,8 @@ OS:Output:Meter,
        \memo external-list autoRDDmeter
   A3, \field Reporting Frequency
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
-       \note RunPeriod, Environment, and Annual are the same
-       \note RunPeriod, Environment, and Annual are synonymous
+       \note RunPeriod and Environment are the same
+       \note RunPeriod and Environment are synonymous
        \type choice
        \default Hourly
        \key Timestep
@@ -30123,8 +30311,8 @@ OS:Output:Variable,
   A5, \field Reporting Frequency
        \note Detailed lists every instance (i.e. HVAC variable timesteps)
        \note Timestep refers to the zone Timestep/Number of Timesteps in hour value
-       \note RunPeriod, Environment, and Annual are the same
-       \note RunPeriod, Environment, and Annual are synonymous
+       \note RunPeriod and Environment are the same
+       \note RunPeriod and Environment are synonymous
        \type choice
        \default Hourly
        \key Detailed
@@ -30158,9 +30346,9 @@ OS:Meter:Custom,
         \type choice
         \key Electricity
         \key NaturalGas
-        \key PropaneGas
-        \key FuelOil#1
-        \key FuelOil#2
+        \key Propane
+        \key FuelOilNo1
+        \key FuelOilNo2
         \key Coal
         \key Diesel
         \key Gasoline
@@ -30186,9 +30374,9 @@ OS:Meter:CustomDecrement,
         \type choice
         \key Electricity
         \key NaturalGas
-        \key PropaneGas
-        \key FuelOil#1
-        \key FuelOil#2
+        \key Propane
+        \key FuelOilNo1
+        \key FuelOilNo2
         \key Coal
         \key Diesel
         \key Gasoline
@@ -30298,6 +30486,121 @@ OS:Output:EnergyManagementSystem,
        \key ErrorsOnly
        \key Verbose
        \default None
+
+OS:Output:Table:SummaryReports,
+       \memo This object allows the user to call report types that are predefined and will appear with the
+       \memo other tabular reports.  These predefined reports are sensitive to the OutputControl:Table:Style object
+       \memo and appear in the same files as the tabular reports.  The entries for this object is a list
+       \memo of the predefined reports that should appear in the tabular report output file.
+       \memo There should be as many fields (A) in this object as there are keys in the following (minus
+       \memo AllSummary+AllMonthly+AllSummaryAndMonthly)
+       \extensible:1
+       \min-fields 1
+       \unique-object
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2; \field Report Name 1
+       \begin-extensible
+       \type choice
+       \key AllSummary
+       \key AllSummaryAndSizingPeriod
+       \key AllMonthly
+       \key AllSummaryAndMonthly
+       \key AllSummaryMonthlyAndSizingPeriod
+       \key AnnualBuildingUtilityPerformanceSummary
+       \key InputVerificationandResultsSummary
+       \key DemandEndUseComponentsSummary
+       \key SourceEnergyEndUseComponentsSummary
+       \key ClimaticDataSummary
+       \key EquipmentSummary
+       \key EnvelopeSummary
+       \key SurfaceShadowingSummary
+       \key ShadingSummary
+       \key LightingSummary
+       \key HVACSizingSummary
+       \key SystemSummary
+       \key ComponentSizingSummary
+       \key CoilSizingDetails
+       \key OutdoorAirSummary
+       \key ObjectCountSummary
+       \key ComponentCostEconomicsSummary
+       \key AdaptiveComfortSummary
+       \key SensibleHeatGainSummary
+       \key ZoneComponentLoadSummary
+       \key AirLoopComponentLoadSummary
+       \key FacilityComponentLoadSummary
+       \key Standard62.1Summary
+       \key EnergyMeters
+       \key InitializationSummary
+       \key LEEDSummary
+       \key LifeCycleCostReport
+       \key TariffReport
+       \key EconomicResultSummary
+       \key ZoneCoolingSummaryMonthly
+       \key ZoneHeatingSummaryMonthly
+       \key ZoneElectricSummaryMonthly
+       \key SpaceGainsMonthly
+       \key PeakSpaceGainsMonthly
+       \key SpaceGainComponentsAtCoolingPeakMonthly
+       \key EnergyConsumptionElectricityNaturalGasMonthly
+       \key EnergyConsumptionElectricityGeneratedPropaneMonthly
+       \key EnergyConsumptionDieselFuelOilMonthly
+       \key EnergyConsumptionDistrictHeatingCoolingMonthly
+       \key EnergyConsumptionCoalGasolineMonthly
+       \key EnergyConsumptionOtherFuelsMonthly
+       \key EndUseEnergyConsumptionElectricityMonthly
+       \key EndUseEnergyConsumptionNaturalGasMonthly
+       \key EndUseEnergyConsumptionDieselMonthly
+       \key EndUseEnergyConsumptionFuelOilMonthly
+       \key EndUseEnergyConsumptionCoalMonthly
+       \key EndUseEnergyConsumptionPropaneMonthly
+       \key EndUseEnergyConsumptionGasolineMonthly
+       \key EndUseEnergyConsumptionOtherFuelsMonthly
+       \key PeakEnergyEndUseElectricityPart1Monthly
+       \key PeakEnergyEndUseElectricityPart2Monthly
+       \key ElectricComponentsOfPeakDemandMonthly
+       \key PeakEnergyEndUseNaturalGasMonthly
+       \key PeakEnergyEndUseDieselMonthly
+       \key PeakEnergyEndUseFuelOilMonthly
+       \key PeakEnergyEndUseCoalMonthly
+       \key PeakEnergyEndUsePropaneMonthly
+       \key PeakEnergyEndUseGasolineMonthly
+       \key PeakEnergyEndUseOtherFuelsMonthly
+       \key SetpointsNotMetWithTemperaturesMonthly
+       \key ComfortReportSimple55Monthly
+       \key UnglazedTranspiredSolarCollectorSummaryMonthly
+       \key OccupantComfortDataSummaryMonthly
+       \key ChillerReportMonthly
+       \key TowerReportMonthly
+       \key BoilerReportMonthly
+       \key DXReportMonthly
+       \key WindowReportMonthly
+       \key WindowEnergyReportMonthly
+       \key WindowZoneSummaryMonthly
+       \key WindowEnergyZoneSummaryMonthly
+       \key AverageOutdoorConditionsMonthly
+       \key OutdoorConditionsMaximumDryBulbMonthly
+       \key OutdoorConditionsMinimumDryBulbMonthly
+       \key OutdoorConditionsMaximumWetBulbMonthly
+       \key OutdoorConditionsMaximumDewPointMonthly
+       \key OutdoorGroundConditionsMonthly
+       \key WindowACReportMonthly
+       \key WaterHeaterReportMonthly
+       \key GeneratorReportMonthly
+       \key DaylightingReportMonthly
+       \key CoilReportMonthly
+       \key PlantLoopDemandReportMonthly
+       \key FanReportMonthly
+       \key PumpReportMonthly
+       \key CondLoopDemandReportMonthly
+       \key ZoneTemperatureOscillationReportMonthly
+       \key AirLoopSystemEnergyAndWaterUseMonthly
+       \key AirLoopSystemComponentLoadsMonthly
+       \key AirLoopSystemComponentEnergyUseMonthly
+       \key MechanicalVentilationLoadsMonthly
+       \key HeatEmissionsSummary
+       \key HeatEmissionsReportMonthly
 
 \group Energy Management System (EMS)
 
@@ -30516,8 +30819,8 @@ OS:EnergyManagementSystem:MeteredOutputVariable,
        \key Gasoline
        \key Diesel
        \key Coal
-       \key FuelOil#1
-       \key FuelOil#2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Propane
        \key OtherFuel1
        \key OtherFuel2
@@ -31574,6 +31877,7 @@ OS:AirflowNetworkFan,
       \required-field
       \type object-list
       \object-list FansCVandOnOffandVAV
+      \object-list FansSystemModel
       \note Enter the name of the fan in the primary air loop.
 
 OS:AirflowNetworkEquivalentDuct,

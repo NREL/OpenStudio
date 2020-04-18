@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -296,6 +296,29 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_EQ(1.0, sz.designZoneAirDistributionEffectivenessinHeatingMode());
   EXPECT_TRUE(sz.isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted());
 
+  // Design Zone Secondary Recirculation Fraction:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(sz.isDesignZoneSecondaryRecirculationFractionDefaulted());
+  EXPECT_EQ(0.0, sz.designZoneSecondaryRecirculationFraction());
+  EXPECT_TRUE(sz.setDesignZoneSecondaryRecirculationFraction(0.35));
+  EXPECT_FALSE(sz.isDesignZoneSecondaryRecirculationFractionDefaulted());
+  EXPECT_EQ(0.35, sz.designZoneSecondaryRecirculationFraction());
+  // Test reset
+  sz.resetDesignZoneSecondaryRecirculationFraction();
+  EXPECT_EQ(0.0, sz.designZoneSecondaryRecirculationFraction());
+  EXPECT_TRUE(sz.isDesignZoneSecondaryRecirculationFractionDefaulted());
+
+  // Design Minimum Zone Ventilation Efficiency:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(sz.isDesignMinimumZoneVentilationEfficiencyDefaulted());
+  EXPECT_EQ(0.0, sz.designMinimumZoneVentilationEfficiency());
+  EXPECT_TRUE(sz.setDesignMinimumZoneVentilationEfficiency(0.25));
+  EXPECT_FALSE(sz.isDesignMinimumZoneVentilationEfficiencyDefaulted());
+  EXPECT_EQ(0.25, sz.designMinimumZoneVentilationEfficiency());
+  // Test reset
+  sz.resetDesignMinimumZoneVentilationEfficiency();
+  EXPECT_EQ(0.0, sz.designMinimumZoneVentilationEfficiency());
+  EXPECT_TRUE(sz.isDesignMinimumZoneVentilationEfficiencyDefaulted());
 
   // Account for Dedicated Outdoor Air System:  Boolean
   // Default in Ctor

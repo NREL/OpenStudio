@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,7 +56,7 @@ namespace openstudio{
     }
 
     SqlFile_Impl::SqlFile_Impl(const openstudio::path& path, const bool createIndexes)
-      : m_path(path), m_connectionOpen(false), m_supportedVersion(false), m_hasYear(true)
+      : m_path(path), m_connectionOpen(false), m_supportedVersion(false), m_hasYear(true), m_hasIlluminanceMapYear(true)
     {
       if (openstudio::filesystem::exists(m_path)){
         m_path = openstudio::filesystem::canonical(m_path);
@@ -75,6 +75,7 @@ namespace openstudio{
       m_sqliteFilename = toString(m_path.make_preferred().native());
       std::string fileName = m_sqliteFilename;
       m_hasYear = true;
+      m_hasIlluminanceMapYear = true;
 
       bool initschema = false;
 
@@ -120,7 +121,7 @@ namespace openstudio{
             "CREATE TABLE ComponentSizes (ComponentSizesIndex INTEGER PRIMARY KEY, CompType TEXT, CompName TEXT, Description TEXT, Value REAL, Units TEXT);"
             "CREATE TABLE RoomAirModels (ZoneIndex INTEGER PRIMARY KEY, AirModelName TEXT, AirModelType INTEGER, TempCoupleScheme INTEGER, SimAirModel INTEGER);"
             "CREATE TABLE DaylightMaps ( MapNumber INTEGER PRIMARY KEY, MapName TEXT, Environment TEXT, Zone INTEGER, ReferencePt1 TEXT, ReferencePt2 TEXT, Z REAL, FOREIGN KEY(Zone) REFERENCES Zones(ZoneIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
-            "CREATE TABLE DaylightMapHourlyReports ( HourlyReportIndex INTEGER PRIMARY KEY, MapNumber INTEGER, Month INTEGER, DayOfMonth INTEGER, Hour INTEGER, FOREIGN KEY(MapNumber) REFERENCES DaylightMaps(MapNumber) ON DELETE CASCADE ON UPDATE CASCADE );"
+            "CREATE TABLE DaylightMapHourlyReports ( HourlyReportIndex INTEGER PRIMARY KEY, MapNumber INTEGER, Year INTEGER, Month INTEGER, DayOfMonth INTEGER, Hour INTEGER, FOREIGN KEY(MapNumber) REFERENCES DaylightMaps(MapNumber) ON DELETE CASCADE ON UPDATE CASCADE );"
             "CREATE TABLE DaylightMapHourlyData ( HourlyDataIndex INTEGER PRIMARY KEY, HourlyReportIndex INTEGER, X REAL, Y REAL, Illuminance REAL, FOREIGN KEY(HourlyReportIndex) REFERENCES DaylightMapHourlyReports(HourlyReportIndex) ON DELETE CASCADE ON UPDATE CASCADE );"
             "CREATE TABLE StringTypes ( StringTypeIndex INTEGER PRIMARY KEY, Value TEXT);"
             "CREATE TABLE Strings ( StringIndex INTEGER PRIMARY KEY, StringTypeIndex INTEGER, Value TEXT, UNIQUE(StringTypeIndex, Value), FOREIGN KEY(StringTypeIndex) REFERENCES StringTypes(StringTypeIndex) ON UPDATE CASCADE );"
@@ -477,6 +478,11 @@ namespace openstudio{
       return m_hasYear;
     }
 
+    bool SqlFile_Impl::hasIlluminanceMapYear() const
+    {
+      return m_hasIlluminanceMapYear;
+    }
+
     bool SqlFile_Impl::isValidConnection()
     {
       std::string energyPlusVersion = this->energyPlusVersion();
@@ -492,9 +498,22 @@ namespace openstudio{
         LOG(Warn, "Using unsupported EnergyPlus version " << version.str());
       }
 
-      // v8.9.0 added the year tag
-      if (version < VersionString(8, 9)) {
-        m_hasYear = false;
+      // v8.9.0 added the year tag, but it seems it's always zero...
+      // IlluminanceMap Year started in 9.2.0
+      // m_hasYear & m_hasIlluminanceMapYear are both default initialized to true
+      if (version < VersionString(9, 2)) {
+        m_hasIlluminanceMapYear = false;
+
+        if (version < VersionString(8, 9)) {
+          m_hasYear = false;
+        } else if (version < VersionString(9, 0)) {
+          // Check if zero
+          boost::optional<int> maxYear = execAndReturnFirstInt("SELECT MAX(Year) FROM Time");
+          if (!maxYear.is_initialized() || maxYear.get() <= 0) {
+            LOG(Warn, "Using EnergyPlusVersion version " << version.str() << " which should have 'Year' field, but it's always zero");
+            m_hasYear = false;
+          }
+        }
       }
 
       return true;
@@ -597,21 +616,25 @@ namespace openstudio{
 
       int hourlyReportIndex = getNextIndex("daylightmaphourlyreports", "HourlyReportIndex");
 
-      // TODO: E+ doesn't have a Year field here: cf https://github.com/NREL/EnergyPlus/issues/7225
-      // PreparedStatement stmt1("insert into daylightmaphourlyreports (HourlyReportIndex, MapNumber, Year, Month, DayOfMonth, Hour) values (?, ?, ?, ?, ?, ?)", m_db, true);
-       // we'll let stmt1 have the transaction
-      // DLM: when implementing option for hasYear, use pointer to statement, assignment of PreparedStatement does not work
-      PreparedStatement stmt1("insert into daylightmaphourlyreports (HourlyReportIndex, MapNumber, Month, DayOfMonth, Hour) values (?, ?, ?, ?, ?)", m_db, true);
+
+      // E+ added the "Year" field to the DaylightMapHourlyReports in version 9.2.0 (NREL/EnergyPlus#7235)
+      // assignment of PreparedStatement does not work, so use a pointer to statement to handle the case where you do or do not have Year
+      std::shared_ptr<PreparedStatement> stmt1;
+      if (hasIlluminanceMapYear()) {
+        stmt1 = std::make_shared<PreparedStatement>("insert into daylightmaphourlyreports (HourlyReportIndex, MapNumber, Year, Month, DayOfMonth, Hour) values (?, ?, ?, ?, ?, ?)", m_db, true);
+      } else {
+        stmt1 = std::make_shared<PreparedStatement>("insert into daylightmaphourlyreports (HourlyReportIndex, MapNumber, Month, DayOfMonth, Hour) values (?, ?, ?, ?, ?)", m_db, true);
+      }
 
       for (size_t dateidx = 0; dateidx < t_times.size(); ++dateidx)
       {
         int b = 0;
-        stmt1.bind(++b, hourlyReportIndex);
-        stmt1.bind(++b, mapIndex);
+        stmt1->bind(++b, hourlyReportIndex);
+        stmt1->bind(++b, mapIndex);
 
         DateTime dt = t_times[dateidx];
 
-        // int year = dt.date().year();
+        int year = dt.date().year();
         int monthOfYear = dt.date().monthOfYear().value();
         int dayOfMonth = dt.date().dayOfMonth();
         int hours = dt.time().hours();
@@ -629,14 +652,14 @@ namespace openstudio{
           hours = 24;
         }
 
-        // if (hasYear()) {
-        //   stmt1.bind(++b, year);
-        // }
-        stmt1.bind(++b, monthOfYear);
-        stmt1.bind(++b, dayOfMonth);
-        stmt1.bind(++b, hours);
+        if (hasIlluminanceMapYear()) {
+          stmt1->bind(++b, year);
+        }
+        stmt1->bind(++b, monthOfYear);
+        stmt1->bind(++b, dayOfMonth);
+        stmt1->bind(++b, hours);
 
-        stmt1.execute();
+        stmt1->execute();
 
         if (t_xs.size() != t_maps[dateidx].size1()
             || t_ys.size() != t_maps[dateidx].size2())
@@ -2481,15 +2504,29 @@ namespace openstudio{
 
           unsigned month = sqlite3_column_int(sqlStmtPtr, b++);
           unsigned day = sqlite3_column_int(sqlStmtPtr, b++);
-          unsigned intervalMinutes = sqlite3_column_int(sqlStmtPtr, b++); // used for run periods
+
+          // In cases where you report the same meter key for eg at Daily and at Timestep frequency
+          // the intervalMinutes will be reported by E+ for the Timestep one, so you get the wrong one for Daily...
+          // And since we can compute this easily, might as well do it
+          unsigned intervalMinutes;
+          if (reportingFrequency == ReportingFrequency::Hourly) {
+            intervalMinutes = 60;
+          } else if (reportingFrequency == ReportingFrequency::Daily) {
+            intervalMinutes = 24 * 60;
+          } else if (reportingFrequency == ReportingFrequency::Monthly) {
+            intervalMinutes = day * 24 * 60;
+          } else {
+            // If Detailed, Timestep, RunPeriod, or Annual: it varies
+            intervalMinutes = sqlite3_column_int(sqlStmtPtr, b++); // used for run periods
+            if ((reportingFrequency == ReportingFrequency::Annual) &&
+                !((intervalMinutes == 365*24*60) || (intervalMinutes != 366*24*60))) {
+              LOG(Error, "For an 'Annual' frequency, expected intervalMinutes to correspond to 365 or 366 days");
+            }
+          }
 
           if ((version.major() == 8) && (version.minor() == 3)){
             // workaround for bug in E+ 8.3, issue #1692
-            if (reportingFrequency == ReportingFrequency::Daily){
-              intervalMinutes = 24 * 60;
-            } else if (reportingFrequency == ReportingFrequency::Monthly){
-              intervalMinutes = day * 24 * 60;
-            } else if (reportingFrequency == ReportingFrequency::RunPeriod){
+            if (reportingFrequency == ReportingFrequency::RunPeriod){
               DateTime firstDateTime = this->firstDateTime(false, dataDictionary.envPeriodIndex);
               DateTime lastDateTime = this->lastDateTime(false, dataDictionary.envPeriodIndex);
               Time deltaT = lastDateTime - firstDateTime;
@@ -3440,11 +3477,9 @@ namespace openstudio{
       std::vector< std::pair<int, DateTime> > reportIndicesDates;
       std::stringstream s;
       s << "select HourlyReportIndex, ";
-      // TODO: Uncomment once E+ actually reports Year for DaylightMapHourlyReports
-      // cf https://github.com/NREL/EnergyPlus/issues/7225
-      // if (hasYear()) {
-      //   s << "Year, ";
-      // }
+      if (hasIlluminanceMapYear()) {
+        s << "Year, ";
+      }
       s << "Month, DayOfMonth, Hour from daylightmaphourlyreports where MapNumber=" << mapIndex;
 
       sqlite3_stmt* sqlStmtPtr;
@@ -3457,19 +3492,16 @@ namespace openstudio{
         int b = 0;
         pair.first = sqlite3_column_int(sqlStmtPtr, b++);
 
-        // TODO: Uncomment once E+ actually reports Year for DaylightMapHourlyReports
-        // cf https://github.com/NREL/EnergyPlus/issues/7225
         boost::optional<unsigned> year;
-        // if (hasYear()) {
-        //   year = sqlite3_column_int(sqlStmtPtr, b++);
-        // }
+        if (hasIlluminanceMapYear()) {
+          year = sqlite3_column_int(sqlStmtPtr, b++);
+        }
 
         unsigned month = sqlite3_column_int(sqlStmtPtr, b++);
         unsigned day = sqlite3_column_int(sqlStmtPtr, b++);
         unsigned hour = sqlite3_column_int(sqlStmtPtr, b++);
 
-        // Note JM 2019-03-14: E+ v8.9.0 added Year
-        // DLM: get standard time zone?
+        // Note JM 2019-03-14: E+ v8.9.0 added Year, but for IlluminanceMap only in 9.2.0
         openstudio::Date date = year ? Date(monthOfYear(month),day, *year) : Date(monthOfYear(month),day);
         pair.second = DateTime(date, Time(0, hour, 0, 0));
         reportIndicesDates.push_back( pair );

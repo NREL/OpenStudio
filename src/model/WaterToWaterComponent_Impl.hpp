@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -114,7 +114,7 @@ class MODEL_API WaterToWaterComponent_Impl : public HVACComponent_Impl
   */
   boost::optional<PlantLoop> tertiaryPlantLoop() const;
 
-  bool removeFromTertiaryPlantLoop();
+  virtual bool removeFromTertiaryPlantLoop();
 
   virtual bool addToTertiaryNode(Node & node);
 

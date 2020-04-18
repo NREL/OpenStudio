@@ -27,6 +27,7 @@
 
   // ignore simulation objects for now, add back in with partial classes in ModelSimulation.i
   %ignore openstudio::model::Model::foundationKivaSettings;
+  %ignore openstudio::model::Model::outputTableSummaryReports;
   %ignore openstudio::model::Model::runPeriod;
   %ignore openstudio::model::Model::weatherFile;
   %ignore openstudio::model::Model::yearDescription;

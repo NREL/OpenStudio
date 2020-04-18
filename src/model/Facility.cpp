@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -247,7 +247,7 @@ namespace detail {
     return OptionalDouble();
   }
 
-   // pass in "Electric", "Gas", or "Other"
+   // pass in "Electric", "NaturalGas", or "Other"
   OptionalDouble Facility_Impl::annualTotalCost(const FuelType& fuel) const
   {
     OptionalSqlFile mySqlFile = model().sqlFile();

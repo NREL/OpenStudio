@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -93,13 +93,13 @@ namespace detail {
       // } else if (fuelType == "NaturalGas") {
       "Boiler Gas Rate",
       "Boiler Gas Energy",
-      // } else if (fuelType == "PropaneGas") {
+      // } else if (fuelType == "Propane") {
       "Boiler Propane Rate",
       "Boiler Propane Energy",
-      // } else if (fuelType == "FuelOil#1") {
+      // } else if (fuelType == "FuelOilNo1") {
       "Boiler FuelOil#1 Rate",
       "Boiler FuelOil#1 Energy",
-      // } else if (fuelType == "FuelOil#2") {
+      // } else if (fuelType == "FuelOilNo2") {
       "Boiler FuelOil#2 Rate",
       "Boiler FuelOil#2 Energy",
       // } else if (fuelType == "Coal") {
@@ -175,10 +175,6 @@ namespace detail {
 
   boost::optional<Curve> BoilerHotWater_Impl::normalizedBoilerEfficiencyCurve() const {
     return getObject<BoilerHotWater>().getModelObjectTarget<Curve>(OS_Boiler_HotWaterFields::NormalizedBoilerEfficiencyCurveName);
-  }
-
-  boost::optional<double> BoilerHotWater_Impl::designWaterOutletTemperature() const {
-    return getDouble(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature,true);
   }
 
   boost::optional<double> BoilerHotWater_Impl::designWaterFlowRate() const {
@@ -318,22 +314,6 @@ namespace detail {
   void BoilerHotWater_Impl::resetNormalizedBoilerEfficiencyCurve() {
     bool ok = setNormalizedBoilerEfficiencyCurve(boost::none);
     OS_ASSERT(ok);
-  }
-
-  bool BoilerHotWater_Impl::setDesignWaterOutletTemperature(boost::optional<double> designWaterOutletTemperature) {
-    bool result = false;
-    if (designWaterOutletTemperature) {
-      result = setDouble(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature, designWaterOutletTemperature.get());
-    } else {
-      result = setString(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature, "");
-    }
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void BoilerHotWater_Impl::resetDesignWaterOutletTemperature() {
-    bool result = setString(OS_Boiler_HotWaterFields::DesignWaterOutletTemperature, "");
-    OS_ASSERT(result);
   }
 
   bool BoilerHotWater_Impl::setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate) {
@@ -592,10 +572,6 @@ boost::optional<Curve> BoilerHotWater::normalizedBoilerEfficiencyCurve() const {
   return getImpl<detail::BoilerHotWater_Impl>()->normalizedBoilerEfficiencyCurve();
 }
 
-boost::optional<double> BoilerHotWater::designWaterOutletTemperature() const {
-  return getImpl<detail::BoilerHotWater_Impl>()->designWaterOutletTemperature();
-}
-
 boost::optional<double> BoilerHotWater::designWaterFlowRate() const {
   return getImpl<detail::BoilerHotWater_Impl>()->designWaterFlowRate();
 }
@@ -690,14 +666,6 @@ bool BoilerHotWater::setNormalizedBoilerEfficiencyCurve(const Curve& normalizedB
 
 void BoilerHotWater::resetNormalizedBoilerEfficiencyCurve() {
   getImpl<detail::BoilerHotWater_Impl>()->resetNormalizedBoilerEfficiencyCurve();
-}
-
-bool BoilerHotWater::setDesignWaterOutletTemperature(double designWaterOutletTemperature) {
-  return getImpl<detail::BoilerHotWater_Impl>()->setDesignWaterOutletTemperature(designWaterOutletTemperature);
-}
-
-void BoilerHotWater::resetDesignWaterOutletTemperature() {
-  getImpl<detail::BoilerHotWater_Impl>()->resetDesignWaterOutletTemperature();
 }
 
 bool BoilerHotWater::setDesignWaterFlowRate(double designWaterFlowRate) {
