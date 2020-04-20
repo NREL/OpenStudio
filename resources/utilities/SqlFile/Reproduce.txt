@@ -21,8 +21,6 @@ With:
 ```
   Output:Variable,*,Zone Mean Air Temperature,Annual;
 
-  Output:Variable,*,Zone Mean Air Temperature,Annual;
-
   Output:Variable,*,Zone Mean Air Temperature,RunPeriod;
 
   Output:Variable,*,Zone Mean Air Temperature,Environment;
