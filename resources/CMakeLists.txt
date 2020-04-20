@@ -283,6 +283,7 @@ SET(gbxml_resources_src
   gbxml/TestCubeAlternateUnits.xml
   gbxml/TwoStoryOffice_Trane.xml
   gbxml/ZNETH.xml
+  gbxml/3951_Geometry_bug.xml
 )
 
 # update the resources

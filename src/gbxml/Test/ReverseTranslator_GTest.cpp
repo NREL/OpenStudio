@@ -85,9 +85,9 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH)
 
   // check for additional properties
   for (const auto& object : model->getModelObjects<ModelObject>()) {
-    if (object.optionalCast<Space>() || 
-        object.optionalCast<Surface>() || 
-        object.optionalCast<ShadingSurface>() || 
+    if (object.optionalCast<Space>() ||
+        object.optionalCast<Surface>() ||
+        object.optionalCast<ShadingSurface>() ||
         object.optionalCast<SubSurface>()) {
 
       EXPECT_TRUE(object.hasAdditionalProperties()) << object;
@@ -561,4 +561,23 @@ TEST_F(gbXMLFixture, ReverseTranslator_TwoStoryOffice_Trane)
   openstudio::gbxml::ForwardTranslator forwardTranslator;
   bool test = forwardTranslator.modelToGbXML(*model, outputPath);
   EXPECT_TRUE(test);
+}
+
+TEST_F(gbXMLFixture, ReverseTranslator_3951_Surface)
+{
+
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/3951_Geometry_bug.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model);
+
+  // Check all the surfaces that are supposed to be floors and ceilings
+  OptionalSurface osurf = model->getModelObjectByName<Surface>("storey-1-slabongrade-space-1");
+  ASSERT_TRUE(osurf);
+  EXPECT_EQ("Floor", osurf->surfaceType());
+  auto space = osurf->space();
+  ASSERT_TRUE(space);
+  EXPECT_EQ("storey-1-space-1", space->name().get());
+
 }
