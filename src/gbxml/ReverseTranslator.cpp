@@ -648,31 +648,31 @@ namespace gbxml {
 
       // set surface type
       // wall types
-      if (surfaceType.find("ExteriorWall")) {
+      if (surfaceType.find("ExteriorWall") != std::string::npos) {
         surface.setSurfaceType("Wall");
-      } else if (surfaceType.find("InteriorWall")) {
+      } else if (surfaceType.find("InteriorWall") != std::string::npos) {
         surface.setSurfaceType("Wall");
-      } else if (surfaceType.find("UndergroundWall")) {
+      } else if (surfaceType.find("UndergroundWall") != std::string::npos) {
         surface.setSurfaceType("Wall");
         // roof types
-      } else if (surfaceType.find("Roof")) {
+      } else if (surfaceType.find("Roof") != std::string::npos) {
         surface.setSurfaceType("RoofCeiling");
-      } else if (surfaceType.find("Ceiling")) {
+      } else if (surfaceType.find("Ceiling") != std::string::npos) {
         surface.setSurfaceType("RoofCeiling");
-      } else if (surfaceType.find("UndergroundCeiling")) {
+      } else if (surfaceType.find("UndergroundCeiling") != std::string::npos) {
         surface.setSurfaceType("RoofCeiling");
         // floor types
-      } else if (surfaceType.find("UndergroundSlab")) {
+      } else if (surfaceType.find("UndergroundSlab") != std::string::npos) {
         surface.setSurfaceType("Floor");
-      } else if (surfaceType.find("SlabOnGrade")) {
+      } else if (surfaceType.find("SlabOnGrade") != std::string::npos) {
         surface.setSurfaceType("Floor");
-      } else if (surfaceType.find("InteriorFloor")) {
+      } else if (surfaceType.find("InteriorFloor") != std::string::npos) {
         surface.setSurfaceType("Floor");
-      } else if (surfaceType.find("RaisedFloor")) {
+      } else if (surfaceType.find("RaisedFloor") != std::string::npos) {
         surface.setSurfaceType("Floor");
-      } else if (surfaceType.find("ExposedFloor")) {
+      } else if (surfaceType.find("ExposedFloor") != std::string::npos) {
         surface.setSurfaceType("Floor");
-      } else if (surfaceType.find("Air")) {
+      } else if (surfaceType.find("Air") != std::string::npos) {
         // this type can be wall, roof, or floor.  just use default surface type based on vertices.
       }
 

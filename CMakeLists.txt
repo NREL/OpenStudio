@@ -156,7 +156,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "rc2")
+set(PROJECT_VERSION_PRERELEASE "rc3")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -692,16 +692,16 @@ FetchRubyMinGW()
 # need to  update the MD5sum for each platform and url below
 if(UNIX)
    if(APPLE)
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200403-darwin.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "18d34a85f98a73cfb01156058198cbd0")
+     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200413-darwin.tar.gz")
+     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0b53a3cd5c8585d6b4c9dbd8c1d41669")
    else()
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200403-linux.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "8792281d9892562251662ebc04b3206a")
+     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200413-linux.tar.gz")
+     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "552be2267c5566062311ea078986ed25")
    endif()
 elseif(WIN32)
   if(CMAKE_CL_64)
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200403-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "2f81b786ae571a778de1db0687ada4b6")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200413-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "670091c577c09ec4b5a478d644125865")
   endif()
 endif()
 
