@@ -84,6 +84,7 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V9-0-1.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-1-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-2-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V9-3-0.sql
   utilities/Zip/test1.zip
 )
 
