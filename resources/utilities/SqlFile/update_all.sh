@@ -5,8 +5,8 @@ token=
 curl_token="-H \"Authorization: token $token\""
 
 # All versions you want to run
-declare -a all_versions=("8.5.0" "8.6.0" "8.7.0" "8.8.0" "8.9.0" "9.0.1" "9.1.0")
-# declare -a all_versions=("9.3.0")
+# declare -a all_versions=("8.5.0" "8.6.0" "8.7.0" "8.8.0" "8.9.0" "9.0.1" "9.1.0" "9.2.0" "9.3.0")
+declare -a all_versions=("9.3.0")
 
 # DO NOT RERUN IF SQL ALREADY THERE
 rerun_if_already_there=false
@@ -45,7 +45,7 @@ for ep_version in "${all_versions[@]}"; do
     echo '    SimpleAndTabular;        !- Option Type' >> $idf_file
     echo "" >> $idf_file
 
-    sed -i 's/Output:Variable,\*,Zone Mean Air Temperature,hourly;/Output:Variable,\*,Zone Mean Air Temperature,Annual;\n\n  Output:Variable,\*,Zone Mean Air Temperature,RunPeriod;\n\n  Output:Variable,\*,Zone Mean Air Temperature,Environment;\n\n  Output:Variable,\*,Zone Mean Air Temperature,Monthly;\n\n  Output:Variable,\*,Zone Mean Air Temperature,Daily;\n\n  Output:Variable,\*,Zone Mean Air Temperature,Hourly;\n\n  Output:Variable,\*,Zone Mean Air Temperature,Timestep;\n\n  Output:Variable,\*,Zone Mean Air Temperature,Detailed;\n/g' $idf_file
+    sed -i 's/Output:Variable,\*,Zone Mean Air Temperature,hourly;/Output:Variable,\*,Zone Mean Air Temperature,Annual;\n\n  Output:Variable,\*,Zone Mean Air Temperature,RunPeriod;\n\n  Output:Variable,\*,Zone Mean Air Temperature,Environment;\n\n  Output:Variable,\*,Zone Mean Air Temperature,Monthly;\n\n  Output:Variable,\*,Zone Mean Air Temperature,Daily;\n\n  Output:Variable,\*,Zone Mean Air Temperature,Hourly;\n\n  Output:Variable,\*,Zone Mean Air Temperature,Timestep;\n\n  Output:Variable,\*,Zone Mean Air Temperature,Detailed;/g' $idf_file
 
   fi;
 

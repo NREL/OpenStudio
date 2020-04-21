@@ -1,0 +1,92 @@
+<gbXML xmlns="http://www.gbxml.org/schema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:schemaLocation="http://www.gbxml.org/schema http://gbxml.org/schema/6-01/GreenBuildingXML_Ver6.01.xsd" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" useSIUnitsForResults="true" SurfaceReferenceLocation="Centerline" temperatureUnit="F" lengthUnit="Feet" areaUnit="SquareFeet" volumeUnit="CubicFeet" version="6.01">
+  <Campus id="Facility">
+
+    <Description>A gbxml MCVE to illustrate issue 3951</Description>
+
+    <Building id="1">
+      <Area>200000</Area>
+      <BuildingStorey id="storey-1">
+        <Name>storey 1</Name>
+        <Level>0</Level>
+      </BuildingStorey>
+      <Space id="space-1" zoneIdRef="zone-1" buildingStoreyIdRef="storey-1" conditionType="HeatedAndCooled">
+        <Name>storey-1-space-1</Name>
+        <Description>internal space 1</Description>
+        <Area>9843.75</Area>
+        <Volume>147656.25</Volume>
+      </Space>
+    </Building>
+
+    <Surface surfaceType="Ceiling" id="surface-1">
+      <Name>storey-1-ceiling-space-1</Name>
+      <RectangularGeometry>
+        <Azimuth>90</Azimuth>
+        <Tilt>0</Tilt>
+      </RectangularGeometry>
+      <CADOjectId>none</CADOjectId>
+      <AdjacentSpaceId spaceIdRef="space-1"/>
+      <PlanarGeometry>
+        <PolyLoop>
+          <CartesianPoint>
+            <Coordinate>150</Coordinate>
+            <Coordinate>-150</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>112.5</Coordinate>
+            <Coordinate>-112.5</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-112.5</Coordinate>
+            <Coordinate>-112.5</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-150</Coordinate>
+            <Coordinate>-150</Coordinate>
+            <Coordinate>15</Coordinate>
+          </CartesianPoint>
+        </PolyLoop>
+      </PlanarGeometry>
+    </Surface>
+
+    <Surface surfaceType="SlabOnGrade" id="surface-2">
+      <Name>storey-1-slabongrade-space-1</Name>
+      <RectangularGeometry>
+        <Azimuth>90</Azimuth>
+        <Tilt>180</Tilt>
+      </RectangularGeometry>
+      <CADOjectId>none</CADOjectId>
+      <AdjacentSpaceId spaceIdRef="space-1"/>
+      <PlanarGeometry>
+        <PolyLoop>
+          <CartesianPoint>
+            <Coordinate>-150</Coordinate>
+            <Coordinate>-150</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>-112.5</Coordinate>
+            <Coordinate>-112.5</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>112.5</Coordinate>
+            <Coordinate>-112.5</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+          <CartesianPoint>
+            <Coordinate>150</Coordinate>
+            <Coordinate>-150</Coordinate>
+            <Coordinate>0</Coordinate>
+          </CartesianPoint>
+        </PolyLoop>
+      </PlanarGeometry>
+    </Surface>
+
+  </Campus>
+  <Zone id="zone-1">
+    <Name>storey-1-zone-1</Name>
+  </Zone>
+</gbXML>

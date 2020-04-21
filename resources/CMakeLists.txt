@@ -84,6 +84,7 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V9-0-1.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-1-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-2-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V9-3-0.sql
   utilities/Zip/test1.zip
 )
 
@@ -283,6 +284,7 @@ SET(gbxml_resources_src
   gbxml/TestCubeAlternateUnits.xml
   gbxml/TwoStoryOffice_Trane.xml
   gbxml/ZNETH.xml
+  gbxml/3951_Geometry_bug.xml
 )
 
 # update the resources
