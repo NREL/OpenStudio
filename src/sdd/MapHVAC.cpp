@@ -5388,7 +5388,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   boost::optional<model::ScheduleRuleset> tesSchedule;
   // TODO: this variable will be used un-initialized in case the "TankSetptTemp" child key is ill-formed (not present or, doesn't cast to double)
   // Set a default or something
-  double thermalStorageTankSetptTemp;
+
   if( auto mo = translateThrmlEngyStor(thrmlEngyStorElement, model) ) {
     thermalStorage = mo->cast<model::ThermalStorageChilledWaterStratified>();
     plantLoop.addSupplyBranchForComponent(thermalStorage.get());
@@ -5398,6 +5398,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     thermalStorageDischargePriority = thrmlEngyStorElement.child("DischrgPriority").text().as_string();
     pugi::xml_node tankSetptTempElement = thrmlEngyStorElement.child("TankSetptTemp");
     boost::optional<double> _tankSetptTemp = lexicalCastToDouble(tankSetptTempElement);
+    double thermalStorageTankSetptTemp{0};
     if (_tankSetptTemp) {
       thermalStorageTankSetptTemp = unitToUnit(_tankSetptTemp.get(),"F","C").get();
     }

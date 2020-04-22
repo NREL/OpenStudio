@@ -67,9 +67,13 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
 
     ## suppress deprecated warnings in unit tests
     if(UNIX)
-      set_target_properties(${ALL_TESTING_TARGETS} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+      if("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")
+        set_target_properties(${BASE_NAME}_tests PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-unused-function")
+      else()
+        set_target_properties(${BASE_NAME}_tests PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations")
+      endif()
     elseif(MSVC)
-      set_target_properties(${ALL_TESTING_TARGETS} PROPERTIES COMPILE_FLAGS "/wd4996")
+      set_target_properties(${BASE_NAME}_tests PROPERTIES COMPILE_FLAGS "/wd4996")
     endif()
 
   endif()
@@ -318,7 +322,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     if("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")
       # Prevent excessive warnings from generated swig files, suppress deprecated declarations
       # Suppress 'register' storage class specified warnings (coming from Ruby)
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-register")
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-register -Wno-sometimes-uninitialized")
     else()
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-register -Wno-conversion-null")
     endif()

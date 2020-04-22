@@ -1007,7 +1007,7 @@ namespace detail {
         oldNewHandleMap.insert(HandleMap::value_type(wsObject.handle(),newObjects.back()->handle()));
         if (sameWorkspace) {
           WorkspaceObjectVector objectTargets = objects[i].targets();
-          for (const WorkspaceObject target : objectTargets) {
+          for (const auto &target : objectTargets) {
             if (std::find(objects.begin(),objects.end(),target) == objects.end()) {
               UnsignedVector fieldIndices = objects[i].getSourceIndices(target.handle());
               for (unsigned index : fieldIndices) {
@@ -1180,7 +1180,7 @@ namespace detail {
         oldNewHandleMap.insert(HandleMap::value_type(object.handle(),newObjects.back()->handle()));
         WorkspaceObjectVector objectTargets = object.targets();
         // preserve pointers to equivalent objects
-        for (const WorkspaceObject target : objectTargets) {
+        for (const auto &target : objectTargets) {
           OptionalUnsigned targetIndexInWorking = working.order().indexInOrder(target.handle());
           OS_ASSERT(targetIndexInWorking);
           auto targetInFoundObjectsIt = std::find(
@@ -1200,7 +1200,7 @@ namespace detail {
         if (sameWorkspace) {
           // preserve external targets too
           objectTargets = allObjects[i].targets();
-          for (const WorkspaceObject target : objectTargets) {
+          for (const auto &target : objectTargets) {
             if (std::find(allObjects.begin(),allObjects.end(),target) == allObjects.end()) {
               UnsignedVector fieldIndices = allObjects[i].getSourceIndices(target.handle());
               for (unsigned index : fieldIndices) {

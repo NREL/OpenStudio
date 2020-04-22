@@ -147,10 +147,10 @@ std::vector<ResourceObject> getRecursiveResources(const ModelObject& object) {
   std::deque<ModelObject> objectQueue;
   objectQueue.push_back(object);
 
-  while (objectQueue.size() > 0) {
+  while (!objectQueue.empty()) {
     ModelObject currentObject(objectQueue[0]);
     objectQueue.pop_front();
-    for (const ResourceObject resource : currentObject.resources()) {
+    for (const auto &resource : currentObject.resources()) {
       insertResult = resultSet.insert(resource.handle());
       if (insertResult.second) {
         result.push_back(resource);
@@ -170,10 +170,10 @@ std::vector< std::vector<ModelObject> > getRecursiveResourceSubTrees(const Model
   std::deque<ModelObject> objectQueue;
   objectQueue.push_back(object);
 
-  while (objectQueue.size() > 0) {
+  while (!objectQueue.empty()) {
     ModelObject currentObject(objectQueue[0]);
     objectQueue.pop_front();
-    for (const ResourceObject resource : currentObject.resources()) {
+    for (const auto &resource : currentObject.resources()) {
       insertResult = resultSet.insert(resource.handle());
       if (insertResult.second) {
         std::vector<ModelObject> subTree = getRecursiveChildren(resource, includeComponentCostLineItems);

@@ -707,7 +707,6 @@ public:
 
 private:
   REGISTER_LOGGER("utilities.QueueEvent");
-  bool obsolete = false;
 };
 
 class Chain // Chains of queue events

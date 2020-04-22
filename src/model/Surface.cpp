@@ -1808,8 +1808,7 @@ namespace detail {
       surface->setVertices(vertices);
 
       // loop over all sub surfaces and reparent
-      typedef std::pair<Handle, Point3dVector> MapType;
-      for (const MapType& p : handleToFaceVertexMap){
+      for (const auto &p : handleToFaceVertexMap){
         // if surface includes a single point it will include them all
         if (pointInPolygon(p.second[0], newFace, tol)){
           boost::optional<SubSurface> subSurface = model.getModelObject<SubSurface>(p.first);

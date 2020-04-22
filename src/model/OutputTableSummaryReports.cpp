@@ -146,7 +146,6 @@ namespace detail {
   }
 
   bool OutputTableSummaryReports_Impl::addSummaryReports(const std::vector<std::string>& summaryReports) {
-    unsigned int num = numberofSummaryReports();
     for (std::string summaryReport : summaryReports) {
       addSummaryReport(summaryReport);
     }

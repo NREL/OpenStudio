@@ -693,8 +693,8 @@ class RubyInterpreter
 {
   private:
     // dummy arguments passed to ruby_options
-    int m_argc;
-    char** m_argv;
+//    int m_argc;
+//    char** m_argv;
 
     static void addIncludePath(std::vector<std::string>& includePaths, const std::string& includePath)
     {

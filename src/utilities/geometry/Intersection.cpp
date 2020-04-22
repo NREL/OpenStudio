@@ -154,7 +154,7 @@ namespace openstudio{
   std::vector<BoostPolygon> removeHoles(const std::vector<BoostPolygon>& polygons)
   {
     std::vector<BoostPolygon> result;
-    for (const BoostPolygon polygon : polygons){
+    for (const auto &polygon : polygons){
       if (polygon.inners().empty()){
         // DLM: might also want to partition if this polygon is self intersecting?
         result.push_back(polygon);

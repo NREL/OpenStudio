@@ -116,7 +116,6 @@ namespace detail {
   }
 
   int ShadowCalculation_Impl::shadingCalculationUpdateFrequency() const {
-    int i = OS_ShadowCalculationFields::DisableSelfShadingWithinShadingZoneGroups;
     boost::optional<int> value = getInt(OS_ShadowCalculationFields::ShadingCalculationUpdateFrequency,true);
     OS_ASSERT(value);
     return value.get();

@@ -496,15 +496,15 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue3267) {
   unsigned story1Doors = 0;
   double story1MinZ = std::numeric_limits<double>::max();
   double story1MaxZ = std::numeric_limits<double>::min();
-  for (const auto surface : space1->surfaces()) {
-    for (const auto vertex : surface.vertices()) {
+  for (const auto &surface : space1->surfaces()) {
+    for (const auto &vertex : surface.vertices()) {
       story1MinZ = std::min(story1MinZ, vertex.z());
       story1MaxZ = std::max(story1MaxZ, vertex.z());
     }
   }
-  for (const auto surface : space1->surfaces()) {
-    for (const auto subSurface : surface.subSurfaces()) {
-      for (const auto vertex : subSurface.vertices()) {
+  for (const auto &surface : space1->surfaces()) {
+    for (const auto &subSurface : surface.subSurfaces()) {
+      for (const auto &vertex : subSurface.vertices()) {
         EXPECT_GE(vertex.z(), story1MinZ);
         EXPECT_LT(vertex.z(), story1MaxZ);
       }
@@ -524,16 +524,16 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue3267) {
   unsigned story2Doors = 0;
   double story2MinZ = std::numeric_limits<double>::max();
   double story2MaxZ = std::numeric_limits<double>::min();
-  for (const auto surface : space2->surfaces()) {
-    for (const auto vertex : surface.vertices()) {
+  for (const auto &surface : space2->surfaces()) {
+    for (const auto &vertex : surface.vertices()) {
       story2MinZ = std::min(story2MinZ, vertex.z());
       story2MaxZ = std::max(story2MaxZ, vertex.z());
     }
   }
 
-  for (const auto surface : space2->surfaces()) {
-    for (const auto subSurface : surface.subSurfaces()) {
-      for (const auto vertex : subSurface.vertices()) {
+  for (const auto &surface : space2->surfaces()) {
+    for (const auto &subSurface : surface.subSurfaces()) {
+      for (const auto &vertex : subSurface.vertices()) {
         EXPECT_GE(vertex.z(), story2MinZ);
         EXPECT_LT(vertex.z(), story2MaxZ);
       }
@@ -610,8 +610,8 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_MultistoryShadingRotation) {
 
   double shadingMinZ = std::numeric_limits<double>::max();
   double shadingMaxZ = std::numeric_limits<double>::min();
-  for (const auto shadingSurface : shadingSurfaceGroup1->shadingSurfaces()) {
-    for (const auto vertex : shadingSurface.vertices()) {
+  for (const auto &shadingSurface : shadingSurfaceGroup1->shadingSurfaces()) {
+    for (const auto &vertex : shadingSurface.vertices()) {
       shadingMinZ = std::min(shadingMinZ, vertex.z());
       shadingMaxZ = std::max(shadingMaxZ, vertex.z());
     }

@@ -291,8 +291,12 @@ if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${SANITIZER_LINKER_FLAGS}")
   set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${SANITIZER_LINKER_FLAGS}")
 
+  option(ENABLE_BUILD_TIME_TRACE "Enable -ftime-trace feature on clang 9+" OFF)
+  if (ENABLE_BUILD_TIME_TRACE)
+    add_definitions(-ftime-trace)
+  endif()
 
-  mark_as_advanced(ENABLE_THREAD_SANITIZER ENABLE_ADDRESS_SANITIZER ENABLE_UNDEFINED_SANITIZER)
+  mark_as_advanced(ENABLE_THREAD_SANITIZER ENABLE_ADDRESS_SANITIZER ENABLE_UNDEFINED_SANITIZER ENABLE_BUILD_TIME_TRACE)
 
 endif()
 
@@ -421,7 +425,7 @@ if(UNIX)
 
   # all warnings
   #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fPIC -fno-strict-aliasing -Winvalid-pch")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wall -fPIC -fno-strict-aliasing -Winvalid-pch")
   # Treat all warnings as errors
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   if(APPLE)
@@ -429,7 +433,9 @@ if(UNIX)
   else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
     # DLM: had to add this due to issues with boost optional and gcc, may be resolved if we move to std::optional
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized")
+    if (NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized")
+    endif()
   endif()
 
   # Note: CMAKE_CXX_STANDARD (with no extensions) already sets -std=c++17 (or std=c++1z).
