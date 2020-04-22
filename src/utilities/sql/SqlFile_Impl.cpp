@@ -2517,12 +2517,22 @@ namespace openstudio{
             intervalMinutes = day * 24 * 60;
           } else {
             // If Detailed, Timestep, RunPeriod, or Annual: it varies
-            intervalMinutes = sqlite3_column_int(sqlStmtPtr, b++); // used for run periods
-            if ((reportingFrequency == ReportingFrequency::Annual) &&
-                !((intervalMinutes == 365*24*60) || (intervalMinutes != 366*24*60))) {
-              LOG(Error, "For an 'Annual' frequency, expected intervalMinutes to correspond to 365 or 366 days");
+            intervalMinutes = sqlite3_column_int(sqlStmtPtr, b); // Notice I'm not incrementing the counter here on purpose
+
+            if (reportingFrequency == ReportingFrequency::Annual) {
+              // Annual actually reports blank for Month, Day, Minute **and Interval** up to 9.3.0 at least
+              // We cannot let it be zero (when blank), since it will make the firstReportDateTime creation fail below
+              // cf https://github.com/NREL/EnergyPlus/issues/7939
+              if (intervalMinutes == 0) {
+                intervalMinutes = 365*24*60;
+              } else if ((intervalMinutes != 365*24*60) && (intervalMinutes != 366*24*60)) {
+                // Issue a Debug log, but retain value. Technically Annual reports on 12/31, regardless of when the start date was
+                LOG(Debug, "For an 'Annual' frequency, intervalMinutes (= " << intervalMinutes << ") doesn't correspond to 365 or 366 days");
+              }
             }
           }
+          // Don't forget to increment the counter anyway, no matter whether we did call sqlite3_column_int or not
+          ++b;
 
           if ((version.major() == 8) && (version.minor() == 3)){
             // workaround for bug in E+ 8.3, issue #1692

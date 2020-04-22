@@ -589,6 +589,7 @@ TEST_F(SqlFileFixture, Regressions) {
   regressionTestSqlFile("1ZoneEvapCooler-V9-0-1.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V9-1-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V9-2-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V9-3-0.sql", 43.28, 20, 20);
 }
 
 TEST_F(SqlFileFixture, SqlFile_LeapYear)
