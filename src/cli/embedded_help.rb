@@ -53,7 +53,6 @@ module Kernel
   $LOAD_PATH << ':/ruby/2.5.0'
   $LOAD_PATH << ':/ruby/2.5.0/x86_64-darwin16'
   $LOAD_PATH << ':/ruby/2.5.0/x64-mswin64_140'
-  $LOAD_PATH << ':/ruby/2.5.0/bundler/gems/pycall.rb-3d4041b8fb9d/lib'
   # DLM: now done in embedded gem initialization section in openstudio_cli.rb
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')
@@ -71,7 +70,7 @@ module Kernel
     'liboga' => 'init_liboga',\
     'sqlite3/sqlite3_native' => 'init_sqlite3_native',\
     'jaro_winkler_ext' => 'init_jaro_winkler_ext',\
-    'pycall.so' => 'init_pycall', \
+    'pycall.so' => 'init_pycall',\
     'pycall.dll' => 'init_pycall'
   }
 
@@ -86,10 +85,6 @@ module Kernel
   end
 
   def require path
-    if require_embedded_extension path
-      return true
-    end
-
     original_directory = Dir.pwd
     path_with_extension = path
 
@@ -126,12 +121,18 @@ module Kernel
       end
     end
 
-    result = original_require path
+    begin
+      result = original_require path
+    rescue Exception => e 
+      result = require_embedded_extension path
+      if not result
+        raise e
+      end
+    end
 
     current_directory = Dir.pwd
     if original_directory != current_directory
       Dir.chdir(original_directory)
-      puts "Directory changed from '#{original_directory}' to '#{current_directory}' while requiring '#{path}', result = #{result}, restoring original_directory"
       STDOUT.flush
     end
 
