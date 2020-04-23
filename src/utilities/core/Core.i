@@ -40,10 +40,10 @@
 
 %include <utilities/core/Enum.i>
 //%include <utilities/core/Exception.i> // moved ahead in include order in CommonInclude
+%include <utilities/core/String.i>
 %include <utilities/core/Path.i>
 %include <OpenStudio.hxx>
 %include <utilities/core/ApplicationPathHelpers.hpp>
-%include <utilities/core/String.hpp>
 %include <utilities/core/StringHelpers.hpp>
 %include <utilities/core/Singleton.i>
 %include <utilities/core/Logger.i>

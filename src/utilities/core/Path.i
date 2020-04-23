@@ -19,7 +19,6 @@
 %{
   #include <utilities/core/Path.hpp>
   #include <utilities/core/PathHelpers.hpp>
-  #include <utilities/core/String.hpp>
 
   namespace openstudio{
 //    #ifdef _WINDOWS
@@ -378,6 +377,7 @@ namespace openstudio {
 
 
 %include <utilities/core/PathHelpers.hpp>
+%include <utilities/core/String.i>
 
 
 // DLM@20100101: demo purposes only, should be able to automatically convert a string input, delete when working
