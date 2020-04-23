@@ -31,6 +31,7 @@
 #include "../idf/WorkspaceObject.hpp"
 #include "../bcl/BCLComponent.hpp"
 #include "Assert.hpp"
+#include <OpenStudio.hxx>
 
 #include <boost/lexical_cast.hpp>
 
@@ -74,19 +75,17 @@ bool IstringPairCompare::operator()(const std::pair<std::string, std::string>& x
   return result;
 }
 
-VersionString::VersionString(const std::string& version)
-  : m_str(version)
-{
+bool VersionString::parseVersionString(const std::string& version) {
   // regex from https://semver.org/
   const boost::regex semverRegex("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$");
   const boost::regex oldRegex("(\\d+)[\\.-](\\d+)(?:[\\.-](\\d+))?(?:[\\.-](\\d+))?");
   boost::smatch m;
-  if (boost::regex_match(version,m, semverRegex)) {
-    m_major = boost::lexical_cast<int>(std::string(m[1].first,m[1].second));
-    m_minor = boost::lexical_cast<int>(std::string(m[2].first,m[2].second));
+  if (boost::regex_match(version, m, semverRegex)) {
+    m_major = boost::lexical_cast<int>(std::string(m[1].first, m[1].second));
+    m_minor = boost::lexical_cast<int>(std::string(m[2].first, m[2].second));
     int n = m.size();
     if (3 < n) {
-      std::string temp(m[3].first,m[3].second);
+      std::string temp(m[3].first, m[3].second);
       if (!temp.empty()) {
         m_patch = boost::lexical_cast<int>(temp);
       }
@@ -97,8 +96,7 @@ VersionString::VersionString(const std::string& version)
     if (5 < n) {
       m_buildString = std::string(m[5].first, m[5].second);
     }
-  }
-  else if (boost::regex_match(version, m, oldRegex)) {
+  } else if (boost::regex_match(version, m, oldRegex)) {
     m_major = boost::lexical_cast<int>(std::string(m[1].first, m[1].second));
     m_minor = boost::lexical_cast<int>(std::string(m[2].first, m[2].second));
     int n = m.size();
@@ -112,10 +110,28 @@ VersionString::VersionString(const std::string& version)
     if (4 < n) {
       m_buildString = std::string(m[4].first, m[4].second);
     }
+  } else {
+    return false;
   }
-  else {
+
+  return true;
+}
+
+VersionString::VersionString()
+  : m_str(openStudioLongVersion())
+{
+  if (!parseVersionString(m_str)) {
+    // This should never happen, there's a specific test in Compare_GTest.cpp for this
+    OS_ASSERT(false);
+  }
+}
+
+VersionString::VersionString(const std::string& version)
+  : m_str(version)
+{
+  if (!parseVersionString(m_str)) {
     LOG_FREE_AND_THROW("openstudio.utilities.VersionString",
-                       "Could not parse '" << version << "' as a version string.");
+      "Could not parse '" << version << "' as a version string.");
   }
 }
 
@@ -215,7 +231,7 @@ bool VersionString::operator<(const VersionString& other) const {
   }
 
   OS_ASSERT(meCurrent == otherCurrent);
-  
+
   if (patch() && other.patch()) {
     meCurrent = patch().get();
     otherCurrent = other.patch().get();

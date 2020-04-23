@@ -66,6 +66,7 @@
 %template(FileReferenceVector) std::vector<openstudio::FileReference>;
 %template(OptionalFileReference) boost::optional<openstudio::FileReference>;
 %template(OptionalVersionString) boost::optional<openstudio::VersionString>;
+%template(VersionStringPair) std::pair<openstudio::VersionString, std::string>;
 
 %include <utilities/core/FileReference.hpp>
 
