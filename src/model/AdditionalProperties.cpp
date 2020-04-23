@@ -183,7 +183,7 @@ namespace detail {
     if (strValue) {
       try {
         value = boost::lexical_cast<double>(*strValue);
-      } catch (boost::bad_lexical_cast) {
+      } catch (const boost::bad_lexical_cast &) {
         LOG(Error, "Value: " + *strValue + ", not castable to type double.")
         value = boost::none;
       }
@@ -200,7 +200,7 @@ namespace detail {
     if (strValue) {
       try {
         value = boost::lexical_cast<int>(*strValue);
-      } catch (boost::bad_lexical_cast) {
+      } catch (const boost::bad_lexical_cast &) {
         LOG(Error, "Value: " + *strValue + ", not castable to type integer.")
         value = boost::none;
       }

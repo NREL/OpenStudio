@@ -99,6 +99,7 @@ TEST_F(UnitsFixture,OSQuantityVector_MathematicalOperators) {
   // basic subtraction
 #ifdef __GNUC__
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wself-assign-overloaded"
 #endif

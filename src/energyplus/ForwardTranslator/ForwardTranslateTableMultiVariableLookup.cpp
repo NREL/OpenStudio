@@ -64,7 +64,7 @@ boost::optional<IdfObject> ForwardTranslator::translateTableMultiVariableLookup(
   std::string interpolationMethod = modelObject.interpolationMethod();
 
   int numberofIndependentVariables = modelObject.numberofIndependentVariables();
-  int expectedNumberOfValues = 1;
+  std::size_t expectedNumberOfValues = 1;
   for (int i = 0; i < numberofIndependentVariables; ++i) {
     auto xValues = modelObject.xValues(i);
     auto sizeX = xValues.size();
