@@ -344,6 +344,19 @@ if(MSVC AND NOT NINJA)
   mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
 endif()
 
+
+option(ENABLE_INCLUDE_WHAT_YOU_USE "Enable iwyu for checking header includes" OFF)
+mark_as_advanced(ENABLE_INCLUDE_WHAT_YOU_USE)
+if (ENABLE_INCLUDE_WHAT_YOU_USE)
+  find_program(INCLUDEWHATYOUUSE include-what-you-use)
+  if(INCLUDEWHATYOUUSE)
+    set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${INCLUDEWHATYOUUSE})
+  else()
+    message(SEND_ERROR "include-what-you-use requested but executable not found")
+  endif()
+endif()
+
+
 ###############################################################################
 
 ###############################################################################
@@ -1073,6 +1086,35 @@ set(all_lib_targets
   ${ALL_RUBY_BINDING_TARGETS}
 )
 
+if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
+  option(USE_PCH "Enable Precompiled Headers" ON)
+  mark_as_advanced(USE_PCH)
+
+  if (USE_PCH)
+    target_precompile_headers(openstudio_utilities PRIVATE "src/utilities/core/Logger.hpp")
+    target_precompile_headers(openstudio_model PRIVATE "src/utilities/core/Logger.hpp" "src/model/ModelObject.hpp")
+    target_precompile_headers(openstudio_energyplus PRIVATE 
+      "src/utilities/core/Logger.hpp"
+      "src/model/Model.hpp"
+      "src/model/ModelObject.hpp"
+      "src/utilities/idf/IdfObject.hpp")
+    target_precompile_headers(openstudio_measure PRIVATE "src/utilities/core/Logger.hpp")
+
+    foreach(test ${ALL_TESTING_TARGETS})
+      target_precompile_headers(${test} PRIVATE
+      "src/utilities/core/Logger.hpp"
+      "src/model/Model.hpp"
+      "src/model/ModelObject.hpp"
+      "src/utilities/idf/IdfObject.hpp")
+    endforeach()
+  endif()
+
+  #  set_target_properties(openstudio_utilities PROPERTIES UNITY_BUILD ON)
+  #  set_target_properties(openstudio_model PROPERTIES UNITY_BUILD ON)
+else()
+  message(WARNING "Upgrade to cmake >= 3.16.0 to get 30-50% better build times with pre-compiled headers")
+endif()
+
 set(all_exe_targets
   GenerateIddFactory
   #gbXMLToIdf
@@ -1225,7 +1267,7 @@ elseif(WIN32)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
 elseif(UNIX)
-	install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.6m.so.1.0" DESTINATION ./EnergyPlus/)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.6m.so.1.0" DESTINATION ./EnergyPlus/)
 else()
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
   #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
