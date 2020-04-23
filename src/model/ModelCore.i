@@ -66,6 +66,10 @@
   %ignore openstudio::model::EnergyManagementSystemCurveOrTableIndexVariable::setCurveOrTableObject;
   // getter curveOrTableObject doesn't need to be ignored and reimplemented because it returns a ModelObject
 
+  // Overload resolution: prefer std::string over char const *
+  %ignore openstudio::model::AdditionalProperties::setFeature(std::string const&, char const*);
+
+
   // should be able to do something here as C# supports partial classes
   // http://www.swig.org/Doc1.3/CSharp.html#csharp_extending_proxy_class
   %typemap(csclassmodifiers) openstudio::model::Model "public partial class"
