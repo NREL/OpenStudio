@@ -29,8 +29,7 @@ __**OpenStudio SDK 3.0.0**__
 ## Long-Term Support of 2.x version: 2.9.X-LTS
 
 This new major release is bringing a lot of changes not the least of which is the separation of the OpenStudioApplication as well as some API breaking changes.
-Long-Term Support (LTS) of the 2.x version will be provided until XX/XX/XXXX via the `2.9.X-LTS` branch and infrequent releases. Only critical bug-fixes will be implemented in the LTS branch
-and no new features will be developed. The supported EnergyPlus version will remain 9.2.0 in the LTS branch. We encourage users to transition to the 3.x version of OpenStudio.
+Only critical bug-fixes will be implemented in the LTS branch and no new features will be developed. The supported EnergyPlus version will remain 9.2.0 in the LTS branch. We encourage users to transition to the 3.x version of OpenStudio.
 
 # Where to Find OpenStudio Documentation
 
@@ -91,7 +90,7 @@ A number of API-breaking changes have been implemented in OpenStudio 3.0:
     * openstudio-standards v0.2.11
     * openstudio_measure_tester v0.2.2  
 
-* [#3796](https://github.com/NREL/OpenStudio/pull/3796) - Reporting Measure: you can now pass `model` to the `arguments()` method of a reporting measure, for easier setup of output variables.
+* [#3796](https://github.com/NREL/OpenStudio/pull/3796) - Reporting Measure: you can now pass `model` to the `arguments()` method of a reporting measure, for easier setup of output variables 
 * [#3847](https://github.com/NREL/OpenStudio/pull/3847) - Chiller:Electric:EIR node API refactor, ChillerAbsorption/ChillerAbsorption tertiary node refactor
     * `ChillerElectricEIR::designHeatRecoveryWaterFlowRate()` now returns an `OptionalDouble` instead of a `double` since it can be now be autosized
     * `ChillerElectricEIR` no longer has getter/setters that set/return std::string for Node Names. It also wraps two new E+ fields: "Condenser Heat Recovery Relative Capacity Fraction", "Heat Recovery Inlet High Temperature Limit Schedule Name" and "Heat Recovery Leaving Temperature Setpoint Node Name"
