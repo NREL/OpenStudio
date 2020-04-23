@@ -30,6 +30,13 @@
 %template(DoubleSet) std::set<double>;
 %template(StringSet) std::set<std::string>;
 
+%template(StringPair) std::pair<std::string, std::string>;
+%template(StringPairVector) std::vector<std::pair<std::string, std::string> >;
+%template(StringPairSet) std::set<std::pair<std::string, std::string> >;
+
+%template(StringUIntPair) std::pair<std::string, unsigned int>;
+%template(StringUIntPairVector) std::vector<std::pair<std::string, unsigned int> >;
+%template(UIntPair) std::pair<unsigned int, unsigned int>;
 
 // boost::optional wrapper
 %{
