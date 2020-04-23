@@ -10,6 +10,9 @@
   %rename(toString) openstudio::WorkflowStepResult::string;
   %rename(toString) openstudio::WorkflowStep::string;
   %rename(toString) openstudio::WorkflowJSON::string;
+  %rename(toString) openstudio::CSVFile::string;
+  %rename(toString) openstudio::StandardsJSON::string;
+
 
 #endif
 

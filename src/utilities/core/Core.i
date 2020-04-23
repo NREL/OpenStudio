@@ -1,6 +1,13 @@
 #ifndef UTILITIES_CORE_CORE_I
 #define UTILITIES_CORE_CORE_I
 
+#if defined(SWIGCSHARP)
+
+  // Avoid triggering a SWIG warning: 'fixed' is a C# keyword
+  %rename(fixedFormat) openstudio::FloatFormat::fixed;
+
+#endif
+
 // does not turn on directors for all classes, just enables them
 %module(directors="1") OpenStudio
 
