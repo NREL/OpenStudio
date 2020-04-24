@@ -1108,28 +1108,29 @@ if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16.0")
       "src/utilities/idf/IdfObject.hpp")
     endforeach()
   endif()
+
+  option(USE_UNITY "Enable Unity Builds (~70% faster builds by merging c++ files)" OFF)
+
+  if (USE_UNITY)
+    set_target_properties(openstudio_osversion PROPERTIES UNITY_BUILD ON)
+    set_target_properties(openstudio_model PROPERTIES UNITY_BUILD ON)
+    set_target_properties(openstudio_utilities PROPERTIES UNITY_BUILD ON)
+    set_target_properties(openstudio_energyplus PROPERTIES UNITY_BUILD ON)
+    set_target_properties(openstudio_measure PROPERTIES UNITY_BUILD ON)
+    set_target_properties(openstudio_radiance PROPERTIES UNITY_BUILD ON)
+    set_target_properties(openstudio_gbxml PROPERTIES UNITY_BUILD ON)
+    set_target_properties(openstudio_isomodel PROPERTIES UNITY_BUILD ON)
+    set_target_properties(openstudio_sdd PROPERTIES UNITY_BUILD ON)
+    set_target_properties(openstudio_airflow PROPERTIES UNITY_BUILD ON)
+
+    foreach(test ${ALL_TESTING_TARGETS})
+      set_target_properties(${test} PROPERTIES UNITY_BUILD ON)
+    endforeach()
+  endif()
 else()
-  message(WARNING "Upgrade to cmake >= 3.16.0 to get 30-50% better build times with pre-compiled headers")
+  message(WARNING "Upgrade to cmake >= 3.16.0 to get 30-70% better build times with pre-compiled headers and unity builds")
 endif()
 
-option(USE_UNITY "Enable Unity Builds (~70% faster builds by merging c++ files)" OFF)
-
-if (USE_UNITY)
-  set_target_properties(openstudio_osversion PROPERTIES UNITY_BUILD ON)
-  set_target_properties(openstudio_model PROPERTIES UNITY_BUILD ON)
-  set_target_properties(openstudio_utilities PROPERTIES UNITY_BUILD ON)
-  set_target_properties(openstudio_energyplus PROPERTIES UNITY_BUILD ON)
-  set_target_properties(openstudio_measure PROPERTIES UNITY_BUILD ON)
-  set_target_properties(openstudio_radiance PROPERTIES UNITY_BUILD ON)
-  set_target_properties(openstudio_gbxml PROPERTIES UNITY_BUILD ON)
-  set_target_properties(openstudio_isomodel PROPERTIES UNITY_BUILD ON)
-  set_target_properties(openstudio_sdd PROPERTIES UNITY_BUILD ON)
-  set_target_properties(openstudio_airflow PROPERTIES UNITY_BUILD ON)
-
-  foreach(test ${ALL_TESTING_TARGETS})
-    set_target_properties(${test} PROPERTIES UNITY_BUILD ON)
-  endforeach()
-endif()
 
 set(all_exe_targets
   GenerateIddFactory
