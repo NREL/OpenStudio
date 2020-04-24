@@ -950,7 +950,7 @@ if(BUILD_V8_BINDINGS)
   add_dependencies(ALL_V8_BINDINGS ${ALL_V8_BINDING_TARGETS})
 endif()
 
-set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
+set(MAXIMIZE_CPU_USAGE ON CACHE BOOL "Attempt to fully load the CPU during builds")
 mark_as_advanced(MAXIMIZE_CPU_USAGE)
 
 

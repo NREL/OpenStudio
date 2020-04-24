@@ -281,7 +281,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     add_custom_target(${swig_target}_swig
       SOURCES "${SWIG_WRAPPER}"
     )
-    add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+  #    add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
   endif()
 
   include_directories(${PROJECT_SOURCE_DIR})

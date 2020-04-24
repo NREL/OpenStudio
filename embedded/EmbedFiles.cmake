@@ -56,6 +56,18 @@ function(embed_files FILES EMBEDDED_LOCATIONS CXX_OUTPUT_FILES)
         DEPENDS ${FILE}
     )
 
+    if(MAXIMIZE_CPU_USAGE)
+      string(MAKE_C_IDENTIFIER "${ARGV3}_${EMBED_SOURCE_FILE}_embed" EMBEDDED_FILE)
+
+      if (NOT TARGET ${EMBEDDED_FILE})
+        add_custom_target(${EMBEDDED_FILE}
+          SOURCES "${EMBED_SOURCE_FILE}"
+          )
+        #      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
+      endif()
+    endif()
+
+
     set(EMBEDDED_FILE_INCLUDES "${EMBEDDED_FILE_INCLUDES}#include <${EMBED_SOURCE_FILE_REL_PATH}>\n")
   endforeach()
 
