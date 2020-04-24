@@ -1113,7 +1113,6 @@ else()
 endif()
 
 option(USE_UNITY "Enable Unity Builds (~70% faster builds by merging c++ files)" OFF)
-mark_as_advanced(USE_UNITY)
 
 if (USE_UNITY)
   set_target_properties(openstudio_osversion PROPERTIES UNITY_BUILD ON)
