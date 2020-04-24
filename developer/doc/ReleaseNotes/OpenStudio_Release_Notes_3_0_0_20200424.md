@@ -13,7 +13,7 @@ These release notes describe version 3.0.0 of the OpenStudio SDK developed by th
 # Overview
 
 Following an important announcement related to future development of the OpenStudio Application released in September 2019 ([A Shift in BTO’s BEM Strategy: A New Future for the OpenStudio Application](https://www.openstudio.net/new-future-for-openstudio-application)), **this release marks the first installment of the separated OpenStudio SDK from the Application.**
-Going forward, the SDK and Application will be distributed as ***separate*** applications and will be released on different schedules. Development of the OpenStudioApplication has been moved to its own [NREL/OpenStudioApplication](https://github.com/NREL/OpenStudioApplication/) GitHub.
+Going forward, the SDK will continue to be distributed and released two times per year, in April and October. Development of the OpenStudioApplication has been moved to its own [NREL/OpenStudioApplication](https://github.com/NREL/OpenStudioApplication/) GitHub.
 
 Below is the list of components that is included in this SDK installer:
 
@@ -24,7 +24,7 @@ __**OpenStudio SDK 3.0.0**__
 - Ruby API
 - C++ SDK
 
-**Note** that [PAT](https://github.com/NREL/OpenStudio-PAT) is no included in either the SDK or Application installers. You will need to install PAT separately which is distributed on the [OpenStudio-PAT](https://github.com/NREL/OpenStudio-PAT) GitHub page.
+**Note** that [PAT](https://github.com/NREL/OpenStudio-PAT) is not included in either the SDK or Application installers. You will need to install PAT separately which is distributed on the [OpenStudio-PAT](https://github.com/NREL/OpenStudio-PAT) GitHub page.
 
 ## Long-Term Support of 2.x version: 2.9.X-LTS
 
