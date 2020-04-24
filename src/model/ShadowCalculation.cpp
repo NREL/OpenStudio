@@ -47,6 +47,8 @@
 #include <utilities/idd/OS_ShadowCalculation_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <boost/optional/optional_io.hpp>
+
 namespace openstudio {
 namespace model  {
 

@@ -41,6 +41,11 @@ namespace pugi {
 
 namespace openstudio {
   namespace sdd {
+    static constexpr auto footToMeter =  0.3048;
+    static constexpr auto cpWater = 4180.0;
+    static constexpr auto densityWater = 1000.0;
+    static constexpr auto meterToFoot = 1.0/0.3048;
+
 
     // Helper to make a vector of pugi::xml_node of all children under an element (regardless of their tag)
     std::vector<pugi::xml_node> makeVectorOfChildren(const pugi::xml_node& root);

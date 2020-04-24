@@ -39,7 +39,6 @@
 
 #include <cmath>
 
-using namespace std;
 
 namespace openstudio {
 namespace model {
@@ -108,15 +107,15 @@ namespace detail {
     }
 
     double result = coefficient1Constant();
-    double x2 = pow(x,2);
-    double y2 = pow(y,2);
+    double x2 = std::pow(x,2);
+    double y2 = std::pow(y,2);
     result += coefficient2x() * x;
     result += coefficient3xPOW2() * x2;
     result += coefficient4y() * y;
     result += coefficient5yPOW2() * y2;
     result += coefficient6xTIMESY() * x * y;
-    result += coefficient7xPOW3() * pow(x,3);
-    result += coefficient8yPOW3() * pow(y,3);
+    result += coefficient7xPOW3() * std::pow(x,3);
+    result += coefficient8yPOW3() * std::pow(y,3);
     result += coefficient9xPOW2TIMESY() * x2 * y;
     result += coefficient10xTIMESYPOW2() * x * y2;
 

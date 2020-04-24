@@ -335,19 +335,19 @@ namespace openstudio{
   }
 
   std::function<double (const Vector&)> sumVectorFunctor() {
-    return std::function<double (const Vector&)> (&sum);
+    return static_cast<double (*)(const Vector &)>(&sum);
   }
 
   std::function<double (const Vector&)> maximumVectorFunctor() {
-    return std::function<double (const Vector&)> (&maximum);
+    return static_cast<double (*)(const Vector &)>(&maximum);
   }
 
   std::function<double (const Vector&)> minimumVectorFunctor() {
-    return std::function<double (const Vector&)> (&minimum);
+    return static_cast<double (*)(const Vector &)>(&minimum);
   }
 
   std::function<double (const Vector&)> meanVectorFunctor() {
-    return std::function<double (const Vector&)> (&mean);
+    return static_cast<double (*)(const Vector &)>(&mean);
   }
 
   std::function<double (const Vector&)> varianceVectorFunctor() {

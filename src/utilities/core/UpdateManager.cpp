@@ -138,10 +138,10 @@ namespace openstudio{
   {
     const std::string url("https://www.openstudio.net");
 
-    web::uri_builder builder(U("/update.html"));
+    web::uri_builder builder(_XPLATSTR("/update.html"));
 
-    builder.append_query(U("app"), to_string_t(appName));
-    builder.append_query(U("version"), to_string_t(openStudioVersion()));
+    builder.append_query(_XPLATSTR("app"), to_string_t(appName));
+    builder.append_query(_XPLATSTR("version"), to_string_t(openStudioVersion()));
 
     return url + toString(builder.to_string());
   }

@@ -38,8 +38,6 @@
 
 #include <boost/optional.hpp>
 
-using namespace openstudio;
-
 class WorkspaceReciever  {
  public:
 
@@ -83,14 +81,14 @@ class WorkspaceReciever  {
 
   void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
   {
-    m_objectImpl = object.getImpl<detail::WorkspaceObject_Impl>();
+    m_objectImpl = object.getImpl<openstudio::detail::WorkspaceObject_Impl>();
     m_iddObjectType = iddObjectType;
     m_handle = handle;
   }
 
   void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
   {
-    m_objectImpl = object.getImpl<detail::WorkspaceObject_Impl>();
+    m_objectImpl = object.getImpl<openstudio::detail::WorkspaceObject_Impl>();
     m_iddObjectType = iddObjectType;
     m_handle = handle;
   }

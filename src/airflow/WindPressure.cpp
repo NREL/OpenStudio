@@ -67,7 +67,7 @@ double pressureModifier(ShelterClass shelter, double H, double Href)
     // This is the default, set above
     break;
   }
-  double wPmod = A0*pow(0.1*H,a);
+  double wPmod = A0*std::pow(0.1*H,a);
   wPmod *= wPmod;
   return wPmod;
 }

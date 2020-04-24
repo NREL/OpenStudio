@@ -46,7 +46,6 @@
 #include "../PortList_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
 
-using namespace openstudio::model;
 
 TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_AirTerminalSingleDuctParallelPIUReheat)
 {
@@ -54,11 +53,11 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_AirTerminalSingleDuct
 
   ASSERT_EXIT (
   {
-    Model m;
-    Schedule s = m.alwaysOnDiscreteSchedule();
-    FanConstantVolume piuFan = FanConstantVolume(m,s);
-    CoilHeatingElectric piuReheatCoil = CoilHeatingElectric(m,s);
-    AirTerminalSingleDuctParallelPIUReheat testObject(m,s,piuFan,piuReheatCoil);
+    openstudio::model::Model m;
+    auto s = m.alwaysOnDiscreteSchedule();
+    auto piuFan = openstudio::model::FanConstantVolume(m,s);
+    auto piuReheatCoil = openstudio::model::CoilHeatingElectric(m,s);
+    openstudio::model::AirTerminalSingleDuctParallelPIUReheat testObject(m,s,piuFan,piuReheatCoil);
 
     exit(0);
   } ,
@@ -66,13 +65,13 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_AirTerminalSingleDuct
 }
 
 TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_addToNode) {
-  Model m;
-  Schedule s = m.alwaysOnDiscreteSchedule();
-  FanConstantVolume piuFan = FanConstantVolume(m,s);
-  CoilHeatingElectric piuReheatCoil = CoilHeatingElectric(m,s);
-  AirTerminalSingleDuctParallelPIUReheat testObject(m,s,piuFan,piuReheatCoil);
+  openstudio::model::Model m;
+  auto s = m.alwaysOnDiscreteSchedule();
+  auto piuFan = openstudio::model::FanConstantVolume(m,s);
+  auto piuReheatCoil = openstudio::model::CoilHeatingElectric(m,s);
+  openstudio::model::AirTerminalSingleDuctParallelPIUReheat testObject(m,s,piuFan,piuReheatCoil);
 
-  AirLoopHVAC airLoop(m);
+  openstudio::model::AirLoopHVAC airLoop(m);
 
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
@@ -104,16 +103,16 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_addToNode) {
 TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
   // test that setAvailabilitySchedule also set PIU fan schedule
   {
-    Model m;
-    Schedule schedule = m.alwaysOnDiscreteSchedule();
-    FanConstantVolume fan(m,schedule);
-    CoilHeatingElectric coil(m,schedule);
-    AirTerminalSingleDuctParallelPIUReheat terminal(m,schedule,fan,coil);
+    openstudio::model::Model m;
+    openstudio::model::Schedule schedule = m.alwaysOnDiscreteSchedule();
+    openstudio::model::FanConstantVolume fan(m,schedule);
+    openstudio::model::CoilHeatingElectric coil(m,schedule);
+    openstudio::model::AirTerminalSingleDuctParallelPIUReheat terminal(m,schedule,fan,coil);
 
-    AirLoopHVAC airLoopHVAC(m);
+    openstudio::model::AirLoopHVAC airLoopHVAC(m);
     airLoopHVAC.addBranchForHVACComponent(terminal);
 
-    ScheduleRuleset hvacSchedule(m);
+    openstudio::model::ScheduleRuleset hvacSchedule(m);
     airLoopHVAC.setAvailabilitySchedule(hvacSchedule);
 
     auto fanSchedule = fan.availabilitySchedule();
@@ -122,29 +121,29 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
 
   // test that addToNode (by proxy addBranchForZone) sets the fan schedule to match system availabilitySchedule
   {
-    Model m;
-    Schedule schedule = m.alwaysOnDiscreteSchedule();
-    FanConstantVolume fan(m,schedule);
-    CoilHeatingElectric coil(m,schedule);
-    AirTerminalSingleDuctParallelPIUReheat terminal(m,schedule,fan,coil);
+    openstudio::model::Model m;
+    openstudio::model::Schedule schedule = m.alwaysOnDiscreteSchedule();
+    openstudio::model::FanConstantVolume fan(m,schedule);
+    openstudio::model::CoilHeatingElectric coil(m,schedule);
+    openstudio::model::AirTerminalSingleDuctParallelPIUReheat terminal(m,schedule,fan,coil);
 
-    AirLoopHVAC airLoopHVAC(m);
+    openstudio::model::AirLoopHVAC airLoopHVAC(m);
 
-    ScheduleRuleset hvacSchedule(m);
+    openstudio::model::ScheduleRuleset hvacSchedule(m);
     airLoopHVAC.setAvailabilitySchedule(hvacSchedule);
 
-    ThermalZone zone(m);
+    openstudio::model::ThermalZone zone(m);
     // KSB: I don't think it is the greatest idea to test these private methods,
     // but this area has resulted in a simulation error so it needs to be tested
-    EXPECT_FALSE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
-    EXPECT_FALSE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+    EXPECT_FALSE(zone.getImpl<openstudio::model::detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
+    EXPECT_FALSE(zone.getImpl<openstudio::model::detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
 
     airLoopHVAC.addBranchForZone(zone,terminal);
     auto fanSchedule = fan.availabilitySchedule();
     ASSERT_EQ(hvacSchedule.handle(),fanSchedule.handle());
 
-    EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
-    EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+    EXPECT_TRUE(zone.getImpl<openstudio::model::detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
+    EXPECT_TRUE(zone.getImpl<openstudio::model::detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
 
     EXPECT_EQ(9u,airLoopHVAC.demandComponents().size());
     EXPECT_EQ(1u,zone.equipment().size());
@@ -159,8 +158,8 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
 
     terminal.remove();
 
-    EXPECT_FALSE(zone.getImpl<detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
-    EXPECT_TRUE(zone.getImpl<detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
+    EXPECT_FALSE(zone.getImpl<openstudio::model::detail::ThermalZone_Impl>()->exhaustPortList().getTarget(3));
+    EXPECT_TRUE(zone.getImpl<openstudio::model::detail::ThermalZone_Impl>()->inletPortList().getTarget(3));
 
     EXPECT_EQ(7u,airLoopHVAC.demandComponents().size());
     EXPECT_TRUE(zone.equipment().empty());

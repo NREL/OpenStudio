@@ -37,10 +37,10 @@ using openstudio::isMember;
 namespace openstudio {
 
 namespace enums {
-  OPENSTUDIO_ENUM(TestEnum, ((first)) ((second)) ((third)) );
+  OPENSTUDIO_ENUM(EnumHelpers_Test_TestEnum, ((first)) ((second)) ((third)) );
 
-  OPENSTUDIO_ENUM(TestEnum2, ((first)(first)(1)) ((second)) ((third)) );
-  OPENSTUDIO_ENUM(TestEnum3, ((first)) ((second)(My Second)(2)) ((third)) ((fourth)(fourth)(5))
+  OPENSTUDIO_ENUM(EnumHelpers_Test_TestEnum2, ((first)(first)(1)) ((second)) ((third)) );
+  OPENSTUDIO_ENUM(EnumHelpers_Test_TestEnum3, ((first)) ((second)(My Second)(2)) ((third)) ((fourth)(fourth)(5))
     ((SIXTH)) );
 
 
@@ -49,7 +49,7 @@ namespace enums {
 
 TEST(EnumHelpers, isMember)
 {
-  openstudio::enums::TestEnum te("third");
+  openstudio::enums::EnumHelpers_Test_TestEnum te("third");
   openstudio::StringVector members;
   members.push_back("first");
   members.push_back("elephant"); // bad values are ignored

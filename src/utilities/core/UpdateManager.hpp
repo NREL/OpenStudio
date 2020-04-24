@@ -37,6 +37,7 @@
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #endif
+#define _TURN_OFF_PLATFORM_STRING
 #include <cpprest/http_client.h>
 #if (defined (__GNUC__))
   #pragma GCC diagnostic pop

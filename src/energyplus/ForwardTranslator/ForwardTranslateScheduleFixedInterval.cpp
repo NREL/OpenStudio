@@ -28,7 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
-
+#include "ForwardTranslateSchedule.hpp"
 #include "../../model/Model.hpp"
 #include "../../model/ScheduleTypeLimits.hpp"
 #include "../../model/ScheduleFixedInterval.hpp"
@@ -47,10 +47,6 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-#define FMT_HEADER_ONLY
-#include <fmt/format.h>
-#include <fmt/printf.h>
-
 using namespace openstudio::model;
 
 using namespace std;
@@ -59,25 +55,6 @@ namespace openstudio {
 
 namespace energyplus {
 
-static unsigned startNewDay(IdfObject &idfObject,unsigned fieldIndex,Date date)
-{
-  std::string string = fmt::sprintf("Through: %02d/%02d",date.monthOfYear().value(),date.dayOfMonth());
-  idfObject.setString(fieldIndex, string);
-  ++fieldIndex;
-  idfObject.setString(fieldIndex, "For: AllDays");
-  ++fieldIndex;
-  return fieldIndex;
-}
-
-static unsigned addUntil(IdfObject &idfObject,unsigned fieldIndex,int hours,int minutes,double value)
-{
-  std::string string = fmt::sprintf("Until: %02d:%02d",hours,minutes);
-  idfObject.setString(fieldIndex, string);
-  ++fieldIndex;
-  idfObject.setDouble(fieldIndex, value);
-  ++fieldIndex;
-  return fieldIndex;
-}
 
 boost::optional<IdfObject> ForwardTranslator::translateScheduleFixedInterval( ScheduleFixedInterval & modelObject )
 {

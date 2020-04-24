@@ -119,9 +119,6 @@
 namespace openstudio {
 namespace sdd {
 
-  const double footToMeter =  0.3048;
-  const double meterToFoot = 1.0/0.3048;
-
   double fixAngle(double angle){
     while (angle >= 360){
       angle -= 360;

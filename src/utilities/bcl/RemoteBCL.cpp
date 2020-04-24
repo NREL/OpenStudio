@@ -237,13 +237,13 @@ namespace openstudio{
       m_lastSearch.clear();
 
       auto client = getClient(remoteUrl());
-      web::uri_builder builder(U("/api/search/"));
+      web::uri_builder builder(_XPLATSTR("/api/search/"));
 
-      builder.append_path(U("*.xml"));
+      builder.append_path(_XPLATSTR("*.xml"));
 
-      builder.append_query(U("fq[]"), to_string_t("ss_uuid:" + component.uid()));
+      builder.append_query(_XPLATSTR("fq[]"), to_string_t("ss_uuid:" + component.uid()));
 
-      builder.append_query(U("api_version"), to_string_t(m_apiVersion));
+      builder.append_query(_XPLATSTR("api_version"), to_string_t(m_apiVersion));
 
       //LOG(Warn, remoteUrl() + toString(builder.to_string()));
 
@@ -280,13 +280,13 @@ namespace openstudio{
       m_lastSearch.clear();
 
       auto client = getClient(remoteUrl());
-      web::uri_builder builder(U("/api/search/"));
+      web::uri_builder builder(_XPLATSTR("/api/search/"));
 
-      builder.append_path(U("*.xml"));
+      builder.append_path(_XPLATSTR("*.xml"));
 
-      builder.append_query(U("fq[]"), to_string_t("ss_uuid:" + measure.uid()));
+      builder.append_query(_XPLATSTR("fq[]"), to_string_t("ss_uuid:" + measure.uid()));
 
-      builder.append_query(U("api_version"), to_string_t(m_apiVersion));
+      builder.append_query(_XPLATSTR("api_version"), to_string_t(m_apiVersion));
 
       //LOG(Warn, remoteUrl() + toString(builder.to_string()));
 
@@ -524,12 +524,12 @@ namespace openstudio{
       m_lastSearch.clear();
 
       auto client = getClient(remoteUrl);
-      web::uri_builder builder(U("/api/search/"));
+      web::uri_builder builder(_XPLATSTR("/api/search/"));
 
-      builder.append_path(U("*.xml"));
+      builder.append_path(_XPLATSTR("*.xml"));
 
-      builder.append_query(U("api_version"), to_string_t(m_apiVersion));
-      builder.append_query(U("show_rows"), U("0"));
+      builder.append_query(_XPLATSTR("api_version"), to_string_t(m_apiVersion));
+      builder.append_query(_XPLATSTR("show_rows"), _XPLATSTR("0"));
 
       //LOG(Warn, remoteUrl() + toString(builder.to_string()));
 
@@ -620,12 +620,12 @@ namespace openstudio{
     m_downloadUid = uid;
     // request.setRawHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17");
     auto client = getClient(remoteUrl());
-    web::uri_builder builder(U("/api/component/download"));
+    web::uri_builder builder(_XPLATSTR("/api/component/download"));
 
-    builder.append_query(U("uids"), to_string_t(uid));
+    builder.append_query(_XPLATSTR("uids"), to_string_t(uid));
 
     web::http::http_request msg(web::http::methods::GET);
-    msg.headers().add(U("User-Agent"), U("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17"));
+    msg.headers().add(_XPLATSTR("User-Agent"), _XPLATSTR("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.56 Safari/537.17"));
     msg.set_request_uri(builder.to_string());
 
     m_httpResponse = client
@@ -662,21 +662,21 @@ namespace openstudio{
     m_lastMetaSearch.reset();
 
     auto client = getClient(remoteUrl());
-    web::uri_builder builder(U("/api/metasearch/"));
+    web::uri_builder builder(_XPLATSTR("/api/metasearch/"));
 
     auto query = searchTerm.empty() ? "*" : searchTerm;
     query = std::regex_replace(query, std::regex("\\+"), "%2B");
     builder.append_path(to_string_t(query + ".xml"));
 
-    builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
+    builder.append_query(_XPLATSTR("fq[]"), to_string_t("bundle:" + filterType));
 
     if (!componentType.empty() && componentType != "*") {
       std::string filter = (filterType == "nrel_component") ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags";
       filter += ":\"" + componentType + "\"";
-      builder.append_query(U("fq[]"), to_string_t(filter));
+      builder.append_query(_XPLATSTR("fq[]"), to_string_t(filter));
     }
 
-    builder.append_query(U("api_version"), to_string_t(m_apiVersion));
+    builder.append_query(_XPLATSTR("api_version"), to_string_t(m_apiVersion));
 
     m_httpResponse = client
       .request(web::http::methods::GET, builder.to_string())
@@ -710,20 +710,20 @@ namespace openstudio{
     m_lastMetaSearch.reset();
 
     auto client = getClient(remoteUrl());
-    web::uri_builder builder(U("/api/metasearch/"));
+    web::uri_builder builder(_XPLATSTR("/api/metasearch/"));
 
     auto query = searchTerm.empty() ? "*" : searchTerm;
     query = std::regex_replace(query, std::regex("\\+"), "%2B");
     builder.append_path(to_string_t(query + ".xml"));
 
-    builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
+    builder.append_query(_XPLATSTR("fq[]"), to_string_t("bundle:" + filterType));
 
     if (componentTypeTID != 0) {
       std::string filter = "tid:" + openstudio::string_conversions::number(componentTypeTID);
-      builder.append_query(U("fq[]"), to_string_t(filter));
+      builder.append_query(_XPLATSTR("fq[]"), to_string_t(filter));
     }
 
-    builder.append_query(U("api_version"), to_string_t(m_apiVersion));
+    builder.append_query(_XPLATSTR("api_version"), to_string_t(m_apiVersion));
 
     m_httpResponse = client
       .request(web::http::methods::GET, builder.to_string())
@@ -757,23 +757,23 @@ namespace openstudio{
     m_lastSearch.clear();
 
     auto client = getClient(remoteUrl());
-    web::uri_builder builder(U("/api/search/"));
+    web::uri_builder builder(_XPLATSTR("/api/search/"));
 
     auto query = searchTerm.empty() ? "*" : searchTerm;
     query = std::regex_replace(query, std::regex("\\+"), "%2B");
     builder.append_path(to_string_t(query + ".xml"));
 
-    builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
+    builder.append_query(_XPLATSTR("fq[]"), to_string_t("bundle:" + filterType));
 
     if (!componentType.empty() && componentType != "*") {
       std::string filter = (filterType == "nrel_component") ? "sm_vid_Component_Tags" : "sm_vid_Measure_Tags";
       filter += ":\"" + componentType + "\"";
-      builder.append_query(U("fq[]"), to_string_t(filter));
+      builder.append_query(_XPLATSTR("fq[]"), to_string_t(filter));
     }
 
-    builder.append_query(U("api_version"), to_string_t(m_apiVersion));
-    builder.append_query(U("show_rows"), to_string_t(openstudio::string_conversions::number(m_numResultsPerQuery)));
-    builder.append_query(U("page"), to_string_t(openstudio::string_conversions::number(page)));
+    builder.append_query(_XPLATSTR("api_version"), to_string_t(m_apiVersion));
+    builder.append_query(_XPLATSTR("show_rows"), to_string_t(openstudio::string_conversions::number(m_numResultsPerQuery)));
+    builder.append_query(_XPLATSTR("page"), to_string_t(openstudio::string_conversions::number(page)));
 
     m_httpResponse = client
       .request(web::http::methods::GET, builder.to_string())
@@ -801,21 +801,21 @@ namespace openstudio{
     m_lastSearch.clear();
 
     auto client = getClient(remoteUrl());
-    web::uri_builder builder(U("/api/search/"));
+    web::uri_builder builder(_XPLATSTR("/api/search/"));
 
     auto query = searchTerm.empty() ? "*" : searchTerm;
     query = std::regex_replace(query, std::regex("\\+"), "%2B");
     builder.append_path(to_string_t(query + ".xml"));
 
-    builder.append_query(U("fq[]"), to_string_t("bundle:" + filterType));
+    builder.append_query(_XPLATSTR("fq[]"), to_string_t("bundle:" + filterType));
 
     if (componentTypeTID != 0) {
       std::string filter = "tid:" + openstudio::string_conversions::number(componentTypeTID);
-      builder.append_query(U("fq[]"), to_string_t(filter));
+      builder.append_query(_XPLATSTR("fq[]"), to_string_t(filter));
     }
-    builder.append_query(U("api_version"), to_string_t(m_apiVersion));
-    builder.append_query(U("show_rows"), to_string_t(openstudio::string_conversions::number(m_numResultsPerQuery)));
-    builder.append_query(U("page"), to_string_t(openstudio::string_conversions::number(page)));
+    builder.append_query(_XPLATSTR("api_version"), to_string_t(m_apiVersion));
+    builder.append_query(_XPLATSTR("show_rows"), to_string_t(openstudio::string_conversions::number(m_numResultsPerQuery)));
+    builder.append_query(_XPLATSTR("page"), to_string_t(openstudio::string_conversions::number(page)));
 
     m_httpResponse = client
       .request(web::http::methods::GET, builder.to_string())

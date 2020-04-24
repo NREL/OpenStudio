@@ -46,7 +46,6 @@ using openstudio::checkPtrVecEqual;
 using openstudio::firstOfPairEqual;
 using openstudio::secondOfPairEqual;
 using openstudio::VersionString;
-using std::shared_ptr;
 
 
 TEST(Compare, istringEqual)
@@ -151,7 +150,7 @@ TEST(Compare, checkPtrVecEqual)
 {
   LOG_FREE(Info, "Compare", "Entering IstringPairCompare")
 
-  typedef std::vector<shared_ptr<double> > VectorType;
+  typedef std::vector<std::shared_ptr<double> > VectorType;
 
   VectorType v1;
   VectorType v2;
@@ -159,42 +158,42 @@ TEST(Compare, checkPtrVecEqual)
   EXPECT_TRUE(checkPtrVecEqual(v1, v1)); // equal to self
   EXPECT_TRUE(checkPtrVecEqual(v2, v2)); // equal to self
 
-  shared_ptr<double> p = shared_ptr<double>(new double(1));
+  std::shared_ptr<double> p = std::shared_ptr<double>(new double(1));
   v1.push_back(p);
   v2.push_back(p);
   EXPECT_TRUE(checkPtrVecEqual(v1, v2)); // euqal
   EXPECT_TRUE(checkPtrVecEqual(v1, v1)); // equal to self
   EXPECT_TRUE(checkPtrVecEqual(v2, v2)); // equal to self
 
-  p = shared_ptr<double>(new double(2));
+  p = std::shared_ptr<double>(new double(2));
   v1.push_back(p);
   v2.push_back(p);
   EXPECT_TRUE(checkPtrVecEqual(v1, v2)); // equal
   EXPECT_TRUE(checkPtrVecEqual(v1, v1)); // equal to self
   EXPECT_TRUE(checkPtrVecEqual(v2, v2)); // equal to self
 
-  shared_ptr<double> p1 = shared_ptr<double>(new double(3));
-  shared_ptr<double> p2 = shared_ptr<double>(new double(3));
+  std::shared_ptr<double> p1 = std::shared_ptr<double>(new double(3));
+  std::shared_ptr<double> p2 = std::shared_ptr<double>(new double(3));
   v1.push_back(p1);
   v2.push_back(p2);
   EXPECT_TRUE(checkPtrVecEqual(v1, v2)); // equal (comparing values)
   EXPECT_TRUE(checkPtrVecEqual(v1, v1)); // equal to self
   EXPECT_TRUE(checkPtrVecEqual(v2, v2)); // equal to self
 
-  p1 = shared_ptr<double>(new double(4));
+  p1 = std::shared_ptr<double>(new double(4));
   v1.push_back(p1);
   EXPECT_FALSE(checkPtrVecEqual(v1, v2)); // unequal
   EXPECT_TRUE(checkPtrVecEqual(v1, v1)); // equal to self
   EXPECT_TRUE(checkPtrVecEqual(v2, v2)); // equal to self
 
-  p2 = shared_ptr<double>(new double(4));
+  p2 = std::shared_ptr<double>(new double(4));
   v2.push_back(p2);
   EXPECT_TRUE(checkPtrVecEqual(v1, v2)); // equal again
   EXPECT_TRUE(checkPtrVecEqual(v1, v1)); // equal to self
   EXPECT_TRUE(checkPtrVecEqual(v2, v2)); // equal to self
 
-  v1.push_back(shared_ptr<double>());
-  v2.push_back(shared_ptr<double>());
+  v1.push_back(std::shared_ptr<double>());
+  v2.push_back(std::shared_ptr<double>());
   EXPECT_FALSE(checkPtrVecEqual(v1, v2)); // null pointer causes failure
   EXPECT_FALSE(checkPtrVecEqual(v1, v1)); // null pointer causes failure
   EXPECT_FALSE(checkPtrVecEqual(v2, v2)); // null pointer causes failure
