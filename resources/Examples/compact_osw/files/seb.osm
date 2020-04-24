@@ -1,7 +1,7 @@
 
 OS:Version,
-  {24ab10d5-e510-4741-8e04-60850cb5f30a}, !- Handle
-  1.11.5;                                 !- Version Identifier
+  {34095568-4518-41d1-bb5c-4e19a9ba9122}, !- Handle
+  3.0.0;                                  !- Version Identifier
 
 OS:WeatherFile,
   {723b8b41-fedf-4006-b2ea-df5318b05b7b}, !- Handle
@@ -124,12 +124,12 @@ OS:ComponentData,
 
 OS:Material,
   {27386e32-241b-4047-9c91-7afab2b78444}, !- Handle
-  Lightweight Concrete - 6 in. - 80 lb/ft3, ! Name
-  MediumRough,                            ! Roughness
-  0.1524,                                 ! Thickness {m}
-  0.53,                                   ! Conductivity {W/m-K}
-  1281.47706991681,                       ! Density {kg/m3}
-  840;                                    ! Specific Heat {J/kg-K}
+  Lightweight Concrete - 6 in. - 80 lb/ft3, !- Name
+  MediumRough,                            !- Roughness
+  0.1524,                                 !- Thickness {m}
+  0.53,                                   !- Conductivity {W/m-K}
+  1281.47706991681,                       !- Density {kg/m3}
+  840;                                    !- Specific Heat {J/kg-K}
 
 OS:Construction,
   {66984aae-0868-46a3-9f1b-b8bcdcc2f82b}, !- Handle
@@ -141,12 +141,12 @@ OS:Construction,
 
 OS:Material,
   {2f236abc-1fc9-4605-864e-c1618d38273c}, !- Handle
-  Gypsum Board - 5/8 in.,                 ! Name
-  MediumSmooth,                           ! Roughness
-  0.015875,                               ! Thickness {m}
-  0.16,                                   ! Conductivity {W/m-K}
-  800,                                    ! Density {kg/m3}
-  1090;                                   ! Specific Heat {J/kg-K}
+  Gypsum Board - 5/8 in.,                 !- Name
+  MediumSmooth,                           !- Roughness
+  0.015875,                               !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  800,                                    !- Density {kg/m3}
+  1090;                                   !- Specific Heat {J/kg-K}
 
 OS:ComponentData,
   {83aed676-0408-4d3e-b9f6-1a0b142b06b8}, !- Handle
@@ -159,12 +159,12 @@ OS:ComponentData,
 
 OS:Material,
   {bcc8c33e-8167-44ff-89ce-7179c3920b4b}, !- Handle
-  Wood-Framed - 4 in. Studs - 16 in. OC - R-0 Cavity Insulation, ! Name
-  Smooth,                                 ! Roughness
-  0.0889,                                 ! Thickness {m}
-  0.367216996560281,                      ! Conductivity {W/m-K}
-  126.145399069936,                       ! Density {kg/m3}
-  1556.29337142857;                       ! Specific Heat {J/kg-K}
+  Wood-Framed - 4 in. Studs - 16 in. OC - R-0 Cavity Insulation, !- Name
+  Smooth,                                 !- Roughness
+  0.0889,                                 !- Thickness {m}
+  0.367216996560281,                      !- Conductivity {W/m-K}
+  126.145399069936,                       !- Density {kg/m3}
+  1556.29337142857;                       !- Specific Heat {J/kg-K}
 
 OS:ComponentData,
   {39c6d086-d9b2-4c8c-86cd-9860e9329321}, !- Handle
@@ -183,12 +183,12 @@ OS:Construction,
 
 OS:Material,
   {f8b57b1b-37ab-485f-9b55-e57f01d46d4a}, !- Handle
-  Carpet - 1/2 in.,                       ! Name
-  MediumRough,                            ! Roughness
-  0.0127,                                 ! Thickness {m}
-  0.06,                                   ! Conductivity {W/m-K}
-  288,                                    ! Density {kg/m3}
-  1380;                                   ! Specific Heat {J/kg-K}
+  Carpet - 1/2 in.,                       !- Name
+  MediumRough,                            !- Roughness
+  0.0127,                                 !- Thickness {m}
+  0.06,                                   !- Conductivity {W/m-K}
+  288,                                    !- Density {kg/m3}
+  1380;                                   !- Specific Heat {J/kg-K}
 
 OS:ComponentData,
   {4a8b16a1-bcd8-410d-9fbe-c2b02c008e96}, !- Handle
@@ -219,12 +219,12 @@ OS:ComponentData,
 
 OS:Material,
   {4c84bca9-1fca-42d7-9300-4dd2ce8d906c}, !- Handle
-  Expanded Polystyrene - Extruded - 1 in., ! Name
-  MediumSmooth,                           ! Roughness
-  0.0254,                                 ! Thickness {m}
-  0.0290000458418302,                     ! Conductivity {W/m-K}
-  29,                                     ! Density {kg/m3}
-  1210;                                   ! Specific Heat {J/kg-K}
+  Expanded Polystyrene - Extruded - 1 in., !- Name
+  MediumSmooth,                           !- Roughness
+  0.0254,                                 !- Thickness {m}
+  0.0290000458418302,                     !- Conductivity {W/m-K}
+  29,                                     !- Density {kg/m3}
+  1210;                                   !- Specific Heat {J/kg-K}
 
 OS:ComponentData,
   {14ed42ee-65c7-4390-9c5a-400b7a156878}, !- Handle
@@ -237,12 +237,12 @@ OS:ComponentData,
 
 OS:Material,
   {23f2c30e-c8ec-4515-9f72-cfd36e1eaade}, !- Handle
-  Wood-Framed - 4 in. Studs - 16 in. OC - R-11 Cavity Insulation, ! Name
-  Smooth,                                 ! Roughness
-  0.0889,                                 ! Thickness {m}
-  0.0603344200649287,                     ! Conductivity {W/m-K}
-  126.145399069936,                       ! Density {kg/m3}
-  1556.29337142857,                       ! Specific Heat {J/kg-K}
+  Wood-Framed - 4 in. Studs - 16 in. OC - R-11 Cavity Insulation, !- Name
+  Smooth,                                 !- Roughness
+  0.0889,                                 !- Thickness {m}
+  0.0603344200649287,                     !- Conductivity {W/m-K}
+  126.145399069936,                       !- Density {kg/m3}
+  1556.29337142857,                       !- Specific Heat {J/kg-K}
   ,                                       !- Thermal Absorptance
   ,                                       !- Solar Absorptance
   ;                                       !- Visible Absorptance
@@ -267,21 +267,21 @@ OS:ComponentData,
 
 OS:Material,
   {bf5cd459-80bf-41c0-a329-5ec46ef3f55c}, !- Handle
-  Built-up Roofing - 3/8 in.,             ! Name
-  Rough,                                  ! Roughness
-  0.009525,                               ! Thickness {m}
-  0.16,                                   ! Conductivity {W/m-K}
-  1120,                                   ! Density {kg/m3}
-  1460;                                   ! Specific Heat {J/kg-K}
+  Built-up Roofing - 3/8 in.,             !- Name
+  Rough,                                  !- Roughness
+  0.009525,                               !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  1120,                                   !- Density {kg/m3}
+  1460;                                   !- Specific Heat {J/kg-K}
 
 OS:Material,
   {90f6b7e6-a97c-4329-8dd9-431134f40b0d}, !- Handle
-  Hardboard - High Density - Standard-tempered Grade - 3/4 in., ! Name
-  Smooth,                                 ! Roughness
-  0.01905,                                ! Thickness {m}
-  0.144,                                  ! Conductivity {W/m-K}
-  1010,                                   ! Density {kg/m3}
-  1340;                                   ! Specific Heat {J/kg-K}
+  Hardboard - High Density - Standard-tempered Grade - 3/4 in., !- Name
+  Smooth,                                 !- Roughness
+  0.01905,                                !- Thickness {m}
+  0.144,                                  !- Conductivity {W/m-K}
+  1010,                                   !- Density {kg/m3}
+  1340;                                   !- Specific Heat {J/kg-K}
 
 OS:ComponentData,
   {5fbf066d-4cbc-4272-b4f7-d5dbda41b774}, !- Handle
@@ -294,12 +294,12 @@ OS:ComponentData,
 
 OS:Material,
   {bfcdf888-e4eb-46b3-b551-489d37c2cf74}, !- Handle
-  Mineral Fiber Batt Insulation - 10 in., ! Name
-  VeryRough,                              ! Roughness
-  0.254,                                  ! Thickness {m}
-  0.05,                                   ! Conductivity {W/m-K}
-  19,                                     ! Density {kg/m3}
-  960;                                    ! Specific Heat {J/kg-K}
+  Mineral Fiber Batt Insulation - 10 in., !- Name
+  VeryRough,                              !- Roughness
+  0.254,                                  !- Thickness {m}
+  0.05,                                   !- Conductivity {W/m-K}
+  19,                                     !- Density {kg/m3}
+  960;                                    !- Specific Heat {J/kg-K}
 
 OS:ComponentData,
   {1d789dba-f7de-402c-9d6f-3ac23206738a}, !- Handle
@@ -312,12 +312,12 @@ OS:ComponentData,
 
 OS:Material,
   {2d0dfbce-9893-46fc-b892-07f14621a67a}, !- Handle
-  Vegetable Fiber Board  Sheathing - Intermediate Density - 1/2 in., ! Name
-  Smooth,                                 ! Roughness
-  0.0127,                                 ! Thickness {m}
-  0.057,                                  ! Conductivity {W/m-K}
-  350,                                    ! Density {kg/m3}
-  1300;                                   ! Specific Heat {J/kg-K}
+  Vegetable Fiber Board  Sheathing - Intermediate Density - 1/2 in., !- Name
+  Smooth,                                 !- Roughness
+  0.0127,                                 !- Thickness {m}
+  0.057,                                  !- Conductivity {W/m-K}
+  350,                                    !- Density {kg/m3}
+  1300;                                   !- Specific Heat {J/kg-K}
 
 OS:ComponentData,
   {90559edb-1f2f-4a9f-a21e-7fae18b8f04a}, !- Handle
@@ -1193,6 +1193,7 @@ OS:SpaceType,
   {a3fcab34-1ab9-41ae-a2c8-ffcda79d30ee}, !- Default Schedule Set Name
   {24066b61-a07d-424c-b316-27fc101a2d21}, !- Group Rendering Name
   {e8fe53f8-bb06-4b95-934b-e1d016bdbff5}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -1203,6 +1204,7 @@ OS:SpaceType,
   {a3fcab34-1ab9-41ae-a2c8-ffcda79d30ee}, !- Default Schedule Set Name
   {eeb3db0d-bf4d-4e7c-8e17-52e8f6b12f1a}, !- Group Rendering Name
   {fa6b061f-ce30-45e1-a604-e480614ae40e}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -1213,6 +1215,7 @@ OS:SpaceType,
   {a3fcab34-1ab9-41ae-a2c8-ffcda79d30ee}, !- Default Schedule Set Name
   {64d8cec1-5463-49c9-8af2-dabde21ff465}, !- Group Rendering Name
   {cc4fca80-2054-4d67-a1df-907da482fbfa}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -1223,6 +1226,7 @@ OS:SpaceType,
   {a3fcab34-1ab9-41ae-a2c8-ffcda79d30ee}, !- Default Schedule Set Name
   {99b357c9-8644-4fb7-950b-8c87b27e37a8}, !- Group Rendering Name
   {9f27c24f-efce-43d2-8694-da297681ec07}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -1446,7 +1450,7 @@ OS:ThermalZone,
   {1483d093-00cf-4411-a8db-204168f831d7}, !- Zone Air Inlet Port List
   {90c398cc-df3e-4d6c-b0bd-bdbfbf9ebb00}, !- Zone Air Exhaust Port List
   {7d1c0aa1-6fb6-473a-9cdc-14bc1d46962c}, !- Zone Air Node Name
-  {6f0e98ee-afb4-4b8c-844c-5281215cf1e7}, !- Zone Return Air Node Name
+  {7fd9302c-c775-488d-9d1c-aeb8f044abbc}, !- Zone Return Air Port List
   ,                                       !- Primary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
   ,                                       !- Secondary Daylighting Control Name
@@ -1455,6 +1459,12 @@ OS:ThermalZone,
   {53702490-41c4-4b6c-8f8c-eb54c3ea20ef}, !- Group Rendering Name
   {11e66bea-10ae-40e8-8fed-df5409c08e2c}, !- Thermostat Name
   No;                                     !- Use Ideal Air Loads
+
+OS:PortList,
+  {7fd9302c-c775-488d-9d1c-aeb8f044abbc}, !- Handle
+  Port List 6,                            !- Name
+  {62523a5c-b2fe-498f-b36c-5e31dceee4cf}, !- HVAC Component
+  {6f0e98ee-afb4-4b8c-844c-5281215cf1e7}; !- Port 1
 
 OS:Node,
   {2db81b0f-4519-4a1e-be83-0c26f308127c}, !- Handle
@@ -1472,7 +1482,7 @@ OS:Connection,
 
 OS:PortList,
   {1483d093-00cf-4411-a8db-204168f831d7}, !- Handle
-  Port List 1,                            !- Name
+  Port List 5,                            !- Name
   {62523a5c-b2fe-498f-b36c-5e31dceee4cf}, !- HVAC Component
   {3356df19-d3ee-4b70-9a55-c4a1faa72a9c}; !- Port 1
 
@@ -1504,23 +1514,28 @@ OS:Sizing:Zone,
   0.002032,                               !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
   0.14158423296,                          !- Heating Maximum Air Flow {m3/s}
   0.3,                                    !- Heating Maximum Air Flow Fraction
-  1,                                      !- Design Zone Air Distribution Effectiveness in Cooling Mode
-  1,                                      !- Design Zone Air Distribution Effectiveness in Heating Mode
   No,                                     !- Account for Dedicated Outdoor Air System
   NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
   Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+  Autosize,                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+  1,                                      !- Design Zone Air Distribution Effectiveness in Cooling Mode
+  1;                                      !- Design Zone Air Distribution Effectiveness in Heating Mode
 
 OS:ZoneHVAC:EquipmentList,
   {72515752-be56-4f06-8a67-071cc1c82ed5}, !- Handle
   Zone HVAC Equipment List 1,             !- Name
   {62523a5c-b2fe-498f-b36c-5e31dceee4cf}, !- Thermal Zone
+  ,                                       !- Load Distribution Scheme
   {3df70275-a1f6-4e4b-9e0c-8bccbbf5371f}, !- Zone Equipment 1
   1,                                      !- Zone Equipment Cooling Sequence 1
   1,                                      !- Zone Equipment Heating or No-Load Sequence 1
+  ,                                       !- Zone Equipment Sequential Cooling Fraction Schedule Name 1
+  ,                                       !- Zone Equipment Sequential Heating Fraction Schedule Name 1
   {1df59d29-3f7a-48da-8c92-ec5dd26f5651}, !- Zone Equipment 2
   2,                                      !- Zone Equipment Cooling Sequence 2
-  2;                                      !- Zone Equipment Heating or No-Load Sequence 2
+  2,                                      !- Zone Equipment Heating or No-Load Sequence 2
+  ,                                       !- Zone Equipment Sequential Cooling Fraction Schedule Name 2
+  ;                                       !- Zone Equipment Sequential Heating Fraction Schedule Name 2
 
 OS:Building,
   {ef611f95-658d-4609-9b31-7cfea756bfd5}, !- Handle
@@ -1533,6 +1548,7 @@ OS:Building,
   {a3fcab34-1ab9-41ae-a2c8-ffcda79d30ee}, !- Default Schedule Set Name
   ,                                       !- Standards Number of Stories
   ,                                       !- Standards Number of Above Ground Stories
+  ,                                       !- Standards Template
   ;                                       !- Standards Building Type
 
 OS:DefaultScheduleSet,
@@ -1612,7 +1628,8 @@ OS:DefaultConstructionSet,
   ,                                       !- Interior Partition Construction Name
   ,                                       !- Space Shading Construction Name
   ,                                       !- Building Shading Construction Name
-  ;                                       !- Site Shading Construction Name
+  ,                                       !- Site Shading Construction Name
+  ;                                       !- Adiabatic Surface Construction Name
 
 OS:DefaultSurfaceConstructions,
   {7cba4898-4e0a-431c-8b9c-3689f2e12180}, !- Handle
@@ -1637,12 +1654,12 @@ OS:DefaultSurfaceConstructions,
 
 OS:Material,
   {b3e5825c-9a8b-46af-afb3-f980267d7dc2}, !- Handle
-  Gypsum Board - 3/4 in.,                 ! Name
-  MediumSmooth,                           ! Roughness
-  0.01905,                                ! Thickness {m}
-  0.16,                                   ! Conductivity {W/m-K}
-  800,                                    ! Density {kg/m3}
-  1090;                                   ! Specific Heat {J/kg-K}
+  Gypsum Board - 3/4 in.,                 !- Name
+  MediumSmooth,                           !- Roughness
+  0.01905,                                !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  800,                                    !- Density {kg/m3}
+  1090;                                   !- Specific Heat {J/kg-K}
 
 OS:ComponentData,
   {d82ab27c-e532-4071-b35b-9a4a184f9171}, !- Handle
@@ -1951,7 +1968,7 @@ OS:ThermalZone,
   {89bd3a85-83d0-470d-ab41-9bddf78b4991}, !- Zone Air Inlet Port List
   {a9dedd7a-e0cf-4c49-b23b-1500f353a3de}, !- Zone Air Exhaust Port List
   {1ddadd30-c037-4008-b0b3-e485972b8ed8}, !- Zone Air Node Name
-  ,                                       !- Zone Return Air Node Name
+  {7cc98e73-f805-4528-a736-60eebe6627e1}, !- Zone Return Air Port List
   ,                                       !- Primary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
   ,                                       !- Secondary Daylighting Control Name
@@ -1960,6 +1977,12 @@ OS:ThermalZone,
   {47d6528c-93b0-4939-ba5f-e731cf33d638}, !- Group Rendering Name
   ,                                       !- Thermostat Name
   No;                                     !- Use Ideal Air Loads
+
+OS:PortList,
+  {7cc98e73-f805-4528-a736-60eebe6627e1}, !- Handle
+  Port List 1,                            !- Name
+  {5d2d3c71-5e39-4a6e-a74e-72ab82165a49}, !- HVAC Component
+  ;                                       !- Port 1
 
 OS:Node,
   {4d3f45cc-225f-4b83-a6a9-512ae7d3e531}, !- Handle
@@ -2008,8 +2031,6 @@ OS:Sizing:Zone,
   ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
   ,                                       !- Heating Maximum Air Flow {m3/s}
   ,                                       !- Heating Maximum Air Flow Fraction
-  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
-  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
   No,                                     !- Account for Dedicated Outdoor Air System
   NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
   Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
@@ -3038,6 +3059,7 @@ OS:SpaceType,
   {a3fcab34-1ab9-41ae-a2c8-ffcda79d30ee}, !- Default Schedule Set Name
   {b55a078d-ff72-4ff3-89f3-ae2da73034ee}, !- Group Rendering Name
   {551731a1-5363-4c1d-9973-57a722d70fd5}, !- Design Specification Outdoor Air Object Name
+  ,                                       !- Standards Template
   ,                                       !- Standards Building Type
   ;                                       !- Standards Space Type
 
@@ -3429,7 +3451,7 @@ OS:AirLoopHVAC,
   Small heating and cooling furnace,      !- Name
   ,                                       !- Controller List Name
   {225dd4da-da8e-46b2-a52e-f6eea1804f9e}, !- Availability Schedule
-  ,                                       !- Availability Manager
+  {46ed45eb-965c-4ce0-aa94-d481d14bc755}, !- Availability Manager List Name
   AutoSize,                               !- Design Supply Air Flow Rate {m3/s}
   ,                                       !- Branch List Name
   ,                                       !- Connector List Name
@@ -3438,7 +3460,17 @@ OS:AirLoopHVAC,
   {85768b56-a3d8-4cbd-9248-7cf7b2c48528}, !- Demand Side Inlet Node A
   {1a3c96a9-e636-4f82-9a94-d0bc14bbc400}, !- Supply Side Outlet Node A
   ,                                       !- Demand Side Inlet Node B
-  ;                                       !- Supply Side Outlet Node B
+  ,                                       !- Supply Side Outlet Node B
+  ,                                       !- Return Air Bypass Flow Temperature Setpoint Schedule Name
+  ,                                       !- Demand Mixer Name
+  ,                                       !- Demand Splitter A Name
+  ,                                       !- Demand Splitter B Name
+  ;                                       !- Supply Splitter Name
+
+OS:AvailabilityManagerAssignmentList,
+  {46ed45eb-965c-4ce0-aa94-d481d14bc755}, !- Handle
+  Small heating and cooling furnace AvailabilityManagerAssignmentList, !- Name
+  ;                                       !- Availability Manager Name 1
 
 OS:Node,
   {d8f8c1b2-36dc-41c2-bcb8-4f674600e9df}, !- Handle
@@ -3529,7 +3561,7 @@ OS:Sizing:System,
   {61663477-14ad-441f-ae7a-b9090dd60b33}, !- AirLoop Name
   Sensible,                               !- Type of Load to Size On
   Autosize,                               !- Design Outdoor Air Flow Rate {m3/s}
-  0.3,                                    !- Minimum System Air Flow Ratio
+  0.3,                                    !- Central Heating Maximum System Air Flow Ratio
   7.00000000000006,                       !- Preheat Design Temperature {C}
   0.008,                                  !- Preheat Design Humidity Ratio {kg-H2O/kg-Air}
   12.8,                                   !- Precool Design Temperature {C}
@@ -3656,7 +3688,7 @@ OS:Fan:ConstantVolume,
   {2b1069ac-3425-4f7d-8b9f-5d4e0bdb9f7a}, !- Handle
   User defined fan 1,                     !- Name
   {225dd4da-da8e-46b2-a52e-f6eea1804f9e}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   311.3611375,                            !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   0.857399978637695,                      !- Motor Efficiency
@@ -3697,6 +3729,7 @@ OS:PlantLoop,
   {fe15e97e-7866-48fc-a06a-59ec0ca5f746}, !- Handle
   Point-of-use Electricity Water Heater,  !- Name
   ,                                       !- Fluid Type
+  0,                                      !- Glycol Concentration
   ,                                       !- User Defined Fluid Type
   ,                                       !- Plant Equipment Operation Heating Load
   ,                                       !- Plant Equipment Operation Cooling Load
@@ -3715,10 +3748,23 @@ OS:PlantLoop,
   ,                                       !- Demand Side Branch List Name
   ,                                       !- Demand Side Connector List Name
   Optimal,                                !- Load Distribution Scheme
-  ,                                       !- Availability Manager List Name
+  {477e9c72-aa53-4cf6-abb8-277da4059ffc}, !- Availability Manager List Name
   ,                                       !- Plant Loop Demand Calculation Scheme
   ,                                       !- Common Pipe Simulation
-  ;                                       !- Pressure Simulation Type
+  ,                                       !- Pressure Simulation Type
+  ,                                       !- Plant Equipment Operation Heating Load Schedule
+  ,                                       !- Plant Equipment Operation Cooling Load Schedule
+  ,                                       !- Primary Plant Equipment Operation Scheme Schedule
+  ,                                       !- Component Setpoint Operation Scheme Schedule
+  ,                                       !- Demand Mixer Name
+  ,                                       !- Demand Splitter Name
+  ,                                       !- Supply Mixer Name
+  ;                                       !- Supply Splitter Name
+
+OS:AvailabilityManagerAssignmentList,
+  {477e9c72-aa53-4cf6-abb8-277da4059ffc}, !- Handle
+  Point-of-use Electricity Water Heater AvailabilityManagerAssignmentList, !- Name
+  ;                                       !- Availability Manager Name 1
 
 OS:Sizing:Plant,
   {9970fb1a-d17b-4537-8d7d-b65568cd8bac}, !- Handle
@@ -3878,7 +3924,10 @@ OS:Pump:ConstantSpeed,
   ,                                       !- Impeller Diameter {m}
   ,                                       !- Rotational Speed {rev/min}
   ,                                       !- Zone
-  ;                                       !- Skin Loss Radiative Fraction
+  ,                                       !- Skin Loss Radiative Fraction
+  PowerPerFlowPerPressure,                !- Design Power Sizing Method
+  348701.1,                               !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
+  1.282051282;                            !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
 
 OS:Node,
   {002a5a36-46b1-489b-a598-d4bf34b9cc5e}, !- Handle
@@ -3950,7 +3999,10 @@ OS:WaterHeater:Mixed,
   1,                                      !- Source Side Effectiveness
   autosize,                               !- Use Side Design Flow Rate {m3/s}
   autosize,                               !- Source Side Design Flow Rate {m3/s}
-  1.5;                                    !- Indirect Water Heating Recovery Time {hr}
+  1.5,                                    !- Indirect Water Heating Recovery Time {hr}
+  IndirectHeatPrimarySetpoint,            !- Source Side Flow Control Mode
+  ,                                       !- Indirect Alternate Setpoint Temperature Schedule Name
+  General;                                !- End-Use Subcategory
 
 OS:Node,
   {35920402-da7a-4ffa-82cf-b8210aad8d9d}, !- Handle
@@ -4300,8 +4352,6 @@ OS:LifeCycleCost:Parameters,
 
 OS:ClimateZones,
   {49bd52f2-59c2-44bc-a294-2c6b04214c47}, !- Handle
-  ,                                       !- Active Institution
-  ,                                       !- Active Year
   ASHRAE,                                 !- Climate Zone Institution Name 1
   ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
   2006,                                   !- Climate Zone Document Year 1
@@ -4348,8 +4398,16 @@ OS:ConvergenceLimits,
 
 OS:ShadowCalculation,
   {103e072e-ccf8-4d14-8a1e-208ef0598ef7}, !- Handle
-  7,                                      !- Calculation Frequency
-  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
+  PolygonClipping,                        !- Shading Calculation Method
+  ,                                       !- Shading Calculation Update Frequency Method
+  7,                                      !- Shading Calculation Update Frequency
+  15000,                                  !- Maximum Figures in Shadow Overlap Calculations
+  ,                                       !- Polygon Clipping Algorithm
+  512,                                    !- Pixel Counting Resolution
+  ,                                       !- Sky Diffuse Modeling Algorithm
+  No,                                     !- Output External Shading Calculation Results
+  No,                                     !- Disable Self-Shading Within Shading Zone Groups
+  No;                                     !- Disable Self-Shading From Shading Zone Groups to Other Zones
 
 OS:SurfaceConvectionAlgorithm:Inside,
   {c3dc9a54-e87b-44a8-8a32-4f421d6250ad}, !- Handle
@@ -5116,8 +5174,8 @@ OS:Connection,
 OS:Connection,
   {6f0e98ee-afb4-4b8c-844c-5281215cf1e7}, !- Handle
   {04418a88-83b8-4fa8-9b01-13e7fa0a8e83}, !- Name
-  {62523a5c-b2fe-498f-b36c-5e31dceee4cf}, !- Source Object
-  12,                                     !- Outlet Port
+  {7fd9302c-c775-488d-9d1c-aeb8f044abbc}, !- Source Object
+  3,                                      !- Outlet Port
   {6c20ce29-938b-48bb-b8d0-ebda3a986fc9}, !- Target Object
   2;                                      !- Inlet Port
 
@@ -5294,21 +5352,27 @@ OS:ZoneHVAC:Baseboard:Convective:Electric,
   1500,                                   !- Nominal Capacity {W}
   0.9;                                    !- Efficiency
 
-OS:AirTerminal:SingleDuct:Uncontrolled,
-  {1df59d29-3f7a-48da-8c92-ec5dd26f5651}, ! Handle
-  OS:AirTerminal:SingleDuct:Uncontrolled 1, ! Name
-  {cef4d0b8-0e58-4db8-a90b-c5b4006baa6d}, ! Availability Schedule Name
-  {fa0f9880-cf59-4f71-a358-fe01c0ba1792}, ! Inlet Air Node Name
-  {0869ac10-3230-4867-96f6-f4c5ad0da45f}, ! Zone Supply Air Node Name
-  Autosize;                               ! Maximum Air Flow Rate {m3/s}
+OS:Node,
+  {85f174eb-d200-41a2-8f02-208d18ec61df}, !- Handle
+  OS:AirTerminal:SingleDuct:Uncontrolled 1 Inlet Node, !- Name
+  {fa0f9880-cf59-4f71-a358-fe01c0ba1792}, !- Inlet Port
+  {351df27b-c7ca-4565-95c6-96095bee0de6}; !- Outlet Port
 
 OS:Connection,
-  {fa0f9880-cf59-4f71-a358-fe01c0ba1792}, !- Handle
-  {60684cee-c30b-430f-9288-b88c0b502ba6}, !- Name
-  {fbcad5af-8be9-48f9-a7b2-0ed4d64bf868}, !- Source Object
+  {351df27b-c7ca-4565-95c6-96095bee0de6}, !- Handle
+  {8d3d2a48-388e-4a6c-938c-e6d7c632a108}, !- Name
+  {85f174eb-d200-41a2-8f02-208d18ec61df}, !- Source Object
   3,                                      !- Outlet Port
   {1df59d29-3f7a-48da-8c92-ec5dd26f5651}, !- Target Object
   3;                                      !- Inlet Port
+
+OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
+  {1df59d29-3f7a-48da-8c92-ec5dd26f5651}, !- Handle
+  OS:AirTerminal:SingleDuct:Uncontrolled 1, !- Name
+  {cef4d0b8-0e58-4db8-a90b-c5b4006baa6d}, !- Availability Schedule Name
+  {351df27b-c7ca-4565-95c6-96095bee0de6}, !- Air Inlet Node Name
+  {0869ac10-3230-4867-96f6-f4c5ad0da45f}, !- Air Outlet Node Name
+  Autosize;                               !- Maximum Air Flow Rate {m3/s}
 
 OS:Connection,
   {0869ac10-3230-4867-96f6-f4c5ad0da45f}, !- Handle
@@ -5316,5 +5380,13 @@ OS:Connection,
   {1df59d29-3f7a-48da-8c92-ec5dd26f5651}, !- Source Object
   4,                                      !- Outlet Port
   {fb981971-f19a-49c7-8466-838db0bae7c4}, !- Target Object
+  2;                                      !- Inlet Port
+
+OS:Connection,
+  {fa0f9880-cf59-4f71-a358-fe01c0ba1792}, !- Handle
+  {60684cee-c30b-430f-9288-b88c0b502ba6}, !- Name
+  {fbcad5af-8be9-48f9-a7b2-0ed4d64bf868}, !- Source Object
+  3,                                      !- Outlet Port
+  {85f174eb-d200-41a2-8f02-208d18ec61df}, !- Target Object
   2;                                      !- Inlet Port
 

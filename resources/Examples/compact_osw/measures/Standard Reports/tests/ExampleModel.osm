@@ -1,7 +1,7 @@
 
 OS:Version,
-  {3e09400d-7b26-40c4-8376-775553719dac}, !- Handle
-  1.1.3;                                  !- Version Identifier
+  {d442bd89-327c-434c-acb8-439bc8bbaf83}, !- Handle
+  3.0.0;                                  !- Version Identifier
 
 OS:Schedule:Constant,
   {5b31371e-075a-43e5-b7df-93e6c5dbb53e}, !- Handle
@@ -12,20 +12,10 @@ OS:Schedule:Constant,
 OS:ScheduleTypeLimits,
   {a19aa1e9-5e4d-426d-ac44-c9b9e6fa6e18}, !- Handle
   Always On Discrete Limits,              !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
-
-OS:Building,
-  {8c09ff8f-5f75-4d27-9f7e-bf9a58538137}, ! Handle
-  Mid-rise Apartment,                     ! Name
-  ,                                       ! Building Type
-  -0,                                     ! North Axis
-  ,                                       ! Nominal Floor to Floor Height
-  {61494be9-25ef-40d9-82bd-b74a2efaeb76}, ! Space Type Name
-  {6b8d9294-f8e5-4dba-98e3-8a12a5521854}, ! Default Construction Set Name
-  ;                                       ! Default Schedule Set Name
 
 OS:Construction,
   {76db9171-03b6-41e7-a45e-2de62e14f86c}, ! Handle
@@ -124,7 +114,8 @@ OS:DefaultConstructionSet,
   {752112b0-37fe-4a2f-ae7c-5b83e2f18d43}, ! Interior Partition Construction Name
   ,                                       ! Space Shading Construction Name
   ,                                       ! Building Shading Construction Name
-  ;                                       ! Site Shading Construction Name
+  ,                                       ! Site Shading Construction Name
+  ;                                       !- Adiabatic Surface Construction Name
 
 OS:DefaultScheduleSet,
   {97176665-e707-4250-8f8d-0d6d92c04843}, ! Handle
@@ -268,154 +259,154 @@ OS:Lights:Definition,
   ;                                       ! Watts per Person
 
 OS:Material,
-  {d656bb33-c65d-4ed3-876b-ea436d48e2f4}, ! Handle
-  000 F08 Metal surface,                  ! Name
-  Smooth,                                 ! Roughness
-  0.00080000000000000004,                 ! Thickness
-  45.280000000000001,                     ! Conductivity
-  7824,                                   ! Density
-  500;                                    ! Specific Heat
+  {d656bb33-c65d-4ed3-876b-ea436d48e2f4}, !- Handle
+  000 F08 Metal surface,                  !- Name
+  Smooth,                                 !- Roughness
+  0.00080000000000000004,                 !- Thickness {m}
+  45.280000000000001,                     !- Conductivity {W/m-K}
+  7824,                                   !- Density {kg/m3}
+  500;                                    !- Specific Heat {J/kg-K}
 
 OS:Material,
-  {e09b8308-cfbf-42ed-8164-900ec0911ef3}, ! Handle
-  000 F16 Acoustic tile,                  ! Name
-  MediumSmooth,                           ! Roughness
-  0.019099999999999999,                   ! Thickness
-  0.059999999999999998,                   ! Conductivity
-  368,                                    ! Density
-  590;                                    ! Specific Heat
+  {e09b8308-cfbf-42ed-8164-900ec0911ef3}, !- Handle
+  000 F16 Acoustic tile,                  !- Name
+  MediumSmooth,                           !- Roughness
+  0.019099999999999999,                   !- Thickness {m}
+  0.059999999999999998,                   !- Conductivity {W/m-K}
+  368,                                    !- Density {kg/m3}
+  590;                                    !- Specific Heat {J/kg-K}
 
 OS:Material,
-  {b9780731-b0c4-4ebe-a967-4b849e2ee99c}, ! Handle
-  000 G01a 19mm gypsum board,             ! Name
-  MediumSmooth,                           ! Roughness
-  0.019,                                  ! Thickness
-  0.16,                                   ! Conductivity
-  800,                                    ! Density
-  1090;                                   ! Specific Heat
+  {b9780731-b0c4-4ebe-a967-4b849e2ee99c}, !- Handle
+  000 G01a 19mm gypsum board,             !- Name
+  MediumSmooth,                           !- Roughness
+  0.019,                                  !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  800,                                    !- Density {kg/m3}
+  1090;                                   !- Specific Heat {J/kg-K}
 
 OS:Material,
-  {eb8c255e-5fed-4488-90a4-d75e66ae9ac6}, ! Handle
-  000 G05 25mm wood,                      ! Name
-  MediumSmooth,                           ! Roughness
-  0.025399999999999999,                   ! Thickness
-  0.14999999999999999,                    ! Conductivity
-  608,                                    ! Density
-  1630;                                   ! Specific Heat
+  {eb8c255e-5fed-4488-90a4-d75e66ae9ac6}, !- Handle
+  000 G05 25mm wood,                      !- Name
+  MediumSmooth,                           !- Roughness
+  0.025399999999999999,                   !- Thickness {m}
+  0.14999999999999999,                    !- Conductivity {W/m-K}
+  608,                                    !- Density {kg/m3}
+  1630;                                   !- Specific Heat {J/kg-K}
 
 OS:Material,
-  {d484a6d2-f81c-4811-8152-397327621470}, ! Handle
-  000 I01 25mm insulation board,          ! Name
-  MediumRough,                            ! Roughness
-  0.025399999999999999,                   ! Thickness
-  0.029999999999999999,                   ! Conductivity
-  43,                                     ! Density
-  1210;                                   ! Specific Heat
+  {d484a6d2-f81c-4811-8152-397327621470}, !- Handle
+  000 I01 25mm insulation board,          !- Name
+  MediumRough,                            !- Roughness
+  0.025399999999999999,                   !- Thickness {m}
+  0.029999999999999999,                   !- Conductivity {W/m-K}
+  43,                                     !- Density {kg/m3}
+  1210;                                   !- Specific Heat {J/kg-K}
 
 OS:Material,
-  {4868b20f-c8cf-4fbb-9f17-5a915fb20760}, ! Handle
-  000 M11 100mm lightweight concrete,     ! Name
-  MediumRough,                            ! Roughness
-  0.1016,                                 ! Thickness
-  0.53000000000000003,                    ! Conductivity
-  1280,                                   ! Density
-  840;                                    ! Specific Heat
+  {4868b20f-c8cf-4fbb-9f17-5a915fb20760}, !- Handle
+  000 M11 100mm lightweight concrete,     !- Name
+  MediumRough,                            !- Roughness
+  0.1016,                                 !- Thickness {m}
+  0.53000000000000003,                    !- Conductivity {W/m-K}
+  1280,                                   !- Density {kg/m3}
+  840;                                    !- Specific Heat {J/kg-K}
 
 OS:Material,
-  {a5bdab58-5720-44e2-ae63-0e09648e8e8c}, ! Handle
-  1/2IN Gypsum,                           ! Name
-  Smooth,                                 ! Roughness
-  0.012699999999999999,                   ! Thickness
-  0.16,                                   ! Conductivity
-  784.89999999999998,                     ! Density
-  830,                                    ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.92000000000000004,                    ! Solar Absorptance
-  0.92000000000000004;                    ! Visible Absorptance
+  {a5bdab58-5720-44e2-ae63-0e09648e8e8c}, !- Handle
+  1/2IN Gypsum,                           !- Name
+  Smooth,                                 !- Roughness
+  0.012699999999999999,                   !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  784.89999999999998,                     !- Density {kg/m3}
+  830,                                    !- Specific Heat {J/kg-K}
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.92000000000000004,                    !- Solar Absorptance
+  0.92000000000000004;                    !- Visible Absorptance
 
 OS:Material,
-  {a297df92-ce7a-4d8d-9eef-36783117813b}, ! Handle
-  AtticFloor Res Insulation-2.37,         ! Name
-  MediumRough,                            ! Roughness
-  0.096537354632839606,                   ! Thickness
-  0.049000000000000002,                   ! Conductivity
-  265,                                    ! Density
-  836.79999999999995,                     ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.69999999999999996;                    ! Visible Absorptance
+  {a297df92-ce7a-4d8d-9eef-36783117813b}, !- Handle
+  AtticFloor Res Insulation-2.37,         !- Name
+  MediumRough,                            !- Roughness
+  0.096537354632839606,                   !- Thickness {m}
+  0.049000000000000002,                   !- Conductivity {W/m-K}
+  265,                                    !- Density {kg/m3}
+  836.8,                                  !- Specific Heat {J/kg-K}
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.69999999999999996;                    !- Visible Absorptance
 
 OS:Material,
-  {68fb6637-2c8a-48d5-98b7-ddf9ade69e9d}, ! Handle
-  IEAD NonRes Roof Insulation-2.85,       ! Name
-  MediumRough,                            ! Roughness
-  0.127338688569477,                      ! Thickness
-  0.049000000000000002,                   ! Conductivity
-  265,                                    ! Density
-  836.79999999999995,                     ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.69999999999999996;                    ! Visible Absorptance
+  {68fb6637-2c8a-48d5-98b7-ddf9ade69e9d}, !- Handle
+  IEAD NonRes Roof Insulation-2.85,       !- Name
+  MediumRough,                            !- Roughness
+  0.127338688569477,                      !- Thickness {m}
+  0.049000000000000002,                   !- Conductivity {W/m-K}
+  265,                                    !- Density {kg/m3}
+  836.8,                                  !- Specific Heat {J/kg-K}
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.69999999999999996;                    !- Visible Absorptance
 
 OS:Material,
-  {340682d3-fa23-42a3-84c2-f1b90ba10569}, ! Handle
-  MAT-CC05 4 HW CONCRETE,                 ! Name
-  Rough,                                  ! Roughness
-  0.1016,                                 ! Thickness
-  1.3109999999999999,                     ! Conductivity
-  2240,                                   ! Density
-  836.79999999999995,                     ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.69999999999999996;                    ! Visible Absorptance
+  {340682d3-fa23-42a3-84c2-f1b90ba10569}, !- Handle
+  MAT-CC05 4 HW CONCRETE,                 !- Name
+  Rough,                                  !- Roughness
+  0.1016,                                 !- Thickness {m}
+  1.3109999999999999,                     !- Conductivity {W/m-K}
+  2240,                                   !- Density {kg/m3}
+  836.8,                                  !- Specific Heat {J/kg-K}
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.69999999999999996;                    !- Visible Absorptance
 
 OS:Material,
-  {e7193b1b-28da-4cc7-b7d1-0cb0e674319f}, ! Handle
-  Metal Decking,                          ! Name
-  MediumSmooth,                           ! Roughness
-  0.0015,                                 ! Thickness
-  45.006,                                 ! Conductivity
-  7680,                                   ! Density
-  418.39999999999998,                     ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.29999999999999999;                    ! Visible Absorptance
+  {e7193b1b-28da-4cc7-b7d1-0cb0e674319f}, !- Handle
+  Metal Decking,                          !- Name
+  MediumSmooth,                           !- Roughness
+  0.0015,                                 !- Thickness {m}
+  45.006,                                 !- Conductivity {W/m-K}
+  7680,                                   !- Density {kg/m3}
+  418.4,                                  !- Specific Heat {J/kg-K}
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.29999999999999999;                    !- Visible Absorptance
 
 OS:Material,
-  {b76ca5ed-32de-4aae-8f80-f521ca8dfb35}, ! Handle
-  Roof Membrane,                          ! Name
-  VeryRough,                              ! Roughness
-  0.0094999999999999998,                  ! Thickness
-  0.16,                                   ! Conductivity
-  1121.29,                                ! Density
-  1460,                                   ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.69999999999999996;                    ! Visible Absorptance
+  {b76ca5ed-32de-4aae-8f80-f521ca8dfb35}, !- Handle
+  Roof Membrane,                          !- Name
+  VeryRough,                              !- Roughness
+  0.0094999999999999998,                  !- Thickness {m}
+  0.16,                                   !- Conductivity {W/m-K}
+  1121.29,                                !- Density {kg/m3}
+  1460,                                   !- Specific Heat {J/kg-K}
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.69999999999999996;                    !- Visible Absorptance
 
 OS:Material,
-  {f2965ebe-dc7c-41a7-a1cf-05a0a6a4ac50}, ! Handle
-  Steel Frame NonRes Wall Insulation-2.75, ! Name
-  MediumRough,                            ! Roughness
-  0.11916136309600101,                    ! Thickness
-  0.049000000000000002,                   ! Conductivity
-  265,                                    ! Density
-  836.79999999999995,                     ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.69999999999999996,                    ! Solar Absorptance
-  0.69999999999999996;                    ! Visible Absorptance
+  {f2965ebe-dc7c-41a7-a1cf-05a0a6a4ac50}, !- Handle
+  Steel Frame NonRes Wall Insulation-2.75, !- Name
+  MediumRough,                            !- Roughness
+  0.11916136309600101,                    !- Thickness {m}
+  0.049000000000000002,                   !- Conductivity {W/m-K}
+  265,                                    !- Density {kg/m3}
+  836.8,                                  !- Specific Heat {J/kg-K}
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.69999999999999996,                    !- Solar Absorptance
+  0.69999999999999996;                    !- Visible Absorptance
 
 OS:Material,
-  {181e8f70-ef0d-4ce2-80c2-2dfcd154e3e1}, ! Handle
-  Wood Siding,                            ! Name
-  MediumSmooth,                           ! Roughness
-  0.01,                                   ! Thickness
-  0.11,                                   ! Conductivity
-  544.62,                                 ! Density
-  1210,                                   ! Specific Heat
-  0.90000000000000002,                    ! Thermal Absorptance
-  0.78000000000000003,                    ! Solar Absorptance
-  0.78000000000000003;                    ! Visible Absorptance
+  {181e8f70-ef0d-4ce2-80c2-2dfcd154e3e1}, !- Handle
+  Wood Siding,                            !- Name
+  MediumSmooth,                           !- Roughness
+  0.01,                                   !- Thickness {m}
+  0.11,                                   !- Conductivity {W/m-K}
+  544.62,                                 !- Density {kg/m3}
+  1210,                                   !- Specific Heat {J/kg-K}
+  0.90000000000000002,                    !- Thermal Absorptance
+  0.78000000000000003,                    !- Solar Absorptance
+  0.78000000000000003;                    !- Visible Absorptance
 
 OS:Material:AirGap,
   {25ace1c7-e946-4fd0-bf24-54a1c7d004d6}, ! Handle
@@ -2679,19 +2670,19 @@ OS:SpaceInfiltration:DesignFlowRate,
   ;                                       ! Velocity Squared Term Coefficient
 
 OS:SpaceType,
-  {61494be9-25ef-40d9-82bd-b74a2efaeb76}, ! Handle
-  ASHRAE 90.1-2004 Mid-riseApartment Apartment, ! Name
-  ,                                       ! Default Construction Set Name
-  {97176665-e707-4250-8f8d-0d6d92c04843}, ! Default Schedule Set Name
-  {397fb4fd-b25d-4ce0-abcd-ce099a034f81}, ! Group Rendering Name
-  ;                                       ! Design Specification Outdoor Air Object Name
+  {61494be9-25ef-40d9-82bd-b74a2efaeb76}, !- Handle
+  ASHRAE 90.1-2004 Mid-riseApartment Apartment, !- Name
+  ,                                       !- Default Construction Set Name
+  {97176665-e707-4250-8f8d-0d6d92c04843}, !- Default Schedule Set Name
+  {397fb4fd-b25d-4ce0-abcd-ce099a034f81}, !- Group Rendering Name
+  ;                                       !- Design Specification Outdoor Air Object Name
 
 OS:SpaceType,
-  {b2b27a8d-0c11-4b65-aca9-667581d024bb}, ! Handle
-  Empty Space Type,                       ! Name
-  ,                                       ! Default Construction Set Name
-  ,                                       ! Default Schedule Set Name
-  {8585fec5-2a6c-42d6-afeb-a1a2f1d15eda}, ! Group Rendering Name
+  {b2b27a8d-0c11-4b65-aca9-667581d024bb}, !- Handle
+  Empty Space Type,                       !- Name
+  ,                                       !- Default Construction Set Name
+  ,                                       !- Default Schedule Set Name
+  {8585fec5-2a6c-42d6-afeb-a1a2f1d15eda}, !- Group Rendering Name
   ;                                       !- Design Specification Outdoor Air Object Name
 
 OS:ThermostatSetpoint:DualSetpoint,
@@ -3170,24 +3161,23 @@ OS:Schedule:Day,
   0.33000000000000002;                    ! Value Until Time 7
 
 OS:Schedule:Rule,
-  {fe883035-f44f-4a85-ad6b-c0ab90f172be}, ! Handle
-  Mid-riseApartment Office Equip Rule 1,  ! Name
-  {6714e85a-6168-4f7c-866d-9e75848deb6e}, ! Schedule Ruleset Name
-  0,                                      ! Rule Order
-  {ec4232d0-062f-4946-9369-6bdf25e1c8b2}, ! Day Schedule Name
-  Yes,                                    ! Apply Sunday
-  No,                                     ! Apply Monday
-  No,                                     ! Apply Tuesday
-  No,                                     ! Apply Wednesday
-  No,                                     ! Apply Thursday
-  No,                                     ! Apply Friday
-  Yes,                                    ! Apply Saturday
-  ,                                       ! Apply Holiday
-  DateRange,                              ! Date Specification Type
-  1,                                      ! Start Month
-  1,                                      ! Start Day
-  12,                                     ! End Month
-  31;                                     ! End Day
+  {fe883035-f44f-4a85-ad6b-c0ab90f172be}, !- Handle
+  Mid-riseApartment Office Equip Rule 1,  !- Name
+  {6714e85a-6168-4f7c-866d-9e75848deb6e}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {ec4232d0-062f-4946-9369-6bdf25e1c8b2}, !- Day Schedule Name
+  Yes,                                    !- Apply Sunday
+  No,                                     !- Apply Monday
+  No,                                     !- Apply Tuesday
+  No,                                     !- Apply Wednesday
+  No,                                     !- Apply Thursday
+  No,                                     !- Apply Friday
+  Yes,                                    !- Apply Saturday
+  DateRange,                              !- Date Specification Type
+  1,                                      !- Start Month
+  1,                                      !- Start Day
+  12,                                     !- End Month
+  31;                                     !- End Day
 
 OS:Schedule:Day,
   {ec4232d0-062f-4946-9369-6bdf25e1c8b2}, ! Handle
@@ -3231,24 +3221,23 @@ OS:Schedule:Day,
   1;                                      !- Value Until Time 3
 
 OS:Schedule:Rule,
-  {76a549b6-f140-4ab2-8a5d-bd128ff80cc0}, ! Handle
-  Mid-riseApartment OFFICE Infil Rule 1,  ! Name
-  {1e5a0a11-4a7c-4a8f-8204-8782a7d4eb01}, ! Schedule Ruleset Name
-  0,                                      ! Rule Order
-  {9c88dfb1-4c23-44ae-a659-c38fabb73c3f}, ! Day Schedule Name
-  Yes,                                    ! Apply Sunday
-  No,                                     ! Apply Monday
-  No,                                     ! Apply Tuesday
-  No,                                     ! Apply Wednesday
-  No,                                     ! Apply Thursday
-  No,                                     ! Apply Friday
-  Yes,                                    ! Apply Saturday
-  ,                                       ! Apply Holiday
-  DateRange,                              ! Date Specification Type
-  1,                                      ! Start Month
-  1,                                      ! Start Day
-  12,                                     ! End Month
-  31;                                     ! End Day
+  {76a549b6-f140-4ab2-8a5d-bd128ff80cc0}, !- Handle
+  Mid-riseApartment OFFICE Infil Rule 1,  !- Name
+  {1e5a0a11-4a7c-4a8f-8204-8782a7d4eb01}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {9c88dfb1-4c23-44ae-a659-c38fabb73c3f}, !- Day Schedule Name
+  Yes,                                    !- Apply Sunday
+  No,                                     !- Apply Monday
+  No,                                     !- Apply Tuesday
+  No,                                     !- Apply Wednesday
+  No,                                     !- Apply Thursday
+  No,                                     !- Apply Friday
+  Yes,                                    !- Apply Saturday
+  DateRange,                              !- Date Specification Type
+  1,                                      !- Start Month
+  1,                                      !- Start Day
+  12,                                     !- End Month
+  31;                                     !- End Day
 
 OS:Schedule:Day,
   {9c88dfb1-4c23-44ae-a659-c38fabb73c3f}, ! Handle
@@ -3349,24 +3338,23 @@ OS:Schedule:Day,
   0;                                      ! Value Until Time 5
 
 OS:Schedule:Rule,
-  {2cdfb6dc-0d04-4bb4-b71b-17290df26fa3}, ! Handle
-  Mid-riseApartment Office Occ Rule 1,    ! Name
-  {939def32-4992-45ef-b4e9-d7ede3a05583}, ! Schedule Ruleset Name
-  0,                                      ! Rule Order
-  {4b0cc63d-bf77-4936-9234-e96c5a927a42}, ! Day Schedule Name
-  Yes,                                    ! Apply Sunday
-  No,                                     ! Apply Monday
-  No,                                     ! Apply Tuesday
-  No,                                     ! Apply Wednesday
-  No,                                     ! Apply Thursday
-  No,                                     ! Apply Friday
-  Yes,                                    ! Apply Saturday
-  ,                                       ! Apply Holiday
-  DateRange,                              ! Date Specification Type
-  1,                                      ! Start Month
-  1,                                      ! Start Day
-  12,                                     ! End Month
-  31;                                     ! End Day
+  {2cdfb6dc-0d04-4bb4-b71b-17290df26fa3}, !- Handle
+  Mid-riseApartment Office Occ Rule 1,    !- Name
+  {939def32-4992-45ef-b4e9-d7ede3a05583}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {4b0cc63d-bf77-4936-9234-e96c5a927a42}, !- Day Schedule Name
+  Yes,                                    !- Apply Sunday
+  No,                                     !- Apply Monday
+  No,                                     !- Apply Tuesday
+  No,                                     !- Apply Wednesday
+  No,                                     !- Apply Thursday
+  No,                                     !- Apply Friday
+  Yes,                                    !- Apply Saturday
+  DateRange,                              !- Date Specification Type
+  1,                                      !- Start Month
+  1,                                      !- Start Day
+  12,                                     !- End Month
+  31;                                     !- End Day
 
 OS:Schedule:Day,
   {4b0cc63d-bf77-4936-9234-e96c5a927a42}, ! Handle
@@ -3439,24 +3427,23 @@ OS:Schedule:Day,
   1;                                      ! Value Until Time 1
 
 OS:Schedule:Rule,
-  {514f9a40-6d79-4be3-9f81-1d4786cfca9d}, ! Handle
-  Mid-riseApartment Clothing Rule 2,      ! Name
-  {5393cb5a-5c9f-4762-a2b4-93230c80ab13}, ! Schedule Ruleset Name
-  1,                                      ! Rule Order
-  {304e7dbf-7afa-488b-bf7d-85939f20723e}, ! Day Schedule Name
-  Yes,                                    ! Apply Sunday
-  Yes,                                    ! Apply Monday
-  Yes,                                    ! Apply Tuesday
-  Yes,                                    ! Apply Wednesday
-  Yes,                                    ! Apply Thursday
-  Yes,                                    ! Apply Friday
-  Yes,                                    ! Apply Saturday
-  ,                                       ! Apply Holiday
-  DateRange,                              ! Date Specification Type
-  5,                                      ! Start Month
-  1,                                      ! Start Day
-  9,                                      ! End Month
-  30;                                     ! End Day
+  {514f9a40-6d79-4be3-9f81-1d4786cfca9d}, !- Handle
+  Mid-riseApartment Clothing Rule 2,      !- Name
+  {5393cb5a-5c9f-4762-a2b4-93230c80ab13}, !- Schedule Ruleset Name
+  1,                                      !- Rule Order
+  {304e7dbf-7afa-488b-bf7d-85939f20723e}, !- Day Schedule Name
+  Yes,                                    !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes,                                    !- Apply Friday
+  Yes,                                    !- Apply Saturday
+  DateRange,                              !- Date Specification Type
+  5,                                      !- Start Month
+  1,                                      !- Start Day
+  9,                                      !- End Month
+  30;                                     !- End Day
 
 OS:Schedule:Day,
   {304e7dbf-7afa-488b-bf7d-85939f20723e}, ! Handle
@@ -3477,24 +3464,23 @@ OS:Schedule:Day,
   0.5;                                    ! Value Until Time 1
 
 OS:Schedule:Rule,
-  {847a2058-26a2-4f60-89cd-e665f3b800f2}, ! Handle
-  Mid-riseApartment Clothing Rule 1,      ! Name
-  {5393cb5a-5c9f-4762-a2b4-93230c80ab13}, ! Schedule Ruleset Name
-  0,                                      ! Rule Order
-  {af997f82-5b02-4c5c-b9aa-410a1a39c0fe}, ! Day Schedule Name
-  Yes,                                    ! Apply Sunday
-  Yes,                                    ! Apply Monday
-  Yes,                                    ! Apply Tuesday
-  Yes,                                    ! Apply Wednesday
-  Yes,                                    ! Apply Thursday
-  Yes,                                    ! Apply Friday
-  Yes,                                    ! Apply Saturday
-  ,                                       ! Apply Holiday
-  DateRange,                              ! Date Specification Type
-  10,                                     ! Start Month
-  1,                                      ! Start Day
-  12,                                     ! End Month
-  31;                                     ! End Day
+  {847a2058-26a2-4f60-89cd-e665f3b800f2}, !- Handle
+  Mid-riseApartment Clothing Rule 1,      !- Name
+  {5393cb5a-5c9f-4762-a2b4-93230c80ab13}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {af997f82-5b02-4c5c-b9aa-410a1a39c0fe}, !- Day Schedule Name
+  Yes,                                    !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes,                                    !- Apply Friday
+  Yes,                                    !- Apply Saturday
+  DateRange,                              !- Date Specification Type
+  10,                                     !- Start Month
+  1,                                      !- Start Day
+  12,                                     !- End Month
+  31;                                     !- End Day
 
 OS:Schedule:Day,
   {af997f82-5b02-4c5c-b9aa-410a1a39c0fe}, ! Handle
@@ -3556,24 +3542,23 @@ OS:Schedule:Day,
   0.17999999999999999;                    ! Value Until Time 5
 
 OS:Schedule:Rule,
-  {7ceb0508-868e-4953-9150-d01273627629}, ! Handle
-  Mid-riseApartment Office Light Rule 1,  ! Name
-  {b7db98c6-63b8-4aed-9013-04071ebae51a}, ! Schedule Ruleset Name
-  0,                                      ! Rule Order
-  {d4c86481-2814-4d07-8d33-31d4715f7466}, ! Day Schedule Name
-  Yes,                                    ! Apply Sunday
-  No,                                     ! Apply Monday
-  No,                                     ! Apply Tuesday
-  No,                                     ! Apply Wednesday
-  No,                                     ! Apply Thursday
-  No,                                     ! Apply Friday
-  Yes,                                    ! Apply Saturday
-  ,                                       ! Apply Holiday
-  DateRange,                              ! Date Specification Type
-  1,                                      ! Start Month
-  1,                                      ! Start Day
-  12,                                     ! End Month
-  31;                                     ! End Day
+  {7ceb0508-868e-4953-9150-d01273627629}, !- Handle
+  Mid-riseApartment Office Light Rule 1,  !- Name
+  {b7db98c6-63b8-4aed-9013-04071ebae51a}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {d4c86481-2814-4d07-8d33-31d4715f7466}, !- Day Schedule Name
+  Yes,                                    !- Apply Sunday
+  No,                                     !- Apply Monday
+  No,                                     !- Apply Tuesday
+  No,                                     !- Apply Wednesday
+  No,                                     !- Apply Thursday
+  No,                                     !- Apply Friday
+  Yes,                                    !- Apply Saturday
+  DateRange,                              !- Date Specification Type
+  1,                                      !- Start Month
+  1,                                      !- Start Day
+  12,                                     !- End Month
+  31;                                     !- End Day
 
 OS:Schedule:Day,
   {d4c86481-2814-4d07-8d33-31d4715f7466}, ! Handle
@@ -3802,24 +3787,23 @@ OS:Schedule:Day,
   29.399999999999999;                     ! Value Until Time 5
 
 OS:Schedule:Rule,
-  {800176b4-2ddb-4299-be09-ee76dd93b084}, ! Handle
-  Mid-riseApartment Office ClgSetp Rule 1, ! Name
-  {c2f3cf6c-d39c-4bec-8cde-4c9a849ad802}, ! Schedule Ruleset Name
-  0,                                      ! Rule Order
-  {71228f9a-d9e3-4ba1-9109-bb9c5a3389a6}, ! Day Schedule Name
-  No,                                     ! Apply Sunday
-  Yes,                                    ! Apply Monday
-  Yes,                                    ! Apply Tuesday
-  Yes,                                    ! Apply Wednesday
-  Yes,                                    ! Apply Thursday
-  Yes,                                    ! Apply Friday
-  No,                                     ! Apply Saturday
-  ,                                       ! Apply Holiday
-  DateRange,                              ! Date Specification Type
-  1,                                      ! Start Month
-  1,                                      ! Start Day
-  12,                                     ! End Month
-  31;                                     ! End Day
+  {800176b4-2ddb-4299-be09-ee76dd93b084}, !- Handle
+  Mid-riseApartment Office ClgSetp Rule 1, !- Name
+  {c2f3cf6c-d39c-4bec-8cde-4c9a849ad802}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {71228f9a-d9e3-4ba1-9109-bb9c5a3389a6}, !- Day Schedule Name
+  No,                                     !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes,                                    !- Apply Friday
+  No,                                     !- Apply Saturday
+  DateRange,                              !- Date Specification Type
+  1,                                      !- Start Month
+  1,                                      !- Start Day
+  12,                                     !- End Month
+  31;                                     !- End Day
 
 OS:Schedule:Day,
   {71228f9a-d9e3-4ba1-9109-bb9c5a3389a6}, ! Handle
@@ -3905,24 +3889,23 @@ OS:Schedule:Day,
   0;                                      ! Value Until Time 3
 
 OS:Schedule:Rule,
-  {f1bcffe0-1f9b-43ad-a244-b826a7e047f4}, ! Handle
-  Mid-riseApartment Office Operation Rule 1, ! Name
-  {1ec744f0-26a9-4ac7-a088-a15b043a6876}, ! Schedule Ruleset Name
-  0,                                      ! Rule Order
-  {4c5c6c29-4e54-4708-ad9f-57ce70fda48a}, ! Day Schedule Name
-  Yes,                                    ! Apply Sunday
-  No,                                     ! Apply Monday
-  No,                                     ! Apply Tuesday
-  No,                                     ! Apply Wednesday
-  No,                                     ! Apply Thursday
-  No,                                     ! Apply Friday
-  Yes,                                    ! Apply Saturday
-  ,                                       ! Apply Holiday
-  DateRange,                              ! Date Specification Type
-  1,                                      ! Start Month
-  1,                                      ! Start Day
-  12,                                     ! End Month
-  31;                                     ! End Day
+  {f1bcffe0-1f9b-43ad-a244-b826a7e047f4}, !- Handle
+  Mid-riseApartment Office Operation Rule 1, !- Name
+  {1ec744f0-26a9-4ac7-a088-a15b043a6876}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {4c5c6c29-4e54-4708-ad9f-57ce70fda48a}, !- Day Schedule Name
+  Yes,                                    !- Apply Sunday
+  No,                                     !- Apply Monday
+  No,                                     !- Apply Tuesday
+  No,                                     !- Apply Wednesday
+  No,                                     !- Apply Thursday
+  No,                                     !- Apply Friday
+  Yes,                                    !- Apply Saturday
+  DateRange,                              !- Date Specification Type
+  1,                                      !- Start Month
+  1,                                      !- Start Day
+  12,                                     !- End Month
+  31;                                     !- End Day
 
 OS:Schedule:Day,
   {4c5c6c29-4e54-4708-ad9f-57ce70fda48a}, ! Handle
@@ -4231,24 +4214,23 @@ OS:Schedule:Day,
   15.6;                                   ! Value Until Time 5
 
 OS:Schedule:Rule,
-  {c9701c04-9cbe-4982-b47b-51ab95628533}, ! Handle
-  Mid-riseApartment Office HtgSetp Rule 1, ! Name
-  {5c983bb4-950f-4a72-a893-02abb0be1081}, ! Schedule Ruleset Name
-  0,                                      ! Rule Order
-  {16ebfbce-2c97-4736-b2ba-aa983ac4316f}, ! Day Schedule Name
-  No,                                     ! Apply Sunday
-  Yes,                                    ! Apply Monday
-  Yes,                                    ! Apply Tuesday
-  Yes,                                    ! Apply Wednesday
-  Yes,                                    ! Apply Thursday
-  Yes,                                    ! Apply Friday
-  No,                                     ! Apply Saturday
-  ,                                       ! Apply Holiday
-  DateRange,                              ! Date Specification Type
-  1,                                      ! Start Month
-  1,                                      ! Start Day
-  12,                                     ! End Month
-  31;                                     ! End Day
+  {c9701c04-9cbe-4982-b47b-51ab95628533}, !- Handle
+  Mid-riseApartment Office HtgSetp Rule 1, !- Name
+  {5c983bb4-950f-4a72-a893-02abb0be1081}, !- Schedule Ruleset Name
+  0,                                      !- Rule Order
+  {16ebfbce-2c97-4736-b2ba-aa983ac4316f}, !- Day Schedule Name
+  No,                                     !- Apply Sunday
+  Yes,                                    !- Apply Monday
+  Yes,                                    !- Apply Tuesday
+  Yes,                                    !- Apply Wednesday
+  Yes,                                    !- Apply Thursday
+  Yes,                                    !- Apply Friday
+  No,                                     !- Apply Saturday
+  DateRange,                              !- Date Specification Type
+  1,                                      !- Start Month
+  1,                                      !- Start Day
+  12,                                     !- End Month
+  31;                                     !- End Day
 
 OS:Schedule:Day,
   {16ebfbce-2c97-4736-b2ba-aa983ac4316f}, ! Handle
@@ -4408,8 +4390,16 @@ OS:ConvergenceLimits,
 
 OS:ShadowCalculation,
   {08d9db6f-515e-4de2-a69a-4aebd356d8b9}, !- Handle
-  7,                                      !- Calculation Frequency
-  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
+  PolygonClipping,                        !- Shading Calculation Method
+  ,                                       !- Shading Calculation Update Frequency Method
+  7,                                      !- Shading Calculation Update Frequency
+  15000,                                  !- Maximum Figures in Shadow Overlap Calculations
+  ,                                       !- Polygon Clipping Algorithm
+  512,                                    !- Pixel Counting Resolution
+  ,                                       !- Sky Diffuse Modeling Algorithm
+  No,                                     !- Output External Shading Calculation Results
+  No,                                     !- Disable Self-Shading Within Shading Zone Groups
+  No;                                     !- Disable Self-Shading From Shading Zone Groups to Other Zones
 
 OS:SurfaceConvectionAlgorithm:Inside,
   {5ac1dc4e-a46c-40d0-8f8b-71fffec222ad}, !- Handle
@@ -4422,7 +4412,7 @@ OS:SurfaceConvectionAlgorithm:Outside,
 OS:HeatBalanceAlgorithm,
   {31bc4afb-6a42-4bd1-a025-00e5e76e5cbb}, !- Handle
   ConductionTransferFunction,             !- Algorithm
-  200;                                    !- Surface Temperature Upper Limit {F}
+  200;                                    !- Surface Temperature Upper Limit {C}
 
 OS:ZoneAirHeatBalanceAlgorithm,
   {944088fc-16a9-4ed6-a19d-bbaca376aaa0}, !- Handle
@@ -7711,7 +7701,7 @@ OS:ThermalZone,
   {3b8282ff-7d62-46f2-b505-0f2afdc01bd5}, !- Zone Air Inlet Port List
   {060e23df-b3fe-40a5-9e06-3469b33f8a24}, !- Zone Air Exhaust Port List
   {a5bb2e53-e535-4018-9c68-d5e2acdf68dd}, !- Zone Air Node Name
-  ,                                       !- Zone Return Air Node Name
+  {36622eb9-eae1-4d7d-8bc2-5d987fe171e6}, !- Zone Return Air Port List
   ,                                       !- Primary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
   ,                                       !- Secondary Daylighting Control Name
@@ -7720,6 +7710,12 @@ OS:ThermalZone,
   {3a4966ab-8c95-4167-831f-a133e1549cba}, !- Group Rendering Name
   ,                                       !- Thermostat Name
   No;                                     !- Use Ideal Air Loads
+
+OS:PortList,
+  {36622eb9-eae1-4d7d-8bc2-5d987fe171e6}, !- Handle
+  Port List 8,                            !- Name
+  {53f8202f-af80-4f57-b071-2f00591042d9}, !- HVAC Component
+  ;                                       !- Port 1
 
 OS:Node,
   {3aa7e11a-99c5-4ef7-a7dd-f7de7c8dd917}, !- Handle
@@ -7737,7 +7733,7 @@ OS:Connection,
 
 OS:PortList,
   {3b8282ff-7d62-46f2-b505-0f2afdc01bd5}, !- Handle
-  Port List 1,                            !- Name
+  Port List 9,                            !- Name
   {53f8202f-af80-4f57-b071-2f00591042d9}; !- HVAC Component
 
 OS:PortList,
@@ -7748,8 +7744,12 @@ OS:PortList,
 OS:Sizing:Zone,
   {fb2c9cbd-b42b-4607-9629-f224cdaac07d}, !- Handle
   {53f8202f-af80-4f57-b071-2f00591042d9}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
   14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
   40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
   0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
   0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
   ,                                       !- Zone Heating Sizing Factor
@@ -7764,8 +7764,10 @@ OS:Sizing:Zone,
   ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
   ,                                       !- Heating Maximum Air Flow {m3/s}
   ,                                       !- Heating Maximum Air Flow Fraction
-  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {ee3ab550-b981-4dd9-baa2-4b4cf85cd10c}, !- Handle
@@ -7793,7 +7795,7 @@ OS:ThermalZone,
   {9b2e38e3-7572-4299-8dca-5ab849e8480c}, !- Zone Air Inlet Port List
   {fca6c2c1-fc9d-4fe8-8dea-771fa34b0d9e}, !- Zone Air Exhaust Port List
   {9ce53569-79cc-4d34-bedd-94ad5b258978}, !- Zone Air Node Name
-  {c1bb3baa-9f50-43a3-a4ac-060b6720ed50}, !- Zone Return Air Node Name
+  {1d3fabb6-584a-4c93-b084-1ac9439e372e}, !- Zone Return Air Port List
   ,                                       !- Primary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
   ,                                       !- Secondary Daylighting Control Name
@@ -7802,6 +7804,12 @@ OS:ThermalZone,
   {5565b1d0-39c9-4049-bfde-1f6bfa37073b}, !- Group Rendering Name
   {59fff3ff-a474-48cd-bae6-d5de874f6d04}, !- Thermostat Name
   No;                                     !- Use Ideal Air Loads
+
+OS:PortList,
+  {1d3fabb6-584a-4c93-b084-1ac9439e372e}, !- Handle
+  Port List 7,                            !- Name
+  {ac372c72-46a2-422c-8271-7b9cc842fcea}, !- HVAC Component
+  {c1bb3baa-9f50-43a3-a4ac-060b6720ed50}; !- Port 1
 
 OS:Node,
   {f5e950a4-88ba-4c29-a930-3c29d776b36e}, !- Handle
@@ -7833,8 +7841,12 @@ OS:PortList,
 OS:Sizing:Zone,
   {17233842-7fc1-4889-9d73-434ef5994ace}, !- Handle
   {ac372c72-46a2-422c-8271-7b9cc842fcea}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
   14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
   40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
   0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
   0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
   ,                                       !- Zone Heating Sizing Factor
@@ -7849,16 +7861,21 @@ OS:Sizing:Zone,
   ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
   ,                                       !- Heating Maximum Air Flow {m3/s}
   ,                                       !- Heating Maximum Air Flow Fraction
-  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {c427d1f8-0bb0-4b19-91df-a139344024d2}, !- Handle
   Zone HVAC Equipment List 2,             !- Name
   {ac372c72-46a2-422c-8271-7b9cc842fcea}, !- Thermal Zone
+  ,                                       !- Load Distribution Scheme
   {2a3c676e-1005-4340-b28b-2cd6ccacb43f}, !- Zone Equipment 1
   1,                                      !- Zone Equipment Cooling Sequence 1
-  1;                                      !- Zone Equipment Heating or No-Load Sequence 1
+  1,                                      !- Zone Equipment Heating or No-Load Sequence 1
+  ,                                       !- Zone Equipment Sequential Cooling Fraction Schedule Name 1
+  ;                                       !- Zone Equipment Sequential Heating Fraction Schedule Name 1
 
 OS:Rendering:Color,
   {5565b1d0-39c9-4049-bfde-1f6bfa37073b}, !- Handle
@@ -7881,7 +7898,7 @@ OS:ThermalZone,
   {b1a04668-2b83-4cc9-bb06-d2aa0ae7ceb8}, !- Zone Air Inlet Port List
   {6b6a0767-48a6-42ab-a298-58ab55310e0d}, !- Zone Air Exhaust Port List
   {2e64d932-115b-46e1-9c2e-eabffd5ac1f4}, !- Zone Air Node Name
-  ,                                       !- Zone Return Air Node Name
+  {e1442438-b7f8-4c4b-b174-196227080547}, !- Zone Return Air Port List
   ,                                       !- Primary Daylighting Control Name
   ,                                       !- Fraction of Zone Controlled by Primary Daylighting Control
   ,                                       !- Secondary Daylighting Control Name
@@ -7890,6 +7907,12 @@ OS:ThermalZone,
   {f117d250-07d2-4a4e-befb-bde16085fd0f}, !- Group Rendering Name
   ,                                       !- Thermostat Name
   No;                                     !- Use Ideal Air Loads
+
+OS:PortList,
+  {e1442438-b7f8-4c4b-b174-196227080547}, !- Handle
+  Port List 1,                            !- Name
+  {55f3ba1e-bd5a-41b6-8b7e-bcb4e7962df0}, !- HVAC Component
+  ;                                       !- Port 1
 
 OS:Node,
   {21dd00b6-d5a9-40c7-bf16-0311f303acf8}, !- Handle
@@ -7918,8 +7941,12 @@ OS:PortList,
 OS:Sizing:Zone,
   {aca3d731-4202-42f0-b2d0-fc7fc6421e41}, !- Handle
   {55f3ba1e-bd5a-41b6-8b7e-bcb4e7962df0}, !- Zone or ZoneList Name
+  SupplyAirTemperature,                   !- Zone Cooling Design Supply Air Temperature Input Method
   14,                                     !- Zone Cooling Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Cooling Design Supply Air Temperature Difference {deltaC}
+  SupplyAirTemperature,                   !- Zone Heating Design Supply Air Temperature Input Method
   40,                                     !- Zone Heating Design Supply Air Temperature {C}
+  11.11,                                  !- Zone Heating Design Supply Air Temperature Difference {deltaC}
   0.0085,                                 !- Zone Cooling Design Supply Air Humidity Ratio {kg-H2O/kg-air}
   0.008,                                  !- Zone Heating Design Supply Air Humidity Ratio {kg-H2O/kg-air}
   ,                                       !- Zone Heating Sizing Factor
@@ -7934,8 +7961,10 @@ OS:Sizing:Zone,
   ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
   ,                                       !- Heating Maximum Air Flow {m3/s}
   ,                                       !- Heating Maximum Air Flow Fraction
-  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
-  ;                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
+  No,                                     !- Account for Dedicated Outdoor Air System
+  NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
+  Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+  Autosize;                               !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
 OS:ZoneHVAC:EquipmentList,
   {a4ed77f5-b0e7-4406-8b11-146319445d45}, !- Handle
@@ -8038,11 +8067,11 @@ OS:Site,
   ;                                       !- Terrain
 
 OS:SpaceType,
-  {0ebee013-d9dc-4031-a99d-911f146ba1b9}, ! Handle
-  Attic 1,                                ! Name
-  ,                                       ! Default Construction Set Name
-  {11f49381-85a2-40db-8fa6-915cf9765161}, ! Default Schedule Set Name
-  {66fb69d3-7cfd-42c2-afa3-e8086fa2fe2e}, ! Group Rendering Name
+  {0ebee013-d9dc-4031-a99d-911f146ba1b9}, !- Handle
+  Attic 1,                                !- Name
+  ,                                       !- Default Construction Set Name
+  {11f49381-85a2-40db-8fa6-915cf9765161}, !- Default Schedule Set Name
+  {66fb69d3-7cfd-42c2-afa3-e8086fa2fe2e}, !- Group Rendering Name
   ;                                       !- Design Specification Outdoor Air Object Name
 
 OS:SpaceInfiltration:DesignFlowRate,
@@ -8169,7 +8198,8 @@ OS:DefaultConstructionSet,
   ,                                       !- Interior Partition Construction Name
   ,                                       !- Space Shading Construction Name
   ,                                       !- Building Shading Construction Name
-  ;                                       !- Site Shading Construction Name
+  ,                                       !- Site Shading Construction Name
+  ;                                       !- Adiabatic Surface Construction Name
 
 OS:DefaultSurfaceConstructions,
   {d8ace24a-ecc0-46e5-9c22-9f4aadef7698}, !- Handle
@@ -8293,7 +8323,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Clg .4% Condns Enth=>MDB, !- Name
   27.3,                                   !- Maximum Dry-Bulb Temperature {C}
   15.2,                                   !- Daily Dry-Bulb Temperature Range {deltaC}
-  59700,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  59700,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb
   81198,                                  !- Barometric Pressure {Pa}
   4.9,                                    !- Wind Speed {m/s}
   0,                                      !- Wind Direction {deg}
@@ -8319,7 +8349,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Clg .4% Condns DP=>MDB, !- Name
   20.2,                                   !- Maximum Dry-Bulb Temperature {C}
   15.2,                                   !- Daily Dry-Bulb Temperature Range {deltaC}
-  16.1,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  16.1,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb
   81198,                                  !- Barometric Pressure {Pa}
   4.9,                                    !- Wind Speed {m/s}
   0,                                      !- Wind Direction {deg}
@@ -8345,7 +8375,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Clg .4% Condns DB=>MWB, !- Name
   33,                                     !- Maximum Dry-Bulb Temperature {C}
   15.2,                                   !- Daily Dry-Bulb Temperature Range {deltaC}
-  15.7,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  15.7,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb
   81198,                                  !- Barometric Pressure {Pa}
   4.9,                                    !- Wind Speed {m/s}
   0,                                      !- Wind Direction {deg}
@@ -8371,7 +8401,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Hum_n 99.6% Condns DP=>MCDB, !- Name
   -10.9,                                  !- Maximum Dry-Bulb Temperature {C}
   0,                                      !- Daily Dry-Bulb Temperature Range {deltaC}
-  -21.6,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  -21.6,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb
   81198,                                  !- Barometric Pressure {Pa}
   3,                                      !- Wind Speed {m/s}
   340,                                    !- Wind Direction {deg}
@@ -8393,7 +8423,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Clg .4% Condns WB=>MDB, !- Name
   27.3,                                   !- Maximum Dry-Bulb Temperature {C}
   15.2,                                   !- Daily Dry-Bulb Temperature Range {deltaC}
-  18.4,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  18.4,                                   !- Humidity Indicating Conditions at Maximum Dry-Bulb
   81198,                                  !- Barometric Pressure {Pa}
   4.9,                                    !- Wind Speed {m/s}
   0,                                      !- Wind Direction {deg}
@@ -8419,7 +8449,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Htg Wind 99.6% Condns WS=>MCDB, !- Name
   3.9,                                    !- Maximum Dry-Bulb Temperature {C}
   0,                                      !- Daily Dry-Bulb Temperature Range {deltaC}
-  3.9,                                    !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  3.9,                                    !- Humidity Indicating Conditions at Maximum Dry-Bulb
   81198,                                  !- Barometric Pressure {Pa}
   12.2,                                   !- Wind Speed {m/s}
   340,                                    !- Wind Direction {deg}
@@ -8441,7 +8471,7 @@ OS:SizingPeriod:DesignDay,
   Denver Centennial  Golden   N Ann Htg 99.6% Condns DB, !- Name
   -18.8,                                  !- Maximum Dry-Bulb Temperature {C}
   0,                                      !- Daily Dry-Bulb Temperature Range {deltaC}
-  -18.8,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb {BasedOnField A3}
+  -18.8,                                  !- Humidity Indicating Conditions at Maximum Dry-Bulb
   81198,                                  !- Barometric Pressure {Pa}
   3,                                      !- Wind Speed {m/s}
   340,                                    !- Wind Direction {deg}
@@ -8562,7 +8592,7 @@ OS:UtilityBill,
   71,                                     !- Billing Period Peak Demand 13
   98.24;                                  !- Billing Period Total Cost 13
 
-OS:Meter,
+OS:Output:Meter,
   {34ddf533-db2d-4c81-8cd2-bd3fd77d538c}, !- Handle
   Electricity:Facility,                   !- Name
   Daily;                                  !- Reporting Frequency
@@ -8671,7 +8701,7 @@ OS:UtilityBill,
   ,                                       !- Billing Period Peak Demand 13
   89.73;                                  !- Billing Period Total Cost 13
 
-OS:Meter,
+OS:Output:Meter,
   {a0a03d3f-3f3c-45ab-ad93-cf4d2801d009}, !- Handle
   Gas:Facility,                           !- Name
   Daily;                                  !- Reporting Frequency
@@ -8727,8 +8757,8 @@ OS:Schedule:Constant,
 OS:ScheduleTypeLimits,
   {22f436b0-252e-4367-b8de-1a1a66a98afe}, !- Handle
   Schedule Type Limits 1,                 !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
 
@@ -9101,8 +9131,11 @@ OS:PlantLoop,
   {d576c31b-8bcb-4724-aa15-eaee410ca7b0}, !- Handle
   Plant Loop 1,                           !- Name
   ,                                       !- Fluid Type
+  0,                                      !- Glycol Concentration
   ,                                       !- User Defined Fluid Type
-  ,                                       !- Plant Equipment Operation Scheme Name
+  ,                                       !- Plant Equipment Operation Heating Load
+  ,                                       !- Plant Equipment Operation Cooling Load
+  ,                                       !- Primary Plant Equipment Operation Scheme
   {26deed91-5d6d-471b-b78e-296ef91ca87f}, !- Loop Temperature Setpoint Node Name
   ,                                       !- Maximum Loop Temperature {C}
   ,                                       !- Minimum Loop Temperature {C}
@@ -9116,18 +9149,34 @@ OS:PlantLoop,
   {3cad7bcb-537a-4e18-ae09-c6008efe80e2}, !- Demand Side Outlet Node Name
   ,                                       !- Demand Side Branch List Name
   ,                                       !- Demand Side Connector List Name
-  ,                                       !- Load Distribution Scheme
-  ,                                       !- Availability Manager List Name
+  Optimal,                                !- Load Distribution Scheme
+  {9e29a62a-c80b-40f9-87f3-85b71cc60bf7}, !- Availability Manager List Name
   ,                                       !- Plant Loop Demand Calculation Scheme
   ,                                       !- Common Pipe Simulation
-  ;                                       !- Pressure Simulation Type
+  ,                                       !- Pressure Simulation Type
+  ,                                       !- Plant Equipment Operation Heating Load Schedule
+  ,                                       !- Plant Equipment Operation Cooling Load Schedule
+  ,                                       !- Primary Plant Equipment Operation Scheme Schedule
+  ,                                       !- Component Setpoint Operation Scheme Schedule
+  ,                                       !- Demand Mixer Name
+  ,                                       !- Demand Splitter Name
+  ,                                       !- Supply Mixer Name
+  ;                                       !- Supply Splitter Name
+
+OS:AvailabilityManagerAssignmentList,
+  {9e29a62a-c80b-40f9-87f3-85b71cc60bf7}, !- Handle
+  Plant Loop 1 AvailabilityManagerAssignmentList, !- Name
+  ;                                       !- Availability Manager Name 1
 
 OS:Sizing:Plant,
   {e157809c-91c7-42cc-b30d-1d8667acbe7b}, !- Handle
   {d576c31b-8bcb-4724-aa15-eaee410ca7b0}, !- Plant or Condenser Loop Name
   Heating,                                !- Loop Type
   82,                                     !- Design Loop Exit Temperature {C}
-  11;                                     !- Loop Design Temperature Difference {deltaC}
+  11,                                     !- Loop Design Temperature Difference {deltaC}
+  NonCoincident,                          !- Sizing Option
+  1,                                      !- Zone Timesteps in Averaging Window
+  None;                                   !- Coincident Sizing Factor Mode
 
 OS:Node,
   {0e7bfa3d-cd68-4f4e-9a1e-f6f182e8ef9c}, !- Handle
@@ -9250,8 +9299,8 @@ OS:Connection,
 OS:ScheduleTypeLimits,
   {84881d5b-9042-4349-b464-7b363cd86945}, !- Handle
   Temperature 5,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -9271,7 +9320,10 @@ OS:Pump:ConstantSpeed,
   ,                                       !- Impeller Diameter {m}
   ,                                       !- Rotational Speed {rev/min}
   ,                                       !- Zone
-  ;                                       !- Skin Loss Radiative Fraction
+  ,                                       !- Skin Loss Radiative Fraction
+  PowerPerFlowPerPressure,                !- Design Power Sizing Method
+  348701.1,                               !- Design Electric Power per Unit Flow Rate {W/(m3/s)}
+  1.282051282;                            !- Design Shaft Power per Unit Flow Rate per Unit Head {W-s/m3-Pa}
 
 OS:Node,
   {cbd498df-e5a0-4b58-8485-c3d3dfad65d1}, !- Handle
@@ -9313,16 +9365,16 @@ OS:SetpointManager:Scheduled,
 OS:ScheduleTypeLimits,
   {709d0245-a26d-4ad8-a0b8-119b91c2d3dc}, !- Handle
   Temperature 6,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
 OS:ScheduleTypeLimits,
   {c3fce164-2fa3-4636-9376-957d28cd632a}, !- Handle
   Temperature 7,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -9346,8 +9398,8 @@ OS:Schedule:Day,
 OS:ScheduleTypeLimits,
   {2f1fc4f3-3bdf-4805-8a93-27be60ea1b0a}, !- Handle
   Temperature 8,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -9663,7 +9715,6 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes,                                    !- Apply Saturday
-  ,                                       !- Apply Holiday
   DateRange,                              !- Date Specification Type
   7,                                      !- Start Month
   1,                                      !- Start Day
@@ -9697,46 +9748,49 @@ OS:Connection,
   2;                                      !- Inlet Port
 
 OS:WaterHeater:Mixed,
-  {bdac591d-6d99-40db-bf72-ee5e1924e2d8}, ! Handle
-  OS:WaterHeater:Mixed,                   ! Name
-  0.378541178396985,                      ! Tank Volume {m3}
-  {0ff84249-993d-4b91-8711-16fe7b4ac0dc}, ! Setpoint Temperature Schedule Name
-  2,                                      ! Deadband Temperature Difference {deltaC}
-  82.22,                                  ! Maximum Temperature Limit {C}
-  Cycle,                                  ! Heater Control Type
-  2930.71070172222,                       ! Heater Maximum Capacity {W}
-  ,                                       ! Heater Minimum Capacity {W}
-  ,                                       ! Heater Ignition Minimum Flow Rate {m3/s}
-  ,                                       ! Heater Ignition Delay {s}
-  NaturalGas,                             ! Heater Fuel Type
-  0.8,                                    ! Heater Thermal Efficiency
-  ,                                       ! Part Load Factor Curve Name
-  20,                                     ! Off Cycle Parasitic Fuel Consumption Rate {W}
-  NaturalGas,                             ! Off Cycle Parasitic Fuel Type
-  0.8,                                    ! Off Cycle Parasitic Heat Fraction to Tank
-  ,                                       ! On Cycle Parasitic Fuel Consumption Rate {W}
-  NaturalGas,                             ! On Cycle Parasitic Fuel Type
-  ,                                       ! On Cycle Parasitic Heat Fraction to Tank
-  Schedule,                               ! Ambient Temperature Indicator
-  {206103c6-ca01-4a70-9825-88bbb320024b}, ! Ambient Temperature Schedule Name
-  {53f8202f-af80-4f57-b071-2f00591042d9}, ! Ambient Temperature Thermal Zone Name
-  ,                                       ! Ambient Temperature Outdoor Air Node Name
-  6,                                      ! Off Cycle Loss Coefficient to Ambient Temperature {W/K}
-  ,                                       ! Off Cycle Loss Fraction to Thermal Zone
-  6,                                      ! On Cycle Loss Coefficient to Ambient Temperature {W/K}
-  ,                                       ! On Cycle Loss Fraction to Thermal Zone
-  ,                                       ! Peak Use Flow Rate {m3/s}
-  ,                                       ! Use Flow Rate Fraction Schedule Name
-  ,                                       ! Cold Water Supply Temperature Schedule Name
-  {f5d6c5d3-f16a-411d-beee-e2a8d38b6e2b}, ! Use Side Inlet Node Name
-  {ac35f622-2a32-495f-9b94-dc8be8dffa04}, ! Use Side Outlet Node Name
-  1,                                      ! Use Side Effectiveness
-  ,                                       ! Source Side Inlet Node Name
-  ,                                       ! Source Side Outlet Node Name
-  1,                                      ! Source Side Effectiveness
-  autosize,                               ! Use Side Design Flow Rate {m3/s}
-  autosize,                               ! Source Side Design Flow Rate {m3/s}
-  1.5;                                    ! Indirect Water Heating Recovery Time {hr}
+  {bdac591d-6d99-40db-bf72-ee5e1924e2d8}, !- Handle
+  OS:WaterHeater:Mixed,                   !- Name
+  0.378541178396985,                      !- Tank Volume {m3}
+  {0ff84249-993d-4b91-8711-16fe7b4ac0dc}, !- Setpoint Temperature Schedule Name
+  2,                                      !- Deadband Temperature Difference {deltaC}
+  82.22,                                  !- Maximum Temperature Limit {C}
+  Cycle,                                  !- Heater Control Type
+  2930.71070172222,                       !- Heater Maximum Capacity {W}
+  ,                                       !- Heater Minimum Capacity {W}
+  ,                                       !- Heater Ignition Minimum Flow Rate {m3/s}
+  ,                                       !- Heater Ignition Delay {s}
+  NaturalGas,                             !- Heater Fuel Type
+  0.8,                                    !- Heater Thermal Efficiency
+  ,                                       !- Part Load Factor Curve Name
+  20,                                     !- Off Cycle Parasitic Fuel Consumption Rate {W}
+  NaturalGas,                             !- Off Cycle Parasitic Fuel Type
+  0.8,                                    !- Off Cycle Parasitic Heat Fraction to Tank
+  ,                                       !- On Cycle Parasitic Fuel Consumption Rate {W}
+  NaturalGas,                             !- On Cycle Parasitic Fuel Type
+  ,                                       !- On Cycle Parasitic Heat Fraction to Tank
+  Schedule,                               !- Ambient Temperature Indicator
+  {206103c6-ca01-4a70-9825-88bbb320024b}, !- Ambient Temperature Schedule Name
+  {53f8202f-af80-4f57-b071-2f00591042d9}, !- Ambient Temperature Thermal Zone Name
+  ,                                       !- Ambient Temperature Outdoor Air Node Name
+  6,                                      !- Off Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       !- Off Cycle Loss Fraction to Thermal Zone
+  6,                                      !- On Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       !- On Cycle Loss Fraction to Thermal Zone
+  ,                                       !- Peak Use Flow Rate {m3/s}
+  ,                                       !- Use Flow Rate Fraction Schedule Name
+  ,                                       !- Cold Water Supply Temperature Schedule Name
+  {f5d6c5d3-f16a-411d-beee-e2a8d38b6e2b}, !- Use Side Inlet Node Name
+  {ac35f622-2a32-495f-9b94-dc8be8dffa04}, !- Use Side Outlet Node Name
+  1,                                      !- Use Side Effectiveness
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  1,                                      !- Source Side Effectiveness
+  autosize,                               !- Use Side Design Flow Rate {m3/s}
+  autosize,                               !- Source Side Design Flow Rate {m3/s}
+  1.5,                                    !- Indirect Water Heating Recovery Time {hr}
+  IndirectHeatPrimarySetpoint,            !- Source Side Flow Control Mode
+  ,                                       !- Indirect Alternate Setpoint Temperature Schedule Name
+  General;                                !- End-Use Subcategory
 
 OS:Schedule:Ruleset,
   {206103c6-ca01-4a70-9825-88bbb320024b}, ! Handle
@@ -9756,8 +9810,8 @@ OS:Schedule:Day,
 OS:ScheduleTypeLimits,
   {31d0a227-1b6b-4a4f-98c0-ce9d7e0f4a52}, !- Handle
   Temperature 9,                          !- Name
-  ,                                       !- Lower Limit Value {BasedOnField A4}
-  ,                                       !- Upper Limit Value {BasedOnField A4}
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
   Continuous,                             !- Numeric Type
   Temperature;                            !- Unit Type
 
@@ -9801,34 +9855,27 @@ OS:AirLoopHVAC,
   {78bbcdf4-b44a-4125-9445-110ac5a21ba1}, !- Handle
   Packaged Rooftop Air Conditioner,       !- Name
   ,                                       !- Controller List Name
-  {c7a0f649-034e-463f-96a2-de6ddda0a840}, !- Availability Manager List Name
+  {07e15aba-6282-4b4d-8ca7-cce4b74035e5}, !- Availability Schedule
+  {d7da6c48-76f0-49d6-9f84-aa1c1910df15}, !- Availability Manager List Name
   AutoSize,                               !- Design Supply Air Flow Rate {m3/s}
   ,                                       !- Branch List Name
   ,                                       !- Connector List Name
   {b7a184b7-4e1a-45a1-9802-bf259882fb33}, !- Supply Side Inlet Node Name
   {71b6d0ef-ca3b-4c75-aa52-2fc866b26249}, !- Demand Side Outlet Node Name
-  {421fe14d-b24b-458d-b058-bfa216c13da5}, !- Demand Side Inlet Node Names
-  {5303df36-9115-402f-9c9a-06832e3e2981}; !- Supply Side Outlet Node Names
+  {421fe14d-b24b-458d-b058-bfa216c13da5}, !- Demand Side Inlet Node A
+  {5303df36-9115-402f-9c9a-06832e3e2981}, !- Supply Side Outlet Node A
+  ,                                       !- Demand Side Inlet Node B
+  ,                                       !- Supply Side Outlet Node B
+  ,                                       !- Return Air Bypass Flow Temperature Setpoint Schedule Name
+  ,                                       !- Demand Mixer Name
+  ,                                       !- Demand Splitter A Name
+  ,                                       !- Demand Splitter B Name
+  ;                                       !- Supply Splitter Name
 
 OS:AvailabilityManagerAssignmentList,
-  {c7a0f649-034e-463f-96a2-de6ddda0a840}, !- Handle
-  Availability Manager Assignment List 1, !- Name
-  {286e0a4b-4a4e-4a5c-bb1e-5117af000320}, !- Availability Manager Name 1
-  {84d80d27-68f7-4278-ac5e-6f6eb2b15984}; !- Availability Manager Name 2
-
-OS:AvailabilityManager:Scheduled,
-  {286e0a4b-4a4e-4a5c-bb1e-5117af000320}, !- Handle
-  Availability Manager Scheduled 1,       !- Name
-  {07e15aba-6282-4b4d-8ca7-cce4b74035e5}; !- Schedule Name
-
-OS:AvailabilityManager:NightCycle,
-  {84d80d27-68f7-4278-ac5e-6f6eb2b15984}, !- Handle
-  Availability Manager Night Cycle 1,     !- Name
-  ,                                       !- Applicability Schedule
-  ,                                       !- Fan Schedule
-  ,                                       !- Control Type
-  ,                                       !- Thermostat Tolerance {deltaC}
-  ;                                       !- Cycling Run Time {s}
+  {d7da6c48-76f0-49d6-9f84-aa1c1910df15}, !- Handle
+  Packaged Rooftop Air Conditioner AvailabilityManagerAssignmentList, !- Name
+  ;                                       !- Availability Manager Name 1
 
 OS:Node,
   {0479976c-4a30-49d6-8a34-ea5e431d8fdb}, !- Handle
@@ -9925,7 +9972,7 @@ OS:Sizing:System,
   {78bbcdf4-b44a-4125-9445-110ac5a21ba1}, !- AirLoop Name
   Sensible,                               !- Type of Load to Size On
   Autosize,                               !- Design Outdoor Air Flow Rate {m3/s}
-  1,                                      !- Minimum System Air Flow Ratio
+  1,                                      !- Central Heating Maximum System Air Flow Ratio
   7,                                      !- Preheat Design Temperature {C}
   0.008,                                  !- Preheat Design Humidity Ratio {kg-H2O/kg-Air}
   12.8,                                   !- Precool Design Temperature {C}
@@ -9941,13 +9988,30 @@ OS:Sizing:System,
   0,                                      !- Cooling Design Air Flow Rate {m3/s}
   DesignDay,                              !- Heating Design Air Flow Method
   0,                                      !- Heating Design Air Flow Rate {m3/s}
-  ZoneSum;                                !- System Outdoor Air Method
+  ZoneSum,                                !- System Outdoor Air Method
+  1,                                      !- Zone Maximum Outdoor Air Fraction {dimensionless}
+  0.0099676501,                           !- Cooling Supply Air Flow Rate Per Floor Area {m3/s-m2}
+  1,                                      !- Cooling Fraction of Autosized Cooling Supply Air Flow Rate
+  3.9475456e-05,                          !- Cooling Supply Air Flow Rate Per Unit Cooling Capacity {m3/s-W}
+  0.0099676501,                           !- Heating Supply Air Flow Rate Per Floor Area {m3/s-m2}
+  1,                                      !- Heating Fraction of Autosized Heating Supply Air Flow Rate
+  1,                                      !- Heating Fraction of Autosized Cooling Supply Air Flow Rate
+  3.1588213e-05,                          !- Heating Supply Air Flow Rate Per Unit Heating Capacity {m3/s-W}
+  CoolingDesignCapacity,                  !- Cooling Design Capacity Method
+  Autosize,                               !- Cooling Design Capacity {W}
+  234.7,                                  !- Cooling Design Capacity Per Floor Area {W/m2}
+  1,                                      !- Fraction of Autosized Cooling Design Capacity
+  HeatingDesignCapacity,                  !- Heating Design Capacity Method
+  Autosize,                               !- Heating Design Capacity {W}
+  157,                                    !- Heating Design Capacity Per Floor Area {W/m2}
+  1,                                      !- Fraction of Autosized Heating Design Capacity
+  OnOff;                                  !- Central Cooling Capacity Control Method
 
 OS:Fan:ConstantVolume,
   {670074dc-6b91-4b64-8c84-d0f957218fd3}, !- Handle
   Fan Constant Volume 1,                  !- Name
   {07e15aba-6282-4b4d-8ca7-cce4b74035e5}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   249.08891,                              !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -9978,10 +10042,10 @@ OS:Curve:Biquadratic,
   0.00333,                                !- Coefficient4 y
   -8e-005,                                !- Coefficient5 y**2
   -0.00021,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {bcea3ee8-a60b-4fc2-80ee-bfed7316323d}, !- Handle
@@ -9989,8 +10053,8 @@ OS:Curve:Quadratic,
   0.77136,                                !- Coefficient1 Constant
   0.34053,                                !- Coefficient2 x
   -0.11088,                               !- Coefficient3 x**2
-  0.75918,                                !- Minimum Value of x {BasedOnField A2}
-  1.13877;                                !- Maximum Value of x {BasedOnField A2}
+  0.75918,                                !- Minimum Value of x
+  1.13877;                                !- Maximum Value of x
 
 OS:Curve:Biquadratic,
   {a1ca2266-9972-493e-ba3d-cc6d8a4fffbf}, !- Handle
@@ -10001,10 +10065,10 @@ OS:Curve:Biquadratic,
   -0.01434,                               !- Coefficient4 y
   0.00063,                                !- Coefficient5 y**2
   -0.00038,                               !- Coefficient6 x*y
-  17,                                     !- Minimum Value of x {BasedOnField A2}
-  22,                                     !- Maximum Value of x {BasedOnField A2}
-  13,                                     !- Minimum Value of y {BasedOnField A3}
-  46;                                     !- Maximum Value of y {BasedOnField A3}
+  17,                                     !- Minimum Value of x
+  22,                                     !- Maximum Value of x
+  13,                                     !- Minimum Value of y
+  46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
   {d76f290c-2ded-4991-8d2d-0b96a9b3d830}, !- Handle
@@ -10012,8 +10076,8 @@ OS:Curve:Quadratic,
   1.2055,                                 !- Coefficient1 Constant
   -0.32953,                               !- Coefficient2 x
   0.12308,                                !- Coefficient3 x**2
-  0.75918,                                !- Minimum Value of x {BasedOnField A2}
-  1.13877;                                !- Maximum Value of x {BasedOnField A2}
+  0.75918,                                !- Minimum Value of x
+  1.13877;                                !- Maximum Value of x
 
 OS:Curve:Quadratic,
   {71ebf3c3-567f-4ef4-a3eb-7a2ba9521eae}, !- Handle
@@ -10021,8 +10085,8 @@ OS:Curve:Quadratic,
   0.771,                                  !- Coefficient1 Constant
   0.229,                                  !- Coefficient2 x
   0,                                      !- Coefficient3 x**2
-  0,                                      !- Minimum Value of x {BasedOnField A2}
-  1;                                      !- Maximum Value of x {BasedOnField A2}
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
 
 OS:Coil:Cooling:DX:SingleSpeed,
   {2cbc2641-4271-421c-a86a-7ab98831a7f0}, !- Handle
@@ -10249,12 +10313,26 @@ OS:Connection,
   {03681f18-0cfb-4d92-b4ee-38385c30b64f}, !- Target Object
   2;                                      !- Inlet Port
 
-OS:AirTerminal:SingleDuct:Uncontrolled,
+OS:Node,
+  {9a1946d1-3090-4a31-adec-dee70f1bdb19}, !- Handle
+  Air Terminal Single Duct Uncontrolled 2 Inlet Node, !- Name
+  {9a6d9df9-1a8b-4b12-9e8b-0a1e6343cae0}, !- Inlet Port
+  {b2bb55b2-c5a6-4b9a-ac0e-e222a6067d44}; !- Outlet Port
+
+OS:Connection,
+  {b2bb55b2-c5a6-4b9a-ac0e-e222a6067d44}, !- Handle
+  {42a9f3e5-85c5-4b26-86cd-4b970635a014}, !- Name
+  {9a1946d1-3090-4a31-adec-dee70f1bdb19}, !- Source Object
+  3,                                      !- Outlet Port
+  {2a3c676e-1005-4340-b28b-2cd6ccacb43f}, !- Target Object
+  3;                                      !- Inlet Port
+
+OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
   {2a3c676e-1005-4340-b28b-2cd6ccacb43f}, !- Handle
   Air Terminal Single Duct Uncontrolled 2, !- Name
   {5b31371e-075a-43e5-b7df-93e6c5dbb53e}, !- Availability Schedule Name
-  {9a6d9df9-1a8b-4b12-9e8b-0a1e6343cae0}, !- Inlet Air Node Name
-  {bb4908ed-dc1f-4028-a25f-d1127a07969a}, !- Zone Supply Air Node Name
+  {b2bb55b2-c5a6-4b9a-ac0e-e222a6067d44}, !- Air Inlet Node Name
+  {bb4908ed-dc1f-4028-a25f-d1127a07969a}, !- Air Outlet Node Name
   AutoSize;                               !- Maximum Air Flow Rate {m3/s}
 
 OS:Node,
@@ -10274,8 +10352,8 @@ OS:Connection,
 OS:Connection,
   {c1bb3baa-9f50-43a3-a4ac-060b6720ed50}, !- Handle
   Connection 40,                          !- Name
-  {ac372c72-46a2-422c-8271-7b9cc842fcea}, !- Source Object
-  12,                                     !- Outlet Port
+  {1d3fabb6-584a-4c93-b084-1ac9439e372e}, !- Source Object
+  3,                                      !- Outlet Port
   {490879a9-92e2-43c4-bd54-87dc2a19d4b4}, !- Target Object
   2;                                      !- Inlet Port
 
@@ -10285,14 +10363,6 @@ OS:Connection,
   {490879a9-92e2-43c4-bd54-87dc2a19d4b4}, !- Source Object
   3,                                      !- Outlet Port
   {dc29ce71-4aa1-46c6-9b87-9f01fdfabfce}, !- Target Object
-  3;                                      !- Inlet Port
-
-OS:Connection,
-  {9a6d9df9-1a8b-4b12-9e8b-0a1e6343cae0}, !- Handle
-  Connection 10,                          !- Name
-  {060b0f8e-1cc9-4284-9381-5e2e0221a78e}, !- Source Object
-  3,                                      !- Outlet Port
-  {2a3c676e-1005-4340-b28b-2cd6ccacb43f}, !- Target Object
   3;                                      !- Inlet Port
 
 OS:Connection,
@@ -10306,8 +10376,8 @@ OS:Connection,
 OS:ScheduleTypeLimits,
   {b599c5b4-10b0-403f-8419-b0b750cf8eaa}, !- Handle
   OnOff,                                  !- Name
-  0,                                      !- Lower Limit Value {BasedOnField A4}
-  1,                                      !- Upper Limit Value {BasedOnField A4}
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
   Discrete,                               !- Numeric Type
   Availability;                           !- Unit Type
 
@@ -10339,7 +10409,6 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes,                                    !- Apply Saturday
-  ,                                       !- Apply Holiday
   DateRange,                              !- Date Specification Type
   3,                                      !- Start Month
   1,                                      !- Start Day
@@ -10374,7 +10443,6 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes,                                    !- Apply Saturday
-  ,                                       !- Apply Holiday
   DateRange,                              !- Date Specification Type
   9,                                      !- Start Month
   1,                                      !- Start Day
@@ -10409,7 +10477,6 @@ OS:Schedule:Rule,
   Yes,                                    !- Apply Thursday
   Yes,                                    !- Apply Friday
   Yes,                                    !- Apply Saturday
-  ,                                       !- Apply Holiday
   DateRange,                              !- Date Specification Type
   6,                                      !- Start Month
   1,                                      !- Start Day
@@ -10430,4 +10497,22 @@ OS:Schedule:Day,
   24,                                     !- Hour 3
   0,                                      !- Minute 3
   0;                                      !- Value Until Time 3
+
+OS:Building,
+  {8c09ff8f-5f75-4d27-9f7e-bf9a58538137}, !- Handle
+  Mid-rise Apartment,                     !- Name
+  ,                                       !- Building Sector Type
+  -0,                                     !- North Axis {deg}
+  ,                                       !- Nominal Floor to Floor Height {m}
+  {61494be9-25ef-40d9-82bd-b74a2efaeb76}, !- Space Type Name
+  {6b8d9294-f8e5-4dba-98e3-8a12a5521854}, !- Default Construction Set Name
+  ;                                       !- Default Schedule Set Name
+
+OS:Connection,
+  {9a6d9df9-1a8b-4b12-9e8b-0a1e6343cae0}, !- Handle
+  Connection 10,                          !- Name
+  {060b0f8e-1cc9-4284-9381-5e2e0221a78e}, !- Source Object
+  3,                                      !- Outlet Port
+  {9a1946d1-3090-4a31-adec-dee70f1bdb19}, !- Target Object
+  2;                                      !- Inlet Port
 

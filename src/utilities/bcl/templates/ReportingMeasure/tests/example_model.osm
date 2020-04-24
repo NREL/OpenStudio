@@ -1,7 +1,7 @@
 
 OS:Version,
-  {0ab440c6-3d07-4226-be46-8a7544614205}, !- Handle
-  1.13.0;                                 !- Version Identifier
+  {7934ce73-3e51-4260-81d5-8b56ed200ee5}, !- Handle
+  3.0.0;                                  !- Version Identifier
 
 OS:SimulationControl,
   {41f65c43-2dc9-4d82-a6e4-a562bae08803}, !- Handle
@@ -37,8 +37,16 @@ OS:ConvergenceLimits,
 
 OS:ShadowCalculation,
   {2c59bec7-e7be-489b-8d3d-042e6bf6bda3}, !- Handle
-  7,                                      !- Calculation Frequency
-  15000;                                  !- Maximum Figures in Shadow Overlap Calculations
+  PolygonClipping,                        !- Shading Calculation Method
+  ,                                       !- Shading Calculation Update Frequency Method
+  7,                                      !- Shading Calculation Update Frequency
+  15000,                                  !- Maximum Figures in Shadow Overlap Calculations
+  ,                                       !- Polygon Clipping Algorithm
+  512,                                    !- Pixel Counting Resolution
+  ,                                       !- Sky Diffuse Modeling Algorithm
+  No,                                     !- Output External Shading Calculation Results
+  No,                                     !- Disable Self-Shading Within Shading Zone Groups
+  No;                                     !- Disable Self-Shading From Shading Zone Groups to Other Zones
 
 OS:Site,
   {5c1f9d16-87a5-488e-aa99-a6dd668a2146}, !- Handle
@@ -1470,7 +1478,8 @@ OS:DefaultConstructionSet,
   {b2cbb0ea-6535-4d3c-956b-742c1f3ae382}, !- Interior Partition Construction Name
   ,                                       !- Space Shading Construction Name
   ,                                       !- Building Shading Construction Name
-  ;                                       !- Site Shading Construction Name
+  ,                                       !- Site Shading Construction Name
+  ;                                       !- Adiabatic Surface Construction Name
 
 OS:DefaultSurfaceConstructions,
   {fc66023b-7db0-4a01-85ee-dcbb644dea02}, !- Handle
@@ -1825,7 +1834,7 @@ OS:ThermalZone,
   {3c07bf71-fc6c-47ee-ba46-40685d96292e}, !- Zone Air Inlet Port List
   {57e66df3-c877-44bc-8c28-bbbbe6a5aa99}, !- Zone Air Exhaust Port List
   {22759e45-ecec-4674-a7c5-20aa0a1c6ed5}, !- Zone Air Node Name
-  {5e7dd03f-e665-4b39-b57e-bca1d58755d5}, !- Zone Return Air Node Name
+  {0eb16d93-0887-4057-a147-8d2da71323b8}, !- Zone Return Air Port List
   {13334f98-3e2e-46d8-a8f7-04e3c85f6dc1}, !- Primary Daylighting Control Name
   0.25,                                   !- Fraction of Zone Controlled by Primary Daylighting Control
   ,                                       !- Secondary Daylighting Control Name
@@ -1834,6 +1843,12 @@ OS:ThermalZone,
   ,                                       !- Group Rendering Name
   {d0bc7d98-a348-486f-b25d-c89e243627b3}, !- Thermostat Name
   No;                                     !- Use Ideal Air Loads
+
+OS:PortList,
+  {0eb16d93-0887-4057-a147-8d2da71323b8}, !- Handle
+  Port List 3,                            !- Name
+  {fc71e57a-151a-46b8-a678-25e6fe6f7b47}, !- HVAC Component
+  {5e7dd03f-e665-4b39-b57e-bca1d58755d5}; !- Port 1
 
 OS:Node,
   {c8f96879-cdf7-4609-9169-8f1f813920b7}, !- Handle
@@ -1883,8 +1898,6 @@ OS:Sizing:Zone,
   ,                                       !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
   ,                                       !- Heating Maximum Air Flow {m3/s}
   ,                                       !- Heating Maximum Air Flow Fraction
-  ,                                       !- Design Zone Air Distribution Effectiveness in Cooling Mode
-  ,                                       !- Design Zone Air Distribution Effectiveness in Heating Mode
   No,                                     !- Account for Dedicated Outdoor Air System
   NeutralSupplyAir,                       !- Dedicated Outdoor Air System Control Strategy
   Autosize,                               !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
@@ -1894,9 +1907,12 @@ OS:ZoneHVAC:EquipmentList,
   {a3a4ffbe-860b-49d8-b8c6-f4f70dfdef0f}, !- Handle
   Zone HVAC Equipment List 1,             !- Name
   {fc71e57a-151a-46b8-a678-25e6fe6f7b47}, !- Thermal Zone
+  ,                                       !- Load Distribution Scheme
   {e95eecc2-55c3-4de1-99bb-7a31dd48c1ff}, !- Zone Equipment 1
   1,                                      !- Zone Equipment Cooling Sequence 1
-  1;                                      !- Zone Equipment Heating or No-Load Sequence 1
+  1,                                      !- Zone Equipment Heating or No-Load Sequence 1
+  ,                                       !- Zone Equipment Sequential Cooling Fraction Schedule Name 1
+  ;                                       !- Zone Equipment Sequential Heating Fraction Schedule Name 1
 
 OS:ThermostatSetpoint:DualSetpoint,
   {d0bc7d98-a348-486f-b25d-c89e243627b3}, !- Handle
@@ -2536,7 +2552,7 @@ OS:Fan:ConstantVolume,
   {59bd5da9-ec95-4ef4-a694-d56122eb57c8}, !- Handle
   Standard Fan,                           !- Name
   {ac27bd9e-96a8-4fed-b7aa-06b830184239}, !- Availability Schedule Name
-  ,                                       !- Fan Efficiency
+  ,                                       !- Fan Total Efficiency
   ,                                       !- Pressure Rise {Pa}
   AutoSize,                               !- Maximum Flow Rate {m3/s}
   ,                                       !- Motor Efficiency
@@ -2668,7 +2684,7 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   {5e05823a-7498-44ba-9122-6160dc938005}, !- Handle
   Evaporative Cooler Direct Research Special 1, !- Name
   {ac27bd9e-96a8-4fed-b7aa-06b830184239}, !- Availability Schedule Name
-  1,                                      !- Cooler Effectiveness
+  1,                                      !- Cooler Design Effectiveness
   0,                                      !- Recirculating Water Pump Power Consumption {W}
   Autosize,                               !- Primary Air Design Flow Rate {m3/s}
   {b201c597-5991-47c6-a451-c8c9e15214eb}, !- Air Inlet Node Name
@@ -2677,14 +2693,32 @@ OS:EvaporativeCooler:Direct:ResearchSpecial,
   0,                                      !- Drift Loss Fraction
   0,                                      !- Blowdown Concentration Ratio
   ,                                       !- Effectiveness Flow Ratio Modifier Curve Name
-  0.1;                                    !- Water Pump Power Sizing Factor {W/(m3/s)}
+  0.1,                                    !- Water Pump Power Sizing Factor {W/(m3/s)}
+  ,                                       !- Water Pump Power Modifier Curve Name
+  -99,                                    !- Evaporative Operation Minimum Drybulb Temperature
+  99,                                     !- Evaporative Operation Maximum Limit Wetbulb Temperature
+  99;                                     !- Evaporative Operation Maximum Limit Drybulb Temperature
 
-OS:AirTerminal:SingleDuct:Uncontrolled,
+OS:Node,
+  {20526501-3131-4052-bd6e-c12d8e5a2753}, !- Handle
+  Air Terminal Single Duct Uncontrolled 1 Inlet Node, !- Name
+  {682fd730-3099-4dd6-8a01-149de1dd75e6}, !- Inlet Port
+  {d8437fa3-4efc-4eba-ac28-e287cb368e32}; !- Outlet Port
+
+OS:Connection,
+  {d8437fa3-4efc-4eba-ac28-e287cb368e32}, !- Handle
+  {77329591-f97a-4955-befb-995a9f59e609}, !- Name
+  {20526501-3131-4052-bd6e-c12d8e5a2753}, !- Source Object
+  3,                                      !- Outlet Port
+  {e95eecc2-55c3-4de1-99bb-7a31dd48c1ff}, !- Target Object
+  3;                                      !- Inlet Port
+
+OS:AirTerminal:SingleDuct:ConstantVolume:NoReheat,
   {e95eecc2-55c3-4de1-99bb-7a31dd48c1ff}, !- Handle
   Air Terminal Single Duct Uncontrolled 1, !- Name
   {ac27bd9e-96a8-4fed-b7aa-06b830184239}, !- Availability Schedule Name
-  {682fd730-3099-4dd6-8a01-149de1dd75e6}, !- Inlet Air Node Name
-  {69640d9c-2df1-48e3-a2ed-b7b211e55de2}, !- Zone Supply Air Node Name
+  {d8437fa3-4efc-4eba-ac28-e287cb368e32}, !- Air Inlet Node Name
+  {69640d9c-2df1-48e3-a2ed-b7b211e55de2}, !- Air Outlet Node Name
   AutoSize;                               !- Maximum Air Flow Rate {m3/s}
 
 OS:Controller:OutdoorAir,
@@ -2773,7 +2807,7 @@ OS:AirLoopHVAC,
   Air Loop HVAC 1,                        !- Name
   ,                                       !- Controller List Name
   {2a10bc52-cb2d-4a4a-a91e-d59204a88546}, !- Availability Schedule
-  ,                                       !- Availability Manager
+  {f83878b3-b8e6-44d6-af9d-60fd129d8338}, !- Availability Manager List Name
   AutoSize,                               !- Design Supply Air Flow Rate {m3/s}
   ,                                       !- Branch List Name
   ,                                       !- Connector List Name
@@ -2782,7 +2816,17 @@ OS:AirLoopHVAC,
   {718e601b-a6a4-4e69-ba90-1c6aeee6daa8}, !- Demand Side Inlet Node A
   {2a7e1904-be9e-4447-939d-5ac0f0fdc167}, !- Supply Side Outlet Node A
   ,                                       !- Demand Side Inlet Node B
-  ;                                       !- Supply Side Outlet Node B
+  ,                                       !- Supply Side Outlet Node B
+  ,                                       !- Return Air Bypass Flow Temperature Setpoint Schedule Name
+  ,                                       !- Demand Mixer Name
+  ,                                       !- Demand Splitter A Name
+  ,                                       !- Demand Splitter B Name
+  ;                                       !- Supply Splitter Name
+
+OS:AvailabilityManagerAssignmentList,
+  {f83878b3-b8e6-44d6-af9d-60fd129d8338}, !- Handle
+  Air Loop HVAC 1 AvailabilityManagerAssignmentList, !- Name
+  ;                                       !- Availability Manager Name 1
 
 OS:Node,
   {d23ccc0d-2206-4d45-ba97-61cd457755fa}, !- Handle
@@ -2879,7 +2923,7 @@ OS:Sizing:System,
   {85cf90c9-9555-4437-9e91-1210fbc84bdd}, !- AirLoop Name
   Sensible,                               !- Type of Load to Size On
   Autosize,                               !- Design Outdoor Air Flow Rate {m3/s}
-  0.3,                                    !- Minimum System Air Flow Ratio
+  0.3,                                    !- Central Heating Maximum System Air Flow Ratio
   7,                                      !- Preheat Design Temperature {C}
   0.008,                                  !- Preheat Design Humidity Ratio {kg-H2O/kg-Air}
   12.8,                                   !- Precool Design Temperature {C}
@@ -2931,8 +2975,8 @@ OS:Connection,
 OS:Connection,
   {5e7dd03f-e665-4b39-b57e-bca1d58755d5}, !- Handle
   Connection 13,                          !- Name
-  {fc71e57a-151a-46b8-a678-25e6fe6f7b47}, !- Source Object
-  12,                                     !- Outlet Port
+  {0eb16d93-0887-4057-a147-8d2da71323b8}, !- Source Object
+  3,                                      !- Outlet Port
   {1f57ab27-7640-49b5-8eb2-d9f55018c20c}, !- Target Object
   2;                                      !- Inlet Port
 
@@ -2942,14 +2986,6 @@ OS:Connection,
   {1f57ab27-7640-49b5-8eb2-d9f55018c20c}, !- Source Object
   3,                                      !- Outlet Port
   {c7de8071-03fa-4f40-89c0-5044a1d282ac}, !- Target Object
-  3;                                      !- Inlet Port
-
-OS:Connection,
-  {682fd730-3099-4dd6-8a01-149de1dd75e6}, !- Handle
-  Connection 10,                          !- Name
-  {82de5883-47f2-4491-a1b5-7f25cf1c9380}, !- Source Object
-  3,                                      !- Outlet Port
-  {e95eecc2-55c3-4de1-99bb-7a31dd48c1ff}, !- Target Object
   3;                                      !- Inlet Port
 
 OS:Connection,
@@ -3237,8 +3273,6 @@ OS:Building,
 
 OS:ClimateZones,
   {02f686a8-1787-4936-9a5f-61184b34e123}, !- Handle
-  ,                                       !- Active Institution
-  ,                                       !- Active Year
   ASHRAE,                                 !- Climate Zone Institution Name 1
   ANSI/ASHRAE Standard 169,               !- Climate Zone Document Name 1
   2006,                                   !- Climate Zone Document Year 1
@@ -3261,4 +3295,12 @@ OS:LifeCycleCost:Parameters,
   ,                                       !- Service Date Month
   ,                                       !- Service Date Year
   ;                                       !- Length of Study Period in Years
+
+OS:Connection,
+  {682fd730-3099-4dd6-8a01-149de1dd75e6}, !- Handle
+  Connection 10,                          !- Name
+  {82de5883-47f2-4491-a1b5-7f25cf1c9380}, !- Source Object
+  3,                                      !- Outlet Port
+  {20526501-3131-4052-bd6e-c12d8e5a2753}, !- Target Object
+  2;                                      !- Inlet Port
 
