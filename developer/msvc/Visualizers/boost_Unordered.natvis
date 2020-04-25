@@ -1,6 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
-<Type Name="boost::unordered::detail::table_impl&lt;boost::unordered::detail::map&lt;*,*,*&gt;&gt;">
+
+<!-- boost < 1.58 -->
+<Type Name="boost::unordered::detail::table_impl&lt;boost::unordered::detail::map&lt;*,*,*&gt;&gt;" Priority="MediumLow">
     <DisplayString>{{ size={size_} }}</DisplayString>
     <Expand>
         <LinkedListItems>
@@ -12,7 +14,36 @@
     </Expand>
 </Type>
 
-<Type Name="boost::unordered::detail::grouped_table_impl&lt;boost::unordered::detail::multimap&lt;*,*,*&gt;&gt;">
+<!-- boost >= 1.58 -->
+<Type Name="boost::unordered::detail::table_impl&lt;boost::unordered::detail::map&lt;*,*,*&gt;&gt;" Priority="Medium">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>size_</Size>
+            <HeadPointer>buckets_[bucket_count_].next_</HeadPointer>
+            <NextPointer>next_</NextPointer>
+            <ValueNode>*((std::pair&lt;$T2 const ,$T3&gt;*)&amp;((boost::unordered::detail::ptr_node&lt;std::pair&lt;$T2 const ,$T3&gt; &gt;*)this)-&gt;value_base_.data_)</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<!-- Starting in VS 2015, Update 2, they added a new visualization for map that shows the key in the name column,
+   and the value in the value column.  If desired, the "ShowElementsByIndex" view can be used to fall back to the prior
+   behavior and show the index in the name column and the key-value pair in the value column. -->
+<Type Name="boost::unordered::detail::table_impl&lt;boost::unordered::detail::map&lt;*,*,*&gt;&gt;" ExcludeView="ShowElementsByIndex" Priority="MediumHigh">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>size_</Size>
+            <HeadPointer>buckets_[bucket_count_].next_</HeadPointer>
+            <NextPointer>next_</NextPointer>
+            <ValueNode Name="[{(*((std::pair&lt;$T2 const ,$T3&gt;*)&amp;((boost::unordered::detail::ptr_node&lt;std::pair&lt;$T2 const ,$T3&gt; &gt;*)this)-&gt;value_base_.data_)).first}]">*((std::pair&lt;$T2 const ,$T3&gt;*)&amp;((boost::unordered::detail::ptr_node&lt;std::pair&lt;$T2 const ,$T3&gt; &gt;*)this)-&gt;value_base_.data_),view(MapHelper)</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<!-- boost < 1.58 -->
+<Type Name="boost::unordered::detail::grouped_table_impl&lt;boost::unordered::detail::multimap&lt;*,*,*&gt;&gt;" Priority="MediumLow">
     <DisplayString>{{ size={size_} }}</DisplayString>
     <Expand>
         <LinkedListItems>
@@ -24,7 +55,21 @@
     </Expand>
 </Type>
 
-<Type Name="boost::unordered::detail::table_impl&lt;boost::unordered::detail::set&lt;*,*&gt;&gt;">
+<!-- boost >= 1.58 -->
+<Type Name="boost::unordered::detail::grouped_table_impl&lt;boost::unordered::detail::multimap&lt;*,*,*&gt;&gt;" Priority="Medium">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>size_</Size>
+            <HeadPointer>buckets_[bucket_count_].next_</HeadPointer>
+            <NextPointer>next_</NextPointer>
+            <ValueNode>*((std::pair&lt;$T2 const ,$T3&gt;*)&amp;((boost::unordered::detail::grouped_ptr_node&lt;std::pair&lt;$T2 const ,$T3&gt; &gt;*)this)->value_base_.data_)</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<!-- boost < 1.58 -->
+<Type Name="boost::unordered::detail::table_impl&lt;boost::unordered::detail::set&lt;*,*&gt;&gt;" Priority="MediumLow">
     <DisplayString>{{ size={size_} }}</DisplayString>
     <Expand>
         <LinkedListItems>
@@ -36,14 +81,41 @@
     </Expand>
 </Type>
 
-<Type Name="boost::unordered::detail::grouped_table_impl&lt;boost::unordered::detail::multiset&lt;*,*&gt;&gt;">
+<!-- boost >= 1.58 -->
+<Type Name="boost::unordered::detail::table_impl&lt;boost::unordered::detail::set&lt;*,*&gt;&gt;" Priority="Medium">
     <DisplayString>{{ size={size_} }}</DisplayString>
     <Expand>
         <LinkedListItems>
             <Size>size_</Size>
             <HeadPointer>buckets_[bucket_count_].next_</HeadPointer>
             <NextPointer>next_</NextPointer>
-            <ValueNode>*(($T2*)&amp;((boost::unordered::detail::grouped_ptr_node&lt;$T2&gt;*)this)->data_)</ValueNode>
+            <ValueNode>*(($T2*)&amp;((boost::unordered::detail::ptr_node&lt;$T2&gt;*)this)->value_base_.data_)</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<!-- boost < 1.58 -->
+<Type Name="boost::unordered::detail::grouped_table_impl&lt;boost::unordered::detail::multiset&lt;*,*&gt;&gt;" Priority="MediumLow">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>size_</Size>
+            <HeadPointer>buckets_[bucket_count_].next_</HeadPointer>
+            <NextPointer>next_</NextPointer>
+            <ValueNode>*(($T2*)&amp;((boost::unordered::detail::grouped_ptr_node&lt;$T2&gt;*)this)-&gt;data_)</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<!-- boost >= 1.58 -->
+<Type Name="boost::unordered::detail::grouped_table_impl&lt;boost::unordered::detail::multiset&lt;*,*&gt;&gt;" Priority="Medium">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>size_</Size>
+            <HeadPointer>buckets_[bucket_count_].next_</HeadPointer>
+            <NextPointer>next_</NextPointer>
+            <ValueNode>*(($T2*)&amp;((boost::unordered::detail::grouped_ptr_node&lt;$T2&gt;*)this)-&gt;value_base_.data_)</ValueNode>
         </LinkedListItems>
     </Expand>
 </Type>

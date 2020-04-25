@@ -1,0 +1,47 @@
+Run files with corresponding version of EnergyPlus and copy of `USA_CO_Golden-NREL.724666_TMY3.epw` for that version.
+
+*Note*: the weather file does change across versions of EnergyPlus. (Actually, it hasn't changed since 8.2.0)
+
+
+Get file from E+ Github:
+
+```
+wget https://raw.githubusercontent.com/NREL/EnergyPlus/v9.2.0/testfiles/1ZoneEvapCooler.idf && mv 1ZoneEvapCooler.idf 1ZoneEvapCooler-V9-2-0.idf
+```
+
+
+Replace
+
+```
+  Output:Variable,*,Zone Mean Air Temperature,hourly;
+```
+
+With:
+
+```
+  Output:Variable,*,Zone Mean Air Temperature,Annual;
+
+  Output:Variable,*,Zone Mean Air Temperature,Annual;
+
+  Output:Variable,*,Zone Mean Air Temperature,RunPeriod;
+
+  Output:Variable,*,Zone Mean Air Temperature,Environment;
+
+  Output:Variable,*,Zone Mean Air Temperature,Monthly;
+
+  Output:Variable,*,Zone Mean Air Temperature,Daily;
+
+  Output:Variable,*,Zone Mean Air Temperature,Hourly;
+
+  Output:Variable,*,Zone Mean Air Temperature,Timestep;
+
+  Output:Variable,*,Zone Mean Air Temperature,Detailed;
+```
+
+And add:
+
+```
+  Output:SQLite,
+    SimpleAndTabular;        !- Option Type
+
+```

@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+<Type Name="boost::multi_array&lt;*,*&gt;">
+    <DisplayString>extent = {extent_list_,view(expand)}</DisplayString>
+    <Expand>
+        <ArrayItems>
+            <Rank>$T2</Rank>
+            <Size>extent_list_[$i]</Size>
+            <ValuePointer>base_</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::detail::multi_array::multi_array_view&lt;*,1&gt;">
+    <DisplayString>extent = {extent_list_,view(expand)}</DisplayString>
+    <Expand>
+        <ArrayItems Condition="base_ != 0">
+            <Rank>1</Rank>
+            <Size>extent_list_[0]</Size>
+            <ValuePointer>($T1*)base_</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::detail::multi_array::multi_array_view&lt;*,2&gt;">
+    <DisplayString>extent = {extent_list_,view(expand)}</DisplayString>
+    <Expand>
+        <IndexListItems Condition="base_ != 0">
+            <Size>extent_list_[0]</Size>
+            <ValueNode>(base_ + origin_offset_ + stride_list_[0] * $i),[extent_list_[1]]na</ValueNode>
+        </IndexListItems>
+    </Expand>
+</Type>
+
+</AutoVisualizer>

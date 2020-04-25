@@ -28,7 +28,7 @@
 </Type>
 
 <Type Name="boost::numeric::ublas::compressed_vector&lt;*&gt;">
-    <DisplayString>{{ size={size_} }}</DisplayString>
+    <DisplayString>{{ size={size_} filled={filled_} }}</DisplayString>
     <Expand>
         <Item Name="[size]" ExcludeView="simple">size_</Item>
         <Item Name="[capacity]" ExcludeView="simple">capacity_</Item>
@@ -38,10 +38,55 @@
     </Expand>
 </Type>
 
+<Type Name="boost::numeric::ublas::coordinate_vector&lt;*&gt;">
+    <DisplayString>{{ size={size_} filled={filled_} }}</DisplayString>
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">size_</Item>
+        <Item Name="[capacity]" ExcludeView="simple">capacity_</Item>
+        <Item Name="[sorted]" ExcludeView="simple">sorted_</Item>
+        <Item Name="[filled]" ExcludeView="simple">filled_</Item>
+        <Item Name="[sorted_filled]" ExcludeView="simple">sorted_filled_</Item>
+        <Item Name="index_data">index_data_</Item>
+        <Item Name="value_data">value_data_</Item>
+    </Expand>
+</Type>
+
 <Type Name="boost::numeric::ublas::matrix&lt;*&gt;">
     <DisplayString>{{ size={size1_}x{size2_} }}</DisplayString>
     <Expand>
-        <ExpandedItem>data_</ExpandedItem>
+        <Item Name="[size]" ExcludeView="simple">data_.size_</Item>
+        <ArrayItems>
+            <Direction>Forward</Direction>
+            <Rank>2</Rank>
+            <Size Condition="$i == 0">size1_</Size>
+            <Size Condition="$i == 1">size2_</Size>
+            <ValuePointer>data_.data_</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::numeric::ublas::identity_matrix&lt;*&gt;">
+    <DisplayString>{{ size={size1_}x{size2_} }}</DisplayString>
+    <Expand>
+        <Item Name="[size1]" ExcludeView="simple">size1_</Item>
+        <Item Name="[size2]" ExcludeView="simple">size2_</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::numeric::ublas::zero_matrix&lt;*&gt;">
+    <DisplayString>{{ size={size1_}x{size2_} }}</DisplayString>
+    <Expand>
+        <Item Name="[size1]" ExcludeView="simple">size1_</Item>
+        <Item Name="[size2]" ExcludeView="simple">size2_</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::numeric::ublas::scalar_matrix&lt;*&gt;">
+    <DisplayString>{{ size={size1_}x{size2_} }}</DisplayString>
+    <Expand>
+        <Item Name="[size1]" ExcludeView="simple">size1_</Item>
+        <Item Name="[size2]" ExcludeView="simple">size2_</Item>
+        <Item Name="[value]" ExcludeView="simple">value_</Item>
     </Expand>
 </Type>
 

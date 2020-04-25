@@ -1,4 +1,4 @@
-src_dir = File.join(File.dirname(__FILE__), "../../openstudiocore/src/model/")
+src_dir = File.join(File.dirname(__FILE__), "../../src/model/")
 module_depends = {}
 module_depends['ModelCore.i'] = nil
 module_depends['ModelSimulation.i'] = 'ModelCore.i'
@@ -9,9 +9,9 @@ module_depends['ModelZoneHVAC.i'] = 'ModelHVAC.i'
 module_depends['ModelAvailabilityManager.i'] = 'ModelHVAC.i'
 module_depends['ModelPlantEquipmentOperationScheme.i'] = 'ModelHVAC.i'
 module_depends['ModelStraightComponent.i'] = 'ModelZoneHVAC.i'
-module_depends['ModelAirflow.i'] = 'ModelStraightComponent.i'
-module_depends['ModelRefrigeration.i'] = 'ModelStraightComponent.i'
-module_depends['ModelGenerators.i'] = 'ModelStraightComponent.i'
+module_depends['ModelAirflow.i'] = 'ModelHVAC.i'
+module_depends['ModelRefrigeration.i'] = 'ModelZoneHVAC.i'
+module_depends['ModelGenerators.i'] = 'ModelHVAC.i'
 
 module_depends_array = {}
 module_depends.each do |key, value|

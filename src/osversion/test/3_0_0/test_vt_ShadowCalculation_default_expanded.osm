@@ -1,0 +1,13 @@
+
+OS:Version,
+  {ed03ed4c-1828-4a30-a2c8-64e1c12ff5ce}, !- Handle
+  2.9.1;                                  !- Version Identifier
+
+OS:ShadowCalculation,
+  {0f93d9e1-bdda-4e2a-829b-e4fff92527d0}, !- Handle
+  20,                                     !- Calculation Frequency
+  15000,                                  !- Maximum Figures in Shadow Overlap Calculations
+  ,                                       !- Polygon Clipping Algorithm
+  ,                                       !- Sky Diffuse Modeling Algorithm
+  ;                                       !- Calculation Method
+

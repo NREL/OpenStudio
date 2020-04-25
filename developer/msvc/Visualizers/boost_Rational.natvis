@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+<!-- Start with debug_adapor -->
+<Type Name="boost::rational&lt;*&gt;">
+    <DisplayString>{num}/{den}</DisplayString>
+    <Expand>
+        <Item Name="Numerator">num</Item>
+        <Item Name="Denominator">den</Item>
+    </Expand>
+</Type>
+
+</AutoVisualizer>

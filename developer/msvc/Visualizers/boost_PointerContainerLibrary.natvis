@@ -18,13 +18,15 @@
 </Type>
 
 <Type Name="boost::void_ptr_iterator&lt;void**,*&gt;">
-    <DisplayString>{($T1*)(*iter_)}</DisplayString>
+    <SmartPointer Usage="Minimal">($T1*)(*iter_)</SmartPointer>
+    <DisplayString>{($T1*)(*iter_),na}</DisplayString>
     <Expand>
         <Item Name="[ptr]">($T1*)(*iter_)</Item>
     </Expand>
 </Type>
 
-<Type Name="boost::ptr_vector&lt;*,*&gt;">
+<!-- VS2013 -->
+<Type Name="boost::ptr_vector&lt;*,*&gt;" Priority="MediumLow">
     <AlternativeType Name="boost::ptr_vector&lt;boost::nullable&lt;*&gt;,*&gt;" />
     <DisplayString>{{ size={c_._Mylast - c_._Myfirst} }}</DisplayString>
     <Expand>
@@ -37,15 +39,31 @@
     </Expand>
 </Type>
 
+<!-- VS2015 -->
+<Type Name="boost::ptr_vector&lt;*,*&gt;" Priority="Medium">
+    <AlternativeType Name="boost::ptr_vector&lt;boost::nullable&lt;*&gt;,*&gt;" />
+    <DisplayString>{{ size={c_._Mypair._Myval2._Mylast - c_._Mypair._Myval2._Myfirst} }}</DisplayString>
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">c_._Mypair._Myval2._Mylast - c_._Mypair._Myval2._Myfirst</Item>
+        <Item Name="[capacity]" ExcludeView="simple">c_._Mypair._Myval2._Myend - c_._Mypair._Myval2._Myfirst</Item>
+        <ArrayItems>
+            <Size>c_._Mypair._Myval2._Mylast - c_._Mypair._Myval2._Myfirst</Size>
+            <ValuePointer>($T1**)c_._Mypair._Myval2._Myfirst</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
 <Type Name="boost::void_ptr_iterator&lt;std::_Vector_iterator&lt;*&gt;,*&gt;">
     <AlternativeType Name="boost::void_ptr_iterator&lt;std::_Vector_const_iterator&lt;*&gt;,*&gt;" />
+    <SmartPointer Usage="Minimal">($T2*)(*iter_._Ptr)</SmartPointer>
     <DisplayString>{($T2*)(*iter_._Ptr)}</DisplayString>
     <Expand>
         <Item Name="[ptr]">($T2*)(*iter_._Ptr)</Item>
     </Expand>
 </Type>
 
-<Type Name="boost::ptr_map&lt;*,*&gt;">
+<!-- VS2013 -->
+<Type Name="boost::ptr_map&lt;*,*&gt;" Priority="MediumLow">
     <AlternativeType Name="boost::ptr_multimap&lt;*,*&gt;" />
     <DisplayString>{{ size={c_._Mysize} }}</DisplayString>
     <Expand>
@@ -59,15 +77,56 @@
     </Expand>
 </Type>
 
-<Type Name="boost::ptr_map_iterator&lt;*,*,*&gt;">
-    <DisplayString>{m_iterator._Ptr-&gt;_Myval.first}, {($T3)m_iterator._Ptr-&gt;_Myval.second}</DisplayString>
+<!-- VS2015 -->
+<Type Name="boost::ptr_map&lt;*,*&gt;" Priority="Medium">
+    <AlternativeType Name="boost::ptr_map&lt;*,*,*&gt;" />
+    <AlternativeType Name="boost::ptr_multimap&lt;*,*&gt;" />
+    <AlternativeType Name="boost::ptr_multimap&lt;*,*,*&gt;" />
+    <DisplayString>{{ size={c_._Mypair._Myval2._Myval2._Mysize} }}</DisplayString>
     <Expand>
-        <Item Name="first">m_iterator._Ptr-&gt;_Myval.first</Item>
-        <Item Name="second">($T3)m_iterator._Ptr-&gt;_Myval.second</Item>
+        <TreeItems>
+            <Size>c_._Mypair._Myval2._Myval2._Mysize</Size>
+            <HeadPointer>c_._Mypair._Myval2._Myval2._Myhead-&gt;_Parent</HeadPointer>
+            <LeftPointer>_Left</LeftPointer>
+            <RightPointer>_Right</RightPointer>
+            <ValueNode Condition="_Isnil == 0">*(std::pair&lt;$T1,$T2 *&gt;*)&amp;(_Myval)</ValueNode>
+        </TreeItems>
     </Expand>
 </Type>
 
-<Type Name="boost::ptr_set&lt;*&gt;">
+<!-- Starting in VS 2015, Update 2, they added a new visualization for map that shows the key in the name column,
+   and the value in the value column.  If desired, the "ShowElementsByIndex" view can be used to fall back to the prior
+   behavior and show the index in the name column and the key-value pair in the value column. -->
+<Type Name="boost::ptr_map&lt;*,*&gt;" ExcludeView="ShowElementsByIndex" Priority="MediumHigh">
+    <AlternativeType Name="boost::ptr_map&lt;*,*,*&gt;" />
+    <AlternativeType Name="boost::ptr_multimap&lt;*,*&gt;" />
+    <AlternativeType Name="boost::ptr_multimap&lt;*,*,*&gt;" />
+    <DisplayString>{{ size={c_._Mypair._Myval2._Myval2._Mysize} }}</DisplayString>
+    <Expand>
+        <TreeItems>
+            <Size>c_._Mypair._Myval2._Myval2._Mysize</Size>
+            <HeadPointer>c_._Mypair._Myval2._Myval2._Myhead-&gt;_Parent</HeadPointer>
+            <LeftPointer>_Left</LeftPointer>
+            <RightPointer>_Right</RightPointer>
+            <ValueNode Condition="_Isnil == 0" Name="[{_Myval.first}]">*(std::pair&lt;$T1,$T2 *&gt;*)&amp;(_Myval),view(MapHelper)</ValueNode>
+        </TreeItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::ptr_map_iterator&lt;std::_Tree_iterator&lt;*&gt;,*,*&gt;">
+    <AlternativeType Name="boost::ptr_map_iterator&lt;std::_Tree_const_iterator&lt;*&gt;,*,*&gt;" />
+    <Intrinsic Name="first" Expression="m_iterator._Ptr-&gt;_Myval.first"/>
+    <Intrinsic Name="second" Expression="*(($T3*)&amp;m_iterator._Ptr-&gt;_Myval.second)"/>
+    <SmartPointer Usage="Minimal">m_iterator._Ptr-&gt;_Isnil ? nullptr : &amp;(m_iterator._Ptr-&gt;_Myval)</SmartPointer>
+    <DisplayString Condition="m_iterator._Ptr-&gt;_Isnil == 0">({first()}, {second()})</DisplayString>
+    <DisplayString Condition="m_iterator._Ptr-&gt;_Isnil != 0">end</DisplayString>
+    <Expand>
+        <Synthetic Condition="m_iterator._Ptr-&gt;_Isnil == 0" Name="[ptr]"><DisplayString>({first()}, {second()})</DisplayString></Synthetic>
+    </Expand>
+</Type>
+
+<!-- VS2013 -->
+<Type Name="boost::ptr_set&lt;*&gt;" Priority="MediumLow">
     <AlternativeType Name="boost::ptr_multiset&lt;*&gt;" />
     <DisplayString>{{ size={c_._Mysize} }}</DisplayString>
     <Expand>
@@ -81,15 +140,31 @@
     </Expand>
 </Type>
 
+<!-- VS2015 -->
+<Type Name="boost::ptr_set&lt;*&gt;" Priority="Medium">
+    <AlternativeType Name="boost::ptr_multiset&lt;*&gt;" />
+    <DisplayString>{{ size={c_._Mypair._Myval2._Myval2._Mysize} }}</DisplayString>
+    <Expand>
+        <TreeItems>
+            <Size>c_._Mypair._Myval2._Myval2._Mysize</Size>
+            <HeadPointer>c_._Mypair._Myval2._Myval2._Myhead-&gt;_Parent</HeadPointer>
+            <LeftPointer>_Left</LeftPointer>
+            <RightPointer>_Right</RightPointer>
+            <ValueNode Condition="_Isnil == 0">($T1*)_Myval</ValueNode>
+        </TreeItems>
+    </Expand>
+</Type>
+
 <Type Name="boost::void_ptr_iterator&lt;std::_Tree_iterator&lt;*&gt;,*&gt;">
     <AlternativeType Name="boost::void_ptr_iterator&lt;std::_Tree_const_iterator&lt;*&gt;,*&gt;" />
-    <DisplayString>{($T2*)(iter_._Ptr-&gt;_Myval)}</DisplayString>
+    <SmartPointer Usage="Minimal">($T2*)(iter_._Ptr-&gt;_Myval)</SmartPointer>
     <Expand>
         <Item Name="[ptr]">($T2*)(iter_._Ptr-&gt;_Myval)</Item>
     </Expand>
 </Type>
 
-<Type Name="boost::ptr_list&lt;*&gt;">
+<!-- VS2013 -->
+<Type Name="boost::ptr_list&lt;*&gt;" Priority="MediumLow">
     <AlternativeType Name="boost::ptr_list&lt;boost::nullable&lt;*&gt;,*&gt;" />
     <DisplayString>{{ size={c_._Mysize} }}</DisplayString>
     <Expand>
@@ -102,21 +177,48 @@
     </Expand>
 </Type>
 
+<!-- VS2015 -->
+<Type Name="boost::ptr_list&lt;*&gt;" Priority="Medium">
+    <AlternativeType Name="boost::ptr_list&lt;boost::nullable&lt;*&gt;,*&gt;" />
+    <DisplayString>{{ size={c_._Mypair._Myval2._Mysize} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>c_._Mypair._Myval2._Mysize</Size>
+            <HeadPointer>c_._Mypair._Myval2._Myhead-&gt;_Next</HeadPointer>
+            <NextPointer>_Next</NextPointer>
+            <ValueNode>($T1*)_Myval</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
 <Type Name="boost::void_ptr_iterator&lt;std::_List_iterator&lt;*&gt;,*&gt;">
     <AlternativeType Name="boost::void_ptr_iterator&lt;std::_List_const_iterator&lt;*&gt;,*&gt;" />
-    <DisplayString>{($T2*)(iter_._Ptr-&gt;_Myval)}</DisplayString>
+    <SmartPointer Usage="Minimal">($T2*)(iter_._Ptr-&gt;_Myval)</SmartPointer>
     <Expand>
         <Item Name="[ptr]">($T2*)(iter_._Ptr-&gt;_Myval)</Item>
     </Expand>
 </Type>
 
-<Type Name="boost::ptr_deque&lt;*&gt;">
+<!-- VS2013 -->
+<Type Name="boost::ptr_deque&lt;*&gt;" Priority="MediumLow">
     <AlternativeType Name="boost::ptr_deque&lt;boost::nullable&lt;*&gt;,*&gt;" />
     <DisplayString>{{ size={c_._Mysize} }}</DisplayString>
     <Expand>
         <IndexListItems>
             <Size>c_._Mysize</Size>
             <ValueNode>($T1*)c_._Map[(($i + c_._Myoff) / c_._EEN_DS) % c_._Mapsize][($i + c_._Myoff) % c_._EEN_DS]</ValueNode>
+        </IndexListItems>
+    </Expand>
+</Type>
+
+<!-- VS2015 -->
+<Type Name="boost::ptr_deque&lt;*&gt;" Priority="Medium">
+    <AlternativeType Name="boost::ptr_deque&lt;boost::nullable&lt;*&gt;,*&gt;" />
+    <DisplayString>{{ size={c_._Mypair._Myval2._Mysize} }}</DisplayString>
+    <Expand>
+        <IndexListItems>
+            <Size>c_._Mypair._Myval2._Mysize</Size>
+            <ValueNode>($T1*)c_._Mypair._Myval2._Map[(($i + c_._Mypair._Myval2._Myoff) / c_._EEN_DS) % c_._Mypair._Myval2._Mapsize][($i + c_._Mypair._Myval2._Myoff) % c_._EEN_DS]</ValueNode>
         </IndexListItems>
     </Expand>
 </Type>

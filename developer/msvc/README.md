@@ -1,6 +1,6 @@
-##Visual Studio 2013 Debugger Visualizers
+##Visual Studio 2017 Debugger Visualizers
 
-Copy the contents of the Visualizers directory to `C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Packages\Debugger\Visualizers`
+Copy the contents of the Visualizers directory to `C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\Common7\Packages\Debugger\Visualizers`
 
 ######To debug visualizer entries
 Add the following registry setting:

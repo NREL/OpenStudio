@@ -1,0 +1,122 @@
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
+
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/PlantEquipmentOperationHeatingLoad.hpp"
+#include "../../model/PlantEquipmentOperationHeatingLoad_Impl.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/Assert.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/PlantEquipmentOperation_HeatingLoad_FieldEnums.hxx>
+#include <utilities/idd/PlantEquipmentList_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
+
+// Special case
+#include "../../model/GeneratorMicroTurbineHeatRecovery.hpp"
+#include "../../model/GeneratorMicroTurbineHeatRecovery_Impl.hpp"
+#include "../../model/GeneratorMicroTurbine.hpp"
+#include "../../model/GeneratorMicroTurbine_Impl.hpp"
+
+using namespace openstudio::model;
+
+using namespace std;
+
+namespace openstudio {
+
+namespace energyplus {
+
+boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationHeatingLoad( PlantEquipmentOperationHeatingLoad & modelObject )
+{
+  IdfObject idfObject(IddObjectType::PlantEquipmentOperation_HeatingLoad);
+  m_idfObjects.push_back(idfObject);
+
+  // Name
+  auto name = modelObject.name().get();
+  idfObject.setName(name);
+
+  double lowerLimit = modelObject.minimumLowerLimit();
+  int i = 1;
+  for( auto upperLimit : modelObject.loadRangeUpperLimits() ) {
+    auto equipment = modelObject.equipment(upperLimit);
+    if( ! equipment.empty() ) {
+      auto eg = idfObject.pushExtensibleGroup();
+      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeLowerLimit,lowerLimit);
+      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeUpperLimit,upperLimit);
+
+      IdfObject equipmentList(IddObjectType::PlantEquipmentList);
+      m_idfObjects.push_back(equipmentList);
+      auto equipmentListName = name + " equipment list " + std::to_string(i);
+      equipmentList.setName(equipmentListName);
+      eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName,equipmentListName);
+
+      for( auto component : equipment )
+      {
+
+        // TODO: Find the right way to deal with this
+        // For now, "dirty" (?) fix for Generator:MicroTurbine
+        // @kbenne, FYI
+        boost::optional<IdfObject> idf_component;
+
+        // If you find a mCHPHR
+        if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = component.optionalCast<GeneratorMicroTurbineHeatRecovery>())
+        {
+          // Get the parent mchp and translate that, which will pull the appropriate fields from the mchpHR
+          // But we need the name of the mchp for the plant equipment list, not the mchpHR
+          GeneratorMicroTurbine mchp = mchpHR->generatorMicroTurbine();
+          idf_component = translateAndMapModelObject(mchp);
+          LOG(Trace, "Found a mchpHR, instead translated " << idf_component->briefDescription());
+        }
+        else
+        {
+          idf_component = translateAndMapModelObject(component);
+        }
+
+        auto eg2 = equipmentList.pushExtensibleGroup();
+        OS_ASSERT(idf_component);
+        eg2.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idf_component->iddObject().name());
+        eg2.setString(PlantEquipmentListExtensibleFields::EquipmentName,idf_component->name().get());
+      }
+    }
+
+    lowerLimit = upperLimit;
+    ++i;
+  }
+
+  return idfObject;
+}
+
+} // energyplus
+
+} // openstudio
+
