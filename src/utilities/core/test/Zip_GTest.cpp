@@ -36,14 +36,8 @@
 #include "CoreFixture.hpp"
 #include "../UnzipFile.hpp"
 #include "../ZipFile.hpp"
+#include "../Path.hpp"
 
-
-#if (defined (_WIN32) || defined (_WIN64))
-std::ostream& operator<<(std::ostream& t_o, const openstudio::path &t_path)
-{
-  return t_o << openstudio::toString(t_path);
-}
-#endif
 
 TEST_F(CoreFixture, Unzip_NonExistTest)
 {

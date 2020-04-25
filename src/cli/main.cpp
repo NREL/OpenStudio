@@ -39,7 +39,10 @@
 #include <dlfcn.h>
 #include <dirent.h>
 #else
-#include <windows.h>
+#  ifndef WIN32_LEAN_AND_MEAN
+#    define WIN32_LEAN_AND_MEAN
+#  endif
+#  include <windows.h>
 #pragma warning(disable : 4930 )
 #pragma warning(disable : 4101 )
 #endif

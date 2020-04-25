@@ -34,7 +34,10 @@
 #include <boost/regex.hpp>
 
 #if (defined (_WIN32) || defined (_WIN64))
-#include <Windows.h>
+#  ifndef WIN32_LEAN_AND_MEAN
+#    define WIN32_LEAN_AND_MEAN
+#  endif
+#  include <Windows.h>
 #endif
 
 namespace openstudio {
