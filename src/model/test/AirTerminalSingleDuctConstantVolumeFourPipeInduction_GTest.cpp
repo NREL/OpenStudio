@@ -51,10 +51,10 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_AirTerm
 
   ASSERT_EXIT (
   {
-    Model m;
-    Schedule s = m.alwaysOnDiscreteSchedule();
-    CoilHeatingWater heatingCoil(m,s);
-    AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m,heatingCoil);
+    openstudio::model::Model m;
+    openstudio::model::Schedule s = m.alwaysOnDiscreteSchedule();
+    openstudio::model::CoilHeatingWater heatingCoil(m,s);
+    openstudio::model::AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m,heatingCoil);
 
     exit(0);
   } ,
@@ -62,34 +62,34 @@ TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_AirTerm
 }
 
 TEST_F(ModelFixture,AirTerminalSingleDuctConstantVolumeFourPipeInduction_addToNode) {
-  Model m;
-  Schedule s = m.alwaysOnDiscreteSchedule();
-  CoilHeatingWater heatingCoil(m,s);
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m,heatingCoil);
+  openstudio::model::Model m;
+  openstudio::model::Schedule s = m.alwaysOnDiscreteSchedule();
+  openstudio::model::CoilHeatingWater heatingCoil(m,s);
+  openstudio::model::AirTerminalSingleDuctConstantVolumeFourPipeInduction testObject(m,heatingCoil);
 
-  AirLoopHVAC airLoop(m);
+  openstudio::model::AirLoopHVAC airLoop(m);
 
-  Node supplyOutletNode = airLoop.supplyOutletNode();
+  auto supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
 
-  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+  auto inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<openstudio::model::Node>();
 
   EXPECT_TRUE(testObject.addToNode(inletNode));
   EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
 
-  PlantLoop plantLoop(m);
+  openstudio::model::PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
 
-  Node demandOutletNode = plantLoop.demandOutletNode();
+  auto demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
-  AirTerminalSingleDuctConstantVolumeFourPipeInduction testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
-  inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+  auto testObjectClone = testObject.clone(m).cast<openstudio::model::AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<openstudio::model::Node>();
 
   EXPECT_FALSE(testObjectClone.addToNode(inletNode));
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
@@ -152,7 +152,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_clone)
   plantLoop.addDemandBranchForComponent(heatingCoil);
   plantLoop.addDemandBranchForComponent(coolingCoil);
 
-  auto testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  auto testObjectClone = testObject.clone(m).cast<openstudio::model::AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
   ASSERT_NO_THROW(testObjectClone.heatingCoil());
   ASSERT_TRUE(testObjectClone.coolingCoil());
   EXPECT_FALSE(testObjectClone.airLoopHVAC());
@@ -162,7 +162,7 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeFourPipeInduction_clone)
 
   openstudio::model::Model m2;
 
-  auto testObjectClone2 = testObject.clone(m2).cast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
+  auto testObjectClone2 = testObject.clone(m2).cast<openstudio::model::AirTerminalSingleDuctConstantVolumeFourPipeInduction>();
   ASSERT_NO_THROW(testObjectClone2.heatingCoil());
   ASSERT_TRUE(testObjectClone2.coolingCoil());
   EXPECT_FALSE(testObjectClone.airLoopHVAC());

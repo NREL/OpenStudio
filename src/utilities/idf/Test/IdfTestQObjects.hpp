@@ -41,7 +41,7 @@
 class WorkspaceReciever  {
  public:
 
-  WorkspaceReciever(const Workspace& workspace)
+  WorkspaceReciever(const openstudio::Workspace& workspace)
   {
 
     // Due to the switch to Nano Signals and Slots, testing for connects are no longer
@@ -73,20 +73,20 @@ class WorkspaceReciever  {
 
   std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> m_objectImpl;
 
-  boost::optional<IddObjectType> m_iddObjectType;
+  boost::optional<openstudio::IddObjectType> m_iddObjectType;
 
-  boost::optional<Handle> m_handle;
+  boost::optional<openstudio::Handle> m_handle;
 
  public:
 
-  void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+  void removeWorkspaceObject(const openstudio::WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
   {
     m_objectImpl = object.getImpl<openstudio::detail::WorkspaceObject_Impl>();
     m_iddObjectType = iddObjectType;
     m_handle = handle;
   }
 
-  void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
+  void addWorkspaceObject(const openstudio::WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
   {
     m_objectImpl = object.getImpl<openstudio::detail::WorkspaceObject_Impl>();
     m_iddObjectType = iddObjectType;

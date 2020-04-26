@@ -71,7 +71,7 @@ TEST_F(UnitsFixture,ScaleFactory_CreateFromAbbreviation) {
   LOG(Debug,"ScaleFactory_CreateFromAbbreviation");
 
   // in factory
-  openstudio::ScaleConstant s = ScaleFactory::instance().createScale("P");
+  openstudio::ScaleConstant s = openstudio::ScaleFactory::instance().createScale("P");
   ASSERT_EQ(15,s().exponent);
   ASSERT_EQ("peta",s().name);
 

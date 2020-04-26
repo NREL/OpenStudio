@@ -73,27 +73,27 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat_addToNode) {
 
   openstudio::model::AirLoopHVAC airLoop(m);
 
-  Node supplyOutletNode = airLoop.supplyOutletNode();
+  openstudio::model::Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
 
-  Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+  auto inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<openstudio::model::Node>();
 
   EXPECT_TRUE(testObject.addToNode(inletNode));
   EXPECT_EQ((unsigned)7, airLoop.demandComponents().size());
 
-  PlantLoop plantLoop(m);
+  openstudio::model::PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
 
-  Node demandOutletNode = plantLoop.demandOutletNode();
+  openstudio::model::Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
   EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
 
-  AirTerminalSingleDuctParallelPIUReheat testObjectClone = testObject.clone(m).cast<AirTerminalSingleDuctParallelPIUReheat>();
-  inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
+  auto testObjectClone = testObject.clone(m).cast<openstudio::model::AirTerminalSingleDuctParallelPIUReheat>();
+  inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<openstudio::model::Node>();
 
   EXPECT_FALSE(testObjectClone.addToNode(inletNode));
   EXPECT_TRUE(airLoop.addBranchForHVACComponent(testObjectClone));
@@ -151,7 +151,7 @@ TEST_F(ModelFixture,AirTerminalSingleDuctParallelPIUReheat) {
     auto zoneImpl = zone.getImpl<openstudio::model::detail::ThermalZone_Impl>();
     auto exhaustMo = zoneImpl->exhaustPortList().lastModelObject();
     ASSERT_TRUE(exhaustMo);
-    auto exhaustNode = exhaustMo->optionalCast<Node>();
+    auto exhaustNode = exhaustMo->optionalCast<openstudio::model::Node>();
     ASSERT_TRUE(exhaustNode);
     ASSERT_TRUE(exhaustNode->outletModelObject());
     ASSERT_EQ(terminal,exhaustNode->outletModelObject().get());
