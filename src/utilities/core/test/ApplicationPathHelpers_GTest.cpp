@@ -37,45 +37,48 @@
 #include <future>
 
 // TODO: GTEST 1.9 should have a GTEST_SKIP macro we could use
-#define SKIP(TEST_NAME) \
-do{\
-   std::cout << "[  SKIPPED ] " << #TEST_NAME << ": symlink tests can only be run with administrator rights on windows (elevated cmd.exe)" << std::endl;\
-   return;\
-} while(0)
+#define SKIP(TEST_NAME)                                                                                                                     \
+  do {                                                                                                                                      \
+    std::cout << "[  SKIPPED ] " << #TEST_NAME << ": symlink tests can only be run with administrator rights on windows (elevated cmd.exe)" \
+              << std::endl;                                                                                                                 \
+    return;                                                                                                                                 \
+  } while (0)
 
 #if defined(_WIN32)
-#include <Windows.h>
+#  ifndef WIN32_LEAN_AND_MEAN
+#    define WIN32_LEAN_AND_MEAN
+#  endif
+#  include <Windows.h>
 
 // A wrapper to implement setenv on Windows like on Unix, using _putenv internally
-int setenv(const char *name, const char *value, int overwrite)
-{
-    int errcode = 0;
-    if(!overwrite) {
-        size_t envsize = 0;
-        errcode = getenv_s(&envsize, NULL, 0, name);
-        if(errcode || envsize) return errcode;
-    }
-    return _putenv_s(name, value);
+int setenv(const char* name, const char* value, int overwrite) {
+  int errcode = 0;
+  if (!overwrite) {
+    size_t envsize = 0;
+    errcode = getenv_s(&envsize, NULL, 0, name);
+    if (errcode || envsize) return errcode;
+  }
+  return _putenv_s(name, value);
 }
 
-void unsetenv(const char *name) {
+void unsetenv(const char* name) {
   _putenv_s(name, "");
 }
 
 BOOL IsElevated() {
-    BOOL fRet = FALSE;
-    HANDLE hToken = NULL;
-    if( OpenProcessToken( GetCurrentProcess( ),TOKEN_QUERY,&hToken ) ) {
-        TOKEN_ELEVATION Elevation;
-        DWORD cbSize = sizeof( TOKEN_ELEVATION );
-        if( GetTokenInformation( hToken, TokenElevation, &Elevation, sizeof( Elevation ), &cbSize ) ) {
-            fRet = Elevation.TokenIsElevated;
-        }
+  BOOL fRet = FALSE;
+  HANDLE hToken = NULL;
+  if (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken)) {
+    TOKEN_ELEVATION Elevation;
+    DWORD cbSize = sizeof(TOKEN_ELEVATION);
+    if (GetTokenInformation(hToken, TokenElevation, &Elevation, sizeof(Elevation), &cbSize)) {
+      fRet = Elevation.TokenIsElevated;
     }
-    if( hToken ) {
-        CloseHandle( hToken );
-    }
-    return fRet;
+  }
+  if (hToken) {
+    CloseHandle(hToken);
+  }
+  return fRet;
 }
 #else
 bool IsElevated() {
@@ -83,11 +86,9 @@ bool IsElevated() {
 }
 #endif
 
-
 using namespace openstudio;
 
-TEST(ApplicationPathHelpers, Strings)
-{
+TEST(ApplicationPathHelpers, Strings) {
   path applicationPath = getApplicationPath();
   path applicationDir = getApplicationDirectory();
   path openstudioModule = getOpenStudioModule();
@@ -104,8 +105,6 @@ TEST(ApplicationPathHelpers, Strings)
   EXPECT_TRUE(exists(energyplusDirectory));
   EXPECT_TRUE(exists(energyplusExecutable));
 }
-
-
 
 // This is really in PathHelpers but used by ApplicationPathHelpers
 TEST(ApplicationPathHelpers, findInSystemPath) {
@@ -135,14 +134,13 @@ TEST(ApplicationPathHelpers, findInSystemPath) {
   // Put it back
   setenv("PATH", current_path, 1);
   boost::filesystem::remove(dummy_file_path);
-
 }
 
 // From PathHelpers too. Ensure that completeAndNormalize keeps resolving symlinks until found
 TEST(ApplicationPathHelpers, completeAndNormalizeMultipleSymlinks) {
 
   if (!IsElevated()) {
-   SKIP(completeAndNormalizeMultipleSymlinks);
+    SKIP(completeAndNormalizeMultipleSymlinks);
   }
 
   std::vector<openstudio::path> toClean;
@@ -196,35 +194,31 @@ TEST(ApplicationPathHelpers, completeAndNormalizeMultipleSymlinks) {
   prev_path = symlink_path;
   toClean.push_back(symlink_path);
 
-
   openstudio::path foundPath = completeAndNormalize(symlink_path);
   EXPECT_TRUE(exists(foundPath));
   EXPECT_EQ(toString(ori_path), toString(foundPath));
 
-  for (const auto& p: toClean) {
+  for (const auto& p : toClean) {
     boost::filesystem::remove(p);
   }
-
-
 }
 
 // Want to make sure what getOpenStudioModule actually returns
 TEST(ApplicationPathHelpers, Simple_test_forThisModule) {
-    path openstudioModulePath = getOpenStudioModule();
-    EXPECT_TRUE(exists(openstudioModulePath));
-    // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
+  path openstudioModulePath = getOpenStudioModule();
+  EXPECT_TRUE(exists(openstudioModulePath));
+  // The expected path is the utilities one, but resolved for symlinks (we don't want to hardcode the version eg openstudio_utilities_tests-2.8.0)
 #if defined(_WIN32)
-  #if _DEBUG
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/openstudiolib.dll");
-  #else
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/openstudiolib.dll");
-  #endif
+#  if _DEBUG
+  openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Debug/openstudiolib.dll");
+#  else
+  openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/Release/openstudiolib.dll");
+#  endif
 #elif __APPLE__
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/libopenstudiolib.dylib");
+  openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/libopenstudiolib.dylib");
 #else
-    openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/libopenstudiolib.so");
+  openstudio::path expectedOpenstudioModulePath = getApplicationBuildDirectory() / toPath("Products/libopenstudiolib.so");
 #endif
-    expectedOpenstudioModulePath = completeAndNormalize(expectedOpenstudioModulePath);
-    EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
+  expectedOpenstudioModulePath = completeAndNormalize(expectedOpenstudioModulePath);
+  EXPECT_EQ(toString(expectedOpenstudioModulePath), toString(openstudioModulePath));
 }
-
