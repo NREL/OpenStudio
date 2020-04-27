@@ -60,7 +60,11 @@ set(CSHARP_ASSEMBLY_VERSION "${CSHARP_VERSION_MAJOR}.${CSHARP_VERSION_MINOR}.${C
 set(CSHARP_TOOLS_VERSION "4.5")
 
 file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/csharp_wrapper/generated_sources")
-configure_file("${PROJECT_SOURCE_DIR}/csharp/developer/OpenStudio/OpenStudio.csproj_dotnet.in" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj")
+if(MSVC)
+  configure_file("${PROJECT_SOURCE_DIR}/csharp/developer/OpenStudio/OpenStudio.csproj.in" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj")
+else()
+  configure_file("${PROJECT_SOURCE_DIR}/csharp/developer/OpenStudio/OpenStudio.csproj_dotnet.in" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj")
+endif()
 
 # Trying to get rid of this by placing more attributes in csproj instead
 if (MSVC)
@@ -219,11 +223,10 @@ install(TARGETS openstudio_csharp DESTINATION CSharp/openstudio/ CONFIGURATIONS 
 
 add_library(
   openstudio_model_csharp
-  SHARED
+  SHARED # Was "MODULE" on Windows before
   ${model_wrapper_files}
 )
 add_dependencies(openstudio_model_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
-
 target_link_libraries(openstudio_model_csharp
   openstudiolib
 )
@@ -232,7 +235,7 @@ install(TARGETS openstudio_model_csharp DESTINATION CSharp/openstudio/ CONFIGURA
 
 add_library(
   openstudio_translators_csharp
-  SHARED
+  SHARED # Was "MODULE" on Windows before
   ${translator_wrapper_files}
 )
 add_dependencies(openstudio_translators_csharp ${ALL_CSHARP_WRAPPER_TARGETS})
