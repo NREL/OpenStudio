@@ -1170,7 +1170,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
       for (unsigned k = 0, n = keys.size(); k < n; ++k) {
         bool ok(false);
         if (scheduleLimits) {
-          ok = isCompatible(keys[k].first,keys[k].second,*scheduleLimits);
+          ok = isCompatible(keys[k].className(), keys[k].scheduleDisplayName(), *scheduleLimits);
         }
         if (ok) {
           ok = user.setPointer(indices[k],schedule.handle());
@@ -1180,7 +1180,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
         else {
           for (model::Schedule& candidate : candidates) {
             if (model::OptionalScheduleTypeLimits limits = candidate.scheduleTypeLimits()) {
-              if (isCompatible(keys[k].first,keys[k].second,*limits)) {
+              if (isCompatible(keys[k].className(), keys[k].scheduleDisplayName(), *limits)) {
                 user.setPointer(indices[k],candidate.handle());
                 schedulesToFixup->refactoredUsers.insert(user);
                 ok = true;
@@ -1197,7 +1197,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
               ok = schedule.resetScheduleTypeLimits();
               OS_ASSERT(ok); // unhooked schedule in Stage 1
             }
-            ok = checkOrAssignScheduleTypeLimits(keys[k].first,keys[k].second,schedule);
+            ok = checkOrAssignScheduleTypeLimits(keys[k].className(), keys[k].scheduleDisplayName(), schedule);
             OS_ASSERT(ok);
             scheduleLimits = schedule.scheduleTypeLimits();
             if (model.numObjects() > modelN) {
@@ -1212,7 +1212,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
             ok = clonedSchedule.resetScheduleTypeLimits();
             OS_ASSERT(ok);
             modelN = model.numObjects();
-            ok = checkOrAssignScheduleTypeLimits(keys[k].first,keys[k].second,clonedSchedule);
+            ok = checkOrAssignScheduleTypeLimits(keys[k].className(), keys[k].scheduleDisplayName(), clonedSchedule);
             OS_ASSERT(ok);
             if (model.numObjects() > modelN) {
               m_new.push_back(clonedSchedule.scheduleTypeLimits().get().idfObject());

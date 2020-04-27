@@ -79,7 +79,7 @@ namespace detail {
       // test or app tester catches it.)
       // OS_ASSERT(!keys.empty());
       for (const ScheduleTypeKey& key : keys) {
-        if (!isCompatible(key.first,key.second,candidate)) {
+        if (!isCompatible(key.className(), key.scheduleDisplayName(), candidate)) {
           return false;
         }
       }

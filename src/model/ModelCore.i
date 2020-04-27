@@ -162,8 +162,6 @@ class Construction;
 %template(ModelObjectSet) std::set<openstudio::model::ModelObject>;
 %template(OptionalModelObject)boost::optional<openstudio::model::ModelObject>;
 %template(getModelObjectHandles) openstudio::getHandles<openstudio::model::ModelObject>;
-%template(ScheduleTypeKey) std::pair<std::string,std::string>;
-%template(ScheduleTypeKeyVector) std::vector< std::pair<std::string,std::string> >;
 
 // include initial objects
 %include <model/ModelObject.hpp>
@@ -217,6 +215,7 @@ namespace model {
 };
 
 //MODELOBJECT_TEMPLATES(ModelObject); // swig preprocessor did not seem to see these for other objects so these are defined above
+MODELOBJECT_TEMPLATES(ScheduleTypeKey);
 MODELOBJECT_TEMPLATES(EMSActuatorNames);
 MODELEXTENSIBLEGROUP_TEMPLATES(ModelExtensibleGroup);
 MODELOBJECT_TEMPLATES(ParentObject);

@@ -937,5 +937,11 @@ std::string EMSActuatorNames::componentTypeName() const {
   return m_componentTypeName;
 }
 
+ScheduleTypeKey::ScheduleTypeKey(const std::string& className, const std::string& scheduleDisplayName)
+  : m_className(className), m_scheduleDisplayName(scheduleDisplayName)
+{}
+std::string ScheduleTypeKey::className() const { return m_className; }
+std::string ScheduleTypeKey::scheduleDisplayName() const { return m_scheduleDisplayName; }
+
 } // model
 } // openstudio
