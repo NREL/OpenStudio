@@ -254,7 +254,7 @@ TEST(Compare,VersionString) {
 
   EXPECT_NO_THROW(VersionString v(openStudioVersion()));
   EXPECT_NO_THROW(VersionString vl(openStudioLongVersion()));
-  EXPECT_NO_THROW(VersionString v2()); // Same as v1
+  EXPECT_NO_THROW(VersionString v2); // Same as v1
 }
 
 TEST(Compare, VersionString_SemVer) {
