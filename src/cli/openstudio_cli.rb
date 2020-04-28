@@ -490,21 +490,71 @@ def parse_main_args(main_args)
     # EmbeddedScripting not available
   end
 
-  # activate or remove bundler
-  Gem::Specification.each do |spec|
-    if spec.gem_dir.chars.first == ':'
-      if spec.name == 'bundler'
-        if use_bundler
-          spec.activate
-        else
-          # DLM: don't remove, used by Resolver
-          #Gem::Specification.remove_spec(spec)
+  original_load_path = $LOAD_PATH.clone
+
+  # Pull in the embedded gems (even if using Bundler)
+  current_dir = Dir.pwd
+  begin
+    # get a list of all the embedded gems
+    dependencies = []
+    original_embedded_gems.each_value do |spec|
+      $logger.debug "Adding dependency on #{spec.name} '~> #{spec.version}'"
+      dependencies << Gem::Dependency.new(spec.name, "~> #{spec.version}")
+    end
+
+    # resolve dependencies
+    activation_errors = false
+    resolver = Gem::Resolver.for_current_gems(dependencies)
+    activation_requests = resolver.resolve
+    $logger.debug "Processing #{activation_requests.size} activation requests"
+    activation_requests.each do |request|
+      do_activate = true
+      spec = request.spec
+
+      # check if this is one of our embedded gems
+      if original_embedded_gems[spec.name]
+        # check if gem can be loaded from RUBYLIB, this supports developer use case
+        original_load_path.each do |lp|
+          if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
+            $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
+            do_activate = false
+            break
+          end
         end
       end
+
+      if do_activate
+        $logger.debug "Activating gem #{spec.spec_file}"
+        begin
+          # Activate will manipulate the $LOAD_PATH to include the gem
+          spec.activate
+        rescue Gem::LoadError
+          $logger.error "Error activating gem #{spec.spec_file}"
+          activation_errors = true
+        end
+      end
+
     end
+
+    if activation_errors
+      return false
+    end
+  ensure
+    Dir.chdir(current_dir)
   end
 
+  # Get all of the embedded gem paths which were added by activating the embedded gems
+  # This is used by embedded_help::require
+  $EMBEDDED_GEM_PATH = $LOAD_PATH - original_load_path
+  # Make sure no non embedded paths snuck in
+  $EMBEDDED_GEM_PATH = $EMBEDDED_GEM_PATH.select {|p| p.to_s.chars.first == ':'}
+  # Restore LOAD_PATH
+  $LOAD_PATH.reject! {|p| not original_load_path.any? p}
+
   if use_bundler
+    ## Get all of the embedded paths in LOAD_PATH so they can be restored after bundler is loaded
+    #embedded_load_paths = $LOAD_PATH.select {|p| p.to_s.chars.first == ':'}
+    ##puts "embedded_load_paths: #{embedded_load_paths}"
 
     current_dir = Dir.pwd
 
@@ -515,8 +565,6 @@ def parse_main_args(main_args)
       $logger.info "Temporarily replacing arch '#{original_arch}' with 'x64-mingw32' for Bundle"
       RbConfig::CONFIG['arch'] = 'x64-mingw32'
     end
-
-
 
     # require bundler
     # have to do some forward declaration and pre-require to get around autoload cycles
@@ -575,60 +623,8 @@ def parse_main_args(main_args)
       Dir.chdir(current_dir)
     end
 
-  end
-
-  # Pull in the embedded gems (even if using Bundler)
-  current_dir = Dir.pwd
-  begin
-    # get a list of all the embedded gems
-    dependencies = []
-    original_embedded_gems.each_value do |spec|
-      $logger.debug "Adding dependency on #{spec.name} '~> #{spec.version}'"
-      dependencies << Gem::Dependency.new(spec.name, "~> #{spec.version}")
-    end
-    #dependencies.each {|d| $logger.debug "Added dependency #{d}"}
-
-    # resolve dependencies
-    activation_errors = false
-    original_load_path = $:.clone
-    resolver = Gem::Resolver.for_current_gems(dependencies)
-    activation_requests = resolver.resolve
-    $logger.debug "Processing #{activation_requests.size} activation requests"
-    activation_requests.each do |request|
-      do_activate = true
-      spec = request.spec
-
-      # check if this is one of our embedded gems
-      if original_embedded_gems[spec.name]
-
-        # check if gem can be loaded from RUBYLIB, this supports developer use case
-        original_load_path.each do |lp|
-          if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
-            $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
-            #Gem::Specification.remove_spec(spec)
-            do_activate = false
-            break
-          end
-        end
-      end
-
-      if do_activate
-        $logger.debug "Activating gem #{spec.spec_file}"
-        begin
-          spec.activate
-        rescue Gem::LoadError
-          $logger.error "Error activating gem #{spec.spec_file}"
-          activation_errors = true
-        end
-      end
-
-    end
-
-    if activation_errors
-      return false
-    end
-  ensure
-    Dir.chdir(current_dir)
+    # restore paths to embedded gems which may have been removed by bundler
+    #$LOAD_PATH.concat embedded_load_paths
   end
 
   # Handle -e commands
