@@ -253,7 +253,7 @@ add_custom_target(csharp_sdk ALL
 if( BUILD_NUGET_PACKAGE )
 
   # TODO: move in MSVC block, remove altogether? For dotnet I'm trying to use the nuget properties metadata directly in csproj
-  configure_file( ${PROJECT_SOURCE_DIR}/OpenStudio.nuspec.in ${PROJECT_BINARY_DIR}/OpenStudio.nuspec )
+  configure_file( ${PROJECT_SOURCE_DIR}/csharp/OpenStudio.nuspec.in ${PROJECT_BINARY_DIR}/OpenStudio.nuspec )
 
   if (MSVC)
 
