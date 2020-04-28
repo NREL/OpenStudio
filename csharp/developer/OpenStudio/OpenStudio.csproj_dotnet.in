@@ -1,4 +1,4 @@
-﻿<!-- <?xml version="1.0" encoding="utf-8"?> -->
+<!-- <?xml version="1.0" encoding="utf-8"?> -->
 <!-- <Project ToolsVersion="${CSHARP_TOOLS_VERSION}" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003"> -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
@@ -39,7 +39,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
     <!-- Using NuspecFile discards everything specified below, but I haven't figured out how to pack the shared libraries (openstudio_csharp.dll/so etc) from here -->
-    <NuspecFile>${PROJECT_BINARY_BIR}/OpenStudio.nuspec</NuspecFile>
+    <NuspecFile>${PROJECT_BINARY_DIR}/OpenStudio.nuspec</NuspecFile>
 
     <PackageId>OpenStudio</PackageId>
     <PackageVersion>${OPENSTUDIO_VERSION}</PackageVersion>
