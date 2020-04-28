@@ -76,19 +76,20 @@ endif()
 #include_external_msproject(OpenStudio "${PROJECT_SOURCE_DIR}/csharp/developer/OpenStudio/OpenStudio.csproj" ${CSHARP_LIBRARIES})
 #in lieu of the above, we are using the following:
 
-# the main OpenStudio dll
-set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/$(ConfigurationName)/OpenStudio.dll")
-set(CONFIG_ARGS "/p:Configuration=$(ConfigurationName)")
-
-if(NINJA)
-  set(CONFIG_ARGS "/p:Configuration=${CMAKE_BUILD_TYPE}")
-  set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.dll")
-endif()
-
+# the main OpenStudio.dll generated
 
 if (MSVC)
   # TODO: Remove
   # set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} /FORCE:MULTIPLE")
+
+  if(NINJA)
+    set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/OpenStudio.dll")
+    set(CONFIG_ARGS "/p:Configuration=${CMAKE_BUILD_TYPE}")
+  else()
+    # **Regular case, pure MSVC**
+    set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/$(ConfigurationName)/OpenStudio.dll")
+    set(CONFIG_ARGS "/p:Configuration=$(ConfigurationName)")
+  endif()
 
   # ignore deprecated warnings since we will export deprecated methods
   add_definitions(/wd4996 /bigobj)
@@ -99,12 +100,26 @@ if (MSVC)
     COMMAND "MSBuild" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj" "${CONFIG_ARGS}"
     DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
   )
+
+  if(NINJA)
+    install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
+  else()
+    # **Regular case, pure MSVC**
+    install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Debug/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
+    install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Release/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
+  endif()
+
 else()
   # Rely on dotnet Core (open source)
   find_program(DOTNET dotnet)
   if(NOT DOTNET)
     message(FATAL_ERROR "C# generation outside of MSVC requires .NET Core (dotnet)")
   endif()
+
+  # TODO: there are probably adjustments to make to OpenStudio.csproj_dotnet.in
+  # The Release/Debug can be stripped probably
+  # Also probably don't need to use multiple `<TargetFrameworks>` which is the reason there's an extra netcoreapp3.0/ level
+  set(OPENSTUDIO_CSHARP_DLL "${CSHARP_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}/netcoreapp3.0/OpenStudio.dll")
 
   # ignore deprecated warnings since we will export deprecated methods
   add_definitions(-Wno-deprecated-declarations)
@@ -115,12 +130,11 @@ else()
     COMMAND "${DOTNET}" "build" "-c" "$<CONFIGURATION>" "-f" "netcoreapp3.0" "${PROJECT_BINARY_DIR}/csharp_wrapper/OpenStudio.csproj"
     DEPENDS ${ALL_CSHARP_WRAPPER_TARGETS} ${ALL_CSHARP_WRAPPER_FILES}
   )
+
+  install(FILES "${OPENSTUDIO_CSHARP_DLL}" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
 endif()
 
-install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Debug/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS DEBUG COMPONENT "CSharpAPI")
-install(FILES "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/csharp/Release/OpenStudio.dll" DESTINATION CSharp/openstudio/ CONFIGURATIONS RELEASE COMPONENT "CSharpAPI")
-
-# keep the following lists aligned with translator_names in \openstudiocore\ProjectMacros.cmake
+# keep the following lists aligned with translator_names in ProjectMacros.cmake
 set(translator_wrappers
   csharp_OpenStudioAirflow_wrap.cxx
   csharp_OpenStudioEnergyPlus_wrap.cxx
@@ -252,14 +266,19 @@ add_custom_target(csharp_sdk ALL
 
 if( BUILD_NUGET_PACKAGE )
 
-  # TODO: move in MSVC block, remove altogether? For dotnet I'm trying to use the nuget properties metadata directly in csproj
-  configure_file( ${PROJECT_SOURCE_DIR}/csharp/OpenStudio.nuspec.in ${PROJECT_BINARY_DIR}/OpenStudio.nuspec )
-
   if (MSVC)
 
-    set(OPENSTUDIO_CSHARP_LIBNAME "openstudio_csharp.dll")
-    set(OPENSTUDIO_MODEL_CSHARP_LIBNAME "openstudio_model_csharp.dll")
-    set(OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME "openstudio_translators_csharp.dll")
+    if(NINJA)
+      set(OPENSTUDIO_CSHARP_DLLNAME "Products/csharp/OpenStudio.dll")
+    else()
+      # Regular case: pure MSVC
+      set(OPENSTUDIO_CSHARP_DLLNAME "Products/csharp/$CONFIGURATION$/OpenStudio.dll")
+    endif()
+    set(OPENSTUDIO_CSHARP_LIBNAME "Products/$CONFIGURATION$/openstudio_csharp.dll")
+    set(OPENSTUDIO_MODEL_CSHARP_LIBNAME "Products/$CONFIGURATION$/openstudio_model_csharp.dll")
+    set(OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME "Products/$CONFIGURATION$/openstudio_translators_csharp.dll")
+
+    configure_file( ${PROJECT_SOURCE_DIR}/csharp/OpenStudio.nuspec.in ${PROJECT_BINARY_DIR}/OpenStudio.nuspec )
 
     add_custom_target(nuget_package
       COMMAND NuGet pack OpenStudio.nuspec -BasePath "${PROJECT_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
@@ -268,9 +287,13 @@ if( BUILD_NUGET_PACKAGE )
     )
   else()
 
-    set(OPENSTUDIO_CSHARP_LIBNAME "libopenstudio_csharp.so")
-    set(OPENSTUDIO_MODEL_CSHARP_LIBNAME "libopenstudio_model_csharp.so")
-    set(OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME "libopenstudio_translators_csharp.so")
+    set(OPENSTUDIO_CSHARP_DLLNAME "Products/csharp/$CONFIGURATION$/netcoreapp3.0/OpenStudio.dll")
+    set(OPENSTUDIO_CSHARP_LIBNAME "Products/libopenstudio_csharp.so")
+    set(OPENSTUDIO_MODEL_CSHARP_LIBNAME "Products/libopenstudio_model_csharp.so")
+    set(OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME "Products/libopenstudio_translators_csharp.so")
+
+    # TODO: Remove altogether? For dotnet I'm trying to use the nuget properties metadata directly in csproj, but not managing to do it
+    configure_file( ${PROJECT_SOURCE_DIR}/csharp/OpenStudio.nuspec.in ${PROJECT_BINARY_DIR}/OpenStudio.nuspec )
 
     #dotnet pack OpenStudio.csproj --configuration $<CONFIG> -p:NuspecFile="${PROJECT_BINARY_DIR}/OpenStudio.nuspec" -p:NuspectProperties="Configuration=$<CONFIG>"
     # dotnet pack <path to .csproj file> -p:NuspecFile=<path to nuspec file> -p:NuspecProperties=<> -p:NuspecBasePath=<Base path>
