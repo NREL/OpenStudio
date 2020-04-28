@@ -15,7 +15,7 @@
   </metadata>
   <files>
     <file src="@OPENSTUDIO_CSHARP_DLLNAME@" target="lib" /> <!-- TODO: target should be lib\{framework}, eg `lib\netcoreapp3.0` -->
-    <file src="@OPENSTUDIO_CSHARP_LIBNAME@" target="build" />
+    <file src="@OPENSTUDIO_CSHARP_LIBNAME@" target="build" /> <!-- target to 'build' is probably not right either -->
     <file src="@OPENSTUDIO_MODEL_CSHARP_LIBNAME@" target="build" />
     <file src="@OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME@" target="build" />
     <file src="@OPENSTUDIO_MODEL_CSHARP_LIBNAME@" target="build" /> <!-- TODO why is this repeated? -->

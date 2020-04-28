@@ -19,5 +19,10 @@
           Condition="'%(Extension)'=='.dll'">
       <Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
     </Copy>
+    <Copy SourceFiles="@(NativeBinary)"
+          DestinationFiles="@(NativeBinary->'$(OutDir)\%(TargetPath)\%(Filename).so')"
+          Condition="'%(Extension)'=='.so'">
+      <Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
+    </Copy>
   </Target>
 </Project>
