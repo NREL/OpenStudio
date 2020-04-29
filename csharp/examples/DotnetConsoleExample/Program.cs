@@ -1,4 +1,5 @@
 ﻿using System;
+
 using OpenStudio;
 
 namespace DotnetConsoleExample
@@ -11,7 +12,21 @@ namespace DotnetConsoleExample
             try
             {
               OpenStudio.Model model = new OpenStudio.Model();
-              Console.WriteLine(model);
+
+              OpenStudio.Space space1 = new OpenStudio.Space(model);
+              space1.setName("First Space");
+              OpenStudio.Space space2 = new OpenStudio.Space(model);
+              space2.setName("Second Space");
+
+              OpenStudio.SpaceVector spaces = model.getSpaces();
+              var spaceArray = spaces.ToArray();
+
+
+              Console.WriteLine("The model has " + spaceArray.Length + " Spaces:");
+              for(int i=0; i < spaceArray.Length; ++i)
+              {
+                  Console.WriteLine("* {0}.", spaceArray[i].nameString());
+              }
             }
             catch (Exception e)
             {

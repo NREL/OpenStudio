@@ -8,10 +8,12 @@
 
   <!-- Result of adding NuGet.Config, running `dotnet nuget locals all -clear` then `dotnet add package OpenStudio -v 3.0.0-rc3 -f netcoreapp3.0` -->
   <ItemGroup>
-    <PackageReference Include="OpenStudio" Version="3.0.0" />
-    <!--<Reference Include="OpenStudio">-->
-      <!--<HintPath>/home/julien/Software/Others/OS-build-release/Products/OpenStudio.dll</HintPath>-->
-      <!--[><HintPath>..\..\..\..\OS-build-release\Products\OpenStudio.dll</HintPath><]-->
-    <!--</Reference>-->
+    <!--<PackageReference Include="OpenStudio" Version="3.0.0" />-->
+    <Reference Include="OpenStudio">
+      <HintPath>/home/julien/Software/Others/OS-build-release/Products/OpenStudio.dll</HintPath>
+      <!--
+         -<HintPath>..\..\..\..\OS-build-release\Products\OpenStudio.dll</HintPath>
+         -->
+    </Reference>
   </ItemGroup>
 </Project>
