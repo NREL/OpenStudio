@@ -24,10 +24,10 @@ namespace OpenStudio.Tests
       steps.Add(measure);
       wf.setMeasureSteps(type, steps);
 
-      Console.WriteLine(wf.toString());
+      // Console.WriteLine(wf.toString());
 
       var wfSteps = wf.workflowSteps().ToArray();
-      Console.WriteLine("There are {0} steps", wfSteps.Length);
+      // Console.WriteLine("There are {0} steps", wfSteps.Length);
 
       Assert.Equal(1, wfSteps.Length);
     }
