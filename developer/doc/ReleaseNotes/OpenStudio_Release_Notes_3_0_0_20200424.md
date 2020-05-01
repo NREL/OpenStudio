@@ -103,12 +103,11 @@ A number of API-breaking changes have been implemented in OpenStudio 3.0:
     * `ShadowCalculation::calculationFrequency` was renamed to `ShadowCalculation::shadingCalculationUpdateFrequency` (same for setter, defaulted, and reset methods)
     * `ShadowCalculation::polygonClippingAlgorithm()` and `ShadowCalculation::skyDiffuseModelingAlgorithm()`: return type changed from `OptionalString` (which was always initialized) to `std::string`
     * All new fields in E+ 9.3.0 were also added
+    * [#3846](https://github.com/NREL/OpenStudio/pull/3846) - `ThermalZone::addEquipment` is no longer exposed to the bindings to avoid confusion and problems, as you should always use `ZoneHVACComponent::addToThermalZone` instead (#2920, #3758)
+    * [#3846](https://github.com/NREL/OpenStudio/pull/3846) - `BoilerHotWater` "Design Water Outlet Temperature" field and associated methods (getter, setter, resetter) were removed to match E+.
 
 ## Minor changes:
 
-* [#3846](https://github.com/NREL/OpenStudio/pull/3846) - `SiteWaterMainsTemperature` now defaults to the `CorrelationFromWeatherFile` Calculation Method just like in EnergyPlus.
-* [#3846](https://github.com/NREL/OpenStudio/pull/3846) - `BoilerHotWater` "Design Water Outlet Temperature" field to match E+
-* [#3868](https://github.com/NREL/OpenStudio/pull/3868) - Fix an error when querying `surfaces()` of `ZoneHVACLowTemperature` objects and surfaces have no construction
 * [#3844](https://github.com/NREL/OpenStudio/pull/3844) - Fix crash in FT for `HeatPumpWaterToWaterEquationFitCooling/Heating` when they reference each other as companion coils
 * [#3871](https://github.com/NREL/OpenStudio/pull/3871) - Remove deprecated Active Year/Institution fields in `OS:ClimateZones`
 * [#3878](https://github.com/NREL/OpenStudio/pull/3878) - Reporting Frequencies (eg: for `OutputVariable`) now differentiates between `RunPeriod` and `Annual` frequencies
