@@ -47,6 +47,8 @@
 #include "ShadingSurface.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
 #include "InteriorPartitionSurface.hpp"
+#include "SurfaceControlMovableInsulation.hpp"
+#include "SurfaceControlMovableInsulation_Impl.hpp"
 #include "SurfacePropertyOtherSideCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
 #include "SurfacePropertyOtherSideConditionsModel.hpp"
@@ -884,6 +886,25 @@ namespace detail {
         subSurface.resetAdjacentSubSurface();
       }
     }
+  }
+
+  boost::optional<SurfaceControlMovableInsulation> Surface_Impl::surfaceControlMovableInsulation() const {
+      std::vector<SurfaceControlMovableInsulation> allscmis(model().getConcreteModelObjects<SurfaceControlMovableInsulation>());
+      std::vector<SurfaceControlMovableInsulation> scmis;
+      for (auto& scmi : allscmis) {
+          Surface surface = scmi.surface();
+          if (surface.handle() == handle()) {
+            scmis.push_back(scmi);
+          }
+      }
+      if (scmis.empty()) {
+          return boost::none;
+      } else if (scmis.size() == 1) {
+          return scmis.at(0);
+      } else {
+          LOG(Error, "More than one SurfaceControlMovableInsulation points to this Surface");
+          return boost::none;
+      }
   }
 
   boost::optional<SurfacePropertyConvectionCoefficients> Surface_Impl::surfacePropertyConvectionCoefficients() const {
@@ -2172,8 +2193,12 @@ void Surface::resetAdjacentSurface() {
   return getImpl<detail::Surface_Impl>()->resetAdjacentSurface();
 }
 
+boost::optional<SurfaceControlMovableInsulation> Surface::surfaceControlMovableInsulation() const {
+  return getImpl<detail::Surface_Impl>()->surfaceControlMovableInsulation();
+}
+
 boost::optional<SurfacePropertyConvectionCoefficients> Surface::surfacePropertyConvectionCoefficients() const {
-    return getImpl<detail::Surface_Impl>()->surfacePropertyConvectionCoefficients();
+  return getImpl<detail::Surface_Impl>()->surfacePropertyConvectionCoefficients();
 }
 
 boost::optional<SurfacePropertyOtherSideCoefficients> Surface::surfacePropertyOtherSideCoefficients() const {
