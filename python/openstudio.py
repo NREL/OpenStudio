@@ -1,5 +1,4 @@
 # imports all of the openstudio libraries into a friendly namespace
-
 import .openstudioairflow as airflow
 import .openstudioanalysis as analysis
 import .openstudioanalysisdriver as analysisdriver
@@ -9,18 +8,17 @@ import .openstudioisomodel as isomodel
 import .openstudiolib as lib
 import .openstudiomeasure as measure
 import .openstudiomodel as model
-# import openstudiomodelcore as modelcore
-# import openstudiomodelgenerators as modelgenerators
-# import openstudiomodelgeometry as modelgeometry
-# import openstudiomodelhvac as modelhvac
-# import openstudiomodelrefrigeration as modelrefrigeration
-# import openstudiomodelresources as modelresources
-# import openstudiomodelsimulation as modelsimulation
+# import .openstudiomodelcore as modelcore
+# import .openstudiomodelgenerators as modelgenerators
+# import .openstudiomodelgeometry as modelgeometry
+# import .openstudiomodelhvac as modelhvac
+# import .openstudiomodelrefrigeration as modelrefrigeration
+# import .openstudiomodelresources as modelresources
+# import .openstudiomodelsimulation as modelsimulation
 import .openstudioosversion as osversion
 import .openstudioradiance as radiance
 import .openstudiosdd as sdd
 # import .openstudiomodeleditor as modeleditor
-
 from .openstudioutilities import *
 from .openstudioutilitiesbcl import *
 from .openstudioutilitiescore import *
@@ -34,5 +32,3 @@ from .openstudioutilitiesidf import *
 from .openstudioutilitiessql import *
 from .openstudioutilitiestime import *
 from .openstudioutilitiesunits import *
-
-
