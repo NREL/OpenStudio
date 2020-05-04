@@ -12,6 +12,11 @@ import .openstudiomodel as model
 # import .openstudiomodelrefrigeration as modelrefrigeration
 # import .openstudiomodelresources as modelresources
 # import .openstudiomodelsimulation as modelsimulation
+# import .openstudiomodelairflow as modelairflow
+# import .openstudiomodelavailabilitymanager as modelavailabilitymanager
+# import .openstudiomodelplantequipmentoperationscheme as modelplantequipmentoperationscheme
+# import .openstudiomodelstraightcomponent as modelstraightcomponent
+# import .openstudiomodelzonehvac as momodelzonehvac
 import .openstudioosversion as osversion
 import .openstudioradiance as radiance
 import .openstudiosdd as sdd
