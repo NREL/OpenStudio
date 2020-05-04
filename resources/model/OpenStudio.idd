@@ -6044,6 +6044,29 @@ OS:WindowProperty:FrameAndDivider,
 
 \group OpenStudio Advanced Construction, Surface, Zone Concepts
 
+OS:SurfaceControl:MovableInsulation,
+      \memo Exterior or Interior Insulation on opaque surfaces
+  A1, \field Handle
+      \type handle
+      \required-field
+  A2, \field Insulation Type
+      \required-field
+      \type choice
+      \key Outside
+      \key Inside
+  A3, \field Surface Name
+      \required-field
+      \type object-list
+      \object-list SurfaceNames
+  A4, \field Material Name
+      \required-field
+      \type object-list
+      \object-list MaterialNames
+  A5; \field Schedule Name
+      \required-field
+      \type object-list
+      \object-list ScheduleNames
+
 OS:SurfaceProperty:ConvectionCoefficients,
       \memo Allow user settable interior and/or exterior convection coefficients.
       \memo Note that some other factors may limit the lower bounds for these values, such as
