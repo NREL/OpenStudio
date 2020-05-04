@@ -1,4 +1,5 @@
-import openstudio
+# import openstudio
+import openstudio_dynamic as openstudio
 
 print(openstudio.toString(openstudio.runmanager.RunManager().dbPath()))
 
