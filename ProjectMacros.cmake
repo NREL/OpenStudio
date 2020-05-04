@@ -503,6 +503,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       ${SWIG_WRAPPER}
     )
 
+    # TODO: for local testing, PYTHON_GENERATED_SRC should go into Products/python next to the .so files
     install(FILES "${PYTHON_GENERATED_SRC}" DESTINATION Python COMPONENT "Python")
     install(TARGETS ${swig_target} DESTINATION Python COMPONENT "Python")
 
