@@ -491,8 +491,9 @@ def parse_main_args(main_args)
   end
 
   original_load_path = $LOAD_PATH.clone
+  embedded_gems_to_activate = []
 
-  # Pull in the embedded gems (even if using Bundler)
+  # Identify the embedded gems (don't activate them yet)
   current_dir = Dir.pwd
   begin
     # get a list of all the embedded gems
@@ -522,16 +523,8 @@ def parse_main_args(main_args)
           end
         end
       end
-
       if do_activate
-        $logger.debug "Activating gem #{spec.spec_file}"
-        begin
-          # Activate will manipulate the $LOAD_PATH to include the gem
-          spec.activate
-        rescue Gem::LoadError
-          $logger.error "Error activating gem #{spec.spec_file}"
-          activation_errors = true
-        end
+        embedded_gems_to_activate << spec
       end
 
     end
@@ -543,19 +536,8 @@ def parse_main_args(main_args)
     Dir.chdir(current_dir)
   end
 
-  # Get all of the embedded gem paths which were added by activating the embedded gems
-  # This is used by embedded_help::require
-  $EMBEDDED_GEM_PATH = $LOAD_PATH - original_load_path
-  # Make sure no non embedded paths snuck in
-  $EMBEDDED_GEM_PATH = $EMBEDDED_GEM_PATH.select {|p| p.to_s.chars.first == ':'}
-  # Restore LOAD_PATH
-  $LOAD_PATH.reject! {|p| not original_load_path.any? p}
-
+  # Load the bundle before activating any embedded gems
   if use_bundler
-    ## Get all of the embedded paths in LOAD_PATH so they can be restored after bundler is loaded
-    #embedded_load_paths = $LOAD_PATH.select {|p| p.to_s.chars.first == ':'}
-    ##puts "embedded_load_paths: #{embedded_load_paths}"
-
     current_dir = Dir.pwd
 
     original_arch = nil
@@ -612,6 +594,7 @@ def parse_main_args(main_args)
 
       $logger.info "Specs to be included [#{remaining_specs.join(',')}]"
 
+
       Bundler.setup(*keep_groups)
     ensure
 
@@ -622,10 +605,31 @@ def parse_main_args(main_args)
 
       Dir.chdir(current_dir)
     end
-
-    # restore paths to embedded gems which may have been removed by bundler
-    #$LOAD_PATH.concat embedded_load_paths
   end
+
+  original_load_path = $LOAD_PATH.clone
+
+  embedded_gems_to_activate.each do |spec|
+    $logger.debug "Activating gem #{spec.spec_file}"
+    begin
+      # Activate will manipulate the $LOAD_PATH to include the gem
+      spec.activate
+    rescue Gem::LoadError
+      # There may be conflicts between the bundle and the embedded gems,
+      # those will be logged here
+      $logger.error "Error activating gem #{spec.spec_file}"
+      activation_errors = true
+    end
+  end
+
+  # Get all of the embedded gem paths which were added by activating the embedded gems
+  # This is used by embedded_help::require
+  $EMBEDDED_GEM_PATH = $LOAD_PATH - original_load_path
+  # Make sure no non embedded paths snuck in
+  $EMBEDDED_GEM_PATH = $EMBEDDED_GEM_PATH.select {|p| p.to_s.chars.first == ':'}
+  # Restore LOAD_PATH
+  $LOAD_PATH.reject! {|p| not original_load_path.any? p}
+
 
   # Handle -e commands
   remove_indices = []
