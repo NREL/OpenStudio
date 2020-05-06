@@ -47,6 +47,7 @@ class PlanarSurface;
 class Space;
 class ConstructionBase;
 class GeneratorPhotovoltaic;
+class SurfaceControlMovableInsulation;
 class SurfacePropertyConvectionCoefficients;
 
 namespace detail {
@@ -176,6 +177,8 @@ namespace detail {
     std::vector<ModelObject> solarCollectors() const;
 
     std::vector<GeneratorPhotovoltaic> generatorPhotovoltaics() const;
+
+    std::vector<SurfaceControlMovableInsulation> surfaceControlMovableInsulation() const;
 
     std::vector<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 

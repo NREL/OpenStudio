@@ -892,9 +892,12 @@ namespace detail {
       std::vector<SurfaceControlMovableInsulation> allscmis(model().getConcreteModelObjects<SurfaceControlMovableInsulation>());
       std::vector<SurfaceControlMovableInsulation> scmis;
       for (auto& scmi : allscmis) {
-          Surface surface = scmi.surface();
-          if (surface.handle() == handle()) {
-            scmis.push_back(scmi);
+          boost::optional<std::string> surfaceName = scmi.surfaceName();
+          if (surfaceName) {
+            Surface surface = scmi.surface();
+            if (surface.handle() == handle()) {
+              scmis.push_back(scmi);
+            }
           }
       }
       if (scmis.empty()) {

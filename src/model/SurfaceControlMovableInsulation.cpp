@@ -103,9 +103,17 @@ namespace detail {
   }
 
   Surface SurfaceControlMovableInsulation_Impl::surface() const {
-    boost::optional<Surface> surface = getObject<Surface>().getModelObjectTarget<Surface>(OS_SurfaceControl_MovableInsulationFields::SurfaceName);
+    boost::optional<Surface> surface = getObject<ModelObject>().getModelObjectTarget<Surface>(OS_SurfaceControl_MovableInsulationFields::SurfaceName);
     OS_ASSERT(surface);
     return surface.get();
+  }
+
+  boost::optional<std::string> SurfaceControlMovableInsulation_Impl::surfaceName() const {
+    boost::optional<Surface> surface = getObject<ModelObject>().getModelObjectTarget<Surface>(OS_SurfaceControl_MovableInsulationFields::SurfaceName);
+    if (surface) {
+      return surface.get().name();
+    }
+    return boost::none;
   }
 
   boost::optional<Material> SurfaceControlMovableInsulation_Impl::material() const {
@@ -149,7 +157,7 @@ namespace detail {
   bool SurfaceControlMovableInsulation_Impl::setSchedule(Schedule& schedule) {
     bool result = ModelObject_Impl::setSchedule(OS_SurfaceControl_MovableInsulationFields::ScheduleName,
                                                 "SurfaceControlMovableInsulation",
-                                                "Movable Insulation 1",
+                                                "Resistance Modifier Fraction",
                                                 schedule);
     return result;
   }
@@ -178,6 +186,10 @@ boost::optional<std::string> SurfaceControlMovableInsulation::insulationType() c
 
 Surface SurfaceControlMovableInsulation::surface() const {
   return getImpl<detail::SurfaceControlMovableInsulation_Impl>()->surface();
+}
+
+boost::optional<std::string> SurfaceControlMovableInsulation::surfaceName() const {
+  return getImpl<detail::SurfaceControlMovableInsulation_Impl>()->surfaceName();
 }
 
 boost::optional<Material> SurfaceControlMovableInsulation::material() const {

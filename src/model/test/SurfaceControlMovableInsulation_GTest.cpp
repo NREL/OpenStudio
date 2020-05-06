@@ -56,8 +56,11 @@ TEST_F(ModelFixture, SurfaceControlMovableInsulation_SurfaceControlMovableInsula
   vertices.push_back(Point3d(0, 1, 0));
   Surface surface(vertices, model);
 
+  ASSERT_FALSE(surface.surfaceControlMovableInsulation());
+
   // create a surface control movable insulation object to use
   SurfaceControlMovableInsulation mi(surface);
+  ASSERT_TRUE(surface.surfaceControlMovableInsulation());
   Surface surface2 = mi.surface();
   EXPECT_EQ(surface, surface2);
   EXPECT_EQ(surface2.surfaceControlMovableInsulation().get(), mi);
@@ -116,10 +119,44 @@ TEST_F(ModelFixture, SurfaceControlMovableInsulation_SetGetFields) {
 
 // test cloning it
 TEST_F(ModelFixture, SurfaceControlMovableInsulation_Clone) {
-  
+  // create a model to use
+  Model model;
+
+  // create a surface to use
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d());
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 1, 0));
+  vertices.push_back(Point3d(0, 1, 0));
+  Surface surface(vertices, model);
+
+  // create a surface control movable insulation object to use
+  SurfaceControlMovableInsulation mi(surface);
+
+  // change some of the fields
+  mi.setInsulationType("Outside");
+
+  // clone it into the same model
+  SurfaceControlMovableInsulation miClone = mi.clone(model).cast<SurfaceControlMovableInsulation>();
+  ASSERT_EQ("Outside", miClone.insulationType().get());
+
+  // clone it into a different model
+  Model model2;
+  SurfaceControlMovableInsulation miClone2 = mi.clone(model2).cast<SurfaceControlMovableInsulation>();
+  ASSERT_EQ("Outside", miClone2.insulationType().get());
 }
 
 // check that remove works
 TEST_F(ModelFixture, SurfaceControlMovableInsulation_Remove) {
-  
+  Model model;
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d());
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 1, 0));
+  vertices.push_back(Point3d(0, 1, 0));
+  Surface surface(vertices, model);
+  auto size = model.modelObjects().size();
+  SurfaceControlMovableInsulation mi(surface);
+  EXPECT_FALSE(mi.remove().empty());
+  EXPECT_EQ(size, model.modelObjects().size());
 }

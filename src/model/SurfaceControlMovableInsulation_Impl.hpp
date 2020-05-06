@@ -79,6 +79,8 @@ namespace detail {
 
     Surface surface() const;
 
+    boost::optional<std::string> surfaceName() const;
+
     boost::optional<Material> material() const;
 
     boost::optional<Schedule> schedule() const;

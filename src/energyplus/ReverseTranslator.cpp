@@ -948,6 +948,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateSteamEquipment(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::SurfaceControl_MovableInsulation :
+    {
+      modelObject = translateSurfaceControlMovableInsulation(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::SurfaceConvectionAlgorithm_Inside :
     {
       //modelObject = translateSurfaceConvectionAlgorithmInside(workspaceObject);

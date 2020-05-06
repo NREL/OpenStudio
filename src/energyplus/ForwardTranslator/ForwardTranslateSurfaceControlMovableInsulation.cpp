@@ -27,101 +27,48 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_SURFACECONTROLMOVABLEINSULATION_HPP
-#define MODEL_SURFACECONTROLMOVABLEINSULATION_HPP
+#include "../ForwardTranslator.hpp"
 
-#include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include "../../model/SurfaceControlMovableInsulation.hpp"
+#include "../../model/SurfaceControlMovableInsulation_Impl.hpp"
+#include "../../model/Material.hpp"
+#include "../../model/Schedule.hpp"
 
-#include "Material.hpp"
-#include "Surface.hpp"
+#include <utilities/idd/SurfaceControl_MovableInsulation_FieldEnums.hxx>
+
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
+
+using namespace openstudio::model;
+
+using namespace std;
 
 namespace openstudio {
 
-namespace model {
+namespace energyplus {
 
-class Material;
-class Schedule;
+boost::optional<IdfObject> ForwardTranslator::translateSurfaceControlMovableInsulation(model::SurfaceControlMovableInsulation & modelObject)
+{
+  boost::optional<std::string> insulationType = modelObject.insulationType();
+  Surface surface = modelObject.surface();
+  boost::optional<Material> material = modelObject.material();
+  boost::optional<Schedule> schedule = modelObject.schedule();
 
-namespace detail {
+  if (!(insulationType && material && schedule)) {
+    LOG(Error, "SurfaceControlMovableInsulation for Surface '" << surface.nameString() << "' missing required fields, will not be translated");
+  }
 
-  class SurfaceControlMovableInsulation_Impl;
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceControl_MovableInsulation, modelObject);
 
-} // detail
+  idfObject.setString(SurfaceControl_MovableInsulationFields::InsulationType, insulationType.get());
+  idfObject.setString(SurfaceControl_MovableInsulationFields::SurfaceName, surface.name().get());
+  idfObject.setString(SurfaceControl_MovableInsulationFields::MaterialName, material->name().get());
+  idfObject.setString(SurfaceControl_MovableInsulationFields::ScheduleName, schedule->name().get());
 
-/** SurfaceControlMovableInsulation is a ModelObject that wraps the OpenStudio IDD object 'OS:SurfaceControl:MovableInsulation'. */
-class MODEL_API SurfaceControlMovableInsulation : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  return idfObject;
+}
 
-  explicit SurfaceControlMovableInsulation(const Surface& surface);
+} // energyplus
 
-  virtual ~SurfaceControlMovableInsulation() {}
-
-  //@}
-
-  static IddObjectType iddObjectType();
-
-  /** @name Getters */
-  //@{
-
-  boost::optional<std::string> insulationType() const;
-
-  Surface surface() const;
-
-  boost::optional<std::string> surfaceName() const;
-
-  boost::optional<Material> material() const;
-
-  boost::optional<Schedule> schedule() const;
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  bool setInsulationType(const std::string& insulationType);
-
-  void resetInsulationType();
-
-  bool setSurface(const Surface& surface);
-
-  bool setMaterial(const Material& material);
-
-  void resetMaterial();
-
-  bool setSchedule(Schedule& schedule);
-
-  void resetSchedule();
-
-  //@}
-  /** @name Other */
-  //@{
-
-  //@}
- protected:
-  /// @cond
-  typedef detail::SurfaceControlMovableInsulation_Impl ImplType;
-
-  explicit SurfaceControlMovableInsulation(std::shared_ptr<detail::SurfaceControlMovableInsulation_Impl> impl);
-
-  friend class detail::SurfaceControlMovableInsulation_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SurfaceControlMovableInsulation");
-};
-
-/** \relates SurfaceControlMovableInsulation*/
-typedef boost::optional<SurfaceControlMovableInsulation> OptionalSurfaceControlMovableInsulation;
-
-/** \relates SurfaceControlMovableInsulation*/
-typedef std::vector<SurfaceControlMovableInsulation> SurfaceControlMovableInsulationVector;
-
-} // model
 } // openstudio
-
-#endif // MODEL_SURFACECONTROLMOVABLEINSULATION_HPP
 

@@ -1115,3 +1115,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
   EXPECT_EQ(daylightingControl.name().get(), "Reference Point 1");
   EXPECT_EQ(daylightingControl.phiRotationAroundZAxis(), 180.0);
 }
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_SurfaceControlMovableInsulation) {
+  
+|
