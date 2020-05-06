@@ -41,6 +41,7 @@
 #include "../../model/ConstructionBase.hpp"
 #include "../../model/ConstructionBase_Impl.hpp"
 #include "../../model/SurfaceControlMovableInsulation.hpp"
+#include "../../model/SurfaceControlMovableInsulation_Impl.hpp"
 #include "../../model/SurfacePropertyOtherSideCoefficients.hpp"
 #include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../../model/SurfacePropertyConvectionCoefficients.hpp"

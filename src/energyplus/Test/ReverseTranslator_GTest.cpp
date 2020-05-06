@@ -85,6 +85,8 @@
 #include "../../model/MaterialPropertyGlazingSpectralData_Impl.hpp"
 #include "../../model/DaylightingControl.hpp"
 #include "../../model/DaylightingControl_Impl.hpp"
+#include "../../model/SurfaceControlMovableInsulation.hpp"
+#include "../../model/SurfaceControlMovableInsulation_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -111,6 +113,7 @@
 #include <utilities/idd/WindowMaterial_Glazing_FieldEnums.hxx>
 #include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
 #include <utilities/idd/Daylighting_ReferencePoint_FieldEnums.hxx>
+#include <utilities/idd/SurfaceControl_MovableInsulation_FieldEnums.hxx>
 
 #include "../../utilities/time/Time.hpp"
 
@@ -1117,5 +1120,90 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_SurfaceControlMovableInsulation) {
-  
-|
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+
+  // surface
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::BuildingSurface_Detailed);
+  idfObject1.setString(BuildingSurface_DetailedFields::Name, "Surface 1");
+  idfObject1.setString(BuildingSurface_DetailedFields::SurfaceType, "Floor");
+  idfObject1.setString(BuildingSurface_DetailedFields::ConstructionName, "");
+  idfObject1.setString(BuildingSurface_DetailedFields::ZoneName, "");
+  idfObject1.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, "Foundation");
+  idfObject1.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, "Foundation Kiva 1");
+  idfObject1.setString(BuildingSurface_DetailedFields::SunExposure, "NoSun");
+  idfObject1.setString(BuildingSurface_DetailedFields::WindExposure, "NoWind");
+  idfObject1.setString(BuildingSurface_DetailedFields::ViewFactortoGround, "");
+  idfObject1.setString(BuildingSurface_DetailedFields::NumberofVertices, "");
+  IdfExtensibleGroup group2 = idfObject1.pushExtensibleGroup(); // vertex 1
+  group2.setDouble(0, 0);
+  group2.setDouble(1, 0);
+  group2.setDouble(2, 0);
+  IdfExtensibleGroup group3 = idfObject1.pushExtensibleGroup(); // vertex 2
+  group3.setDouble(0, 0);
+  group3.setDouble(1, 6.81553519541936);
+  group3.setDouble(2, 0);
+  IdfExtensibleGroup group4 = idfObject1.pushExtensibleGroup(); // vertex 3
+  group4.setDouble(0, 13.6310703908387);
+  group4.setDouble(1, 6.81553519541936);
+  group4.setDouble(2, 0);
+  IdfExtensibleGroup group5 = idfObject1.pushExtensibleGroup(); // vertex 4
+  group5.setDouble(0, 13.6310703908387);
+  group5.setDouble(1, 0);
+  group5.setDouble(2, 0);
+
+  openstudio::WorkspaceObject epSurface = workspace.addObject(idfObject1).get();
+
+  // material
+  openstudio::IdfObject idfObject2(openstudio::IddObjectType::Material);
+  idfObject2.setString(0, "Material 1"); // Name
+  idfObject2.setString(1, "Smooth");
+  idfObject2.setString(2, "0.012");
+  idfObject2.setString(3, "3.2");
+  idfObject2.setString(4, "2.5");
+  idfObject2.setString(5, "2.04");
+  idfObject2.setString(6, "0.8");
+  idfObject2.setString(7, "0.6");
+  idfObject2.setString(8, "0.6");
+
+  openstudio::WorkspaceObject epMaterial = workspace.addObject(idfObject2).get();
+
+  // schedule
+  openstudio::IdfObject idfObject3( openstudio::IddObjectType::Schedule_Constant );
+  idfObject3.setString(0, "Schedule 1");
+  idfObject3.setString(1, "0.5");
+
+  openstudio::WorkspaceObject epSchedule = workspace.addObject(idfObject3).get();
+
+  // surface control
+  openstudio::IdfObject idfObject4(openstudio::IddObjectType::SurfaceControl_MovableInsulation);
+  idfObject4.setString(SurfaceControl_MovableInsulationFields::InsulationType, "Inside");
+  idfObject4.setString(SurfaceControl_MovableInsulationFields::SurfaceName, "Surface 1");
+  idfObject4.setString(SurfaceControl_MovableInsulationFields::MaterialName, "Material 1");
+  idfObject4.setString(SurfaceControl_MovableInsulationFields::ScheduleName, "Schedule 1");
+
+  openstudio::WorkspaceObject epMovableInsulation = workspace.addObject(idfObject4).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<SurfaceControlMovableInsulation> mis = model.getModelObjects<SurfaceControlMovableInsulation>();
+  ASSERT_EQ(1u, mis.size());
+  SurfaceControlMovableInsulation mi = mis[0];
+  EXPECT_EQ("Inside", mi.insulationType().get());
+
+  std::vector<Surface> surfaces = model.getModelObjects<Surface>();
+  ASSERT_EQ(1u, surfaces.size());
+  Surface surface = surfaces[0];
+  EXPECT_EQ(mi.surface().name().get(), surface.name().get());
+
+  std::vector<Material> materials = model.getModelObjects<Material>();
+  ASSERT_EQ(1u, materials.size());
+  Material material = materials[0];
+  EXPECT_EQ(mi.material().get().name().get(), material.name().get());
+
+  std::vector<Schedule> schedules = model.getModelObjects<Schedule>();
+  ASSERT_EQ(1u, schedules.size());
+  Schedule schedule = schedules[0];
+  EXPECT_EQ(mi.schedule().get().name().get(), schedule.name().get());
+}

@@ -29,15 +29,16 @@
 
 #include "../ForwardTranslator.hpp"
 
+#include "../../model/Model.hpp"
 #include "../../model/SurfaceControlMovableInsulation.hpp"
 #include "../../model/SurfaceControlMovableInsulation_Impl.hpp"
 #include "../../model/Material.hpp"
 #include "../../model/Schedule.hpp"
 
 #include <utilities/idd/SurfaceControl_MovableInsulation_FieldEnums.hxx>
-
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFactory.hxx>
+
 
 using namespace openstudio::model;
 
@@ -47,8 +48,12 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSurfaceControlMovableInsulation(model::SurfaceControlMovableInsulation & modelObject)
+boost::optional<IdfObject> ForwardTranslator::translateSurfaceControlMovableInsulation( SurfaceControlMovableInsulation & modelObject)
 {
+  IdfObject idfObject(openstudio::IddObjectType::SurfaceControl_MovableInsulation);
+
+  m_idfObjects.push_back(idfObject);
+
   boost::optional<std::string> insulationType = modelObject.insulationType();
   Surface surface = modelObject.surface();
   boost::optional<Material> material = modelObject.material();
@@ -56,19 +61,26 @@ boost::optional<IdfObject> ForwardTranslator::translateSurfaceControlMovableInsu
 
   if (!(insulationType && material && schedule)) {
     LOG(Error, "SurfaceControlMovableInsulation for Surface '" << surface.nameString() << "' missing required fields, will not be translated");
+    return boost::none;
   }
 
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceControl_MovableInsulation, modelObject);
-
   idfObject.setString(SurfaceControl_MovableInsulationFields::InsulationType, insulationType.get());
-  idfObject.setString(SurfaceControl_MovableInsulationFields::SurfaceName, surface.name().get());
-  idfObject.setString(SurfaceControl_MovableInsulationFields::MaterialName, material->name().get());
-  idfObject.setString(SurfaceControl_MovableInsulationFields::ScheduleName, schedule->name().get());
 
-  return idfObject;
+  idfObject.setString(SurfaceControl_MovableInsulationFields::SurfaceName, modelObject.surfaceName().get());
+
+  boost::optional<IdfObject> mat = translateAndMapModelObject(*material);
+  if (mat && mat->name()){
+    idfObject.setString(SurfaceControl_MovableInsulationFields::MaterialName, mat->name().get());
+  }
+
+  boost::optional<IdfObject> sch = translateAndMapModelObject(*schedule);
+  if (sch && sch->name()){
+    idfObject.setString(SurfaceControl_MovableInsulationFields::ScheduleName, sch->name().get());
+  }
+
+  return boost::optional<IdfObject>(idfObject);
 }
 
 } // energyplus
 
 } // openstudio
-
