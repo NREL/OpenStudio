@@ -32,6 +32,8 @@
 #include "RenderingColor.hpp"
 #include "ConstructionBase.hpp"
 #include "ConstructionBase_Impl.hpp"
+#include "ConstructionAirBoundary.hpp"
+#include "ConstructionAirBoundary_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "SpaceType.hpp"
@@ -85,14 +87,18 @@ namespace openstudio
     {
       // make construction materials
       for (auto& construction : model.getModelObjects<ConstructionBase>()){
-        boost::optional<RenderingColor> color = construction.renderingColor();
-        if (!color){
-          color = RenderingColor(model);
-          construction.setRenderingColor(*color);
+        // If it's ConstructionAirBoundary, we'll later use the standard material "AirWall"
+        if (!construction.optionalCast<ConstructionAirBoundary>()) {
+          boost::optional<RenderingColor> color = construction.renderingColor();
+          if (!color){
+            color = RenderingColor(model);
+            construction.setRenderingColor(*color);
+          }
+          std::string name = getObjectThreeMaterialName(construction);
+          addThreeMaterial(materials, materialMap, makeThreeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
         }
-        std::string name = getObjectThreeMaterialName(construction);
-        addThreeMaterial(materials, materialMap, makeThreeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1, ThreeSide::DoubleSide));
       }
+
 
       // make thermal zone materials
       for (auto& thermalZone : model.getConcreteModelObjects<ThermalZone>()){
@@ -259,7 +265,12 @@ namespace openstudio
       if (construction)
       {
         userData.setConstructionName(construction->nameString());
-        userData.setConstructionMaterialName(getObjectThreeMaterialName(*construction));
+        // If this is a ConstructionAirBoundary, then set to the standard material "AirWall"
+        if (construction->optionalCast<ConstructionAirBoundary>()) {
+          userData.setConstructionMaterialName("AirWall");
+        } else {
+          userData.setConstructionMaterialName(getObjectThreeMaterialName(*construction));
+        }
       }
 
       if (space)
