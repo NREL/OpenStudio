@@ -38,6 +38,8 @@
 #include "../Space_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
+#include "../ConstructionAirBoundary.hpp"
+#include "../ConstructionAirBoundary_Impl.hpp"
 
 #include "../../utilities/geometry/ThreeJS.hpp"
 
@@ -82,4 +84,30 @@ TEST_F(ModelFixture,ThreeJSForwardTranslator_ExampleModel) {
 
   EXPECT_EQ(model.getConcreteModelObjects<Space>().size(), model2->getConcreteModelObjects<Space>().size());
   EXPECT_EQ(model.getConcreteModelObjects<Surface>().size(), model2->getConcreteModelObjects<Surface>().size());
+}
+
+TEST_F(ModelFixture,ThreeJSForwardTranslator_ConstructionAirBoundary) {
+
+  ThreeJSForwardTranslator ft;
+  ThreeJSReverseTranslator rt;
+  openstudio::path out;
+
+  Model m = exampleModel();
+  EXPECT_FALSE(m.getConcreteModelObjects<ConstructionAirBoundary>().empty());
+
+  ThreeScene scene = ft.modelToThreeJS(m, false);
+
+  // Ensure we get no errors or warnings, generally speaking.
+  // Here I'm especially after #3943: "Unknown iddObjectType 'OS:Construction:AirBoundary'"
+  EXPECT_EQ(0, ft.errors().size());
+  EXPECT_EQ(0, ft.warnings().size());
+
+  for (const auto& error : ft.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : ft.warnings()){
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
 }
