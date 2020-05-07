@@ -5,7 +5,7 @@
 # * Use only full 40-character hashes
 # * Here's an example of a way to grep the commit history to find commits to exclude:
 # ```
-# git log --all --reverse --grep='copyright' --pretty='format:# %C(auto)%s [%an, %as]%n%H%n' >> .git-blame-ignore-revs
+# git log --all --reverse --grep='copyright' --grep='\[chore\]' --pretty='format:# %C(auto)%s [%an, %as]%n%H%n' >> .git-blame-ignore-revs
 #
 # ```
 # Note: On older git (like 2.17 which is default in 18.04, without `sudo add-apt-repository ppa:git-core/ppa`),
@@ -127,3 +127,6 @@ b2d77f6923934f6cabe86560d46ef37002f1732b
 
 # Updated copyrights for 2020 [Alex Swindler, 2020-02-28]
 1a0500de74b83093e22892a1f3ff3b67b799e648
+
+# whitespace changes in bundle tests [chore] [Julien Marrec, 2020-04-21]
+fa7a5b99830bcab336eba7ebf6bf799948ba0cc4
