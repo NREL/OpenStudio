@@ -39,9 +39,11 @@
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
 #include "../ConstructionAirBoundary.hpp"
-#include "../ConstructionAirBoundary_Impl.hpp"
+#include "../Construction.hpp"
 
 #include "../../utilities/geometry/ThreeJS.hpp"
+
+#include <algorithm>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -57,6 +59,18 @@ TEST_F(ModelFixture,ThreeJSForwardTranslator_ExampleModel) {
 
   // triangulated, for display
   ThreeScene scene = ft.modelToThreeJS(model, true);
+  // Ensure we get no errors or warnings, generally speaking.
+  EXPECT_EQ(0, ft.errors().size());
+  EXPECT_EQ(0, ft.warnings().size());
+
+  for (const auto& error : ft.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : ft.warnings()){
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
   std::string json = scene.toJSON();
   EXPECT_TRUE(ThreeScene::load(json));
 
@@ -68,6 +82,19 @@ TEST_F(ModelFixture,ThreeJSForwardTranslator_ExampleModel) {
 
   // not triangulated, for model transport/translation
   scene = ft.modelToThreeJS(model, false);
+
+  // Ensure we get no errors or warnings, generally speaking.
+  EXPECT_EQ(0, ft.errors().size());
+  EXPECT_EQ(0, ft.warnings().size());
+
+  for (const auto& error : ft.errors()){
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : ft.warnings()){
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
   json = scene.toJSON();
   EXPECT_TRUE(ThreeScene::load(json));
 
@@ -89,11 +116,13 @@ TEST_F(ModelFixture,ThreeJSForwardTranslator_ExampleModel) {
 TEST_F(ModelFixture,ThreeJSForwardTranslator_ConstructionAirBoundary) {
 
   ThreeJSForwardTranslator ft;
-  ThreeJSReverseTranslator rt;
-  openstudio::path out;
 
-  Model m = exampleModel();
-  EXPECT_FALSE(m.getConcreteModelObjects<ConstructionAirBoundary>().empty());
+  Model m;
+  ConstructionAirBoundary cAirBoundary(m);
+  cAirBoundary.setName("Construction_Air_Boundary");
+
+  Construction c(m);
+  c.setName("RegularConstruction");
 
   ThreeScene scene = ft.modelToThreeJS(m, false);
 
@@ -109,5 +138,21 @@ TEST_F(ModelFixture,ThreeJSForwardTranslator_ConstructionAirBoundary) {
   for (const auto& warning : ft.warnings()){
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
+
+
+  // Materials are named like "prefix_" + <construction.name>
+  auto checkIfMaterialExist = [](const auto& materials, const std::string& containedString) {
+    auto it = std::find_if(materials.cbegin(), materials.cend(),
+      [&containedString](const auto& mat){
+        return mat.name().find(containedString) != std::string::npos;
+      }
+    );
+    return it != materials.cend();
+  };
+
+  auto materials = scene.materials();
+  EXPECT_TRUE(checkIfMaterialExist(materials, "RegularConstruction"));
+  EXPECT_FALSE(checkIfMaterialExist(materials, "Construction_Air_Boundary")); // Instead it should have been skipped to be replace by "AirWall"
+  EXPECT_TRUE(checkIfMaterialExist(materials, "AirWall"));
 
 }
