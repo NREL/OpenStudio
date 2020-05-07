@@ -42,8 +42,6 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-
-#define FMT_HEADER_ONLY
 #include <fmt/format.h>
 #include <fmt/printf.h>
 
