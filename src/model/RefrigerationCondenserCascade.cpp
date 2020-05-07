@@ -30,6 +30,11 @@
 #include "RefrigerationCondenserCascade.hpp"
 #include "RefrigerationCondenserCascade_Impl.hpp"
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_Refrigeration_Condenser_Cascade_FieldEnums.hxx>
@@ -214,6 +219,37 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  std::vector<RefrigerationSystem> RefrigerationCondenserCascade_Impl::systems() const {
+    std::vector<RefrigerationSystem> result;
+
+    RefrigerationCondenserCascade refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
+    for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
+      RefrigerationCondenserCascadeVector refrigerationCondenserCascades = refrigerationSystem.cascadeCondenserLoads();
+      if ( !refrigerationCondenserCascades.empty() && std::find(refrigerationCondenserCascades.begin(), refrigerationCondenserCascades.end(), refrigerationCondenserCascade) != refrigerationCondenserCascades.end() ) {
+        result.push_back(refrigerationSystem);
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  void RefrigerationCondenserCascade_Impl::removeFromSystems() {
+    RefrigerationCondenserCascade refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
+
+    for (RefrigerationSystem& refrigerationSystem: this->systems()) {
+      refrigerationSystem.removeCascadeCondenserLoad(refrigerationCondenserCascade);
+    }
+  }
+
+  std::vector<IdfObject> RefrigerationCondenserCascade_Impl::remove()
+  {
+    // Remove from ModelObjectList in RefrigerationSystem(s) if needed
+    this->removeFromSystems();
+
+    return ModelObject_Impl::remove();
+  }
+
 } // detail
 
 RefrigerationCondenserCascade::RefrigerationCondenserCascade(const Model& model)
@@ -325,6 +361,14 @@ bool RefrigerationCondenserCascade::setCondensatePipingRefrigerantInventory(doub
 
 void RefrigerationCondenserCascade::resetCondensatePipingRefrigerantInventory() {
   getImpl<detail::RefrigerationCondenserCascade_Impl>()->resetCondensatePipingRefrigerantInventory();
+}
+
+std::vector<RefrigerationSystem> RefrigerationCondenserCascade::systems() const {
+  return getImpl<detail::RefrigerationCondenserCascade_Impl>()->systems();
+}
+
+void RefrigerationCondenserCascade::removeFromSystems() {
+  getImpl<detail::RefrigerationCondenserCascade_Impl>()->removeFromSystems();
 }
 
 /// @cond

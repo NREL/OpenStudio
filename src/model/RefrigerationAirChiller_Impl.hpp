@@ -36,6 +36,7 @@
 namespace openstudio {
 namespace model {
 
+class RefrigerationSystem;
 class Schedule;
 // class CurveLinear;
 
@@ -169,6 +170,8 @@ namespace detail {
 
     bool isAverageRefrigerantChargeInventoryDefaulted() const;
 
+    boost::optional<RefrigerationSystem> system() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -268,6 +271,8 @@ namespace detail {
     bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
     void resetAverageRefrigerantChargeInventory();
+
+    void removeFromSystem();
 
     //@}
     /** @name Other */

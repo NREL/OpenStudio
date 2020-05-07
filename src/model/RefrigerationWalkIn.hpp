@@ -152,6 +152,7 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   boost::optional<openstudio::Time> defrost8StartTime() const;
 
+  // Returns the parent RefrigerationSystem if any
   boost::optional<RefrigerationSystem> system() const;
 
   boost::optional<ThermalZone> zoneBoundaryThermalZone() const;
@@ -286,6 +287,7 @@ class MODEL_API RefrigerationWalkIn : public ModelObject {
 
   bool addToSystem(RefrigerationSystem & system);
 
+  // Remove from parent system if any
   void removeFromSystem();
 
   bool setZoneBoundaryThermalZone(const ThermalZone& zoneBoundaryThermalZone);
