@@ -37,6 +37,7 @@ namespace openstudio {
 
 namespace model {
 
+class RefrigerationSystem;
 class Schedule;
 // class CurveLinear;
 
@@ -153,6 +154,9 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
 
   bool isAverageRefrigerantChargeInventoryDefaulted() const;
 
+  // Returns the parent RefrigerationSystem if any
+  boost::optional<RefrigerationSystem> system() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -252,6 +256,9 @@ class MODEL_API RefrigerationAirChiller : public ZoneHVACComponent {
   bool setAverageRefrigerantChargeInventory(double averageRefrigerantChargeInventory);
 
   void resetAverageRefrigerantChargeInventory();
+
+  // Remove from parent system if any
+  void removeFromSystem();
 
   //@}
   /** @name Other */

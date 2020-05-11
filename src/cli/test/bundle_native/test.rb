@@ -5,8 +5,8 @@ def local_gems
 end
 
 # list installed gems
-puts local_gems.map{ |name, specs| 
-  [name, specs.map{ |spec| spec.version.to_s }.join(',')].join(' ') 
+puts local_gems.map{ |name, specs|
+  [name, specs.map{ |spec| spec.version.to_s }.join(',')].join(' ')
 }
 # test a gem that required native extensions
 require 'ffi'

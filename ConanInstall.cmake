@@ -72,7 +72,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     #boost_geometry/${BOOST_VERSION}@bincrafters/stable
     pugixml/1.10@bincrafters/stable
     jsoncpp/1.9.2
-    zlib/1.2.11
+    zlib/1.2.11@nrel/testing # TODO: Temp, pending merging of https://github.com/conan-io/conan-center-index/pull/1526, to resolve #3961
     fmt/6.0.0
     sqlite3/3.30.1
     cpprestsdk/2.10.14@bincrafters/stable

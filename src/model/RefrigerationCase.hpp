@@ -238,6 +238,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   boost::optional<openstudio::Time> defrost8StartTime() const;
 
+  // Returns the parent RefrigerationSystem if any
   boost::optional<RefrigerationSystem> system() const;
 
   //@}
@@ -466,6 +467,7 @@ class MODEL_API RefrigerationCase : public ParentObject {
 
   bool addToSystem(RefrigerationSystem & system);
 
+  // Remove from parent system if any
   void removeFromSystem();
 
   //@}

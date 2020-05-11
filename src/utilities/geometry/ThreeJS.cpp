@@ -77,16 +77,20 @@ namespace openstudio{
     std::string result;
     if (istringEqual(iddObjectType, "OS:Construction")){
       result = "Construction_" + name;
-    }else if (istringEqual(iddObjectType, "OS:ThermalZone")){
+    } else if (istringEqual(iddObjectType, "OS:ThermalZone")){
       result = "ThermalZone_" + name;
-    }else if (istringEqual(iddObjectType, "OS:SpaceType")){
+    } else if (istringEqual(iddObjectType, "OS:SpaceType")){
       result = "SpaceType_" + name;
-    }else if (istringEqual(iddObjectType, "OS:BuildingStory")){
+    } else if (istringEqual(iddObjectType, "OS:BuildingStory")){
       result = "BuildingStory_" + name;
-    }else if (istringEqual(iddObjectType, "OS:BuildingUnit")){
+    } else if (istringEqual(iddObjectType, "OS:BuildingUnit")){
       result = "BuildingUnit_" + name;
-    } else{
-      LOG_FREE(Error, "getObjectMaterialName", "Unknown iddObjectType '" << iddObjectType << "'");
+    } else if (istringEqual(iddObjectType, "OS:Construction:AirBoundary")){
+      // This shouldn't happen
+      LOG_FREE(Error, "getObjectThreeMaterialName", "Didn't expect it would be called for '" << iddObjectType << "' (name = '" << name << "')");
+      result = "ConstructionAirBoundary_" + name;
+    } else {
+      LOG_FREE(Error, "getObjectThreeMaterialName", "Unknown iddObjectType '" << iddObjectType << "'");
     }
     return result;
   }

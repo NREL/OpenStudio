@@ -39,6 +39,7 @@ namespace model {
 
 class CurveCubic;
 class ThermalZone;
+class RefrigerationSystem;
 class RefrigerationAirChiller;
 class RefrigerationCase;
 class RefrigerationWalkIn;
@@ -152,6 +153,9 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   bool isEndUseSubcategoryDefaulted() const;
 
+  // Returns the parent RefrigerationSystem(s)
+  std::vector<RefrigerationSystem> systems() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -235,6 +239,9 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
   bool setEndUseSubcategory(std::string endUseSubcategory);
 
   void resetEndUseSubcategory();
+
+  // Remove from parent system if any
+  void removeFromSystems();
 
   //@}
   /** @name Other */
