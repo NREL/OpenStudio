@@ -38,7 +38,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # set(BOOST_VERSION "1.71.0")
 
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
-  list(APPEND CONAN_OPTIONS "fmt:header_only=True")
+  # TODO:  list(APPEND CONAN_OPTIONS "fmt:header_only=True")
 
   # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
   # bump the actual package version when we make changes) than the binaries were built with
