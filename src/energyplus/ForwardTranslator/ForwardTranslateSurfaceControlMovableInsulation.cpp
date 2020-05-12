@@ -56,24 +56,21 @@ boost::optional<IdfObject> ForwardTranslator::translateSurfaceControlMovableInsu
   m_idfObjects.push_back(idfObject);
 
   std::string insulationType = modelObject.insulationType();
-  Surface surface = modelObject.surface();
-  Material material = modelObject.material();
-  Schedule schedule = modelObject.schedule();
 
   idfObject.setString(SurfaceControl_MovableInsulationFields::InsulationType, insulationType);
 
-  boost::optional<IdfObject> surf = translateAndMapModelObject(surface);
-  if (surf && surf->name()){
+  Surface surface = modelObject.surface();
+  if (boost::optional<IdfObject> surf = translateAndMapModelObject(surface)) {
     idfObject.setString(SurfaceControl_MovableInsulationFields::SurfaceName, surf->name().get());
   }
 
-  boost::optional<IdfObject> mat = translateAndMapModelObject(material);
-  if (mat && mat->name()){
+  Material material = modelObject.material();
+  if (boost::optional<IdfObject> mat = translateAndMapModelObject(material)) {
     idfObject.setString(SurfaceControl_MovableInsulationFields::MaterialName, mat->name().get());
   }
 
-  boost::optional<IdfObject> sch = translateAndMapModelObject(schedule);
-  if (sch && sch->name()){
+  Schedule schedule = modelObject.schedule();
+  if (boost::optional<IdfObject> sch = translateAndMapModelObject(schedule)) {
     idfObject.setString(SurfaceControl_MovableInsulationFields::ScheduleName, sch->name().get());
   }
 
