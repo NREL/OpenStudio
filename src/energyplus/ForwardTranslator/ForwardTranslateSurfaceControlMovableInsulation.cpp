@@ -34,6 +34,7 @@
 #include "../../model/SurfaceControlMovableInsulation_Impl.hpp"
 #include "../../model/Material.hpp"
 #include "../../model/Schedule.hpp"
+#include "../../model/Surface.hpp"
 
 #include <utilities/idd/SurfaceControl_MovableInsulation_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"

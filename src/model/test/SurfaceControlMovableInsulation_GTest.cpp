@@ -40,11 +40,12 @@
 #include "../StandardOpaqueMaterial_Impl.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
+#include "../ScheduleTypeLimits.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SurfaceControlMovableInsulation_SurfaceControlMovableInsulation) {    
+TEST_F(ModelFixture, SurfaceControlMovableInsulation_SurfaceControlMovableInsulation) {
   // create a model to use
   Model model;
 
@@ -114,6 +115,8 @@ TEST_F(ModelFixture, SurfaceControlMovableInsulation_SetGetFields) {
   boost::optional<ScheduleConstant> scheduleConstant = schedule.optionalCast<ScheduleConstant>();
   ASSERT_TRUE(scheduleConstant);
   EXPECT_EQ((*scheduleConstant).value(), 1.0);
+  EXPECT_EQ(model.alwaysOnContinuousScheduleName(), schedule.nameString());
+
   mi.setSchedule(sched);
   Schedule schedule2 = mi.schedule();
   boost::optional<ScheduleConstant> scheduleConstant2 = schedule2.optionalCast<ScheduleConstant>();
@@ -121,6 +124,15 @@ TEST_F(ModelFixture, SurfaceControlMovableInsulation_SetGetFields) {
   EXPECT_EQ(mi.schedule(), sched);
   EXPECT_EQ(mi.schedule(), *scheduleConstant2);
   EXPECT_EQ((*scheduleConstant2).value(), 0.5);
+
+  // The Schedule Type Registry should have done it's thing and assigned a scheduleTypeLimits
+  ASSERT_TRUE(schedule2.scheduleTypeLimits());
+  ASSERT_TRUE(schedule2.scheduleTypeLimits()->lowerLimitValue());
+  EXPECT_EQ(0.0, schedule2.scheduleTypeLimits()->lowerLimitValue().get());
+  ASSERT_TRUE(schedule2.scheduleTypeLimits()->upperLimitValue());
+  EXPECT_EQ(1.0, schedule2.scheduleTypeLimits()->upperLimitValue().get());
+  ASSERT_TRUE(schedule2.scheduleTypeLimits()->numericType());
+  EXPECT_EQ("Continuous", schedule2.scheduleTypeLimits()->numericType().get());
 }
 
 // test cloning it

@@ -92,7 +92,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfaceControlMovableInsulation) {
 
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Material).size());
-  EXPECT_EQ(5u, workspace.getObjectsByType(IddObjectType::Schedule_Constant).size()); // Always On Discrete, Always On Continuous, Always Off Discrete, Schedule Constant 1, Schedule Constant 2
+  // Always On Discrete, Always Off Discrete, Always On Continuous, Schedule Constant 1
+  EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Schedule_Constant).size());
 
   std::vector<WorkspaceObject> objVector(workspace.getObjectsByType(IddObjectType::SurfaceControl_MovableInsulation));
   ASSERT_EQ(1u, objVector.size());

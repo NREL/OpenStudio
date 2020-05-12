@@ -59,12 +59,12 @@ OptionalModelObject ReverseTranslator::translateSurfaceControlMovableInsulation(
     return boost::none;
   }
 
-  OptionalString insulationType = workspaceObject.getString(openstudio::SurfaceControl_MovableInsulationFields::InsulationType);
+  // Surface and Material are both required fields and not defaulted in the model Ctor, so make sure we can find them
+  // before we instantiate a SCMI ModelObject
   OptionalWorkspaceObject target;
 
   boost::optional<Surface> surface;
-  target = workspaceObject.getTarget(openstudio::SurfaceControl_MovableInsulationFields::SurfaceName);
-  if (target){
+  if ((target = workspaceObject.getTarget(openstudio::SurfaceControl_MovableInsulationFields::SurfaceName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
       if (modelObject->optionalCast<Surface>()){
@@ -77,8 +77,7 @@ OptionalModelObject ReverseTranslator::translateSurfaceControlMovableInsulation(
   }
 
   boost::optional<Material> material;
-  target = workspaceObject.getTarget(openstudio::SurfaceControl_MovableInsulationFields::MaterialName);
-  if (target){
+  if ((target = workspaceObject.getTarget(openstudio::SurfaceControl_MovableInsulationFields::MaterialName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
       if (modelObject->optionalCast<Material>()){
@@ -86,30 +85,27 @@ OptionalModelObject ReverseTranslator::translateSurfaceControlMovableInsulation(
       }
     }
   } else {
-    LOG(Error, "Could not find material attached to SurfaceControlMovableInsulation object");
-    return boost::none;
-  }
-
-  if (!(surface && material)) {
-    LOG(Error, "SurfaceControlMovableInsulation missing required fields, will not be translated");
+    LOG(Error, "Could not find material for SurfaceControlMovableInsulation object attached to " << surface->briefDescription());
     return boost::none;
   }
 
   SurfaceControlMovableInsulation surfaceControlMovableInsulation(*surface, *material);
-  surfaceControlMovableInsulation.setInsulationType(*insulationType);
 
-  target = workspaceObject.getTarget(openstudio::SurfaceControl_MovableInsulationFields::ScheduleName);
-  if (target){
+  // Required-fields but defaulted in model Ctor: Log an Info if not found, but continue processing
+  if (boost::optional<std::string> insulationType = workspaceObject.getString(openstudio::SurfaceControl_MovableInsulationFields::InsulationType)) {
+    surfaceControlMovableInsulation.setInsulationType(*insulationType);
+  } else {
+    LOG(Info, "Defaulting Insulation Type for SurfaceControlMovableInsulation object attached to " << surface->briefDescription());
+  }
+
+  if ((target = workspaceObject.getTarget(openstudio::SurfaceControl_MovableInsulationFields::ScheduleName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<Schedule>()){
-        boost::optional<Schedule> schedule = modelObject->cast<Schedule>();
-        surfaceControlMovableInsulation.setSchedule(*schedule); 
-      }
+    if (modelObject && modelObject->optionalCast<Schedule>()) {
+      Schedule schedule = modelObject->cast<Schedule>();
+      surfaceControlMovableInsulation.setSchedule(schedule);
     }
   } else {
-    LOG(Error, "Could not find schedule attached to SurfaceControlMovableInsulation object");
-    return boost::none;
+    LOG(Info, "Defaulting Schedule Name for SurfaceControlMovableInsulation object attached to " << surface->briefDescription());
   }
 
   return surfaceControlMovableInsulation;
