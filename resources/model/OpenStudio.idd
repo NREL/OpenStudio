@@ -15103,7 +15103,11 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \type object-list
        \required-field
        \object-list QuadraticCubicCurves
-  N6, \field Nominal Time for Condensate Removal to Begin
+  N6 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+       \type real
+       \default -25.0
+       \units C
+  N7, \field Nominal Time for Condensate Removal to Begin
        \note The nominal time for condensate to begin leaving the coil's condensate
        \note drain line at the coil's rated air flow rate and temperature conditions.
        \note Nominal time is equal to the ratio of the energy of the coil's maximum
@@ -15114,7 +15118,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \minimum 0
        \maximum 3000
        \default 0.0
-  N7, \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+  N8, \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
        \note Ratio of the initial moisture evaporation rate from the cooling coil (when
        \note the compressor first turns off) and the coil's steady state latent capacity
        \note at rated air flow rate and temperature conditions. Suggested value is 1.5; zero value
@@ -15124,7 +15128,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \minimum 0
        \maximum 5
        \default 0.0
-  N8, \field Maximum Cycling Rate
+  N9, \field Maximum Cycling Rate
        \note The maximum on-off cycling Rate for the compressor, which occurs at 50% run time
        \note fraction. Suggested value is 3; zero value means latent degradation model is disabled.
        \type real
@@ -15132,7 +15136,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \minimum 0
        \maximum 5
        \default 0.0
-  N9, \field Latent Capacity Time Constant
+  N10, \field Latent Capacity Time Constant
        \note Time constant for the cooling coil's latent capacity to reach steady state after
        \note startup. Suggested value is 45; zero value means latent degradation model is disabled.
        \type real
@@ -15149,32 +15153,32 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \default AirCooled
        \key AirCooled
        \key EvaporativelyCooled
-  N10, \field Evaporative Condenser Effectiveness
+  N11, \field Evaporative Condenser Effectiveness
        \type real
        \units dimensionless
        \minimum 0
        \maximum 1
        \default 0.9
-  N11, \field Evaporative Condenser Air Flow Rate
+  N12, \field Evaporative Condenser Air Flow Rate
        \note Used to calculate evaporative condenser water use
        \type real
        \autosizable
        \units m3/s
        \minimum> 0
-  N12, \field Evaporative Condenser Pump Rated Power Consumption
+  N13, \field Evaporative Condenser Pump Rated Power Consumption
        \note Rated power consumed by the evaporative condenser's water pump
        \type real
        \autosizable
        \units W
        \minimum 0
        \default 0.0
-  N13, \field Crankcase Heater Capacity
+  N14, \field Crankcase Heater Capacity
        \type real
        \units W
        \ip-units Btu/h
        \minimum 0
        \default 0.0
-  N14, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
+  N15, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \units C
        \minimum 0
@@ -15185,7 +15189,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
   A14, \field Condensate Collection Water Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
-  N15, \field Basin Heater Capacity
+  N16, \field Basin Heater Capacity
        \note This field is only used for Condenser Type = EvaporativelyCooled and for periods
        \note when the basin heater is available (field Basin Heater Operating Schedule Name).
        \note For this situation, the heater maintains the basin water temperature at the basin heater
@@ -15195,7 +15199,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \units W/K
        \minimum 0
        \default 0.0
-  N16, \field Basin Heater Setpoint Temperature
+  N17, \field Basin Heater Setpoint Temperature
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Enter the outdoor dry-bulb temperature when the basin heater turns on.
        \type real
