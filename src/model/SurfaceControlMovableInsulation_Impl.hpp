@@ -75,15 +75,13 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<std::string> insulationType() const;
+    std::string insulationType() const;
 
     Surface surface() const;
 
-    boost::optional<std::string> surfaceName() const;
+    Material material() const;
 
-    boost::optional<Material> material() const;
-
-    boost::optional<Schedule> schedule() const;
+    Schedule schedule() const;
 
     //@}
     /** @name Setters */
@@ -91,17 +89,11 @@ namespace detail {
 
     bool setInsulationType(const std::string& insulationType);
 
-    void resetInsulationType();
-
     bool setSurface(const Surface& surface);
 
     bool setMaterial(const Material& material);
 
-    void resetMaterial();
-
     bool setSchedule(Schedule& schedule);
-
-    void resetSchedule();
 
     //@}
     /** @name Other */

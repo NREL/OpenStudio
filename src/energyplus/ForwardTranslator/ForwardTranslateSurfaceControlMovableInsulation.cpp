@@ -54,26 +54,24 @@ boost::optional<IdfObject> ForwardTranslator::translateSurfaceControlMovableInsu
 
   m_idfObjects.push_back(idfObject);
 
-  boost::optional<std::string> insulationType = modelObject.insulationType();
+  std::string insulationType = modelObject.insulationType();
   Surface surface = modelObject.surface();
-  boost::optional<Material> material = modelObject.material();
-  boost::optional<Schedule> schedule = modelObject.schedule();
+  Material material = modelObject.material();
+  Schedule schedule = modelObject.schedule();
 
-  if (!(insulationType && material && schedule)) {
-    LOG(Error, "SurfaceControlMovableInsulation for Surface '" << surface.nameString() << "' missing required fields, will not be translated");
-    return boost::none;
+  idfObject.setString(SurfaceControl_MovableInsulationFields::InsulationType, insulationType);
+
+  boost::optional<IdfObject> surf = translateAndMapModelObject(surface);
+  if (surf && surf->name()){
+    idfObject.setString(SurfaceControl_MovableInsulationFields::SurfaceName, surf->name().get());
   }
 
-  idfObject.setString(SurfaceControl_MovableInsulationFields::InsulationType, insulationType.get());
-
-  idfObject.setString(SurfaceControl_MovableInsulationFields::SurfaceName, modelObject.surfaceName().get());
-
-  boost::optional<IdfObject> mat = translateAndMapModelObject(*material);
+  boost::optional<IdfObject> mat = translateAndMapModelObject(material);
   if (mat && mat->name()){
     idfObject.setString(SurfaceControl_MovableInsulationFields::MaterialName, mat->name().get());
   }
 
-  boost::optional<IdfObject> sch = translateAndMapModelObject(*schedule);
+  boost::optional<IdfObject> sch = translateAndMapModelObject(schedule);
   if (sch && sch->name()){
     idfObject.setString(SurfaceControl_MovableInsulationFields::ScheduleName, sch->name().get());
   }

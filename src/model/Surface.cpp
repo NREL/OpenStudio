@@ -889,25 +889,16 @@ namespace detail {
   }
 
   boost::optional<SurfaceControlMovableInsulation> Surface_Impl::surfaceControlMovableInsulation() const {
-      std::vector<SurfaceControlMovableInsulation> allscmis(model().getConcreteModelObjects<SurfaceControlMovableInsulation>());
-      std::vector<SurfaceControlMovableInsulation> scmis;
-      for (auto& scmi : allscmis) {
-          boost::optional<std::string> surfaceName = scmi.surfaceName();
-          if (surfaceName) {
-            Surface surface = scmi.surface();
-            if (surface.handle() == handle()) {
-              scmis.push_back(scmi);
-            }
-          }
-      }
-      if (scmis.empty()) {
-          return boost::none;
-      } else if (scmis.size() == 1) {
-          return scmis.at(0);
-      } else {
-          LOG(Error, "More than one SurfaceControlMovableInsulation points to this Surface");
-          return boost::none;
-      }
+    Surface thisSurface = getObject<Surface>();
+    std::vector<SurfaceControlMovableInsulation> movableInsulations = thisSurface.getModelObjectSources<SurfaceControlMovableInsulation>(SurfaceControlMovableInsulation::iddObjectType());
+    if (movableInsulations.empty()) {
+      return boost::none;
+    } else if (movableInsulations.size() == 1) {
+      return movableInsulations.at(0);
+    } else {
+      LOG(Error, "More than one SurfaceControlMovableInsulation points to this Surface");
+      return boost::none;
+    }
   }
 
   boost::optional<SurfacePropertyConvectionCoefficients> Surface_Impl::surfacePropertyConvectionCoefficients() const {

@@ -45,7 +45,6 @@ class PlanarSurfaceGroup;
 class Space;
 class ConstructionBase;
 class GeneratorPhotovoltaic;
-class SurfaceControlMovableInsulation;
 class SurfacePropertyConvectionCoefficients;
 
 namespace detail {
@@ -232,9 +231,6 @@ class MODEL_API PlanarSurface : public ParentObject {
 
   /// Returns any generator photovoltaics associated with this surface.
   std::vector<GeneratorPhotovoltaic> generatorPhotovoltaics() const;
-
-  /// Returns any SurfaceControlMovableInsulation associated with this surface.
-  std::vector<SurfaceControlMovableInsulation> surfaceControlMovableInsulation() const;
 
   /// Returns any SurfacePropertyConvectionCoefficients associated with this surface, does not return SurfacePropertyConvectionCoefficientsMultipleSurface.
   std::vector<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;

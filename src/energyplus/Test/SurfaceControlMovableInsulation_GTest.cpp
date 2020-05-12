@@ -75,35 +75,30 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfaceControlMovableInsulation) {
   surface.setSpace(space);
   StandardOpaqueMaterial material(model);
   ScheduleConstant schedule(model);
-  openstudio::model::SurfaceControlMovableInsulation mi(surface);
+  openstudio::model::SurfaceControlMovableInsulation mi(surface, material);
   EXPECT_EQ(surface.handle(), mi.surface().handle());
   ASSERT_TRUE(surface.surfaceControlMovableInsulation());
+  EXPECT_EQ("Outside", surface.surfaceControlMovableInsulation().get().insulationType());
 
-  mi.setInsulationType("Outside");
-  ASSERT_TRUE(mi.insulationType());
+  mi.setInsulationType("Inside");
   mi.setMaterial(material);
-  ASSERT_TRUE(mi.material());
-  EXPECT_EQ(material.handle(), mi.material().get().handle());
+  EXPECT_EQ(material.handle(), mi.material().handle());
+  EXPECT_TRUE(!(schedule.handle() == mi.schedule().handle()));
   mi.setSchedule(schedule);
-  ASSERT_TRUE(mi.schedule());
-  EXPECT_EQ(schedule.handle(), mi.schedule().get().handle());
+  EXPECT_EQ(schedule.handle(), mi.schedule().handle());
 
   ForwardTranslator trans;
   Workspace workspace = trans.translateModel(model);
 
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Material).size());
-  EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Schedule_Constant).size());
+  EXPECT_EQ(5u, workspace.getObjectsByType(IddObjectType::Schedule_Constant).size()); // Always On Discrete, Always On Continuous, Always Off Discrete, Schedule Constant 1, Schedule Constant 2
 
   std::vector<WorkspaceObject> objVector(workspace.getObjectsByType(IddObjectType::SurfaceControl_MovableInsulation));
   ASSERT_EQ(1u, objVector.size());
   WorkspaceObject wo(objVector.at(0));
 
-  boost::optional<std::string> miit(wo.getString(SurfaceControl_MovableInsulationFields::InsulationType));
-  EXPECT_TRUE(miit);
-  if (miit) {
-    EXPECT_EQ(miit.get(), "Outside");
-  }
+  EXPECT_EQ("Inside", wo.getString(SurfaceControl_MovableInsulationFields::InsulationType, false).get());
 
   boost::optional<WorkspaceObject> woSurface(wo.getTarget(SurfaceControl_MovableInsulationFields::SurfaceName));
   EXPECT_TRUE(woSurface);

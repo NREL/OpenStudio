@@ -71,6 +71,9 @@ OptionalModelObject ReverseTranslator::translateSurfaceControlMovableInsulation(
         surface = modelObject->cast<Surface>();
       }
     }
+  } else {
+    LOG(Error, "Could not find surface attached to SurfaceControlMovableInsulation object");
+    return boost::none;
   }
 
   boost::optional<Material> material;
@@ -82,24 +85,32 @@ OptionalModelObject ReverseTranslator::translateSurfaceControlMovableInsulation(
         material = modelObject->cast<Material>();
       }
     }
+  } else {
+    LOG(Error, "Could not find material attached to SurfaceControlMovableInsulation object");
+    return boost::none;
   }
 
-  boost::optional<Schedule> schedule;
+  if (!(surface && material)) {
+    LOG(Error, "SurfaceControlMovableInsulation missing required fields, will not be translated");
+    return boost::none;
+  }
+
+  SurfaceControlMovableInsulation surfaceControlMovableInsulation(*surface, *material);
+  surfaceControlMovableInsulation.setInsulationType(*insulationType);
+
   target = workspaceObject.getTarget(openstudio::SurfaceControl_MovableInsulationFields::ScheduleName);
   if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
       if (modelObject->optionalCast<Schedule>()){
-        schedule = modelObject->cast<Schedule>();
+        boost::optional<Schedule> schedule = modelObject->cast<Schedule>();
+        surfaceControlMovableInsulation.setSchedule(*schedule); 
       }
     }
+  } else {
+    LOG(Error, "Could not find schedule attached to SurfaceControlMovableInsulation object");
+    return boost::none;
   }
-
-  SurfaceControlMovableInsulation surfaceControlMovableInsulation(*surface);
-
-  surfaceControlMovableInsulation.setInsulationType(*insulationType);
-  surfaceControlMovableInsulation.setMaterial(*material);
-  surfaceControlMovableInsulation.setSchedule(*schedule); 
 
   return surfaceControlMovableInsulation;
 }

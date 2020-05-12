@@ -1190,7 +1190,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SurfaceControlMovableInsulation) {
   std::vector<SurfaceControlMovableInsulation> mis = model.getModelObjects<SurfaceControlMovableInsulation>();
   ASSERT_EQ(1u, mis.size());
   SurfaceControlMovableInsulation mi = mis[0];
-  EXPECT_EQ("Inside", mi.insulationType().get());
+  EXPECT_EQ("Inside", mi.insulationType());
 
   std::vector<Surface> surfaces = model.getModelObjects<Surface>();
   ASSERT_EQ(1u, surfaces.size());
@@ -1200,10 +1200,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SurfaceControlMovableInsulation) {
   std::vector<Material> materials = model.getModelObjects<Material>();
   ASSERT_EQ(1u, materials.size());
   Material material = materials[0];
-  EXPECT_EQ(mi.material().get().name().get(), material.name().get());
+  EXPECT_EQ(mi.material().name().get(), material.name().get());
 
   std::vector<Schedule> schedules = model.getModelObjects<Schedule>();
-  ASSERT_EQ(1u, schedules.size());
-  Schedule schedule = schedules[0];
-  EXPECT_EQ(mi.schedule().get().name().get(), schedule.name().get());
+  ASSERT_EQ(2u, schedules.size()); // Schedule Constant 1 and Schedule 1
 }

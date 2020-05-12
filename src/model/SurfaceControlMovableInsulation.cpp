@@ -38,6 +38,8 @@
 #include "Material_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
+#include "ScheduleConstant.hpp"
+#include "ScheduleConstant_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -98,8 +100,10 @@ namespace detail {
     return SurfaceControlMovableInsulation::iddObjectType();
   }
 
-  boost::optional<std::string> SurfaceControlMovableInsulation_Impl::insulationType() const {
-    return getString(OS_SurfaceControl_MovableInsulationFields::InsulationType, true, true);
+  std::string SurfaceControlMovableInsulation_Impl::insulationType() const {
+    boost::optional<std::string> insulationType = getString(OS_SurfaceControl_MovableInsulationFields::InsulationType, true, true);
+    OS_ASSERT(insulationType);
+    return insulationType.get();
   }
 
   Surface SurfaceControlMovableInsulation_Impl::surface() const {
@@ -108,30 +112,21 @@ namespace detail {
     return surface.get();
   }
 
-  boost::optional<std::string> SurfaceControlMovableInsulation_Impl::surfaceName() const {
-    boost::optional<Surface> surface = getObject<ModelObject>().getModelObjectTarget<Surface>(OS_SurfaceControl_MovableInsulationFields::SurfaceName);
-    if (surface) {
-      return surface.get().name();
-    }
-    return boost::none;
+  Material SurfaceControlMovableInsulation_Impl::material() const {
+    boost::optional<Material> material = getObject<ModelObject>().getModelObjectTarget<Material>(OS_SurfaceControl_MovableInsulationFields::MaterialName);
+    OS_ASSERT(material);
+    return material.get();
   }
 
-  boost::optional<Material> SurfaceControlMovableInsulation_Impl::material() const {
-    return getObject<ModelObject>().getModelObjectTarget<Material>(OS_SurfaceControl_MovableInsulationFields::MaterialName);
-  }
-
-  boost::optional<Schedule> SurfaceControlMovableInsulation_Impl::schedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_SurfaceControl_MovableInsulationFields::ScheduleName);
+  Schedule SurfaceControlMovableInsulation_Impl::schedule() const {
+    boost::optional<Schedule> schedule = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_SurfaceControl_MovableInsulationFields::ScheduleName);
+    OS_ASSERT(schedule);
+    return schedule.get();
   }
 
   bool SurfaceControlMovableInsulation_Impl::setInsulationType(const std::string& insulationType) {
     bool result = setString(OS_SurfaceControl_MovableInsulationFields::InsulationType, insulationType);
     return result;
-  }
-
-  void SurfaceControlMovableInsulation_Impl::resetInsulationType() {
-    bool result = setString(OS_SurfaceControl_MovableInsulationFields::InsulationType, "");
-    OS_ASSERT(result);
   }
 
   bool SurfaceControlMovableInsulation_Impl::setSurface(const Surface& surface) {
@@ -149,11 +144,6 @@ namespace detail {
     return setPointer(OS_SurfaceControl_MovableInsulationFields::MaterialName, material.handle());
   }
 
-  void SurfaceControlMovableInsulation_Impl::resetMaterial() {
-    bool result = setString(OS_SurfaceControl_MovableInsulationFields::MaterialName, "");
-    OS_ASSERT(result);
-  }
-
   bool SurfaceControlMovableInsulation_Impl::setSchedule(Schedule& schedule) {
     bool result = ModelObject_Impl::setSchedule(OS_SurfaceControl_MovableInsulationFields::ScheduleName,
                                                 "SurfaceControlMovableInsulation",
@@ -162,25 +152,29 @@ namespace detail {
     return result;
   }
 
-  void SurfaceControlMovableInsulation_Impl::resetSchedule() {
-    bool result = setString(OS_SurfaceControl_MovableInsulationFields::ScheduleName, "");
-    OS_ASSERT(result);
-  }
-
 } // detail
 
-SurfaceControlMovableInsulation::SurfaceControlMovableInsulation(const Surface& surface)
+SurfaceControlMovableInsulation::SurfaceControlMovableInsulation(const Surface& surface, const Material& material)
   : ModelObject(SurfaceControlMovableInsulation::iddObjectType(), surface.model())
 {
   OS_ASSERT(getImpl<detail::SurfaceControlMovableInsulation_Impl>());
+
+  setInsulationType("Outside");
+
   setSurface(surface);
+
+  setMaterial(material);
+
+  ScheduleConstant schedule(surface.model());
+  schedule.setValue(1.0);
+  setSchedule(schedule);
 }
 
 IddObjectType SurfaceControlMovableInsulation::iddObjectType() {
   return IddObjectType(IddObjectType::OS_SurfaceControl_MovableInsulation);
 }
 
-boost::optional<std::string> SurfaceControlMovableInsulation::insulationType() const {
+std::string SurfaceControlMovableInsulation::insulationType() const {
   return getImpl<detail::SurfaceControlMovableInsulation_Impl>()->insulationType();
 }
 
@@ -188,24 +182,16 @@ Surface SurfaceControlMovableInsulation::surface() const {
   return getImpl<detail::SurfaceControlMovableInsulation_Impl>()->surface();
 }
 
-boost::optional<std::string> SurfaceControlMovableInsulation::surfaceName() const {
-  return getImpl<detail::SurfaceControlMovableInsulation_Impl>()->surfaceName();
-}
-
-boost::optional<Material> SurfaceControlMovableInsulation::material() const {
+Material SurfaceControlMovableInsulation::material() const {
   return getImpl<detail::SurfaceControlMovableInsulation_Impl>()->material();
 }
 
-boost::optional<Schedule> SurfaceControlMovableInsulation::schedule() const {
+Schedule SurfaceControlMovableInsulation::schedule() const {
   return getImpl<detail::SurfaceControlMovableInsulation_Impl>()->schedule();
 }
 
 bool SurfaceControlMovableInsulation::setInsulationType(const std::string& insulationType) {
   return getImpl<detail::SurfaceControlMovableInsulation_Impl>()->setInsulationType(insulationType);
-}
-
-void SurfaceControlMovableInsulation::resetInsulationType() {
-  getImpl<detail::SurfaceControlMovableInsulation_Impl>()->resetInsulationType();
 }
 
 bool SurfaceControlMovableInsulation::setSurface(const Surface& surface) {
@@ -216,16 +202,8 @@ bool SurfaceControlMovableInsulation::setMaterial(const Material& material) {
   return getImpl<detail::SurfaceControlMovableInsulation_Impl>()->setMaterial(material);
 }
 
-void SurfaceControlMovableInsulation::resetMaterial() {
-  getImpl<detail::SurfaceControlMovableInsulation_Impl>()->resetMaterial();
-}
-
 bool SurfaceControlMovableInsulation::setSchedule(Schedule& schedule) {
   return getImpl<detail::SurfaceControlMovableInsulation_Impl>()->setSchedule(schedule);
-}
-
-void SurfaceControlMovableInsulation::resetSchedule() {
-  getImpl<detail::SurfaceControlMovableInsulation_Impl>()->resetSchedule();
 }
 
 /// @cond
