@@ -15531,6 +15531,10 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \key AirCooled
        \key EvaporativelyCooled
        \required-field
+  N1 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+       \type real
+       \default -25.0
+       \units C
   A8 , \field Supply Water Storage Tank
   A9 , \field Condensate Collection Water Storage Tank
   A10 , \field Apply Part Load Fraction to Speeds Greater than 1
@@ -15543,23 +15547,23 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \key Yes
        \key No
        \default No
-  N1 , \field Crankcase Heater Capacity
+  N2 , \field Crankcase Heater Capacity
        \type real
        \minimum 0.0
        \units W
        \ip-units W
        \required-field
-  N2 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
+  N3 , \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
        \units C
        \required-field
-  N3,  \field Basin Heater Capacity
+  N4,  \field Basin Heater Capacity
        \type real
        \units W/K
        \minimum 0.0
        \required-field
-  N4,  \field Basin Heater Setpoint Temperature
+  N5,  \field Basin Heater Setpoint Temperature
        \type real
        \units C
        \minimum 2.0
