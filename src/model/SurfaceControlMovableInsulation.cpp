@@ -38,8 +38,6 @@
 #include "Material_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "ScheduleConstant.hpp"
-#include "ScheduleConstant_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -85,6 +83,8 @@ namespace detail {
       // cloned into same model, erase reference to parent
       // this object is now invalid but having two objects point to same surface would also be invalid
       result.setString(OS_SurfaceControl_MovableInsulationFields::SurfaceName, "");
+      LOG(Warn, "Cloning the SurfaceControlMoveableInsulation resets the Surface attached to it while it is a required field. "
+                "You should call `setSurface(Surface&)` on the clone");
     }
 
     return result;
@@ -98,6 +98,18 @@ namespace detail {
 
   IddObjectType SurfaceControlMovableInsulation_Impl::iddObjectType() const {
     return SurfaceControlMovableInsulation::iddObjectType();
+  }
+
+  std::vector<ScheduleTypeKey> SurfaceControlMovableInsulation_Impl::getScheduleTypeKeys(const Schedule& schedule) const
+  {
+    std::vector<ScheduleTypeKey> result;
+    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+    if (std::find(b,e,OS_SurfaceControl_MovableInsulationFields::ScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("SurfaceControlMovableInsulation", "Resistance Modifier Fraction"));
+    }
+    return result;
   }
 
   std::string SurfaceControlMovableInsulation_Impl::insulationType() const {
@@ -165,14 +177,25 @@ SurfaceControlMovableInsulation::SurfaceControlMovableInsulation(const Surface& 
 
   setMaterial(material);
 
-  ScheduleConstant schedule(surface.model());
-  schedule.setValue(1.0);
-  setSchedule(schedule);
+  {
+    auto schedule = surface.model().alwaysOnContinuousSchedule();
+    setSchedule(schedule);
+  }
 }
 
 IddObjectType SurfaceControlMovableInsulation::iddObjectType() {
   return IddObjectType(IddObjectType::OS_SurfaceControl_MovableInsulation);
 }
+
+std::vector<std::string> SurfaceControlMovableInsulation::insulationTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_SurfaceControl_MovableInsulationFields::InsulationType);
+}
+
+std::vector<std::string> SurfaceControlMovableInsulation::validInsulationTypeValues() {
+  return SurfaceControlMovableInsulation::insulationTypeValues();
+}
+
 
 std::string SurfaceControlMovableInsulation::insulationType() const {
   return getImpl<detail::SurfaceControlMovableInsulation_Impl>()->insulationType();

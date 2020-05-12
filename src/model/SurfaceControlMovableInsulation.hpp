@@ -33,13 +33,11 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
-#include "Material.hpp"
-#include "Surface.hpp"
-
 namespace openstudio {
 
 namespace model {
 
+class Surface;
 class Material;
 class Schedule;
 
@@ -55,6 +53,7 @@ class MODEL_API SurfaceControlMovableInsulation : public ModelObject {
   /** @name Constructors and Destructors */
   //@{
 
+  // Constructor takes required-field arguments Surface and Material. The Schedule is defaulted to alwaysOnContinuousSchedule
   explicit SurfaceControlMovableInsulation(const Surface& surface, const Material& material);
 
   virtual ~SurfaceControlMovableInsulation() {}
@@ -62,6 +61,10 @@ class MODEL_API SurfaceControlMovableInsulation : public ModelObject {
   //@}
 
   static IddObjectType iddObjectType();
+
+  static std::vector<std::string> insulationTypeValues();
+
+  static std::vector<std::string> validInsulationTypeValues();
 
   /** @name Getters */
   //@{
@@ -80,6 +83,8 @@ class MODEL_API SurfaceControlMovableInsulation : public ModelObject {
 
   bool setInsulationType(const std::string& insulationType);
 
+  /** Note that if the target surface already has a SurfaceControlMovableInsulation attached to it, it will be removed as there can be only one
+    * SurfaceControlMovableInsulation per Surface. */
   bool setSurface(const Surface& surface);
 
   bool setMaterial(const Material& material);
