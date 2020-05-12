@@ -17596,18 +17596,22 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \type real
         \minimum 0.0
         \units C
+   N9,  \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+        \type real
+        \default -25.0
+        \units C
    A8,  \field Supply Water Storage Tank Name
         \type object-list
         \object-list WaterStorageTankNames
    A9,  \field Condensate Collection Water Storage Tank Name
         \type object-list
         \object-list WaterStorageTankNames
-   N9,  \field Basin Heater Capacity
+   N10, \field Basin Heater Capacity
         \required-field
         \type real
         \units W/K
         \minimum 0.0
-   N10, \field Basin Heater Setpoint Temperature
+   N11, \field Basin Heater Setpoint Temperature
         \required-field
         \type real
         \units C
