@@ -15285,7 +15285,11 @@ OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode,
   A11, \field Condensate Collection Water Storage Tank
        \type object-list
        \object-list WaterStorageTankNames
-  N5,  \field Basin Heater Capacity
+  N5,  \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+       \type real
+       \default -25.0
+       \units C
+  N6,  \field Basin Heater Capacity
        \type real
        \units W/K
        \minimum 0.0
@@ -15295,7 +15299,7 @@ OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode,
        \note For this situation, the heater maintains the basin water temperature at the basin heater
        \note setpoint temperature when the outdoor air temperature falls below the setpoint temperature.
        \note The basin heater only operates when the DX coil is off.
-  N6,  \field Basin Heater Setpoint Temperature
+  N7,  \field Basin Heater Setpoint Temperature
        \type real
        \units C
        \minimum 2.0
