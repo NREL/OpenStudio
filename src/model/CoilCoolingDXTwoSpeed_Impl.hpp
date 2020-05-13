@@ -80,6 +80,12 @@ namespace detail {
 
     virtual unsigned outletPort() const override;
 
+    virtual bool addToNode(Node & node) override;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -138,29 +144,11 @@ namespace detail {
 
     boost::optional<Schedule> basinHeaterOperatingSchedule()const;
 
-  boost::optional<double> autosizedRatedHighSpeedTotalCoolingCapacity() const ;
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-  boost::optional<double> autosizedRatedHighSpeedSensibleHeatRatio() const ;
+    bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
 
-  boost::optional<double> autosizedRatedHighSpeedAirFlowRate() const ;
-
-  boost::optional<double> autosizedRatedLowSpeedTotalCoolingCapacity() const ;
-
-  boost::optional<double> autosizedRatedLowSpeedSensibleHeatRatio() const ;
-
-  boost::optional<double> autosizedRatedLowSpeedAirFlowRate() const ;
-
-  boost::optional<double> autosizedHighSpeedEvaporativeCondenserAirFlowRate() const ;
-
-  boost::optional<double> autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
-
-  boost::optional<double> autosizedLowSpeedEvaporativeCondenserAirFlowRate() const ;
-
-  boost::optional<double> autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
-
-  virtual void autosize() override;
-
-  virtual void applySizingValues() override;
+    boost::optional<double> unitInternalStaticAirPressure() const;
 
     //@}
     /** @name Setters */
@@ -252,9 +240,42 @@ namespace detail {
 
     void resetBasinHeaterOperatingSchedule();
 
-    bool addToNode(Node & node) override;
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+
+    void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
+
+    bool setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure);
+
+    void resetUnitInternalStaticAirPressure();
 
     //@}
+    /** @name Other */
+    //@{
+
+    // Autosize methods
+
+    boost::optional<double> autosizedRatedHighSpeedTotalCoolingCapacity() const ;
+
+    boost::optional<double> autosizedRatedHighSpeedSensibleHeatRatio() const ;
+
+    boost::optional<double> autosizedRatedHighSpeedAirFlowRate() const ;
+
+    boost::optional<double> autosizedRatedLowSpeedTotalCoolingCapacity() const ;
+
+    boost::optional<double> autosizedRatedLowSpeedSensibleHeatRatio() const ;
+
+    boost::optional<double> autosizedRatedLowSpeedAirFlowRate() const ;
+
+    boost::optional<double> autosizedHighSpeedEvaporativeCondenserAirFlowRate() const ;
+
+    boost::optional<double> autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+
+    boost::optional<double> autosizedLowSpeedEvaporativeCondenserAirFlowRate() const ;
+
+    boost::optional<double> autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+
+    //@}
+
   private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingDXTwoSpeed");
 

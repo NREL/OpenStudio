@@ -845,3 +845,46 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXVariableSpeed_minOAT
   ASSERT_TRUE(c.getTarget(21));
   EXPECT_EQ("Coil Cooling DX Variable Speed 1 Speed Data List", c.getTarget(21)->nameString());
 }
+
+TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompressor) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXTwoSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXTwoSpeed_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:Coil:Cooling:DX:TwoSpeed").size());
+  WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:TwoSpeed")[0];
+
+  // First insertion
+  // Field before insertion point
+  ASSERT_TRUE(c.getDouble(6));
+  EXPECT_EQ(1.2, c.getDouble(6).get());
+
+  // Insertion point is at index 7, and is defaulted
+  EXPECT_FALSE(c.getString(7, false, true));
+
+  // After is the inlet node, via a PortList
+  ASSERT_TRUE(c.getTarget(8));
+  EXPECT_EQ("Coil Inlet Node Name", c.getTarget(8)->getTarget(2)->nameString());
+
+
+  // Second insertion
+  // Field before insertion point
+  ASSERT_TRUE(c.getString(22, false, true));
+  EXPECT_EQ("EvaporativelyCooled", c.getString(22, false, true).get());
+
+  // Insertion point is at index 23, and is defaulted
+  EXPECT_FALSE(c.getString(23, false, true));
+
+  // After
+  ASSERT_TRUE(c.getDouble(24));
+  EXPECT_EQ(0.5, c.getDouble(24).get());
+
+
+  // Last field is a schedule
+  ASSERT_TRUE(c.getTarget(34));
+  EXPECT_EQ("Basin Heater Operating Schedule Name", c.getTarget(34)->nameString());
+}

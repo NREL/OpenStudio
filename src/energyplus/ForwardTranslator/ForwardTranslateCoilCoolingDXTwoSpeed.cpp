@@ -114,6 +114,11 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoSpeedWith
     idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::HighSpeedRatedAirFlowRate,"Autosize");
   }
 
+  // Unit Internal Static Air Pressure
+  if ( (d = modelObject.unitInternalStaticAirPressure()) ) {
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::UnitInternalStaticAirPressure, *d);
+  }
+
   //A3 , \field Air Inlet Node Name
   OptionalModelObject omo = modelObject.inletModelObject();
   if( omo )
@@ -229,6 +234,12 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoSpeedWith
 
   //  A13, \field Condenser Type
   idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::CondenserType,modelObject.getCondenserType());
+
+  // Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  {
+    auto value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation();
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,value);
+  }
 
   //   N9, \field High Speed Evaporative Condenser Effectiveness
   d=modelObject.getHighSpeedEvaporativeCondenserEffectiveness();

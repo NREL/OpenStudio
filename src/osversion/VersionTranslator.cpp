@@ -5327,6 +5327,30 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else if (iddname == "OS:Coil:Cooling:DX:TwoSpeed") {
+      // Inserted 'Unit Internal Static Air Pressure' at field 7
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 23 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 7) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else if (i < 22) {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          } else {
+            // Every other is shifted by two fields
+            newObject.setString(i + 2, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     // No-op
     } else {
       ss << object;

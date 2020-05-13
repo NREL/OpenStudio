@@ -324,6 +324,25 @@ TEST_F(ModelFixture,CoilCoolingDXTwoSpeed_SetGetFields)
     ScheduleCompact basinSch(m);
     coil.setBasinHeaterOperatingSchedule(basinSch);
     ASSERT_EQ(basinSch,coil.getBasinHeaterOperatingSchedule().get());
+
+    // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+    EXPECT_TRUE(coil.isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted());
+    double defaultedMinOATTemp = coil.minimumOutdoorDryBulbTemperatureforCompressorOperation();
+    // There are no IDD limits, so everything should work
+    EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
+    EXPECT_FALSE(coil.isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted());
+    EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+    // reset
+    coil.resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
+    EXPECT_TRUE(coil.isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted());
+    EXPECT_EQ(defaultedMinOATTemp, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+
+    EXPECT_FALSE(coil.unitInternalStaticAirPressure());
+    EXPECT_TRUE(coil.setUnitInternalStaticAirPressure(773.3));
+    ASSERT_TRUE(coil.unitInternalStaticAirPressure());
+    EXPECT_EQ(773.3, coil.unitInternalStaticAirPressure().get());
+    coil.resetUnitInternalStaticAirPressure();
+    EXPECT_FALSE(coil.unitInternalStaticAirPressure());
 }
 
 //Test adding LifeCycleCost

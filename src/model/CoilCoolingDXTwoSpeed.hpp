@@ -269,6 +269,12 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
   /** \deprecated */
   boost::optional<Schedule> getBasinHeaterOperatingSchedule() const;
 
+  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+
+  bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
+
+  boost::optional<double> unitInternalStaticAirPressure() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -395,6 +401,18 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
 
   void resetBasinHeaterOperatingSchedule();
 
+  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+
+  void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
+
+  bool setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure);
+
+  void resetUnitInternalStaticAirPressure();
+
+  //@}
+  /** @name Other */
+  //@{
+
   boost::optional<double> autosizedRatedHighSpeedTotalCoolingCapacity() const ;
 
   boost::optional<double> autosizedRatedHighSpeedSensibleHeatRatio() const ;
@@ -414,8 +432,6 @@ class MODEL_API CoilCoolingDXTwoSpeed : public StraightComponent {
   boost::optional<double> autosizedLowSpeedEvaporativeCondenserAirFlowRate() const ;
 
   boost::optional<double> autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
-
-
 
   //@}
  protected:
