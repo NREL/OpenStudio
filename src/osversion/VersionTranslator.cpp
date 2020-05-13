@@ -5247,13 +5247,14 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
   for (const IdfObject& object : idf_3_0_0.objects()) {
     auto iddname = object.iddObject().name();
 
-    if (iddname == "OS:Example:Object") {
-      auto iddObject = idd_3_0_1.getObject("OS:Example:Object");
+    // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
+    if (iddname == "OS:Coil:Cooling:DX:SingleSpeed") {
+      auto iddObject = idd_3_0_1.getObject(iddname);
       IdfObject newObject(iddObject.get());
 
       for (size_t i = 0; i < object.numFields(); ++i) {
         if ((value = object.getString(i))) {
-          if (i < 2) {
+          if (i < 15) {
             // Handle
             newObject.setString(i, value.get());
           } else {
@@ -5266,7 +5267,6 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
-
     // No-op
     } else {
       ss << object;
@@ -5275,8 +5275,7 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
 
   return ss.str();
 
-}
-
+} // end update_3_0_0_to_3_0_1
 
 } // osversion
 } // openstudio

@@ -93,6 +93,17 @@ TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_RatedTotalCoolingCapacity_GettersSe
   EXPECT_EQ(coil.basinHeaterCapacity(),1.5);
   EXPECT_EQ(coil.basinHeaterSetpointTemperature(),2.5);
 
+  EXPECT_TRUE(coil.isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted());
+  double defaultedMinOATTemp = coil.minimumOutdoorDryBulbTemperatureforCompressorOperation();
+  // There are no IDD limits, so everything should work
+  EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
+  EXPECT_FALSE(coil.isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted());
+  EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+  // reset
+  coil.resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
+  EXPECT_TRUE(coil.isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted());
+  EXPECT_EQ(defaultedMinOATTemp, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+
 }
 
 TEST_F(ModelFixture,CoilCoolingDXSingleSpeed_addToNode) {

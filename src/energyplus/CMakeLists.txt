@@ -581,6 +581,7 @@ set(${target_name}_test_src
   Test/CentralHeatPumpSystem_GTest.cpp
 
   Test/CoilHeatingGas_GTest.cpp
+  Test/CoilCoolingDXSingleSpeed_GTest.cpp
   Test/CoilCoolingDXMultiSpeed_GTest.cpp
   Test/Construction_GTest.cpp
   Test/DaylightingControl_GTest.cpp

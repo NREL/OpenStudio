@@ -736,3 +736,31 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_nondefault) {
 
 }
 
+TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCompressor) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXSingleSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model);
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXSingleSpeed_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed").size());
+  WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed")[0];
+
+  // Field before insertion point is a curve, should still be
+  ASSERT_TRUE(c.getTarget(14));
+  EXPECT_EQ("CC DX SingleSpeed PartLoadFrac Correlation Curve", c.getTarget(14)->nameString());
+
+  // Insertion point is at index 15, and is defaulted
+  EXPECT_FALSE(c.getString(15, false, true));
+
+  // After should be 1000.0
+  ASSERT_TRUE(c.getDouble(16));
+  EXPECT_EQ(1000.0, c.getDouble(16).get());
+
+  // Last field
+  ASSERT_TRUE(c.getTarget(31));
+  EXPECT_EQ("Always Off Discrete", c.getTarget(31)->nameString());
+
+}
