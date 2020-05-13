@@ -1,12 +1,12 @@
 
 OS:Version,
-  {c5ac07a8-42cf-429a-843a-929ee627178c}, !- Handle
+  {b54882f7-b163-4983-9ea6-9f1ae820321d}, !- Handle
   3.0.0;                                  !- Version Identifier
 
 OS:Coil:Cooling:DX:SingleSpeed,
-  {7c1a6122-edc7-4857-84e5-48e84afe75f9}, !- Handle
+  {6bc08ea9-503f-4add-9d9c-d783cb6dffd7}, !- Handle
   Coil Cooling DX Single Speed 1,         !- Name
-  {fb187ccd-0d9f-40db-a6a1-83572252fbff}, !- Availability Schedule Name
+  {d689dc77-9b21-4713-a495-2e5a315b6f94}, !- Availability Schedule Name
   autosize,                               !- Rated Total Cooling Capacity {W}
   autosize,                               !- Rated Sensible Heat Ratio
   3,                                      !- Rated COP {W/W}
@@ -14,11 +14,11 @@ OS:Coil:Cooling:DX:SingleSpeed,
   773.3,                                  !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
   ,                                       !- Air Inlet Node Name
   ,                                       !- Air Outlet Node Name
-  {87b4540c-bb70-44bf-b023-d02db26b8e4f}, !- Total Cooling Capacity Function of Temperature Curve Name
-  {6d17326e-bfb3-444b-a044-5312ca2db676}, !- Total Cooling Capacity Function of Flow Fraction Curve Name
-  {104f818f-2e56-4195-a336-4598506f66b6}, !- Energy Input Ratio Function of Temperature Curve Name
-  {e09933fb-5432-4270-a415-1b4231a4076a}, !- Energy Input Ratio Function of Flow Fraction Curve Name
-  {355e6f97-d898-4ba2-be0b-b3f74496ae17}, !- Part Load Fraction Correlation Curve Name
+  {57ac54ab-337e-4f99-921b-761cf0f5af12}, !- Total Cooling Capacity Function of Temperature Curve Name
+  {b0fd7654-d159-45ad-9b4f-f70d3055bfe6}, !- Total Cooling Capacity Function of Flow Fraction Curve Name
+  {fa3636c1-4625-442b-ae0a-4c873a570811}, !- Energy Input Ratio Function of Temperature Curve Name
+  {e31d64ed-8fb7-4039-8725-7efff979d4c3}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {4c5c97c4-7b29-47a7-82ff-9e70dff408df}, !- Part Load Fraction Correlation Curve Name
   1000,                                   !- Nominal Time for Condensate Removal to Begin {s}
   ,                                       !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
   ,                                       !- Maximum Cycling Rate {cycles/hr}
@@ -34,10 +34,10 @@ OS:Coil:Cooling:DX:SingleSpeed,
   ,                                       !- Condensate Collection Water Storage Tank Name
   0,                                      !- Basin Heater Capacity {W/K}
   10,                                     !- Basin Heater Setpoint Temperature {C}
-  {37fe27fa-8f37-4406-abad-4e0b791f4f58}; !- Basin Heater Operating Schedule Name
+  {46b001cb-8e6c-4b83-bf49-62beefcdcbdf}; !- Basin Heater Operating Schedule Name
 
 OS:Curve:Biquadratic,
-  {87b4540c-bb70-44bf-b023-d02db26b8e4f}, !- Handle
+  {57ac54ab-337e-4f99-921b-761cf0f5af12}, !- Handle
   Curve Biquadratic 1,                    !- Name
   0.942587793,                            !- Coefficient1 Constant
   0.009543347,                            !- Coefficient2 x
@@ -51,7 +51,7 @@ OS:Curve:Biquadratic,
   46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
-  {6d17326e-bfb3-444b-a044-5312ca2db676}, !- Handle
+  {b0fd7654-d159-45ad-9b4f-f70d3055bfe6}, !- Handle
   Curve Quadratic 1,                      !- Name
   0.8,                                    !- Coefficient1 Constant
   0.2,                                    !- Coefficient2 x
@@ -60,7 +60,7 @@ OS:Curve:Quadratic,
   1.5;                                    !- Maximum Value of x
 
 OS:Curve:Biquadratic,
-  {104f818f-2e56-4195-a336-4598506f66b6}, !- Handle
+  {fa3636c1-4625-442b-ae0a-4c873a570811}, !- Handle
   Curve Biquadratic 2,                    !- Name
   0.342414409,                            !- Coefficient1 Constant
   0.034885008,                            !- Coefficient2 x
@@ -74,7 +74,7 @@ OS:Curve:Biquadratic,
   46;                                     !- Maximum Value of y
 
 OS:Curve:Quadratic,
-  {e09933fb-5432-4270-a415-1b4231a4076a}, !- Handle
+  {e31d64ed-8fb7-4039-8725-7efff979d4c3}, !- Handle
   Curve Quadratic 2,                      !- Name
   1.1552,                                 !- Coefficient1 Constant
   -0.1808,                                !- Coefficient2 x
@@ -83,7 +83,7 @@ OS:Curve:Quadratic,
   1.5;                                    !- Maximum Value of x
 
 OS:Curve:Quadratic,
-  {355e6f97-d898-4ba2-be0b-b3f74496ae17}, !- Handle
+  {4c5c97c4-7b29-47a7-82ff-9e70dff408df}, !- Handle
   CC DX SingleSpeed PartLoadFrac Correlation Curve, !- Name
   0.85,                                   !- Coefficient1 Constant
   0.15,                                   !- Coefficient2 x
@@ -92,13 +92,13 @@ OS:Curve:Quadratic,
   1;                                      !- Maximum Value of x
 
 OS:Schedule:Constant,
-  {fb187ccd-0d9f-40db-a6a1-83572252fbff}, !- Handle
+  {d689dc77-9b21-4713-a495-2e5a315b6f94}, !- Handle
   Always On Discrete,                     !- Name
-  {de03eaf9-b012-4919-8c7f-77a56061cfdf}, !- Schedule Type Limits Name
+  {a28f3483-6df4-41a1-8ed7-4c943bc7e383}, !- Schedule Type Limits Name
   1;                                      !- Value
 
 OS:ScheduleTypeLimits,
-  {de03eaf9-b012-4919-8c7f-77a56061cfdf}, !- Handle
+  {a28f3483-6df4-41a1-8ed7-4c943bc7e383}, !- Handle
   OnOff,                                  !- Name
   0,                                      !- Lower Limit Value
   1,                                      !- Upper Limit Value
@@ -106,13 +106,13 @@ OS:ScheduleTypeLimits,
   Availability;                           !- Unit Type
 
 OS:Schedule:Constant,
-  {37fe27fa-8f37-4406-abad-4e0b791f4f58}, !- Handle
+  {46b001cb-8e6c-4b83-bf49-62beefcdcbdf}, !- Handle
   Always Off Discrete,                    !- Name
-  {fe613e3d-930d-4c61-8055-080ce611b7a5}, !- Schedule Type Limits Name
+  {ad0f95a2-88c3-40be-98f6-4c2a9293d56d}, !- Schedule Type Limits Name
   0;                                      !- Value
 
 OS:ScheduleTypeLimits,
-  {fe613e3d-930d-4c61-8055-080ce611b7a5}, !- Handle
+  {ad0f95a2-88c3-40be-98f6-4c2a9293d56d}, !- Handle
   OnOff 1,                                !- Name
   0,                                      !- Lower Limit Value
   1,                                      !- Upper Limit Value

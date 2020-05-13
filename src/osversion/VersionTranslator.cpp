@@ -5247,8 +5247,8 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
   for (const IdfObject& object : idf_3_0_0.objects()) {
     auto iddname = object.iddObject().name();
 
-    // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
     if (iddname == "OS:Coil:Cooling:DX:SingleSpeed") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
       auto iddObject = idd_3_0_1.getObject(iddname);
       IdfObject newObject(iddObject.get());
 

@@ -515,7 +515,7 @@ TEST_F(OSVersionFixture,KeepHandles) {
 
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
 
   // spot check a few model objects
   std::vector<IdfObject> idfObjects = oldIdf->getObjectsByName("OS:RunPeriod 1");
@@ -543,7 +543,7 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_fuel.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_fuel_updated.osm");
   model->save(outPath, true);
 
@@ -601,7 +601,7 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_updated.osm");
   model->save(outPath, true);
 
@@ -650,7 +650,7 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default_expanded
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_expanded.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_expanded_updated.osm");
   model->save(outPath, true);
 
@@ -695,7 +695,7 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_nondefault) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_nondefault.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_nondefault_updated.osm");
   model->save(outPath, true);
 
@@ -741,7 +741,7 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCo
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXSingleSpeed.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXSingleSpeed_updated.osm");
   model->save(outPath, true);
 
