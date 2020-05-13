@@ -93,8 +93,6 @@ class MODEL_API CoilCoolingDXMultiSpeed : public StraightComponent {
 
   double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-  bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
-
   //@}
   /** @name Setters */
   //@{
@@ -126,8 +124,6 @@ class MODEL_API CoilCoolingDXMultiSpeed : public StraightComponent {
   bool setFuelType(std::string fuelType);
 
   bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
-
-  void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
 
   //@}
   /** @name Other */

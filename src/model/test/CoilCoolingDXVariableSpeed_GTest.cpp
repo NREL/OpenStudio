@@ -89,14 +89,9 @@ TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_MinOATCompressor)
   CoilCoolingDXVariableSpeed coil(m);
 
   // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
-  EXPECT_TRUE(coil.isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted());
-  double defaultedMinOATTemp = coil.minimumOutdoorDryBulbTemperatureforCompressorOperation();
+  // IDD Default
+  EXPECT_EQ(-25.0, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
   // There are no IDD limits, so everything should work
   EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
-  EXPECT_FALSE(coil.isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted());
   EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
-  // reset
-  coil.resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
-  EXPECT_TRUE(coil.isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted());
-  EXPECT_EQ(defaultedMinOATTemp, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
 }

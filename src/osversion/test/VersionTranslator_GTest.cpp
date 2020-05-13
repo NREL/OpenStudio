@@ -752,8 +752,9 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCo
   ASSERT_TRUE(c.getTarget(14));
   EXPECT_EQ("CC DX SingleSpeed PartLoadFrac Correlation Curve", c.getTarget(14)->nameString());
 
-  // Insertion point is at index 15, and is defaulted
-  EXPECT_FALSE(c.getString(15, false, true));
+  // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
+  ASSERT_TRUE(c.getDouble(15));
+  EXPECT_EQ(-25.0, c.getDouble(15).get());
 
   // After should be 1000.0
   ASSERT_TRUE(c.getDouble(16));
@@ -780,8 +781,9 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidity
   // Field before insertion point is unused (storage tank)
   EXPECT_FALSE(c.getString(14, false, true));
 
-  // Insertion point is at index 15, and is defaulted
-  EXPECT_FALSE(c.getString(15, false, true));
+  // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
+  ASSERT_TRUE(c.getDouble(15));
+  EXPECT_EQ(-25.0, c.getDouble(15).get());
 
   // After should be 100.0
   ASSERT_TRUE(c.getDouble(16));
@@ -808,8 +810,9 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXMultiSpeed_minOATCom
   ASSERT_TRUE(c.getString(6, false, true));
   EXPECT_EQ("EvaporativelyCooled", c.getString(6, false, true).get());
 
-  // Insertion point is at index 7, and is defaulted
-  EXPECT_FALSE(c.getString(7, false, true));
+  // Insertion point is at index 7, and is set to -25 (same as model Ctor and E+ IDD default)
+  ASSERT_TRUE(c.getDouble(7));
+  EXPECT_EQ(-25.0, c.getDouble(7).get());
 
   // After is unused (storage tank)
   EXPECT_FALSE(c.getString(8, false, true));
@@ -835,8 +838,9 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXVariableSpeed_minOAT
   ASSERT_TRUE(c.getDouble(14));
   EXPECT_EQ(11.0, c.getDouble(14).get());
 
-  // Insertion point is at index 15, and is defaulted
-  EXPECT_FALSE(c.getString(15, false, true));
+  // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
+  ASSERT_TRUE(c.getDouble(15));
+  EXPECT_EQ(-25.0, c.getDouble(15).get());
 
   // After is unused (storage tank)
   EXPECT_FALSE(c.getString(16, false, true));
@@ -863,8 +867,9 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompr
   ASSERT_TRUE(c.getDouble(6));
   EXPECT_EQ(1.2, c.getDouble(6).get());
 
-  // Insertion point is at index 7, and is defaulted
-  EXPECT_FALSE(c.getString(7, false, true));
+  // Insertion point is at index 7, and is set to 773.3 (same as model Ctor and E+ source code default)
+  ASSERT_TRUE(c.getDouble(7));
+  EXPECT_EQ(773.3, c.getDouble(7).get());
 
   // After is the inlet node, via a PortList
   ASSERT_TRUE(c.getTarget(8));
@@ -876,8 +881,9 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompr
   ASSERT_TRUE(c.getString(22, false, true));
   EXPECT_EQ("EvaporativelyCooled", c.getString(22, false, true).get());
 
-  // Insertion point is at index 23, and is defaulted
-  EXPECT_FALSE(c.getString(23, false, true));
+  // Insertion point is at index 23, and is set to -25 (same as model Ctor and E+ IDD default)
+  ASSERT_TRUE(c.getDouble(23));
+  EXPECT_EQ(-25.0, c.getDouble(23).get());
 
   // After
   ASSERT_TRUE(c.getDouble(24));

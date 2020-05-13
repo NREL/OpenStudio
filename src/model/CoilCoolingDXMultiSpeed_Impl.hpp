@@ -111,8 +111,6 @@ namespace detail {
 
     double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-    bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
-
     //@}
     /** @name Setters */
     //@{
@@ -144,8 +142,6 @@ namespace detail {
     bool setFuelType(std::string fuelType);
 
     bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
-
-    void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
 
     //@}
     /** @name Other */

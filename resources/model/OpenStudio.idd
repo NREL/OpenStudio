@@ -15105,7 +15105,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \object-list QuadraticCubicCurves
   N6 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
-       \default -25.0
+       \required-field
        \units C
   N7, \field Nominal Time for Condensate Removal to Begin
        \note The nominal time for condensate to begin leaving the coil's condensate
@@ -15287,7 +15287,7 @@ OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode,
        \object-list WaterStorageTankNames
   N5,  \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
-       \default -25.0
+       \required-field
        \units C
   N6,  \field Basin Heater Capacity
        \type real
@@ -15533,7 +15533,7 @@ OS:Coil:Cooling:DX:MultiSpeed,
        \required-field
   N1 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
-       \default -25.0
+       \required-field
        \units C
   A8 , \field Supply Water Storage Tank
   A9 , \field Condensate Collection Water Storage Tank
@@ -15755,6 +15755,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type real
        \units Pa
        \minimum> 0.0
+       \required-field
   A4, \field Air Inlet Node Name
        \type object-list
        \required-field
@@ -15856,7 +15857,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \key EvaporativelyCooled
   N10, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
-       \default -25.0
+       \required-field
        \units C
   N11, \field High Speed Evaporative Condenser Effectiveness
        \type real
@@ -17598,7 +17599,7 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \units C
    N9,  \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
         \type real
-        \default -25.0
+        \required-field
         \units C
    A8,  \field Supply Water Storage Tank Name
         \type object-list

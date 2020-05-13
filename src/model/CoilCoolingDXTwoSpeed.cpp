@@ -811,34 +811,22 @@ namespace detail{
     return value.get();
   }
 
-  bool CoilCoolingDXTwoSpeed_Impl::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
-    return isEmpty(OS_Coil_Cooling_DX_TwoSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
-  }
-
   bool CoilCoolingDXTwoSpeed_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
     bool result = setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
                             minimumOutdoorDryBulbTemperatureforCompressorOperation);
     return result;
   }
 
-  void CoilCoolingDXTwoSpeed_Impl::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
-    bool result = setString(OS_Coil_Cooling_DX_TwoSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, "");
-    OS_ASSERT(result);
-  }
-
-  boost::optional<double> CoilCoolingDXTwoSpeed_Impl::unitInternalStaticAirPressure() const {
-    return getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::UnitInternalStaticAirPressure,true);
+  double CoilCoolingDXTwoSpeed_Impl::unitInternalStaticAirPressure() const {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_TwoSpeedFields::UnitInternalStaticAirPressure,true);
+    OS_ASSERT(value);
+    return value.get();
   }
 
   bool CoilCoolingDXTwoSpeed_Impl::setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure) {
     bool result = setDouble(OS_Coil_Cooling_DX_TwoSpeedFields::UnitInternalStaticAirPressure,
                             unitInternalStaticAirPressure);
     return result;
-  }
-
-  void CoilCoolingDXTwoSpeed_Impl::resetUnitInternalStaticAirPressure() {
-    bool result = setString(OS_Coil_Cooling_DX_TwoSpeedFields::UnitInternalStaticAirPressure, "");
-    OS_ASSERT(result);
   }
 
   bool CoilCoolingDXTwoSpeed_Impl::addToNode(Node & node)
@@ -1086,6 +1074,8 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model,
   setBasinHeaterSetpointTemperature(10.0);
   //  A16; \field Basin Heater Operating Schedule Name
   setString(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName,"");
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0); // Per E+ IDD default
+  setUnitInternalStaticAirPressure(773.3); // Per I/O ref
 }
 
 CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model)
@@ -1190,6 +1180,8 @@ CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(const Model& model)
   setBasinHeaterCapacity(10.0);
   setBasinHeaterSetpointTemperature(2.0);
   setString(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName,"");
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0); // Per E+ IDD default
+  setUnitInternalStaticAirPressure(773.3); // Per I/O ref
 }
 
 CoilCoolingDXTwoSpeed::CoilCoolingDXTwoSpeed(std::shared_ptr<detail::CoilCoolingDXTwoSpeed_Impl> p)
@@ -1643,28 +1635,16 @@ double CoilCoolingDXTwoSpeed::minimumOutdoorDryBulbTemperatureforCompressorOpera
   return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->minimumOutdoorDryBulbTemperatureforCompressorOperation();
 }
 
-bool CoilCoolingDXTwoSpeed::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
-  return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted();
-}
-
 bool CoilCoolingDXTwoSpeed::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
   return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
 }
 
-void CoilCoolingDXTwoSpeed::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
-  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
-}
-
-boost::optional<double> CoilCoolingDXTwoSpeed::unitInternalStaticAirPressure() const {
+double CoilCoolingDXTwoSpeed::unitInternalStaticAirPressure() const {
   return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->unitInternalStaticAirPressure();
 }
 
 bool CoilCoolingDXTwoSpeed::setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure) {
   return getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->setUnitInternalStaticAirPressure(unitInternalStaticAirPressure);
-}
-
-void CoilCoolingDXTwoSpeed::resetUnitInternalStaticAirPressure() {
-  getImpl<detail::CoilCoolingDXTwoSpeed_Impl>()->resetUnitInternalStaticAirPressure();
 }
 
 boost::optional<double> CoilCoolingDXTwoSpeed::autosizedRatedHighSpeedTotalCoolingCapacity() const {

@@ -146,9 +146,7 @@ namespace detail {
 
     double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-    bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
-
-    boost::optional<double> unitInternalStaticAirPressure() const;
+    double unitInternalStaticAirPressure() const;
 
     //@}
     /** @name Setters */
@@ -242,11 +240,7 @@ namespace detail {
 
     bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-    void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
-
     bool setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure);
-
-    void resetUnitInternalStaticAirPressure();
 
     //@}
     /** @name Other */

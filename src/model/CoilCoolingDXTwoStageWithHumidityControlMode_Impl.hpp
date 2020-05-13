@@ -115,8 +115,6 @@ namespace detail {
 
     double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-    bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
-
     //@}
     /** @name Setters */
     //@{
@@ -158,8 +156,6 @@ namespace detail {
     void resetBasinHeaterOperatingSchedule();
 
     bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
-
-    void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
 
     //@}
     /** @name Other */

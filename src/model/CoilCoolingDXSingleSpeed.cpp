@@ -891,19 +891,11 @@ namespace detail{
     return value.get();
   }
 
-  bool CoilCoolingDXSingleSpeed_Impl::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
-    return isEmpty(OS_Coil_Cooling_DX_SingleSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
-  }
 
   bool CoilCoolingDXSingleSpeed_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
     bool result = setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
                             minimumOutdoorDryBulbTemperatureforCompressorOperation);
     return result;
-  }
-
-  void CoilCoolingDXSingleSpeed_Impl::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
-    bool result = setString(OS_Coil_Cooling_DX_SingleSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, "");
-    OS_ASSERT(result);
   }
 
   bool CoilCoolingDXSingleSpeed_Impl::addToNode(Node & node)
@@ -1095,6 +1087,7 @@ CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(const Model& model)
   setEvaporativeCondenserPumpRatedPowerConsumption(boost::none);
   setCrankcaseHeaterCapacity(0.0);
   setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(0.0);
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0); // Per E+ IDD default
   //setSupplyWaterStorageTankName("");
   //setCondensateCollectionWaterStorageTankName("");
   setBasinHeaterCapacity(0.0);
@@ -1139,6 +1132,7 @@ CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(const Model& model,
   setEvaporativeCondenserPumpRatedPowerConsumption(boost::none);
   setCrankcaseHeaterCapacity(0.0);
   setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(0.0);
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0); // Per E+ IDD default
   //setSupplyWaterStorageTankName("");
   //setCondensateCollectionWaterStorageTankName("");
   setBasinHeaterCapacity(0.0);
@@ -1601,16 +1595,8 @@ double CoilCoolingDXSingleSpeed::minimumOutdoorDryBulbTemperatureforCompressorOp
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->minimumOutdoorDryBulbTemperatureforCompressorOperation();
 }
 
-bool CoilCoolingDXSingleSpeed::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
-  return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted();
-}
-
 bool CoilCoolingDXSingleSpeed::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
   return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
-}
-
-void CoilCoolingDXSingleSpeed::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
-  getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
 }
 
 AirflowNetworkEquivalentDuct CoilCoolingDXSingleSpeed::getAirflowNetworkEquivalentDuct(double length, double diameter)

@@ -115,8 +115,9 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoSpeedWith
   }
 
   // Unit Internal Static Air Pressure
-  if ( (d = modelObject.unitInternalStaticAirPressure()) ) {
-    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::UnitInternalStaticAirPressure, *d);
+  {
+    auto value = modelObject.unitInternalStaticAirPressure();
+    idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::UnitInternalStaticAirPressure,value);
   }
 
   //A3 , \field Air Inlet Node Name

@@ -425,19 +425,10 @@ namespace detail {
     return value.get();
   }
 
-  bool CoilCoolingDXVariableSpeed_Impl::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
-    return isEmpty(OS_Coil_Cooling_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
-  }
-
   bool CoilCoolingDXVariableSpeed_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
     bool result = setDouble(OS_Coil_Cooling_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
                             minimumOutdoorDryBulbTemperatureforCompressorOperation);
     return result;
-  }
-
-  void CoilCoolingDXVariableSpeed_Impl::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
-    bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, "");
-    OS_ASSERT(result);
   }
 
   boost::optional<Curve> CoilCoolingDXVariableSpeed_Impl::optionalEnergyPartLoadFractionCurve() const {
@@ -709,6 +700,8 @@ CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(const Model& model)
   OS_ASSERT(ok);
   ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
   OS_ASSERT(ok);
+  ok = setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);
+  OS_ASSERT(ok);
   // ok = setSupplyWaterStorageTank(WaterStorageTank);
   // OS_ASSERT(ok);
   // ok = setCondensateCollectionWaterStorageTank(WaterStorageTank);
@@ -748,6 +741,8 @@ CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(const Model& model,
   ok = setCrankcaseHeaterCapacity(0.0);
   OS_ASSERT(ok);
   ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
+  OS_ASSERT(ok);
+  ok = setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);
   OS_ASSERT(ok);
   // ok = setSupplyWaterStorageTank(WaterStorageTank);
   // OS_ASSERT(ok);
@@ -946,16 +941,8 @@ double CoilCoolingDXVariableSpeed::minimumOutdoorDryBulbTemperatureforCompressor
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->minimumOutdoorDryBulbTemperatureforCompressorOperation();
 }
 
-bool CoilCoolingDXVariableSpeed::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
-  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted();
-}
-
 bool CoilCoolingDXVariableSpeed::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
-}
-
-void CoilCoolingDXVariableSpeed::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
-  getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
 }
 
 std::vector<CoilCoolingDXVariableSpeedSpeedData> CoilCoolingDXVariableSpeed::speeds() const {

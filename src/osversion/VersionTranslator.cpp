@@ -5264,6 +5264,9 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
         }
       }
 
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(15, -25.0);
+
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
@@ -5283,6 +5286,9 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
           }
         }
       }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(15, -25.0);
 
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
@@ -5304,6 +5310,9 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
         }
       }
 
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(7, -25.0);
+
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
@@ -5323,6 +5332,9 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
           }
         }
       }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(15, -25.0);
 
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
@@ -5347,6 +5359,12 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
           }
         }
       }
+
+      // Set new field per I/O ref /source code default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(7, 773.3);
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(23, -25.0);
 
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;

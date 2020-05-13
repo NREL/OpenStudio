@@ -340,19 +340,10 @@ namespace detail {
     return value.get();
   }
 
-  bool CoilCoolingDXTwoStageWithHumidityControlMode_Impl::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
-    return isEmpty(OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
-  }
-
   bool CoilCoolingDXTwoStageWithHumidityControlMode_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
     bool result = setDouble(OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
                             minimumOutdoorDryBulbTemperatureforCompressorOperation);
     return result;
-  }
-
-  void CoilCoolingDXTwoStageWithHumidityControlMode_Impl::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
-    bool result = setString(OS_Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, "");
-    OS_ASSERT(result);
   }
 
   unsigned CoilCoolingDXTwoStageWithHumidityControlMode_Impl::inletPort() const {
@@ -531,6 +522,7 @@ CoilCoolingDXTwoStageWithHumidityControlMode::CoilCoolingDXTwoStageWithHumidityC
   setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
   setBasinHeaterCapacity(0.0);
   setBasinHeaterSetpointTemperature(2.0);
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0); // Per E+ IDD default
 
   {
     CurveBiquadratic totalCoolingCapacityFunctionofTemperatureCurve(model);
@@ -899,16 +891,8 @@ double CoilCoolingDXTwoStageWithHumidityControlMode::minimumOutdoorDryBulbTemper
   return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->minimumOutdoorDryBulbTemperatureforCompressorOperation();
 }
 
-bool CoilCoolingDXTwoStageWithHumidityControlMode::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
-  return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted();
-}
-
 bool CoilCoolingDXTwoStageWithHumidityControlMode::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
   return getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
-}
-
-void CoilCoolingDXTwoStageWithHumidityControlMode::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
-  getImpl<detail::CoilCoolingDXTwoStageWithHumidityControlMode_Impl>()->resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
 }
 
 AirflowNetworkEquivalentDuct CoilCoolingDXTwoStageWithHumidityControlMode::getAirflowNetworkEquivalentDuct(double length, double diameter)
