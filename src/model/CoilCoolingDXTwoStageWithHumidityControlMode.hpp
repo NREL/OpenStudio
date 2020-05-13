@@ -88,6 +88,10 @@ class MODEL_API CoilCoolingDXTwoStageWithHumidityControlMode : public StraightCo
 
   boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
+  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+
+  bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -128,13 +132,17 @@ class MODEL_API CoilCoolingDXTwoStageWithHumidityControlMode : public StraightCo
 
   void resetBasinHeaterOperatingSchedule();
 
+  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+
+  void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
+
   //@}
   /** @name Other */
   //@{
 
   /** Creates a new equivalent duct object if an object is not already attached. */
   AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-  
+
   /** Returns the attached equivalent duct object, if any. */
   boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 

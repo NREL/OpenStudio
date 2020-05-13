@@ -764,3 +764,30 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCo
   EXPECT_EQ("Always Off Discrete", c.getTarget(31)->nameString());
 
 }
+
+TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidityControlMode_minOATCompressor) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXTwoStageWithHumidityControlMode.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXTwoStageWithHumidityControlMode_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode").size());
+  WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode")[0];
+
+  // Field before insertion point is unused (storage tank)
+  EXPECT_FALSE(c.getString(14, false, true));
+
+  // Insertion point is at index 15, and is defaulted
+  EXPECT_FALSE(c.getString(15, false, true));
+
+  // After should be 100.0
+  ASSERT_TRUE(c.getDouble(16));
+  EXPECT_EQ(100.0, c.getDouble(16).get());
+
+  // Last field
+  ASSERT_TRUE(c.getDouble(17));
+  EXPECT_EQ(3.0, c.getDouble(17).get());
+}

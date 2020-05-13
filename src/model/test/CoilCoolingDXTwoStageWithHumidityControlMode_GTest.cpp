@@ -52,6 +52,26 @@ TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode)
     ::testing::ExitedWithCode(0), "" );
 }
 
+TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode_MinOATCompressor)
+{
+  Model m;
+
+  CoilCoolingDXTwoStageWithHumidityControlMode coil(m);
+
+  // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  EXPECT_TRUE(coil.isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted());
+  double defaultedMinOATTemp = coil.minimumOutdoorDryBulbTemperatureforCompressorOperation();
+  // There are no IDD limits, so everything should work
+  EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
+  EXPECT_FALSE(coil.isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted());
+  EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+  // reset
+  coil.resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
+  EXPECT_TRUE(coil.isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted());
+  EXPECT_EQ(defaultedMinOATTemp, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+
+}
+
 /* Verifies that the CoilPerformanceDXCooling objects are indeed cloned too
  * Address https://github.com/NREL/OpenStudio/issues/2253
  */
