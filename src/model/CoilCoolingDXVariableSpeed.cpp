@@ -419,6 +419,27 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  double CoilCoolingDXVariableSpeed_Impl::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
+    return isEmpty(OS_Coil_Cooling_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+    bool result = setDouble(OS_Coil_Cooling_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
+                            minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    return result;
+  }
+
+  void CoilCoolingDXVariableSpeed_Impl::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
+    bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, "");
+    OS_ASSERT(result);
+  }
+
   boost::optional<Curve> CoilCoolingDXVariableSpeed_Impl::optionalEnergyPartLoadFractionCurve() const {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_VariableSpeedFields::EnergyPartLoadFractionCurveName);
   }
@@ -919,6 +940,22 @@ bool CoilCoolingDXVariableSpeed::setBasinHeaterOperatingSchedule(Schedule& sched
 
 void CoilCoolingDXVariableSpeed::resetBasinHeaterOperatingSchedule() {
   getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetBasinHeaterOperatingSchedule();
+}
+
+double CoilCoolingDXVariableSpeed::minimumOutdoorDryBulbTemperatureforCompressorOperation() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->minimumOutdoorDryBulbTemperatureforCompressorOperation();
+}
+
+bool CoilCoolingDXVariableSpeed::isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted();
+}
+
+bool CoilCoolingDXVariableSpeed::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
+}
+
+void CoilCoolingDXVariableSpeed::resetMinimumOutdoorDryBulbTemperatureforCompressorOperation() {
+  getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
 }
 
 std::vector<CoilCoolingDXVariableSpeedSpeedData> CoilCoolingDXVariableSpeed::speeds() const {

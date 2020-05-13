@@ -818,3 +818,30 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXMultiSpeed_minOATCom
   ASSERT_TRUE(c.getString(17, false, true));
   EXPECT_EQ("Electricity", c.getString(17, false, true).get());
 }
+
+TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXVariableSpeed_minOATCompressor) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXVariableSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXVariableSpeed_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:Coil:Cooling:DX:VariableSpeed").size());
+  WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:VariableSpeed")[0];
+
+  // Field before insertion point
+  ASSERT_TRUE(c.getDouble(14));
+  EXPECT_EQ(11.0, c.getDouble(14).get());
+
+  // Insertion point is at index 15, and is defaulted
+  EXPECT_FALSE(c.getString(15, false, true));
+
+  // After is unused (storage tank)
+  EXPECT_FALSE(c.getString(16, false, true));
+
+  // Last field is the SpeedDataList
+  ASSERT_TRUE(c.getTarget(21));
+  EXPECT_EQ("Coil Cooling DX Variable Speed 1 Speed Data List", c.getTarget(21)->nameString());
+}

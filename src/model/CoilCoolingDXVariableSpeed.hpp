@@ -107,6 +107,10 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
+  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+
+  bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -156,6 +160,10 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
   bool setBasinHeaterOperatingSchedule(Schedule& schedule);
 
   void resetBasinHeaterOperatingSchedule();
+
+  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+
+  void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
 
   //@}
   /** @name Other */

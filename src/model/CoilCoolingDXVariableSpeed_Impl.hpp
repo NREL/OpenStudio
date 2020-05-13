@@ -88,6 +88,12 @@ namespace detail {
 
     virtual bool addToNode(Node & node) override;
 
+    virtual std::vector<IdfObject> remove() override;
+
+    virtual void autosize() override;
+
+    virtual void applySizingValues() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -130,15 +136,9 @@ namespace detail {
 
     boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
-  boost::optional<double> autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const ;
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-  boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
-
-  boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const ;
-
-  virtual void autosize() override;
-
-  virtual void applySizingValues() override;
+    bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -190,6 +190,10 @@ namespace detail {
 
     void resetBasinHeaterOperatingSchedule();
 
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+
+    void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
+
     //@}
     /** @name Other */
     //@{
@@ -208,7 +212,13 @@ namespace detail {
 
     void removeAllSpeeds();
 
-    std::vector<IdfObject> remove() override;
+
+    // Autosize methods
+    boost::optional<double> autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const ;
+
+    boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
+
+    boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const ;
 
     //@}
    protected:
