@@ -71,6 +71,18 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual unsigned inletPort() const override;
+
+    virtual unsigned outletPort() const override;
+
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+
+    virtual bool addToNode(Node & node) override;
+
     //@}
     /** @name Getters */
     //@{
@@ -96,6 +108,10 @@ namespace detail {
     boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
     std::string fuelType() const;
+
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+
+    bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -127,28 +143,20 @@ namespace detail {
 
     bool setFuelType(std::string fuelType);
 
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+
+    void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
+
     //@}
     /** @name Other */
     //@{
-
-    virtual unsigned inletPort() const override;
-
-    virtual unsigned outletPort() const override;
-
-    ModelObject clone(Model model) const override;
-
-    std::vector<ModelObject> children() const override;
 
     std::vector<CoilCoolingDXMultiSpeedStageData> stages() const;
 
     void addStage(CoilCoolingDXMultiSpeedStageData& stage);
 
-    boost::optional<HVACComponent> containingHVACComponent() const override;
-
-    bool addToNode(Node & node) override;
-
     AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-    
+
     boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
     //@}

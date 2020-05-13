@@ -791,3 +791,30 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidity
   ASSERT_TRUE(c.getDouble(17));
   EXPECT_EQ(3.0, c.getDouble(17).get());
 }
+
+TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXMultiSpeed_minOATCompressor) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXMultiSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXMultiSpeed_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:Coil:Cooling:DX:MultiSpeed").size());
+  WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:MultiSpeed")[0];
+
+  // Field before insertion point
+  ASSERT_TRUE(c.getString(6, false, true));
+  EXPECT_EQ("EvaporativelyCooled", c.getString(6, false, true).get());
+
+  // Insertion point is at index 7, and is defaulted
+  EXPECT_FALSE(c.getString(7, false, true));
+
+  // After is unused (storage tank)
+  EXPECT_FALSE(c.getString(8, false, true));
+
+  // Last field
+  ASSERT_TRUE(c.getString(17, false, true));
+  EXPECT_EQ("Electricity", c.getString(17, false, true).get());
+}

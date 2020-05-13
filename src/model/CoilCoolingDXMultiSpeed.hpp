@@ -91,6 +91,10 @@ class MODEL_API CoilCoolingDXMultiSpeed : public StraightComponent {
 
   std::string fuelType() const;
 
+  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+
+  bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -121,6 +125,10 @@ class MODEL_API CoilCoolingDXMultiSpeed : public StraightComponent {
 
   bool setFuelType(std::string fuelType);
 
+  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+
+  void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
+
   //@}
   /** @name Other */
   //@{
@@ -133,7 +141,7 @@ class MODEL_API CoilCoolingDXMultiSpeed : public StraightComponent {
 
   /** Creates a new equivalent duct object if an object is not already attached. */
   AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-  
+
   /** Returns the attached equivalent duct object, if any. */
   boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
