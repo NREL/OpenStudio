@@ -589,9 +589,14 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
     // Check that the test model (in 2.9.1), actually has bad starting fuels
     EXPECT_TRUE(replaceFuelTypesMap.find(old_fuelType) != replaceFuelTypesMap.end());
 
-    std::string new_fuelType = model->getObjectsByType(iddname)[0].getString(fieldIndex).get();
+    int newFieldIndex = fieldIndex;
+    if (iddname == "OS:Coil:Cooling:DX:MultiSpeed") {
+      // Fuel Type, was 16 on 3.0.0, 17 on 3.0.1
+      newFieldIndex = 17;
+    }
+    std::string new_fuelType = model->getObjectsByType(iddname)[0].getString(newFieldIndex).get();
     EXPECT_NE(old_fuelType, new_fuelType);
-    EXPECT_EQ(replaceFuelTypesMap.at(old_fuelType), new_fuelType);
+    EXPECT_EQ(replaceFuelTypesMap.at(old_fuelType), new_fuelType) << "Failed for " << iddname;
   }
 
 }
