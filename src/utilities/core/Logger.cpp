@@ -103,10 +103,9 @@ namespace openstudio{
       std::pair<LoggerMapType::iterator, bool> inserted = m_loggerMap.insert(newPair);
 
       return inserted.first->second;
-
     }
 
-    return it->second;
+     return it->second;
   }
 
   bool LoggerSingleton::findSink(boost::shared_ptr<LogSinkBackend> sink)

@@ -152,8 +152,8 @@ namespace detail {
     // Relies on utilties/StandardsJSON since it's used in several places
     // Here we store a Json::Value rather than the StandardsJSON because we only care about the "materials" primaryKey
     // Not the whole StandardsJSON
-    static Json::Value m_standardsArr;
-    void parseStandardsJSON() const;
+    static const Json::Value &getStandardsJSON();
+    static Json::Value parseStandardsJSON();
   };
 
 } // detail

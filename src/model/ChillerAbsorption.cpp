@@ -67,7 +67,7 @@ namespace detail {
 
   const std::vector<std::string>& ChillerAbsorption_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 

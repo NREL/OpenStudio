@@ -80,7 +80,7 @@ namespace detail {
 
   const std::vector<std::string>& SiteWaterMainsTemperature_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
       // Not appropriate
       //SetupOutputVariable( "Site Mains Water Temperature [C]", WaterMainsTemp, "Zone", "Average", "Environment" );
     return result;

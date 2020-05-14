@@ -75,7 +75,7 @@ namespace detail {
 
   const std::vector<std::string>& ElectricLoadCenterStorageSimple_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Electric Storage Simple Charge State",
       "Electric Storage Charge Power",
       "Electric Storage Charge Energy",

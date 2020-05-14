@@ -70,9 +70,7 @@ AirflowNetworkCrack_Impl::AirflowNetworkCrack_Impl(const AirflowNetworkCrack_Imp
 
 const std::vector<std::string>& AirflowNetworkCrack_Impl::outputVariableNames() const
 {
-  static std::vector<std::string> result;
-  if(result.empty()){
-  }
+  static const std::vector<std::string> result;
   return result;
 }
 

@@ -186,7 +186,7 @@ namespace detail {
 
   const std::vector<std::string>& Surface_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Surface Inside Face Temperature",
       "Surface Outside Face Temperature"
     };

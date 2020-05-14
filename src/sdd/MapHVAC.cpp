@@ -238,9 +238,9 @@
 namespace openstudio {
 namespace sdd {
 
-const double footToMeter =  0.3048;
-const double cpWater = 4180.0;
-const double densityWater = 1000.0;
+constexpr double footToMeter =  0.3048;
+constexpr double cpWater = 4180.0;
+constexpr double densityWater = 1000.0;
 
 // Adjust scheduleDay by delaying the start and stop by the respective offset
 // This is used by the OA Controller ventilation schedule

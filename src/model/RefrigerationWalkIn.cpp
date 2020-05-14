@@ -84,7 +84,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationWalkIn_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Refrigeration Walk In Evaporator Total Cooling Rate",
       "Refrigeration Walk In Evaporator Total Cooling Energy",
       "Refrigeration Walk In Evaporator Sensible Cooling Rate",

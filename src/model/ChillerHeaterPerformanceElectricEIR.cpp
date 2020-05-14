@@ -80,7 +80,7 @@ namespace detail {
 
   const std::vector<std::string>& ChillerHeaterPerformanceElectricEIR_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
       // TODO: Implement? Problem is that the output for this is extremely weird/unusual
       // You actually have to go to the CentralHeatPumpSystem to find the Number of Chiller Heater Modules XXX
       // result.push_back("Chiller Heater Operation Mode Unit <x>");

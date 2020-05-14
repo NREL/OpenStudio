@@ -282,17 +282,17 @@ namespace isomodel {
   }
 
   //End Utility Functions
-  const double daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-  const double hoursInMonth[] = {744, 672, 744, 720, 744, 720, 744, 744, 720, 744, 720, 744};
-  const double megasecondsInMonth[] = {2.6784, 2.4192, 2.6784, 2.592, 2.6784, 2.592, 2.6784, 2.6784, 2.592, 2.6784, 2.592, 2.6784};
-  const double monthFractionOfYear[] = {0.0849315068493151, 0.0767123287671233, 0.0849315068493151, 0.0821917808219178, 0.0849315068493151, 0.0821917808219178, 0.0849315068493151, 0.0849315068493151, 0.0821917808219178, 0.0849315068493151, 0.0821917808219178, 0.0849315068493151};
-  const double daysInYear = 365;
-  const double hoursInYear = 8760;
-  const double hoursInWeek = 168;
-  const double  EECALC_NUM_MONTHS = 12;
-  const double  EECALC_NUM_HOURS = 24;
-  const double  EECALC_WEEKDAY_START = 7;
-  const double kWh2MJ = 3.6f;
+  constexpr double daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+  constexpr double hoursInMonth[] = {744, 672, 744, 720, 744, 720, 744, 744, 720, 744, 720, 744};
+  constexpr double megasecondsInMonth[] = {2.6784, 2.4192, 2.6784, 2.592, 2.6784, 2.592, 2.6784, 2.6784, 2.592, 2.6784, 2.592, 2.6784};
+  constexpr double monthFractionOfYear[] = {0.0849315068493151, 0.0767123287671233, 0.0849315068493151, 0.0821917808219178, 0.0849315068493151, 0.0821917808219178, 0.0849315068493151, 0.0849315068493151, 0.0821917808219178, 0.0849315068493151, 0.0821917808219178, 0.0849315068493151};
+  constexpr double daysInYear = 365;
+  constexpr double hoursInYear = 8760;
+  constexpr double hoursInWeek = 168;
+  constexpr double  EECALC_NUM_MONTHS = 12;
+  constexpr double  EECALC_NUM_HOURS = 24;
+  constexpr double  EECALC_WEEKDAY_START = 7;
+  constexpr double kWh2MJ = 3.6f;
 
   //Solver functions
   void SimModel::scheduleAndOccupancy(Vector& weekdayOccupiedMegaseconds,

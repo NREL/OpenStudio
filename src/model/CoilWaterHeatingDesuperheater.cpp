@@ -85,7 +85,7 @@ namespace detail {
 
   const std::vector<std::string>& CoilWaterHeatingDesuperheater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // TODO: scraped from I/O ref, but should double check here... (gut feeling (c) JM)
       "Water Heater Part Load Ratio",
       "Water Heater Heating Rate",

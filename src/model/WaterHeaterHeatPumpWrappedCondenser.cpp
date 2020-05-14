@@ -91,7 +91,7 @@ namespace detail {
 
   const std::vector<std::string>& WaterHeaterHeatPumpWrappedCondenser_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Water Heater Compressor Part Load Ratio",
       "Water Heater On Cycle Ancillary Electric Power",
       "Water Heater On Cycle Ancillary Electric Energy",

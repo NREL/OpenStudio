@@ -65,7 +65,7 @@ namespace detail {
 
   const std::vector<std::string>& AvailabilityManagerDifferentialThermostat_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
      "Availability Manager Differential Thermostat Control Status"
     };
     return result;

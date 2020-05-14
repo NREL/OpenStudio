@@ -75,7 +75,7 @@ namespace detail {
   // This logically doesn't produce any output variables
   const std::vector<std::string>& MeterCustom_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     //LOG(Info, "Meter:Custom does not produce any output variables.");
     return result;
   }

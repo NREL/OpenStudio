@@ -3460,7 +3460,7 @@ std::string ForwardTranslator::stripOS2(const string& s)
 
 std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslate()
 {
-  static std::vector<IddObjectType> result = iddObjectsToTranslateInitializer();
+  static const std::vector<IddObjectType> result = iddObjectsToTranslateInitializer();
   return result;
 }
 

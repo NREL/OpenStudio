@@ -75,7 +75,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACUnitVentilator_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Unit Ventilator Heating Rate",
       "Zone Unit Ventilator Heating Energy",
       "Zone Unit Ventilator Total Cooling Rate",

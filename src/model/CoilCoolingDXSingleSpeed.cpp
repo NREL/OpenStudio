@@ -133,7 +133,7 @@ namespace detail{
   const std::vector<std::string>& CoilCoolingDXSingleSpeed_Impl::outputVariableNames() const
   {
     // TODO: static for now
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Cooling Coil Total Cooling Rate",
       "Cooling Coil Total Cooling Energy",
       "Cooling Coil Sensible Cooling Rate",

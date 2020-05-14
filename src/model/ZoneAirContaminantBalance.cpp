@@ -96,7 +96,7 @@ namespace detail {
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& ZoneAirContaminantBalance_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
       // Reported in ThermalZone
       // The following output variables are available when Carbon Dioxide Concentration = Yes.
       //result.push_back("Zone Air CO2 Internal Gain Volume Flow Rate");

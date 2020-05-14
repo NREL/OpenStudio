@@ -70,7 +70,7 @@ namespace detail {
 
   const std::vector<std::string>& BoilerHotWater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
 
       // Common variables
       "Boiler Heating Rate",

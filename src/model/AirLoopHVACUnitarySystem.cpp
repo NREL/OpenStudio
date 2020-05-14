@@ -85,7 +85,7 @@ namespace detail {
   const std::vector<std::string>& AirLoopHVACUnitarySystem_Impl::outputVariableNames() const
   {
     // TODO: make this non static, and do implement the test cases below
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Unitary System Fan Part Load Ratio",
       "Unitary System Compressor Part Load Ratio",
       "Unitary System Total Cooling Rate",

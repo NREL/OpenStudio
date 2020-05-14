@@ -99,7 +99,7 @@ namespace detail {
   // (see GeneratorMicroTurbineHeatRecovery::outputVariableNames for these)
   const std::vector<std::string>& GeneratorMicroTurbine_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Generator Produced Electric Power",
       "Generator Produced Electric Energy",
       "Generator LHV Basis Electric Efficiency",

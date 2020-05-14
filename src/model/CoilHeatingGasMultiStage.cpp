@@ -76,7 +76,7 @@ namespace detail {
 
   const std::vector<std::string>& CoilHeatingGasMultiStage_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Heating Coil Energy",
       "Heating Coil Rate",
       "Heating Coil Gas Consumption",

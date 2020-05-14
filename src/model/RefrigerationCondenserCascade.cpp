@@ -73,7 +73,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationCondenserCascade_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // TODO implement checks and make sure there aren't any other variables
       // FOR CONDENSERS COOLING SYSTEMS SERVING CASES AND/OR WALKINS:
       "Refrigeration System Condenser Heat Transfer Rate",

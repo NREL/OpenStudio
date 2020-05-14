@@ -73,7 +73,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACIdealLoadsAirSystem_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Ideal Loads Supply Air Sensible Heating Energy",
       "Zone Ideal Loads Supply Air Total Heating Energy",
       "Zone Ideal Loads Supply Air Sensible Cooling Energy",

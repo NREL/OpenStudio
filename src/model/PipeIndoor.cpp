@@ -77,7 +77,7 @@ namespace detail {
 
   const std::vector<std::string>& PipeIndoor_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Pipe Fluid Heat Transfer Rate",
       "Pipe Ambient Heat Transfer Rate",
       "Pipe Fluid Heat Transfer Energy",

@@ -82,7 +82,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationCase_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Refrigeration Case Evaporator Total Cooling Rate",
       "Refrigeration Case Evaporator Total Cooling Energy",
       "Refrigeration Case Evaporator Sensible Cooling Rate",

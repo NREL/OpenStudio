@@ -70,7 +70,7 @@ namespace detail {
 
   const std::vector<std::string>& PipeOutdoor_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Pipe Fluid Heat Transfer Rate",
       "Pipe Fluid Heat Transfer Energy",
       "Pipe Mass Flow Rate",
