@@ -183,7 +183,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-
   bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient1Type(const std::string& convectionCoefficient1Type) {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Type, convectionCoefficient1Type);
     return result;

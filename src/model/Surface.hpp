@@ -43,6 +43,7 @@ class Space;
 class SubSurface;
 class ShadingSurfaceGroup;
 class ConstructionBase;
+class SurfaceControlMovableInsulation;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class SurfacePropertyConvectionCoefficients;
@@ -169,6 +170,9 @@ class MODEL_API Surface : public PlanarSurface {
 
   /** Resets the adjacent Surface. */
   void resetAdjacentSurface();
+
+  /** Returns the SurfaceControlMovableInsulation, if it exists. */
+  boost::optional<SurfaceControlMovableInsulation> surfaceControlMovableInsulation() const;
 
   /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
   boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;

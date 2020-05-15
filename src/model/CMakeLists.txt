@@ -1400,6 +1400,9 @@ set(${target_name}_src
   Surface.hpp
   Surface_Impl.hpp
   Surface.cpp
+  SurfaceControlMovableInsulation.hpp
+  SurfaceControlMovableInsulation_Impl.hpp
+  SurfaceControlMovableInsulation.cpp
   SurfacePropertyConvectionCoefficients.cpp
   SurfacePropertyConvectionCoefficients.hpp
   SurfacePropertyConvectionCoefficients_Impl.hpp
@@ -2045,6 +2048,7 @@ set(${target_name}_test_src
   test/SteamEquipment_GTest.cpp
   test/SubSurface_GTest.cpp
   test/Surface_GTest.cpp
+  test/SurfaceControlMovableInsulation_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
