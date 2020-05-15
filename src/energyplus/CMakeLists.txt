@@ -583,6 +583,7 @@ set(${target_name}_test_src
   Test/CoilHeatingGas_GTest.cpp
   Test/CoilCoolingDXMultiSpeed_GTest.cpp
   Test/Construction_GTest.cpp
+  Test/ControllerOutdoorAir_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
