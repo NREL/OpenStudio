@@ -79,6 +79,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTemperatureRad
   boost::optional<double> value;
   boost::optional<ModelObject> temp;
 
+  // If it doesn't have any surfaces, then don't bother translating it, E+ will crash
+  if (modelObject.surfaces().empty()) {
+    LOG(Info, modelObject.briefDescription() << " does not have any target surfaces with ConstructionWithInternalSource, it will not be translated");
+    return boost::none;
+  }
+
   IdfObject idfObject(IddObjectType::ZoneHVAC_LowTemperatureRadiant_Electric);
   m_idfObjects.push_back(idfObject);
 
