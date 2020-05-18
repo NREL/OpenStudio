@@ -28,70 +28,41 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
-#include "ModelFixture.hpp"
-#include "../CoilCoolingDXVariableSpeed.hpp"
-#include "../CoilCoolingDXVariableSpeed_Impl.hpp"
-#include "../Curve.hpp"
-#include "../Curve_Impl.hpp"
-#include "../CoilCoolingDXVariableSpeedSpeedData.hpp"
+#include "EnergyPlusFixture.hpp"
 
-using namespace openstudio;
+#include "../ForwardTranslator.hpp"
+
+#include "../../model/Model.hpp"
+#include "../../model/CoilCoolingDXTwoSpeed.hpp"
+#include "../../model/CoilCoolingDXTwoSpeed_Impl.hpp"
+
+#include <utilities/idd/Coil_Cooling_DX_TwoSpeed_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
-TEST_F(ModelFixture,CoilCoolingDXVariableSpeed)
-{
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT (
-  {
-     Model m;
-     CoilCoolingDXVariableSpeed coil(m);
-
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
-}
-
-TEST_F(ModelFixture, CoilCoolingDXVariableSpeed_Speeds)
-{
-  Model m;
-  CoilCoolingDXVariableSpeed coil(m);
-
-  CoilCoolingDXVariableSpeedSpeedData speed1( m );
-  coil.addSpeed(speed1);
-
-  CoilCoolingDXVariableSpeedSpeedData speed2( m );
-  coil.addSpeed(speed2);
-
-  ASSERT_EQ(2u,coil.speeds().size());
-
-}
-
-TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_Remove)
-{
-  Model m;
-  auto count = m.modelObjects().size();
-
-  CoilCoolingDXVariableSpeed coil(m);
-  CoilCoolingDXVariableSpeedSpeedData speed1( m );
-  coil.addSpeed(speed1);
-  coil.remove();
-
-  auto curves = m.getModelObjects<model::Curve>();
-
-  EXPECT_EQ(count,m.modelObjects().size() - curves.size());
-}
-
-TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_MinOATCompressor)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXTwoSpeed_MinOATCompressor) {
   Model m;
 
-  CoilCoolingDXVariableSpeed coil(m);
+  CoilCoolingDXTwoSpeed coil(m);
+  coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-7.5);
+  coil.setUnitInternalStaticAirPressure(769.3);
 
-  // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
-  // IDD Default
-  EXPECT_EQ(-25.0, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
-  // There are no IDD limits, so everything should work
-  EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
-  EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  // Note JM 2020-05-13: I find it weird that the coil gets translated when it's not even used by anything, but trying to fix #3976 only here
+  WorkspaceObjectVector idf_coils(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_TwoSpeed));
+  ASSERT_EQ(1u, idf_coils.size());
+  WorkspaceObject idf_coil(idf_coils[0]);
+
+  auto _d = idf_coil.getDouble(Coil_Cooling_DX_TwoSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
+  ASSERT_TRUE(_d);
+  EXPECT_DOUBLE_EQ(-7.5, _d.get());
+
+  _d = idf_coil.getDouble(Coil_Cooling_DX_TwoSpeedFields::UnitInternalStaticAirPressure);
+  ASSERT_TRUE(_d);
+  EXPECT_DOUBLE_EQ(769.3, _d.get());
 }

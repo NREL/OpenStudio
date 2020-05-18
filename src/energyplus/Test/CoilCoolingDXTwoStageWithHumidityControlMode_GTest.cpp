@@ -28,70 +28,42 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
-#include "ModelFixture.hpp"
-#include "../CoilCoolingDXVariableSpeed.hpp"
-#include "../CoilCoolingDXVariableSpeed_Impl.hpp"
-#include "../Curve.hpp"
-#include "../Curve_Impl.hpp"
-#include "../CoilCoolingDXVariableSpeedSpeedData.hpp"
+#include "EnergyPlusFixture.hpp"
 
-using namespace openstudio;
+#include "../ForwardTranslator.hpp"
+
+#include "../../model/Model.hpp"
+#include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode_Impl.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/Node.hpp"
+
+#include <utilities/idd/Coil_Cooling_DX_TwoStageWithHumidityControlMode_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
-TEST_F(ModelFixture,CoilCoolingDXVariableSpeed)
-{
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT (
-  {
-     Model m;
-     CoilCoolingDXVariableSpeed coil(m);
-
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
-}
-
-TEST_F(ModelFixture, CoilCoolingDXVariableSpeed_Speeds)
-{
-  Model m;
-  CoilCoolingDXVariableSpeed coil(m);
-
-  CoilCoolingDXVariableSpeedSpeedData speed1( m );
-  coil.addSpeed(speed1);
-
-  CoilCoolingDXVariableSpeedSpeedData speed2( m );
-  coil.addSpeed(speed2);
-
-  ASSERT_EQ(2u,coil.speeds().size());
-
-}
-
-TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_Remove)
-{
-  Model m;
-  auto count = m.modelObjects().size();
-
-  CoilCoolingDXVariableSpeed coil(m);
-  CoilCoolingDXVariableSpeedSpeedData speed1( m );
-  coil.addSpeed(speed1);
-  coil.remove();
-
-  auto curves = m.getModelObjects<model::Curve>();
-
-  EXPECT_EQ(count,m.modelObjects().size() - curves.size());
-}
-
-TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_MinOATCompressor)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXTwoStageWithHumidityControlMode_MinOATCompressor) {
   Model m;
 
-  CoilCoolingDXVariableSpeed coil(m);
+  CoilCoolingDXTwoStageWithHumidityControlMode coil(m);
+  coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-7.5);
 
-  // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
-  // IDD Default
-  EXPECT_EQ(-25.0, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
-  // There are no IDD limits, so everything should work
-  EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
-  EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+  // Need to be used to be translated
+  AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  coil.addToNode(supplyOutletNode);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idf_coils(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode));
+  ASSERT_EQ(1u, idf_coils.size());
+  WorkspaceObject idf_coil(idf_coils[0]);
+
+  auto _d = idf_coil.getDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
+  ASSERT_TRUE(_d);
+  EXPECT_DOUBLE_EQ(-7.5, _d.get());
 }

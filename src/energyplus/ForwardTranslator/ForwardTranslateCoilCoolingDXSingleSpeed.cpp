@@ -169,6 +169,9 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXSingleSpeedW
     idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::NominalTimeforCondensateRemovaltoBegin,*d);
   }
 
+  idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
+                      modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+
   d=modelObject.getRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity();
   if(d)
   {

@@ -102,6 +102,11 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXMultiSpeed( 
     idfObject.setString(Coil_Cooling_DX_MultiSpeedFields::ApplyLatentDegradationtoSpeedsGreaterthan1,"No");
   }
 
+  // Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  if( (value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation()) ) {
+    idfObject.setDouble(Coil_Cooling_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,value.get());
+  }
+
   // CrankcaseHeaterCapacity
   if( (value = modelObject.crankcaseHeaterCapacity()) ) {
     idfObject.setDouble(Coil_Cooling_DX_MultiSpeedFields::CrankcaseHeaterCapacity,value.get());
