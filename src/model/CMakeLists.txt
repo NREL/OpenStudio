@@ -288,18 +288,6 @@ set(${target_name}_src
   CoilCoolingCooledBeam.hpp
   CoilCoolingCooledBeam_Impl.hpp
   CoilCoolingCooledBeam.cpp  
-  CoilCoolingDX.hpp
-  CoilCoolingDX_Impl.hpp
-  CoilCoolingDX.cpp
-  CoilCoolingDXCurveFitPerformance.hpp
-  CoilCoolingDXCurveFitPerformance_Impl.hpp
-  CoilCoolingDXCurveFitPerformance.cpp
-  CoilCoolingDXCurveFitOperatingMode.hpp
-  CoilCoolingDXCurveFitOperatingMode_Impl.hpp
-  CoilCoolingDXCurveFitOperatingMode.cpp
-  CoilCoolingDXCurveFitSpeed.hpp
-  CoilCoolingDXCurveFitSpeed_Impl.hpp
-  CoilCoolingDXCurveFitSpeed.cpp  
   CoilCoolingDXMultiSpeed.hpp
   CoilCoolingDXMultiSpeed_Impl.hpp
   CoilCoolingDXMultiSpeed.cpp
