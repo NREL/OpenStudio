@@ -15294,6 +15294,7 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
   N3, \field Condenser Air Flow Rate Fraction
        \note Ratio of condenser air flow at this speed to the
        \note operating mode Rated Condenser Air Flow Rate
+       \required-field
        \type real
        \minimum> 0.0
   N4, \field Gross Sensible Heat Ratio
@@ -15317,7 +15318,7 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \type real
        \minimum> 0.0
        \maximum 1.0
-       \default 1.0
+       \required-field
   N7, \field Rated Evaporator Fan Power Per Volume Flow Rate
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -15334,7 +15335,7 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \note operating mode Nominal Evaporative Condenser Pump Power
        \type real
        \minimum> 0.0
-       \default 1.0
+       \required-field
   N9, \field Evaporative Condenser Effectiveness
        \type real
        \units dimensionless

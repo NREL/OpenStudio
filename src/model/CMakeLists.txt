@@ -287,7 +287,10 @@ set(${target_name}_src
   ClimateZones.cpp
   CoilCoolingCooledBeam.hpp
   CoilCoolingCooledBeam_Impl.hpp
-  CoilCoolingCooledBeam.cpp  
+  CoilCoolingCooledBeam.cpp
+  CoilCoolingDXCurveFitSpeed.hpp
+  CoilCoolingDXCurveFitSpeed_Impl.hpp
+  CoilCoolingDXCurveFitSpeed.cpp
   CoilCoolingDXMultiSpeed.hpp
   CoilCoolingDXMultiSpeed_Impl.hpp
   CoilCoolingDXMultiSpeed.cpp
@@ -1748,6 +1751,7 @@ set(${target_name}_test_src
   test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
+  test/CoilCoolingDXCurveFitSpeed_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
   test/CoilCoolingDXMultiSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp

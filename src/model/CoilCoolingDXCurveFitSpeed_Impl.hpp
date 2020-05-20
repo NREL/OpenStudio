@@ -36,7 +36,7 @@
 namespace openstudio {
 namespace model {
 
-class Curve
+class Curve;
 
 namespace detail {
 
@@ -76,25 +76,19 @@ namespace detail {
 
     double evaporatorAirFlowRateFraction() const;
 
-    boost::optional<double> condenserAirFlowRateFraction() const;
+    double condenserAirFlowRateFraction() const;
 
     boost::optional<double> grossSensibleHeatRatio() const;
 
     bool isGrossSensibleHeatRatioAutosized() const;
 
-    boost::optional<double> autosizedGrossSensibleHeatRatio();
-
     double grossCoolingCOP() const;
 
     double activeFractionofCoilFaceArea() const;
 
-    bool isActiveFractionofCoilFaceAreaDefaulted() const;
-
     double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
 
     double evaporativeCondenserPumpPowerFraction() const;
-
-    bool isEvaporativeCondenserPumpPowerFractionDefaulted() const;
 
     double evaporativeCondenserEffectiveness() const;
 
@@ -108,13 +102,13 @@ namespace detail {
 
     Curve partLoadFractionCorrelationCurve() const;
 
-    double ratedWasteHeatFractionofPowerInput() const;
-
     Curve wasteHeatModifierFunctionofTemperatureCurve() const;
 
-    Curve sensibleHeatRatioModifierFunctionofTemperatureCurve() const;
+    double ratedWasteHeatFractionofPowerInput() const;
 
-    Curve sensibleHeatRatioModifierFunctionofFlowFractionCurve() const;
+    boost::optional<Curve> sensibleHeatRatioModifierFunctionofTemperatureCurve() const;
+
+    boost::optional<Curve> sensibleHeatRatioModifierFunctionofFlowFractionCurve() const;
 
     //@}
     /** @name Setters */
@@ -126,8 +120,6 @@ namespace detail {
 
     bool setCondenserAirFlowRateFraction(double condenserAirFlowRateFraction);
 
-    void resetCondenserAirFlowRateFraction();
-
     bool setGrossSensibleHeatRatio(double grossSensibleHeatRatio);
 
     void autosizeGrossSensibleHeatRatio();
@@ -136,13 +128,9 @@ namespace detail {
 
     bool setActiveFractionofCoilFaceArea(double activeFractionofCoilFaceArea);
 
-    void resetActiveFractionofCoilFaceArea();
-
     bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate);
 
     bool setEvaporativeCondenserPumpPowerFraction(double evaporativeCondenserPumpPowerFraction);
-
-    void resetEvaporativeCondenserPumpPowerFraction();
 
     bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
 
@@ -156,21 +144,27 @@ namespace detail {
 
     bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-    bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
-
     bool setWasteHeatModifierFunctionofTemperatureCurve(const Curve& curve);
+
+    bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
 
     bool setSensibleHeatRatioModifierFunctionofTemperatureCurve(const Curve& curve);
 
+    void resetSensibleHeatRatioModifierFunctionofTemperatureCurve();
+
     bool setSensibleHeatRatioModifierFunctionofFlowFractionCurve(const Curve& curve);
 
-    virtual void autosize() override;
-
-    virtual void applySizingValues() override;
+    void resetSensibleHeatRatioModifierFunctionofFlowFractionCurve();
 
     //@}
     /** @name Other */
     //@{
+
+    boost::optional<double> autosizedGrossSensibleHeatRatio() const;
+
+    void autosize();
+
+    void applySizingValues();
 
     virtual std::vector<ModelObject> children() const override;
     virtual ModelObject clone(Model model) const override;
@@ -185,6 +179,7 @@ namespace detail {
     boost::optional<Curve> optionalEnergyInputRatioModifierFunctionofTemperatureCurve() const;
     boost::optional<Curve> optionalEnergyInputRatioModifierFunctionofAirFlowFractionCurve() const;
     boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
+    boost::optional<Curve> optionalWasteHeatModifierFunctionofTemperatureCurve() const;
 
   };
 
