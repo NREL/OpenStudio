@@ -15036,34 +15036,33 @@ OS:Coil:Cooling:DX,
        \type alpha
        \reference CoilCoolingDX
        \reference AFNCoilNames
+       \reference ConnectionObject
   A3, \field Evaporator Inlet Node Name
        \required-field
-       \object-list Node
+       \object-list ConnectionNames
   A4, \field Evaporator Outlet Node Name
        \required-field
-       \object-list Node
+       \object-list ConnectionNames
   A5, \field Availability Schedule Name
        \note Schedule value > 0 means the coil is available.
        \note If this field is blank, the coil is always available.
        \type object-list
        \object-list ScheduleNames
-  A6, \field Condenser Zone Name
+  A6, \field Condenser Zone
        \note This input field is name of a conditioned or unconditioned zone where the secondary
        \note coil (condenser) of a DX system or heat pump is to be placed.  This is an optional
        \note input field specified only when the user desires to reject the condenser heat into a
        \note zone. The heat rejected is modeled as internal sensible heat gain of the zone.
        \type object-list
-       \object-list ZoneNames
+       \object-list ThermalZoneNames
   A7, \field Condenser Inlet Node Name
-       \required-field
        \note This is the name of an air node in the simulation.  This may be an explicitly defined outdoor
        \note air node, or it may be a separate air node.
-       \object-list Node
+       \type alpha
   A8, \field Condenser Outlet Node Name
-       \required-field
        \note This is the name of an air node in the simulation.
-       \object-list Node
-  A9, \field Performance Object Name
+       \type alpha
+  A9, \field Performance Object
        \required-field
        \type object-list
        \object-list DXCoolingPerformanceNames
@@ -15091,6 +15090,7 @@ OS:Coil:Cooling:DX:CurveFit:Performance,
   N2, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \units C
+       \required-field
   N3, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \minimum 0.0
@@ -15105,11 +15105,12 @@ OS:Coil:Cooling:DX:CurveFit:Performance,
        \type real
        \units Pa
        \minimum> 0.0
+       \required-field
   A3, \field Capacity Control Method
        \type choice
        \key Discrete
        \key Continuous
-       \default Discrete
+       \required-field
   N5, \field Evaporative Condenser Basin Heater Capacity
        \note This field is only used for Condenser Type = EvaporativelyCooled and for periods
        \note when the basin heater is available (field Basin Heater Operating Schedule Name).
@@ -15247,7 +15248,7 @@ OS:Coil:Cooling:DX:CurveFit:OperatingMode,
        \type choice
        \key Yes
        \key No
-       \default No
+       \required-field
   A4, \field Condenser Type
        \type choice
        \key AirCooled
