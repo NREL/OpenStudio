@@ -15037,13 +15037,13 @@ OS:Coil:Cooling:DX,
        \reference CoilCoolingDX
        \reference AFNCoilNames
        \reference ConnectionObject
-  A3, \field Evaporator Inlet Node Name
+  A3, \field Evaporator Inlet Node
        \required-field
        \object-list ConnectionNames
-  A4, \field Evaporator Outlet Node Name
+  A4, \field Evaporator Outlet Node
        \required-field
        \object-list ConnectionNames
-  A5, \field Availability Schedule Name
+  A5, \field Availability Schedule
        \note Schedule value > 0 means the coil is available.
        \note If this field is blank, the coil is always available.
        \type object-list
@@ -15067,7 +15067,11 @@ OS:Coil:Cooling:DX,
        \type object-list
        \object-list DXCoolingPerformanceNames
   A10,\field Condensate Collection Water Storage Tank Name
+       \type object-list
+       \object-list WaterStorageTankNames
   A11; \field Evaporative Condenser Supply Water Storage Tank Name
+       \type object-list
+       \object-list WaterStorageTankNames
 
 OS:Coil:Cooling:DX:CurveFit:Performance,
        \memo DX cooling coil performance specification referencing one or more
