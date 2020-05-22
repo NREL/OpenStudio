@@ -128,20 +128,20 @@ namespace detail {
 
     virtual unsigned outletPort() const override;
 
-    ModelObject clone(Model model) const override;
+    virtual ModelObject clone(Model model) const override;
 
-    std::vector<ModelObject> children() const override;
+    virtual std::vector<ModelObject> children() const override;
 
-    boost::optional<HVACComponent> containingHVACComponent() const override;
+    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    bool addToNode(Node & node) override;
+    virtual bool addToNode(Node & node) override;
 
     //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingDX");
 
-    boost::optional<DXCoolingPerformance> optionalPerformanceObject() const;
+    boost::optional<CoilCoolingDXCurveFitPerformance> optionalPerformanceObject() const;
 
     boost::optional<Connection> optionalAirInletNode() const;
     boost::optional<Connection> optionalAirOutletNode() const;

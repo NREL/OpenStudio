@@ -36,6 +36,10 @@
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "CoilCoolingDX.hpp"
+#include "CoilCoolingDX_Impl.hpp"
+#include "CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -138,7 +142,9 @@ namespace detail {
   }
 
   Schedule CoilCoolingDXCurveFitPerformance_Impl::evaporativeCondenserBasinHeaterOperatingSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterOperatingSchedule);
+    boost::optional<Schedule> schedule = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterOperatingSchedule);
+    OS_ASSERT(schedule);
+    return schedule.get();
   }
 
   std::string CoilCoolingDXCurveFitPerformance_Impl::compressorFuelType() const {
@@ -147,10 +153,28 @@ namespace detail {
     return value.get();
   }
 
-  CoilCoolingDX CoilCoolingDXCurveFitPerformance_Impl::coilCoolingDX() const {
-    boost::optional<CoilCoolingDX> coilCoolingDX = getObject<CoilCoolingDXCurveFitPerformance>().getModelObjectSources<CoilCoolingDX>(CoilCoolingDX::iddObjectType());
-    OS_ASSERT(coilCoolingDX);
-    return coilCoolingDX.get();
+  boost::optional<CoilCoolingDXCurveFitOperatingMode> CoilCoolingDXCurveFitPerformance_Impl::optionalBaseOperatingMode() const {
+    return getObject<ModelObject>().getModelObjectTarget<CoilCoolingDXCurveFitOperatingMode>(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::BaseOperatingMode);
+  }
+
+  CoilCoolingDXCurveFitOperatingMode CoilCoolingDXCurveFitPerformance_Impl::baseOperatingMode() const {
+    boost::optional<CoilCoolingDXCurveFitOperatingMode> value = optionalBaseOperatingMode();
+    if (!value) {
+      LOG_AND_THROW(briefDescription() << " does not have an Base Operating Mode attached.");
+    }
+    return value.get();
+  }
+
+  boost::optional<CoilCoolingDXCurveFitOperatingMode> CoilCoolingDXCurveFitPerformance_Impl::alternativeOperatingMode1() const {
+    return getObject<ModelObject>().getModelObjectTarget<CoilCoolingDXCurveFitOperatingMode>(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1);
+  }
+
+  boost::optional<CoilCoolingDXCurveFitOperatingMode> CoilCoolingDXCurveFitPerformance_Impl::alternativeOperatingMode2() const {
+    return getObject<ModelObject>().getModelObjectTarget<CoilCoolingDXCurveFitOperatingMode>(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2);
+  }
+
+  std::vector<CoilCoolingDX> CoilCoolingDXCurveFitPerformance_Impl::coilCoolingDXs() const {
+    return getObject<ModelObject>().getModelObjectSources<CoilCoolingDX>(CoilCoolingDX::iddObjectType());
   }
 
   bool CoilCoolingDXCurveFitPerformance_Impl::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
@@ -160,7 +184,7 @@ namespace detail {
 
   bool CoilCoolingDXCurveFitPerformance_Impl::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
     bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, minimumOutdoorDryBulbTemperatureforCompressorOperation);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool CoilCoolingDXCurveFitPerformance_Impl::setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation) {
@@ -201,14 +225,119 @@ namespace detail {
     return result;
   }
 
+  bool CoilCoolingDXCurveFitPerformance_Impl::setBaseOperatingMode(const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode) {
+    bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::BaseOperatingMode, baseOperatingMode.handle());
+    return result;
+  }
+
+  bool CoilCoolingDXCurveFitPerformance_Impl::setAlternativeOperatingMode1(const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1) {
+    bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1, alternativeOperatingMode1.handle());
+    return result;
+  }
+
+  void CoilCoolingDXCurveFitPerformance_Impl::resetAlternativeOperatingMode1() {
+    bool result = setString(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1, "");
+    OS_ASSERT(result);
+  }
+
+  bool CoilCoolingDXCurveFitPerformance_Impl::setAlternativeOperatingMode2(const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode2) {
+    bool result = setPointer(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2, alternativeOperatingMode2.handle());
+    return result;
+  }
+
+  void CoilCoolingDXCurveFitPerformance_Impl::resetAlternativeOperatingMode2() {
+    bool result = setString(OS_Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2, "");
+    OS_ASSERT(result);
+  }
+
+  ModelObject CoilCoolingDXCurveFitPerformance_Impl::clone(Model model) const {
+    auto t_clone = ModelObject_Impl::clone(model).cast<CoilCoolingDXCurveFitPerformance>();
+
+    // TODO: clone the operating modes
+
+    return t_clone;
+  }
+
+  std::vector<ModelObject> CoilCoolingDXCurveFitPerformance_Impl::children() const {
+    std::vector<ModelObject> result;
+
+    // TODO
+
+    return result;
+  }
+
 } // detail
 
-CoilCoolingDXCurveFitPerformance::CoilCoolingDXCurveFitPerformance(const Model& model)
+CoilCoolingDXCurveFitPerformance::CoilCoolingDXCurveFitPerformance(const Model& model,
+                                                                   const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode)
   : ResourceObject(CoilCoolingDXCurveFitPerformance::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>());
 
+  setCrankcaseHeaterCapacity(0.0);
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);
+  setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
+  setUnitInternalStaticAirPressure(773.3);
+  setCapacityControlMethod("Discrete");
+  setEvaporativeCondenserBasinHeaterCapacity(0.0);
+  setEvaporativeCondenserBasinHeaterSetpointTemperature(2.0);
+  {
+    auto schedule = model.alwaysOnDiscreteSchedule();
+    setEvaporativeCondenserBasinHeaterOperatingSchedule(schedule);
+  }
+  setCompressorFuelType("Electricity");
 
+  setBaseOperatingMode(baseOperatingMode);
+}
+
+CoilCoolingDXCurveFitPerformance::CoilCoolingDXCurveFitPerformance(const Model& model,
+                                                                   const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode,
+                                                                   const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1)
+  : ResourceObject(CoilCoolingDXCurveFitPerformance::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>());
+
+  setCrankcaseHeaterCapacity(0.0);
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);
+  setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
+  setUnitInternalStaticAirPressure(773.3);
+  setCapacityControlMethod("Discrete");
+  setEvaporativeCondenserBasinHeaterCapacity(0.0);
+  setEvaporativeCondenserBasinHeaterSetpointTemperature(2.0);
+  {
+    auto schedule = model.alwaysOnDiscreteSchedule();
+    setEvaporativeCondenserBasinHeaterOperatingSchedule(schedule);
+  }
+  setCompressorFuelType("Electricity");
+
+  setBaseOperatingMode(baseOperatingMode);
+  setAlternativeOperatingMode1(alternativeOperatingMode1);
+}
+
+CoilCoolingDXCurveFitPerformance::CoilCoolingDXCurveFitPerformance(const Model& model,
+                                                                   const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode,
+                                                                   const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1,
+                                                                   const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode2)
+  : ResourceObject(CoilCoolingDXCurveFitPerformance::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>());
+
+  setCrankcaseHeaterCapacity(0.0);
+  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);
+  setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
+  setUnitInternalStaticAirPressure(773.3);
+  setCapacityControlMethod("Discrete");
+  setEvaporativeCondenserBasinHeaterCapacity(0.0);
+  setEvaporativeCondenserBasinHeaterSetpointTemperature(2.0);
+  {
+    auto schedule = model.alwaysOnDiscreteSchedule();
+    setEvaporativeCondenserBasinHeaterOperatingSchedule(schedule);
+  }
+  setCompressorFuelType("Electricity");
+
+  setBaseOperatingMode(baseOperatingMode);
+  setAlternativeOperatingMode1(alternativeOperatingMode1);
+  setAlternativeOperatingMode2(alternativeOperatingMode2);
 }
 
 IddObjectType CoilCoolingDXCurveFitPerformance::iddObjectType() {
@@ -261,16 +390,28 @@ std::string CoilCoolingDXCurveFitPerformance::compressorFuelType() const {
   return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->compressorFuelType();
 }
 
-CoilCoolingDX CoilCoolingDXCurveFitPerformance::coilCoolingDX() const {
-  return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->coilCoolingDX();
+CoilCoolingDXCurveFitOperatingMode CoilCoolingDXCurveFitPerformance::baseOperatingMode() const {
+  return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->baseOperatingMode();
+}
+
+boost::optional<CoilCoolingDXCurveFitOperatingMode> CoilCoolingDXCurveFitPerformance::alternativeOperatingMode1() const {
+  return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->alternativeOperatingMode1();
+}
+
+boost::optional<CoilCoolingDXCurveFitOperatingMode> CoilCoolingDXCurveFitPerformance::alternativeOperatingMode2() const {
+  return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->alternativeOperatingMode2();
+}
+
+std::vector<CoilCoolingDX> CoilCoolingDXCurveFitPerformance::coilCoolingDXs() const {
+  return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->coilCoolingDXs();
 }
 
 bool CoilCoolingDXCurveFitPerformance::setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity) {
   return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->setCrankcaseHeaterCapacity(crankcaseHeaterCapacity);
 }
 
-void CoilCoolingDXCurveFitPerformance::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
-  getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
+bool CoilCoolingDXCurveFitPerformance::setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation) {
+  return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->setMinimumOutdoorDryBulbTemperatureforCompressorOperation(minimumOutdoorDryBulbTemperatureforCompressorOperation);
 }
 
 bool CoilCoolingDXCurveFitPerformance::setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation) {
@@ -299,6 +440,26 @@ bool CoilCoolingDXCurveFitPerformance::setEvaporativeCondenserBasinHeaterOperati
 
 bool CoilCoolingDXCurveFitPerformance::setCompressorFuelType(const std::string& compressorFuelType) {
   return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->setCompressorFuelType(compressorFuelType);
+}
+
+bool CoilCoolingDXCurveFitPerformance::setBaseOperatingMode(const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode) {
+  return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->setBaseOperatingMode(baseOperatingMode);
+}
+
+bool CoilCoolingDXCurveFitPerformance::setAlternativeOperatingMode1(const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1) {
+  return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->setAlternativeOperatingMode1(alternativeOperatingMode1);
+}
+
+void CoilCoolingDXCurveFitPerformance::resetAlternativeOperatingMode1() {
+  getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->resetAlternativeOperatingMode1();
+}
+
+bool CoilCoolingDXCurveFitPerformance::setAlternativeOperatingMode2(const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode2) {
+  return getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->setAlternativeOperatingMode2(alternativeOperatingMode2);
+}
+
+void CoilCoolingDXCurveFitPerformance::resetAlternativeOperatingMode2() {
+  getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>()->resetAlternativeOperatingMode2();
 }
 
 /// @cond

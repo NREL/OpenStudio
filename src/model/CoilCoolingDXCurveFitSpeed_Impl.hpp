@@ -31,17 +31,18 @@
 #define MODEL_COILCOOLINGDXCURVEFITSPEED_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ParentObject_Impl.hpp"
+#include "ResourceObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
 class Curve;
+class CoilCoolingDXCurveFitOperatingMode;
 
 namespace detail {
 
-  /** CoilCoolingDXCurveFitSpeed_Impl is a ParentObject_Impl that is the implementation class for CoilCoolingDXCurveFitSpeed.*/
-  class MODEL_API CoilCoolingDXCurveFitSpeed_Impl : public ParentObject_Impl {
+  /** CoilCoolingDXCurveFitSpeed_Impl is a ResourceObject_Impl that is the implementation class for CoilCoolingDXCurveFitSpeed.*/
+  class MODEL_API CoilCoolingDXCurveFitSpeed_Impl : public ResourceObject_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -110,6 +111,8 @@ namespace detail {
 
     boost::optional<Curve> sensibleHeatRatioModifierFunctionofFlowFractionCurve() const;
 
+    std::vector<CoilCoolingDXCurveFitOperatingMode> coilCoolingDXCurveFitOperatingModes() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -166,8 +169,9 @@ namespace detail {
 
     void applySizingValues();
 
-    virtual std::vector<ModelObject> children() const override;
-    virtual ModelObject clone(Model model) const override;
+    ModelObject clone(Model model) const override;
+
+    std::vector<ModelObject> children() const override;
 
     //@}
    protected:

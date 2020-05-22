@@ -39,6 +39,7 @@ namespace model {
 
 class Schedule;
 class CoilCoolingDX;
+class CoilCoolingDXCurveFitOperatingMode;
 
 namespace detail {
 
@@ -52,7 +53,17 @@ class MODEL_API CoilCoolingDXCurveFitPerformance : public ResourceObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit CoilCoolingDXCurveFitPerformance(const Model& model);
+  explicit CoilCoolingDXCurveFitPerformance(const Model& model,
+                                            const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode);
+
+  explicit CoilCoolingDXCurveFitPerformance(const Model& model,
+                                            const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode,
+                                            const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1);
+
+  explicit CoilCoolingDXCurveFitPerformance(const Model& model,
+                                            const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode,
+                                            const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1,
+                                            const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode2);
 
   virtual ~CoilCoolingDXCurveFitPerformance() {}
 
@@ -85,7 +96,13 @@ class MODEL_API CoilCoolingDXCurveFitPerformance : public ResourceObject {
 
   std::string compressorFuelType() const;
 
-  CoilCoolingDX coilCoolingDX() const;
+  CoilCoolingDXCurveFitOperatingMode baseOperatingMode() const;
+
+  boost::optional<CoilCoolingDXCurveFitOperatingMode> alternativeOperatingMode1() const;
+
+  boost::optional<CoilCoolingDXCurveFitOperatingMode> alternativeOperatingMode2() const;
+
+  std::vector<CoilCoolingDX> coilCoolingDXs() const;
 
   //@}
   /** @name Setters */
@@ -108,6 +125,16 @@ class MODEL_API CoilCoolingDXCurveFitPerformance : public ResourceObject {
   bool setEvaporativeCondenserBasinHeaterOperatingSchedule(Schedule& schedule);
 
   bool setCompressorFuelType(const std::string& compressorFuelType);
+
+  bool setBaseOperatingMode(const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode);
+
+  bool setAlternativeOperatingMode1(const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1);
+
+  void resetAlternativeOperatingMode1();
+
+  bool setAlternativeOperatingMode2(const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode2);
+
+  void resetAlternativeOperatingMode2();
 
   //@}
   /** @name Other */

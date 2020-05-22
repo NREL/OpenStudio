@@ -31,13 +31,14 @@
 #define MODEL_COILCOOLINGDXCURVEFITSPEED_HPP
 
 #include <model/ModelAPI.hpp>
-#include "ParentObject.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
 
 namespace model {
 
 class Curve;
+class CoilCoolingDXCurveFitOperatingMode;
 
 namespace detail {
 
@@ -45,8 +46,8 @@ namespace detail {
 
 } // detail
 
-/** CoilCoolingDXCurveFitSpeed is a ParentObject that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:CurveFit:Speed'. */
-class MODEL_API CoilCoolingDXCurveFitSpeed : public ParentObject {
+/** CoilCoolingDXCurveFitSpeed is a ResourceObject that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:CurveFit:Speed'. */
+class MODEL_API CoilCoolingDXCurveFitSpeed : public ResourceObject {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -59,7 +60,7 @@ class MODEL_API CoilCoolingDXCurveFitSpeed : public ParentObject {
     Curve& partLoadFractionCorrelationCurve,
     Curve& wasteHeatModifierFunctionofTemperatureCurve);
 
-  /** Create CoilCoolingDXMultiSpeedStageData with default curves **/
+  /** Create CoilCoolingDXCurveFitSpeed with default curves **/
   explicit CoilCoolingDXCurveFitSpeed(const Model& model);
 
   virtual ~CoilCoolingDXCurveFitSpeed() {}
@@ -108,6 +109,8 @@ class MODEL_API CoilCoolingDXCurveFitSpeed : public ParentObject {
   boost::optional<Curve> sensibleHeatRatioModifierFunctionofTemperatureCurve() const;
 
   boost::optional<Curve> sensibleHeatRatioModifierFunctionofFlowFractionCurve() const;
+
+  std::vector<CoilCoolingDXCurveFitOperatingMode> coilCoolingDXCurveFitOperatingModes() const;
 
   //@}
   /** @name Setters */

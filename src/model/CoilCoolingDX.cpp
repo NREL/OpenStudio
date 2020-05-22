@@ -41,6 +41,7 @@
 #include "CoilCoolingDXCurveFitPerformance.hpp"
 #include "CoilCoolingDXCurveFitPerformance_Impl.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_Cooling_DX_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -159,7 +160,7 @@ namespace detail {
 
   bool CoilCoolingDX_Impl::setCondenserInletNodeName(const std::string& condenserInletNodeName) {
     bool result = setString(OS_Coil_Cooling_DXFields::CondenserInletNodeName, condenserInletNodeName);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoilCoolingDX_Impl::resetCondenserInletNodeName() {
@@ -169,7 +170,7 @@ namespace detail {
 
   bool CoilCoolingDX_Impl::setCondenserOutletNodeName(const std::string& condenserOutletNodeName) {
     bool result = setString(OS_Coil_Cooling_DXFields::CondenserOutletNodeName, condenserOutletNodeName);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoilCoolingDX_Impl::resetCondenserOutletNodeName() {
@@ -184,7 +185,7 @@ namespace detail {
 
   bool CoilCoolingDX_Impl::setCondensateCollectionWaterStorageTankName(const std::string& condensateCollectionWaterStorageTankName) {
     bool result = setString(OS_Coil_Cooling_DXFields::CondensateCollectionWaterStorageTankName, condensateCollectionWaterStorageTankName);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoilCoolingDX_Impl::resetCondensateCollectionWaterStorageTankName() {
@@ -194,7 +195,7 @@ namespace detail {
 
   bool CoilCoolingDX_Impl::setEvaporativeCondenserSupplyWaterStorageTankName(const std::string& evaporativeCondenserSupplyWaterStorageTankName) {
     bool result = setString(OS_Coil_Cooling_DXFields::EvaporativeCondenserSupplyWaterStorageTankName, evaporativeCondenserSupplyWaterStorageTankName);
-    OS_ASSERT(result);
+    return result;
   }
 
   void CoilCoolingDX_Impl::resetEvaporativeCondenserSupplyWaterStorageTankName() {
@@ -213,12 +214,29 @@ namespace detail {
   ModelObject CoilCoolingDX_Impl::clone(Model model) const {
     auto t_clone = StraightComponent_Impl::clone(model).cast<CoilCoolingDX>();
 
+    // TODO: clone the performance object
+
     return t_clone;
   }
 
   std::vector<ModelObject> CoilCoolingDX_Impl::children() const {
+    std::vector<ModelObject> result;
+
+    // TODO
 
     return result;
+  }
+
+  boost::optional<HVACComponent> CoilCoolingDX_Impl::containingHVACComponent() const
+  {
+    // TODO
+
+    return boost::none;
+  }
+
+  bool CoilCoolingDX_Impl::addToNode(Node & node)
+  {
+    return false;
   }
 
 } // detail

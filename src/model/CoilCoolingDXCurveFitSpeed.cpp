@@ -38,7 +38,10 @@
 #include "CurveBiquadratic_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
+#include "CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
 
+#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_Cooling_DX_CurveFit_Speed_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -52,7 +55,7 @@ namespace detail {
   CoilCoolingDXCurveFitSpeed_Impl::CoilCoolingDXCurveFitSpeed_Impl(const IdfObject& idfObject,
                                                                    Model_Impl* model,
                                                                    bool keepHandle)
-    : ParentObject_Impl(idfObject,model,keepHandle)
+    : ResourceObject_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == CoilCoolingDXCurveFitSpeed::iddObjectType());
   }
@@ -60,7 +63,7 @@ namespace detail {
   CoilCoolingDXCurveFitSpeed_Impl::CoilCoolingDXCurveFitSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                    Model_Impl* model,
                                                                    bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
+    : ResourceObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == CoilCoolingDXCurveFitSpeed::iddObjectType());
   }
@@ -68,7 +71,7 @@ namespace detail {
   CoilCoolingDXCurveFitSpeed_Impl::CoilCoolingDXCurveFitSpeed_Impl(const CoilCoolingDXCurveFitSpeed_Impl& other,
                                                                    Model_Impl* model,
                                                                    bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
+    : ResourceObject_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& CoilCoolingDXCurveFitSpeed_Impl::outputVariableNames() const
@@ -230,6 +233,10 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurve);
   }
 
+  std::vector<CoilCoolingDXCurveFitOperatingMode> CoilCoolingDXCurveFitSpeed_Impl::coilCoolingDXCurveFitOperatingModes() const {
+    return getObject<ModelObject>().getModelObjectSources<CoilCoolingDXCurveFitOperatingMode>(CoilCoolingDXCurveFitOperatingMode::iddObjectType());
+  }
+
   bool CoilCoolingDXCurveFitSpeed_Impl::setGrossTotalCoolingCapacityFraction(double grossTotalCoolingCapacityFraction) {
     bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossTotalCoolingCapacityFraction, grossTotalCoolingCapacityFraction);
     return result;
@@ -352,6 +359,12 @@ namespace detail {
 
   }
 
+  ModelObject CoilCoolingDXCurveFitSpeed_Impl::clone(Model model) const {
+    auto t_clone = ModelObject_Impl::clone(model).cast<CoilCoolingDXCurveFitSpeed>();
+
+    return t_clone;
+  }
+
   std::vector<ModelObject> CoilCoolingDXCurveFitSpeed_Impl::children() const {
     std::vector<ModelObject> result;
 
@@ -365,16 +378,10 @@ namespace detail {
     return result;
   }
 
-  ModelObject CoilCoolingDXCurveFitSpeed_Impl::clone(Model model) const {
-    auto t_clone = ModelObject_Impl::clone(model).cast<CoilCoolingDXCurveFitSpeed>();
-
-    return t_clone;
-  }
-
 } // detail
 
 CoilCoolingDXCurveFitSpeed::CoilCoolingDXCurveFitSpeed(const Model& model)
-  : ParentObject(CoilCoolingDXCurveFitSpeed::iddObjectType(),model)
+  : ResourceObject(CoilCoolingDXCurveFitSpeed::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>());
 
@@ -460,7 +467,7 @@ CoilCoolingDXCurveFitSpeed::CoilCoolingDXCurveFitSpeed(const Model& model,
   Curve& energyInputRatioModifierFunctionofAirFlowFractionCurve,
   Curve& partLoadFractionCorrelationCurve,
   Curve& wasteHeatModifierFunctionofTemperatureCurve)
-  : ParentObject(CoilCoolingDXCurveFitSpeed::iddObjectType(),model)
+  : ResourceObject(CoilCoolingDXCurveFitSpeed::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>());
 
@@ -563,6 +570,10 @@ boost::optional<Curve> CoilCoolingDXCurveFitSpeed::sensibleHeatRatioModifierFunc
   return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->sensibleHeatRatioModifierFunctionofFlowFractionCurve();
 }
 
+std::vector<CoilCoolingDXCurveFitOperatingMode> CoilCoolingDXCurveFitSpeed::coilCoolingDXCurveFitOperatingModes() const {
+  return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->coilCoolingDXCurveFitOperatingModes();
+}
+
 bool CoilCoolingDXCurveFitSpeed::setGrossTotalCoolingCapacityFraction(double grossTotalCoolingCapacityFraction) {
   return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setGrossTotalCoolingCapacityFraction(grossTotalCoolingCapacityFraction);
 }
@@ -661,7 +672,7 @@ void CoilCoolingDXCurveFitSpeed::applySizingValues() {
 
 /// @cond
 CoilCoolingDXCurveFitSpeed::CoilCoolingDXCurveFitSpeed(std::shared_ptr<detail::CoilCoolingDXCurveFitSpeed_Impl> impl)
-  : ParentObject(impl)
+  : ResourceObject(impl)
 {}
 /// @endcond
 
