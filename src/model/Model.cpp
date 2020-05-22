@@ -1067,6 +1067,8 @@ namespace detail {
         modelObj->autosize();
       } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR
         modelObj->autosize();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXCurveFitOperatingMode>()) { // CoilCoolingDXCurveFitOperatingMode
+        modelObj->autosize();
       } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXCurveFitSpeed>()) { // CoilCoolingDXCurveFitSpeed
         modelObj->autosize();
       } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXMultiSpeedStageData>()) { // CoilCoolingDXMultiSpeedStageData
@@ -1095,6 +1097,8 @@ namespace detail {
       } else if (auto modelObj = optModelObj.optionalCast<ControllerOutdoorAir>()) { // ControllerOutdoorAir
         modelObj->applySizingValues();
       } else if (auto modelObj = optModelObj.optionalCast<ChillerHeaterPerformanceElectricEIR>()) { // ChillerHeaterPerformanceElectricEIR
+        modelObj->applySizingValues();
+      } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXCurveFitOperatingMode>()) { // CoilCoolingDXCurveFitOperatingMode
         modelObj->applySizingValues();
       } else if (auto modelObj = optModelObj.optionalCast<CoilCoolingDXCurveFitSpeed>()) { // CoilCoolingDXCurveFitSpeed
         modelObj->applySizingValues();
@@ -2794,6 +2798,9 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
   REGISTER_CONSTRUCTOR(ClimateZones);
   REGISTER_CONSTRUCTOR(CoilCoolingCooledBeam);
+  REGISTER_CONSTRUCTOR(CoilCoolingDX);
+  REGISTER_CONSTRUCTOR(CoilCoolingDXCurveFitPerformance);
+  REGISTER_CONSTRUCTOR(CoilCoolingDXCurveFitOperatingMode);
   REGISTER_CONSTRUCTOR(CoilCoolingDXCurveFitSpeed);
   REGISTER_CONSTRUCTOR(CoilCoolingDXMultiSpeed);
   REGISTER_CONSTRUCTOR(CoilCoolingDXMultiSpeedStageData);
@@ -3289,6 +3296,9 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
   REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
   REGISTER_COPYCONSTRUCTORS(CoilCoolingCooledBeam);
+  REGISTER_COPYCONSTRUCTORS(CoilCoolingDX);
+  REGISTER_COPYCONSTRUCTORS(CoilCoolingDXCurveFitPerformance);
+  REGISTER_COPYCONSTRUCTORS(CoilCoolingDXCurveFitOperatingMode);
   REGISTER_COPYCONSTRUCTORS(CoilCoolingDXCurveFitSpeed);
   REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeed);
   REGISTER_COPYCONSTRUCTORS(CoilCoolingDXMultiSpeedStageData);
