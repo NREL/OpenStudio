@@ -38,6 +38,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "CoilCoolingDXCurveFitPerformance.hpp"
+#include "CoilCoolingDXCurveFitPerformance_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_Cooling_DX_FieldEnums.hxx>
@@ -112,6 +114,18 @@ namespace detail {
     return getString(OS_Coil_Cooling_DXFields::CondenserOutletNodeName,true);
   }
 
+  boost::optional<CoilCoolingDXCurveFitPerformance> CoilCoolingDX_Impl::optionalPerformanceObject() const {
+    return getObject<ModelObject>().getModelObjectTarget<CoilCoolingDXCurveFitPerformance>(OS_Coil_Cooling_DXFields::PerformanceObject);
+  }
+
+  CoilCoolingDXCurveFitPerformance CoilCoolingDX_Impl::performanceObject() const {
+    boost::optional<CoilCoolingDXCurveFitPerformance> value = optionalPerformanceObject();
+    if (!value) {
+      LOG_AND_THROW(briefDescription() << " does not have an Performance Object attached.");
+    }
+    return value.get();
+  }
+
   boost::optional<std::string> CoilCoolingDX_Impl::condensateCollectionWaterStorageTankName() const {
     return getString(OS_Coil_Cooling_DXFields::CondensateCollectionWaterStorageTankName,true);
   }
@@ -163,6 +177,11 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  bool CoilCoolingDX_Impl::setPerformanceObject(const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance) {
+    bool result = setPointer(OS_Coil_Cooling_DXFields::PerformanceObject, coilCoolingDXCurveFitPerformance.handle());
+    return result;
+  }
+
   bool CoilCoolingDX_Impl::setCondensateCollectionWaterStorageTankName(const std::string& condensateCollectionWaterStorageTankName) {
     bool result = setString(OS_Coil_Cooling_DXFields::CondensateCollectionWaterStorageTankName, condensateCollectionWaterStorageTankName);
     OS_ASSERT(result);
@@ -204,11 +223,13 @@ namespace detail {
 
 } // detail
 
-CoilCoolingDX::CoilCoolingDX(const Model& model)
+CoilCoolingDX::CoilCoolingDX(const Model& model,
+                             const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance)
   : StraightComponent(CoilCoolingDX::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::CoilCoolingDX_Impl>());
 
+  setPerformanceObject(coilCoolingDXCurveFitPerformance);
 }
 
 IddObjectType CoilCoolingDX::iddObjectType() {
@@ -229,6 +250,10 @@ boost::optional<std::string> CoilCoolingDX::condenserInletNodeName() const {
 
 boost::optional<std::string> CoilCoolingDX::condenserOutletNodeName() const {
   return getImpl<detail::CoilCoolingDX_Impl>()->condenserOutletNodeName();
+}
+
+CoilCoolingDXCurveFitPerformance CoilCoolingDX::performanceObject() const {
+  return getImpl<detail::CoilCoolingDX_Impl>()->performanceObject();
 }
 
 boost::optional<std::string> CoilCoolingDX::condensateCollectionWaterStorageTankName() const {
@@ -255,32 +280,36 @@ void CoilCoolingDX::resetCondenserZone() {
   getImpl<detail::CoilCoolingDX_Impl>()->resetCondenserZone();
 }
 
-void CoilCoolingDX::setCondenserInletNodeName(const std::string& condenserInletNodeName) {
-  getImpl<detail::CoilCoolingDX_Impl>()->setCondenserInletNodeName(condenserInletNodeName);
+bool CoilCoolingDX::setCondenserInletNodeName(const std::string& condenserInletNodeName) {
+  return getImpl<detail::CoilCoolingDX_Impl>()->setCondenserInletNodeName(condenserInletNodeName);
 }
 
 void CoilCoolingDX::resetCondenserInletNodeName() {
   getImpl<detail::CoilCoolingDX_Impl>()->resetCondenserInletNodeName();
 }
 
-void CoilCoolingDX::setCondenserOutletNodeName(const std::string& condenserOutletNodeName) {
-  getImpl<detail::CoilCoolingDX_Impl>()->setCondenserOutletNodeName(condenserOutletNodeName);
+bool CoilCoolingDX::setCondenserOutletNodeName(const std::string& condenserOutletNodeName) {
+  return getImpl<detail::CoilCoolingDX_Impl>()->setCondenserOutletNodeName(condenserOutletNodeName);
 }
 
 void CoilCoolingDX::resetCondenserOutletNodeName() {
   getImpl<detail::CoilCoolingDX_Impl>()->resetCondenserOutletNodeName();
 }
 
-void CoilCoolingDX::setCondensateCollectionWaterStorageTankName(const std::string& condensateCollectionWaterStorageTankName) {
-  getImpl<detail::CoilCoolingDX_Impl>()->setCondensateCollectionWaterStorageTankName(condensateCollectionWaterStorageTankName);
+bool CoilCoolingDX::setPerformanceObject(const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance) {
+  return getImpl<detail::CoilCoolingDX_Impl>()->setPerformanceObject(coilCoolingDXCurveFitPerformance);
+}
+
+bool CoilCoolingDX::setCondensateCollectionWaterStorageTankName(const std::string& condensateCollectionWaterStorageTankName) {
+  return getImpl<detail::CoilCoolingDX_Impl>()->setCondensateCollectionWaterStorageTankName(condensateCollectionWaterStorageTankName);
 }
 
 void CoilCoolingDX::resetCondensateCollectionWaterStorageTankName() {
   getImpl<detail::CoilCoolingDX_Impl>()->resetCondensateCollectionWaterStorageTankName();
 }
 
-void CoilCoolingDX::setEvaporativeCondenserSupplyWaterStorageTankName(const std::string& evaporativeCondenserSupplyWaterStorageTankName) {
-  getImpl<detail::CoilCoolingDX_Impl>()->setEvaporativeCondenserSupplyWaterStorageTankName(evaporativeCondenserSupplyWaterStorageTankName);
+bool CoilCoolingDX::setEvaporativeCondenserSupplyWaterStorageTankName(const std::string& evaporativeCondenserSupplyWaterStorageTankName) {
+  return getImpl<detail::CoilCoolingDX_Impl>()->setEvaporativeCondenserSupplyWaterStorageTankName(evaporativeCondenserSupplyWaterStorageTankName);
 }
 
 void CoilCoolingDX::resetEvaporativeCondenserSupplyWaterStorageTankName() {

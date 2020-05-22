@@ -27,86 +27,87 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_COILCOOLINGDX_HPP
-#define MODEL_COILCOOLINGDX_HPP
+#ifndef MODEL_COILCOOLINGDXCURVEFITPERFORMANCE_HPP
+#define MODEL_COILCOOLINGDXCURVEFITPERFORMANCE_HPP
 
 #include <model/ModelAPI.hpp>
-#include "StraightComponent.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
+
 namespace model {
 
 class Schedule;
-class ThermalZone;
-class CoilCoolingDXCurveFitPerformance;
+class CoilCoolingDX;
 
 namespace detail {
 
-  class CoilCoolingDX_Impl;
+  class CoilCoolingDXCurveFitPerformance_Impl;
 
 } // detail
 
-/** CoilCoolingDX is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX'. */
-class MODEL_API CoilCoolingDX : public StraightComponent {
+/** CoilCoolingDXCurveFitPerformance is a ResourceObject that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:CurveFit:Performance'. */
+class MODEL_API CoilCoolingDXCurveFitPerformance : public ResourceObject {
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  explicit CoilCoolingDX(const Model& model,
-                         const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance);
+  explicit CoilCoolingDXCurveFitPerformance(const Model& model);
 
-  virtual ~CoilCoolingDX() {}
+  virtual ~CoilCoolingDXCurveFitPerformance() {}
 
   //@}
 
   static IddObjectType iddObjectType();
 
+  static std::vector<std::string> capacityControlMethodValues();
+
+  static std::vector<std::string> compressorFuelTypeValues();
+
   /** @name Getters */
   //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+  double crankcaseHeaterCapacity() const;
 
-  boost::optional<ThermalZone> condenserZone() const;
+  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-  boost::optional<std::string> condenserInletNodeName() const;
+  double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
-  boost::optional<std::string> condenserOutletNodeName() const;
+  double unitInternalStaticAirPressure() const;
 
-  CoilCoolingDXCurveFitPerformance performanceObject() const;
+  std::string capacityControlMethod() const;
 
-  boost::optional<std::string> condensateCollectionWaterStorageTankName() const;
+  double evaporativeCondenserBasinHeaterCapacity() const;
 
-  boost::optional<std::string> evaporativeCondenserSupplyWaterStorageTankName() const;
+  double evaporativeCondenserBasinHeaterSetpointTemperature() const;
+
+  Schedule evaporativeCondenserBasinHeaterOperatingSchedule() const;
+
+  std::string compressorFuelType() const;
+
+  CoilCoolingDX coilCoolingDX() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+  bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
-  void resetAvailabilitySchedule();
+  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-  bool setCondenserZone(const ThermalZone& thermalZone);
+  bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 
-  void resetCondenserZone();
+  bool setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure);
 
-  bool setCondenserInletNodeName(const std::string& condenserInletNodeName);
+  bool setCapacityControlMethod(const std::string& capacityControlMethod);
 
-  void resetCondenserInletNodeName();
+  bool setEvaporativeCondenserBasinHeaterCapacity(double evaporativeCondenserBasinHeaterCapacity);
 
-  bool setCondenserOutletNodeName(const std::string& condenserOutletNodeName);
+  bool setEvaporativeCondenserBasinHeaterSetpointTemperature(double evaporativeCondenserBasinHeaterSetpointTemperature);
 
-  void resetCondenserOutletNodeName();
+  bool setEvaporativeCondenserBasinHeaterOperatingSchedule(Schedule& schedule);
 
-  bool setPerformanceObject(const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance);
-
-  bool setCondensateCollectionWaterStorageTankName(const std::string& condensateCollectionWaterStorageTankName);
-
-  void resetCondensateCollectionWaterStorageTankName();
-
-  bool setEvaporativeCondenserSupplyWaterStorageTankName(const std::string& evaporativeCondenserSupplyWaterStorageTankName);
-
-  void resetEvaporativeCondenserSupplyWaterStorageTankName();
+  bool setCompressorFuelType(const std::string& compressorFuelType);
 
   //@}
   /** @name Other */
@@ -115,27 +116,27 @@ class MODEL_API CoilCoolingDX : public StraightComponent {
   //@}
  protected:
   /// @cond
-  typedef detail::CoilCoolingDX_Impl ImplType;
+  typedef detail::CoilCoolingDXCurveFitPerformance_Impl ImplType;
 
-  explicit CoilCoolingDX(std::shared_ptr<detail::CoilCoolingDX_Impl> impl);
+  explicit CoilCoolingDXCurveFitPerformance(std::shared_ptr<detail::CoilCoolingDXCurveFitPerformance_Impl> impl);
 
-  friend class detail::CoilCoolingDX_Impl;
+  friend class detail::CoilCoolingDXCurveFitPerformance_Impl;
   friend class Model;
   friend class IdfObject;
   friend class openstudio::detail::IdfObject_Impl;
   /// @endcond
  private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingDX");
+  REGISTER_LOGGER("openstudio.model.CoilCoolingDXCurveFitPerformance");
 };
 
-/** \relates CoilCoolingDX*/
-typedef boost::optional<CoilCoolingDX> OptionalCoilCoolingDX;
+/** \relates CoilCoolingDXCurveFitPerformance*/
+typedef boost::optional<CoilCoolingDXCurveFitPerformance> OptionalCoilCoolingDXCurveFitPerformance;
 
-/** \relates CoilCoolingDX*/
-typedef std::vector<CoilCoolingDX> CoilCoolingDXVector;
+/** \relates CoilCoolingDXCurveFitPerformance*/
+typedef std::vector<CoilCoolingDXCurveFitPerformance> CoilCoolingDXCurveFitPerformanceVector;
 
 } // model
 } // openstudio
 
-#endif // MODEL_COILCOOLINGDX_HPP
+#endif // MODEL_COILCOOLINGDXCURVEFITPERFORMANCE_HPP
 

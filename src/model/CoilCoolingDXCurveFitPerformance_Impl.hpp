@@ -27,40 +27,39 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_COILCOOLINGDX_IMPL_HPP
-#define MODEL_COILCOOLINGDX_IMPL_HPP
+#ifndef MODEL_COILCOOLINGDXCURVEFITPERFORMANCE_IMPL_HPP
+#define MODEL_COILCOOLINGDXCURVEFITPERFORMANCE_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
-#include "StraightComponent_Impl.hpp"
+#include "ResourceObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
 class Schedule;
-class ThermalZone;
-class CoilCoolingDXCurveFitPerformance;
+class CoilCoolingDX;
 
 namespace detail {
 
-  /** CoilCoolingDX_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingDX.*/
-  class MODEL_API CoilCoolingDX_Impl : public StraightComponent_Impl {
+  /** CoilCoolingDXCurveFitPerformance_Impl is a ResourceObject_Impl that is the implementation class for CoilCoolingDXCurveFitPerformance.*/
+  class MODEL_API CoilCoolingDXCurveFitPerformance_Impl : public ResourceObject_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    CoilCoolingDX_Impl(const IdfObject& idfObject,
-                       Model_Impl* model,
-                       bool keepHandle);
+    CoilCoolingDXCurveFitPerformance_Impl(const IdfObject& idfObject,
+                                          Model_Impl* model,
+                                          bool keepHandle);
 
-    CoilCoolingDX_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                       Model_Impl* model,
-                       bool keepHandle);
+    CoilCoolingDXCurveFitPerformance_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                          Model_Impl* model,
+                                          bool keepHandle);
 
-    CoilCoolingDX_Impl(const CoilCoolingDX_Impl& other,
-                       Model_Impl* model,
-                       bool keepHandle);
+    CoilCoolingDXCurveFitPerformance_Impl(const CoilCoolingDXCurveFitPerformance_Impl& other,
+                                          Model_Impl* model,
+                                          bool keepHandle);
 
-    virtual ~CoilCoolingDX_Impl() {}
+    virtual ~CoilCoolingDXCurveFitPerformance_Impl() {}
 
     //@}
     /** @name Virtual Methods */
@@ -76,75 +75,56 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+    double crankcaseHeaterCapacity() const;
 
-    boost::optional<ThermalZone> condenserZone() const;
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-    boost::optional<std::string> condenserInletNodeName() const;
+    double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
-    boost::optional<std::string> condenserOutletNodeName() const;
+    double unitInternalStaticAirPressure() const;
 
-    CoilCoolingDXCurveFitPerformance performanceObject() const;
+    std::string capacityControlMethod() const;
 
-    boost::optional<std::string> condensateCollectionWaterStorageTankName() const;
+    double evaporativeCondenserBasinHeaterCapacity() const;
 
-    boost::optional<std::string> evaporativeCondenserSupplyWaterStorageTankName() const;
+    double evaporativeCondenserBasinHeaterSetpointTemperature() const;
+
+    Schedule evaporativeCondenserBasinHeaterOperatingSchedule() const;
+
+    std::string compressorFuelType() const;
+
+    CoilCoolingDX coilCoolingDX() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+    bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
-    void resetAvailabilitySchedule();
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-    bool setCondenserZone(const ThermalZone& thermalZone);
+    bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 
-    void resetCondenserZone();
+    bool setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure);
 
-    bool setCondenserInletNodeName(const std::string& condenserInletNodeName);
+    bool setCapacityControlMethod(const std::string& capacityControlMethod);
 
-    void resetCondenserInletNodeName();
+    bool setEvaporativeCondenserBasinHeaterCapacity(double evaporativeCondenserBasinHeaterCapacity);
 
-    bool setCondenserOutletNodeName(const std::string& condenserOutletNodeName);
+    bool setEvaporativeCondenserBasinHeaterSetpointTemperature(double evaporativeCondenserBasinHeaterSetpointTemperature);
 
-    void resetCondenserOutletNodeName();
+    bool setEvaporativeCondenserBasinHeaterOperatingSchedule(Schedule& schedule);
 
-    bool setPerformanceObject(const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance);
-
-    bool setCondensateCollectionWaterStorageTankName(const std::string& condensateCollectionWaterStorageTankName);
-
-    void resetCondensateCollectionWaterStorageTankName();
-
-    bool setEvaporativeCondenserSupplyWaterStorageTankName(const std::string& evaporativeCondenserSupplyWaterStorageTankName);
-
-    void resetEvaporativeCondenserSupplyWaterStorageTankName();
+    bool setCompressorFuelType(const std::string& compressorFuelType);
 
     //@}
     /** @name Other */
     //@{
 
-    virtual unsigned inletPort() const override;
-
-    virtual unsigned outletPort() const override;
-
-    ModelObject clone(Model model) const override;
-
-    std::vector<ModelObject> children() const override;
-
-    boost::optional<HVACComponent> containingHVACComponent() const override;
-
-    bool addToNode(Node & node) override;
-
     //@}
    protected:
    private:
-    REGISTER_LOGGER("openstudio.model.CoilCoolingDX");
-
-    boost::optional<DXCoolingPerformance> optionalPerformanceObject() const;
-
-    boost::optional<Connection> optionalAirInletNode() const;
-    boost::optional<Connection> optionalAirOutletNode() const;
+    REGISTER_LOGGER("openstudio.model.CoilCoolingDXCurveFitPerformance");
   };
 
 } // detail
@@ -152,5 +132,5 @@ namespace detail {
 } // model
 } // openstudio
 
-#endif // MODEL_COILCOOLINGDX_IMPL_HPP
+#endif // MODEL_COILCOOLINGDXCURVEFITPERFORMANCE_IMPL_HPP
 
