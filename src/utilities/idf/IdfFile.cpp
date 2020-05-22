@@ -380,26 +380,28 @@ OptionalIdfFile IdfFile::load(const path& p,
   // complete path
   path wp(p);
 
-  if (iddFileType == IddFileType::OpenStudio) {
+  std::string ext = getFileExtension(p);
 
+  if (iddFileType == IddFileType::OpenStudio) {
     // can be Model or Component
-    std::string ext = getFileExtension(p);
     if (! ( openstudio::istringEqual(ext, "osm") ||
             openstudio::istringEqual(ext, "osc")) ) {
       LOG_FREE(Warn,"openstudio.setFileExtension","Path p, '" << toString(p)
                  << "', has an unexpected file extension. Was expecting 'osm' or 'osc'.");
     }
-
-    // This isn't issuing warnings because we pass false (we have to, since it can be either osm or osc)
-    // hence why we do check above
-    wp = completePathToFile(wp,path(),modelFileExtension(),false);
-    if (wp.empty()) {
-      wp = completePathToFile(wp,path(),componentFileExtension(),false);
+  } else {
+    std::string ext = getFileExtension(p);
+    if (! ( openstudio::istringEqual(ext, "idf") ||
+            openstudio::istringEqual(ext, "imf") ||
+            openstudio::istringEqual(ext, "ddy")) ) {
+      LOG_FREE(Warn,"openstudio.setFileExtension","Path p, '" << toString(p)
+                 << "', has an unexpected file extension. Was expecting 'idf', 'ddy', or 'imf'.");
     }
   }
-  else {
-    wp = completePathToFile(wp,path(),"idf",true);
-  }
+
+  // pass warnOnMisMatch as false since we warn above anyways
+  // In fact, don't pass the ext param, skip the entire call to setFileExtension which is pointless since it won't force replace it
+  wp = completePathToFile(wp,path(),"",false);
 
   // try to open file and parse
   openstudio::filesystem::ifstream inFile(wp);

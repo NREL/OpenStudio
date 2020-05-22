@@ -113,6 +113,8 @@ namespace detail {
 
     boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -149,10 +151,11 @@ namespace detail {
 
     bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
     bool setBasinHeaterOperatingSchedule(Schedule& schedule);
 
     void resetBasinHeaterOperatingSchedule();
+
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
     //@}
     /** @name Other */

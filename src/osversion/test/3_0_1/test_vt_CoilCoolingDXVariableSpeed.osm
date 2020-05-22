@@ -1,0 +1,41 @@
+
+OS:Version,
+  {af733672-23c2-4eea-93d6-1017dc341614}, !- Handle
+  3.0.0;                                  !- Version Identifier
+
+OS:Coil:Cooling:DX:VariableSpeed,
+  {e2e4bac6-5849-4c06-a35b-5b512e89e84f}, !- Handle
+  Coil Cooling DX Variable Speed 1,       !- Name
+  ,                                       !- Indoor Air Inlet Node Name
+  ,                                       !- Indoor Air Outlet Node Name
+  1,                                      !- Nominal Speed Level {dimensionless}
+  autosize,                               !- Gross Rated Total Cooling Capacity At Selected Nominal Speed Level {W}
+  autosize,                               !- Rated Air Flow Rate At Selected Nominal Speed Level {m3/s}
+  0,                                      !- Nominal Time for Condensate to Begin Leaving the Coil {s}
+  0,                                      !- Initial Moisture Evaporation Rate Divided by Steady-State AC Latent Capacity {dimensionless}
+  {dd042707-2520-4672-9cf2-194e21086783}, !- Energy Part Load Fraction Curve Name
+  ,                                       !- Condenser Air Inlet Node Name
+  AirCooled,                              !- Condenser Type
+  0,                                      !- Evaporative Condenser Pump Rated Power Consumption {W}
+  0,                                      !- Crankcase Heater Capacity {W}
+  11,                                     !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       !- Supply Water Storage Tank Name
+  ,                                       !- Condensate Collection Water Storage Tank Name
+  0,                                      !- Basin Heater Capacity {W/K}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  ,                                       !- Basin Heater Operating Schedule Name
+  {a59a5a80-3bed-4c6b-99fe-4ef7a4dc758e}; !- Speed Data List
+
+OS:Curve:Quadratic,
+  {dd042707-2520-4672-9cf2-194e21086783}, !- Handle
+  Curve Quadratic 1,                      !- Name
+  0.85,                                   !- Coefficient1 Constant
+  0.15,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:ModelObjectList,
+  {a59a5a80-3bed-4c6b-99fe-4ef7a4dc758e}, !- Handle
+  Coil Cooling DX Variable Speed 1 Speed Data List; !- Name
+

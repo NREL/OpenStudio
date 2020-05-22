@@ -274,6 +274,12 @@ OptionalModelObject result,temp;
       coil.setNominalTimeForCondensateRemovalToBegin(*d);
     }
 
+    d=workspaceObject.getDouble(Coil_Cooling_DX_SingleSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation);
+    if(d)
+    {
+      coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(*d);
+    }
+
     d=workspaceObject.getDouble(Coil_Cooling_DX_SingleSpeedFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
     if(d)
     {

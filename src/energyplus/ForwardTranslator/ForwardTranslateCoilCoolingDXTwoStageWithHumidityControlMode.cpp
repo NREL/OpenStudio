@@ -143,6 +143,12 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWith
     }
   }
 
+  // Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  {
+    auto value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation();
+    idfObject.setDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,value);
+  }
+
   // BasinHeaterCapacity
   {
     auto value = modelObject.basinHeaterCapacity();
