@@ -27,14 +27,78 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include <gtest/gtest.h>
+#include <string>
 #include "ModelFixture.hpp"
 
 #include "../CoilCoolingDXCurveFitPerformance.hpp"
 #include "../CoilCoolingDXCurveFitPerformance_Impl.hpp"
 
+#include "../CoilCoolingDX.hpp"
+#include "../CoilCoolingDX_Impl.hpp"
+#include "../CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "../CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
+
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_GettersSetters) {
+TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_CoilCoolingDXCurveFitPerformance) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
+  ASSERT_EXIT(
+    {
+      // create a model to use
+      Model model;
+
+      // create a coil cooling dx curve fit operating mode object to use
+      CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+
+      // create a coil cooling dx curve fit performance object to use
+      CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0),
+    ""
+  );
+
+  // create a model to use
+  Model model;
+
+  // create a coil cooling dx curve fit operating mode object to use
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+
+  // create a coil cooling dx curve fit performance object to use
+  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+
+  EXPECT_EQ(0.0, performance.crankcaseHeaterCapacity());
+  EXPECT_EQ(-25.0, performance.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+  EXPECT_EQ(10.0, performance.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation());
+  EXPECT_EQ(773.3, performance.unitInternalStaticAirPressure());
+  EXPECT_EQ("Discrete", performance.capacityControlMethod());
+  EXPECT_EQ(0.0, performance.evaporativeCondenserBasinHeaterCapacity());
+  EXPECT_EQ(2.0, performance.evaporativeCondenserBasinHeaterSetpointTemperature());
+  ASSERT_TRUE(performance.evaporativeCondenserBasinHeaterOperatingSchedule().optionalCast<Schedule>());
+  ASSERT_TRUE(performance.evaporativeCondenserBasinHeaterOperatingSchedule().optionalCast<ScheduleConstant>());
+  ScheduleConstant schedule = performance.evaporativeCondenserBasinHeaterOperatingSchedule().cast<ScheduleConstant>();
+  EXPECT_EQ(1.0, schedule.value());
+  ASSERT_TRUE(performance.baseOperatingMode().optionalCast<CoilCoolingDXCurveFitOperatingMode>());
+  ASSERT_FALSE(performance.alternativeOperatingMode1());
+  ASSERT_FALSE(performance.alternativeOperatingMode2());
+  EXPECT_EQ(0, performance.coilCoolingDXs().size());
+}
+
+TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_GettersSetters) {
+  // create a model to use
+  Model model;
+
+  // create a coil cooling dx curve fit operating mode object to use
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+
+  // create a coil cooling dx curve fit performance object to use
+  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
 }

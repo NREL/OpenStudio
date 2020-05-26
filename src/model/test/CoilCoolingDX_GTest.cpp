@@ -27,14 +27,81 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include <gtest/gtest.h>
+#include <string>
 #include "ModelFixture.hpp"
 
 #include "../CoilCoolingDX.hpp"
 #include "../CoilCoolingDX_Impl.hpp"
 
+#include "../CoilCoolingDXCurveFitPerformance.hpp"
+#include "../CoilCoolingDXCurveFitPerformance_Impl.hpp"
+#include "../CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "../CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilCoolingDX_GettersSetters) {
+TEST_F(ModelFixture, CoilCoolingDX_CoilCoolingDX) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
+  ASSERT_EXIT(
+    {
+      // create a model to use
+      Model model;
+
+      // create a coil cooling dx curve fit operating mode object to use
+      CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+
+      // create a coil cooling dx curve fit performance object to use
+      CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+
+      // create a coil cooling dx object to use
+      CoilCoolingDX dx(model, performance);
+
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0),
+    ""
+  );
+
+  // create a model to use
+  Model model;
+
+  // create a coil cooling dx curve fit operating mode object to use
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+
+  // create a coil cooling dx curve fit performance object to use
+  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+
+  // create a coil cooling dx object to use
+  CoilCoolingDX dx(model, performance);
+
+  ASSERT_FALSE(dx.availabilitySchedule());
+  ASSERT_FALSE(dx.condenserZone());
+  ASSERT_TRUE(dx.condenserInletNodeName());
+  EXPECT_EQ("", dx.condenserInletNodeName().get());
+  ASSERT_TRUE(dx.condenserOutletNodeName());
+  EXPECT_EQ("", dx.condenserOutletNodeName().get());
+  ASSERT_TRUE(dx.performanceObject().optionalCast<CoilCoolingDXCurveFitPerformance>());
+  ASSERT_FALSE(dx.condensateCollectionWaterStorageTankName());
+  ASSERT_FALSE(dx.evaporativeCondenserSupplyWaterStorageTankName());
+}
+
+TEST_F(ModelFixture, CoilCoolingDX_GettersSetters) {
+  // create a model to use
+  Model model;
+
+  // create a coil cooling dx curve fit operating mode object to use
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+
+  // create a coil cooling dx curve fit performance object to use
+  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+
+  // create a coil cooling dx object to use
+  CoilCoolingDX dx(model, performance);
 }

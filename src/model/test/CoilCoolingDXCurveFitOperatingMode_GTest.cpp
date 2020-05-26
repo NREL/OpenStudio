@@ -27,14 +27,64 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include <gtest/gtest.h>
+#include <string>
 #include "ModelFixture.hpp"
 
 #include "../CoilCoolingDXCurveFitOperatingMode.hpp"
 #include "../CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
 
+#include "../CoilCoolingDXCurveFitPerformance.hpp"
+#include "../CoilCoolingDXCurveFitPerformance_Impl.hpp"
+#include "../CoilCoolingDXCurveFitSpeed.hpp"
+#include "../CoilCoolingDXCurveFitSpeed_Impl.hpp"
+
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_GettersSetters) {
+TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_CoilCoolingDXCurveFitOperatingMode) {
+  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
+  ASSERT_EXIT(
+    {
+      // create a model to use
+      Model model;
+
+      // create a coil cooling dx curve fit operating mode object to use
+      CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0),
+    ""
+  );
+
+  // create a model to use
+  Model model;
+
+  // create a coil cooling dx curve fit operating mode object to use
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+
+  ASSERT_FALSE(operatingMode.ratedGrossTotalCoolingCapacity());
+  EXPECT_TRUE(operatingMode.isRatedGrossTotalCoolingCapacityAutosized());
+  ASSERT_FALSE(operatingMode.ratedEvaporatorAirFlowRate());
+  EXPECT_TRUE(operatingMode.isRatedEvaporatorAirFlowRateAutosized());
+  ASSERT_FALSE(operatingMode.ratedCondenserAirFlowRate());
+  EXPECT_TRUE(operatingMode.isRatedCondenserAirFlowRateAutosized());
+  EXPECT_EQ(0.0, operatingMode.maximumCyclingRate());
+  EXPECT_EQ(0.0, operatingMode.ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity());
+  EXPECT_EQ(0.0, operatingMode.latentCapacityTimeConstant());
+  EXPECT_EQ(0.0, operatingMode.nominalTimeforCondensateRemovaltoBegin());
+  EXPECT_FALSE(operatingMode.applyLatentDegradationtoSpeedsGreaterthan1());
+  EXPECT_EQ("AirCooled", operatingMode.condenserType());
+  EXPECT_EQ(0, operatingMode.coilCoolingDXCurveFitPerformances().size());
+  EXPECT_EQ(0, operatingMode.speeds().size());
+}
+
+TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_GettersSetters) {
+  // create a model to use
+  Model model;
+
+  // create a coil cooling dx curve fit operating mode object to use
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
 }
