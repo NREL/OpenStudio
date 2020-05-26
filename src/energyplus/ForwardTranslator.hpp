@@ -118,6 +118,10 @@ class ChillerAbsorption;
 class ChillerAbsorptionIndirect;
 class ChillerElectricEIR;
 class ChillerHeaterPerformanceElectricEIR;
+class CoilCoolingDX;
+class CoilCoolingDXCurveFitPerformance;
+class CoilCoolingDXCurveFitOperatingMode;
+class CoilCoolingDXSpeed;
 class CoilCoolingDXMultiSpeed;
 class CoilCoolingDXSingleSpeed;
 class CoilCoolingDXTwoSpeed;
@@ -679,6 +683,14 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR( model::ChillerHeaterPerformanceElectricEIR & modelObject  );
 
   boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed( model::CoilCoolingDXSingleSpeed & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDX( model::CoilCoolingDX & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDXCurveFitPerformance( model::CoilCoolingDXCurveFitPerformance & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDXCurveFitOperatingMode( model::CoilCoolingDXCurveFitOperatingMode & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDXCurveFitSpeed( model::CoilCoolingDXCurveFitSpeed & modelObject );
 
   boost::optional<IdfObject> translateCoilCoolingDXMultiSpeed( model::CoilCoolingDXMultiSpeed & modelObject );
 

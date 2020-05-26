@@ -1032,6 +1032,30 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // This is handled directly in ATU:SingleDuct:ConstantVolume::FourPipeBeam
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX :
+    {
+      model::CoilCoolingDX dx = modelObject.cast<CoilCoolingDX>();
+      retVal = translateCoilCoolingDX(dx);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_CurveFit_Performance :
+    {
+      model::CoilCoolingDXCurveFitPerformance performance = modelObject.cast<CoilCoolingDXCurveFitPerformance>();
+      retVal = translateCoilCoolingDXCurveFitPerformance(performance);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_CurveFit_OperatingMode :
+    {
+      model::CoilCoolingDXCurveFitOperatingMode operatingMode = modelObject.cast<CoilCoolingDXCurveFitOperatingMode>();
+      retVal = translateCoilCoolingDXCurveFitOperatingMode(operatingMode);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_CurveFit_Speed :
+    {
+      model::CoilCoolingDXCurveFitSpeed speed = modelObject.cast<CoilCoolingDXCurveFitSpeed>();
+      retVal = translateCoilCoolingDXCurveFitSpeed(speed);
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed :
     {
       model::CoilCoolingDXSingleSpeed coil = modelObject.cast<CoilCoolingDXSingleSpeed>();

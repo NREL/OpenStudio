@@ -64,6 +64,10 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
   ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDX.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitPerformance.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitOperatingMode.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
@@ -411,6 +415,10 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateBuilding.cpp
   ReverseTranslator/ReverseTranslateBuildingSurfaceDetailed.cpp
   ReverseTranslator/ReverseTranslateControllerOutdoorAir.cpp
+  ReverseTranslator/ReverseTranslateCoilCoolingDX.cpp
+  ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitPerformance.cpp
+  ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitOperatingMode.cpp
+  ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitSpeed.cpp
   ReverseTranslator/ReverseTranslateCoilCoolingDXSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateCoilHeatingGas.cpp
   ReverseTranslator/ReverseTranslateCoilSystemCoolingDX.cpp

@@ -99,7 +99,15 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateCoilHeatingGas(const WorkspaceObject & workspaceObject);
 
-  boost::optional<model::ModelObject> translateCoilCoolingDXSingleSpeed( const WorkspaceObject& orkspaceObject);
+  boost::optional<model::ModelObject> translateCoilCoolingDX( const WorkspaceObject& workspaceObject);
+
+  boost::optional<model::ModelObject> translateCoilCoolingDXCurveFitPerformance( const WorkspaceObject& workspaceObject);
+
+  boost::optional<model::ModelObject> translateCoilCoolingDXCurveFitOperatingMode( const WorkspaceObject& workspaceObject);
+
+  boost::optional<model::ModelObject> translateCoilCoolingDXCurveFitSpeed( const WorkspaceObject& workspaceObject);
+
+  boost::optional<model::ModelObject> translateCoilCoolingDXSingleSpeed( const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translateCoilSystemCoolingDX(const WorkspaceObject & workspaceObject);
 
