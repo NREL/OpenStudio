@@ -53,4 +53,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
   WorkspaceObjectVector idfSpeeds(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_CurveFit_Speed));
   ASSERT_EQ(1u, idfSpeeds.size());
   WorkspaceObject idfSpeed(idfSpeeds[0]);
+
+  EXPECT_EQ(1.0, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::GrossTotalCoolingCapacityFraction, false).get());
+  EXPECT_EQ(1.0, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporatorAirFlowRateFraction, false).get());
+  EXPECT_EQ(1.0, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::CondenserAirFlowRateFraction, false).get());
+  EXPECT_EQ("Autosize", idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, false).get());
+  EXPECT_EQ(3.0, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::GrossCoolingCOP, false).get());
+  EXPECT_EQ(1.0, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::ActiveFractionofCoilFaceArea, false).get());
+  EXPECT_EQ(773.3, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate, false).get());
+  EXPECT_EQ(1.0, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserPumpPowerFraction, false).get());
+  EXPECT_EQ(0.9, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserEffectiveness, false).get());
+  EXPECT_EQ(0.2, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedWasteHeatFractionofPowerInput, false).get());
+
+  WorkspaceObjectVector idfCurveBiquadratics(w.getObjectsByType(IddObjectType::Curve_Biquadratic));
+  ASSERT_EQ(3u, idfCurveBiquadratics.size());
+
+  WorkspaceObjectVector idfCurveQuadratics(w.getObjectsByType(IddObjectType::Curve_Quadratic));
+  ASSERT_EQ(3u, idfCurveQuadratics.size());
 }

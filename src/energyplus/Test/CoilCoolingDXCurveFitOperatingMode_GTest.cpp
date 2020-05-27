@@ -36,7 +36,7 @@
 #include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
 #include "../../model/CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
 
-#include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_CurveFit_OperatingMode_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
@@ -53,4 +53,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitOperatingMode) 
   WorkspaceObjectVector idfOperatingModes(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_CurveFit_OperatingMode));
   ASSERT_EQ(1u, idfOperatingModes.size());
   WorkspaceObject idfOperatingMode(idfOperatingModes[0]);
+
+  EXPECT_EQ("Autosize", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatedGrossTotalCoolingCapacity, false).get());
+  EXPECT_EQ("Autosize", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatedEvaporatorAirFlowRate, false).get());
+  EXPECT_EQ("Autosize", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatedCondenserAirFlowRate, false).get());
+  EXPECT_EQ(0.0, idfOperatingMode.getDouble(Coil_Cooling_DX_CurveFit_OperatingModeFields::MaximumCyclingRate, false).get());
+  EXPECT_EQ(0.0, idfOperatingMode.getDouble(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity, false).get());
+  EXPECT_EQ(0.0, idfOperatingMode.getDouble(Coil_Cooling_DX_CurveFit_OperatingModeFields::LatentCapacityTimeConstant, false).get());
+  EXPECT_EQ(0.0, idfOperatingMode.getDouble(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalTimeforCondensateRemovaltoBegin, false).get());
+  EXPECT_EQ("No", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::ApplyLatentDegradationtoSpeedsGreaterthan1, false).get());
+  EXPECT_EQ("AirCooled", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::CondenserType, false).get());
+  EXPECT_EQ("Autosize", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalEvaporativeCondenserPumpPower, false).get());
+  EXPECT_EQ("", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalSpeedNumber, false).get());
 }

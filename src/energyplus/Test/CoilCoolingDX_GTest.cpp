@@ -41,6 +41,7 @@
 #include "../../model/CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
 
 #include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_CurveFit_Performance_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
@@ -59,4 +60,32 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
   WorkspaceObjectVector idfDXs(w.getObjectsByType(IddObjectType::Coil_Cooling_DX));
   ASSERT_EQ(1u, idfDXs.size());
   WorkspaceObject idfDX(idfDXs[0]);
+
+  boost::optional<WorkspaceObject> woCoilCoolingDXCurveFitPerformance(idfDX.getTarget(Coil_Cooling_DXFields::PerformanceObjectName));
+  EXPECT_TRUE(woCoilCoolingDXCurveFitPerformance);
+  if (woCoilCoolingDXCurveFitPerformance) {
+    EXPECT_EQ(woCoilCoolingDXCurveFitPerformance->iddObject().type(), IddObjectType::Coil_Cooling_DX_CurveFit_Performance);
+  }
+
+  WorkspaceObjectVector idfPerformances(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_CurveFit_Performance));
+  ASSERT_EQ(1u, idfPerformances.size());
+  WorkspaceObject idfPerformance(idfPerformances[0]);
+
+  EXPECT_EQ(woCoilCoolingDXCurveFitPerformance, idfPerformance);
+
+  boost::optional<WorkspaceObject> woBaseOperatingMode(idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::BaseOperatingMode));
+  EXPECT_TRUE(woBaseOperatingMode);
+  if (woBaseOperatingMode) {
+    EXPECT_EQ(woBaseOperatingMode->iddObject().type(), IddObjectType::Coil_Cooling_DX_CurveFit_OperatingMode);
+  }  
+  boost::optional<WorkspaceObject> woAlternativeOperatingMode1(idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1));
+  EXPECT_FALSE(woAlternativeOperatingMode1);
+  boost::optional<WorkspaceObject> woAlternativeOperatingMode2(idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2));
+  EXPECT_FALSE(woAlternativeOperatingMode2);
+
+  WorkspaceObjectVector idfOperatingModes(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_CurveFit_OperatingMode));
+  ASSERT_EQ(1u, idfOperatingModes.size());
+  WorkspaceObject idfOperatingMode(idfOperatingModes[0]);
+
+  EXPECT_EQ(woBaseOperatingMode, idfOperatingMode);
 }

@@ -56,4 +56,30 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitPerformance) {
   WorkspaceObjectVector idfPerformances(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_CurveFit_Performance));
   ASSERT_EQ(1u, idfPerformances.size());
   WorkspaceObject idfPerformance(idfPerformances[0]);
+
+  boost::optional<WorkspaceObject> woBaseOperatingMode(idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::BaseOperatingMode));
+  EXPECT_TRUE(woBaseOperatingMode);
+  if (woBaseOperatingMode) {
+    EXPECT_EQ(woBaseOperatingMode->iddObject().type(), IddObjectType::Coil_Cooling_DX_CurveFit_OperatingMode);
+  }  
+  boost::optional<WorkspaceObject> woAlternativeOperatingMode1(idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1));
+  EXPECT_FALSE(woAlternativeOperatingMode1);
+  boost::optional<WorkspaceObject> woAlternativeOperatingMode2(idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2));
+  EXPECT_FALSE(woAlternativeOperatingMode2);
+
+  WorkspaceObjectVector idfOperatingModes(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_CurveFit_OperatingMode));
+  ASSERT_EQ(1u, idfOperatingModes.size());
+  WorkspaceObject idfOperatingMode(idfOperatingModes[0]);
+
+  EXPECT_EQ(woBaseOperatingMode, idfOperatingMode);
+
+  EXPECT_EQ(0.0, idfPerformance.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacity, false).get());
+  EXPECT_EQ(-25.0, idfPerformance.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, false).get());
+  EXPECT_EQ(10.0, idfPerformance.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation, false).get());
+  EXPECT_EQ(773.3, idfPerformance.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::UnitInternalStaticAirPressure, false).get());
+  EXPECT_EQ("Discrete", idfPerformance.getString(Coil_Cooling_DX_CurveFit_PerformanceFields::CapacityControlMethod, false).get());
+  EXPECT_EQ(0.0, idfPerformance.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterCapacity, false).get());
+  EXPECT_EQ(2.0, idfPerformance.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterSetpointTemperature, false).get());
+  EXPECT_EQ("Always On Discrete", idfPerformance.getString(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterOperatingScheduleName, false).get());
+  EXPECT_EQ("Electricity", idfPerformance.getString(Coil_Cooling_DX_CurveFit_PerformanceFields::CompressorFuelType, false).get());
 }
