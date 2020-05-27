@@ -3612,6 +3612,10 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   // Unlike other AVMs, this one doesn't live on the AVM AssignmentList, so need to tell it to translate all the time
   result.push_back(IddObjectType::OS_AvailabilityManager_HybridVentilation);
   result.push_back(IddObjectType::OS_Chiller_Electric_EIR);
+  result.push_back(IddObjectType::OS_Coil_Cooling_DX);
+  result.push_back(IddObjectType::OS_Coil_Cooling_DX_CurveFit_Performance);
+  result.push_back(IddObjectType::OS_Coil_Cooling_DX_CurveFit_OperatingMode);
+  result.push_back(IddObjectType::OS_Coil_Cooling_DX_CurveFit_Speed);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_SingleSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_TwoSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_Water);

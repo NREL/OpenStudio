@@ -39,8 +39,6 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
 #include "../../model/CoilCoolingDXCurveFitPerformance_Impl.hpp"
-#include "../../model/WaterStorageTank.hpp"
-#include "../../model/WaterStorageTank_Impl.hpp"
 
 #include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>

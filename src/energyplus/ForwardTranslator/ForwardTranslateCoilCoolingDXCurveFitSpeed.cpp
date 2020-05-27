@@ -32,6 +32,9 @@
 
 #include "../../model/CoilCoolingDXCurveFitSpeed.hpp"
 
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
+
 #include <utilities/idd/Coil_Cooling_DX_CurveFit_Speed_FieldEnums.hxx>
 // #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -47,46 +50,79 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitSpee
   boost::optional<std::string> s;
   boost::optional<double> value;
 
+  IdfObject idfObject(openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_Speed);
+
+  m_idfObjects.push_back(idfObject);
+
   // Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX, modelObject);
+  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::Name, modelObject.name().get());
 
   // GrossTotalCoolingCapacityFunction
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::GrossTotalCoolingCapacityFraction, modelObject.grossTotalCoolingCapacityFraction());
 
   // EvaporatorAirFlowRateFraction
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporatorAirFlowRateFraction, modelObject.evaporatorAirFlowRateFraction());
 
   // CondenserAirFlowRateFraction
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::CondenserAirFlowRateFraction, modelObject.condenserAirFlowRateFraction());
 
   // GrossSensibleHeatRatio
+  value = modelObject.grossSensibleHeatRatio();
+  if (value) {
+    idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, value.get());
+  } else {
+    idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, "Autosize");
+  }
 
   // GrossCoolingCOP
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::GrossCoolingCOP, modelObject.grossCoolingCOP());
 
   // ActiveFractionofCoilFaceArea
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::ActiveFractionofCoilFaceArea, modelObject.activeFractionofCoilFaceArea());
 
   // RatedEvaporatorFanPowerPerVolumeFlowRate
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate, modelObject.ratedEvaporatorFanPowerPerVolumeFlowRate());
 
   // EvaporativeCondenserPumpPowerFraction
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserPumpPowerFraction, modelObject.evaporativeCondenserPumpPowerFraction());
 
   // EvaporativeCondenserEffectiveness
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserEffectiveness, modelObject.evaporativeCondenserEffectiveness());
 
   // TotalCoolingCapacityModifierFunctionofTemperatureCurveName
+  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, modelObject.totalCoolingCapacityModifierFunctionofTemperatureCurve().name().get());
 
   // TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName
+  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, modelObject.totalCoolingCapacityModifierFunctionofAirFlowFractionCurve().name().get());
 
   // EnergyInputRatioModifierFunctionofTemperatureCurveName
+  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, modelObject.energyInputRatioModifierFunctionofTemperatureCurve().name().get());
 
   // EnergyInputRatioModifierFunctionofAirFlowFractionCurveName
+  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, modelObject.energyInputRatioModifierFunctionofAirFlowFractionCurve().name().get());
 
   // PartLoadFractionCorrelationCurveName
-
-  // RatedWasteHeatFractionofPowerInput
+  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurveName, modelObject.partLoadFractionCorrelationCurve().name().get());
 
   // WasteHeatModifierFunctionofTemperatureCurveName
+  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::WasteHeatModifierFunctionofTemperatureCurveName, modelObject.wasteHeatModifierFunctionofTemperatureCurve().name().get());
+
+  // RatedWasteHeatFractionofPowerInput
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedWasteHeatFractionofPowerInput, modelObject.ratedWasteHeatFractionofPowerInput());
 
   // SensibleHeatRatioModifierFunctionofTemperatureCurveName
+  boost::optional<Curve> sensibleHeatRatioModifierFunctionofTemperatureCurve = modelObject.sensibleHeatRatioModifierFunctionofTemperatureCurve();
+  if (sensibleHeatRatioModifierFunctionofTemperatureCurve) {
+    idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurveName, sensibleHeatRatioModifierFunctionofTemperatureCurve.get().name().get());
+  }
 
   // SensibleHeatRatioModifierFunctionofFlowFractionCurveName
+  boost::optional<Curve> sensibleHeatRatioModifierFunctionofFlowFractionCurve = modelObject.sensibleHeatRatioModifierFunctionofFlowFractionCurve();
+  if (sensibleHeatRatioModifierFunctionofFlowFractionCurve) {
+    idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurveName, sensibleHeatRatioModifierFunctionofFlowFractionCurve.get().name().get());
+  }
 
-  return idfObject;
+  return boost::optional<IdfObject>(idfObject);
 } // End of translate function
 
 } // end namespace energyplus

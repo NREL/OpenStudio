@@ -87,6 +87,14 @@
 #include "../../model/DaylightingControl_Impl.hpp"
 #include "../../model/SurfaceControlMovableInsulation.hpp"
 #include "../../model/SurfaceControlMovableInsulation_Impl.hpp"
+#include "../../model/CoilCoolingDX.hpp"
+#include "../../model/CoilCoolingDX_Impl.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance_Impl.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
+#include "../../model/CoilCoolingDXCurveFitSpeed.hpp"
+#include "../../model/CoilCoolingDXCurveFitSpeed_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -114,6 +122,10 @@
 #include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
 #include <utilities/idd/Daylighting_ReferencePoint_FieldEnums.hxx>
 #include <utilities/idd/SurfaceControl_MovableInsulation_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_CurveFit_Performance_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_CurveFit_OperatingMode_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_CurveFit_Speed_FieldEnums.hxx>
 
 #include "../../utilities/time/Time.hpp"
 
@@ -1204,4 +1216,24 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SurfaceControlMovableInsulation) {
 
   std::vector<Schedule> schedules = model.getModelObjects<Schedule>();
   ASSERT_EQ(2u, schedules.size()); // Schedule Constant 1 and Schedule 1
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDX) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDXCurveFitPerformance) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDXCurveFitOperatingMode) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDXCurveFitSpeed) {
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  
 }

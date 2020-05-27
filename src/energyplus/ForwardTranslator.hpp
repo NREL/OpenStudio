@@ -121,7 +121,7 @@ class ChillerHeaterPerformanceElectricEIR;
 class CoilCoolingDX;
 class CoilCoolingDXCurveFitPerformance;
 class CoilCoolingDXCurveFitOperatingMode;
-class CoilCoolingDXSpeed;
+class CoilCoolingDXCurveFitSpeed;
 class CoilCoolingDXMultiSpeed;
 class CoilCoolingDXSingleSpeed;
 class CoilCoolingDXTwoSpeed;

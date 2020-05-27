@@ -52,34 +52,56 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitPerf
   boost::optional<std::string> s;
   boost::optional<double> value;
 
+  IdfObject idfObject(openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_Performance);
+
+  m_idfObjects.push_back(idfObject);
+
   // Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX, modelObject);
+  idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::Name, modelObject.name().get());
 
   // CrankcaseHeaterCapacity
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacity, modelObject.crankcaseHeaterCapacity());
 
   // MinimumOutdoorDryBulbTemperatureforCompressorOperation
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation());
 
   // MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation, modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation());
 
   // UnitInternalStaticAirPressure
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::UnitInternalStaticAirPressure, modelObject.unitInternalStaticAirPressure());
 
   // CapacityControlMethod
+  idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::CapacityControlMethod, modelObject.capacityControlMethod());
 
   // EvaporativeCondenserBasinHeaterCapacity
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterCapacity, modelObject.evaporativeCondenserBasinHeaterCapacity());
 
   // EvaporativeCondenserBasinHeaterSetpointTemperature
+  idfObject.setDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterSetpointTemperature, modelObject.evaporativeCondenserBasinHeaterSetpointTemperature());
 
   // EvaporativeCondenserBasinHeaterOperatingScheduleName
+  idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterOperatingScheduleName, modelObject.evaporativeCondenserBasinHeaterOperatingSchedule().name().get());
 
   // CompressorFuelType
+  idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::CompressorFuelType, modelObject.compressorFuelType());
 
   // BaseOperatingMode
+  idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::BaseOperatingMode, modelObject.baseOperatingMode().name().get());
 
   // AlternativeOperatingMode1
+  boost::optional<CoilCoolingDXCurveFitOperatingMode> alternativeOperatingMode1 = modelObject.alternativeOperatingMode1();
+  if (alternativeOperatingMode1) {
+    idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1, alternativeOperatingMode1.get().name().get());
+  }
 
   // AlternativeOperatingMode2
+  boost::optional<CoilCoolingDXCurveFitOperatingMode> alternativeOperatingMode2 = modelObject.alternativeOperatingMode2();
+  if (alternativeOperatingMode2) {
+    idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2, alternativeOperatingMode2.get().name().get());
+  }
 
-  return idfObject;
+  return boost::optional<IdfObject>(idfObject);
 } // End of translate function
 
 } // end namespace energyplus

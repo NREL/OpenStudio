@@ -27,76 +27,36 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
+
 #include "../ForwardTranslator.hpp"
+
 #include "../../model/Model.hpp"
-
 #include "../../model/CoilCoolingDX.hpp"
-
-#include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
-#include "../../model/ThermalZone.hpp"
-#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/CoilCoolingDX_Impl.hpp"
 #include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
 #include "../../model/CoilCoolingDXCurveFitPerformance_Impl.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
 
 #include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
-// #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
-namespace openstudio {
+TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
+  Model m;
+  CoilCoolingDXCurveFitOperatingMode operatingMode(m);
+  CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
+  CoilCoolingDX dx(m, performance);
 
-namespace energyplus {
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX( model::CoilCoolingDX& modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
-
-  IdfObject idfObject(openstudio::IddObjectType::Coil_Cooling_DX);
-
-  m_idfObjects.push_back(idfObject);
-
-  // Name
-  idfObject.setString(Coil_Cooling_DXFields::Name, modelObject.name().get());
-
-  // EvaporatorInletNodeName
-
-  // EvaporatorOutletNodeName
-
-  // AvailabilityScheduleName
-  if (boost::optional<Schedule> schedule = modelObject.availabilitySchedule() ) {
-    if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
-      idfObject.setString(Coil_Cooling_DXFields::AvailabilityScheduleName, _schedule->name().get());
-    }
-  }
-
-  // CondenserZoneName
-  if (boost::optional<ThermalZone> thermalZone = modelObject.condenserZone() ) {
-    if (boost::optional<IdfObject> _thermalZone = translateAndMapModelObject(thermalZone.get())) {
-      idfObject.setString(Coil_Cooling_DXFields::CondenserZoneName, _thermalZone->name().get());
-    }
-  }
-
-  // CondenserInletNodeName
-
-  // CondenserOutletNodeName
-
-  // PerformanceObjectName
-  CoilCoolingDXCurveFitPerformance performance = modelObject.performanceObject();
-  if (boost::optional<IdfObject> _performance = translateAndMapModelObject(performance)) {
-    idfObject.setString(Coil_Cooling_DXFields::PerformanceObjectName, _performance->name().get());
-  }
-
-  // CondensateCollectionWaterStorageTankName
-
-  // EvaporativeCondenserSupplyWaterStorageTankName
-
-  return boost::optional<IdfObject>(idfObject);
-} // End of translate function
-
-} // end namespace energyplus
-} // end namespace openstudio
+  WorkspaceObjectVector idfDXs(w.getObjectsByType(IddObjectType::Coil_Cooling_DX));
+  ASSERT_EQ(1u, idfDXs.size());
+  WorkspaceObject idfDX(idfDXs[0]);
+}
