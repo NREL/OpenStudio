@@ -15360,26 +15360,25 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load flow
        \type object-list
-       \object-list UnivariateFunctions
+       \object-list QuadraticCubicCurves
   A5, \field Energy Input Ratio Modifier Function of Temperature Curve
        \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
        \note wb = entering wet-bulb temperature (C)
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
-       \object-list UnivariateFunctions
-       \object-list BivariateFunctions
+       \object-list BiquadraticCurves
   A6, \field Energy Input Ratio Modifier Function of Air Flow Fraction Curve
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load flow
        \type object-list
-       \object-list UnivariateFunctions
+       \object-list QuadraticCubicCurves
   A7, \field Part Load Fraction Correlation Curve
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note PLR = part load ratio (cooling load/steady state capacity)
        \type object-list
-       \object-list UnivariateFunctions
+       \object-list QuadraticCubicCurves
   N10,\field Rated Waste Heat Fraction of Power Input
        \note Recoverable waste heat at full load and rated conditions
        \required-field
@@ -15392,7 +15391,7 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \note cdb = entering condenser dry-bulb temperature (C)
        \note edb = entering coil dry-bulb temperature (C)
        \type object-list
-       \object-list BivariateFunctions
+       \object-list BiquadraticCurves
   A9, \field Sensible Heat Ratio Modifier Function of Temperature Curve
        \note curve = a + b*wb + c*wb**2 + d*db + e*db**2 + f*wb*db
        \note wb = entering wet-bulb temperature seen by the DX cooling coil (C)
@@ -15401,7 +15400,7 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \note If this curve is used and the Sensible Heat Ratio Modifier Function of Flow Fraction (SHRFFF)
        \note Curve Name is blank, the SHRFFF is assumed to be a constant value of 1.0.
        \type object-list
-       \object-list BivariateFunctions
+       \object-list BiquadraticCurves
   A10; \field Sensible Heat Ratio Modifier Function of Flow Fraction Curve
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
@@ -15409,7 +15408,7 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \note If this curve is used and the Sensible Heat Ratio Modifier Function of Temperature Curve Name (SHRFT)
        \note Curve Name is blank, the SHRFT is assumed to be a constant value of 1.0.
        \type object-list
-       \object-list UnivariateFunctions
+       \object-list QuadraticCubicCurves
 
 OS:Coil:Cooling:DX:SingleSpeed,
        \min-fields 15
