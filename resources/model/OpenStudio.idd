@@ -15353,8 +15353,7 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \note wb = entering wet-bulb temperature (C)
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
-       \object-list UnivariateFunctions
-       \object-list BivariateFunctions
+       \object-list BiquadraticCurves
   A4, \field Total Cooling Capacity Modifier Function of Air Flow Fraction Curve
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
