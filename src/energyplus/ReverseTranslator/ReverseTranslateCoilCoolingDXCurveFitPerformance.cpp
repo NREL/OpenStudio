@@ -30,6 +30,7 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance_Impl.hpp"
 
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
@@ -37,7 +38,10 @@
 #include "../../model/CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
 
 #include <utilities/idd/Coil_Cooling_DX_CurveFit_Performance_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
+
+#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 
@@ -45,11 +49,36 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateCoilCoolingDXCurveFitPerformance( const WorkspaceObject & workspaceObject )
+OptionalModelObject ReverseTranslator::translateCoilCoolingDXCurveFitPerformance( const WorkspaceObject & workspaceObject )
 {
-  boost::optional<ModelObject> result;
+  if( workspaceObject.iddObject().type() != IddObjectType::Coil_Cooling_DX_CurveFit_Performance ){
+    LOG(Error, "WorkspaceObject is not IddObjectType: CoilCoolingDXCurveFitPerformance");
+    return boost::none;
+  }
 
-  return result;
+  OptionalString s;
+  OptionalDouble d;
+  OptionalWorkspaceObject target;
+
+  boost::optional<CoilCoolingDXCurveFitOperatingMode> baseOperatingMode;
+  if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::BaseOperatingMode))) {
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (modelObject->optionalCast<CoilCoolingDXCurveFitOperatingMode>()){
+        baseOperatingMode = modelObject->cast<CoilCoolingDXCurveFitOperatingMode>();
+      }
+    }
+  }
+
+  openstudio::model::CoilCoolingDXCurveFitPerformance performance(m_model,
+                                                                  *baseOperatingMode);
+
+  s = workspaceObject.name();
+  if(s){
+    performance.setName(*s);
+  }
+
+  return performance;
 } // End of translate function
 
 } // end namespace energyplus

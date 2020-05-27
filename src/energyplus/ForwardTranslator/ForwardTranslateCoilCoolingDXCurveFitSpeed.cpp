@@ -36,7 +36,7 @@
 #include "../../model/Curve_Impl.hpp"
 
 #include <utilities/idd/Coil_Cooling_DX_CurveFit_Speed_FieldEnums.hxx>
-// #include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -45,7 +45,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitSpeed( model::CoilCoolingDXCurveFitSpeed& modelObject )
+boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitSpeed( CoilCoolingDXCurveFitSpeed& modelObject )
 {
   boost::optional<std::string> s;
   boost::optional<double> value;
@@ -90,36 +90,74 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitSpee
   idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserEffectiveness, modelObject.evaporativeCondenserEffectiveness());
 
   // TotalCoolingCapacityModifierFunctionofTemperatureCurveName
-  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, modelObject.totalCoolingCapacityModifierFunctionofTemperatureCurve().name().get());
+  {
+    auto curve = modelObject.totalCoolingCapacityModifierFunctionofTemperatureCurve();
+    if(auto _curve = translateAndMapModelObject(curve)) {
+      idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, _curve->name().get());
+    }
+  }
 
   // TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName
-  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, modelObject.totalCoolingCapacityModifierFunctionofAirFlowFractionCurve().name().get());
+  {
+    auto curve = modelObject.totalCoolingCapacityModifierFunctionofAirFlowFractionCurve();
+    if(auto _curve = translateAndMapModelObject(curve)) {
+      idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, _curve->name().get());
+    }
+  }
 
   // EnergyInputRatioModifierFunctionofTemperatureCurveName
-  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, modelObject.energyInputRatioModifierFunctionofTemperatureCurve().name().get());
+  {
+    auto curve = modelObject.energyInputRatioModifierFunctionofTemperatureCurve();
+    if(auto _curve = translateAndMapModelObject(curve)) {
+      idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, _curve->name().get());
+    }
+  }
 
   // EnergyInputRatioModifierFunctionofAirFlowFractionCurveName
-  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, modelObject.energyInputRatioModifierFunctionofAirFlowFractionCurve().name().get());
+  {
+    auto curve = modelObject.energyInputRatioModifierFunctionofAirFlowFractionCurve();
+    if(auto _curve = translateAndMapModelObject(curve)) {
+      idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, _curve->name().get());
+    }
+  }
 
   // PartLoadFractionCorrelationCurveName
-  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurveName, modelObject.partLoadFractionCorrelationCurve().name().get());
+  {
+    auto curve = modelObject.partLoadFractionCorrelationCurve();
+    if(auto _curve = translateAndMapModelObject(curve)) {
+      idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurveName, _curve->name().get());
+    }
+  }
 
   // WasteHeatModifierFunctionofTemperatureCurveName
-  idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::WasteHeatModifierFunctionofTemperatureCurveName, modelObject.wasteHeatModifierFunctionofTemperatureCurve().name().get());
+  {
+    auto curve = modelObject.wasteHeatModifierFunctionofTemperatureCurve();
+    if(auto _curve = translateAndMapModelObject(curve)) {
+      idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::WasteHeatModifierFunctionofTemperatureCurveName, _curve->name().get());
+    }
+  }
 
   // RatedWasteHeatFractionofPowerInput
   idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedWasteHeatFractionofPowerInput, modelObject.ratedWasteHeatFractionofPowerInput());
 
   // SensibleHeatRatioModifierFunctionofTemperatureCurveName
-  boost::optional<Curve> sensibleHeatRatioModifierFunctionofTemperatureCurve = modelObject.sensibleHeatRatioModifierFunctionofTemperatureCurve();
-  if (sensibleHeatRatioModifierFunctionofTemperatureCurve) {
-    idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurveName, sensibleHeatRatioModifierFunctionofTemperatureCurve.get().name().get());
+  {
+    boost::optional<Curve> curve = modelObject.sensibleHeatRatioModifierFunctionofTemperatureCurve();
+    if (curve) {
+      if(auto _curve = translateAndMapModelObject(*curve)) {
+        idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurveName, _curve->name().get());
+      }
+    }
   }
 
   // SensibleHeatRatioModifierFunctionofFlowFractionCurveName
-  boost::optional<Curve> sensibleHeatRatioModifierFunctionofFlowFractionCurve = modelObject.sensibleHeatRatioModifierFunctionofFlowFractionCurve();
-  if (sensibleHeatRatioModifierFunctionofFlowFractionCurve) {
-    idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurveName, sensibleHeatRatioModifierFunctionofFlowFractionCurve.get().name().get());
+  {
+    boost::optional<Curve> curve = modelObject.sensibleHeatRatioModifierFunctionofFlowFractionCurve();
+    if (curve) {
+      if(auto _curve = translateAndMapModelObject(*curve)) {
+        idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurveName, _curve->name().get());
+      }
+    }
   }
 
   return boost::optional<IdfObject>(idfObject);

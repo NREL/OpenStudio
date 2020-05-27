@@ -30,6 +30,7 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/CoilCoolingDX.hpp"
+#include "../../model/CoilCoolingDX_Impl.hpp"
 
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
@@ -41,7 +42,10 @@
 #include "../../model/CoilCoolingDXCurveFitPerformance_Impl.hpp"
 
 #include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
+#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
+
+#include "../../utilities/core/Assert.hpp"
 
 using namespace openstudio::model;
 
@@ -49,11 +53,36 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateCoilCoolingDX( const WorkspaceObject & workspaceObject )
+OptionalModelObject ReverseTranslator::translateCoilCoolingDX( const WorkspaceObject & workspaceObject )
 {
-  boost::optional<ModelObject> result;
+  if( workspaceObject.iddObject().type() != IddObjectType::Coil_Cooling_DX ){
+    LOG(Error, "WorkspaceObject is not IddObjectType: CoilCoolingDX");
+    return boost::none;
+  }
 
-  return result;
+  OptionalString s;
+  OptionalDouble d;
+  OptionalWorkspaceObject target;
+
+  boost::optional<CoilCoolingDXCurveFitPerformance> performanceObject;
+  if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DXFields::PerformanceObjectName))) {
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    if (modelObject){
+      if (modelObject->optionalCast<CoilCoolingDXCurveFitPerformance>()){
+        performanceObject = modelObject->cast<CoilCoolingDXCurveFitPerformance>();
+      }
+    }
+  }
+
+  openstudio::model::CoilCoolingDX dx(m_model,
+                                      *performanceObject);
+
+  s = workspaceObject.name();
+  if(s){
+    dx.setName(*s);
+  }
+
+  return dx;
 } // End of translate function
 
 } // end namespace energyplus
