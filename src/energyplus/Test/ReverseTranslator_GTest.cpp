@@ -1341,7 +1341,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDX) {
 
   openstudio::WorkspaceObject epOperatingMode = workspace.addObject(idfObject2).get();
 
-  openstudio::IdfObject idfObject3(openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_Speed);
+  openstudio::IdfObject idfObject3(openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_Performance);
   idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::Name, "Coil Cooling DX Curve Fit Performance 1");
   idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacity, "0.0");
   idfObject3.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, "-25.0");
@@ -1367,24 +1367,37 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDX) {
   Model model = trans.translateWorkspace(workspace);
 
   std::vector<CurveBiquadratic> biquadratics = model.getModelObjects<CurveBiquadratic>();
-  ASSERT_EQ(1u, biquadratics.size());
+  ASSERT_EQ(3u, biquadratics.size());
 
   std::vector<CurveQuadratic> quadratics = model.getModelObjects<CurveQuadratic>();
-  ASSERT_EQ(1u, quadratics.size());
+  ASSERT_EQ(3u, quadratics.size());
 
   std::vector<CoilCoolingDXCurveFitSpeed> speeds = model.getModelObjects<CoilCoolingDXCurveFitSpeed>();
   ASSERT_EQ(1u, speeds.size());
   CoilCoolingDXCurveFitSpeed speed = speeds[0];
+  EXPECT_EQ(1u, speed.coilCoolingDXCurveFitOperatingModes().size());
 
   std::vector<CoilCoolingDXCurveFitOperatingMode> operatingModes = model.getModelObjects<CoilCoolingDXCurveFitOperatingMode>();
   ASSERT_EQ(1u, operatingModes.size());
   CoilCoolingDXCurveFitOperatingMode operatingMode = operatingModes[0];
+  ASSERT_EQ(1u, operatingMode.speeds().size());
+  EXPECT_EQ(1u, operatingMode.coilCoolingDXCurveFitPerformances().size());
 
   std::vector<CoilCoolingDXCurveFitPerformance> performances = model.getModelObjects<CoilCoolingDXCurveFitPerformance>();
   ASSERT_EQ(1u, performances.size());
   CoilCoolingDXCurveFitPerformance performance = performances[0];
+  EXPECT_EQ(operatingMode, performance.baseOperatingMode());
+  ASSERT_FALSE(performance.alternativeOperatingMode1());
+  ASSERT_FALSE(performance.alternativeOperatingMode2());
+  EXPECT_EQ(1u, performance.coilCoolingDXs().size());
 
   std::vector<CoilCoolingDX> dxs = model.getModelObjects<CoilCoolingDX>();
   ASSERT_EQ(1u, dxs.size());
   CoilCoolingDX dx = dxs[0];
+  EXPECT_EQ(performance, dx.performanceObject());
+  ASSERT_FALSE(dx.availabilitySchedule());
+  ASSERT_FALSE(dx.condenserZone());
+
+  std::vector<Schedule> schedules = model.getModelObjects<Schedule>();
+  ASSERT_EQ(1u, schedules.size());
 }
