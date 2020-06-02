@@ -4,6 +4,8 @@
 // Make Vector Enumerable in Ruby
 #if defined SWIGRUBY
   %mixin openstudio::Vector "Enumerable";
+  %alias  openstudio::Vector::append "<<";
+  %rename("map!") openstudio::Vector::map_bang;
 #endif
 
 %{
@@ -97,6 +99,36 @@ public:
     return self;
   }
 
+  // For `map!`
+  Vector* map_bang() {
+    if ( !rb_block_given_p() ) {
+      rb_raise( rb_eArgError, "No block given" );
+    }
+
+    VALUE r = Qnil;
+    // Can't be const_iterator, since we're mutating
+    Vector::iterator i = self->begin();
+    Vector::iterator e = self->end();
+
+    try {
+      for ( ; i != e; ++i ) {
+        r = swig::from<double>(*i);
+        r = rb_yield(r);
+        *i = swig::as<double>(r);
+      }
+    } catch (const std::exception&) {
+      rb_raise(rb_eTypeError,
+         "Yield block did not return a valid element for " "Container");
+    }
+    return self;
+  }
+
+  // For `<<`
+  void append(double d) {
+    unsigned s = self->size();
+    self->resize(s+1, true);
+    (*self)(s) = d;
+  }
 #endif // End SWIGRUBY
 
 };
