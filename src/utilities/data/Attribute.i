@@ -29,6 +29,15 @@
   %ignore openstudio::Attribute::Attribute(const std::string& name, unsigned value, const boost::optional<std::string>& units);
 #endif
 
+#if defined(SWIGCSHARP)
+  // Help in overload resolution by preferring the std::string over char const * ones
+  %ignore openstudio::Attribute::setValue(char const*);
+  %ignore openstudio::Attribute::Attribute(std::string const&, char const*);
+  %ignore openstudio::Attribute::Attribute(std::string const&, char const*, std::string const&);
+  %ignore openstudio::Attribute::Attribute(openstudio::UUID const&, openstudio::UUID const&, std::string const&, boost::optional< std::string > const&, char const*, boost::optional< std::string > const&, std::string const&);
+  %ignore openstudio::Attribute::Attribute(openstudio::UUID const&, openstudio::UUID const&, std::string const&, boost::optional< std::string > const&, char const*, boost::optional< std::string > const&);
+#endif
+
 %include <utilities/data/Attribute.hpp>
 
 // extend class

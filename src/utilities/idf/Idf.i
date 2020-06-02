@@ -3,7 +3,7 @@
 
 %{
   #include <utilities/core/Checksum.hpp>
-  
+
   #include <utilities/idf/Handle.hpp>
   #include <utilities/idf/IdfExtensibleGroup.hpp>
   #include <utilities/idf/IdfObject.hpp>
@@ -107,6 +107,11 @@
   %typemap(csclassmodifiers) openstudio::WorkspaceExtensibleGroup "public partial class"
   %typemap(csclassmodifiers) openstudio::IdfObject "public partial class"
   %typemap(csclassmodifiers) openstudio::IdfExtensibleGroup "public partial class"
+
+  // Help in overload resolution
+  // these have both const and non const
+  %ignore openstudio::WorkspaceObject::idfObject() const;
+  %ignore openstudio::Workspace::order() const;
 #endif
 
 #if defined(SWIGJAVA)

@@ -235,10 +235,8 @@ option(BUILD_PAT "Build PAT" OFF)
 option(BUILD_DOCUMENTATION "Build Documentation" OFF)
 
 # Build CSharp bindings
-# Requires: SWIG
-if(WIN32)
-  option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
-endif()
+option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
+option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 
 # Build Java bindings
 # Requires: SWIG
@@ -261,10 +259,6 @@ set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Con
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
-endif()
-
-if(WIN32)
-  option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 endif()
 
 # Enable runtime checking features
@@ -350,10 +344,10 @@ option(CONAN_PRINT_RUN_COMMANDS "Log every conan self.run command" OFF)
 mark_as_advanced(CONAN_PRINT_RUN_COMMANDS)
 if(CONAN_PRINT_RUN_COMMANDS)
   set(ENV{CONAN_PRINT_RUN_COMMANDS} "1")
-  message("Setting CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
+  message(STATUS "Setting CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
 else()
   unset(ENV{CONAN_PRINT_RUN_COMMANDS})
-  message("CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
+  message(STATUS "CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
 endif()
 
 # Attempt to run, it'll do the right thing if the calling cmake script already ran it
@@ -1364,14 +1358,9 @@ if(BUILD_PAT)
   )
 endif()
 
-if( BUILD_NUGET_PACKAGE )
-  configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )
-
-  add_custom_target(nuget_package
-    COMMAND NuGet pack OpenStudio.nuspec -BasePath "${PROJECT_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
-    DEPENDS csharp_sdk
-    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
-  )
+if( BUILD_NUGET_PACKAGE AND NOT BUILD_CSHARP_BINDINGS)
+  message("If BUILD_NUGET_PACKAGE=ON, you must use BUILD_CSHARP_BINDINGS=ON too")
+  # Rest moved to csharp/CMakeLists.txt
 endif()
 
 
