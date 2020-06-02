@@ -1,8 +1,8 @@
-# OpenStudio Version 3.0.1
+# OpenStudio Version 3.1.0
 
 _Release Notes - MM/DD/YYYY_
 
-These release notes describe version 3.0.1 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Systems, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
+These release notes describe version 3.1.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Systems, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
 -  Overview
 -  Where to Find OpenStudio Documentation
@@ -17,7 +17,7 @@ Going forward, the SDK will continue to be distributed and released two times pe
 
 Below is the list of components that is included in this SDK installer:
 
-__**OpenStudio SDK 3.0.1**__
+__**OpenStudio SDK 3.1.0**__
 - EnergyPlus
 - Command Line Interface (CLI)
 - Radiance
@@ -35,11 +35,11 @@ __**OpenStudio SDK 3.0.1**__
 
 # Installation Notes
 
-OpenStudio 3.0.1 is supported on 64-bit Windows 7 – 10, OS X 10.12 – 10.15, and Ubuntu 18.04.
+OpenStudio 3.1.0 is supported on 64-bit Windows 7 – 10, OS X 10.12 – 10.15, and Ubuntu 18.04.
 
-OpenStudio 3.0.1 supports [EnergyPlus Release 9.3](https://github.com/NREL/EnergyPlus/releases/tag/v9.3.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio 3.0.1.
+OpenStudio 3.1.0 supports [EnergyPlus Release 9.3](https://github.com/NREL/EnergyPlus/releases/tag/v9.3.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio 3.1.0.
 
-OpenStudio 3.0.1 supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio 3.0.1.
+OpenStudio 3.1.0 supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio 3.1.0.
 
 OpenStudio 3.x now uses **Ruby 2.5.5** as the supported version (2.2.4 previously).
 
@@ -55,13 +55,13 @@ For help with common installation problems please visit, http://nrel.github.io/O
 
 # OpenStudio SDK: Changelog
 
-The 3.0.1 is a minor release. This update includes several new features, performance improvements, and bug fixes.
+The 3.1.0 is a minor release. This update includes several new features, performance improvements, and bug fixes.
 You can find the list of Pull Requests that got into this release [here **TODO**](https://github.com/NREL/OpenStudio/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aclosed+created%3A2020-02-25..2020-MM-DD+).
 
 
 ## New Features, Major Fixes and API-breaking changes
 
-A number of API-breaking changes have been implemented in OpenStudio 3.0.1:
+A number of API-breaking changes have been implemented in OpenStudio 3.1.0:
 
 * [#3960](https://github.com/NREL/OpenStudio/pull/3960) - Added support for building the C# bindings via `dotnet` CLI, including on Unix platforms.
 * [#3959](https://github.com/NREL/OpenStudio/pull/3959) - Also included some improvements in the generated C# bindings by reducing build warnings and properly exposing some types via SWIG
