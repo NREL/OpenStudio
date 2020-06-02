@@ -1,12 +1,16 @@
 #ifndef UTILITIES_DATA_VECTOR_I
 #define UTILITIES_DATA_VECTOR_I
 
+// Make Vector Enumerable in Ruby
+#if defined SWIGRUBY
+  %mixin openstudio::Vector "Enumerable";
+#endif
+
 %{
   #include <utilities/data/Vector.hpp>
 %}
 
 %template(DoubleFromVectorFunctor) boost::function1<double, const openstudio::Vector &>;
-
 
 // create an instantiation of the vector class
 %template(VectorVector) std::vector< openstudio::Vector >;
@@ -24,8 +28,7 @@ public:
 
   // sizing
   unsigned size() const;
-  void resize(unsigned N, bool preserve);
-
+  void resize(unsigned N, bool preserve=true);
 };
 
 %extend Vector{
@@ -75,6 +78,27 @@ public:
     os << *self;
     return os.str();
   }
+
+#if defined SWIGRUBY
+  // `%mixin Enumerable` requires having an `each()` method and will provide a bunch of other methods automatically
+  // such as sort, inject, map, etc
+  Vector* each() {
+    if ( !rb_block_given_p() ) {
+      rb_raise( rb_eArgError, "no block given");
+    }
+
+    VALUE r;
+    Vector::const_iterator i = self->begin();
+    Vector::const_iterator e = self->end();
+    for ( ; i != e; ++i ) {
+      r = swig::from(*i); // always a double
+      rb_yield(r);
+    }
+    return self;
+  }
+
+#endif // End SWIGRUBY
+
 };
 
 
