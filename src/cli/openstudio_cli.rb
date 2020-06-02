@@ -47,8 +47,8 @@ require 'rbconfig'
 $argv = ARGV.dup
 
 $logger = Logger.new(STDOUT)
-#$logger.level = Logger::ERROR
-$logger.level = Logger::WARN
+$logger.level = Logger::ERROR
+#$logger.level = Logger::WARN
 #$logger.level = Logger::DEBUG
 
 #OpenStudio::Logger.instance.standardOutLogger.disable
@@ -162,29 +162,6 @@ end
 #module Bundler
 #end
 
-# This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
-module IRB # :nodoc:
-  def self.start_session(binding)
-    unless @__initialized
-      args = ARGV
-      ARGV.replace(ARGV.dup)
-      IRB.setup(nil)
-      ARGV.replace(args)
-      @__initialized = true
-    end
-
-    workspace = WorkSpace.new(binding)
-
-    irb = Irb.new(workspace)
-
-    @CONF[:IRB_RC].call(irb.context) if @CONF[:IRB_RC]
-    @CONF[:MAIN_CONTEXT] = irb.context
-
-    catch(:IRB_EXIT) do
-      irb.eval_input
-    end
-  end
-end
 
 # This is the save puts to use to catch EPIPE. Uses `puts` on the given IO object and safely ignores any Errno::EPIPE
 #
@@ -1741,8 +1718,14 @@ end
 $logger.info "Executing argv: #{ARGV}"
 
 begin
-  result = CLI.new(ARGV).execute
+  result = ExecuteRubyScript.execute(ARGV)
+rescue SystemExit
+  # Okay if required file calls system exit
+  result = 0
 rescue Exception => e
+  puts "Exception Class: #{ e.class.name }"
+  puts "Exception Message: #{ e.message }"
+  puts "Exception Backtrace: #{ e.backtrace }"
   puts "Error executing argv: #{ARGV}"
   puts "Error: #{e.message} in #{e.backtrace.join("\n")}"
   result = 1
