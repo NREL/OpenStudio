@@ -85,7 +85,7 @@ namespace detail {
 
   const std::vector<std::string>& CoilSystemCoolingDXHeatExchangerAssisted_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
       // Not appropriate: no specific output, there are at the coil and HX level
     return result;
   }

@@ -75,7 +75,7 @@ namespace detail {
 
   const std::vector<std::string>& SteamEquipment_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Steam Equipment District Heating Rate",
       "Steam Equipment District Heating Energy",
       "Steam Equipment Radiant Heating Energy",

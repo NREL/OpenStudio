@@ -69,7 +69,7 @@ namespace detail {
 
   const std::vector<std::string>& HumidifierSteamElectric_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Humidifier Water Volume Flow Rate",
       "Humidifier Water Volume",
       "Humidifier Electric Power",

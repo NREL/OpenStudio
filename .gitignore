@@ -13,4 +13,3 @@ developer/msvc/Visualizers/all_concat.natvis
 *.sublime-projet
 *.cache
 .clangd/
-

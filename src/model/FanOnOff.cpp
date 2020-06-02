@@ -105,7 +105,7 @@ namespace detail {
 
   const std::vector<std::string>& FanOnOff_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> results{"Fan Electric Power", "Fan Rise in Air Temperature", "Fan Heat Gain to Air", "Fan Electric Energy", "Fan Air Mass Flow Rate", "Fan Runtime Fraction"};
+    static const std::vector<std::string> results{"Fan Electric Power", "Fan Rise in Air Temperature", "Fan Heat Gain to Air", "Fan Electric Energy", "Fan Air Mass Flow Rate", "Fan Runtime Fraction"};
     return results;
   }
 

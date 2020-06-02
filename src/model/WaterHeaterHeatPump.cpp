@@ -86,7 +86,7 @@ namespace detail {
 
   const std::vector<std::string>& WaterHeaterHeatPump_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // WaterHeater:HeatPump:PumpedCondenser
       "Water Heater Compressor Part Load Ratio",
       "Water Heater On Cycle Ancillary Electric Power",

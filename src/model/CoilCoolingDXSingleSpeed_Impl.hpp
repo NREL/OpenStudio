@@ -135,6 +135,8 @@ namespace detail {
 
     boost::optional<Schedule> basinHeaterOperatingSchedule()const;
 
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+
     // Autosizing methods
 
     virtual void autosize() override;
@@ -227,6 +229,7 @@ namespace detail {
 
     void resetBasinHeaterOperatingSchedule();
 
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
     boost::optional<double> ratedTotalCoolingCapacity() const;
 

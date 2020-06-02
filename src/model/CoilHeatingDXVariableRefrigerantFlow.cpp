@@ -76,7 +76,7 @@ namespace detail {
 
   const std::vector<std::string>& CoilHeatingDXVariableRefrigerantFlow_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Heating Coil Total Heating Rate",
       "Heating Coil Total Heating Energy",
       "Heating Coil Runtime Fraction"

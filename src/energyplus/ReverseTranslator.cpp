@@ -155,7 +155,7 @@ Model ReverseTranslator::translateWorkspace(const Workspace & workspace, Progres
   }
 
   m_model = Model();
-  m_model.setFastNaming(true);
+  m_model.setFastNaming(false);
 
   m_workspace = workspace.clone();
 
@@ -946,6 +946,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::SteamEquipment :
     {
       modelObject = translateSteamEquipment(workspaceObject);
+      break;
+    }
+  case openstudio::IddObjectType::SurfaceControl_MovableInsulation :
+    {
+      modelObject = translateSurfaceControlMovableInsulation(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::SurfaceConvectionAlgorithm_Inside :

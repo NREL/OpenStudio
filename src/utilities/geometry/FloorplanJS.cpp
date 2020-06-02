@@ -41,10 +41,10 @@
 
 namespace openstudio{
 
-  const std::string BELOWFLOORPLENUMPOSTFIX(" Floor Plenum");
-  const std::string ABOVECEILINGPLENUMPOSTFIX(" Plenum");
-  const std::string PLENUMSPACETYPENAME("Plenum Space Type"); // DLM: needs to be coordinated with name in Model_Impl::plenumSpaceType()
-  const std::string PLENUMCOLOR("#C0C0C0"); // DLM: needs to be coordinated with plenum colors in makeStandardThreeMaterials
+  static constexpr auto BELOWFLOORPLENUMPOSTFIX(" Floor Plenum");
+  static constexpr auto ABOVECEILINGPLENUMPOSTFIX(" Plenum");
+  static constexpr auto PLENUMSPACETYPENAME("Plenum Space Type"); // DLM: needs to be coordinated with name in Model_Impl::plenumSpaceType()
+  static constexpr auto PLENUMCOLOR("#C0C0C0"); // DLM: needs to be coordinated with plenum colors in makeStandardThreeMaterials
 
   FloorplanObject::FloorplanObject(const std::string& id, const std::string& name, const std::string& handleString)
     : m_id(id), m_name(name), m_handle(toUUID(handleString)), m_handleString(handleString)

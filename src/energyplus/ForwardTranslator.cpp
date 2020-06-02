@@ -3017,6 +3017,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateOutsideSurfaceConvectionAlgorithm(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_SurfaceControl_MovableInsulation:
+  {
+    model::SurfaceControlMovableInsulation obj = modelObject.cast<SurfaceControlMovableInsulation>();
+    retVal = translateSurfaceControlMovableInsulation(obj);
+    break;
+  }
   case openstudio::IddObjectType::OS_SurfaceProperty_ConvectionCoefficients:
   {
     model::SurfacePropertyConvectionCoefficients obj = modelObject.cast<SurfacePropertyConvectionCoefficients>();
@@ -3460,7 +3466,7 @@ std::string ForwardTranslator::stripOS2(const string& s)
 
 std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslate()
 {
-  static std::vector<IddObjectType> result = iddObjectsToTranslateInitializer();
+  static const std::vector<IddObjectType> result = iddObjectsToTranslateInitializer();
   return result;
 }
 
@@ -3742,6 +3748,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_DefaultScheduleSet);
 
   // Translated by the object it references directly
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceControl_MovableInsulation);           // Surface Only
   //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);      // Surface, SubSurface,
   //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);   // Surface, SubSurface,
   //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter); // Surface Only

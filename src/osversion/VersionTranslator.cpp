@@ -142,7 +142,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.9.0")] = &VersionTranslator::update_2_8_1_to_2_9_0;
   m_updateMethods[VersionString("2.9.1")] = &VersionTranslator::update_2_9_0_to_2_9_1;
   m_updateMethods[VersionString("3.0.0")] = &VersionTranslator::update_2_9_1_to_3_0_0;
-  //m_updateMethods[VersionString("3.0.1")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("3.0.1")] = &VersionTranslator::update_3_0_0_to_3_0_1;
+  //m_updateMethods[VersionString("3.0.2")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -293,7 +294,8 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.8.1"));
   m_startVersions.push_back(VersionString("2.9.0"));
   m_startVersions.push_back(VersionString("2.9.1"));
-  //m_startVersions.push_back(VersionString("3.0.0"));
+  m_startVersions.push_back(VersionString("3.0.0"));
+  //m_startVersions.push_back(VersionString("3.0.1"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm,
@@ -5233,6 +5235,149 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
   return ss.str();
 
 }
+
+std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, const IddFileAndFactoryWrapper& idd_3_0_1) {
+  std::stringstream ss;
+  boost::optional<std::string> value;
+
+  ss << idf_3_0_0.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_3_0_1.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_3_0_0.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:Coil:Cooling:DX:SingleSpeed") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 15) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(15, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 15) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(15, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Coil:Cooling:DX:MultiSpeed") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 7 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 7) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(7, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Coil:Cooling:DX:VariableSpeed") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 15) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(15, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Coil:Cooling:DX:TwoSpeed") {
+      // Inserted 'Unit Internal Static Air Pressure' at field 7
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 23 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 7) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else if (i < 22) {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          } else {
+            // Every other is shifted by two fields
+            newObject.setString(i + 2, value.get());
+          }
+        }
+      }
+
+      // Set new field per I/O ref /source code default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(7, 773.3);
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(23, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    // No-op
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+
+} // end update_3_0_0_to_3_0_1
 
 } // osversion
 } // openstudio

@@ -84,7 +84,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationWalkIn_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Refrigeration Walk In Evaporator Total Cooling Rate",
       "Refrigeration Walk In Evaporator Total Cooling Energy",
       "Refrigeration Walk In Evaporator Sensible Cooling Rate",
@@ -157,6 +157,8 @@ namespace detail {
   std::vector<IdfObject> RefrigerationWalkIn_Impl::remove()
   {
     std::vector<IdfObject> result;
+
+    this->removeFromSystem();
 
     std::shared_ptr<Model_Impl> t_model = model().getImpl<Model_Impl>();
     // t_model->blockSignals(true);

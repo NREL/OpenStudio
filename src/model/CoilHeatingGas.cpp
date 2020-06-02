@@ -107,7 +107,7 @@ namespace detail{
   const std::vector<std::string>& CoilHeatingGas_Impl::outputVariableNames() const
   {
     // TODO: static until return of ModelObject is changed
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // Common variables
       "Heating Coil Air Heating Energy",
       "Heating Coil Air Heating Rate",

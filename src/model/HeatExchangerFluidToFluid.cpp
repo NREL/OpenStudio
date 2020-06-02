@@ -79,7 +79,7 @@ namespace detail {
 
   const std::vector<std::string>& HeatExchangerFluidToFluid_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Fluid Heat Exchanger Heat Transfer Rate",
       "Fluid Heat Exchanger Heat Transfer Energy",
       "Fluid Heat Exchanger Loop Supply Side Mass Flow Rate",

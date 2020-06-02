@@ -106,7 +106,7 @@ namespace detail {
 
   const std::vector<std::string>& SolarCollectorFlatPlatePhotovoltaicThermal_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Generator Produced Thermal Rate",
       "Generator Produced Thermal Energy",
       "Generator PVT Fluid Bypass Status",

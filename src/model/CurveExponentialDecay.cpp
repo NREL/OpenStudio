@@ -68,7 +68,7 @@ namespace detail {
 
   const std::vector<std::string>& CurveExponentialDecay_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Performance Curve Output Value",
       "Performance Curve Input Variable 1 Value"
     };

@@ -70,7 +70,7 @@ namespace detail {
 
   const std::vector<std::string>& Gas_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 
@@ -573,12 +573,9 @@ Gas::Gas(const Model& model,
 }
 
 std::vector<std::string> Gas::validGasTypes() {
-  static StringVector result;
-  if (result.empty()) {
-    result = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+  static const StringVector result = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                             OS_WindowMaterial_GasFields::GasType);
-    OS_ASSERT(!result.empty());
-  }
+  OS_ASSERT(!result.empty());
   return result;
 }
 

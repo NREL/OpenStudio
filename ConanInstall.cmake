@@ -38,6 +38,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # set(BOOST_VERSION "1.71.0")
 
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
+  # TODO:  list(APPEND CONAN_OPTIONS "fmt:header_only=True")
+
   # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
   # bump the actual package version when we make changes) than the binaries were built with
   # 'outdated' also acts like 'missing': if no binary, will build them.
@@ -72,8 +74,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     #boost_geometry/${BOOST_VERSION}@bincrafters/stable
     pugixml/1.10@bincrafters/stable
     jsoncpp/1.9.2
-    zlib/1.2.11
-    fmt/6.0.0
+    zlib/1.2.11@nrel/testing # TODO: Temp, pending merging of https://github.com/conan-io/conan-center-index/pull/1526, to resolve #3961
+    fmt/6.2.0
     sqlite3/3.30.1
     cpprestsdk/2.10.14@bincrafters/stable
     websocketpp/0.8.1@bincrafters/stable

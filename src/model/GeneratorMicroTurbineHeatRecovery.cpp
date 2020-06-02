@@ -83,7 +83,7 @@ namespace model {
   // Lists the output variables that are specific to the heat recovery portion of a Generator:MicroTurbine
   const std::vector<std::string>& GeneratorMicroTurbineHeatRecovery_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Generator Produced Thermal Rate",
       "Generator Produced Thermal Energy",
       "Generator Thermal Efficiency LHV Basis",

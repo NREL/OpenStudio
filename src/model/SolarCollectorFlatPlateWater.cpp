@@ -99,7 +99,7 @@ namespace detail {
 
   const std::vector<std::string>& SolarCollectorFlatPlateWater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Solar Collector Incident Angle Modifier",
       "Solar Collector Efficiency",
       "Solar Collector Heat Transfer Rate",

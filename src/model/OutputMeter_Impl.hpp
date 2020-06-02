@@ -161,22 +161,6 @@ namespace detail {
     REGISTER_LOGGER("openstudio.model.OutputMeter");
   };
 
-  struct OutputMeterRegexInitializer : StaticInitializer<OutputMeterRegexInitializer>
-  {
-    static void initialize()
-    {
-      openstudio::model::OutputMeter::meterRegex();
-    }
-  };
-
-  struct MakeSureOutputMeterRegexInitializerIsInitialized
-  {
-    MakeSureOutputMeterRegexInitializerIsInitialized()
-    {}
-
-    OutputMeterRegexInitializer m_i;
-  };
-
 } // detail
 
 } // model

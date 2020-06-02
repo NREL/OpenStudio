@@ -39,6 +39,7 @@ class Time;
 
 namespace model {
 
+class RefrigerationSystem;
 class Schedule;
 class ThermalZone;
 class CurveCubic;

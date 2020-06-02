@@ -68,7 +68,7 @@ namespace detail {
   // TODO: remove
   const std::vector<std::string>& PeopleDefinition_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
       // Not appropriate: output is listed in People instead
     return result;
   }

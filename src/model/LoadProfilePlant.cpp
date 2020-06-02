@@ -80,7 +80,7 @@ namespace detail {
 
   const std::vector<std::string>& LoadProfilePlant_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Plant Load Profile Mass Flow Rate",
       "Plant Load Profile Heat Transfer Rate",
       "Plant Load Profile Heat Transfer Energy",

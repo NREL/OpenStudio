@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Do not enable compiler specific extensions, for eg on GCC use -std=c++1z (=c++17) and not -std=gnu++17
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Use ccache is available, has to be before "project()"
+# Use ccache if available, has to be before "project()"
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
   # Support Unix Makefiles and Ninja
@@ -15,7 +15,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.0.0)
+project(OpenStudio VERSION 3.0.1)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -156,7 +156,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "")
+set(PROJECT_VERSION_PRERELEASE "beta")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -686,16 +686,16 @@ FetchRubyMinGW()
 # need to  update the MD5sum for each platform and url below
 if(UNIX)
    if(APPLE)
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200413-darwin.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0b53a3cd5c8585d6b4c9dbd8c1d41669")
+     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200512-darwin.tar.gz")
+     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "527b01cec6184a91c0e1f98d2d83da38")
    else()
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200413-linux.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "552be2267c5566062311ea078986ed25")
+     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200511-linux.tar.gz")
+     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "5734f3476017f1705a060df1fe046ff9")
    endif()
 elseif(WIN32)
   if(CMAKE_CL_64)
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200413-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "670091c577c09ec4b5a478d644125865")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200512-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "6c556cb707eb1c3d89ec7244f9b3f712")
   endif()
 endif()
 
@@ -795,11 +795,10 @@ if(BUILD_NODE_MODULES)
 endif()
 
 if(BUILD_PYTHON_BINDINGS)
-  # need python
-  # TODO: add support for 3.x
-  find_package(PythonInterp 2.7 REQUIRED)
-  find_package(PythonLibs 2.7 REQUIRED)
-  include_directories(SYSTEM ${PYTHON_INCLUDE_DIRS})
+
+  find_package(Python COMPONENTS Interpreter Development REQUIRED)
+
+  include_directories(SYSTEM ${Python_INCLUDE_DIRS})
   set(ALL_PYTHON_BINDINGS "") # global list of python bindings
   set(ALL_PYTHON_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
   set(ALL_PYTHON_WRAPPER_FILES "") # global list of generated wrapper cxx files

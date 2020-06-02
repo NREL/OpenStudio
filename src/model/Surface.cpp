@@ -47,6 +47,8 @@
 #include "ShadingSurface.hpp"
 #include "InteriorPartitionSurfaceGroup.hpp"
 #include "InteriorPartitionSurface.hpp"
+#include "SurfaceControlMovableInsulation.hpp"
+#include "SurfaceControlMovableInsulation_Impl.hpp"
 #include "SurfacePropertyOtherSideCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
 #include "SurfacePropertyOtherSideConditionsModel.hpp"
@@ -186,7 +188,7 @@ namespace detail {
 
   const std::vector<std::string>& Surface_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Surface Inside Face Temperature",
       "Surface Outside Face Temperature"
     };
@@ -883,6 +885,19 @@ namespace detail {
       for (SubSurface subSurface : otherSurface.subSurfaces()){
         subSurface.resetAdjacentSubSurface();
       }
+    }
+  }
+
+  boost::optional<SurfaceControlMovableInsulation> Surface_Impl::surfaceControlMovableInsulation() const {
+    Surface thisSurface = getObject<Surface>();
+    std::vector<SurfaceControlMovableInsulation> movableInsulations = thisSurface.getModelObjectSources<SurfaceControlMovableInsulation>(SurfaceControlMovableInsulation::iddObjectType());
+    if (movableInsulations.empty()) {
+      return boost::none;
+    } else if (movableInsulations.size() == 1) {
+      return movableInsulations.at(0);
+    } else {
+      LOG(Error, "More than one SurfaceControlMovableInsulation points to this Surface");
+      return boost::none;
     }
   }
 
@@ -2172,8 +2187,12 @@ void Surface::resetAdjacentSurface() {
   return getImpl<detail::Surface_Impl>()->resetAdjacentSurface();
 }
 
+boost::optional<SurfaceControlMovableInsulation> Surface::surfaceControlMovableInsulation() const {
+  return getImpl<detail::Surface_Impl>()->surfaceControlMovableInsulation();
+}
+
 boost::optional<SurfacePropertyConvectionCoefficients> Surface::surfacePropertyConvectionCoefficients() const {
-    return getImpl<detail::Surface_Impl>()->surfacePropertyConvectionCoefficients();
+  return getImpl<detail::Surface_Impl>()->surfacePropertyConvectionCoefficients();
 }
 
 boost::optional<SurfacePropertyOtherSideCoefficients> Surface::surfacePropertyOtherSideCoefficients() const {

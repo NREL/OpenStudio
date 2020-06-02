@@ -36,6 +36,8 @@
 namespace openstudio {
 namespace model {
 
+class RefrigerationSystem;
+
 namespace detail {
 
   /** RefrigerationCondenserCascade_Impl is a ModelObject_Impl that is the implementation class for RefrigerationCondenserCascade.*/
@@ -66,6 +68,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual std::vector<IdfObject> remove() override;
+
     //@}
     /** @name Getters */
     //@{
@@ -87,6 +91,8 @@ namespace detail {
     boost::optional<double> condensateReceiverRefrigerantInventory() const;
 
     boost::optional<double> condensatePipingRefrigerantInventory() const;
+
+    std::vector<RefrigerationSystem> systems() const;
 
     //@}
     /** @name Setters */
@@ -115,6 +121,8 @@ namespace detail {
     bool setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory);
 
     void resetCondensatePipingRefrigerantInventory();
+
+    void removeFromSystems();
 
     //@}
     /** @name Other */

@@ -72,7 +72,7 @@ namespace detail {
 
   const std::vector<std::string>& PlantComponentTemperatureSource_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Plant Temperature Source Component Mass Flow Rate",
       "Plant Temperature Source Component Inlet Temperature",
       "Plant Temperature Source Component Outlet Temperature",

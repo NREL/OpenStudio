@@ -66,7 +66,7 @@ namespace detail {
 
   const std::vector<std::string>& ConstructionWithInternalSource_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Surface Internal Source Location Temperature",
       "Surface Internal User Specified Location Temperature"
     };

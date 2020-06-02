@@ -90,7 +90,7 @@ namespace detail {
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& ControllerOutdoorAir_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // TODO: Note that the key value for these outputs is the AirLoopHVAC name,
       // not the name of the Controller:OutdoorAir.
       "Air System Outdoor Air Economizer Status",

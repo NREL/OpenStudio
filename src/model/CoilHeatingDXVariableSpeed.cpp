@@ -89,7 +89,7 @@ namespace detail {
 
   const std::vector<std::string>& CoilHeatingDXVariableSpeed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Heating Coil Electric Power",
       "Heating Coil Heating Rate",
       "Heating Coil Sensible Heating Rate",

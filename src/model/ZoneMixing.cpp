@@ -74,7 +74,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneMixing_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Zone Mixing Volume",
       "Zone Mixing Current Density Air Volume Flow Rate",
       "Zone Mixing Standard Density Air Volume Flow Rate",

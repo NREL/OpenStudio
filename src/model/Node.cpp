@@ -83,7 +83,7 @@ namespace detail{
   // Get all output variable names that could be associated with this object.
   const std::vector<std::string>& Node_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // Common Variables
       "System Node Temperature",
       "System Node Last Timestep Temperature",

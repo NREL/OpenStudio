@@ -435,7 +435,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   set(ALL_RUBY_BINDING_WRAPPERS_FULL_PATH "${ALL_RUBY_BINDING_WRAPPERS_FULL_PATH}" PARENT_SCOPE)
 
   # Python bindings
-  if(PYTHON_LIBRARY AND BUILD_PYTHON_BINDINGS)
+  if(BUILD_PYTHON_BINDINGS)
     set(swig_target "python_${NAME}")
 
     # utilities goes into OpenStudio. directly, everything else is nested
@@ -464,15 +464,17 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     # Add the -py3 flag if the version used is Python 3
     set(SWIG_PYTHON_3_FLAG "")
-    if (PYTHON_VERSION_MAJOR)
-      if (PYTHON_VERSION_MAJOR EQUAL 3)
+    if (Python_VERSION_MAJOR)
+      if (Python_VERSION_MAJOR EQUAL 3)
         set(SWIG_PYTHON_3_FLAG -py3)
         message(STATUS "${MODULE} - Building SWIG Bindings for Python 3")
       else()
         message(STATUS "${MODULE} - Building SWIG Bindings for Python 2")
       endif()
     else()
-      message(STATUS "${MODULE} - Couldnt determine version of Python - Building SWIG Bindings for Python 2")
+      # Python2 has been EOL since January 1, 2020
+      set(SWIG_PYTHON_3_FLAG -py3)
+      message(STATUS "${MODULE} - Couldnt determine version of Python - Building SWIG Bindings for Python 3")
     endif()
 
     add_custom_command(
@@ -501,6 +503,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       ${SWIG_WRAPPER}
     )
 
+    # TODO: for local testing, PYTHON_GENERATED_SRC should go into Products/python next to the .so files
     install(FILES "${PYTHON_GENERATED_SRC}" DESTINATION Python COMPONENT "Python")
     install(TARGETS ${swig_target} DESTINATION Python COMPONENT "Python")
 
@@ -520,7 +523,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       endif()
     endif()
 
-    target_link_libraries(${swig_target} ${PARENT_TARGET} ${PYTHON_LIBRARY})
+    target_link_libraries(${swig_target} ${PARENT_TARGET} ${PYTHON_Libraries})
 
     add_dependencies(${swig_target} ${PARENT_TARGET})
 

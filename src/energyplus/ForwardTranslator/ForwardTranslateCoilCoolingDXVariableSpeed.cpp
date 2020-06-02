@@ -129,6 +129,11 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
     idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation,value.get());
   }
 
+  // Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  if( (value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation()) ) {
+    idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,value.get());
+  }
+
   // SupplyWaterStorageTankName
 
   // CondensateCollectionWaterStorageTankName

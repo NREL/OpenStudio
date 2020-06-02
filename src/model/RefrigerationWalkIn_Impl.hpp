@@ -42,6 +42,7 @@ class Time;
 namespace model {
 
 class Schedule;
+class RefrigerationSystem;
 class RefrigerationWalkInZoneBoundary;
 class RefrigerationDefrostCycleParameters;
 

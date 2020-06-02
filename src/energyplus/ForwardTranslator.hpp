@@ -398,6 +398,7 @@ class SpaceType;
 class SteamEquipment;
 class SubSurface;
 class Surface;
+class SurfaceControlMovableInsulation;
 class SurfacePropertyConvectionCoefficients;
 class SurfacePropertyConvectionCoefficientsMultipleSurface;
 class SurfacePropertyExposedFoundationPerimeter;
@@ -1240,6 +1241,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateSurface( model::Surface & modelObject );
 
+  boost::optional<IdfObject> translateSurfaceControlMovableInsulation(model::SurfaceControlMovableInsulation & modelObject);
+
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficients(model::SurfacePropertyConvectionCoefficients & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficientsMultipleSurface(model::SurfacePropertyConvectionCoefficientsMultipleSurface & modelObject);
@@ -1462,8 +1465,6 @@ class ENERGYPLUS_API ForwardTranslator {
 
   ProgressBar* m_progressBar;
 
-  friend struct detail::ForwardTranslatorInitializer;
-
   // temp code
   bool m_keepRunControlSpecialDays;
   bool m_ipTabularOutput;
@@ -1473,25 +1474,6 @@ class ENERGYPLUS_API ForwardTranslator {
   bool m_excludeVariableDictionary; // exclude Output:VariableDictionary
 };
 
-namespace detail
-{
-  struct ForwardTranslatorInitializer : StaticInitializer<ForwardTranslatorInitializer>
-  {
-    static void initialize()
-    {
-      ForwardTranslator::iddObjectsToTranslate();
-    }
-  };
-
-  struct MakeSureForwardTranslatorInitializerIsInitialized
-  {
-    MakeSureForwardTranslatorInitializerIsInitialized()
-    {
-    }
-
-    ForwardTranslatorInitializer m_i;
-  };
-}
 
 } // energyplus
 

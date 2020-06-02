@@ -34,6 +34,8 @@
 #include "Schedule_Impl.hpp"
 // #include "CurveLinear.hpp"
 // #include "CurveLinear_Impl.hpp"
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -78,7 +80,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationAirChiller_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Refrigeration Zone Air Chiller Total Cooling Rate",
       "Refrigeration Zone Air Chiller Total Cooling Energy",
       "Refrigeration Zone Air Chiller Sensible Cooling Rate",
@@ -158,6 +160,9 @@ namespace detail {
 
   std::vector<IdfObject> RefrigerationAirChiller_Impl::remove()
   {
+    // Remove from ModelObjectList in system if needed
+    this->removeFromSystem();
+
     return ZoneHVACComponent_Impl::remove();
   }
 
@@ -719,6 +724,25 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Refrigeration_AirChillerFields::DefrostScheduleName);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationAirChiller_Impl::system() const {
+    std::vector<RefrigerationSystem> refrigerationSystems = this->model().getConcreteModelObjects<RefrigerationSystem>();
+    RefrigerationAirChiller refrigerationAirChiller = this->getObject<RefrigerationAirChiller>();
+    for (RefrigerationSystem refrigerationSystem : refrigerationSystems) {
+      RefrigerationAirChillerVector refrigerationAirChillers = refrigerationSystem.airChillers();
+      if ( !refrigerationAirChillers.empty() && std::find(refrigerationAirChillers.begin(), refrigerationAirChillers.end(), refrigerationAirChiller) != refrigerationAirChillers.end() ) {
+        return refrigerationSystem;
+      }
+    }
+    return boost::none;
+  }
+
+  void RefrigerationAirChiller_Impl::removeFromSystem() {
+    if (boost::optional<RefrigerationSystem> _refrigerationSystem = system()) {
+      _refrigerationSystem->removeAirChiller(this->getObject<RefrigerationAirChiller>());
+    }
+  }
+
+
 } // detail
 
 RefrigerationAirChiller::RefrigerationAirChiller(const Model& model, Schedule& defrostSchedule)
@@ -1141,6 +1165,14 @@ bool RefrigerationAirChiller::setAverageRefrigerantChargeInventory(double averag
 
 void RefrigerationAirChiller::resetAverageRefrigerantChargeInventory() {
   getImpl<detail::RefrigerationAirChiller_Impl>()->resetAverageRefrigerantChargeInventory();
+}
+
+boost::optional<RefrigerationSystem> RefrigerationAirChiller::system() const {
+  return getImpl<detail::RefrigerationAirChiller_Impl>()->system();
+}
+
+void RefrigerationAirChiller::removeFromSystem() {
+  getImpl<detail::RefrigerationAirChiller_Impl>()->removeFromSystem();
 }
 
 /// @cond

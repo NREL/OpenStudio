@@ -66,7 +66,7 @@ AirflowNetworkEffectiveLeakageArea_Impl::AirflowNetworkEffectiveLeakageArea_Impl
 
 const std::vector<std::string>& AirflowNetworkEffectiveLeakageArea_Impl::outputVariableNames() const
 {
-  static std::vector<std::string> result;
+  static const std::vector<std::string> result;
   return result;
 }
 

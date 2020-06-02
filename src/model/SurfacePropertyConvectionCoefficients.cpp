@@ -92,7 +92,7 @@ namespace detail {
 
   const std::vector<std::string>& SurfacePropertyConvectionCoefficients_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 
@@ -182,7 +182,6 @@ namespace detail {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Location, "");
     OS_ASSERT(result);
   }
-
 
   bool SurfacePropertyConvectionCoefficients_Impl::setConvectionCoefficient1Type(const std::string& convectionCoefficient1Type) {
     bool result = setString(OS_SurfaceProperty_ConvectionCoefficientsFields::ConvectionCoefficient1Type, convectionCoefficient1Type);

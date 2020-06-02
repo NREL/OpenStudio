@@ -97,7 +97,7 @@ namespace openstudio {
   };
 
   /// Find version 4 UUIDs in a string.
-  UTILITIES_API boost::regex &uuidInString();
+  UTILITIES_API const boost::regex &uuidInString();
 
   /// create a unique name, prefix << " " << UUID.
   UTILITIES_API std::string createUniqueName(const std::string& prefix);
