@@ -415,22 +415,24 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       endif()
     endif()
 
-    target_link_libraries(${swig_target} ${PARENT_TARGET} ${PYTHON_Libraries})
-
+    # TODO: really unusre where former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want... We're not
+    # trying to make a CLI here
+    target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends} ${Python_LIBRARIES})
     add_dependencies(${swig_target} ${PARENT_TARGET})
 
     # add this target to a "global" variable so python tests can require these
-    list(APPEND ALL_PYTHON_BINDINGS "${swig_target}")
-    set(ALL_PYTHON_BINDINGS "${ALL_PYTHON_BINDINGS}" PARENT_SCOPE)
+    list(APPEND ALL_PYTHON_BINDING_TARGETS "${swig_target}")
+    set(ALL_PYTHON_BINDING_TARGETS "${ALL_PYTHON_BINDING_TARGETS}" PARENT_SCOPE)
 
-    list(APPEND ALL_PYTHON_BINDING_DEPENDS "${PARENT_TARGET}")
+    list(APPEND ALL_PYTHON_BINDING_DEPENDS "${${PARENT_TARGET}_depends}")
     set(ALL_PYTHON_BINDING_DEPENDS "${ALL_PYTHON_BINDING_DEPENDS}" PARENT_SCOPE)
 
-    list(APPEND ALL_PYTHON_WRAPPER_FILES "${SWIG_WRAPPER_FULL_PATH}")
-    set(ALL_PYTHON_WRAPPER_FILES "${ALL_PYTHON_WRAPPER_FILES}" PARENT_SCOPE)
+    list(APPEND ALL_PYTHON_BINDING_WRAPPERS "${SWIG_WRAPPER}")
+    set(ALL_PYTHON_BINDING_WRAPPERS "${ALL_PYTHON_BINDING_WRAPPERS}" PARENT_SCOPE)
 
-    list(APPEND ALL_PYTHON_WRAPPER_TARGETS "${SWIG_TARGET}")
-    set(ALL_PYTHON_WRAPPER_TARGETS "${ALL_PYTHON_WRAPPER_TARGETS}" PARENT_SCOPE)
+    list(APPEND ALL_PYTHON_BINDING_WRAPPERS_FULL_PATH "${SWIG_WRAPPER_FULL_PATH}")
+    set(ALL_PYTHON_BINDING_WRAPPERS_FULL_PATH "${ALL_PYTHON_BINDING_WRAPPERS_FULL_PATH}" PARENT_SCOPE)
+
   endif()
 
   # csharp
