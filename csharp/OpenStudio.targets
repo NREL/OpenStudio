@@ -15,8 +15,8 @@
   </PropertyGroup>
   <Target Name="CopyNativeBinaries" DependsOnTargets="CopyFilesToOutputDirectory">
     <Copy SourceFiles="@(NativeBinary)"
-          DestinationFiles="@(NativeBinary->'$(OutDir)\%(TargetPath)\%(Filename).dll')"
-          Condition="'%(Extension)'=='.dll'">
+          DestinationFiles="@(NativeBinary->'$(OutDir)\%(TargetPath)\%(Filename).%(Extension)')"
+          Condition="('%(Extension)'=='.dll') Or ('%(Extension)'=='.so')">
       <Output TaskParameter="DestinationFiles" ItemName="FileWrites" />
     </Copy>
   </Target>
