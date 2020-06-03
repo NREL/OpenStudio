@@ -268,7 +268,7 @@ def split_main_and_subcommand(argv, command_list)
     elsif argv[i].end_with?('.rb')
       main_args   = argv[0, i]
       sub_command = 'execute_ruby_script'
-      sub_args    = argv[i..-1]
+      sub_args    = argv[i+1..-1]
       break
     end
   end
@@ -1476,36 +1476,33 @@ class ExecuteRubyScript
       o.banner = 'Usage: openstudio execute_ruby_script file [arguments]'
     end
 
-    if sub_argv.size == 1
-      if sub_argv[0] == '-h' || sub_argv[0] == '--help'
-        safe_puts(opts.help)
-        return 0
-      end
+    if sub_argv.size == 0
+      sub_argv = "-h"
     end
 
     # Parse the options
     # DLM: don't do argument parsing as in other commands since we want to pass the remaining arguments to the ruby script
-    return 0 if sub_argv == nil
+    #return 0 if sub_argv == nil
     return 1 unless sub_argv
     $logger.debug("ExecuteRubyScript command: #{sub_argv.inspect}")
-    file_path = sub_argv.shift.to_s
-    file_path = File.absolute_path(File.join(Dir.pwd, file_path)) unless Pathname.new(file_path).absolute?
-    $logger.debug "Path for the file to run: #{file_path}"
+   # file_path = sub_argv.shift.to_s
+   # file_path = File.absolute_path(File.join(Dir.pwd, file_path)) unless Pathname.new(file_path).absolute?
+    #$logger.debug "Path for the file to run: #{file_path}"
 
     ARGV.clear
 
-    ARGV << "-h"
+    #ARGV << "-h"
 
-    #sub_argv.each do |arg|
-    #  ARGV << arg
-    #end
+    sub_argv.each do |arg|
+      ARGV << arg
+    end
 
     $logger.debug "ARGV: #{ARGV}"
 
-    unless File.exists? file_path
-      $logger.error "Unable to find the file #{file_path} on the filesystem"
-      return 1
-    end
+    #unless File.exists? file_path
+    #  $logger.error "Unable to find the file #{file_path} on the filesystem"
+    #  return 1
+    #end
 
     require 'uo_cli'
 
