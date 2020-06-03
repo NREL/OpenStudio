@@ -260,15 +260,15 @@ def split_main_and_subcommand(argv, command_list)
   # We split the arguments into two: One set containing any flags before a word, and then the rest. The rest are what
   # get actually sent on to the command
   argv.each_index do |i|
-    if commands.index(argv[i])
-      main_args   = argv[0, i]
-      sub_command = argv[i]
-      sub_args    = argv[i+1..-1]
-      break
-    elsif argv[i].end_with?('.rb')
+    if argv[i].end_with?('.rb')
       main_args   = argv[0, i]
       sub_command = 'execute_ruby_script'
       sub_args    = argv[i+1..-1]
+      break
+    else
+      main_args   = argv[0, i]
+      sub_command = 'execute_ruby_script'
+      sub_args    = argv[i..-1]
       break
     end
   end
@@ -690,6 +690,8 @@ class CLI
   #
   def initialize(argv)
     $main_args, $sub_command, $sub_args = split_main_and_subcommand(argv, command_list)
+
+    $sub_command = 'execute_ruby_script'
 
     if $main_args.include? '--verbose'
       $logger.level = Logger::DEBUG
@@ -1477,7 +1479,7 @@ class ExecuteRubyScript
     end
 
     if sub_argv.size == 0
-      sub_argv = "-h"
+      sub_argv << "-h"
     end
 
     # Parse the options
