@@ -47,8 +47,8 @@ require 'rbconfig'
 $argv = ARGV.dup
 
 $logger = Logger.new(STDOUT)
-$logger.level = Logger::ERROR
-#$logger.level = Logger::WARN
+#$logger.level = Logger::ERROR
+$logger.level = Logger::WARN
 #$logger.level = Logger::DEBUG
 
 #OpenStudio::Logger.instance.standardOutLogger.disable
@@ -162,6 +162,29 @@ end
 #module Bundler
 #end
 
+# This is the code chunk to allow for an embedded IRB shell. From Jason Roelofs, found on StackOverflow
+module IRB # :nodoc:
+  def self.start_session(binding)
+    unless @__initialized
+      args = ARGV
+      ARGV.replace(ARGV.dup)
+      IRB.setup(nil)
+      ARGV.replace(args)
+      @__initialized = true
+    end
+
+    workspace = WorkSpace.new(binding)
+
+    irb = Irb.new(workspace)
+
+    @CONF[:IRB_RC].call(irb.context) if @CONF[:IRB_RC]
+    @CONF[:MAIN_CONTEXT] = irb.context
+
+    catch(:IRB_EXIT) do
+      irb.eval_input
+    end
+  end
+end
 
 # This is the save puts to use to catch EPIPE. Uses `puts` on the given IO object and safely ignores any Errno::EPIPE
 #
@@ -1470,9 +1493,12 @@ class ExecuteRubyScript
     $logger.debug "Path for the file to run: #{file_path}"
 
     ARGV.clear
-    sub_argv.each do |arg|
-      ARGV << arg
-    end
+
+    ARGV << "-h"
+
+    #sub_argv.each do |arg|
+    #  ARGV << arg
+    #end
 
     $logger.debug "ARGV: #{ARGV}"
 
@@ -1481,7 +1507,7 @@ class ExecuteRubyScript
       return 1
     end
 
-    require file_path
+    require 'uo_cli'
 
     0
   end
@@ -1717,8 +1743,8 @@ end
 # Execute the CLI interface, and exit with the proper error code
 $logger.info "Executing argv: #{ARGV}"
 
-begin
-  result = ExecuteRubyScript.execute(ARGV)
+ begin
+  result = CLI.new(ARGV).execute
 rescue SystemExit
   # Okay if required file calls system exit
   result = 0
