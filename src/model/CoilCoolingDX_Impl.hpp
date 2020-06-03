@@ -72,58 +72,6 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
-
-    boost::optional<Schedule> availabilitySchedule() const;
-
-    boost::optional<ThermalZone> condenserZone() const;
-
-    boost::optional<std::string> condenserInletNodeName() const;
-
-    boost::optional<std::string> condenserOutletNodeName() const;
-
-    CoilCoolingDXCurveFitPerformance performanceObject() const;
-
-    boost::optional<std::string> condensateCollectionWaterStorageTankName() const;
-
-    boost::optional<std::string> evaporativeCondenserSupplyWaterStorageTankName() const;
-
-    //@}
-    /** @name Setters */
-    //@{
-
-    bool setAvailabilitySchedule(Schedule& schedule);
-
-    void resetAvailabilitySchedule();
-
-    bool setCondenserZone(const ThermalZone& thermalZone);
-
-    void resetCondenserZone();
-
-    bool setCondenserInletNodeName(const std::string& condenserInletNodeName);
-
-    void resetCondenserInletNodeName();
-
-    bool setCondenserOutletNodeName(const std::string& condenserOutletNodeName);
-
-    void resetCondenserOutletNodeName();
-
-    bool setPerformanceObject(const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance);
-
-    bool setCondensateCollectionWaterStorageTankName(const std::string& condensateCollectionWaterStorageTankName);
-
-    void resetCondensateCollectionWaterStorageTankName();
-
-    bool setEvaporativeCondenserSupplyWaterStorageTankName(const std::string& evaporativeCondenserSupplyWaterStorageTankName);
-
-    void resetEvaporativeCondenserSupplyWaterStorageTankName();
-
-    //@}
-    /** @name Other */
-    //@{
-
     virtual unsigned inletPort() const override;
 
     virtual unsigned outletPort() const override;
@@ -137,10 +85,57 @@ namespace detail {
     virtual bool addToNode(Node & node) override;
 
     //@}
+    /** @name Getters */
+    //@{
+
+    Schedule availabilitySchedule() const;
+
+    boost::optional<ThermalZone> condenserZone() const;
+
+    boost::optional<std::string> condenserInletNodeName() const;
+
+    boost::optional<std::string> condenserOutletNodeName() const;
+
+    CoilCoolingDXCurveFitPerformance performanceObject() const;
+
+    // boost::optional<HVACComponent> condensateCollectionWaterStorageTank() const;
+
+    // boost::optional<HVACComponent> evaporativeCondenserSupplyWaterStorageTank() const;
+
+    //@}
+    /** @name Setters */
+    //@{
+
+    bool setAvailabilitySchedule(Schedule& schedule);
+
+    bool setCondenserZone(const ThermalZone& thermalZone);
+    void resetCondenserZone();
+
+    bool setCondenserInletNodeName(const std::string& condenserInletNodeName);
+    void resetCondenserInletNodeName();
+
+    bool setCondenserOutletNodeName(const std::string& condenserOutletNodeName);
+    void resetCondenserOutletNodeName();
+
+    bool setPerformanceObject(const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance);
+
+    // bool setCondensateCollectionWaterStorageTank(const HVACComponent& condensateCollectionWaterStorageTank);
+    // void resetCondensateCollectionWaterStorageTank();
+
+    // bool setEvaporativeCondenserSupplyWaterStorageTank(const HVACComponent& evaporativeCondenserSupplyWaterStorageTank);
+    // void resetEvaporativeCondenserSupplyWaterStorageTank();
+
+    //@}
+    /** @name Other */
+    //@{
+
+
+    //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingDX");
 
+    boost::optional<Schedule> optionalAvailabilitySchedule() const;
     boost::optional<CoilCoolingDXCurveFitPerformance> optionalPerformanceObject() const;
 
     boost::optional<Connection> optionalAirInletNode() const;

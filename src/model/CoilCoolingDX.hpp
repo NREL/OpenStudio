@@ -64,7 +64,7 @@ class MODEL_API CoilCoolingDX : public StraightComponent {
   /** @name Getters */
   //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+  Schedule availabilitySchedule() const;
 
   boost::optional<ThermalZone> condenserZone() const;
 
@@ -74,9 +74,8 @@ class MODEL_API CoilCoolingDX : public StraightComponent {
 
   CoilCoolingDXCurveFitPerformance performanceObject() const;
 
-  boost::optional<std::string> condensateCollectionWaterStorageTankName() const;
-
-  boost::optional<std::string> evaporativeCondenserSupplyWaterStorageTankName() const;
+  // boost::optional<HVACComponent> condensateCollectionWaterStorageTank() const;
+  // boost::optional<HVACComponent> evaporativeCondenserSupplyWaterStorageTank() const;
 
   //@}
   /** @name Setters */
@@ -84,29 +83,22 @@ class MODEL_API CoilCoolingDX : public StraightComponent {
 
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
-
   bool setCondenserZone(const ThermalZone& thermalZone);
-
   void resetCondenserZone();
 
   bool setCondenserInletNodeName(const std::string& condenserInletNodeName);
-
   void resetCondenserInletNodeName();
 
   bool setCondenserOutletNodeName(const std::string& condenserOutletNodeName);
-
   void resetCondenserOutletNodeName();
 
   bool setPerformanceObject(const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance);
 
-  bool setCondensateCollectionWaterStorageTankName(const std::string& condensateCollectionWaterStorageTankName);
+  // bool setCondensateCollectionWaterStorageTank(const HVACComponent& condensateCollectionWaterStorageTank);
+  // void resetCondensateCollectionWaterStorageTank();
 
-  void resetCondensateCollectionWaterStorageTankName();
-
-  bool setEvaporativeCondenserSupplyWaterStorageTankName(const std::string& evaporativeCondenserSupplyWaterStorageTankName);
-
-  void resetEvaporativeCondenserSupplyWaterStorageTankName();
+  // bool setEvaporativeCondenserSupplyWaterStorageTank(const HVACComponent& evaporativeCondenserSupplyWaterStorageTank);
+  // void resetEvaporativeCondenserSupplyWaterStorageTank();
 
   //@}
   /** @name Other */

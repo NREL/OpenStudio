@@ -67,7 +67,7 @@ class MODEL_API CoilCoolingDXCurveFitOperatingMode : public ResourceObject {
 
   boost::optional<double> ratedGrossTotalCoolingCapacity() const;
 
-  bool isRatedGrossTotalCoolingCapacityAutosized() const;  
+  bool isRatedGrossTotalCoolingCapacityAutosized() const;
 
   boost::optional<double> ratedEvaporatorAirFlowRate() const;
 
@@ -75,7 +75,7 @@ class MODEL_API CoilCoolingDXCurveFitOperatingMode : public ResourceObject {
 
   boost::optional<double> ratedCondenserAirFlowRate() const;
 
-  bool isRatedCondenserAirFlowRateAutosized() const;  
+  bool isRatedCondenserAirFlowRateAutosized() const;
 
   double maximumCyclingRate() const;
 
@@ -91,28 +91,29 @@ class MODEL_API CoilCoolingDXCurveFitOperatingMode : public ResourceObject {
 
   boost::optional<double> nominalEvaporativeCondenserPumpPower() const;
 
-  bool isNominalEvaporativeCondenserPumpPowerAutosized() const;  
+  bool isNominalEvaporativeCondenserPumpPowerAutosized() const;
 
-  boost::optional<int> nominalSpeedNumber() const;
+  // Returns the nominal speed number if set, or the number of speeds if not
+  unsigned nominalSpeedNumber() const;
+  bool isNominalSpeedNumberDefaulted() const;
 
   std::vector<CoilCoolingDXCurveFitPerformance> coilCoolingDXCurveFitPerformances() const;
 
   std::vector<CoilCoolingDXCurveFitSpeed> speeds() const;
+
+  unsigned numberOfSpeeds() const;
 
   //@}
   /** @name Setters */
   //@{
 
   bool setRatedGrossTotalCoolingCapacity(double ratedGrossTotalCoolingCapacity);
-
   void autosizeRatedGrossTotalCoolingCapacity();
 
   bool setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate);
-
   void autosizeRatedEvaporatorAirFlowRate();
 
   bool setRatedCondenserAirFlowRate(double ratedCondenserAirFlowRate);
-
   void autosizeRatedCondenserAirFlowRate();
 
   bool setMaximumCyclingRate(double maximumCyclingRate);
@@ -128,11 +129,9 @@ class MODEL_API CoilCoolingDXCurveFitOperatingMode : public ResourceObject {
   bool setCondenserType(const std::string& condenserType);
 
   bool setNominalEvaporativeCondenserPumpPower(double nominalEvaporativeCondenserPumpPower);
-
   void autosizeNominalEvaporativeCondenserPumpPower();
 
-  bool setNominalSpeedNumber(int nominalSpeedNumber);
-
+  bool setNominalSpeedNumber(unsigned nominalSpeedNumber);
   void resetNominalSpeedNumber();
 
   void addSpeed(CoilCoolingDXCurveFitSpeed& speed);

@@ -69,6 +69,10 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -103,7 +107,7 @@ namespace detail {
 
     Curve partLoadFractionCorrelationCurve() const;
 
-    Curve wasteHeatModifierFunctionofTemperatureCurve() const;
+    boost::optional<Curve> wasteHeatModifierFunctionofTemperatureCurve() const;
 
     double ratedWasteHeatFractionofPowerInput() const;
 
@@ -124,7 +128,6 @@ namespace detail {
     bool setCondenserAirFlowRateFraction(double condenserAirFlowRateFraction);
 
     bool setGrossSensibleHeatRatio(double grossSensibleHeatRatio);
-
     void autosizeGrossSensibleHeatRatio();
 
     bool setGrossCoolingCOP(double grossCoolingCOP);
@@ -148,15 +151,14 @@ namespace detail {
     bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
     bool setWasteHeatModifierFunctionofTemperatureCurve(const Curve& curve);
+    void resetWasteHeatModifierFunctionofTemperatureCurve();
 
     bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
 
     bool setSensibleHeatRatioModifierFunctionofTemperatureCurve(const Curve& curve);
-
     void resetSensibleHeatRatioModifierFunctionofTemperatureCurve();
 
     bool setSensibleHeatRatioModifierFunctionofFlowFractionCurve(const Curve& curve);
-
     void resetSensibleHeatRatioModifierFunctionofFlowFractionCurve();
 
     //@}
@@ -168,10 +170,6 @@ namespace detail {
     void autosize();
 
     void applySizingValues();
-
-    ModelObject clone(Model model) const override;
-
-    std::vector<ModelObject> children() const override;
 
     //@}
    protected:

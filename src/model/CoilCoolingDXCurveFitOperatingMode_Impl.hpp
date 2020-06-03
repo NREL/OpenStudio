@@ -69,21 +69,22 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
     //@}
     /** @name Getters */
     //@{
 
     boost::optional<double> ratedGrossTotalCoolingCapacity() const;
-
     bool isRatedGrossTotalCoolingCapacityAutosized() const;
 
     boost::optional<double> ratedEvaporatorAirFlowRate() const;
-
-    bool isRatedEvaporatorAirFlowRateAutosized() const;    
+    bool isRatedEvaporatorAirFlowRateAutosized() const;
 
     boost::optional<double> ratedCondenserAirFlowRate() const;
-
-    bool isRatedCondenserAirFlowRateAutosized() const;   
+    bool isRatedCondenserAirFlowRateAutosized() const;
 
     double maximumCyclingRate() const;
 
@@ -98,31 +99,28 @@ namespace detail {
     std::string condenserType() const;
 
     boost::optional<double> nominalEvaporativeCondenserPumpPower() const;
+    bool isNominalEvaporativeCondenserPumpPowerAutosized() const;
 
-    bool isNominalEvaporativeCondenserPumpPowerAutosized() const;    
-
-    boost::optional<int> nominalSpeedNumber() const;
-
+    unsigned nominalSpeedNumber() const;
     bool isNominalSpeedNumberDefaulted() const;
 
     std::vector<CoilCoolingDXCurveFitPerformance> coilCoolingDXCurveFitPerformances() const;
 
     std::vector<CoilCoolingDXCurveFitSpeed> speeds() const;
 
+    unsigned numberOfSpeeds() const;
+
     //@}
     /** @name Setters */
     //@{
 
     bool setRatedGrossTotalCoolingCapacity(double ratedGrossTotalCoolingCapacity);
-
     void autosizeRatedGrossTotalCoolingCapacity();
 
     bool setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate);
-
     void autosizeRatedEvaporatorAirFlowRate();
 
     bool setRatedCondenserAirFlowRate(double ratedCondenserAirFlowRate);
-
     void autosizeRatedCondenserAirFlowRate();
 
     bool setMaximumCyclingRate(double maximumCyclingRate);
@@ -141,11 +139,13 @@ namespace detail {
 
     void autosizeNominalEvaporativeCondenserPumpPower();
 
-    bool setNominalSpeedNumber(int nominalSpeedNumber);
-
+    bool setNominalSpeedNumber(unsigned nominalSpeedNumber);
     void resetNominalSpeedNumber();
 
     void addSpeed(CoilCoolingDXCurveFitSpeed& speed);
+
+
+    // TODO: ADD removeSpeed, setSpeeds,etc
 
     //@}
     /** @name Other */
@@ -162,10 +162,6 @@ namespace detail {
     void autosize();
 
     void applySizingValues();
-
-    ModelObject clone(Model model) const override;
-
-    std::vector<ModelObject> children() const override;
 
     //@}
    protected:

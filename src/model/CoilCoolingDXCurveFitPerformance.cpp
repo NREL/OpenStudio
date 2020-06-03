@@ -88,7 +88,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> CoilCoolingDXCurveFitPerformance_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -96,6 +95,29 @@ namespace detail {
     {
       result.push_back(ScheduleTypeKey("CoilCoolingDXCurveFitPerformance","Evaporative Condenser Basin Heater Operating Schedule"));
     }
+    return result;
+  }
+
+  ModelObject CoilCoolingDXCurveFitPerformance_Impl::clone(Model model) const {
+    auto t_clone = ModelObject_Impl::clone(model).cast<CoilCoolingDXCurveFitPerformance>();
+
+    // TODO: clone the operating modes
+
+    return t_clone;
+  }
+
+  std::vector<ModelObject> CoilCoolingDXCurveFitPerformance_Impl::children() const {
+    std::vector<ModelObject> result;
+
+    // TODO: ensure this is right
+    result.push_back(baseOperatingMode());
+    if (auto _mode = alternativeOperatingMode1()) {
+      result.push_back(_mode.get());
+    }
+    if (auto _mode = alternativeOperatingMode2()) {
+      result.push_back(_mode.get());
+    }
+
     return result;
   }
 
@@ -250,22 +272,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  ModelObject CoilCoolingDXCurveFitPerformance_Impl::clone(Model model) const {
-    auto t_clone = ModelObject_Impl::clone(model).cast<CoilCoolingDXCurveFitPerformance>();
-
-    // TODO: clone the operating modes
-
-    return t_clone;
-  }
-
-  std::vector<ModelObject> CoilCoolingDXCurveFitPerformance_Impl::children() const {
-    std::vector<ModelObject> result;
-
-    // TODO
-
-    return result;
-  }
-
 } // detail
 
 CoilCoolingDXCurveFitPerformance::CoilCoolingDXCurveFitPerformance(const Model& model,
@@ -288,56 +294,6 @@ CoilCoolingDXCurveFitPerformance::CoilCoolingDXCurveFitPerformance(const Model& 
   setCompressorFuelType("Electricity");
 
   setBaseOperatingMode(baseOperatingMode);
-}
-
-CoilCoolingDXCurveFitPerformance::CoilCoolingDXCurveFitPerformance(const Model& model,
-                                                                   const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode,
-                                                                   const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1)
-  : ResourceObject(CoilCoolingDXCurveFitPerformance::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>());
-
-  setCrankcaseHeaterCapacity(0.0);
-  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);
-  setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
-  setUnitInternalStaticAirPressure(773.3);
-  setCapacityControlMethod("Discrete");
-  setEvaporativeCondenserBasinHeaterCapacity(0.0);
-  setEvaporativeCondenserBasinHeaterSetpointTemperature(2.0);
-  {
-    auto schedule = model.alwaysOnDiscreteSchedule();
-    setEvaporativeCondenserBasinHeaterOperatingSchedule(schedule);
-  }
-  setCompressorFuelType("Electricity");
-
-  setBaseOperatingMode(baseOperatingMode);
-  setAlternativeOperatingMode1(alternativeOperatingMode1);
-}
-
-CoilCoolingDXCurveFitPerformance::CoilCoolingDXCurveFitPerformance(const Model& model,
-                                                                   const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode,
-                                                                   const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1,
-                                                                   const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode2)
-  : ResourceObject(CoilCoolingDXCurveFitPerformance::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>());
-
-  setCrankcaseHeaterCapacity(0.0);
-  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);
-  setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
-  setUnitInternalStaticAirPressure(773.3);
-  setCapacityControlMethod("Discrete");
-  setEvaporativeCondenserBasinHeaterCapacity(0.0);
-  setEvaporativeCondenserBasinHeaterSetpointTemperature(2.0);
-  {
-    auto schedule = model.alwaysOnDiscreteSchedule();
-    setEvaporativeCondenserBasinHeaterOperatingSchedule(schedule);
-  }
-  setCompressorFuelType("Electricity");
-
-  setBaseOperatingMode(baseOperatingMode);
-  setAlternativeOperatingMode1(alternativeOperatingMode1);
-  setAlternativeOperatingMode2(alternativeOperatingMode2);
 }
 
 IddObjectType CoilCoolingDXCurveFitPerformance::iddObjectType() {

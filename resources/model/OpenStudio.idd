@@ -15038,9 +15038,11 @@ OS:Coil:Cooling:DX,
        \reference AFNCoilNames
        \reference ConnectionObject
   A3, \field Evaporator Inlet Node
+       \type object-list
        \required-field
        \object-list ConnectionNames
   A4, \field Evaporator Outlet Node
+       \type object-list
        \required-field
        \object-list ConnectionNames
   A5, \field Availability Schedule
@@ -15048,6 +15050,7 @@ OS:Coil:Cooling:DX,
        \note If this field is blank, the coil is always available.
        \type object-list
        \object-list ScheduleNames
+       \required-field
   A6, \field Condenser Zone
        \note This input field is name of a conditioned or unconditioned zone where the secondary
        \note coil (condenser) of a DX system or heat pump is to be placed.  This is an optional

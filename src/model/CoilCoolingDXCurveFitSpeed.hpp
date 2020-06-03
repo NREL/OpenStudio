@@ -92,6 +92,7 @@ class MODEL_API CoilCoolingDXCurveFitSpeed : public ResourceObject {
 
   double evaporativeCondenserEffectiveness() const;
 
+  // TODO: probably make these optional actually like in E+, and adjust Ctor accordingly
   Curve totalCoolingCapacityModifierFunctionofTemperatureCurve() const;
 
   Curve totalCoolingCapacityModifierFunctionofAirFlowFractionCurve() const;
@@ -102,7 +103,7 @@ class MODEL_API CoilCoolingDXCurveFitSpeed : public ResourceObject {
 
   Curve partLoadFractionCorrelationCurve() const;
 
-  Curve wasteHeatModifierFunctionofTemperatureCurve() const;
+  boost::optional<Curve> wasteHeatModifierFunctionofTemperatureCurve() const;
 
   double ratedWasteHeatFractionofPowerInput() const;
 
@@ -147,15 +148,14 @@ class MODEL_API CoilCoolingDXCurveFitSpeed : public ResourceObject {
   bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
   bool setWasteHeatModifierFunctionofTemperatureCurve(const Curve& curve);
+  void resetWasteHeatModifierFunctionofTemperatureCurve();
 
   bool setRatedWasteHeatFractionofPowerInput(double ratedWasteHeatFractionofPowerInput);
 
   bool setSensibleHeatRatioModifierFunctionofTemperatureCurve(const Curve& curve);
-
   void resetSensibleHeatRatioModifierFunctionofTemperatureCurve();
 
   bool setSensibleHeatRatioModifierFunctionofFlowFractionCurve(const Curve& curve);
-
   void resetSensibleHeatRatioModifierFunctionofFlowFractionCurve();
 
   //@}

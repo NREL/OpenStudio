@@ -56,20 +56,29 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX( model::Coi
   boost::optional<std::string> s;
   boost::optional<double> value;
 
-  IdfObject idfObject(openstudio::IddObjectType::Coil_Cooling_DX);
+  // PerformanceObjectName, is required, so start by that
+  CoilCoolingDXCurveFitPerformance performance = modelObject.performanceObject();
+  if (boost::optional<IdfObject> _performance = translateAndMapModelObject(performance)) {
+    s = _performance->name().get();
+  } else {
+    LOG(Warn, modelObject.briefDescription() << " cannot be translated as its performance object cannot be translated: "
+        << performance.briefDescription() << ".");
+    return boost::none;
+  }
 
-  m_idfObjects.push_back(idfObject);
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX, modelObject);
 
-  // Name
-  idfObject.setString(Coil_Cooling_DXFields::Name, modelObject.name().get());
+  // PerformanceObjectName
+  idfObject.setString(Coil_Cooling_DXFields::PerformanceObjectName, s.get());
 
   // EvaporatorInletNodeName
 
   // EvaporatorOutletNodeName
 
   // AvailabilityScheduleName
-  if (boost::optional<Schedule> schedule = modelObject.availabilitySchedule() ) {
-    if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
+  {
+    auto schedule = modelObject.availabilitySchedule();
+    if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule)) {
       idfObject.setString(Coil_Cooling_DXFields::AvailabilityScheduleName, _schedule->name().get());
     }
   }
@@ -84,12 +93,6 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX( model::Coi
   // CondenserInletNodeName
 
   // CondenserOutletNodeName
-
-  // PerformanceObjectName
-  CoilCoolingDXCurveFitPerformance performance = modelObject.performanceObject();
-  if (boost::optional<IdfObject> _performance = translateAndMapModelObject(performance)) {
-    idfObject.setString(Coil_Cooling_DXFields::PerformanceObjectName, _performance->name().get());
-  }
 
   // CondensateCollectionWaterStorageTankName
 

@@ -40,6 +40,10 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "CoilCoolingDXCurveFitPerformance.hpp"
 #include "CoilCoolingDXCurveFitPerformance_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
+#include "AirflowNetworkEquivalentDuct.hpp"
+#include "AirflowNetworkEquivalentDuct_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -88,7 +92,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> CoilCoolingDX_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -99,8 +102,75 @@ namespace detail {
     return result;
   }
 
-  boost::optional<Schedule> CoilCoolingDX_Impl::availabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_DXFields::AvailabilitySchedule);
+  unsigned CoilCoolingDX_Impl::inletPort() const {
+    return OS_Coil_Cooling_DXFields::EvaporatorInletNode;
+  }
+
+  unsigned CoilCoolingDX_Impl::outletPort() const {
+    return OS_Coil_Cooling_DXFields::EvaporatorOutletNode;
+  }
+
+  ModelObject CoilCoolingDX_Impl::clone(Model model) const {
+    auto t_clone = StraightComponent_Impl::clone(model).cast<CoilCoolingDX>();
+
+    // TODO: clone the performance object
+
+    return t_clone;
+  }
+
+  std::vector<ModelObject> CoilCoolingDX_Impl::children() const {
+    std::vector<ModelObject> result;
+
+    result.push_back(performanceObject());
+
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+
+    return result;
+  }
+
+  boost::optional<HVACComponent> CoilCoolingDX_Impl::containingHVACComponent() const
+  {
+    // AirLoopHVACUnitarySystem
+    {
+      auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+      for( auto const & system : systems ) {
+        if( auto coolingCoil = system.coolingCoil() ) {
+          if( coolingCoil->handle() == this->handle() ) {
+            return system;
+          }
+        }
+      }
+    }
+
+    return boost::none;
+  }
+
+  bool CoilCoolingDX_Impl::addToNode(Node & node)
+  {
+    // Only meant to be in a AirLoopHVACUnitarySystem
+    return false;
+  }
+
+  boost::optional<Schedule> CoilCoolingDX_Impl::optionalAvailabilitySchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_DXFields::AvailabilityScheduleName);
+  }
+
+  Schedule CoilCoolingDX_Impl::availabilitySchedule()  const
+  {
+    boost::optional<Schedule> value = optionalAvailabilitySchedule();
+    if (!value){
+      // it is an error if we get here, however we don't want to crash
+      // so we hook up to global always on schedule
+      LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
+      value = this->model().alwaysOnDiscreteSchedule();
+      OS_ASSERT(value);
+      const_cast<CoilCoolingDX_Impl*>(this)->setAvailabilitySchedule(*value);
+      value = optionalAvailabilitySchedule();
+    }
+    OS_ASSERT(value);
+    return value.get();
   }
 
   boost::optional<ThermalZone> CoilCoolingDX_Impl::condenserZone() const {
@@ -127,13 +197,13 @@ namespace detail {
     return value.get();
   }
 
-  boost::optional<std::string> CoilCoolingDX_Impl::condensateCollectionWaterStorageTankName() const {
-    return getString(OS_Coil_Cooling_DXFields::CondensateCollectionWaterStorageTankName,true);
-  }
+  // boost::optional<std::string> CoilCoolingDX_Impl::condensateCollectionWaterStorageTankName() const {
+  //   return getString(OS_Coil_Cooling_DXFields::CondensateCollectionWaterStorageTankName,true);
+  // }
 
-  boost::optional<std::string> CoilCoolingDX_Impl::evaporativeCondenserSupplyWaterStorageTankName() const {
-    return getString(OS_Coil_Cooling_DXFields::EvaporativeCondenserSupplyWaterStorageTankName,true);
-  }
+  // boost::optional<std::string> CoilCoolingDX_Impl::evaporativeCondenserSupplyWaterStorageTankName() const {
+  //   return getString(OS_Coil_Cooling_DXFields::EvaporativeCondenserSupplyWaterStorageTankName,true);
+  // }
 
   bool CoilCoolingDX_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Coil_Cooling_DXFields::AvailabilitySchedule,
@@ -141,11 +211,6 @@ namespace detail {
                               "Availability Schedule",
                               schedule);
     return result;
-  }
-
-  void CoilCoolingDX_Impl::resetAvailabilitySchedule() {
-    bool result = setString(OS_Coil_Cooling_DXFields::AvailabilitySchedule, "");
-    OS_ASSERT(result);
   }
 
   bool CoilCoolingDX_Impl::setCondenserZone(const ThermalZone& thermalZone) {
@@ -183,61 +248,25 @@ namespace detail {
     return result;
   }
 
-  bool CoilCoolingDX_Impl::setCondensateCollectionWaterStorageTankName(const std::string& condensateCollectionWaterStorageTankName) {
-    bool result = setString(OS_Coil_Cooling_DXFields::CondensateCollectionWaterStorageTankName, condensateCollectionWaterStorageTankName);
-    return result;
-  }
+  // bool CoilCoolingDX_Impl::setCondensateCollectionWaterStorageTankName(const std::string& condensateCollectionWaterStorageTankName) {
+  //   bool result = setString(OS_Coil_Cooling_DXFields::CondensateCollectionWaterStorageTankName, condensateCollectionWaterStorageTankName);
+  //   return result;
+  // }
 
-  void CoilCoolingDX_Impl::resetCondensateCollectionWaterStorageTankName() {
-    bool result = setString(OS_Coil_Cooling_DXFields::CondensateCollectionWaterStorageTankName, "");
-    OS_ASSERT(result);
-  }
+  // void CoilCoolingDX_Impl::resetCondensateCollectionWaterStorageTankName() {
+  //   bool result = setString(OS_Coil_Cooling_DXFields::CondensateCollectionWaterStorageTankName, "");
+  //   OS_ASSERT(result);
+  // }
 
-  bool CoilCoolingDX_Impl::setEvaporativeCondenserSupplyWaterStorageTankName(const std::string& evaporativeCondenserSupplyWaterStorageTankName) {
-    bool result = setString(OS_Coil_Cooling_DXFields::EvaporativeCondenserSupplyWaterStorageTankName, evaporativeCondenserSupplyWaterStorageTankName);
-    return result;
-  }
+  // bool CoilCoolingDX_Impl::setEvaporativeCondenserSupplyWaterStorageTankName(const std::string& evaporativeCondenserSupplyWaterStorageTankName) {
+  //   bool result = setString(OS_Coil_Cooling_DXFields::EvaporativeCondenserSupplyWaterStorageTankName, evaporativeCondenserSupplyWaterStorageTankName);
+  //   return result;
+  // }
 
-  void CoilCoolingDX_Impl::resetEvaporativeCondenserSupplyWaterStorageTankName() {
-    bool result = setString(OS_Coil_Cooling_DXFields::EvaporativeCondenserSupplyWaterStorageTankName, "");
-    OS_ASSERT(result);
-  }
-
-  unsigned CoilCoolingDX_Impl::inletPort() const {
-    return OS_Coil_Cooling_DXFields::EvaporatorInletNode;
-  }
-
-  unsigned CoilCoolingDX_Impl::outletPort() const {
-    return OS_Coil_Cooling_DXFields::EvaporatorOutletNode;
-  }
-
-  ModelObject CoilCoolingDX_Impl::clone(Model model) const {
-    auto t_clone = StraightComponent_Impl::clone(model).cast<CoilCoolingDX>();
-
-    // TODO: clone the performance object
-
-    return t_clone;
-  }
-
-  std::vector<ModelObject> CoilCoolingDX_Impl::children() const {
-    std::vector<ModelObject> result;
-
-    // TODO
-
-    return result;
-  }
-
-  boost::optional<HVACComponent> CoilCoolingDX_Impl::containingHVACComponent() const
-  {
-    // TODO
-
-    return boost::none;
-  }
-
-  bool CoilCoolingDX_Impl::addToNode(Node & node)
-  {
-    return false;
-  }
+  // void CoilCoolingDX_Impl::resetEvaporativeCondenserSupplyWaterStorageTankName() {
+  //   bool result = setString(OS_Coil_Cooling_DXFields::EvaporativeCondenserSupplyWaterStorageTankName, "");
+  //   OS_ASSERT(result);
+  // }
 
 } // detail
 
@@ -247,14 +276,19 @@ CoilCoolingDX::CoilCoolingDX(const Model& model,
 {
   OS_ASSERT(getImpl<detail::CoilCoolingDX_Impl>());
 
-  setPerformanceObject(coilCoolingDXCurveFitPerformance);
+
+  auto always_on = model.alwaysOnDiscreteSchedule();
+  bool ok = setAvailabilitySchedule( always_on );
+  OS_ASSERT(ok);
+  ok = setPerformanceObject(coilCoolingDXCurveFitPerformance);
+  OS_ASSERT(ok);
 }
 
 IddObjectType CoilCoolingDX::iddObjectType() {
   return IddObjectType(IddObjectType::OS_Coil_Cooling_DX);
 }
 
-boost::optional<Schedule> CoilCoolingDX::availabilitySchedule() const {
+Schedule CoilCoolingDX::availabilitySchedule() const {
   return getImpl<detail::CoilCoolingDX_Impl>()->availabilitySchedule();
 }
 
@@ -274,20 +308,8 @@ CoilCoolingDXCurveFitPerformance CoilCoolingDX::performanceObject() const {
   return getImpl<detail::CoilCoolingDX_Impl>()->performanceObject();
 }
 
-boost::optional<std::string> CoilCoolingDX::condensateCollectionWaterStorageTankName() const {
-  return getImpl<detail::CoilCoolingDX_Impl>()->condensateCollectionWaterStorageTankName();
-}
-
-boost::optional<std::string> CoilCoolingDX::evaporativeCondenserSupplyWaterStorageTankName() const {
-  return getImpl<detail::CoilCoolingDX_Impl>()->evaporativeCondenserSupplyWaterStorageTankName();
-}
-
 bool CoilCoolingDX::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::CoilCoolingDX_Impl>()->setAvailabilitySchedule(schedule);
-}
-
-void CoilCoolingDX::resetAvailabilitySchedule() {
-  getImpl<detail::CoilCoolingDX_Impl>()->resetAvailabilitySchedule();
 }
 
 bool CoilCoolingDX::setCondenserZone(const ThermalZone& thermalZone) {
@@ -318,21 +340,29 @@ bool CoilCoolingDX::setPerformanceObject(const CoilCoolingDXCurveFitPerformance&
   return getImpl<detail::CoilCoolingDX_Impl>()->setPerformanceObject(coilCoolingDXCurveFitPerformance);
 }
 
-bool CoilCoolingDX::setCondensateCollectionWaterStorageTankName(const std::string& condensateCollectionWaterStorageTankName) {
-  return getImpl<detail::CoilCoolingDX_Impl>()->setCondensateCollectionWaterStorageTankName(condensateCollectionWaterStorageTankName);
-}
-
-void CoilCoolingDX::resetCondensateCollectionWaterStorageTankName() {
-  getImpl<detail::CoilCoolingDX_Impl>()->resetCondensateCollectionWaterStorageTankName();
-}
-
-bool CoilCoolingDX::setEvaporativeCondenserSupplyWaterStorageTankName(const std::string& evaporativeCondenserSupplyWaterStorageTankName) {
-  return getImpl<detail::CoilCoolingDX_Impl>()->setEvaporativeCondenserSupplyWaterStorageTankName(evaporativeCondenserSupplyWaterStorageTankName);
-}
-
-void CoilCoolingDX::resetEvaporativeCondenserSupplyWaterStorageTankName() {
-  getImpl<detail::CoilCoolingDX_Impl>()->resetEvaporativeCondenserSupplyWaterStorageTankName();
-}
+// boost::optional<std::string> CoilCoolingDX::condensateCollectionWaterStorageTankName() const {
+//   return getImpl<detail::CoilCoolingDX_Impl>()->condensateCollectionWaterStorageTankName();
+// }
+//
+// bool CoilCoolingDX::setCondensateCollectionWaterStorageTankName(const std::string& condensateCollectionWaterStorageTankName) {
+//   return getImpl<detail::CoilCoolingDX_Impl>()->setCondensateCollectionWaterStorageTankName(condensateCollectionWaterStorageTankName);
+// }
+//
+// void CoilCoolingDX::resetCondensateCollectionWaterStorageTankName() {
+//   getImpl<detail::CoilCoolingDX_Impl>()->resetCondensateCollectionWaterStorageTankName();
+// }
+//
+// boost::optional<std::string> CoilCoolingDX::evaporativeCondenserSupplyWaterStorageTankName() const {
+//   return getImpl<detail::CoilCoolingDX_Impl>()->evaporativeCondenserSupplyWaterStorageTankName();
+// }
+//
+// bool CoilCoolingDX::setEvaporativeCondenserSupplyWaterStorageTankName(const std::string& evaporativeCondenserSupplyWaterStorageTankName) {
+//   return getImpl<detail::CoilCoolingDX_Impl>()->setEvaporativeCondenserSupplyWaterStorageTankName(evaporativeCondenserSupplyWaterStorageTankName);
+// }
+//
+// void CoilCoolingDX::resetEvaporativeCondenserSupplyWaterStorageTankName() {
+//   getImpl<detail::CoilCoolingDX_Impl>()->resetEvaporativeCondenserSupplyWaterStorageTankName();
+// }
 
 /// @cond
 CoilCoolingDX::CoilCoolingDX(std::shared_ptr<detail::CoilCoolingDX_Impl> impl)

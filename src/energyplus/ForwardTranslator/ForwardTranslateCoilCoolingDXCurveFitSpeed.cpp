@@ -130,9 +130,8 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitSpee
   }
 
   // WasteHeatModifierFunctionofTemperatureCurveName
-  {
-    auto curve = modelObject.wasteHeatModifierFunctionofTemperatureCurve();
-    if(auto _curve = translateAndMapModelObject(curve)) {
+  if (auto optCurve = modelObject.wasteHeatModifierFunctionofTemperatureCurve()) {
+    if(auto _curve = translateAndMapModelObject(optCurve.get())) {
       idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::WasteHeatModifierFunctionofTemperatureCurveName, _curve->name().get());
     }
   }

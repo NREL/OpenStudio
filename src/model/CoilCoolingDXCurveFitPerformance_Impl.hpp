@@ -72,6 +72,10 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    virtual ModelObject clone(Model model) const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
     //@}
     /** @name Getters */
     //@{
@@ -138,9 +142,6 @@ namespace detail {
     /** @name Other */
     //@{
 
-    ModelObject clone(Model model) const override;
-
-    std::vector<ModelObject> children() const override;
 
     //@}
    protected:

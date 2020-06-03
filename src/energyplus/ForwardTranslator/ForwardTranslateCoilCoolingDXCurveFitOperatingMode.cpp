@@ -113,15 +113,16 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitOper
   }
 
   // NominalSpeedNumber
-  boost::optional<int> nominalSpeedNumber = modelObject.nominalSpeedNumber();
-  if (nominalSpeedNumber) {
-    idfObject.setInt(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalSpeedNumber, nominalSpeedNumber.get());
-  }
+  idfObject.setInt(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalSpeedNumber, modelObject.nominalSpeedNumber());
 
   // SpeedxName
   for( auto speed: modelObject.speeds() ) {
-    auto eg = idfObject.pushExtensibleGroup();
-    eg.setString(Coil_Cooling_DX_CurveFit_OperatingModeExtensibleFields::SpeedName, speed.name().get());
+    if (auto _s = translateAndMapModelObject(speed)) {
+      auto eg = idfObject.pushExtensibleGroup();
+      eg.setString(Coil_Cooling_DX_CurveFit_OperatingModeExtensibleFields::SpeedName, _s->nameString());
+    } else {
+      LOG(Warn, modelObject.briefDescription() << " cannot translate speed " << _s->briefDescription());
+    }
   }
 
   return boost::optional<IdfObject>(idfObject);

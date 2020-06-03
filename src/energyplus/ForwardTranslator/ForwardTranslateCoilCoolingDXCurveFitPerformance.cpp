@@ -52,12 +52,20 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitPerf
   boost::optional<std::string> s;
   boost::optional<double> value;
 
-  IdfObject idfObject(openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_Performance);
+  // BaseOperatingMode is required, so start with that
+  CoilCoolingDXCurveFitOperatingMode baseOpMode = modelObject.baseOperatingMode();
+  if (boost::optional<IdfObject> _baseOpMode = translateAndMapModelObject(baseOpMode)) {
+    s = _baseOpMode->name().get();
+  } else {
+    LOG(Warn, modelObject.briefDescription() << " cannot be translated as its Base Operating Mode object cannot be translated: "
+        << baseOpMode.briefDescription() << ".");
+    return boost::none;
+  }
 
-  m_idfObjects.push_back(idfObject);
+  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_Performance, modelObject);
 
-  // Name
-  idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::Name, modelObject.name().get());
+  // BaseOperatingMode
+  idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::BaseOperatingMode, s.get());
 
   // CrankcaseHeaterCapacity
   idfObject.setDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacity, modelObject.crankcaseHeaterCapacity());
@@ -85,9 +93,6 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitPerf
 
   // CompressorFuelType
   idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::CompressorFuelType, modelObject.compressorFuelType());
-
-  // BaseOperatingMode
-  idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::BaseOperatingMode, modelObject.baseOperatingMode().name().get());
 
   // AlternativeOperatingMode1
   boost::optional<CoilCoolingDXCurveFitOperatingMode> alternativeOperatingMode1 = modelObject.alternativeOperatingMode1();

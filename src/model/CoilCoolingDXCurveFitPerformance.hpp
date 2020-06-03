@@ -56,15 +56,6 @@ class MODEL_API CoilCoolingDXCurveFitPerformance : public ResourceObject {
   explicit CoilCoolingDXCurveFitPerformance(const Model& model,
                                             const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode);
 
-  explicit CoilCoolingDXCurveFitPerformance(const Model& model,
-                                            const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode,
-                                            const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1);
-
-  explicit CoilCoolingDXCurveFitPerformance(const Model& model,
-                                            const CoilCoolingDXCurveFitOperatingMode& baseOperatingMode,
-                                            const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode1,
-                                            const CoilCoolingDXCurveFitOperatingMode& alternativeOperatingMode2);
-
   virtual ~CoilCoolingDXCurveFitPerformance() {}
 
   //@}

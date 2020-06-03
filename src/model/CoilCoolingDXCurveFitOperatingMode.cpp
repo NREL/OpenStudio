@@ -83,6 +83,23 @@ namespace detail {
     return CoilCoolingDXCurveFitOperatingMode::iddObjectType();
   }
 
+  ModelObject CoilCoolingDXCurveFitOperatingMode_Impl::clone(Model model) const {
+    auto t_clone = ModelObject_Impl::clone(model).cast<CoilCoolingDXCurveFitOperatingMode>();
+
+    auto t_speeds = speeds();
+    for( auto speed: t_speeds ) {
+      auto speedClone = speed.clone(model).cast<CoilCoolingDXCurveFitSpeed>();
+      t_clone.addSpeed(speedClone);
+    }
+    return t_clone;
+  }
+
+  std::vector<ModelObject> CoilCoolingDXCurveFitOperatingMode_Impl::children() const {
+    std::vector<ModelObject> result = subsetCastVector<ModelObject>(speeds());
+
+    return result;
+  }
+
   boost::optional<double> CoilCoolingDXCurveFitOperatingMode_Impl::ratedGrossTotalCoolingCapacity() const {
     return getDouble(OS_Coil_Cooling_DX_CurveFit_OperatingModeFields::RatedGrossTotalCoolingCapacity,true);
   }
@@ -171,8 +188,22 @@ namespace detail {
     return result;
   }
 
-  boost::optional<int> CoilCoolingDXCurveFitOperatingMode_Impl::nominalSpeedNumber() const {
-    return getInt(OS_Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalSpeedNumber,true);
+  unsigned CoilCoolingDXCurveFitOperatingMode_Impl::numberOfSpeeds() const {
+    return numExtensibleGroups();
+  }
+
+  bool CoilCoolingDXCurveFitOperatingMode_Impl::isNominalSpeedNumberDefaulted() const {
+    return isEmpty(OS_Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalSpeedNumber);
+  }
+
+  unsigned CoilCoolingDXCurveFitOperatingMode_Impl::nominalSpeedNumber() const {
+    if (isNominalSpeedNumberDefaulted()) {
+      return numberOfSpeeds();
+    } else {
+      boost::optional<int> nominalSpeedNumber = getInt(OS_Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalSpeedNumber, false);
+      OS_ASSERT(nominalSpeedNumber);
+      return static_cast<unsigned>(nominalSpeedNumber.get());
+    }
   }
 
   std::vector<CoilCoolingDXCurveFitPerformance> CoilCoolingDXCurveFitOperatingMode_Impl::coilCoolingDXCurveFitPerformances() const {
@@ -266,7 +297,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool CoilCoolingDXCurveFitOperatingMode_Impl::setNominalSpeedNumber(int nominalSpeedNumber) {
+  bool CoilCoolingDXCurveFitOperatingMode_Impl::setNominalSpeedNumber(unsigned nominalSpeedNumber) {
+    unsigned nSpeeds = numberOfSpeeds();
+    if (nominalSpeedNumber > nSpeeds) {
+      LOG(Warn, "For " << briefDescription() << ", cannot set a nominalSpeedNumber (=" << nominalSpeedNumber
+             << ") greater than the number of speeds (=" << nSpeeds << ").");
+      return false;
+    }
+
     bool result = setInt(OS_Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalSpeedNumber, nominalSpeedNumber);
     return result;
   }
@@ -299,10 +337,10 @@ namespace detail {
   }
 
   void CoilCoolingDXCurveFitOperatingMode_Impl::autosize() {
-    autosizedRatedGrossTotalCoolingCapacity();
-    autosizedRatedEvaporatorAirFlowRate();
-    autosizedRatedCondenserAirFlowRate();
-    autosizedNominalEvaporativeCondenserPumpPower();
+    autosizeRatedGrossTotalCoolingCapacity();
+    autosizeRatedEvaporatorAirFlowRate();
+    autosizeRatedCondenserAirFlowRate();
+    autosizeNominalEvaporativeCondenserPumpPower();
   }
 
   void CoilCoolingDXCurveFitOperatingMode_Impl::applySizingValues() {
@@ -327,23 +365,6 @@ namespace detail {
       setNominalEvaporativeCondenserPumpPower(val.get());
     }
 
-  }
-
-  ModelObject CoilCoolingDXCurveFitOperatingMode_Impl::clone(Model model) const {
-    auto t_clone = ModelObject_Impl::clone(model).cast<CoilCoolingDXCurveFitOperatingMode>();
-
-    auto t_speeds = speeds();
-    for( auto speed: t_speeds ) {
-      auto speedClone = speed.clone(model).cast<CoilCoolingDXCurveFitSpeed>();
-      t_clone.addSpeed(speedClone);
-    }
-    return t_clone;
-  }
-
-  std::vector<ModelObject> CoilCoolingDXCurveFitOperatingMode_Impl::children() const {
-    std::vector<ModelObject> result = subsetCastVector<ModelObject>(speeds());
-
-    return result;
   }
 
 } // detail
@@ -430,7 +451,11 @@ bool CoilCoolingDXCurveFitOperatingMode::isNominalEvaporativeCondenserPumpPowerA
   return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->isNominalEvaporativeCondenserPumpPowerAutosized();
 }
 
-boost::optional<int> CoilCoolingDXCurveFitOperatingMode::nominalSpeedNumber() const {
+bool CoilCoolingDXCurveFitOperatingMode::isNominalSpeedNumberDefaulted() const {
+  return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->isNominalSpeedNumberDefaulted();
+}
+
+unsigned CoilCoolingDXCurveFitOperatingMode::nominalSpeedNumber() const {
   return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->nominalSpeedNumber();
 }
 
@@ -498,7 +523,7 @@ void CoilCoolingDXCurveFitOperatingMode::autosizeNominalEvaporativeCondenserPump
   getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->autosizeNominalEvaporativeCondenserPumpPower();
 }
 
-bool CoilCoolingDXCurveFitOperatingMode::setNominalSpeedNumber(int nominalSpeedNumber) {
+bool CoilCoolingDXCurveFitOperatingMode::setNominalSpeedNumber(unsigned nominalSpeedNumber) {
   return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->setNominalSpeedNumber(nominalSpeedNumber);
 }
 
@@ -508,6 +533,10 @@ void CoilCoolingDXCurveFitOperatingMode::resetNominalSpeedNumber() {
 
 void CoilCoolingDXCurveFitOperatingMode::addSpeed(CoilCoolingDXCurveFitSpeed& speed) {
   return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->addSpeed(speed);
+}
+
+unsigned CoilCoolingDXCurveFitOperatingMode::numberOfSpeeds() const {
+  return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->numberOfSpeeds();
 }
 
 boost::optional<double> CoilCoolingDXCurveFitOperatingMode::autosizedRatedGrossTotalCoolingCapacity() {
