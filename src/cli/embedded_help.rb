@@ -53,6 +53,7 @@ module Kernel
   $LOAD_PATH << ':/ruby/2.5.0'
   $LOAD_PATH << ':/ruby/2.5.0/x86_64-darwin16'
   $LOAD_PATH << ':/ruby/2.5.0/x64-mswin64_140'
+  $LOAD_PATH << ':/ruby/2.5.0/gems/certified-1.0.0' 
   # DLM: now done in embedded gem initialization section in openstudio_cli.rb
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-standards.rb').gsub('/openstudio-standards.rb', '')
   #$LOAD_PATH << EmbeddedScripting::findFirstFileByName('openstudio-workflow.rb').gsub('/openstudio-workflow.rb', '')

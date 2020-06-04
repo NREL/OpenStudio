@@ -48,6 +48,8 @@ file(GLOB_RECURSE JSON_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.json")
 file(GLOB_RECURSE SPEC_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.gemspec")
 file(GLOB_RECURSE GZ_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.gz")
 file(GLOB_RECURSE YML_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.yml")
+file(GLOB_RECURSE CRT_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.crt")
+file(GLOB_RECURSE DATA_FILES FOLLOW_SYMLINKS "${OPENSTUDIO_GEMS_DIR}/**/*.data")
 file(GLOB_RECURSE OS_FILES FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/openstudio/**/*.rb") # DLM: this is temporary, these files should live somewhere else and be included in the shared Ruby lib
 
 foreach( _FILE ${GEMFILE_FILES} )
@@ -158,6 +160,18 @@ foreach( _FILE ${YML_FILES} )
   list(APPEND EMBEDDED_PATHS ${LOCATION})
 endforeach()
 
+foreach( _FILE ${CRT_FILES} )
+  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
+  list(APPEND FILES ${_FILE})
+  list(APPEND EMBEDDED_PATHS ${LOCATION})
+endforeach()
+
+foreach( _FILE ${DATA_FILES} )
+  file(RELATIVE_PATH LOCATION "${PROJECT_BINARY_DIR}/openstudio-gems" ${_FILE})
+  list(APPEND FILES ${_FILE})
+  list(APPEND EMBEDDED_PATHS ${LOCATION})
+endforeach()
+
 # DLM: this is temporary, these files should live somewhere else and be included in the shared Ruby lib
 foreach( _FILE ${OS_FILES} )
   file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
@@ -254,7 +268,7 @@ endif()
 
 
 # -Wno-deprecated-declaration, /wd4996: suppresses deprecated warning
-# -Wno-register, /wd5033: ISO C++1z does not allow ‘register’ storage class specifier
+# -Wno-register, /wd5033: ISO C++1z does not allow ï¿½registerï¿½ storage class specifier
 if(MSVC)
   set_target_properties(openstudio PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
   set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
