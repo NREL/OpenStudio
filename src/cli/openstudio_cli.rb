@@ -260,12 +260,12 @@ def split_main_and_subcommand(argv, command_list)
   # We split the arguments into two: One set containing any flags before a word, and then the rest. The rest are what
   # get actually sent on to the command
   argv.each_index do |i|
-    if argv[i].end_with?('.rb')
+    if commands.index(argv[i])
       main_args   = argv[0, i]
-      sub_command = 'execute_ruby_script'
+      sub_command = argv[i]
       sub_args    = argv[i+1..-1]
       break
-    else
+    elsif argv[i].end_with?('.rb')
       main_args   = argv[0, i]
       sub_command = 'execute_ruby_script'
       sub_args    = argv[i..-1]
@@ -675,6 +675,7 @@ class CLI
         measure: [ Proc.new { ::Measure }, {primary: true, working: false}],
         update: [ Proc.new { ::Update }, {primary: true, working: false}],
         execute_ruby_script: [ Proc.new { ::ExecuteRubyScript }, {primary: false, working: true}],
+        urbanopt_cli: [ Proc.new { ::UrbanOptCLI }, {primary: false, working: true}],
         #interactive_ruby: [ Proc.new { ::InteractiveRubyShell }, {primary: false, working: false}], # DLM: not working
         openstudio_version: [ Proc.new { ::OpenStudioVersion }, {primary: true, working: true}],
         energyplus_version: [ Proc.new { ::EnergyPlusVersion }, {primary: true, working: true}],
@@ -690,8 +691,6 @@ class CLI
   #
   def initialize(argv)
     $main_args, $sub_command, $sub_args = split_main_and_subcommand(argv, command_list)
-
-    $sub_command = 'execute_ruby_script'
 
     if $main_args.include? '--verbose'
       $logger.level = Logger::DEBUG
@@ -1478,6 +1477,65 @@ class ExecuteRubyScript
       o.banner = 'Usage: openstudio execute_ruby_script file [arguments]'
     end
 
+    if sub_argv.size == 1
+      if sub_argv[0] == '-h' || sub_argv[0] == '--help'
+        safe_puts(opts.help)
+        return 0
+      end
+    end
+
+    # Parse the options
+    # DLM: don't do argument parsing as in other commands since we want to pass the remaining arguments to the ruby script
+    return 0 if sub_argv == nil
+    return 1 unless sub_argv
+    $logger.debug("ExecuteRubyScript command: #{sub_argv.inspect}")
+    file_path = sub_argv.shift.to_s
+    file_path = File.absolute_path(File.join(Dir.pwd, file_path)) unless Pathname.new(file_path).absolute?
+    $logger.debug "Path for the file to run: #{file_path}"
+
+    ARGV.clear
+    sub_argv.each do |arg|
+      ARGV << arg
+    end
+
+    $logger.debug "ARGV: #{ARGV}"
+
+    unless File.exists? file_path
+      $logger.error "Unable to find the file #{file_path} on the filesystem"
+      return 1
+    end
+
+    require file_path
+
+    0
+  end
+end
+
+# Class to execute a ruby script
+class UrbanOptCLI
+
+  # Provides text for the main help functionality
+  def self.synopsis
+    'Executes urbanopt cli'
+  end
+
+  # Executes an arbitrary ruby script
+  #
+  # @param [Array] sub_argv Options passed to the execute_ruby_script command from the user input
+  # @return [Fixnum] Return status
+  #
+  def execute(sub_argv)
+
+    $logger.info "Running UrbanOpt CLI"
+
+    require 'pathname'
+
+    options = {}
+
+    opts = OptionParser.new do |o|
+      o.banner = 'Usage: urbanopt_cli args'
+    end
+
     if sub_argv.size == 0
       sub_argv << "-h"
     end
@@ -1486,25 +1544,18 @@ class ExecuteRubyScript
     # DLM: don't do argument parsing as in other commands since we want to pass the remaining arguments to the ruby script
     #return 0 if sub_argv == nil
     return 1 unless sub_argv
-    $logger.debug("ExecuteRubyScript command: #{sub_argv.inspect}")
+    $logger.debug("UrbanOpt CLI command: #{sub_argv.inspect}")
    # file_path = sub_argv.shift.to_s
    # file_path = File.absolute_path(File.join(Dir.pwd, file_path)) unless Pathname.new(file_path).absolute?
     #$logger.debug "Path for the file to run: #{file_path}"
 
     ARGV.clear
 
-    #ARGV << "-h"
-
     sub_argv.each do |arg|
       ARGV << arg
     end
 
     $logger.debug "ARGV: #{ARGV}"
-
-    #unless File.exists? file_path
-    #  $logger.error "Unable to find the file #{file_path} on the filesystem"
-    #  return 1
-    #end
 
     require 'uo_cli'
 
