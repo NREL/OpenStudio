@@ -74,7 +74,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneVentilationWindandStackOpenArea_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
       // Not appropriate: all variables reported at the zone level
       //result.push_back("Zone Ventilation Sensible Heat Loss Energy");
       //result.push_back("Zone Ventilation Sensible Heat Gain Energy");

@@ -3017,6 +3017,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateOutsideSurfaceConvectionAlgorithm(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_SurfaceControl_MovableInsulation:
+  {
+    model::SurfaceControlMovableInsulation obj = modelObject.cast<SurfaceControlMovableInsulation>();
+    retVal = translateSurfaceControlMovableInsulation(obj);
+    break;
+  }
   case openstudio::IddObjectType::OS_SurfaceProperty_ConvectionCoefficients:
   {
     model::SurfacePropertyConvectionCoefficients obj = modelObject.cast<SurfacePropertyConvectionCoefficients>();
@@ -3460,7 +3466,7 @@ std::string ForwardTranslator::stripOS2(const string& s)
 
 std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslate()
 {
-  static std::vector<IddObjectType> result = iddObjectsToTranslateInitializer();
+  static const std::vector<IddObjectType> result = iddObjectsToTranslateInitializer();
   return result;
 }
 
@@ -3570,7 +3576,10 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
 
   result.push_back(IddObjectType::OS_AirLoopHVAC);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ControllerList);
-  result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem);
+
+  // Translated by AirLoopHVAC (and AirLoopHVAC:DedicatedOutdoorAirSystem but not wrapped)
+  // result.push_back(IddObjectType::OS_AirLoopHVAC_OutdoorAirSystem)
+
   result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryHeatCool_VAVChangeoverBypass);
   result.push_back(IddObjectType::OS_AirLoopHVAC_UnitaryCoolOnly);
   result.push_back(IddObjectType::OS_AirLoopHVAC_ZoneMixer);
@@ -3594,7 +3603,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Connection);
   result.push_back(IddObjectType::OS_Connector_Mixer);
   result.push_back(IddObjectType::OS_Connector_Splitter);
-  result.push_back(IddObjectType::OS_Controller_OutdoorAir);
+  // result.push_back(IddObjectType::OS_Controller_OutdoorAir); // Will be translated by the AirLoopHVACOutdoorAirSystem
   result.push_back(IddObjectType::OS_CoolingTower_SingleSpeed);
   result.push_back(IddObjectType::OS_Curve_Bicubic);
   result.push_back(IddObjectType::OS_Curve_Biquadratic);
@@ -3742,6 +3751,7 @@ void ForwardTranslator::translateConstructions(const model::Model & model)
   iddObjectTypes.push_back(IddObjectType::OS_DefaultScheduleSet);
 
   // Translated by the object it references directly
+  //iddObjectTypes.push_back(IddObjectType::OS_SurfaceControl_MovableInsulation);           // Surface Only
   //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);      // Surface, SubSurface,
   //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);   // Surface, SubSurface,
   //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter); // Surface Only

@@ -75,7 +75,7 @@ namespace detail {
   const std::vector<std::string>& CoolingTowerTwoSpeed_Impl::outputVariableNames() const
   {
     // static for now
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
 
     // Common Variables
     "Cooling Tower Fan Electric Power",

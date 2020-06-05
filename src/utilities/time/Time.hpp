@@ -42,13 +42,13 @@
 
 namespace openstudio{
 
-  const unsigned HOURS_PER_DAY = 24;
-  const unsigned MINUTES_PER_HOUR = 60;
-  const unsigned SECONDS_PER_MINUTE = 60;
+  constexpr unsigned HOURS_PER_DAY = 24;
+  constexpr unsigned MINUTES_PER_HOUR = 60;
+  constexpr unsigned SECONDS_PER_MINUTE = 60;
 
-  const double MINUTES_PER_SECOND = 1.0/60.0;
-  const double HOURS_PER_SECOND = MINUTES_PER_SECOND/60.0;
-  const double DAYS_PER_SECOND = HOURS_PER_SECOND/24.0;
+  constexpr double MINUTES_PER_SECOND = 1.0/60.0;
+  constexpr double HOURS_PER_SECOND = MINUTES_PER_SECOND/60.0;
+  constexpr double DAYS_PER_SECOND = HOURS_PER_SECOND/24.0;
 
   /// round towards zero, need to move this
   UTILITIES_API int floor0( double value );

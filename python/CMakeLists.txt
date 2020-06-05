@@ -21,7 +21,7 @@
 #target_link_libraries(openstudio_python
 # ${ALL_PYTHON_BINDING_DEPENDS}
 # ${Boost_LIBRARIES}
-# ${PYTHON_LIBRARY}
+# ${Python_LIBRARIES}
 #)
 
 #install(TARGETS openstudio_python DESTINATION Python CONFIGURATIONS COMPONENT "Python")

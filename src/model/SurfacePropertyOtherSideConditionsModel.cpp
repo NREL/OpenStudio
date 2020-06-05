@@ -65,7 +65,7 @@ namespace detail {
 
   const std::vector<std::string>& SurfacePropertyOtherSideConditionsModel_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Surface Other Side Conditions Modeled Convection Air Temperature",
       "Surface Other Side Conditions Modeled Convection Heat Transfer Coefficient",
       "Surface Other Side Conditions Modeled Radiation Temperature",

@@ -1803,7 +1803,11 @@ rescue Exception => e
   puts "Exception Message: #{ e.message }"
   puts "Exception Backtrace: #{ e.backtrace }"
   puts "Error executing argv: #{ARGV}"
-  puts "Error: #{e.message} in #{e.backtrace.join("\n")}"
+  if e.backtrace.nil?
+    puts "Error: #{e.message}"
+  else
+    puts "Error: #{e.message} in #{e.backtrace.join("\n")}"
+  end
   result = 1
 end
 STDOUT.flush

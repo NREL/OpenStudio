@@ -70,7 +70,7 @@ namespace detail {
 
   const std::vector<std::string>& ZoneHVACBaseboardConvectiveElectric_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Baseboard Total Heating Rate",
       "Baseboard Total Heating Energy",
       "Baseboard Electric Energy",

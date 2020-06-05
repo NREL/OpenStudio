@@ -65,10 +65,7 @@ class EMSActuatorNames;
 
 class AdditionalProperties;
 
-
-/** Typedef for ScheduleTypeRegistry key. First is a string representation of the class name.
- *  Second is a display name for the schedule. \relates ModelObject */
-typedef std::pair<std::string,std::string> ScheduleTypeKey;
+class ScheduleTypeKey;
 
 namespace detail {
 

@@ -165,7 +165,7 @@ namespace detail {
 
   const std::vector<std::string>& ScheduleRuleset_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Schedule Value"
     };
     return result;
@@ -308,9 +308,9 @@ namespace detail {
       }
     }
 
-    if (!this->isSummerDesignDayScheduleDefaulted()){
-      ScheduleDay summerDesignDaySchedule = this->summerDesignDaySchedule();
-      summerDesignDaySchedule.remove();
+    boost::optional<ScheduleDay> existingSummerDDSchedule;
+    if (!this->isSummerDesignDayScheduleDefaulted()) {
+      existingSummerDDSchedule = this->summerDesignDaySchedule();
     }
     ModelObject clone = schedule.clone();
     bool result = setPointer(OS_Schedule_RulesetFields::SummerDesignDayScheduleName, clone.handle());
@@ -319,17 +319,23 @@ namespace detail {
       result = summerDesignDaySchedule().setScheduleTypeLimits(*limits);
       OS_ASSERT(result);
     }
+    if (existingSummerDDSchedule) {
+      existingSummerDDSchedule->remove();
+    }
     return result;
   }
 
   void ScheduleRuleset_Impl::resetSummerDesignDaySchedule()
   {
-    if (!this->isSummerDesignDayScheduleDefaulted()){
-      ScheduleDay summerDesignDaySchedule = this->summerDesignDaySchedule();
-      summerDesignDaySchedule.remove();
+    boost::optional<ScheduleDay> existingSummerDDSchedule;
+    if (!this->isSummerDesignDayScheduleDefaulted()) {
+      existingSummerDDSchedule = this->summerDesignDaySchedule();
     }
     bool test = this->setString(OS_Schedule_RulesetFields::SummerDesignDayScheduleName, "");
     OS_ASSERT(test);
+    if (existingSummerDDSchedule) {
+      existingSummerDDSchedule->remove();
+    }
   }
 
   bool ScheduleRuleset_Impl::setWinterDesignDaySchedule(const ScheduleDay& schedule)
@@ -345,9 +351,9 @@ namespace detail {
       }
     }
 
-    if (!this->isWinterDesignDayScheduleDefaulted()){
-      ScheduleDay winterDesignDaySchedule = this->winterDesignDaySchedule();
-      winterDesignDaySchedule.remove();
+    boost::optional<ScheduleDay> existingWinterDDSchedule;
+    if (!this->isWinterDesignDayScheduleDefaulted()) {
+      ScheduleDay existingWinterDDSchedule = this->winterDesignDaySchedule();
     }
     ModelObject clone = schedule.clone();
     bool result = setPointer(OS_Schedule_RulesetFields::WinterDesignDayScheduleName, clone.handle());
@@ -356,17 +362,23 @@ namespace detail {
       result = winterDesignDaySchedule().setScheduleTypeLimits(*limits);
       OS_ASSERT(result);
     }
+    if (existingWinterDDSchedule) {
+      existingWinterDDSchedule->remove();
+    }
     return result;
   }
 
   void ScheduleRuleset_Impl::resetWinterDesignDaySchedule()
   {
-    if (!this->isWinterDesignDayScheduleDefaulted()){
-      ScheduleDay winterDesignDaySchedule = this->winterDesignDaySchedule();
-      winterDesignDaySchedule.remove();
+    boost::optional<ScheduleDay> existingWinterDDSchedule;
+    if (!this->isWinterDesignDayScheduleDefaulted()) {
+      existingWinterDDSchedule = this->winterDesignDaySchedule();
     }
     bool test = this->setString(OS_Schedule_RulesetFields::WinterDesignDayScheduleName, "");
     OS_ASSERT(test);
+    if (existingWinterDDSchedule) {
+      existingWinterDDSchedule->remove();
+    }
   }
 
   bool ScheduleRuleset_Impl::setHolidaySchedule(const ScheduleDay& schedule)
@@ -382,9 +394,9 @@ namespace detail {
       }
     }
 
-    if (!this->isHolidayScheduleDefaulted()){
-      ScheduleDay holidaySchedule = this->holidaySchedule();
-      holidaySchedule.remove();
+    boost::optional<ScheduleDay> existingHolidaySchedule;
+    if (!this->isHolidayScheduleDefaulted()) {
+      existingHolidaySchedule = this->holidaySchedule();
     }
     ModelObject clone = schedule.clone();
     bool result = setPointer(OS_Schedule_RulesetFields::HolidayScheduleName, clone.handle());
@@ -393,17 +405,23 @@ namespace detail {
       result = holidaySchedule().setScheduleTypeLimits(*limits);
       OS_ASSERT(result);
     }
+    if (existingHolidaySchedule) {
+      existingHolidaySchedule->remove();
+    }
     return result;
   }
 
   void ScheduleRuleset_Impl::resetHolidaySchedule()
   {
-    if (!this->isHolidayScheduleDefaulted()){
-      ScheduleDay holidaySchedule = this->holidaySchedule();
-      holidaySchedule.remove();
+    boost::optional<ScheduleDay> existingHolidaySchedule;
+    if (!this->isHolidayScheduleDefaulted()) {
+      existingHolidaySchedule = this->holidaySchedule();
     }
     bool test = this->setString(OS_Schedule_RulesetFields::HolidayScheduleName, "");
     OS_ASSERT(test);
+    if (existingHolidaySchedule) {
+      existingHolidaySchedule->remove();
+    }
   }
 
   struct ScheduleRuleIndexCompare {

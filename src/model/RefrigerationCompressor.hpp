@@ -37,6 +37,7 @@ namespace openstudio {
 
 namespace model {
 
+class RefrigerationSystem;
 class CurveBicubic;
 
 namespace detail {
@@ -88,6 +89,9 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
 
+  // Returns the parent RefrigerationSystem(s)
+  std::vector<RefrigerationSystem> systems() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -127,6 +131,9 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
   bool setTranscriticalCompressorCapacityCurve(const CurveBicubic& curveBicubic);
 
   void resetTranscriticalCompressorCapacityCurve();
+
+  // Remove from parent system(s)
+  void removeFromSystems();
 
   //@}
   /** @name Other */

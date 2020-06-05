@@ -66,7 +66,7 @@ namespace detail {
 
   const std::vector<std::string>& DistrictHeating_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "District Heating Hot Water Rate",
       "District Heating Hot Water Energy",
       "District Heating Rate",

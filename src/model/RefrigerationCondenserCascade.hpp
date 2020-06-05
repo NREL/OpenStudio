@@ -37,6 +37,8 @@ namespace openstudio {
 
 namespace model {
 
+class RefrigerationSystem;
+
 namespace detail {
 
   class RefrigerationCondenserCascade_Impl;
@@ -80,6 +82,9 @@ class MODEL_API RefrigerationCondenserCascade : public ModelObject {
 
   boost::optional<double> condensatePipingRefrigerantInventory() const;
 
+  // Returns the parent RefrigerationSystem(s)
+  std::vector<RefrigerationSystem> systems() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -107,6 +112,9 @@ class MODEL_API RefrigerationCondenserCascade : public ModelObject {
   bool setCondensatePipingRefrigerantInventory(double condensatePipingRefrigerantInventory);
 
   void resetCondensatePipingRefrigerantInventory();
+
+  // Remove from parent system(s)
+  void removeFromSystems();
 
   //@}
   /** @name Other */

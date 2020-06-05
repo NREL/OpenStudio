@@ -42,6 +42,9 @@
   // ignore generator objects for now, add back in with partial classes in ModelGenerators.i
   %ignore openstudio::model::PlanarSurface::generatorPhotovoltaics;
 
+  // Overload resolution: prefer std::string over char const *
+  %ignore openstudio::model::BuildingUnit::setFeature(std::string const&, char const*);
+
   // DLM: this is a proof of concept section to see how attributes work in C#
   %include <attribute.i>
 
@@ -167,6 +170,7 @@ MODELOBJECT_TEMPLATES(ShadingSurfaceGroup);
 MODELOBJECT_TEMPLATES(ShadingSurface);
 MODELOBJECT_TEMPLATES(InteriorPartitionSurfaceGroup);
 MODELOBJECT_TEMPLATES(InteriorPartitionSurface);
+MODELOBJECT_TEMPLATES(SurfaceControlMovableInsulation);
 MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideCoefficients);
 MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideConditionsModel);
 MODELOBJECT_TEMPLATES(SurfacePropertyConvectionCoefficients);
@@ -217,6 +221,7 @@ SWIG_MODELOBJECT(ShadingSurfaceGroup, 1);
 SWIG_MODELOBJECT(ShadingSurface, 1);
 SWIG_MODELOBJECT(InteriorPartitionSurfaceGroup, 1);
 SWIG_MODELOBJECT(InteriorPartitionSurface, 1);
+SWIG_MODELOBJECT(SurfaceControlMovableInsulation, 1);
 SWIG_MODELOBJECT(SurfacePropertyOtherSideCoefficients, 1);
 SWIG_MODELOBJECT(SurfacePropertyOtherSideConditionsModel, 1);
 SWIG_MODELOBJECT(SurfacePropertyConvectionCoefficients, 1);

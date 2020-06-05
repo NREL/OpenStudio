@@ -80,7 +80,7 @@ namespace detail {
 
   const std::vector<std::string>& ElectricLoadCenterTransformer_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Transformer Efficiency",
       "Transformer Input Electric Power",
       "Transformer Input Electric Energy",

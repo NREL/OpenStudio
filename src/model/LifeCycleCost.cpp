@@ -500,7 +500,7 @@ boost::optional<int>  LifeCycleCost_Impl::costedThermalZones() const
 // Get all output variable names that could be associated with this object.
 const std::vector<std::string>& LifeCycleCost_Impl::outputVariableNames() const
 {
-  static std::vector<std::string> result;
+  static const std::vector<std::string> result;
     // Not appropriate: no specific variables
   return result;
 }

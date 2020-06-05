@@ -127,7 +127,7 @@ namespace detail {
     // Relies on utilties/StandardsJSON since it's used in several places
     // Here we store a Json::Value rather than the StandardsJSON because we only care about the "space_types" primaryKey
     // Not the whole StandardsJSON
-    const static Json::Value standardsArr{parseStandardsJSON()};
+    static const Json::Value standardsArr{parseStandardsJSON()};
     return standardsArr;
   }
 
@@ -153,7 +153,7 @@ namespace detail {
 
   const std::vector<std::string>& SpaceType_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 

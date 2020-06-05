@@ -114,6 +114,10 @@ class UTILITIES_API VersionString {
  public:
   explicit VersionString(const std::string& version);
 
+  // Default constructor, assumes the current OpenStudio::openStudioLongVersion is passed
+  // For use in std::pair<VersionString, std::string> otherwise C# complains
+  VersionString();
+
   VersionString(int major,int minor);
 
   VersionString(int major,int minor,int patch);
@@ -161,6 +165,7 @@ class UTILITIES_API VersionString {
   bool isNextVersion(const VersionString& nextVersionCandidate) const;
 
  private:
+  bool parseVersionString(const std::string& str);
   std::string m_str;
   int m_major;
   int m_minor;

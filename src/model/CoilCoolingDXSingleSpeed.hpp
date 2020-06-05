@@ -224,6 +224,8 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
   /** \deprecated */
   boost::optional<Schedule> getBasinHeaterOperatingSchedule() const;
 
+  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -333,6 +335,7 @@ class MODEL_API CoilCoolingDXSingleSpeed : public StraightComponent {
 
   void resetBasinHeaterOperatingSchedule();
 
+  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
   boost::optional<double> ratedTotalCoolingCapacity() const;
 

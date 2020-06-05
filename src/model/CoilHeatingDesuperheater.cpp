@@ -83,7 +83,7 @@ namespace detail {
 
   const std::vector<std::string>& CoilHeatingDesuperheater_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Heating Coil Rate",
       "Heating Coil Energy",
       "Heating Coil Electric Power",

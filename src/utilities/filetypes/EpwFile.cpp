@@ -35,8 +35,6 @@
 #include "../core/StringHelpers.hpp"
 #include "../core/Assert.hpp"
 
-#define FMT_HEADER_ONLY
-
 #include <fmt/format.h>
 
 namespace openstudio{

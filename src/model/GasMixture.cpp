@@ -217,7 +217,7 @@ namespace detail {
 
   const std::vector<std::string>& GasMixture_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 
@@ -642,12 +642,9 @@ IddObjectType GasMixture::iddObjectType() {
 }
 
 std::vector<std::string> GasMixture::validGasTypes() {
-  static StringVector result;
-  if (result.empty()) {
-    result = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+  static const StringVector result = getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                             OS_WindowMaterial_GasMixtureFields::Gas1Type);
-    OS_ASSERT(!result.empty());
-  }
+  OS_ASSERT(!result.empty());
   return result;
 }
 

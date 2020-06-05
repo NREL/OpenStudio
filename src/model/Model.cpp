@@ -3124,7 +3124,8 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(SteamEquipmentDefinition);
   REGISTER_CONSTRUCTOR(SubSurface);
   REGISTER_CONSTRUCTOR(Surface);
-  REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficients)
+  REGISTER_CONSTRUCTOR(SurfaceControlMovableInsulation);
+  REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficients);
   REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficientsMultipleSurface);
   REGISTER_CONSTRUCTOR(SurfacePropertyExposedFoundationPerimeter);
   REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
@@ -3617,6 +3618,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(SteamEquipmentDefinition);
   REGISTER_COPYCONSTRUCTORS(SubSurface);
   REGISTER_COPYCONSTRUCTORS(Surface);
+  REGISTER_COPYCONSTRUCTORS(SurfaceControlMovableInsulation);
   REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficients);
   REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficientsMultipleSurface);
   REGISTER_COPYCONSTRUCTORS(SurfacePropertyExposedFoundationPerimeter);

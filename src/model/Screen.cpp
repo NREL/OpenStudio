@@ -68,7 +68,7 @@ namespace detail {
 
   const std::vector<std::string>& Screen_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
+    static const std::vector<std::string> result;
     return result;
   }
 

@@ -238,9 +238,9 @@
 namespace openstudio {
 namespace sdd {
 
-const double footToMeter =  0.3048;
-const double cpWater = 4180.0;
-const double densityWater = 1000.0;
+constexpr double footToMeter =  0.3048;
+constexpr double cpWater = 4180.0;
+constexpr double densityWater = 1000.0;
 
 // Adjust scheduleDay by delaying the start and stop by the respective offset
 // This is used by the OA Controller ventilation schedule
@@ -4990,17 +4990,17 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
     pugi::xml_node minAirFracSchRefElement = trmlUnitElement.child("MinAirFracSchRef");
     if( boost::optional<model::Schedule> minAirFracSch = model.getModelObjectByName<model::Schedule>(minAirFracSchRefElement.text().as_string()) )
     {
-      terminal.setZoneMinimumAirFlowMethod("Scheduled");
+      terminal.setZoneMinimumAirFlowInputMethod("Scheduled");
       terminal.setMinimumAirFlowFractionSchedule(minAirFracSch.get());
     }
     else if( primaryAirFlowMin )
     {
-      terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
+      terminal.setZoneMinimumAirFlowInputMethod("FixedFlowRate");
       terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
     }
     else
     {
-      terminal.setZoneMinimumAirFlowMethod("Constant");
+      terminal.setZoneMinimumAirFlowInputMethod("Constant");
       terminal.setConstantMinimumAirFlowFraction(0.2);
     }
 

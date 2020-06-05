@@ -44,6 +44,8 @@
 #include "RefrigerationWalkIn_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -83,7 +85,7 @@ namespace detail {
 
   const std::vector<std::string>& RefrigerationSecondarySystem_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       // TODO: implement checks
       // FOR SECONDARY SYSTEMS SERVING CASES AND/OR WALKINS:
       "Refrigeration Secondary Loop Pump Electric Power",
@@ -121,6 +123,9 @@ namespace detail {
   std::vector<IdfObject> RefrigerationSecondarySystem_Impl::remove()
   {
     std::vector<IdfObject> result;
+
+    // Remove from ModelObjectList in RefrigerationSystem(s) if needed
+    this->removeFromSystems();
 
     if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
       std::vector<IdfObject> removedCasesAndWalkins = caseAndWalkinList->remove();
@@ -708,6 +713,29 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  std::vector<RefrigerationSystem> RefrigerationSecondarySystem_Impl::systems() const {
+    std::vector<RefrigerationSystem> result;
+
+    RefrigerationSecondarySystem refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
+    for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
+      RefrigerationSecondarySystemVector refrigerationSecondarySystems = refrigerationSystem.secondarySystemLoads();
+      if ( !refrigerationSecondarySystems.empty() && std::find(refrigerationSecondarySystems.begin(), refrigerationSecondarySystems.end(), refrigerationSecondarySystem) != refrigerationSecondarySystems.end() ) {
+        result.push_back(refrigerationSystem);
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  void RefrigerationSecondarySystem_Impl::removeFromSystems() {
+    RefrigerationSecondarySystem refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
+
+    for (RefrigerationSystem& refrigerationSystem: this->systems()) {
+      refrigerationSystem.removeSecondarySystemLoad(refrigerationSecondarySystem);
+    }
+  }
+
 } // detail
 
 RefrigerationSecondarySystem::RefrigerationSecondarySystem(const Model& model)
@@ -1075,6 +1103,14 @@ bool RefrigerationSecondarySystem::setEndUseSubcategory(std::string endUseSubcat
 
 void RefrigerationSecondarySystem::resetEndUseSubcategory() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetEndUseSubcategory();
+}
+
+std::vector<RefrigerationSystem> RefrigerationSecondarySystem::systems() const {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->systems();
+}
+
+void RefrigerationSecondarySystem::removeFromSystems() {
+  getImpl<detail::RefrigerationSecondarySystem_Impl>()->removeFromSystems();
 }
 
 /// @cond

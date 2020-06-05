@@ -94,7 +94,7 @@ namespace detail {
 
   const std::vector<std::string>& GeneratorFuelCell_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Generator Produced Electric Power",
       "Generator Produced Electric Energy",
       "Generator Produced Thermal Rate",

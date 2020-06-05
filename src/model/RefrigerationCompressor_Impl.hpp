@@ -36,6 +36,7 @@
 namespace openstudio {
 namespace model {
 
+class RefrigerationSystem;
 class CurveBicubic;
 
 namespace detail {
@@ -70,6 +71,8 @@ namespace detail {
 
     virtual ModelObject clone(Model model) const override;
 
+    virtual std::vector<IdfObject> remove() override;
+
     virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
     virtual std::vector<ModelObject> children() const override;
@@ -101,6 +104,12 @@ namespace detail {
     boost::optional<CurveBicubic> transcriticalCompressorPowerCurve() const;
 
     boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
+
+    // There isn't any unicity enforced, so a compressor can be listed multiple times on a single system, or on several system
+    // Additionally, a compressor can be either listed on the CompressorList or the High Stage Compressor List
+    // Returns systems this is listed on, either as compressor or high stage compressor
+    std::vector<RefrigerationSystem> systems() const;
+
 
     //@}
     /** @name Setters */
@@ -141,6 +150,8 @@ namespace detail {
     bool setTranscriticalCompressorCapacityCurve(const boost::optional<CurveBicubic>& curveBicubic);
 
     void resetTranscriticalCompressorCapacityCurve();
+
+    void removeFromSystems();
 
     //@}
     /** @name Other */

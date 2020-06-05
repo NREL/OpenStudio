@@ -87,7 +87,7 @@ namespace detail {
 
   const std::vector<std::string>& CoilHeatingElectric_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Heating Coil Air Heating Energy",
       "Heating Coil Air Heating Rate",
       "Heating Coil Electric Energy",

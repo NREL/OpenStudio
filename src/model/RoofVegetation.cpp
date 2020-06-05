@@ -234,7 +234,7 @@ namespace detail {
 
   const std::vector<std::string>& RoofVegetation_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Green Roof Soil Temperature",
       "Green Roof Vegetation Temperature",
       "Green Roof Soil Root Moisture Ratio",

@@ -66,6 +66,10 @@
   %ignore openstudio::model::EnergyManagementSystemCurveOrTableIndexVariable::setCurveOrTableObject;
   // getter curveOrTableObject doesn't need to be ignored and reimplemented because it returns a ModelObject
 
+  // Overload resolution: prefer std::string over char const *
+  %ignore openstudio::model::AdditionalProperties::setFeature(std::string const&, char const*);
+
+
   // should be able to do something here as C# supports partial classes
   // http://www.swig.org/Doc1.3/CSharp.html#csharp_extending_proxy_class
   %typemap(csclassmodifiers) openstudio::model::Model "public partial class"
@@ -158,8 +162,6 @@ class Construction;
 %template(ModelObjectSet) std::set<openstudio::model::ModelObject>;
 %template(OptionalModelObject)boost::optional<openstudio::model::ModelObject>;
 %template(getModelObjectHandles) openstudio::getHandles<openstudio::model::ModelObject>;
-%template(ScheduleTypeKey) std::pair<std::string,std::string>;
-%template(ScheduleTypeKeyVector) std::vector< std::pair<std::string,std::string> >;
 
 // include initial objects
 %include <model/ModelObject.hpp>
@@ -213,6 +215,7 @@ namespace model {
 };
 
 //MODELOBJECT_TEMPLATES(ModelObject); // swig preprocessor did not seem to see these for other objects so these are defined above
+MODELOBJECT_TEMPLATES(ScheduleTypeKey);
 MODELOBJECT_TEMPLATES(EMSActuatorNames);
 MODELEXTENSIBLEGROUP_TEMPLATES(ModelExtensibleGroup);
 MODELOBJECT_TEMPLATES(ParentObject);

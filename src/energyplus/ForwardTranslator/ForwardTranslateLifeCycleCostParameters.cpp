@@ -135,10 +135,7 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCostParameters( 
       sector = "Commercial";
     }
 
-    static boost::optional<IdfFile> usePriceEscalationFile;
-    if (!usePriceEscalationFile){
-     usePriceEscalationFile = findIdfFile(":/Resources/LCCusePriceEscalationDataSet2011.idf");
-    }
+    static const boost::optional<IdfFile> usePriceEscalationFile = findIdfFile(":/Resources/LCCusePriceEscalationDataSet2011.idf");
     OS_ASSERT(usePriceEscalationFile);
 
     for (IdfObject object : usePriceEscalationFile->objects()){

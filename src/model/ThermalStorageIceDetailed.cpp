@@ -77,7 +77,7 @@ namespace detail {
 
   const std::vector<std::string>& ThermalStorageIceDetailed_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result{
+    static const std::vector<std::string> result{
       "Ice Thermal Storage Cooling Rate",
       "Ice Thermal Storage Change Fraction",
       "Ice Thermal Storage End Fraction",
