@@ -80,9 +80,21 @@ namespace detail {
 
   const std::vector<std::string>& CoilCoolingDX_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-    }
+    static const std::vector<std::string> result{
+      "Cooling Coil Total Cooling Rate",
+      "Cooling Coil Total Cooling Energy",
+      "Cooling Coil Sensible Cooling Rate",
+      "Cooling Coil Sensible Cooling Energy",
+      "Cooling Coil Latent Cooling Rate",
+      "Cooling Coil Latent Cooling Energy",
+      "Cooling Coil Electric Power",
+      "Cooling Coil Electric Energy",
+      "Cooling Coil Runtime Fraction",
+      "SubcoolReheat Cooling Coil Operation Mode",
+      "SubcoolReheat Cooling Coil Operation Mode Ratio",
+      "SubcoolReheat Cooling Coil Recovered Heat Energy Rate",
+      "SubcoolReheat Cooling Coil Recovered Heat Energy"
+    };
     return result;
   }
 
