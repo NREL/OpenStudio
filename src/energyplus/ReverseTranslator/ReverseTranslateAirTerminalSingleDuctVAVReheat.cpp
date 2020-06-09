@@ -119,7 +119,7 @@ OptionalModelObject ReverseTranslator::translateAirTerminalSingleDuctVAVReheat( 
     s = workspaceObject.getString(AirTerminal_SingleDuct_VAV_ReheatFields::ZoneMinimumAirFlowInputMethod);
     if( s )
     {
-      airTerminal->setZoneMinimumAirFlowMethod(s.get());
+      airTerminal->setZoneMinimumAirFlowInputMethod(s.get());
     }
 
     // ConstantMinimumAirFlowFraction
