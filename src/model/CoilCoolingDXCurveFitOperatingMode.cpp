@@ -411,8 +411,8 @@ namespace detail {
 
   bool CoilCoolingDXCurveFitOperatingMode_Impl::removeSpeed(unsigned index) {
     bool result = false;
-    if ((index > 0) && (index < numberOfSpeeds())) {
-      getObject<ModelObject>().eraseExtensibleGroup(index);
+    if ((index > 0) && (index <= numberOfSpeeds())) {
+      getObject<ModelObject>().eraseExtensibleGroup(index-1);
       result = true;
     }
     return result;

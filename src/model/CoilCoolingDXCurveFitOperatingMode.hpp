@@ -152,8 +152,8 @@ class MODEL_API CoilCoolingDXCurveFitOperatingMode : public ResourceObject {
 
   /*
    * You can shuffle the priority of a given CoilCoolingDXCurveFitSpeed after having added it
-   * If priority is below 1, it's reset to 1.
-   * If priority is greater than the number of speeds, will reset to last
+   * If index is below 1, it's reset to 1.
+   * If index is greater than the number of speeds, will reset to last
    */
   bool setSpeedIndex(const CoilCoolingDXCurveFitSpeed& speed, unsigned index);
 
@@ -176,7 +176,7 @@ class MODEL_API CoilCoolingDXCurveFitOperatingMode : public ResourceObject {
   bool removeSpeed(const CoilCoolingDXCurveFitSpeed& speed);
 
   /*
-   * Remove the CoilCoolingDXCurveFitSpeed at the given priority
+   * Remove the CoilCoolingDXCurveFitSpeed at the given index (1-indexed)
    */
   bool removeSpeed(unsigned index);
 
