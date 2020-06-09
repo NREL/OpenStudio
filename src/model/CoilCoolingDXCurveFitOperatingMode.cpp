@@ -419,17 +419,18 @@ namespace detail {
   }
 
   boost::optional<double> CoilCoolingDXCurveFitOperatingMode_Impl::autosizedRatedGrossTotalCoolingCapacity() {
-    return getAutosizedValue("TODO_CHECK_SQL Rated Gross Total Cooling Capacity", "W");
+    return getAutosizedValue("Design Size Rated Gross Total Cooling Capacity", "W");
   }
 
   boost::optional<double> CoilCoolingDXCurveFitOperatingMode_Impl::autosizedRatedEvaporatorAirFlowRate() {
-    return getAutosizedValue("TODO_CHECK_SQL Rated Evaporator Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Rated Evaporator Air Flow Rate", "m3/s");
   }
 
   boost::optional<double> CoilCoolingDXCurveFitOperatingMode_Impl::autosizedRatedCondenserAirFlowRate() {
-    return getAutosizedValue("TODO_CHECK_SQL Rated Condenser Air Flow Rate", "m3/s");
+    return getAutosizedValue("Design Size Rated Condenser Air Flow Rate", "m3/s");
   }
 
+  // Pending https://github.com/NREL/EnergyPlus/issues/8066 the SQL won't have this field.
   boost::optional<double> CoilCoolingDXCurveFitOperatingMode_Impl::autosizedNominalEvaporativeCondenserPumpPower() {
     return getAutosizedValue("TODO_CHECK_SQL Nominal Evaporative Condenser Pump Power", "W");
   }

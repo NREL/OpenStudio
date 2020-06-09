@@ -372,7 +372,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilCoolingDXCurveFitSpeed_Impl::autosizedGrossSensibleHeatRatio() const {
-    return getAutosizedValue("TODO_CHECK_SQL Gross Sensible Heat Ratio", "");
+    return getAutosizedValue("Design Size Gross Sensible Heat Ratio", "");
   }
 
   void CoilCoolingDXCurveFitSpeed_Impl::autosize() {
