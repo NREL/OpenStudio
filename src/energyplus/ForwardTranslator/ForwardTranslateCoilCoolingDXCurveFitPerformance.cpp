@@ -97,13 +97,17 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitPerf
   // AlternativeOperatingMode1
   boost::optional<CoilCoolingDXCurveFitOperatingMode> alternativeOperatingMode1 = modelObject.alternativeOperatingMode1();
   if (alternativeOperatingMode1) {
-    idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1, alternativeOperatingMode1.get().name().get());
+    if (boost::optional<IdfObject> _opMode = translateAndMapModelObject(alternativeOperatingMode1.get())) {
+      idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1, _opMode->nameString());
+    }
   }
 
   // AlternativeOperatingMode2
   boost::optional<CoilCoolingDXCurveFitOperatingMode> alternativeOperatingMode2 = modelObject.alternativeOperatingMode2();
   if (alternativeOperatingMode2) {
-    idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2, alternativeOperatingMode2.get().name().get());
+    if (boost::optional<IdfObject> _opMode = translateAndMapModelObject(alternativeOperatingMode2.get())) {
+      idfObject.setString(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2, _opMode->nameString());
+    }
   }
 
   return boost::optional<IdfObject>(idfObject);
