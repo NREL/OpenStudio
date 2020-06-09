@@ -154,7 +154,7 @@ namespace detail {
   }
 
   boost::optional<Schedule> CoilCoolingDX_Impl::optionalAvailabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_DXFields::AvailabilityScheduleName);
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_DXFields::AvailabilitySchedule);
   }
 
   Schedule CoilCoolingDX_Impl::availabilitySchedule()  const

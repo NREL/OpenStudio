@@ -314,7 +314,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilCoolingDXCurveFitOperatingMode_Impl::addSpeed(CoilCoolingDXCurveFitSpeed& speed) {
+  void CoilCoolingDXCurveFitOperatingMode_Impl::addSpeed(const CoilCoolingDXCurveFitSpeed& speed) {
     auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     OS_ASSERT(!group.empty());
     group.setPointer(OS_Coil_Cooling_DX_CurveFit_OperatingModeExtensibleFields::Speed,speed.handle());
@@ -531,7 +531,7 @@ void CoilCoolingDXCurveFitOperatingMode::resetNominalSpeedNumber() {
   getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->resetNominalSpeedNumber();
 }
 
-void CoilCoolingDXCurveFitOperatingMode::addSpeed(CoilCoolingDXCurveFitSpeed& speed) {
+void CoilCoolingDXCurveFitOperatingMode::addSpeed(const CoilCoolingDXCurveFitSpeed& speed) {
   return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->addSpeed(speed);
 }
 

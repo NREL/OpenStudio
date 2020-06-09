@@ -134,7 +134,7 @@ class MODEL_API CoilCoolingDXCurveFitOperatingMode : public ResourceObject {
   bool setNominalSpeedNumber(unsigned nominalSpeedNumber);
   void resetNominalSpeedNumber();
 
-  void addSpeed(CoilCoolingDXCurveFitSpeed& speed);
+  void addSpeed(const CoilCoolingDXCurveFitSpeed& speed);
 
   //@}
   /** @name Other */

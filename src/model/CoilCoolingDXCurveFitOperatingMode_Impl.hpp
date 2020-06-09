@@ -142,7 +142,7 @@ namespace detail {
     bool setNominalSpeedNumber(unsigned nominalSpeedNumber);
     void resetNominalSpeedNumber();
 
-    void addSpeed(CoilCoolingDXCurveFitSpeed& speed);
+    void addSpeed(const CoilCoolingDXCurveFitSpeed& speed);
 
 
     // TODO: ADD removeSpeed, setSpeeds,etc
