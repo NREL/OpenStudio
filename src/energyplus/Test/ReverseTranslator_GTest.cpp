@@ -1387,16 +1387,15 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDX) {
   ASSERT_EQ(1u, performances.size());
   CoilCoolingDXCurveFitPerformance performance = performances[0];
   EXPECT_EQ(operatingMode, performance.baseOperatingMode());
-  ASSERT_FALSE(performance.alternativeOperatingMode1());
-  ASSERT_FALSE(performance.alternativeOperatingMode2());
+  EXPECT_FALSE(performance.alternativeOperatingMode1());
+  EXPECT_FALSE(performance.alternativeOperatingMode2());
   EXPECT_EQ(1u, performance.coilCoolingDXs().size());
 
   std::vector<CoilCoolingDX> dxs = model.getModelObjects<CoilCoolingDX>();
   ASSERT_EQ(1u, dxs.size());
   CoilCoolingDX dx = dxs[0];
   EXPECT_EQ(performance, dx.performanceObject());
-  ASSERT_FALSE(dx.availabilitySchedule());
-  ASSERT_FALSE(dx.condenserZone());
+  EXPECT_FALSE(dx.condenserZone());
 
   std::vector<Schedule> schedules = model.getModelObjects<Schedule>();
   ASSERT_EQ(1u, schedules.size());
