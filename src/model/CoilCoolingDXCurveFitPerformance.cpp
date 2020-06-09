@@ -305,9 +305,17 @@ std::vector<std::string> CoilCoolingDXCurveFitPerformance::capacityControlMethod
                         OS_Coil_Cooling_DX_CurveFit_PerformanceFields::CapacityControlMethod);
 }
 
+std::vector<std::string> CoilCoolingDXCurveFitPerformance::validCapacityControlMethodValues() {
+  return capacityControlMethodValues();
+}
+
 std::vector<std::string> CoilCoolingDXCurveFitPerformance::compressorFuelTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_Coil_Cooling_DX_CurveFit_PerformanceFields::CompressorFuelType);
+}
+
+std::vector<std::string> CoilCoolingDXCurveFitPerformance::validCompressorFuelTypeValues() {
+  return compressorFuelTypeValues();
 }
 
 double CoilCoolingDXCurveFitPerformance::crankcaseHeaterCapacity() const {

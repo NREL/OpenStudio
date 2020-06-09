@@ -66,6 +66,10 @@ class MODEL_API CoilCoolingDXCurveFitPerformance : public ResourceObject {
 
   static std::vector<std::string> compressorFuelTypeValues();
 
+  static std::vector<std::string> validCapacityControlMethodValues();
+
+  static std::vector<std::string> validCompressorFuelTypeValues();
+
   /** @name Getters */
   //@{
 
