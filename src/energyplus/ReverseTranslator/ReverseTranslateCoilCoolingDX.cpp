@@ -82,17 +82,21 @@ OptionalModelObject ReverseTranslator::translateCoilCoolingDX( const WorkspaceOb
     dx.setName(*s);
   }
 
-  if(target = workspaceObject.getTarget(openstudio::Coil_Cooling_DXFields::AvailabilityScheduleName)){
+  if((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DXFields::AvailabilityScheduleName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject && modelObject->optionalCast<Schedule>()){
-      dx.setAvailabilitySchedule(modelObject->cast<Schedule>());
+    if (modelObject) {
+      if (auto optSch = modelObject->optionalCast<Schedule>()) {
+        dx.setAvailabilitySchedule(optSch.get());
+      }
     }
   }
 
-  if(target = workspaceObject.getTarget(openstudio::Coil_Cooling_DXFields::CondenserZoneName)){
+  if((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DXFields::CondenserZoneName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject && modelObject->optionalCast<ThermalZone>()){
-      dx.setCondenserZone(modelObject->cast<ThermalZone>());
+    if (modelObject) {
+      if (auto optZ = modelObject->optionalCast<ThermalZone>()) {
+        dx.setCondenserZone(optZ.get());
+      }
     }
   }
 

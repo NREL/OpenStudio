@@ -58,73 +58,61 @@ OptionalModelObject ReverseTranslator::translateCoilCoolingDXCurveFitSpeed( cons
   OptionalDouble d;
   OptionalWorkspaceObject target;
 
-  boost::optional<Curve> totalCoolingCapacityModifierFunctionofTemperatureCurve;
+  openstudio::model::CoilCoolingDXCurveFitSpeed speed(m_model);
+
   if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Curve>()){
-        totalCoolingCapacityModifierFunctionofTemperatureCurve = modelObject->cast<Curve>();
+      if (auto optCurve = modelObject->optionalCast<Curve>()) {
+        speed.setTotalCoolingCapacityModifierFunctionofTemperatureCurve(optCurve.get());
       }
     }
   }
 
-  boost::optional<Curve> totalCoolingCapacityModifierFunctionofAirFlowFractionCurve;
   if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Curve>()){
-        totalCoolingCapacityModifierFunctionofAirFlowFractionCurve = modelObject->cast<Curve>();
+      if (auto optCurve = modelObject->optionalCast<Curve>()){
+        speed.setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(optCurve.get());
       }
     }
   }
 
-  boost::optional<Curve> energyInputRatioModifierFunctionofTemperatureCurve;
   if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Curve>()){
-        energyInputRatioModifierFunctionofTemperatureCurve = modelObject->cast<Curve>();
+      if (auto optCurve = modelObject->optionalCast<Curve>()){
+        speed.setEnergyInputRatioModifierFunctionofTemperatureCurve(optCurve.get());
       }
     }
   }
 
-  boost::optional<Curve> energyInputRatioModifierFunctionofAirFlowFractionCurve;
   if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Curve>()){
-        energyInputRatioModifierFunctionofAirFlowFractionCurve = modelObject->cast<Curve>();
+      if (auto optCurve = modelObject->optionalCast<Curve>()){
+        speed.setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(optCurve.get());
       }
     }
   }
 
-  boost::optional<Curve> partLoadFractionCorrelationCurve;
   if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurveName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Curve>()){
-        partLoadFractionCorrelationCurve = modelObject->cast<Curve>();
+      if (auto optCurve = modelObject->optionalCast<Curve>()){
+        speed.setPartLoadFractionCorrelationCurve(optCurve.get());
       }
     }
   }
 
-  boost::optional<Curve> wasteHeatModifierFunctionofTemperatureCurve;
   if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_SpeedFields::WasteHeatModifierFunctionofTemperatureCurveName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
-      if (modelObject->optionalCast<Curve>()){
-        wasteHeatModifierFunctionofTemperatureCurve = modelObject->cast<Curve>();
+      if (auto optCurve = modelObject->optionalCast<Curve>()){
+        speed.setWasteHeatModifierFunctionofTemperatureCurve(optCurve.get());
       }
     }
   }
-
-  openstudio::model::CoilCoolingDXCurveFitSpeed speed(m_model,
-                                                      *totalCoolingCapacityModifierFunctionofTemperatureCurve,
-                                                      *totalCoolingCapacityModifierFunctionofAirFlowFractionCurve,
-                                                      *energyInputRatioModifierFunctionofTemperatureCurve,
-                                                      *energyInputRatioModifierFunctionofAirFlowFractionCurve,
-                                                      *partLoadFractionCorrelationCurve,
-                                                      *wasteHeatModifierFunctionofTemperatureCurve);
 
   s = workspaceObject.name();
   if(s){
@@ -183,14 +171,14 @@ OptionalModelObject ReverseTranslator::translateCoilCoolingDXCurveFitSpeed( cons
     speed.setRatedWasteHeatFractionofPowerInput(*d);
   }
 
-  if(target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurveName)){
+  if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurveName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject && modelObject->optionalCast<Curve>()){
       speed.setSensibleHeatRatioModifierFunctionofTemperatureCurve(modelObject->cast<Curve>());
     }
   }
 
-  if(target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurveName)){
+  if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurveName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject && modelObject->optionalCast<Curve>()){
       speed.setSensibleHeatRatioModifierFunctionofFlowFractionCurve(modelObject->cast<Curve>());

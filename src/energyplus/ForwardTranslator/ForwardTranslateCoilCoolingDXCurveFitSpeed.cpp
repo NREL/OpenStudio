@@ -90,41 +90,36 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitSpee
   idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserEffectiveness, modelObject.evaporativeCondenserEffectiveness());
 
   // TotalCoolingCapacityModifierFunctionofTemperatureCurveName
-  {
-    auto curve = modelObject.totalCoolingCapacityModifierFunctionofTemperatureCurve();
-    if(auto _curve = translateAndMapModelObject(curve)) {
+  if (auto optCurve = modelObject.totalCoolingCapacityModifierFunctionofTemperatureCurve()) {
+    if(auto _curve = translateAndMapModelObject(optCurve.get())) {
       idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofTemperatureCurveName, _curve->name().get());
     }
   }
 
   // TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName
-  {
-    auto curve = modelObject.totalCoolingCapacityModifierFunctionofAirFlowFractionCurve();
-    if(auto _curve = translateAndMapModelObject(curve)) {
+  if (auto optCurve = modelObject.totalCoolingCapacityModifierFunctionofAirFlowFractionCurve()) {
+    if(auto _curve = translateAndMapModelObject(optCurve.get())) {
       idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::TotalCoolingCapacityModifierFunctionofAirFlowFractionCurveName, _curve->name().get());
     }
   }
 
   // EnergyInputRatioModifierFunctionofTemperatureCurveName
-  {
-    auto curve = modelObject.energyInputRatioModifierFunctionofTemperatureCurve();
-    if(auto _curve = translateAndMapModelObject(curve)) {
+  if (auto optCurve = modelObject.energyInputRatioModifierFunctionofTemperatureCurve()) {
+    if(auto _curve = translateAndMapModelObject(optCurve.get())) {
       idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofTemperatureCurveName, _curve->name().get());
     }
   }
 
   // EnergyInputRatioModifierFunctionofAirFlowFractionCurveName
-  {
-    auto curve = modelObject.energyInputRatioModifierFunctionofAirFlowFractionCurve();
-    if(auto _curve = translateAndMapModelObject(curve)) {
+  if (auto optCurve = modelObject.energyInputRatioModifierFunctionofAirFlowFractionCurve()) {
+    if(auto _curve = translateAndMapModelObject(optCurve.get())) {
       idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::EnergyInputRatioModifierFunctionofAirFlowFractionCurveName, _curve->name().get());
     }
   }
 
   // PartLoadFractionCorrelationCurveName
-  {
-    auto curve = modelObject.partLoadFractionCorrelationCurve();
-    if(auto _curve = translateAndMapModelObject(curve)) {
+  if (auto optCurve = modelObject.partLoadFractionCorrelationCurve()) {
+    if(auto _curve = translateAndMapModelObject(optCurve.get())) {
       idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::PartLoadFractionCorrelationCurveName, _curve->name().get());
     }
   }
@@ -140,22 +135,16 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitSpee
   idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedWasteHeatFractionofPowerInput, modelObject.ratedWasteHeatFractionofPowerInput());
 
   // SensibleHeatRatioModifierFunctionofTemperatureCurveName
-  {
-    boost::optional<Curve> curve = modelObject.sensibleHeatRatioModifierFunctionofTemperatureCurve();
-    if (curve) {
-      if(auto _curve = translateAndMapModelObject(*curve)) {
-        idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurveName, _curve->name().get());
-      }
+  if (auto optCurve = modelObject.sensibleHeatRatioModifierFunctionofTemperatureCurve()) {
+    if(auto _curve = translateAndMapModelObject(optCurve.get())) {
+      idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofTemperatureCurveName, _curve->name().get());
     }
   }
 
   // SensibleHeatRatioModifierFunctionofFlowFractionCurveName
-  {
-    boost::optional<Curve> curve = modelObject.sensibleHeatRatioModifierFunctionofFlowFractionCurve();
-    if (curve) {
-      if(auto _curve = translateAndMapModelObject(*curve)) {
-        idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurveName, _curve->name().get());
-      }
+  if (auto optCurve = modelObject.sensibleHeatRatioModifierFunctionofFlowFractionCurve()) {
+    if(auto _curve = translateAndMapModelObject(optCurve.get())) {
+      idfObject.setString(Coil_Cooling_DX_CurveFit_SpeedFields::SensibleHeatRatioModifierFunctionofFlowFractionCurveName, _curve->name().get());
     }
   }
 
