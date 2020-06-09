@@ -77,12 +77,12 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitSpeed_CoilCoolingDXCurveFitSpeed) {
   EXPECT_EQ(773.3, speed.ratedEvaporatorFanPowerPerVolumeFlowRate());
   EXPECT_EQ(1.0, speed.evaporativeCondenserPumpPowerFraction());
   EXPECT_EQ(0.9, speed.evaporativeCondenserEffectiveness());
-  ASSERT_TRUE(speed.totalCoolingCapacityModifierFunctionofTemperatureCurve().optionalCast<CurveBiquadratic>());
-  ASSERT_TRUE(speed.totalCoolingCapacityModifierFunctionofAirFlowFractionCurve().optionalCast<CurveQuadratic>());
-  ASSERT_TRUE(speed.energyInputRatioModifierFunctionofTemperatureCurve().optionalCast<CurveBiquadratic>());
-  ASSERT_TRUE(speed.energyInputRatioModifierFunctionofAirFlowFractionCurve().optionalCast<CurveQuadratic>());
-  ASSERT_TRUE(speed.partLoadFractionCorrelationCurve().optionalCast<CurveQuadratic>());
-  ASSERT_TRUE(speed.wasteHeatModifierFunctionofTemperatureCurve().optionalCast<CurveBiquadratic>());
+  EXPECT_FALSE(speed.totalCoolingCapacityModifierFunctionofTemperatureCurve());
+  EXPECT_FALSE(speed.totalCoolingCapacityModifierFunctionofAirFlowFractionCurve());
+  EXPECT_FALSE(speed.energyInputRatioModifierFunctionofTemperatureCurve());
+  EXPECT_FALSE(speed.energyInputRatioModifierFunctionofAirFlowFractionCurve());
+  EXPECT_FALSE(speed.partLoadFractionCorrelationCurve());
+  EXPECT_FALSE(speed.wasteHeatModifierFunctionofTemperatureCurve());
   ASSERT_FALSE(speed.sensibleHeatRatioModifierFunctionofTemperatureCurve());
   ASSERT_FALSE(speed.sensibleHeatRatioModifierFunctionofFlowFractionCurve());
   EXPECT_EQ(0, speed.coilCoolingDXCurveFitOperatingModes().size());
