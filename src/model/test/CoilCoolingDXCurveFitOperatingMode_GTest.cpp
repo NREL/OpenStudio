@@ -90,3 +90,110 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_GettersSetters) {
 
   // TODO:
 }
+
+TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_Speeds) {
+
+  // create a model to use
+  Model model;
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+
+  std::vector<CoilCoolingDXCurveFitSpeed> speeds;
+  for (unsigned i = 1; i <= 10; ++i) {
+    CoilCoolingDXCurveFitSpeed speed(model);
+    operatingMode.setName("Speed " + std::to_string(i));
+    speeds.push_back(speed);
+    EXPECT_TRUE(operatingMode.addSpeed(speed));
+    EXPECT_EQ(i, operatingMode.numberOfSpeeds());
+    EXPECT_EQ(speeds, operatingMode.speeds());
+  }
+
+  // Can't add more than 10 Speeds;
+  CoilCoolingDXCurveFitSpeed anotherSpeed(model);
+  EXPECT_FALSE(operatingMode.addSpeed(anotherSpeed));
+  EXPECT_EQ(10, operatingMode.numberOfSpeeds());
+  EXPECT_EQ(speeds, operatingMode.speeds());
+
+  // Can't remove a speed that's not in there...
+  EXPECT_FALSE(operatingMode.removeSpeed(anotherSpeed));
+  EXPECT_EQ(10, operatingMode.numberOfSpeeds());
+  EXPECT_EQ(speeds, operatingMode.speeds());
+
+  {
+    int speedIndex = 6;
+    std::vector<CoilCoolingDXCurveFitSpeed> thisSpeeds = operatingMode.speeds();
+    const auto& speedAtIndex = thisSpeeds[speedIndex - 1];
+    EXPECT_TRUE(std::find(thisSpeeds.begin(), thisSpeeds.end(), speedAtIndex) != thisSpeeds.end());
+    auto optIndex = operatingMode.speedIndex(speedAtIndex);
+    ASSERT_TRUE(optIndex);
+    EXPECT_EQ(speedIndex, optIndex.get());
+    EXPECT_TRUE(operatingMode.removeSpeed(speedIndex));
+    EXPECT_EQ(9, operatingMode.numberOfSpeeds());
+    EXPECT_FALSE(std::find(thisSpeeds.begin(), thisSpeeds.end(), speedAtIndex) != thisSpeeds.end());
+    // Do the same on our vector, so we're up to date...
+    speeds.erase(speeds.begin() + speedIndex - 1);
+    EXPECT_EQ(speeds, operatingMode.speeds());
+  }
+
+  {
+    int speedIndex = 3;
+    std::vector<CoilCoolingDXCurveFitSpeed> thisSpeeds = operatingMode.speeds();
+    const auto& speedAtIndex = thisSpeeds[speedIndex - 1];
+    EXPECT_TRUE(std::find(thisSpeeds.begin(), thisSpeeds.end(), speedAtIndex) != thisSpeeds.end());
+    auto optIndex = operatingMode.speedIndex(speedAtIndex);
+    ASSERT_TRUE(optIndex);
+    EXPECT_EQ(speedIndex, optIndex.get());
+    EXPECT_TRUE(operatingMode.removeSpeed(speedAtIndex));
+    EXPECT_EQ(8, operatingMode.numberOfSpeeds());
+    EXPECT_FALSE(std::find(thisSpeeds.begin(), thisSpeeds.end(), speedAtIndex) != thisSpeeds.end());
+    // Do the same on our vector, so we're up to date...
+    speeds.erase(std::find(speeds.begin(), speeds.end(), speedAtIndex));
+    EXPECT_EQ(speeds, operatingMode.speeds());
+  }
+
+  {
+    const auto& speedAtEnd = speeds.back();
+    auto optIndex = operatingMode.speedIndex(speedAtEnd);
+    ASSERT_TRUE(optIndex);
+    EXPECT_EQ(operatingMode.numberOfSpeeds(), optIndex.get());
+
+    EXPECT_TRUE(operatingMode.setSpeedIndex(speedAtEnd, 4));
+    optIndex = operatingMode.speedIndex(speedAtEnd);
+    ASSERT_TRUE(optIndex);
+    EXPECT_EQ(4, optIndex.get());
+    EXPECT_EQ(8, operatingMode.numberOfSpeeds());
+    for (unsigned i = 0; i < 4; ++i) {
+      if (i < 4) {
+        EXPECT_EQ(speeds[i], operatingMode.speeds()[i]);
+      } else if (i > 4) {
+        EXPECT_EQ(speeds[i-1], operatingMode.speeds()[i]);
+      }
+    }
+  }
+
+  operatingMode.removeAllSpeeds();
+  EXPECT_EQ(0, operatingMode.numberOfSpeeds());
+
+  EXPECT_TRUE(operatingMode.setSpeeds(speeds));
+  EXPECT_EQ(8, operatingMode.numberOfSpeeds());
+  EXPECT_EQ(speeds, operatingMode.speeds());
+
+  for (unsigned i = 11; i <= 13; ++i) {
+    CoilCoolingDXCurveFitSpeed speed(model);
+    operatingMode.setName("Speed " + std::to_string(i));
+    speeds.push_back(speed);
+  }
+  EXPECT_EQ(11u, speeds.size());
+  operatingMode.removeAllSpeeds();
+  EXPECT_TRUE(operatingMode.addSpeed(anotherSpeed));
+
+  // This should clear, then assign the first 10, but then return false since the 11th failed
+  EXPECT_FALSE(operatingMode.setSpeeds(speeds));
+  EXPECT_EQ(10, operatingMode.numberOfSpeeds());
+  {
+    std::vector<CoilCoolingDXCurveFitSpeed> thisSpeeds = operatingMode.speeds();
+    for (unsigned i = 0; i < 10; ++i) {
+      EXPECT_EQ(speeds[i], thisSpeeds[i]);
+    }
+  }
+}
