@@ -42,6 +42,7 @@
 #include "../Schedule_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
+#include "../AirLoopHVACUnitarySystem.cpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -108,4 +109,19 @@ TEST_F(ModelFixture, CoilCoolingDX_GettersSetters) {
   CoilCoolingDX dx(model, performance);
 
   // TODO
+}
+
+TEST_F(ModelFixture, CoilCoolingDX_containingHVACComponent) {
+
+  Model model;
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+  CoilCoolingDX dx(model, performance);
+
+  AirLoopHVACUnitarySystem unitary(model);
+  EXPECT_TRUE(unitary.setCoolingCoil(dx));
+
+  ASSERT_TRUE(dx.containingHVACComponent());
+  EXPECT_EQ(unitary, dx.containingHVACComponent().get());
 }
