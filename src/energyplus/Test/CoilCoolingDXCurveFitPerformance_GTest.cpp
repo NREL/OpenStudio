@@ -34,9 +34,13 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
-#include "../../model/CoilCoolingDXCurveFitPerformance_Impl.hpp"
+
+#include "../../model/CoilCoolingDX.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVACUnitarySystem.hpp"
+#include "../../model/Node.hpp"
 #include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
-#include "../../model/CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
+#include "../../utilities/idd/IddObject.hpp"
 
 #include <utilities/idd/Coil_Cooling_DX_CurveFit_Performance_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -47,8 +51,17 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitPerformance) {
   Model m;
+
   CoilCoolingDXCurveFitOperatingMode operatingMode(m);
   CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
+  CoilCoolingDX dx(m, performance);
+
+  // put it inside a Unitary, and put Unitary on an AirLoopHVAC so it gets translated
+  AirLoopHVACUnitarySystem unitary(m);
+  unitary.setCoolingCoil(dx);
+  AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
@@ -61,7 +74,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitPerformance) {
   EXPECT_TRUE(woBaseOperatingMode);
   if (woBaseOperatingMode) {
     EXPECT_EQ(woBaseOperatingMode->iddObject().type(), IddObjectType::Coil_Cooling_DX_CurveFit_OperatingMode);
-  }  
+  }
   boost::optional<WorkspaceObject> woAlternativeOperatingMode1(idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1));
   EXPECT_FALSE(woAlternativeOperatingMode1);
   boost::optional<WorkspaceObject> woAlternativeOperatingMode2(idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2));

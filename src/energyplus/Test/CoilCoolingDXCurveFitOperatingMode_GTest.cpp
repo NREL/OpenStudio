@@ -34,7 +34,13 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
-#include "../../model/CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
+
+#include "../../model/CoilCoolingDXCurveFitSpeed.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
+#include "../../model/CoilCoolingDX.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVACUnitarySystem.hpp"
+#include "../../model/Node.hpp"
 
 #include <utilities/idd/Coil_Cooling_DX_CurveFit_OperatingMode_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -46,6 +52,21 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitOperatingMode) {
   Model m;
   CoilCoolingDXCurveFitOperatingMode operatingMode(m);
+  CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
+  CoilCoolingDX dx(m, performance);
+
+  CoilCoolingDXCurveFitSpeed speed1(m);
+  CoilCoolingDXCurveFitSpeed speed2(m);
+
+  // put it inside a Unitary, and put Unitary on an AirLoopHVAC so it gets translated
+  AirLoopHVACUnitarySystem unitary(m);
+  unitary.setCoolingCoil(dx);
+  AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
+
+  EXPECT_TRUE(operatingMode.addSpeed(speed1));
+  EXPECT_TRUE(operatingMode.addSpeed(speed2));
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
@@ -64,5 +85,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitOperatingMode) 
   EXPECT_EQ("No", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::ApplyLatentDegradationtoSpeedsGreaterthan1, false).get());
   EXPECT_EQ("AirCooled", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::CondenserType, false).get());
   EXPECT_EQ("Autosize", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalEvaporativeCondenserPumpPower, false).get());
-  EXPECT_EQ("", idfOperatingMode.getString(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalSpeedNumber, false).get());
+  EXPECT_EQ(2, idfOperatingMode.getInt(Coil_Cooling_DX_CurveFit_OperatingModeFields::NominalSpeedNumber, false).get());
+  EXPECT_EQ(2u, idfOperatingMode.numExtensibleGroups());
 }
