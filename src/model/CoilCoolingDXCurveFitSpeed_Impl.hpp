@@ -97,15 +97,15 @@ namespace detail {
 
     double evaporativeCondenserEffectiveness() const;
 
-    Curve totalCoolingCapacityModifierFunctionofTemperatureCurve() const;
+    boost::optional<Curve> totalCoolingCapacityModifierFunctionofTemperatureCurve() const;
 
-    Curve totalCoolingCapacityModifierFunctionofAirFlowFractionCurve() const;
+    boost::optional<Curve> totalCoolingCapacityModifierFunctionofAirFlowFractionCurve() const;
 
-    Curve energyInputRatioModifierFunctionofTemperatureCurve() const;
+    boost::optional<Curve> energyInputRatioModifierFunctionofTemperatureCurve() const;
 
-    Curve energyInputRatioModifierFunctionofAirFlowFractionCurve() const;
+    boost::optional<Curve> energyInputRatioModifierFunctionofAirFlowFractionCurve() const;
 
-    Curve partLoadFractionCorrelationCurve() const;
+    boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
     boost::optional<Curve> wasteHeatModifierFunctionofTemperatureCurve() const;
 
@@ -141,14 +141,19 @@ namespace detail {
     bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
 
     bool setTotalCoolingCapacityModifierFunctionofTemperatureCurve(const Curve& curve);
+    void resetTotalCoolingCapacityModifierFunctionofTemperatureCurve();
 
     bool setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(const Curve& curve);
+    void resetTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve();
 
     bool setEnergyInputRatioModifierFunctionofTemperatureCurve(const Curve& curve);
+    void resetEnergyInputRatioModifierFunctionofTemperatureCurve();
 
     bool setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(const Curve& curve);
+    void resetEnergyInputRatioModifierFunctionofAirFlowFractionCurve();
 
     bool setPartLoadFractionCorrelationCurve(const Curve& curve);
+    void resetPartLoadFractionCorrelationCurve();
 
     bool setWasteHeatModifierFunctionofTemperatureCurve(const Curve& curve);
     void resetWasteHeatModifierFunctionofTemperatureCurve();
@@ -175,13 +180,6 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.CoilCoolingDXCurveFitSpeed");
-
-    boost::optional<Curve> optionalTotalCoolingCapacityModifierFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve() const;
-    boost::optional<Curve> optionalEnergyInputRatioModifierFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalEnergyInputRatioModifierFunctionofAirFlowFractionCurve() const;
-    boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
-    boost::optional<Curve> optionalWasteHeatModifierFunctionofTemperatureCurve() const;
 
   };
 

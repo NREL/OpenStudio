@@ -52,15 +52,6 @@ class MODEL_API CoilCoolingDXCurveFitSpeed : public ResourceObject {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit CoilCoolingDXCurveFitSpeed(const Model& model,
-    Curve& totalCoolingCapacityModifierFunctionofTemperatureCurve,
-    Curve& totalCoolingCapacityModifierFunctionofAirFlowFractionCurve,
-    Curve& energyInputRatioModifierFunctionofTemperatureCurve,
-    Curve& energyInputRatioModifierFunctionofAirFlowFractionCurve,
-    Curve& partLoadFractionCorrelationCurve,
-    Curve& wasteHeatModifierFunctionofTemperatureCurve);
-
-  /** Create CoilCoolingDXCurveFitSpeed with default curves **/
   explicit CoilCoolingDXCurveFitSpeed(const Model& model);
 
   virtual ~CoilCoolingDXCurveFitSpeed() {}
@@ -93,15 +84,15 @@ class MODEL_API CoilCoolingDXCurveFitSpeed : public ResourceObject {
   double evaporativeCondenserEffectiveness() const;
 
   // TODO: probably make these optional actually like in E+, and adjust Ctor accordingly
-  Curve totalCoolingCapacityModifierFunctionofTemperatureCurve() const;
+  boost::optional<Curve> totalCoolingCapacityModifierFunctionofTemperatureCurve() const;
 
-  Curve totalCoolingCapacityModifierFunctionofAirFlowFractionCurve() const;
+  boost::optional<Curve> totalCoolingCapacityModifierFunctionofAirFlowFractionCurve() const;
 
-  Curve energyInputRatioModifierFunctionofTemperatureCurve() const;
+  boost::optional<Curve> energyInputRatioModifierFunctionofTemperatureCurve() const;
 
-  Curve energyInputRatioModifierFunctionofAirFlowFractionCurve() const;
+  boost::optional<Curve> energyInputRatioModifierFunctionofAirFlowFractionCurve() const;
 
-  Curve partLoadFractionCorrelationCurve() const;
+  boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
   boost::optional<Curve> wasteHeatModifierFunctionofTemperatureCurve() const;
 
@@ -138,14 +129,19 @@ class MODEL_API CoilCoolingDXCurveFitSpeed : public ResourceObject {
   bool setEvaporativeCondenserEffectiveness(double evaporativeCondenserEffectiveness);
 
   bool setTotalCoolingCapacityModifierFunctionofTemperatureCurve(const Curve& curve);
+  void resetTotalCoolingCapacityModifierFunctionofTemperatureCurve();
 
   bool setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(const Curve& curve);
+  void resetTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve();
 
   bool setEnergyInputRatioModifierFunctionofTemperatureCurve(const Curve& curve);
+  void resetEnergyInputRatioModifierFunctionofTemperatureCurve();
 
   bool setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(const Curve& curve);
+  void resetEnergyInputRatioModifierFunctionofAirFlowFractionCurve();
 
   bool setPartLoadFractionCorrelationCurve(const Curve& curve);
+  void resetPartLoadFractionCorrelationCurve();
 
   bool setWasteHeatModifierFunctionofTemperatureCurve(const Curve& curve);
   void resetWasteHeatModifierFunctionofTemperatureCurve();
