@@ -108,6 +108,8 @@ namespace detail {
 
     std::vector<CoilCoolingDXCurveFitSpeed> speeds() const;
 
+    // Extensible: Speeds
+    boost::optional<unsigned> speedIndex(const CoilCoolingDXCurveFitSpeed& speed) const;
     unsigned numberOfSpeeds() const;
 
     //@}
@@ -142,10 +144,14 @@ namespace detail {
     bool setNominalSpeedNumber(unsigned nominalSpeedNumber);
     void resetNominalSpeedNumber();
 
-    void addSpeed(const CoilCoolingDXCurveFitSpeed& speed);
-
-
-    // TODO: ADD removeSpeed, setSpeeds,etc
+    // Extensible: Speeds
+    bool addSpeed(const CoilCoolingDXCurveFitSpeed& speed);
+    bool addSpeed(const CoilCoolingDXCurveFitSpeed& speed, unsigned index);
+    bool setSpeedIndex(const CoilCoolingDXCurveFitSpeed& speed, unsigned index);
+    bool setSpeeds(const std::vector<CoilCoolingDXCurveFitSpeed>& speeds);
+    void removeAllSpeeds();
+    bool removeSpeed(const CoilCoolingDXCurveFitSpeed& speed);
+    bool removeSpeed(unsigned index);
 
     //@}
     /** @name Other */

@@ -103,6 +103,11 @@ class MODEL_API CoilCoolingDXCurveFitOperatingMode : public ResourceObject {
 
   unsigned numberOfSpeeds() const;
 
+  /*
+   * Get the index of a given CoilCoolingDXCurveFitSpeed (1-indexed)
+   */
+  boost::optional<unsigned> speedIndex(const CoilCoolingDXCurveFitSpeed& speed) const;
+
   //@}
   /** @name Setters */
   //@{
@@ -134,7 +139,47 @@ class MODEL_API CoilCoolingDXCurveFitOperatingMode : public ResourceObject {
   bool setNominalSpeedNumber(unsigned nominalSpeedNumber);
   void resetNominalSpeedNumber();
 
-  void addSpeed(const CoilCoolingDXCurveFitSpeed& speed);
+  /*
+   * Add a new CoilCoolingDXCurveFitSpeed at the end of the list (priority = last).
+   */
+  bool addSpeed(const CoilCoolingDXCurveFitSpeed& speed);
+
+  /*
+   * Add a new CoilCoolingDXCurveFitSpeed to the list which a given index (1 to x).
+   * Internally calls addSpeed then setSpeedIndex, see remarks there
+   */
+  bool addSpeed(const CoilCoolingDXCurveFitSpeed& speed, unsigned index);
+
+  /*
+   * You can shuffle the priority of a given CoilCoolingDXCurveFitSpeed after having added it
+   * If priority is below 1, it's reset to 1.
+   * If priority is greater than the number of speeds, will reset to last
+   */
+  bool setSpeedIndex(const CoilCoolingDXCurveFitSpeed& speed, unsigned index);
+
+  /*
+   * Set all speeds using a list of CoilCoolingDXCurveFitSpeeds
+   * Internally calls addSpeed, and will return the global status, but will continue trying if there are problems
+   * (eg: if you make a vector larger than the number of accepted speeds, or a vector that has a speed from another model, the valid speeds will be
+   * added indeed, but it'll eventually return false)
+   */
+  bool setSpeeds(const std::vector<CoilCoolingDXCurveFitSpeed>& speeds);
+
+  /*
+   * Removes all CoilCoolingDXCurveFitSpeeds in this object
+   */
+  void removeAllSpeeds();
+
+  /*
+   * Remove the given CoilCoolingDXCurveFitSpeed from this object's speeds
+   */
+  bool removeSpeed(const CoilCoolingDXCurveFitSpeed& speed);
+
+  /*
+   * Remove the CoilCoolingDXCurveFitSpeed at the given priority
+   */
+  bool removeSpeed(unsigned index);
+
 
   //@}
   /** @name Other */

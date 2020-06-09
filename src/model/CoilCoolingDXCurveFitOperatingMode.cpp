@@ -314,10 +314,108 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  void CoilCoolingDXCurveFitOperatingMode_Impl::addSpeed(const CoilCoolingDXCurveFitSpeed& speed) {
+
+  boost::optional<unsigned> CoilCoolingDXCurveFitOperatingMode_Impl::speedIndex(const CoilCoolingDXCurveFitSpeed& speed) const {
+
+    boost::optional<unsigned> result;
+
+    // Find with custom predicate, checking handle equality between the toSurface and the fromSurface pairs
+    // We do it with extensibleGroups() (rather than viewFactors()) and getString to avoid overhead
+    // of manipulating actual model objects (getTarget, then create a ViewFactor wrapper, get handle convert to string...) and speed up the routine
+    auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
+    auto h = openstudio::toString(speed.handle());
+    auto it = std::find_if(egs.begin(), egs.end(),
+      [&](const WorkspaceExtensibleGroup& eg) {
+        return (eg.getField(OS_Coil_Cooling_DX_CurveFit_OperatingModeExtensibleFields::Speed).get() == h);
+      });
+
+    // If found, we compute the index by using std::distance between the start of vector and the iterator returned by std::find_if
+    if (it != egs.end()) {
+      result = std::distance(egs.begin(), it) + 1;
+    }
+
+    return result;
+  }
+
+
+  bool CoilCoolingDXCurveFitOperatingMode_Impl::addSpeed(const CoilCoolingDXCurveFitSpeed& speed) {
     auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-    OS_ASSERT(!group.empty());
-    group.setPointer(OS_Coil_Cooling_DX_CurveFit_OperatingModeExtensibleFields::Speed,speed.handle());
+    if (group.empty()) {
+      LOG(Error, "You have reached the maximum number of speeds (=" << numberOfSpeeds() << "), occurred for " << briefDescription() << ".");
+      return false;
+    }
+
+    return group.setPointer(OS_Coil_Cooling_DX_CurveFit_OperatingModeExtensibleFields::Speed, speed.handle());
+  }
+
+
+  bool CoilCoolingDXCurveFitOperatingMode_Impl::setSpeedIndex(const CoilCoolingDXCurveFitSpeed& speed, unsigned index)
+  {
+    boost::optional<unsigned> idx = speedIndex(speed);
+    if (!idx) {
+      LOG(Warn, "For " << briefDescription() << " cannot set the index of speed " << speed.briefDescription() << " since it is not part of it.");
+      return false;
+    }
+
+    // TODO: we could just set via string instead of doing a ton of typechecking below...
+
+    std::vector<CoilCoolingDXCurveFitSpeed> speedVector = speeds();
+
+    if (index > speedVector.size()) {
+      LOG(Warn, "Requested a speed index of " << index << " to be assigned to " << speed.briefDescription() << ", but "
+          << briefDescription() << " only has " << speedVector.size() << " speeds, resetting to that.");
+      index = speedVector.size();
+    } else if (index < 1) {
+      LOG(Warn, "Requested a speed index of " << index << " < 1 to be assigned to " << speed.briefDescription() << ", resetting to 1");
+      index = 1;
+    }
+
+    speedVector.erase(speedVector.begin() + idx.get() - 1); // speedIndex is 1-indexed, and vector is 0-indexed
+
+    speedVector.insert(speedVector.begin() + (index - 1), speed);
+
+    return setSpeeds(speedVector);
+  }
+
+  bool CoilCoolingDXCurveFitOperatingMode_Impl::addSpeed(const CoilCoolingDXCurveFitSpeed& speed, unsigned index) {
+    bool ok = addSpeed(speed);
+    if (!ok) {
+      return false;
+    }
+    ok = setSpeedIndex(speed, index);
+    return ok;
+  }
+  bool CoilCoolingDXCurveFitOperatingMode_Impl::setSpeeds(const std::vector<CoilCoolingDXCurveFitSpeed>& speeds) {
+    // Clear the extensible groups, and redo them
+    bool ok = true;
+    clearExtensibleGroups();
+    for (const CoilCoolingDXCurveFitSpeed& s : speeds) {
+      ok &= addSpeed(s);
+    }
+    return ok;
+  }
+
+  void CoilCoolingDXCurveFitOperatingMode_Impl::removeAllSpeeds() {
+    clearExtensibleGroups();
+  }
+
+  bool CoilCoolingDXCurveFitOperatingMode_Impl::removeSpeed(const CoilCoolingDXCurveFitSpeed& speed) {
+    boost::optional<unsigned> idx = speedIndex(speed);
+    if (!idx) {
+      LOG(Warn, "For " << briefDescription() << " cannot remove speed " << speed.briefDescription() << " since it is not part of it.");
+      return false;
+    }
+
+    return removeSpeed(idx.get());
+  }
+
+  bool CoilCoolingDXCurveFitOperatingMode_Impl::removeSpeed(unsigned index) {
+    bool result = false;
+    if ((index > 0) && (index < numberOfSpeeds())) {
+      getObject<ModelObject>().eraseExtensibleGroup(index);
+      result = true;
+    }
+    return result;
   }
 
   boost::optional<double> CoilCoolingDXCurveFitOperatingMode_Impl::autosizedRatedGrossTotalCoolingCapacity() {
@@ -463,10 +561,6 @@ std::vector<CoilCoolingDXCurveFitPerformance> CoilCoolingDXCurveFitOperatingMode
   return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->coilCoolingDXCurveFitPerformances();
 }
 
-std::vector<CoilCoolingDXCurveFitSpeed> CoilCoolingDXCurveFitOperatingMode::speeds() const {
-  return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->speeds();
-}
-
 bool CoilCoolingDXCurveFitOperatingMode::setRatedGrossTotalCoolingCapacity(double ratedGrossTotalCoolingCapacity) {
   return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->setRatedGrossTotalCoolingCapacity(ratedGrossTotalCoolingCapacity);
 }
@@ -531,13 +625,46 @@ void CoilCoolingDXCurveFitOperatingMode::resetNominalSpeedNumber() {
   getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->resetNominalSpeedNumber();
 }
 
-void CoilCoolingDXCurveFitOperatingMode::addSpeed(const CoilCoolingDXCurveFitSpeed& speed) {
-  return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->addSpeed(speed);
-}
-
 unsigned CoilCoolingDXCurveFitOperatingMode::numberOfSpeeds() const {
   return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->numberOfSpeeds();
 }
+
+boost::optional<unsigned> CoilCoolingDXCurveFitOperatingMode::speedIndex(const CoilCoolingDXCurveFitSpeed& speed) const {
+  return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->speedIndex(speed);
+}
+
+std::vector<CoilCoolingDXCurveFitSpeed> CoilCoolingDXCurveFitOperatingMode::speeds() const {
+  return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->speeds();
+}
+
+bool CoilCoolingDXCurveFitOperatingMode::addSpeed(const CoilCoolingDXCurveFitSpeed& speed) {
+  return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->addSpeed(speed);
+}
+
+bool CoilCoolingDXCurveFitOperatingMode::addSpeed(const CoilCoolingDXCurveFitSpeed& speed, unsigned index) {
+  return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->addSpeed(speed, index);
+}
+
+bool CoilCoolingDXCurveFitOperatingMode::setSpeedIndex(const CoilCoolingDXCurveFitSpeed& speed, unsigned index) {
+  return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->setSpeedIndex(speed, index);
+}
+
+bool CoilCoolingDXCurveFitOperatingMode::setSpeeds(const std::vector<CoilCoolingDXCurveFitSpeed>& speeds) {
+  return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->setSpeeds(speeds);
+}
+
+void CoilCoolingDXCurveFitOperatingMode::removeAllSpeeds() {
+  getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->removeAllSpeeds();
+}
+
+bool CoilCoolingDXCurveFitOperatingMode::removeSpeed(const CoilCoolingDXCurveFitSpeed& speed) {
+  return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->removeSpeed(speed);
+}
+
+bool CoilCoolingDXCurveFitOperatingMode::removeSpeed(unsigned index) {
+  return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->removeSpeed(index);
+}
+
 
 boost::optional<double> CoilCoolingDXCurveFitOperatingMode::autosizedRatedGrossTotalCoolingCapacity() {
   return getImpl<detail::CoilCoolingDXCurveFitOperatingMode_Impl>()->autosizedRatedGrossTotalCoolingCapacity();
