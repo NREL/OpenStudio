@@ -42,7 +42,9 @@
 #include "../Schedule_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
-#include "../AirLoopHVACUnitarySystem.cpp"
+#include "../AirLoopHVACUnitarySystem.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../Node.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -124,4 +126,17 @@ TEST_F(ModelFixture, CoilCoolingDX_containingHVACComponent) {
 
   ASSERT_TRUE(dx.containingHVACComponent());
   EXPECT_EQ(unitary, dx.containingHVACComponent().get());
+}
+
+TEST_F(ModelFixture, CoilCoolingDX_addToNode) {
+  // Should not be allowed, only meant to be inside a Unitary
+  Model model;
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+  CoilCoolingDX dx(model, performance);
+
+  AirLoopHVAC a(model);
+  Node supplyOutlet = a.supplyOutletNode();
+  EXPECT_FALSE(dx.addToNode(supplyOutlet));
 }
