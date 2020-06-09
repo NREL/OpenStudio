@@ -106,4 +106,6 @@ TEST_F(ModelFixture, CoilCoolingDX_GettersSetters) {
 
   // create a coil cooling dx object to use
   CoilCoolingDX dx(model, performance);
+
+  // TODO
 }

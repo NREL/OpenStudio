@@ -101,4 +101,6 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_GettersSetters) {
 
   // create a coil cooling dx curve fit performance object to use
   CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+
+  // TODO:
 }

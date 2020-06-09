@@ -94,4 +94,6 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitSpeed_GettersSetters) {
 
   // create a coil cooling dx curve fit speed object to use
   CoilCoolingDXCurveFitSpeed speed(model);
+
+  // TODO:
 }

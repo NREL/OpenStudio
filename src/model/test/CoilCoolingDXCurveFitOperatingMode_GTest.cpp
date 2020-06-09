@@ -59,7 +59,6 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_CoilCoolingDXCurveFitOpe
     ""
   );
 
-  // create a model to use
   Model model;
 
   // create a coil cooling dx curve fit operating mode object to use
@@ -79,6 +78,7 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_CoilCoolingDXCurveFitOpe
   EXPECT_EQ("AirCooled", operatingMode.condenserType());
   EXPECT_EQ(0, operatingMode.coilCoolingDXCurveFitPerformances().size());
   EXPECT_EQ(0, operatingMode.speeds().size());
+
 }
 
 TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_GettersSetters) {
@@ -87,4 +87,6 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_GettersSetters) {
 
   // create a coil cooling dx curve fit operating mode object to use
   CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+
+  // TODO:
 }
