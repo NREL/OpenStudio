@@ -118,7 +118,7 @@ OptionalModelObject ReverseTranslator::translateCoilCoolingDXCurveFitPerformance
     performance.setEvaporativeCondenserBasinHeaterSetpointTemperature(*d);
   }
 
-  if(target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterOperatingScheduleName)){
+  if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::EvaporativeCondenserBasinHeaterOperatingScheduleName))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject && modelObject->optionalCast<Schedule>()){
       Schedule schedule = modelObject->cast<Schedule>();
@@ -131,14 +131,14 @@ OptionalModelObject ReverseTranslator::translateCoilCoolingDXCurveFitPerformance
     performance.setCompressorFuelType(*s);
   }
 
-  if(target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1)){
+  if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode1))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject && modelObject->optionalCast<CoilCoolingDXCurveFitOperatingMode>()){
       performance.setAlternativeOperatingMode1(modelObject->cast<CoilCoolingDXCurveFitOperatingMode>());
     }
   }
 
-  if(target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2)){
+  if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DX_CurveFit_PerformanceFields::AlternativeOperatingMode2))) {
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject && modelObject->optionalCast<CoilCoolingDXCurveFitOperatingMode>()){
       performance.setAlternativeOperatingMode1(modelObject->cast<CoilCoolingDXCurveFitOperatingMode>());
