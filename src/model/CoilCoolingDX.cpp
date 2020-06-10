@@ -125,7 +125,9 @@ namespace detail {
   ModelObject CoilCoolingDX_Impl::clone(Model model) const {
     auto t_clone = StraightComponent_Impl::clone(model).cast<CoilCoolingDX>();
 
-    // TODO: clone the performance object
+    // The CoilCoolingDXCurveFitPerformance is a ResourceObject so it'll be handled by the ModelObject::clone
+    // auto performanceClone = performanceObject().clone(model).cast<CoilCoolingDXCurveFitPerformance>();
+    // t_clone.setPerformanceObject(performanceClone);
 
     return t_clone;
   }

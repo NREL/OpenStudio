@@ -43,6 +43,8 @@
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
 
+#include <algorithm>
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -103,4 +105,98 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_GettersSetters) {
   CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
 
   // TODO:
+}
+
+TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_coilCoolingDXs) {
+  Model model;
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+  CoilCoolingDX dx1(model, performance);
+
+  EXPECT_EQ(1u, performance.directUseCount());
+  auto coilCoolingDXs = performance.coilCoolingDXs();
+  ASSERT_EQ(1u, coilCoolingDXs.size());
+  EXPECT_EQ(dx1, coilCoolingDXs[0]);
+
+  CoilCoolingDX dx2(model, performance);
+  EXPECT_EQ(2u, performance.directUseCount());
+  coilCoolingDXs = performance.coilCoolingDXs();
+  ASSERT_EQ(2u, coilCoolingDXs.size());
+  EXPECT_TRUE(std::find(coilCoolingDXs.begin(), coilCoolingDXs.end(), dx1) != coilCoolingDXs.end());
+  EXPECT_TRUE(std::find(coilCoolingDXs.begin(), coilCoolingDXs.end(), dx2) != coilCoolingDXs.end());
+
+  CoilCoolingDXCurveFitPerformance performance2(model, operatingMode);
+  EXPECT_TRUE(dx1.setPerformanceObject(performance2));
+  EXPECT_EQ(1u, performance2.directUseCount());
+  coilCoolingDXs = performance2.coilCoolingDXs();
+  ASSERT_EQ(1u, coilCoolingDXs.size());
+  EXPECT_EQ(dx1, coilCoolingDXs[0]);
+
+
+  EXPECT_EQ(1u, performance.directUseCount());
+  coilCoolingDXs = performance.coilCoolingDXs();
+  ASSERT_EQ(1u, coilCoolingDXs.size());
+  EXPECT_EQ(dx2, coilCoolingDXs[0]);
+
+}
+
+TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_clone) {
+  Model model;
+
+  CoilCoolingDXCurveFitOperatingMode baseOperatingMode(model);
+  CoilCoolingDXCurveFitOperatingMode alternativeOperatingMode1(model);
+  CoilCoolingDXCurveFitOperatingMode alternativeOperatingMode2(model);
+  CoilCoolingDXCurveFitPerformance performance(model, baseOperatingMode);
+  CoilCoolingDX dx(model, performance);
+
+  EXPECT_EQ(performance, dx.performanceObject());
+  EXPECT_EQ(baseOperatingMode, performance.baseOperatingMode());
+  EXPECT_FALSE(performance.alternativeOperatingMode1());
+  EXPECT_FALSE(performance.alternativeOperatingMode2());
+
+  EXPECT_TRUE(performance.setAlternativeOperatingMode1(alternativeOperatingMode1));
+  EXPECT_EQ(performance, dx.performanceObject());
+  EXPECT_EQ(baseOperatingMode, performance.baseOperatingMode());
+  ASSERT_TRUE(performance.alternativeOperatingMode1());
+  EXPECT_EQ(alternativeOperatingMode1, performance.alternativeOperatingMode1());
+  EXPECT_FALSE(performance.alternativeOperatingMode2());
+
+  EXPECT_TRUE(performance.setAlternativeOperatingMode2(alternativeOperatingMode2));
+  EXPECT_EQ(performance, dx.performanceObject());
+  EXPECT_EQ(baseOperatingMode, performance.baseOperatingMode());
+  ASSERT_TRUE(performance.alternativeOperatingMode1());
+  EXPECT_EQ(alternativeOperatingMode1, performance.alternativeOperatingMode1());
+  ASSERT_TRUE(performance.alternativeOperatingMode2());
+  EXPECT_EQ(alternativeOperatingMode2, performance.alternativeOperatingMode2());
+
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(3u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+
+  auto performanceClone = performance.clone(model).cast<CoilCoolingDXCurveFitPerformance>();
+  EXPECT_EQ(performance, dx.performanceObject());
+  EXPECT_EQ(baseOperatingMode, performance.baseOperatingMode());
+  EXPECT_EQ(alternativeOperatingMode1, performance.alternativeOperatingMode1());
+  EXPECT_EQ(alternativeOperatingMode2, performance.alternativeOperatingMode2());
+  EXPECT_EQ(baseOperatingMode, performanceClone.baseOperatingMode());
+  EXPECT_EQ(alternativeOperatingMode1, performanceClone.alternativeOperatingMode1());
+  EXPECT_EQ(alternativeOperatingMode2, performanceClone.alternativeOperatingMode2());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(3u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+
+  performance.remove();
+  EXPECT_EQ(baseOperatingMode, performanceClone.baseOperatingMode());
+  EXPECT_EQ(alternativeOperatingMode1, performanceClone.alternativeOperatingMode1());
+  EXPECT_EQ(alternativeOperatingMode2, performanceClone.alternativeOperatingMode2());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+
+  performanceClone.remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
 }

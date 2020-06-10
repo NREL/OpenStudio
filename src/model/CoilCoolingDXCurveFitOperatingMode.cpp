@@ -44,6 +44,8 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
+#include <algorithm>
+
 namespace openstudio {
 namespace model {
 

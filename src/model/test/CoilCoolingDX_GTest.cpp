@@ -43,6 +43,7 @@
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
 #include "../AirLoopHVACUnitarySystem.hpp"
+#include "../AirLoopHVACUnitarySystem_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../Node.hpp"
 
@@ -120,12 +121,23 @@ TEST_F(ModelFixture, CoilCoolingDX_containingHVACComponent) {
   CoilCoolingDXCurveFitOperatingMode operatingMode(model);
   CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
   CoilCoolingDX dx(model, performance);
+  EXPECT_TRUE(dx.isRemovable());
 
   AirLoopHVACUnitarySystem unitary(model);
   EXPECT_TRUE(unitary.setCoolingCoil(dx));
+  ASSERT_TRUE(unitary.coolingCoil());
+  EXPECT_EQ(dx, unitary.coolingCoil().get());
 
   ASSERT_TRUE(dx.containingHVACComponent());
   EXPECT_EQ(unitary, dx.containingHVACComponent().get());
+
+  // Shouldn't be able to remove DX since it's contained in a HVAC Component
+  EXPECT_FALSE(dx.isRemovable());
+  auto rmed = dx.remove();
+  EXPECT_EQ(0u, rmed.size());
+  ASSERT_TRUE(unitary.coolingCoil());
+  EXPECT_EQ(dx, unitary.coolingCoil().get());
+
 }
 
 TEST_F(ModelFixture, CoilCoolingDX_addToNode) {
@@ -139,4 +151,79 @@ TEST_F(ModelFixture, CoilCoolingDX_addToNode) {
   AirLoopHVAC a(model);
   Node supplyOutlet = a.supplyOutletNode();
   EXPECT_FALSE(dx.addToNode(supplyOutlet));
+}
+
+TEST_F(ModelFixture, CoilCoolingDX_performanceObject) {
+  Model model;
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+  CoilCoolingDX dx(model, performance);
+
+  EXPECT_EQ(performance, dx.performanceObject());
+  CoilCoolingDXCurveFitPerformance performance2(model, operatingMode);
+  EXPECT_TRUE(dx.setPerformanceObject(performance2));
+  EXPECT_EQ(performance2, dx.performanceObject());
+}
+
+TEST_F(ModelFixture, CoilCoolingDX_clone) {
+  Model model;
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+  CoilCoolingDX dx(model, performance);
+
+  EXPECT_EQ(performance, dx.performanceObject());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+
+  auto dxClone = dx.clone(model).cast<CoilCoolingDX>();
+  EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+  EXPECT_EQ(performance, dx.performanceObject());
+  EXPECT_EQ(performance, dxClone.performanceObject());
+
+  dx.remove();
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+  EXPECT_EQ(performance, dxClone.performanceObject());
+
+  dxClone.remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+}
+
+TEST_F(ModelFixture, CoilCoolingDX_cloneParent) {
+  Model model;
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+  CoilCoolingDX dx(model, performance);
+
+  AirLoopHVACUnitarySystem unitary(model);
+  EXPECT_TRUE(unitary.setCoolingCoil(dx));
+
+  ASSERT_TRUE(dx.containingHVACComponent());
+  EXPECT_EQ(unitary, dx.containingHVACComponent().get());
+
+  ASSERT_TRUE(unitary.coolingCoil());
+  EXPECT_EQ(dx, unitary.coolingCoil().get());
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<AirLoopHVACUnitarySystem>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+
+  // Cloning the unitary should clone the coolingCoil, but the clone of the DX should still share resources
+  auto unitaryClone = unitary.clone(model).cast<AirLoopHVACUnitarySystem>();
+  EXPECT_EQ(2u, model.getConcreteModelObjects<AirLoopHVACUnitarySystem>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+  EXPECT_EQ(dx, unitary.coolingCoil().get());
+  EXPECT_NE(dx, unitaryClone.coolingCoil().get());
 }
