@@ -104,7 +104,56 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_GettersSetters) {
   // create a coil cooling dx curve fit performance object to use
   CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
 
-  // TODO:
+  EXPECT_EQ(performance.crankcaseHeaterCapacity(), 0.0);
+  EXPECT_EQ(performance.minimumOutdoorDryBulbTemperatureforCompressorOperation(), -25.0);
+  EXPECT_EQ(performance.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(), 10.0);
+  EXPECT_EQ(performance.unitInternalStaticAirPressure(), 773.3);
+  EXPECT_EQ(performance.capacityControlMethod(), "Discrete");
+  EXPECT_EQ(performance.evaporativeCondenserBasinHeaterCapacity(), 0.0);
+  EXPECT_EQ(performance.evaporativeCondenserBasinHeaterSetpointTemperature(), 2.0);
+  Schedule schedule = performance.evaporativeCondenserBasinHeaterOperatingSchedule();
+  boost::optional<ScheduleConstant> scheduleConstant = schedule.optionalCast<ScheduleConstant>();
+  ASSERT_TRUE(scheduleConstant);
+  EXPECT_EQ((*scheduleConstant).value(), 1.0);
+  EXPECT_EQ(performance.compressorFuelType(), "Electricity");
+  EXPECT_EQ(performance.baseOperatingMode(), operatingMode);
+  ASSERT_FALSE(performance.alternativeOperatingMode1());
+  ASSERT_FALSE(performance.alternativeOperatingMode2());
+  EXPECT_EQ(performance.coilCoolingDXs().size(), 0u);
+
+  performance.setCrankcaseHeaterCapacity(1.0);
+  performance.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-30.0);
+  performance.setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(15.0);
+  performance.setUnitInternalStaticAirPressure(800.0);
+  performance.setCapacityControlMethod("Continuous");
+  performance.setEvaporativeCondenserBasinHeaterCapacity(1.0);
+  performance.setEvaporativeCondenserBasinHeaterSetpointTemperature(3.0);
+  ScheduleConstant scheduleConstant2(model);
+  scheduleConstant2.setValue(0.5);
+  performance.setEvaporativeCondenserBasinHeaterOperatingSchedule(scheduleConstant2);
+  performance.setCompressorFuelType("NaturalGas");
+  CoilCoolingDXCurveFitOperatingMode operatingMode2(model);
+  performance.setBaseOperatingMode(operatingMode2);
+  CoilCoolingDXCurveFitOperatingMode alternative1(model);
+  performance.setAlternativeOperatingMode1(alternative1);
+  CoilCoolingDXCurveFitOperatingMode alternative2(model);
+  performance.setAlternativeOperatingMode2(alternative2);
+
+  EXPECT_EQ(performance.crankcaseHeaterCapacity(), 1.0);
+  EXPECT_EQ(performance.minimumOutdoorDryBulbTemperatureforCompressorOperation(), -30.0);
+  EXPECT_EQ(performance.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(), 15.0);
+  EXPECT_EQ(performance.unitInternalStaticAirPressure(), 800.0);
+  EXPECT_EQ(performance.capacityControlMethod(), "Continuous");
+  EXPECT_EQ(performance.evaporativeCondenserBasinHeaterCapacity(), 1.0);
+  EXPECT_EQ(performance.evaporativeCondenserBasinHeaterSetpointTemperature(), 3.0);
+  Schedule schedule2 = performance.evaporativeCondenserBasinHeaterOperatingSchedule();
+  boost::optional<ScheduleConstant> scheduleConstant3 = schedule2.optionalCast<ScheduleConstant>();
+  ASSERT_TRUE(scheduleConstant3);
+  EXPECT_EQ((*scheduleConstant3).value(), 0.5);
+  EXPECT_EQ(performance.compressorFuelType(), "NaturalGas");
+  EXPECT_EQ(performance.baseOperatingMode(), operatingMode2);
+  ASSERT_TRUE(performance.alternativeOperatingMode1());
+  ASSERT_TRUE(performance.alternativeOperatingMode2());
 }
 
 TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_coilCoolingDXs) {

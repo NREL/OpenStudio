@@ -95,5 +95,95 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitSpeed_GettersSetters) {
   // create a coil cooling dx curve fit speed object to use
   CoilCoolingDXCurveFitSpeed speed(model);
 
-  // TODO:
+  EXPECT_EQ(1.0, speed.grossTotalCoolingCapacityFraction());
+  EXPECT_EQ(1.0, speed.evaporatorAirFlowRateFraction());
+  EXPECT_EQ(1.0, speed.condenserAirFlowRateFraction());
+  ASSERT_FALSE(speed.grossSensibleHeatRatio());
+  EXPECT_TRUE(speed.isGrossSensibleHeatRatioAutosized());
+  EXPECT_EQ(3.0, speed.grossCoolingCOP());
+  EXPECT_EQ(1.0, speed.activeFractionofCoilFaceArea());
+  EXPECT_EQ(773.3, speed.ratedEvaporatorFanPowerPerVolumeFlowRate());
+  EXPECT_EQ(1.0, speed.evaporativeCondenserPumpPowerFraction());
+  EXPECT_EQ(0.9, speed.evaporativeCondenserEffectiveness());
+  EXPECT_FALSE(speed.totalCoolingCapacityModifierFunctionofTemperatureCurve());
+  EXPECT_FALSE(speed.totalCoolingCapacityModifierFunctionofAirFlowFractionCurve());
+  EXPECT_FALSE(speed.energyInputRatioModifierFunctionofTemperatureCurve());
+  EXPECT_FALSE(speed.energyInputRatioModifierFunctionofAirFlowFractionCurve());
+  EXPECT_FALSE(speed.partLoadFractionCorrelationCurve());
+  EXPECT_FALSE(speed.wasteHeatModifierFunctionofTemperatureCurve());
+  EXPECT_EQ(speed.ratedWasteHeatFractionofPowerInput(), 0.2);
+  ASSERT_FALSE(speed.sensibleHeatRatioModifierFunctionofTemperatureCurve());
+  ASSERT_FALSE(speed.sensibleHeatRatioModifierFunctionofFlowFractionCurve());
+  EXPECT_EQ(speed.coilCoolingDXCurveFitOperatingModes().size(), 0u);
+
+  speed.setGrossTotalCoolingCapacityFraction(2.0);
+  speed.setEvaporatorAirFlowRateFraction(3.0);
+  speed.setCondenserAirFlowRateFraction(4.0);
+  speed.setGrossSensibleHeatRatio(0.5);
+  speed.setGrossCoolingCOP(6.0);
+  speed.setActiveFractionofCoilFaceArea(0.6);
+  speed.setRatedEvaporatorFanPowerPerVolumeFlowRate(8.0);
+  speed.setEvaporativeCondenserPumpPowerFraction(9.0);
+  speed.setEvaporativeCondenserEffectiveness(0.7);
+  CurveBiquadratic totalCoolingCapacityModifierFunctionofTemperatureCurve(model);
+  speed.setTotalCoolingCapacityModifierFunctionofTemperatureCurve(totalCoolingCapacityModifierFunctionofTemperatureCurve);
+  CurveQuadratic totalCoolingCapacityModifierFunctionofAirFlowFractionCurve(model);
+  speed.setTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve(totalCoolingCapacityModifierFunctionofAirFlowFractionCurve);
+  CurveBiquadratic energyInputRatioModifierFunctionofTemperatureCurve(model);
+  speed.setEnergyInputRatioModifierFunctionofTemperatureCurve(energyInputRatioModifierFunctionofTemperatureCurve);
+  CurveQuadratic energyInputRatioModifierFunctionofAirFlowFractionCurve(model);
+  speed.setEnergyInputRatioModifierFunctionofAirFlowFractionCurve(energyInputRatioModifierFunctionofAirFlowFractionCurve);
+  CurveQuadratic partLoadFractionCorrelationCurve(model);
+  speed.setPartLoadFractionCorrelationCurve(partLoadFractionCorrelationCurve);
+  CurveBiquadratic wasteHeatModifierFunctionofTemperatureCurve(model);
+  speed.setWasteHeatModifierFunctionofTemperatureCurve(wasteHeatModifierFunctionofTemperatureCurve);
+  speed.setRatedWasteHeatFractionofPowerInput(0.8);
+  CurveBiquadratic sensibleHeatRatioModifierFunctionofTemperatureCurve(model);
+  speed.setSensibleHeatRatioModifierFunctionofTemperatureCurve(sensibleHeatRatioModifierFunctionofTemperatureCurve);
+  CurveQuadratic sensibleHeatRatioModifierFunctionofFlowFractionCurve(model);
+  speed.setSensibleHeatRatioModifierFunctionofFlowFractionCurve(sensibleHeatRatioModifierFunctionofFlowFractionCurve);
+
+  EXPECT_EQ(2.0, speed.grossTotalCoolingCapacityFraction());
+  EXPECT_EQ(3.0, speed.evaporatorAirFlowRateFraction());
+  EXPECT_EQ(4.0, speed.condenserAirFlowRateFraction());
+  ASSERT_TRUE(speed.grossSensibleHeatRatio());
+  EXPECT_EQ(speed.grossSensibleHeatRatio().get(), 0.5);
+  EXPECT_FALSE(speed.isGrossSensibleHeatRatioAutosized());
+  EXPECT_EQ(6.0, speed.grossCoolingCOP());
+  EXPECT_EQ(0.6, speed.activeFractionofCoilFaceArea());
+  EXPECT_EQ(8.0, speed.ratedEvaporatorFanPowerPerVolumeFlowRate());
+  EXPECT_EQ(9.0, speed.evaporativeCondenserPumpPowerFraction());
+  EXPECT_EQ(0.7, speed.evaporativeCondenserEffectiveness());
+  EXPECT_TRUE(speed.totalCoolingCapacityModifierFunctionofTemperatureCurve());
+  EXPECT_TRUE(speed.totalCoolingCapacityModifierFunctionofAirFlowFractionCurve());
+  EXPECT_TRUE(speed.energyInputRatioModifierFunctionofTemperatureCurve());
+  EXPECT_TRUE(speed.energyInputRatioModifierFunctionofAirFlowFractionCurve());
+  EXPECT_TRUE(speed.partLoadFractionCorrelationCurve());
+  EXPECT_TRUE(speed.wasteHeatModifierFunctionofTemperatureCurve());
+  EXPECT_EQ(speed.ratedWasteHeatFractionofPowerInput(), 0.8);
+  ASSERT_TRUE(speed.sensibleHeatRatioModifierFunctionofTemperatureCurve());
+  ASSERT_TRUE(speed.sensibleHeatRatioModifierFunctionofFlowFractionCurve());
+
+  speed.autosizeGrossSensibleHeatRatio();
+  speed.resetTotalCoolingCapacityModifierFunctionofTemperatureCurve();
+  speed.resetTotalCoolingCapacityModifierFunctionofAirFlowFractionCurve();
+  speed.resetEnergyInputRatioModifierFunctionofTemperatureCurve();
+  speed.resetEnergyInputRatioModifierFunctionofAirFlowFractionCurve();
+  speed.resetPartLoadFractionCorrelationCurve();
+  speed.resetWasteHeatModifierFunctionofTemperatureCurve();
+  speed.resetSensibleHeatRatioModifierFunctionofTemperatureCurve();
+  speed.resetSensibleHeatRatioModifierFunctionofFlowFractionCurve();
+
+  ASSERT_FALSE(speed.grossSensibleHeatRatio());
+  EXPECT_TRUE(speed.isGrossSensibleHeatRatioAutosized());
+  EXPECT_FALSE(speed.totalCoolingCapacityModifierFunctionofTemperatureCurve());
+  EXPECT_FALSE(speed.totalCoolingCapacityModifierFunctionofAirFlowFractionCurve());
+  EXPECT_FALSE(speed.energyInputRatioModifierFunctionofTemperatureCurve());
+  EXPECT_FALSE(speed.energyInputRatioModifierFunctionofAirFlowFractionCurve());
+  EXPECT_FALSE(speed.partLoadFractionCorrelationCurve());
+  EXPECT_FALSE(speed.wasteHeatModifierFunctionofTemperatureCurve());
+  ASSERT_FALSE(speed.sensibleHeatRatioModifierFunctionofTemperatureCurve());
+  ASSERT_FALSE(speed.sensibleHeatRatioModifierFunctionofFlowFractionCurve());
+
+  
 }

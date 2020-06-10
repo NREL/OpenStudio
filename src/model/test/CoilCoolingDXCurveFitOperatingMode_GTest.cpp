@@ -88,7 +88,73 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_GettersSetters) {
   // create a coil cooling dx curve fit operating mode object to use
   CoilCoolingDXCurveFitOperatingMode operatingMode(model);
 
-  // TODO:
+  ASSERT_FALSE(operatingMode.ratedGrossTotalCoolingCapacity());
+  ASSERT_TRUE(operatingMode.isRatedGrossTotalCoolingCapacityAutosized());
+  ASSERT_FALSE(operatingMode.ratedEvaporatorAirFlowRate());
+  ASSERT_TRUE(operatingMode.isRatedEvaporatorAirFlowRateAutosized());
+  ASSERT_FALSE(operatingMode.ratedCondenserAirFlowRate());
+  ASSERT_TRUE(operatingMode.isRatedCondenserAirFlowRateAutosized());
+  EXPECT_EQ(operatingMode.maximumCyclingRate(), 0.0);
+  EXPECT_EQ(operatingMode.ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(), 0.0);
+  EXPECT_EQ(operatingMode.latentCapacityTimeConstant(), 0.0);
+  EXPECT_EQ(operatingMode.nominalTimeforCondensateRemovaltoBegin(), 0.0);
+  EXPECT_FALSE(operatingMode.applyLatentDegradationtoSpeedsGreaterthan1());
+  EXPECT_EQ(operatingMode.condenserType(), "AirCooled");
+  ASSERT_FALSE(operatingMode.nominalEvaporativeCondenserPumpPower());
+  ASSERT_TRUE(operatingMode.isNominalEvaporativeCondenserPumpPowerAutosized());
+  EXPECT_EQ(operatingMode.nominalSpeedNumber(), 0);
+  EXPECT_TRUE(operatingMode.isNominalSpeedNumberDefaulted());
+  EXPECT_EQ(operatingMode.coilCoolingDXCurveFitPerformances().size(), 0u);
+  EXPECT_EQ(operatingMode.speeds().size(), 0u);
+  EXPECT_EQ(operatingMode.numberOfSpeeds(), 0);
+
+  operatingMode.setRatedGrossTotalCoolingCapacity(0.1);
+  operatingMode.setRatedEvaporatorAirFlowRate(0.2);
+  operatingMode.setRatedCondenserAirFlowRate(0.3);
+  operatingMode.setMaximumCyclingRate(1.0);
+  operatingMode.setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(2.0);
+  operatingMode.setLatentCapacityTimeConstant(3.0);
+  operatingMode.setNominalTimeforCondensateRemovaltoBegin(4.0);
+  operatingMode.setApplyLatentDegradationtoSpeedsGreaterthan1(true);
+  operatingMode.setCondenserType("EvaporativelyCooled");
+  operatingMode.setNominalEvaporativeCondenserPumpPower(5.0);
+  operatingMode.setNominalSpeedNumber(1);
+
+  ASSERT_TRUE(operatingMode.ratedGrossTotalCoolingCapacity());
+  EXPECT_EQ(operatingMode.ratedGrossTotalCoolingCapacity().get(), 0.1);
+  ASSERT_FALSE(operatingMode.isRatedGrossTotalCoolingCapacityAutosized());
+  ASSERT_TRUE(operatingMode.ratedEvaporatorAirFlowRate());
+  EXPECT_EQ(operatingMode.ratedEvaporatorAirFlowRate().get(), 0.2);
+  ASSERT_FALSE(operatingMode.isRatedEvaporatorAirFlowRateAutosized());
+  ASSERT_TRUE(operatingMode.ratedCondenserAirFlowRate());
+  EXPECT_EQ(operatingMode.ratedCondenserAirFlowRate().get(), 0.3);
+  ASSERT_FALSE(operatingMode.isRatedCondenserAirFlowRateAutosized());
+  EXPECT_EQ(operatingMode.maximumCyclingRate(), 1.0);
+  EXPECT_EQ(operatingMode.ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(), 2.0);
+  EXPECT_EQ(operatingMode.latentCapacityTimeConstant(), 3.0);
+  EXPECT_EQ(operatingMode.nominalTimeforCondensateRemovaltoBegin(), 4.0);
+  EXPECT_TRUE(operatingMode.applyLatentDegradationtoSpeedsGreaterthan1());
+  EXPECT_EQ(operatingMode.condenserType(), "EvaporativelyCooled");
+  ASSERT_TRUE(operatingMode.nominalEvaporativeCondenserPumpPower());
+  EXPECT_EQ(operatingMode.nominalEvaporativeCondenserPumpPower().get(), 5.0);
+  ASSERT_FALSE(operatingMode.isNominalEvaporativeCondenserPumpPowerAutosized());
+  EXPECT_EQ(operatingMode.nominalSpeedNumber(), 0);
+  EXPECT_TRUE(operatingMode.isNominalSpeedNumberDefaulted());
+
+  operatingMode.autosizeRatedGrossTotalCoolingCapacity();
+  operatingMode.autosizeRatedEvaporatorAirFlowRate();
+  operatingMode.autosizeRatedCondenserAirFlowRate();
+  operatingMode.autosizeNominalEvaporativeCondenserPumpPower();
+  operatingMode.resetNominalSpeedNumber();
+
+  ASSERT_FALSE(operatingMode.ratedGrossTotalCoolingCapacity());
+  ASSERT_TRUE(operatingMode.isRatedGrossTotalCoolingCapacityAutosized());
+  ASSERT_FALSE(operatingMode.ratedEvaporatorAirFlowRate());
+  ASSERT_TRUE(operatingMode.isRatedEvaporatorAirFlowRateAutosized());
+  ASSERT_FALSE(operatingMode.ratedCondenserAirFlowRate());
+  ASSERT_TRUE(operatingMode.isRatedCondenserAirFlowRateAutosized());
+  EXPECT_EQ(operatingMode.nominalSpeedNumber(), 0);
+  EXPECT_TRUE(operatingMode.isNominalSpeedNumberDefaulted());
 }
 
 TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_Speeds) {

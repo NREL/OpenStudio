@@ -40,6 +40,8 @@
 #include "../CoilCoolingDXCurveFitOperatingMode_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../Schedule_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
 #include "../AirLoopHVACUnitarySystem.hpp"
@@ -111,7 +113,50 @@ TEST_F(ModelFixture, CoilCoolingDX_GettersSetters) {
   // create a coil cooling dx object to use
   CoilCoolingDX dx(model, performance);
 
-  // TODO
+  Schedule schedule = dx.availabilitySchedule();
+  boost::optional<ScheduleConstant> scheduleConstant = schedule.optionalCast<ScheduleConstant>();
+  ASSERT_TRUE(scheduleConstant);
+  EXPECT_EQ((*scheduleConstant).value(), 1.0);
+  ASSERT_TRUE(scheduleConstant);
+  ASSERT_FALSE(dx.condenserZone());
+  ASSERT_TRUE(dx.condenserInletNodeName());
+  EXPECT_EQ(dx.condenserInletNodeName().get(), "");
+  ASSERT_TRUE(dx.condenserOutletNodeName());
+  EXPECT_EQ(dx.condenserOutletNodeName().get(), "");
+  CoilCoolingDXCurveFitPerformance performanceObject = dx.performanceObject();
+  EXPECT_EQ(performanceObject.name().get(), performance.name().get());
+
+  ScheduleConstant scheduleConstant2(model);
+  scheduleConstant2.setValue(0.5);
+  dx.setAvailabilitySchedule(scheduleConstant2);
+  ThermalZone thermalZone(model);
+  dx.setCondenserZone(thermalZone);
+  dx.setCondenserInletNodeName("Node 1");
+  dx.setCondenserOutletNodeName("Node 2");
+  CoilCoolingDXCurveFitPerformance performance2(model, operatingMode);
+  dx.setPerformanceObject(performance2);
+
+  Schedule schedule2 = dx.availabilitySchedule();
+  boost::optional<ScheduleConstant> scheduleConstant3 = schedule2.optionalCast<ScheduleConstant>();
+  ASSERT_TRUE(scheduleConstant3);
+  EXPECT_EQ((*scheduleConstant3).value(), 0.5);
+  ASSERT_TRUE(dx.condenserZone());
+  ASSERT_TRUE(dx.condenserInletNodeName());
+  EXPECT_EQ(dx.condenserInletNodeName().get(), "Node 1");
+  ASSERT_TRUE(dx.condenserOutletNodeName());
+  EXPECT_EQ(dx.condenserOutletNodeName().get(), "Node 2");
+  CoilCoolingDXCurveFitPerformance performanceObject2 = dx.performanceObject();
+  EXPECT_EQ(performanceObject2.name().get(), performance2.name().get());
+
+  dx.resetCondenserZone();
+  dx.resetCondenserInletNodeName();
+  dx.resetCondenserOutletNodeName();
+
+  ASSERT_FALSE(dx.condenserZone());
+  ASSERT_TRUE(dx.condenserInletNodeName());
+  EXPECT_EQ(dx.condenserInletNodeName().get(), "");
+  ASSERT_TRUE(dx.condenserOutletNodeName());
+  EXPECT_EQ(dx.condenserOutletNodeName().get(), "");
 }
 
 TEST_F(ModelFixture, CoilCoolingDX_containingHVACComponent) {
