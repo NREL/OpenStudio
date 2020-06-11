@@ -30,6 +30,7 @@
 #include "ParentObject.hpp"
 #include "ParentObject_Impl.hpp"
 #include "ResourceObject.hpp"
+#include "ResourceObject_Impl.hpp"
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
 #include "LifeCycleCost.hpp"
@@ -87,24 +88,15 @@ namespace detail {
     //}
 
     // subTree includes this object, make sure to include costs as well
-    auto subTree = getRecursiveChildren(getObject<ParentObject>(), true);
+    // drop the ResourceObject instances, if they are used by other objects
+    // This is probably the unique situation where you want to get children minus ResourceObjects
+    auto subTree = getRecursiveChildren(getObject<ParentObject>(), true, false);
 
-    // drop the Curve instances, if they are used by other objects
-    // Perhaps this could be done in the getRecursiveChildren, but this way
-    // the getRecursiveChildren method might be less surprising
-    // This is probably the unique situation where you want to get children minus curves
-    auto isUsedCurve = [](const ModelObject & modelObject) {
-      auto _curve = modelObject.optionalCast<Curve>();
-      return (_curve && _curve->directUseCount() > 1);
-    };
-    auto end = std::remove_if(subTree.begin(), subTree.end(), isUsedCurve);
-    std::vector<ModelObject> noCurvesSubTree(subTree.begin(),end);
-
-    for (const ModelObject& object : noCurvesSubTree) {
+    for (const ModelObject& object : subTree) {
       result.push_back(object.idfObject());
     }
 
-    bool ok = model().removeObjects(getHandles<ModelObject>(noCurvesSubTree));
+    bool ok = model().removeObjects(getHandles<ModelObject>(subTree));
     if (!ok) { result.clear(); }
 
     return result;
@@ -123,8 +115,12 @@ namespace detail {
     ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
     for (ModelObject child : children())
     {
-      ModelObject newChild = child.clone(model);
-      newChild.setParent(newParent);
+      // ResourceObjects will have been handled by ModelObject_Impl::clone already
+      // but they might be listed as children also (notably for OSApp and IG)
+      // if (child.optionalCast<ResourceObject>()) {
+        ModelObject newChild = child.clone(model);
+        newChild.setParent(newParent);
+      // }
     }
     return newParentAsModelObject;
   }
@@ -153,7 +149,9 @@ std::vector<IddObjectType> ParentObject::allowableChildTypes() const
   return getImpl<detail::ParentObject_Impl>()->allowableChildTypes();
 }
 
-std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCostsAndAdditionalProperties) {
+std::vector<ModelObject> getRecursiveChildren(const ParentObject& object,
+                                              bool includeLifeCycleCostsAndAdditionalProperties,
+                                              bool includeUsedResources) {
   std::set<Handle> resultSet;
   std::pair<HandleSet::const_iterator,bool> insertResult;
   std::vector<ModelObject> result;
@@ -179,6 +177,12 @@ std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool i
     // parent's costs have already been added
 
     for (const ModelObject& child : currentParent.children()) {
+      if (!includeUsedResources) {
+        auto _ro = child.optionalCast<ResourceObject>();
+        if (_ro && _ro->directUseCount() > 1) {
+          continue;
+        }
+      }
       insertResult = resultSet.insert(child.handle());
       if (insertResult.second) {
         result.push_back(child);
