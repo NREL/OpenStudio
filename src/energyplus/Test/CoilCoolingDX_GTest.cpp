@@ -46,6 +46,7 @@
 
 #include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_CurveFit_Performance_FieldEnums.hxx>
+#include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
@@ -57,6 +58,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
   CoilCoolingDXCurveFitOperatingMode operatingMode(m);
   CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
   CoilCoolingDX dx(m, performance);
+  dx.setName("CoilCoolingDX");
 
   // put it inside a Unitary, and put Unitary on an AirLoopHVAC so it gets translated
   AirLoopHVACUnitarySystem unitary(m);
@@ -65,12 +67,40 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
   unitary.addToNode(supplyOutletNode);
 
+  // Test custom setting of one condenser node name
+  EXPECT_TRUE(dx.setCondenserOutletNodeName("My Custom Condenser Outlet Node Name"));
+  EXPECT_TRUE(dx.condenserOutletNodeName());
+
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idfUnitarys(w.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem));
+  ASSERT_EQ(1u, idfUnitarys.size());
+  WorkspaceObject idfUnitary(idfUnitarys[0]);
 
   WorkspaceObjectVector idfDXs(w.getObjectsByType(IddObjectType::Coil_Cooling_DX));
   ASSERT_EQ(1u, idfDXs.size());
   WorkspaceObject idfDX(idfDXs[0]);
+
+  // Check that the Unitary ends up with the CoilCoolingDX
+  EXPECT_EQ("Coil:Cooling:DX", idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::CoolingCoilObjectType).get());
+  EXPECT_EQ(idfDX.nameString(), idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::CoolingCoilName).get());
+
+  // Check Node connections: Evap by the Unitary
+  EXPECT_NE("", idfDX.getString(Coil_Cooling_DXFields::EvaporatorInletNodeName).get());
+  EXPECT_NE("", idfDX.getString(Coil_Cooling_DXFields::EvaporatorOutletNodeName).get());
+
+  // Since the Unitary only has a Cooling Coil (no fan, not HC / Suppl HC), the nodes should match
+  EXPECT_EQ(idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirInletNodeName).get(),
+            idfDX.getString(Coil_Cooling_DXFields::EvaporatorInletNodeName).get());
+
+  EXPECT_EQ(idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::AirOutletNodeName).get(),
+            idfDX.getString(Coil_Cooling_DXFields::EvaporatorOutletNodeName).get());
+
+
+  // Condenser Inlet Node: defaulted
+  EXPECT_EQ(dx.nameString() + " Condenser Inlet Node Name", idfDX.getString(Coil_Cooling_DXFields::CondenserInletNodeName).get());
+  EXPECT_EQ("My Custom Condenser Outlet Node Name", idfDX.getString(Coil_Cooling_DXFields::CondenserOutletNodeName).get());
 
   boost::optional<WorkspaceObject> woCoilCoolingDXCurveFitPerformance(idfDX.getTarget(Coil_Cooling_DXFields::PerformanceObjectName));
   EXPECT_TRUE(woCoilCoolingDXCurveFitPerformance);

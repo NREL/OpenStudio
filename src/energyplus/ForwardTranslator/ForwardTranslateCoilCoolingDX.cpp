@@ -71,8 +71,8 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX( model::Coi
   // PerformanceObjectName
   idfObject.setString(Coil_Cooling_DXFields::PerformanceObjectName, s.get());
 
+  // Evaporator Nodes are handled in the FT for AirLoopHVACUnitarySystem
   // EvaporatorInletNodeName
-
   // EvaporatorOutletNodeName
 
   // AvailabilityScheduleName
@@ -91,8 +91,16 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX( model::Coi
   }
 
   // CondenserInletNodeName
+  std::string condenserInletNodeName(modelObject.nameString() + " Condenser Inlet Node");
+  if (auto _s = modelObject.condenserInletNodeName()) {
+    condenserInletNodeName =  _s.get();
+  }
 
   // CondenserOutletNodeName
+  std::string condenserOutletNodeName(modelObject.nameString() + " Condenser Outlet Node");
+  if (auto _s = modelObject.condenserOutletNodeName()) {
+    condenserOutletNodeName =  _s.get();
+  }
 
   // CondensateCollectionWaterStorageTankName
 
