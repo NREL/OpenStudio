@@ -68,7 +68,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
   unitary.addToNode(supplyOutletNode);
 
   // Test custom setting of one condenser node name
-  EXPECT_TRUE(dx.setCondenserOutletNodeName("My Custom Condenser Outlet Node Name"));
+  EXPECT_TRUE(dx.setCondenserOutletNodeName("My Custom Condenser Outlet Node"));
   EXPECT_TRUE(dx.condenserOutletNodeName());
 
   ForwardTranslator ft;
@@ -99,8 +99,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
 
 
   // Condenser Inlet Node: defaulted
-  EXPECT_EQ(dx.nameString() + " Condenser Inlet Node Name", idfDX.getString(Coil_Cooling_DXFields::CondenserInletNodeName).get());
-  EXPECT_EQ("My Custom Condenser Outlet Node Name", idfDX.getString(Coil_Cooling_DXFields::CondenserOutletNodeName).get());
+  EXPECT_EQ(dx.nameString() + " Condenser Inlet Node", idfDX.getString(Coil_Cooling_DXFields::CondenserInletNodeName).get());
+  EXPECT_EQ("My Custom Condenser Outlet Node", idfDX.getString(Coil_Cooling_DXFields::CondenserOutletNodeName).get());
 
   boost::optional<WorkspaceObject> woCoilCoolingDXCurveFitPerformance(idfDX.getTarget(Coil_Cooling_DXFields::PerformanceObjectName));
   EXPECT_TRUE(woCoilCoolingDXCurveFitPerformance);

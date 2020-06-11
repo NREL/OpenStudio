@@ -91,10 +91,8 @@ TEST_F(ModelFixture, CoilCoolingDX_CoilCoolingDX) {
 
   EXPECT_EQ(alwaysOn, dx.availabilitySchedule());
   ASSERT_FALSE(dx.condenserZone());
-  ASSERT_TRUE(dx.condenserInletNodeName());
-  EXPECT_EQ("", dx.condenserInletNodeName().get());
-  ASSERT_TRUE(dx.condenserOutletNodeName());
-  EXPECT_EQ("", dx.condenserOutletNodeName().get());
+  EXPECT_FALSE(dx.condenserInletNodeName());
+  EXPECT_FALSE(dx.condenserOutletNodeName());
   ASSERT_TRUE(dx.performanceObject().optionalCast<CoilCoolingDXCurveFitPerformance>());
   // ASSERT_FALSE(dx.condensateCollectionWaterStorageTankName());
   // ASSERT_FALSE(dx.evaporativeCondenserSupplyWaterStorageTankName());
@@ -118,11 +116,9 @@ TEST_F(ModelFixture, CoilCoolingDX_GettersSetters) {
   ASSERT_TRUE(scheduleConstant);
   EXPECT_EQ((*scheduleConstant).value(), 1.0);
   ASSERT_TRUE(scheduleConstant);
-  ASSERT_FALSE(dx.condenserZone());
-  ASSERT_TRUE(dx.condenserInletNodeName());
-  EXPECT_EQ(dx.condenserInletNodeName().get(), "");
-  ASSERT_TRUE(dx.condenserOutletNodeName());
-  EXPECT_EQ(dx.condenserOutletNodeName().get(), "");
+  EXPECT_FALSE(dx.condenserZone());
+  EXPECT_FALSE(dx.condenserInletNodeName());
+  EXPECT_FALSE(dx.condenserOutletNodeName());
   CoilCoolingDXCurveFitPerformance performanceObject = dx.performanceObject();
   EXPECT_EQ(performanceObject.name().get(), performance.name().get());
 
@@ -152,11 +148,9 @@ TEST_F(ModelFixture, CoilCoolingDX_GettersSetters) {
   dx.resetCondenserInletNodeName();
   dx.resetCondenserOutletNodeName();
 
-  ASSERT_FALSE(dx.condenserZone());
-  ASSERT_TRUE(dx.condenserInletNodeName());
-  EXPECT_EQ(dx.condenserInletNodeName().get(), "");
-  ASSERT_TRUE(dx.condenserOutletNodeName());
-  EXPECT_EQ(dx.condenserOutletNodeName().get(), "");
+  EXPECT_FALSE(dx.condenserZone());
+  EXPECT_FALSE(dx.condenserInletNodeName());
+  EXPECT_FALSE(dx.condenserOutletNodeName());
 }
 
 TEST_F(ModelFixture, CoilCoolingDX_containingHVACComponent) {
