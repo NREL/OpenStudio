@@ -41,6 +41,8 @@
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
 
+#include <algorithm>
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -184,6 +186,30 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitSpeed_GettersSetters) {
   EXPECT_FALSE(speed.wasteHeatModifierFunctionofTemperatureCurve());
   ASSERT_FALSE(speed.sensibleHeatRatioModifierFunctionofTemperatureCurve());
   ASSERT_FALSE(speed.sensibleHeatRatioModifierFunctionofFlowFractionCurve());
+}
 
-  
+TEST_F(ModelFixture, CoilCoolingDXCurveFitSpeed_coilCoolingDXCurveFitPerformances) {
+  Model model;
+
+  CoilCoolingDXCurveFitSpeed speed(model);
+  CoilCoolingDXCurveFitOperatingMode operatingMode1(model);
+  EXPECT_TRUE(operatingMode1.addSpeed(speed));
+
+  EXPECT_EQ(1u, speed.directUseCount());
+  auto coilCoolingDXCurveFitOperatingModes = speed.coilCoolingDXCurveFitOperatingModes();
+  ASSERT_EQ(1u, coilCoolingDXCurveFitOperatingModes.size());
+  EXPECT_EQ(operatingMode1, coilCoolingDXCurveFitOperatingModes[0]);
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode2(model);
+  EXPECT_TRUE(operatingMode2.addSpeed(speed));
+
+  EXPECT_EQ(2u, speed.directUseCount());
+  coilCoolingDXCurveFitOperatingModes = speed.coilCoolingDXCurveFitOperatingModes();
+  ASSERT_EQ(2u, coilCoolingDXCurveFitOperatingModes.size());
+  EXPECT_TRUE(std::find(coilCoolingDXCurveFitOperatingModes.begin(),
+                        coilCoolingDXCurveFitOperatingModes.end(),
+                        operatingMode1) != coilCoolingDXCurveFitOperatingModes.end());
+  EXPECT_TRUE(std::find(coilCoolingDXCurveFitOperatingModes.begin(),
+                        coilCoolingDXCurveFitOperatingModes.end(),
+                        operatingMode2) != coilCoolingDXCurveFitOperatingModes.end());
 }

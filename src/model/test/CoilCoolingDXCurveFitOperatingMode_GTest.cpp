@@ -39,6 +39,8 @@
 #include "../CoilCoolingDXCurveFitSpeed.hpp"
 #include "../CoilCoolingDXCurveFitSpeed_Impl.hpp"
 
+#include <algorithm>
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -167,7 +169,7 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_Speeds) {
   std::vector<CoilCoolingDXCurveFitSpeed> speeds;
   for (unsigned i = 1; i <= 10; ++i) {
     CoilCoolingDXCurveFitSpeed speed(model);
-    operatingMode.setName("Speed " + std::to_string(i));
+    speed.setName("Speed " + std::to_string(i));
     speeds.push_back(speed);
     EXPECT_TRUE(operatingMode.addSpeed(speed));
     EXPECT_EQ(i, operatingMode.numberOfSpeeds());
@@ -265,4 +267,102 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_Speeds) {
       EXPECT_EQ(speeds[i], thisSpeeds[i]);
     }
   }
+}
+
+TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_coilCoolingDXCurveFitPerformances) {
+  Model model;
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+  CoilCoolingDXCurveFitPerformance performance1(model, operatingMode);
+
+  EXPECT_EQ(1u, operatingMode.directUseCount());
+  auto coilCoolingDXCurveFitPerformances = operatingMode.coilCoolingDXCurveFitPerformances();
+  ASSERT_EQ(1u, coilCoolingDXCurveFitPerformances.size());
+  EXPECT_EQ(performance1, coilCoolingDXCurveFitPerformances[0]);
+
+  CoilCoolingDXCurveFitPerformance performance2(model, operatingMode);
+  EXPECT_EQ(2u, operatingMode.directUseCount());
+  coilCoolingDXCurveFitPerformances = operatingMode.coilCoolingDXCurveFitPerformances();
+  ASSERT_EQ(2u, coilCoolingDXCurveFitPerformances.size());
+  EXPECT_TRUE(std::find(coilCoolingDXCurveFitPerformances.begin(), coilCoolingDXCurveFitPerformances.end(), performance1) != coilCoolingDXCurveFitPerformances.end());
+  EXPECT_TRUE(std::find(coilCoolingDXCurveFitPerformances.begin(), coilCoolingDXCurveFitPerformances.end(), performance2) != coilCoolingDXCurveFitPerformances.end());
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode2(model);
+  EXPECT_TRUE(performance1.setBaseOperatingMode(operatingMode2));
+
+  EXPECT_EQ(1u, operatingMode2.directUseCount());
+  coilCoolingDXCurveFitPerformances = operatingMode2.coilCoolingDXCurveFitPerformances();
+  ASSERT_EQ(1u, coilCoolingDXCurveFitPerformances.size());
+  EXPECT_EQ(performance1, coilCoolingDXCurveFitPerformances[0]);
+
+
+  EXPECT_EQ(1u, operatingMode.directUseCount());
+  coilCoolingDXCurveFitPerformances = operatingMode.coilCoolingDXCurveFitPerformances();
+  ASSERT_EQ(1u, coilCoolingDXCurveFitPerformances.size());
+  EXPECT_EQ(performance2, coilCoolingDXCurveFitPerformances[0]);
+}
+
+
+TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_clone) {
+
+  // create a model to use
+  Model model;
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+
+  std::vector<CoilCoolingDXCurveFitSpeed> speeds;
+  for (unsigned i = 1; i <= 10; ++i) {
+    CoilCoolingDXCurveFitSpeed speed(model);
+    speed.setName("Speed " + std::to_string(i));
+    speeds.push_back(speed);
+    EXPECT_TRUE(operatingMode.addSpeed(speed));
+  }
+
+  EXPECT_EQ(10u, operatingMode.numberOfSpeeds());
+  EXPECT_EQ(speeds, operatingMode.speeds());
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+  EXPECT_EQ(10u, model.getConcreteModelObjects<CoilCoolingDXCurveFitSpeed>().size());
+
+  auto operatingModeClone = operatingMode.clone(model).cast<CoilCoolingDXCurveFitOperatingMode>();
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+  EXPECT_EQ(10u, model.getConcreteModelObjects<CoilCoolingDXCurveFitSpeed>().size());
+
+  EXPECT_EQ(10u, operatingMode.numberOfSpeeds());
+  EXPECT_EQ(speeds, operatingMode.speeds());
+
+  EXPECT_EQ(10u, operatingModeClone.numberOfSpeeds());
+  EXPECT_EQ(speeds, operatingModeClone.speeds());
+
+
+  // This shouldn't work, it's going to put the CoilCoolingDXCurveFitPerformance in a broken state
+  auto rmed = operatingMode.remove();
+  EXPECT_EQ(0u, rmed.size());
+  EXPECT_NO_THROW(performance.baseOperatingMode());
+  CoilCoolingDXCurveFitOperatingMode anotherOperatingMode(model);
+  EXPECT_TRUE(performance.setBaseOperatingMode(anotherOperatingMode));
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(3u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+  EXPECT_EQ(10u, model.getConcreteModelObjects<CoilCoolingDXCurveFitSpeed>().size());
+
+
+
+  rmed = operatingMode.remove();
+  EXPECT_EQ(1u, rmed.size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+  EXPECT_EQ(10u, model.getConcreteModelObjects<CoilCoolingDXCurveFitSpeed>().size());
+  EXPECT_EQ(10u, operatingModeClone.numberOfSpeeds());
+  EXPECT_EQ(speeds, operatingModeClone.speeds());
+
+
+  rmed = operatingModeClone.remove();
+  EXPECT_EQ(11u, rmed.size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilCoolingDXCurveFitSpeed>().size());
 }

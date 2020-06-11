@@ -236,16 +236,29 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_clone) {
   EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
   EXPECT_EQ(3u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
 
-  performance.remove();
+  // This shouldn't work, it's going to put the CoilCoolingDX in a broken state
+  auto rmed = performance.remove();
+  EXPECT_EQ(0u, rmed.size());
+  EXPECT_NO_THROW(dx.performanceObject());
+  CoilCoolingDXCurveFitOperatingMode anotherOperatingMode(model);
+  CoilCoolingDXCurveFitPerformance anotherPerformance(model, anotherOperatingMode);
+  EXPECT_TRUE(dx.setPerformanceObject(anotherPerformance));
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(3u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+
+  rmed = performance.remove();
+  EXPECT_EQ(1u, rmed.size());
   EXPECT_EQ(baseOperatingMode, performanceClone.baseOperatingMode());
   EXPECT_EQ(alternativeOperatingMode1, performanceClone.alternativeOperatingMode1());
   EXPECT_EQ(alternativeOperatingMode2, performanceClone.alternativeOperatingMode2());
   EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+
+  rmed = performanceClone.remove();
+  EXPECT_EQ(4u, rmed.size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
   EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
   EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
-
-  performanceClone.remove();
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilCoolingDX>().size());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
 }
