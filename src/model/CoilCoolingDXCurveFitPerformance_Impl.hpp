@@ -76,6 +76,9 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const override;
 
+    // If this object is still used by at least one CoilCoolingDX, refuse to remove to avoid putting the CoilCoolingDX(s) in a broken state
+    virtual std::vector<IdfObject> remove() override;
+
     //@}
     /** @name Getters */
     //@{

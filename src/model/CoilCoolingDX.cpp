@@ -123,18 +123,18 @@ namespace detail {
   }
 
   ModelObject CoilCoolingDX_Impl::clone(Model model) const {
-    auto t_clone = StraightComponent_Impl::clone(model).cast<CoilCoolingDX>();
+    return StraightComponent_Impl::clone(model);
 
     // The CoilCoolingDXCurveFitPerformance is a ResourceObject so it'll be handled by the ModelObject::clone
+    // (StraightComponent_Impl::clone calls HVACComponent_Impl::clone, which skips ParentObject_Impl::clone and goes directly to ModelObject::clone)
     // auto performanceClone = performanceObject().clone(model).cast<CoilCoolingDXCurveFitPerformance>();
     // t_clone.setPerformanceObject(performanceClone);
-
-    return t_clone;
   }
 
   std::vector<ModelObject> CoilCoolingDX_Impl::children() const {
     std::vector<ModelObject> result;
 
+    // This is a ResourceObject, so it shouldn't really be a child except for OS App / IG
     result.push_back(performanceObject());
 
     std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());

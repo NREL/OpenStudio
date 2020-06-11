@@ -87,14 +87,15 @@ namespace detail {
   }
 
   ModelObject CoilCoolingDXCurveFitSpeed_Impl::clone(Model model) const {
-    auto t_clone = ModelObject_Impl::clone(model).cast<CoilCoolingDXCurveFitSpeed>();
-
-    return t_clone;
+    // clone the operating modes is already handle in ModelObject_Impl::clone since they are ResourceObjects
+    // We don't do ParentObject_Impl::clone since it'll also CLONE the children...
+    return ModelObject_Impl::clone(model);
   }
 
   std::vector<ModelObject> CoilCoolingDXCurveFitSpeed_Impl::children() const {
     std::vector<ModelObject> result;
 
+    // These are ResourceObjects, so they shouldn't really be children except for OS App / IG
     if (auto _c = totalCoolingCapacityModifierFunctionofTemperatureCurve()) {
       result.push_back(_c.get());
     }

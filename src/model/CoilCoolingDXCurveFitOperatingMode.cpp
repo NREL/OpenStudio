@@ -86,20 +86,29 @@ namespace detail {
   }
 
   ModelObject CoilCoolingDXCurveFitOperatingMode_Impl::clone(Model model) const {
-    auto t_clone = ModelObject_Impl::clone(model).cast<CoilCoolingDXCurveFitOperatingMode>();
-
-    auto t_speeds = speeds();
-    for( auto speed: t_speeds ) {
-      auto speedClone = speed.clone(model).cast<CoilCoolingDXCurveFitSpeed>();
-      t_clone.addSpeed(speedClone);
-    }
-    return t_clone;
+    // clone the operating modes is already handle in ModelObject_Impl::clone since they are ResourceObjects
+    // We don't do ParentObject_Impl::clone since it'll also CLONE the children...
+    return ModelObject_Impl::clone(model);
   }
 
   std::vector<ModelObject> CoilCoolingDXCurveFitOperatingMode_Impl::children() const {
+    // These are ResourceObjects, so they shouldn't really be children except for OS App / IG
     std::vector<ModelObject> result = subsetCastVector<ModelObject>(speeds());
 
     return result;
+  }
+
+  std::vector<IdfObject> CoilCoolingDXCurveFitOperatingMode_Impl::remove() {
+    auto perfs = coilCoolingDXCurveFitPerformances();
+    auto it = std::find_if(perfs.begin(), perfs.end(),
+                           [this](const CoilCoolingDXCurveFitPerformance& perf){
+                             return (perf.baseOperatingMode().handle() == this->handle());
+                           });
+    if (it != perfs.end()) {
+      LOG(Warn, "Cannot remove object because it is used by at least one CoilCoolingDXCurveFitPerformance as a required field");
+      return std::vector<IdfObject>();
+    }
+    return ResourceObject_Impl::remove();
   }
 
   boost::optional<double> CoilCoolingDXCurveFitOperatingMode_Impl::ratedGrossTotalCoolingCapacity() const {

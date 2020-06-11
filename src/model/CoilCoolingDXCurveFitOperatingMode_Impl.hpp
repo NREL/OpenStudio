@@ -73,6 +73,10 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const override;
 
+    // If this object is still used by at least one CoilCoolingDXCurveFitPerformance as a BaseOperatingMode, refuse to remove to avoid putting
+    // the CoilCoolingDXCurveFitPerformance(s) in a broken state
+    virtual std::vector<IdfObject> remove() override;
+
     //@}
     /** @name Getters */
     //@{
