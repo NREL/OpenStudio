@@ -192,11 +192,11 @@ namespace detail {
   }
 
   boost::optional<std::string> CoilCoolingDX_Impl::condenserInletNodeName() const {
-    return getString(OS_Coil_Cooling_DXFields::CondenserInletNodeName,true);
+    return getString(OS_Coil_Cooling_DXFields::CondenserInletNodeName, false, true);
   }
 
   boost::optional<std::string> CoilCoolingDX_Impl::condenserOutletNodeName() const {
-    return getString(OS_Coil_Cooling_DXFields::CondenserOutletNodeName,true);
+    return getString(OS_Coil_Cooling_DXFields::CondenserOutletNodeName, false, true);
   }
 
   boost::optional<CoilCoolingDXCurveFitPerformance> CoilCoolingDX_Impl::optionalPerformanceObject() const {
