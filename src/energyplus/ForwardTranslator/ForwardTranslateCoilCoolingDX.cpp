@@ -95,12 +95,14 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX( model::Coi
   if (auto _s = modelObject.condenserInletNodeName()) {
     condenserInletNodeName =  _s.get();
   }
+  idfObject.setString(Coil_Cooling_DXFields::CondenserInletNodeName, condenserInletNodeName);
 
   // CondenserOutletNodeName
   std::string condenserOutletNodeName(modelObject.nameString() + " Condenser Outlet Node");
   if (auto _s = modelObject.condenserOutletNodeName()) {
     condenserOutletNodeName =  _s.get();
   }
+  idfObject.setString(Coil_Cooling_DXFields::CondenserOutletNodeName, condenserOutletNodeName);
 
   // CondensateCollectionWaterStorageTankName
 
