@@ -233,13 +233,13 @@ namespace openstudio
     }
 
     bool sortSceneChildren(const ThreeSceneChild &lhs, const ThreeSceneChild &rhs) {
-      unsigned leftTypeOrder = getIddObjectTypeOrder(lhs.userData().surfaceType());
-      unsigned rightTypeOrder = getIddObjectTypeOrder(rhs.userData().surfaceType());
+      unsigned leftTypeOrder = getUserDataSurfaceTypeOrder(lhs.userData().surfaceType());
+      unsigned rightTypeOrder = getUserDataSurfaceTypeOrder(rhs.userData().surfaceType());
 
       if (leftTypeOrder == rightTypeOrder){
-        return lhs.userData().name() > rhs.userData().name();
+        return lhs.userData().name() < rhs.userData().name();
       }
-      return leftTypeOrder > rightTypeOrder;
+      return leftTypeOrder < rightTypeOrder;
     }
 
     boost::optional<RenderingColor> makeRenderingColor(const std::string& color, Model& model)
