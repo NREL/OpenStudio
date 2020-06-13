@@ -10,6 +10,10 @@
 
 %ignore openstudio::model::detail;
 
+// Ignore the ostream operator<<, especially for CSharp where it'll throw a multiple definition
+// This is done in utilities/core/csharp/LanguageSpecific.i
+//%ignore openstudio::model::operator<<;
+
 %{
   #include <model/Model.hpp>
   #include <model/Model_Impl.hpp>

@@ -10,6 +10,13 @@
   %rename(toString) openstudio::WorkflowStepResult::string;
   %rename(toString) openstudio::WorkflowStep::string;
   %rename(toString) openstudio::WorkflowJSON::string;
+  %rename(toString) openstudio::CSVFile::string;
+  %rename(toString) openstudio::StandardsJSON::string;
+
+  // Overload resolution
+  %ignore openstudio::WorkflowStepValue::WorkflowStepValue(std::string const&, char const*);
+  %ignore openstudio::MeasureStep::setArgument(std::string const&, char const*);
+
 
 #endif
 

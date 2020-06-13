@@ -19,7 +19,6 @@
 %{
   #include <utilities/core/Path.hpp>
   #include <utilities/core/PathHelpers.hpp>
-  #include <utilities/core/String.hpp>
 
   namespace openstudio{
 //    #ifdef _WINDOWS
@@ -107,7 +106,7 @@ namespace openstudio {
     //PathStringType file_string() const;
     //PathStringType directory_string() const;
     //PathStringType external_file_string() const;
-    // TODO: this generates a CSHARP SWIG warning: 'string' is a C# keyword
+    // This generates a CSHARP SWIG warning: 'string' is a C# keyword: renamed above
     path string() const;
 
     path root_path() const;
@@ -140,9 +139,12 @@ namespace openstudio {
   // DLM: deprecate in favor of path.to_s
   std::string toString(const path& p);
 
+  // C# not happy about overloads, so just leave the std::string one
+#ifndef SWIGCSHARP
   // UTF-8 encoded char* to path
   // DLM: deprecate
   path toPath(const char* s);
+#endif
 
   // UTF-8 encoded std::string to path
   // DLM: deprecate in favor of Path.new(string)
@@ -375,6 +377,7 @@ namespace openstudio {
 
 
 %include <utilities/core/PathHelpers.hpp>
+%include <utilities/core/String.i>
 
 
 // DLM@20100101: demo purposes only, should be able to automatically convert a string input, delete when working

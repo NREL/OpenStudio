@@ -4990,17 +4990,17 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
     pugi::xml_node minAirFracSchRefElement = trmlUnitElement.child("MinAirFracSchRef");
     if( boost::optional<model::Schedule> minAirFracSch = model.getModelObjectByName<model::Schedule>(minAirFracSchRefElement.text().as_string()) )
     {
-      terminal.setZoneMinimumAirFlowMethod("Scheduled");
+      terminal.setZoneMinimumAirFlowInputMethod("Scheduled");
       terminal.setMinimumAirFlowFractionSchedule(minAirFracSch.get());
     }
     else if( primaryAirFlowMin )
     {
-      terminal.setZoneMinimumAirFlowMethod("FixedFlowRate");
+      terminal.setZoneMinimumAirFlowInputMethod("FixedFlowRate");
       terminal.setFixedMinimumAirFlowRate(primaryAirFlowMin.get());
     }
     else
     {
-      terminal.setZoneMinimumAirFlowMethod("Constant");
+      terminal.setZoneMinimumAirFlowInputMethod("Constant");
       terminal.setConstantMinimumAirFlowFraction(0.2);
     }
 

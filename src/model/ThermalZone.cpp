@@ -33,6 +33,10 @@
 #include "AirLoopHVACSupplyPlenum_Impl.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat.hpp"
 #include "AirTerminalSingleDuctParallelPIUReheat_Impl.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat.hpp"
+#include "AirTerminalSingleDuctSeriesPIUReheat_Impl.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction.hpp"
+#include "AirTerminalSingleDuctConstantVolumeFourPipeInduction_Impl.hpp"
 #include "AirLoopHVACReturnPlenum.hpp"
 #include "AirLoopHVACReturnPlenum_Impl.hpp"
 #include "ZoneHVACEquipmentList.hpp"
@@ -2121,6 +2125,38 @@ namespace detail {
                               secondaryInletNode.outletPort(),
                               terminal.get(),
                               terminal->secondaryAirInletPort() );
+            }
+            else if( boost::optional<AirTerminalSingleDuctSeriesPIUReheat> terminal = inletObj->optionalCast<AirTerminalSingleDuctSeriesPIUReheat>() )
+            {
+              Node secondaryInletNode(_model);
+
+              PortList t_exhaustPortList = exhaustPortList();
+
+              _model.connect( t_exhaustPortList,
+                              t_exhaustPortList.nextPort(),
+                              secondaryInletNode,
+                              secondaryInletNode.inletPort() );
+
+              _model.connect( secondaryInletNode,
+                              secondaryInletNode.outletPort(),
+                              terminal.get(),
+                              terminal->secondaryAirInletPort() );
+            }
+            else if( boost::optional<AirTerminalSingleDuctConstantVolumeFourPipeInduction> terminal = inletObj->optionalCast<AirTerminalSingleDuctConstantVolumeFourPipeInduction>() )
+            {
+              Node inducedAirInletNode(_model);
+
+              PortList t_exhaustPortList = exhaustPortList();
+
+              _model.connect( t_exhaustPortList,
+                              t_exhaustPortList.nextPort(),
+                              inducedAirInletNode,
+                              inducedAirInletNode.inletPort() );
+
+              _model.connect( inducedAirInletNode,
+                              inducedAirInletNode.outletPort(),
+                              terminal.get(),
+                              terminal->inducedAirInletPort() );
             }
           }
 
