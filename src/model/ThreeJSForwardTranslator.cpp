@@ -241,11 +241,13 @@ namespace openstudio
 
         boost::optional<Surface> parentSurface = subSurface->surface();
         std::string boundaryMaterialName;
-        if (surface){
-          boundaryMaterialName = "Boundary_" + surface->surfaceType();
-          userData.setOutsideBoundaryCondition(surface->outsideBoundaryCondition());
+        if (parentSurface) {
+          boundaryMaterialName = "Boundary_" + parentSurface->surfaceType();
+          userData.setOutsideBoundaryCondition(parentSurface->outsideBoundaryCondition());
           userData.setSunExposure(parentSurface->sunExposure());
           userData.setWindExposure(parentSurface->windExposure());
+          userData.setSurfaceName(parentSurface->nameString());
+          userData.setSurfaceHandle(toThreeUUID(toString(parentSurface->handle())));
         }
 
         boost::optional<SubSurface> adjacentSubSurface = subSurface->adjacentSubSurface();
