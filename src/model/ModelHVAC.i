@@ -55,6 +55,9 @@
   // WaterUseConnections is defined in ModelStraightComponent.i (which depends on this file)
   %ignore openstudio::model::WaterUseEquipment::waterUseConnections;
 
+  // Defined in ModelStraightComponent.i
+  %ignore openstudio::model::CoilCoolingDXMultiSpeedStageData::parentCoil;
+
 #endif
 
 namespace openstudio {
@@ -70,6 +73,8 @@ namespace model {
 %feature("valuewrapper") PlantEquipmentOperationHeatingLoad;
 %feature("valuewrapper") PlantEquipmentOperationCoolingLoad;
 %feature("valuewrapper") WaterUseConnections;
+%feature("valuewrapper") CoilCoolingDXMultiSpeed;
+
 class AirflowNetworkDistributionNode;
 class AirflowNetworkZone;
 class AirflowNetworkEquivalentDuct;
@@ -79,6 +84,7 @@ class AirflowNetworkZoneExhaustFan;
 class PlantEquipmentOperationHeatingLoad;
 class PlantEquipmentOperationCoolingLoad;
 class WaterUseConnections;
+class CoilCoolingDXMultiSpeed;
 
 }
 }
