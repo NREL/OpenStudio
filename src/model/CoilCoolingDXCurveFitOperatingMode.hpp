@@ -97,17 +97,6 @@ class MODEL_API CoilCoolingDXCurveFitOperatingMode : public ResourceObject {
   unsigned nominalSpeedNumber() const;
   bool isNominalSpeedNumberDefaulted() const;
 
-  std::vector<CoilCoolingDXCurveFitPerformance> coilCoolingDXCurveFitPerformances() const;
-
-  std::vector<CoilCoolingDXCurveFitSpeed> speeds() const;
-
-  unsigned numberOfSpeeds() const;
-
-  /*
-   * Get the index of a given CoilCoolingDXCurveFitSpeed (1-indexed)
-   */
-  boost::optional<unsigned> speedIndex(const CoilCoolingDXCurveFitSpeed& speed) const;
-
   //@}
   /** @name Setters */
   //@{
@@ -138,6 +127,34 @@ class MODEL_API CoilCoolingDXCurveFitOperatingMode : public ResourceObject {
 
   bool setNominalSpeedNumber(unsigned nominalSpeedNumber);
   void resetNominalSpeedNumber();
+
+  //@}
+  /** @name Other */
+  //@{
+
+  boost::optional<double> autosizedRatedGrossTotalCoolingCapacity();
+
+  boost::optional<double> autosizedRatedEvaporatorAirFlowRate();
+
+  boost::optional<double> autosizedRatedCondenserAirFlowRate();
+
+  boost::optional<double> autosizedNominalEvaporativeCondenserPumpPower();
+
+  void autosize();
+
+  void applySizingValues();
+
+
+  std::vector<CoilCoolingDXCurveFitPerformance> coilCoolingDXCurveFitPerformances() const;
+
+  std::vector<CoilCoolingDXCurveFitSpeed> speeds() const;
+
+  unsigned numberOfSpeeds() const;
+
+  /*
+   * Get the index of a given CoilCoolingDXCurveFitSpeed (1-indexed)
+   */
+  boost::optional<unsigned> speedIndex(const CoilCoolingDXCurveFitSpeed& speed) const;
 
   /*
    * Add a new CoilCoolingDXCurveFitSpeed at the end of the list (priority = last).
@@ -180,22 +197,6 @@ class MODEL_API CoilCoolingDXCurveFitOperatingMode : public ResourceObject {
    */
   bool removeSpeed(unsigned index);
 
-
-  //@}
-  /** @name Other */
-  //@{
-
-  boost::optional<double> autosizedRatedGrossTotalCoolingCapacity();
-
-  boost::optional<double> autosizedRatedEvaporatorAirFlowRate();
-
-  boost::optional<double> autosizedRatedCondenserAirFlowRate();
-
-  boost::optional<double> autosizedNominalEvaporativeCondenserPumpPower();
-
-  void autosize();
-
-  void applySizingValues();
 
   //@}
  protected:

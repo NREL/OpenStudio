@@ -330,9 +330,6 @@ namespace detail {
 
     boost::optional<unsigned> result;
 
-    // Find with custom predicate, checking handle equality between the toSurface and the fromSurface pairs
-    // We do it with extensibleGroups() (rather than viewFactors()) and getString to avoid overhead
-    // of manipulating actual model objects (getTarget, then create a ViewFactor wrapper, get handle convert to string...) and speed up the routine
     auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
     auto h = openstudio::toString(speed.handle());
     auto it = std::find_if(egs.begin(), egs.end(),
@@ -355,8 +352,13 @@ namespace detail {
       LOG(Error, "You have reached the maximum number of speeds (=" << numberOfSpeeds() << "), occurred for " << briefDescription() << ".");
       return false;
     }
-
-    return group.setPointer(OS_Coil_Cooling_DX_CurveFit_OperatingModeExtensibleFields::Speed, speed.handle());
+    bool result = group.setPointer(OS_Coil_Cooling_DX_CurveFit_OperatingModeExtensibleFields::Speed, speed.handle());
+    if (!result) {
+      // Something went wrong
+      // So erase the new extensible group
+      getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
+    }
+    return result;
   }
 
 

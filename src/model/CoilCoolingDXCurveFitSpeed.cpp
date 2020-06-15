@@ -124,6 +124,13 @@ namespace detail {
     return result;
   }
 
+  std::vector<IdfObject> CoilCoolingDXCurveFitSpeed_Impl::remove() {
+    for (auto& opMode: coilCoolingDXCurveFitOperatingModes()) {
+      opMode.removeSpeed(getObject<CoilCoolingDXCurveFitSpeed>());
+    }
+    return ResourceObject_Impl::remove();
+  }
+
   double CoilCoolingDXCurveFitSpeed_Impl::grossTotalCoolingCapacityFraction() const {
     boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::GrossTotalCoolingCapacityFraction,true);
     OS_ASSERT(value);

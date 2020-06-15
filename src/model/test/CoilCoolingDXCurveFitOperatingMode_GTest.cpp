@@ -267,6 +267,19 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_Speeds) {
       EXPECT_EQ(speeds[i], thisSpeeds[i]);
     }
   }
+
+  operatingMode.removeAllSpeeds();
+  EXPECT_EQ(0u, operatingMode.numExtensibleGroups());
+  EXPECT_EQ(0u, operatingMode.numberOfSpeeds());
+  EXPECT_EQ(0u, operatingMode.speeds().size());
+
+  // Test that added a speed from another model will fail but not add a blank extensible group
+  Model model2;
+  CoilCoolingDXCurveFitSpeed speedFromAnotherModel(model2);
+  EXPECT_FALSE(operatingMode.addSpeed(speedFromAnotherModel));
+  EXPECT_EQ(0u, operatingMode.numExtensibleGroups());
+  EXPECT_EQ(0u, operatingMode.numberOfSpeeds());
+  EXPECT_EQ(0u, operatingMode.speeds().size());
 }
 
 TEST_F(ModelFixture, CoilCoolingDXCurveFitOperatingMode_coilCoolingDXCurveFitPerformances) {

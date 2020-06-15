@@ -73,6 +73,9 @@ namespace detail {
 
     virtual std::vector<ModelObject> children() const override;
 
+    // If this object is used by any CoilCoolingDXCurveFitOperatingMode, remove the corresponding extensible group to avoid having 'blanks'
+    virtual std::vector<IdfObject> remove() override;
+
     //@}
     /** @name Getters */
     //@{

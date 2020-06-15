@@ -213,3 +213,42 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitSpeed_coilCoolingDXCurveFitPerformance
                         coilCoolingDXCurveFitOperatingModes.end(),
                         operatingMode2) != coilCoolingDXCurveFitOperatingModes.end());
 }
+
+TEST_F(ModelFixture, CoilCoolingDXCurveFitSpeed_remove) {
+  // If we remove a speed, we would like any CurveFitOperatingMode that use it to have their extensible groups adjusted
+  Model model;
+
+  CoilCoolingDXCurveFitSpeed speed1(model);
+  CoilCoolingDXCurveFitSpeed speed2(model);
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode1(model);
+  EXPECT_TRUE(operatingMode1.addSpeed(speed1));
+  EXPECT_TRUE(operatingMode1.addSpeed(speed2));
+
+  EXPECT_EQ(2u, operatingMode1.numExtensibleGroups());
+  EXPECT_EQ(2u, operatingMode1.numberOfSpeeds());
+  EXPECT_EQ(2u, operatingMode1.speeds().size());
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode2(model);
+  EXPECT_TRUE(operatingMode2.addSpeed(speed1));
+
+  EXPECT_EQ(1u, operatingMode2.numExtensibleGroups());
+  EXPECT_EQ(1u, operatingMode2.numberOfSpeeds());
+  EXPECT_EQ(1u, operatingMode2.speeds().size());
+
+  EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDXCurveFitSpeed>().size());
+
+  speed1.remove();
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitSpeed>().size());
+
+  EXPECT_EQ(1u, operatingMode1.numExtensibleGroups());
+  EXPECT_EQ(1u, operatingMode1.numberOfSpeeds());
+  EXPECT_EQ(1u, operatingMode1.speeds().size());
+  EXPECT_EQ(0u, operatingMode2.numExtensibleGroups());
+  EXPECT_EQ(0u, operatingMode2.numberOfSpeeds());
+  EXPECT_EQ(0u, operatingMode2.speeds().size());
+
+  EXPECT_EQ(speed2, operatingMode1.speeds()[0]);
+
+}
