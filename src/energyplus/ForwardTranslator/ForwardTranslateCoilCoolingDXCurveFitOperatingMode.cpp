@@ -74,7 +74,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitOper
     idfObject.setString(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatedEvaporatorAirFlowRate, "Autosize");
   }
 
-  // RatedCondenserAirFlowRate
+  // RatedCondenserAirFlowRate: Unused if condenserType = "AirCooled"
   value = modelObject.ratedCondenserAirFlowRate();
   if (value) {
     idfObject.setDouble(Coil_Cooling_DX_CurveFit_OperatingModeFields::RatedCondenserAirFlowRate, value.get());

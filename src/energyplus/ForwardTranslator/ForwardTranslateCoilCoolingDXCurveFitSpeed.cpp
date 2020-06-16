@@ -63,7 +63,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXCurveFitSpee
   // EvaporatorAirFlowRateFraction
   idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporatorAirFlowRateFraction, modelObject.evaporatorAirFlowRateFraction());
 
-  // CondenserAirFlowRateFraction
+  // CondenserAirFlowRateFraction: (Unused if parent operatingMode's condenserType = "AirCooled")
   idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::CondenserAirFlowRateFraction, modelObject.condenserAirFlowRateFraction());
 
   // GrossSensibleHeatRatio

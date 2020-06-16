@@ -295,7 +295,11 @@ CoilCoolingDX::CoilCoolingDX(const Model& model,
   bool ok = setAvailabilitySchedule( always_on );
   OS_ASSERT(ok);
   ok = setPerformanceObject(coilCoolingDXCurveFitPerformance);
-  OS_ASSERT(ok);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s coilCoolingDXCurveFitPerformance to "
+        << coilCoolingDXCurveFitPerformance.briefDescription() << ".");
+  }
 }
 
 IddObjectType CoilCoolingDX::iddObjectType() {

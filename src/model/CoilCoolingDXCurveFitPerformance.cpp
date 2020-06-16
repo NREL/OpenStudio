@@ -286,20 +286,32 @@ CoilCoolingDXCurveFitPerformance::CoilCoolingDXCurveFitPerformance(const Model& 
 {
   OS_ASSERT(getImpl<detail::CoilCoolingDXCurveFitPerformance_Impl>());
 
-  setCrankcaseHeaterCapacity(0.0);
-  setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);
-  setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
-  setUnitInternalStaticAirPressure(773.3);
-  setCapacityControlMethod("Discrete");
-  setEvaporativeCondenserBasinHeaterCapacity(0.0);
-  setEvaporativeCondenserBasinHeaterSetpointTemperature(2.0);
+  bool ok = setCrankcaseHeaterCapacity(0.0);
+  OS_ASSERT(ok);
+  ok = setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);
+  OS_ASSERT(ok);
+  ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
+  OS_ASSERT(ok);
+  ok = setUnitInternalStaticAirPressure(773.3);
+  OS_ASSERT(ok);
+  ok = setCapacityControlMethod("Discrete");
+  OS_ASSERT(ok);
+  ok = setEvaporativeCondenserBasinHeaterCapacity(0.0);
+  OS_ASSERT(ok);
+  ok = setEvaporativeCondenserBasinHeaterSetpointTemperature(2.0);
+  OS_ASSERT(ok);
   {
     auto schedule = model.alwaysOnDiscreteSchedule();
     setEvaporativeCondenserBasinHeaterOperatingSchedule(schedule);
   }
   setCompressorFuelType("Electricity");
 
-  setBaseOperatingMode(baseOperatingMode);
+  ok = setBaseOperatingMode(baseOperatingMode);
+  if (!ok) {
+    remove();
+    LOG_AND_THROW("Unable to set " << briefDescription() << "'s baseOperatingMode to "
+        << baseOperatingMode.briefDescription() << ".");
+  }
 }
 
 IddObjectType CoilCoolingDXCurveFitPerformance::iddObjectType() {
