@@ -98,8 +98,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
             idfDX.getString(Coil_Cooling_DXFields::EvaporatorOutletNodeName).get());
 
 
-  // Condenser Inlet Node: defaulted
+  // Condenser Inlet Node: defaulted, so there should also be an OutdoorAir:NodeList corresponding, so that node conditions are set from weather file
+  // and E+ doesn't complain
   EXPECT_EQ(dx.nameString() + " Condenser Inlet Node", idfDX.getString(Coil_Cooling_DXFields::CondenserInletNodeName).get());
+  WorkspaceObjectVector woOANodeLists(w.getObjectsByType(IddObjectType::OutdoorAir_NodeList));
+  ASSERT_EQ(1u, woOANodeLists.size());
+  WorkspaceObject woOANodeList(woOANodeLists[0]);
+  EXPECT_EQ(dx.nameString() + " Condenser Inlet Node", woOANodeList.getString(0).get());
+
   EXPECT_EQ("My Custom Condenser Outlet Node", idfDX.getString(Coil_Cooling_DXFields::CondenserOutletNodeName).get());
 
   boost::optional<WorkspaceObject> woCoilCoolingDXCurveFitPerformance(idfDX.getTarget(Coil_Cooling_DXFields::PerformanceObjectName));

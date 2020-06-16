@@ -94,6 +94,11 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX( model::Coi
   std::string condenserInletNodeName(modelObject.nameString() + " Condenser Inlet Node");
   if (auto _s = modelObject.condenserInletNodeName()) {
     condenserInletNodeName =  _s.get();
+  } else {
+    // Create an OutdoorAir:NodeList for the condenser inlet conditions to be set directly from weather file
+    IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
+    oaNodeListIdf.setString(0, condenserInletNodeName);
+    m_idfObjects.push_back(oaNodeListIdf);
   }
   idfObject.setString(Coil_Cooling_DXFields::CondenserInletNodeName, condenserInletNodeName);
 
