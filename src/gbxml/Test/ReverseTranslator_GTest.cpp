@@ -59,6 +59,7 @@
 
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/core/Optional.hpp"
+#include "../../utilities/geometry/Plane.hpp"
 
 #include <utilities/idd/OS_Surface_FieldEnums.hxx>
 #include <utilities/idd/OS_SubSurface_FieldEnums.hxx>
@@ -524,4 +525,21 @@ TEST_F(gbXMLFixture, ReverseTranslator_3951_Surface)
     ASSERT_TRUE(_space);
     EXPECT_EQ("storey-1-space-1", _space->nameString());
   }
+}
+
+TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling)
+{
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/3997_WindowScaling_bug.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  boost::optional<openstudio::model::Model> _model = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(_model);
+
+  // Check the SubSurface is contained on the same plane as its Surface
+  auto _subSurfaces = _model->getConcreteModelObjects<SubSurface>();
+  ASSERT_EQ(1u, _subSurfaces.size());
+  SubSurface ss = _subSurfaces[0];
+  ASSERT_TRUE(ss.surface());
+  Surface s = ss.surface().get();
+  EXPECT_TRUE(ss.plane().equal(s.plane()));
 }
