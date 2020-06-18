@@ -250,8 +250,11 @@ TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
   space.setThermalZone(zone);
 
   // save model for diffing
-  path modelPath = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_NoFacility_original.osm");
-  model.save(modelPath, true);
+  bool debug = false;
+  if (debug) {
+    path modelPath = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_NoFacility_original.osm");
+    model.save(modelPath, true);
+  }
 
   // Write out the XML
   path p = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_NoFacility.xml");
@@ -274,6 +277,14 @@ TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
   auto ozone = model2->getModelObjectByName<ThermalZone>(zone.nameString()); // Dragostea Din Tei!
   ASSERT_TRUE(ozone);
 
-  modelPath = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_NoFacility_roundtripped.osm");
-  model2->save(modelPath, true);
+  // This really tests a RT feature, but doesn't really matter. When diffing original & rountripped, I noticed a diff in Material:
+  // the roundtripped model has Roughness missing
+  auto omat = model2->getModelObjectByName<StandardOpaqueMaterial>("Material4");
+  ASSERT_TRUE(omat);
+  EXPECT_EQ("MediumSmooth", omat->roughness());
+
+  if (debug) {
+    path modelPath2 = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_NoFacility_roundtripped.osm");
+    model2->save(modelPath2, true);
+  }
 }
