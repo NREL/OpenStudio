@@ -89,7 +89,12 @@ namespace gbxml {
   }
 
   ReverseTranslator::ReverseTranslator()
-    : m_nonBaseMultiplier(1.0), m_lengthMultiplier(1.0)
+    : m_temperatureUnit(UnitFactory::instance().createUnit("C").get()),
+      m_lengthUnit(UnitFactory::instance().createUnit("m").get()),
+      m_areaUnit(UnitFactory::instance().createUnit("m^2").get()),
+      m_volumeUnit(UnitFactory::instance().createUnit("m^3").get()),
+      m_useSIUnitsForResults(true),
+      m_lengthMultiplier(1.0)
   {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ReverseTranslator"));
@@ -180,61 +185,28 @@ namespace gbxml {
 
     // gbXML attributes not mapped directly to IDF, but needed to map
 
-    // {F, C, K, R}
-    // JWD: the previous check was not great, this one is better and more true to the schema
-    std::string temperatureUnit{ root.attribute("temperatureUnit").value() };
-    if (temperatureUnit == "F") {
-      m_temperatureUnit = UnitFactory::instance().createUnit("F").get();
-    } else if (temperatureUnit == "C") {
-      m_temperatureUnit = UnitFactory::instance().createUnit("C").get();
-    } else if (temperatureUnit == "K") {
-      m_temperatureUnit = UnitFactory::instance().createUnit("K").get();
-    } else if (temperatureUnit == "R") {
-      m_temperatureUnit = UnitFactory::instance().createUnit("R").get();
-    } else {
-      LOG(Warn, "No recognized temperature unit specified, using C");
-      m_temperatureUnit = UnitFactory::instance().createUnit("C").get();
+    {
+      std::string temperatureUnitEnumString{ root.attribute("temperatureUnit").value() };
+      m_temperatureUnit = temperatureUnitFromEnum(temperatureUnitEnumString);
     }
 
-    // {Kilometers, Centimeters, Millimeters, Meters, Miles, Yards, Feet, Inches}
-    // JWD: the previous check was not great, this one is better, though still not exactly true to the schema
-    std::string lengthUnit{ root.attribute("lengthUnit").value() };
-    if (istringEqual(lengthUnit, "Kilometers")) {
-      m_nonBaseMultiplier = 1000.0;
-      m_lengthUnit = UnitFactory::instance().createUnit("m").get();
-    } else if (istringEqual(lengthUnit, "Centimeters")) {
-      m_nonBaseMultiplier = 1.0e-2;
-      m_lengthUnit = UnitFactory::instance().createUnit("m").get();
-    } else if (istringEqual(lengthUnit, "Millimeters")) {
-      m_nonBaseMultiplier = 1.0e-3;
-      m_lengthUnit = UnitFactory::instance().createUnit("K").get();
-    } else if (istringEqual(lengthUnit, "Meters")) {
-      m_lengthUnit = UnitFactory::instance().createUnit("m").get();
-    } else if (istringEqual(lengthUnit, "Miles")) {
-      m_lengthUnit = UnitFactory::instance().createUnit("mi").get();
-    } else if (istringEqual(lengthUnit, "Yards")) {
-      m_nonBaseMultiplier = 3.0;
-      m_lengthUnit = UnitFactory::instance().createUnit("ft").get();
-    } else if (istringEqual(lengthUnit, "Feet")) {
-      m_lengthUnit = UnitFactory::instance().createUnit("ft").get();
-    } else if (istringEqual(lengthUnit, "Inches")) {
-      m_lengthUnit = UnitFactory::instance().createUnit("in").get();
-    } else {
-      LOG(Warn, "No length unit specified, using Meters");
-      m_lengthUnit = UnitFactory::instance().createUnit("m").get();
+    {
+      std::string lengthUnitEnumString{ root.attribute("lengthUnit").value() };
+      m_lengthUnit = lengthUnitFromEnum(lengthUnitEnumString);
+      Quantity unitQuantity(1.0, m_lengthUnit);
+      Unit targetUnit = UnitFactory::instance().createUnit("m").get();
+      m_lengthMultiplier = QuantityConverter::instance().convert(unitQuantity, targetUnit)->value();
     }
 
-    Quantity unitLength(m_nonBaseMultiplier, m_lengthUnit);
-    Unit targetUnit = UnitFactory::instance().createUnit("m").get();
-    m_lengthMultiplier = QuantityConverter::instance().convert(unitLength, targetUnit)->value();
+    {
+      std::string areaUnitEnumString{ root.attribute("areaUnit").value() };
+      m_areaUnit = areaUnitFromEnum(areaUnitEnumString);
+    }
 
-    // {SquareKilometers, SquareMeters, SquareCentimeters, SquareMillimeters, SquareMiles, SquareYards, SquareFeet, SquareInches}
-    // TODO: still need some help with some units
-    std::string areaUnit = root.attribute("areaUnit").value();
-
-    // {CubicKilometers, CubicMeters, CubicCentimeters, CubicMillimeters, CubicMiles, CubicYards, CubicFeet, CubicInches}
-    // TODO: still need some help with some units
-    std::string volumeUnit = root.attribute("volumeUnit").value();
+    {
+      std::string volumeUnitEnumString{ root.attribute("volumeUnit").value() };
+      m_volumeUnit = volumeUnitFromEnum(volumeUnitEnumString);
+    }
 
     // {true, false}
     m_useSIUnitsForResults = true;
@@ -557,18 +529,6 @@ namespace gbxml {
     for (auto &cart_el : cartesianPointElements) {
       auto coordinateElements = cart_el.children("Coordinate");
       OS_ASSERT(std::distance(coordinateElements.begin(), coordinateElements.end()) == 3);
-
-      /* Calling these conversions every time is unnecessarily slow
-
-      Unit targetUnit = UnitFactory::instance().createUnit("m").get();
-      Quantity xQuantity(coordinateElements.at(0).toElement().text().toDouble(), m_lengthUnit);
-      Quantity yQuantity(coordinateElements.at(1).toElement().text().toDouble(), m_lengthUnit);
-      Quantity zQuantity(coordinateElements.at(2).toElement().text().toDouble(), m_lengthUnit);
-
-      double x = QuantityConverter::instance().convert(xQuantity, targetUnit)->value();
-      double y = QuantityConverter::instance().convert(yQuantity, targetUnit)->value();
-      double z = QuantityConverter::instance().convert(zQuantity, targetUnit)->value();
-      */
 
       std::array<double, 3> coords{ {0.0, 0.0, 0.0} };
       size_t i{ 0 };
@@ -973,17 +933,6 @@ namespace gbxml {
       auto coordinateElements = cart_el.children("Coordinate");
       OS_ASSERT(std::distance(coordinateElements.begin(), coordinateElements.end()) == 3);
 
-      /* Calling these conversions every time is unnecessarily slow
-
-      Unit targetUnit = UnitFactory::instance().createUnit("m").get();
-      Quantity xQuantity(coordinateElements.at(0).toElement().text().toDouble(), m_lengthUnit);
-      Quantity yQuantity(coordinateElements.at(1).toElement().text().toDouble(), m_lengthUnit);
-      Quantity zQuantity(coordinateElements.at(2).toElement().text().toDouble(), m_lengthUnit);
-
-      double x = QuantityConverter::instance().convert(xQuantity, targetUnit)->value();
-      double y = QuantityConverter::instance().convert(yQuantity, targetUnit)->value();
-      double z = QuantityConverter::instance().convert(zQuantity, targetUnit)->value();
-      */
       std::array<double, 3> coords{ {0.0, 0.0, 0.0} };
       size_t i{ 0 };
       for (auto &el : coordinateElements) {

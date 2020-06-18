@@ -53,6 +53,9 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/StringHelpers.hpp"
 
+#include "../utilities/units/UnitFactory.hpp"
+#include "../utilities/units/QuantityConverter.hpp"
+
 #include <pugixml.hpp>
 
 namespace openstudio {

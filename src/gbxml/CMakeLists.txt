@@ -9,6 +9,7 @@ set(${target_name}_src
   ReverseTranslator.cpp
   MapEnvelope.cpp
   MapSchedules.cpp
+  MapEnums.cpp
 )
 
 set(${target_name}_test_src

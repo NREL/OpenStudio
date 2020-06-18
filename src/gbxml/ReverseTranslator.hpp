@@ -41,6 +41,7 @@
 
 #include "../utilities/units/Unit.hpp"
 #include <unordered_map>
+#include <string_view>
 
 namespace pugi {
   class xml_node;
@@ -49,6 +50,7 @@ namespace pugi {
 namespace openstudio {
 
   class ProgressBar;
+  class Quantity;
 
 namespace model {
   class Model;
@@ -76,13 +78,10 @@ namespace gbxml {
   private:
     openstudio::Unit m_temperatureUnit;
     openstudio::Unit m_lengthUnit;
-    double m_nonBaseMultiplier;
-    double m_lengthMultiplier;
     openstudio::Unit m_areaUnit;
     openstudio::Unit m_volumeUnit;
     bool m_useSIUnitsForResults;
-
-  private:
+    double m_lengthMultiplier; // This conversion happens so often for coordinates that we just store it
 
     // given id and name from XML (name may be empty) return an OS name
     std::string escapeName(const std::string& id, const std::string& name);
@@ -110,6 +109,31 @@ namespace gbxml {
     boost::optional<openstudio::model::ModelObject> translateConstruction(const pugi::xml_node& element, const std::unordered_map<std::string, pugi::xml_node> &layerElements, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateWindowType(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateMaterial(const pugi::xml_node& element, openstudio::model::Model& model);
+
+    // handle the conversion Units
+    Unit lengthUnitFromEnum(std::string_view lengthUnitEnumString) const;
+    Unit temperatureUnitFromEnum(std::string_view temperatureUnitEnumString) const;
+    Unit areaUnitFromEnum(std::string_view areaUnitEnumString) const;
+    Unit volumeUnitFromEnum(std::string_view volumeUnitEnumString) const;
+
+    Unit uValueUnitFromEnum(std::string_view uValueUnitEnumString) const;
+    Unit rValueUnitFromEnum(std::string_view rValueUnitEnumString) const;
+    Unit conductivityUnitFromEnum(std::string_view conductivityEnumString) const;
+    Unit specificHeatUnitFromEnum(std::string_view specificHeatEnumString) const;
+    Unit densityUnitFromEnum(std::string_view densityEnumString) const;
+
+    Unit windSpeedUnitFromEnum(std::string_view windSpeedEnumString) const;
+
+    // capacityUnitEnum: tons, kW, etc
+    // Unit capacityUnitFromEnum(std::string_view capacityEnumString) const;
+    // flowUnitEnum: CFM, GPH, L per s, etc
+    // powerUnitEnum
+    // pressureUnitEnum
+    // illuminanceUnitEnum
+    // flowPerAreaUnitEnum
+    // enthalpyUnitEnum
+    // energyUnitEnum
+    // etc
 
     StringStreamLogSink m_logSink;
 
