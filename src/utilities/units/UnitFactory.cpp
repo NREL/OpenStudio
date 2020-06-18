@@ -569,6 +569,8 @@ UnitFactorySingleton::UnitFactorySingleton() {
   registerUnit(createMisc1SolidAngle,UnitSystem::Misc1);
   registerUnit(createMisc1People,UnitSystem::Misc1);
   registerUnit(createMisc1Cycle,UnitSystem::Misc1);
+  // Missing? registerUnit(createMisc1Currency,UnitSystem::Misc1);
+  registerUnit(createMisc1Yards,UnitSystem::Misc1);
 
   // Misc1 Derived Units =======================================================
   registerUnit(createMisc1Volume);
@@ -592,6 +594,9 @@ UnitFactorySingleton::UnitFactorySingleton() {
   registerEquivalentString("years","yr");
   registerEquivalentString("hr","h");
   registerEquivalentString("hrs","h");
+  registerEquivalentString("yards","yd");
+  registerEquivalentString("yard","yd");
+
 }
 
 UnitSystem getSystem(const std::string& unitString) {

@@ -32,8 +32,10 @@
 
 #include "../UtilitiesAPI.hpp"
 #include "Unit_Impl.hpp"
+#include "Misc1Unit.hpp"
 
 namespace openstudio {
+
 namespace detail {
 
 /** Misc1Unit_Impl is a Unit_Impl that is the implementation class for Misc1Unit.*/

@@ -165,6 +165,7 @@ QuantityConverterSingleton::QuantityConverterSingleton()
     { UnitSystem::Therm, "yr", "s", 31556925.9747, 0 },
     { UnitSystem::Misc1, "ftH_{2}O", "kg/m*s^2", 2989.06692, 0 },
     { UnitSystem::Misc1, "crL", "m", 0.1, 0 },
+    { UnitSystem::Misc1, "yd", "m", 0.9144, 0 },
     { UnitSystem::Celsius, "C", "K", 1.0, 273.15 },
     { UnitSystem::Fahrenheit, "F", "K", 0.555555555555555555556, 255.37222222222222222222222 },
     { UnitSystem::Mixed, "", "", 0.0, 0.0 }

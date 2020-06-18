@@ -38,7 +38,7 @@ namespace detail {
   Misc1Unit_Impl::Misc1Unit_Impl(const Misc1Expnt& exponents,
                                  int scaleExponent,
                                  const std::string& prettyString)
-    : Unit_Impl(scaleExponent,prettyString,12,UnitSystem::Misc1)
+    : Unit_Impl(scaleExponent,prettyString,13,UnitSystem::Misc1)
   {
     m_units[0].first = "ftH_{2}O"; m_units[0].second = exponents.m_ftH2O;
     m_units[1].first = "crL"; m_units[1].second = exponents.m_crL;
@@ -52,12 +52,13 @@ namespace detail {
     m_units[9].first = "people"; m_units[9].second = exponents.m_people;
     m_units[10].first = "cycle"; m_units[10].second = exponents.m_cycle;
     m_units[11].first = "$"; m_units[11].second = exponents.m_dollar;
+    m_units[12].first = "yd"; m_units[12].second = exponents.m_yards;
   }
 
   Misc1Unit_Impl::Misc1Unit_Impl(const std::string &scaleAbbreviation,
                                  const Misc1Expnt &exponents,
                                  const std::string &prettyString)
-    : Unit_Impl(scaleAbbreviation,prettyString,12,UnitSystem::Misc1)
+    : Unit_Impl(scaleAbbreviation,prettyString,13,UnitSystem::Misc1)
   {
     m_units[0].first = "ftH_{2}O"; m_units[0].second = exponents.m_ftH2O;
     m_units[1].first = "crL"; m_units[1].second = exponents.m_crL;
@@ -71,6 +72,7 @@ namespace detail {
     m_units[9].first = "people"; m_units[9].second = exponents.m_people;
     m_units[10].first = "cycle"; m_units[10].second = exponents.m_cycle;
     m_units[11].first = "$"; m_units[11].second = exponents.m_dollar;
+    m_units[12].first = "yd"; m_units[12].second = exponents.m_yards;
   }
 
   Unit Misc1Unit_Impl::clone() const {
@@ -160,6 +162,10 @@ Misc1Unit createMisc1Cycle() {
 
 Misc1Unit createMisc1Currency() {
   return Misc1Unit(Misc1Expnt(0,0,0,0,0,0,0,0,0,0,0,1));
+}
+
+Misc1Unit createMisc1Yards() {
+  return Misc1Unit(Misc1Expnt(0,0,0,0,0,0,0,0,0,0,0,0,1));
 }
 
 Misc1Unit createMisc1Volume() {
