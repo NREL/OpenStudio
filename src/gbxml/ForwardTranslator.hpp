@@ -92,8 +92,12 @@ namespace gbxml {
 
     // listed in translation order
     bool translateModel(const openstudio::model::Model& model, pugi::xml_document& document);
-    boost::optional<pugi::xml_node> translateFacility(const openstudio::model::Facility& facility, pugi::xml_node& parent);
-    boost::optional<pugi::xml_node> translateBuilding(const openstudio::model::Building& building, pugi::xml_node& parent);
+
+    // Facility and Building could not be explicitly instantiated in the model, but the functions still need to be called so that Spaces and surfaces
+    // are translated. Facility and Building both are UniqueModelObjects, so passing model here as an argument is harmless
+    boost::optional<pugi::xml_node> translateFacility(const openstudio::model::Model& model, pugi::xml_node& parent);
+    boost::optional<pugi::xml_node> translateBuilding(const openstudio::model::Model& model, pugi::xml_node& parent);
+
     boost::optional<pugi::xml_node> translateSpace(const openstudio::model::Space& space, pugi::xml_node& parent);
     boost::optional<pugi::xml_node> translateShadingSurfaceGroup(const openstudio::model::ShadingSurfaceGroup& shadingSurfaceGroup, pugi::xml_node& parent);
     boost::optional<pugi::xml_node> translateBuildingStory(const openstudio::model::BuildingStory& story, pugi::xml_node& parent);
