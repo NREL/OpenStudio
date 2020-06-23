@@ -92,10 +92,6 @@ namespace detail {
 
     boost::optional<ThermalZone> condenserZone() const;
 
-    boost::optional<std::string> condenserInletNodeName() const;
-
-    boost::optional<std::string> condenserOutletNodeName() const;
-
     CoilCoolingDXCurveFitPerformance performanceObject() const;
 
     // boost::optional<HVACComponent> condensateCollectionWaterStorageTank() const;
@@ -111,11 +107,14 @@ namespace detail {
     bool setCondenserZone(const ThermalZone& thermalZone);
     void resetCondenserZone();
 
-    bool setCondenserInletNodeName(const std::string& condenserInletNodeName);
-    void resetCondenserInletNodeName();
+    // TODO: Eventually provide an API to set these Nodes once E+ is done implementing support for it (as of 9.3.0 it's not the case)
+    // boost::optional<std::string> condenserInletNodeName() const;
+    // bool setCondenserInletNodeName(const std::string& condenserInletNodeName);
+    // void resetCondenserInletNodeName();
 
-    bool setCondenserOutletNodeName(const std::string& condenserOutletNodeName);
-    void resetCondenserOutletNodeName();
+    // boost::optional<std::string> condenserOutletNodeName() const;
+    // bool setCondenserOutletNodeName(const std::string& condenserOutletNodeName);
+    // void resetCondenserOutletNodeName();
 
     bool setPerformanceObject(const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance);
 

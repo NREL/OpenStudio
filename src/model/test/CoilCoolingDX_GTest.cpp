@@ -91,9 +91,9 @@ TEST_F(ModelFixture, CoilCoolingDX_CoilCoolingDX) {
 
   EXPECT_EQ(alwaysOn, dx.availabilitySchedule());
   ASSERT_FALSE(dx.condenserZone());
-  EXPECT_FALSE(dx.condenserInletNodeName());
-  EXPECT_FALSE(dx.condenserOutletNodeName());
   ASSERT_TRUE(dx.performanceObject().optionalCast<CoilCoolingDXCurveFitPerformance>());
+  // EXPECT_FALSE(dx.condenserInletNodeName());
+  // EXPECT_FALSE(dx.condenserOutletNodeName());
   // ASSERT_FALSE(dx.condensateCollectionWaterStorageTankName());
   // ASSERT_FALSE(dx.evaporativeCondenserSupplyWaterStorageTankName());
 }
@@ -117,8 +117,8 @@ TEST_F(ModelFixture, CoilCoolingDX_GettersSetters) {
   EXPECT_EQ((*scheduleConstant).value(), 1.0);
   ASSERT_TRUE(scheduleConstant);
   EXPECT_FALSE(dx.condenserZone());
-  EXPECT_FALSE(dx.condenserInletNodeName());
-  EXPECT_FALSE(dx.condenserOutletNodeName());
+  // EXPECT_FALSE(dx.condenserInletNodeName());
+  // EXPECT_FALSE(dx.condenserOutletNodeName());
   CoilCoolingDXCurveFitPerformance performanceObject = dx.performanceObject();
   EXPECT_EQ(performanceObject.name().get(), performance.name().get());
 
@@ -127,8 +127,8 @@ TEST_F(ModelFixture, CoilCoolingDX_GettersSetters) {
   dx.setAvailabilitySchedule(scheduleConstant2);
   ThermalZone thermalZone(model);
   dx.setCondenserZone(thermalZone);
-  dx.setCondenserInletNodeName("Node 1");
-  dx.setCondenserOutletNodeName("Node 2");
+  // dx.setCondenserInletNodeName("Node 1");
+  // dx.setCondenserOutletNodeName("Node 2");
   CoilCoolingDXCurveFitPerformance performance2(model, operatingMode);
   dx.setPerformanceObject(performance2);
 
@@ -137,20 +137,20 @@ TEST_F(ModelFixture, CoilCoolingDX_GettersSetters) {
   ASSERT_TRUE(scheduleConstant3);
   EXPECT_EQ((*scheduleConstant3).value(), 0.5);
   ASSERT_TRUE(dx.condenserZone());
-  ASSERT_TRUE(dx.condenserInletNodeName());
-  EXPECT_EQ(dx.condenserInletNodeName().get(), "Node 1");
-  ASSERT_TRUE(dx.condenserOutletNodeName());
-  EXPECT_EQ(dx.condenserOutletNodeName().get(), "Node 2");
+  // ASSERT_TRUE(dx.condenserInletNodeName());
+  // EXPECT_EQ(dx.condenserInletNodeName().get(), "Node 1");
+  // ASSERT_TRUE(dx.condenserOutletNodeName());
+  // EXPECT_EQ(dx.condenserOutletNodeName().get(), "Node 2");
   CoilCoolingDXCurveFitPerformance performanceObject2 = dx.performanceObject();
   EXPECT_EQ(performanceObject2.name().get(), performance2.name().get());
 
   dx.resetCondenserZone();
-  dx.resetCondenserInletNodeName();
-  dx.resetCondenserOutletNodeName();
-
   EXPECT_FALSE(dx.condenserZone());
-  EXPECT_FALSE(dx.condenserInletNodeName());
-  EXPECT_FALSE(dx.condenserOutletNodeName());
+
+  // dx.resetCondenserInletNodeName();
+  // EXPECT_FALSE(dx.condenserInletNodeName());
+  // dx.resetCondenserOutletNodeName();
+  // EXPECT_FALSE(dx.condenserOutletNodeName());
 }
 
 TEST_F(ModelFixture, CoilCoolingDX_containingHVACComponent) {

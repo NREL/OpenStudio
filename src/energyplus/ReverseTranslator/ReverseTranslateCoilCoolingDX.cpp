@@ -100,6 +100,8 @@ OptionalModelObject ReverseTranslator::translateCoilCoolingDX( const WorkspaceOb
     }
   }
 
+  // TODO: eventually support the condenser Inlet/Outlet Nodes and the Storage Tanks
+
   return dx;
 } // End of translate function
 

@@ -68,8 +68,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
   unitary.addToNode(supplyOutletNode);
 
   // Test custom setting of one condenser node name
-  EXPECT_TRUE(dx.setCondenserOutletNodeName("My Custom Condenser Outlet Node"));
-  EXPECT_TRUE(dx.condenserOutletNodeName());
+  // EXPECT_TRUE(dx.setCondenserOutletNodeName("My Custom Condenser Outlet Node"));
+  // EXPECT_TRUE(dx.condenserOutletNodeName());
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(m);
@@ -106,7 +106,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
   WorkspaceObject woOANodeList(woOANodeLists[0]);
   EXPECT_EQ(dx.nameString() + " Condenser Inlet Node", woOANodeList.getString(0).get());
 
-  EXPECT_EQ("My Custom Condenser Outlet Node", idfDX.getString(Coil_Cooling_DXFields::CondenserOutletNodeName).get());
+  // EXPECT_EQ("My Custom Condenser Outlet Node", idfDX.getString(Coil_Cooling_DXFields::CondenserOutletNodeName).get());
+  EXPECT_EQ(dx.nameString() + " Condenser Outlet Node", idfDX.getString(Coil_Cooling_DXFields::CondenserOutletNodeName).get());
 
   boost::optional<WorkspaceObject> woCoilCoolingDXCurveFitPerformance(idfDX.getTarget(Coil_Cooling_DXFields::PerformanceObjectName));
   EXPECT_TRUE(woCoilCoolingDXCurveFitPerformance);

@@ -83,7 +83,8 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX( model::Coi
     }
   }
 
-  // CondenserZoneName
+  // CondenserZoneName: as of E+ 9.3.0, this appears unused.
+  // TODO: eventually handle the condenser inlet/outlet node connections if the Condenser Zone is used?
   if (boost::optional<ThermalZone> thermalZone = modelObject.condenserZone() ) {
     if (boost::optional<IdfObject> _thermalZone = translateAndMapModelObject(thermalZone.get())) {
       idfObject.setString(Coil_Cooling_DXFields::CondenserZoneName, _thermalZone->name().get());
@@ -92,21 +93,21 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX( model::Coi
 
   // CondenserInletNodeName
   std::string condenserInletNodeName(modelObject.nameString() + " Condenser Inlet Node");
-  if (auto _s = modelObject.condenserInletNodeName()) {
-    condenserInletNodeName =  _s.get();
-  } else {
+  // if (auto _s = modelObject.condenserInletNodeName()) {
+  //   condenserInletNodeName =  _s.get();
+  // } else {
     // Create an OutdoorAir:NodeList for the condenser inlet conditions to be set directly from weather file
     IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
     oaNodeListIdf.setString(0, condenserInletNodeName);
     m_idfObjects.push_back(oaNodeListIdf);
-  }
+  // }
   idfObject.setString(Coil_Cooling_DXFields::CondenserInletNodeName, condenserInletNodeName);
 
   // CondenserOutletNodeName
   std::string condenserOutletNodeName(modelObject.nameString() + " Condenser Outlet Node");
-  if (auto _s = modelObject.condenserOutletNodeName()) {
-    condenserOutletNodeName =  _s.get();
-  }
+  //if (auto _s = modelObject.condenserOutletNodeName()) {
+    //condenserOutletNodeName =  _s.get();
+  //}
   idfObject.setString(Coil_Cooling_DXFields::CondenserOutletNodeName, condenserOutletNodeName);
 
   // CondensateCollectionWaterStorageTankName

@@ -191,14 +191,6 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_Coil_Cooling_DXFields::CondenserZone);
   }
 
-  boost::optional<std::string> CoilCoolingDX_Impl::condenserInletNodeName() const {
-    return getString(OS_Coil_Cooling_DXFields::CondenserInletNodeName, false, true);
-  }
-
-  boost::optional<std::string> CoilCoolingDX_Impl::condenserOutletNodeName() const {
-    return getString(OS_Coil_Cooling_DXFields::CondenserOutletNodeName, false, true);
-  }
-
   boost::optional<CoilCoolingDXCurveFitPerformance> CoilCoolingDX_Impl::optionalPerformanceObject() const {
     return getObject<ModelObject>().getModelObjectTarget<CoilCoolingDXCurveFitPerformance>(OS_Coil_Cooling_DXFields::PerformanceObject);
   }
@@ -237,25 +229,33 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool CoilCoolingDX_Impl::setCondenserInletNodeName(const std::string& condenserInletNodeName) {
-    bool result = setString(OS_Coil_Cooling_DXFields::CondenserInletNodeName, condenserInletNodeName);
-    return result;
-  }
+  //boost::optional<std::string> CoilCoolingDX_Impl::condenserInletNodeName() const {
+    //return getString(OS_Coil_Cooling_DXFields::CondenserInletNodeName, false, true);
+  //}
 
-  void CoilCoolingDX_Impl::resetCondenserInletNodeName() {
-    bool result = setString(OS_Coil_Cooling_DXFields::CondenserInletNodeName, "");
-    OS_ASSERT(result);
-  }
+  //bool CoilCoolingDX_Impl::setCondenserInletNodeName(const std::string& condenserInletNodeName) {
+    //bool result = setString(OS_Coil_Cooling_DXFields::CondenserInletNodeName, condenserInletNodeName);
+    //return result;
+  //}
 
-  bool CoilCoolingDX_Impl::setCondenserOutletNodeName(const std::string& condenserOutletNodeName) {
-    bool result = setString(OS_Coil_Cooling_DXFields::CondenserOutletNodeName, condenserOutletNodeName);
-    return result;
-  }
+  //void CoilCoolingDX_Impl::resetCondenserInletNodeName() {
+    //bool result = setString(OS_Coil_Cooling_DXFields::CondenserInletNodeName, "");
+    //OS_ASSERT(result);
+  //}
 
-  void CoilCoolingDX_Impl::resetCondenserOutletNodeName() {
-    bool result = setString(OS_Coil_Cooling_DXFields::CondenserOutletNodeName, "");
-    OS_ASSERT(result);
-  }
+  //boost::optional<std::string> CoilCoolingDX_Impl::condenserOutletNodeName() const {
+    //return getString(OS_Coil_Cooling_DXFields::CondenserOutletNodeName, false, true);
+  //}
+
+  //bool CoilCoolingDX_Impl::setCondenserOutletNodeName(const std::string& condenserOutletNodeName) {
+    //bool result = setString(OS_Coil_Cooling_DXFields::CondenserOutletNodeName, condenserOutletNodeName);
+    //return result;
+  //}
+
+  //void CoilCoolingDX_Impl::resetCondenserOutletNodeName() {
+    //bool result = setString(OS_Coil_Cooling_DXFields::CondenserOutletNodeName, "");
+    //OS_ASSERT(result);
+  //}
 
   bool CoilCoolingDX_Impl::setPerformanceObject(const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance) {
     bool result = setPointer(OS_Coil_Cooling_DXFields::PerformanceObject, coilCoolingDXCurveFitPerformance.handle());
@@ -314,14 +314,6 @@ boost::optional<ThermalZone> CoilCoolingDX::condenserZone() const {
   return getImpl<detail::CoilCoolingDX_Impl>()->condenserZone();
 }
 
-boost::optional<std::string> CoilCoolingDX::condenserInletNodeName() const {
-  return getImpl<detail::CoilCoolingDX_Impl>()->condenserInletNodeName();
-}
-
-boost::optional<std::string> CoilCoolingDX::condenserOutletNodeName() const {
-  return getImpl<detail::CoilCoolingDX_Impl>()->condenserOutletNodeName();
-}
-
 CoilCoolingDXCurveFitPerformance CoilCoolingDX::performanceObject() const {
   return getImpl<detail::CoilCoolingDX_Impl>()->performanceObject();
 }
@@ -338,25 +330,33 @@ void CoilCoolingDX::resetCondenserZone() {
   getImpl<detail::CoilCoolingDX_Impl>()->resetCondenserZone();
 }
 
-bool CoilCoolingDX::setCondenserInletNodeName(const std::string& condenserInletNodeName) {
-  return getImpl<detail::CoilCoolingDX_Impl>()->setCondenserInletNodeName(condenserInletNodeName);
-}
-
-void CoilCoolingDX::resetCondenserInletNodeName() {
-  getImpl<detail::CoilCoolingDX_Impl>()->resetCondenserInletNodeName();
-}
-
-bool CoilCoolingDX::setCondenserOutletNodeName(const std::string& condenserOutletNodeName) {
-  return getImpl<detail::CoilCoolingDX_Impl>()->setCondenserOutletNodeName(condenserOutletNodeName);
-}
-
-void CoilCoolingDX::resetCondenserOutletNodeName() {
-  getImpl<detail::CoilCoolingDX_Impl>()->resetCondenserOutletNodeName();
-}
-
 bool CoilCoolingDX::setPerformanceObject(const CoilCoolingDXCurveFitPerformance& coilCoolingDXCurveFitPerformance) {
   return getImpl<detail::CoilCoolingDX_Impl>()->setPerformanceObject(coilCoolingDXCurveFitPerformance);
 }
+
+//boost::optional<std::string> CoilCoolingDX::condenserInletNodeName() const {
+  //return getImpl<detail::CoilCoolingDX_Impl>()->condenserInletNodeName();
+//}
+
+//bool CoilCoolingDX::setCondenserInletNodeName(const std::string& condenserInletNodeName) {
+  //return getImpl<detail::CoilCoolingDX_Impl>()->setCondenserInletNodeName(condenserInletNodeName);
+//}
+
+//void CoilCoolingDX::resetCondenserInletNodeName() {
+  //getImpl<detail::CoilCoolingDX_Impl>()->resetCondenserInletNodeName();
+//}
+
+//bool CoilCoolingDX::setCondenserOutletNodeName(const std::string& condenserOutletNodeName) {
+  //return getImpl<detail::CoilCoolingDX_Impl>()->setCondenserOutletNodeName(condenserOutletNodeName);
+//}
+
+//boost::optional<std::string> CoilCoolingDX::condenserOutletNodeName() const {
+  //return getImpl<detail::CoilCoolingDX_Impl>()->condenserOutletNodeName();
+//}
+
+//void CoilCoolingDX::resetCondenserOutletNodeName() {
+  //getImpl<detail::CoilCoolingDX_Impl>()->resetCondenserOutletNodeName();
+//}
 
 // boost::optional<std::string> CoilCoolingDX::condensateCollectionWaterStorageTankName() const {
 //   return getImpl<detail::CoilCoolingDX_Impl>()->condensateCollectionWaterStorageTankName();
