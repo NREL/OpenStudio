@@ -15143,6 +15143,7 @@ OS:Coil:Cooling:DX:CurveFit:Performance,
        \note throughout the entire simulation.
        \type object-list
        \object-list ScheduleNames
+       \required-field
   A5, \field Compressor Fuel Type
        \type choice
        \key Electricity
