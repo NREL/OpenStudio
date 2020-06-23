@@ -115,12 +115,8 @@ namespace detail {
     ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
     for (ModelObject child : children())
     {
-      // ResourceObjects will have been handled by ModelObject_Impl::clone already
-      // but they might be listed as children also (notably for OSApp and IG)
-      // if (child.optionalCast<ResourceObject>()) {
-        ModelObject newChild = child.clone(model);
-        newChild.setParent(newParent);
-      // }
+      ModelObject newChild = child.clone(model);
+      newChild.setParent(newParent);
     }
     return newParentAsModelObject;
   }
