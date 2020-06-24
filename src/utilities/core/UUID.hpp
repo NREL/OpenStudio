@@ -74,6 +74,10 @@ namespace openstudio {
       return is_nil();
     }
 
+    bool isEqual(const UUID& other) const {
+      return (*this == other);
+    }
+
     using boost::uuids::uuid::iterator;
     using boost::uuids::uuid::const_iterator;
     using boost::uuids::uuid::begin;
