@@ -27791,16 +27791,19 @@ OS:Pipe:Outdoor,
        \units m
        \minimum> 0.0
 
-SwimmingPool:Indoor,
+OS:SwimmingPool:Indoor,
        \memo Specifies an indoor swimming pools linked to a floor surface.
        \memo The pool is assumed to cover the entire floor to which it is linked.
-       \min-fields 16
-  A1,  \field Name
+       \min-fields 17
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
        \required-field
        \type alpha
        \reference-class-name validBranchEquipmentTypes
        \reference validBranchEquipmentNames
-  A2,  \field Surface Name
+  A3,  \field Surface Name
        \required-field
        \note Name of the floor surface where the pool is located.
        \type object-list
@@ -27809,15 +27812,15 @@ SwimmingPool:Indoor,
        \required-field
        \type real
        \units m
-  A3,  \field Activity Factor Schedule Name
+  A4,  \field Activity Factor Schedule Name
        \required-field
        \type object-list
        \object-list ScheduleNames
-  A4,  \field Make-up Water Supply Schedule Name
+  A5,  \field Make-up Water Supply Schedule Name
        \required-field
        \type object-list
        \object-list ScheduleNames
-  A5,  \field Cover Schedule Name
+  A6,  \field Cover Schedule Name
        \required-field
        \type object-list
        \object-list ScheduleNames
@@ -27841,10 +27844,10 @@ SwimmingPool:Indoor,
        \minimum 0.0
        \maximum 1.0
        \default 0.0
-  A6,  \field Pool Water Inlet Node
+  A7,  \field Pool Water Inlet Node
        \required-field
        \type node
-  A7,  \field Pool Water Outlet Node
+  A8,  \field Pool Water Outlet Node
        \required-field
        \type node
   N6,  \field Pool Heating System Maximum Water Flow Rate
@@ -27858,17 +27861,17 @@ SwimmingPool:Indoor,
        \ip-units W/(gal/min)
        \type real
        \minimum 0.0
-  A8,  \field Setpoint Temperature Schedule
+  A9,  \field Setpoint Temperature Schedule
        \required-field
        \type object-list
        \object-list ScheduleNames
   N8,  \field Maximum Number of People
        \required-field
        \minimum 0.0
-  A9,  \field People Schedule
+  A10,  \field People Schedule
        \type object-list
        \object-list ScheduleNames
-  A10; \field People Heat Gain Schedule
+  A11; \field People Heat Gain Schedule
        \type object-list
        \object-list ScheduleNames
 
