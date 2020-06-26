@@ -27801,8 +27801,7 @@ OS:SwimmingPool:Indoor,
   A2,  \field Name
        \required-field
        \type alpha
-       \reference-class-name validBranchEquipmentTypes
-       \reference validBranchEquipmentNames
+       \reference ConnectionObject
   A3,  \field Surface Name
        \required-field
        \note Name of the floor surface where the pool is located.
@@ -27828,39 +27827,43 @@ OS:SwimmingPool:Indoor,
        \type real
        \minimum 0.0
        \maximum 1.0
-       \default 0.0
+       \required-field
   N3,  \field Cover Convection Factor
        \type real
        \minimum 0.0
        \maximum 1.0
-       \default 0.0
+       \required-field
   N4,  \field Cover Short-Wavelength Radiation Factor
        \type real
        \minimum 0.0
        \maximum 1.0
-       \default 0.0
+       \required-field
   N5,  \field Cover Long-Wavelength Radiation Factor
        \type real
        \minimum 0.0
        \maximum 1.0
-       \default 0.0
+       \required-field
   A7,  \field Pool Water Inlet Node
        \required-field
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A8,  \field Pool Water Outlet Node
        \required-field
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   N6,  \field Pool Heating System Maximum Water Flow Rate
        \type real
        \units m3/s
        \ip-units gal/min
        \minimum 0.0
+       \required-field
   N7,  \field Pool Miscellaneous Equipment Power
        \note Power input per pool water flow rate
-       \units W/(m3/s)
-       \ip-units W/(gal/min)
+       \units W-s/m3
+       \ip-units W-min/gal
        \type real
        \minimum 0.0
+       \required-field
   A9,  \field Setpoint Temperature Schedule
        \required-field
        \type object-list
@@ -27871,9 +27874,11 @@ OS:SwimmingPool:Indoor,
   A10,  \field People Schedule
        \type object-list
        \object-list ScheduleNames
+       \required-field
   A11; \field People Heat Gain Schedule
        \type object-list
        \object-list ScheduleNames
+       \required-field
 
 \group Solar Collectors
 
