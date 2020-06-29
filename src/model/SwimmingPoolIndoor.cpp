@@ -388,12 +388,12 @@ namespace detail {
 
 } // detail
 
-SwimmingPoolIndoor::SwimmingPoolIndoor(const Model& model)
+SwimmingPoolIndoor::SwimmingPoolIndoor(const Model& model, const Surface& floorSurface)
   : StraightComponent(SwimmingPoolIndoor::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::SwimmingPoolIndoor_Impl>());
 
-  // TODO: Appropriately handle the following required object-list fields.
+  // Appropriately handle the following required object-list fields.
   //     OS_SwimmingPool_IndoorFields::SurfaceName
   //     OS_SwimmingPool_IndoorFields::ActivityFactorScheduleName
   //     OS_SwimmingPool_IndoorFields::MakeupWaterSupplyScheduleName
@@ -403,39 +403,58 @@ SwimmingPoolIndoor::SwimmingPoolIndoor(const Model& model)
   //     OS_SwimmingPool_IndoorFields::SetpointTemperatureSchedule
   //     OS_SwimmingPool_IndoorFields::PeopleSchedule
   //     OS_SwimmingPool_IndoorFields::PeopleHeatGainSchedule
-  bool ok = true;
-  // ok = setSurface();
+
+  bool ok = setSurface(floorSurface);
+  if (!ok) {
+    LOG_AND_THROW(floorSurface.briefDescription() << " is not a valid surface for a SwimmingPool:Indoor object");
+  }
+
+
+  // IDD Defaults
+  setCoverEvaporationFactor(0.0);
+  setCoverConvectionFactor(0.0);
+  setCoverShortWavelengthRadiationFactor(0.0);
+  setCoverLongWavelengthRadiationFactor(0.0);
+
+  // No IDD defaults
+
+  // It makes sense to assume zero
+  setPoolMiscellaneousEquipmentPower(0.0);
+  // Abritrary depth of 2m...
+  setAverageDepth(2.0);
+
+  // Assume pool is always uncovered
+  auto alwaysOff = model.alwaysOffDiscreteSchedule();
+  ok = setCoverSchedule(alwaysOff);
   OS_ASSERT(ok);
-  // setAverageDepth();
-  // ok = setActivityFactorSchedule();
+
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  ok = setPeopleSchedule(alwaysOn);
   OS_ASSERT(ok);
-  // ok = setMakeupWaterSupplySchedule();
+
+  ok = setActivityFactorSchedule(alwaysOn);
   OS_ASSERT(ok);
-  // ok = setCoverSchedule();
+
+
+  // These don't have defaults in the E+ IDD, and are hard to make sensible defaults for, so use numbers from 5ZoneSwimmingPool
+  setPoolHeatingSystemMaximumWaterFlowRate(0.1);
+  setMaximumNumberofPeople(15.0);
+
+  // 16.67? take as arg to Ctor?
+  auto makeUpSch = ScheduleRuleset(model, 16.67);
+  makeUpSch.setName("Pool MakeUp Water Temperature Schedule");
+  ok = setMakeupWaterSupplySchedule(makeUpSch);
   OS_ASSERT(ok);
-  // ok = setCoverEvaporationFactor();
+
+  // Assume 300W? take as arg to Ctor?
+  auto gainSch = ScheduleRuleset(model, 300.0);
+  gainSch.setName("Pool People Heat Gain Schedule");
+  ok = setPeopleHeatGainSchedule(gainSch);
   OS_ASSERT(ok);
-  // ok = setCoverConvectionFactor();
-  OS_ASSERT(ok);
-  // ok = setCoverShortWavelengthRadiationFactor();
-  OS_ASSERT(ok);
-  // ok = setCoverLongWavelengthRadiationFactor();
-  OS_ASSERT(ok);
-  // ok = setPoolWaterInletNode();
-  OS_ASSERT(ok);
-  // ok = setPoolWaterOutletNode();
-  OS_ASSERT(ok);
-  // ok = setPoolHeatingSystemMaximumWaterFlowRate();
-  OS_ASSERT(ok);
-  // ok = setPoolMiscellaneousEquipmentPower();
-  OS_ASSERT(ok);
-  // ok = setSetpointTemperatureSchedule();
-  OS_ASSERT(ok);
-  // ok = setMaximumNumberofPeople();
-  OS_ASSERT(ok);
-  // ok = setPeopleSchedule();
-  OS_ASSERT(ok);
-  // ok = setPeopleHeatGainSchedule();
+
+  auto tempSch = ScheduleRuleset(model, 27.0);
+  tempSch.setName("Pool Setpoint Temperature Schedule");
+  ok = setSetpointTemperatureSchedule(tempSch);
   OS_ASSERT(ok);
 }
 
