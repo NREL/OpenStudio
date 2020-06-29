@@ -350,6 +350,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSurfacePropertyExposedFoundationPerimeter.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideConditionsModel.cpp
+  ForwardTranslator/ForwardTranslateSwimmingPoolIndoor.cpp
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp
   ForwardTranslator/ForwardTranslateTemperingValve.cpp
   ForwardTranslator/ForwardTranslateThermalStorageIceDetailed.cpp
@@ -523,6 +524,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmInside.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmOutside.cpp
   ReverseTranslator/ReverseTranslateSurfacePropertyExposedFoundationPerimeter.cpp
+  ReverseTranslator/ReverseTranslateSwimmingPoolIndoor.cpp
   ReverseTranslator/ReverseTranslateThermostatSetpointDualSetpoint.cpp
   ReverseTranslator/ReverseTranslateTimestep.cpp
   ReverseTranslator/ReverseTranslateVersion.cpp
@@ -642,6 +644,7 @@ set(${target_name}_test_src
   Test/Surface_GTest.cpp
   Test/SurfaceControlMovableInsulation_GTest.cpp
   Test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  Test/SwimmingPoolIndoor_GTest.cpp
   Test/TableMultiVariableLookup_GTest.cpp
   Test/ThermalStorageChilledWaterStratified_GTest.cpp
   Test/ThermalZone_GTest.cpp

@@ -126,25 +126,25 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_GettersSetters) {
   EXPECT_EQ(0.5, swimmingPoolIndoor.coverEvaporationFactor());
 
   // Cover Convection Factor: Required Double
-  EXPECT_TRUE(swimmingPoolIndoor.setCoverConvectionFactor(0.5));
-  EXPECT_EQ(0.5, swimmingPoolIndoor.coverConvectionFactor());
+  EXPECT_TRUE(swimmingPoolIndoor.setCoverConvectionFactor(0.6));
+  EXPECT_EQ(0.6, swimmingPoolIndoor.coverConvectionFactor());
   // Bad Value
   EXPECT_FALSE(swimmingPoolIndoor.setCoverConvectionFactor(-10.0));
-  EXPECT_EQ(0.5, swimmingPoolIndoor.coverConvectionFactor());
+  EXPECT_EQ(0.6, swimmingPoolIndoor.coverConvectionFactor());
 
   // Cover Short-Wavelength Radiation Factor: Required Double
-  EXPECT_TRUE(swimmingPoolIndoor.setCoverShortWavelengthRadiationFactor(0.5));
-  EXPECT_EQ(0.5, swimmingPoolIndoor.coverShortWavelengthRadiationFactor());
+  EXPECT_TRUE(swimmingPoolIndoor.setCoverShortWavelengthRadiationFactor(0.7));
+  EXPECT_EQ(0.7, swimmingPoolIndoor.coverShortWavelengthRadiationFactor());
   // Bad Value
   EXPECT_FALSE(swimmingPoolIndoor.setCoverShortWavelengthRadiationFactor(-10.0));
-  EXPECT_EQ(0.5, swimmingPoolIndoor.coverShortWavelengthRadiationFactor());
+  EXPECT_EQ(0.7, swimmingPoolIndoor.coverShortWavelengthRadiationFactor());
 
   // Cover Long-Wavelength Radiation Factor: Required Double
-  EXPECT_TRUE(swimmingPoolIndoor.setCoverLongWavelengthRadiationFactor(0.5));
-  EXPECT_EQ(0.5, swimmingPoolIndoor.coverLongWavelengthRadiationFactor());
+  EXPECT_TRUE(swimmingPoolIndoor.setCoverLongWavelengthRadiationFactor(0.8));
+  EXPECT_EQ(0.8, swimmingPoolIndoor.coverLongWavelengthRadiationFactor());
   // Bad Value
   EXPECT_FALSE(swimmingPoolIndoor.setCoverLongWavelengthRadiationFactor(-10.0));
-  EXPECT_EQ(0.5, swimmingPoolIndoor.coverLongWavelengthRadiationFactor());
+  EXPECT_EQ(0.8, swimmingPoolIndoor.coverLongWavelengthRadiationFactor());
 
   // Pool Heating System Maximum Water Flow Rate: Required Double
   EXPECT_TRUE(swimmingPoolIndoor.setPoolHeatingSystemMaximumWaterFlowRate(0.1));
@@ -154,11 +154,11 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_GettersSetters) {
   EXPECT_EQ(0.1, swimmingPoolIndoor.poolHeatingSystemMaximumWaterFlowRate());
 
   // Pool Miscellaneous Equipment Power: Required Double
-  EXPECT_TRUE(swimmingPoolIndoor.setPoolMiscellaneousEquipmentPower(0.1));
-  EXPECT_EQ(0.1, swimmingPoolIndoor.poolMiscellaneousEquipmentPower());
+  EXPECT_TRUE(swimmingPoolIndoor.setPoolMiscellaneousEquipmentPower(2000.0));
+  EXPECT_EQ(2000., swimmingPoolIndoor.poolMiscellaneousEquipmentPower());
   // Bad Value
   EXPECT_FALSE(swimmingPoolIndoor.setPoolMiscellaneousEquipmentPower(-10.0));
-  EXPECT_EQ(0.1, swimmingPoolIndoor.poolMiscellaneousEquipmentPower());
+  EXPECT_EQ(2000., swimmingPoolIndoor.poolMiscellaneousEquipmentPower());
 
   // Setpoint Temperature Schedule: Required Object
   {
@@ -168,11 +168,11 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_GettersSetters) {
   }
 
   // Maximum Number of People: Required Double
-  EXPECT_TRUE(swimmingPoolIndoor.setMaximumNumberofPeople(0.1));
-  EXPECT_EQ(0.1, swimmingPoolIndoor.maximumNumberofPeople());
+  EXPECT_TRUE(swimmingPoolIndoor.setMaximumNumberofPeople(12.5));
+  EXPECT_EQ(12.5, swimmingPoolIndoor.maximumNumberofPeople());
   // Bad Value
   EXPECT_FALSE(swimmingPoolIndoor.setMaximumNumberofPeople(-10.0));
-  EXPECT_EQ(0.1, swimmingPoolIndoor.maximumNumberofPeople());
+  EXPECT_EQ(12.5, swimmingPoolIndoor.maximumNumberofPeople());
 
   // People Schedule: Required Object
   {
@@ -209,6 +209,8 @@ TEST_F(ModelFixture, SwimmingPoolIndoor_addToNode) {
 
 
   SwimmingPoolIndoor swimmingPoolIndoor(m, floorSurface);
+  EXPECT_FALSE(swimmingPoolIndoor.inletModelObject());
+  EXPECT_FALSE(swimmingPoolIndoor.outletModelObject());
   EXPECT_FALSE(swimmingPoolIndoor.poolWaterInletNode());
   EXPECT_FALSE(swimmingPoolIndoor.poolWaterOutletNode());
 

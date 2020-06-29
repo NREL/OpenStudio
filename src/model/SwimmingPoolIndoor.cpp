@@ -249,7 +249,7 @@ namespace detail {
   }
 
   bool SwimmingPoolIndoor_Impl::setSurface(const Surface& floorSurface) {
-    if (floorSurface.surfaceType() != "Floor") {
+    if (!openstudio::istringEqual(floorSurface.surfaceType(), "Floor")) {
       LOG(Error, "Only surfaceTypes of 'Floor' accepted: Unable to set " << briefDescription() << "'s Surface to "
         << floorSurface.briefDescription() << " which has a surface Type of '" << floorSurface.surfaceType() << "'.");
       return false;
@@ -260,7 +260,7 @@ namespace detail {
 
   bool SwimmingPoolIndoor_Impl::setAverageDepth(double averageDepth) {
     bool result = setDouble(OS_SwimmingPool_IndoorFields::AverageDepth, averageDepth);
-    OS_ASSERT(result);
+    return result;
   }
 
   bool SwimmingPoolIndoor_Impl::setActivityFactorSchedule(Schedule& schedule) {
@@ -377,14 +377,23 @@ namespace detail {
   // convenience
   boost::optional<Node> SwimmingPoolIndoor_Impl::poolWaterInletNode() const
   {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SwimmingPool_IndoorFields::PoolWaterInletNode);
+    boost::optional<Node> result;
+
+    if (auto mo = inletModelObject()) {
+      result = mo->optionalCast<Node>();
+    }
+    return result;
   }
 
   boost::optional<Node> SwimmingPoolIndoor_Impl::poolWaterOutletNode() const
   {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SwimmingPool_IndoorFields::PoolWaterOutletNode);
-  }
+    boost::optional<Node> result;
 
+    if (auto mo = outletModelObject()) {
+      result = mo->optionalCast<Node>();
+    }
+    return result;
+  }
 
 } // detail
 
@@ -527,7 +536,7 @@ bool SwimmingPoolIndoor::setSurface(const Surface& floorSurface) {
 }
 
 bool SwimmingPoolIndoor::setAverageDepth(double averageDepth) {
-  getImpl<detail::SwimmingPoolIndoor_Impl>()->setAverageDepth(averageDepth);
+  return getImpl<detail::SwimmingPoolIndoor_Impl>()->setAverageDepth(averageDepth);
 }
 
 bool SwimmingPoolIndoor::setActivityFactorSchedule(Schedule& schedule) {

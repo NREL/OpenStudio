@@ -57,7 +57,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSwimmingPoolIndoor( model
 
   // Surface Name: Required Object
   Surface surface = modelObject.surface();
-  if (!(surface.surfaceType() != "Floor")) {
+  if (!openstudio::istringEqual(surface.surfaceType(), "Floor")) {
     LOG(Error, "Only surfaceTypes of 'Floor' accepted for SwimmingPoolIndoor. " << modelObject.briefDescription() << "'s Surface is "
         << surface.briefDescription() << " which has a surface Type of '" << surface.surfaceType() << "'.");
     return boost::none;
@@ -156,7 +156,7 @@ boost::optional<IdfObject> ForwardTranslator::translateSwimmingPoolIndoor( model
 
   // People Schedule: Optional Object (but enforced in E+ source)
   Schedule peopleSchedule = modelObject.peopleSchedule();
-  if (auto _sch = translateAndMapModelObject(setpointTemperatureSchedule))  {
+  if (auto _sch = translateAndMapModelObject(peopleSchedule))  {
     idfObject.setString(SwimmingPool_IndoorFields::PeopleSchedule, _sch->nameString());
   } else {
     LOG(Error, "Missing required 'People Schedule Name' for " << modelObject.briefDescription());
