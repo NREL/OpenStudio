@@ -30,27 +30,20 @@
 #include "SwimmingPoolIndoor.hpp"
 #include "SwimmingPoolIndoor_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "FloorSurface.hpp"
-#include "FloorSurface_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+#include "Surface.hpp"
+#include "Surface_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Connection.hpp"
-#include "Connection_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "Schedule.hpp"
-#include "Schedule_Impl.hpp"
-#include "../../model/ScheduleTypeLimits.hpp"
-#include "../../model/ScheduleTypeRegistry.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "ScheduleRuleset.hpp"
+
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_SwimmingPool_Indoor_FieldEnums.hxx>
@@ -100,7 +93,6 @@ namespace detail {
 
   std::vector<ScheduleTypeKey> SwimmingPoolIndoor_Impl::getScheduleTypeKeys(const Schedule& schedule) const
   {
-    // TODO: Check schedule display names.
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -131,8 +123,29 @@ namespace detail {
     return result;
   }
 
-  FloorSurface SwimmingPoolIndoor_Impl::surface() const {
-    boost::optional<FloorSurface> value = optionalSurface();
+  unsigned SwimmingPoolIndoor_Impl::inletPort() const
+  {
+    return OS_SwimmingPool_IndoorFields::PoolWaterInletNode;
+  }
+
+  unsigned SwimmingPoolIndoor_Impl::outletPort() const
+  {
+    return OS_SwimmingPool_IndoorFields::PoolWaterOutletNode;
+  }
+
+  bool SwimmingPoolIndoor_Impl::addToNode(Node & node)
+  {
+    if( boost::optional<PlantLoop> plant = node.plantLoop() ) {
+      if( plant->demandComponent(node.handle()) ) {
+        return StraightComponent_Impl::addToNode(node);
+      }
+    }
+
+    return false;
+  }
+
+  Surface SwimmingPoolIndoor_Impl::surface() const {
+    boost::optional<Surface> value = optionalSurface();
     if (!value) {
       LOG_AND_THROW(briefDescription() << " does not have an Surface attached.");
     }
@@ -193,22 +206,6 @@ namespace detail {
     return value.get();
   }
 
-  Connection SwimmingPoolIndoor_Impl::poolWaterInletNode() const {
-    boost::optional<Connection> value = optionalPoolWaterInletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Pool Water Inlet Node attached.");
-    }
-    return value.get();
-  }
-
-  Connection SwimmingPoolIndoor_Impl::poolWaterOutletNode() const {
-    boost::optional<Connection> value = optionalPoolWaterOutletNode();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Pool Water Outlet Node attached.");
-    }
-    return value.get();
-  }
-
   double SwimmingPoolIndoor_Impl::poolHeatingSystemMaximumWaterFlowRate() const {
     boost::optional<double> value = getDouble(OS_SwimmingPool_IndoorFields::PoolHeatingSystemMaximumWaterFlowRate,true);
     OS_ASSERT(value);
@@ -251,7 +248,12 @@ namespace detail {
     return value.get();
   }
 
-  bool SwimmingPoolIndoor_Impl::setSurface(const FloorSurface& floorSurface) {
+  bool SwimmingPoolIndoor_Impl::setSurface(const Surface& floorSurface) {
+    if (floorSurface.surfaceType() != "Floor") {
+      LOG(Error, "Only surfaceTypes of 'Floor' accepted: Unable to set " << briefDescription() << "'s Surface to "
+        << floorSurface.briefDescription() << " which has a surface Type of '" << floorSurface.surfaceType() << "'.");
+      return false;
+    }
     bool result = setPointer(OS_SwimmingPool_IndoorFields::SurfaceName, floorSurface.handle());
     return result;
   }
@@ -305,16 +307,6 @@ namespace detail {
     return result;
   }
 
-  bool SwimmingPoolIndoor_Impl::setPoolWaterInletNode(const Connection& connection) {
-    bool result = setPointer(OS_SwimmingPool_IndoorFields::PoolWaterInletNode, connection.handle());
-    return result;
-  }
-
-  bool SwimmingPoolIndoor_Impl::setPoolWaterOutletNode(const Connection& connection) {
-    bool result = setPointer(OS_SwimmingPool_IndoorFields::PoolWaterOutletNode, connection.handle());
-    return result;
-  }
-
   bool SwimmingPoolIndoor_Impl::setPoolHeatingSystemMaximumWaterFlowRate(double poolHeatingSystemMaximumWaterFlowRate) {
     bool result = setDouble(OS_SwimmingPool_IndoorFields::PoolHeatingSystemMaximumWaterFlowRate, poolHeatingSystemMaximumWaterFlowRate);
     return result;
@@ -354,8 +346,8 @@ namespace detail {
     return result;
   }
 
-  boost::optional<FloorSurface> SwimmingPoolIndoor_Impl::optionalSurface() const {
-    return getObject<ModelObject>().getModelObjectTarget<FloorSurface>(OS_SwimmingPool_IndoorFields::SurfaceName);
+  boost::optional<Surface> SwimmingPoolIndoor_Impl::optionalSurface() const {
+    return getObject<ModelObject>().getModelObjectTarget<Surface>(OS_SwimmingPool_IndoorFields::SurfaceName);
   }
 
   boost::optional<Schedule> SwimmingPoolIndoor_Impl::optionalActivityFactorSchedule() const {
@@ -370,14 +362,6 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_SwimmingPool_IndoorFields::CoverScheduleName);
   }
 
-  boost::optional<Connection> SwimmingPoolIndoor_Impl::optionalPoolWaterInletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_SwimmingPool_IndoorFields::PoolWaterInletNode);
-  }
-
-  boost::optional<Connection> SwimmingPoolIndoor_Impl::optionalPoolWaterOutletNode() const {
-    return getObject<ModelObject>().getModelObjectTarget<Connection>(OS_SwimmingPool_IndoorFields::PoolWaterOutletNode);
-  }
-
   boost::optional<Schedule> SwimmingPoolIndoor_Impl::optionalSetpointTemperatureSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_SwimmingPool_IndoorFields::SetpointTemperatureSchedule);
   }
@@ -389,6 +373,18 @@ namespace detail {
   boost::optional<Schedule> SwimmingPoolIndoor_Impl::optionalPeopleHeatGainSchedule() const {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_SwimmingPool_IndoorFields::PeopleHeatGainSchedule);
   }
+
+  // convenience
+  boost::optional<Node> SwimmingPoolIndoor_Impl::poolWaterInletNode() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SwimmingPool_IndoorFields::PoolWaterInletNode);
+  }
+
+  boost::optional<Node> SwimmingPoolIndoor_Impl::poolWaterOutletNode() const
+  {
+    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SwimmingPool_IndoorFields::PoolWaterOutletNode);
+  }
+
 
 } // detail
 
@@ -447,7 +443,7 @@ IddObjectType SwimmingPoolIndoor::iddObjectType() {
   return IddObjectType(IddObjectType::OS_SwimmingPool_Indoor);
 }
 
-FloorSurface SwimmingPoolIndoor::surface() const {
+Surface SwimmingPoolIndoor::surface() const {
   return getImpl<detail::SwimmingPoolIndoor_Impl>()->surface();
 }
 
@@ -483,14 +479,6 @@ double SwimmingPoolIndoor::coverLongWavelengthRadiationFactor() const {
   return getImpl<detail::SwimmingPoolIndoor_Impl>()->coverLongWavelengthRadiationFactor();
 }
 
-Connection SwimmingPoolIndoor::poolWaterInletNode() const {
-  return getImpl<detail::SwimmingPoolIndoor_Impl>()->poolWaterInletNode();
-}
-
-Connection SwimmingPoolIndoor::poolWaterOutletNode() const {
-  return getImpl<detail::SwimmingPoolIndoor_Impl>()->poolWaterOutletNode();
-}
-
 double SwimmingPoolIndoor::poolHeatingSystemMaximumWaterFlowRate() const {
   return getImpl<detail::SwimmingPoolIndoor_Impl>()->poolHeatingSystemMaximumWaterFlowRate();
 }
@@ -515,11 +503,11 @@ Schedule SwimmingPoolIndoor::peopleHeatGainSchedule() const {
   return getImpl<detail::SwimmingPoolIndoor_Impl>()->peopleHeatGainSchedule();
 }
 
-bool SwimmingPoolIndoor::setSurface(const FloorSurface& floorSurface) {
+bool SwimmingPoolIndoor::setSurface(const Surface& floorSurface) {
   return getImpl<detail::SwimmingPoolIndoor_Impl>()->setSurface(floorSurface);
 }
 
-void SwimmingPoolIndoor::setAverageDepth(double averageDepth) {
+bool SwimmingPoolIndoor::setAverageDepth(double averageDepth) {
   getImpl<detail::SwimmingPoolIndoor_Impl>()->setAverageDepth(averageDepth);
 }
 
@@ -551,14 +539,6 @@ bool SwimmingPoolIndoor::setCoverLongWavelengthRadiationFactor(double coverLongW
   return getImpl<detail::SwimmingPoolIndoor_Impl>()->setCoverLongWavelengthRadiationFactor(coverLongWavelengthRadiationFactor);
 }
 
-bool SwimmingPoolIndoor::setPoolWaterInletNode(const Connection& connection) {
-  return getImpl<detail::SwimmingPoolIndoor_Impl>()->setPoolWaterInletNode(connection);
-}
-
-bool SwimmingPoolIndoor::setPoolWaterOutletNode(const Connection& connection) {
-  return getImpl<detail::SwimmingPoolIndoor_Impl>()->setPoolWaterOutletNode(connection);
-}
-
 bool SwimmingPoolIndoor::setPoolHeatingSystemMaximumWaterFlowRate(double poolHeatingSystemMaximumWaterFlowRate) {
   return getImpl<detail::SwimmingPoolIndoor_Impl>()->setPoolHeatingSystemMaximumWaterFlowRate(poolHeatingSystemMaximumWaterFlowRate);
 }
@@ -588,6 +568,15 @@ SwimmingPoolIndoor::SwimmingPoolIndoor(std::shared_ptr<detail::SwimmingPoolIndoo
   : StraightComponent(impl)
 {}
 /// @endcond
+
+
+boost::optional<Node> SwimmingPoolIndoor::poolWaterInletNode() const {
+  return getImpl<detail::SwimmingPoolIndoor_Impl>()->poolWaterInletNode();
+}
+
+boost::optional<Node> SwimmingPoolIndoor::poolWaterOutletNode() const {
+  return getImpl<detail::SwimmingPoolIndoor_Impl>()->poolWaterOutletNode();
+}
 
 } // model
 } // openstudio

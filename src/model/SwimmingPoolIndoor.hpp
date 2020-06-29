@@ -37,16 +37,9 @@ namespace openstudio {
 
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class FloorSurface;
+class Surface;
 class Schedule;
-class Schedule;
-class Schedule;
-class Connection;
-class Connection;
-class Schedule;
-class Schedule;
-class Schedule;
+class Node;
 
 namespace detail {
 
@@ -60,7 +53,7 @@ class MODEL_API SwimmingPoolIndoor : public StraightComponent {
   /** @name Constructors and Destructors */
   //@{
 
-  explicit SwimmingPoolIndoor(const Model& model);
+  explicit SwimmingPoolIndoor(const Model& model, const Surface& floorSurface);
 
   virtual ~SwimmingPoolIndoor() {}
 
@@ -71,18 +64,14 @@ class MODEL_API SwimmingPoolIndoor : public StraightComponent {
   /** @name Getters */
   //@{
 
-  // TODO: Check return type. From object lists, some candidates are: FloorSurface.
-  FloorSurface surface() const;
+  Surface surface() const;
 
   double averageDepth() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule activityFactorSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule makeupWaterSupplySchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule coverSchedule() const;
 
   double coverEvaporationFactor() const;
@@ -93,46 +82,31 @@ class MODEL_API SwimmingPoolIndoor : public StraightComponent {
 
   double coverLongWavelengthRadiationFactor() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection poolWaterInletNode() const;
-
-  // TODO: Check return type. From object lists, some candidates are: Connection.
-  Connection poolWaterOutletNode() const;
-
   double poolHeatingSystemMaximumWaterFlowRate() const;
 
   double poolMiscellaneousEquipmentPower() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule setpointTemperatureSchedule() const;
 
   double maximumNumberofPeople() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule peopleSchedule() const;
 
-  // TODO: Check return type. From object lists, some candidates are: Schedule.
   Schedule peopleHeatGainSchedule() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: FloorSurface.
-  bool setSurface(const FloorSurface& floorSurface);
+  // Set the Pool's surface object. Surface MUST be of type 'Floor'
+  bool setSurface(const Surface& floorSurface);
 
   bool setAverageDepth(double averageDepth);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
   bool setActivityFactorSchedule(Schedule& schedule);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
   bool setMakeupWaterSupplySchedule(Schedule& schedule);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
   bool setCoverSchedule(Schedule& schedule);
 
   bool setCoverEvaporationFactor(double coverEvaporationFactor);
@@ -143,33 +117,27 @@ class MODEL_API SwimmingPoolIndoor : public StraightComponent {
 
   bool setCoverLongWavelengthRadiationFactor(double coverLongWavelengthRadiationFactor);
 
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setPoolWaterInletNode(const Connection& connection);
-
-  // TODO: Check argument type. From object lists, some candidates are: Connection.
-  bool setPoolWaterOutletNode(const Connection& connection);
-
   bool setPoolHeatingSystemMaximumWaterFlowRate(double poolHeatingSystemMaximumWaterFlowRate);
 
   bool setPoolMiscellaneousEquipmentPower(double poolMiscellaneousEquipmentPower);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
   bool setSetpointTemperatureSchedule(Schedule& schedule);
 
   bool setMaximumNumberofPeople(double maximumNumberofPeople);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
   bool setPeopleSchedule(Schedule& schedule);
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
   bool setPeopleHeatGainSchedule(Schedule& schedule);
 
   //@}
   /** @name Other */
   //@{
+
+  // Convenience function to return the inletNode of the Pool object
+  boost::optional<Node> poolWaterInletNode() const;
+
+  // Convenience function to return the Outlet Node of the Pool object
+  boost::optional<Node> poolWaterOutletNode() const;
 
   //@}
  protected:
