@@ -404,6 +404,7 @@ class SurfacePropertyConvectionCoefficientsMultipleSurface;
 class SurfacePropertyExposedFoundationPerimeter;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
+class SwimmingPoolIndoor;
 class TableMultiVariableLookup;
 class TemperingValve;
 class ThermalZone;
@@ -1252,6 +1253,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSurfacePropertyOtherSideCoefficients(model::SurfacePropertyOtherSideCoefficients & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyOtherSideConditionsModel(model::SurfacePropertyOtherSideConditionsModel & modelObject);
+
+  boost::optional<IdfObject> translateSwimmingPoolIndoor(model::SwimmingPoolIndoor & modelObject);
 
   boost::optional<IdfObject> translateTableMultiVariableLookup( model::TableMultiVariableLookup & modelObject );
 

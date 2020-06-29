@@ -968,6 +968,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateSurfacePropertyExposedFoundationPerimeter(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::SwimmingPool_Indoor :
+    {
+      modelObject = translateSwimmingPoolIndoor(workspaceObject);
+      break;
+    }
   case openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint :
     {
       modelObject = translateThermostatSetpointDualSetpoint(workspaceObject);

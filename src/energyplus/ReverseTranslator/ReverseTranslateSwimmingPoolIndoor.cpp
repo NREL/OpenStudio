@@ -31,9 +31,8 @@
 
 #include "../../model/SwimmingPoolIndoor.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "../../model/FloorSurface.hpp"
-#include "../../model/FloorSurface_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
 
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
@@ -52,53 +51,53 @@ namespace energyplus {
 
 boost::optional<ModelObject> ReverseTranslator::translateSwimmingPoolIndoor( const WorkspaceObject & workspaceObject )
 {
-  boost::optional<ModelObject> result;
   boost::optional<WorkspaceObject> _wo;
   boost::optional<ModelObject> _mo;
 
+  // Surface Name: Required Object, and as Ctor arg. And will throw if not the right SurfaceType...
+  boost::optional<Surface> _surface;
+  if ( (_wo = workspaceObject.getTarget(SwimmingPool_IndoorFields::SurfaceName)) ) {
+    if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
+      // TODO: check return types
+      if ( (_surface = _mo->optionalCast<Surface>()) ) {
+        if (_surface->surfaceType() != "Floor") {
+          LOG(Warn, workspaceObject.briefDescription() << " has a surface assigned, but it is NOT of type 'Floor' like it should");
+          return::boost::none;
+        }
+      } else {
+        LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Surface Name'");
+        return boost::none;
+      }
+    } else {
+      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Surface Name'");
+      return boost::none;
+    }
+  } else {
+    LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Surface Name'");
+    return boost::none;
+  }
+
   // Instantiate an object of the class to store the values,
   // but we don't return it until we know it's ok
-  // TODO: check constructor, it might need other objects
-  openstudio::model::SwimmingPoolIndoor modelObject( m_model );
-
-  // TODO: Note JM 2018-10-17
-  // You are responsible for implementing any additional logic based on choice fields, etc.
-  // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
+  openstudio::model::SwimmingPoolIndoor modelObject( m_model, _surface.get() );
 
   // Name
   if (boost::optional<std::string> _name = workspaceObject.name()) {
     modelObject.setName(_name.get());
   }
 
-  // Surface Name: Required Object
-  if ( (_wo = workspaceObject.getTarget(SwimmingPool_IndoorFields::SurfaceName)) ) {
-    if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
-      // TODO: check return types
-      if (boost::optional<FloorSurface> _surface = _mo->optionalCast<FloorSurface>()) {
-        modelObject.setSurface(_surface.get());
-      } else {
-        LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Surface Name'");
-      }
-    } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Surface Name'");
-      return result;
-    }
-  } else {
-    LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Surface Name'");
-    return result;
-  }
+
   // Average Depth: Required Double
   if (boost::optional<double> _averageDepth = workspaceObject.getDouble(SwimmingPool_IndoorFields::AverageDepth)) {
     modelObject.setAverageDepth(_averageDepth.get());
- } else {
-   LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Average Depth'");
-    return result;
+  } else {
+    LOG(Warn, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Average Depth', using default");
+    return boost::none;
   }
 
   // Activity Factor Schedule Name: Required Object
   if ( (_wo = workspaceObject.getTarget(SwimmingPool_IndoorFields::ActivityFactorScheduleName)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
-      // TODO: check return types
       if (boost::optional<Schedule> _activityFactorSchedule = _mo->optionalCast<Schedule>()) {
         modelObject.setActivityFactorSchedule(_activityFactorSchedule.get());
       } else {
@@ -106,16 +105,15 @@ boost::optional<ModelObject> ReverseTranslator::translateSwimmingPoolIndoor( con
       }
     } else {
       LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Activity Factor Schedule Name'");
-      return result;
+      return boost::none;
     }
   } else {
     LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Activity Factor Schedule Name'");
-    return result;
+    return boost::none;
   }
   // Make-up Water Supply Schedule Name: Required Object
   if ( (_wo = workspaceObject.getTarget(SwimmingPool_IndoorFields::MakeupWaterSupplyScheduleName)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
-      // TODO: check return types
       if (boost::optional<Schedule> _makeupWaterSupplySchedule = _mo->optionalCast<Schedule>()) {
         modelObject.setMakeupWaterSupplySchedule(_makeupWaterSupplySchedule.get());
       } else {
@@ -123,16 +121,15 @@ boost::optional<ModelObject> ReverseTranslator::translateSwimmingPoolIndoor( con
       }
     } else {
       LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Make-up Water Supply Schedule Name'");
-      return result;
+      return boost::none;
     }
   } else {
     LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Make-up Water Supply Schedule Name'");
-    return result;
+    return boost::none;
   }
   // Cover Schedule Name: Required Object
   if ( (_wo = workspaceObject.getTarget(SwimmingPool_IndoorFields::CoverScheduleName)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
-      // TODO: check return types
       if (boost::optional<Schedule> _coverSchedule = _mo->optionalCast<Schedule>()) {
         modelObject.setCoverSchedule(_coverSchedule.get());
       } else {
@@ -140,11 +137,11 @@ boost::optional<ModelObject> ReverseTranslator::translateSwimmingPoolIndoor( con
       }
     } else {
       LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Cover Schedule Name'");
-      return result;
+      return boost::none;
     }
   } else {
     LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Cover Schedule Name'");
-    return result;
+    return boost::none;
   }
   // Cover Evaporation Factor: Optional Double
   if (boost::optional<double> _coverEvaporationFactor = workspaceObject.getDouble(SwimmingPool_IndoorFields::CoverEvaporationFactor)) {
@@ -167,39 +164,9 @@ boost::optional<ModelObject> ReverseTranslator::translateSwimmingPoolIndoor( con
   }
 
   // Pool Water Inlet Node: Required Node
-  if ( (_wo = workspaceObject.getTarget(SwimmingPool_IndoorFields::PoolWaterInletNode)) ) {
-    if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
-      // TODO: check return types
-      if (boost::optional<Node> _poolWaterInletNode = _mo->optionalCast<Node>()) {
-        modelObject.setPoolWaterInletNode(_poolWaterInletNode.get());
-      } else {
-        LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Pool Water Inlet Node'");
-      }
-    } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Pool Water Inlet Node'");
-      return result;
-    }
-  } else {
-    LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Pool Water Inlet Node'");
-    return result;
-  }
+
   // Pool Water Outlet Node: Required Node
-  if ( (_wo = workspaceObject.getTarget(SwimmingPool_IndoorFields::PoolWaterOutletNode)) ) {
-    if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
-      // TODO: check return types
-      if (boost::optional<Node> _poolWaterOutletNode = _mo->optionalCast<Node>()) {
-        modelObject.setPoolWaterOutletNode(_poolWaterOutletNode.get());
-      } else {
-        LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Pool Water Outlet Node'");
-      }
-    } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Pool Water Outlet Node'");
-      return result;
-    }
-  } else {
-    LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Pool Water Outlet Node'");
-    return result;
-  }
+
   // Pool Heating System Maximum Water Flow Rate: Optional Double
   if (boost::optional<double> _poolHeatingSystemMaximumWaterFlowRate = workspaceObject.getDouble(SwimmingPool_IndoorFields::PoolHeatingSystemMaximumWaterFlowRate)) {
     modelObject.setPoolHeatingSystemMaximumWaterFlowRate(_poolHeatingSystemMaximumWaterFlowRate.get());
@@ -213,7 +180,6 @@ boost::optional<ModelObject> ReverseTranslator::translateSwimmingPoolIndoor( con
   // Setpoint Temperature Schedule: Required Object
   if ( (_wo = workspaceObject.getTarget(SwimmingPool_IndoorFields::SetpointTemperatureSchedule)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
-      // TODO: check return types
       if (boost::optional<Schedule> _setpointTemperatureSchedule = _mo->optionalCast<Schedule>()) {
         modelObject.setSetpointTemperatureSchedule(_setpointTemperatureSchedule.get());
       } else {
@@ -221,24 +187,23 @@ boost::optional<ModelObject> ReverseTranslator::translateSwimmingPoolIndoor( con
       }
     } else {
       LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Setpoint Temperature Schedule'");
-      return result;
+      return boost::none;
     }
   } else {
     LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Setpoint Temperature Schedule'");
-    return result;
+    return boost::none;
   }
   // Maximum Number of People: Required Double
   if (boost::optional<double> _maximumNumberofPeople = workspaceObject.getDouble(SwimmingPool_IndoorFields::MaximumNumberofPeople)) {
     modelObject.setMaximumNumberofPeople(_maximumNumberofPeople.get());
  } else {
    LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Maximum Number of People'");
-    return result;
+    return boost::none;
   }
 
   // People Schedule: Optional Object
   if ( (_wo = workspaceObject.getTarget(SwimmingPool_IndoorFields::PeopleSchedule)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
-      // TODO: check return types
       if (boost::optional<Schedule> _peopleSchedule = _mo->optionalCast<Schedule>()) {
         modelObject.setPeopleSchedule(_peopleSchedule.get());
       } else {
@@ -249,7 +214,6 @@ boost::optional<ModelObject> ReverseTranslator::translateSwimmingPoolIndoor( con
   // People Heat Gain Schedule: Optional Object
   if ( (_wo = workspaceObject.getTarget(SwimmingPool_IndoorFields::PeopleHeatGainSchedule)) ) {
     if( (_mo = translateAndMapWorkspaceObject(_wo.get())) ) {
-      // TODO: check return types
       if (boost::optional<Schedule> _peopleHeatGainSchedule = _mo->optionalCast<Schedule>()) {
         modelObject.setPeopleHeatGainSchedule(_peopleHeatGainSchedule.get());
       } else {
@@ -257,8 +221,9 @@ boost::optional<ModelObject> ReverseTranslator::translateSwimmingPoolIndoor( con
       }
     }
   }
-  result = modelObject;
-  return result;
+
+  return modelObject;
+
 } // End of translate function
 
 } // end namespace energyplus
