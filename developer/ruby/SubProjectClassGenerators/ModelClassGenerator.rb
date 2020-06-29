@@ -488,8 +488,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         end
       }
       if @hasScheduleFields
-        result << "#include \"../../model/ScheduleTypeLimits.hpp\"\n"
-        result << "#include \"../../model/ScheduleTypeRegistry.hpp\"\n"
+        result << "#include \"ScheduleTypeLimits.hpp\"\n"
+        result << "#include \"ScheduleTypeRegistry.hpp\"\n"
       end
 
       result << "\n" if preamble == ""
@@ -1267,7 +1267,7 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
           result << "}\n\n"
         else
-          result << "void " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
+          result << "bool " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
           result << "  getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
           result << "}\n\n"
         end
@@ -1429,8 +1429,8 @@ class ModelClassGenerator < SubProjectClassGenerator
     @nonextensibleFields.each { |field|
       if field.isObjectList?
         result << preamble
-        result << "#include \"../model/" << field.objectListClassName << ".hpp\"\n"
-        result << "#include \"../model/" << field.objectListClassName << "_Impl.hpp\"\n\n"
+        result << "#include \"../" << field.objectListClassName << ".hpp\"\n"
+        result << "#include \"../" << field.objectListClassName << "_Impl.hpp\"\n\n"
         preamble = ""
       end
     }
@@ -1580,7 +1580,7 @@ class ModelClassGenerator < SubProjectClassGenerator
           end
 
           if !bad_val.nil?
-            result << "   Bad Value\n";
+            result << "  // Bad Value\n";
             result << "  EXPECT_FALSE(#{instanceName}." << field.setterName << "(#{bad_val}));\n";
 
             if field.optionalGetter?
