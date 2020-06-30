@@ -9063,6 +9063,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       model::ZoneHVACFourPipeFanCoil fpfc(model,schedule.get(),fan.get(),coolingCoil.get(),heatingCoil.get());
       result = fpfc;
 
+
+      if( fanOperModeSch ) {
+        fpfc.setSupplyAirFanOperatingModeSchedule(fanOperModeSch.get());
+      }
+
       // pull the max air flow rate from the fan and set in the fpfc
       if (clgSupFanCapSim && htgSupFanCapSim) {
         fpfc.setMaximumSupplyAirFlowRate(std::max(clgSupFanCapSim.get(),htgSupFanCapSim.get()));
@@ -9207,6 +9212,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
       }
 
       result = vrfTerminal;
+
+      if( fanOperModeSch ) {
+        vrfTerminal.setSupplyAirFanOperatingModeSchedule(fanOperModeSch.get());
+      }
 
       {
         auto value = element.firstChildElement("VRFSysRef").text().toStdString();
