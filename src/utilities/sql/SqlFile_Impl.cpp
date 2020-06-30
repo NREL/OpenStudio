@@ -343,7 +343,8 @@ namespace openstudio{
     {
       // Interestingly, you CANNOT bind any database identifier (such as the table name / column name) but only litteral values...
       // boost::optional<int> maxindex = execAndReturnFirstInt("SELECT MAX( ? ) FROM ?", t_columnName, t_tableName);
-      boost::optional<int> maxindex = execAndReturnFirstInt("SELECT MAX(" + t_columnName + ") FROM " + t_tableName);
+      std::string query = "SELECT MAX(" + t_columnName + ") FROM " + t_tableName + ";";
+      boost::optional<int> maxindex = execAndReturnFirstInt(query);
 
       if (maxindex)
       {
