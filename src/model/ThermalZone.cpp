@@ -1229,7 +1229,15 @@ namespace detail {
     if (mySqlFile) {
       // now use sql query to check if conditioned
       std::string zoneName = boost::to_upper_copy(name(true).get());
-      result = mySqlFile->execAndReturnFirstString("SELECT Value from tabulardatawithstrings where (reportname = 'InputVerificationandResultsSummary') and (ReportForString = 'Entire Facility') and (TableName = 'Zone Summary'  ) and (ColumnName ='Conditioned (Y/N)') and (RowName = '" + zoneName + "')");
+
+      std::string query = R"(SELECT Value from TabularDataWithStrings
+                              WHERE ReportName = 'InputVerificationandResultsSummary'
+                                AND ReportForString = 'Entire Facility'
+                                AND TableName = 'Zone Summary'
+                                AND ColumnName = 'Conditioned (Y/N)'
+                                AND RowName = ?;)";
+
+      result = mySqlFile->execAndReturnFirstString(query, zoneName); // zoneName is a bind argument, will get escaped properly
       if (!result){
         LOG(Error, "Query for " << briefDescription() << " isConditioned failed.");
       }

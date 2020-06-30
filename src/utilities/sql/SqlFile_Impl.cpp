@@ -240,25 +240,38 @@ namespace openstudio{
       std::stringstream timeStamp;
       timeStamp << t_simulationTime.date().year() << "." << t_simulationTime.date().monthOfYear().value() << "." << t_simulationTime.date().dayOfMonth() << " " << t_simulationTime.time().toString();
 
-      std::stringstream insertSimulation;
+      std::stringstream version;
+      version << "EnergyPlus, VERSION " << energyPlusVersionMajor() << "." << energyPlusVersionMinor() << ", (OpenStudio) YMD=" << timeStamp.str();
 
+      std::string insertSimulation = R"(INSERT INTO Simulations (SimulationIndex, EnergyPlusVersion, TimeStamp,
+                                                                 NumTimestepsPerHour, Completed, CompletedSuccessfully)
+                                        VALUES (?, ?, ?, ?, ?, ?);)";
 
-      insertSimulation << "insert into simulations (SimulationIndex, EnergyPlusVersion, TimeStamp, NumTimestepsPerHour, Completed, CompletedSuccessfully) values ("
-        << nextSimulationIndex << ", 'EnergyPlus, VERSION " << energyPlusVersionMajor() << "." << energyPlusVersionMinor() << ", (OpenStudio) YMD=" << timeStamp.str() << "', '" << timeStamp.str() << "', 6, 1, 1);";
+      execAndThrowOnError(insertSimulation,
+          // bindArgs
+          nextSimulationIndex,
+          version.str(),
+          timeStamp.str(),
+          6,
+          6,
+          1);
 
-      execAndThrowOnError(insertSimulation.str());
+      int nextEnvironmentPeriodIndex = getNextIndex("EnvironmentPeriods", "EnvironmentPeriodIndex");
 
+      std::stringstream envName;
+      envName << t_epwFile.stateProvinceRegion() << " WMO#=" << t_epwFile.wmoNumber();
 
-      int nextEnvironmentPeriodIndex = getNextIndex("environmentperiods", "EnvironmentPeriodIndex");
+      std::string insertEnvironment = R"(INSERT INTO EnvironmentPeriods (EnvironmentPeriodIndex, SimulationIndex,
+                                                                         EnvironmentName, EnvironmentType) VALUES (?, ?, ?, ?);)";
+      execAndThrowOnError(insertEnvironment,
+          // bindArgs
+          nextEnvironmentPeriodIndex,
+          nextSimulationIndex,
+          envName.str(),
+          3);
 
-      std::stringstream insertEnvironment;
-      insertEnvironment << "insert into environmentperiods (EnvironmentPeriodIndex, SimulationIndex, EnvironmentName, EnvironmentType) values ("
-        << nextEnvironmentPeriodIndex << ", " << nextSimulationIndex << ", '" << t_epwFile.stateProvinceRegion() << " WMO#=" << t_epwFile.wmoNumber() << "', 3);";
-
-      execAndThrowOnError(insertEnvironment.str());
 
       int nextTimeIndex = getNextIndex("time", "TimeIndex");
-
 
       std::shared_ptr<PreparedStatement> stmt;
       if (hasYear()) {
