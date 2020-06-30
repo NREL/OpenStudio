@@ -496,7 +496,7 @@ namespace openstudio{
         const std::string &t_environmentName, const std::vector<DateTime> &t_times,
         const std::vector<double> &t_xs, const std::vector<double> &t_ys, double t_z, const std::vector<Matrix> &t_maps)
     {
-      boost::optional<int> zoneIndex = execAndReturnFirstInt("select ZoneIndex from zones where ZoneName='" + t_zoneName + "';");
+      boost::optional<int> zoneIndex = execAndReturnFirstInt("select ZoneIndex from zones where ZoneName=?;", t_zoneName);
 
       if (!zoneIndex)
       {
@@ -1184,8 +1184,8 @@ namespace openstudio{
     boost::optional<EnvironmentType> SqlFile_Impl::environmentType(const std::string& envPeriod) const
     {
       boost::optional<EnvironmentType> result;
-      std::string query = "SELECT EnvironmentType FROM environmentperiods WHERE EnvironmentName='" + envPeriod + "' COLLATE NOCASE";
-      boost::optional<int> temp = execAndReturnFirstInt(query);
+      std::string query = "SELECT EnvironmentType FROM environmentperiods WHERE EnvironmentName=? COLLATE NOCASE";
+      boost::optional<int> temp = execAndReturnFirstInt(query, envPeriod);
       if (temp){
         try{
           result = EnvironmentType(*temp);
@@ -3438,9 +3438,13 @@ namespace openstudio{
     // find the illuminance map index by name
     boost::optional<int> SqlFile_Impl::illuminanceMapIndex(const std::string& name) const
     {
-      return execAndReturnFirstInt("SELECT MapNumber FROM DaylightMaps WHERE MapName LIKE %?%",
-          // Bind Args
-          name);
+      // TODO: haven't figured out how to bind properly to the LIKE statement, tried
+      // LIKE ?
+      // LIKE %?%  => sqlite3_prepare_v2 fails
+      // LIKE %%?%%
+      // LIKE '%?%' (not recognized as a placeholder)
+      const std::string& s = "SELECT MapNumber FROM DaylightMaps WHERE MapName LIKE '%" + name + "%'";
+      return execAndReturnFirstInt(s);
     }
 
     void SqlFile_Impl::mf_makeConsistent(std::vector<SqlFileTimeSeriesQuery>& queries)
