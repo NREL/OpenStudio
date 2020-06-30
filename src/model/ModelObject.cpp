@@ -316,14 +316,14 @@ namespace detail {
       return result;
     }
 
-    // Query the Intialization Summary -> Component Sizing table to get
+    // Query the Initialization Summary -> Component Sizing table to get
     // the row names that contains information for this component.
     std::string rowsQuery = R"(
       SELECT RowName FROM TabularDataWithStrings
         WHERE ReportName = 'Initialization Summary'
         AND ReportForString = 'Entire Facility'
         AND TableName = 'Component Sizing Information'
-        AND Value = ?)";
+        AND Value = ?;)";
 
     boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery,
         // Bind args
@@ -351,7 +351,7 @@ namespace detail {
           AND ReportForString = 'Entire Facility'
           AND TableName = 'Component Sizing Information'
           AND RowName = ?
-          AND Value = ?)";
+          AND Value = ?;)";
       boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery,
           // bindArgs
           rowName, valueNameAndUnits);
@@ -367,7 +367,7 @@ namespace detail {
           AND TableName = 'Component Sizing Information'
           AND ColumnName='Value'
           AND RowName = ?
-          AND Value = ?)";
+          AND Value = ?;)";
       boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery, rowName);
       // Check if the query succeeded
       if (val) {

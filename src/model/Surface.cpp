@@ -728,6 +728,7 @@ namespace detail {
       // fenestration
       if (sqlFile && constructionName && oConstruction->isFenestration()) {
 
+        // get u-factor, then subtract film coefficients
 
         std::string query = R"(SELECT RowId from TabularDataWithStrings
                                       WHERE ReportName = 'EnvelopeSummary'
