@@ -62,7 +62,11 @@ struct PreparedStatement
 
     if (!m_statement)
     {
-      throw std::runtime_error("Error creating prepared statement: " + t_stmt + " with error code " + std::to_string(code));
+      int extendedErrorCode = sqlite3_extended_errcode(m_db);
+      const char * err = sqlite3_errmsg(m_db);
+      std::string errMsg = err;
+      throw std::runtime_error("Error creating prepared statement: " + t_stmt + " with error code " + std::to_string(code)
+          + ", extended code " + std::to_string(extendedErrorCode) + ", errmsg: " + errMsg);
     }
   }
 
@@ -79,7 +83,11 @@ struct PreparedStatement
 
     if (!m_statement)
     {
-      throw std::runtime_error("Error creating prepared statement: " + t_stmt + " with error code " + std::to_string(code));
+      int extendedErrorCode = sqlite3_extended_errcode(m_db);
+      const char * err = sqlite3_errmsg(m_db);
+      std::string errMsg = err;
+      throw std::runtime_error("Error creating prepared statement: " + t_stmt + " with error code " + std::to_string(code)
+          + ", extended code " + std::to_string(extendedErrorCode) + ", errmsg: " + errMsg);
     }
 
     if (!bindAll(args...)) {
@@ -148,6 +156,7 @@ struct PreparedStatement
     }
   }
 
+  // Executes a **SINGLE** statement
   void execAndThrowOnError() {
     int code = execute();
     if (code != SQLITE_DONE)
@@ -156,6 +165,7 @@ struct PreparedStatement
     }
   }
 
+  // Executes a **SINGLE** statement
   int execute() {
     int code = sqlite3_step(m_statement);
     sqlite3_reset(m_statement);
