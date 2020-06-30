@@ -866,12 +866,16 @@ namespace openstudio{
 
       void retrieveDataDictionary();
 
-      // execute a statement and return the error code, used for create/drop tables
+      // executes **MULTIPLE** statement and throws if it failed, used for create/drop tables.
+      // Since it uses sqlite3_exec internally, cannot use Variadic arguments for binding
+      void execAndThrowOnError(const std::string& t_stmt);
+
+      // execute a **SINGLE** statement and throws if it failed
       // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
       template<typename... Args>
-      void execAndThrowOnError(const std::string& statement, Args&& ... args) const {
+      void execAndThrowOnError(const std::string& bindingStatement, Args&& ... args) {
         if (m_db) {
-          PreparedStatement stmt(statement, m_db, false, args...);
+          PreparedStatement stmt(bindingStatement, m_db, false, args...);
           stmt.execAndThrowOnError();
         }
         std::runtime_error("Error executing SQL statement as database connection is not open.");

@@ -233,6 +233,24 @@ namespace openstudio{
       close();
     }
 
+    void SqlFile_Impl::execAndThrowOnError(const std::string &t_stmt)
+    {
+      char *err = nullptr;
+      if (sqlite3_exec(m_db, t_stmt.c_str(), nullptr, nullptr, &err) != SQLITE_OK)
+      {
+        std::string errstr;
+
+        if (err)
+        {
+          errstr = err;
+          sqlite3_free(err);
+        }
+
+        throw std::runtime_error("Error executing SQL statement: " + t_stmt + " " + errstr);
+      }
+    }
+
+
     void SqlFile_Impl::addSimulation(const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
       const openstudio::Calendar &t_calendar) {
       int nextSimulationIndex = getNextIndex("simulations", "SimulationIndex");
