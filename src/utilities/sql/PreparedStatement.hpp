@@ -58,11 +58,11 @@ struct PreparedStatement
       sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
     }
 
-    sqlite3_prepare_v2(m_db, t_stmt.c_str(), t_stmt.size(), &m_statement, nullptr);
+    int code = sqlite3_prepare_v2(m_db, t_stmt.c_str(), t_stmt.size(), &m_statement, nullptr);
 
     if (!m_statement)
     {
-      throw std::runtime_error("Error creating prepared statement: " + t_stmt);
+      throw std::runtime_error("Error creating prepared statement: " + t_stmt + " with error code " + std::to_string(code));
     }
   }
 
