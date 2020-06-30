@@ -42,6 +42,7 @@
 #include <iostream>
 #include <boost/regex.hpp>
 #include <resources.hxx>
+#include <stdexcept>
 
 using namespace std;
 using namespace boost;
@@ -184,8 +185,14 @@ TEST_F(SqlFileFixture, TimeSeries)
 
 TEST_F(SqlFileFixture, BadStatement)
 {
-  OptionalDouble result = sqlFile.execAndReturnFirstDouble("SELECT * FROM NonExistantTable");
-  EXPECT_FALSE(result);
+  const std::string query = "SELECT * FROM NonExistantTable;";
+  try {
+    sqlFile.execAndReturnFirstDouble(query);
+    FAIL() << "BadStatement should fail";
+  } catch (std::runtime_error& e) {
+    std::string expectedError("Error creating prepared statement: SELECT * FROM NonExistantTable; with error code 1, extended code 1, errmsg: no such table: NonExistantTable");
+    EXPECT_EQ(expectedError, std::string{e.what()});
+  }
 }
 
 TEST_F(SqlFileFixture, CreateSqlFile)
@@ -683,7 +690,7 @@ TEST_F(SqlFileFixture, SqlFile_Escapes_injection)
         openstudio::DateTime::now(),
         c);
 
-    EXPECT_TRUE(sql.connectionOpen());
+    ASSERT_TRUE(sql.connectionOpen());
 
     sql.insertTimeSeriesData("Sum", "Zone", "Zone", "DAYLIGHTING WINDOW", "Daylight Luminance", openstudio::ReportingFrequency::Hourly,
         boost::optional<std::string>(), "lux", timeSeries);
