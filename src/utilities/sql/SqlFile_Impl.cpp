@@ -29,14 +29,13 @@
 
 #include "SqlFile_Impl.hpp"
 #include "SqlFileTimeSeriesQuery.hpp"
+#include "PreparedStatement.hpp"
 #include "OpenStudio.hxx"
 
 #include "../time/Calendar.hpp"
 #include "../filetypes/EpwFile.hpp"
 #include "../core/Containers.hpp"
 #include "../core/Assert.hpp"
-
-
 
 using boost::multi_index_container;
 using boost::multi_index::indexed_by;
@@ -234,80 +233,6 @@ namespace openstudio{
       close();
     }
 
-    struct PreparedStatement
-    {
-      sqlite3 *m_db;
-      sqlite3_stmt *m_statement;
-      bool m_transaction;
-
-      PreparedStatement & operator=(const PreparedStatement&) = delete;
-      PreparedStatement(const PreparedStatement&) = delete;
-
-      PreparedStatement(const std::string &t_stmt, sqlite3 *t_db, bool t_transaction = false)
-        : m_db(t_db), m_statement(nullptr), m_transaction(t_transaction)
-      {
-        if (m_transaction)
-        {
-          sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
-        }
-
-        sqlite3_prepare_v2(m_db, t_stmt.c_str(), t_stmt.size(), &m_statement, nullptr);
-
-        if (!m_statement)
-        {
-          throw std::runtime_error("Error creating prepared statement: " + t_stmt);
-        }
-
-      }
-
-      ~PreparedStatement()
-      {
-        if (m_statement)
-        {
-          sqlite3_finalize(m_statement);
-        }
-
-        if (m_transaction)
-        {
-          sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
-        }
-      }
-
-      void bind(int position, const std::string &t_str)
-      {
-        sqlite3_bind_text(m_statement, position, t_str.c_str(), t_str.size(), SQLITE_TRANSIENT);
-      }
-
-      void bind(int position, int val)
-      {
-        sqlite3_bind_int(m_statement, position, val);
-      }
-
-      void bind(int position, unsigned int val)
-      {
-        sqlite3_bind_int(m_statement, position, val);
-      }
-
-
-      void bind(int position, double val)
-      {
-        sqlite3_bind_double(m_statement, position, val);
-      }
-
-      void execute()
-      {
-        if (sqlite3_step(m_statement) != SQLITE_DONE)
-        {
-          sqlite3_reset(m_statement);
-          throw std::runtime_error("Error executing SQL statement step");
-        } else {
-          sqlite3_reset(m_statement);
-        }
-      }
-
-    };
-
-
     void SqlFile_Impl::addSimulation(const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
       const openstudio::Calendar &t_calendar) {
       int nextSimulationIndex = getNextIndex("simulations", "SimulationIndex");
@@ -368,7 +293,7 @@ namespace openstudio{
 
           stmt->bind(++b, nextEnvironmentPeriodIndex);
 
-          stmt->execute();
+          stmt->execAndThrowOnError();
 
           ++nextTimeIndex;
         }
@@ -378,23 +303,6 @@ namespace openstudio{
 
     }
 
-    void SqlFile_Impl::execAndThrowOnError(const std::string &t_stmt)
-    {
-      char *err = nullptr;
-      if (sqlite3_exec(m_db, t_stmt.c_str(), nullptr, nullptr, &err) != SQLITE_OK)
-      {
-        std::string errstr;
-
-        if (err)
-        {
-          errstr = err;
-          sqlite3_free(err);
-        }
-
-        throw std::runtime_error("Error executing SQL statement: " + t_stmt + " " + errstr);
-      }
-    }
-
     bool SqlFile_Impl::connectionOpen() const
     {
       return m_connectionOpen;
@@ -402,7 +310,9 @@ namespace openstudio{
 
     int SqlFile_Impl::getNextIndex(const std::string &t_tableName, const std::string &t_columnName)
     {
-      boost::optional<int> maxindex = execAndReturnFirstInt("select max(" + t_columnName + ") from " + t_tableName);
+      // Interestingly, you CANNOT bind any database identifier (such as the table name / column name) but only litteral values...
+      // boost::optional<int> maxindex = execAndReturnFirstInt("SELECT MAX( ? ) FROM ?", t_columnName, t_tableName);
+      boost::optional<int> maxindex = execAndReturnFirstInt("SELECT MAX(" + t_columnName + ") FROM " + t_tableName);
 
       if (maxindex)
       {
@@ -542,38 +452,9 @@ namespace openstudio{
     {
       int zoneIndex = getNextIndex("zones", "ZoneIndex");
 
-      std::stringstream insertZone;
-      insertZone << "insert into zones (ZoneIndex, ZoneName, RelNorth, OriginX, OriginY, OriginZ, CentroidX, CentroidY, CentroidZ, OfType, Multiplier, ListMultiplier, MinimumX, MaximumX, MinimumY, MaximumY, MinimumZ, MaximumZ, CeilingHeight, Volume, InsideConvectionAlgo, OutsideConvectionAlgo, FloorArea, ExtGrossWallArea, ExtNetWallArea, ExtWindowArea, IsPartOfTotalArea) values ("
-        << zoneIndex << ", "
-        << "'" << t_name << "', "
-        << t_relNorth << ", "
-        << t_originX << ", "
-        << t_originY << ", "
-        << t_originZ << ", "
-        << t_centroidX << ", "
-        << t_centroidY << ", "
-        << t_centroidZ << ", "
-        << t_ofType << ", "
-        << t_multiplier << ", "
-        << t_listMultiplier << ", "
-        << t_minimumX << ", "
-        << t_maximumX << ", "
-        << t_minimumY << ", "
-        << t_maximumY << ", "
-        << t_minimumZ << ", "
-        << t_maximumZ << ", "
-        << t_ceilingHeight << ", "
-        << t_volume << ", "
-        << t_insideConvectionAlgo << ", "
-        << t_outsideConvectionAlgo << ", "
-        << t_floorArea << ", "
-        << t_extGrossWallArea << ", "
-        << t_extNetWallArea << ", "
-        << t_extWindowArea << ", "
-        << t_isPartOfTotalArea << ");";
-
-      execAndThrowOnError(insertZone.str());
-
+      execAndThrowOnError("insert into zones (ZoneIndex, ZoneName, RelNorth, OriginX, OriginY, OriginZ, CentroidX, CentroidY, CentroidZ, OfType, Multiplier, ListMultiplier, MinimumX, MaximumX, MinimumY, MaximumY, MinimumZ, MaximumZ, CeilingHeight, Volume, InsideConvectionAlgo, OutsideConvectionAlgo, FloorArea, ExtGrossWallArea, ExtNetWallArea, ExtWindowArea, IsPartOfTotalArea) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          // Bind Args
+          zoneIndex, t_name, t_relNorth, t_originX, t_originY, t_originZ, t_centroidX, t_centroidY, t_centroidZ, t_ofType, t_multiplier, t_listMultiplier, t_minimumX, t_maximumX, t_minimumY, t_maximumY, t_minimumZ, t_maximumZ, t_ceilingHeight, t_volume, t_insideConvectionAlgo, t_outsideConvectionAlgo, t_floorArea, t_extGrossWallArea, t_extNetWallArea, t_extWindowArea, t_isPartOfTotalArea);
 
       return zoneIndex;
     }
@@ -659,7 +540,7 @@ namespace openstudio{
         stmt1->bind(++b, dayOfMonth);
         stmt1->bind(++b, hours);
 
-        stmt1->execute();
+        stmt1->execAndThrowOnError();
 
         if (t_xs.size() != t_maps[dateidx].size1()
             || t_ys.size() != t_maps[dateidx].size2())
@@ -680,7 +561,7 @@ namespace openstudio{
             stmt2.bind(3, t_ys[yidx]);
             stmt2.bind(4, t_maps[dateidx](xidx, yidx));
 
-            stmt2.execute();
+            stmt2.execAndThrowOnError();
           }
         }
 
@@ -776,7 +657,7 @@ namespace openstudio{
         stmt->bind(++b, datadicindex);
         stmt->bind(++b, value);
 
-        stmt->execute();
+        stmt->execAndThrowOnError();
       }
     }
 
@@ -928,41 +809,41 @@ namespace openstudio{
         const openstudio::EndUseCategoryType &t_categoryType,
         const openstudio::MonthOfYear &t_monthOfYear) const
     {
-      const std::string reportname = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription());
-      const std::string columnname = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":" +
+      const std::string reportName = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription());
+      const std::string columnName = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":" +
         boost::algorithm::to_upper_copy(t_fuelType.valueName());
-      const std::string rowname = t_monthOfYear.valueDescription();
+      const std::string rowName = t_monthOfYear.valueDescription();
 
-      const std::string& s = "SELECT Value FROM tabulardatawithstrings WHERE \
-                              ReportName='" + reportname + "' and \
-                              ReportForString='Meter' AND \
-                              RowName='" + rowname + "' AND \
-                              ColumnName='" + columnname + "' AND \
-                              Units='J'";
 
-      return execAndReturnFirstDouble(s);
+      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings WHERE
+                                  WHERE ReportName=?
+                                  AND ReportForString='Meter'
+                                  AND RowName=?
+                                  AND ColumnName=?
+                                  AND Units='J')";
+
+      return execAndReturnFirstDouble(s, reportName, rowName, columnName);
     }
 
-    //TODO
     boost::optional<double> SqlFile_Impl::peakEnergyDemandByMonth(
         const openstudio::EndUseFuelType &t_fuelType,
         const openstudio::EndUseCategoryType &t_categoryType,
         const openstudio::MonthOfYear &t_monthOfYear) const
     {
-      const std::string reportname = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription()) + " PEAK DEMAND";
-      const std::string columnname = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":" +
+      const std::string reportName = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription()) + " PEAK DEMAND";
+      const std::string columnName = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":" +
         boost::algorithm::to_upper_copy(t_fuelType.valueName()) +
         " {AT MAX/MIN}";
-      const std::string rowname = t_monthOfYear.valueDescription();
+      const std::string rowName = t_monthOfYear.valueDescription();
 
-      const std::string& s = "SELECT Value FROM tabulardatawithstrings WHERE \
-                              ReportName='" + reportname + "' and \
-                              ReportForString='Meter' AND \
-                              RowName='" + rowname + "' AND \
-                              ColumnName='" + columnname + "' AND \
-                              Units='W'";
+      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings WHERE
+                                  WHERE ReportName=?
+                                  AND ReportForString='Meter'
+                                  AND RowName=?
+                                  AND ColumnName=?
+                                  AND Units='W')";
 
-      return execAndReturnFirstDouble(s);
+      return execAndReturnFirstDouble(s, reportName, rowName, columnName);
     }
 
     /// hours simulated
@@ -1935,191 +1816,6 @@ namespace openstudio{
       s << boost::lexical_cast<std::string>(iEpRfNKv->envPeriodIndex);
 
       return execAndReturnFirstDouble(s.str());
-    }
-
-    boost::optional<double> SqlFile_Impl::execAndReturnFirstDouble(const std::string& statement) const
-    {
-      boost::optional<double> value;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-
-        code = sqlite3_step(sqlStmtPtr);
-        if (code == SQLITE_ROW)
-        {
-          value = sqlite3_column_double(sqlStmtPtr, 0);
-        }
-
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-      return value;
-    }
-
-    boost::optional<int> SqlFile_Impl::execAndReturnFirstInt(const std::string& statement) const
-    {
-      boost::optional<int> value;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-
-        code = sqlite3_step(sqlStmtPtr);
-        if (code == SQLITE_ROW)
-        {
-          value = sqlite3_column_int(sqlStmtPtr, 0);
-        }
-
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-      return value;
-    }
-
-    boost::optional<std::string> SqlFile_Impl::execAndReturnFirstString(const std::string& statement) const
-    {
-      boost::optional<std::string> value;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-
-        code = sqlite3_step(sqlStmtPtr);
-        if (code == SQLITE_ROW)
-        {
-          value = columnText(sqlite3_column_text(sqlStmtPtr, 0));
-        }
-
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-      return value;
-    }
-
-    boost::optional<std::vector<double> > SqlFile_Impl::execAndReturnVectorOfDouble(const std::string& statement) const
-    {
-      boost::optional<double> value;
-      boost::optional<std::vector<double> > valueVector;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-        while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
-        {
-          if (!valueVector){
-            valueVector = std::vector<double>();
-          }
-
-          code = sqlite3_step(sqlStmtPtr);
-          if (code == SQLITE_ROW)
-          {
-            value = sqlite3_column_double(sqlStmtPtr, 0);
-            valueVector->push_back(*value);
-          }
-          else  // i didn't get a row.  something is wrong so set the exit condition.
-          {     // should never get here since i test for all documented return states above
-            code = SQLITE_DONE;
-          }
-
-        }// end loop
-
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-
-      return valueVector;
-    }
-
-    boost::optional<std::vector<int> > SqlFile_Impl::execAndReturnVectorOfInt(const std::string& statement) const
-    {
-      boost::optional<int> value;
-      boost::optional<std::vector<int> > valueVector;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-        while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
-        {
-          if (!valueVector){
-            valueVector = std::vector<int>();
-          }
-
-          code = sqlite3_step(sqlStmtPtr);
-          if (code == SQLITE_ROW)
-          {
-            value = sqlite3_column_int(sqlStmtPtr, 0);
-            valueVector->push_back(*value);
-          }
-          else  // i didn't get a row.  something is wrong so set the exit condition.
-          {     // should never get here since i test for all documented return states above
-            code = SQLITE_DONE;
-          }
-
-        }// end loop
-
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-
-      return valueVector;
-    }
-
-    boost::optional<std::vector<std::string> > SqlFile_Impl::execAndReturnVectorOfString(const std::string& statement) const
-    {
-      boost::optional<std::string> value;
-      boost::optional<std::vector<std::string> > valueVector;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-        while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
-        {
-          if (!valueVector){
-            valueVector = std::vector<std::string>();
-          }
-
-          code = sqlite3_step(sqlStmtPtr);
-          if (code == SQLITE_ROW)
-          {
-            value = columnText(sqlite3_column_text(sqlStmtPtr, 0));
-            valueVector->push_back(*value);
-          }
-          else  // i didn't get a row.  something is wrong so set the exit condition.
-          {     // should never get here since i test for all documented return states above
-            code = SQLITE_DONE;
-          }
-
-        }// end loop
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-      return valueVector;
-    }
-
-
-    // execute a statement and return the error code, used for create/drop tables
-    int SqlFile_Impl::execute(const std::string& statement)
-    {
-      int code = SQLITE_ERROR;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-
-        code = sqlite3_step(sqlStmtPtr);
-
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-      return code;
     }
 
     std::vector<double> SqlFile_Impl::timeSeriesValues(const DataDictionaryItem& dataDictionary)
@@ -3126,26 +2822,15 @@ namespace openstudio{
     /// get names of all available illuminance maps for the given environment period
     std::vector<std::string> SqlFile_Impl::illuminanceMapNames(const std::string& envPeriod) const
     {
+
+
       std::vector<std::string> names;
 
-      std::stringstream s;
-      s << "select MapName from daylightmaps where Environment = '" << envPeriod << "' COLLATE NOCASE";
-
-      sqlite3_stmt* sqlStmtPtr;
-
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
-      code = sqlite3_step(sqlStmtPtr);
-
-      while (code == SQLITE_ROW)
-      {
-        names.push_back(columnText(sqlite3_column_text(sqlStmtPtr,0)));
-
-        // step to next row
-        code = sqlite3_step(sqlStmtPtr);
+      if(auto _vec = execAndReturnVectorOfString("SELECT MapName FROM DaylightMaps WHERE Environment = ? COLLATE NOCASE",
+          // Bind Args
+          envPeriod)) {
+        names = _vec.get();
       }
-
-      /// must finalize to prevent memory leaks
-      sqlite3_finalize(sqlStmtPtr);
 
       return names;
     }
@@ -3304,24 +2989,11 @@ namespace openstudio{
     {
       std::vector<std::string> names;
 
-      std::stringstream s;
-      s << "select ZoneName from zones where ZoneIndex in (select Zone from daylightmaps where MapNumber = " << mapIndex << ")";
-
-      sqlite3_stmt* sqlStmtPtr;
-
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
-      code = sqlite3_step(sqlStmtPtr);
-
-      while (code == SQLITE_ROW)
-      {
-        names.push_back(columnText(sqlite3_column_text(sqlStmtPtr,0)));
-
-        // step to next row
-        code = sqlite3_step(sqlStmtPtr);
+      if (auto _vec = execAndReturnVectorOfString("SELECT ZoneName FROM Zones WHERE ZoneIndex in (SELECT Zone from DaylightMaps WHERE MapNumber = ?",
+          // Bind Args
+          mapIndex)) {
+        names = _vec.get();
       }
-
-      /// must finalize to prevent memory leaks
-      sqlite3_finalize(sqlStmtPtr);
 
       return names;
     }
@@ -3330,24 +3002,11 @@ namespace openstudio{
     Vector SqlFile_Impl::illuminanceMapX(const int& hourlyReportIndex) const
     {
       std::vector<double> xv;
-      std::stringstream s;
-      s << "select X from daylightmaphourlydata where HourlyReportIndex=" << hourlyReportIndex << " group by X";
-
-      sqlite3_stmt* sqlStmtPtr;
-
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
-      code = sqlite3_step(sqlStmtPtr);
-
-      while (code == SQLITE_ROW)
-      {
-        xv.push_back(sqlite3_column_double(sqlStmtPtr,0));
-
-        // step to next row
-        code = sqlite3_step(sqlStmtPtr);
+      if (auto _vec = execAndReturnVectorOfDouble("SELECT X FROM DaylightMapHourlyData WHERE HourlyReportIndex = ? GROUP BY X",
+          // Bind Args
+          hourlyReportIndex)) {
+        xv = _vec.get();
       }
-
-      /// must finalize to prevent memory leaks
-      sqlite3_finalize(sqlStmtPtr);
 
       // copy std::vector to Vector, will be sorted in ascending order
       Vector x(xv.size());
@@ -3381,24 +3040,12 @@ namespace openstudio{
     Vector SqlFile_Impl::illuminanceMapY(const int& hourlyReportIndex) const
     {
       std::vector<double> yv;
-      std::stringstream s;
-      s << "select Y from daylightmaphourlydata where HourlyReportIndex=" << hourlyReportIndex << " group by Y";
 
-      sqlite3_stmt* sqlStmtPtr;
-
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
-      code = sqlite3_step(sqlStmtPtr);
-
-      while (code == SQLITE_ROW)
-      {
-        yv.push_back(sqlite3_column_double(sqlStmtPtr,0));
-
-        // step to next row
-        code = sqlite3_step(sqlStmtPtr);
+      if (auto _vec = execAndReturnVectorOfDouble("SELECT Y FROM DaylightMapHourlyData WHERE HourlyReportIndex = ? GROUP BY Y",
+          // Bind Args
+          hourlyReportIndex)) {
+        yv = _vec.get();
       }
-
-      /// must finalize to prevent memory leaks
-      sqlite3_finalize(sqlStmtPtr);
 
       // copy std::vector to Vector, will be sorted in ascending order
       Vector y(yv.size());
@@ -3444,25 +3091,15 @@ namespace openstudio{
 
     std::vector<int> SqlFile_Impl::illuminanceMapHourlyReportIndices(const int& mapIndex) const
     {
-      std::vector<int> reportIndices;
-      std::stringstream s;
-      s << "select HourlyReportIndex from daylightmaphourlyreports where MapNumber=" << mapIndex;
+      std::vector<int> result;
 
-      sqlite3_stmt* sqlStmtPtr;
-
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
-      code = sqlite3_step(sqlStmtPtr);
-      while (code == SQLITE_ROW)
-      {
-        reportIndices.push_back( sqlite3_column_int(sqlStmtPtr,0) );
-        // step to next row
-        code = sqlite3_step(sqlStmtPtr);
+      if (auto _vec = execAndReturnVectorOfInt("SELECT HourlyReportIndex FROM DaylightMapHourlyReports WHERE MapNumber=?",
+          // Bind Args
+          mapIndex)) {
+        result = _vec.get();
       }
 
-      /// must finalize to prevent memory leaks
-      sqlite3_finalize(sqlStmtPtr);
-
-      return reportIndices;
+      return result;
     }
 
 
@@ -3769,22 +3406,9 @@ namespace openstudio{
     // find the illuminance map index by name
     boost::optional<int> SqlFile_Impl::illuminanceMapIndex(const std::string& name) const
     {
-      boost::optional<int> index;
-
-      const std::string& s = "select MapNumber from daylightmaps where MapName like '%" + name + "%'";
-
-      sqlite3_stmt* sqlStmtPtr;
-
-      int code = sqlite3_prepare_v2(m_db, s.c_str(),-1,&sqlStmtPtr,nullptr);
-      code = sqlite3_step(sqlStmtPtr);
-
-      if(code == SQLITE_ROW)
-        index = sqlite3_column_int(sqlStmtPtr,0);
-
-      /// must finalize to prevent memory leaks
-      sqlite3_finalize(sqlStmtPtr);
-
-      return index;
+      return execAndReturnFirstInt("SELECT MapNumber FROM DaylightMaps WHERE MapName LIKE %?%",
+          // Bind Args
+          name);
     }
 
     void SqlFile_Impl::mf_makeConsistent(std::vector<SqlFileTimeSeriesQuery>& queries)

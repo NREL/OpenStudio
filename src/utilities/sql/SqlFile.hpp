@@ -35,6 +35,7 @@
 #include "SummaryData.hpp"
 #include "SqlFileDataDictionary.hpp"
 #include "SqlFileEnums.hpp"
+#include "SqlFile_Impl.hpp"
 
 #include "../data/Vector.hpp"
 #include "../data/Matrix.hpp"
@@ -59,9 +60,9 @@ class EpwFile;
 class Calendar;
 class SqlFileTimeSeriesQuery;
 
-namespace detail {
-  class SqlFile_Impl;
-}
+//namespace detail {
+  //class SqlFile_Impl;
+//}
 
 /** SqlFile class is a transaction script around the sql output of EnergyPlus. */
 class UTILITIES_API SqlFile {
@@ -816,26 +817,79 @@ class UTILITIES_API SqlFile {
   /** @name Generic Query Interface */
   //@{
 
+
   /// execute a statement and return the first (if any) value as a double
-  boost::optional<double> execAndReturnFirstDouble(const std::string& statement) const;
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template<typename... Args>
+  boost::optional<double> execAndReturnFirstDouble(const std::string& statement, Args&& ... args) const {
+    boost::optional<double> result;
+    if (m_impl){
+      result = m_impl->execAndReturnFirstDouble(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
 
   /// execute a statement and return the first (if any) value as a int
-  boost::optional<int> execAndReturnFirstInt(const std::string& statement) const;
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template<typename... Args>
+  boost::optional<int> execAndReturnFirstInt(const std::string& statement, Args&& ... args) const {
+    boost::optional<int> result;
+    if (m_impl){
+      result = m_impl->execAndReturnFirstInt(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
 
   /// execute a statement and return the first (if any) value as a string
-  boost::optional<std::string> execAndReturnFirstString(const std::string& statement) const;
-
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template<typename... Args>
+  boost::optional<std::string> execAndReturnFirstString(const std::string& statement, Args&& ... args) const {
+    boost::optional<std::string> result;
+    if (m_impl){
+      result = m_impl->execAndReturnFirstString(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
   /// execute a statement and return the results (if any) in a vector of double
-  boost::optional<std::vector<double> > execAndReturnVectorOfDouble(const std::string& statement) const;
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template<typename... Args>
+  boost::optional<std::vector<double> > execAndReturnVectorOfDouble(const std::string& statement, Args&& ... args) const {
+    boost::optional<std::vector<double> > result;
+    if (m_impl){
+      result = m_impl->execAndReturnVectorOfDouble(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
 
   /// execute a statement and return the results (if any) in a vector of int
-  boost::optional<std::vector<int> > execAndReturnVectorOfInt(const std::string& statement) const;
-
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template<typename... Args>
+  boost::optional<std::vector<int> > execAndReturnVectorOfInt(const std::string& statement, Args&& ... args) const {
+    boost::optional<std::vector<int> > result;
+    if (m_impl){
+      result = m_impl->execAndReturnVectorOfInt(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
   /// execute a statement and return the results (if any) in a vector of string
-  boost::optional<std::vector<std::string> > execAndReturnVectorOfString(const std::string& statement) const;
-
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template<typename... Args>
+  boost::optional<std::vector<std::string> > execAndReturnVectorOfString(const std::string& statement, Args&& ... args) const {
+    boost::optional<std::vector<std::string> > result;
+    if (m_impl){
+      result = m_impl->execAndReturnVectorOfString(statement, std::forward<Args>(args)...);
+    }
+    return result;
+  }
   /// execute a statement and return the error code, used for create/drop tables
-  int execute(const std::string& statement);
+  // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
+  template<typename... Args>
+  int execute(const std::string& statement, Args&& ... args) {
+    int result = 1; // SQLITE_ERROR
+    if (m_impl){
+      result = m_impl->execute(statement, std::forward<Args>(args)...);
+    }
+  }
 
   void insertTimeSeriesData(const std::string &t_variableType, const std::string &t_indexGroup,
       const std::string &t_timestepType, const std::string &t_keyValue, const std::string &t_variableName,
