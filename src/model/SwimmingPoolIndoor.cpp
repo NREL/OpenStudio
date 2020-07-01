@@ -81,9 +81,30 @@ namespace detail {
 
   const std::vector<std::string>& SwimmingPoolIndoor_Impl::outputVariableNames() const
   {
-    static std::vector<std::string> result;
-    if (result.empty()){
-    }
+    static std::vector<std::string> result{
+     "Indoor Pool Makeup Water Rate",
+     "Indoor Pool Makeup Water Volume",
+     "Indoor Pool Makeup Water Temperature",
+     "Indoor Pool Water Temperature",
+     "Indoor Pool Inlet Water Temperature",
+     "Indoor Pool Inlet Water Mass Flow Rate",
+     "Indoor Pool Miscellaneous Equipment Power",
+     "Indoor Pool Miscellaneous Equipment Energy",
+     "Indoor Pool Water Heating Rate",
+     "Indoor Pool Water Heating Energy",
+     "Indoor Pool Radiant to Convection by Cover",
+     "Indoor Pool People Heat Gain",
+     "Indoor Pool Current Activity Factor",
+     "Indoor Pool Current Cover Factor",
+     "Indoor Pool Saturation Pressure at Pool Temperature",
+     "Indoor Pool Partial Pressure of Water Vapor in Air",
+     "Indoor Pool Current Cover Evaporation Factor",
+     "Indoor Pool Current Cover Convective Factor",
+     "Indoor Pool Current Cover SW Radiation Factor",
+     "Indoor Pool Current Cover LW Radiation Factor",
+     "Indoor Pool Evaporative Heat Loss Rate",
+     "Indoor Pool Evaporative Heat Loss Energy"
+    };
     return result;
   }
 
