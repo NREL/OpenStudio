@@ -54,6 +54,12 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterStratified( Wa
   boost::optional<double> value;
   boost::optional<Schedule> schedule;
 
+  if (!modelObject.plantLoop() && !(modelObject.peakUseFlowRate() && modelObject.useFlowRateFractionSchedule()) ) {
+    LOG(Warn, modelObject.briefDescription() << " will not be translated as it not on a PlantLoop, and it does not have both a Peak Use Flow Rate "
+        "and a Use Flow Rate Fraction Schedule which is a required condition for stand-alone operation");
+    return boost::none;
+  }
+
   // Name
   IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::WaterHeater_Stratified, modelObject);
 

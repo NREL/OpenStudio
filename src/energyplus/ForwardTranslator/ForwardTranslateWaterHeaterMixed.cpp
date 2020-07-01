@@ -58,6 +58,12 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterMixed( WaterHe
   boost::optional<double> value;
   boost::optional<Schedule> schedule;
 
+  if (!modelObject.plantLoop() && !(modelObject.peakUseFlowRate() && modelObject.useFlowRateFractionSchedule()) ) {
+    LOG(Warn, modelObject.briefDescription() << " will not be translated as it not on a PlantLoop, and it does not have both a Peak Use Flow Rate "
+        "and a Use Flow Rate Fraction Schedule which is a required condition for stand-alone operation");
+    return boost::none;
+  }
+
   IdfObject idfObject(IddObjectType::WaterHeater_Mixed);
 
   m_idfObjects.push_back(idfObject);
