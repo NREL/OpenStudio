@@ -169,6 +169,8 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"ChillerElectricEIR","Basin Heater Operating","basinHeaterSchedule",false,"Availability",0.0,1.0},
     {"ChillerElectricEIR","Heat Recovery Inlet High Temperature Limit","heatRecoveryInletHighTemperatureLimitSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilCoolingCooledBeam","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilCoolingDX","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilCoolingDXCurveFitPerformance","Evaporative Condenser Basin Heater Operating Schedule","evaporativeCondenserBasinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXSingleSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXSingleSpeed","Basin Heater Operation","basinHeaterOperatingSchedule",false,"Availability",0.0,1.0},
     {"CoilCoolingDXTwoSpeed","Availability","availabilitySchedule",false,"Availability",0.0,1.0},

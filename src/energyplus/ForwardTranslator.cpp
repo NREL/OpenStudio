@@ -1032,6 +1032,30 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // This is handled directly in ATU:SingleDuct:ConstantVolume::FourPipeBeam
       break;
     }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX :
+    {
+      model::CoilCoolingDX dx = modelObject.cast<CoilCoolingDX>();
+      retVal = translateCoilCoolingDX(dx);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_CurveFit_Performance :
+    {
+      model::CoilCoolingDXCurveFitPerformance performance = modelObject.cast<CoilCoolingDXCurveFitPerformance>();
+      retVal = translateCoilCoolingDXCurveFitPerformance(performance);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_CurveFit_OperatingMode :
+    {
+      model::CoilCoolingDXCurveFitOperatingMode operatingMode = modelObject.cast<CoilCoolingDXCurveFitOperatingMode>();
+      retVal = translateCoilCoolingDXCurveFitOperatingMode(operatingMode);
+      break;
+    }
+  case openstudio::IddObjectType::OS_Coil_Cooling_DX_CurveFit_Speed :
+    {
+      model::CoilCoolingDXCurveFitSpeed speed = modelObject.cast<CoilCoolingDXCurveFitSpeed>();
+      retVal = translateCoilCoolingDXCurveFitSpeed(speed);
+      break;
+    }
   case openstudio::IddObjectType::OS_Coil_Cooling_DX_SingleSpeed :
     {
       model::CoilCoolingDXSingleSpeed coil = modelObject.cast<CoilCoolingDXSingleSpeed>();
@@ -3591,6 +3615,14 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   // Unlike other AVMs, this one doesn't live on the AVM AssignmentList, so need to tell it to translate all the time
   result.push_back(IddObjectType::OS_AvailabilityManager_HybridVentilation);
   result.push_back(IddObjectType::OS_Chiller_Electric_EIR);
+
+  // Coil:Cooling:DX will be translated by the UnitarySystem it's in, and will in turn translate CurveFitPerformance, which will translate
+  // OperatingMode, which will translate Speed
+  // result.push_back(IddObjectType::OS_Coil_Cooling_DX);
+  // result.push_back(IddObjectType::OS_Coil_Cooling_DX_CurveFit_Performance);
+  // result.push_back(IddObjectType::OS_Coil_Cooling_DX_CurveFit_OperatingMode);
+  // result.push_back(IddObjectType::OS_Coil_Cooling_DX_CurveFit_Speed);
+
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_SingleSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_DX_TwoSpeed);
   result.push_back(IddObjectType::OS_Coil_Cooling_Water);
