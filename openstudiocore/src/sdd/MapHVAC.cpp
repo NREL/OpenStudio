@@ -9213,10 +9213,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
 
       result = vrfTerminal;
 
-      if( fanOperModeSch ) {
-        vrfTerminal.setSupplyAirFanOperatingModeSchedule(fanOperModeSch.get());
-      }
-
       {
         auto value = element.firstChildElement("VRFSysRef").text().toStdString();
         auto vrfSys = model.getModelObjectByName<model::AirConditionerVariableRefrigerantFlow>(value);
@@ -9245,6 +9241,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateZnSy
           auto schedule = model.alwaysOffDiscreteSchedule();
           vrfTerminal.setSupplyAirFanOperatingModeSchedule(schedule);
         }
+      }
+
+      if( fanOperModeSch ) {
+        vrfTerminal.setSupplyAirFanOperatingModeSchedule(fanOperModeSch.get());
       }
 
       // ClgSupFanCapSim
