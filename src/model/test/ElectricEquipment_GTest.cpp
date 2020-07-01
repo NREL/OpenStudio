@@ -109,7 +109,6 @@ TEST_F(ModelFixture, ElectricEquipment_Cost) {
 TEST_F(ModelFixture, ElectricEquipment_FractionsLatentRadiantLost) {
   Model m;
   ElectricEquipmentDefinition definition(model);
-  ElectricEquipment electricEquipment(definition);
 
   ASSERT_TRUE(definition.setFractionLatent(0.5));
   ASSERT_TRUE(definition.setFractionRadiant(0.5));

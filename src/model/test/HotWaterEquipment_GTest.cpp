@@ -49,3 +49,15 @@ TEST_F(ModelFixture, HotWaterEquipment)
   HotWaterEquipment hotWaterEquipment(definition);
   EXPECT_EQ(2u, model.numObjects());
 }
+
+/* Tests that you cannot set Fractions that sum to greater than 1 */
+TEST_F(ModelFixture, HotWaterEquipment_FractionsLatentRadiantLost) {
+  Model m;
+  HotWaterEquipmentDefinition definition(model);
+
+  ASSERT_TRUE(definition.setFractionLatent(0.5));
+  ASSERT_TRUE(definition.setFractionRadiant(0.5));
+  ASSERT_FALSE(definition.setFractionLost(0.75));
+  ASSERT_FALSE(definition.setFractionLatent(0.75));
+  ASSERT_FALSE(definition.setFractionRadiant(0.75));
+}

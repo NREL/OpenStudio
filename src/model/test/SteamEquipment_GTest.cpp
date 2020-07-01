@@ -83,3 +83,15 @@ TEST_F(ModelFixture, SteamEquipment_Instance)
   SteamEquipment instance(definition);
   EXPECT_TRUE(instance.definition().optionalCast<SteamEquipmentDefinition>());
 }
+
+/* Tests that you cannot set Fractions that sum to greater than 1 */
+TEST_F(ModelFixture, SteamEquipment_FractionsLatentRadiantLost) {
+  Model m;
+  SteamEquipmentDefinition definition(model);
+
+  ASSERT_TRUE(definition.setFractionLatent(0.5));
+  ASSERT_TRUE(definition.setFractionRadiant(0.5));
+  ASSERT_FALSE(definition.setFractionLost(0.75));
+  ASSERT_FALSE(definition.setFractionLatent(0.75));
+  ASSERT_FALSE(definition.setFractionRadiant(0.75));
+}
