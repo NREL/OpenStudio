@@ -72,7 +72,7 @@
   %init %{
     rb_eval_string("OpenStudio::IdfObject.class_eval { define_method(:to_" #_name ") { OpenStudio::Model::to" #_name "(self); } }");
     rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_name ") { |handle| OpenStudio::Model::get" #_name "(self, handle); } }");
-    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_name "s) { OpenStudio::Model::get" #_name "s(self, sorted=false); } }");
+    rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_name "s) { | sorted = false | OpenStudio::Model::get" #_name "s(self, sorted); } }");
     rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_name "ByName) { |name| OpenStudio::Model::get" #_name "ByName(self, name); } }");
     rb_eval_string("OpenStudio::Model::Model.class_eval { define_method(:get" #_name "sByName) { |name, exactMatch| OpenStudio::Model::get" #_name "sByName(self, name, exactMatch); } }");
   %}
@@ -202,7 +202,7 @@
 
       boost::optional<_name> to##_name(const openstudio::IdfObject& idfObject);
       boost::optional<_name> get##_name(const Model &t_model, const openstudio::Handle &t_handle);
-      std::vector<_name> get##_name##s(const Model &t_model, bool sorted=false);
+      std::vector<_name> get##_name##s(const Model &t_model, bool sorted);
       boost::optional<_name> get##_name##ByName(const Model &t_model, const std::string &t_name);
       std::vector<_name> get##_name##sByName(const Model &t_model, const std::string &t_name, bool t_exactMatch);
     }
@@ -216,7 +216,7 @@
       boost::optional<_name> get##_name(const Model &t_model, const openstudio::Handle &t_handle) {
         return t_model.getModelObject<_name>(t_handle);
       }
-      std::vector<_name> get##_name##s(const Model &t_model, bool sorted=false) {
+      std::vector<_name> get##_name##s(const Model &t_model, bool sorted) {
         %#if _isConcrete
           return t_model.getConcreteModelObjects<_name>(sorted);
         %#else
