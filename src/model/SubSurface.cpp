@@ -493,6 +493,7 @@ namespace detail {
     std::string subSurfaceType = this->subSurfaceType();
     if (istringEqual("FixedWindow", subSurfaceType) ||
         istringEqual("OperableWindow", subSurfaceType) ||
+        istringEqual("Skylight", subSurfaceType) ||
         istringEqual("GlassDoor", subSurfaceType))
     {
       result = true;
