@@ -38,6 +38,8 @@
 #include "../SubSurface_Impl.hpp"
 #include "../Building.hpp"
 #include "../Building_Impl.hpp"
+#include "../WindowPropertyFrameAndDivider.hpp"
+#include "../WindowPropertyFrameAndDivider_Impl.hpp"
 #include "../SimpleGlazing.hpp"
 #include "../Construction.hpp"
 #include "../DefaultSubSurfaceConstructions.hpp"
@@ -1036,6 +1038,12 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     SubSurface s(vertices, model);
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("Skylight", s.subSurfaceType());
+
+    WindowPropertyFrameAndDivider frame(model);
+    EXPECT_TRUE(s.allowWindowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider().optionalCast<WindowPropertyFrameAndDivider>());
   }
   {
     // normal 0,1,0
@@ -1048,6 +1056,12 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     SubSurface s(vertices, model);
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("FixedWindow", s.subSurfaceType());
+
+    WindowPropertyFrameAndDivider frame(model);
+    EXPECT_TRUE(s.allowWindowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider().optionalCast<WindowPropertyFrameAndDivider>());
   }
 
   // with base surface the default type is set based on base surface
@@ -1093,9 +1107,21 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("Door", s.subSurfaceType());
 
+    WindowPropertyFrameAndDivider frame(model);
+    EXPECT_FALSE(s.allowWindowPropertyFrameAndDivider());
+    EXPECT_FALSE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_FALSE(s.windowPropertyFrameAndDivider());
+    ASSERT_FALSE(s.windowPropertyFrameAndDivider().optionalCast<WindowPropertyFrameAndDivider>());
+
     EXPECT_TRUE(s.setSubSurfaceType("GlassDoor"));
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("GlassDoor", s.subSurfaceType());
+
+    WindowPropertyFrameAndDivider frame(model);
+    EXPECT_TRUE(s.allowWindowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider().optionalCast<WindowPropertyFrameAndDivider>());
   }
   {
     // normal 0,1,0 not on bottom edge
@@ -1110,6 +1136,12 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     EXPECT_EQ("FixedWindow", s.subSurfaceType());
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("FixedWindow", s.subSurfaceType());
+
+    WindowPropertyFrameAndDivider frame(model);
+    EXPECT_TRUE(s.allowWindowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider().optionalCast<WindowPropertyFrameAndDivider>());
   }
 
   // set default window construction, reproduces #1924
@@ -1143,9 +1175,21 @@ TEST_F(ModelFixture, DefaultSubSurfaceType)
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("Door", s.subSurfaceType());
 
+    WindowPropertyFrameAndDivider frame(model);
+    EXPECT_FALSE(s.allowWindowPropertyFrameAndDivider());
+    EXPECT_FALSE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_FALSE(s.windowPropertyFrameAndDivider());
+    ASSERT_FALSE(s.windowPropertyFrameAndDivider().optionalCast<WindowPropertyFrameAndDivider>());
+
     s.setConstruction(construction);
     s.assignDefaultSubSurfaceType();
     EXPECT_EQ("GlassDoor", s.subSurfaceType());
+
+    WindowPropertyFrameAndDivider frame(model);
+    EXPECT_TRUE(s.allowWindowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.setWindowPropertyFrameAndDivider(frame));
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider());
+    ASSERT_TRUE(s.windowPropertyFrameAndDivider().optionalCast<WindowPropertyFrameAndDivider>());
   }
 }
 
