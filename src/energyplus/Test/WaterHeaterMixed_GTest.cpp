@@ -61,6 +61,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorWaterHeaterMixed_Condition)
 
   WaterHeaterMixed wh(m);
   EXPECT_FALSE(wh.peakUseFlowRate());
+  EXPECT_FALSE(wh.useFlowRateFractionSchedule());
 
   // Not on a PlantLoop, and no Peak use Flow rate => Not translated
   {
@@ -68,15 +69,33 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorWaterHeaterMixed_Condition)
     EXPECT_EQ(0u, w.getObjectsByType(IddObjectType::WaterHeater_Mixed).size());
   }
 
+  // Has a peak flow rate, but still missing the Flow Rate schedule
   EXPECT_TRUE(wh.setPeakUseFlowRate(0.1));
   EXPECT_TRUE(wh.peakUseFlowRate());
+  {
+    Workspace w = ft.translateModel(m);
+    EXPECT_EQ(0u, w.getObjectsByType(IddObjectType::WaterHeater_Mixed).size());
+  }
+
+  // Has both required conditions for standalone
+  EXPECT_TRUE(wh.setUseFlowRateFractionSchedule(m.alwaysOnContinuousSchedule));
+  EXPECT_TRUE(wh.useFlowRateFractionSchedule());
   {
     Workspace w = ft.translateModel(m);
     EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_Mixed).size());
   }
 
+  // Now it has the schedule, but not the peak use flow rate
   wh.resetPeakUseFlowRate();
   EXPECT_FALSE(wh.peakUseFlowRate());
+  {
+    Workspace w = ft.translateModel(m);
+    EXPECT_EQ(0u, w.getObjectsByType(IddObjectType::WaterHeater_Mixed).size());
+  }
+
+  // Now it has neither
+  wh.resetUseFlowRateFractionSchedule();
+  EXPECT_FALSE(wh.useFlowRateFractionSchedule());
   {
     Workspace w = ft.translateModel(m);
     EXPECT_EQ(0u, w.getObjectsByType(IddObjectType::WaterHeater_Mixed).size());

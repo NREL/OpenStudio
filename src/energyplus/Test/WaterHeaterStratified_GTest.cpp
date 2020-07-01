@@ -53,10 +53,6 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-using namespace openstudio::energyplus;
-using namespace openstudio::model;
-using namespace openstudio;
-
 // Test for #1675
 TEST_F(EnergyPlusFixture,ForwardTranslatorWaterHeaterStratified_Condition)
 {
@@ -65,6 +61,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorWaterHeaterStratified_Condition)
 
   WaterHeaterStratified wh(m);
   EXPECT_FALSE(wh.peakUseFlowRate());
+  EXPECT_FALSE(wh.useFlowRateFractionSchedule());
 
   // Not on a PlantLoop, and no Peak use Flow rate => Not translated
   {
@@ -72,15 +69,33 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorWaterHeaterStratified_Condition)
     EXPECT_EQ(0u, w.getObjectsByType(IddObjectType::WaterHeater_Stratified).size());
   }
 
+  // Has a peak flow rate, but still missing the Flow Rate schedule
   EXPECT_TRUE(wh.setPeakUseFlowRate(0.1));
   EXPECT_TRUE(wh.peakUseFlowRate());
+  {
+    Workspace w = ft.translateModel(m);
+    EXPECT_EQ(0u, w.getObjectsByType(IddObjectType::WaterHeater_Stratified).size());
+  }
+
+  // Has both required conditions for standalone
+  EXPECT_TRUE(wh.setUseFlowRateFractionSchedule(m.alwaysOnContinuousSchedule));
+  EXPECT_TRUE(wh.useFlowRateFractionSchedule());
   {
     Workspace w = ft.translateModel(m);
     EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_Stratified).size());
   }
 
+  // Now it has the schedule, but not the peak use flow rate
   wh.resetPeakUseFlowRate();
   EXPECT_FALSE(wh.peakUseFlowRate());
+  {
+    Workspace w = ft.translateModel(m);
+    EXPECT_EQ(0u, w.getObjectsByType(IddObjectType::WaterHeater_Stratified).size());
+  }
+
+  // Now it has neither
+  wh.resetUseFlowRateFractionSchedule();
+  EXPECT_FALSE(wh.useFlowRateFractionSchedule());
   {
     Workspace w = ft.translateModel(m);
     EXPECT_EQ(0u, w.getObjectsByType(IddObjectType::WaterHeater_Stratified).size());
