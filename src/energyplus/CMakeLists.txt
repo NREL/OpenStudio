@@ -647,6 +647,8 @@ set(${target_name}_test_src
   Test/ThermalZone_GTest.cpp
   Test/ThermostatSetpointDualSetpoint_GTest.cpp
   Test/WindowPropertyFrameAndDivider_GTest.cpp
+  Test/WaterHeaterMixed_GTest.cpp
+  Test/WaterHeaterStratified_GTest.cpp
   Test/ZoneHVACLowTemperatureRadiantConstFlow_GTest.cpp
   Test/ZoneHVACLowTempRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
