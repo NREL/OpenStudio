@@ -108,7 +108,7 @@ TEST_F(ModelFixture, ElectricEquipment_Cost) {
 /* Tests that you cannot set Fractions that sum to greater than 1 */
 TEST_F(ModelFixture, ElectricEquipment_FractionsLatentRadiantLost) {
   Model m;
-  ElectricEquipmentDefinition definition(model);
+  ElectricEquipmentDefinition definition(m);
 
   ASSERT_TRUE(definition.setFractionLatent(0.5));
   ASSERT_TRUE(definition.setFractionRadiant(0.5));

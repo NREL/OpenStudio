@@ -95,7 +95,7 @@ TEST_F(ModelFixture, GasEquipment_Cost)
 /* Tests that you cannot set Fractions that sum to greater than 1 */
 TEST_F(ModelFixture, GasEquipment_FractionsLatentRadiantLost) {
   Model m;
-  GasEquipmentDefinition definition(model);
+  GasEquipmentDefinition definition(m);
 
   ASSERT_TRUE(definition.setFractionLatent(0.5));
   ASSERT_TRUE(definition.setFractionRadiant(0.5));

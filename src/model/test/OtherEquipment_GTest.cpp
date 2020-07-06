@@ -129,7 +129,7 @@ TEST_F(ModelFixture, OtherEquipment_EndUseSubcategory)
 /* Tests that you cannot set Fractions that sum to greater than 1 */
 TEST_F(ModelFixture, OtherEquipment_FractionsLatentRadiantLost) {
   Model m;
-  OtherEquipmentDefinition definition(model);
+  OtherEquipmentDefinition definition(m);
 
   ASSERT_TRUE(definition.setFractionLatent(0.5));
   ASSERT_TRUE(definition.setFractionRadiant(0.5));
