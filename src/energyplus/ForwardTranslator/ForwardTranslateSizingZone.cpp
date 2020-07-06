@@ -64,26 +64,20 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   boost::optional<std::string> s;
   boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::Sizing_Zone);
-
-  m_idfObjects.push_back(idfObject);
-
   // ZoneorZoneListName
-
   model::ThermalZone thermalZone = modelObject.thermalZone();
-
   boost::optional<IdfObject> _thermalZone = translateAndMapModelObject(thermalZone);
-
-  boost::optional<std::string> name;
-
-  if( _thermalZone )
-  {
-    name = _thermalZone->name();
+  if (!_thermalZone) {
+    // This shouldn't even happen, but in any case, there's no point translating a Sizing:Zone for no Zone...
+    return boost::none;
   }
 
-  if( name )
+  IdfObject idfObject(IddObjectType::Sizing_Zone);
+  m_idfObjects.push_back(idfObject);
+
+  std::string name = _thermalZone->nameString();
   {
-    idfObject.setString(Sizing_ZoneFields::ZoneorZoneListName,name.get());
+    idfObject.setString(Sizing_ZoneFields::ZoneorZoneListName, name);
   }
 
   // ZoneCoolingDesignSupplyAirTemperatureInputMethod
@@ -261,11 +255,8 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   {
     IdfObject dSZAD(IddObjectType::DesignSpecification_ZoneAirDistribution);
 
-    if( name )
-    {
-      dSZADName = name.get() +  " Design Spec Zone Air Dist";
-      dSZAD.setName(dSZADName);
-    }
+    dSZADName = name +  " Design Spec Zone Air Dist";
+    dSZAD.setName(dSZADName);
 
     // register the DSZAD
     m_idfObjects.push_back(dSZAD);
@@ -298,49 +289,33 @@ boost::optional<IdfObject> ForwardTranslator::translateSizingZone( SizingZone & 
   // Add ThermalZone and associated design objects to ControllerMechanicalVentilation.
   // This would be done in forwardTranslateControllerMechanicalVentilation except doing it here maintains proper order of the idf file.
 
-  boost::optional<model::ControllerMechanicalVentilation> controllerMechanicalVentilation;
-  boost::optional<IdfObject> _controllerMechanicalVentilation;
-
-  if( boost::optional<model::AirLoopHVAC> airLoopHVAC = thermalZone.airLoopHVAC() )
-  {
-    if( boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC->airLoopHVACOutdoorAirSystem() )
-    {
+  // Now that Multiple AirLoopHVACs serving the same zone are possible, need to loop on all
+  for (const auto& airLoopHVAC : thermalZone.airLoopHVACs()) {
+    if (boost::optional<model::AirLoopHVACOutdoorAirSystem> oaSystem = airLoopHVAC.airLoopHVACOutdoorAirSystem()) {
       model::ControllerOutdoorAir controllerOutdoorAir = oaSystem->getControllerOutdoorAir();
+      model::ControllerMechanicalVentilation controllerMechanicalVentilation = controllerOutdoorAir.controllerMechanicalVentilation();
+      if (boost::optional<IdfObject> _controllerMechanicalVentilation = translateAndMapModelObject(controllerMechanicalVentilation)) {
+        IdfExtensibleGroup eg = _controllerMechanicalVentilation->pushExtensibleGroup();
 
-      controllerMechanicalVentilation = controllerOutdoorAir.controllerMechanicalVentilation();
-    }
-  }
+        // Thermal Zone Name
+        eg.setString(Controller_MechanicalVentilationExtensibleFields::ZoneorZoneListName, name);
 
-  if( controllerMechanicalVentilation )
-  {
-    _controllerMechanicalVentilation = translateAndMapModelObject(controllerMechanicalVentilation.get());
-  }
+        // DesignSpecificationOutdoorAir
+        std::vector<model::Space> spaces = thermalZone.spaces();
 
-  if( _controllerMechanicalVentilation && _thermalZone )
-  {
-    IdfExtensibleGroup eg = _controllerMechanicalVentilation->pushExtensibleGroup();
+        if (spaces.size() > 0) {
+          if (boost::optional<model::DesignSpecificationOutdoorAir> designOASpec = spaces.front().designSpecificationOutdoorAir()) {
+            if (boost::optional<IdfObject> _designOASpec = translateAndMapModelObject(designOASpec.get()) ) {
+              eg.setString(Controller_MechanicalVentilationExtensibleFields::DesignSpecificationOutdoorAirObjectName,_designOASpec->name().get());
+            }
+          }
+        }
 
-    // Thermal Zone Name
-    eg.setString(Controller_MechanicalVentilationExtensibleFields::ZoneorZoneListName,_thermalZone->name().get());
-
-    // DesignSpecificationOutdoorAir
-    std::vector<model::Space> spaces = thermalZone.spaces();
-
-    if( spaces.size() > 0 )
-    {
-      if( boost::optional<model::DesignSpecificationOutdoorAir> designOASpec = spaces.front().designSpecificationOutdoorAir()  )
-      {
-        if( boost::optional<IdfObject> _designOASpec = translateAndMapModelObject(designOASpec.get()) )
-        {
-          eg.setString(Controller_MechanicalVentilationExtensibleFields::DesignSpecificationOutdoorAirObjectName,_designOASpec->name().get());
+        // DesignSpecificationZoneAirDistributionObjectName
+        if (isDSZADTranslated) {
+          eg.setString(Controller_MechanicalVentilationExtensibleFields::DesignSpecificationZoneAirDistributionObjectName, dSZADName);
         }
       }
-    }
-
-    // DesignSpecificationZoneAirDistributionObjectName
-    if( _thermalZone && isDSZADTranslated )
-    {
-      eg.setString(Controller_MechanicalVentilationExtensibleFields::DesignSpecificationZoneAirDistributionObjectName, dSZADName);
     }
   }
 

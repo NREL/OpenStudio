@@ -422,7 +422,7 @@ end
 class ModelClassGenerator < SubProjectClassGenerator
   attr_accessor :iddObjectType, :idfObject, :iddObject, :isOS
   attr_accessor :requiredObjectListFields, :requiredDataFields
-  attr_accessor :hasRealFields, :hasScheduleFields, :autosizedGetterNames
+  attr_accessor :hasRealFields, :hasScheduleFields, :autosizedGetterNames, :autosizeSetterNames
 
   def initialize(className, baseClassName, pImpl, qobject, iddObjectType)
     super(className, baseClassName, pImpl, qobject)
@@ -449,10 +449,12 @@ class ModelClassGenerator < SubProjectClassGenerator
 
       # Determine if the object has any autosizable fields
       @autosizedGetterNames = []
+      @autosizeSetterNames = []
       @iddObject.nonextensibleFields.each do |iddField|
         modelObjectField = ModelObjectField.new(@iddObject, iddField)
         if modelObjectField.canAutosize?
           @autosizedGetterNames << modelObjectField.autosizedName
+          @autosizeSetterNames << modelObjectField.autosizeName
         end
       end
 
@@ -1170,7 +1172,7 @@ class ModelClassGenerator < SubProjectClassGenerator
       if @autosizedGetterNames.size > 0
         # autosize()
         result << "  void " << @className << "_Impl::autosize() {\n"
-        @autosizedGetterNames.each do |name|
+        @autosizeSetterNames.each do |name|
           result << "    #{name}();\n"
         end
         result << "  }\n\n"

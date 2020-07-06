@@ -285,6 +285,7 @@ SET(gbxml_resources_src
   gbxml/TwoStoryOffice_Trane.xml
   gbxml/ZNETH.xml
   gbxml/3951_Geometry_bug.xml
+  gbxml/3997_WindowScaling_bug.xml
 )
 
 # update the resources

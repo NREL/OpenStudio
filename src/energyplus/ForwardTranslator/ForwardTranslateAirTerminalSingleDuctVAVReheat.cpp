@@ -161,8 +161,8 @@ boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVR
     idfObject.setString(AirTerminal_SingleDuct_VAV_ReheatFields::MaximumAirFlowRate,"Autosize");
   }
 
-  // ZoneMinimumAirFlowMethod
-  s = modelObject.zoneMinimumAirFlowMethod();
+  // ZoneMinimumAirFlowInputMethod
+  s = modelObject.zoneMinimumAirFlowInputMethod();
   if( s )
   {
     idfObject.setString(AirTerminal_SingleDuct_VAV_ReheatFields::ZoneMinimumAirFlowInputMethod,s.get());

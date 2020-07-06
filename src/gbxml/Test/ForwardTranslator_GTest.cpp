@@ -45,7 +45,9 @@
 #include "../../model/StandardOpaqueMaterial.hpp"
 #include "../../model/StandardOpaqueMaterial_Impl.hpp"
 #include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 
 #include "../../model/Model.hpp"
 
@@ -181,7 +183,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
 
   ASSERT_TRUE(model2);
   //std::cout << *model2 << std::endl;
-  auto osurf = model2->getModelObjectByName<Surface>(surfname);  
+  auto osurf = model2->getModelObjectByName<Surface>(surfname);
   ASSERT_TRUE(osurf);
   auto ocons = osurf->construction();
   ASSERT_TRUE(ocons);
@@ -192,4 +194,97 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
   EXPECT_TRUE(olayeredcons->layers()[1].optionalCast<StandardOpaqueMaterial>());
   EXPECT_TRUE(olayeredcons->layers()[2].optionalCast<MasslessOpaqueMaterial>());
   EXPECT_TRUE(olayeredcons->layers()[3].optionalCast<StandardOpaqueMaterial>());
+}
+
+TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
+  // Test for #3314: gbXML translation does not roundtrip unless Facility object present
+
+  Model model;
+
+  Construction construction(model);
+  construction.setName("Construction1");
+
+  MaterialVector layers;
+
+  MasslessOpaqueMaterial material1(model);
+  material1.setName("Material1");
+  layers.push_back(material1);
+
+  StandardOpaqueMaterial material2(model);
+  material2.setName("Material2");
+  layers.push_back(material2);
+
+  MasslessOpaqueMaterial material3(model);
+  material3.setName("Material3");
+  layers.push_back(material3);
+
+  StandardOpaqueMaterial material4(model);
+  material4.setName("Material4");
+  material4.setRoughness("MediumSmooth");
+  layers.push_back(material4);
+
+  construction.setLayers(layers);
+
+  // Not instantiating facility nor building on purpose
+  // Facility facility = model.getUniqueModelObject<Facility>();
+  // Building building = model.getUniqueModelObject<Building>();
+
+  Space space(model);
+  space.setName("Space1");
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 1));
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(1, 0, 0));
+  points.push_back(Point3d(1, 0, 1));
+
+  //std::string surfname("Surface 1"); // DLM: note this will fail because "Surface 1" gets round tripped as "Surface_1"
+  std::string surfname("Surface1");
+  Surface surface(points, model);
+  surface.setName(surfname);
+  surface.setConstruction(construction);
+  surface.setSpace(space);
+
+  ThermalZone zone(model);
+  zone.setName("Zone1");
+  space.setThermalZone(zone);
+
+  // save model for diffing
+  bool debug = false;
+  if (debug) {
+    path modelPath = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_NoFacility_original.osm");
+    model.save(modelPath, true);
+  }
+
+  // Write out the XML
+  path p = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_NoFacility.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test = forwardTranslator.modelToGbXML(model, p);
+
+  EXPECT_TRUE(test);
+
+  // Read the XML back in and check surface/space/zone were all translated
+  ReverseTranslator reverseTranslator;
+  boost::optional<Model> model2 = reverseTranslator.loadModel(p);
+
+  ASSERT_TRUE(model2);
+  //std::cout << *model2 << std::endl;
+  auto osurf = model2->getModelObjectByName<Surface>(surfname);
+  ASSERT_TRUE(osurf);
+  auto ospace = model2->getModelObjectByName<Space>(space.nameString());
+  ASSERT_TRUE(ospace);
+  auto ozone = model2->getModelObjectByName<ThermalZone>(zone.nameString()); // Dragostea Din Tei!
+  ASSERT_TRUE(ozone);
+
+  // This really tests a RT feature, but doesn't really matter. When diffing original & rountripped, I noticed a diff in Material:
+  // the roundtripped model has Roughness missing
+  auto omat = model2->getModelObjectByName<StandardOpaqueMaterial>("Material4");
+  ASSERT_TRUE(omat);
+  EXPECT_EQ("MediumSmooth", omat->roughness());
+
+  if (debug) {
+    path modelPath2 = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_NoFacility_roundtripped.osm");
+    model2->save(modelPath2, true);
+  }
 }

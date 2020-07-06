@@ -42,6 +42,9 @@
   // ignore generator objects for now, add back in with partial classes in ModelGenerators.i
   %ignore openstudio::model::PlanarSurface::generatorPhotovoltaics;
 
+  // Overload resolution: prefer std::string over char const *
+  %ignore openstudio::model::BuildingUnit::setFeature(std::string const&, char const*);
+
   // DLM: this is a proof of concept section to see how attributes work in C#
   %include <attribute.i>
 

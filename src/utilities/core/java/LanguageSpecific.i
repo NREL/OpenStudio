@@ -2,7 +2,7 @@
 #define UTILITIES_JAVA_LANGUAGESPECIFIC_I
 
 %include <wchar.i>
-%include <cwstring.i>
+// Not implemented for this target: %include <cwstring.i>
 %include <std_wstring.i>
 
 %rename(Path) openstudio::path; // For consistancy with other class names and to avoid conflicts

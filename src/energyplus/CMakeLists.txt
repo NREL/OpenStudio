@@ -64,6 +64,10 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
   ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDX.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitPerformance.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitOperatingMode.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
@@ -411,6 +415,10 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateBuilding.cpp
   ReverseTranslator/ReverseTranslateBuildingSurfaceDetailed.cpp
   ReverseTranslator/ReverseTranslateControllerOutdoorAir.cpp
+  ReverseTranslator/ReverseTranslateCoilCoolingDX.cpp
+  ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitPerformance.cpp
+  ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitOperatingMode.cpp
+  ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitSpeed.cpp
   ReverseTranslator/ReverseTranslateCoilCoolingDXSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateCoilHeatingGas.cpp
   ReverseTranslator/ReverseTranslateCoilSystemCoolingDX.cpp
@@ -583,12 +591,17 @@ set(${target_name}_test_src
   Test/CentralHeatPumpSystem_GTest.cpp
 
   Test/CoilHeatingGas_GTest.cpp
+  Test/CoilCoolingDX_GTest.cpp
+  Test/CoilCoolingDXCurveFitPerformance_GTest.cpp
+  Test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp
+  Test/CoilCoolingDXCurveFitSpeed_GTest.cpp
   Test/CoilCoolingDXSingleSpeed_GTest.cpp
   Test/CoilCoolingDXMultiSpeed_GTest.cpp
   Test/CoilCoolingDXTwoSpeed_GTest.cpp
   Test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   Test/CoilCoolingDXVariableSpeed_GTest.cpp
   Test/Construction_GTest.cpp
+  Test/ControllerOutdoorAir_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp

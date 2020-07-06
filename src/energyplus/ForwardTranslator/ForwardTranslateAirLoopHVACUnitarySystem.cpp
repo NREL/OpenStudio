@@ -73,6 +73,8 @@
 #include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
+#include "../../model/CoilCoolingDX.hpp"
+#include "../../model/CoilCoolingDX_Impl.hpp"
 #include "../../model/UnitarySystemPerformanceMultispeed.hpp"
 #include "../../model/UnitarySystemPerformanceMultispeed_Impl.hpp"
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
@@ -94,6 +96,7 @@
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_WaterToAirHeatPump_VariableSpeedEquationFit_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
@@ -776,6 +779,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVACUnitarySystem(
       } else {
         LOG(Warn,modelObject.briefDescription() << ": Contains an unsupported type " << _hx->iddObject().type() << ".");
       }
+    } else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX )
+    {
+      _coolingCoil->setString(Coil_Cooling_DXFields::EvaporatorInletNodeName,inletNodeName);
+      _coolingCoil->setString(Coil_Cooling_DXFields::EvaporatorOutletNodeName,outletNodeName);
     } else {
       LOG(Warn, modelObject.briefDescription() << ": Contains an unsupported type " << _coolingCoil->iddObject().type() << ".");
     }

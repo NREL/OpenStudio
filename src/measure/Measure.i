@@ -20,6 +20,12 @@
 %ignore openstudio::model::detail;
 %ignore openstudio::measure::detail;
 
+#if defined(SWIGCSHARP)
+  // Help in overload resolution preferring std::string over char const *
+  %ignore openstudio::measure::OSArgument::setValue(char const*);
+  %ignore openstudio::measure::OSArgument::setDefaultValue(char const*);
+#endif
+
 %{
   #include <measure/OSArgument.hpp>
   #include <measure/OSOutput.hpp>
