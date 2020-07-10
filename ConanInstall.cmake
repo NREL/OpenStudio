@@ -27,15 +27,15 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   message(STATUS "openstudio: RUNNING CONAN")
 
+  # Add NREL remote and place it first in line, so that if we vendor dependencies to NREL's repo they will be picked first
+  conan_add_remote(NAME nrel INDEX 0
+    URL https://api.bintray.com/conan/commercialbuilding/nrel)
+
   conan_add_remote(NAME bincrafters
     URL https://api.bintray.com/conan/bincrafters/public-conan)
-  conan_add_remote(NAME nrel
-    URL https://api.bintray.com/conan/commercialbuilding/nrel)
+
   #conan_add_remote(NAME jmarrec
   #  URL https://api.bintray.com/conan/jmarrec/testing)
-
-  # Convenience variable to set a consistent version for individual boost packages
-  # set(BOOST_VERSION "1.71.0")
 
   list(APPEND CONAN_OPTIONS "zlib:minizip=True")
   # TODO:  list(APPEND CONAN_OPTIONS "fmt:header_only=True")
