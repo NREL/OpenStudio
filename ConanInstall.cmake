@@ -23,7 +23,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   include(${CMAKE_BINARY_DIR}/conan.cmake)
 
-  conan_check(VERSION 1.21.0 REQUIRED)
+  conan_check(VERSION 1.25.0 REQUIRED)
 
   message(STATUS "openstudio: RUNNING CONAN")
 
@@ -60,27 +60,16 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     openssl/1.1.0l # ruby 2.5.5 won't work with 1.1.1x, so use 1.1.0l here to try to force every package to align on the same as ruby
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
     openstudio_ruby/2.5.5@nrel/stable    # TODO: Temp #@nrel/stable
-    boost/1.71.0
-    #boost_asio/${BOOST_VERSION}@bincrafters/stable
-    #boost_program_options/${BOOST_VERSION}@bincrafters/stable
-    #boost_regex/${BOOST_VERSION}@bincrafters/stable
-    #boost_filesystem/${BOOST_VERSION}@bincrafters/stable
-    #boost_crc/${BOOST_VERSION}@bincrafters/stable
-    #boost_algorithm/${BOOST_VERSION}@bincrafters/stable
-    #boost_uuid/${BOOST_VERSION}@bincrafters/stable
-    #boost_log/${BOOST_VERSION}@bincrafters/stable
-    #boost_numeric_ublas/${BOOST_VERSION}@bincrafters/stable
-    #boost_functional/${BOOST_VERSION}@bincrafters/stable
-    #boost_geometry/${BOOST_VERSION}@bincrafters/stable
-    pugixml/1.10@bincrafters/stable
-    jsoncpp/1.9.2
-    zlib/1.2.11@nrel/testing # TODO: Temp, pending merging of https://github.com/conan-io/conan-center-index/pull/1526, to resolve #3961
-    fmt/6.2.0
-    sqlite3/3.30.1
-    cpprestsdk/2.10.14@bincrafters/stable
-    websocketpp/0.8.1@bincrafters/stable
-    geographiclib/1.49@bincrafters/stable
-    swig_installer/4.0.1@bincrafters/stable
+    boost/1.72.0
+    pugixml/1.10
+    jsoncpp/1.9.3
+    zlib/1.2.11
+    fmt/7.0.1
+    sqlite3/3.32.3
+    cpprestsdk/2.10.16
+    websocketpp/0.8.2
+    geographiclib/1.50.1
+    swig/4.0.1
     ${CONAN_GTEST}
 
     # Override to avoid dependency mismatches
