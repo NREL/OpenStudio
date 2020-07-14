@@ -302,7 +302,7 @@ class MODEL_API Model : public openstudio::Workspace {
    *  speed up the search. This method will only work for concrete model objects (leaves in the
    *  ModelObject inheritance tree), hence the name. */
   template <typename T>
-  std::vector<T> getConcreteModelObjects(bool sorted=false) const
+  std::vector<T> getConcreteModelObjects() const
   {
     std::vector<T> result;
     std::vector<WorkspaceObject> objects = this->getObjectsByType(T::iddObjectType());
@@ -310,9 +310,6 @@ class MODEL_API Model : public openstudio::Workspace {
     {
       std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
       if (p) { result.push_back(T(p)); }
-    }
-    if (sorted) {
-      std::sort(result.begin(), result.end());
     }
     return result;
   }
