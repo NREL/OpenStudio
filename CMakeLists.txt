@@ -483,6 +483,9 @@ if(MSVC)
   if(CMAKE_CL_64)
     # ignore conversion from size_t to int for now
     add_definitions(/wd4267)
+  else()
+    # ignore conversion from 'type1' to 'type2', possible loss of data
+    add_definitions(/wd4244)
   endif()
 
   # treat warnings as errors
@@ -571,7 +574,7 @@ elseif(WIN32)
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
     ## TODO: update md5 hash, but not present on GitHub as .zip, only .exe for now at least
-    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_a2cbd995acd1928a7baa18407bb8e949)
+    set(ENERGYPLUS_EXPECTED_HASH a002a02922eddccff684760116cef710)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -681,44 +684,47 @@ endif()
 include(FetchRubyMinGW.cmake)
 FetchRubyMinGW()
 
-# openstudio gems
-# CI will build and upload openstudio gems to s3 at https://github.com/NREL/OpenStudio-gems
-# need to  update the MD5sum for each platform and url below
-if(UNIX)
-   if(APPLE)
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-darwin.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4212a009d37e38b087aad51b4b2800e0")
-   else()
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-linux.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "eb52b76926b82f6c0505fb57d2f46c5b")
-   endif()
-elseif(WIN32)
-  if(CMAKE_CL_64)
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "52c80458909142726b1287dabe0da7a3")
+if(CMAKE_CL_64)
+  # openstudio gems is not supported on 32 bit platforms
+  # openstudio gems
+  # CI will build and upload openstudio gems to s3 at https://github.com/NREL/OpenStudio-gems
+  # need to  update the MD5sum for each platform and url below
+  if(UNIX)
+     if(APPLE)
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4212a009d37e38b087aad51b4b2800e0")
+     else()
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "eb52b76926b82f6c0505fb57d2f46c5b")
+     endif()
+  elseif(WIN32)
+    if(CMAKE_CL_64)
+      set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-windows.tar.gz")
+      set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "52c80458909142726b1287dabe0da7a3")
+    endif()
   endif()
-endif()
 
-set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
-set(OPENSTUDIO_GEMS_DIR "${PROJECT_BINARY_DIR}/openstudio-gems")
-set(OPENSTUDIO_GEMS_TARGETS_FILE "${OPENSTUDIO_GEMS_DIR}/export-extensions.cmake")
-set(OPENSTUDIO_GEMS_INIT_FILE "${OPENSTUDIO_GEMS_DIR}/init-extensions.cpp")
-if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
-  file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
-endif()
+  set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
+  set(OPENSTUDIO_GEMS_DIR "${PROJECT_BINARY_DIR}/openstudio-gems")
+  set(OPENSTUDIO_GEMS_TARGETS_FILE "${OPENSTUDIO_GEMS_DIR}/export-extensions.cmake")
+  set(OPENSTUDIO_GEMS_INIT_FILE "${OPENSTUDIO_GEMS_DIR}/init-extensions.cpp")
+  if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
+    file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
+  endif()
 
-if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
-  message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
-  file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
-    ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
-    INACTIVITY_TIMEOUT 300 # 5 minute timeout
-    SHOW_PROGRESS
-    EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
+  if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
+    message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
+      ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
+      INACTIVITY_TIMEOUT 300 # 5 minute timeout
+      SHOW_PROGRESS
+      EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
 
-  file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
-  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+    file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
 
-  file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/src/cli/embedded_files")
+    file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/src/cli/embedded_files")
+  endif()
 endif()
 
 # SWIG
@@ -860,9 +866,14 @@ set(project_directories
   measure
   sdd
   lib
-  cli
   install_utility
 )
+
+if(CMAKE_CL_64)
+  # openstudio cli is not supported on 32 bit platforms
+  # due to ruby dependencies
+  list(APPEND project_directories cli)
+endif()
 
 # Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
@@ -1057,8 +1068,11 @@ set(all_lib_targets
   openstudio_isomodel
   openstudio_sdd
   openstudio_airflow
-  ${ALL_RUBY_BINDING_TARGETS}
 )
+
+if(CMAKE_CL_64)
+  list(APPEND all_lib_targets ${ALL_RUBY_BINDING_TARGETS})
+endif()
 
 set(all_exe_targets
   GenerateIddFactory
@@ -1378,8 +1392,11 @@ if (MSVC)
 
     # The potential inefficiency goes away if we use LTO linking
     target_link_libraries(openstudiolib PRIVATE -IGNORE:4217,4049)
-    target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
     target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
+    if(CMAKE_CL_64)
+      # openstudio cli not supported on 32 bit
+      target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
+    endif()
   endif()
 endif()
 
