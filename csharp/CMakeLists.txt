@@ -267,6 +267,19 @@ add_custom_target(csharp_sdk ALL
 if( BUILD_NUGET_PACKAGE )
 
   if (MSVC)
+    include(ExternalProject)
+    
+    ExternalProject_Add(OS-32
+      SOURCE_DIR ${CMAKE_SOURCE_DIR}
+      CMAKE_GENERATOR
+        "Visual Studio 15 2017"
+      CMAKE_ARGS
+        -A Win32
+      CMAKE_CACHE_ARGS
+        -DBUILD_CSHARP_BINDINGS:BOOL=ON
+        -DBUILD_NUGET_PACKAGE:BOOL=OFF
+      INSTALL_COMMAND ""
+    )
 
     if(NINJA)
       set(OPENSTUDIO_CSHARP_DLLNAME "Products/csharp/OpenStudio.dll")
