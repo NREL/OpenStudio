@@ -270,8 +270,7 @@ void OSRunner::prepareForMeasureRun(const OSMeasure& measure) {
   }
   boost::optional<WorkflowStep> currentStep = m_workflow.currentStep();
   if (!currentStep){
-    LOG(Error, "Cannot find current Workflow Step");
-    return;
+    LOG(Info, "Cannot find current Workflow Step");
   }
 
   m_startedStep = true;
