@@ -104,3 +104,15 @@ TEST_F(ModelFixture, ElectricEquipment_Cost) {
 
   EXPECT_DOUBLE_EQ(300.0, cost->totalCost());
 }
+
+/* Tests that you cannot set Fractions that sum to greater than 1 */
+TEST_F(ModelFixture, ElectricEquipment_FractionsLatentRadiantLost) {
+  Model m;
+  ElectricEquipmentDefinition definition(m);
+
+  ASSERT_TRUE(definition.setFractionLatent(0.5));
+  ASSERT_TRUE(definition.setFractionRadiant(0.5));
+  ASSERT_FALSE(definition.setFractionLost(0.75));
+  ASSERT_FALSE(definition.setFractionLatent(0.75));
+  ASSERT_FALSE(definition.setFractionRadiant(0.75));
+}

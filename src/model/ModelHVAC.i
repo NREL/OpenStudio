@@ -175,6 +175,7 @@ MODELOBJECT_TEMPLATES(ChillerAbsorption);
 MODELOBJECT_TEMPLATES(SolarCollectorPerformanceFlatPlate);
 MODELOBJECT_TEMPLATES(SolarCollectorPerformanceIntegralCollectorStorage);
 MODELOBJECT_TEMPLATES(SolarCollectorPerformancePhotovoltaicThermalSimple);
+MODELOBJECT_TEMPLATES(SwimmingPoolIndoor);
 
 MODELOBJECT_TEMPLATES(SetpointManagerFollowOutdoorAirTemperature);
 MODELOBJECT_TEMPLATES(SetpointManagerFollowSystemNodeTemperature);
@@ -285,7 +286,7 @@ SWIG_MODELOBJECT(ChillerAbsorption, 1);
 SWIG_MODELOBJECT(SolarCollectorPerformanceFlatPlate, 1);
 SWIG_MODELOBJECT(SolarCollectorPerformanceIntegralCollectorStorage, 1);
 SWIG_MODELOBJECT(SolarCollectorPerformancePhotovoltaicThermalSimple, 1);
-
+SWIG_MODELOBJECT(SwimmingPoolIndoor,1);
 
 SWIG_MODELOBJECT(SetpointManagerFollowOutdoorAirTemperature,1);
 SWIG_MODELOBJECT(SetpointManagerFollowSystemNodeTemperature,1);

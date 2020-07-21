@@ -50,10 +50,14 @@
 #include "../../model/ThermalZone_Impl.hpp"
 
 #include "../../model/Model.hpp"
+#include "utilities/core/Compare.hpp"
 
 #include <resources.hxx>
 
 #include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <pugixml.hpp>
 
 using namespace openstudio::model;
 using namespace openstudio::gbxml;
@@ -287,4 +291,41 @@ TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
     path modelPath2 = resourcesPath() / openstudio::toPath("gbxml/ForwardTranslator_NoFacility_roundtripped.osm");
     model2->save(modelPath2, true);
   }
+}
+
+TEST_F(gbXMLFixture, ForwardTranslator_surfaceType_4001)
+{
+  // Test for #4001 : surfaceType is written twice when SlabOnGrade
+  Model model = exampleModel();
+
+  // Write out the XML
+  path p = resourcesPath() / openstudio::toPath("gbxml/exampleModel.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test = forwardTranslator.modelToGbXML(model, p);
+
+  EXPECT_TRUE(test);
+
+  ASSERT_TRUE(openstudio::filesystem::exists(p));
+
+  openstudio::filesystem::ifstream file(p, std::ios_base::binary);
+  ASSERT_TRUE(file.is_open());
+  pugi::xml_document doc;
+  auto load_result = doc.load(file);
+  file.close();
+  ASSERT_TRUE(load_result) << "'" << p << "' Failed to load:\n"
+    << "Error description: " << load_result.description() << "\n"
+    << "Error offset: " << load_result.offset;
+
+  // Now go select the Surface_1, which currently ends up with two surfaceType attributes before fix for #4001
+  pugi::xpath_node surfaceXPath = doc.select_node("//Surface[@id='Surface_1']");
+  ASSERT_TRUE(surfaceXPath);
+  pugi::xml_node surfaceNode = surfaceXPath.node();
+  EXPECT_EQ(1u, std::count_if(surfaceNode.attributes_begin(),
+                              surfaceNode.attributes_end(),
+                              [](const auto& att) { return openstudio::istringEqual(att.name(), "surfaceType"); })
+  );
+  std::string surfaceType = surfaceNode.attribute("surfaceType").value();
+  std::string expectedSurfaceType("SlabOnGrade");
+  EXPECT_EQ(expectedSurfaceType, surfaceType);
 }
