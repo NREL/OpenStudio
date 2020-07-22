@@ -444,6 +444,10 @@ namespace detail {
     return value.get();
   }
 
+  bool SubSurface_Impl::isSubSurfaceTypeDefaulted() const {
+    return isEmpty(OS_SubSurfaceFields::SubSurfaceType);
+  }
+
   std::vector<std::string> SubSurface_Impl::subSurfaceTypeValues() const {
     return SubSurface::validSubSurfaceTypeValues();
   }
@@ -562,6 +566,11 @@ namespace detail {
     return result;
   }
 
+  void SubSurface_Impl::resetSubSurfaceType() {
+    bool result = setString(OS_SubSurfaceFields::SubSurfaceType, "");
+    OS_ASSERT(result);
+  }
+
   bool SubSurface_Impl::setViewFactortoGround(boost::optional<double> viewFactortoGround) {
     bool result = false;
     if (viewFactortoGround) {
@@ -675,8 +684,9 @@ namespace detail {
   bool SubSurface_Impl::setSurface(const Surface& surface)
   {
     bool emptySurface = isEmpty(OS_SubSurfaceFields::SurfaceName);
+    bool emptySubSurfaceType = isEmpty(OS_SubSurfaceFields:SubSurfaceType);
     bool result = setPointer(OS_SubSurfaceFields::SurfaceName, surface.handle());
-    if (result && emptySurface){
+    if (result && emptySurface && emptySubSurfaceType){
       assignDefaultSubSurfaceType();
     }
     return result;
@@ -1160,7 +1170,6 @@ SubSurface::SubSurface(const std::vector<Point3d>& vertices, const Model& model)
   : PlanarSurface(SubSurface::iddObjectType(),vertices,model)
 {
   OS_ASSERT(getImpl<detail::SubSurface_Impl>());
-  assignDefaultSubSurfaceType();
 }
 
 IddObjectType SubSurface::iddObjectType() {
@@ -1175,6 +1184,10 @@ std::vector<std::string> SubSurface::validSubSurfaceTypeValues() {
 
 std::string SubSurface::subSurfaceType() const {
   return getImpl<detail::SubSurface_Impl>()->subSurfaceType();
+}
+
+bool SubSurface::isSubSurfaceTypeDefaulted() const {
+  return getImpl<detail::SubSurface_Impl>()->isSubSurfaceTypeDefaulted();
 }
 
 boost::optional<double> SubSurface::viewFactortoGround() const {
@@ -1231,6 +1244,10 @@ bool SubSurface::isNumberofVerticesAutocalculated() const {
 
 bool SubSurface::setSubSurfaceType(std::string subSurfaceType) {
   return getImpl<detail::SubSurface_Impl>()->setSubSurfaceType(subSurfaceType);
+}
+
+void SubSurface::resetSubSurfaceType() {
+  getImpl<detail::SubSurface_Impl>()->resetSubSurfaceType();
 }
 
 bool SubSurface::setViewFactortoGround(boost::optional<double> viewFactortoGround) {

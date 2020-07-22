@@ -138,6 +138,8 @@ namespace detail {
 
     std::string subSurfaceType() const;
 
+    bool isSubSurfaceTypeDefaulted() const;
+
     std::vector<std::string> subSurfaceTypeValues() const;
 
     boost::optional<double> viewFactortoGround() const;
@@ -169,6 +171,8 @@ namespace detail {
     //@{
 
     bool setSubSurfaceType(std::string subSurfaceType);
+
+    void resetSubSurfaceType();
 
     bool setViewFactortoGround(boost::optional<double> viewFactortoGround);
 
