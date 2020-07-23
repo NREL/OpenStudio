@@ -1170,7 +1170,6 @@ SubSurface::SubSurface(const std::vector<Point3d>& vertices, const Model& model)
   : PlanarSurface(SubSurface::iddObjectType(),vertices,model)
 {
   OS_ASSERT(getImpl<detail::SubSurface_Impl>());
-
   resetSubSurfaceType();
 }
 
