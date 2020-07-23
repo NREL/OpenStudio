@@ -684,7 +684,7 @@ namespace detail {
   bool SubSurface_Impl::setSurface(const Surface& surface)
   {
     bool emptySurface = isEmpty(OS_SubSurfaceFields::SurfaceName);
-    bool emptySubSurfaceType = isEmpty(OS_SubSurfaceFields:SubSurfaceType);
+    bool emptySubSurfaceType = isEmpty(OS_SubSurfaceFields::SubSurfaceType);
     bool result = setPointer(OS_SubSurfaceFields::SurfaceName, surface.handle());
     if (result && emptySurface && emptySubSurfaceType){
       assignDefaultSubSurfaceType();
@@ -1170,6 +1170,8 @@ SubSurface::SubSurface(const std::vector<Point3d>& vertices, const Model& model)
   : PlanarSurface(SubSurface::iddObjectType(),vertices,model)
 {
   OS_ASSERT(getImpl<detail::SubSurface_Impl>());
+
+  resetSubSurfaceType();
 }
 
 IddObjectType SubSurface::iddObjectType() {
