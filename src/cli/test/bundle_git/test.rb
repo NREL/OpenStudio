@@ -25,4 +25,4 @@ begin
 rescue LoadError
   did_fail = true
 end
-raise "Should not load openstudio-standards" unless did_fail == true
+raise "Should allow to load the embedded openstudio-standards" unless did_fail == false
