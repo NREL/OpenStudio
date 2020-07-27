@@ -869,6 +869,7 @@ set(project_directories
   install_utility
 )
 
+# resources must be added after find EnergyPlus
 add_subdirectory(resources)
 
 foreach(D ${project_directories})
