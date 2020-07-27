@@ -869,21 +869,22 @@ set(project_directories
   install_utility
 )
 
-if(CMAKE_CL_64)
-  # openstudio cli is not supported on 32 bit platforms
-  # due to ruby dependencies
-  list(APPEND project_directories cli)
-endif()
-
-# Include the resources, should happen after find EnergyPlus
 add_subdirectory(resources)
 
 foreach(D ${project_directories})
   add_subdirectory(src/${D})
 endforeach()
 
+if(CMAKE_CL_64)
+  # openstudio cli and ruby bindings are not supported on 32 bit platforms
+  # due to ruby dependencies
+  add_subdirectory(src/cli)
 add_subdirectory(ruby)
+endif()
 
+add_dependencies(openstudio_utilities
+CreateEmbeddedSource
+)
 
 # csharp, after loading projects
 if(BUILD_CSHARP_BINDINGS)
@@ -1006,10 +1007,7 @@ if(BUILD_DOCUMENTATION)
 
   endforeach()
 
-  # Set up dependencies after all targets have been created
-  add_dependencies(openstudio_utilities
-    CreateEmbeddedSource
-  )
+  # Set up dependencies after all targets have been created 
   add_dependencies(openstudio_utilities_doc
     openstudio_utilities_idd_doc
   )
@@ -1017,11 +1015,6 @@ if(BUILD_DOCUMENTATION)
     openstudio_utilities_doc
     openstudio_utilities_idd_doc
   )
-
-endif()
-
-
-if(BUILD_DOCUMENTATION)
 
   add_custom_target(ALL_DOXYGEN)
   add_dependencies(ALL_DOXYGEN ${ALL_CPP_DOC_TARGETS})
@@ -1056,35 +1049,6 @@ endif()
 
 ###############################################################################
 # Export targets and generate OpenStudioCoreConfig.cmake
-
-set(all_lib_targets
-  openstudio_osversion
-  openstudio_model
-  openstudio_utilities
-  openstudio_energyplus
-  openstudio_measure
-  openstudio_radiance
-  openstudio_gbxml
-  openstudio_isomodel
-  openstudio_sdd
-  openstudio_airflow
-)
-
-if(CMAKE_CL_64)
-  list(APPEND all_lib_targets ${ALL_RUBY_BINDING_TARGETS})
-endif()
-
-set(all_exe_targets
-  GenerateIddFactory
-  #gbXMLToIdf
-  openstudio
-)
-
-if(UNIX AND NOT APPLE)
-  foreach(targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
-    set_target_properties(${targ} PROPERTIES VERSION ${OpenStudio_VERSION})
-  endforeach()
-endif()
 
 configure_file("${PROJECT_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
   "${PROJECT_BINARY_DIR}/OpenStudioCoreConfig.cmake" @ONLY)
@@ -1249,34 +1213,26 @@ if(BUILD_PAT AND APPLE)
   install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
 endif()
 
-export(TARGETS
-         openstudio_airflow
-         openstudio_model
-         openstudio_energyplus
-         openstudio_measure
-         openstudio_osversion
-         openstudio_sdd
-         openstudio_isomodel
-         openstudio_gbxml
-         openstudio_radiance
-         openstudio_utilities
-         openstudiolib
-         openstudio_rb
-       NAMESPACE "openstudio::"
-       FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
-       )
-
-install(EXPORT openstudio
-        DESTINATION lib/cmake/openstudio
-        NAMESPACE "openstudio::"
-        COMPONENT "CPPAPI"
-        FILE openstudioConfig.cmake)
-
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
   "${PROJECT_BINARY_DIR}/openstudioConfigVersion.cmake"
   VERSION ${CMAKE_PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion
+)
+
+export(
+  EXPORT
+  openstudio
+       NAMESPACE "openstudio::"
+       FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
+       )
+
+install(
+  EXPORT openstudio
+        DESTINATION lib/cmake/openstudio
+        NAMESPACE "openstudio::"
+        COMPONENT "CPPAPI"
+  FILE openstudioConfig.cmake
 )
 
 install(
@@ -1377,7 +1333,6 @@ if( BUILD_NUGET_PACKAGE AND NOT BUILD_CSHARP_BINDINGS)
   # Rest moved to csharp/CMakeLists.txt
 endif()
 
-
 if (MSVC)
   if (NOT USE_LTO)
     message(WARNING "Suppressing 121,000+ linker warnings, see src/lib/CMakeLists.txt for details")
@@ -1392,9 +1347,9 @@ if (MSVC)
 
     # The potential inefficiency goes away if we use LTO linking
     target_link_libraries(openstudiolib PRIVATE -IGNORE:4217,4049)
-    target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
     if(CMAKE_CL_64)
-      # openstudio cli not supported on 32 bit
+      # openstudio cli and ruby bindings are not supported on 32 bit
+      target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
       target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
     endif()
   endif()
