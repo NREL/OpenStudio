@@ -989,6 +989,48 @@ TEST_F(GeometryFixture, Triangulate_Up)
   EXPECT_TRUE(checkNormals(normal, test));
 }
 
+TEST_F(GeometryFixture, Triangulate_ComplexHoles) {
+  double tol = 0.01;
+  Vector3d normal(0, 0, -1);
+
+  std::vector<std::vector<Point3d>> test;
+  std::vector<std::vector<Point3d>> holes;
+  Point3dVector points1;
+  Point3dVector points2;
+
+  // sense is down with a hole in middle
+  points1 = makeRectangleDown(0, 0, 4, 4);
+  points2.clear();
+  points2.push_back(Point3d(1.0, 2.5, 0));
+  points2.push_back(Point3d(1.5, 3.0, 0));
+  points2.push_back(Point3d(2.5, 3.0, 0));
+  points2.push_back(Point3d(3.0, 2.5, 0));
+  points2.push_back(Point3d(3.0, 1.5, 0));
+  points2.push_back(Point3d(2.5, 1.0, 0));
+  points2.push_back(Point3d(1.5, 1.0, 0));
+  points2.push_back(Point3d(1.0, 1.5, 0));
+  ASSERT_TRUE(getArea(points2));
+  EXPECT_DOUBLE_EQ(3.5, getArea(points2).get());
+
+  holes.clear();
+  holes.push_back(points2);
+  test = computeTriangulation(points1, holes, tol);
+  EXPECT_FALSE(test.empty());
+  EXPECT_DOUBLE_EQ(12.5, totalArea(test));
+  EXPECT_TRUE(checkNormals(normal, test));
+
+  // now triangulate the hole
+  holes.clear();
+  holes = computeTriangulation(points2, holes, tol);
+  EXPECT_TRUE(holes.size() > 3);
+  EXPECT_DOUBLE_EQ(3.5, totalArea(holes));
+
+  test = computeTriangulation(points1, holes, tol);
+  EXPECT_FALSE(test.empty());
+  EXPECT_DOUBLE_EQ(12.5, totalArea(test));
+  EXPECT_TRUE(checkNormals(normal, test));
+}
+
 TEST_F(GeometryFixture, PointLatLon)
 {
   // building in Portland
