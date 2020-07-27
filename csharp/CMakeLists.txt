@@ -255,15 +255,15 @@ if( BUILD_NUGET_PACKAGE )
       INSTALL_COMMAND ""
     )
 
+    # This is used in the OpenStudio.nuspec template
+    # One problem. What if 64 bit is configured with ninja,
+    # but 32 bit is configured without ninja?
     if(NINJA)
-      set(OPENSTUDIO_CSHARP_DLLNAME "Products/csharp/OpenStudio.dll")
+      set(OPENSTUDIO_CONFIGURATION_TYPE "")
     else()
       # Regular case: pure MSVC
-      set(OPENSTUDIO_CSHARP_DLLNAME "Products/csharp/$CONFIGURATION$/OpenStudio.dll")
+      set(OPENSTUDIO_CONFIGURATION_TYPE "$CONFIGURATION$")
     endif()
-    set(OPENSTUDIO_CSHARP_LIBNAME "Products/$CONFIGURATION$/openstudio_csharp.dll")
-    set(OPENSTUDIO_MODEL_CSHARP_LIBNAME "Products/$CONFIGURATION$/openstudio_model_csharp.dll")
-    set(OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME "Products/$CONFIGURATION$/openstudio_translators_csharp.dll")
 
     configure_file( ${PROJECT_SOURCE_DIR}/csharp/OpenStudio.nuspec.in ${PROJECT_BINARY_DIR}/OpenStudio.nuspec )
 

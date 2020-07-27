@@ -14,17 +14,17 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="Products/csharp/$CONFIGURATION$/OpenStudio.dll" target="lib/net35" />
-    <file src="Products/$CONFIGURATION$/openstudiolib.dll" target="build/x64" />
-    <file src="Products/$CONFIGURATION$/openstudio_csharp.dll" target="build/x64" />
-    <file src="Products/$CONFIGURATION$/openstudio_model_csharp.dll" target="build/x64" />
-    <file src="Products/$CONFIGURATION$/openstudio_translators_csharp.dll" target="build/x64" />
-    <file src="Products/$CONFIGURATION$/openstudio_model_csharp.dll" target="build/x64" />
-    <file src="OS-32/Products/$CONFIGURATION$/openstudiolib.dll" target="build/x86" />
-    <file src="OS-32/Products/$CONFIGURATION$/openstudio_csharp.dll" target="build/x86" />
-    <file src="OS-32/Products/$CONFIGURATION$/openstudio_model_csharp.dll" target="build/x86" />
-    <file src="OS-32/Products/$CONFIGURATION$/openstudio_translators_csharp.dll" target="build/x86" />
-    <file src="OS-32/Products/$CONFIGURATION$/openstudio_model_csharp.dll" target="build/x86" />
+    <file src="Products/csharp/${OPENSTUDIO_CONFIGURATION_TYPE}/OpenStudio.dll" target="lib/net35" />
+    <file src="Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudiolib.dll" target="build/x64" />
+    <file src="Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudio_csharp.dll" target="build/x64" />
+    <file src="Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudio_model_csharp.dll" target="build/x64" />
+    <file src="Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudio_translators_csharp.dll" target="build/x64" />
+    <file src="Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudio_model_csharp.dll" target="build/x64" />
+    <file src="OS-32/Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudiolib.dll" target="build/x86" />
+    <file src="OS-32/Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudio_csharp.dll" target="build/x86" />
+    <file src="OS-32/Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudio_model_csharp.dll" target="build/x86" />
+    <file src="OS-32/Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudio_translators_csharp.dll" target="build/x86" />
+    <file src="OS-32/Products/${OPENSTUDIO_CONFIGURATION_TYPE}/openstudio_model_csharp.dll" target="build/x86" />
     <file src="@PROJECT_SOURCE_DIR@/csharp/OpenStudio.targets" target="build" />  
     <file src="@PROJECT_SOURCE_DIR@/LICENSE.md" target="" />
   </files>
