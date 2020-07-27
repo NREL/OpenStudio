@@ -328,6 +328,12 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"SurfacePropertyConvectionCoefficients","Convection Coefficient 2","convectionCoefficient2Schedule",true,"",OptionalDouble(),OptionalDouble() },
     {"SurfacePropertyConvectionCoefficientsMultipleSurface","Convection Coefficient 1","convectionCoefficient1Schedule",true,"",OptionalDouble(),OptionalDouble() },
     {"SurfacePropertyConvectionCoefficientsMultipleSurface","Convection Coefficient 2","convectionCoefficient2Schedule",true,"",OptionalDouble(),OptionalDouble() },
+    {"SwimmingPoolIndoor","Activity Factor","activityFactorSchedule",true,"",0.0,OptionalDouble()}, // can exceed 1.0, for wave pools for eg
+    {"SwimmingPoolIndoor","Make-up Water Supply","makeupWaterSupplySchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"SwimmingPoolIndoor","Cover","coverSchedule",true,"",0.0,1.0},
+    {"SwimmingPoolIndoor","Setpoint Temperature Schedule","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
+    {"SwimmingPoolIndoor","People Schedule","peopleSchedule",true,"",0.0,1.0},
+    {"SwimmingPoolIndoor","People Heat Gain Schedule","peopleHeatGainSchedule",true,"ActivityLevel",0.0,OptionalDouble()},
     {"ThermalStorageIceDetailed","Availability Schedule","availabilitySchedule",false,"Availability",0.0,1.0},
     {"ThermalStorageChilledWaterStratified","Setpoint Temperature","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ThermalStorageChilledWaterStratified","Ambient Temperature","ambientTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},

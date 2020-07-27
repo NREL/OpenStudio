@@ -3083,6 +3083,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateSubSurface(subSurface);
       break;
     }
+  case openstudio::IddObjectType::OS_SwimmingPool_Indoor:
+  {
+    model::SwimmingPoolIndoor obj = modelObject.cast<SwimmingPoolIndoor>();
+    retVal = translateSwimmingPoolIndoor(obj);
+    break;
+  }
   case openstudio::IddObjectType::OS_Table_MultiVariableLookup :
     {
       model::TableMultiVariableLookup table = modelObject.cast<TableMultiVariableLookup>();
