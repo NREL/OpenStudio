@@ -209,6 +209,14 @@ namespace detail {
   }
 
   bool HotWaterEquipmentDefinition_Impl::setFractionLatent(double fractionLatent) {
+
+    double fractionRadiantAndLost = fractionRadiant() + fractionLost();
+    if ( (fractionLatent + fractionRadiantAndLost) > 1.0) {
+      LOG(Error, "Radiant Fraction and Lost Fraction sum to " << fractionRadiantAndLost
+          << " and you supplied a Latent Fraction of " << fractionLatent
+          << " which would result in a sum greater than 1.0");
+      return false;
+    }
     bool result = setDouble(OS_HotWaterEquipment_DefinitionFields::FractionLatent, fractionLatent);
     return result;
   }
@@ -219,6 +227,14 @@ namespace detail {
   }
 
   bool HotWaterEquipmentDefinition_Impl::setFractionRadiant(double fractionRadiant) {
+
+    double fractionLatentAndLost = fractionLatent() + fractionLost();
+    if ( (fractionRadiant + fractionLatentAndLost) > 1.0) {
+      LOG(Error, "Latent Fraction and Lost Fraction sum to " << fractionLatentAndLost
+          << " and you supplied a Radiant Fraction of " << fractionRadiant
+          << " which would result in a sum greater than 1.0");
+      return false;
+    }
     bool result = setDouble(OS_HotWaterEquipment_DefinitionFields::FractionRadiant, fractionRadiant);
     return result;
   }
@@ -229,6 +245,14 @@ namespace detail {
   }
 
   bool HotWaterEquipmentDefinition_Impl::setFractionLost(double fractionLost) {
+
+    double fractionLatentAndRadiant = fractionLatent() + fractionRadiant();
+    if ( (fractionLost + fractionLatentAndRadiant) > 1.0) {
+      LOG(Error, "Latent Fraction and Radiant Fraction sum to " << fractionLatentAndRadiant
+          << " and you supplied a Lost Fraction of " << fractionLost
+          << " which would result in a sum greater than 1.0");
+      return false;
+    }
     bool result = setDouble(OS_HotWaterEquipment_DefinitionFields::FractionLost, fractionLost);
     return result;
   }
