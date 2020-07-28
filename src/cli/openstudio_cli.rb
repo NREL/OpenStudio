@@ -55,6 +55,16 @@ $logger.level = Logger::WARN
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
+OpenStudio.autoload(:Airflow, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:EnergyPlus, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:GbXML, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:ISOModel, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:Measure, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:Model, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:OSVersion, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:Radiance, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:SDD, ":/openstudio_init_extended.rb")
+
 # debug Gem::Resolver, must go before resolver is required
 #ENV['DEBUG_RESOLVER'] = "1"
 original_arch = nil
@@ -720,7 +730,7 @@ class CLI
     if !$eval_cmds.empty?
       $eval_cmds.each do |cmd|
         $logger.debug "Executing cmd: #{cmd}"
-        eval(cmd)
+        eval(cmd, BINDING)
       end
       if $sub_command
         $logger.warn "Evaluate mode detected, ignoring sub_command #{$sub_command}"

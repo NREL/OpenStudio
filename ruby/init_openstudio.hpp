@@ -32,5 +32,8 @@
 
 void init_openstudio_internal();
 
+void init_openstudio_internal_basic();
+void init_openstudio_internal_extended();
+
 void evalString(const std::string &t_str);
 
