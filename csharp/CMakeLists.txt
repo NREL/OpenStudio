@@ -245,6 +245,7 @@ if( BUILD_NUGET_PACKAGE )
     ExternalProject_Add(OS-32
       SOURCE_DIR ${PROJECT_SOURCE_DIR}
       BINARY_DIR ${PROJECT_BINARY_DIR}/OS-32
+      BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config Release
       CMAKE_GENERATOR
         "Visual Studio 15 2017"
       CMAKE_ARGS
