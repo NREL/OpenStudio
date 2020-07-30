@@ -1,6 +1,10 @@
 function Controller () {
   // silent install is not an option until QtIFW v3.0.1
   // gui.setSilent(true);
+  // On Windows uncomment the following 3 lines to make silent installation pass the install screen
+  //installer.installationFinished.connect(function() {
+  //  gui.clickButton(buttons.NextButton);
+  //});
 }
 
 Controller.prototype.IntroductionPageCallback = function () {
