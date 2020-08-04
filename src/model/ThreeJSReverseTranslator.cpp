@@ -233,8 +233,8 @@ namespace openstudio
     }
 
     bool sortSceneChildren(const ThreeSceneChild &lhs, const ThreeSceneChild &rhs) {
-      unsigned leftTypeOrder = getIddObjectTypeOrder(lhs.userData().surfaceType());
-      unsigned rightTypeOrder = getIddObjectTypeOrder(rhs.userData().surfaceType());
+      unsigned leftTypeOrder = getUserDataSurfaceTypeOrder(lhs.userData().surfaceType());
+      unsigned rightTypeOrder = getUserDataSurfaceTypeOrder(rhs.userData().surfaceType());
 
       if (leftTypeOrder == rightTypeOrder){
         return lhs.userData().name() < rhs.userData().name();
@@ -388,7 +388,7 @@ namespace openstudio
       // sort the children to create all surfaces before sub surfaces
       std::sort(children.begin(), children.end(), sortSceneChildren);
 
-      for (const auto& child : sceneObject.children()){
+      for (const auto& child : children) {
         boost::optional<ThreeGeometry> geometry = scene.getGeometry(child.geometry());
         if (!geometry){
           continue;
