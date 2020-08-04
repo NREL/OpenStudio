@@ -118,6 +118,10 @@ class ChillerAbsorption;
 class ChillerAbsorptionIndirect;
 class ChillerElectricEIR;
 class ChillerHeaterPerformanceElectricEIR;
+class CoilCoolingDX;
+class CoilCoolingDXCurveFitPerformance;
+class CoilCoolingDXCurveFitOperatingMode;
+class CoilCoolingDXCurveFitSpeed;
 class CoilCoolingDXMultiSpeed;
 class CoilCoolingDXSingleSpeed;
 class CoilCoolingDXTwoSpeed;
@@ -398,11 +402,13 @@ class SpaceType;
 class SteamEquipment;
 class SubSurface;
 class Surface;
+class SurfaceControlMovableInsulation;
 class SurfacePropertyConvectionCoefficients;
 class SurfacePropertyConvectionCoefficientsMultipleSurface;
 class SurfacePropertyExposedFoundationPerimeter;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
+class SwimmingPoolIndoor;
 class TableMultiVariableLookup;
 class TemperingValve;
 class ThermalZone;
@@ -678,6 +684,14 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateChillerHeaterPerformanceElectricEIR( model::ChillerHeaterPerformanceElectricEIR & modelObject  );
 
   boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed( model::CoilCoolingDXSingleSpeed & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDX( model::CoilCoolingDX & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDXCurveFitPerformance( model::CoilCoolingDXCurveFitPerformance & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDXCurveFitOperatingMode( model::CoilCoolingDXCurveFitOperatingMode & modelObject );
+
+  boost::optional<IdfObject> translateCoilCoolingDXCurveFitSpeed( model::CoilCoolingDXCurveFitSpeed & modelObject );
 
   boost::optional<IdfObject> translateCoilCoolingDXMultiSpeed( model::CoilCoolingDXMultiSpeed & modelObject );
 
@@ -1240,6 +1254,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateSurface( model::Surface & modelObject );
 
+  boost::optional<IdfObject> translateSurfaceControlMovableInsulation(model::SurfaceControlMovableInsulation & modelObject);
+
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficients(model::SurfacePropertyConvectionCoefficients & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyConvectionCoefficientsMultipleSurface(model::SurfacePropertyConvectionCoefficientsMultipleSurface & modelObject);
@@ -1249,6 +1265,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateSurfacePropertyOtherSideCoefficients(model::SurfacePropertyOtherSideCoefficients & modelObject);
 
   boost::optional<IdfObject> translateSurfacePropertyOtherSideConditionsModel(model::SurfacePropertyOtherSideConditionsModel & modelObject);
+
+  boost::optional<IdfObject> translateSwimmingPoolIndoor(model::SwimmingPoolIndoor & modelObject);
 
   boost::optional<IdfObject> translateTableMultiVariableLookup( model::TableMultiVariableLookup & modelObject );
 

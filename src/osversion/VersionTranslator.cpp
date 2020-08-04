@@ -1172,7 +1172,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
       for (unsigned k = 0, n = keys.size(); k < n; ++k) {
         bool ok(false);
         if (scheduleLimits) {
-          ok = isCompatible(keys[k].first,keys[k].second,*scheduleLimits);
+          ok = isCompatible(keys[k].className(), keys[k].scheduleDisplayName(), *scheduleLimits);
         }
         if (ok) {
           ok = user.setPointer(indices[k],schedule.handle());
@@ -1182,7 +1182,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
         else {
           for (model::Schedule& candidate : candidates) {
             if (model::OptionalScheduleTypeLimits limits = candidate.scheduleTypeLimits()) {
-              if (isCompatible(keys[k].first,keys[k].second,*limits)) {
+              if (isCompatible(keys[k].className(), keys[k].scheduleDisplayName(), *limits)) {
                 user.setPointer(indices[k],candidate.handle());
                 schedulesToFixup->refactoredUsers.insert(user);
                 ok = true;
@@ -1199,7 +1199,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
               ok = schedule.resetScheduleTypeLimits();
               OS_ASSERT(ok); // unhooked schedule in Stage 1
             }
-            ok = checkOrAssignScheduleTypeLimits(keys[k].first,keys[k].second,schedule);
+            ok = checkOrAssignScheduleTypeLimits(keys[k].className(), keys[k].scheduleDisplayName(), schedule);
             OS_ASSERT(ok);
             scheduleLimits = schedule.scheduleTypeLimits();
             if (model.numObjects() > modelN) {
@@ -1214,7 +1214,7 @@ void VersionTranslator::fixInterobjectIssuesStage2_0_8_3_to_0_8_4(
             ok = clonedSchedule.resetScheduleTypeLimits();
             OS_ASSERT(ok);
             modelN = model.numObjects();
-            ok = checkOrAssignScheduleTypeLimits(keys[k].first,keys[k].second,clonedSchedule);
+            ok = checkOrAssignScheduleTypeLimits(keys[k].className(), keys[k].scheduleDisplayName(), clonedSchedule);
             OS_ASSERT(ok);
             if (model.numObjects() > modelN) {
               m_new.push_back(clonedSchedule.scheduleTypeLimits().get().idfObject());
@@ -5247,13 +5247,14 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
   for (const IdfObject& object : idf_3_0_0.objects()) {
     auto iddname = object.iddObject().name();
 
-    if (iddname == "OS:Example:Object") {
-      auto iddObject = idd_3_0_1.getObject("OS:Example:Object");
+    if (iddname == "OS:Coil:Cooling:DX:SingleSpeed") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
       IdfObject newObject(iddObject.get());
 
       for (size_t i = 0; i < object.numFields(); ++i) {
         if ((value = object.getString(i))) {
-          if (i < 2) {
+          if (i < 15) {
             // Handle
             newObject.setString(i, value.get());
           } else {
@@ -5263,9 +5264,110 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
         }
       }
 
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(15, -25.0);
+
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else if (iddname == "OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 15) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(15, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Coil:Cooling:DX:MultiSpeed") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 7 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 7) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(7, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Coil:Cooling:DX:VariableSpeed") {
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 15 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 15) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else {
+            // Every other is shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(15, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:Coil:Cooling:DX:TwoSpeed") {
+      // Inserted 'Unit Internal Static Air Pressure' at field 7
+      // Inserted field 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' at position 23 (0-indexed)
+      auto iddObject = idd_3_0_1.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 7) {
+            // Handle
+            newObject.setString(i, value.get());
+          } else if (i < 22) {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          } else {
+            // Every other is shifted by two fields
+            newObject.setString(i + 2, value.get());
+          }
+        }
+      }
+
+      // Set new field per I/O ref /source code default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(7, 773.3);
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(23, -25.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
 
     // No-op
     } else {
@@ -5275,8 +5377,7 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
 
   return ss.str();
 
-}
-
+} // end update_3_0_0_to_3_0_1
 
 } // osversion
 } // openstudio

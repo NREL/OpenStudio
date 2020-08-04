@@ -150,6 +150,10 @@ MODELOBJECT_TEMPLATES(ExteriorWaterEquipmentDefinition)
 MODELOBJECT_TEMPLATES(RenderingColor);
 MODELOBJECT_TEMPLATES(DesignSpecificationOutdoorAir);
 
+MODELOBJECT_TEMPLATES(CoilCoolingDXCurveFitPerformance);
+MODELOBJECT_TEMPLATES(CoilCoolingDXCurveFitOperatingMode);
+MODELOBJECT_TEMPLATES(CoilCoolingDXCurveFitSpeed);
+
 SWIG_MODELOBJECT(ScheduleInterval, 0);
 SWIG_MODELOBJECT(ScheduleFile, 1);
 SWIG_MODELOBJECT(ExternalFile, 1);
@@ -233,6 +237,10 @@ SWIG_MODELOBJECT(ExteriorFuelEquipmentDefinition, 1);
 SWIG_MODELOBJECT(ExteriorWaterEquipmentDefinition, 1);
 SWIG_MODELOBJECT(RenderingColor, 1);
 SWIG_MODELOBJECT(DesignSpecificationOutdoorAir, 1);
+
+SWIG_MODELOBJECT(CoilCoolingDXCurveFitPerformance, 1);
+SWIG_MODELOBJECT(CoilCoolingDXCurveFitOperatingMode, 1);
+SWIG_MODELOBJECT(CoilCoolingDXCurveFitSpeed, 1);
 
 %include <model/ScheduleTypeRegistry.hpp>
 

@@ -188,10 +188,9 @@ namespace gbxml {
     gbXMLElement.append_attribute("version") = "6.01";
     gbXMLElement.append_attribute("SurfaceReferenceLocation") = "Centerline";
 
-    boost::optional<model::Facility> facility = model.getOptionalUniqueModelObject<model::Facility>();
-    if (facility) {
-      translateFacility(*facility, gbXMLElement);
-    }
+    // translateFacility is responsible to translate Surfaces, and calls translateBuilding, which is responsible to translate spaces
+    // so we do need to call it anyways.
+    translateFacility(model, gbXMLElement);
 
     // do constructions
     std::vector<model::ConstructionBase> constructionBases = model.getModelObjects<model::ConstructionBase>();
@@ -412,35 +411,36 @@ namespace gbxml {
     return true;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateFacility(const openstudio::model::Facility& facility, pugi::xml_node& parent)
+  boost::optional<pugi::xml_node> ForwardTranslator::translateFacility(const openstudio::model::Model& model, pugi::xml_node& parent)
   {
-    auto result = parent.append_child("Campus");
-    m_translatedObjects[facility.handle()] = result;
 
-    boost::optional<std::string> name = facility.name();
+    // `model` is `const`, so we shouldn't call getUniqueModelObject<model::Facility> which will **create** a new object in there.
+    boost::optional<model::Facility> _facility = model.getOptionalUniqueModelObject<model::Facility>();
+
+    auto result = parent.append_child("Campus");
+    std::string name = "Facility";
+
+    if (_facility) {
+      m_translatedObjects[_facility->handle()] = result;
+      if (auto _s = _facility->name()) {
+        name = _s.get();
+      }
+    }
 
     // id
     result.append_attribute("id") = "Facility";
 
     // name
     auto nameElement = result.append_child("Name");
-    if (name) {
-      nameElement.text() = name.get().c_str();
-    } else {
-      nameElement.text() = "Facility";
-    }
-
-    model::Model model = facility.model();
+    nameElement.text() = name.c_str();
 
     // todo: translate location
 
-    // translate building
-    boost::optional<model::Building> building = model.getOptionalUniqueModelObject<model::Building>();
-    if (building) {
-      translateBuilding(*building, result);
-    }
+    // translate building: needs to be done even if not explicitly instantiated since that's what translates Spaces in particular.
+    translateBuilding(model, result);
 
     // translate surfaces
+    // TODO: JM 2020-06-18 Why is translateSpace not responsible to call this one?
     std::vector<model::Surface> surfaces = model.getConcreteModelObjects<model::Surface>();
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Surfaces"));
@@ -477,36 +477,46 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateBuilding(const openstudio::model::Building& building, pugi::xml_node& parent)
+  boost::optional<pugi::xml_node> ForwardTranslator::translateBuilding(const openstudio::model::Model& model, pugi::xml_node& parent)
   {
+    // `model` is `const`, so we shouldn't call getUniqueModelObject<model::Building> which will **create** a new object in there.
+    // model::Building building = model.getUniqueModelObject<model::Building>();
+    boost::optional<model::Building> _building = model.getOptionalUniqueModelObject<model::Building>();
+
     auto result = parent.append_child("Building");
-    m_translatedObjects[building.handle()] = result;
+    std::string bName = "Building";
+    std::string bType = "Unknown";
+    if (_building) {
+      m_translatedObjects[_building->handle()] = result;
+      bName = _building->nameString();
 
-    // id
-    std::string name = building.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
+      if (boost::optional<std::string> _standardsBuildingType = _building->standardsBuildingType()) {
+        // TODO: map to gbXML types
+        // bType = escapeName(_standardsBuildingType.get()).c_str();
+      }
 
-    // building type
-    //result.append_attribute("buildingType") = "Office";
-    result.append_attribute("buildingType") = "Unknown";
+      // space type
+      if (boost::optional<model::SpaceType> _spaceType = _building->spaceType()) {
+        //std::string spaceTypeName = _spaceType->nameString();
+        // TODO: map to gbXML types
+        // bType = escapeName(spaceTypeName).c_str();
+      }
 
-    boost::optional<std::string> standardsBuildingType = building.standardsBuildingType();
-    if (standardsBuildingType) {
-      // todo: map to gbXML types
-      //result.append_attribute("buildingType") = escapeName(spaceTypeName).c_str();
     }
 
-    // space type
-    boost::optional<model::SpaceType> spaceType = building.spaceType();
-    if (spaceType) {
-      //std::string spaceTypeName = spaceType->name().get();
-      // todo: map to gbXML types
-      //result.append_attribute("buildingType", escapeName(spaceTypeName));
+    // id
+    result.append_attribute("id") = escapeName(bName).c_str();
+
+    // building type
+    result.append_attribute("buildingType") = bType.c_str();
+
+    if (_building) {
+
     }
 
     // name
     auto nameElement = result.append_child("Name");
-    nameElement.text() = name.c_str();
+    nameElement.text() = bName.c_str();
 
     // area
     auto areaElement = result.append_child("Area");
@@ -514,7 +524,7 @@ namespace gbxml {
     // DLM: we want to use gbXML's definition of floor area which includes area from all spaces with people in them
     //double floorArea = building.floorArea();
 
-    std::vector<model::Space> spaces = building.spaces();
+    std::vector<model::Space> spaces = model.getConcreteModelObjects<model::Space>();
 
     double floorArea = 0;
     for (const model::Space& space : spaces) {
@@ -543,7 +553,7 @@ namespace gbxml {
     }
 
     // translate shading surface groups
-    model::ShadingSurfaceGroupVector shadingSurfaceGroups = building.model().getConcreteModelObjects<model::ShadingSurfaceGroup>();
+    model::ShadingSurfaceGroupVector shadingSurfaceGroups = model.getConcreteModelObjects<model::ShadingSurfaceGroup>();
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Shading Surface Groups"));
       m_progressBar->setMinimum(0);
@@ -560,7 +570,7 @@ namespace gbxml {
     }
 
     // translate stories
-    model::BuildingStoryVector stories = building.model().getConcreteModelObjects<model::BuildingStory>();
+    model::BuildingStoryVector stories = model.getConcreteModelObjects<model::BuildingStory>();
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Stories"));
       m_progressBar->setMinimum(0);
@@ -780,7 +790,7 @@ namespace gbxml {
           result.append_attribute("surfaceType") = "RaisedFloor";
         } else if (surface.isGroundSurface()) {
           checkSlabOnGrade = true;
-          result.append_attribute("surfaceType") = "UndergroundSlab"; // might be SlabOnGrade, check vertices later
+          // Can be either UndergroundSlab or SlabOnGrade, check vertices later
         } else if (istringEqual("Surface", outsideBoundaryCondition)) {
           result.append_attribute("surfaceType") = "InteriorFloor";
         } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
@@ -837,6 +847,8 @@ namespace gbxml {
       }
       if ((maxZ <= 0.01) && (minZ >= -0.01)) {
         result.append_attribute("surfaceType") = "SlabOnGrade";
+      } else {
+        result.append_attribute("surfaceType") = "UndergroundSlab";
       }
     }
 

@@ -99,7 +99,15 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateCoilHeatingGas(const WorkspaceObject & workspaceObject);
 
-  boost::optional<model::ModelObject> translateCoilCoolingDXSingleSpeed( const WorkspaceObject& orkspaceObject);
+  boost::optional<model::ModelObject> translateCoilCoolingDX( const WorkspaceObject& workspaceObject);
+
+  boost::optional<model::ModelObject> translateCoilCoolingDXCurveFitPerformance( const WorkspaceObject& workspaceObject);
+
+  boost::optional<model::ModelObject> translateCoilCoolingDXCurveFitOperatingMode( const WorkspaceObject& workspaceObject);
+
+  boost::optional<model::ModelObject> translateCoilCoolingDXCurveFitSpeed( const WorkspaceObject& workspaceObject);
+
+  boost::optional<model::ModelObject> translateCoilCoolingDXSingleSpeed( const WorkspaceObject& workspaceObject);
 
   boost::optional<model::ModelObject> translateCoilSystemCoolingDX(const WorkspaceObject & workspaceObject);
 
@@ -311,11 +319,15 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateSteamEquipment(const WorkspaceObject& workspaceObject);
 
+  boost::optional<model::ModelObject> translateSurfaceControlMovableInsulation(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateSurfaceConvectionAlgorithmInside(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateSurfaceConvectionAlgorithmOutside(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateSurfacePropertyExposedFoundationPerimeter(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateSwimmingPoolIndoor(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateThermostatSetpointDualSetpoint(const WorkspaceObject & workspaceObject);
 

@@ -64,6 +64,10 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
   ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDX.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitPerformance.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitOperatingMode.cpp
+  ForwardTranslator/ForwardTranslateCoilCoolingDXCurveFitSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXMultiSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXSingleSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilCoolingDXTwoSpeed.cpp
@@ -344,11 +348,13 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSteamEquipment.cpp
   ForwardTranslator/ForwardTranslateSubSurface.cpp
   ForwardTranslator/ForwardTranslateSurface.cpp
+  ForwardTranslator/ForwardTranslateSurfaceControlMovableInsulation.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyExposedFoundationPerimeter.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideConditionsModel.cpp
+  ForwardTranslator/ForwardTranslateSwimmingPoolIndoor.cpp
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp
   ForwardTranslator/ForwardTranslateTemperingValve.cpp
   ForwardTranslator/ForwardTranslateThermalStorageIceDetailed.cpp
@@ -410,6 +416,10 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateBuilding.cpp
   ReverseTranslator/ReverseTranslateBuildingSurfaceDetailed.cpp
   ReverseTranslator/ReverseTranslateControllerOutdoorAir.cpp
+  ReverseTranslator/ReverseTranslateCoilCoolingDX.cpp
+  ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitPerformance.cpp
+  ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitOperatingMode.cpp
+  ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitSpeed.cpp
   ReverseTranslator/ReverseTranslateCoilCoolingDXSingleSpeed.cpp
   ReverseTranslator/ReverseTranslateCoilHeatingGas.cpp
   ReverseTranslator/ReverseTranslateCoilSystemCoolingDX.cpp
@@ -518,9 +528,11 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSizingZone.cpp
   ReverseTranslator/ReverseTranslateSizingPeriodDesignDay.cpp
   ReverseTranslator/ReverseTranslateSteamEquipment.cpp
+  ReverseTranslator/ReverseTranslateSurfaceControlMovableInsulation.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmInside.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmOutside.cpp
   ReverseTranslator/ReverseTranslateSurfacePropertyExposedFoundationPerimeter.cpp
+  ReverseTranslator/ReverseTranslateSwimmingPoolIndoor.cpp
   ReverseTranslator/ReverseTranslateThermostatSetpointDualSetpoint.cpp
   ReverseTranslator/ReverseTranslateTimestep.cpp
   ReverseTranslator/ReverseTranslateVersion.cpp
@@ -581,8 +593,17 @@ set(${target_name}_test_src
   Test/CentralHeatPumpSystem_GTest.cpp
 
   Test/CoilHeatingGas_GTest.cpp
+  Test/CoilCoolingDX_GTest.cpp
+  Test/CoilCoolingDXCurveFitPerformance_GTest.cpp
+  Test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp
+  Test/CoilCoolingDXCurveFitSpeed_GTest.cpp
+  Test/CoilCoolingDXSingleSpeed_GTest.cpp
   Test/CoilCoolingDXMultiSpeed_GTest.cpp
+  Test/CoilCoolingDXTwoSpeed_GTest.cpp
+  Test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
+  Test/CoilCoolingDXVariableSpeed_GTest.cpp
   Test/Construction_GTest.cpp
+  Test/ControllerOutdoorAir_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
@@ -633,7 +654,9 @@ set(${target_name}_test_src
   Test/StandardGlazing_GTest.cpp
   Test/SubSurface_GTest.cpp
   Test/Surface_GTest.cpp
-  Test/SurfacePropertyConvectionCoefficients.cpp
+  Test/SurfaceControlMovableInsulation_GTest.cpp
+  Test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  Test/SwimmingPoolIndoor_GTest.cpp
   Test/TableMultiVariableLookup_GTest.cpp
   Test/ThermalStorageChilledWaterStratified_GTest.cpp
   Test/ThermalZone_GTest.cpp

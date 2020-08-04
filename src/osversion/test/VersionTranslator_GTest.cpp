@@ -515,7 +515,7 @@ TEST_F(OSVersionFixture,KeepHandles) {
 
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
 
   // spot check a few model objects
   std::vector<IdfObject> idfObjects = oldIdf->getObjectsByName("OS:RunPeriod 1");
@@ -543,7 +543,7 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_fuel.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_fuel_updated.osm");
   model->save(outPath, true);
 
@@ -589,9 +589,14 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_fuelTypeRenames) {
     // Check that the test model (in 2.9.1), actually has bad starting fuels
     EXPECT_TRUE(replaceFuelTypesMap.find(old_fuelType) != replaceFuelTypesMap.end());
 
-    std::string new_fuelType = model->getObjectsByType(iddname)[0].getString(fieldIndex).get();
+    int newFieldIndex = fieldIndex;
+    if (iddname == "OS:Coil:Cooling:DX:MultiSpeed") {
+      // Fuel Type, was 16 on 3.0.0, 17 on 3.0.1
+      newFieldIndex = 17;
+    }
+    std::string new_fuelType = model->getObjectsByType(iddname)[0].getString(newFieldIndex).get();
     EXPECT_NE(old_fuelType, new_fuelType);
-    EXPECT_EQ(replaceFuelTypesMap.at(old_fuelType), new_fuelType);
+    EXPECT_EQ(replaceFuelTypesMap.at(old_fuelType), new_fuelType) << "Failed for " << iddname;
   }
 
 }
@@ -601,7 +606,7 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_updated.osm");
   model->save(outPath, true);
 
@@ -650,7 +655,7 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_default_expanded
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_expanded.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_default_expanded_updated.osm");
   model->save(outPath, true);
 
@@ -695,7 +700,7 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_nondefault) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_nondefault.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
-  ASSERT_TRUE(model);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_0/test_vt_ShadowCalculation_nondefault_updated.osm");
   model->save(outPath, true);
 
@@ -736,3 +741,161 @@ TEST_F(OSVersionFixture, update_2_9_1_to_3_0_0_ShadowCaculation_nondefault) {
 
 }
 
+TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCompressor) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXSingleSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXSingleSpeed_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed").size());
+  WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed")[0];
+
+  // Field before insertion point is a curve, should still be
+  ASSERT_TRUE(c.getTarget(14));
+  EXPECT_EQ("CC DX SingleSpeed PartLoadFrac Correlation Curve", c.getTarget(14)->nameString());
+
+  // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
+  ASSERT_TRUE(c.getDouble(15));
+  EXPECT_EQ(-25.0, c.getDouble(15).get());
+
+  // After should be 1000.0
+  ASSERT_TRUE(c.getDouble(16));
+  EXPECT_EQ(1000.0, c.getDouble(16).get());
+
+  // Last field
+  ASSERT_TRUE(c.getTarget(31));
+  EXPECT_EQ("Always Off Discrete", c.getTarget(31)->nameString());
+
+}
+
+TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidityControlMode_minOATCompressor) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXTwoStageWithHumidityControlMode.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXTwoStageWithHumidityControlMode_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode").size());
+  WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:TwoStageWithHumidityControlMode")[0];
+
+  // Field before insertion point is unused (storage tank)
+  EXPECT_FALSE(c.getString(14, false, true));
+
+  // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
+  ASSERT_TRUE(c.getDouble(15));
+  EXPECT_EQ(-25.0, c.getDouble(15).get());
+
+  // After should be 100.0
+  ASSERT_TRUE(c.getDouble(16));
+  EXPECT_EQ(100.0, c.getDouble(16).get());
+
+  // Last field
+  ASSERT_TRUE(c.getDouble(17));
+  EXPECT_EQ(3.0, c.getDouble(17).get());
+}
+
+TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXMultiSpeed_minOATCompressor) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXMultiSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXMultiSpeed_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:Coil:Cooling:DX:MultiSpeed").size());
+  WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:MultiSpeed")[0];
+
+  // Field before insertion point
+  ASSERT_TRUE(c.getString(6, false, true));
+  EXPECT_EQ("EvaporativelyCooled", c.getString(6, false, true).get());
+
+  // Insertion point is at index 7, and is set to -25 (same as model Ctor and E+ IDD default)
+  ASSERT_TRUE(c.getDouble(7));
+  EXPECT_EQ(-25.0, c.getDouble(7).get());
+
+  // After is unused (storage tank)
+  EXPECT_FALSE(c.getString(8, false, true));
+
+  // Last field
+  ASSERT_TRUE(c.getString(17, false, true));
+  EXPECT_EQ("Electricity", c.getString(17, false, true).get());
+}
+
+TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXVariableSpeed_minOATCompressor) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXVariableSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXVariableSpeed_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:Coil:Cooling:DX:VariableSpeed").size());
+  WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:VariableSpeed")[0];
+
+  // Field before insertion point
+  ASSERT_TRUE(c.getDouble(14));
+  EXPECT_EQ(11.0, c.getDouble(14).get());
+
+  // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
+  ASSERT_TRUE(c.getDouble(15));
+  EXPECT_EQ(-25.0, c.getDouble(15).get());
+
+  // After is unused (storage tank)
+  EXPECT_FALSE(c.getString(16, false, true));
+
+  // Last field is the SpeedDataList
+  ASSERT_TRUE(c.getTarget(21));
+  EXPECT_EQ("Coil Cooling DX Variable Speed 1 Speed Data List", c.getTarget(21)->nameString());
+}
+
+TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompressor) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXTwoSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_0_1/test_vt_CoilCoolingDXTwoSpeed_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:Coil:Cooling:DX:TwoSpeed").size());
+  WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:TwoSpeed")[0];
+
+  // First insertion
+  // Field before insertion point
+  ASSERT_TRUE(c.getDouble(6));
+  EXPECT_EQ(1.2, c.getDouble(6).get());
+
+  // Insertion point is at index 7, and is set to 773.3 (same as model Ctor and E+ source code default)
+  ASSERT_TRUE(c.getDouble(7));
+  EXPECT_EQ(773.3, c.getDouble(7).get());
+
+  // After is the inlet node, via a PortList
+  ASSERT_TRUE(c.getTarget(8));
+  EXPECT_EQ("Coil Inlet Node Name", c.getTarget(8)->getTarget(2)->nameString());
+
+
+  // Second insertion
+  // Field before insertion point
+  ASSERT_TRUE(c.getString(22, false, true));
+  EXPECT_EQ("EvaporativelyCooled", c.getString(22, false, true).get());
+
+  // Insertion point is at index 23, and is set to -25 (same as model Ctor and E+ IDD default)
+  ASSERT_TRUE(c.getDouble(23));
+  EXPECT_EQ(-25.0, c.getDouble(23).get());
+
+  // After
+  ASSERT_TRUE(c.getDouble(24));
+  EXPECT_EQ(0.5, c.getDouble(24).get());
+
+
+  // Last field is a schedule
+  ASSERT_TRUE(c.getTarget(34));
+  EXPECT_EQ("Basin Heater Operating Schedule Name", c.getTarget(34)->nameString());
+}

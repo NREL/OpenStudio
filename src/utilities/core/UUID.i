@@ -7,17 +7,21 @@
 
 %{
   #include <utilities/core/UUID.hpp>
+  #include <functional>
 %}
 
 namespace openstudio{
 
   #ifdef SWIGRUBY
     %rename("nil?") isNull();
+
+    %alias UUID::isEqual "eql?";
   #endif
 
   class UUID {
   public:
     bool isNull() const;
+    bool isEqual(const UUID& other) const;
     ~UUID();
 
   protected:
@@ -38,6 +42,14 @@ namespace openstudio{
 
     std::string __str__() const{
       return openstudio::toString(*self);
+    }
+
+    int __hash__() const{
+      return std::hash<std::string>{}(openstudio::toString(*self));
+    }
+
+    bool __eq__ (const UUID & other) const{
+        return *self == other;
     }
 
     bool operator!= ( const UUID & other ) const {

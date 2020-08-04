@@ -44,6 +44,7 @@ class Surface;
 class ShadingSurfaceGroup;
 class SurfaceIntersection;
 class ConstructionBase;
+class SurfaceControlMovableInsulation;
 class SurfacePropertyOtherSideCoefficients;
 class SurfacePropertyOtherSideConditionsModel;
 class SurfacePropertyConfectionCoefficients;
@@ -204,6 +205,8 @@ namespace detail {
     bool setAdjacentSurface(Surface& surface);
 
     void resetAdjacentSurface();
+
+    boost::optional<SurfaceControlMovableInsulation> surfaceControlMovableInsulation() const;
 
     boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
