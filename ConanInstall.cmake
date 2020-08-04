@@ -57,7 +57,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   conan_cmake_run(REQUIRES
     ${CONAN_READLINE}
     ${CONAN_QT}
-    openssl/1.1.0l@nrel/testing # ruby 2.5.5 won't work with 1.1.1x, so use 1.1.0l here to try to force every package to align on the same as ruby
+    openssl/1.1.0l
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
     openstudio_ruby/2.5.5@nrel/testing
     boost/1.71.0
