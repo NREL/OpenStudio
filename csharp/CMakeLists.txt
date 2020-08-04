@@ -241,7 +241,7 @@ if( BUILD_NUGET_PACKAGE )
 
   if (MSVC)
     include(ExternalProject)
-    
+
     ExternalProject_Add(OS-32
       SOURCE_DIR ${PROJECT_SOURCE_DIR}
       BINARY_DIR ${PROJECT_BINARY_DIR}/OS-32

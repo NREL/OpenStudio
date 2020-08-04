@@ -884,7 +884,7 @@ add_subdirectory(ruby)
 endif()
 
 add_dependencies(openstudio_utilities
-CreateEmbeddedSource
+  CreateEmbeddedSource
 )
 
 # csharp, after loading projects
@@ -1008,7 +1008,7 @@ if(BUILD_DOCUMENTATION)
 
   endforeach()
 
-  # Set up dependencies after all targets have been created 
+  # Set up dependencies after all targets have been created
   add_dependencies(openstudio_utilities_doc
     openstudio_utilities_idd_doc
   )
