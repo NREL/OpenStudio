@@ -158,6 +158,25 @@ namespace openstudio
       return (allPoints.size() - 1);
     }
 
+    std::string getBoundaryMaterialName(const ThreeUserData& userData) 
+    {
+      std::string result;
+      if (userData.outsideBoundaryCondition() == "Outdoors") {
+        if ((userData.sunExposure() == "SunExposed") && (userData.windExposure() == "WindExposed")) {
+          result = "Boundary_Outdoors_SunWind";
+        } else if (userData.sunExposure() == "SunExposed") {
+          result = "Boundary_Outdoors_Sun";
+        } else if (userData.windExposure() == "WindExposed") {
+          result = "Boundary_Outdoors_Wind";
+        } else {
+          result = "Boundary_Outdoors";
+        }
+      } else {
+        result = "Boundary_" + userData.outsideBoundaryCondition();
+      }
+      return result;
+    }
+
     void updateUserData(ThreeUserData& userData, const PlanarSurface& planarSurface)
     {
       std::string name = planarSurface.nameString();
@@ -187,20 +206,9 @@ namespace openstudio
           userData.setOutsideBoundaryConditionObjectName(adjacentSurface->nameString());
           userData.setOutsideBoundaryConditionObjectHandle(toThreeUUID(toString(adjacentSurface->handle())));
         }
-
-        if (userData.outsideBoundaryCondition() == "Outdoors"){
-          if ((userData.sunExposure() == "SunExposed") && (userData.windExposure() == "WindExposed")){
-            userData.setBoundaryMaterialName("Boundary_Outdoors_SunWind");
-          } else if (userData.sunExposure() == "SunExposed") {
-            userData.setBoundaryMaterialName("Boundary_Outdoors_Sun");
-          } else if (userData.windExposure() == "WindExposed") {
-            userData.setBoundaryMaterialName("Boundary_Outdoors_Wind");
-          } else{
-            userData.setBoundaryMaterialName("Boundary_Outdoors");
-          }
-        } else{
-          userData.setBoundaryMaterialName("Boundary_" + userData.outsideBoundaryCondition());
-        }
+        
+        // set boundary conditions before calling getBoundaryMaterialName
+        userData.setBoundaryMaterialName(getBoundaryMaterialName(userData));
       }
 
       if (shadingSurface)
@@ -240,12 +248,12 @@ namespace openstudio
         userData.setSurfaceTypeMaterialName(getSurfaceTypeThreeMaterialName(subSurfaceType));
 
         boost::optional<Surface> parentSurface = subSurface->surface();
-        std::string boundaryMaterialName;
-        if (surface){
-          boundaryMaterialName = "Boundary_" + surface->surfaceType();
-          userData.setOutsideBoundaryCondition(surface->outsideBoundaryCondition());
+        if (parentSurface) {
+          userData.setOutsideBoundaryCondition(parentSurface->outsideBoundaryCondition());
           userData.setSunExposure(parentSurface->sunExposure());
           userData.setWindExposure(parentSurface->windExposure());
+          userData.setSurfaceName(parentSurface->nameString());
+          userData.setSurfaceHandle(toThreeUUID(toString(parentSurface->handle())));
         }
 
         boost::optional<SubSurface> adjacentSubSurface = subSurface->adjacentSubSurface();
@@ -253,13 +261,10 @@ namespace openstudio
           userData.setOutsideBoundaryConditionObjectName(adjacentSubSurface->nameString());
           userData.setOutsideBoundaryConditionObjectHandle(toThreeUUID(toString(adjacentSubSurface->handle())));
           userData.setBoundaryMaterialName("Boundary_Surface");
-        } else{
-          if (boundaryMaterialName == "Boundary_Surface"){
-            userData.setBoundaryMaterialName("");
-          } else{
-            userData.setBoundaryMaterialName(boundaryMaterialName);
-          }
         }
+
+        // set boundary conditions before calling getBoundaryMaterialName
+        userData.setBoundaryMaterialName(getBoundaryMaterialName(userData));
       }
 
       if (construction)

@@ -106,8 +106,12 @@ typedef std::vector<ParentObject> ParentObjectVector;
 
 /** Returns object and all other objects accessible by calling children() on encountered
  *  \link ParentObject ParentObjects \endlink. LifeCycleCost and AdditionalProperties objects
- *  are not technically children but may be included by setting the optional second argument to true. \relates ParentObject */
-MODEL_API std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCostsAndAdditionalProperties = false);
+ *  are not technically children but may be included by setting the optional second argument to true. \relates ParentObject
+ *  An additional switch can exclude ResourceObject which have a directUseCount > 1, which is especially useful for remove() so you don't remove
+ *  ResourceObjects (such as Curve) if they are actually used by another object than the one you're deleting */
+MODEL_API std::vector<ModelObject> getRecursiveChildren(const ParentObject& object,
+                                                        bool includeLifeCycleCostsAndAdditionalProperties = false,
+                                                        bool includeUsedResources = true);
 
 /** Returns all objects in getRecursiveChildren(object) that can be cast to type T. */
 template <typename T>

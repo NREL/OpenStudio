@@ -864,6 +864,16 @@ TEST_F(GeometryFixture, JoinAll)
   }
   EXPECT_TRUE(found1);
   EXPECT_TRUE(found2);
+
+  // out of order
+  polygons.clear();
+  polygons.push_back(makeRectangleDown(0, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(3, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(2, 0, 1, 1));
+  polygons.push_back(makeRectangleDown(1, 0, 1, 1));
+  test = joinAll(polygons, tol);
+  ASSERT_EQ(1u, test.size());
+  EXPECT_EQ(4.0, totalArea(test));
 }
 
 
