@@ -355,25 +355,25 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
 
     # Add the -py3 flag if the version used is Python 3
-    set(SWIG_PYTHON_3_FLAG "")
+    set(SWIG_PYTHON_3_FLAGS "")
     if (Python_VERSION_MAJOR)
       if (Python_VERSION_MAJOR EQUAL 3)
-        set(SWIG_PYTHON_3_FLAG -py3)
+        set(SWIG_PYTHON_3_FLAGS "-py3;-relativeimport")
         message(STATUS "${MODULE} - Building SWIG Bindings for Python 3")
       else()
         message(STATUS "${MODULE} - Building SWIG Bindings for Python 2")
       endif()
     else()
       # Python2 has been EOL since January 1, 2020
-      set(SWIG_PYTHON_3_FLAG -py3)
+      set(SWIG_PYTHON_3_FLAGS "-py3;-relativeimport")
       message(STATUS "${MODULE} - Couldnt determine version of Python - Building SWIG Bindings for Python 3")
     endif()
 
     add_custom_command(
-      OUTPUT "${SWIG_WRAPPER_FULL_PATH}"
+      OUTPUT "${SWIG_WRAPPER_FULL_PATH}" "${PYTHON_GENERATED_SRC}"
       COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
               "${SWIG_EXECUTABLE}"
-              "-python" ${SWIG_PYTHON_3_FLAG} "-c++" ${PYTHON_AUTODOC}
+              "-python" ${SWIG_PYTHON_3_FLAGS} "-c++" ${PYTHON_AUTODOC}
               -outdir ${PYTHON_GENERATED_SRC_DIR} "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src"
               -module "${MODULE}"
               -o "${SWIG_WRAPPER_FULL_PATH}"
@@ -395,10 +395,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       ${SWIG_WRAPPER}
     )
 
-    # TODO: for local testing, PYTHON_GENERATED_SRC should go into Products/python next to the .so files
-    install(FILES "${PYTHON_GENERATED_SRC}" DESTINATION Python COMPONENT "Python")
-    install(TARGETS ${swig_target} DESTINATION Python COMPONENT "Python")
-
     set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME _${LOWER_NAME})
     set_target_properties(${swig_target} PROPERTIES PREFIX "")
     set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/python/")
@@ -408,6 +404,14 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd4005") ## /wd4996 suppresses deprecated warning, /wd4005 suppresses macro redefinition warning
       set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
     elseif(UNIX)
+      # TODO: Probably something to be done here...
+
+      # set_target_properties(${swig_target}
+      #   PROPERTIES
+      #   BUILD_RPATH $<TARGET_FILE_DIR:openstudiolib>
+      #   INSTALL_RPATH ${CMAKE_INSTALL_LIBDIR}
+      # )
+      # set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-Wl,-rpath,./")
       if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
         set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-sometimes-uninitialized")
       else()
@@ -415,9 +419,26 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       endif()
     endif()
 
+    file(MAKE_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/openstudio/")
+    set(COPY_PYTHON_GENERATED_SRC "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py")
+    set(MODIFIED_PYTHON_GENERATED_SRC "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/openstudio/${LOWER_NAME}.py")
+    add_custom_command(TARGET ${swig_target}
+      POST_BUILD
+      # OUTPUT "${MODIFIED_PYTHON_GENERATED_SRC}"
+      COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${PYTHON_GENERATED_SRC}" "${COPY_PYTHON_GENERATED_SRC}"
+      COMMAND "${CMAKE_COMMAND}" -P "${PROJECT_SOURCE_DIR}/python/FixPythonImports.cmake" "${PYTHON_GENERATED_SRC}" "${MODIFIED_PYTHON_GENERATED_SRC}"
+      DEPENDS "${PYTHON_GENERATED_SRC}"
+    )
+    set_source_files_properties(${MODIFIED_PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
+
+    # TODO: for local testing, PYTHON_GENERATED_SRC should go into Products/python next to the .so files
+    install(FILES "${MODIFIED_PYTHON_GENERATED_SRC}" DESTINATION Python COMPONENT "Python")
+    install(TARGETS ${swig_target} DESTINATION Python COMPONENT "Python")
+
+
     # TODO: really unusre where former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want... We're not
     # trying to make a CLI here
-    target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends} ${Python_LIBRARIES})
+    target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends}) # ${Python_LIBRARIES})
     add_dependencies(${swig_target} ${PARENT_TARGET})
 
     # add this target to a "global" variable so python tests can require these

@@ -27,6 +27,22 @@
 #install(TARGETS openstudio_python DESTINATION Python CONFIGURATIONS COMPONENT "Python")
 
 install(FILES "openstudio.py" DESTINATION Python COMPONENT "Python")
+#add_custom_command(TARGET openstudio_python
+  #POST_BUILD
+  #COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/openstudio_dynamic.py $<TARGET_FILE_DIR:openstudio_python>/__init__.py
+#)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/openstudio.py ${PROJECT_BINARY_DIR}/Products/python/openstudio.py COPYONLY)
+# configure_file(${CMAKE_CURRENT_SOURCE_DIR}/openstudio_dynamic.py ${PROJECT_BINARY_DIR}/Products/python/openstudio_dynamic.py COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/openstudio.py ${PROJECT_BINARY_DIR}/Products/python/openstudio/__init__.py COPYONLY)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/setup.py ${PROJECT_BINARY_DIR}/Products/python/setup.py @ONLY)
+
+set(CMAKE_INSTALL_RPATH "$ORIGIN")
+foreach(p ${ALL_PYTHON_BINDING_TARGETS})
+  target_link_libraries(${p}
+    openstudiolib
+  )
+endforeach()
 
 # convenience target to build the SDK
 add_custom_target(python_sdk ALL
