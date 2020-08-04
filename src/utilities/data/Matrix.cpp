@@ -393,6 +393,15 @@ namespace openstudio{
     // raise A to the Nth power, maximum distance between two nodes
     for (unsigned i = 0; i < N; ++i){
       A = prod(A,A);
+
+      // re-normalize
+      for (unsigned i = 0; i < N; ++i) {
+        for (unsigned j = 0; j < N; ++j) {
+          if (A(j, i) > 1) {
+            A(j, i) = 1;
+          }
+        }
+      }
     }
 
     std::set<unsigned> added;

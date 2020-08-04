@@ -372,6 +372,26 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       //modelObject = translateCoilHeatingGas(workspaceObject );
       break;
     }
+  case openstudio::IddObjectType::Coil_Cooling_DX :
+    {
+      modelObject = translateCoilCoolingDX(workspaceObject );
+      break;
+    }
+  case openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_Performance :
+    {
+      modelObject = translateCoilCoolingDXCurveFitPerformance(workspaceObject );
+      break;
+    }
+  case openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_OperatingMode :
+    {
+      modelObject = translateCoilCoolingDXCurveFitOperatingMode(workspaceObject );
+      break;
+    }
+  case openstudio::IddObjectType::Coil_Cooling_DX_CurveFit_Speed :
+    {
+      modelObject = translateCoilCoolingDXCurveFitSpeed(workspaceObject );
+      break;
+    }
   case openstudio::IddObjectType::Coil_Cooling_DX_SingleSpeed :
     {
       //modelObject = translateCoilCoolingDXSingleSpeed(workspaceObject );
@@ -968,6 +988,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateSurfacePropertyExposedFoundationPerimeter(workspaceObject);
       break;
     }
+  //case openstudio::IddObjectType::SwimmingPool_Indoor :
+    //{
+      //modelObject = translateSwimmingPoolIndoor(workspaceObject);
+      //break;
+    //}
   case openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint :
     {
       modelObject = translateThermostatSetpointDualSetpoint(workspaceObject);

@@ -790,7 +790,7 @@ namespace gbxml {
           result.append_attribute("surfaceType") = "RaisedFloor";
         } else if (surface.isGroundSurface()) {
           checkSlabOnGrade = true;
-          result.append_attribute("surfaceType") = "UndergroundSlab"; // might be SlabOnGrade, check vertices later
+          // Can be either UndergroundSlab or SlabOnGrade, check vertices later
         } else if (istringEqual("Surface", outsideBoundaryCondition)) {
           result.append_attribute("surfaceType") = "InteriorFloor";
         } else if (istringEqual("Adiabatic", outsideBoundaryCondition)) {
@@ -847,6 +847,8 @@ namespace gbxml {
       }
       if ((maxZ <= 0.01) && (minZ >= -0.01)) {
         result.append_attribute("surfaceType") = "SlabOnGrade";
+      } else {
+        result.append_attribute("surfaceType") = "UndergroundSlab";
       }
     }
 
