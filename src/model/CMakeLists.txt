@@ -288,6 +288,18 @@ set(${target_name}_src
   CoilCoolingCooledBeam.hpp
   CoilCoolingCooledBeam_Impl.hpp
   CoilCoolingCooledBeam.cpp
+  CoilCoolingDX.hpp
+  CoilCoolingDX_Impl.hpp
+  CoilCoolingDX.cpp
+  CoilCoolingDXCurveFitPerformance.hpp
+  CoilCoolingDXCurveFitPerformance_Impl.hpp
+  CoilCoolingDXCurveFitPerformance.cpp
+  CoilCoolingDXCurveFitOperatingMode.hpp
+  CoilCoolingDXCurveFitOperatingMode_Impl.hpp
+  CoilCoolingDXCurveFitOperatingMode.cpp
+  CoilCoolingDXCurveFitSpeed.hpp
+  CoilCoolingDXCurveFitSpeed_Impl.hpp
+  CoilCoolingDXCurveFitSpeed.cpp
   CoilCoolingDXMultiSpeed.hpp
   CoilCoolingDXMultiSpeed_Impl.hpp
   CoilCoolingDXMultiSpeed.cpp
@@ -1418,6 +1430,9 @@ set(${target_name}_src
   SurfacePropertyOtherSideConditionsModel.cpp
   SurfacePropertyOtherSideConditionsModel.hpp
   SurfacePropertyOtherSideConditionsModel_Impl.hpp
+  SwimmingPoolIndoor.cpp
+  SwimmingPoolIndoor.hpp
+  SwimmingPoolIndoor_Impl.hpp
   TableMultiVariableLookup.hpp
   TableMultiVariableLookup_Impl.hpp
   TableMultiVariableLookup.cpp
@@ -1748,6 +1763,10 @@ set(${target_name}_test_src
   test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
+  test/CoilCoolingDX_GTest.cpp
+  test/CoilCoolingDXCurveFitPerformance_GTest.cpp
+  test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp
+  test/CoilCoolingDXCurveFitSpeed_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
   test/CoilCoolingDXMultiSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
@@ -2054,6 +2073,7 @@ set(${target_name}_test_src
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyOtherSideCoefficients_GTest.cpp
   test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
+  test/SwimmingPoolIndoor_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/ThermalStorageIceDetailed_GTest.cpp

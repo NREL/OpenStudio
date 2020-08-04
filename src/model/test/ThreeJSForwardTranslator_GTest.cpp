@@ -38,6 +38,8 @@
 #include "../Space_Impl.hpp"
 #include "../Surface.hpp"
 #include "../Surface_Impl.hpp"
+#include "../SubSurface.hpp"
+#include "../SubSurface_Impl.hpp"
 #include "../ConstructionAirBoundary.hpp"
 #include "../Construction.hpp"
 
@@ -111,6 +113,7 @@ TEST_F(ModelFixture,ThreeJSForwardTranslator_ExampleModel) {
 
   EXPECT_EQ(model.getConcreteModelObjects<Space>().size(), model2->getConcreteModelObjects<Space>().size());
   EXPECT_EQ(model.getConcreteModelObjects<Surface>().size(), model2->getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(model.getConcreteModelObjects<SubSurface>().size(), model2->getConcreteModelObjects<SubSurface>().size());
 }
 
 TEST_F(ModelFixture,ThreeJSForwardTranslator_ConstructionAirBoundary) {
