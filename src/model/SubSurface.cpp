@@ -684,9 +684,8 @@ namespace detail {
   bool SubSurface_Impl::setSurface(const Surface& surface)
   {
     bool emptySurface = isEmpty(OS_SubSurfaceFields::SurfaceName);
-    bool emptySubSurfaceType = isEmpty(OS_SubSurfaceFields::SubSurfaceType);
     bool result = setPointer(OS_SubSurfaceFields::SurfaceName, surface.handle());
-    if (result && emptySurface && emptySubSurfaceType){
+    if (result && emptySurface && isSubSurfaceTypeDefaulted()){
       assignDefaultSubSurfaceType();
     }
     return result;
