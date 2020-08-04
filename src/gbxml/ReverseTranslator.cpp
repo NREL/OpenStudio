@@ -573,7 +573,7 @@ namespace gbxml {
       std::array<double, 3> coords{ {0.0, 0.0, 0.0} };
       size_t i{ 0 };
       for (auto &el : coordinateElements) {
-        coords[i] = m_lengthMultiplier*el.text().as_double();
+        coords[i] = m_lengthMultiplier * el.text().as_double();
         ++i;
         if (i == 3) {
           break;
@@ -987,7 +987,7 @@ namespace gbxml {
       std::array<double, 3> coords{ {0.0, 0.0, 0.0} };
       size_t i{ 0 };
       for (auto &el : coordinateElements) {
-        coords[i] = el.text().as_double();
+        coords[i] = m_lengthMultiplier * el.text().as_double();
         ++i;
         if (i == 3) {
           break;

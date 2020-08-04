@@ -24,7 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>${CSHARP_LIBRARY_OUTPUT_DIRECTORY}\Debug\OpenStudio.xml</DocumentationFile>
-    <NoWarn>1591</NoWarn>
+    <NoWarn>1591,0108</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|${CSHARP_PLATFORM}' ">
     <DebugType>pdbonly</DebugType>
@@ -34,7 +34,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>${CSHARP_LIBRARY_OUTPUT_DIRECTORY}\Release\OpenStudio.xml</DocumentationFile>
-    <NoWarn>1591</NoWarn>
+    <NoWarn>1591,0108</NoWarn> <!-- CS1591: Missing XML comment for publicly visible type or member 'Type_or_Member', CS0108: iddObjectType() hides inherited member ModelObject.iddObjectType() -->
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

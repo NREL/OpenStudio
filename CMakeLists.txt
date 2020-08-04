@@ -235,10 +235,8 @@ option(BUILD_PAT "Build PAT" OFF)
 option(BUILD_DOCUMENTATION "Build Documentation" OFF)
 
 # Build CSharp bindings
-# Requires: SWIG
-if(WIN32)
-  option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
-endif()
+option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
+option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 
 # Build Java bindings
 # Requires: SWIG
@@ -261,10 +259,6 @@ set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Con
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
-endif()
-
-if(WIN32)
-  option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 endif()
 
 # Enable runtime checking features
@@ -350,10 +344,10 @@ option(CONAN_PRINT_RUN_COMMANDS "Log every conan self.run command" OFF)
 mark_as_advanced(CONAN_PRINT_RUN_COMMANDS)
 if(CONAN_PRINT_RUN_COMMANDS)
   set(ENV{CONAN_PRINT_RUN_COMMANDS} "1")
-  message("Setting CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
+  message(STATUS "Setting CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
 else()
   unset(ENV{CONAN_PRINT_RUN_COMMANDS})
-  message("CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
+  message(STATUS "CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
 endif()
 
 # Attempt to run, it'll do the right thing if the calling cmake script already ran it
@@ -692,16 +686,16 @@ FetchRubyMinGW()
 # need to  update the MD5sum for each platform and url below
 if(UNIX)
    if(APPLE)
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200512-darwin.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "527b01cec6184a91c0e1f98d2d83da38")
+     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-darwin.tar.gz")
+     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4212a009d37e38b087aad51b4b2800e0")
    else()
-     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200511-linux.tar.gz")
-     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "5734f3476017f1705a060df1fe046ff9")
+     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-linux.tar.gz")
+     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "eb52b76926b82f6c0505fb57d2f46c5b")
    endif()
 elseif(WIN32)
   if(CMAKE_CL_64)
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200512-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "6c556cb707eb1c3d89ec7244f9b3f712")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "52c80458909142726b1287dabe0da7a3")
   endif()
 endif()
 
@@ -1364,14 +1358,9 @@ if(BUILD_PAT)
   )
 endif()
 
-if( BUILD_NUGET_PACKAGE )
-  configure_file( OpenStudio.nuspec.in OpenStudio.nuspec )
-
-  add_custom_target(nuget_package
-    COMMAND NuGet pack OpenStudio.nuspec -BasePath "${PROJECT_BINARY_DIR}/" -properties Configuration=$<CONFIGURATION>
-    DEPENDS csharp_sdk
-    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
-  )
+if( BUILD_NUGET_PACKAGE AND NOT BUILD_CSHARP_BINDINGS)
+  message("If BUILD_NUGET_PACKAGE=ON, you must use BUILD_CSHARP_BINDINGS=ON too")
+  # Rest moved to csharp/CMakeLists.txt
 endif()
 
 

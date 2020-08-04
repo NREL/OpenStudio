@@ -59,7 +59,7 @@ namespace detail {
     /// return direct child objects in the hierarchy
     virtual std::vector<ModelObject> children() const;
 
-    /// remove the object from the model's workspace
+    /// remove the object from the model's workspace, as well as recursive children (unless they are ResourceObjects and are used somewhere else)
     /// return a new workspace containing any removed object(s)
     virtual std::vector<openstudio::IdfObject> remove() override;
 

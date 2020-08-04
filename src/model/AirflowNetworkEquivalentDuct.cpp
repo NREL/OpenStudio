@@ -113,6 +113,8 @@ namespace detail {
         return std::string("Coil:Heating:DX:MultiSpeed");
       case IddObjectType::OS_Coil_Heating_Desuperheater:
         return std::string("Coil:Heating:Desuperheater");
+      case IddObjectType::OS_Coil_Cooling_DX:
+        return std::string("Coil:Cooling:DX");
       default:
         return boost::none;
       }

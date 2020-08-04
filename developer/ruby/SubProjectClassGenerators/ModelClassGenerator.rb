@@ -422,7 +422,7 @@ end
 class ModelClassGenerator < SubProjectClassGenerator
   attr_accessor :iddObjectType, :idfObject, :iddObject, :isOS
   attr_accessor :requiredObjectListFields, :requiredDataFields
-  attr_accessor :hasRealFields, :hasScheduleFields, :autosizedGetterNames
+  attr_accessor :hasRealFields, :hasScheduleFields, :autosizedGetterNames, :autosizeSetterNames
 
   def initialize(className, baseClassName, pImpl, qobject, iddObjectType)
     super(className, baseClassName, pImpl, qobject)
@@ -449,10 +449,12 @@ class ModelClassGenerator < SubProjectClassGenerator
 
       # Determine if the object has any autosizable fields
       @autosizedGetterNames = []
+      @autosizeSetterNames = []
       @iddObject.nonextensibleFields.each do |iddField|
         modelObjectField = ModelObjectField.new(@iddObject, iddField)
         if modelObjectField.canAutosize?
           @autosizedGetterNames << modelObjectField.autosizedName
+          @autosizeSetterNames << modelObjectField.autosizeName
         end
       end
 
@@ -486,8 +488,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         end
       }
       if @hasScheduleFields
-        result << "#include \"../../model/ScheduleTypeLimits.hpp\"\n"
-        result << "#include \"../../model/ScheduleTypeRegistry.hpp\"\n"
+        result << "#include \"ScheduleTypeLimits.hpp\"\n"
+        result << "#include \"ScheduleTypeRegistry.hpp\"\n"
       end
 
       result << "\n" if preamble == ""
@@ -1170,7 +1172,7 @@ class ModelClassGenerator < SubProjectClassGenerator
       if @autosizedGetterNames.size > 0
         # autosize()
         result << "  void " << @className << "_Impl::autosize() {\n"
-        @autosizedGetterNames.each do |name|
+        @autosizeSetterNames.each do |name|
           result << "    #{name}();\n"
         end
         result << "  }\n\n"
@@ -1265,7 +1267,7 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
           result << "}\n\n"
         else
-          result << "void " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
+          result << "bool " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
           result << "  getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
           result << "}\n\n"
         end
@@ -1427,8 +1429,8 @@ class ModelClassGenerator < SubProjectClassGenerator
     @nonextensibleFields.each { |field|
       if field.isObjectList?
         result << preamble
-        result << "#include \"../model/" << field.objectListClassName << ".hpp\"\n"
-        result << "#include \"../model/" << field.objectListClassName << "_Impl.hpp\"\n\n"
+        result << "#include \"../" << field.objectListClassName << ".hpp\"\n"
+        result << "#include \"../" << field.objectListClassName << "_Impl.hpp\"\n\n"
         preamble = ""
       end
     }
@@ -1578,7 +1580,7 @@ class ModelClassGenerator < SubProjectClassGenerator
           end
 
           if !bad_val.nil?
-            result << "   Bad Value\n";
+            result << "  // Bad Value\n";
             result << "  EXPECT_FALSE(#{instanceName}." << field.setterName << "(#{bad_val}));\n";
 
             if field.optionalGetter?

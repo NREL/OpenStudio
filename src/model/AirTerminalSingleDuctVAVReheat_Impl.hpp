@@ -97,9 +97,9 @@ namespace detail {
 
     bool isMaximumAirFlowRateAutosized() const;
 
-    std::string zoneMinimumAirFlowMethod();
+    std::string zoneMinimumAirFlowInputMethod();
 
-    bool setZoneMinimumAirFlowMethod( std::string value );
+    bool setZoneMinimumAirFlowInputMethod(const std::string& value );
 
     boost::optional<double> constantMinimumAirFlowFraction() const;
     bool isConstantMinimumAirFlowFractionAutosized() const;
@@ -135,7 +135,7 @@ namespace detail {
 
     std::string damperHeatingAction();
 
-    bool setDamperHeatingAction( std::string value );
+    bool setDamperHeatingAction(const std::string& value);
 
     boost::optional<double> maximumFlowPerZoneFloorAreaDuringReheat();
 
