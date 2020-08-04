@@ -68,6 +68,13 @@ namespace detail {
 
     virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+    // Cloning should ensure we do have modelObjectLists for control zones, but they should be empty
+    // as it is not connected to an AirLoopHVAC (yet) and it wouldn't make sense to have zones there
+    virtual ModelObject clone(Model model) const override;
+
+    // Clears the ModelObjectLists, then remove them
+    virtual std::vector<IdfObject> remove() override;
+
     boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
     Schedule applicabilitySchedule() const;
