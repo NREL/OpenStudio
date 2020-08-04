@@ -30,10 +30,14 @@
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
 #include "../AvailabilityManagerNightCycle.hpp"
+#include "../AvailabilityManagerNightCycle_Impl.hpp"
 #include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../AirLoopHVAC.hpp"
+#include "../ModelObjectList.hpp"
+#include "../ModelObjectList_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -154,4 +158,83 @@ TEST_F(ModelFixture, AvailabilityManagerNightCycle_Schedules)
   boost::optional<Schedule> _sch = avm.fanSchedule();
   ASSERT_TRUE(_sch);
   EXPECT_EQ(sch_op, _sch.get());
+}
+
+TEST_F(ModelFixture, AvailabilityManagerNightCycle_zoneLists_clone_Remove)
+{
+  // Add test for #4020
+
+  Model m;
+
+  AirLoopHVAC a(m);
+  AvailabilityManagerNightCycle avm(m);
+  EXPECT_EQ(4, m.getConcreteModelObjects<ModelObjectList>().size());
+
+  EXPECT_TRUE(a.addAvailabilityManager(avm));
+  EXPECT_TRUE(avm.airLoopHVAC());
+
+  ThermalZone z1(m);
+  ThermalZone z2(m);
+  ThermalZone z3(m);
+  ThermalZone z4(m);
+  EXPECT_EQ(4, m.getConcreteModelObjects<ThermalZone>().size());
+  EXPECT_EQ(4, m.getConcreteModelObjects<ModelObjectList>().size());
+
+  EXPECT_TRUE(avm.setControlThermalZones({z1}));
+  EXPECT_TRUE(avm.setCoolingControlThermalZones({z2}));
+  EXPECT_TRUE(avm.setHeatingControlThermalZones({z3}));
+  EXPECT_TRUE(avm.setHeatingZoneFansOnlyThermalZones({z4}));
+
+  ASSERT_EQ(1, avm.controlThermalZones().size());
+  ASSERT_EQ(1, avm.coolingControlThermalZones().size());
+  ASSERT_EQ(1, avm.heatingControlThermalZones().size());
+  ASSERT_EQ(1, avm.heatingZoneFansOnlyThermalZones().size());
+  ASSERT_EQ(z1, avm.controlThermalZones()[0]);
+  ASSERT_EQ(z2, avm.coolingControlThermalZones()[0]);
+  ASSERT_EQ(z3, avm.heatingControlThermalZones()[0]);
+  ASSERT_EQ(z4, avm.heatingZoneFansOnlyThermalZones()[0]);
+
+  // Cloning should ensure we do have modelObjectLists for control zones, but they should be empty
+  // as it is not connected to an AirLoopHVAC (yet) and it wouldn't make sense to have zones there
+  AvailabilityManagerNightCycle avmClone = avm.clone(m).cast<AvailabilityManagerNightCycle>();
+  EXPECT_TRUE(avm.airLoopHVAC());
+  EXPECT_FALSE(avmClone.airLoopHVAC());
+  EXPECT_EQ(2, m.getConcreteModelObjects<AvailabilityManagerNightCycle>().size());
+  EXPECT_EQ(4, m.getConcreteModelObjects<ThermalZone>().size());
+  EXPECT_EQ(8, m.getConcreteModelObjects<ModelObjectList>().size());
+  ASSERT_EQ(1, avm.controlThermalZones().size());
+  ASSERT_EQ(1, avm.coolingControlThermalZones().size());
+  ASSERT_EQ(1, avm.heatingControlThermalZones().size());
+  ASSERT_EQ(1, avm.heatingZoneFansOnlyThermalZones().size());
+  ASSERT_EQ(z1, avm.controlThermalZones()[0]);
+  ASSERT_EQ(z2, avm.coolingControlThermalZones()[0]);
+  ASSERT_EQ(z3, avm.heatingControlThermalZones()[0]);
+  ASSERT_EQ(z4, avm.heatingZoneFansOnlyThermalZones()[0]);
+  EXPECT_EQ(0, avmClone.controlThermalZones().size());
+  EXPECT_EQ(0, avmClone.coolingControlThermalZones().size());
+  EXPECT_EQ(0, avmClone.heatingControlThermalZones().size());
+  EXPECT_EQ(0, avmClone.heatingZoneFansOnlyThermalZones().size());
+
+  // Removes the object and 4 MOLists
+  auto removedObjects = avmClone.remove();
+  EXPECT_EQ(5, removedObjects.size());
+  EXPECT_TRUE(avm.airLoopHVAC());
+  EXPECT_EQ(1, m.getConcreteModelObjects<AvailabilityManagerNightCycle>().size());
+  EXPECT_EQ(4, m.getConcreteModelObjects<ThermalZone>().size());
+  EXPECT_EQ(4, m.getConcreteModelObjects<ModelObjectList>().size());
+  ASSERT_EQ(1, avm.controlThermalZones().size());
+  ASSERT_EQ(1, avm.coolingControlThermalZones().size());
+  ASSERT_EQ(1, avm.heatingControlThermalZones().size());
+  ASSERT_EQ(1, avm.heatingZoneFansOnlyThermalZones().size());
+  ASSERT_EQ(z1, avm.controlThermalZones()[0]);
+  ASSERT_EQ(z2, avm.coolingControlThermalZones()[0]);
+  ASSERT_EQ(z3, avm.heatingControlThermalZones()[0]);
+  ASSERT_EQ(z4, avm.heatingZoneFansOnlyThermalZones()[0]);
+
+  // Removes the object and 4 MOLists, and must not delete the thermal zones!
+  removedObjects = avm.remove();
+  EXPECT_EQ(5, removedObjects.size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<AvailabilityManagerNightCycle>().size());
+  EXPECT_EQ(4, m.getConcreteModelObjects<ThermalZone>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<ModelObjectList>().size());
 }
