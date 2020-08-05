@@ -4717,31 +4717,6 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
-
-    } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
-      auto iddObject = idd_2_9_0.getObject("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow");
-      IdfObject newObject(iddObject.get());
-
-      // Added fields at end, so copy everything existing in place
-      for (size_t i = 0; i < object.numFields(); ++i) {
-        if ((value = object.getString(i))) {
-          newObject.setString(i, value.get());
-        }
-      }
-
-      // 21 = AVM List
-      // 22 = Design Spec ZoneHVAC Sizing
-      // 23 = Supplemental Heating Coil (optional)
-      // Maximum SAT for Supplemental Heater
-      newObject.setString(24, "Autosize");
-      // Maximum OATdb for Supplemental Heater
-      newObject.setDouble(25, 21.0);
-
-      // Register refactored
-      m_refactored.push_back(RefactoredObjectData(object, newObject));
-      ss << newObject;
-
-
     // Four fields were added but only the last (End Use Subcat) was implemented, but withotu transition rules either
     } else if ((iddname == "OS:HeaderedPumps:ConstantSpeed") || (iddname == "OS:HeaderedPumps:VariableSpeed")) {
       auto iddObject = idd_2_9_0.getObject(iddname);
@@ -5223,6 +5198,31 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       // Two fields were plain added to the end: Design Zone Secondary Recirculation Fraction,
       // and  Design Minimum Zone Ventilation Efficiency, but both are optional (has default) so no-op there
 
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
+      // Note #3687 was originally planned for 2.9.0 inclusion, so VT was there. But it was only merged to develop3 and hence relased in 3.0.0
+      // Moving it in the right location, as needed per #4016
+      auto iddObject = idd_3_0_0.getObject("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow");
+      IdfObject newObject(iddObject.get());
+
+      // Added fields at end, so copy everything existing in place
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+      // 21 = AVM List
+      // 22 = Design Spec ZoneHVAC Sizing
+      // 23 = Supplemental Heating Coil (optional)
+      // Maximum SAT for Supplemental Heater
+      newObject.setString(24, "Autosize");
+      // Maximum OATdb for Supplemental Heater
+      newObject.setDouble(25, 21.0);
+
+      // Register refactored
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
