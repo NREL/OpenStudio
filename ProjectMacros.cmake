@@ -419,25 +419,34 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       endif()
     endif()
 
-    file(MAKE_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/openstudio/")
+    # TODO: for local testing, PYTHON_GENERATED_SRC should go into Products/python next to the .so files
     set(COPY_PYTHON_GENERATED_SRC "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/${LOWER_NAME}.py")
-    set(MODIFIED_PYTHON_GENERATED_SRC "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/python/openstudio/${LOWER_NAME}.py")
     add_custom_command(TARGET ${swig_target}
       POST_BUILD
-      # OUTPUT "${MODIFIED_PYTHON_GENERATED_SRC}"
+      # OUTPUT "${PYTHON_GENERATED_SRC}"
       COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${PYTHON_GENERATED_SRC}" "${COPY_PYTHON_GENERATED_SRC}"
-      COMMAND "${CMAKE_COMMAND}" -P "${PROJECT_SOURCE_DIR}/python/FixPythonImports.cmake" "${PYTHON_GENERATED_SRC}" "${MODIFIED_PYTHON_GENERATED_SRC}"
       DEPENDS "${PYTHON_GENERATED_SRC}"
     )
-    set_source_files_properties(${MODIFIED_PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
+    set_source_files_properties(${COPY_PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
 
-    # TODO: for local testing, PYTHON_GENERATED_SRC should go into Products/python next to the .so files
-    install(FILES "${MODIFIED_PYTHON_GENERATED_SRC}" DESTINATION Python COMPONENT "Python")
+    # I'd also like the .so directly in package folder
+    if (BUILD_PYTHON_PIP_PACKAGE)
+      set(MODIFIED_PYTHON_GENERATED_SRC "${PYTHON_PACKAGE_FOLDER}/openstudio/${LOWER_NAME}.py")
+      add_custom_command(TARGET ${swig_target}
+        POST_BUILD
+        # OUTPUT "${MODIFIED_PYTHON_GENERATED_SRC}"
+        COMMAND "${CMAKE_COMMAND}" -P "${PROJECT_SOURCE_DIR}/python/FixPythonImports.cmake" "${PYTHON_GENERATED_SRC}" "${MODIFIED_PYTHON_GENERATED_SRC}"
+        COMMAND "${CMAKE_COMMAND}" -E copy $<TARGET_FILE:${swig_target}> "${PYTHON_PACKAGE_FOLDER}/openstudio/"
+        DEPENDS "${PYTHON_GENERATED_SRC}"
+      )
+      set_source_files_properties(${MODIFIED_PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
+    endif()
+
+    install(FILES "${PYTHON_GENERATED_SRC}" DESTINATION Python COMPONENT "Python")
     install(TARGETS ${swig_target} DESTINATION Python COMPONENT "Python")
 
-
-    # TODO: really unusre where former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want... We're not
-    # trying to make a CLI here
+    # TODO: really unsure what former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want...
+    # We're not trying to make a CLI here
     target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends}) # ${Python_LIBRARIES})
     add_dependencies(${swig_target} ${PARENT_TARGET})
 

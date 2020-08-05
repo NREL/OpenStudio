@@ -851,6 +851,7 @@ if(BUILD_NODE_MODULES)
 endif()
 
 if(BUILD_PYTHON_BINDINGS)
+  option(BUILD_PYTHON_PIP_PACKAGE "Prepare a folder to build a pip module" OFF)
 
   find_package(Python COMPONENTS Interpreter Development REQUIRED)
 
@@ -859,6 +860,11 @@ if(BUILD_PYTHON_BINDINGS)
   set(ALL_PYTHON_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
   set(ALL_PYTHON_WRAPPER_FILES "") # global list of generated wrapper cxx files
   set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
+
+  if(BUILD_PYTHON_PIP_PACKAGE)
+    set(PYTHON_PACKAGE_FOLDER "${PROJECT_BINARY_DIR}/Products/python_package")
+    file(MAKE_DIRECTORY "${PYTHON_PACKAGE_FOLDER}")
+  endif()
 endif()
 
 # Threading library
