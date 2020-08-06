@@ -41,7 +41,9 @@ endforeach()
 
 # convenience target to build the SDK
 add_custom_target(python_sdk ALL
-  DEPENDS ${ALL_PYTHON_BINDINGS}
+  DEPENDS
+    ${ALL_PYTHON_BINDING_TARGETS}
+    ${ALL_PYTHON_GENERATED_SRCS}
 )
 
 
@@ -52,25 +54,43 @@ if (BUILD_PYTHON_PIP_PACKAGE)
 
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/setup.py ${PYTHON_PACKAGE_FOLDER}/setup.py @ONLY)
 
-  set(ALL_PATCHED_SOS "")
-  foreach(p ${ALL_PYTHON_BINDING_TARGETS})
-    set(PATCHED_SO_PATH "${PYTHON_PACKAGE_FOLDER}/openstudio/$<TARGET_FILE_NAME:${p}>")
-    add_custom_command(
-      TARGET python_sdk POST_BUILD
+  #set(ALL_MODIFIED_PYTHON_GENERATED_SRCS "")
+  #foreach(p ${ALL_PYTHON_GENERATED_SRCS})
+    #get_filename_component(LOWER_NAME ${p} NAME)
+    #set(MODIFIED_PYTHON_GENERATED_SRC "${PYTHON_PACKAGE_FOLDER}/openstudio/${LOWER_NAME}")
 
-      # OUTPUT "${PATCHED_SO_PATH}"
-      COMMAND "${CMAKE_COMMAND}" -E copy $<TARGET_FILE:${p}> ${PATCHED_SO_PATH}
-      COMMAND patchelf --set-rpath '$ORIGIN' ${PATCHED_SO_PATH}
-      DEPENDS ${p}
-    )
+    #add_custom_command(
+      #OUTPUT ${MODIFIED_PYTHON_GENERATED_SRC}
+      #COMMAND "${CMAKE_COMMAND}" -P "${PROJECT_SOURCE_DIR}/python/FixPythonImports.cmake" "${p}" "${MODIFIED_PYTHON_GENERATED_SRC}"
+      #DEPENDS ${PYTHON_GENERATED_SRC}
+    #)
+    #list(APPEND ALL_MODIFIED_PYTHON_GENERATED_SRCS "${MODIFIED_PYTHON_GENERATED_SRC}")
+    #set_source_files_properties(${MODIFIED_PYTHON_GENERATED_SRC} PROPERTIES GENERATED TRUE)
+  #endforeach()
 
-    list(APPEND ALL_PATCHED_SOS "${PATCHED_SO_PATH}")
-  endforeach()
+
+  #set(ALL_PATCHED_SOS "")
+  #foreach(p ${ALL_PYTHON_BINDING_TARGETS})
+    #set(PATCHED_SO_PATH "${PYTHON_PACKAGE_FOLDER}/openstudio/$<TARGET_FILE_NAME:${p}>")
+    #message(STATUS "${PATCHED_SO_PATH}")
+    #add_custom_command(
+      #TARGET python_sdk POST_BUILD
+
+      ## OUTPUT "${PATCHED_SO_PATH}"
+      #COMMAND "${CMAKE_COMMAND}" -E copy $<TARGET_FILE:${p}> ${PATCHED_SO_PATH}
+      #COMMAND "${CMAKE_COMMAND}" -E echo "Patching ${PATCHED_SO_PATH}"
+      #COMMAND patchelf --set-rpath '$ORIGIN' ${PATCHED_SO_PATH}
+      #DEPENDS ${p}
+    #)
+
+    #list(APPEND ALL_PATCHED_SOS "${PATCHED_SO_PATH}")
+  #endforeach()
 
   add_custom_target(python_package
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:openstudiolib> "${PYTHON_PACKAGE_FOLDER}/openstudio"
     COMMAND python3 setup.py sdist bdist_wheel
     # COMMAND python3 -m twine upload --repository testpypi dist/*
-    DEPENDS ${ALL_PATCHED_SOS}
+    DEPENDS ${ALL_PYTHON_BINDING_TARGETS}
     WORKING_DIRECTORY ${PYTHON_PACKAGE_FOLDER}
   )
 
