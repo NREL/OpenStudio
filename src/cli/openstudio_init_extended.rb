@@ -8,12 +8,12 @@
 ::OpenStudio.module_eval { remove_const(:GbXML) }
 ::OpenStudio.module_eval { remove_const(:ISOModel) }
 ::OpenStudio.module_eval { remove_const(:Measure) }
+::OpenStudio.module_eval { remove_const(:Ruleset) } 
 ::OpenStudio.module_eval { remove_const(:Model) }
 ::OpenStudio.module_eval { remove_const(:OSVersion) }
 ::OpenStudio.module_eval { remove_const(:Radiance) }
 ::OpenStudio.module_eval { remove_const(:SDD) }
 
 OpenStudio::init_rest_of_openstudio()
-
 
 
