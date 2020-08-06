@@ -235,8 +235,8 @@ add_custom_target(csharp_sdk ALL
 )
 
 if( BUILD_NUGET_PACKAGE )
-  if(NOT CMAKE_CL_64)
-    message(FATAL_ERROR "Nuget package cannot be built using the 64 bit generator")
+  if(CMAKE_SIZEOF_VOID_P EQUAL 4) # 32 bit
+    message(FATAL_ERROR "Nuget package cannot be built using the 32 bit generator")
   endif()
 
   if (MSVC)
