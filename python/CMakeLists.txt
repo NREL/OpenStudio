@@ -46,9 +46,7 @@ add_custom_target(python_sdk ALL
 
 
 if (BUILD_PYTHON_PIP_PACKAGE)
-  add_custom_target(python_package
-    DEPENDS python_sdk
-  )
+
   # configure_file(${CMAKE_CURRENT_SOURCE_DIR}/openstudio_dynamic.py ${PROJECT_BINARY_DIR}/Products/python/openstudio_dynamic.py COPYONLY)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/openstudio.py ${PYTHON_PACKAGE_FOLDER}/openstudio/__init__.py COPYONLY)
 
@@ -58,7 +56,7 @@ if (BUILD_PYTHON_PIP_PACKAGE)
   foreach(p ${ALL_PYTHON_BINDING_TARGETS})
     set(PATCHED_SO_PATH "${PYTHON_PACKAGE_FOLDER}/openstudio/$<TARGET_FILE_NAME:${p}>")
     add_custom_command(
-      TARGET python_package POST_BUILD
+      TARGET python_sdk POST_BUILD
 
       # OUTPUT "${PATCHED_SO_PATH}"
       COMMAND "${CMAKE_COMMAND}" -E copy $<TARGET_FILE:${p}> ${PATCHED_SO_PATH}
@@ -69,8 +67,7 @@ if (BUILD_PYTHON_PIP_PACKAGE)
     list(APPEND ALL_PATCHED_SOS "${PATCHED_SO_PATH}")
   endforeach()
 
-  add_custom_command(
-    TARGET python_package POST_BUILD
+  add_custom_target(python_package
     COMMAND python3 setup.py sdist bdist_wheel
     # COMMAND python3 -m twine upload --repository testpypi dist/*
     DEPENDS ${ALL_PATCHED_SOS}
