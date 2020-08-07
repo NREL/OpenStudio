@@ -28,6 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "IddRegex.hpp"
+#include <ctre.hpp>
 
 namespace openstudio{
 namespace iddRegex{
@@ -44,11 +45,37 @@ namespace iddRegex{
     return result;
   }
 
+
+  template<typename RegexResult, std::size_t ... Idx>
+  Regex::results unpack_results(const RegexResult &results, std::index_sequence<Idx...>)
+  {
+    if (results) {
+      return Regex::results::value_type{results.template get<Idx>() ...};
+    } else {
+      return {};
+    }
+  }
+
+
+  template<typename RegexResult>
+  Regex::results generate_results(const RegexResult &results) {
+    return unpack_results(results, std::make_index_sequence<RegexResult::count()>());
+  }
+
+  template<auto & regex>
+  constexpr Regex make_regex()
+  {
+    return Regex{[](const std::string_view sv){ return generate_results(ctre::match<regex>(sv)); },
+                 [](const std::string_view sv){ return generate_results(ctre::search<regex>(sv)); }};
+  }
+
+  static constexpr auto pattern = ctll::fixed_string{"^!IDD_Version (\\S+)"};
+
   /// Search for IDD version in line
   /// matches[1], version identifier
-  const boost::regex &version(){
-    static const boost::regex result("^!IDD_Version (\\S+)");
-    return result;
+  const Regex &version(){
+    static constexpr auto regex = make_regex<pattern>();
+    return regex;
   }
 
   /// Search for IDD build in line

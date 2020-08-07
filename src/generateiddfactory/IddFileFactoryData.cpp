@@ -115,14 +115,14 @@ void IddFileFactoryData::parseFile(const path& outPath,
   // get version
   std::getline(iddFile,line);
   trimLine = line; boost::trim(trimLine);
-  bool ok = boost::regex_search(trimLine,matches,iddRegex::version());
-  if (!ok) {
+  const auto results = iddRegex::version().search(trimLine);
+  if (!results) {
     ss << "Idd file " << m_fileName << " located at " << m_filePath.string()
        << " does not list its version on the first line, which is: " << std::endl
        << line;
     throw std::runtime_error(ss.str().c_str());
   }
-  m_version = std::string(matches[1].first,matches[1].second);
+  m_version = (*results)[1];
   boost::trim(m_version);
   header << m_readyLineForOutput(line) << std::endl;
 
@@ -179,7 +179,7 @@ void IddFileFactoryData::parseFile(const path& outPath,
 
     // look for IddObject
     StringPair objectName;
-    ok = boost::regex_search(trimLine,matches,iddRegex::line());
+    auto ok = boost::regex_search(trimLine,matches,iddRegex::line());
     if (!ok) {
       ss << "Unable to extract object name from line " << lineNum << "," << std::endl
          << line << std::endl

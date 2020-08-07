@@ -248,22 +248,22 @@ namespace detail {
     // temp string to read file
     std::string line;
 
-    // this will contain matches to regular expressions
-    boost::smatch matches;
 
     // read in the version from the first line
     getline(is, line);
-    if (boost::regex_search(line, matches, iddRegex::version())){
+    if (auto matches = iddRegex::version().search(line); matches){
 
-      m_version = std::string(matches[1].first,matches[1].second);
+      m_version = matches.value()[1];
 
       // this line belongs to the header
       header << line << std::endl;
-
     }else{
       // idd file must have a version on the first line of input
       LOG_AND_THROW("Idd file does not contain version on first line: '" << line << "'");
     }
+
+    // this will contain matches to regular expressions
+    boost::smatch matches;
 
     // read the rest of the file line by line
     // todo, do this by regex
@@ -495,13 +495,13 @@ std::pair<VersionString, std::string> IddFile::parseVersionBuild(const openstudi
   const std::string strdata(data.cbegin(), data.cend());
 
   std::string build;
-  boost::smatch matches;
-  if (boost::regex_search(strdata, matches, iddRegex::build())) {
+
+  if (boost::smatch matches; boost::regex_search(strdata, matches, iddRegex::build())) {
     build = std::string(matches[1].first,matches[1].second);
   }
 
-  if (boost::regex_search(strdata, matches, iddRegex::version())) {
-    return std::make_pair(VersionString(std::string(matches[1].first, matches[1].second)), build);
+  if (auto matches = iddRegex::version().search(strdata); matches) {
+    return std::make_pair(VersionString(std::string{matches.value()[0]}), build);
   }
 
   throw std::runtime_error("Unable to parse version from IDD: " + openstudio::toString(p));

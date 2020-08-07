@@ -32,6 +32,9 @@ target_link_libraries(${target_name}
   #CONAN_PKG::boost_crc
 )
 
+target_include_directories(${target_name} PRIVATE ${CMAKE_SOURCE_DIR}/dependencies/ctre)
+
+
 # generate the IddFactory files
 add_custom_command(
   OUTPUT

@@ -34,6 +34,14 @@
 #include "../core/StaticInitializer.hpp"
 #include <boost/regex.hpp>
 
+struct Regex {
+  using results = std::optional<std::array<std::string_view, 5>>;
+  using results_func = results (*)(const std::string_view);
+
+  results_func match;
+  results_func search;
+};
+
 namespace openstudio{
 namespace iddRegex{
 
@@ -45,7 +53,7 @@ namespace iddRegex{
 
   /// Search for IDD version in line
   /// matches[1], version identifier
-  UTILITIES_API const boost::regex &version();
+  UTILITIES_API const Regex &version();
 
   /// Search for IDD build in line
   /// matches[1], build identifier

@@ -427,6 +427,7 @@ target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_compile_definitions(${target_name} PRIVATE openstudio_utilities_EXPORTS SHARED_OS_LIBS)
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR}/src)
+target_include_directories(${target_name} PRIVATE ${CMAKE_SOURCE_DIR}/dependencies/ctre)
 
 if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib)
