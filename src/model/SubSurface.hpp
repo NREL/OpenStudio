@@ -82,6 +82,8 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   std::string subSurfaceType() const;
 
+  bool isSubSurfaceTypeDefaulted() const;
+
   boost::optional<double> viewFactortoGround() const;
 
   bool isViewFactortoGroundDefaulted() const;
@@ -111,6 +113,8 @@ class MODEL_API SubSurface : public PlanarSurface {
   //@{
 
   bool setSubSurfaceType(std::string subSurfaceType);
+
+  void resetSubSurfaceType();
 
   bool setViewFactortoGround(boost::optional<double> viewFactortoGround);
 

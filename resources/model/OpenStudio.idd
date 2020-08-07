@@ -5650,7 +5650,7 @@ OS:SubSurface,
        \reference AllShadingAndHTSurfNames
   A3, \field Sub Surface Type
        \type choice
-       \required-field
+       \default FixedWindow
        \key FixedWindow
        \key OperableWindow
        \key Door
