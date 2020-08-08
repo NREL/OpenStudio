@@ -27,92 +27,75 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_IDD_IDDKEY_HPP
-#define UTILITIES_IDD_IDDKEY_HPP
+#ifndef UTILITIES_REGEX_HPP
+#define UTILITIES_REGEX_HPP
 
-#include "../UtilitiesAPI.hpp"
-
-#include "../core/Logger.hpp"
-
-#include <boost/optional.hpp>
-
+#include <array>
+#include <optional>
 #include <string>
-#include <vector>
-#include <ostream>
+#include <string_view>
+#include <boost/algorithm/string/case_conv.hpp>
 
-namespace openstudio{
+namespace openstudio {
+  struct Regex {
+    enum struct Ignore_Case {
+      True,
+      False
+    };
 
-struct IddKeyProperties;
+    using Results = std::optional <std::array<std::string_view, 5>>;
+    using Results_Func = Results (*)(const std::string_view);
 
-namespace detail{
-  class IddKey_Impl;
+    Results_Func m_match;
+    Results_Func m_search;
+    Ignore_Case m_ignoreCase = Ignore_Case::False;
+
+    // prevent use by temporary string, since this is returning a string_view
+    void match(std::string &&) = delete;
+    void search(std::string &&) = delete;
+
+
+
+    [[nodiscard]] auto match(const std::string_view sv) const {
+      if (m_ignoreCase == Ignore_Case::True) {
+        return case_insensitive(m_match, sv);
+      } else {
+        return m_match(sv);
+      }
+    }
+
+    [[nodiscard]] auto search(const std::string_view sv) const {
+      if (m_ignoreCase == Ignore_Case::True) {
+        return case_insensitive(m_search, sv);
+      } else {
+        return m_search(sv);
+      }
+    }
+
+  private:
+    [[nodiscard]] static Results case_insensitive(Results_Func op, const std::string_view sv) {
+      std::string str{sv};
+      boost::algorithm::to_lower(str);
+      const auto results = op(str);
+
+      if (results) {
+        // we need to create a new results object that is a set of string_view into the same positions of
+        // the one that was performed on the to_lower string. With only changing the case
+        // the positions inside of the string should stay constant
+        Results::value_type translated_results;
+
+        for (std::size_t index = 0; index < translated_results.size(); ++index) {
+          if (!(*results)[index].empty()) {
+            translated_results[index] = sv.substr(std::distance(str.c_str(), (*results)[index].data()), (*results)[index].size());
+          }
+        }
+
+        return translated_results;
+      } else {
+        return {};
+      }
+    }
+  };
 }
 
-/** IddKey represents an enumeration value for an IDD field of type choice. */
-class UTILITIES_API IddKey {
- public:
-  /** @name Constructors and Destructors */
-  //@{
-
-  /** Default constructor */
-  IddKey();
-
-  /** Copy constructor shares implementation. */
-  IddKey(const IddKey& other) = default;
-
-  //@}
-  /** @name Getters */
-  //@{
-
-  /** Returns the key name */
-  std::string name() const;
-
-  /** Returns the key properties. */
-  const IddKeyProperties& properties() const;
-
-  //@}
-  /** @name Queries */
-  //@{
-
-  /** Returns true if all data is exactly equal. */
-  bool operator==(const IddKey& other) const;
-
-  /** Negation of operator==. */
-  bool operator!=(const IddKey& other) const;
-
-  //@}
-  /** @name Serialization */
-  //@{
-
-  /** Load from text. */
-  static boost::optional<IddKey> load(const std::string& name, const std::string& text);
-
-  /** Print to os in standard IDD format */
-  std::ostream& print(std::ostream& os) const;
-
-  //@}
- private:
-  ///@cond
-  // pointer to implementation
-  std::shared_ptr<detail::IddKey_Impl> m_impl;
-
-  // construct from impl
-  IddKey(const std::shared_ptr<detail::IddKey_Impl>& impl);
-  ///@endcond
-
-  // configure logging
-  REGISTER_LOGGER("openstudio.idd.IddKey");
-};
-
-/** \relates IddKey */
-typedef std::vector<IddKey> IddKeyVector;
-
-/** \relates IddKey */
-typedef boost::optional<IddKey> OptionalIddKey;
-
-/** \relates IddKey */
-UTILITIES_API std::ostream& operator<<(std::ostream& os, const IddKey& iddKey);
-
-} // openstudio
-
-#endif // UTILITIES_IDD_IDDKEY_HPP
+#endif

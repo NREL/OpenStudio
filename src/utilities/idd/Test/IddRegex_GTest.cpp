@@ -122,15 +122,14 @@ TEST_F(IddFixture, IddRegex_FieldExtraction) {
         \\key Intermittent\
         \\default Continuous");
 
-  smatch matches;
-  std::string firstMatch;
-  std::string secondMatch;
-
-  EXPECT_TRUE(boost::regex_search(iddFieldText,matches,iddRegex::lastField()));
-  firstMatch = std::string(matches[1].first,matches[1].second); trim(firstMatch);
-  secondMatch = std::string(matches[2].first,matches[2].second); trim(secondMatch);
-  EXPECT_EQ(iddLastFieldLeftovers,firstMatch);
-  EXPECT_EQ(iddLastField,secondMatch);
+  const auto matches = iddRegex::lastField().search(iddFieldText);
+  EXPECT_TRUE(matches);
+  std::string match{matches.value()[1]}; trim(match);
+  std::string remainder(std::string_view(matches.value()[0].data(),
+                              std::distance(matches.value()[0].begin(), matches.value()[1].begin())));
+  trim(remainder);
+  EXPECT_EQ(iddLastFieldLeftovers,remainder);
+  EXPECT_EQ(iddLastField,match);
 
 }
 

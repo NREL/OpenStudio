@@ -28,6 +28,8 @@
 ***********************************************************************************************************************/
 
 #include "IddRegex.hpp"
+#include "../core/Regex.hpp"
+#include "../core/RegexBuilders.hpp"
 #include <ctre.hpp>
 
 namespace openstudio{
@@ -46,175 +48,173 @@ namespace iddRegex{
   }
 
 
-  template<typename RegexResult, std::size_t ... Idx>
-  Regex::results unpack_results(const RegexResult &results, std::index_sequence<Idx...>)
-  {
-    if (results) {
-      return Regex::results::value_type{results.template get<Idx>() ...};
-    } else {
-      return {};
-    }
-  }
 
-
-  template<typename RegexResult>
-  Regex::results generate_results(const RegexResult &results) {
-    return unpack_results(results, std::make_index_sequence<RegexResult::count()>());
-  }
-
-  template<auto & regex>
-  constexpr Regex make_regex()
-  {
-    return Regex{[](const std::string_view sv){ return generate_results(ctre::match<regex>(sv)); },
-                 [](const std::string_view sv){ return generate_results(ctre::search<regex>(sv)); }};
-  }
-
-  static constexpr auto pattern = ctll::fixed_string{"^!IDD_Version (\\S+)"};
 
   /// Search for IDD version in line
   /// matches[1], version identifier
+  static constexpr auto version_regex = ctll::fixed_string{"^!IDD_Version (\\S+)"};
   const Regex &version(){
-    static constexpr auto regex = make_regex<pattern>();
+    static constexpr auto regex = make_regex<version_regex>();
     return regex;
   }
 
   /// Search for IDD build in line
   /// matches[1], build identifier
-  const boost::regex &build(){
-    static const boost::regex result("^!IDD_BUILD (\\S+)");
-    return result;
+  static constexpr auto build_regex = ctll::fixed_string{"^!IDD_BUILD (\\S+)"};
+  const Regex &build(){
+    static constexpr auto regex = make_regex<build_regex>();
+    return regex;
   }
 
   /// Search for IDD header, each line must start with '!', no preceding whitespace
   /// matches[1], header
-  const boost::regex &header(){
-    static const boost::regex result("^(^!.*?^[^!])");
-    return result;
+  static constexpr auto header_regex = ctll::fixed_string{"^(^!.*?^[^!])"};
+  const Regex &header(){
+    static constexpr auto regex = make_regex<header_regex>();
+    return regex;
   }
 
   /// Match comment only line
   /// matches[1], comment
-  const boost::regex &commentOnlyLine(){
-    static const boost::regex result("^[\\s\\t]*[!](.*)");
-    return result;
+  static constexpr auto commentOnlyLine_regex = ctll::fixed_string{"^[\\s\\t]*[!](.*)"};
+  const Regex &commentOnlyLine(){
+    static constexpr auto regex = make_regex<commentOnlyLine_regex>();
+    return regex;
   }
 
   /// Match content then comment
   /// matches[1], content
   /// matches[2], comment if any
-  const boost::regex &contentAndCommentLine(){
-    static const boost::regex result("^([^!]*)[!]?(.*)");
-    return result;
+  static constexpr auto contentAndCommentLine_regex = ctll::fixed_string{"^([^!]*)[!]?(.*)"};
+  const Regex &contentAndCommentLine(){
+    static constexpr auto regex = make_regex<contentAndCommentLine_regex>();
+    return regex;
   }
 
   /// Match group identifier
   /// matches[1], group name
-  const boost::regex &group(){
-    static const boost::regex result("^[\\\\][gG]roup(.*)");
-    return result;
+  static constexpr auto group_regex = ctll::fixed_string{"^[\\\\][gG]roup(.*)"};
+  const Regex &group(){
+    static constexpr auto regex = make_regex<group_regex>();
+    return regex;
   }
 
   /// Match include-file identifier
   /// matches[1], included Idd file name
-  const boost::regex &includeFile() {
-    static const boost::regex result("^[\\\\][iI]nclude-[fF]ile(.*)");
-    return result;
+  static constexpr auto includeFile_regex = ctll::fixed_string{"^[\\\\][iI]nclude-[fF]ile(.*)"};
+  const Regex &includeFile() {
+    static constexpr auto regex = make_regex<includeFile_regex>();
+    return regex;
   }
 
   /// Match remove-object identifier
   /// matches[1], object in included Idd file that should not be included in this file
-  const boost::regex &removeObject() {
-    static const boost::regex result("^[\\\\][rR]emove-[oO]bject(.*)");
-    return result;
+  static constexpr auto removeObject_regex = ctll::fixed_string{"^[\\\\][rR]emove-[oO]bject(.*)"};
+  const Regex &removeObject() {
+    static constexpr auto regex = make_regex<removeObject_regex>();
+    return regex;
   }
 
   /// Match line with either a ',' or a ';' that are not preceded by '!'
   /// matches[1], before separator
   /// matches[2], after separator
-  const boost::regex &line(){
-    static const boost::regex result("^([^!]*?)[,;](.*)");
-    return result;
+  static constexpr auto line_regex = ctll::fixed_string{"^([^!]*?)[,;](.*)"};
+  const Regex &line(){
+    static constexpr auto regex = make_regex<line_regex>();
+    return regex;
   }
 
   /// Match an object memo property
   /// matches[1], memo text
-  const boost::regex &memoProperty(){
-    static const boost::regex result("^[mM]emo(.*)");
-    return result;
+  static constexpr auto memoProperty_regex = ctll::fixed_string{"^[mM]emo(.*)"};
+  const Regex &memoProperty(){
+    static constexpr auto regex = make_regex<memoProperty_regex>();
+    return regex;
   }
 
   /// Match an object note property
   /// matches[1], note text
-  const boost::regex &noteProperty(){
-    static const boost::regex result("^[nN]ote(.*)");
-    return result;
+  static constexpr auto noteProperty_regex = ctll::fixed_string{"^[nN]ote(.*)"};
+  const Regex &noteProperty(){
+    static constexpr auto regex = make_regex<noteProperty_regex>();
+    return regex;
   }
 
   /// Match an object with no fields in the idd
   /// matches[1], before separator
   /// matches[2], after separator
-  const boost::regex &objectNoFields(){
-    static const boost::regex result("^([^!^,]*?)[;](.*)");
-    return result;
+  static constexpr auto objectNoFields_regex = ctll::fixed_string{"^([^!^,]*?)[;](.*)"};
+  const Regex &objectNoFields(){
+    static constexpr auto regex = make_regex<objectNoFields_regex>();
+    return regex;
   }
 
   /// Match an object with one or more fields in the idd
   /// matches[1], object text
   /// matches[2], field(s) text
-  const boost::regex &objectAndFields(){
-    static const boost::regex result("^(.*?[,].*?)([AN][0-9]+[\\s\\t]*[,;].*)");
-    return result;
+  static constexpr auto objectAndFields_regex = ctll::fixed_string{"^(.*?[,].*?)([AN][0-9]+[\\s\\t]*[,;].*)"};
+  const Regex &objectAndFields(){
+    static constexpr auto regex = make_regex<objectAndFields_regex>();
+    return regex;
   }
 
   /// Match an object unique property
-  const boost::regex &uniqueProperty(){
-    static const boost::regex result("^[uU]nique-[oO]bject");
-    return result;
+  static constexpr auto uniqueProperty_regex = ctll::fixed_string{"^[uU]nique-[oO]bject"};
+  const Regex &uniqueProperty(){
+    static constexpr auto regex = make_regex<uniqueProperty_regex>();
+    return regex;
   }
 
   /// Match an object required property
-  const boost::regex &requiredObjectProperty(){
-    static const boost::regex result("^[rR]equired-[oO]bject");
-    return result;
+  static constexpr auto requiredObjectProperty_regex = ctll::fixed_string{"^[rR]equired-[oO]bject"};
+  const Regex &requiredObjectProperty(){
+    static constexpr auto regex = make_regex<requiredObjectProperty_regex>();
+    return regex;
   }
 
   /// Match an object obsolete property
   /// matches[1], reason for obsolete
-  const boost::regex &obsoleteProperty(){
-    static const boost::regex result("^[oO]bsolete(.*)");
-    return result;
+  static constexpr auto obsoleteProperty_regex = ctll::fixed_string{"^[oO]bsolete(.*)"};
+  const Regex &obsoleteProperty(){
+    static constexpr auto regex = make_regex<obsoleteProperty_regex>();
+    return regex;
   }
 
-  const boost::regex &hasurlProperty()
+  static constexpr auto hasurlProperty_regex = ctll::fixed_string{"^(URL-[Oo]bject|url-[Oo]bject)"};
+  const Regex &hasurlProperty()
   {
-    static const boost::regex result("^(URL-[Oo]bject|url-[Oo]bject)");
-    return result;
+    static constexpr auto regex = make_regex<hasurlProperty_regex>();
+    return regex;
   }
 
   /// Match an object extensible property
   /// matches[1], number of last fields to extend
-  const boost::regex &extensibleProperty(){
-    static const boost::regex result("^[eE]xtensible[\\s\\t]*:[\\s\\t]*([1-9][0-9]*)");
-    return result;
+  static constexpr auto extensibleProperty_regex = ctll::fixed_string{R"(^[eE]xtensible[\s\t]*:[\s\t]*([1-9][0-9]*))"};
+  const Regex &extensibleProperty(){
+    static constexpr auto regex = make_regex<extensibleProperty_regex>();
+    return regex;
   }
 
   /// Match an object format property
   /// matches[1], format text
-  const boost::regex &formatProperty(){
-    static const boost::regex result("^[fF]ormat([^!]*)");
-    return result;
+  static constexpr auto formatProperty_regex = ctll::fixed_string{"^[fF]ormat([^!]*)"};
+  const Regex &formatProperty(){
+    static constexpr auto regex = make_regex<formatProperty_regex>();
+    return regex;
   }
 
   /// Match an object min fields property
   /// matches[1], min number of fields
-  const boost::regex &minFieldsProperty(){
-    static const boost::regex result("^[mM]in-[fF]ields[\\s\\t]*([0-9]+)");
-    return result;
+  static constexpr auto minFieldsProperty_regex = ctll::fixed_string{"^[mM]in-[fF]ields[\\s\\t]*([0-9]+)"};
+  const Regex &minFieldsProperty(){
+    static constexpr auto regex = make_regex<minFieldsProperty_regex>();
+    return regex;
   }
 
-  const boost::regex &maxFieldsProperty() {
-    static const boost::regex result("^[mM]ax-[fF]ields[\\s\\t]*([0-9]+)");
-    return result;
+  static constexpr auto maxFieldsProperty_regex = ctll::fixed_string{"^[mM]ax-[fF]ields[\\s\\t]*([0-9]+)"};
+  const Regex &maxFieldsProperty() {
+    static constexpr auto regex = make_regex<maxFieldsProperty_regex>();
+    return regex;
   }
 
   /// Match a field declaration in the idd
@@ -222,191 +222,218 @@ namespace iddRegex{
   /// matches[1], alpha or numeric indicator
   /// matches[2], alpha or numeric number
   /// matches[3], after separator
-  const boost::regex &field(){
-    static const boost::regex result("^[\\s\\t]*?([AN])([0-9]+)[\\s\\t]*[,;](.*)");
-    return result;
+  static constexpr auto field_regex = ctll::fixed_string{R"(^[\s\t]*?([AN])([0-9]+)[\s\t]*[,;](.*))"};
+  const Regex &field(){
+    static constexpr auto regex = make_regex<field_regex>();
+    return regex;
   }
 
   /// Match the closing field in an idd object
   /// matches[1], all previous text
   /// matches[2], the last field
-  const boost::regex &closingField(){
-    static const boost::regex result("(.*)([AN][0-9]+[\\s\\t]*[;].*?)$");
-    return result;
+  static constexpr auto closingField_regex = ctll::fixed_string{"(.*)([AN][0-9]+[\\s\\t]*[;].*?)$"};
+  const Regex &closingField(){
+    static constexpr auto regex = make_regex<closingField_regex>();
+    return regex;
   }
 
   /// Match the last field declaration in a string, may or may not be the closing field
   /// matches[1], all previous text
   /// matches[2], the last field
-  const boost::regex &lastField(){
-    static const boost::regex result("(.*)([AN][0-9]+[\\s\\t]*[,;].*)$");
-    return result;
+  static constexpr auto lastField_regex = ctll::fixed_string{"^.*([AN][0-9]+\\s*[,;].*)$"};
+  const Regex &lastField(){
+    static constexpr auto regex = make_regex<lastField_regex>();
+    return regex;
   }
 
   /// Match a field name
   /// matches[1], the field name
-  const boost::regex &name(){
-    static const boost::regex result("[\\\\][fF]ield([^\\\\^!]*)");
-    return result;
+  static constexpr auto name_regex = ctll::fixed_string{R"([\\][fF]ield([^\\^!]*))"};
+  const Regex &name(){
+    static constexpr auto regex = make_regex<name_regex>();
+    return regex;
   }
 
   /// Match a field field name property
   /// matches[1], the field name
-  const boost::regex &nameProperty(){
-    static const boost::regex result("^[fF]ield([^!]*)");
-    return result;
+  static constexpr auto nameProperty_regex = ctll::fixed_string{"^[fF]ield([^!]*)"};
+  const Regex &nameProperty(){
+    static constexpr auto regex = make_regex<nameProperty_regex>();
+    return regex;
   }
 
   /// Match a field required property
-  const boost::regex &requiredFieldProperty(){
-    static const boost::regex result("^[rR]equired-[fF]ield");
-    return result;
+  static constexpr auto requiredFieldProperty_regex = ctll::fixed_string{"^[rR]equired-[fF]ield"};
+  const Regex &requiredFieldProperty(){
+    static constexpr auto regex = make_regex<requiredFieldProperty_regex>();
+    return regex;
   }
 
   /// Match a field autosizable property
-  const boost::regex &autosizableProperty(){
-    static const boost::regex result("^[aA]utosizable");
-    return result;
+  static constexpr auto autosizableProperty_regex = ctll::fixed_string{"^[aA]utosizable"};
+  const Regex &autosizableProperty(){
+    static constexpr auto regex = make_regex<autosizableProperty_regex>();
+    return regex;
   }
 
   /// Match a field autocalculatable property
-  const boost::regex &autocalculatableProperty(){
-    static const boost::regex result("^[aA]utocalculatable");
-    return result;
+  static constexpr auto autocalculatableProperty_regex = ctll::fixed_string{"^[aA]utocalculatable"};
+  const Regex &autocalculatableProperty(){
+    static constexpr auto regex = make_regex<autocalculatableProperty_regex>();
+    return regex;
   }
 
   /// Match a field retaincase property
-  const boost::regex &retaincaseProperty(){
-    static const boost::regex result("^[rR]etaincase");
-    return result;
+  static constexpr auto retaincaseProperty_regex = ctll::fixed_string{"^[rR]etaincase"};
+  const Regex &retaincaseProperty(){
+    static constexpr auto regex = make_regex<retaincaseProperty_regex>();
+    return regex;
   }
 
   /// Match a field units property
   /// matches[1], the field units
-  const boost::regex &unitsProperty(){
-    static const boost::regex result("^[uU]nits([^!]*)");
-    return result;
+  static constexpr auto unitsProperty_regex = ctll::fixed_string{"^[uU]nits([^!]*)"};
+  const Regex &unitsProperty(){
+    static constexpr auto regex = make_regex<unitsProperty_regex>();
+    return regex;
   }
 
   /// Match a field ip units property
   /// matches[1], the field ip units
-  const boost::regex &ipUnitsProperty(){
-    static const boost::regex result("^[iI][pP]-[uU]nits([^!]*)");
-    return result;
+  static constexpr auto ipUnitsProperty_regex = ctll::fixed_string{"^[iI][pP]-[uU]nits([^!]*)"};
+  const Regex &ipUnitsProperty(){
+    static constexpr auto regex = make_regex<ipUnitsProperty_regex>();
+    return regex;
   }
 
   /// Match a field exclusive minimum property
   /// matches[1], the field exclusive minimum
-  const boost::regex &minExclusiveProperty(){
-    static const boost::regex result("^[mM]inimum[\\s\\t]*[>]([^!]*)");
-    return result;
+  static constexpr auto minExclusiveProperty_regex = ctll::fixed_string{"^[mM]inimum[\\s\\t]*[>]([^!]*)"};
+  const Regex &minExclusiveProperty(){
+    static constexpr auto regex = make_regex<minExclusiveProperty_regex>();
+    return regex;
   }
 
   /// Match a field inclusive minimum property
   /// matches[1], the field inclusive minimum
-  const boost::regex &minInclusiveProperty(){
-    static const boost::regex result("^[mM]inimum([^>!]*)");
-    return result;
+  static constexpr auto minInclusiveProperty_regex = ctll::fixed_string{"^[mM]inimum([^>!]*)"};
+  const Regex &minInclusiveProperty(){
+    static constexpr auto regex = make_regex<minInclusiveProperty_regex>();
+    return regex;
   }
 
   /// Match a field exclusive maximum property
   /// matches[1], the field exclusive maximum
-  const boost::regex &maxExclusiveProperty(){
-    static const boost::regex result("^[mM]aximum[\\s\\t]*[<]([^!]*)");
-    return result;
+  static constexpr auto maxExclusiveProperty_regex = ctll::fixed_string{"^[mM]aximum[\\s\\t]*[<]([^!]*)"};
+  const Regex &maxExclusiveProperty(){
+    static constexpr auto regex = make_regex<maxExclusiveProperty_regex>();
+    return regex;
   }
 
   /// Match a field inclusive maximum property
   /// matches[1], the field inclusive maximum
-  const boost::regex &maxInclusiveProperty(){
-    static const boost::regex result("^[mM]aximum([^<!]*)");
-    return result;
+  static constexpr auto maxInclusiveProperty_regex = ctll::fixed_string{"^[mM]aximum([^<!]*)"};
+  const Regex &maxInclusiveProperty(){
+    static constexpr auto regex = make_regex<maxInclusiveProperty_regex>();
+    return regex;
   }
 
   /// Match a field deprecated property
   /// matches[1], reason for deprecated
-  const boost::regex &deprecatedProperty(){
-    static const boost::regex result("^[dD]eprecated(.*)");
-    return result;
+  static constexpr auto deprecatedProperty_regex = ctll::fixed_string{"^[dD]eprecated(.*)"};
+  const Regex &deprecatedProperty(){
+    static constexpr auto regex = make_regex<deprecatedProperty_regex>();
+    return regex;
   }
 
   /// Match a field default property
   /// matches[1], default value
-  const boost::regex &defaultProperty(){
-    static const boost::regex result("^[dD]efault([^!]*)");
-    return result;
+  static constexpr auto defaultProperty_regex = ctll::fixed_string{"^[dD]efault([^!]*)"};
+  const Regex &defaultProperty(){
+    static constexpr auto regex = make_regex<defaultProperty_regex>();
+    return regex;
   }
 
   /// Match a field default property with either autocalculate or autosize
-  const boost::regex &automaticDefault(){
-    static const boost::regex result(".*(autocalculate|autosize).*", boost::regex_constants::icase);
-    return result;
+  static constexpr auto automaticDefault_regex = ctll::fixed_string{".*(autocalculate|autosize).*"};
+  const Regex &automaticDefault(){
+    static constexpr auto regex = make_regex<automaticDefault_regex>(true);
+    return regex;
   }
 
   /// Match a field type property
   /// matches[1], type
-  const boost::regex &typeProperty(){
-    static const boost::regex result("^type[\\s\\t]*(integer|real|alpha|choice|node|object-list|external-list|url|handle)",
-      boost::regbase::normal | boost::regbase::icase);
-    return result;
+  static constexpr auto typeProperty_regex = ctll::fixed_string{"^type[\\s\\t]*(integer|real|alpha|choice|node|object-list|external-list|url|handle)"};
+  const Regex &typeProperty(){
+    static constexpr auto regex = make_regex<typeProperty_regex>(true);
+    return regex;
   }
 
   /// Match a field key property
   /// matches[1], key value
-  const boost::regex &keyProperty(){
-    static const boost::regex result("^[kK]ey(.*)");
-    return result;
+  static constexpr auto keyProperty_regex = ctll::fixed_string{"^[kK]ey(.*)"};
+  const Regex &keyProperty(){
+    static constexpr auto regex = make_regex<keyProperty_regex>();
+    return regex;
   }
 
   /// Match a field object-list property
   /// matches[1], object-list value
-  const boost::regex &objectListProperty(){
-    static const boost::regex result("^[oO]bject-[lL]ist([^!]*)");
-    return result;
+  static constexpr auto objectListProperty_regex = ctll::fixed_string{"^[oO]bject-[lL]ist([^!]*)"};
+  const Regex &objectListProperty(){
+    static constexpr auto regex = make_regex<objectListProperty_regex>();
+    return regex;
   }
 
-  const boost::regex &externalListProperty() {
-    static const boost::regex result("^[eE]xternal-[lL]ist([^!]*)");
-    return result;
+  static constexpr auto externalListProperty_regex = ctll::fixed_string{"^[eE]xternal-[lL]ist([^!]*)"};
+  const Regex &externalListProperty() {
+    static constexpr auto regex = make_regex<externalListProperty_regex>();
+    return regex;
   }
 
   /// Match a field reference property
   /// matches[1], reference value
-  const boost::regex &referenceProperty(){
-    static const boost::regex result("^[rR]eference([^!]*)");
-    return result;
+  static constexpr auto referenceProperty_regex = ctll::fixed_string{"^[rR]eference([^!]*)"};
+  const Regex &referenceProperty(){
+    static constexpr auto regex = make_regex<referenceProperty_regex>();
+    return regex;
   }
 
   /// Match a field reference-class-name property
   /// matches[1], reference-class-name value
-  const boost::regex & referenceClassNameProperty(){
-    static const boost::regex result("^[rR]eference-[cC]lass-[nN]ame([^!]*)");
-    return result;
+  static constexpr auto referenceClassNameProperty_regex = ctll::fixed_string{"^[rR]eference-[cC]lass-[nN]ame([^!]*)"};
+  const Regex & referenceClassNameProperty(){
+    static constexpr auto regex = make_regex<referenceClassNameProperty_regex>();
+    return regex;
   }
 
   /// Match begin extensible
-  const boost::regex &beginExtensible(){
-    static const boost::regex result("[\\\\][bB]egin-[eE]xtensible");
-    return result;
+  static constexpr auto beginExtensible_regex = ctll::fixed_string{"[\\\\][bB]egin-[eE]xtensible"};
+  const Regex &beginExtensible(){
+    static constexpr auto regex = make_regex<beginExtensible_regex>();
+    return regex;
   }
 
   /// Match begin extensible
-  const boost::regex &beginExtensibleProperty(){
-    static const boost::regex result("^[bB]egin-[eE]xtensible");
-    return result;
+  static constexpr auto beginExtensibleProperty_regex = ctll::fixed_string{"^[bB]egin-[eE]xtensible"};
+  const Regex &beginExtensibleProperty(){
+    static constexpr auto regex = make_regex<beginExtensibleProperty_regex>();
+    return regex;
   }
 
   /// Match a field or object level comment
   /// matches[1], after '\' until next '\'
   /// matches[2], after second '\' (may be empty)
-  const boost::regex &metaDataComment(){
-    static const boost::regex result("^[\\s\\t]*?[\\\\]([^\\\\]*)(.*)");
-    return result;
+  static constexpr auto metaDataComment_regex = ctll::fixed_string{R"(^[\s\t]*?[\\]([^\\]*)(.*))"};
+  const Regex &metaDataComment(){
+    static constexpr auto regex = make_regex<metaDataComment_regex>();
+    return regex;
   }
 
-  const boost::regex &versionObjectName() {
-    static const boost::regex result(".*[vV]ersion.*");
-    return result;
+  static constexpr auto versionObjectName_regex = ctll::fixed_string{".*[vV]ersion.*"};
+  const Regex &versionObjectName() {
+    static constexpr auto regex = make_regex<versionObjectName_regex>();
+    return regex;
   }
 
 } // iddRegex

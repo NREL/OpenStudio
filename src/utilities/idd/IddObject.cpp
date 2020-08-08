@@ -41,6 +41,7 @@
 
 
 #include <boost/lexical_cast.hpp>
+#include <memory>
 
 using std::string;
 using std::vector;
@@ -77,7 +78,7 @@ namespace detail {
 
   // GETTERS
 
-  std::string IddObject_Impl::name() const
+  const std::string &IddObject_Impl::name() const
   {
     return m_name;
   }
@@ -87,7 +88,7 @@ namespace detail {
     return m_type;
   }
 
-  std::string IddObject_Impl::group() const
+  const std::string &IddObject_Impl::group() const
   {
     return m_group;
   }
@@ -114,7 +115,7 @@ namespace detail {
     // is index in the regular fields
     if (index < m_fields.size()){
       field = m_fields[index];
-    }else if (m_extensibleFields.size() > 0){
+    }else if (!m_extensibleFields.empty()){
       // if not subtract out fields size and mod by number of extensible fields
       index = index - m_fields.size();
       index = index % m_extensibleFields.size();
@@ -229,7 +230,7 @@ namespace detail {
   bool IddObject_Impl::isVersionObject() const {
     return (type() == IddObjectType::Version) ||
            (type() == IddObjectType::OS_Version) ||
-           (boost::regex_match(name(),iddRegex::versionObjectName()));
+           (iddRegex::versionObjectName().match(name()));
   }
 
   bool IddObject_Impl::isNonextensibleField(unsigned index) const {
@@ -470,17 +471,17 @@ namespace detail {
 
   void IddObject_Impl::parse(const std::string& text)
   {
-    smatch matches;
-    if (boost::regex_search(text, matches, iddRegex::objectAndFields())){
+    if (const auto matches = iddRegex::objectAndFields().search(text); matches) {
       // find and parse the object text
-      string objectText(matches[1].first, matches[1].second);
+
+      string objectText(matches.value()[1]);
       parseObject(objectText);
 
       // find and parse the fields text
-      string fieldsText(matches[2].first, matches[2].second);
+      string fieldsText(matches.value()[2]);
       parseFields(fieldsText);
 
-    }else if (boost::regex_match(text, iddRegex::objectNoFields())){
+    }else if (iddRegex::objectNoFields().match(text)){
       // there are no fields in this object, it is all object text
       parseObject(text);
 
@@ -561,28 +562,28 @@ namespace detail {
   void IddObject_Impl::parseObject(const std::string& text)
   {
     // find the object name and the property text
-    smatch matches;
     string objectName;
     string propertiesText;
-    if (boost::regex_search(text, matches, iddRegex::line())){
-      objectName = string(matches[1].first, matches[1].second); trim(objectName);
+    if (const auto matches = iddRegex::line().search(text); matches) {
+      objectName = matches.value()[1]; trim(objectName);
       if (!boost::equals(m_name,objectName)){
         LOG_AND_THROW("Object name '" << objectName << "' does not match expected '" << m_name << "'");
       }
 
-      propertiesText = string(matches[2].first, matches[2].second); trim(propertiesText);
+      propertiesText = matches.value()[2]; trim(propertiesText);
     }else{
       LOG_AND_THROW("Could not determine object name from text '" << text << "'");
     }
 
-    while (boost::regex_search(propertiesText, matches, iddRegex::metaDataComment())){
-      string thisProperty(matches[1].first, matches[1].second); trim(thisProperty);
+    Regex::Results matches;
+    while ((matches = iddRegex::metaDataComment().search(propertiesText))) {
+      string thisProperty(matches.value()[1]); trim(thisProperty);
       parseProperty(thisProperty);
 
-      propertiesText = string(matches[2].first, matches[2].second); trim(propertiesText);
+      propertiesText = matches.value()[2]; trim(propertiesText);
     }
     if ( !( (boost::regex_match(propertiesText, commentRegex::whitespaceOnlyBlock())) ||
-            (boost::regex_match(propertiesText, iddRegex::commentOnlyLine())) ) ){
+            (iddRegex::commentOnlyLine().match(propertiesText)))) {
       LOG_AND_THROW("Could not process properties text '" << propertiesText << "' in object '"
                     << m_name << "'");
     }
@@ -590,40 +591,40 @@ namespace detail {
 
   void IddObject_Impl::parseProperty(const std::string& text)
   {
-    smatch matches;
-    if (boost::regex_search(text, matches, iddRegex::memoProperty())){
-      string memo(matches[1].first, matches[1].second); trim(memo);
+    Regex::Results matches;
+    if (matches = iddRegex::memoProperty().search(text); matches){
+      string memo(matches.value()[1]); trim(memo);
       if (m_properties.memo.empty()) { m_properties.memo = memo; }
       else { m_properties.memo += "\n" + memo; }
 
-    }else if (boost::regex_match(text, iddRegex::uniqueProperty())){
+    }else if (iddRegex::uniqueProperty().match(text)){
       m_properties.unique = true;
 
-    }else if (boost::regex_match(text, iddRegex::requiredObjectProperty())){
+    }else if (iddRegex::requiredObjectProperty().match(text)){
       m_properties.required = true;
 
-    }else if (boost::regex_match(text, iddRegex::obsoleteProperty())){
+    }else if (iddRegex::obsoleteProperty().match(text)){
       m_properties.obsolete = true;
 
-    }else if (boost::regex_match(text, iddRegex::hasurlProperty())){
+    }else if (iddRegex::hasurlProperty().match(text)){
       m_properties.hasURL = true;
 
-    }else if (boost::regex_search(text, matches, iddRegex::extensibleProperty())){
+    }else if (matches = iddRegex::extensibleProperty().search(text); matches){
       m_properties.extensible = true;
 
-      string numExtensible(matches[1].first, matches[1].second);
+      string numExtensible(matches.value()[1]);
       m_properties.numExtensible = boost::lexical_cast<unsigned>(numExtensible);
 
-    }else if (boost::regex_search(text, matches, iddRegex::formatProperty())){
-      string format(matches[1].first, matches[1].second); trim(format);
+    }else if (matches = iddRegex::formatProperty().search(text); matches){
+      string format(matches.value()[1]); trim(format);
       m_properties.format = format;
 
-    }else if (boost::regex_search(text, matches, iddRegex::minFieldsProperty())){
-      string minFields(matches[1].first, matches[1].second);
+    }else if (matches = iddRegex::minFieldsProperty().search(text); matches){
+      string minFields(matches.value()[1]);
       m_properties.minFields = boost::lexical_cast<unsigned>(minFields);
 
-    }else if (boost::regex_search(text, matches, iddRegex::maxFieldsProperty())) {
-      string maxFields(matches[1].first, matches[1].second);
+    }else if (matches = iddRegex::maxFieldsProperty().search(text); matches) {
+      string maxFields(matches.value()[1]);
       m_properties.maxFields = boost::lexical_cast<unsigned>(maxFields);
     }else {
       // error, unknown property
@@ -635,20 +636,20 @@ namespace detail {
   {
     string copyText(text);
 
-    smatch matches;
-    while (boost::regex_search(copyText, matches, iddRegex::lastField())){
+    Regex::Results matches;
+    while ((matches = iddRegex::lastField().search(copyText))) {
       // take the text of the last field
-      string fieldText(matches[2].first, matches[2].second);
+      string fieldText(matches.value()[1]);
       string fieldName;
 
       // peak ahead to find the field name for indexing in map
-      smatch nameMatches;
-      if (boost::regex_search(fieldText, nameMatches, iddRegex::name())){
-        fieldName = string(nameMatches[1].first, nameMatches[1].second); trim(fieldName);
-      }else if(boost::regex_search(fieldText, nameMatches, iddRegex::field())){
+      Regex::Results nameMatches;
+      if (nameMatches = iddRegex::name().search(fieldText); nameMatches) {
+        fieldName = string(nameMatches.value()[1]); trim(fieldName);
+      }else if(nameMatches = iddRegex::field().search(fieldText); nameMatches) {
         // if no explicit field name, use the type and number
-        string fieldTypeChar(nameMatches[1].first, nameMatches[1].second); trim(fieldTypeChar);
-        string fieldTypeNumber(nameMatches[2].first, nameMatches[2].second); trim(fieldTypeNumber);
+        string fieldTypeChar(nameMatches.value()[1]); trim(fieldTypeChar);
+        string fieldTypeNumber(nameMatches.value()[2]); trim(fieldTypeNumber);
         fieldName = fieldTypeChar + fieldTypeNumber;
       }else{
         // cannot find the field name
@@ -665,7 +666,7 @@ namespace detail {
       m_fields.push_back(*oField);
 
       // copy the rest of the text and continue
-      copyText = string(matches[1].first, matches[1].second);
+      copyText = std::string_view(matches.value()[0].data(), std::distance(matches.value()[0].begin(), matches.value()[1].begin()));
     }
 
     if (!copyText.empty()){
@@ -682,7 +683,7 @@ namespace detail {
 // CONSTRUCTORS
 
 IddObject::IddObject()
-  : m_impl(std::shared_ptr<detail::IddObject_Impl>(new detail::IddObject_Impl()))
+  : m_impl(std::make_shared<detail::IddObject_Impl>())
 {}
 
 IddObject::IddObject(const IddObject& other)

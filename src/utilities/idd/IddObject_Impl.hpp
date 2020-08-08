@@ -66,7 +66,7 @@ namespace detail {
     //@{
 
     /** Get this IddObject's name. */
-    std::string name() const;
+    const std::string &name() const;
 
     /** Get the type of this object, as specified by the OPENSTUDIO_ENUM IddObjectType. type()
      *  is essentially an enum-encoding of name(). type() should be equivalent to
@@ -74,7 +74,7 @@ namespace detail {
     IddObjectType type() const;
 
     /** Get the name of the Idd group to which this object belongs. */
-    std::string group() const;
+    const std::string &group() const;
 
     /** Get the properties of this object. */
     const IddObjectProperties& properties() const;

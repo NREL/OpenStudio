@@ -41,6 +41,8 @@
 #include <boost/algorithm/string.hpp>
 
 namespace openstudio{
+  struct Regex;
+
 namespace detail{
 
   /// Implementation of IddFile
@@ -77,6 +79,8 @@ namespace detail{
 
     /** Get the IddObjects that match objectRegex. */
     std::vector<IddObject> getObjects(const boost::regex& objectRegex) const;
+
+    std::vector<IddObject> getObjects(const Regex &objectRegex) const;
 
     /** If possible, returns the version IddObject for this IddFile. */
     boost::optional<IddObject> versionObject() const;

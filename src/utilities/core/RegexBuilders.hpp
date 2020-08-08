@@ -27,92 +27,36 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_IDD_IDDKEY_HPP
-#define UTILITIES_IDD_IDDKEY_HPP
+#ifndef UTILITIES_REGEXBUILDERS_HPP
+#define UTILITIES_REGEXBUILDERS_HPP
 
-#include "../UtilitiesAPI.hpp"
+#include "Regex.hpp"
+#include <ctre.hpp>
 
-#include "../core/Logger.hpp"
+namespace openstudio {
 
-#include <boost/optional.hpp>
+  template<typename RegexResult, std::size_t ... Idx>
+  Regex::Results unpack_results(const RegexResult &results, std::index_sequence<Idx...>) {
+    if (results) {
+      return Regex::Results::value_type{results.template get<Idx>() ...};
+    } else {
+      return {};
+    }
+  }
 
-#include <string>
-#include <vector>
-#include <ostream>
 
-namespace openstudio{
+  template<typename RegexResult>
+  Regex::Results generate_results(const RegexResult &results) {
+    return unpack_results(results, std::make_index_sequence<RegexResult::count()>());
+  }
 
-struct IddKeyProperties;
+  template<auto &regex>
+  constexpr Regex make_regex(const bool ignoreCase = false) {
+    return Regex{[](const std::string_view sv) { return generate_results(ctre::match<regex>(sv)); },
+                 [](const std::string_view sv) { return generate_results(ctre::search<regex>(sv)); },
+                 ignoreCase?Regex::Ignore_Case::True:Regex::Ignore_Case::False};
+  }
 
-namespace detail{
-  class IddKey_Impl;
 }
 
-/** IddKey represents an enumeration value for an IDD field of type choice. */
-class UTILITIES_API IddKey {
- public:
-  /** @name Constructors and Destructors */
-  //@{
-
-  /** Default constructor */
-  IddKey();
-
-  /** Copy constructor shares implementation. */
-  IddKey(const IddKey& other) = default;
-
-  //@}
-  /** @name Getters */
-  //@{
-
-  /** Returns the key name */
-  std::string name() const;
-
-  /** Returns the key properties. */
-  const IddKeyProperties& properties() const;
-
-  //@}
-  /** @name Queries */
-  //@{
-
-  /** Returns true if all data is exactly equal. */
-  bool operator==(const IddKey& other) const;
-
-  /** Negation of operator==. */
-  bool operator!=(const IddKey& other) const;
-
-  //@}
-  /** @name Serialization */
-  //@{
-
-  /** Load from text. */
-  static boost::optional<IddKey> load(const std::string& name, const std::string& text);
-
-  /** Print to os in standard IDD format */
-  std::ostream& print(std::ostream& os) const;
-
-  //@}
- private:
-  ///@cond
-  // pointer to implementation
-  std::shared_ptr<detail::IddKey_Impl> m_impl;
-
-  // construct from impl
-  IddKey(const std::shared_ptr<detail::IddKey_Impl>& impl);
-  ///@endcond
-
-  // configure logging
-  REGISTER_LOGGER("openstudio.idd.IddKey");
-};
-
-/** \relates IddKey */
-typedef std::vector<IddKey> IddKeyVector;
-
-/** \relates IddKey */
-typedef boost::optional<IddKey> OptionalIddKey;
-
-/** \relates IddKey */
-UTILITIES_API std::ostream& operator<<(std::ostream& os, const IddKey& iddKey);
-
-} // openstudio
-
-#endif // UTILITIES_IDD_IDDKEY_HPP
+#endif

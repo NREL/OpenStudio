@@ -52,6 +52,8 @@ set(core_src
   core/PathHelpers.hpp
   core/PathHelpers.cpp
   core/Queue.hpp
+  core/Regex.hpp
+  core/RegexBuilders.hpp
   core/RubyInterpreter.hpp
   core/RubyException.hpp
   core/Singleton.hpp

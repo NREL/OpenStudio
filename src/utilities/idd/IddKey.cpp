@@ -83,14 +83,14 @@ namespace detail {
 
   void IddKey_Impl::parse(const std::string& text)
   {
-    boost::smatch matches;
-    if (boost::regex_search(text, matches, iddRegex::contentAndCommentLine())){
-      std::string keyName(matches[1].first, matches[1].second); boost::trim(keyName);
+    if (const auto matches = iddRegex::contentAndCommentLine().search(text); matches) {
+      std::string keyName(matches.value()[1]);
+      boost::trim(keyName);
       if (!boost::equals(name(), keyName)) {
         LOG_AND_THROW("Key name '" << keyName << "' does not match expected '" << name() << "'");
       };
 
-      std::string note(matches[2].first, matches[2].second);
+      std::string note(matches.value()[2]);
       m_properties.note = note;
     }else{
       LOG_AND_THROW("Key name could not be determined from text '" << text << "'");
@@ -101,12 +101,9 @@ namespace detail {
 } // detail
 
 IddKey::IddKey()
-  : m_impl(std::shared_ptr<detail::IddKey_Impl>(new detail::IddKey_Impl()))
+  : m_impl(std::make_shared<detail::IddKey_Impl>())
 {}
 
-IddKey::IddKey(const IddKey& other)
-  : m_impl(other.m_impl)
-{}
 
 bool IddKey::operator==(const IddKey& other) const {
   return (*m_impl == *(other.m_impl));
@@ -127,7 +124,7 @@ const IddKeyProperties& IddKey::properties() const
 }
 
 OptionalIddKey IddKey::load(const std::string& name, const std::string& text) {
-  std::shared_ptr<detail::IddKey_Impl> p = detail::IddKey_Impl::load(name,text);
+  const auto p = detail::IddKey_Impl::load(name,text);
   if (p) { return IddKey(p); }
   else { return boost::none; }
 }

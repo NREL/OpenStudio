@@ -121,7 +121,8 @@ std::vector<IdfObject> IdfFile::objects() const {
     OS_ASSERT(oit->iddObject().isVersionObject() ||
                  ((oit->iddObject().type() == IddObjectType::Catchall) &&
                   (oit->numFields() > 0u) &&
-                  (boost::regex_match(oit->getString(0).get(),iddRegex::versionObjectName()))));
+                  (iddRegex::versionObjectName().match(oit->getString(0).get()))));
+
     result.erase(oit);
   }
   return result;
@@ -171,7 +172,7 @@ void IdfFile::addObject(const IdfObject& object) {
   }
   else if ((object.iddObject().type() == IddObjectType::Catchall) &&
            (object.numFields() > 0u) &&
-           (boost::regex_match(object.getString(0).get(),iddRegex::versionObjectName())))
+           (iddRegex::versionObjectName().match(object.getString(0).get())))
   {
     m_versionObjectIndices.insert(m_objects.size() - 1);
   }
@@ -192,9 +193,9 @@ void IdfFile::insertObjectByIddObjectType(const IdfObject& object) {
       if (object.iddObject().isVersionObject() ||
           ((object.iddObject().type() == IddObjectType::Catchall) &&
            (object.numFields() > 0u) &&
-           (boost::regex_match(object.getString(0).get(),iddRegex::versionObjectName()))))
+           (iddRegex::versionObjectName().match(object.getString(0).get()))))
       {
-        unsigned index = unsigned(it - m_objects.begin());
+        const auto index = std::distance(m_objects.begin(), it);
         m_versionObjectIndices.insert(index);
         OS_ASSERT(m_objects[index] == object);
       }
@@ -211,7 +212,7 @@ bool IdfFile::removeObject(const IdfObject& object) {
     if (it->iddObject().isVersionObject() ||
         ((object.iddObject().type() == IddObjectType::Catchall) &&
          (object.numFields() > 0u) &&
-         (boost::regex_match(object.getString(0).get(),iddRegex::versionObjectName()))))
+         (iddRegex::versionObjectName().match(object.getString(0).get()))))
     {
       m_versionObjectIndices.erase(index);
     }
@@ -377,12 +378,9 @@ OptionalIdfFile IdfFile::load(const path& p,
                               const IddFileType& iddFileType,
                               ProgressBar* progressBar)
 {
-  // complete path
-  path wp(p);
-
-  std::string ext = getFileExtension(p);
 
   if (iddFileType == IddFileType::OpenStudio) {
+    const auto ext = getFileExtension(p);
     // can be Model or Component
     if (! ( openstudio::istringEqual(ext, "osm") ||
             openstudio::istringEqual(ext, "osc")) ) {
@@ -390,7 +388,7 @@ OptionalIdfFile IdfFile::load(const path& p,
                  << "', has an unexpected file extension. Was expecting 'osm' or 'osc'.");
     }
   } else {
-    std::string ext = getFileExtension(p);
+    const auto ext = getFileExtension(p);
     if (! ( openstudio::istringEqual(ext, "idf") ||
             openstudio::istringEqual(ext, "imf") ||
             openstudio::istringEqual(ext, "ddy")) ) {
@@ -401,7 +399,8 @@ OptionalIdfFile IdfFile::load(const path& p,
 
   // pass warnOnMisMatch as false since we warn above anyways
   // In fact, don't pass the ext param, skip the entire call to setFileExtension which is pointless since it won't force replace it
-  wp = completePathToFile(wp,path(),"",false);
+  // complete path
+  const auto wp = completePathToFile(p,path(),"",false);
 
   // try to open file and parse
   openstudio::filesystem::ifstream inFile(wp);
@@ -650,7 +649,7 @@ bool IdfFile::m_load(std::istream& is, ProgressBar* progressBar, bool versionOnl
         }
         objectType = "Catchall";
       }
-      if (boost::regex_match(objectType,iddRegex::versionObjectName())) {
+      if (iddRegex::versionObjectName().match(objectType) ) {
         isVersion = true;
       }
 

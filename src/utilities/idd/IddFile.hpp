@@ -45,6 +45,8 @@ namespace openstudio{
 
 // forward declarations
 class IddFactorySingleton;
+struct Regex;
+
 namespace detail{
   class IddFile_Impl;
 } // detail
@@ -92,6 +94,7 @@ class UTILITIES_API IddFile {
 
   /** Returns the objects whose names match objectRegex. */
   std::vector<IddObject> getObjects(const boost::regex& objectRegex) const;
+  std::vector<IddObject> getObjects(const Regex &objectRegex) const;
 
   /** Returns the version IddObject for this file, if possible. */
   boost::optional<IddObject> versionObject() const;

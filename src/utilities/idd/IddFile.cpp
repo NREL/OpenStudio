@@ -99,6 +99,18 @@ namespace detail {
     return result;
   }
 
+  std::vector<IddObject> IddFile_Impl::getObjects(const Regex &objectRegex) const {
+    IddObjectVector result;
+
+    for (const IddObject &object : m_objects) {
+      if (objectRegex.match(object.name())) {
+        result.push_back(object);
+      }
+    }
+
+    return result;
+  }
+
   boost::optional<IddObject> IddFile_Impl::versionObject() const {
     if (m_versionObject) {
       return m_versionObject;
@@ -205,12 +217,12 @@ namespace detail {
 
   std::ostream& IddFile_Impl::print(std::ostream& os) const
   {
-    os << m_header << std::endl;
+    os << m_header << '\n';
     std::string groupName;
     for (const IddObject& object : m_objects){
       if (object.group() != groupName) {
         groupName = object.group();
-        os << "\\group " << groupName << std::endl << std::endl;
+        os << "\\group " << groupName << "\n\n";
       }
       object.print(os);
     }
@@ -256,14 +268,12 @@ namespace detail {
       m_version = matches.value()[1];
 
       // this line belongs to the header
-      header << line << std::endl;
+      header << line << '\n';
     }else{
       // idd file must have a version on the first line of input
       LOG_AND_THROW("Idd file does not contain version on first line: '" << line << "'");
     }
 
-    // this will contain matches to regular expressions
-    boost::smatch matches;
 
     // read the rest of the file line by line
     // todo, do this by regex
@@ -273,31 +283,34 @@ namespace detail {
       // remove whitespace
       boost::trim(line);
 
+      openstudio::Regex::Results matches;
+
       if (line.empty()){
 
         headerClosed = true;
 
         // empty line
         continue;
-      }else if (boost::regex_search(line, matches, iddRegex::build())) {
-        m_build = std::string(matches[1].first,matches[1].second);
+      }else if (matches = iddRegex::build().search(line); matches) {
+        m_build = matches.value()[1];
         // this line belongs to the header
-        header << line << std::endl;
+        header << line << '\n';
 
-      }else if (boost::regex_match(line, iddRegex::commentOnlyLine())){
+      }else if (matches = iddRegex::commentOnlyLine().match(line); matches) {
 
         if (!headerClosed){
-          header << line << std::endl;
+          header << line << '\n';
         }
 
         // comment only line
         continue;
-      }else if (boost::regex_search(line, matches, iddRegex::group())){
+      }else if (matches = iddRegex::group().search(line); matches) {
 
         headerClosed = true;
 
         // get the group name
-        std::string groupName(matches[1].first, matches[1].second); boost::trim(groupName);
+        std::string groupName{matches.value()[1]};
+        boost::trim(groupName);
 
         // set the current group
         currentGroup = groupName;
@@ -315,8 +328,9 @@ namespace detail {
 
         // peek at the object name for indexing in map
         std::string objectName;
-        if (boost::regex_search(line, matches, iddRegex::line())){
-          objectName = std::string(matches[1].first, matches[1].second); boost::trim(objectName);
+        if (matches = iddRegex::line().search(line); matches) {
+          objectName = matches.value()[1];
+          boost::trim(objectName);
         }else{
           // can't figure out the object's name
           LOG_AND_THROW("Cannot determine object name on line " << lineNum <<
@@ -327,12 +341,12 @@ namespace detail {
         std::string text(line);
 
           // check if the object has no fields
-        if (boost::regex_match(line, iddRegex::objectNoFields())){
+        if (iddRegex::objectNoFields().match(line)) {
           foundClosingLine = true;
         }
 
         // check if the object has fields, and last field on this line
-        if (boost::regex_match(line, iddRegex::closingField())){
+        if (iddRegex::closingField().match(line)) {
           foundClosingLine = true;
         }
 
@@ -345,7 +359,7 @@ namespace detail {
           boost::trim(line);
 
           // found last field and this is not a field comment
-          if (foundClosingLine && (!boost::regex_match(line, iddRegex::metaDataComment()))){
+          if (foundClosingLine && !iddRegex::metaDataComment().match(line)) {
             break;
           }
 
@@ -355,7 +369,7 @@ namespace detail {
             text += line;
 
             // check if we have found the last field
-            if (boost::regex_match(line, iddRegex::closingField())){
+            if (iddRegex::closingField().match(line)) {
               foundClosingLine = true;
             }
           }
@@ -367,7 +381,7 @@ namespace detail {
         // construct a new object and put it in the object vector
         if (object) { m_objects.push_back(*object); }
         else {
-          LOG_AND_THROW("Unable to construct IddObject from text: " << std::endl << text);
+          LOG_AND_THROW("Unable to construct IddObject from text: \n" << text);
         }
 
       }
@@ -427,6 +441,10 @@ std::vector<IddObject> IddFile::getObjectsInGroup(const std::string& group) cons
 }
 
 std::vector<IddObject> IddFile::getObjects(const boost::regex& objectRegex) const {
+  return m_impl->getObjects(objectRegex);
+}
+
+std::vector<IddObject> IddFile::getObjects(const Regex &objectRegex) const {
   return m_impl->getObjects(objectRegex);
 }
 
@@ -496,8 +514,8 @@ std::pair<VersionString, std::string> IddFile::parseVersionBuild(const openstudi
 
   std::string build;
 
-  if (boost::smatch matches; boost::regex_search(strdata, matches, iddRegex::build())) {
-    build = std::string(matches[1].first,matches[1].second);
+  if (auto matches = iddRegex::build().search(strdata); matches) {
+    build = matches.value()[1];
   }
 
   if (auto matches = iddRegex::version().search(strdata); matches) {
