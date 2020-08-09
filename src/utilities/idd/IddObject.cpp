@@ -42,6 +42,7 @@
 
 #include <boost/lexical_cast.hpp>
 #include <memory>
+#include <ctre.hpp>
 
 using std::string;
 using std::vector;
@@ -632,15 +633,37 @@ namespace detail {
     }
   }
 
+  // has to live outside of a function
+  constexpr static auto field_start_regex = ctll::fixed_string{"([AN][0-9]+[\\s]*[,;])"};
+
   void IddObject_Impl::parseFields(const std::string& text)
   {
-    string copyText(text);
+    std::string_view to_parse = text;
 
-    Regex::Results matches;
-    while ((matches = iddRegex::lastField().search(copyText))) {
+
+
+    if (const auto [whole, match] = ctre::search<field_start_regex>(to_parse); whole && (match.begin() == to_parse.begin())) {
+      // found first element at start, where expected
+    } else {
+      std::cerr << "Whole '" << whole << "'\n";
+      std::cerr << "Match '" << match << "'\n";
+      LOG_AND_THROW("Could not process field text '" << text << "' in object ', start is not where expected" << m_name << "'");
+    }
+
+    while (!to_parse.empty()) {
       // take the text of the last field
-      string fieldText(matches.value()[1]);
+      auto field_end = to_parse.end();
+      if (const auto [whole, match] = ctre::search<field_start_regex>(to_parse.begin() + 1, to_parse.end()); whole) {
+        field_end = match.begin();
+      }
+
+      const auto field_size = std::distance(to_parse.begin(), field_end);
+      std::string_view fieldText(to_parse.begin(), field_size);
+      //remove parsed bits so we start at the next field
+      to_parse.remove_prefix(field_size);
+
       string fieldName;
+
 
       // peak ahead to find the field name for indexing in map
       Regex::Results nameMatches;
@@ -657,25 +680,15 @@ namespace detail {
       }
 
       // construct the field
-      OptionalIddField oField = IddField::load(fieldName, fieldText, m_name);
+      OptionalIddField oField = IddField::load(fieldName, std::string{fieldText}, m_name);
       if (!oField) {
         LOG_AND_THROW("Cannot parse IddField text '" << fieldText << "'.");
       }
 
       // construct a new object and put it in the object list and object map
       m_fields.push_back(*oField);
-
-      // copy the rest of the text and continue
-      copyText = std::string_view(matches.value()[0].data(), std::distance(matches.value()[0].begin(), matches.value()[1].begin()));
     }
 
-    if (!copyText.empty()){
-      LOG_AND_THROW("Could not process remaining field text '" << copyText << "' in object '"
-                    << m_name << "'");
-    }
-
-    // reverse the field list because they were inserted in reverse order
-    reverse(m_fields.begin(), m_fields.end());
   }
 
 } // detail
