@@ -633,12 +633,35 @@ namespace detail {
 
   void IddObject_Impl::parseFields(const std::string& text)
   {
-    string copyText(text);
+    static const boost::regex field_start("[AN][0-9]+[\\s]*[,;]");
 
-    smatch matches;
-    while (boost::regex_search(copyText, matches, iddRegex::lastField())){
+    auto begin = text.begin();
+    const auto end = text.end();
+
+    boost::match_results<std::string::const_iterator> matches;
+    if (boost::regex_search(begin, end, matches, field_start)) {
+      begin = matches[0].first;
+      if (begin != text.begin()) {
+        LOG_AND_THROW("Could not process field text '" << text << "' in object ', start is not where expected"
+            << m_name << "'");
+      }
+    } else {
+      return;
+    }
+
+    auto field_end = text.end();
+
+    while (begin != end) {
+      if (boost::regex_search(begin + 1, end, matches, field_start)) {
+        field_end = matches[0].first;
+      } else {
+        field_end = end;
+      }
+
       // take the text of the last field
-      string fieldText(matches[2].first, matches[2].second);
+      string fieldText(begin, field_end);
+      begin = field_end;
+
       string fieldName;
 
       // peak ahead to find the field name for indexing in map
@@ -663,18 +686,7 @@ namespace detail {
 
       // construct a new object and put it in the object list and object map
       m_fields.push_back(*oField);
-
-      // copy the rest of the text and continue
-      copyText = string(matches[1].first, matches[1].second);
     }
-
-    if (!copyText.empty()){
-      LOG_AND_THROW("Could not process remaining field text '" << copyText << "' in object '"
-                    << m_name << "'");
-    }
-
-    // reverse the field list because they were inserted in reverse order
-    reverse(m_fields.begin(), m_fields.end());
   }
 
 } // detail
