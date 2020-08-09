@@ -41,6 +41,7 @@
 #include "../units/IPUnit.hpp"
 #include "../units/Quantity.hpp"
 
+#include "../core/ASCIIStrings.hpp"
 #include "../core/Assert.hpp"
 #include "../core/Containers.hpp"
 
@@ -302,10 +303,10 @@ namespace detail {
 
       // parse all the properties
       while (boost::regex_search(fieldProperties, matches, iddRegex::metaDataComment())){
-        std::string thisProperty(matches[1].first, matches[1].second); boost::trim(thisProperty);
+        std::string thisProperty(matches[1].first, matches[1].second); openstudio::ascii_trim(thisProperty);
         parseProperty(thisProperty);
 
-        fieldProperties = std::string(matches[2].first, matches[2].second); boost::trim(fieldProperties);
+        fieldProperties = std::string(matches[2].first, matches[2].second); openstudio::ascii_trim(fieldProperties);
       }
 
       if ( !( (boost::regex_match(fieldProperties, commentRegex::whitespaceOnlyBlock())) ||
@@ -356,8 +357,10 @@ namespace detail {
 
     bool notHandled=true;
     boost::smatch matches;
-    std::string lowerText = boost::algorithm::to_lower_copy(text);
-    char index = lowerText[0];
+
+    std::string lowerText = openstudio::ascii_to_lower_copy(text);
+
+    const char index = lowerText[0];
 
     //sort inside the case statements based on the probability of that value being in the string.(so we don't run 5 unlikely
     //regex tofind the likely one) Keep the case statements in aphabitical order for ease of maintance, since it doesn't
@@ -395,7 +398,7 @@ namespace detail {
         {
           OS_ASSERT(boost::regex_search(text, matches, iddRegex::defaultProperty()));
           std::string stringDefault(matches[1].first, matches[1].second);
-          boost::trim(stringDefault);
+          openstudio::ascii_trim(stringDefault);
           m_properties.stringDefault = stringDefault;
           notHandled=false;
           // if we are numeric type and not set to autosize, set the numeric property
@@ -426,7 +429,7 @@ namespace detail {
         {
           OS_ASSERT(boost::regex_search(text, matches, iddRegex::externalListProperty()));
           std::string externalList(matches[1].first, matches[1].second);
-          boost::trim(externalList);
+          openstudio::ascii_trim(externalList);
           m_properties.externalLists.push_back(externalList);
           notHandled=false;
         }
@@ -439,7 +442,7 @@ namespace detail {
         {
           OS_ASSERT(boost::regex_search(text, matches, iddRegex::nameProperty()));
           std::string fieldName(matches[1].first, matches[1].second);
-          boost::trim(fieldName);
+          openstudio::ascii_trim(fieldName);
           notHandled=false;
           if (!boost::equals(m_name, fieldName))
           {
@@ -455,7 +458,7 @@ namespace detail {
         {
           OS_ASSERT(boost::regex_search(text, matches, iddRegex::ipUnitsProperty()));
           std::string ipUnits(matches[1].first, matches[1].second);
-          boost::trim(ipUnits);
+          openstudio::ascii_trim(ipUnits);
           m_properties.ipUnits = ipUnits;
           notHandled=false;
         }
@@ -473,7 +476,7 @@ namespace detail {
           if (boost::regex_search(keyText, keyMatches, iddRegex::contentAndCommentLine()))
           {
             std::string keyName(keyMatches[1].first, keyMatches[1].second);
-            boost::trim(keyName);
+            openstudio::ascii_trim(keyName);
 
             // construct the key
             OptionalIddKey key = IddKey::load(keyName, keyText);
@@ -501,7 +504,7 @@ namespace detail {
           {
             m_properties.minBoundType = IddFieldProperties::ExclusiveBound;
             std::string minExclusive(matches[1].first, matches[1].second);
-            boost::trim(minExclusive);
+            openstudio::ascii_trim(minExclusive);
             m_properties.minBoundValue = boost::lexical_cast<double>(minExclusive);
             m_properties.minBoundText = minExclusive;
             notHandled=false;
@@ -510,7 +513,7 @@ namespace detail {
           {
             m_properties.minBoundType = IddFieldProperties::InclusiveBound;
             std::string minInclusive(matches[1].first, matches[1].second);
-            boost::trim(minInclusive);
+            openstudio::ascii_trim(minInclusive);
             m_properties.minBoundValue = boost::lexical_cast<double>(minInclusive);
             m_properties.minBoundText = minInclusive;
             notHandled=false;
@@ -522,7 +525,7 @@ namespace detail {
           {
             m_properties.maxBoundType = IddFieldProperties::ExclusiveBound;
             std::string maxExclusive(matches[1].first, matches[1].second);
-            boost::trim(maxExclusive);
+            openstudio::ascii_trim(maxExclusive);
             m_properties.maxBoundValue = boost::lexical_cast<double>(maxExclusive);
             m_properties.maxBoundText = maxExclusive;
             notHandled=false;
@@ -531,7 +534,7 @@ namespace detail {
           {
             m_properties.maxBoundType = IddFieldProperties::InclusiveBound;
             std::string maxInclusive(matches[1].first, matches[1].second);
-            boost::trim(maxInclusive);
+            openstudio::ascii_trim(maxInclusive);
             m_properties.maxBoundValue = boost::lexical_cast<double>(maxInclusive);
             m_properties.maxBoundText = maxInclusive;
             notHandled=false;
@@ -567,7 +570,7 @@ namespace detail {
         {
           OS_ASSERT(boost::regex_search(text, matches, iddRegex::objectListProperty()));
           std::string objectList(matches[1].first, matches[1].second);
-          boost::trim(objectList);
+          openstudio::ascii_trim(objectList);
           m_properties.objectLists.push_back(objectList);
           notHandled=false;
         }
@@ -584,7 +587,7 @@ namespace detail {
         {
           OS_ASSERT(boost::regex_search(text, matches, iddRegex::referenceClassNameProperty()));
           std::string reference(matches[1].first, matches[1].second);
-          boost::trim(reference);
+          openstudio::ascii_trim(reference);
           m_properties.referenceClassNames.push_back(reference);
           notHandled=false;
         }
@@ -592,7 +595,7 @@ namespace detail {
         {
           OS_ASSERT(boost::regex_search(text, matches, iddRegex::referenceProperty()));
           std::string reference(matches[1].first, matches[1].second);
-          boost::trim(reference);
+          openstudio::ascii_trim(reference);
           m_properties.references.push_back(reference);
           notHandled=false;
         }
@@ -610,7 +613,7 @@ namespace detail {
         {
           OS_ASSERT(boost::regex_search(text, matches, iddRegex::typeProperty()));
           std::string fieldType(matches[1].first, matches[1].second);
-          boost::trim(fieldType);
+          openstudio::ascii_trim(fieldType);
           m_properties.type = IddFieldType(fieldType);
           notHandled=false;
         }
@@ -628,7 +631,7 @@ namespace detail {
         {
           OS_ASSERT(boost::regex_search(text, matches, iddRegex::unitsProperty()));
           std::string units(matches[1].first, matches[1].second);
-          boost::trim(units);
+          openstudio::ascii_trim(units);
           m_properties.units = units;
           notHandled=false;
         }

@@ -38,7 +38,7 @@
 #include "CommentRegex.hpp"
 
 #include "../core/Assert.hpp"
-
+#include "../core/ASCIIStrings.hpp"
 
 #include <boost/lexical_cast.hpp>
 
@@ -48,7 +48,6 @@ using boost::regex;
 using boost::smatch;
 using boost::regex_replace;
 using boost::replace_all;
-using boost::trim;
 
 namespace openstudio {
 
@@ -543,7 +542,7 @@ namespace detail {
     for (IddField& extensibleField : m_extensibleFields){
       std::string extensibleFieldName = extensibleField.name();
       extensibleFieldName = regex_replace(extensibleFieldName, find, replace);
-      trim(extensibleFieldName);
+      openstudio::ascii_trim(extensibleFieldName);
       extensibleField.setName(extensibleFieldName);
     }
 
@@ -565,21 +564,21 @@ namespace detail {
     string objectName;
     string propertiesText;
     if (boost::regex_search(text, matches, iddRegex::line())){
-      objectName = string(matches[1].first, matches[1].second); trim(objectName);
+      objectName = string(matches[1].first, matches[1].second); openstudio::ascii_trim(objectName);
       if (!boost::equals(m_name,objectName)){
         LOG_AND_THROW("Object name '" << objectName << "' does not match expected '" << m_name << "'");
       }
 
-      propertiesText = string(matches[2].first, matches[2].second); trim(propertiesText);
+      propertiesText = string(matches[2].first, matches[2].second); openstudio::ascii_trim(propertiesText);
     }else{
       LOG_AND_THROW("Could not determine object name from text '" << text << "'");
     }
 
     while (boost::regex_search(propertiesText, matches, iddRegex::metaDataComment())){
-      string thisProperty(matches[1].first, matches[1].second); trim(thisProperty);
+      string thisProperty(matches[1].first, matches[1].second); openstudio::ascii_trim(thisProperty);
       parseProperty(thisProperty);
 
-      propertiesText = string(matches[2].first, matches[2].second); trim(propertiesText);
+      propertiesText = string(matches[2].first, matches[2].second); openstudio::ascii_trim(propertiesText);
     }
     if ( !( (boost::regex_match(propertiesText, commentRegex::whitespaceOnlyBlock())) ||
             (boost::regex_match(propertiesText, iddRegex::commentOnlyLine())) ) ){
@@ -592,7 +591,7 @@ namespace detail {
   {
     smatch matches;
     if (boost::regex_search(text, matches, iddRegex::memoProperty())){
-      string memo(matches[1].first, matches[1].second); trim(memo);
+      string memo(matches[1].first, matches[1].second); openstudio::ascii_trim(memo);
       if (m_properties.memo.empty()) { m_properties.memo = memo; }
       else { m_properties.memo += "\n" + memo; }
 
@@ -615,7 +614,7 @@ namespace detail {
       m_properties.numExtensible = boost::lexical_cast<unsigned>(numExtensible);
 
     }else if (boost::regex_search(text, matches, iddRegex::formatProperty())){
-      string format(matches[1].first, matches[1].second); trim(format);
+      string format(matches[1].first, matches[1].second); openstudio::ascii_trim(format);
       m_properties.format = format;
 
     }else if (boost::regex_search(text, matches, iddRegex::minFieldsProperty())){
@@ -667,11 +666,11 @@ namespace detail {
       // peak ahead to find the field name for indexing in map
       smatch nameMatches;
       if (boost::regex_search(fieldText, nameMatches, iddRegex::name())){
-        fieldName = string(nameMatches[1].first, nameMatches[1].second); trim(fieldName);
+        fieldName = string(nameMatches[1].first, nameMatches[1].second); openstudio::ascii_trim(fieldName);
       }else if(boost::regex_search(fieldText, nameMatches, iddRegex::field())){
         // if no explicit field name, use the type and number
-        string fieldTypeChar(nameMatches[1].first, nameMatches[1].second); trim(fieldTypeChar);
-        string fieldTypeNumber(nameMatches[2].first, nameMatches[2].second); trim(fieldTypeNumber);
+        string fieldTypeChar(nameMatches[1].first, nameMatches[1].second); openstudio::ascii_trim(fieldTypeChar);
+        string fieldTypeNumber(nameMatches[2].first, nameMatches[2].second); openstudio::ascii_trim(fieldTypeNumber);
         fieldName = fieldTypeChar + fieldTypeNumber;
       }else{
         // cannot find the field name
