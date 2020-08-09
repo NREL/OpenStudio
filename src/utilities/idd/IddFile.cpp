@@ -36,6 +36,7 @@
 
 #include "../core/PathHelpers.hpp"
 #include "../core/Assert.hpp"
+#include "../core/ASCIIStrings.hpp"
 
 #include "../core/Containers.hpp"
 
@@ -281,7 +282,7 @@ namespace detail {
       ++lineNum;
 
       // remove whitespace
-      boost::trim(line);
+      openstudio::ascii_trim(line);
 
       openstudio::Regex::Results matches;
 
@@ -310,7 +311,7 @@ namespace detail {
 
         // get the group name
         std::string groupName{matches.value()[1]};
-        boost::trim(groupName);
+        openstudio::ascii_trim(groupName);
 
         // set the current group
         currentGroup = groupName;
@@ -330,7 +331,7 @@ namespace detail {
         std::string objectName;
         if (matches = iddRegex::line().search(line); matches) {
           objectName = matches.value()[1];
-          boost::trim(objectName);
+          openstudio::ascii_trim(objectName);
         }else{
           // can't figure out the object's name
           LOG_AND_THROW("Cannot determine object name on line " << lineNum <<
@@ -356,7 +357,7 @@ namespace detail {
           ++lineNum;
 
           // remove whitespace
-          boost::trim(line);
+          openstudio::ascii_trim(line);
 
           // found last field and this is not a field comment
           if (foundClosingLine && !iddRegex::metaDataComment().match(line)) {

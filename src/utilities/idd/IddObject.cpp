@@ -38,6 +38,7 @@
 #include "CommentRegex.hpp"
 
 #include "../core/Assert.hpp"
+#include "../core/ASCIIStrings.hpp"
 
 
 #include <boost/lexical_cast.hpp>
@@ -50,7 +51,6 @@ using boost::regex;
 using boost::smatch;
 using boost::regex_replace;
 using boost::replace_all;
-using boost::trim;
 
 namespace openstudio {
 
@@ -545,7 +545,7 @@ namespace detail {
     for (IddField& extensibleField : m_extensibleFields){
       std::string extensibleFieldName = extensibleField.name();
       extensibleFieldName = regex_replace(extensibleFieldName, find, replace);
-      trim(extensibleFieldName);
+      openstudio::ascii_trim(extensibleFieldName);
       extensibleField.setName(extensibleFieldName);
     }
 
@@ -566,22 +566,22 @@ namespace detail {
     string objectName;
     string propertiesText;
     if (const auto matches = iddRegex::line().search(text); matches) {
-      objectName = matches.value()[1]; trim(objectName);
+      objectName = matches.value()[1]; openstudio::ascii_trim(objectName);
       if (!boost::equals(m_name,objectName)){
         LOG_AND_THROW("Object name '" << objectName << "' does not match expected '" << m_name << "'");
       }
 
-      propertiesText = matches.value()[2]; trim(propertiesText);
+      propertiesText = matches.value()[2]; openstudio::ascii_trim(propertiesText);
     }else{
       LOG_AND_THROW("Could not determine object name from text '" << text << "'");
     }
 
     Regex::Results matches;
     while ((matches = iddRegex::metaDataComment().search(propertiesText))) {
-      string thisProperty(matches.value()[1]); trim(thisProperty);
+      string thisProperty(matches.value()[1]); openstudio::ascii_trim(thisProperty);
       parseProperty(thisProperty);
 
-      propertiesText = matches.value()[2]; trim(propertiesText);
+      propertiesText = matches.value()[2]; openstudio::ascii_trim(propertiesText);
     }
     if ( !( (boost::regex_match(propertiesText, commentRegex::whitespaceOnlyBlock())) ||
             (iddRegex::commentOnlyLine().match(propertiesText)))) {
@@ -594,7 +594,7 @@ namespace detail {
   {
     Regex::Results matches;
     if (matches = iddRegex::memoProperty().search(text); matches){
-      string memo(matches.value()[1]); trim(memo);
+      string memo(matches.value()[1]); openstudio::ascii_trim(memo);
       if (m_properties.memo.empty()) { m_properties.memo = memo; }
       else { m_properties.memo += "\n" + memo; }
 
@@ -617,7 +617,7 @@ namespace detail {
       m_properties.numExtensible = boost::lexical_cast<unsigned>(numExtensible);
 
     }else if (matches = iddRegex::formatProperty().search(text); matches){
-      string format(matches.value()[1]); trim(format);
+      string format(matches.value()[1]); openstudio::ascii_trim(format);
       m_properties.format = format;
 
     }else if (matches = iddRegex::minFieldsProperty().search(text); matches){
@@ -668,11 +668,11 @@ namespace detail {
       // peak ahead to find the field name for indexing in map
       Regex::Results nameMatches;
       if (nameMatches = iddRegex::name().search(fieldText); nameMatches) {
-        fieldName = string(nameMatches.value()[1]); trim(fieldName);
+        fieldName = string(nameMatches.value()[1]); openstudio::ascii_trim(fieldName);
       }else if(nameMatches = iddRegex::field().search(fieldText); nameMatches) {
         // if no explicit field name, use the type and number
-        string fieldTypeChar(nameMatches.value()[1]); trim(fieldTypeChar);
-        string fieldTypeNumber(nameMatches.value()[2]); trim(fieldTypeNumber);
+        string fieldTypeChar(nameMatches.value()[1]); openstudio::ascii_trim(fieldTypeChar);
+        string fieldTypeNumber(nameMatches.value()[2]); openstudio::ascii_trim(fieldTypeNumber);
         fieldName = fieldTypeChar + fieldTypeNumber;
       }else{
         // cannot find the field name

@@ -42,13 +42,12 @@
 #include "../units/Quantity.hpp"
 
 #include "../core/Assert.hpp"
+#include "../core/ASCIIStrings.hpp"
 #include "../core/Containers.hpp"
 
 
 #include <boost/lexical_cast.hpp>
 
-
-using boost::algorithm::trim;
 
 namespace openstudio {
 
@@ -302,10 +301,10 @@ namespace detail {
       // parse all the properties
       Regex::Results metaDataMatches;
       while ((metaDataMatches = iddRegex::metaDataComment().search(fieldProperties))) {
-        std::string thisProperty(metaDataMatches.value()[1]); boost::trim(thisProperty);
+        std::string thisProperty(metaDataMatches.value()[1]); openstudio::ascii_trim(thisProperty);
         parseProperty(thisProperty);
 
-        fieldProperties = std::string(metaDataMatches.value()[2]); boost::trim(fieldProperties);
+        fieldProperties = std::string(metaDataMatches.value()[2]); openstudio::ascii_trim(fieldProperties);
       }
 
       if ( !( (boost::regex_match(fieldProperties, commentRegex::whitespaceOnlyBlock())) ||
@@ -355,7 +354,7 @@ namespace detail {
 
 
     bool notHandled=true;
-    std::string lowerText = boost::algorithm::to_lower_copy(text);
+    std::string lowerText = openstudio::ascii_to_lower_copy(text);
     char index = lowerText[0];
 
     //sort inside the case statements based on the probability of that value being in the string.(so we don't run 5 unlikely
@@ -395,7 +394,7 @@ namespace detail {
           const auto matches = iddRegex::defaultProperty().search(text);
           OS_ASSERT(matches);
           std::string stringDefault(matches.value()[1]);
-          boost::trim(stringDefault);
+          openstudio::ascii_trim(stringDefault);
           m_properties.stringDefault = stringDefault;
           notHandled=false;
           // if we are numeric type and not set to autosize, set the numeric property
@@ -427,7 +426,7 @@ namespace detail {
           const auto matches = iddRegex::externalListProperty().search(text);
           OS_ASSERT(matches);
           std::string externalList(matches.value()[1]);
-          boost::trim(externalList);
+          openstudio::ascii_trim(externalList);
           m_properties.externalLists.push_back(externalList);
           notHandled=false;
         }
@@ -441,7 +440,7 @@ namespace detail {
           const auto matches = iddRegex::nameProperty().search(text);
           OS_ASSERT(matches);
           std::string fieldName(matches.value()[1]);
-          boost::trim(fieldName);
+          openstudio::ascii_trim(fieldName);
           notHandled=false;
           if (!boost::equals(m_name, fieldName))
           {
@@ -458,7 +457,7 @@ namespace detail {
           const auto matches = iddRegex::ipUnitsProperty().search(text);
           OS_ASSERT(matches);
           std::string ipUnits(matches.value()[1]);
-          boost::trim(ipUnits);
+          openstudio::ascii_trim(ipUnits);
           m_properties.ipUnits = ipUnits;
           notHandled=false;
         }
@@ -476,7 +475,7 @@ namespace detail {
           if (const auto keyMatches = iddRegex::contentAndCommentLine().search(keyText); keyMatches)
           {
             std::string keyName(keyMatches.value()[1]);
-            boost::trim(keyName);
+            openstudio::ascii_trim(keyName);
 
             // construct the key
             OptionalIddKey key = IddKey::load(keyName, keyText);
@@ -504,7 +503,7 @@ namespace detail {
           {
             m_properties.minBoundType = IddFieldProperties::ExclusiveBound;
             std::string minExclusive(matches.value()[1]);
-            boost::trim(minExclusive);
+            openstudio::ascii_trim(minExclusive);
             m_properties.minBoundValue = boost::lexical_cast<double>(minExclusive);
             m_properties.minBoundText = minExclusive;
             notHandled=false;
@@ -513,7 +512,7 @@ namespace detail {
           {
             m_properties.minBoundType = IddFieldProperties::InclusiveBound;
             std::string minInclusive(matches.value()[1]);
-            boost::trim(minInclusive);
+            openstudio::ascii_trim(minInclusive);
             m_properties.minBoundValue = boost::lexical_cast<double>(minInclusive);
             m_properties.minBoundText = minInclusive;
             notHandled=false;
@@ -525,7 +524,7 @@ namespace detail {
           {
             m_properties.maxBoundType = IddFieldProperties::ExclusiveBound;
             std::string maxExclusive(matches.value()[1]);
-            boost::trim(maxExclusive);
+            openstudio::ascii_trim(maxExclusive);
             m_properties.maxBoundValue = boost::lexical_cast<double>(maxExclusive);
             m_properties.maxBoundText = maxExclusive;
             notHandled=false;
@@ -534,7 +533,7 @@ namespace detail {
           {
             m_properties.maxBoundType = IddFieldProperties::InclusiveBound;
             std::string maxInclusive(matches.value()[1]);
-            boost::trim(maxInclusive);
+            openstudio::ascii_trim(maxInclusive);
             m_properties.maxBoundValue = boost::lexical_cast<double>(maxInclusive);
             m_properties.maxBoundText = maxInclusive;
             notHandled=false;
@@ -546,7 +545,7 @@ namespace detail {
           const auto matches = iddRegex::memoProperty().search(text);
           OS_ASSERT(matches);
           std::string memo(matches.value()[1]);
-          trim(memo);
+          openstudio::ascii_trim(memo);
           if (m_properties.note.empty()) { m_properties.note = memo; }
           else {m_properties.note += "\n" + memo; }
         }
@@ -560,7 +559,7 @@ namespace detail {
           const auto matches = iddRegex::noteProperty().search(text);
           OS_ASSERT(matches);
           std::string note(matches.value()[1]);
-          trim(note);
+          openstudio::ascii_trim(note);
           if (m_properties.note.empty()) { m_properties.note = note; }
           else { m_properties.note += "\n" + note; }
         }
@@ -573,7 +572,7 @@ namespace detail {
           const auto matches = iddRegex::objectListProperty().search(text);
           OS_ASSERT(matches);
           std::string objectList(matches.value()[1]);
-          boost::trim(objectList);
+          openstudio::ascii_trim(objectList);
           m_properties.objectLists.push_back(objectList);
           notHandled=false;
         }
@@ -591,7 +590,7 @@ namespace detail {
           const auto matches = iddRegex::referenceClassNameProperty().search(text);
           OS_ASSERT(matches);
           std::string reference(matches.value()[1]);
-          boost::trim(reference);
+          openstudio::ascii_trim(reference);
           m_properties.referenceClassNames.push_back(reference);
           notHandled=false;
         }
@@ -600,7 +599,7 @@ namespace detail {
           const auto matches = iddRegex::referenceProperty().search(text);
           OS_ASSERT(matches);
           std::string reference(matches.value()[1]);
-          boost::trim(reference);
+          openstudio::ascii_trim(reference);
           m_properties.references.push_back(reference);
           notHandled=false;
         }
@@ -619,7 +618,7 @@ namespace detail {
           const auto matches = iddRegex::typeProperty().search(text);
           OS_ASSERT(matches);
           std::string fieldType(matches.value()[1]);
-          boost::trim(fieldType);
+          openstudio::ascii_trim(fieldType);
           m_properties.type = IddFieldType(fieldType);
           notHandled=false;
         }
@@ -638,7 +637,7 @@ namespace detail {
           const auto matches = iddRegex::unitsProperty().search(text);
           OS_ASSERT(matches);
           std::string units(matches.value()[1]);
-          boost::trim(units);
+          openstudio::ascii_trim(units);
           m_properties.units = units;
           notHandled=false;
         }
