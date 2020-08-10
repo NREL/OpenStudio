@@ -36,6 +36,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/WaterHeaterStratified.hpp"
 // #include "../../model/WaterHeaterStratified_Impl.hpp"
+#include "../../model/Schedule.hpp"
 
 #include "../../model/PlantLoop.hpp"
 #include "../../model/PlantLoop_Impl.hpp"
