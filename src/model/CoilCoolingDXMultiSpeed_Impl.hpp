@@ -147,9 +147,19 @@ namespace detail {
     /** @name Other */
     //@{
 
+    // Extensible: Stages
     std::vector<CoilCoolingDXMultiSpeedStageData> stages() const;
+    unsigned numberOfStages() const;
+    boost::optional<unsigned> stageIndex(const CoilCoolingDXMultiSpeedStageData& stage) const;
 
-    void addStage(CoilCoolingDXMultiSpeedStageData& stage);
+    // Note: a CoilCoolingDXMultiSpeedStageData can be used only by one CoilCoolingDXMultiSpeed
+    bool addStage(const CoilCoolingDXMultiSpeedStageData& stage);
+    bool addStage(const CoilCoolingDXMultiSpeedStageData& stage, unsigned index);
+    bool setStageIndex(const CoilCoolingDXMultiSpeedStageData& stage, unsigned index);
+    bool setStages(const std::vector<CoilCoolingDXMultiSpeedStageData>& stages);
+    void removeAllStages();
+    bool removeStage(const CoilCoolingDXMultiSpeedStageData& stage);
+    bool removeStage(unsigned index);
 
     AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 

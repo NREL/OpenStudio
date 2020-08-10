@@ -121,6 +121,82 @@ namespace detail {
     return result;
   }
 
+  ModelObject AvailabilityManagerNightCycle_Impl::clone(Model model) const {
+    AvailabilityManagerNightCycle avmClone = ModelObject_Impl::clone(model).cast<AvailabilityManagerNightCycle>();
+
+    // Now recreate the lists
+    // Control Zone List
+    ModelObjectList controlThermalZoneList = ModelObjectList(model);
+    controlThermalZoneList.setName(this->name().get() + " Control Zone List");
+    bool ok = avmClone.getImpl<detail::AvailabilityManager_Impl>()->setPointer(
+        OS_AvailabilityManager_NightCycleFields::ControlZoneorZoneListName, controlThermalZoneList.handle()
+    );
+    OS_ASSERT(ok);
+
+    // Cooling Control Zone List
+    ModelObjectList coolingControlThermalZoneList = ModelObjectList(model);
+    coolingControlThermalZoneList.setName(this->name().get() + " Cooling Control Zone List");
+    ok = avmClone.getImpl<detail::AvailabilityManager_Impl>()->setPointer(
+        OS_AvailabilityManager_NightCycleFields::CoolingControlZoneorZoneListName, coolingControlThermalZoneList.handle()
+    );
+    OS_ASSERT(ok);
+
+    // Heating Control Zone List
+    ModelObjectList heatingControlThermalZoneList = ModelObjectList(model);
+    heatingControlThermalZoneList.setName(this->name().get() + " Heating Control Zone List");
+    ok = avmClone.getImpl<detail::AvailabilityManager_Impl>()->setPointer(
+        OS_AvailabilityManager_NightCycleFields::HeatingControlZoneorZoneListName, heatingControlThermalZoneList.handle()
+    );
+    OS_ASSERT(ok);
+
+    // Heating Zone Fans Only Zone List
+    ModelObjectList heatingZoneFansOnlyThermalZoneList = ModelObjectList(model);
+    heatingZoneFansOnlyThermalZoneList.setName(this->name().get() + " Heating Zone Fans Only Zone List");
+    ok = avmClone.getImpl<detail::AvailabilityManager_Impl>()->setPointer(
+        OS_AvailabilityManager_NightCycleFields::HeatingZoneFansOnlyZoneorZoneListName, heatingZoneFansOnlyThermalZoneList.handle()
+    );
+    OS_ASSERT(ok);
+
+    return avmClone;
+  }
+
+  std::vector<IdfObject> AvailabilityManagerNightCycle_Impl::remove() {
+    std::vector<IdfObject> result;
+
+    // Remove the ModelObjectLists. You have to clear them first, or it'll also remove the ThermalZones contained within.
+    {
+      ModelObjectList mo_list = controlThermalZoneList();
+      mo_list.removeAllModelObjects();
+      std::vector<IdfObject> removedMoList = mo_list.remove();
+      result.insert(result.end(), removedMoList.begin(), removedMoList.end());
+    }
+
+    {
+      ModelObjectList mo_list = coolingControlThermalZoneList();
+      mo_list.removeAllModelObjects();
+      std::vector<IdfObject> removedMoList = mo_list.remove();
+      result.insert(result.end(), removedMoList.begin(), removedMoList.end());
+    }
+
+    {
+      ModelObjectList mo_list = heatingControlThermalZoneList();
+      mo_list.removeAllModelObjects();
+      std::vector<IdfObject> removedMoList = mo_list.remove();
+      result.insert(result.end(), removedMoList.begin(), removedMoList.end());
+    }
+
+    {
+      ModelObjectList mo_list = heatingZoneFansOnlyThermalZoneList();
+      mo_list.removeAllModelObjects();
+      std::vector<IdfObject> removedMoList = mo_list.remove();
+      result.insert(result.end(), removedMoList.begin(), removedMoList.end());
+    }
+
+    std::vector<IdfObject> AvailabilityManagerNightCycle = ModelObject_Impl::remove();
+    result.insert(result.end(), AvailabilityManagerNightCycle.begin(), AvailabilityManagerNightCycle.end());
+
+    return result;
+  }
 
   boost::optional<AirLoopHVAC> AvailabilityManagerNightCycle_Impl::airLoopHVAC() const {
     if (boost::optional<Loop> _loop = loop()) {
@@ -245,10 +321,7 @@ namespace detail {
   }
   void AvailabilityManagerNightCycle_Impl::clearControlThermalZoneList() {
     ModelObjectList mo_list = controlThermalZoneList();
-    for (const ModelObject& mo : mo_list.modelObjects()) {
-      mo_list.removeModelObject(mo);
-    }
-    // Assert size = 0?
+    mo_list.removeAllModelObjects();
   }
 
 
@@ -301,10 +374,7 @@ namespace detail {
 
   void AvailabilityManagerNightCycle_Impl::clearCoolingControlThermalZoneList() {
     ModelObjectList mo_list = coolingControlThermalZoneList();
-    for (const ModelObject& mo : mo_list.modelObjects()) {
-      mo_list.removeModelObject(mo);
-    }
-    // Assert size = 0?
+    mo_list.removeAllModelObjects();
   }
 
 
@@ -355,10 +425,7 @@ namespace detail {
 
   void AvailabilityManagerNightCycle_Impl::clearHeatingControlThermalZoneList() {
     ModelObjectList mo_list = heatingControlThermalZoneList();
-    for (const ModelObject& mo : mo_list.modelObjects()) {
-      mo_list.removeModelObject(mo);
-    }
-    // Assert size = 0?
+    mo_list.removeAllModelObjects();
   }
 
 
@@ -411,10 +478,7 @@ namespace detail {
 
   void AvailabilityManagerNightCycle_Impl::clearHeatingZoneFansOnlyThermalZoneList() {
     ModelObjectList mo_list = heatingZoneFansOnlyThermalZoneList();
-    for (const ModelObject& mo : mo_list.modelObjects()) {
-      mo_list.removeModelObject(mo);
-    }
-    // Assert size = 0?
+    mo_list.removeAllModelObjects();
   }
 
 

@@ -171,6 +171,10 @@ list(APPEND EMBEDDED_PATHS "embedded_help.rb")
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_cli.rb")
 list(APPEND EMBEDDED_PATHS "openstudio_cli.rb")
 
+list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/openstudio_init_extended.rb")
+list(APPEND EMBEDDED_PATHS "openstudio_init_extended.rb")
+
+
 list(APPEND FILES "${CMAKE_CURRENT_SOURCE_DIR}/measure_manager.rb")
 list(APPEND EMBEDDED_PATHS "measure_manager.rb")
 
