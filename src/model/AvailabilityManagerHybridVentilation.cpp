@@ -119,9 +119,12 @@ namespace detail {
 
   ModelObject AvailabilityManagerHybridVentilation_Impl::clone(Model model) const {
     auto avmClone = AvailabilityManager_Impl::clone(model).cast<AvailabilityManagerHybridVentilation>();
+
     // Makes little sense to me to keep these two which are AirLoopHVAC specific. If you're cloning this object, it's to set to to ANOTHER AirLoopHVAC
     avmClone.resetControlledZone();
     avmClone.resetZoneVentilationObject();
+
+    return avmClone;
   }
 
   boost::optional<ThermalZone> AvailabilityManagerHybridVentilation_Impl::controlledZone() const {
