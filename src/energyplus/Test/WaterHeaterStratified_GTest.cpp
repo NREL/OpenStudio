@@ -79,7 +79,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorWaterHeaterStratified_Condition)
   }
 
   // Has both required conditions for standalone
-  EXPECT_TRUE(wh.setUseFlowRateFractionSchedule(m.alwaysOnContinuousSchedule));
+  auto alwaysOnContinuous = m.alwaysOnContinuousSchedule();
+  EXPECT_TRUE(wh.setUseFlowRateFractionSchedule(alwaysOnContinuous));
   EXPECT_TRUE(wh.useFlowRateFractionSchedule());
   {
     Workspace w = ft.translateModel(m);
