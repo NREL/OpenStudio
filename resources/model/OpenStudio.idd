@@ -12408,13 +12408,13 @@ OS:AvailabilityManager:HybridVentilation,
        \type real
        \units minutes
        \minimum 0.0
-       \default 0.0
+       \required-field
   N9 ; \field Minimum Ventilation Time
        \note Minimum ventilation time when natural ventilation is forced on.
        \type real
        \units minutes
        \minimum 0.0
-       \default 0.0
+       \required-field
 
 OS:Boiler:HotWater,
        \memo This boiler model is an adaptation of the empirical model from the Building
