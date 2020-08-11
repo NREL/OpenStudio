@@ -30,6 +30,7 @@
 #include "AvailabilityManagerHybridVentilation.hpp"
 #include "AvailabilityManagerHybridVentilation_Impl.hpp"
 #include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "Schedule.hpp"
