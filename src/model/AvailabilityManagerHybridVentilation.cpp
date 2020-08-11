@@ -278,6 +278,27 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AvailabilityManager_HybridVentilationFields::VentilationControlModeSchedule);
   }
 
+  double AvailabilityManagerHybridVentilation_Impl::minimumHVACOperationTime() const {
+    boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumHVACOperationTime,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool AvailabilityManagerHybridVentilation_Impl::setMinimumHVACOperationTime(double minimumHVACOperationTime) {
+    bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumHVACOperationTime, minimumHVACOperationTime);
+    return result;
+  }
+
+  double AvailabilityManagerHybridVentilation_Impl::minimumVentilationTime() const {
+    boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumVentilationTime,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool AvailabilityManagerHybridVentilation_Impl::setMinimumVentilationTime(double minimumVentilationTime) {
+    bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumVentilationTime, minimumVentilationTime);
+    return result;
+  }
 } // detail
 
 AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const Model& model)
@@ -305,6 +326,8 @@ AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const
   setMaximumOutdoorEnthalpy(30000.0);
   setMinimumOutdoorDewpoint(15.0);
   setMaximumOutdoorDewpoint(30.0);
+  setMinimumHVACOperationTime(0.0);
+  setMinimumVentilationTime(0.0);
 }
 
 AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const Model& model, Schedule& ventilationControlModeSchedule, Schedule& minimumOutdoorVentilationAirSchedule)
@@ -323,6 +346,8 @@ AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const
   setMaximumOutdoorEnthalpy(300000.0);
   setMinimumOutdoorDewpoint(-100.0);
   setMaximumOutdoorDewpoint(100.0);
+  setMinimumHVACOperationTime(0.0);
+  setMinimumVentilationTime(0.0);
 }
 
 IddObjectType AvailabilityManagerHybridVentilation::iddObjectType() {
@@ -431,6 +456,22 @@ bool AvailabilityManagerHybridVentilation::setOpeningFactorFunctionofWindSpeedCu
 
 void AvailabilityManagerHybridVentilation::resetOpeningFactorFunctionofWindSpeedCurve() {
   getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->resetOpeningFactorFunctionofWindSpeedCurve();
+}
+
+double AvailabilityManagerHybridVentilation::minimumHVACOperationTime() const {
+  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumHVACOperationTime();
+}
+
+bool AvailabilityManagerHybridVentilation::setMinimumHVACOperationTime(double minimumHVACOperationTime) {
+  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumHVACOperationTime(minimumHVACOperationTime);
+}
+
+double AvailabilityManagerHybridVentilation::minimumVentilationTime() const {
+  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumVentilationTime();
+}
+
+bool AvailabilityManagerHybridVentilation::setMinimumVentilationTime(double minimumVentilationTime) {
+  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumVentilationTime(minimumVentilationTime);
 }
 
 /// @cond

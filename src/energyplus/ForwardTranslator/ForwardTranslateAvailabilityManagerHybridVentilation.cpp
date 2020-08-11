@@ -155,6 +155,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerHybrid
     idfObject.setString(AvailabilityManager_HybridVentilationFields::OpeningFactorFunctionofWindSpeedCurveName,idf->name().get());
   }
 
+  // Minimum HVAC Operation Time
+  {
+    auto value = modelObject.minimumHVACOperationTime();
+    idfObject.setDouble(AvailabilityManager_HybridVentilationFields::MinimumHVACOperationTime,value);
+  }
+
+  // Minimum Ventilation Time
+  {
+    auto value = modelObject.minimumVentilationTime();
+    idfObject.setDouble(AvailabilityManager_HybridVentilationFields::MinimumVentilationTime,value);
+  }
+
   return idfObject;
 }
 

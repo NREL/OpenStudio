@@ -96,6 +96,10 @@ class MODEL_API AvailabilityManagerHybridVentilation : public AvailabilityManage
 
   double maximumOutdoorDewpoint() const;
 
+  double minimumHVACOperationTime() const;
+
+  double minimumVentilationTime() const;
+
   Schedule minimumOutdoorVentilationAirSchedule() const;
 
   boost::optional<Curve> openingFactorFunctionofWindSpeedCurve() const;
@@ -132,6 +136,9 @@ class MODEL_API AvailabilityManagerHybridVentilation : public AvailabilityManage
 
   void resetOpeningFactorFunctionofWindSpeedCurve();
 
+  bool setMinimumHVACOperationTime(double minimumHVACOperationTime);
+
+  bool setMinimumVentilationTime(double minimumVentilationTime);
   //@}
   /** @name Other */
   //@{

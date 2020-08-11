@@ -100,6 +100,10 @@ namespace detail {
 
     boost::optional<Curve> openingFactorFunctionofWindSpeedCurve() const;
 
+    double minimumHVACOperationTime() const;
+
+    double minimumVentilationTime() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -131,6 +135,10 @@ namespace detail {
     bool setOpeningFactorFunctionofWindSpeedCurve(const boost::optional<Curve>& curve);
 
     void resetOpeningFactorFunctionofWindSpeedCurve();
+
+    bool setMinimumHVACOperationTime(double minimumHVACOperationTime);
+
+    bool setMinimumVentilationTime(double minimumVentilationTime);
 
     //@}
     /** @name Other */
