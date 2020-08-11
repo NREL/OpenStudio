@@ -12393,7 +12393,7 @@ OS:AvailabilityManager:HybridVentilation,
        \note The schedule is used to incorporate operation of simple airflow objects and HVAC
        \note system operation.
        \note The simple airflow objects are Ventilation and Mixing only
-  A10; \field ZoneVentilation Object
+  A10, \field ZoneVentilation Object
        \note This field has not been instrumented to work with
        \note global Zone or Zone List names option for Ventilation:DesignFlowRate.  In order to
        \note use, you must enter the single <Ventilation:DesignFlowRate> name in this field.
@@ -12403,6 +12403,18 @@ OS:AvailabilityManager:HybridVentilation,
        \object-list VentilationNames
        \note The other ZoneVentilation:* and ZoneMixing objects controlled in the same AirLoopHVAC
        \note will work in the same way as this ventilation object.
+  N8 , \field Minimum HVAC Operation Time
+       \note Minimum operation time when HVAC system is forced on.
+       \type real
+       \units minutes
+       \minimum 0.0
+       \default 0.0
+  N9 ; \field Minimum Ventilation Time
+       \note Minimum ventilation time when natural ventilation is forced on.
+       \type real
+       \units minutes
+       \minimum 0.0
+       \default 0.0
 
 OS:Boiler:HotWater,
        \memo This boiler model is an adaptation of the empirical model from the Building
