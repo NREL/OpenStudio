@@ -37,8 +37,12 @@
 #include "../../model/WaterHeaterStratified_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
-#include <utilities/idd/WaterHeater_Stratified_FieldEnums.hxx>
+#include "../../model/PlantLoop.hpp"
+
 #include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/core/Optional.hpp"
+
+#include <utilities/idd/WaterHeater_Stratified_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -55,7 +59,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterStratified( Wa
   boost::optional<Schedule> schedule;
 
   if (!modelObject.plantLoop() && !(modelObject.peakUseFlowRate() && modelObject.useFlowRateFractionSchedule()) ) {
-    LOG(Warn, modelObject.briefDescription() << " will not be translated as it not on a PlantLoop, and it does not have both a Peak Use Flow Rate "
+    LOG(Warn, modelObject.briefDescription() << " will not be translated as it is not on a PlantLoop, and it does not have both a Peak Use Flow Rate "
         "and a Use Flow Rate Fraction Schedule which is a required condition for stand-alone operation");
     return boost::none;
   }
