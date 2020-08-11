@@ -29,8 +29,19 @@
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
+
 #include "../AvailabilityManagerHybridVentilation.hpp"
-#include "../AvailabilityManagerHybridVentilation_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
+#include "../ThermalZone.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../Schedule.hpp"
+#include "../CurveLinear.hpp"
+#include "../Curve.hpp"
+#include "../ZoneVentilationDesignFlowRate.hpp"
+#include "../ZoneVentilationWindandStackOpenArea.hpp"
+#include "../ZoneMixing.hpp"
+#include "../Model.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -49,3 +60,153 @@ TEST_F(ModelFixture,AvailabilityManagerHybridVentilation)
     ::testing::ExitedWithCode(0), "" );
 }
 
+TEST_F(ModelFixture, AvailabilityManagerHybridVentilation_GettersSetters) {
+  Model m;
+
+  AvailabilityManagerHybridVentilation avm(m);
+  avm.setName("My AvailabilityManagerHybridVentilation");
+  EXPECT_FALSE(avm.loop());
+
+  AirLoopHVAC a(m);
+  a.addAvailabilityManager(avm);
+  ASSERT_TRUE(avm.loop());
+  EXPECT_EQ(a, avm.loop().get());
+
+  // Controlled Zone: Optional Object
+  ThermalZone z(m);
+  Schedule alwaysOn = m.alwaysOnDiscreteSchedule();
+
+  AirTerminalSingleDuctConstantVolumeNoReheat atu(m, alwaysOn);
+  EXPECT_TRUE(a.addBranchForZone(z, atu));
+
+  EXPECT_FALSE(avm.controlledZone());
+  EXPECT_TRUE(avm.setControlledZone(z));
+  ASSERT_TRUE(avm.controlledZone());
+  EXPECT_EQ(z, avm.controlledZone().get());
+  avm.resetControlledZone();
+  EXPECT_FALSE(avm.controlledZone());
+
+  // Ventilation Control Mode Schedule: Required Object
+  ScheduleConstant ventilation_control_sch(m);
+  EXPECT_TRUE(avm.setVentilationControlModeSchedule(ventilation_control_sch));
+  EXPECT_EQ(ventilation_control_sch, avm.ventilationControlModeSchedule());
+
+  // Use Weather File Rain Indicators: Required Boolean
+  EXPECT_TRUE(avm.setUseWeatherFileRainIndicators(true));
+  EXPECT_TRUE(avm.useWeatherFileRainIndicators());
+  EXPECT_TRUE(avm.setUseWeatherFileRainIndicators(false));
+  EXPECT_FALSE(avm.useWeatherFileRainIndicators());
+
+  // Maximum Wind Speed: Required Double
+  EXPECT_TRUE(avm.setMaximumWindSpeed(20.0));
+  EXPECT_EQ(20.0, avm.maximumWindSpeed());
+  // Bad Value
+  EXPECT_FALSE(avm.setMaximumWindSpeed(-10.0));
+  EXPECT_EQ(20.0, avm.maximumWindSpeed());
+
+  // Minimum Outdoor Temperature: Required Double
+  EXPECT_TRUE(avm.setMinimumOutdoorTemperature(0.0));
+  EXPECT_EQ(0.0, avm.minimumOutdoorTemperature());
+  // Bad Value
+  EXPECT_FALSE(avm.setMinimumOutdoorTemperature(-110.0));
+  EXPECT_EQ(0.0, avm.minimumOutdoorTemperature());
+
+  // Maximum Outdoor Temperature: Required Double
+  EXPECT_TRUE(avm.setMaximumOutdoorTemperature(0.0));
+  EXPECT_EQ(0.0, avm.maximumOutdoorTemperature());
+  // Bad Value
+  EXPECT_FALSE(avm.setMaximumOutdoorTemperature(-110.0));
+  EXPECT_EQ(0.0, avm.maximumOutdoorTemperature());
+
+  // Minimum Outdoor Enthalpy: Required Double
+  EXPECT_TRUE(avm.setMinimumOutdoorEnthalpy(150000.0));
+  EXPECT_EQ(150000.0, avm.minimumOutdoorEnthalpy());
+  // Bad Value
+  EXPECT_FALSE(avm.setMinimumOutdoorEnthalpy(-10.0));
+  EXPECT_EQ(150000.0, avm.minimumOutdoorEnthalpy());
+
+  // Maximum Outdoor Enthalpy: Required Double
+  EXPECT_TRUE(avm.setMaximumOutdoorEnthalpy(150000.0));
+  EXPECT_EQ(150000.0, avm.maximumOutdoorEnthalpy());
+  // Bad Value
+  EXPECT_FALSE(avm.setMaximumOutdoorEnthalpy(-10.0));
+  EXPECT_EQ(150000.0, avm.maximumOutdoorEnthalpy());
+
+  // Minimum Outdoor Dewpoint: Required Double
+  EXPECT_TRUE(avm.setMinimumOutdoorDewpoint(0.0));
+  EXPECT_EQ(0.0, avm.minimumOutdoorDewpoint());
+  // Bad Value
+  EXPECT_FALSE(avm.setMinimumOutdoorDewpoint(-110.0));
+  EXPECT_EQ(0.0, avm.minimumOutdoorDewpoint());
+
+  // Maximum Outdoor Dewpoint: Required Double
+  EXPECT_TRUE(avm.setMaximumOutdoorDewpoint(0.0));
+  EXPECT_EQ(0.0, avm.maximumOutdoorDewpoint());
+  // Bad Value
+  EXPECT_FALSE(avm.setMaximumOutdoorDewpoint(-110.0));
+  EXPECT_EQ(0.0, avm.maximumOutdoorDewpoint());
+
+  // Minimum Outdoor Ventilation Air Schedule: Optional Object but set in Ctor and non optional
+  ScheduleConstant min_oa_sch(m);
+  EXPECT_TRUE(avm.setMinimumOutdoorVentilationAirSchedule(min_oa_sch));
+  EXPECT_EQ(min_oa_sch, avm.minimumOutdoorVentilationAirSchedule());
+
+  // Opening Factor Function of Wind Speed Curve: Optional Object
+  CurveLinear opening_factor_curve(m);
+  EXPECT_FALSE(avm.openingFactorFunctionofWindSpeedCurve());
+  EXPECT_TRUE(avm.setOpeningFactorFunctionofWindSpeedCurve(opening_factor_curve));
+  ASSERT_TRUE(avm.openingFactorFunctionofWindSpeedCurve());
+  EXPECT_EQ(opening_factor_curve, avm.openingFactorFunctionofWindSpeedCurve().get());
+  avm.resetOpeningFactorFunctionofWindSpeedCurve();
+  EXPECT_FALSE(avm.openingFactorFunctionofWindSpeedCurve());
+
+  // AirflowNetwork Control Type Schedule: Optional Object
+  ScheduleConstant afn_control_sch(m);
+  EXPECT_FALSE(avm.airflowNetworkControlTypeSchedule());
+  EXPECT_TRUE(avm.setAirflowNetworkControlTypeSchedule(afn_control_sch));
+  ASSERT_TRUE(avm.airflowNetworkControlTypeSchedule());
+  EXPECT_EQ(afn_control_sch, avm.airflowNetworkControlTypeSchedule().get());
+  avm.resetAirflowNetworkControlTypeSchedule();
+  EXPECT_FALSE(avm.airflowNetworkControlTypeSchedule());
+
+  // Simple Airflow Control Type Schedule: Optional Object
+  ScheduleConstant simple_control_sch(m);
+  EXPECT_FALSE(avm.simpleAirflowControlTypeSchedule());
+  EXPECT_TRUE(avm.setSimpleAirflowControlTypeSchedule(simple_control_sch));
+  ASSERT_TRUE(avm.simpleAirflowControlTypeSchedule());
+  EXPECT_EQ(simple_control_sch, avm.simpleAirflowControlTypeSchedule().get());
+  avm.resetSimpleAirflowControlTypeSchedule();
+  EXPECT_FALSE(avm.simpleAirflowControlTypeSchedule());
+
+  // ZoneVentilation Object: Optional Object
+  EXPECT_FALSE(avm.zoneVentilationObject());
+  ZoneVentilationDesignFlowRate zvd(m);
+  EXPECT_TRUE(avm.setZoneVentilationObject(zvd));
+  ASSERT_TRUE(avm.zoneVentilationObject());
+  EXPECT_EQ(zvd, avm.zoneVentilationObject().get());
+  ZoneVentilationWindandStackOpenArea zvw(m);
+  EXPECT_TRUE(avm.setZoneVentilationObject(zvw));
+  ASSERT_TRUE(avm.zoneVentilationObject());
+  EXPECT_EQ(zvw, avm.zoneVentilationObject().get());
+  // Bad type
+  ZoneMixing zm(z);
+  EXPECT_FALSE(avm.setZoneVentilationObject(zm));
+  ASSERT_TRUE(avm.zoneVentilationObject());
+  EXPECT_EQ(zvw, avm.zoneVentilationObject().get());
+  avm.resetZoneVentilationObject();
+  EXPECT_FALSE(avm.zoneVentilationObject());
+
+  // Minimum HVAC Operation Time: Required Double
+  EXPECT_TRUE(avm.setMinimumHVACOperationTime(0.1));
+  EXPECT_EQ(0.1, avm.minimumHVACOperationTime());
+  // Bad Value
+  EXPECT_FALSE(avm.setMinimumHVACOperationTime(-10.0));
+  EXPECT_EQ(0.1, avm.minimumHVACOperationTime());
+
+  // Minimum Ventilation Time: Required Double
+  EXPECT_TRUE(avm.setMinimumVentilationTime(0.2));
+  EXPECT_EQ(0.2, avm.minimumVentilationTime());
+  // Bad Value
+  EXPECT_FALSE(avm.setMinimumVentilationTime(-10.0));
+  EXPECT_EQ(0.2, avm.minimumVentilationTime());
+}
