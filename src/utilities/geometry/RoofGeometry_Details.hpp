@@ -28,6 +28,7 @@
 
 #include "Geometry.hpp"
 #include "Vector3d.hpp"
+#include "Point3d.hpp"
 #include <boost/optional.hpp>
 #include <boost/math/constants/constants.hpp>
 
@@ -2381,7 +2382,7 @@ static void removeEmptyLav(std::vector< std::vector< std::shared_ptr<Vertex> > >
   }
 }
 
-static std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& polygon, double roofPitchDegrees) {
+[[maybe_unused]] static std::vector< std::vector<Point3d> > doStraightSkeleton(std::vector<Point3d>& polygon, double roofPitchDegrees) {
 
   /* Straight skeleton algorithm implementation. Based on highly modified Petr
   * Felkel and Stepan Obdrzalek algorithm.
@@ -2716,7 +2717,7 @@ static void applyGableLogicTwoRidgesTwoOppositeAngles(std::vector< std::vector<P
 
 }
 
-static void applyGables(std::vector< std::vector<Point3d> >& surfaces) {
+[[maybe_unused]] static void applyGables(std::vector< std::vector<Point3d> >& surfaces) {
   // Convert hip roof to gable roof
 
   // Simple logic
@@ -2776,7 +2777,7 @@ static std::vector<Point3d> getShedLine(std::vector<Point3d>& polygon, double di
   return line;
 }
 
-static std::vector< std::vector<Point3d> > doShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees) {
+[[maybe_unused]] static std::vector< std::vector<Point3d> > doShedRoof(std::vector<Point3d>& polygon, double roofPitchDegrees, double directionDegrees) {
   std::vector< std::vector<Point3d> > surfaces;
 
   double zcoord = initPolygon(polygon);

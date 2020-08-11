@@ -146,11 +146,11 @@ namespace detail {
   }
 
   bool OutputTableSummaryReports_Impl::addSummaryReports(const std::vector<std::string>& summaryReports) {
-    unsigned int num = numberofSummaryReports();
+    bool result = true;
     for (std::string summaryReport : summaryReports) {
-      addSummaryReport(summaryReport);
+      result &= addSummaryReport(summaryReport);
     }
-    return true;
+    return result;
   }
 
   boost::optional<unsigned> OutputTableSummaryReports_Impl::summaryReportIndex(const std::string& summaryReport) const {
