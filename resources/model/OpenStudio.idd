@@ -9918,7 +9918,7 @@ OS:AirLoopHVAC,
        \note This can be used to model a pressurized system or set to zero to model a DOAS with no return flow.
        \note Use ZoneAirMassFlowConservation to balance zone infiltration and mixing flows.
        \minimum 0.0
-       \default 1.0
+       \required-field
   A6, \field Branch List Name
        \note Name of a BranchList containing all the branches in this air loop
        \type object-list

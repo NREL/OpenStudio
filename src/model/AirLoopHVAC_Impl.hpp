@@ -78,6 +78,10 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   void autosizeDesignSupplyAirFlowRate();
 
+  double designReturnAirFlowFractionofSupplyAirFlow() const;
+
+  bool setDesignReturnAirFlowFractionofSupplyAirFlow(double designReturnAirFlowFractionofSupplyAirFlow);
+
   virtual Node supplyInletNode() const override;
 
   virtual Node supplyOutletNode() const override;
