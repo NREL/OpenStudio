@@ -98,9 +98,9 @@ TEST_F(UnitsFixture,OSQuantityVector_MathematicalOperators) {
 
   // basic subtraction
   resultVec = testVec1;
-  resultVec -= resultVec;
+  resultVec -= 2*resultVec;
   resultQ = testQ1;
-  resultQ -= resultQ;
+  resultQ -= 2*resultQ;
   ASSERT_EQ(2u,resultVec.size());
   EXPECT_EQ(resultQ,resultVec.getQuantity(0));
   EXPECT_EQ(resultQ,resultVec.getQuantity(1));
