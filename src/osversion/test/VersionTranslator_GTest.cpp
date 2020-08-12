@@ -899,3 +899,33 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompr
   ASSERT_TRUE(c.getTarget(34));
   EXPECT_EQ("Basin Heater Operating Schedule Name", c.getTarget(34)->nameString());
 }
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AirLoopHVAC) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_AirLoopHVAC.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_AirLoopHVAC_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:AirLoopHVAC").size());
+  WorkspaceObject a = model->getObjectsByType("OS:AirLoopHVAC")[0];
+
+  // Before insertion point
+  ASSERT_TRUE(a.getString(5, false, true));
+  EXPECT_EQ("autosize", a.getString(5, false, true).get());
+
+  // Insertion point
+  ASSERT_TRUE(a.getDouble(6));
+  EXPECT_EQ(1.0, a.getDouble(6).get());
+
+  // Brana. List
+  EXPECT_FALSE(a.getString(7, false, true));
+  // Connector List
+  EXPECT_FALSE(a.getString(8, false, true));
+
+  // Supply Side Inlet Node Name, via a PortList
+  ASSERT_TRUE(a.getTarget(9));
+  EXPECT_EQ("Supply Inlet Node", a.getTarget(9)->getTarget(4)->nameString());
+
+}

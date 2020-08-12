@@ -5379,6 +5379,31 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
 
 } // end update_3_0_0_to_3_0_1
 
+
+    //} else if (iddname == "OS:AirLoopHVAC") {
+
+      //// Design Return Air Flow Fraction of Supply Air Flow, inserted at position 6 (0-indexed)
+
+      //auto iddObject = idd_3_1_0.getObject(iddname);
+      //IdfObject newObject(iddObject.get());
+
+      //for (size_t i = 0; i < object.numFields(); ++i) {
+        //if ((value = object.getString(i))) {
+          //if (i < 6) {
+            //newObject.setString(i, value.get());
+          //} else {
+            //// Shifted by one field
+            //newObject.setString(i + 1, value.get());
+          //}
+        //}
+      //}
+
+      //// Set new field per IDD default, same as Model Ctor, since it was made required-field
+      //newObject.setDouble(6, 1.0);
+
+      //m_refactored.push_back(RefactoredObjectData(object, newObject));
+      //ss << newObject;
+
 } // osversion
 } // openstudio
 
