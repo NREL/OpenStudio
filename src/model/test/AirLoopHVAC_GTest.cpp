@@ -1459,6 +1459,8 @@ TEST_F(ModelFixture,AirLoopHVAC_designReturnAirFlowFractionofSupplyAirFlow) {
   EXPECT_TRUE(a.setDesignReturnAirFlowFractionofSupplyAirFlow(0.5));
   EXPECT_EQ(0.5, a.designReturnAirFlowFractionofSupplyAirFlow());
   // Bad Value
-  EXPECT_FALSE(a.setDesignReturnAirFlowFractionofSupplyAirFlow(1.5));
+  EXPECT_FALSE(a.setDesignReturnAirFlowFractionofSupplyAirFlow(-1.0));
   EXPECT_EQ(0.5, a.designReturnAirFlowFractionofSupplyAirFlow());
+  // TODO: Not sure if we need to limit the idd to \maximum 1.0 or not
+  // In theory it can be >1.0 for negative pressurization with a return fan flow that is > than supply. I can't say I've tested that use case.
 }
