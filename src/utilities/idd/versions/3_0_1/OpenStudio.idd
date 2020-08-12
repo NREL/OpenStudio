@@ -1,4 +1,4 @@
-!IDD_Version 3.1.0
+!IDD_Version 3.0.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.1.0
+       \default 3.0.1
   A3; \field Prerelease Identifier
        \type alpha
 
@@ -5650,7 +5650,7 @@ OS:SubSurface,
        \reference AllShadingAndHTSurfNames
   A3, \field Sub Surface Type
        \type choice
-       \default FixedWindow
+       \required-field
        \key FixedWindow
        \key OperableWindow
        \key Door
@@ -9888,7 +9888,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
 
 OS:AirLoopHVAC,
        \memo Defines a central forced air system
-       \min-fields 13
+       \min-fields 12
   A1, \field Handle
        \type handle
        \required-field
@@ -9913,12 +9913,6 @@ OS:AirLoopHVAC,
        \autosizable
        \units m3/s
        \default 0
-  N2, \field Design Return Air Flow Fraction of Supply Air Flow
-       \note The design return air flow rate as a fraction of supply air flow rate with no exhaust.
-       \note This can be used to model a pressurized system or set to zero to model a DOAS with no return flow.
-       \note Use ZoneAirMassFlowConservation to balance zone infiltration and mixing flows.
-       \minimum 0.0
-       \required-field
   A6, \field Branch List Name
        \note Name of a BranchList containing all the branches in this air loop
        \type object-list
@@ -10675,7 +10669,6 @@ OS:AirLoopHVAC:UnitarySystem,
        \note used only for heat pump configurations (i.e., a DX cooling and DX heating coil is used).
   A13, \field Cooling Coil Name
        \type object-list
-       \object-list CoilCoolingDX
        \object-list CoolingCoilsDX
        \object-list CoolingCoilsDXMultiSpeed
        \object-list CoolingCoilsDXVariableSpeed
@@ -12399,7 +12392,7 @@ OS:AvailabilityManager:HybridVentilation,
        \note The schedule is used to incorporate operation of simple airflow objects and HVAC
        \note system operation.
        \note The simple airflow objects are Ventilation and Mixing only
-  A10, \field ZoneVentilation Object
+  A10; \field ZoneVentilation Object
        \note This field has not been instrumented to work with
        \note global Zone or Zone List names option for Ventilation:DesignFlowRate.  In order to
        \note use, you must enter the single <Ventilation:DesignFlowRate> name in this field.
@@ -12409,18 +12402,6 @@ OS:AvailabilityManager:HybridVentilation,
        \object-list VentilationNames
        \note The other ZoneVentilation:* and ZoneMixing objects controlled in the same AirLoopHVAC
        \note will work in the same way as this ventilation object.
-  N8 , \field Minimum HVAC Operation Time
-       \note Minimum operation time when HVAC system is forced on.
-       \type real
-       \units minutes
-       \minimum 0.0
-       \required-field
-  N9 ; \field Minimum Ventilation Time
-       \note Minimum ventilation time when natural ventilation is forced on.
-       \type real
-       \units minutes
-       \minimum 0.0
-       \required-field
 
 OS:Boiler:HotWater,
        \memo This boiler model is an adaptation of the empirical model from the Building
@@ -15039,398 +15020,6 @@ OS:Coil:Heating:FourPipeBeam,
        \object-list UniVariateCurves
        \object-list UniVariateTables
 
-OS:Coil:Cooling:DX,
-       \memo New general DX cooling coil supporting on or more speeds and one or or operating  modes.
-       \memo Includes DX evaporator coil, compressor, and condenser.
-       \memo Object is currently only supported by the AIRLOOPHVAC:UNITARYSYSTEM object.
-       \memo Remaining Coil:Cooling:DX* objects will be deprecated at a future date,
-       \memo after which, this object will replace all other Coil:Cooling:DX* objects.
-       \min-fields 9
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \required-field
-       \type alpha
-       \reference CoilCoolingDX
-       \reference AFNCoilNames
-       \reference ConnectionObject
-  A3, \field Evaporator Inlet Node
-       \type object-list
-       \required-field
-       \object-list ConnectionNames
-  A4, \field Evaporator Outlet Node
-       \type object-list
-       \required-field
-       \object-list ConnectionNames
-  A5, \field Availability Schedule
-       \note Schedule value > 0 means the coil is available.
-       \note If this field is blank, the coil is always available.
-       \type object-list
-       \object-list ScheduleNames
-       \required-field
-  A6, \field Condenser Zone
-       \note This input field is name of a conditioned or unconditioned zone where the secondary
-       \note coil (condenser) of a DX system or heat pump is to be placed.  This is an optional
-       \note input field specified only when the user desires to reject the condenser heat into a
-       \note zone. The heat rejected is modeled as internal sensible heat gain of the zone.
-       \type object-list
-       \object-list ThermalZoneNames
-  A7, \field Condenser Inlet Node Name
-       \note This is the name of an air node in the simulation.  This may be an explicitly defined outdoor
-       \note air node, or it may be a separate air node.
-       \type alpha
-  A8, \field Condenser Outlet Node Name
-       \note This is the name of an air node in the simulation.
-       \type alpha
-  A9, \field Performance Object
-       \required-field
-       \type object-list
-       \object-list DXCoolingPerformanceNames
-  A10,\field Condensate Collection Water Storage Tank Name
-       \type object-list
-       \object-list WaterStorageTankNames
-  A11; \field Evaporative Condenser Supply Water Storage Tank Name
-       \type object-list
-       \object-list WaterStorageTankNames
-
-OS:Coil:Cooling:DX:CurveFit:Performance,
-       \memo DX cooling coil performance specification referencing one or more
-       \memo operating modes. Mode 1 is always the base design operating mode.
-       \memo Additional modes are optional states such as subcool reheat for humidity control.
-       \min-fields 12
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \required-field
-       \type alpha
-       \reference DXCoolingPerformanceNames
-  N1, \field Crankcase Heater Capacity
-       \type real
-       \minimum 0.0
-       \units W
-       \ip-units W
-       \required-field
-  N2, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
-       \type real
-       \units C
-       \required-field
-  N3, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
-       \type real
-       \minimum 0.0
-       \units C
-       \required-field
-  N4, \field Unit Internal Static Air Pressure
-       \note Enter pressure drop for the unit containing the coil.
-       \note This value is only used to calculate Energy Efficiency Ratio
-       \note (EER), Integrated Energy Efficiency Ratio (IEER), and the
-       \note Standard Rating (Net) Cooling Capacity. This value is not
-       \note used for modeling the evaporator fan during simulations.
-       \type real
-       \units Pa
-       \minimum> 0.0
-       \required-field
-  A3, \field Capacity Control Method
-       \type choice
-       \key Discrete
-       \key Continuous
-       \required-field
-  N5, \field Evaporative Condenser Basin Heater Capacity
-       \note This field is only used for Condenser Type = EvaporativelyCooled and for periods
-       \note when the basin heater is available (field Basin Heater Operating Schedule Name).
-       \note For this situation, the heater maintains the basin water temperature at the basin heater
-       \note setpoint temperature when the outdoor air temperature falls below the setpoint temperature.
-       \note The basin heater only operates when the DX coil is off.
-       \type real
-       \units W/K
-       \minimum 0.0
-       \required-field
-  N6, \field Evaporative Condenser Basin Heater Setpoint Temperature
-       \note This field is only used for Condenser Type = EvaporativelyCooled.
-       \note Enter the outdoor dry-bulb temperature when the basin heater turns on.
-       \type real
-       \units C
-       \minimum 2.0
-       \required-field
-  A4, \field Evaporative Condenser Basin Heater Operating Schedule
-       \note This field is only used for Condenser Type = EvaporativelyCooled.
-       \note Schedule values greater than 0 allow the basin heater to operate whenever the outdoor
-       \note air dry-bulb temperature is below the basin heater setpoint temperature.
-       \note If a schedule name is not entered, the basin heater is allowed to operate
-       \note throughout the entire simulation.
-       \type object-list
-       \object-list ScheduleNames
-       \required-field
-  A5, \field Compressor Fuel Type
-       \type choice
-       \key Electricity
-       \key NaturalGas
-       \key Propane
-       \key Diesel
-       \key Gasoline
-       \key FuelOilNo1
-       \key FuelOilNo2
-       \key OtherFuel1
-       \key OtherFuel2
-       \required-field
-  A6, \field Base Operating Mode
-       \note Operating Mode 1 is always used as the base design operating mode.
-       \required-field
-       \type object-list
-       \object-list DXCoolingOperatingModeNames
-  A7, \field Alternative Operating Mode 1
-       \note The alternative operating mode is used for enhanced dehumidification.
-       \note If this is blank, the coil will always operate in the base operating mode.
-       \note If an alternate mode is defined here, the coil will use the enhanced mode if
-       \note activated by the parent system controls.
-       \type object-list
-       \object-list DXCoolingOperatingModeNames
-  A8; \field Alternative Operating Mode 2
-       \note The alternative operating mode is used for enhanced dehumidification.
-       \note If this is blank, the coil will always operate in the base operating mode or
-       \note Alternative Mode 1. If both Alternative Operating Mode 1 and Mode 2 are defined here,
-       \note the coil will perform both Subcool and Reheat modes for enhanced dehumidification.
-       \note Alternative Operating Mode 1 is used as Subcool mode, and Alternative Operating Mode 2
-       \note is used as Reheat mode.
-       \type object-list
-       \object-list DXCoolingOperatingModeNames
-
-OS:Coil:Cooling:DX:CurveFit:OperatingMode,
-       \memo DX cooling coil performance for a single operating mode which may have one or more speeds.
-       \extensible: 1
-       \min-fields 14
-       \max-fields 23
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \required-field
-       \type alpha
-       \reference DXCoolingOperatingModeNames
-  N1, \field Rated Gross Total Cooling Capacity
-       \note Total (sensible+latent) cooling capacity not accounting for the effect of supply air fan heat.
-       \note Rating point: air entering the evaporator coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
-       \note air entering the condenser coil at 35 C dry-bulb/23.9 C wet-bulb.
-       \required-field
-       \type real
-       \units W
-       \minimum> 0.0
-       \autosizable
-       \note gross capacity excluding supply air fan heat
-  N2, \field Rated Evaporator Air Flow Rate
-       \note Flow rate corresponding to rated total cooling capacity, Rated SHR and Rated COP.
-       \note Should be between 0.00004027 m3/s and 0.00006041 m3/s per watt of rated total cooling capacity.
-       \required-field
-       \type real
-       \units m3/s
-       \minimum> 0.0
-       \autosizable
-  N3, \field Rated Condenser Air Flow Rate
-       \note Used to calculate evaporative condenser water use.
-       \required-field
-       \type real
-       \units m3/s
-       \minimum> 0.0
-       \autosizable
-  N4, \field Maximum Cycling Rate
-       \note The maximum on-off cycling Rate for the compressor, which occurs at 50% run time
-       \note fraction. Suggested value is 3; zero value means latent degradation model is disabled.
-       \type real
-       \units cycles/hr
-       \minimum 0.0
-       \maximum 5.0
-       \required-field
-  N5, \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
-       \note Ratio of the initial moisture evaporation rate from the cooling coil (when
-       \note the compressor first turns off) and the coil's steady state latent capacity
-       \note at rated air flow rate and temperature conditions. Suggested value is 1.5; zero value
-       \note means latent degradation model is disabled.
-       \type real
-       \units dimensionless
-       \minimum 0.0
-       \maximum 5.0
-       \required-field
-  N6, \field Latent Capacity Time Constant
-       \note Time constant for the cooling coil's latent capacity to reach steady state after
-       \note startup. Suggested value is 45; zero value means latent degradation model is disabled.
-       \type real
-       \units s
-       \minimum 0.0
-       \maximum 500.0
-       \required-field
-  N7, \field Nominal Time for Condensate Removal to Begin
-       \note The nominal time for condensate to begin leaving the coil's condensate
-       \note drain line at the coil's rated air flow rate and temperature conditions.
-       \note Nominal time is equal to the ratio of the energy of the coil's maximum
-       \note condensate holding capacity (J) to the coil's steady state latent capacity (W).
-       \note Suggested value is 1000; zero value means latent degradation model is disabled.
-       \type real
-       \units s
-       \minimum 0.0
-       \maximum 3000.0
-       \required-field
-  A3, \field Apply Latent Degradation to Speeds Greater than 1
-       \type choice
-       \key Yes
-       \key No
-       \required-field
-  A4, \field Condenser Type
-       \type choice
-       \key AirCooled
-       \key EvaporativelyCooled
-       \required-field
-  N8, \field Nominal Evaporative Condenser Pump Power
-       \note Rated power consumed by the evaporative condenser's water pump
-       \type real
-       \units W
-       \minimum 0.0
-       \autosizable
-       \required-field
-  N9, \field Nominal Speed Number
-       \note Must be lower than or equal to the highest speed number.
-       \note If blank, defaults to the highest speed number used.
-       \type integer
-  A5; \field Speed 1
-       \type object-list
-       \object-list DXCoolingSpeedNames
-       \begin-extensible
-
-OS:Coil:Cooling:DX:CurveFit:Speed,
-       \memo DX cooling coil performance for a single speed within a single operating mode.
-       \min-fields 16
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2, \field Name
-       \required-field
-       \type alpha
-       \reference DXCoolingSpeedNames
-  N1, \field Gross Total Cooling Capacity Fraction
-       \note Ratio of capacity at this speed to the
-       \note operating mode Rated Gross Total Cooling Capacity
-       \required-field
-       \type real
-       \minimum> 0.0
-  N2, \field Evaporator Air Flow Rate Fraction
-       \note Ratio of capacity at this speed to the
-       \note operating mode Rated Evaporator Air Flow Rate
-       \required-field
-       \type real
-       \minimum> 0.0
-  N3, \field Condenser Air Flow Rate Fraction
-       \note Ratio of condenser air flow at this speed to the
-       \note operating mode Rated Condenser Air Flow Rate
-       \required-field
-       \type real
-       \minimum> 0.0
-  N4, \field Gross Sensible Heat Ratio
-       \note Rated sensible heat ratio (gross sensible capacity/gross total capacity)
-       \note sensible and total capacities do not include supply fan heat
-       \required-field
-       \type real
-       \minimum 0.1
-       \maximum 1.0
-       \autosizable
-  N5, \field Gross Cooling COP
-       \note Gross cooling capacity divided by power input to the compressor and condenser fan.
-       \note Does not include supply fan heat or supply fan electrical energy input.
-       \type real
-       \units W/W
-       \minimum> 0.0
-       \required-field
-  N6, \field Active Fraction of Coil Face Area
-       \note The fraction of the cooling coil face which is actively cooled at this speed.
-       \note For non-split-face coils, this should be 1.0.
-       \type real
-       \minimum> 0.0
-       \maximum 1.0
-       \required-field
-  N7, \field Rated Evaporator Fan Power Per Volume Flow Rate
-       \note Enter the evaporator fan power per air volume flow rate at the rated test conditions.
-       \note The test conditions vary external static pressure based on total cooling capacity.
-       \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER), and the
-       \note Standard Rating (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file.
-       \note This value is not used for modeling the evaporator fan during simulations.
-       \type real
-       \units W/(m3/s)
-       \minimum 0.0
-       \maximum 1250.0
-       \required-field
-  N8, \field Evaporative Condenser Pump Power Fraction
-       \note Ratio of evaporative condenser pump power at this speed to the
-       \note operating mode Nominal Evaporative Condenser Pump Power
-       \type real
-       \minimum> 0.0
-       \required-field
-  N9, \field Evaporative Condenser Effectiveness
-       \type real
-       \units dimensionless
-       \minimum 0.0
-       \maximum 1.0
-       \required-field
-  A3, \field Total Cooling Capacity Modifier Function of Temperature Curve
-       \note biquadratic curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
-       \note quadratic curve = a + b*edb + c*edb**2
-       \note wb = entering wet-bulb temperature (C)
-       \note edb = dry-bulb temperature seen by the condenser (C)
-       \type object-list
-       \object-list BiquadraticCurves
-  A4, \field Total Cooling Capacity Modifier Function of Air Flow Fraction Curve
-       \note quadratic curve = a + b*ff + c*ff**2
-       \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
-       \note ff = Fraction of the full load flow
-       \type object-list
-       \object-list QuadraticCubicCurves
-  A5, \field Energy Input Ratio Modifier Function of Temperature Curve
-       \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
-       \note wb = entering wet-bulb temperature (C)
-       \note edb = dry-bulb temperature seen by the condenser (C)
-       \type object-list
-       \object-list BiquadraticCurves
-  A6, \field Energy Input Ratio Modifier Function of Air Flow Fraction Curve
-       \note quadratic curve = a + b*ff + c*ff**2
-       \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
-       \note ff = Fraction of the full load flow
-       \type object-list
-       \object-list QuadraticCubicCurves
-  A7, \field Part Load Fraction Correlation Curve
-       \note quadratic curve = a + b*PLR + c*PLR**2
-       \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
-       \note PLR = part load ratio (cooling load/steady state capacity)
-       \type object-list
-       \object-list QuadraticCubicCurves
-  N10,\field Rated Waste Heat Fraction of Power Input
-       \note Recoverable waste heat at full load and rated conditions
-       \required-field
-       \type real
-       \units dimensionless
-       \minimum> 0.0
-       \maximum 1.0
-  A8, \field Waste Heat Modifier Function of Temperature Curve
-       \note curve = a + b*cdb + c*cdb**2 + d*edb + e*edb**2 + f*cdb*edb
-       \note cdb = entering condenser dry-bulb temperature (C)
-       \note edb = entering coil dry-bulb temperature (C)
-       \type object-list
-       \object-list BiquadraticCurves
-  A9, \field Sensible Heat Ratio Modifier Function of Temperature Curve
-       \note curve = a + b*wb + c*wb**2 + d*db + e*db**2 + f*wb*db
-       \note wb = entering wet-bulb temperature seen by the DX cooling coil (C)
-       \note db = entering dry-bulb temperature seen by the DX cooling coil (C)
-       \note entering temperature can be outside air or pretreated air.
-       \note If this curve is used and the Sensible Heat Ratio Modifier Function of Flow Fraction (SHRFFF)
-       \note Curve Name is blank, the SHRFFF is assumed to be a constant value of 1.0.
-       \type object-list
-       \object-list BiquadraticCurves
-  A10; \field Sensible Heat Ratio Modifier Function of Flow Fraction Curve
-       \note quadratic curve = a + b*ff + c*ff**2
-       \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
-       \note ff = fraction of the full load flow
-       \note If this curve is used and the Sensible Heat Ratio Modifier Function of Temperature Curve Name (SHRFT)
-       \note Curve Name is blank, the SHRFT is assumed to be a constant value of 1.0.
-       \type object-list
-       \object-list QuadraticCubicCurves
-
 OS:Coil:Cooling:DX:SingleSpeed,
        \min-fields 15
   A1, \field Handle
@@ -15936,13 +15525,6 @@ OS:CoilPerformance:DX:Cooling,
 
 OS:Coil:Cooling:DX:MultiSpeed,
        \extensible:1
-       \max-fields 22
-       \memo Direct expansion (DX) cooling coil and condensing unit (includes electric or
-       \memo engine-driven compressor and condenser fan), multi-speed (or variable-speed).
-       \memo Optional moisture evaporation from wet coil when compressor cycles off with continuous
-       \memo fan operation. Requires two to four sets of performance data and will interpolate
-       \memo between speeds. Modeled as a single coil (multi-speed compressor or multiple
-       \memo compressors with row split or intertwined coil).
   A1, \field Handle
        \type handle
        \required-field
@@ -28208,95 +27790,6 @@ OS:Pipe:Outdoor,
        \type real
        \units m
        \minimum> 0.0
-
-OS:SwimmingPool:Indoor,
-       \memo Specifies an indoor swimming pools linked to a floor surface.
-       \memo The pool is assumed to cover the entire floor to which it is linked.
-       \min-fields 17
-  A1,  \field Handle
-       \type handle
-       \required-field
-  A2,  \field Name
-       \required-field
-       \type alpha
-       \reference ConnectionObject
-  A3,  \field Surface Name
-       \required-field
-       \note Name of the floor surface where the pool is located.
-       \type object-list
-       \object-list FloorSurfaceNames
-  N1,  \field Average Depth
-       \required-field
-       \type real
-       \units m
-  A4,  \field Activity Factor Schedule Name
-       \required-field
-       \type object-list
-       \object-list ScheduleNames
-  A5,  \field Make-up Water Supply Schedule Name
-       \required-field
-       \type object-list
-       \object-list ScheduleNames
-  A6,  \field Cover Schedule Name
-       \required-field
-       \type object-list
-       \object-list ScheduleNames
-  N2,  \field Cover Evaporation Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-       \required-field
-  N3,  \field Cover Convection Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-       \required-field
-  N4,  \field Cover Short-Wavelength Radiation Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-       \required-field
-  N5,  \field Cover Long-Wavelength Radiation Factor
-       \type real
-       \minimum 0.0
-       \maximum 1.0
-       \required-field
-  A7,  \field Pool Water Inlet Node
-       \required-field
-       \type object-list
-       \object-list ConnectionNames
-  A8,  \field Pool Water Outlet Node
-       \required-field
-       \type object-list
-       \object-list ConnectionNames
-  N6,  \field Pool Heating System Maximum Water Flow Rate
-       \type real
-       \units m3/s
-       \ip-units gal/min
-       \minimum 0.0
-       \required-field
-  N7,  \field Pool Miscellaneous Equipment Power
-       \note Power input per pool water flow rate
-       \units W-s/m3
-       \ip-units W-min/gal
-       \type real
-       \minimum 0.0
-       \required-field
-  A9,  \field Setpoint Temperature Schedule
-       \required-field
-       \type object-list
-       \object-list ScheduleNames
-  N8,  \field Maximum Number of People
-       \required-field
-       \minimum 0.0
-  A10,  \field People Schedule
-       \type object-list
-       \object-list ScheduleNames
-       \required-field
-  A11; \field People Heat Gain Schedule
-       \type object-list
-       \object-list ScheduleNames
-       \required-field
 
 \group Solar Collectors
 
