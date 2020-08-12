@@ -4900,7 +4900,7 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
     return false;
   };
 
-  auto replaceForField = [&ss, &replaceFuelTypesMap](const IdfObject& object, IdfObject& newObject, int fieldIndex) -> void {
+  auto replaceForField = [&replaceFuelTypesMap](const IdfObject& object, IdfObject& newObject, int fieldIndex) -> void {
       if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
         auto it = replaceFuelTypesMap.find(_fuelType.get());
         if (it != replaceFuelTypesMap.end()) {
