@@ -51,7 +51,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     set(CONAN_GTEST "")
   endif()
 
-  # DLM: add option for shared libs if we are building shared?
+  if(BUILD_RUBY_BINDINGS)
+    set(CONAN_RUBY "openstudio_ruby/2.5.5@nrel/testing")
+  endif()
 
   # This will create the conanbuildinfo.cmake in the current binary dir, not the cmake_binary_dir
   conan_cmake_run(REQUIRES
@@ -59,19 +61,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     ${CONAN_QT}
     openssl/1.1.0l
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    openstudio_ruby/2.5.5@nrel/testing
+    ${CONAN_RUBY}
     boost/1.71.0
-    #boost_asio/${BOOST_VERSION}@bincrafters/stable
-    #boost_program_options/${BOOST_VERSION}@bincrafters/stable
-    #boost_regex/${BOOST_VERSION}@bincrafters/stable
-    #boost_filesystem/${BOOST_VERSION}@bincrafters/stable
-    #boost_crc/${BOOST_VERSION}@bincrafters/stable
-    #boost_algorithm/${BOOST_VERSION}@bincrafters/stable
-    #boost_uuid/${BOOST_VERSION}@bincrafters/stable
-    #boost_log/${BOOST_VERSION}@bincrafters/stable
-    #boost_numeric_ublas/${BOOST_VERSION}@bincrafters/stable
-    #boost_functional/${BOOST_VERSION}@bincrafters/stable
-    #boost_geometry/${BOOST_VERSION}@bincrafters/stable
     pugixml/1.10@bincrafters/stable
     jsoncpp/1.9.2
     zlib/1.2.11

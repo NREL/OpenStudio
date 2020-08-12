@@ -254,6 +254,20 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 # Requires: EnergyPlus
 option(BUILD_TESTING "Build testing targets" OFF)
 
+option(BUILD_RUBY_BINDINGS "Build Ruby bindings" ON)
+mark_as_advanced(BUILD_RUBY_BINDINGS)
+if(CMAKE_SIZEOF_VOID_P EQUAL 4) # 32 bit
+  set(BUILD_RUBY_BINDINGS OFF CACHE BOOL "Override option" FORCE)
+  message("Ruby bindings are not support on 32 bit platforms, forcing BUILD_RUBY_BINDINGS OFF")
+endif()
+
+option(BUILD_CLI "Build OpenStudio command line interface" ON)
+mark_as_advanced(BUILD_CLI)
+if(NOT BUILD_RUBY_BINDINGS)
+  set(BUILD_CLI OFF CACHE BOOL "Override option" FORCE)
+  message("OpenStudio CLI depends on Ruby bindings which are disabled, therefore BUILD_CLI is also disabled")
+endif()
+
 # Build with OpenSSL support
 set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
 
@@ -369,7 +383,9 @@ endmacro()
 
 ###############################################################################
 
-get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
+if(BUILD_RUBY_BINDINGS)
+  get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
+endif()
 
 # Export to Parent
 if(hasParent)
@@ -573,7 +589,6 @@ elseif(WIN32)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    ## TODO: update md5 hash, but not present on GitHub as .zip, only .exe for now at least
     set(ENERGYPLUS_EXPECTED_HASH a002a02922eddccff684760116cef710)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
@@ -873,11 +888,12 @@ foreach(D ${project_directories})
   add_subdirectory(src/${D})
 endforeach()
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-  # openstudio cli and ruby bindings are not supported on 32 bit platforms
-  # due to ruby dependencies
-  add_subdirectory(src/cli)
+if(BUILD_RUBY_BINDINGS)
   add_subdirectory(ruby)
+endif()
+
+if(BUILD_CLI)
+  add_subdirectory(src/cli)
 endif()
 
 add_dependencies(openstudio_utilities
