@@ -924,8 +924,10 @@ endif()
 
 ###############################################################################
 # Targets that combine all bindings targets
-add_custom_target(ALL_RUBY_BINDINGS)
-add_dependencies(ALL_RUBY_BINDINGS ${ALL_RUBY_BINDING_TARGETS})
+if(BUILD_RUBY_BINDINGS)
+  add_custom_target(ALL_RUBY_BINDINGS)
+  add_dependencies(ALL_RUBY_BINDINGS ${ALL_RUBY_BINDING_TARGETS})
+endif()
 
 if(BUILD_PYTHON_BINDINGS)
   add_custom_target(ALL_PYTHON_BINDINGS)
