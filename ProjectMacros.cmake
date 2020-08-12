@@ -210,41 +210,41 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set(SWIG_COMMON "-Fmicrosoft")
   endif()
 
+  # check if this is the OpenStudioUtilities project
+  string(REGEX MATCH "OpenStudioUtilities" IS_UTILTIES "${NAME}")
+
+  set(swig_target "ruby_${NAME}")
+
+  # wrapper file output
+  set(SWIG_WRAPPER "ruby_${NAME}_wrap.cxx")
+  set(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}")
+  # ruby dlls should be all lowercase
+  string(TOLOWER "${NAME}" LOWER_NAME)
+
+  # utilities goes into OpenStudio:: directly, everything else is nested
+  if(IS_UTILTIES)
+    set(MODULE "OpenStudio")
+  else()
+    set(MODULE "OpenStudio::${SIMPLENAME}")
+  endif()
+
+  if(DEFINED OpenStudioCore_SWIG_INCLUDE_DIR)
+    set(extra_includes "-I${OpenStudioCore_SWIG_INCLUDE_DIR}")
+  endif()
+
+  if(DEFINED OpenStudioCore_DIR)
+    set(extra_includes2 "-I${OpenStudioCore_DIR}/src")
+  endif()
+
+  set(this_depends ${ParentSWIGWrappers})
+  list(APPEND this_depends ${PARENT_TARGET}_GeneratedHeaders)
+  list(APPEND this_depends ${RequiredHeaders})
+  list(REMOVE_DUPLICATES this_depends)
+  set(${NAME}_SWIG_Depends "${this_depends}")
+  set(${NAME}_SWIG_Depends "${this_depends}" PARENT_SCOPE)
+
   # Ruby bindings
   if(BUILD_RUBY_BINDINGS)
-    # check if this is the OpenStudioUtilities project
-    string(REGEX MATCH "OpenStudioUtilities" IS_UTILTIES "${NAME}")
-
-    set(swig_target "ruby_${NAME}")
-
-    # wrapper file output
-    set(SWIG_WRAPPER "ruby_${NAME}_wrap.cxx")
-    set(SWIG_WRAPPER_FULL_PATH "${CMAKE_CURRENT_BINARY_DIR}/${SWIG_WRAPPER}")
-    # ruby dlls should be all lowercase
-    string(TOLOWER "${NAME}" LOWER_NAME)
-
-    # utilities goes into OpenStudio:: directly, everything else is nested
-    if(IS_UTILTIES)
-      set(MODULE "OpenStudio")
-    else()
-      set(MODULE "OpenStudio::${SIMPLENAME}")
-    endif()
-
-    if(DEFINED OpenStudioCore_SWIG_INCLUDE_DIR)
-      set(extra_includes "-I${OpenStudioCore_SWIG_INCLUDE_DIR}")
-    endif()
-
-    if(DEFINED OpenStudioCore_DIR)
-      set(extra_includes2 "-I${OpenStudioCore_DIR}/src")
-    endif()
-
-    set(this_depends ${ParentSWIGWrappers})
-    list(APPEND this_depends ${PARENT_TARGET}_GeneratedHeaders)
-    list(APPEND this_depends ${RequiredHeaders})
-    list(REMOVE_DUPLICATES this_depends)
-    set(${NAME}_SWIG_Depends "${this_depends}")
-    set(${NAME}_SWIG_Depends "${this_depends}" PARENT_SCOPE)
-
     add_custom_command(
       OUTPUT "${SWIG_WRAPPER}"
       COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
