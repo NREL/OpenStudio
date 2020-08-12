@@ -4892,7 +4892,7 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       // {"OS:Boiler:HotWater", 2},  // Fuel Type
   });
 
-  auto checkIfReplaceNeeded = [this, replaceFuelTypesMap](const IdfObject& object, int fieldIndex) -> bool {
+  auto checkIfReplaceNeeded = [replaceFuelTypesMap](const IdfObject& object, int fieldIndex) -> bool {
     // std::map::contains() only in C++20
     if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
       return replaceFuelTypesMap.find(_fuelType.get()) != replaceFuelTypesMap.end();
@@ -4900,7 +4900,7 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
     return false;
   };
 
-  auto replaceForField = [this, &ss, &replaceFuelTypesMap](const IdfObject& object, IdfObject& newObject, int fieldIndex) -> void {
+  auto replaceForField = [&replaceFuelTypesMap](const IdfObject& object, IdfObject& newObject, int fieldIndex) -> void {
       if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
         auto it = replaceFuelTypesMap.find(_fuelType.get());
         if (it != replaceFuelTypesMap.end()) {

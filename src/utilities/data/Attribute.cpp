@@ -612,7 +612,7 @@ namespace detail {
       ss << *p;
     }  else if (auto * p = std::get_if<std::string>(&m_value)) {
       ss << *p;
-    } else if (auto * p = std::get_if<std::vector<Attribute>>(&m_value)) {
+    } else if (std::get_if<std::vector<Attribute>>(&m_value)) {
       // Call toXml() and save to the stringstream
       this->toXml().save(ss, "  ");
     }

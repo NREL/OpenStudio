@@ -615,6 +615,7 @@ namespace detail {
 
   void FanSystemModel_Impl::resetElectricPowerFunctionofFlowFractionCurve() {
     bool result = setString(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName, "");
+    OS_ASSERT(result);
   }
 
   bool FanSystemModel_Impl::setNightVentilationModePressureRise(double nightVentilationModePressureRise) {
