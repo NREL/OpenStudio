@@ -5386,9 +5386,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   boost::optional<model::ThermalStorageChilledWaterStratified> thermalStorage;
   std::string thermalStorageDischargePriority;
   boost::optional<model::ScheduleRuleset> tesSchedule;
-  // TODO: this variable will be used un-initialized in case the "TankSetptTemp" child key is ill-formed (not present or, doesn't cast to double)
-  // Set a default or something
-  double thermalStorageTankSetptTemp;
+  // Note: this variable will be used un-initialized in case the "TankSetptTemp" child key is ill-formed (not present or, doesn't cast to double)
+  // Setting to a default of 7.5 per E+ example 5ZoneVAV-ChilledWaterStorage-Stratified.idf
+  double thermalStorageTankSetptTemp = 7.5;
   if( auto mo = translateThrmlEngyStor(thrmlEngyStorElement, model) ) {
     thermalStorage = mo->cast<model::ThermalStorageChilledWaterStratified>();
     plantLoop.addSupplyBranchForComponent(thermalStorage.get());
@@ -5400,6 +5400,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     boost::optional<double> _tankSetptTemp = lexicalCastToDouble(tankSetptTempElement);
     if (_tankSetptTemp) {
       thermalStorageTankSetptTemp = unitToUnit(_tankSetptTemp.get(),"F","C").get();
+    } else {
+      LOG(Warn, "Missing TankSetptTemp (or bad cast to double) for '" << thermalStorage->briefDescription()
+             << ", defaulting to " << thermalStorageTankSetptTemp << " C.");
     }
 
     // charging scheme, which is a component setpoint scheme so we add SPMs
