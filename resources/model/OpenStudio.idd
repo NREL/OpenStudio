@@ -9888,7 +9888,7 @@ OS:AirConditioner:VariableRefrigerantFlow,
 
 OS:AirLoopHVAC,
        \memo Defines a central forced air system
-       \min-fields 12
+       \min-fields 13
   A1, \field Handle
        \type handle
        \required-field
@@ -9913,6 +9913,12 @@ OS:AirLoopHVAC,
        \autosizable
        \units m3/s
        \default 0
+  N2, \field Design Return Air Flow Fraction of Supply Air Flow
+       \note The design return air flow rate as a fraction of supply air flow rate with no exhaust.
+       \note This can be used to model a pressurized system or set to zero to model a DOAS with no return flow.
+       \note Use ZoneAirMassFlowConservation to balance zone infiltration and mixing flows.
+       \minimum 0.0
+       \default 1.0
   A6, \field Branch List Name
        \note Name of a BranchList containing all the branches in this air loop
        \type object-list
