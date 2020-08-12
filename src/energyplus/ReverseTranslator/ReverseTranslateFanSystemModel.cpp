@@ -189,7 +189,7 @@ boost::optional<ModelObject> ReverseTranslator::translateFanSystemModel( const W
 
   boost::optional<int> _numberofSpeeds = workspaceObject.getInt(Fan_SystemModelFields::NumberofSpeeds);
   int nExts = extensibleGroups.size();
-  int nspeeds;
+  int nspeeds = 0;
   if (_numberofSpeeds) {
     nspeeds = _numberofSpeeds.get();
     if (nExts < nspeeds) {
