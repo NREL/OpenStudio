@@ -77,58 +77,81 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   ModelObject clone(Model model) const;
 
+  // RefrigerationCase will be removed from any ModelObjectList it is already on. Clone the case if you need want it on several.
   bool addCase( const RefrigerationCase & refrigerationCase);
 
+  // Removes child from the list, but does not remove the child object itself
   void removeCase( const RefrigerationCase & refrigerationCase);
 
+  // Removes all child object from the list, but does not remove the children themselves
   void removeAllCases();
 
   std::vector<RefrigerationCase> cases() const;
 
+  // RefrigerationWalkIn will be removed from any ModelObjectList it is already on. Clone the walkin if you need want it on several.
   bool addWalkin( const RefrigerationWalkIn & refrigerationWalkin);
 
+  // Removes child from the list, but does not remove the child object itself
   void removeWalkin( const RefrigerationWalkIn & refrigerationWalkin);
 
+  // Removes all child object from the list, but does not remove the children themselves
   void removeAllWalkins();
 
   std::vector<RefrigerationWalkIn> walkins() const;
 
+  // Compressor will be removed from any ModelObjectList (either as a compressor or high stage compressor) it is already on.
+  // Clone the walkin if you need want it on several.
   bool addCompressor( const RefrigerationCompressor & compressor);
 
+  // Removes child from the list, but does not remove the child object itself
   void removeCompressor( const RefrigerationCompressor & compressor);
 
+  // Removes all child object from the list, but does not remove the children themselves
   void removeAllCompressors();
 
   std::vector<RefrigerationCompressor> compressors() const;
 
+  // Compressor will be removed from any ModelObjectList (either as a compressor or high stage compressor) it is already on.
+  // Clone the walkin if you need want it on several.
   bool addHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
 
+  // Removes child from the list, but does not remove the child object itself
   void removeHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
 
+  // Removes all child object from the list, but does not remove the children themselves
   void removeAllHighStageCompressors();
 
   std::vector<RefrigerationCompressor> highStageCompressors() const;
 
+  // RefrigerationSecondarySystem will be removed from any ModelObjectList it is already on. Clone it if you need want it on several.
   bool addSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
 
+  // Removes child from the list, but does not remove the child object itself
   void removeSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
 
+  // Removes all child object from the list, but does not remove the children themselves
   void removeAllSecondarySystemLoads();
 
   std::vector<RefrigerationSecondarySystem> secondarySystemLoads() const;
 
+  // RefrigerationCondenserCascade will be removed from any ModelObjectList it is already on. Clone it if you need want it on several.
   bool addCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
 
+  // Removes child from the list, but does not remove the child object itself
   void removeCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
 
+  // Removes all child object from the list, but does not remove the children themselves
   void removeAllCascadeCondenserLoads();
 
   std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
 
+  // RefrigerationAirChiller will be removed from any ModelObjectList it is already on. Clone it if you need want it on several.
   bool addAirChiller( const RefrigerationAirChiller & airChiller);
 
+  // Removes child from the list, but does not remove the child object itself
   void removeAirChiller( const RefrigerationAirChiller & airChiller);
 
+  // Removes all child object from the list, but does not remove the children themselves
   void removeAllAirChillers();
 
   std::vector<RefrigerationAirChiller> airChillers() const;
