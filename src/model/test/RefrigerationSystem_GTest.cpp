@@ -1428,15 +1428,157 @@ TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkinsList_Unicity)
 }
 
 // Test for #3921
-TEST_F(ModelFixture, DISABLED_RefrigerationSystem_AddCompressorMultipleTimes)
+TEST_F(ModelFixture, RefrigerationSystem_Case_AddMultipleTimes)
 {
   Model model;
-  RefrigerationSystem testObject = RefrigerationSystem(model);
+  RefrigerationSystem system = RefrigerationSystem(model);
 
   ScheduleCompact s1(model);
-  RefrigerationCompressor compressor1(model);
+  RefrigerationCase c(model, s1);
 
-  EXPECT_TRUE(testObject.addCompressor(compressor1));
-  EXPECT_TRUE(testObject.addCompressor(compressor1));
-  EXPECT_NO_THROW(testObject.remove());
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCase>().size());
+
+  EXPECT_TRUE(system.addCase(c));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCase>().size());
+  ASSERT_EQ(1, system.cases().size());
+  EXPECT_EQ(c, system.cases()[0]);
+  EXPECT_TRUE(system.addCase(c));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCase>().size());
+  ASSERT_EQ(1, system.cases().size());
+  EXPECT_EQ(c, system.cases()[0]);
+
+  // Shouldn't throw, and should remove the Case too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationCase>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_WalkIn_AddMultipleTimes)
+{
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationWalkIn walkIn(model, s1);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationWalkIn>().size());
+
+  EXPECT_TRUE(system.addWalkin(walkIn));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationWalkIn>().size());
+  ASSERT_EQ(1, system.walkins().size());
+  EXPECT_EQ(walkIn, system.walkins()[0]);
+  EXPECT_TRUE(system.addWalkin(walkIn));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationWalkIn>().size());
+  ASSERT_EQ(1, system.walkins().size());
+  EXPECT_EQ(walkIn, system.walkins()[0]);
+
+  // Shouldn't throw, and should remove the WalkIn too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationWalkIn>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_Compressor_AddMultipleTimes)
+{
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  RefrigerationCompressor compressor(model);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressor>().size());
+
+  EXPECT_TRUE(system.addCompressor(compressor));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressor>().size());
+  ASSERT_EQ(1, system.compressors().size());
+  EXPECT_EQ(compressor, system.compressors()[0]);
+  EXPECT_EQ(0, system.highStageCompressors().size());
+  EXPECT_TRUE(system.addCompressor(compressor));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressor>().size());
+  ASSERT_EQ(1, system.compressors().size());
+  EXPECT_EQ(compressor, system.compressors()[0]);
+  EXPECT_EQ(0, system.highStageCompressors().size());
+
+  // Test on the High Stage too
+  EXPECT_TRUE(system.addHighStageCompressor(compressor));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(0, system.compressors().size());
+  ASSERT_EQ(1, system.highStageCompressors().size());
+  EXPECT_EQ(compressor, system.highStageCompressors()[0]);
+
+  // Shouldn't throw, and should remove the Compressor too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationCompressor>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_SecondarySystemLoad_AddMultipleTimes)
+{
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  RefrigerationSecondarySystem secondarySystem(model);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationSecondarySystem>().size());
+
+  EXPECT_TRUE(system.addSecondarySystemLoad(secondarySystem));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationSecondarySystem>().size());
+  ASSERT_EQ(1, system.secondarySystemLoads().size());
+  EXPECT_EQ(secondarySystem, system.secondarySystemLoads()[0]);
+  EXPECT_TRUE(system.addSecondarySystemLoad(secondarySystem));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationSecondarySystem>().size());
+  ASSERT_EQ(1, system.secondarySystemLoads().size());
+  EXPECT_EQ(secondarySystem, system.secondarySystemLoads()[0]);
+
+  // Shouldn't throw, and should remove the SecondarySystem too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationSecondarySystem>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_CondenserCascadeLoad_AddMultipleTimes)
+{
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  RefrigerationCondenserCascade condenserCascade(model);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+
+  EXPECT_TRUE(system.addCascadeCondenserLoad(condenserCascade));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+  ASSERT_EQ(1, system.cascadeCondenserLoads().size());
+  EXPECT_EQ(condenserCascade, system.cascadeCondenserLoads()[0]);
+  EXPECT_TRUE(system.addCascadeCondenserLoad(condenserCascade));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+  ASSERT_EQ(1, system.cascadeCondenserLoads().size());
+  EXPECT_EQ(condenserCascade, system.cascadeCondenserLoads()[0]);
+
+  // Shouldn't throw, and should remove the CondenserCascade too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserCascade>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_AirChiller_AddMultipleTimes)
+{
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationAirChiller airChiller(model, s1);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationAirChiller>().size());
+
+  EXPECT_TRUE(system.addAirChiller(airChiller));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationAirChiller>().size());
+  ASSERT_EQ(1, system.airChillers().size());
+  EXPECT_EQ(airChiller, system.airChillers()[0]);
+  EXPECT_TRUE(system.addAirChiller(airChiller));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationAirChiller>().size());
+  ASSERT_EQ(1, system.airChillers().size());
+  EXPECT_EQ(airChiller, system.airChillers()[0]);
+
+  // Shouldn't throw, and should remove the AirChiller too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationAirChiller>().size());
 }
