@@ -5650,7 +5650,7 @@ OS:SubSurface,
        \reference AllShadingAndHTSurfNames
   A3, \field Sub Surface Type
        \type choice
-       \required-field
+       \default FixedWindow
        \key FixedWindow
        \key OperableWindow
        \key Door
@@ -15918,6 +15918,13 @@ OS:CoilPerformance:DX:Cooling,
 
 OS:Coil:Cooling:DX:MultiSpeed,
        \extensible:1
+       \max-fields 22
+       \memo Direct expansion (DX) cooling coil and condensing unit (includes electric or
+       \memo engine-driven compressor and condenser fan), multi-speed (or variable-speed).
+       \memo Optional moisture evaporation from wet coil when compressor cycles off with continuous
+       \memo fan operation. Requires two to four sets of performance data and will interpolate
+       \memo between speeds. Modeled as a single coil (multi-speed compressor or multiple
+       \memo compressors with row split or intertwined coil).
   A1, \field Handle
        \type handle
        \required-field

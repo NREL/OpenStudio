@@ -176,6 +176,9 @@ class MODEL_API CoilCoolingDXMultiSpeedStageData : public ParentObject {
   /** @name Other */
   //@{
 
+  // Returns the CoilCoolingDXMultiSpeed that references it if any
+  boost::optional<CoilCoolingDXMultiSpeed> parentCoil() const;
+
   boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const ;
 
   boost::optional<double> autosizedGrossRatedSensibleHeatRatio() const ;

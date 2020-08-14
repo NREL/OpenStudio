@@ -615,6 +615,7 @@ namespace detail {
 
   void FanSystemModel_Impl::resetElectricPowerFunctionofFlowFractionCurve() {
     bool result = setString(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName, "");
+    OS_ASSERT(result);
   }
 
   bool FanSystemModel_Impl::setNightVentilationModePressureRise(double nightVentilationModePressureRise) {
@@ -676,9 +677,8 @@ namespace detail {
   boost::optional<unsigned> FanSystemModel_Impl::speedIndex(const FanSystemModelSpeed& t_speed) const {
     boost::optional<unsigned> result;
 
-    // Find with custom predicate, checking handle equality between the toSurface and the fromSurface pairs
-    // We do it with extensibleGroups() (rather than viewFactors()) and getString to avoid overhead
-    // of manipulating actual model objects (getTarget, then create a ViewFactor wrapper, get handle convert to string...) and speed up the routine
+    // We do it with extensibleGroups() (rather than speeds()) and getString to avoid overhead
+    // of manipulating actual model objects and speed up the routine
     auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
     auto flowFraction = toString(t_speed.flowFraction());
     auto it = std::find_if(egs.begin(), egs.end(),

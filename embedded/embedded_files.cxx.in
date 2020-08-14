@@ -20,7 +20,7 @@ namespace embedded_files {
 @EMBEDDED_FILES@
   };
 
-  std::vector<std::string> fileNames() {
+  const std::vector<std::string> &fileNames() {
     static const std::vector<std::string> result = [](){
       std::vector<std::string> val;
       val.reserve(embedded_file_count);
@@ -29,10 +29,11 @@ namespace embedded_files {
       }
       return val;
     }();
+
     return result;
   }
 
-  std::map<std::string, std::pair<size_t, const uint8_t *>> files()
+  const std::map<std::string, std::pair<size_t, const uint8_t *>> &files()
   {
     static const std::map<std::string, std::pair<size_t, const uint8_t *>> fs = [](){
       std::map<std::string, std::pair<size_t, const uint8_t *>> val;
