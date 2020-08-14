@@ -205,6 +205,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGeneratorMicroTurbine_ELCD_Orphan)
   // Add it on the same branch as the chpHR, right after it
   Node mchpHROutletNode = mchpHR.outletModelObject()->cast<Node>();
   ASSERT_TRUE(waterHeater.addToNode(mchpHROutletNode));
+  EXPECT_TRUE(waterHeater.plantLoop());
 
   // Create a plantEquipmentOperationHeatingLoad
   PlantEquipmentOperationHeatingLoad operation(model);

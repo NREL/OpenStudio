@@ -3638,6 +3638,12 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_Coil_Heating_Water);
   result.push_back(IddObjectType::OS_Coil_Heating_WaterToAirHeatPump_EquationFit);
   result.push_back(IddObjectType::OS_Coil_WaterHeating_Desuperheater);
+
+  // If using a plantLoop, this will be translated by the PlantLoop. But WaterHeaters can also be used stand-alone, so always translate them
+  // We'll check in their FT if the "Peak Use Flow Rate" is actually initialized as it's an indication that the WH was
+  result.push_back(IddObjectType::OS_WaterHeater_Mixed);
+  result.push_back(IddObjectType::OS_WaterHeater_Stratified);
+
   result.push_back(IddObjectType::OS_Connection);
   result.push_back(IddObjectType::OS_Connector_Mixer);
   result.push_back(IddObjectType::OS_Connector_Splitter);

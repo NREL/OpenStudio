@@ -86,6 +86,17 @@ namespace detail {
 
     virtual boost::optional<double> ratedThermaltoElectricalPowerRatio() const override;
 
+    // Will clone also the mchpHR if any
+    virtual ModelObject clone(Model model) const override;
+
+    // Will also remove the mchpHR (and remove it from loop) if any
+    virtual std::vector<IdfObject> remove() override;
+
+    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+
+    virtual std::vector<ModelObject> children() const override;
+
+
     //@}
     /** @name Getters */
     //@{
@@ -258,11 +269,6 @@ namespace detail {
     /** @name Other */
     //@{
 
-    ModelObject clone(Model model) const override;
-
-    std::vector<IddObjectType> allowableChildTypes() const override;
-
-    std::vector<ModelObject> children() const override;
 
     //@}
    protected:
