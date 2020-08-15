@@ -889,6 +889,7 @@ class UTILITIES_API SqlFile {
     if (m_impl){
       result = m_impl->execute(statement, std::forward<Args>(args)...);
     }
+    return result;
   }
 
   void insertTimeSeriesData(const std::string &t_variableType, const std::string &t_indexGroup,
