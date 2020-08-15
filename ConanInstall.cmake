@@ -94,7 +94,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     BUILD ${CONAN_BUILD}
     # Passes `-u, --update`    to conan install: Check updates exist from upstream remotes
     # That and build=outdated should ensure we track the right
-    # UPDATE
+    UPDATE
   )
 
   set(CONAN_OPENSTUDIO_ALREADY_RUN TRUE)
