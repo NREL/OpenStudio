@@ -37,7 +37,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   #conan_add_remote(NAME jmarrec
   #  URL https://api.bintray.com/conan/jmarrec/testing)
 
-  # Enable revisions in conan
+  # Enable revisions in conan: check if they are already enabled, if not do it an warn user
   execute_process(
     COMMAND ${CONAN_CMD} config get general.revisions_enabled
     OUTPUT_VARIABLE CONAN_REV_STATUS
