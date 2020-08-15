@@ -88,6 +88,8 @@ namespace openstudio {
 namespace model {
   bool replaceDir(const openstudio::path &sourceDir, const openstudio::path &destinationDir)
   {
+    bool result = true;
+
     // Path **must** exist for `canonical()` to work, `weakly_canonical()` doesn't require this
     const auto src = openstudio::filesystem::weakly_canonical(sourceDir);
     const auto dest = openstudio::filesystem::weakly_canonical(destinationDir);
@@ -100,21 +102,22 @@ namespace model {
     }
 
     // If the source dir doesn't exist, there's a problem
-    if (!openstudio::filesystem::exists(src) || !openstudio::filesystem::is_directory(src))
-    {
+    if (!openstudio::filesystem::exists(src) || !openstudio::filesystem::is_directory(src)) {
       LOG_FREE(Error, "replaceDir", "Source directory does not exist: " << toString(src));
       return false;
     }
 
-    // If the dest dir exists, remove it
-    if (openstudio::filesystem::exists(dest))
-    {
+    // If the dest dir exists, remove all entries in it
+    if (openstudio::filesystem::exists(dest)) {
       if (openstudio::filesystem::is_directory(dest)) {
-        try {
-          openstudio::filesystem::remove_all(dest);
-        } catch (const std::exception &e) {
-          LOG_FREE(Error, "replaceDir", "Destination directory could not be removed: " << toString(dest) << "error: " << e.what());
-          return false;
+        for (openstudio::filesystem::directory_iterator end_dir_it, it(dest); it != end_dir_it; ++it) {
+          openstudio::filesystem::path path = it->path();
+          try {
+            openstudio::filesystem::remove_all(path);
+          } catch (const std::exception& e) {
+            LOG_FREE(Error, "replaceDir", "Error deleting: " << toString(path) << e.what());
+            result = false;
+          }
         }
       } else {
         LOG_FREE(Error, "replaceDir", "Destination exists and is not a directory, aborting: " << toString(dest));
@@ -123,15 +126,19 @@ namespace model {
     }
 
     // Now we recreate it, and it must work!
-    if (!openstudio::filesystem::create_directory(dest))
-    {
-      LOG_FREE(Error, "replaceDir", "Could not create destination directory: " << toString(dest));
-      return false;
+    if (!openstudio::filesystem::exists(dest)) {
+      try {
+        if (!openstudio::filesystem::create_directory(dest)) {
+          LOG_FREE(Error, "replaceDir", "Could not create destination directory: " << toString(dest));
+          return false;
+        }
+      } catch (const std::exception& e) {
+        LOG_FREE(Error, "replaceDir",  "Error creating directory: " << toString(dest) << e.what());
+        return false;
+      }
     }
 
-    bool result = true;
-    for (const auto& dirEnt : openstudio::filesystem::recursive_directory_iterator{src})
-    {
+    for (const auto& dirEnt : openstudio::filesystem::recursive_directory_iterator{src}) {
       const auto& path = dirEnt.path();
       auto relativePathStr = path.string();
       boost::replace_first(relativePathStr, src.string(), "");

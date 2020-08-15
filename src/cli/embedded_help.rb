@@ -171,7 +171,9 @@ module Kernel
     $LOADED << path
     s = EmbeddedScripting::getFileAsString(path)
     s = OpenStudio::preprocess_ruby_script(s)
+
     result = Kernel::eval(s,BINDING,path)
+
 
     current_directory = Dir.pwd
     if original_directory != current_directory

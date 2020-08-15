@@ -59,6 +59,8 @@
 #include "../../model/Space.hpp"
 
 #include <utilities/idd/ZoneHVAC_LowTemperatureRadiant_VariableFlow_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <resources.hxx>
@@ -184,4 +186,10 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Crash_no_constructions) 
   EXPECT_TRUE(testRad.addToThermalZone(z));
 
   ASSERT_NO_THROW(ft.translateModel(m));
+
+  // Test for #2797 - When no surfaces, it shouldn't even be translated or E+ will crash
+  EXPECT_TRUE(testRad.surfaces().empty());
+  Workspace w = ft.translateModel(m);
+  WorkspaceObjectVector idf_rads(w.getObjectsByType(IddObjectType::ZoneHVAC_LowTemperatureRadiant_VariableFlow));
+  EXPECT_EQ(0u, idf_rads.size());
 }
