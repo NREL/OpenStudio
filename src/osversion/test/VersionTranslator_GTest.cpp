@@ -899,3 +899,78 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoSpeed_minOATCompr
   ASSERT_TRUE(c.getTarget(34));
   EXPECT_EQ("Basin Heater Operating Schedule Name", c.getTarget(34)->nameString());
 }
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AvailabilityManagerHybridVentilation) {
+
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_AvailabilityManagerHybridVentilation.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_AvailabilityManagerHybridVentilation_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:AvailabilityManager:HybridVentilation").size());
+  WorkspaceObject avm = model->getObjectsByType("OS:AvailabilityManager:HybridVentilation")[0];
+
+  // Maximum Outdoor Dewpoint
+  ASSERT_TRUE(avm.getDouble(11));
+  EXPECT_EQ(30.0, avm.getDouble(11).get());
+
+  // Minimum Outdoor Ventilation Air Schedule
+  ASSERT_TRUE(avm.getTarget(12));
+  EXPECT_EQ("Min OA Schedule", avm.getTarget(12)->nameString());
+
+  // Opening Factor Function of Wind Speed Curve
+  ASSERT_TRUE(avm.getTarget(13));
+  EXPECT_EQ("Opening Factor Function of Wind Speed Curve", avm.getTarget(13)->nameString());
+
+  // The following three were existing in the IDD but not implemented, and they are optional
+  // AirflowNetwork Control Type Schedule
+  EXPECT_FALSE(avm.getTarget(14));
+
+  // Simple Airflow Control Type Schedule
+  EXPECT_FALSE(avm.getTarget(15));
+
+  // ZoneVentilation Object
+  EXPECT_FALSE(avm.getTarget(16));
+
+  // Following two fields added, required-fields, set to the IDD default in Ctor
+  // Minimum HVAC Operation Time
+  ASSERT_TRUE(avm.getDouble(17));
+  EXPECT_EQ(0.0, avm.getDouble(17).get());
+
+  // Minimum Ventilation Time
+  ASSERT_TRUE(avm.getDouble(18));
+  EXPECT_EQ(0.0, avm.getDouble(18).get());
+
+}
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AirLoopHVAC) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_AirLoopHVAC.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_AirLoopHVAC_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(1u, model->getObjectsByType("OS:AirLoopHVAC").size());
+  WorkspaceObject a = model->getObjectsByType("OS:AirLoopHVAC")[0];
+
+  // Before insertion point
+  ASSERT_TRUE(a.getString(5, false, true));
+  EXPECT_EQ("autosize", a.getString(5, false, true).get());
+
+  // Insertion point
+  ASSERT_TRUE(a.getDouble(6));
+  EXPECT_EQ(1.0, a.getDouble(6).get());
+
+  // Brana. List
+  EXPECT_FALSE(a.getString(7, false, true));
+  // Connector List
+  EXPECT_FALSE(a.getString(8, false, true));
+
+  // Supply Side Inlet Node Name, via a PortList
+  ASSERT_TRUE(a.getTarget(9));
+  EXPECT_EQ("Supply Inlet Node", a.getTarget(9)->getTarget(4)->nameString());
+
+}
