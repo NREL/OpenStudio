@@ -46,6 +46,8 @@ set(utilities_resources_src
   utilities/Filetypes/min.osw
   utilities/Filetypes/full.osw
   utilities/Filetypes/test_csv.csv
+  utilities/Filetypes/Floorspace_Issue4036_BeforeMerge.json
+  utilities/Filetypes/Floorspace_Issue4036_AfterMerge.json
   utilities/Geometry/floorplan.json
   utilities/Geometry/floorplan_colors.json
   utilities/Geometry/floorplan_doors.json

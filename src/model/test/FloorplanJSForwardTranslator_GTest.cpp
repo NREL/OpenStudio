@@ -64,6 +64,8 @@
 #include "../../utilities/geometry/FloorplanJS.hpp"
 #include "../../utilities/geometry/ThreeJS.hpp"
 
+#include <resources.hxx>
+
 #include <json/json.h>
 
 using namespace openstudio;
@@ -620,3 +622,77 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_MultistoryShadingRotation) {
   EXPECT_NEAR(shadingMinZ, 0.3048*0.0, 0.01);
 }
 
+
+TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue4036) {
+  
+  openstudio::path beforeMergePath = resourcesPath() / toPath("utilities/Filetypes/Floorspace_Issue4036_BeforeMerge.json");
+  openstudio::path afterMergePath = resourcesPath() / toPath("utilities/Filetypes/Floorspace_Issue4036_AfterMerge.json");
+   
+  std::stringstream ss;
+  std::ifstream inFile;
+  inFile.open(beforeMergePath.string());
+  ss << inFile.rdbuf(); 
+  std::string beforeMergeString = ss.str();  
+  inFile.close();
+  ss.clear();
+
+  inFile.open(afterMergePath.string());
+  ss << inFile.rdbuf();
+  std::string afterMergeString = ss.str();
+  inFile.close();
+  ss.clear();
+
+  boost::optional<FloorplanJS> beforeFloorplan = FloorplanJS::load(beforeMergeString);
+  ASSERT_TRUE(beforeFloorplan);
+
+  boost::optional<FloorplanJS> afterFloorplan = FloorplanJS::load(afterMergeString);
+  ASSERT_TRUE(afterFloorplan);
+
+  // translate the floorplans to models
+  boost::optional<Model> beforeModel;
+  {
+    ThreeScene threeScene = beforeFloorplan->toThreeScene(true);
+    ThreeJSReverseTranslator rt;
+    beforeModel = rt.modelFromThreeJS(threeScene);
+  }
+  ASSERT_TRUE(beforeModel);
+
+  //beforeModel->save(toPath("beforeModel.osm"), true);
+
+  boost::optional<Model> afterModel;
+  {
+    ThreeScene threeScene = afterFloorplan->toThreeScene(true);
+    ThreeJSReverseTranslator rt;
+    afterModel = rt.modelFromThreeJS(threeScene);
+  }
+  ASSERT_TRUE(afterModel);
+
+  //afterModel->save(toPath("afterModel.osm"), true);
+
+  std::vector<Model> models {beforeModel.get(), afterModel.get()};
+  for (const auto& model : models) {
+    unsigned numSpaces = 0;
+    unsigned numZones = 0;
+    unsigned numPlenums = 0;
+    
+    SpaceType plenumSpaceType = model.plenumSpaceType();
+    for (const auto& space : model.getConcreteModelObjects<Space>()) {
+      numSpaces += 1;
+      if (space.spaceType() && space.spaceType()->handle() == plenumSpaceType.handle()) {
+        numPlenums += 1;
+        for (const auto& surface : space.surfaces()) {
+          // no doors or windows on the plenums
+          EXPECT_EQ(0, surface.subSurfaces().size());
+        }
+      }
+    }
+
+    for (const auto& zone : model.getConcreteModelObjects<ThermalZone>()) {
+      numZones += 1;
+    }
+
+    EXPECT_EQ(numSpaces, 9);
+    EXPECT_EQ(numZones, 9);
+    EXPECT_EQ(numPlenums, 6);
+  }
+}
