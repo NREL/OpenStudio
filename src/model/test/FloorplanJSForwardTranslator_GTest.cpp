@@ -678,6 +678,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue4036) {
     SpaceType plenumSpaceType = model.plenumSpaceType();
     for (const auto& space : model.getConcreteModelObjects<Space>()) {
       numSpaces += 1;
+      ASSERT_TRUE(space.thermalZone());
       if (space.spaceType() && space.spaceType()->handle() == plenumSpaceType.handle()) {
         numPlenums += 1;
         for (const auto& surface : space.surfaces()) {
@@ -689,6 +690,7 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue4036) {
 
     for (const auto& zone : model.getConcreteModelObjects<ThermalZone>()) {
       numZones += 1;
+      EXPECT_EQ(1u, zone.spaces().size());
     }
 
     EXPECT_EQ(numSpaces, 9);
