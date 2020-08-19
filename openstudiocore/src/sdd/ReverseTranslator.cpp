@@ -1354,6 +1354,36 @@ namespace sdd {
         var = model::OutputVariable("Zone Combined Outdoor Air Mass Flow Rate",*result);
         var.setReportingFrequency(interval);
 
+        var = model::OutputVariable("Zone VRF Air Terminal Cooling Electric Power",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone VRF Air Terminal Total Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone VRF Air Terminal Sensible Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone VRF Air Terminal Latent Cooling Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone VRF Air Terminal Heating Electric Power",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone VRF Air Terminal Total Heating Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone VRF Air Terminal Sensible Heating Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone VRF Air Terminal Latent Heating Rate",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Zone VRF Air Terminal Fan Availability Status",*result);
+        var.setReportingFrequency(interval);
+
+        var = model::OutputVariable("Fan Electric Power",*result);
+        var.setReportingFrequency(interval);
+
         {
           auto zonehvac = result->getModelObjects<model::ZoneHVACWaterToAirHeatPump>();
           for( const auto & comp : zonehvac ) {
