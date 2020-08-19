@@ -1449,3 +1449,18 @@ TEST_F(ModelFixture,AirLoopHVAC_multiloops) {
   EXPECT_EQ(2, z1.airLoopHVACs().size());
 }
 
+TEST_F(ModelFixture,AirLoopHVAC_designReturnAirFlowFractionofSupplyAirFlow) {
+  // Test for new field added per #4039
+  Model m;
+  AirLoopHVAC a(m);
+  // Test Ctor value (E+ IDD default)
+  EXPECT_TRUE(a.isDesignSupplyAirFlowRateAutosized());
+  EXPECT_EQ(1.0, a.designReturnAirFlowFractionofSupplyAirFlow());
+  EXPECT_TRUE(a.setDesignReturnAirFlowFractionofSupplyAirFlow(0.5));
+  EXPECT_EQ(0.5, a.designReturnAirFlowFractionofSupplyAirFlow());
+  // Bad Value
+  EXPECT_FALSE(a.setDesignReturnAirFlowFractionofSupplyAirFlow(-1.0));
+  EXPECT_EQ(0.5, a.designReturnAirFlowFractionofSupplyAirFlow());
+  // TODO: Not sure if we need to limit the idd to \maximum 1.0 or not
+  // In theory it can be >1.0 for negative pressurization with a return fan flow that is > than supply. I can't say I've tested that use case.
+}

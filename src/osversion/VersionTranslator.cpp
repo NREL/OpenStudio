@@ -143,7 +143,8 @@ VersionTranslator::VersionTranslator()
   m_updateMethods[VersionString("2.9.1")] = &VersionTranslator::update_2_9_0_to_2_9_1;
   m_updateMethods[VersionString("3.0.0")] = &VersionTranslator::update_2_9_1_to_3_0_0;
   m_updateMethods[VersionString("3.0.1")] = &VersionTranslator::update_3_0_0_to_3_0_1;
-  //m_updateMethods[VersionString("3.0.2")] = &VersionTranslator::defaultUpdate;
+  m_updateMethods[VersionString("3.1.0")] = &VersionTranslator::update_3_0_1_to_3_1_0;
+  //m_updateMethods[VersionString("3.1.0")] = &VersionTranslator::defaultUpdate;
 
   // List of previous versions that may be updated to this one.
   //   - To increment the translator, add an entry for the version just released (branched for
@@ -295,7 +296,8 @@ VersionTranslator::VersionTranslator()
   m_startVersions.push_back(VersionString("2.9.0"));
   m_startVersions.push_back(VersionString("2.9.1"));
   m_startVersions.push_back(VersionString("3.0.0"));
-  //m_startVersions.push_back(VersionString("3.0.1"));
+  m_startVersions.push_back(VersionString("3.0.1"));
+  //m_startVersions.push_back(VersionString("3.1.0"));
 }
 
 boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm,
@@ -4717,31 +4719,6 @@ std::string VersionTranslator::update_2_8_1_to_2_9_0(const IdfFile& idf_2_8_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
-
-    } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
-      auto iddObject = idd_2_9_0.getObject("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow");
-      IdfObject newObject(iddObject.get());
-
-      // Added fields at end, so copy everything existing in place
-      for (size_t i = 0; i < object.numFields(); ++i) {
-        if ((value = object.getString(i))) {
-          newObject.setString(i, value.get());
-        }
-      }
-
-      // 21 = AVM List
-      // 22 = Design Spec ZoneHVAC Sizing
-      // 23 = Supplemental Heating Coil (optional)
-      // Maximum SAT for Supplemental Heater
-      newObject.setString(24, "Autosize");
-      // Maximum OATdb for Supplemental Heater
-      newObject.setDouble(25, 21.0);
-
-      // Register refactored
-      m_refactored.push_back(RefactoredObjectData(object, newObject));
-      ss << newObject;
-
-
     // Four fields were added but only the last (End Use Subcat) was implemented, but withotu transition rules either
     } else if ((iddname == "OS:HeaderedPumps:ConstantSpeed") || (iddname == "OS:HeaderedPumps:VariableSpeed")) {
       auto iddObject = idd_2_9_0.getObject(iddname);
@@ -4917,7 +4894,7 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       // {"OS:Boiler:HotWater", 2},  // Fuel Type
   });
 
-  auto checkIfReplaceNeeded = [this, replaceFuelTypesMap](const IdfObject& object, int fieldIndex) -> bool {
+  auto checkIfReplaceNeeded = [replaceFuelTypesMap](const IdfObject& object, int fieldIndex) -> bool {
     // std::map::contains() only in C++20
     if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
       return replaceFuelTypesMap.find(_fuelType.get()) != replaceFuelTypesMap.end();
@@ -4925,7 +4902,7 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
     return false;
   };
 
-  auto replaceForField = [this, &ss, &replaceFuelTypesMap](const IdfObject& object, IdfObject& newObject, int fieldIndex) -> void {
+  auto replaceForField = [&replaceFuelTypesMap](const IdfObject& object, IdfObject& newObject, int fieldIndex) -> void {
       if (boost::optional<std::string> _fuelType = object.getString(fieldIndex)) {
         auto it = replaceFuelTypesMap.find(_fuelType.get());
         if (it != replaceFuelTypesMap.end()) {
@@ -5226,6 +5203,31 @@ std::string VersionTranslator::update_2_9_1_to_3_0_0(const IdfFile& idf_2_9_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else if (iddname == "OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow") {
+      // Note #3687 was originally planned for 2.9.0 inclusion, so VT was there. But it was only merged to develop3 and hence relased in 3.0.0
+      // Moving it in the right location, as needed per #4016
+      auto iddObject = idd_3_0_0.getObject("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow");
+      IdfObject newObject(iddObject.get());
+
+      // Added fields at end, so copy everything existing in place
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+      // 21 = AVM List
+      // 22 = Design Spec ZoneHVAC Sizing
+      // 23 = Supplemental Heating Coil (optional)
+      // Maximum SAT for Supplemental Heater
+      newObject.setString(24, "Autosize");
+      // Maximum OATdb for Supplemental Heater
+      newObject.setDouble(25, 21.0);
+
+      // Register refactored
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     // No-op
     } else {
       ss << object;
@@ -5378,6 +5380,73 @@ std::string VersionTranslator::update_3_0_0_to_3_0_1(const IdfFile& idf_3_0_0, c
   return ss.str();
 
 } // end update_3_0_0_to_3_0_1
+
+
+std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, const IddFileAndFactoryWrapper& idd_3_1_0) {
+  std::stringstream ss;
+  boost::optional<std::string> value;
+
+  ss << idf_3_0_1.header() << std::endl << std::endl;
+  IdfFile targetIdf(idd_3_1_0.iddFile());
+  ss << targetIdf.versionObject().get();
+
+  for (const IdfObject& object : idf_3_0_1.objects()) {
+    auto iddname = object.iddObject().name();
+
+    if (iddname == "OS:AvailabilityManager:HybridVentilation") {
+      // Added 2 new fields at end only, and made them required-field by setting their default in the Ctor, so VT needed
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+      // Set new fields per IDD default, same as Model Ctor, since it was made required-field
+      // Minimum HVAC Operation Time
+      newObject.setDouble(17, 0.0);
+      // Minimum Ventilation Time
+      newObject.setDouble(18, 0.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:AirLoopHVAC") {
+
+      // Design Return Air Flow Fraction of Supply Air Flow, inserted at position 6 (0-indexed)
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            newObject.setString(i, value.get());
+          } else {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Set new field per IDD default, same as Model Ctor, since it was made required-field
+      newObject.setDouble(6, 1.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    // No-op
+    } else {
+      ss << object;
+    }
+  }
+
+  return ss.str();
+
+} // end update_3_0_1_to_3_1_0
 
 } // osversion
 } // openstudio

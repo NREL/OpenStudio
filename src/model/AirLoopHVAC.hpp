@@ -98,6 +98,9 @@ class MODEL_API AirLoopHVAC : public Loop
 
   void autosizeDesignSupplyAirFlowRate();
 
+  double designReturnAirFlowFractionofSupplyAirFlow() const;
+
+  bool setDesignReturnAirFlowFractionofSupplyAirFlow(double designReturnAirFlowFractionofSupplyAirFlow);
 
   /** Returns the supply inlet node. */
   Node supplyInletNode() const override;

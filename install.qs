@@ -1,6 +1,20 @@
 function Controller () {
+  installer.autoRejectMessageBoxes();
+
   // silent install is not an option until QtIFW v3.0.1
-  // gui.setSilent(true);
+  gui.setSilent(true);
+
+  installer.setMessageBoxAutomaticAnswer("OverwriteTargetDirectory",
+                                         QMessageBox.Yes);
+
+  installer.installationFinished.connect(function() {
+    gui.clickButton(buttons.NextButton);
+  });
+  // Uninstaller
+  installer.uninstallationFinished.connect(function() {
+    gui.clickButton(buttons.NextButton);
+  });
+  
 }
 
 Controller.prototype.IntroductionPageCallback = function () {
@@ -44,4 +58,3 @@ Controller.prototype.ReadyForInstallationPageCallback = function () {
 Controller.prototype.FinishedPageCallback = function () {
   gui.clickButton(buttons.FinishButton);
 }
-

@@ -414,7 +414,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   ASSERT_FALSE(availableEnvPeriods.empty());
   EXPECT_EQ(static_cast<unsigned>(3), availableEnvPeriods.size());
   std::string availableEnvPeriod;
-  for (int i = 0; i < availableEnvPeriods.size(); i++)
+  for (size_t i = 0; i < availableEnvPeriods.size(); i++)
   {
     if (availableEnvPeriods[i].find("CONDNS") == std::string::npos) {
       availableEnvPeriod = availableEnvPeriods[i];

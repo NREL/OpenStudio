@@ -98,13 +98,13 @@ TEST_F(UnitsFixture,OSQuantityVector_MathematicalOperators) {
 
   // basic subtraction
   resultVec = testVec1;
-  resultVec -= resultVec;
+  resultVec -= 2*resultVec;
   resultQ = testQ1;
-  resultQ -= resultQ;
+  resultQ -= 2*resultQ;
   ASSERT_EQ(2u,resultVec.size());
   EXPECT_EQ(resultQ,resultVec.getQuantity(0));
   EXPECT_EQ(resultQ,resultVec.getQuantity(1));
-  EXPECT_EQ(0.0,resultQ.value());
+  EXPECT_EQ(-3.5,resultQ.value());
 
   resultVec = testVec1 - testVec2;
   resultQ = testQ1 - testQ2;

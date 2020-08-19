@@ -269,6 +269,10 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
         OptionalWaterUseConnections waterUseConnections(const openstudio::model::WaterUseEquipment& weq){
           return weq.waterUseConnections();
         }
+
+        OptionalCoilCoolingDXMultiSpeed parentCoil(const openstudio::model::CoilCoolingDXMultiSpeedStageData& stage){
+          return stage.parentCoil();
+        }
       }
     }
   }
@@ -285,6 +289,13 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
     {
       public OptionalWaterUseConnections waterUseConnections() {
         return OpenStudio.OpenStudioModelStraightComponent.waterUseConnections(this);
+      }
+    }
+
+    public partial class CoilCoolingDXMultiSpeedStageData : ParentObject
+    {
+      public OptionalCoilCoolingDXMultiSpeed parentCoil() {
+        return OpenStudio.OpenStudioModelStraightComponent.parentCoil(this);
       }
     }
 

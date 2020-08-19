@@ -353,3 +353,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_MultiLoop_ControllerMV) 
   }
 
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_designReturnAirFlowFractionofSupplyAirFlow) {
+
+  ForwardTranslator ft;
+
+  Model m;
+  AirLoopHVAC a(m);
+  // Test Ctor value (E+ IDD default)
+  EXPECT_TRUE(a.setDesignReturnAirFlowFractionofSupplyAirFlow(0.5));
+  EXPECT_EQ(0.5, a.designReturnAirFlowFractionofSupplyAirFlow());
+
+  Workspace w = ft.translateModel(m);
+
+  // Get AVM list (only one should be present)
+  WorkspaceObjectVector idfObjs(w.getObjectsByType(IddObjectType::AirLoopHVAC));
+  ASSERT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_loop(idfObjs[0]);
+  EXPECT_EQ(0.5, idf_loop.getDouble(AirLoopHVACFields::DesignReturnAirFlowFractionofSupplyAirFlow).get());
+}

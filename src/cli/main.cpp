@@ -160,6 +160,12 @@ extern "C" {
     void Init_readline(void);
     void Init_syslog(void);
   #endif
+
+    VALUE init_rest_of_openstudio(...) {
+      init_openstudio_internal_extended(); 
+      return Qtrue;
+    }
+
 }
 
 std::vector<std::string> paths;
@@ -537,7 +543,13 @@ int main(int argc, char *argv[])
     #endif
 
     // openstudio
-    init_openstudio_internal();
+    init_openstudio_internal_basic();
+
+    auto module = rb_define_module("OpenStudio");
+    rb_define_module_function(module,
+                     "init_rest_of_openstudio",
+                     init_rest_of_openstudio,
+                     0);
   }
 
   // DLM: this will interpret any strings passed on the command line as UTF-8
@@ -551,7 +563,7 @@ int main(int argc, char *argv[])
   try{
     rubyInterpreter.evalString(R"(
        begin
-         (require 'openstudio_cli')
+         require 'openstudio_cli'
        rescue Exception => e
          puts
          puts "Error: #{e.message}"

@@ -162,6 +162,20 @@ namespace detail {
     return newCHP;
   }
 
+  std::vector<IdfObject> GeneratorMicroTurbine_Impl::remove() {
+    std::vector<IdfObject> result;
+
+    if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = generatorMicroTurbineHeatRecovery()) {
+      std::vector<IdfObject> objs = mchpHR->remove();
+      result.insert(result.end(), objs.begin(), objs.end());
+    }
+
+    std::vector<IdfObject> objs = Generator_Impl::remove();
+    result.insert(result.end(), objs.begin(), objs.end());
+
+    return result;
+  }
+
   // Return allowable child types: Generator:MicroTurbine
   std::vector<IddObjectType> GeneratorMicroTurbine_Impl::allowableChildTypes() const
   {

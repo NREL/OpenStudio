@@ -78,17 +78,21 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   void autosizeDesignSupplyAirFlowRate();
 
-  Node supplyInletNode() const override;
+  double designReturnAirFlowFractionofSupplyAirFlow() const;
 
-  Node supplyOutletNode() const override;
+  bool setDesignReturnAirFlowFractionofSupplyAirFlow(double designReturnAirFlowFractionofSupplyAirFlow);
 
-  std::vector<Node> supplyOutletNodes() const override;
+  virtual Node supplyInletNode() const override;
 
-  Node demandInletNode() const override;
+  virtual Node supplyOutletNode() const override;
 
-  std::vector<Node> demandInletNodes() const override;
+  virtual std::vector<Node> supplyOutletNodes() const override;
 
-  Node demandOutletNode() const override;
+  virtual Node demandInletNode() const override;
+
+  virtual std::vector<Node> demandInletNodes() const override;
+
+  virtual Node demandOutletNode() const override;
 
   boost::optional<Node> outdoorAirNode() const;
 
@@ -100,7 +104,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) override;
+  virtual std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) override;
 
   boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
@@ -196,7 +200,7 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
 
   std::vector<ThermalZone> thermalZones() const;
 
-  std::vector<ModelObject> children() const override;
+  virtual std::vector<ModelObject> children() const override;
 
   Schedule availabilitySchedule() const;
 
