@@ -1845,9 +1845,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
           }
         }
       }
-    }
-    else if(istringEqual(airSegmentTypeElement.text().toStdString(),"Relief"))
-    {
+    } else if (
+      istringEqual(airSegmentTypeElement.text().toStdString(),"Relief") ||
+      istringEqual(airSegmentTypeElement.text().toStdString(),"Exhaust")
+    ) {
       QDomElement fanElement = airSegmentElement.firstChildElement("Fan");
       if( ! fanElement.isNull() )
       {
