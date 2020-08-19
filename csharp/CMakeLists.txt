@@ -247,7 +247,7 @@ if( BUILD_NUGET_PACKAGE )
       BINARY_DIR ${PROJECT_BINARY_DIR}/OS-32
       BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config Release
       CMAKE_GENERATOR
-        "Visual Studio 15 2017"
+        "Visual Studio 16 2019"
       CMAKE_ARGS
         -A Win32
       CMAKE_CACHE_ARGS
