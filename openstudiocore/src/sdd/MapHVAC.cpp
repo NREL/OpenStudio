@@ -6577,18 +6577,20 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
     }
     else
     {
-      QDomElement flowMinElement = pumpElement.firstChildElement("FlowMinSim");
-      value = flowMinElement.text().toDouble(&ok);
-      if( ok ) {
-        auto flowMin = unitToUnit(value, "gal/min", "m^3/s").get();
-        pump.setMinimumFlowRate(flowMin);
-      }
-
       if( flowCap ) {
         if( equal(flowCap.get(),0.0) ) {
           LOG(Warn,pump.name().get() << " has 0 capacity specified.");
         }
         pump.setRatedFlowRate(flowCap.get());
+      }
+
+      if(flowCap && (! equal(flowCap.get(),0.0))) {
+        QDomElement flowMinElement = pumpElement.firstChildElement("FlowMinSim");
+        value = flowMinElement.text().toDouble(&ok);
+        if( ok ) {
+          auto flowMin = unitToUnit(value, "gal/min", "m^3/s").get();
+          pump.setDesignMinimumFlowRateFraction(flowMin / flowCap.get());
+        }
       }
 
       if( pwr ) {
