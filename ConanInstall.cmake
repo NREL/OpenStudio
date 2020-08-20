@@ -65,7 +65,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     set(CONAN_GTEST "")
   endif()
 
-  # DLM: add option for shared libs if we are building shared?
+  if(BUILD_RUBY_BINDINGS)
+    set(CONAN_RUBY "openstudio_ruby/2.5.5@nrel/testing")
+  endif()
 
   # This will create the conanbuildinfo.cmake in the current binary dir, not the cmake_binary_dir
   conan_cmake_run(REQUIRES
