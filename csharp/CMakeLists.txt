@@ -250,6 +250,7 @@ if( BUILD_NUGET_PACKAGE )
         "Visual Studio 16 2019"
       CMAKE_ARGS
         -A Win32
+        -DCMAKE_BUILD_TYPE=Release
       CMAKE_CACHE_ARGS
         -DBUILD_CSHARP_BINDINGS:BOOL=ON
         -DBUILD_NUGET_PACKAGE:BOOL=OFF
