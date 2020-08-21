@@ -31,6 +31,7 @@
 #define UTILITIES_SQL_PREPAREDSTATEMENT_HPP
 
 #include "../UtilitiesAPI.hpp"
+#include "../core/String.hpp"
 
 #include <sqlite3.h>
 #include <boost/optional.hpp>
@@ -140,6 +141,26 @@ struct PreparedStatement
     }
     return true;
   }
+
+  // Makes no sense
+  bool bind(int position, bool val) = delete;
+  bool bind(int position, char val) = delete;
+
+  /** char* to std::string. */
+  bool bind(int position, const char* s) {
+    return bind(position, openstudio::toString(s));
+  }
+
+  /** wstring to std::string. */
+  bool bind(int position, const std::wstring& w) {
+    return bind(position, openstudio::toString(w));
+  }
+
+  /** wchar_t* to std::string. */
+  bool bind(int position, const wchar_t* w) {
+    return bind(position, openstudio::toString(w));
+  }
+
 
   template<typename... Args>
   bool bindAll(Args&&... args) {
