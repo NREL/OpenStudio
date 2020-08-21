@@ -73,7 +73,8 @@ class MODEL_API ConstructionWithInternalSource : public LayeredConstruction {
   /// (when boiler/hot water heater performance is not affected by return and supply water
   /// temperatures). A value of 1 will trigger a two-dimensional solution for this surface only.
   /// This may be necessary for hydronic radiant cooling situations since chiller performance is
-  /// affected by the water temperatures provided.  Defaults to 1.
+  /// affected by the water temperatures provided.
+  /// Defaults to 1.
   int dimensionsForTheCTFCalculation() const;
   bool setDimensionsForTheCTFCalculation(int dimensionsForTheCTFCalculation);
 
@@ -84,13 +85,20 @@ class MODEL_API ConstructionWithInternalSource : public LayeredConstruction {
   double tubeSpacing() const;
   bool setTubeSpacing(double tubeSpacing);
 
+  /// Used in conjunction with field Temperature Calculation Requested After Layer Number
+  /// this field is the location perpendicular to the main direction of heat transfer
+  /// 0.0 means in line with the tubing, 1.0 means at the midpoint between two adjacent pipes
+  /// this field is ignored for 1-D calculations
+  /// Defaults to 0.0.
+  double twoDimensionalTemperatureCalculationPosition() const;
+  bool setTwoDimensionalTemperatureCalculation Position(double twoDimensionalTemperatureCalculationPosition);
+
   //@}
   /** @name Static Methods */
   //@{
 
   static IddObjectType iddObjectType();
   ConstructionWithInternalSource reverseConstructionWithInternalSource() const;
-
 
   //@}
  protected:

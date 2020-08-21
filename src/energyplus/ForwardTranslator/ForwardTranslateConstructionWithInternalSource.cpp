@@ -71,6 +71,9 @@ namespace energyplus {
   // Tube Spacing
   idfObject.setDouble(Construction_InternalSourceFields::TubeSpacing, modelObject.tubeSpacing());
 
+  // Two Dimensional Temperature Calculation Position
+  idfObject.setDouble(Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition, modelObject.twoDimensionalTemperatureCalculationPosition());
+
   //Layers
   MaterialVector layers = modelObject.layers();
 

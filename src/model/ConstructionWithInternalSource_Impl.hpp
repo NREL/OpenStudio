@@ -40,17 +40,6 @@ namespace detail {
   class MODEL_API ConstructionWithInternalSource_Impl : public LayeredConstruction_Impl
   {
 
-
-
-
-
-
-
-
-
-
-
-
   public:
 
     // constructor
@@ -98,6 +87,11 @@ namespace detail {
     /// Returns tubeSpacing.
     double tubeSpacing() const;
     bool setTubeSpacing(double tubeSpacing);
+
+    /// Returns twoDimensionalTemperatureCalculationPosition.
+    double twoDimensionalTemperatureCalculationPosition() const;
+    bool setTwoDimensionalTemperatureCalculationPosition(double twoDimensionalTemperatureCalculationPosition);
+
     ConstructionWithInternalSource reverseConstructionWithInternalSource() const;
 
   private:

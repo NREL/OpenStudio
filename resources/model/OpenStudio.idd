@@ -3670,7 +3670,7 @@ OS:Construction:FfactorGroundFloor,
 
 OS:Construction:InternalSource,
        \memo Start with outside layer and work your way to the inside Layer
-       \memo Up to 10 layers total, 8 for windows
+       \memo Up to 10 layers total
        \memo Enter the material name for each layer
        \extensible:1
        \min-fields 8
@@ -3687,11 +3687,13 @@ OS:Construction:InternalSource,
        \type integer
        \default 1
        \minimum 1
+       \maximum 10
   N2, \field Temperature Calculation Requested After Layer Number
        \note refers to the list of materials which follows
        \type integer
        \default 1
        \minimum 1
+       \maximum 10
   N3, \field Dimensions for the CTF Calculation
        \note 1 = 1-dimensional calculation, 2 = 2-dimensional calculation
        \type integer
@@ -3704,6 +3706,17 @@ OS:Construction:InternalSource,
        \type real
        \default 0.154
        \units m
+       \minimum 0.0
+       \maximum< 1.0
+  N5 , \field Two-Dimensional Temperature Calculation Position
+       \minimum 0.0
+       \maximum 1.0
+       \default 0.0
+       \units dimensionless
+       \note used in conjunction with field Temperature Calculation Requested After Layer Number
+       \note this field is the location perpendicular to the main direction of heat transfer
+       \note 0.0 means in line with the tubing, 1.0 means at the midpoint between two adjacent pipes
+       \note this field is ignored for 1-D calculations
   A3, \field Surface Rendering Name
        \type object-list
        \object-list SurfaceRenderingNames
