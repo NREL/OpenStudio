@@ -31022,13 +31022,16 @@ OS:Meter:Custom,
         \key Propane
         \key FuelOilNo1
         \key FuelOilNo2
-        \key Coal
         \key Diesel
         \key Gasoline
-        \key Water
-        \key Generic
+        \key Coal
         \key OtherFuel1
         \key OtherFuel2
+        \key Steam
+        \key DistrictHeating
+        \key DistrictCooling
+        \key Water
+        \key Generic
    A4,  \field Key Name
         \begin-extensible
    A5;  \field Output Variable or Meter Name
