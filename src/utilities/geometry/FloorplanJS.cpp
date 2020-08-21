@@ -519,28 +519,32 @@ namespace openstudio{
     const Json::Value daylightingControlDefinitions = m_value.get("daylighting_control_definitions", Json::arrayValue);
     const Json::Value doorDefinitions = m_value.get("door_definitions", Json::arrayValue);
 
-    // get all the windows on this story
+    // get all the windows on this story unless this is a plenum
     std::map<std::string, std::vector<Json::Value> > edgeIdToWindowsMap;
-    for (const auto& window : story.get("windows", Json::arrayValue)){
-      assertKeyAndType(window, "edge_id", Json::stringValue);
+    if (!belowFloorPlenum && !aboveCeilingPlenum) {   
+      for (const auto& window : story.get("windows", Json::arrayValue)){
+        assertKeyAndType(window, "edge_id", Json::stringValue);
 
-      std::string edgeId = window.get("edge_id", "").asString();
-      if (edgeIdToWindowsMap.find(edgeId) == edgeIdToWindowsMap.end()){
-        edgeIdToWindowsMap[edgeId] = std::vector<Json::Value>();
+        std::string edgeId = window.get("edge_id", "").asString();
+        if (edgeIdToWindowsMap.find(edgeId) == edgeIdToWindowsMap.end()){
+          edgeIdToWindowsMap[edgeId] = std::vector<Json::Value>();
+        }
+        edgeIdToWindowsMap[edgeId].push_back(window);
       }
-      edgeIdToWindowsMap[edgeId].push_back(window);
     }
 
-    // get all the doors on this story
+    // get all the doors on this story unless this is a plenum
     std::map<std::string, std::vector<Json::Value> > edgeIdToDoorsMap;
-    for (const auto& door : story.get("doors", Json::arrayValue)){
-      assertKeyAndType(door, "edge_id", Json::stringValue);
+    if (!belowFloorPlenum && !aboveCeilingPlenum) {   
+      for (const auto& door : story.get("doors", Json::arrayValue)){
+        assertKeyAndType(door, "edge_id", Json::stringValue);
 
-      std::string edgeId = door.get("edge_id", "").asString();
-      if (edgeIdToDoorsMap.find(edgeId) == edgeIdToDoorsMap.end()){
-        edgeIdToDoorsMap[edgeId] = std::vector<Json::Value>();
+        std::string edgeId = door.get("edge_id", "").asString();
+        if (edgeIdToDoorsMap.find(edgeId) == edgeIdToDoorsMap.end()){
+          edgeIdToDoorsMap[edgeId] = std::vector<Json::Value>();
+        }
+        edgeIdToDoorsMap[edgeId].push_back(door);
       }
-      edgeIdToDoorsMap[edgeId].push_back(door);
     }
 
     // get the face
