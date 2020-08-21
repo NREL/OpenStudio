@@ -529,15 +529,24 @@ OS:PerformancePrecisionTradeoffs,
       \key Mode03
       \key Mode04
       \key Mode05
+      \key Mode06
+      \key Mode07
       \key Advanced
       \default Normal
-  N1; \field MaxZoneTempDiff
+  N1, \field MaxZoneTempDiff
       \note Maximum zone temperature change before HVAC timestep is shortened.
       \note Only used when Override Mode is set to Advanced
       \type real
       \minimum 0.1
       \maximum 3.0
       \default 0.3
+  N2; \field MaxAllowedDelTemp
+      \note Maximum surface temperature change before HVAC timestep is shortened.
+      \note Only used when Override Mode is set to Advanced
+      \type real
+      \minimum 0.002
+      \maximum 0.1
+      \default 0.002
 
 OS:Sizing:Parameters,
        \unique-object

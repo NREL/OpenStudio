@@ -169,6 +169,26 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  double PerformancePrecisionTradeoffs_Impl::maxAllowedDelTemp() const {
+    boost::optional<double> value = getDouble(OS_PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool PerformancePrecisionTradeoffs_Impl::isMaxAllowedDelTempDefaulted() const {
+    return isEmpty(OS_PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp);
+  }
+
+  bool PerformancePrecisionTradeoffs_Impl::setMaxAllowedDelTemp(double maxAllowedDelTemp) {
+    bool result = setDouble(OS_PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp, maxAllowedDelTemp);
+    // OS_ASSERT(result);
+    return result;
+  }
+
+  void PerformancePrecisionTradeoffs_Impl::resetMaxAllowedDelTemp() {
+    bool result = setString(OS_PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp, "");
+    OS_ASSERT(result);
+  }
 
 } // detail
 
@@ -243,6 +263,22 @@ void PerformancePrecisionTradeoffs::resetMaxZoneTempDiff() {
   getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->resetMaxZoneTempDiff();
 }
 
+// MaxAllowedDelTemp
+double PerformancePrecisionTradeoffs::maxAllowedDelTemp() const {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->maxAllowedDelTemp();
+}
+
+bool PerformancePrecisionTradeoffs::isMaxAllowedDelTempDefaultedDefaulted() const {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->isMaxAllowedDelTempDefaultedDefaulted();
+}
+
+bool PerformancePrecisionTradeoffs::setMaxZoneTempDiff(double maxAllowedDelTemp) {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->setMaxZoneTempDiff(maxAllowedDelTemp);
+}
+
+void PerformancePrecisionTradeoffs::resetMaxAllowedDelTemp() {
+  getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->resetMaxAllowedDelTemp();
+}
 
 /// @cond
 PerformancePrecisionTradeoffs::PerformancePrecisionTradeoffs(std::shared_ptr<detail::PerformancePrecisionTradeoffs_Impl> impl)

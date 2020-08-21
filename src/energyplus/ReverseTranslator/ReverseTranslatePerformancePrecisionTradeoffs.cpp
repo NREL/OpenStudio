@@ -76,6 +76,9 @@ OptionalModelObject ReverseTranslator::translatePerformancePrecisionTradeoffs( c
     performancePrecisionTradeoffs.setMaxZoneTempDiff(optD.get());
   }
 
+  if (OptionalDouble optD = workspaceObject.getDouble(PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp)) {
+    performancePrecisionTradeoffs.setMaxAllowedDelTemp(optD.get());
+  }
 
   return performancePrecisionTradeoffs;
 }

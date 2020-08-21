@@ -84,6 +84,9 @@ namespace detail {
     double maxZoneTempDiff() const;
     bool isMaxZoneTempDiffDefaulted() const;
 
+    double maxAllowedDelTemp() const;
+    bool isMaxAllowedDelTempDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -99,6 +102,9 @@ namespace detail {
 
     bool setMaxZoneTempDiff(double maxZoneTempDiff);
     void resetMaxZoneTempDiff();
+
+    bool setMaxAllowedDelTemp(double maxAllowedDelTemp);
+    void resetMaxAllowedDelTemp();
 
     //@}
     /** @name Other */
