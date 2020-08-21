@@ -123,7 +123,7 @@ namespace detail{
       // TODO: DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
       // until then, make this include all possible outputVariableNames for class regardless of fuelType
       // std::string fuelType = this->fuelType();
-      // => ["NaturalGas", "Propane", "Diesel", "Gasoline", "FuelOilNo1", "FuelOilNo2", "OtherFuel1", "OtherFuel2"]
+      // => ["NaturalGas", "Propane", "Diesel", "Gasoline", "Coal", "FuelOilNo1", "FuelOilNo2", "OtherFuel1", "OtherFuel2"]
       //         "Heating Coil <Fuel Type> Energy",
       // if (fuelType == "NaturalGas") {
         "Heating Coil Gas Energy",
@@ -155,6 +155,11 @@ namespace detail{
         "Heating Coil Gasoline Rate",
         "Heating Coil Ancillary Gasoline Energy",
         "Heating Coil Ancillary Gasoline Rate",
+      // } else if (fuelType == "Coal") {
+        "Heating Coil Coal Energy",
+        "Heating Coil Coal Rate",
+        "Heating Coil Ancillary Coal Energy",
+        "Heating Coil Ancillary Coal Rate",
       // } else if (fuelType == "OtherFuel1") {
         "Heating Coil OtherFuel1 Energy",
         "Heating Coil OtherFuel1 Rate",

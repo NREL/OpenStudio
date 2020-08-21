@@ -17100,6 +17100,7 @@ OS:Coil:Heating:Gas,
        \key Propane
        \key Diesel
        \key Gasoline
+       \key Coal
        \key FuelOilNo1
        \key FuelOilNo2
        \key OtherFuel1
