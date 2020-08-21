@@ -71,7 +71,7 @@ struct PreparedStatement
   }
 
   template<typename... Args>
-  PreparedStatement(const std::string &t_stmt, sqlite3 *t_db, bool t_transaction = false, Args&&... args)
+  PreparedStatement(const std::string &t_stmt, sqlite3 *t_db, bool t_transaction, Args&&... args)
   : m_db(t_db), m_statement(nullptr), m_transaction(t_transaction)
   {
     if (m_transaction)
