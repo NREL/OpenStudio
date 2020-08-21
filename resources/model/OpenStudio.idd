@@ -31274,6 +31274,9 @@ OS:Output:Table:SummaryReports,
        \key MechanicalVentilationLoadsMonthly
        \key HeatEmissionsSummary
        \key HeatEmissionsReportMonthly
+       \key ThermalResilienceSummary
+       \key CO2ResilienceSummary
+       \key VisualResilienceSummary
 
 \group Energy Management System (EMS)
 
