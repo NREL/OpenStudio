@@ -136,15 +136,15 @@ namespace detail{
         "Heating Coil Ancillary Propane Energy",
         "Heating Coil Ancillary Propane Rate",
       // } else if (fuelType == "FuelOilNo1") {
-        "Heating Coil FuelOil#1 Energy",
-        "Heating Coil FuelOil#1 Rate",
-        "Heating Coil Ancillary FuelOil#1 Energy",
-        "Heating Coil Ancillary FuelOil#1 Rate",
+        "Heating Coil FuelOilNo1 Energy",
+        "Heating Coil FuelOilNo1 Rate",
+        "Heating Coil Ancillary FuelOilNo1 Energy",
+        "Heating Coil Ancillary FuelOilNo1 Rate",
       // } else if (fuelType == "FuelOilNo2") {
-        "Heating Coil FuelOil#2 Energy",
-        "Heating Coil FuelOil#2 Rate",
-        "Heating Coil Ancillary FuelOil#2 Energy",
-        "Heating Coil Ancillary FuelOil#2 Rate",
+        "Heating Coil FuelOilNo2 Energy",
+        "Heating Coil FuelOilNo2 Rate",
+        "Heating Coil Ancillary FuelOilNo2 Energy",
+        "Heating Coil Ancillary FuelOilNo2 Rate",
       // } else if (fuelType == "Diesel") {
         "Heating Coil Diesel Energy",
         "Heating Coil Diesel Rate",

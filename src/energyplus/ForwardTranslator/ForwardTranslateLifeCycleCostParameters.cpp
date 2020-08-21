@@ -161,8 +161,8 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCostParameters( 
     makeUsePriceEscalation(modelObject.gasolineInflation(),    "Gasoline", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
     makeUsePriceEscalation(modelObject.dieselInflation(),      "Diesel", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
     makeUsePriceEscalation(modelObject.coalInflation(),        "Coal", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
-    makeUsePriceEscalation(modelObject.fuelOil1Inflation(),    "FuelOil#1", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
-    makeUsePriceEscalation(modelObject.fuelOil2Inflation(),    "FuelOil#2", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
+    makeUsePriceEscalation(modelObject.fuelOil1Inflation(),    "FuelOilNo1", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
+    makeUsePriceEscalation(modelObject.fuelOil2Inflation(),    "FuelOilNo2", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
     makeUsePriceEscalation(modelObject.propaneInflation(),     "Propane", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
     makeUsePriceEscalation(modelObject.waterInflation(),       "Water", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
   }

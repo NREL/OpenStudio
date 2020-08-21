@@ -134,11 +134,11 @@ namespace detail {
         "Water Heater Propane Rate",
         "Water Heater Propane Energy",
         // } else if (fuelType == "FuelOilNo1") {
-        "Water Heater FuelOil#1 Rate",
-        "Water Heater FuelOil#1 Energy",
+        "Water Heater FuelOilNo1 Rate",
+        "Water Heater FuelOilNo1 Energy",
         // } else if (fuelType == "FuelOilNo2") {
-        "Water Heater FuelOil#2 Rate",
-        "Water Heater FuelOil#2 Energy",
+        "Water Heater FuelOilNo2 Rate",
+        "Water Heater FuelOilNo2 Energy",
         // } else if (fuelType == "Coal") {
         "Water Heater Coal Rate",
         "Water Heater Coal Energy",
