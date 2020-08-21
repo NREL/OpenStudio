@@ -817,7 +817,6 @@ class UTILITIES_API SqlFile {
   /** @name Generic Query Interface */
   //@{
 
-
   /// execute a statement and return the first (if any) value as a double
   // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
   template<typename... Args>
@@ -827,6 +826,11 @@ class UTILITIES_API SqlFile {
       result = m_impl->execAndReturnFirstDouble(statement, std::forward<Args>(args)...);
     }
     return result;
+  }
+
+  boost::optional<double> execAndReturnFirstDouble(const std::string& statement) const {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execAndReturnFirstDouble<>(statement);
   }
 
   /// execute a statement and return the first (if any) value as a int
@@ -840,6 +844,11 @@ class UTILITIES_API SqlFile {
     return result;
   }
 
+  boost::optional<int> execAndReturnFirstInt(const std::string& statement) const {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execAndReturnFirstInt<>(statement);
+  }
+
   /// execute a statement and return the first (if any) value as a string
   // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
   template<typename... Args>
@@ -850,6 +859,12 @@ class UTILITIES_API SqlFile {
     }
     return result;
   }
+
+  boost::optional<std::string> execAndReturnFirstString(const std::string& statement) const {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execAndReturnFirstString<>(statement);
+  }
+
   /// execute a statement and return the results (if any) in a vector of double
   // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
   template<typename... Args>
@@ -859,6 +874,11 @@ class UTILITIES_API SqlFile {
       result = m_impl->execAndReturnVectorOfDouble(statement, std::forward<Args>(args)...);
     }
     return result;
+  }
+
+  boost::optional<std::vector<double> > execAndReturnVectorOfDouble(const std::string& statement) const {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execAndReturnVectorOfDouble<>(statement);
   }
 
   /// execute a statement and return the results (if any) in a vector of int
@@ -871,6 +891,12 @@ class UTILITIES_API SqlFile {
     }
     return result;
   }
+
+  boost::optional<std::vector<int> > execAndReturnVectorOfInt(const std::string& statement) const {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execAndReturnVectorOfInt<>(statement);
+  }
+
   /// execute a statement and return the results (if any) in a vector of string
   // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
   template<typename... Args>
@@ -881,6 +907,12 @@ class UTILITIES_API SqlFile {
     }
     return result;
   }
+
+  boost::optional<std::vector<std::string> > execAndReturnVectorOfString(const std::string& statement) const {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execAndReturnVectorOfString<>(statement);
+  }
+
   /// execute a statement and return the error code, used for create/drop tables
   // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
   template<typename... Args>
@@ -890,6 +922,11 @@ class UTILITIES_API SqlFile {
       result = m_impl->execute(statement, std::forward<Args>(args)...);
     }
     return result;
+  }
+
+  int execute(const std::string& statement) {
+    // Forward to the variadic one. This one is for the ruby bindings
+    return execute<>(statement);
   }
 
   void insertTimeSeriesData(const std::string &t_variableType, const std::string &t_indexGroup,
