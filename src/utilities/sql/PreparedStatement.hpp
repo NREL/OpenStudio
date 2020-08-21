@@ -143,7 +143,6 @@ struct PreparedStatement
   }
 
   // Makes no sense
-  bool bind(int position, bool val) = delete;
   bool bind(int position, char val) = delete;
 
   /** char* to std::string. */
@@ -161,6 +160,10 @@ struct PreparedStatement
     return bind(position, openstudio::toString(w));
   }
 
+  // This one would happen automatically, but I would rather be explicit
+  bool bind(int position, bool val) {
+    return bind(position, static_cast<int>(val));
+  }
 
   template<typename... Args>
   bool bindAll(Args&&... args) {
