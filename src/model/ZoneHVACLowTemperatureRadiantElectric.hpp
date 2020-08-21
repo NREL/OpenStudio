@@ -87,6 +87,10 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
 
   bool isTemperatureControlTypeDefaulted() const;
 
+  std::string setpointControlType() const;
+
+  bool isSetpointControlTypeDefaulted() const;
+
   double heatingThrottlingRange() const;
 
   bool isHeatingThrottlingRangeDefaulted() const;
@@ -110,6 +114,10 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
   bool setTemperatureControlType(std::string temperatureControlType);
 
   void resetTemperatureControlType();
+
+  bool setSetpointControlType(std::string setpointControlType);
+
+  void resetSetpointControlType();
 
   bool setHeatingThrottlingRange(double heatingThrottlingRange);
 

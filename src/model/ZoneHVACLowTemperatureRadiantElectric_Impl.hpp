@@ -96,15 +96,19 @@ namespace detail {
 
     bool isTemperatureControlTypeDefaulted() const;
 
+    std::string setpointControlType() const;
+
+    bool isSetpointControlTypeDefaulted() const;
+
     double heatingThrottlingRange() const;
 
     bool isHeatingThrottlingRangeDefaulted() const;
 
-  boost::optional<double> autosizedMaximumElectricalPowertoPanel() const ;
+    boost::optional<double> autosizedMaximumElectricalPowertoPanel() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
 
     /** @name Setters */
 
@@ -125,6 +129,10 @@ namespace detail {
     bool setTemperatureControlType(std::string temperatureControlType);
 
     void resetTemperatureControlType();
+
+    bool setSetpointControlType(std::string setpointControlType);
+
+    void resetSetpointControlType();
 
     bool setHeatingThrottlingRange(double heatingThrottlingRange);
 

@@ -246,6 +246,18 @@ namespace detail {
     return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType);
   }
 
+  std::string ZoneHVACLowTemperatureRadiantElectric_Impl::setpointControlType() const
+  {
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::SetpointControlType,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::isSetpointControlTypeDefaulted() const
+  {
+    return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::SetpointControlType);
+  }
+
   double ZoneHVACLowTemperatureRadiantElectric_Impl::heatingThrottlingRange() const
   {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingThrottlingRange,true);
@@ -339,6 +351,18 @@ namespace detail {
   void ZoneHVACLowTemperatureRadiantElectric_Impl::resetTemperatureControlType()
   {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType, "");
+    OS_ASSERT(result);
+  }
+
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setSetpointControlType(std::string setpointControlType)
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::SetpointControlType, setpointControlType);
+    return result;
+  }
+
+  void ZoneHVACLowTemperatureRadiantElectric_Impl::resetSetpointControlType()
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::SetpointControlType, "");
     OS_ASSERT(result);
   }
 
@@ -471,6 +495,7 @@ ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(con
   resetRadiantSurfaceType();
   autosizeMaximumElectricalPowertoPanel();
   setTemperatureControlType("MeanAirTemperature");
+  setSetpointControlType("HalfFlowPower");
   setHeatingThrottlingRange(2.0);
   //setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingSetpointTemperatureScheduleName,"");
 
@@ -537,6 +562,16 @@ bool ZoneHVACLowTemperatureRadiantElectric::isTemperatureControlTypeDefaulted() 
   return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->isTemperatureControlTypeDefaulted();
 }
 
+std::string ZoneHVACLowTemperatureRadiantElectric::setpointControlType() const
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setpointControlType();
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::isSetpointControlTypeDefaulted() const
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->isSetpointControlTypeDefaulted();
+}
+
 double ZoneHVACLowTemperatureRadiantElectric::heatingThrottlingRange() const
 {
   return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->heatingThrottlingRange();
@@ -590,6 +625,16 @@ bool ZoneHVACLowTemperatureRadiantElectric::setTemperatureControlType(std::strin
 void ZoneHVACLowTemperatureRadiantElectric::resetTemperatureControlType()
 {
   getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->resetTemperatureControlType();
+}
+
+bool ZoneHVACLowTemperatureRadiantElectric::setSetpointControlType(std::string setpointControlType)
+{
+  return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setSetpointControlType(setpointControlType);
+}
+
+void ZoneHVACLowTemperatureRadiantElectric::resetSetpointControlType()
+{
+  getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->resetSetpointControlType();
 }
 
 bool ZoneHVACLowTemperatureRadiantElectric::setHeatingThrottlingRange(double heatingThrottlingRange)
