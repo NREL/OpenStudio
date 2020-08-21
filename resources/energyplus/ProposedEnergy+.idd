@@ -5310,8 +5310,8 @@ Construction:InternalSource,
        \memo Up to 10 layers total
        \memo Enter the material name for each layer
        \extensible:1
-       \min-fields 6
-       \max-fields 15
+       \min-fields 7
+       \max-fields 16
   A1 , \field Name
        \required-field
        \type alpha
@@ -24708,7 +24708,6 @@ ZoneHVAC:HybridUnitaryHVAC,
         \minimum> 0
         \note Input the external static pressure when the system operates at maximum supply air flow rate. Fan affinity laws are used to scale supply fan power from the values tabulated in lookup tables, to values that match the external static pressure input to this field. If this field is blank, the supply fan power is not scaled from the values tabulated in lookup tables.
         \units Pa
-
    A13, \field Fan Heat Included in Lookup Tables
         \type choice
         \key No
@@ -25971,7 +25970,7 @@ ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \type choice
         \key HalfFlowPower
         \key ZeroFlowPower
-        \default HalfFlowPowe
+        \default HalfFlowPower
    A8 , \field Heating Design Capacity Method
         \type choice
         \key HeatingDesignCapacity
