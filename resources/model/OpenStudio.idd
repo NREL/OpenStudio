@@ -31343,6 +31343,7 @@ OS:EnergyManagementSystem:ProgramCallingManager,
   A3, \field EnergyPlus Model Calling Point
        \type choice
        \key BeginNewEnvironment
+       \key BeginZoneTimestepBeforeSetCurrentWeather
        \key AfterNewEnvironmentWarmUpIsComplete
        \key BeginZoneTimestepBeforeInitHeatBalance
        \key BeginZoneTimestepAfterInitHeatBalance
