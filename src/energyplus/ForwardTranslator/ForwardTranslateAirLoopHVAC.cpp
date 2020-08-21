@@ -397,6 +397,10 @@ boost::optional<IdfObject> ForwardTranslator::translateAirLoopHVAC( AirLoopHVAC 
     idfObject.setDouble(openstudio::AirLoopHVACFields::DesignSupplyAirFlowRate,val.get());
   }
 
+  // Design Return Air Flow Fraction of Supply Air Flow
+  idfObject.setDouble(openstudio::AirLoopHVACFields::DesignReturnAirFlowFractionofSupplyAirFlow,
+                      airLoopHVAC.designReturnAirFlowFractionofSupplyAirFlow());
+
   // Branch List Name
   IdfObject branchList(openstudio::IddObjectType::BranchList);
   branchList.setName(airLoopHVACName + " Supply Branches");

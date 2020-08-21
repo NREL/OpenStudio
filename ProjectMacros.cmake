@@ -151,17 +151,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   set(ParentSWIGWrappers "")
   # Now we loop through all of the parent swig targets and collect the requirements from them
   foreach(p ${PARENT_SWIG_TARGETS})
-    get_target_property(target_files "ruby_${p}" SOURCES)
-
-    if("${target_files}" STREQUAL "target_files-NOTFOUND")
-      message(FATAL_ERROR "Unable to locate sources for ruby_${p}, there is probably an error in the build order for ${NAME} in the top level CMakeLists.txt or you have not properly specified the dependencies in MAKE_SWIG_TARGET for ${NAME}")
-    endif()
-
-    #message(STATUS "${target_files}")
-    # This is the real data collection
     list(APPEND ParentSWIGWrappers ${${p}_SWIG_Depends})
   endforeach()
-
 
   # Reduce the size of the RequiredHeaders list
   list(REMOVE_DUPLICATES RequiredHeaders)
@@ -219,8 +210,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     set(SWIG_COMMON "-Fmicrosoft")
   endif()
 
-  # Ruby bindings
-
   # check if this is the OpenStudioUtilities project
   string(REGEX MATCH "OpenStudioUtilities" IS_UTILTIES "${NAME}")
 
@@ -254,185 +243,86 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   set(${NAME}_SWIG_Depends "${this_depends}")
   set(${NAME}_SWIG_Depends "${this_depends}" PARENT_SCOPE)
 
-  #message(STATUS "${${NAME}_SWIG_Depends}")
-
-  #set(RUBY_AUTODOC "")
-  #if(BUILD_DOCUMENTATION)
-  #  set(RUBY_AUTODOC -features autodoc=1)
-  #endif()
-
-  add_custom_command(
-    OUTPUT "${SWIG_WRAPPER}"
-    COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
-            "${SWIG_EXECUTABLE}"
-            "-ruby" "-c++" "-fvirtual" "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src" "${extra_includes}" "${extra_includes2}" ${RUBY_AUTODOC}
-            -module "${MODULE}" -initname "${LOWER_NAME}"
-            "-I${PROJECT_SOURCE_DIR}/ruby"
-            -o "${SWIG_WRAPPER_FULL_PATH}"
-            "${SWIG_DEFINES}" ${SWIG_COMMON} "${KEY_I_FILE}"
-    DEPENDS ${this_depends}
-  )
-
-  if(MAXIMIZE_CPU_USAGE)
-    add_custom_target(${swig_target}_swig
-      SOURCES "${SWIG_WRAPPER}"
-    )
-    add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
-  endif()
-
-  include_directories(${PROJECT_SOURCE_DIR})
-
-  add_library(
-    ${swig_target} OBJECT
-    ${SWIG_WRAPPER}
-  )
-
-
-  # run rdoc
-  if(BUILD_DOCUMENTATION)
-    add_custom_target(${swig_target}_rdoc
-      ${CMAKE_COMMAND} -E chdir "${PROJECT_BINARY_DIR}/ruby/${CMAKE_CFG_INTDIR}" "${CONAN_BIN_DIRS_OPENSTUDIO_RUBY}/ruby" "${PROJECT_SOURCE_DIR}/../developer/ruby/SwigWrapToRDoc.rb" "${PROJECT_BINARY_DIR}/" "${SWIG_WRAPPER_FULL_PATH}" "${NAME}"
-      DEPENDS ${SWIG_WRAPPER}
+  # Ruby bindings
+  if(BUILD_RUBY_BINDINGS)
+    add_custom_command(
+      OUTPUT "${SWIG_WRAPPER}"
+      COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
+              "${SWIG_EXECUTABLE}"
+              "-ruby" "-c++" "-fvirtual" "-I${PROJECT_SOURCE_DIR}/src" "-I${PROJECT_BINARY_DIR}/src" "${extra_includes}" "${extra_includes2}" ${RUBY_AUTODOC}
+              -module "${MODULE}" -initname "${LOWER_NAME}"
+              "-I${PROJECT_SOURCE_DIR}/ruby"
+              -o "${SWIG_WRAPPER_FULL_PATH}"
+              "${SWIG_DEFINES}" ${SWIG_COMMON} "${KEY_I_FILE}"
+      DEPENDS ${this_depends}
     )
 
-    # Add this documentation target to the list of all targets
-    list(APPEND ALL_RDOC_TARGETS ${swig_target}_rdoc)
-    set(ALL_RDOC_TARGETS "${ALL_RDOC_TARGETS}" PARENT_SCOPE)
-
-  endif()
-
-  #set_target_properties(${swig_target} PROPERTIES PREFIX "")
-  #set_target_properties(${swig_target} PROPERTIES OUTPUT_NAME "${LOWER_NAME}")
-  #if(APPLE)
-  #  set_target_properties(${swig_target} PROPERTIES SUFFIX ".bundle" )
-  #  #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
-  #  #set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-undefined suppress -flat_namespace")
-  #endif()
-
-
-  if(MSVC)
-    #set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EXTCONF_H=<osruby_config.h> -DRUBY_EMBEDDED /bigobj /wd4996") ## /wd4996 suppresses deprecated warning
-    set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033 /wd4244") ## /wd4996 suppresses deprecated warning, /wd5033 supresses 'register' is no longer a supported storage class, /wd4244 supresses conversion from 'type1' to 'type2' possible loss of data
-  elseif(UNIX)
-    # If 'AppleClang' or 'Clang'
-    if("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")
-      # Prevent excessive warnings from generated swig files, suppress deprecated declarations
-      # Suppress 'register' storage class specified warnings (coming from Ruby)
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-register -Wno-sometimes-uninitialized")
-    else()
-      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-register -Wno-conversion-null -Wno-misleading-indentation")
+    if(MAXIMIZE_CPU_USAGE)
+      add_custom_target(${swig_target}_swig
+        SOURCES "${SWIG_WRAPPER}"
+      )
+      add_dependencies(${PARENT_TARGET} ${swig_target}_swig)
     endif()
+
+    include_directories(${PROJECT_SOURCE_DIR})
+
+    add_library(
+      ${swig_target} OBJECT
+      ${SWIG_WRAPPER}
+    )
+
+    # run rdoc
+    if(BUILD_DOCUMENTATION)
+      add_custom_target(${swig_target}_rdoc
+        ${CMAKE_COMMAND} -E chdir "${PROJECT_BINARY_DIR}/ruby/${CMAKE_CFG_INTDIR}" "${CONAN_BIN_DIRS_OPENSTUDIO_RUBY}/ruby" "${PROJECT_SOURCE_DIR}/../developer/ruby/SwigWrapToRDoc.rb" "${PROJECT_BINARY_DIR}/" "${SWIG_WRAPPER_FULL_PATH}" "${NAME}"
+        DEPENDS ${SWIG_WRAPPER}
+      )
+
+      # Add this documentation target to the list of all targets
+      list(APPEND ALL_RDOC_TARGETS ${swig_target}_rdoc)
+      set(ALL_RDOC_TARGETS "${ALL_RDOC_TARGETS}" PARENT_SCOPE)
+
+    endif()
+
+    if(MSVC)
+      #set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-DRUBY_EXTCONF_H=<osruby_config.h> -DRUBY_EMBEDDED /bigobj /wd4996") ## /wd4996 suppresses deprecated warning
+      set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033 /wd4244") ## /wd4996 suppresses deprecated warning, /wd5033 supresses 'register' is no longer a supported storage class, /wd4244 supresses conversion from 'type1' to 'type2' possible loss of data
+    elseif(UNIX)
+      # If 'AppleClang' or 'Clang'
+      if("${CMAKE_CXX_COMPILER_ID}" MATCHES "^(Apple)?Clang$")
+        # Prevent excessive warnings from generated swig files, suppress deprecated declarations
+        # Suppress 'register' storage class specified warnings (coming from Ruby)
+        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-register -Wno-sometimes-uninitialized")
+      else()
+        set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-register -Wno-conversion-null -Wno-misleading-indentation")
+      endif()
+    endif()
+
+    set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/ruby/")
+    set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
+    set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
+    target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends})
+    target_include_directories(${swig_target} PRIVATE ${RUBY_INCLUDE_DIRS})
+    add_dependencies(${swig_target} ${PARENT_TARGET})
+
+    # QT-Separation-Move
+    target_include_directories(${swig_target} PUBLIC ${QT_INCLUDES})
+    target_compile_definitions(${swig_target} PUBLIC ${QT_DEFS})
+
+    execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
+
+    # add this target to a "global" variable so ruby tests can require these
+    list(APPEND ALL_RUBY_BINDING_TARGETS "${swig_target}")
+    set(ALL_RUBY_BINDING_TARGETS "${ALL_RUBY_BINDING_TARGETS}" PARENT_SCOPE)
+
+    # add this target to a "global" variable so ruby tests can require these
+    list(APPEND ALL_RUBY_BINDING_WRAPPERS "${SWIG_WRAPPER}")
+    set(ALL_RUBY_BINDING_WRAPPERS "${ALL_RUBY_BINDING_WRAPPERS}" PARENT_SCOPE)
+
+    # add this target to a "global" variable so ruby tests can require these
+    list(APPEND ALL_RUBY_BINDING_WRAPPERS_FULL_PATH "${SWIG_WRAPPER_FULL_PATH}")
+    set(ALL_RUBY_BINDING_WRAPPERS_FULL_PATH "${ALL_RUBY_BINDING_WRAPPERS_FULL_PATH}" PARENT_SCOPE)
   endif()
-
-  #if(CMAKE_COMPILER_IS_GNUCXX)
-  #  if(GCC_VERSION VERSION_GREATER 4.6 OR GCC_VERSION VERSION_EQUAL 4.6)
-  #    set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized -Wno-unused-but-set-variable")
-  #  else()
-  #    set_source_files_properties(${SWIG_WRAPPER} PROPERTIES COMPILE_FLAGS "-Wno-uninitialized")
-  #  endif()
-  #endif()
-
-  set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/ruby/")
-  #if(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
-  #  # Ruby 2 requires modules to have a .so extension, even on windows
-  #  set_target_properties(${swig_target} PROPERTIES SUFFIX ".so")
-  #endif()
-  set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/ruby/")
-  set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/")
-  target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends})
-  target_include_directories(${swig_target} PRIVATE ${RUBY_INCLUDE_DIRS})
-  add_dependencies(${swig_target} ${PARENT_TARGET})
-
-  # QT-Separation-Move
-  target_include_directories(${swig_target} PUBLIC ${QT_INCLUDES})
-  target_compile_definitions(${swig_target} PUBLIC ${QT_DEFS})
-
-  ####Remove binding install related stuff. At least for now. Might need some of this to support sketchup
-  ####if(APPLE)
-  ####  set(_NAME "${LOWER_NAME}.bundle")
-  ####  # the following script will change the bindings to prefer the version of libruby included with SketchUp to the system library, preventing loading two different copies of libruby
-  ####  add_custom_command(TARGET ${swig_target} POST_BUILD COMMAND ${RUBY_EXECUTABLE} "${PROJECT_SOURCE_DIR}/SketchUpInstallName.rb" "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ruby/${_NAME}")
-  ####elseif(RUBY_VERSION_MAJOR EQUAL "2" AND MSVC)
-  ####  set(_NAME "${LOWER_NAME}.so")
-  ####else()
-  ####  set(_NAME "${LOWER_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}")
-  ####endif()
-
-  ####if(WIN32 OR APPLE)
-  ####  install(TARGETS ${swig_target} DESTINATION Ruby/openstudio/)
-
-
-  ####  install(CODE "
-  ####    #message(\"INSTALLING SWIG_TARGET: ${swig_target}  with NAME = ${_NAME}\")
-  ####    include(GetPrerequisites)
-  ####    get_prerequisites(\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME} PREREQUISITES 1 1 \"\" \"${Prereq_Dirs}\")
-  ####    #message(\"PREREQUISITES = \${PREREQUISITES}\")
-
-
-  ####    if(WIN32)
-  ####      list(REVERSE PREREQUISITES)
-  ####    endif()
-
-  ####    foreach(PREREQ IN LISTS PREREQUISITES)
-  ####
-  ####      if(APPLE AND PREREQ MATCHES \".*libruby.*\")
-  ####        # skip updating references to libruby, we do not install this with the bindings
-  ####      else()
-  ####        gp_resolve_item(\"\" \${PREREQ} \"\" \"${Prereq_Dirs}\" resolved_item_var)
-  ####        execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
-  ####
-  ####        get_filename_component(PREREQNAME \${resolved_item_var} NAME)
-  ####
-  ####        if(APPLE)
-  ####          execute_process(COMMAND \"install_name_tool\" -change \"\${PREREQ}\" \"@loader_path/\${PREREQNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/${_NAME}\")
-  ####          foreach(PR IN LISTS PREREQUISITES)
-  ####            gp_resolve_item(\"\" \${PR} \"\" \"\" PRPATH)
-  ####            get_filename_component( PRNAME \${PRPATH} NAME)
-  ####            execute_process(COMMAND \"install_name_tool\" -change \"\${PR}\" \"@loader_path/\${PRNAME}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\${PREREQNAME}\")
-  ####          endforeach()
-  ####        else()
-  ####          if(EXISTS \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\")
-  ####            file(READ \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" TEXT)
-  ####          else()
-  ####            set(TEXT \"\")
-  ####          endif()
-  ####          string(REGEX MATCH \${PREREQNAME} MATCHVAR \"\${TEXT}\")
-  ####          if(NOT (\"\${MATCHVAR}\" STREQUAL \"\${PREREQNAME}\"))
-  ####            file(APPEND \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"DL::dlopen \\\"\\\#{File.dirname(__FILE__)}/\${PREREQNAME}\\\"\n\")
-  ####          endif()
-  ####      endif()
-  ####      endif()
-
-  ####    endforeach()
-  ####  ")
-  ####else()
-  ####  install(TARGETS ${swig_target} DESTINATION "${RUBY_MODULE_ARCH_DIR}")
-  ####endif()
-  ####if(UNIX)
-  ####  # do not write file on unix, existence of file is checked before it is loaded
-  ####  #install(CODE "
-  ####  #  file(WRITE \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/thirdparty.rb\" \"# Nothing to see here\")
-  ####  #")
-  ####endif()
-
-  execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
-
-  # add this target to a "global" variable so ruby tests can require these
-  list(APPEND ALL_RUBY_BINDING_TARGETS "${swig_target}")
-  set(ALL_RUBY_BINDING_TARGETS "${ALL_RUBY_BINDING_TARGETS}" PARENT_SCOPE)
-
-  # Doesn't look like this is used
-  # add this target to a "global" variable so ruby tests can require these
-  #list(APPEND ALL_RDOCIFY_FILES "${SWIG_WRAPPER}")
-  #set(ALL_RDOCIFY_FILES "${ALL_RDOCIFY_FILES}" PARENT_SCOPE)
-
-  # add this target to a "global" variable so ruby tests can require these
-  list(APPEND ALL_RUBY_BINDING_WRAPPERS "${SWIG_WRAPPER}")
-  set(ALL_RUBY_BINDING_WRAPPERS "${ALL_RUBY_BINDING_WRAPPERS}" PARENT_SCOPE)
-
-  # add this target to a "global" variable so ruby tests can require these
-  list(APPEND ALL_RUBY_BINDING_WRAPPERS_FULL_PATH "${SWIG_WRAPPER_FULL_PATH}")
-  set(ALL_RUBY_BINDING_WRAPPERS_FULL_PATH "${ALL_RUBY_BINDING_WRAPPERS_FULL_PATH}" PARENT_SCOPE)
 
   # Python bindings
   if(BUILD_PYTHON_BINDINGS)

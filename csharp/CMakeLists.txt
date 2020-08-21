@@ -1,33 +1,3 @@
-#only building C# bindings with Visual Studio
-
-#set(ALL_CSHARP_WRAPPER_FILES
-#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesCore_wrap.cxx
-#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesIdd_wrap.cxx
-#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesIdf_wrap.cxx
-#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesBCL_wrap.cxx
-#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesData_wrap.cxx
-#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesGeometry_wrap.cxx
-#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesSql_wrap.cxx
-#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesTime_wrap.cxx
-#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesUnits_wrap.cxx
-#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilitiesFileTypes_wrap.cxx
-#  C:/OpenStudio/build-32/src/utilities/csharp_OpenStudioUtilities_wrap.cxx
-#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelCore_wrap.cxx
-#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelSimulation_wrap.cxx
-#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelResources_wrap.cxx
-#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelGeometry_wrap.cxx
-#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelHVAC_wrap.cxx
-#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelRefrigeration_wrap.cxx
-#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModelGenerators_wrap.cxx
-#  C:/OpenStudio/build-32/src/model/csharp_OpenStudioModel_wrap.cxx
-#  C:/OpenStudio/build-32/src/energyplus/csharp_OpenStudioEnergyPlus_wrap.cxx
-#  C:/OpenStudio/build-32/src/gbxml/csharp_OpenStudioGBXML_wrap.cxx
-#  C:/OpenStudio/build-32/src/airflow/csharp_OpenStudioAirflow_wrap.cxx
-#  C:/OpenStudio/build-32/src/osversion/csharp_OpenStudioOSVersion_wrap.cxx
-#  C:/OpenStudio/build-32/src/sdd/csharp_OpenStudioSDD_wrap.cxx
-#)
-
-
 
 install(DIRECTORY "examples"
   DESTINATION "CSharp/"
@@ -265,18 +235,37 @@ add_custom_target(csharp_sdk ALL
 )
 
 if( BUILD_NUGET_PACKAGE )
+  if(CMAKE_SIZEOF_VOID_P EQUAL 4) # 32 bit
+    message(FATAL_ERROR "Nuget package cannot be built using the 32 bit generator")
+  endif()
 
   if (MSVC)
+    include(ExternalProject)
 
+    ExternalProject_Add(OS-32
+      SOURCE_DIR ${PROJECT_SOURCE_DIR}
+      BINARY_DIR ${PROJECT_BINARY_DIR}/OS-32
+      BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config Release
+      CMAKE_GENERATOR
+        "Visual Studio 16 2019"
+      CMAKE_ARGS
+        -A Win32
+        -DCMAKE_BUILD_TYPE=Release
+      CMAKE_CACHE_ARGS
+        -DBUILD_CSHARP_BINDINGS:BOOL=ON
+        -DBUILD_NUGET_PACKAGE:BOOL=OFF
+      INSTALL_COMMAND ""
+    )
+
+    # This is used in the OpenStudio.nuspec template
+    # One problem. What if 64 bit is configured with ninja,
+    # but 32 bit is configured without ninja?
     if(NINJA)
-      set(OPENSTUDIO_CSHARP_DLLNAME "Products/csharp/OpenStudio.dll")
+      set(OPENSTUDIO_CONFIGURATION_TYPE "")
     else()
       # Regular case: pure MSVC
-      set(OPENSTUDIO_CSHARP_DLLNAME "Products/csharp/$CONFIGURATION$/OpenStudio.dll")
+      set(OPENSTUDIO_CONFIGURATION_TYPE "$CONFIGURATION$")
     endif()
-    set(OPENSTUDIO_CSHARP_LIBNAME "Products/$CONFIGURATION$/openstudio_csharp.dll")
-    set(OPENSTUDIO_MODEL_CSHARP_LIBNAME "Products/$CONFIGURATION$/openstudio_model_csharp.dll")
-    set(OPENSTUDIO_TRANSLATORS_CSHARP_LIBNAME "Products/$CONFIGURATION$/openstudio_translators_csharp.dll")
 
     configure_file( ${PROJECT_SOURCE_DIR}/csharp/OpenStudio.nuspec.in ${PROJECT_BINARY_DIR}/OpenStudio.nuspec )
 
