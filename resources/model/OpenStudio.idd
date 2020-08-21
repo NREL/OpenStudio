@@ -31053,13 +31053,16 @@ OS:Meter:CustomDecrement,
         \key Propane
         \key FuelOilNo1
         \key FuelOilNo2
-        \key Coal
         \key Diesel
         \key Gasoline
-        \key Water
-        \key Generic
+        \key Coal
         \key OtherFuel1
         \key OtherFuel2
+        \key Steam
+        \key DistrictHeating
+        \key DistrictCooling
+        \key Water
+        \key Generic
    A4,  \field Source Meter Name
         \required-field
    A5,  \field Key Name
