@@ -187,15 +187,15 @@ endif()
 
 # EnergyPlus Idd version
 set(ENERGYPLUS_VERSION_MAJOR 9)
-set(ENERGYPLUS_VERSION_MINOR 3)
+set(ENERGYPLUS_VERSION_MINOR 4)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "baff08990c")
+set(ENERGYPLUS_BUILD_SHA "908c5cedf5")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.3.0")
+set(ENERGYPLUS_RELEASE_NAME "v9.4.0-IOFreeze")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
