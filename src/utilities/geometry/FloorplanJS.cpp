@@ -1519,6 +1519,111 @@ namespace openstudio{
     setNorthAxis(0);
   }
 
+  double FloorplanJS::latitude() const
+  {
+    double result = 0;
+    Json::Value project = m_value.get("project", Json::objectValue);
+    if (!project.isNull()) {
+      Json::Value map = project.get("map", Json::objectValue);
+      if (!map.isNull()) {
+        result = map.get("latitude", result).asDouble();
+      }
+    }
+    return result;
+  }
+
+  bool FloorplanJS::setLatitude(double latitude) 
+  {
+    if (!checkKeyAndType(m_value, "project", Json::objectValue)) {
+      m_value["project"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& project = m_value["project"];
+
+    if (!checkKeyAndType(project, "map", Json::objectValue)) {
+      project["map"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& map = project["map"];
+
+    map["latitude"] = latitude;
+
+    return true;
+  }
+
+  void FloorplanJS::resetLatitude()
+  { 
+    setLatitude(0); 
+  }
+
+  double FloorplanJS::longitude() const 
+  {
+    double result = 0;
+    Json::Value project = m_value.get("project", Json::objectValue);
+    if (!project.isNull()) {
+      Json::Value map = project.get("map", Json::objectValue);
+      if (!map.isNull()) {
+        result = map.get("longitude", result).asDouble();
+      }
+    }
+    return result;
+  }
+
+  bool FloorplanJS::setLongitude(double longitude) 
+  {
+    if (!checkKeyAndType(m_value, "project", Json::objectValue)) {
+      m_value["project"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& project = m_value["project"];
+
+    if (!checkKeyAndType(project, "map", Json::objectValue)) {
+      project["map"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& map = project["map"];
+
+    map["longitude"] = longitude;
+
+    return true;
+  }
+
+  void FloorplanJS::resetLongitude()
+  { 
+    setLongitude(0); 
+  }
+
+  double FloorplanJS::elevation() const 
+  {
+    double result = 0;
+    Json::Value project = m_value.get("project", Json::objectValue);
+    if (!project.isNull()) {
+      Json::Value map = project.get("map", Json::objectValue);
+      if (!map.isNull()) {
+        result = map.get("elevation", result).asDouble();
+      }
+    }
+    return result;
+  }
+
+  bool FloorplanJS::setElevation(double elevation) 
+  {
+    if (!checkKeyAndType(m_value, "project", Json::objectValue)) {
+      m_value["project"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& project = m_value["project"];
+
+    if (!checkKeyAndType(project, "map", Json::objectValue)) {
+      project["map"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& map = project["map"];
+
+    map["elevation"] = elevation;
+
+    return true;
+  }
+
+  void FloorplanJS::resetElevation() 
+  {
+    setElevation(0);
+  }
+
   void FloorplanJS::updateStories(const std::vector<FloorplanObject>& objects, bool removeMissingObjects)
   {
     updateObjects(m_value, "stories", objects, removeMissingObjects);

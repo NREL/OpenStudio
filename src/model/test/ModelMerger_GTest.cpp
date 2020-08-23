@@ -33,6 +33,12 @@
 
 #include "../ModelMerger.hpp"
 #include "../Model.hpp"
+#include "../Site.hpp"
+#include "../Site_Impl.hpp"
+#include "../Facility.hpp"
+#include "../Facility_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
 #include "../Surface.hpp"
@@ -64,9 +70,29 @@ TEST_F(ModelFixture, ModelMerger_Initial) {
   Model model2;
   std::map<UUID, UUID> handleMapping;
 
+  std::string siteName = "The Site";
+  std::string facilityName = "The Facility";
+  std::string buildingName = "The Building";
+  double northAxis = 30;
+  double latitude = 40;
+  double longitude = -104;
+  double elevation = 5280;
+
   // first model is empty
 
   // second model has spaces
+  Site site2 = model2.getUniqueModelObject<Site>();
+  site2.setName(siteName);
+  site2.setLatitude(latitude);
+  site2.setLongitude(longitude);
+  site2.setElevation(elevation);
+
+  Facility facility2 = model2.getUniqueModelObject<Facility>();
+  facility2.setName(facilityName);
+
+  Building building2 = model2.getUniqueModelObject<Building>();
+  building2.setName(buildingName);
+  building2.setNorthAxis(northAxis);
 
   // object#_model#
   std::vector<Point3d> floorprint1_2;
@@ -102,11 +128,17 @@ TEST_F(ModelFixture, ModelMerger_Initial) {
   space2_2->setThermalZone(zone2_2);
 
   // pre merge tests
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<Site>().size());
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<Facility>().size());
+  EXPECT_EQ(0u, model1.getConcreteModelObjects<Building>().size());
   EXPECT_EQ(0u, model1.getConcreteModelObjects<Space>().size());
   EXPECT_EQ(0u, model1.getConcreteModelObjects<Surface>().size());
   EXPECT_EQ(0u, model1.getConcreteModelObjects<SubSurface>().size());
   EXPECT_EQ(0u, model1.getConcreteModelObjects<ThermalZone>().size());
 
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Site>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Facility>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Building>().size());
   EXPECT_EQ(2u, model2.getConcreteModelObjects<Space>().size());
   EXPECT_EQ(12u, model2.getConcreteModelObjects<Surface>().size());
   EXPECT_EQ(8u, model2.getConcreteModelObjects<SubSurface>().size());
@@ -117,15 +149,34 @@ TEST_F(ModelFixture, ModelMerger_Initial) {
   merger.mergeModels(model1, model2, handleMapping);
 
   // post merge tests
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<Site>().size());
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<Facility>().size());
+  EXPECT_EQ(1u, model1.getConcreteModelObjects<Building>().size());
   EXPECT_EQ(2u, model1.getConcreteModelObjects<Space>().size());
   EXPECT_EQ(12u, model1.getConcreteModelObjects<Surface>().size());
   EXPECT_EQ(8u, model1.getConcreteModelObjects<SubSurface>().size());
   EXPECT_EQ(2u, model1.getConcreteModelObjects<ThermalZone>().size());
 
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Site>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Facility>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<Building>().size());
   EXPECT_EQ(2u, model2.getConcreteModelObjects<Space>().size());
   EXPECT_EQ(12u, model2.getConcreteModelObjects<Surface>().size());
   EXPECT_EQ(8u, model2.getConcreteModelObjects<SubSurface>().size());
   EXPECT_EQ(2u, model2.getConcreteModelObjects<ThermalZone>().size());
+
+  Site site1 = model1.getUniqueModelObject<Site>();
+  EXPECT_EQ(site1.nameString(), siteName);
+  EXPECT_DOUBLE_EQ(site1.latitude(), latitude);
+  EXPECT_DOUBLE_EQ(site1.longitude(), longitude);
+  EXPECT_DOUBLE_EQ(site1.elevation(), elevation);
+
+  Facility facility1 = model1.getUniqueModelObject<Facility>();
+  //EXPECT_EQ(facility1.nameString(), facilityName); // DLM: Facility does not have a name field in IDD
+  
+  Building building1 = model1.getUniqueModelObject<Building>();
+  EXPECT_EQ(building1.nameString(), buildingName);
+  EXPECT_DOUBLE_EQ(building1.northAxis(), northAxis);
 
   boost::optional<Space> testSpace = model1.getConcreteModelObjectByName<Space>("Space 1 - Model 2");
   ASSERT_TRUE(testSpace);
