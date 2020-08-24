@@ -180,7 +180,7 @@ TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Setters_Getters)
   EXPECT_EQ(testTemperatureControlType,"MeanAirTemperature");
   EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.isTemperatureControlTypeDefaulted());
 
-  // Field A5 Setpoint Control Type. Test set and get Setpoint Control Type, and test default and reset functions
+  // Field A6 Setpoint Control Type. Test set and get Setpoint Control Type, and test default and reset functions
 
   EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.setSetpointControlType("ZeroFlowPower"));
   std::string testSetpointControlType = zoneHVACLowTemperatureRadiantElectric.setpointControlType();

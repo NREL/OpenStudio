@@ -147,11 +147,22 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
   //add the surface group to the list of idf objects
   m_idfObjects.push_back(_surfaceGroup);
 
+  //field Fluid to Radiant Surface Heat Transfer Model
+  if(boost::optional<std::string> fluidType= modelObject.temperatureControlType() )
+  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::fluidToRadiantSurfaceHeatTransferModel,fluidType.get());
+  }
 
   //field Hydronic Tubing Inside Diameter
   if( (value = modelObject.hydronicTubingInsideDiameter()) )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingInsideDiameter,value.get());
+  }
+
+  //field Hydronic Tubing Outside Diameter
+  if( (value = modelObject.hydronicTubingOutsideDiameter()) )
+  {
+    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingOutsideDiameter,value.get());
   }
 
   //field Hydronic Tubing Length
@@ -164,10 +175,22 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingLength,value.get());
   }
 
+  //field Hydronic Tubing Conductivity
+  if( (value = modelObject.hydronicTubingConductivity()) )
+  {
+    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingConductivity,value.get());
+  }
+
   //field Temperature Control Type
   if(boost::optional<std::string> tempCtrlType= modelObject.temperatureControlType() )
   {
     idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::TemperatureControlType,tempCtrlType.get());
+  }
+
+  //field Setpoint Control Type
+  if(boost::optional<std::string> setpCtrlType= modelObject.setpointControlType() )
+  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::SetpointControlType,setpCtrlType.get());
   }
 
   // Heating Coil
@@ -309,6 +332,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
 
   //field Circuit Length
   idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CircuitLength,modelObject.circuitLength());
+
+  //field Changeover Delay Time Period Schedule
+  Schedule changeoverDelayTimePeriodSchedule = modelObject.changeoverDelayTimePeriodSchedule();
+  if(auto _sch = translateAndMapModelObject(changeoverDelayTimePeriodSchedule))  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::ChangeoverDelayTimePeriodSchedule, _sch->nameString());
+  }
 
   return idfObject;
 }

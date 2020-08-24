@@ -372,13 +372,6 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
     {
       idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CondensationControlDewpointOffset,value.get());
     }
-
-    //field Changeover Delay Time Period Schedule
-    Schedule changeoverDelayTimePeriodSchedule = modelObject.changeoverDelayTimePeriodSchedule();
-    if(auto _sch = translateAndMapModelObject(activityFactorSchedule))  {
-      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::ChangeoverDelayTimePeriodSchedule, _sch->nameString());
-    }
-
   }
 
   //field Number of Circuits
@@ -386,6 +379,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
 
   //field Circuit Length
   idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CircuitLength,modelObject.circuitLength());
+
+  //field Changeover Delay Time Period Schedule
+  Schedule changeoverDelayTimePeriodSchedule = modelObject.changeoverDelayTimePeriodSchedule();
+  if(auto _sch = translateAndMapModelObject(changeoverDelayTimePeriodSchedule))  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::ChangeoverDelayTimePeriodSchedule, _sch->nameString());
+  }
 
   return idfObject;
 }

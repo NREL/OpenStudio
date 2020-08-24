@@ -126,6 +126,12 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   testRad.setHydronicTubingLength(200);
   boost::optional<double> length = testRad.hydronicTubingLength();
   EXPECT_EQ(*length, 200);
+  EXPECT_FALSE(testRad.isHydronicTubingLengthDefaulted());
+  EXPECT_FALSE(testRad.isHydronicTubingLengthAutosized());
+  testRad.resetHydronicTubingLength();
+  EXPECT_TRUE(testRad.isHydronicTubingLengthDefaulted());
+  testRad.autosizeHydronicTubingLength();
+  EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());
 
   testRad.setHydronicTubingConductivity(0.01);
   double cond = testRad.hydronicTubingConductivity();
@@ -219,7 +225,6 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   testRad.autosizeRatedFlowRate();
   EXPECT_TRUE(testRad.isRatedFlowRateAutosized());
   EXPECT_FALSE(testRad.ratedFlowRate());
-
 
   testRad.autosizeHydronicTubingLength();
   EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());
