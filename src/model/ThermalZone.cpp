@@ -263,8 +263,8 @@ namespace detail {
       // TODO:: All of this section should be dynamic (if no ElectricEquipment, don't propose the output...)
 
       // Electric Equipment
-      "Zone Electric Equipment Electric Power",
-      "Zone Electric Equipment Electric Energy",
+      "Zone Electric Equipment Electricity Rate",
+      "Zone Electric Equipment Electricity Energy",
       "Zone Electric Equipment Radiant Heating Energy",
       "Zone Electric Equipment Radiant Heating Rate",
       "Zone Electric Equipment Convective Heating Energy",
@@ -277,8 +277,8 @@ namespace detail {
       "Zone Electric Equipment Total Heating Rate",
 
       // Gas Equipment
-      "Zone Gas Equipment Gas Rate",
-      "Zone Gas Equipment Gas Energy",
+      "Zone Gas Equipment NaturalGas Rate",
+      "Zone Gas Equipment NaturalGas Energy",
       "Zone Gas Equipment Radiant Heating Energy",
       "Zone Gas Equipment Radiant Heating Rate",
       "Zone Gas Equipment Convective Heating Energy",
@@ -306,18 +306,18 @@ namespace detail {
 
       // IT Equipment
       "Zone ITE Adjusted Return Air Temperature ",
-      "Zone ITE CPU Electric Power ",
-      "Zone ITE Fan Electric Power ",
-      "Zone ITE UPS Electric Power ",
-      "Zone ITE CPU Electric Power at Design Inlet Conditions ",
-      "Zone ITE Fan Electric Power at Design Inlet Conditions ",
+      "Zone ITE CPU Electricity Rate ",
+      "Zone ITE Fan Electricity Rate ",
+      "Zone ITE UPS Electricity Rate ",
+      "Zone ITE CPU Electricity Rate at Design Inlet Conditions ",
+      "Zone ITE Fan Electricity Rate at Design Inlet Conditions ",
       "Zone ITE UPS Heat Gain to Zone Rate ",
       "Zone ITE Total Heat Gain to Zone Rate ",
-      "Zone ITE CPU Electric Energy ",
-      "Zone ITE Fan Electric Energy ",
-      "Zone ITE UPS Electric Energy ",
-      "Zone ITE CPU Electric Energy at Design Inlet Conditions ",
-      "Zone ITE Fan Electric Energy at Design Inlet Conditions ",
+      "Zone ITE CPU Electricity Energy ",
+      "Zone ITE Fan Electricity Energy ",
+      "Zone ITE UPS Electricity Energy ",
+      "Zone ITE CPU Electricity Energy at Design Inlet Conditions ",
+      "Zone ITE Fan Electricity Energy at Design Inlet Conditions ",
       "Zone ITE UPS Heat Gain to Zone Energy ",
       "Zone ITE Total Heat Gain to Zone Energy ",
       "Zone ITE Standard Density Air Volume Flow Rate ",
@@ -333,7 +333,7 @@ namespace detail {
 
       // Lights
       // TODO: if zone.spaces.select{|s| s.lights.size > 0}.size > 0
-      "Zone Lights Electric Power",
+      "Zone Lights Electricity Rate",
       "Zone Lights Radiant Heating Energy",
       "Zone Lights Radiant Heating Rate",
       "Zone Lights Visible Radiation Heating Energy",
@@ -344,7 +344,7 @@ namespace detail {
       "Zone Lights Return Air Heating Rate",
       "Zone Lights Total Heating Energy",
       "Zone Lights Total Heating Rate",
-      "Zone Lights Electric Energy",
+      "Zone Lights Electricity Energy",
 
       // OtherEquipment
       "Zone Other Equipment Radiant Heating Energy",
@@ -521,7 +521,7 @@ namespace detail {
       "Zone Ventilation Mass",
       "Zone Ventilation Mass Flow Rate",
       "Zone Ventilation Air Change Rate",
-      "Zone Ventilation Fan Electric Energy",
+      "Zone Ventilation Fan Electricity Energy",
       "Zone Ventilation Air Inlet Temperature",
 
 

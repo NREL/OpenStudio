@@ -80,10 +80,10 @@ namespace detail {
     static const std::vector<std::string> result{
       "Zone Radiant HVAC Heating Rate",
       "Zone Radiant HVAC Heating Energy",
-      "Zone Radiant HVAC Gas Rate",
-      "Zone Radiant HVAC Gas Energy",
-      "Zone Radiant HVAC Electric Power",
-      "Zone Radiant HVAC Electric Energy"
+      "Zone Radiant HVAC NaturalGas Rate",
+      "Zone Radiant HVAC NaturalGas Energy",
+      "Zone Radiant HVAC Electricity Rate",
+      "Zone Radiant HVAC Electricity Energy"
     };
     return result;
   }

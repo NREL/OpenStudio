@@ -181,8 +181,8 @@ namespace detail {
       "Zone Water to Air Heat Pump Latent Heating Energy",
       "Zone Water to Air Heat Pump Latent Cooling Rate",
       "Zone Water to Air Heat Pump Latent Cooling Energy",
-      "Zone Water to Air Heat Pump Electric Power",
-      "Zone Water to Air Heat Pump Electric Energy",
+      "Zone Water to Air Heat Pump Electricity Rate",
+      "Zone Water to Air Heat Pump Electricity Energy",
       "Zone Water to Air Heat Pump Fan Part Load Ratio",
       "Zone Water to Air Heat Pump Compressor Part Load Ratio",
       "Zone Water to Air Heat Pump Fan Availability Status"

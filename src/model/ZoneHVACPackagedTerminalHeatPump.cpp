@@ -132,8 +132,8 @@ namespace detail {
       "Zone Packaged Terminal Heat Pump Latent Heating Energy",
       "Zone Packaged Terminal Heat Pump Latent Cooling Rate",
       "Zone Packaged Terminal Heat Pump Latent Cooling Energy",
-      "Zone Packaged Terminal Heat Pump Electric Power",
-      "Zone Packaged Terminal Heat Pump Electric Energy",
+      "Zone Packaged Terminal Heat Pump Electricity Rate",
+      "Zone Packaged Terminal Heat Pump Electricity Energy",
       "Zone Packaged Terminal Heat Pump Fan Part Load Ratio",
       "Zone Packaged Terminal Heat Pump Compressor Part Load Ratio",
       "Zone Packaged Terminal Heat Pump Fan Availability Status"

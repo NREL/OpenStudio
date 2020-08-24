@@ -82,8 +82,8 @@ namespace detail {
       "Zone Unit Ventilator Total Cooling Energy",
       "Zone Unit Ventilator Sensible Cooling Rate",
       "Zone Unit Ventilator Sensible Cooling Energy",
-      "Zone Unit Ventilator Fan Electric Power",
-      "Zone Unit Ventilator Fan Electric Energy",
+      "Zone Unit Ventilator Fan Electricity Rate",
+      "Zone Unit Ventilator Fan Electricity Energy",
       "Zone Unit Ventilator Fan Availability Status",
       "Zone Unit Ventilator Fan Part Load Ratio"
     };

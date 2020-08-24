@@ -78,8 +78,8 @@ namespace detail {
       "Evaporative Cooler Part Load Ratio",
       "Evaporative Cooler Dewpoint Bound Status",
       "Evaporative Cooler Operating Mode Satus",
-      "Evaporative Cooler Electric Energy",
-      "Evaporative Cooler Electric Power"
+      "Evaporative Cooler Electricity Energy",
+      "Evaporative Cooler Electricity Rate"
 
       // Doc doesn't specify, but 95% sure this is only
       // If Supply Water Storage Tank Name is specified:

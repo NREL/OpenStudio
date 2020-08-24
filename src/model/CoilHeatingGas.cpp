@@ -113,8 +113,8 @@ namespace detail{
       "Heating Coil Air Heating Rate",
 
       // This is the parasitic electric load associated with the coil operation, such as an inducer fan
-      "Heating Coil Electric Energy",
-      "Heating Coil Electric Power",
+      "Heating Coil Electricity Energy",
+      "Heating Coil Electricity Rate",
 
       "Heating Coil Runtime Fraction",
 
@@ -126,10 +126,10 @@ namespace detail{
       // => ["NaturalGas", "Propane", "Diesel", "Gasoline", "Coal", "FuelOilNo1", "FuelOilNo2", "OtherFuel1", "OtherFuel2"]
       //         "Heating Coil <Fuel Type> Energy",
       // if (fuelType == "NaturalGas") {
-        "Heating Coil Gas Energy",
-        "Heating Coil Gas Rate",
-        "Heating Coil Ancillary Gas Energy",
-        "Heating Coil Ancillary Gas Rate",
+        "Heating Coil NaturalGas Energy",
+        "Heating Coil NaturalGas Rate",
+        "Heating Coil Ancillary NaturalGas Energy",
+        "Heating Coil Ancillary NaturalGas Rate",
       // } else if (fuelType == "Propane") {
         "Heating Coil Propane Energy",
         "Heating Coil Propane Rate",

@@ -101,10 +101,10 @@ namespace detail {
       "Refrigeration Case Return Air Sensible Heating Energy",
       "Refrigeration Case Return Air Latent Rate",
       "Refrigeration Case Return Air Latent Energy",
-      "Refrigeration Case Evaporator Fan Electric Power",
-      "Refrigeration Case Evaporator Fan Electric Energy",
-      "Refrigeration Case Lighting Electric Power",
-      "Refrigeration Case Lighting Electric Energy",
+      "Refrigeration Case Evaporator Fan Electricity Rate",
+      "Refrigeration Case Evaporator Fan Electricity Energy",
+      "Refrigeration Case Lighting Electricity Rate",
+      "Refrigeration Case Lighting Electricity Energy",
       "Refrigeration Case Latent Credit Curve Value",
 
       // TODO: implement tests
@@ -112,11 +112,11 @@ namespace detail {
       // If case defrost type is Electric, Hot-Gas, or Hot-Brine with Temperature Termination
       "Refrigeration Case Defrost Energy Correction Curve Value",
       // If anti-sweat heater control type is not equal to None:
-      "Refrigeration Case Anti Sweat Electric Power",
-      "Refrigeration Case Anti Sweat Electric Energy",
+      "Refrigeration Case Anti Sweat Electricity Rate",
+      "Refrigeration Case Anti Sweat Electricity Energy",
       // If case defrost type is Electric or Electric with Temperature Termination:
-      "Refrigeration Case Defrost Electric Power",
-      "Refrigeration Case Defrost Electric Energy"
+      "Refrigeration Case Defrost Electricity Rate",
+      "Refrigeration Case Defrost Electricity Energy"
 
     };
     return result;

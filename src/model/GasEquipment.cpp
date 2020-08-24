@@ -77,8 +77,8 @@ namespace detail {
   const std::vector<std::string>& GasEquipment_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Gas Equipment Gas Rate",
-      "Gas Equipment Gas Energy",
+      "Gas Equipment NaturalGas Rate",
+      "Gas Equipment NaturalGas Energy",
       "Gas Equipment Radiant Heating Energy",
       "Gas Equipment Convective Heating Energy",
       "Gas Equipment Latent Gain Energy",
@@ -91,8 +91,8 @@ namespace detail {
       "Gas Equipment Total Heating Rate"
 
       // Reported in ThermalZone
-      //"Zone Gas Equipment Gas Rate",
-      //"Zone Gas Equipment Gas Energy",
+      //"Zone Gas Equipment NaturalGas Rate",
+      //"Zone Gas Equipment NaturalGas Energy",
       //"Zone Gas Equipment Radiant Heating Energy",
       //"Zone Gas Equipment Radiant Heating Rate",
       //"Zone Gas Equipment Convective Heating Energy",

@@ -89,8 +89,8 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACLowTemperatureRadiantElectric_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Zone Radiant HVAC Electric Power",
-      "Zone Radiant HVAC Electric Energy",
+      "Zone Radiant HVAC Electricity Rate",
+      "Zone Radiant HVAC Electricity Energy",
       "Zone Radiant HVAC Heating Energy",
       "Zone Radiant HVAC Heating Rate"
     };

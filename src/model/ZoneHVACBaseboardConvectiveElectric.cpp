@@ -73,8 +73,8 @@ namespace detail {
     static const std::vector<std::string> result{
       "Baseboard Total Heating Rate",
       "Baseboard Total Heating Energy",
-      "Baseboard Electric Energy",
-      "Baseboard Electric Power"
+      "Baseboard Electricity Energy",
+      "Baseboard Electricity Rate"
     };
     return result;
   }

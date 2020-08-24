@@ -114,7 +114,7 @@ namespace detail {
         "Water Heater Cycle On Count",
         "Water Heater Runtime Fraction",
         "Water Heater Part Load Ratio",
-        "Water Heater Electric Power",
+        "Water Heater Electricity Rate",
 
         // This should be based on fuel type
 
@@ -125,11 +125,11 @@ namespace detail {
         // until then, make this include all possible outputVariableNames for class regardless of fuelType
         // std::string fuelType = this->fuelType();
         // if (fuelType == "Electricity") {
-        "Water Heater Electric Power",
-        "Water Heater Electric Energy",
+        "Water Heater Electricity Rate",
+        "Water Heater Electricity Energy",
         // } else if (fuelType == "NaturalGas") {
-        "Water Heater Gas Rate",
-        "Water Heater Gas Energy",
+        "Water Heater NaturalGas Rate",
+        "Water Heater NaturalGas Energy",
         // } else if (fuelType == "Propane") {
         "Water Heater Propane Rate",
         "Water Heater Propane Energy",

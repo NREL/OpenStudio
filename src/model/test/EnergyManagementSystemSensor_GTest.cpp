@@ -97,10 +97,10 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor)
   EXPECT_EQ(zoneTemperature, zoneSensor.outputVariable());
   EXPECT_EQ(zone1.nameString(), zoneSensor.keyName());
 
-  // add Zone Lights Electric Power to both zones
-  OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
+  // add Zone Lights Electricity Rate to both zones
+  OutputVariable lightsElectricPower("Zone Lights Electricity Rate", model);
   EXPECT_EQ("*", lightsElectricPower.keyValue());
-  EXPECT_EQ("Zone Lights Electric Power", lightsElectricPower.variableName());
+  EXPECT_EQ("Zone Lights Electricity Rate", lightsElectricPower.variableName());
 
   // add light sensor on zone1
   EnergyManagementSystemSensor lights(model, lightsElectricPower);
@@ -150,11 +150,11 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
 
 
   // add output variable 1
-  OutputVariable outvar1("VRF Heat Pump Heating Electric Energy", model);
+  OutputVariable outvar1("VRF Heat Pump Heating Electricity Energy", model);
   outvar1.setName("residential mini split vrf heat energy output var");
   outvar1.setKeyValue("");
   //EXPECT_EQ("", outvar1.keyValue());
-  EXPECT_EQ("VRF Heat Pump Heating Electric Energy", outvar1.variableName());
+  EXPECT_EQ("VRF Heat Pump Heating Electricity Energy", outvar1.variableName());
   EXPECT_EQ("residential mini split vrf heat energy output var", outvar1.nameString());
 
   // add sensor 1
@@ -163,11 +163,11 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
   sensor1.setKeyName("living zone Multi Split Heat Pump");
 
   // add output variable 2
-  OutputVariable outvar2("VRF Heat Pump Heating Electric Energy", model);
+  OutputVariable outvar2("VRF Heat Pump Heating Electricity Energy", model);
   outvar2.setName("residential mini split|unit 2 vrf heat energy output var");
   outvar2.setKeyValue("");
   //EXPECT_EQ("", outvar2.keyValue());
-  EXPECT_EQ("VRF Heat Pump Heating Electric Energy", outvar2.variableName());
+  EXPECT_EQ("VRF Heat Pump Heating Electricity Energy", outvar2.variableName());
   EXPECT_EQ("residential mini split|unit 2 vrf heat energy output var", outvar2.nameString());
 
   // add sensor

@@ -85,7 +85,7 @@ namespace detail {
   const std::vector<std::string>& CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Cooling Coil Electric Power",
+      "Cooling Coil Electricity Rate",
       "Cooling Coil Total Cooling Rate",
       "Cooling Coil Sensible Cooling Rate",
       "Cooling Coil Source Side Heat Transfer Rate",
@@ -102,7 +102,7 @@ namespace detail {
       "Cooling Coil Upper Speed Level",
       "Cooling Coil Neighboring Speed Levels Ratio",
       "Cooling Coil Recoverable Heat Transfer Rate",
-      "Cooling Coil Electric Energy",
+      "Cooling Coil Electricity Energy",
       "Cooling Coil Total Cooling Energy",
       "Cooling Coil Sensible Cooling Energy",
       "Cooling Coil Latent Cooling Energy",
