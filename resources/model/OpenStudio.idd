@@ -19760,10 +19760,10 @@ OS:Curve:DoubleExponentialDecay,
   N3, \field Coefficient3 C3
        \type real
        \required-field
-  N4, \field Coefficient3 C4
+  N4, \field Coefficient4 C4
        \type real
        \required-field
-  N5, \field Coefficient3 C5
+  N5, \field Coefficient5 C5
        \type real
        \required-field
   N6, \field Minimum Value of x
