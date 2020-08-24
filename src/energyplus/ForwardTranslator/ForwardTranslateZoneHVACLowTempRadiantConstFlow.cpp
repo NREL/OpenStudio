@@ -146,10 +146,22 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
   //add the surface group to the list of idf objects
   m_idfObjects.push_back(_surfaceGroup);
 
- //field Hydronic Tubing Inside Diameter
- if( (value = modelObject.hydronicTubingInsideDiameter()) )
+  //field Fluid to Radiant Surface Heat Transfer Model
+  if(boost::optional<std::string> fluidType= modelObject.temperatureControlType() )
+  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::fluidToRadiantSurfaceHeatTransferModel,fluidType.get());
+  }
+
+  //field Hydronic Tubing Inside Diameter
+  if( (value = modelObject.hydronicTubingInsideDiameter()) )
   {
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingInsideDiameter,value.get());
+  }
+
+  //field Hydronic Tubing Outside Diameter
+  if( (value = modelObject.hydronicTubingOutsideDiameter()) )
+  {
+    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingOutsideDiameter,value.get());
   }
 
   //field Hydronic Tubing Length
@@ -162,10 +174,22 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
     idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingLength,value.get());
   }
 
+  //field Hydronic Tubing Conductivity
+  if( (value = modelObject.hydronicTubingConductivity()) )
+  {
+    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingConductivity,value.get());
+  }
+
   //field Temperature Control Type
- if(boost::optional<std::string> tempCtrlType= modelObject.temperatureControlType() )
+  if(boost::optional<std::string> tempCtrlType= modelObject.temperatureControlType() )
   {
     idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::TemperatureControlType,tempCtrlType.get());
+  }
+
+  //field Running Mean Outdoor Drybulb Temperature Weighting Factor
+  if( (value = modelObject.runningMeanOutdoorDryBulbTemperatureWeightingFactor()) )
+  {
+    idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RunningMeanOutdoorDryBulbTemperatureWeightingFactor,value.get());
   }
 
   //field Rated Flow Rate
@@ -347,6 +371,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantCon
     if( (value = coilCool.condensationControlDewpointOffset()) )
     {
       idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::CondensationControlDewpointOffset,value.get());
+    }
+
+    //field Changeover Delay Time Period Schedule
+    Schedule changeoverDelayTimePeriodSchedule = modelObject.changeoverDelayTimePeriodSchedule();
+    if(auto _sch = translateAndMapModelObject(activityFactorSchedule))  {
+      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::ChangeoverDelayTimePeriodSchedule, _sch->nameString());
     }
 
   }
