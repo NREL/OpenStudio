@@ -100,13 +100,13 @@ namespace detail {
   const std::vector<std::string>& GeneratorMicroTurbine_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Generator Produced Electric Power",
-      "Generator Produced Electric Energy",
+      "Generator Produced AC Electricity Rate",
+      "Generator Produced AC Electricity Energy",
       "Generator LHV Basis Electric Efficiency",
       // <FuelType>
-      "Generator Gas HHV Basis Rate",
-      "Generator Gas HHV Basis Energy",
-      "Generator Gas Mass Flow Rate",
+      "Generator NaturalGas HHV Basis Rate",
+      "Generator NaturalGas HHV Basis Energy",
+      "Generator NaturalGas Mass Flow Rate",
 
       "Generator Propane HHV Basis Rate",
       "Generator Propane HHV Basis Energy",
@@ -122,10 +122,10 @@ namespace detail {
       // "Generator Heat Recovery Inlet Temperature",
       // "Generator Heat Recovery Outlet Temperature",
       // "Generator Heat Recovery Water Mass Flow Rate",
-      "Generator Standby Electric Power",
+      "Generator Standby Electricity Rate",
       "Generator Standby Electric Energy",
-      "Generator Ancillary Electric Power",
-      "Generator Ancillary Electric Energy",
+      "Generator Ancillary Electricity Rate",
+      "Generator Ancillary Electricity Energy",
       "Generator Exhaust Air Mass Flow Rate",
       "Generator Exhaust Air Temperature"
     };

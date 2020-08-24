@@ -78,8 +78,8 @@ namespace detail {
     static const std::vector<std::string> result{
       "Refrigeration Transcritical System Gas Cooler Heat Transfer Rate",
       "Refrigeration Transcritical System Gas Cooler Heat Transfer Energy",
-      "Refrigeration Transcritical System Gas Cooler Fan Electric Power",
-      "Refrigeration Transcritical System Gas Cooler Fan Electric Energy",
+      "Refrigeration Transcritical System Gas Cooler Fan Electricity Rate",
+      "Refrigeration Transcritical System Gas Cooler Fan Electricity Energy",
       "Refrigeration Transcritical System Gas Cooler Outlet Temperature",
       "Refrigeration Transcritical System Gas Cooler Outlet Pressure",
       "Refrigeration Transcritical System Gas Cooler Defrost Recovered Heat Transfer Rate",

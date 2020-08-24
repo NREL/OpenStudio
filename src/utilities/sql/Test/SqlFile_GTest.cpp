@@ -141,9 +141,9 @@ TEST_F(SqlFileFixture, TimeSeriesCount)
   openstudio::OptionalTimeSeries ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "Electricity:Facility",  "");
   ASSERT_TRUE(ts);
 
-  // check that "Gas:Facility" is available
-  ASSERT_EQ(1, std::count(availableTimeSeries.begin(), availableTimeSeries.end(), "Gas:Facility"));
-  ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "Gas:Facility",  "");
+  // check that "NaturalGas:Facility" is available (prior to 9.4.0, it was 'NaturalGas:Facility')
+  ASSERT_EQ(1, std::count(availableTimeSeries.begin(), availableTimeSeries.end(), "NaturalGas:Facility"));
+  ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "NaturalGas:Facility",  "");
   ASSERT_TRUE(ts);
 
   // check that "NotAVariable:Facility" is not available
@@ -156,9 +156,9 @@ TEST_F(SqlFileFixture, TimeSeriesCount)
   ts = sqlFile.timeSeries(availableEnvPeriods[0], "Run Period", "Electricity:Facility",  "");
   ASSERT_TRUE(ts);
 
-  // check that "Gas:Facility" is available
-  ASSERT_EQ(1, std::count(availableTimeSeries.begin(), availableTimeSeries.end(), "Gas:Facility"));
-  ts = sqlFile.timeSeries(availableEnvPeriods[0], "Run Period", "Gas:Facility",  "");
+  // check that "NaturalGas:Facility" is available
+  ASSERT_EQ(1, std::count(availableTimeSeries.begin(), availableTimeSeries.end(), "NaturalGas:Facility"));
+  ts = sqlFile.timeSeries(availableEnvPeriods[0], "Run Period", "NaturalGas:Facility",  "");
   ASSERT_TRUE(ts);
 
   // check that "NotAVariable:Facility" is not available

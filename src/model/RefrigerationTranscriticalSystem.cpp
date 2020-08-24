@@ -84,11 +84,11 @@ namespace detail {
   const std::vector<std::string>& RefrigerationTranscriticalSystem_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Refrigeration Transcritical System Total High Pressure Compressor Electric Power",
-      "Refrigeration Transcritical System Total High Pressure Compressor Electric Energy",
-      "Refrigeration Transcritical System Low Pressure Compressor Electric Power",
-      "Refrigeration Transcritical System Low Pressure Compressor Electric Energy",
-      "Refrigeration Transcritical System Total Compressor Electric Energy",
+      "Refrigeration Transcritical System Total High Pressure Compressor Electricity Rate",
+      "Refrigeration Transcritical System Total High Pressure Compressor Electricity Energy",
+      "Refrigeration Transcritical System Low Pressure Compressor Electricity Rate",
+      "Refrigeration Transcritical System Low Pressure Compressor Electricity Energy",
+      "Refrigeration Transcritical System Total Compressor Electricity Energy",
       "Refrigeration Transcritical System Average COP",
       "Refrigeration Transcritical System Medium Temperature Cases and Walk Ins Heat Transfer Rate",
       "Refrigeration Transcritical System Medium Temperature Cases and Walk Ins Heat Transfer Energy",

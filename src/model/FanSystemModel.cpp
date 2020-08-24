@@ -156,7 +156,7 @@ namespace detail {
   const std::vector<std::string>& FanSystemModel_Impl::outputVariableNames() const
   {
 
-    static const std::vector<std::string> results{"Fan Electric Power", "Fan Rise in Air Temperature", "Fan Electric Energy", "Fan Air Mass Flow Rate"};
+    static const std::vector<std::string> results{"Fan Electricity Rate", "Fan Rise in Air Temperature", "Fan Electricity Energy", "Fan Air Mass Flow Rate"};
     return results;
   }
 

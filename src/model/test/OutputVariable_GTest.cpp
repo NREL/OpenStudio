@@ -62,7 +62,7 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
 
     // all possible variables
     std::vector<std::string> variableNames = zone.outputVariableNames();
-    EXPECT_TRUE(std::find(variableNames.begin(), variableNames.end(), "Zone Lights Electric Power") != variableNames.end());
+    EXPECT_TRUE(std::find(variableNames.begin(), variableNames.end(), "Zone Lights Electricity Rate") != variableNames.end());
     EXPECT_TRUE(std::find(variableNames.begin(), variableNames.end(), "Zone Lights Radiant Heating Energy") != variableNames.end());
 
     // variables actually found
@@ -70,10 +70,10 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
     EXPECT_TRUE(variables.empty());
   }
 
-  // add Zone Lights Electric Power to both zones
-  OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
+  // add Zone Lights Electricity Rate to both zones
+  OutputVariable lightsElectricPower("Zone Lights Electricity Rate", model);
   EXPECT_EQ("*", lightsElectricPower.keyValue());
-  EXPECT_EQ("Zone Lights Electric Power", lightsElectricPower.variableName());
+  EXPECT_EQ("Zone Lights Electricity Rate", lightsElectricPower.variableName());
   //Check BCVTB
   EXPECT_FALSE(lightsElectricPower.exportToBCVTB());
   EXPECT_TRUE(lightsElectricPower.isExportToBCVTBDefaulted());

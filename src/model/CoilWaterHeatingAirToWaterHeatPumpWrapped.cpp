@@ -80,12 +80,12 @@ namespace detail {
       "Cooling Coil Latent Cooling Rate",
       "Cooling Coil Latent Cooling Energy",
       "Cooling Coil Runtime Fraction",
-      "DX Cooling Coil Crankcase Heater Electric Power",
-      "Cooling Coil Crankcase Heater Electric Energy",
+      "DX Cooling Coil Crankcase Heater Electricity Rate",
+      "Cooling Coil Crankcase Heater Electricity Energy",
       "Cooling Coil Total Water Heating Rate",
       "Cooling Coil Total Water Heating Energy",
-      "Cooling Coil Water Heating Electric Power",
-      "Cooling Coil Water Heating Electric Energy"
+      "Cooling Coil Water Heating Electricity Rate",
+      "Cooling Coil Water Heating Electricity Energy"
     };
     return result;
   }

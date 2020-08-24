@@ -94,10 +94,10 @@ namespace detail {
       "Zone VRF Air Terminal Sensible Heating Energy",
       "Zone VRF Air Terminal Latent Heating Rate",
       "Zone VRF Air Terminal Latent Heating Energy",
-      "Zone VRF Air Terminal Cooling Electric Power",
-      "Zone VRF Air Terminal Cooling Electric Energy",
-      "Zone VRF Air Terminal Heating Electric Power",
-      "Zone VRF Air Terminal Heating Electric Energy",
+      "Zone VRF Air Terminal Cooling Electricity Rate",
+      "Zone VRF Air Terminal Cooling Electricity Energy",
+      "Zone VRF Air Terminal Heating Electricity Rate",
+      "Zone VRF Air Terminal Heating Electricity Energy",
       "Zone VRF Air Terminal Fan Availability Status"
     };
     return result;

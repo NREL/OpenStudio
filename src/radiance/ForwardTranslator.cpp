@@ -2499,7 +2499,7 @@ namespace radiance {
     outputVariable = openstudio::model::OutputVariable("Zone People Occupant Count", outmodel);
     outputVariable.setReportingFrequency("Hourly");
 
-    outputVariable = openstudio::model::OutputVariable("Zone Lights Electric Power", outmodel);
+    outputVariable = openstudio::model::OutputVariable("Zone Lights Electricity Rate", outmodel);
     outputVariable.setReportingFrequency("Hourly");
 
     // only report weather periods

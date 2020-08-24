@@ -558,10 +558,10 @@ Building,
        \note For faster execution rely on the convergence criteria to detect when warmup is complete.
        \note When this field is greater than the maximum warmup days defined previous field
        \note the maximum number of warmup days will be reset to the minimum value entered here.
-       \note Warmup days will be set to be the value you entered when it is less than the default 6.
+       \note Warmup days will be set to be the value you entered. The default is 1.
        \type integer
        \minimum> 0
-       \default 6
+       \default 1
 
 ShadowCalculation,
        \unique-object
@@ -5343,7 +5343,6 @@ Construction:InternalSource,
        \note uniform spacing between tubes or resistance wires in direction
        \note perpendicular to main intended direction of heat transfer
   N5 , \field Two-Dimensional Temperature Calculation Position
-       \required-field
        \minimum 0.0
        \maximum 1.0
        \default 0.0
@@ -24794,7 +24793,7 @@ ZoneHVAC:HybridUnitaryHVAC,
         \note Select the fuel type associated with field: "System Third Fuel Consumption Lookup Table" in each mode.
         \note If this field is blank, default third fuel type = None.
         \default None
-   A188, \field Objective Function to Minimize
+   A18, \field Objective Function to Minimize
         \type choice
         \key Electricity Use
         \key Second Fuel Use
@@ -24817,41 +24816,49 @@ ZoneHVAC:HybridUnitaryHVAC,
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the Supply Air Temperature Lookup Table for Mode 0.
+        \note Units for lookup table values should be in C.
         \note If this field is blank, Mode 0 will not be considered for any period that requires ventilation, heating, cooling, humidification, or dehumidification. If this field is blank, when Mode 0 is chosen (during standby periods) the supply air temperature will equal the return air temperature.
    A22, \field Mode 0 Supply Air Humidity Ratio Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the Supply Air Humidity Ratio Lookup Table for Mode 0.
+        \note Units for lookup table values should be in kgWater/kgDryAir.
         \note If this field is blank, Mode 0 will not be considered for any period that requires ventilation, heating, cooling, humidification, or dehumidification. If this field is blank, when Mode 0 is chosen (during standby periods) the supply air humidty ratio will equal the return air humidity ratio.
    A23, \field Mode 0 System Electric Power Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the Electric Power Lookup Table for Mode 0.
+        \note Units for lookup table values should be in W.
         \note If this field is blank, Mode 0 does not consume electricity.
    A24, \field Mode 0 Supply Fan Electric Power Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the Supply Fan Electric Power Lookup Table for Mode 0.
+        \note Units for lookup table values should be in W.
         \note If this field is blank, Mode 0 does not consume electricity for supply fan.
    A25, \field Mode 0 External Static Pressure Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the External Static Pressure Lookup Table for Mode 0.
+        \note Units for lookup table values should be in Pa.
         \note If this field is blank, external static pressure will not be reported.
    A26, \field Mode 0 System Second Fuel Consumption Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the System Second Fuel Consumption Lookup Table for Mode 0.
+        \note Units for lookup table values should be in W.
         \note If this field is blank, Mode 0 does not consume a second fuel.
    A27, \field Mode 0 System Third Fuel Consumption Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the System Third Fuel Consumption Lookup Table for Mode 0.
+        \note Units for lookup table values should be in W.
         \note If this field is blank, Mode 0 does not consume a third fuel.
    A28, \field Mode 0 System Water Use Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the System Water Use Lookup Table for Mode 0.
+        \note Units for lookup table values should be in kg/s.
         \note If this field is blank, Mode 0 does not consume water.
     N6, \field Mode 0 Outdoor Air Fraction
         \type real
@@ -24877,41 +24884,49 @@ ZoneHVAC:HybridUnitaryHVAC,
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the Supply Air Temperature Lookup Table for Mode 1.
+        \note Units for lookup table values should be in C.
         \note If this field is blank, Mode 1 will not be considered for any time step that requires ventilation, heating, cooling, humidification, or dehumidification.
    A31, \field Mode 1 Supply Air Humidity Ratio Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the Supply Air Humidity Ratio Lookup Table for Mode 1.
+        \note Units for lookup table values should be in kgWater/kgDryAir.
         \note If this field is blank, Mode 1 will not be considered for any time step that requires ventilation, heating, cooling, humidification, or dehumidification.
    A32, \field Mode 1 System Electric Power Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the Electric Power Lookup Table for Mode 1.
+        \note Units for lookup table values should be in W.
         \note If this field is blank, Mode 1 does not use electricity
    A33, \field Mode 1 Supply Fan Electric Power Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the Supply Fan Electric Power Lookup Table for Mode 1.
+        \note Units for lookup table values should be in W.
         \note If this field is blank, Mode 1 does not use electricity for supply fan.
    A34, \field Mode 1 External Static Pressure Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the External Static Pressure Lookup Table for Mode 1.
+        \note Units for lookup table values should be in Pa.
         \note If this field is blank, external static pressure will not be reported for Mode 1.
    A35, \field Mode 1 System Second Fuel Consumption Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the System Second Fuel Consumption Lookup Table for Mode 1.
+        \note Units for lookup table values should be in W.
         \note If this field is blank, Mode 1 does not consume a second fuel.
    A36, \field Mode 1 System Third Fuel Consumption Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the System Third Fuel Consumption Lookup Table for Mode 1.
+        \note Units for lookup table values should be in W.
         \note If this field is blank, Mode 1 does not consume a third fuel.
    A37, \field Mode 1 System Water Use Lookup Table Name
         \type object-list
         \object-list MultivariateFunctions
         \note Enter the name of the System Water Use Lookup Table for Mode 1.
+        \note Units for lookup table values should be in kg/s.
         \note If this field is blank, Mode 1 does not consume water.
     N8, \field Mode 1 Minimum Outdoor Air Temperature
         \type real
@@ -25965,7 +25980,7 @@ ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \key SurfaceFaceTemperature
         \key SurfaceInteriorTemperature
         \default MeanAirTemperature
-   A7 , \field Setpoint Control Type
+   A7,  \field Setpoint Control Type
         \note How setpoint temperature is defined
         \type choice
         \key HalfFlowPower
@@ -26015,7 +26030,7 @@ ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \type node
    N9 , \field Heating Control Throttling Range
         \units deltaC
-        \minimum 0.5
+        \minimum 0
         \default 0.5
    A11, \field Heating Control Temperature Schedule Name
         \type object-list
@@ -26063,7 +26078,7 @@ ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \type node
    N14, \field Cooling Control Throttling Range
         \units deltaC
-        \minimum 0.5
+        \minimum 0
         \default 0.5
    A15, \field Cooling Control Temperature Schedule Name
         \type object-list
@@ -26143,7 +26158,7 @@ ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \default 0.016
         \ip-units in
    N3 , \field Hydronic Tubing Length
-        \note Total length of pipe embedded in surface
+        \note (total length of pipe embedded in surface)
         \units m
         \minimum> 0
         \autosizable
@@ -26196,7 +26211,7 @@ ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \minimum 0.0
         \maximum 1.0
         \default 0.9
-   N10 , \field Fraction of Motor Inefficiencies to Fluid Stream
+   N10, \field Fraction of Motor Inefficiencies to Fluid Stream
         \minimum 0.0
         \maximum 1.0
         \default 0.0
@@ -26268,6 +26283,7 @@ ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \note If this field is blank, the system allows changeover with no delay
         \type object-list
         \object-list ScheduleNames
+
 
 ZoneHVAC:LowTemperatureRadiant:Electric,
         \memo Electric resistance low temperature radiant system
@@ -60795,7 +60811,7 @@ Output:DebuggingData,
        \type choice
        \key Yes
        \key No
-       \default N
+       \default No
 
 Output:PreprocessorMessage,
    \memo This object does not come from a user input.  This is generated by a pre-processor
@@ -60844,7 +60860,7 @@ PythonPlugin:SearchPaths,
        \memo can be disabled, and users can add supplemental search paths
        \memo that point to libraries of plugin scripts.
        \unique-object
-       \min-fields 1
+       \min-fields 3
        \extensible:1
    A1, \field Name
        \type alpha
@@ -60874,7 +60890,7 @@ PythonPlugin:SearchPaths,
 PythonPlugin:Instance,
        \memo A single plugin to be executed during the simulation, which can contain multiple calling points
        \memo for the same class instance by overriding multiple calling point methods.
-       \min-fields 5
+       \min-fields 4
    A1, \field Name
        \required-field
        \type alpha
@@ -60900,20 +60916,20 @@ PythonPlugin:Instance,
        \note The class must inherit the EnergyPlusPlugin base class
 
 PythonPlugin:Variables,
-       \memo This object defines name identifiers for custom Python Plugin variable data that should be shared
-       \memo among all running Python Plugins.
-       \unique-object
-       \min-fields 1
-       \extensible:1
-   A1, \field Name
-       \required-field
-       \type alpha
-       \note This object name is purely for reporting and diagnostics
-   A2; \field Variable Name 1
-       \type alpha
-       \begin-extensible
-       \note This variable is used to identify and create a shared variable in EnergyPlus.
-       \note This variable can then be used by all running Python Plugin instances.
+        \memo This object defines name identifiers for custom Python Plugin variable data that should be shared
+        \memo among all running Python Plugins.
+        \unique-object
+        \min-fields 2
+        \extensible:1
+   A1,  \field Name
+        \required-field
+        \type alpha
+        \note This object name is purely for reporting and diagnostics
+   A2;  \field Variable Name 1
+        \type alpha
+        \begin-extensible
+        \note This variable is used to identify and create a shared variable in EnergyPlus.
+        \note This variable can then be used by all running Python Plugin instances.
 
 PythonPlugin:TrendVariable,
        \memo This object sets up a Python plugin trend variable from an Python plugin variable

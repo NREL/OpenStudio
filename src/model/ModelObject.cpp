@@ -255,7 +255,7 @@ namespace detail {
     boost::replace_all(sqlObjectType, "OS:", "");
 
     // Special logic to deal with EnergyPlus inconsistencies
-    if (sqlObjectType == "Coil:Heating:Gas") {
+    if (sqlObjectType == "Coil:Heating:NaturalGas") {
       sqlObjectType = "Coil:Heating:Fuel";
     }
 

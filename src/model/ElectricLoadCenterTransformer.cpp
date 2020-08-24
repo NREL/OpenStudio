@@ -82,19 +82,19 @@ namespace detail {
   {
     static const std::vector<std::string> result{
       "Transformer Efficiency",
-      "Transformer Input Electric Power",
-      "Transformer Input Electric Energy",
-      "Transformer Output Electric Power",
-      "Transformer Output Electric Energy",
+      "Transformer Input Electricity Rate",
+      "Transformer Input Electricity Energy",
+      "Transformer Output Electricity Rate",
+      "Transformer Output Electricity Energy",
       "Transformer No Load Loss Rate",
       "Transformer No Load Loss Energy",
       "Transformer Load Loss Rate",
       "Transformer Load Loss Energy",
       "Transformer Thermal Loss Rate",
       "Transformer Thermal Loss Energy",
-      "Transformer Distribution Electric Loss Energy",
-      "Transformer Cogeneration Electric Loss Energy",
-      "Transformer Conversion Electric Loss Energy"
+      "Transformer Distribution Electricity Loss Energy",
+      "Transformer Cogeneration Electricity Loss Energy",
+      "Transformer Conversion Electricity Loss Energy"
     };
     return result;
   }

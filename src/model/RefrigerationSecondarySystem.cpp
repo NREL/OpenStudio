@@ -88,8 +88,8 @@ namespace detail {
     static const std::vector<std::string> result{
       // TODO: implement checks
       // FOR SECONDARY SYSTEMS SERVING CASES AND/OR WALKINS:
-      "Refrigeration Secondary Loop Pump Electric Power",
-      "Refrigeration Secondary Loop Pump Electric Energy",
+      "Refrigeration Secondary Loop Pump Electricity Rate",
+      "Refrigeration Secondary Loop Pump Electricity Energy",
       "Refrigeration Secondary Loop Load Heat Transfer Rate",
       "Refrigeration Secondary Loop Load Heat Transfer Energy",
       "Refrigeration Secondary Loop Total Heat Transfer Rate",
@@ -100,8 +100,8 @@ namespace detail {
       "Refrigeration Secondary Loop Receiver Heat Gain Rate",
       "Refrigeration Secondary Loop Receiver Heat Gain Energy",
       // FOR SECONDARY SYSTEMS SERVING AIR CHILLERS:
-      "Refrigeration Air Chiller Secondary Loop Pump Electric Power",
-      "Refrigeration Air Chiller Secondary Loop Pump Electric Energy",
+      "Refrigeration Air Chiller Secondary Loop Pump Electricity Rate",
+      "Refrigeration Air Chiller Secondary Loop Pump Electricity Energy",
       "Refrigeration Air Chiller Secondary Loop Load Heat Transfer Rate",
       "Refrigeration Air Chiller Secondary Loop Load Heat Transfer Energy",
       "Refrigeration Air Chiller Secondary Loop Total Heat Transfer Rate",

@@ -1861,7 +1861,7 @@ OS:UtilityCost:Tariff,
        \type alpha
        \required-field
   A3, \field Output Meter Name
-       \note The name of any standard meter or custom meter or but usually set to either Electricity:Facility or Gas:Facility
+       \note The name of any standard meter or custom meter or but usually set to either Electricity:Facility or NaturalGas:Facility
        \type alpha
        \required-field
   A4, \field Conversion Factor Choice
@@ -19760,10 +19760,10 @@ OS:Curve:DoubleExponentialDecay,
   N3, \field Coefficient3 C3
        \type real
        \required-field
-  N4, \field Coefficient3 C4
+  N4, \field Coefficient4 C4
        \type real
        \required-field
-  N5, \field Coefficient3 C5
+  N5, \field Coefficient5 C5
        \type real
        \required-field
   N6, \field Minimum Value of x

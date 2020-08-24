@@ -79,8 +79,8 @@ namespace detail {
   const std::vector<std::string>& ZoneHVACEnergyRecoveryVentilator_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Zone Ventilator Electric Power",
-      "Zone Ventilator Electric Energy",
+      "Zone Ventilator Electricity Rate",
+      "Zone Ventilator Electricity Energy",
       "Zone Ventilator Total Cooling Rate",
       "Zone Ventilator Total Cooling Energy",
       "Zone Ventilator Total Heating Rate",

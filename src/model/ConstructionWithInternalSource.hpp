@@ -91,7 +91,7 @@ class MODEL_API ConstructionWithInternalSource : public LayeredConstruction {
   /// this field is ignored for 1-D calculations
   /// Defaults to 0.0.
   double twoDimensionalTemperatureCalculationPosition() const;
-  bool setTwoDimensionalTemperatureCalculation Position(double twoDimensionalTemperatureCalculationPosition);
+  bool setTwoDimensionalTemperatureCalculationPosition(double twoDimensionalTemperatureCalculationPosition);
 
   //@}
   /** @name Static Methods */

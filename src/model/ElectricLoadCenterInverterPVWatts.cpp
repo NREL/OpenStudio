@@ -75,17 +75,17 @@ namespace detail {
   {
     static const std::vector<std::string> result{
       "Inverter DC to AC Efficiency",
-      "Inverter DC Input Electric Power",
-      "Inverter DC Input Electric Energy",
-      "Inverter AC Output Electric Power",
-      "Inverter AC Output Electric Energy",
+      "Inverter DC Input Electricity Rate",
+      "Inverter DC Input Electricity Energy",
+      "Inverter AC Output Electricity Rate",
+      "Inverter AC Output Electricity Energy",
       "Inverter Conversion Loss Power",
       "Inverter Conversion Loss Energy",
       "Inverter Conversion Loss Decrement Energy",
       "Inverter Thermal Loss Rate",
       "Inverter Thermal Loss Energy",
-      "Inverter Ancillary AC Electric Power",
-      "Inverter Ancillary AC Electric Energy"
+      "Inverter Ancillary AC Electricity Rate",
+      "Inverter Ancillary AC Electricity Energy"
     };
     return result;
   }

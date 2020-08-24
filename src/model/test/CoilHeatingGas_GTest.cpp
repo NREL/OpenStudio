@@ -79,7 +79,7 @@ TEST_F(ModelFixture,CoilHeatingGas) {
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Propane"), validFuelTypes.end());
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "NaturalGas"), validFuelTypes.end());
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Diesel"), validFuelTypes.end());
-  EXPECT_EQ(validFuelTypes.size(), 8);
+  EXPECT_EQ(validFuelTypes.size(), 9);
 
 }
 

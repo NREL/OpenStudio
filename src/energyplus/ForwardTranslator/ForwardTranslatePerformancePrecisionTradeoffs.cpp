@@ -70,7 +70,7 @@ boost::optional<IdfObject> ForwardTranslator::translatePerformancePrecisionTrade
     idfObject.setDouble(PerformancePrecisionTradeoffsFields::MaxZoneTempDiff, modelObject.maxZoneTempDiff());
   }
 
-  if (!modelObject.isMaxAllowedDelTemp()) {
+  if (!modelObject.isMaxAllowedDelTempDefaulted()) {
     idfObject.setDouble(PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp, modelObject.maxAllowedDelTemp());
   }
 

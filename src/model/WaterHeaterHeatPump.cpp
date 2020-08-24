@@ -89,10 +89,10 @@ namespace detail {
     static const std::vector<std::string> result{
       // WaterHeater:HeatPump:PumpedCondenser
       "Water Heater Compressor Part Load Ratio",
-      "Water Heater On Cycle Ancillary Electric Power",
-      "Water Heater On Cycle Ancillary Electric Energy",
-      "Water Heater Off Cycle Ancillary Electric Power",
-      "Water Heater Off Cycle Ancillary Electric Energy"
+      "Water Heater On Cycle Ancillary Electricity Rate",
+      "Water Heater On Cycle Ancillary Electricity Energy",
+      "Water Heater Off Cycle Ancillary Electricity Rate",
+      "Water Heater Off Cycle Ancillary Electricity Energy"
     };
     return result;
   }

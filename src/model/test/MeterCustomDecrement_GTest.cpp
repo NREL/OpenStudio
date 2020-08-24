@@ -72,7 +72,7 @@ TEST_F(ModelFixture, MeterCustomDecrement_KeyVarGroups)
 
   std::vector< std::pair<std::string,std::string> > keyVarGroups = testObject.keyVarGroups();
 
-  EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Lights 1", "Lights Electric Energy"));
+  EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Lights 1", "Lights Electricity Energy"));
   keyVarGroups = testObject.keyVarGroups();
   EXPECT_EQ(1, keyVarGroups.size());
   // Also test the numKeyVarGroups method
@@ -81,7 +81,7 @@ TEST_F(ModelFixture, MeterCustomDecrement_KeyVarGroups)
   testObject.removeAllKeyVarGroups();
   EXPECT_EQ(0, testObject.numKeyVarGroups());
 
-  EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Lights 1", "Lights Electric Energy"));
+  EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Lights 1", "Lights Electricity Energy"));
   EXPECT_EQ(1, testObject.numKeyVarGroups());
 
   EXPECT_TRUE(testObject.addKeyVarGroup("SPACE1-1 Equipment 1", "Equipment Electric Energy"));

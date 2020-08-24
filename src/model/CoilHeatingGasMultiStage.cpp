@@ -82,7 +82,7 @@ namespace detail {
       "Heating Coil Gas Consumption",
       "Heating Coil Gas Consumption Rate",
       "Heating Coil Electric Consumption",
-      "Heating Coil Electric Power",
+      "Heating Coil Electricity Rate",
       "Heating Coil Runtime Fraction",
       "Heating Coil Parasitic Gas Consumption",
       "Heating Coil Parasitic Gas Consumption Rate"

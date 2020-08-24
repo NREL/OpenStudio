@@ -139,8 +139,8 @@ namespace detail {
       "Zone Packaged Terminal Air Conditioner Latent Heating Energy",
       "Zone Packaged Terminal Air Conditioner Latent Cooling Rate",
       "Zone Packaged Terminal Air Conditioner Latent Cooling Energy",
-      "Zone Packaged Terminal Air Conditioner Electric Power",
-      "Zone Packaged Terminal Air Conditioner Electric Energy",
+      "Zone Packaged Terminal Air Conditioner Electricity Rate",
+      "Zone Packaged Terminal Air Conditioner Electricity Energy",
       "Zone Packaged Terminal Air Conditioner Fan Part Load Ratio",
       "Zone Packaged Terminal Air Conditioner Compressor Part Load Ratio",
       "Zone Packaged Terminal Air Conditioner Fan Availability Status"
