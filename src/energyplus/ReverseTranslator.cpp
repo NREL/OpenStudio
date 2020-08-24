@@ -1114,7 +1114,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     modelObject = translateZoneMixing(workspaceObject);
     break;
   }
-  case openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName:
+  case openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName:
   {
     modelObject = translateZonePropertyUserViewFactorsBySurfaceName(workspaceObject);
     break;

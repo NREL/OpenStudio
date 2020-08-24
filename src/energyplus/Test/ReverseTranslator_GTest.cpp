@@ -806,7 +806,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   openstudio::WorkspaceObject epBuildingSurfaceDetailed2 = workspace.addObject(idf_surface2).get();
 
 
-  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
+  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
   idf_zoneProp.setString(0, "Thermal Zone 1"); // Zone or ZoneList Name
   idf_zoneProp.setString(1, "Surface 1"); // From Surface 1
   idf_zoneProp.setString(2, "Surface 2"); // To Surface 2
@@ -877,7 +877,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   openstudio::WorkspaceObject epBuildingSurfaceDetailed = workspace.addObject(idf_surface).get();
 
 
-  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
+  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
   idf_zoneProp.setString(0, "Thermal Zone 1"); // Zone or ZoneList Name
   idf_zoneProp.setString(1, "Surface 1"); // From Surface 1
   idf_zoneProp.setString(2, "Surface 1"); // To Surface 1

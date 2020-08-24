@@ -77,7 +77,7 @@ class MODEL_API ViewFactor {
 // Overload operator<<
 MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::ViewFactor& viewFactor);
 
-/** ZonePropertyUserViewFactorsBySurfaceName is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneProperty:UserViewFactors:bySurfaceName'. */
+/** ZonePropertyUserViewFactorsBySurfaceName is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneProperty:UserViewFactors:BySurfaceName'. */
 class MODEL_API ZonePropertyUserViewFactorsBySurfaceName : public ModelObject {
  public:
   /** @name Constructors and Destructors */
