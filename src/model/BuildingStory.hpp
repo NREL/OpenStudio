@@ -35,6 +35,8 @@
 
 namespace openstudio {
 
+class BoundingBox;
+
 namespace model {
 
 class SpaceType;
@@ -72,6 +74,12 @@ class MODEL_API BuildingStory : public ModelObject {
   boost::optional<double> nominalFloortoFloorHeight() const;
 
   boost::optional<double> nominalFloortoCeilingHeight() const;
+
+  /** Get the BoundingBox in building coordinates. */
+  openstudio::BoundingBox boundingBoxBuildingCoordinates() const;
+
+  /** Get the BoundingBox in site coordinates. */
+  openstudio::BoundingBox boundingBoxSiteCoordinates() const;
 
   //@}
   /** @name Setters */
