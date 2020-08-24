@@ -31,6 +31,8 @@
 #include "SqlFile_Impl.hpp"
 #include "SqlFileTimeSeriesQuery.hpp"
 
+#include <sqlite3.h>
+
 namespace openstudio{
 
 SqlFile::SqlFile()
