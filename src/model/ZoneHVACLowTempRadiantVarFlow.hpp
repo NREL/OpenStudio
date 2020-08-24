@@ -55,9 +55,9 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
   //@{
 
   explicit ZoneHVACLowTempRadiantVarFlow(const Model& model,
-                                                                                  Schedule& availabilitySchedule,
-                                                                                  HVACComponent& heatingCoil,
-                                                                                 HVACComponent& coolingCoil);
+                                         Schedule& availabilitySchedule,
+                                         HVACComponent& heatingCoil,
+                                         HVACComponent& coolingCoil);
 
   virtual ~ZoneHVACLowTempRadiantVarFlow() {}
 
@@ -82,9 +82,17 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   std::vector<Surface> surfaces() const;
 
+  std::string fluidToRadiantSurfaceHeatTransferModel() const;
+
+  bool isFluidToRadiantSurfaceHeatTransferModelDefaulted() const;
+
   double hydronicTubingInsideDiameter() const;
 
   bool isHydronicTubingInsideDiameterDefaulted() const;
+
+  double hydronicTubingOutsideDiameter() const;
+
+  bool isHydronicTubingOutsideDiameterDefaulted() const;
 
   boost::optional<double> hydronicTubingLength() const;
 
@@ -92,13 +100,23 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   bool isHydronicTubingLengthAutosized() const;
 
+  double hydronicTubingConductivity() const;
+
+  bool isHydronicTubingConductivityDefaulted() const;
+
   std::string temperatureControlType() const;
 
   bool isTemperatureControlTypeDefaulted() const;
 
+  std::string setpointControlType() const;
+
+  bool isSetpointControlTypeDefaulted() const;
+
   std::string numberofCircuits() const;
 
   double circuitLength() const;
+
+  boost::optional<Schedule> changeoverDelayTimePeriodSchedule() const;
 
   //@}
   /** @name Setters */
@@ -110,6 +128,10 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   void resetRadiantSurfaceType();
 
+  bool setFluidToRadiantSurfaceHeatTransferModel(std::string fluidToRadiantSurfaceHeatTransferModel);
+
+  void resetFluidToRadiantSurfaceHeatTransferModel();
+
   bool setHeatingCoil(HVACComponent& heatingCoil);
 
   bool setCoolingCoil(HVACComponent& coolingCoil);
@@ -118,19 +140,35 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   void resetHydronicTubingInsideDiameter();
 
+  bool setHydronicTubingOutsideDiameter(double hydronicTubingOutsideDiameter);
+
+  void resetHydronicTubingOutsideDiameter();
+
   bool setHydronicTubingLength(double hydronicTubingLength);
 
   void resetHydronicTubingLength();
 
   void autosizeHydronicTubingLength();
 
+  bool setHydronicTubingConductivity(double hydronicTubingConductivity);
+
+  void resetHydronicTubingConductivity();
+
   bool setTemperatureControlType(std::string temperatureControlType);
 
   void resetTemperatureControlType();
 
+  bool setSetpointControlType(std::string setpointControlType);
+
+  void resetSetpointControlType();
+
   bool setNumberofCircuits(std::string numberofCircuits);
 
   bool setCircuitLength(double circuitLength);
+
+  bool setChangeoverDelayTimePeriodSchedule(Schedule& schedule);
+
+  void resetChangeoverDelayTimePeriodSchedule();
 
   boost::optional<ThermalZone> thermalZone() const override;
 

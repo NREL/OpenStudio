@@ -220,15 +220,15 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   bool setCircuitLength(double circuitLength);
 
+  bool setChangeoverDelayTimePeriodSchedule(Schedule& schedule);
+
+  void resetChangeoverDelayTimePeriodSchedule();
+
   boost::optional<ThermalZone> thermalZone() const override;
 
   bool addToThermalZone(ThermalZone & thermalZone);
 
   void removeFromThermalZone();
-
-  bool setChangeoverDelayTimePeriodSchedule(Schedule& schedule);
-
-  void resetChangeoverDelayTimePeriodSchedule();
 
   //@}
   /** @name Other */

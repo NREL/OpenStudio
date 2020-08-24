@@ -495,7 +495,6 @@ ZoneHVACLowTemperatureRadiantElectric::ZoneHVACLowTemperatureRadiantElectric(con
   resetRadiantSurfaceType();
   autosizeMaximumElectricalPowertoPanel();
   setTemperatureControlType("MeanAirTemperature");
-  setSetpointControlType("HalfFlowPower");
   setHeatingThrottlingRange(2.0);
   //setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::HeatingSetpointTemperatureScheduleName,"");
 

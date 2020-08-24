@@ -177,7 +177,7 @@ namespace detail {
 
     void resetHydronicTubingInsideDiameter();
 
-    bool setHydronicTubingOutsideDiameter();
+    bool setHydronicTubingOutsideDiameter(double hydronicTubingOutsideDiameter);
 
     void resetHydronicTubingOutsideDiameter();
 
@@ -185,7 +185,7 @@ namespace detail {
 
     void autosizeHydronicTubingLength();
 
-    bool setHydronicTubingConductivity();
+    bool setHydronicTubingConductivity(double hydronicTubingConductivity);
 
     void resetHydronicTubingConductivity();
 
@@ -229,15 +229,15 @@ namespace detail {
 
     bool setCircuitLength(double circuitLength);
 
+    bool setChangeoverDelayTimePeriodSchedule(Schedule& schedule);
+
+    void resetChangeoverDelayTimePeriodSchedule();
+
     boost::optional<ThermalZone> thermalZone() const override;
 
     bool addToThermalZone(ThermalZone & thermalZone) override;
 
     void removeFromThermalZone() override;
-
-    bool setChangeoverDelayTimePeriodSchedule(Schedule& schedule);
-
-    void resetChangeoverDelayTimePeriodSchedule();
 
     //@}
     /** @name Other */

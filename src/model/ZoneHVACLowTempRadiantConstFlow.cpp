@@ -435,7 +435,6 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter) {
     bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingInsideDiameter, hydronicTubingInsideDiameter);
     return result;
@@ -841,12 +840,28 @@ bool ZoneHVACLowTempRadiantConstFlow::isHydronicTubingInsideDiameterDefaulted() 
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->isHydronicTubingInsideDiameterDefaulted();
 }
 
+double ZoneHVACLowTempRadiantConstFlow::hydronicTubingOutsideDiameter() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->hydronicTubingOutsideDiameter();
+}
+
+bool ZoneHVACLowTempRadiantConstFlow::isHydronicTubingOutsideDiameterDefaulted() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->isHydronicTubingOutsideDiameterDefaulted();
+}
+
 boost::optional<double> ZoneHVACLowTempRadiantConstFlow::hydronicTubingLength() const {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->hydronicTubingLength();
 }
 
 bool ZoneHVACLowTempRadiantConstFlow::isHydronicTubingLengthAutosized() const {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->isHydronicTubingLengthAutosized();
+}
+
+double ZoneHVACLowTempRadiantConstFlow::hydronicTubingConductivity() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->hydronicTubingConductivity();
+}
+
+bool ZoneHVACLowTempRadiantConstFlow::isHydronicTubingConductivityDefaulted() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->isHydronicTubingConductivityDefaulted();
 }
 
 std::string ZoneHVACLowTempRadiantConstFlow::temperatureControlType() const {
@@ -913,6 +928,10 @@ double ZoneHVACLowTempRadiantConstFlow::circuitLength() const {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->circuitLength();
 }
 
+boost::optional<Schedule> ZoneHVACLowTempRadiantConstFlow::changeoverDelayTimePeriodSchedule() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->changeoverDelayTimePeriodSchedule();
+}
+
 bool ZoneHVACLowTempRadiantConstFlow::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setAvailabilitySchedule(schedule);
 }
@@ -941,12 +960,28 @@ void ZoneHVACLowTempRadiantConstFlow::resetHydronicTubingInsideDiameter() {
   getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetHydronicTubingInsideDiameter();
 }
 
+bool ZoneHVACLowTempRadiantConstFlow::setHydronicTubingOutsideDiameter(double hydronicTubingOutsideDiameter) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setHydronicTubingOutsideDiameter(hydronicTubingOutsideDiameter);
+}
+
+void ZoneHVACLowTempRadiantConstFlow::resetHydronicTubingOutsideDiameter() {
+  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetHydronicTubingOutsideDiameter();
+}
+
 bool ZoneHVACLowTempRadiantConstFlow::setHydronicTubingLength(double hydronicTubingLength) {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setHydronicTubingLength(hydronicTubingLength);
 }
 
 void ZoneHVACLowTempRadiantConstFlow::autosizeHydronicTubingLength() {
   getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->autosizeHydronicTubingLength();
+}
+
+bool ZoneHVACLowTempRadiantConstFlow::setHydronicTubingConductivity(double hydronicTubingConductivity) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setHydronicTubingConductivity(hydronicTubingConductivity);
+}
+
+void ZoneHVACLowTempRadiantConstFlow::resetHydronicTubingConductivity() {
+  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetHydronicTubingConductivity();
 }
 
 bool ZoneHVACLowTempRadiantConstFlow::setTemperatureControlType(std::string temperatureControlType) {
@@ -1019,6 +1054,14 @@ bool ZoneHVACLowTempRadiantConstFlow::setNumberofCircuits(std::string numberofCi
 
 bool ZoneHVACLowTempRadiantConstFlow::setCircuitLength(double circLength) {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setCircuitLength(circLength);
+}
+
+bool ZoneHVACLowTempRadiantConstFlow::setChangeoverDelayTimePeriodSchedule(Schedule& schedule) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setChangeoverDelayTimePeriodSchedule(schedule);
+}
+
+void ZoneHVACLowTempRadiantConstFlow::resetChangeoverDelayTimePeriodSchedule() {
+  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetChangeoverDelayTimePeriodSchedule();
 }
 
 boost::optional<ThermalZone> ZoneHVACLowTempRadiantConstFlow::thermalZone() const
