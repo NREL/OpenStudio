@@ -102,6 +102,10 @@ namespace detail {
 
     std::vector<Surface> surfaces() const;
 
+    std::string fluidToRadiantSurfaceHeatTransferModel() const;
+
+    bool isFluidToRadiantSurfaceHeatTransferModelDefaulted() const;
+
     double hydronicTubingInsideDiameter() const;
 
     bool isHydronicTubingInsideDiameterDefaulted() const;
@@ -151,6 +155,10 @@ namespace detail {
     bool setRadiantSurfaceType(boost::optional<std::string> radiantSurfaceType);
 
     void resetRadiantSurfaceType();
+
+    bool setFluidToRadiantSurfaceHeatTransferModel(std::string fluidToRadiantSurfaceHeatTransferModel);
+
+    void resetFluidToRadiantSurfaceHeatTransferModel();
 
     bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
 

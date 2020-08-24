@@ -86,6 +86,10 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   std::vector<Surface> surfaces() const;
 
+  std::string fluidToRadiantSurfaceHeatTransferModel() const;
+
+  bool isFluidToRadiantSurfaceHeatTransferModelDefaulted() const;
+
   double hydronicTubingInsideDiameter() const;
 
   bool isHydronicTubingInsideDiameterDefaulted() const;
@@ -135,6 +139,10 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
   bool setRadiantSurfaceType(std::string radiantSurfaceType);
 
   void resetRadiantSurfaceType();
+
+  bool setFluidToRadiantSurfaceHeatTransferModel(std::string fluidToRadiantSurfaceHeatTransferModel);
+
+  void resetFluidToRadiantSurfaceHeatTransferModel();
 
   bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
 

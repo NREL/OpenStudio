@@ -270,6 +270,18 @@ namespace detail {
     return surfaces;
   }
 
+  std::string ZoneHVACLowTempRadiantConstFlow_Impl::fluidToRadiantSurfaceHeatTransferModel() const
+  {
+    boost::optional<std::string> value = getString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::FluidtoRadiantSurfaceHeatTransferModel,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::isFluidToRadiantSurfaceHeatTransferModelDefaulted() const
+  {
+    return isEmpty(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::FluidtoRadiantSurfaceHeatTransferModel);
+  }
+
   double ZoneHVACLowTempRadiantConstFlow_Impl::hydronicTubingInsideDiameter() const {
     boost::optional<double> value = getDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingInsideDiameter,true);
     OS_ASSERT(value);
@@ -376,6 +388,19 @@ namespace detail {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::RadiantSurfaceType, "Ceilings");
     OS_ASSERT(result);
   }
+
+  bool ZoneHVACLowTempRadiantConstFlow_Impl::setFluidToRadiantSurfaceHeatTransferModel(std::string fluidToRadiantSurfaceHeatTransferModel)
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::FluidToRadiantSurfaceHeatTransferModel, fluidToRadiantSurfaceHeatTransferModel);
+    return result;
+  }
+
+  void ZoneHVACLowTempRadiantConstFlow_Impl::resetFluidToRadiantSurfaceHeatTransferModel()
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::FluidToRadiantSurfaceHeatTransferModel, "");
+    OS_ASSERT(result);
+  }
+
 
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter) {
     bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::HydronicTubingInsideDiameter, hydronicTubingInsideDiameter);
@@ -723,6 +748,14 @@ std::vector<Surface> ZoneHVACLowTempRadiantConstFlow::surfaces() const {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->surfaces();
 }
 
+std:;string ZoneHVACLowTempRadiantConstFlow::fluidToRadiantSurfaceHeatTransferModel() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->fluidToRadiantSurfaceHeatTransferModel();
+}
+
+bool ZoneHVACLowTempRadiantConstFlow::isFluidToRadiantSurfaceHeatTransferModelDefaulted() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->isFluidToRadiantSurfaceHeatTransferModelDefaulted();
+}
+
 double ZoneHVACLowTempRadiantConstFlow::hydronicTubingInsideDiameter() const {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->hydronicTubingInsideDiameter();
 }
@@ -813,6 +846,14 @@ bool ZoneHVACLowTempRadiantConstFlow::setRadiantSurfaceType(std::string radiantS
 
 void ZoneHVACLowTempRadiantConstFlow::resetRadiantSurfaceType() {
   getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetRadiantSurfaceType();
+}
+
+bool ZoneHVACLowTempRadiantConstFlow::setFluidToRadiantSurfaceHeatTransferModel(std:;string fluidToRadiantSurfaceHeatTransferModel) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setFluidToRadiantSurfaceHeatTransferModel(fluidToRadiantSurfaceHeatTransferModel);
+}
+
+void ZoneHVACLowTempRadiantConstFlow::resetFluidToRadiantSurfaceHeatTransferModel() {
+  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetFluidToRadiantSurfaceHeatTransferModel();
 }
 
 bool ZoneHVACLowTempRadiantConstFlow::setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter) {
