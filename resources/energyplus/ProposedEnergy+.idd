@@ -5343,7 +5343,6 @@ Construction:InternalSource,
        \note uniform spacing between tubes or resistance wires in direction
        \note perpendicular to main intended direction of heat transfer
   N5 , \field Two-Dimensional Temperature Calculation Position
-       \required-field
        \minimum 0.0
        \maximum 1.0
        \default 0.0
