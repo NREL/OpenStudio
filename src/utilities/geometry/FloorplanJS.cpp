@@ -1102,7 +1102,7 @@ namespace openstudio{
       }
     }
 
-    // DLM: geometry in ThreeJS output is always in meters without north angle applied
+    // DLM: geometry in ThreeJS output is always in meters in building coordinates
     // north angle is applied directly to osm, does not impact this translation
 
     double lengthToMeters = 1;
@@ -1510,6 +1510,13 @@ namespace openstudio{
     Json::Value& project = m_value["project"];
 
     project["north_axis"] = northAxis;
+
+    if (!checkKeyAndType(project, "map", Json::objectValue)) {
+      project["map"] = Json::Value(Json::objectValue);
+    }
+    Json::Value& map = project["map"];
+
+    map["rotation"] = degToRad(northAxis);
 
     return true;
   }

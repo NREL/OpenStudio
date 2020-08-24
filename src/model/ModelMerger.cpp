@@ -150,6 +150,17 @@ namespace openstudio
             continue;
           }
 
+          if ((iddObjectType == IddObjectType::OS_Site) ||
+              (iddObjectType == IddObjectType::OS_Facility) ||
+              (iddObjectType == IddObjectType::OS_Building)) 
+          {
+            // this is a unique object
+            if (std::get<0>(currentLookup).size() == 1) {
+              result[handle] = *(std::get<0>(currentLookup).begin());
+              continue;
+            }
+          }
+
           ModelObject modelObject = object.cast<ModelObject>();
           if (modelObject.hasAdditionalProperties()) {
             model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
@@ -889,7 +900,7 @@ namespace openstudio
       if (currentHandle){
         currentObject = m_currentModel.getObject(*currentHandle);
         if (!currentObject){
-          LOG(Error, "Could not find object in current model for handle " << *currentHandle);
+          LOG(Error, "Could not find object in current model for handle " << *currentHandle << " of type " << iddObjectType.valueName());
         }
       }
 
