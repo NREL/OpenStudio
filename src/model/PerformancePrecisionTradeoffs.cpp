@@ -272,8 +272,8 @@ bool PerformancePrecisionTradeoffs::isMaxAllowedDelTempDefaulted() const {
   return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->isMaxAllowedDelTempDefaulted();
 }
 
-bool PerformancePrecisionTradeoffs::setMaxZoneTempDiff(double maxAllowedDelTemp) {
-  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->setMaxZoneTempDiff(maxAllowedDelTemp);
+bool PerformancePrecisionTradeoffs::setMaxAllowedDelTemp(double maxAllowedDelTemp) {
+  return getImpl<detail::PerformancePrecisionTradeoffs_Impl>()->setMaxAllowedDelTemp(maxAllowedDelTemp);
 }
 
 void PerformancePrecisionTradeoffs::resetMaxAllowedDelTemp() {
