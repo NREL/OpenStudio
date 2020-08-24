@@ -91,7 +91,6 @@ namespace detail {
 
     virtual void applySizingValues() override;
 
-
     //@}
     /** @name Getters */
     //@{
@@ -110,13 +109,25 @@ namespace detail {
 
     bool isHydronicTubingInsideDiameterDefaulted() const;
 
+    double hydronicTubingOutsideDiameter() const;
+
+    bool isHydronicTubingOutsideDiameterDefaulted() const;
+
     boost::optional<double> hydronicTubingLength() const;
 
     bool isHydronicTubingLengthAutosized() const;
 
+    double hydronicTubingConductivity() const;
+
+    bool isHydronicTubingConductivityDefaulted() const;
+
     std::string temperatureControlType() const;
 
     bool isTemperatureControlTypeDefaulted() const;
+
+    double runningMeanOutdoorDryBulbTemperatureWeightingFactor() const;
+
+    bool isRunningMeanOutdoorDryBulbTemperatureWeightingFactorDefaulted() const;
 
     HVACComponent heatingCoil() const;
 
@@ -146,6 +157,8 @@ namespace detail {
 
     double circuitLength() const;
 
+    boost::optional<Schedule> changeoverDelayTimePeriodSchedule() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -164,13 +177,25 @@ namespace detail {
 
     void resetHydronicTubingInsideDiameter();
 
+    bool setHydronicTubingOutsideDiameter();
+
+    void resetHydronicTubingOutsideDiameter();
+
     bool setHydronicTubingLength(boost::optional<double> hydronicTubingLength);
 
     void autosizeHydronicTubingLength();
 
+    bool setHydronicTubingConductivity();
+
+    void resetHydronicTubingConductivity();
+
     bool setTemperatureControlType(std::string temperatureControlType);
 
     void resetTemperatureControlType();
+
+    bool setRunningMeanOutdoorDryBulbTemperatureWeightingFactor();
+
+    void resetRunningMeanOutdoorDryBulbTemperatureWeightingFactor();
 
     bool setHeatingCoil(HVACComponent& heatingCoil);
 
@@ -209,6 +234,10 @@ namespace detail {
     bool addToThermalZone(ThermalZone & thermalZone) override;
 
     void removeFromThermalZone() override;
+
+    bool setChangeoverDelayTimePeriodSchedule(Schedule& schedule);
+
+    void resetChangeoverDelayTimePeriodSchedule();
 
     //@}
     /** @name Other */

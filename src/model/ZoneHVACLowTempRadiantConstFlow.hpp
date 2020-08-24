@@ -94,13 +94,25 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   bool isHydronicTubingInsideDiameterDefaulted() const;
 
+  double hydronicTubingOutsideDiameter() const;
+
+  bool isHydronicTubingOutsideDiameterDefaulted() const;
+
   boost::optional<double> hydronicTubingLength() const;
 
   bool isHydronicTubingLengthAutosized() const;
 
+  double hydronicTubingConductivity() const;
+
+  bool isHydronicTubingConductivityDefaulted() const;
+
   std::string temperatureControlType() const;
 
   bool isTemperatureControlTypeDefaulted() const;
+
+  double runningMeanOutdoorDryBulbTemperatureWeightingFactor() const;
+
+  bool isRunningMeanOutdoorDryBulbTemperatureWeightingFactorDefaulted() const;
 
   HVACComponent heatingCoil() const;
 
@@ -130,6 +142,8 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   double circuitLength() const;
 
+  boost::optional<Schedule> changeoverDelayTimePeriodSchedule() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -148,6 +162,10 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   void resetHydronicTubingInsideDiameter();
 
+  bool setHydronicTubingOutsideDiameter(double hydronicTubingOutsideDiameter);
+
+  void resetHydronicTubingOutsideDiameter();
+
   bool setHydronicTubingLength(double hydronicTubingLength);
 
   // Will forward to autosizeHydronicTubingLength()
@@ -155,9 +173,17 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   void autosizeHydronicTubingLength();
 
+  bool setHydronicTubingConductivity(double hydronicTubingConductivity);
+
+  void resetHydronicTubingConductivity();
+
   bool setTemperatureControlType(std::string temperatureControlType);
 
   void resetTemperatureControlType();
+
+  bool setRunningMeanOutdoorDryBulbTemperatureWeightingFactor(double runningMeanOutdoorDryBulbTemperatureWeightingFactor);
+
+  void resetRunningMeanOutdoorDryBulbTemperatureWeightingFactor();
 
   bool setHeatingCoil(HVACComponent& heatingCoil);
 
@@ -199,6 +225,10 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
   bool addToThermalZone(ThermalZone & thermalZone);
 
   void removeFromThermalZone();
+
+  bool setChangeoverDelayTimePeriodSchedule(Schedule& schedule);
+
+  void resetChangeoverDelayTimePeriodSchedule();
 
   //@}
   /** @name Other */
