@@ -37,6 +37,8 @@
 #include "../core/Containers.hpp"
 #include "../core/Assert.hpp"
 
+#include <sqlite3.h>
+
 using boost::multi_index_container;
 using boost::multi_index::indexed_by;
 using boost::multi_index::ordered_unique;

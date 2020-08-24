@@ -32,7 +32,6 @@
 
 #include "../UtilitiesAPI.hpp"
 
-#include <sqlite3.h>
 #include "SummaryData.hpp"
 #include "SqlFileEnums.hpp"
 #include "SqlFileDataDictionary.hpp"
@@ -46,6 +45,8 @@
 
 #include <string>
 #include <vector>
+
+struct sqlite3;
 
 namespace openstudio{
 
