@@ -974,3 +974,56 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AirLoopHVAC) {
   EXPECT_EQ("Supply Inlet Node", a.getTarget(9)->getTarget(4)->nameString());
 
 }
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypes) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> outputMeters = model->getObjectsByType("OS:Output:Meter");
+  ASSERT_EQ(3u, outputMeters.size());
+  EXPECT_NE(std::find_if(outputMeters.begin(),
+                         outputMeters.end(),
+                         [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "NaturalGas:Facility"); }),
+            outputMeters.end());
+  EXPECT_NE(std::find_if(outputMeters.begin(),
+                         outputMeters.end(),
+                         [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "Heating:FuelOilNo1"); }),
+            outputMeters.end());
+  EXPECT_NE(std::find_if(outputMeters.begin(),
+                         outputMeters.end(),
+                         [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "WaterSystems:Propane"); }),
+            outputMeters.end());
+
+
+
+  // In the preparation of the test model, I assigned the same value to the Output:Variable 'name' (unused in E+) and the 'Variable Name' field we
+  // care about. That allows us to easily have on the object the initial and the final values.
+  // {Old, New}
+  const std::map<std::string, std::string> renameMap({
+    {"Boiler FuelOil#1 Energy", "Boiler FuelOilNo1 Energy"},
+    {"Boiler Gas Rate", "Boiler NaturalGas Rate"},
+    {"Boiler Electric Power", "Boiler Electricity Rate"},
+    {"Cooling Coil Water Heating Electric Power", "Cooling Coil Water Heating Electricity Rate"},
+    {"Generator Requested Electric Power", "Generator Requested Electricity Rate"},
+    {"Air System DX Cooling Coil Electric Energy", "Air System DX Cooling Coil Electricity Rate"},
+    // Introduce extra spaces on purpose...
+    {"Water  Heater  Gas Rate", "Water Heater NaturalGas Rate"},
+  });
+
+  std::vector<WorkspaceObject> outputVariables = model->getObjectsByType("OS:Output:Variable");
+  ASSERT_EQ(renameMap.size(), outputVariables.size());
+  ASSERT_EQ(7u, outputVariables.size());
+
+  for (const auto& outputVariable : outputVariables) {
+    auto name = outputVariable.nameString();
+    auto it = renameMap.find(name);
+    ASSERT_NE(it,renameMap.end()) << "Output:Variable named " << name << " not in replaceMap";
+    EXPECT_EQ(it->second, outputVariable.getString(3).get())
+      << "Output:Variable named " << name << " did not get the expected rename for Variable Name field";
+  }
+
+}
