@@ -4652,8 +4652,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   QDomElement ventSysRefElement = thermalZoneElement.firstChildElement("VentSysRef");
   boost::optional<model::ModelObject> ventSysEquip;
 
-  // ThermalZoneVentilationSystem
-  // Find out if ventSys is already a simsys or a priaircondgsys
+  //// ThermalZoneVentilationSystem
+  //// Find out if ventSys is already a simsys or a priaircondgsys
   bool translateVentSys = true;
   for( const auto & info : priAirCondInfo ) {
     if( info.SysRefElement == ventSysRefElement ) {
@@ -4681,7 +4681,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
         if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement,doc,model) )
         {
           ventSysEquip = trmlUnit;
-          airLoopHVAC->addBranchForZone(thermalZone,trmlUnit->cast<model::StraightComponent>());
+          auto trmlUnitHVACComponent = trmlUnit->cast<model::HVACComponent>();
+          airLoopHVAC->multiAddBranchForZone(thermalZone,trmlUnitHVACComponent);
           QDomElement inducedAirZnRefElement = trmlUnitElement.firstChildElement("InducedAirZnRef");
           if( boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().toStdString()) )
           {
@@ -4761,14 +4762,15 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     {
       airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(sysInfo.SysRefElement.text().toStdString());
 
-      if( airLoopHVAC && ! thermalZone.airLoopHVAC() )
+      if( airLoopHVAC )
       {
         QDomElement trmlUnitElement = findTrmlUnitElementForZone(nameElement.text(),doc);
         if( ! trmlUnitElement.isNull() ) {
           if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement,doc,model) )
           {
             sysInfo.ModelObject = trmlUnit;
-            airLoopHVAC->addBranchForZone(thermalZone,trmlUnit->cast<model::StraightComponent>());
+            auto trmlUnitHVACComponent = trmlUnit->cast<model::StraightComponent>();
+            airLoopHVAC->multiAddBranchForZone(thermalZone,trmlUnitHVACComponent);
             QDomElement inducedAirZnRefElement = trmlUnitElement.firstChildElement("InducedAirZnRef");
             if( boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().toStdString()) )
             {
@@ -4817,7 +4819,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
                     zoneHVAC->removeFromThermalZone();
                     loop->removeBranchForZone(tz.get());
                     model::AirTerminalSingleDuctInletSideMixer inletSideMixer(model);
-                    loop->addBranchForZone(tz.get(), inletSideMixer);
+                    loop->multiAddBranchForZone(tz.get(), inletSideMixer);
                     auto node = inletSideMixer.outletModelObject()->cast<model::Node>();
                     zoneHVAC->addToNode(node);
                     break;
