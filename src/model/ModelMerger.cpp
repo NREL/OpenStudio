@@ -156,7 +156,8 @@ namespace openstudio
           {
             // this is a unique object
             if (std::get<0>(currentLookup).size() == 1) {
-              result[handle] = *(std::get<0>(currentLookup).begin());
+              Handle currentHandle = *(std::get<0>(currentLookup).begin());
+              result[currentHandle] = handle;
               continue;
             }
           }
