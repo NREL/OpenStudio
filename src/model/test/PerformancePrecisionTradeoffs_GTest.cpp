@@ -131,7 +131,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_SetGetFields) {
   EXPECT_EQ(0.05, performancePrecisionTradeoffs.maxAllowedDelTemp());
   // max 0.1
   EXPECT_FALSE(performancePrecisionTradeoffs.setMaxAllowedDelTemp(1));
-  EXPECT_FALSE(performancePrecisionTradeoffs.maxAllowedDelTempDefaulted());
+  EXPECT_FALSE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
   EXPECT_EQ(0.05, performancePrecisionTradeoffs.maxAllowedDelTemp());
   performancePrecisionTradeoffs.resetMaxAllowedDelTemp();
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
@@ -165,7 +165,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone)
   EXPECT_FALSE(performancePrecisionTradeoffsClone.isMaxZoneTempDiffDefaulted());
   EXPECT_EQ(0.65, performancePrecisionTradeoffsClone.maxZoneTempDiff());
   EXPECT_FALSE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
-  EXPECT_EQ(0.05, performancePrecisionTradeoffs.isMaxAllowedDelTemp());
+  EXPECT_EQ(0.05, performancePrecisionTradeoffs.maxAllowedDelTemp());
 
   // clone it into a different model
   Model model2;
