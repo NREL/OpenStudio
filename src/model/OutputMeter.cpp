@@ -444,7 +444,7 @@ namespace detail {
                    "', keyValue = '' did not return a TimeSeries");
 
         if (boost::contains(name, "FuelOil_")) {
-          name = boost::replace_all_copy(name, "FuelOil_", "FuelOil#");
+          name = boost::replace_all_copy(name, "FuelOil_", "FuelOilNo");
 
           result = sqlFile->timeSeries(envPeriod, frequency, name, "");
         }

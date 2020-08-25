@@ -141,7 +141,7 @@ TEST_F(SqlFileFixture, TimeSeriesCount)
   openstudio::OptionalTimeSeries ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "Electricity:Facility",  "");
   ASSERT_TRUE(ts);
 
-  // check that "NaturalGas:Facility" is available (prior to 9.4.0, it was 'NaturalGas:Facility')
+  // check that "NaturalGas:Facility" is available (prior to 9.4.0, it was 'Gas:Facility')
   ASSERT_EQ(1, std::count(availableTimeSeries.begin(), availableTimeSeries.end(), "NaturalGas:Facility"));
   ts = sqlFile.timeSeries(availableEnvPeriods[0], "Hourly", "NaturalGas:Facility",  "");
   ASSERT_TRUE(ts);
