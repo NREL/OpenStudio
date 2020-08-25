@@ -872,6 +872,14 @@ bool ZoneHVACLowTempRadiantConstFlow::isTemperatureControlTypeDefaulted() const 
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->isTemperatureControlTypeDefaulted();
 }
 
+double ZoneHVACLowTempRadiantConstFlow::runningMeanOutdoorDryBulbTemperatureWeightingFactor() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->runningMeanOutdoorDryBulbTemperatureWeightingFactor();
+}
+
+bool ZoneHVACLowTempRadiantConstFlow::isRunningMeanOutdoorDryBulbTemperatureWeightingFactorDefaulted() const {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->isRunningMeanOutdoorDryBulbTemperatureWeightingFactorDefaulted();
+}
+
 HVACComponent ZoneHVACLowTempRadiantConstFlow::heatingCoil() const {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->heatingCoil();
 }
@@ -986,6 +994,14 @@ void ZoneHVACLowTempRadiantConstFlow::resetHydronicTubingConductivity() {
 
 bool ZoneHVACLowTempRadiantConstFlow::setTemperatureControlType(const std::string& temperatureControlType) {
   return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setTemperatureControlType(temperatureControlType);
+}
+
+bool ZoneHVACLowTempRadiantConstFlow::setRunningMeanOutdoorDryBulbTemperatureWeightingFactor(double runningMeanOutdoorDryBulbTemperatureWeightingFactor) {
+  return getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->setRunningMeanOutdoorDryBulbTemperatureWeightingFactor(runningMeanOutdoorDryBulbTemperatureWeightingFactor);
+}
+
+void ZoneHVACLowTempRadiantConstFlow::resetRunningMeanOutdoorDryBulbTemperatureWeightingFactor() {
+  getImpl<detail::ZoneHVACLowTempRadiantConstFlow_Impl>()->resetRunningMeanOutdoorDryBulbTemperatureWeightingFactor();
 }
 
 void ZoneHVACLowTempRadiantConstFlow::resetTemperatureControlType() {

@@ -534,6 +534,12 @@ namespace detail {
     return result;
   }
 
+  void ZoneHVACLowTempRadiantVarFlow_Impl::resetChangeoverDelayTimePeriodSchedule()
+  {
+    bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ChangeoverDelayTimePeriodSchedule, "");
+    OS_ASSERT(result);
+  }
+
   boost::optional<Schedule> ZoneHVACLowTempRadiantVarFlow_Impl::optionalAvailabilitySchedule() const
   {
     return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::AvailabilityScheduleName);
