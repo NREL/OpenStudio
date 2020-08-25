@@ -47,21 +47,18 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputDebuggingData( mode
   IdfObject idfObject( openstudio::IddObjectType::Output_DebuggingData );
   m_idfObjects.push_back(idfObject);
 
-  // This stuff is stored as numeric in E+ right now... So if true = 1, else 0
-  // cf https://github.com/NREL/EnergyPlus/issues/7740
-
   // Report Debugging Data
   if (modelObject.reportDebuggingData()) {
-    idfObject.setInt(Output_DebuggingDataFields::ReportDebuggingData, 1);
+    idfObject.setInt(Output_DebuggingDataFields::ReportDebuggingData, "Yes");
   } else {
-    idfObject.setInt(Output_DebuggingDataFields::ReportDebuggingData, 0);
+    idfObject.setInt(Output_DebuggingDataFields::ReportDebuggingData, "No");
   }
 
   // Report During Warmup
   if (modelObject.reportDuringWarmup()) {
-    idfObject.setInt(Output_DebuggingDataFields::ReportDuringWarmup, 1);
+    idfObject.setInt(Output_DebuggingDataFields::ReportDuringWarmup, "Yes");
   } else {
-    idfObject.setInt(Output_DebuggingDataFields::ReportDuringWarmup, 0);
+    idfObject.setInt(Output_DebuggingDataFields::ReportDuringWarmup, "No");
   }
 
   return idfObject;
