@@ -152,8 +152,6 @@ namespace openstudio{
   {
     std::vector<ThreeMaterial> result;
 
-    // materials from 'openstudio\openstudiocore\ruby\openstudio\sketchup_plugin\lib\interfaces\MaterialsInterface.rb'
-
     //result.push_back(makeThreeMaterial("Undefined", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide, 50, "MeshBasicMaterial"));
     result.push_back(makeThreeMaterial("Undefined", toThreeColor(255, 255, 255), 1, ThreeSide::DoubleSide));
 
