@@ -49,16 +49,16 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputDebuggingData( mode
 
   // Report Debugging Data
   if (modelObject.reportDebuggingData()) {
-    idfObject.setInt(Output_DebuggingDataFields::ReportDebuggingData, "Yes");
+    idfObject.setString(Output_DebuggingDataFields::ReportDebuggingData, "Yes");
   } else {
-    idfObject.setInt(Output_DebuggingDataFields::ReportDebuggingData, "No");
+    idfObject.setString(Output_DebuggingDataFields::ReportDebuggingData, "No");
   }
 
   // Report During Warmup
   if (modelObject.reportDuringWarmup()) {
-    idfObject.setInt(Output_DebuggingDataFields::ReportDuringWarmup, "Yes");
+    idfObject.setString(Output_DebuggingDataFields::ReportDuringWarmup, "Yes");
   } else {
-    idfObject.setInt(Output_DebuggingDataFields::ReportDuringWarmup, "No");
+    idfObject.setString(Output_DebuggingDataFields::ReportDuringWarmup, "No");
   }
 
   return idfObject;
