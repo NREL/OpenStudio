@@ -474,7 +474,7 @@ IddObjectType OutputMeter::iddObjectType() {
 boost::regex OutputMeter::meterRegex()
 {
   // DLM: Must put more specific terms, e.g. HeatingCoils, before less specific terms, e.g. Heating
-  static const boost::regex result("^(.*?)?:?(InteriorLights|ExteriorLights|InteriorEquipment|ExteriorEquipment|Fans|Pumps|HeatingCoils|Heating|CoolingCoils|Cooling|HeatRejection|Humidifier|HeatRecoveryForCooling|HeatRecoveryForHeating|HeatRecovery|WaterSystems|Cogeneration|Refrigeration|Chillers|Boilers|Baseboard)?:?(Electricity|Gasoline|Gas|Diesel|Coal|FuelOil_1|FuelOil_2|Propane|Water|Steam|DistrictCooling|DistrictHeating|EnergyTransfer)?:?(Facility|Building|HVAC|Zone|System|Plant)?:?([^:]*?)?$");
+  static const boost::regex result("^(.*?)?:?(InteriorLights|ExteriorLights|InteriorEquipment|ExteriorEquipment|Fans|Pumps|HeatingCoils|Heating|CoolingCoils|Cooling|HeatRejection|Humidifier|HeatRecoveryForCooling|HeatRecoveryForHeating|HeatRecovery|WaterSystems|Cogeneration|Refrigeration|Chillers|Boilers|Baseboard)?:?(Electricity|Gasoline|NaturalGas|Diesel|Coal|FuelOil_1|FuelOil_2|Propane|Water|Steam|DistrictCooling|DistrictHeating|EnergyTransfer)?:?(Facility|Building|HVAC|Zone|System|Plant)?:?([^:]*?)?$");
   return result;
 }
 
@@ -499,7 +499,7 @@ std::string OutputMeter::getName(const boost::optional<std::string>& specificEnd
     if (!result.empty()){
       result += ":";
     }
-    result += FuelType(*fuelType).valueName();
+    result += FuelType(*fuelType).valueDescription(); // same as valueName for all, except for FuelType::Gas where it returns "NaturalGas" which is what we want
   }
   if (installLocationType){
     // there is a weird corner case to handle 'InteriorLights:Electricity:Facility' -> 'InteriorLights:Electricity'
