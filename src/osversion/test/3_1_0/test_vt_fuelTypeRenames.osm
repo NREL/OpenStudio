@@ -1,0 +1,59 @@
+
+OS:Version,
+  {de0b43e8-576b-4019-bcca-10fdb2d09167}, !- Handle
+  3.0.1;                                  !- Version Identifier
+
+OS:Output:Meter,
+  {09dd51a2-5239-4d9c-9fba-8b4aa6a8ec42}, !- Handle
+  Gas:Facility;                           !- Name
+
+OS:Output:Meter,
+  {c3aadfb0-125f-40ed-9899-55fb442d1cde}, !- Handle
+  Heating:FuelOil_1;                      !- Name
+
+OS:Output:Meter,
+  {2fe20251-2b76-4488-ae52-4fa08ceaae94}, !- Handle
+  WaterSystems:Propane;                   !- Name
+
+OS:Output:Variable,
+  {dcc57d45-62f3-467c-b2f5-a35a18bb13ec}, !- Handle
+  Boiler FuelOil#1 Energy,                !- Name
+  ,                                       !- Key Value
+  Boiler FuelOil#1 Energy;                !- Variable Name
+
+OS:Output:Variable,
+  {e90223da-9584-451e-b52e-44db450c4800}, !- Handle
+  Boiler Gas Rate,                        !- Name
+  ,                                       !- Key Value
+  Boiler Gas Rate;                        !- Variable Name
+
+OS:Output:Variable,
+  {cbe8c53e-0530-4812-8884-4b424489fc8c}, !- Handle
+  Boiler Electric Power,                  !- Name
+  ,                                       !- Key Value
+  Boiler Electric Power;                  !- Variable Name
+
+OS:Output:Variable,
+  {0ed6eef2-0ec6-4657-b3c2-49119a503923}, !- Handle
+  Cooling Coil Water Heating Electric Power, !- Name
+  ,                                       !- Key Value
+  Cooling Coil Water Heating Electric Power; !- Variable Name
+
+OS:Output:Variable,
+  {c5fafa64-d53e-43e1-ac18-2e92634bf9ee}, !- Handle
+  Generator Requested Electric Power,     !- Name
+  ,                                       !- Key Value
+  Generator Requested Electric Power;     !- Variable Name
+
+OS:Output:Variable,
+  {f0b18ac9-0770-4bd8-a331-5fe503467c2e}, !- Handle
+  Air System DX Cooling Coil Electric Energy, !- Name
+  ,                                       !- Key Value
+  Air System DX Cooling Coil Electric Energy; !- Variable Name
+
+OS:Output:Variable,
+  {35c88651-daca-4567-84c8-0df1a80e96e3}, !- Handle
+  Water  Heater  Gas Rate,                !- Name
+  ,                                       !- Key Value
+  Water  Heater  Gas Rate;                !- Variable Name
+
