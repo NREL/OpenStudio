@@ -20,9 +20,6 @@ ${PROJECT_SOURCE_DIR}/resources/energyplus/SimpleSurfaces/SimpleSurfaces_Relativ
 ${PROJECT_SOURCE_DIR}/resources/energyplus/TranslatorV2_Tests/Simple_Construction.idf
 ${PROJECT_SOURCE_DIR}/resources/energyplus/ZoneBoundaryCondition/Bug_486_zone_bdr_test.idf
 ${PROJECT_SOURCE_DIR}/resources/energyplus/NewFileTemplate.idf
-${PROJECT_SOURCE_DIR}/resources/project/buildings/SmallOffice.idf
-${PROJECT_SOURCE_DIR}/resources/project/results/MetricsOfInterest.idf
-${PROJECT_SOURCE_DIR}/resources/project/results/ReportVariableRequests.idf
 ${PROJECT_SOURCE_DIR}/resources/resultsviewer/1ZoneEvapCooler/in.idf
 ${PROJECT_SOURCE_DIR}/resources/resultsviewer/1ZoneUncontrolled/in.idf
 ${PROJECT_SOURCE_DIR}/resources/resultsviewer/DaylightingDeviceShelf/in.idf
@@ -64,15 +61,15 @@ ${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0200 su-alt wds rotat
 ${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0300 multiple windows.idf
 ${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0400 offset window error.idf
 ${PROJECT_SOURCE_DIR}/resources/sketchup_plugin/testcases/t0500 window split into two gap.idf
-${PROJECT_SOURCE_DIR}/energyplus/Resources/LCCusePriceEscalationDataSet2011.idf
-${PROJECT_SOURCE_DIR}/energyplus/Resources/NH3_FluidPropertiesDataSet.idf
-${PROJECT_SOURCE_DIR}/energyplus/Resources/R11_FluidPropertiesDataSet.idf
-${PROJECT_SOURCE_DIR}/energyplus/Resources/R123_FluidPropertiesDataSet.idf
-${PROJECT_SOURCE_DIR}/energyplus/Resources/R12_FluidPropertiesDataSet.idf
-${PROJECT_SOURCE_DIR}/energyplus/Resources/R134a_FluidPropertiesDataSet.idf
-${PROJECT_SOURCE_DIR}/energyplus/Resources/R22_FluidPropertiesDataSet.idf
-${PROJECT_SOURCE_DIR}/energyplus/Resources/R404a_FluidPropertiesDataSet.idf
-${PROJECT_SOURCE_DIR}/energyplus/Resources/R407a_FluidPropertiesDataSet.idf
-${PROJECT_SOURCE_DIR}/energyplus/Resources/R410a_FluidPropertiesDataSet.idf
-${PROJECT_SOURCE_DIR}/energyplus/Resources/R507a_FluidPropertiesDataSet.idf
-${PROJECT_SOURCE_DIR}/energyplus/Resources/R744_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/src/energyplus/Resources/LCCusePriceEscalationDataSet2011.idf
+${PROJECT_SOURCE_DIR}/src/energyplus/Resources/NH3_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R11_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R123_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R12_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R134a_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R22_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R404a_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R407a_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R410a_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R507a_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R744_FluidPropertiesDataSet.idf
