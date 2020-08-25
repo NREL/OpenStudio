@@ -104,7 +104,7 @@ TEST_F(ModelFixture, MeterRegex)
   ASSERT_TRUE(matches[4].matched);
   ASSERT_TRUE(matches[5].matched);
   EXPECT_EQ("", string(matches[1].first, matches[1].second));
-  EXPECT_EQ("Gas", string(matches[3].first, matches[3].second));
+  EXPECT_EQ("NaturalGas", string(matches[3].first, matches[3].second));
   EXPECT_EQ("Facility", string(matches[4].first, matches[4].second));
   EXPECT_EQ("", string(matches[5].first, matches[5].second));
 

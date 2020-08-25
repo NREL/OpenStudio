@@ -319,7 +319,7 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   SqlResults ep_910 = {195052539.91, 27600.69, 427.17, 324.04, 782.87, 3256405.15, 191767000.0};
   SqlResults ep_920 = {194898706.43, 27595.94, 426.75, 324.25, 782.28, 3256577.21, 191613000.0};
   SqlResults ep_930 = {194906985.51, 27596.57, 426.75, 324.25, 782.28, 3262855.66, 191615000.0};
-  SqlResults ep_940 = {194906985.51, 27596.57, 426.75, 324.25, 782.28, 3262855.66, 191615000.0};
+  SqlResults ep_940 = {194908854.32, 27605.85, 426.75, 324.50, 782.28, 3265714.94, 191614000.0};
 
   // =========== Check that you are within relatively normal ranges compared to previous versions  =================
 
@@ -330,9 +330,9 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
     // Costs by fuel type
     EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get()));
     EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get()));
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get()));
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get(), 0.002));
     EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get()));
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get(), 0.002));
+    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get(), 0.003));
     EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get()));
   }
 
