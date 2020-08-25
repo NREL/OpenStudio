@@ -24,7 +24,7 @@ File.open(basepath + "/../LICENSE.md") do |file|
     if line.strip.empty?
       copyright +=  "*" + line
       ruby_copyright += "#" + line
-    
+
     else
       copyright += "*  " + line
       ruby_copyright += "#  " + line
@@ -44,9 +44,9 @@ exceptions = [basepath + "/src/geographic_lib/",
               basepath + "/src/polypartition/",
               basepath + "/src/pugixml/",
               basepath + "/src/qtwinmigrate/",
-              basepath + "/src/qwt/",    
-              basepath + "/src/sqlite/",       
-              basepath + "/src/zlib/",              
+              basepath + "/src/qwt/",
+              basepath + "/src/sqlite/",
+              basepath + "/src/zlib/",
               basepath + "/src/utilities/sql/Sqlite3.c",
               basepath + "/src/utilities/sql/Sqlite3.h",
               "mainpage.hpp"]
@@ -108,7 +108,6 @@ exceptions = []
 
 # glob for rb
 files = Dir.glob(basepath + "/ruby/**/*.rb")
-files.concat Dir.glob(basepath + "/sketchup_plugin/**/*.rb")
 
 # reject exceptions
 files.reject! do |p|
