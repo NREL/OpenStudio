@@ -148,9 +148,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
   m_idfObjects.push_back(_surfaceGroup);
 
   //field Fluid to Radiant Surface Heat Transfer Model
-  if(boost::optional<std::string> fluidType= modelObject.temperatureControlType() )
+  if(boost::optional<std::string> modelType = modelObject.fluidtoRadiantSurfaceHeatTransferModel() )
   {
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FluidtoRadiantSurfaceHeatTransferModel,fluidType.get());
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FluidtoRadiantSurfaceHeatTransferModel, modelType.get());
   }
 
   //field Hydronic Tubing Inside Diameter
