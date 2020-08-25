@@ -179,7 +179,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone)
   EXPECT_FALSE(performancePrecisionTradeoffsClone2.isMaxZoneTempDiffDefaulted());
   EXPECT_EQ(0.65, performancePrecisionTradeoffsClone2.maxZoneTempDiff());
   EXPECT_FALSE(performancePrecisionTradeoffsClone2.isMaxAllowedDelTempDefaulted());
-  EXPECT_EQ(0.65, performancePrecisionTradeoffsClone2.maxAllowedDelTemp());
+  EXPECT_EQ(0.05, performancePrecisionTradeoffsClone2.maxAllowedDelTemp());
 }
 
 // check that remove works
