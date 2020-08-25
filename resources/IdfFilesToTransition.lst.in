@@ -38,3 +38,12 @@ ${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R407a_FluidPropertiesDataSet.idf
 ${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R410a_FluidPropertiesDataSet.idf
 ${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R507a_FluidPropertiesDataSet.idf
 ${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R744_FluidPropertiesDataSet.idf
+${PROJECT_SOURCE_DIR}/resources/eefg/dummy.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/ScheduleFile/in.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/SimpleSurfaces/4ZoneWithShading_Simple_2.idf
+${PROJECT_SOURCE_DIR}/resources/utilities/Idf/CommentTest.idf
+${PROJECT_SOURCE_DIR}/resources/utilities/Idf/DosLineEndingTest.idf
+${PROJECT_SOURCE_DIR}/resources/utilities/Idf/FormatPropertyTest_Formatted.idf
+${PROJECT_SOURCE_DIR}/resources/utilities/Idf/FormatPropertyTest_Unformatted.idf
+${PROJECT_SOURCE_DIR}/resources/utilities/Idf/MixedLineEndingTest.idf
+${PROJECT_SOURCE_DIR}/resources/utilities/Idf/UnixLineEndingTest.idf
