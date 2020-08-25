@@ -205,6 +205,7 @@ set(energyplus_resources_src
   energyplus/TranslatorV2_Tests/Simple_Construction.idf
   energyplus/RefLargeOffice/RefBldgLargeOfficeNew2004_Chicago.idf
   energyplus/ZoneBoundaryCondition/Bug_486_zone_bdr_test.idf
+  energyplus/SmallOffice/SmallOffice.idf
 )
 
 # update the resources
@@ -243,37 +244,6 @@ add_custom_target(openstudio_radiance_resources
 )
 
 CREATE_SRC_GROUPS("${radiance_resources_src}")
-
-########################################################
-# resultsviewer resources
-
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-set(ENERGYPLUS_OUTPUTS "")
-
-set(ResultsViewer_resources_src
-  resultsviewer/1ZoneEvapCooler/in.idf
-  resultsviewer/1ZoneUncontrolled/in.idf
-  resultsviewer/DaylightingDeviceShelf/in.idf
-  resultsviewer/QkSvcRest/in.idf
-  resultsviewer/SmallOffice/SmallOffice.idf
-  resultsviewer/SolarCollectorFlatPlateWater/in.idf
-)
-
-# update the resources
-UPDATE_RESOURCES("${ResultsViewer_resources_src}")
-
-# add runs
-RUN_ENERGYPLUS("in.idf" "resultsviewer/QkSvcRest" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
-RUN_ENERGYPLUS("SmallOffice.idf" "resultsviewer/SmallOffice" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
-
-# add target
-add_custom_target(ResultsViewer_resources
-  DEPENDS ${ResultsViewer_resources_src} ${ENERGYPLUS_OUTPUTS}
-
-  SOURCES ${ResultsViewer_resources_src}
-)
-
-CREATE_SRC_GROUPS("${ResultsViewer_resources_src}")
 
 ########################################################
 # gbxml resources

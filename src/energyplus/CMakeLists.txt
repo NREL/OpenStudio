@@ -738,7 +738,6 @@ if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 
   add_dependencies(${target_name}_tests
-    ResultsViewer_resources
     openstudio_energyplus_resources
   )
 

@@ -434,7 +434,7 @@ TEST_F(EnergyPlusFixture,ReverseTranslatorTest_TranslateSite)
 }
 
 TEST_F(EnergyPlusFixture,ReverseTranslatorTest_SmallOffice) {
-  openstudio::path p = resourcesPath() / toPath("resultsviewer/SmallOffice/SmallOffice.idf");
+  openstudio::path p = resourcesPath() / toPath("energyplus/SmallOffice/SmallOffice.idf");
   Workspace ws = Workspace::load(p).get();
   ReverseTranslator rt;
   Model model = rt.translateWorkspace(ws);

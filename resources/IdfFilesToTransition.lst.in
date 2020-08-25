@@ -20,12 +20,7 @@ ${PROJECT_SOURCE_DIR}/resources/energyplus/SimpleSurfaces/SimpleSurfaces_Relativ
 ${PROJECT_SOURCE_DIR}/resources/energyplus/TranslatorV2_Tests/Simple_Construction.idf
 ${PROJECT_SOURCE_DIR}/resources/energyplus/ZoneBoundaryCondition/Bug_486_zone_bdr_test.idf
 ${PROJECT_SOURCE_DIR}/resources/energyplus/NewFileTemplate.idf
-${PROJECT_SOURCE_DIR}/resources/resultsviewer/1ZoneEvapCooler/in.idf
-${PROJECT_SOURCE_DIR}/resources/resultsviewer/1ZoneUncontrolled/in.idf
-${PROJECT_SOURCE_DIR}/resources/resultsviewer/DaylightingDeviceShelf/in.idf
-${PROJECT_SOURCE_DIR}/resources/resultsviewer/QkSvcRest/in.idf
-${PROJECT_SOURCE_DIR}/resources/resultsviewer/SmallOffice/SmallOffice.idf
-${PROJECT_SOURCE_DIR}/resources/resultsviewer/SolarCollectorFlatPlateWater/in.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/SmallOffice/SmallOffice.idf
 ${PROJECT_SOURCE_DIR}/src/energyplus/Resources/LCCusePriceEscalationDataSet2011.idf
 ${PROJECT_SOURCE_DIR}/src/energyplus/Resources/NH3_FluidPropertiesDataSet.idf
 ${PROJECT_SOURCE_DIR}/src/energyplus/Resources/R11_FluidPropertiesDataSet.idf
