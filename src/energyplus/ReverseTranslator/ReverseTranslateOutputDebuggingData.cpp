@@ -55,14 +55,14 @@ boost::optional<ModelObject> ReverseTranslator::translateOutputDebuggingData( co
 
   // Report Debugging Data: Optional Double **as a boolean...**
   if (boost::optional<double> _reportDebuggingData = wo.getDouble(Output_DebuggingDataFields::ReportDebuggingData)) {
-    if (openstudio::equal(1.0, _reportDebuggingData.get())) {
+    if(istringEqual("Yes", _reportDebuggingData.get())) {
       reportDebuggingData = true;
     }
   }
 
   // Report During Warmup: Optional Double **as a boolean...**
   if (boost::optional<double> _reportDuringWarmup = wo.getDouble(Output_DebuggingDataFields::ReportDuringWarmup)) {
-    if (openstudio::equal(1.0, _reportDuringWarmup.get())) {
+    if(istringEqual("Yes", _reportDuringWarmup.get())) {
       reportDuringWarmup = true;
     }
   }
