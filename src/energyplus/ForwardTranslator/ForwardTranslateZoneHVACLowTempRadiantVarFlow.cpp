@@ -150,7 +150,7 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
   //field Fluid to Radiant Surface Heat Transfer Model
   if(boost::optional<std::string> fluidType= modelObject.temperatureControlType() )
   {
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::fluidToRadiantSurfaceHeatTransferModel,fluidType.get());
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::FluidtoRadiantSurfaceHeatTransferModel,fluidType.get());
   }
 
   //field Hydronic Tubing Inside Diameter
@@ -334,9 +334,10 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTempRadiantVar
   idfObject.setDouble(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::CircuitLength,modelObject.circuitLength());
 
   //field Changeover Delay Time Period Schedule
-  Schedule changeoverDelayTimePeriodSchedule = modelObject.changeoverDelayTimePeriodSchedule();
-  if(auto _sch = translateAndMapModelObject(changeoverDelayTimePeriodSchedule))  {
-    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::ChangeoverDelayTimePeriodSchedule, _sch->nameString());
+  if (auto _changeoverDelayTimePeriodSchedule = modelObject.changeoverDelayTimePeriodSchedule()) {
+    if(auto _sch = translateAndMapModelObject(_changeoverDelayTimePeriodSchedule.get()))  {
+      idfObject.setString(ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ChangeoverDelayTimePeriodSchedule, _sch->nameString());
+    }
   }
 
   return idfObject;

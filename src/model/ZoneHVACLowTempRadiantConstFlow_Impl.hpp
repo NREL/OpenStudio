@@ -101,9 +101,9 @@ namespace detail {
 
     std::vector<Surface> surfaces() const;
 
-    std::string fluidToRadiantSurfaceHeatTransferModel() const;
+    std::string fluidtoRadiantSurfaceHeatTransferModel() const;
 
-    bool isFluidToRadiantSurfaceHeatTransferModelDefaulted() const;
+    bool isFluidtoRadiantSurfaceHeatTransferModelDefaulted() const;
 
     double hydronicTubingInsideDiameter() const;
 
@@ -169,9 +169,9 @@ namespace detail {
 
     void resetRadiantSurfaceType();
 
-    bool setFluidToRadiantSurfaceHeatTransferModel(std::string fluidToRadiantSurfaceHeatTransferModel);
+    bool setFluidtoRadiantSurfaceHeatTransferModel(const std::string& fluidtoRadiantSurfaceHeatTransferModel);
 
-    void resetFluidToRadiantSurfaceHeatTransferModel();
+    void resetFluidtoRadiantSurfaceHeatTransferModel();
 
     bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
 
@@ -189,11 +189,11 @@ namespace detail {
 
     void resetHydronicTubingConductivity();
 
-    bool setTemperatureControlType(std::string temperatureControlType);
+    bool setTemperatureControlType(const std::string& temperatureControlType);
 
     void resetTemperatureControlType();
 
-    bool setRunningMeanOutdoorDryBulbTemperatureWeightingFactor();
+    bool setRunningMeanOutdoorDryBulbTemperatureWeightingFactor(double runningMeanOutdoorDryBulbTemperatureWeightingFactor);
 
     void resetRunningMeanOutdoorDryBulbTemperatureWeightingFactor();
 
@@ -225,7 +225,7 @@ namespace detail {
 
     void resetFractionofMotorInefficienciestoFluidStream();
 
-    bool setNumberofCircuits(std::string numberofCircuits);
+    bool setNumberofCircuits(const std::string& numberofCircuits);
 
     bool setCircuitLength(double circuitLength);
 

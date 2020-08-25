@@ -82,9 +82,9 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   std::vector<Surface> surfaces() const;
 
-  std::string fluidToRadiantSurfaceHeatTransferModel() const;
+  std::string fluidtoRadiantSurfaceHeatTransferModel() const;
 
-  bool isFluidToRadiantSurfaceHeatTransferModelDefaulted() const;
+  bool isFluidtoRadiantSurfaceHeatTransferModelDefaulted() const;
 
   double hydronicTubingInsideDiameter() const;
 
@@ -124,13 +124,13 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setRadiantSurfaceType(std::string radiantSurfaceType);
+  bool setRadiantSurfaceType(const std::string& radiantSurfaceType);
 
   void resetRadiantSurfaceType();
 
-  bool setFluidToRadiantSurfaceHeatTransferModel(std::string fluidToRadiantSurfaceHeatTransferModel);
+  bool setFluidtoRadiantSurfaceHeatTransferModel(const std::string& fluidtoRadiantSurfaceHeatTransferModel);
 
-  void resetFluidToRadiantSurfaceHeatTransferModel();
+  void resetFluidtoRadiantSurfaceHeatTransferModel();
 
   bool setHeatingCoil(HVACComponent& heatingCoil);
 
@@ -154,15 +154,15 @@ class MODEL_API ZoneHVACLowTempRadiantVarFlow : public ZoneHVACComponent {
 
   void resetHydronicTubingConductivity();
 
-  bool setTemperatureControlType(std::string temperatureControlType);
+  bool setTemperatureControlType(const std::string& temperatureControlType);
 
   void resetTemperatureControlType();
 
-  bool setSetpointControlType(std::string setpointControlType);
+  bool setSetpointControlType(const std::string& setpointControlType);
 
   void resetSetpointControlType();
 
-  bool setNumberofCircuits(std::string numberofCircuits);
+  bool setNumberofCircuits(const std::string& numberofCircuits);
 
   bool setCircuitLength(double circuitLength);
 

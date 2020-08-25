@@ -86,9 +86,9 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   std::vector<Surface> surfaces() const;
 
-  std::string fluidToRadiantSurfaceHeatTransferModel() const;
+  std::string fluidtoRadiantSurfaceHeatTransferModel() const;
 
-  bool isFluidToRadiantSurfaceHeatTransferModelDefaulted() const;
+  bool isFluidtoRadiantSurfaceHeatTransferModelDefaulted() const;
 
   double hydronicTubingInsideDiameter() const;
 
@@ -150,13 +150,13 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setRadiantSurfaceType(std::string radiantSurfaceType);
+  bool setRadiantSurfaceType(const std::string& radiantSurfaceType);
 
   void resetRadiantSurfaceType();
 
-  bool setFluidToRadiantSurfaceHeatTransferModel(std::string fluidToRadiantSurfaceHeatTransferModel);
+  bool setFluidtoRadiantSurfaceHeatTransferModel(const std::string& fluidtoRadiantSurfaceHeatTransferModel);
 
-  void resetFluidToRadiantSurfaceHeatTransferModel();
+  void resetFluidtoRadiantSurfaceHeatTransferModel();
 
   bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
 
@@ -177,7 +177,7 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   void resetHydronicTubingConductivity();
 
-  bool setTemperatureControlType(std::string temperatureControlType);
+  bool setTemperatureControlType(const std::string& temperatureControlType);
 
   void resetTemperatureControlType();
 
@@ -216,7 +216,7 @@ class MODEL_API ZoneHVACLowTempRadiantConstFlow : public ZoneHVACComponent {
 
   void resetFractionofMotorInefficienciestoFluidStream();
 
-  bool setNumberofCircuits(std::string numberofCircuits);
+  bool setNumberofCircuits(const std::string& numberofCircuits);
 
   bool setCircuitLength(double circuitLength);
 

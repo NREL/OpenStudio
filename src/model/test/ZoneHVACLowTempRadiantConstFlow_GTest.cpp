@@ -96,13 +96,13 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   boost::optional<std::string> str1 = testRad.radiantSurfaceType();
   EXPECT_EQ(*str1,"Floors");
 
-  testRad.setFluidToRadiantSurfaceHeatTransferModel("ISOStandard");
-  boost::optional<std::string> str2 = testRad.fluidToRadiantSurfaceHeatTransferModel();
+  testRad.setFluidtoRadiantSurfaceHeatTransferModel("ISOStandard");
+  boost::optional<std::string> str2 = testRad.fluidtoRadiantSurfaceHeatTransferModel();
   EXPECT_EQ(*str2,"ISOStandard");
-  EXPECT_FALSE(testRad.isFluidToRadiantSurfaceHeatTransferModelDefaulted());
-  testRad.resetFluidToRadiantSurfaceHeatTransferModel();
-  EXPECT_TRUE(testRad.isFluidToRadiantSurfaceHeatTransferModelDefaulted());
-  boost::optional<std::string> str3 = testRad.fluidToRadiantSurfaceHeatTransferModel();
+  EXPECT_FALSE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
+  testRad.resetFluidtoRadiantSurfaceHeatTransferModel();
+  EXPECT_TRUE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
+  boost::optional<std::string> str3 = testRad.fluidtoRadiantSurfaceHeatTransferModel();
   EXPECT_EQ(*str3,"ConvectionOnly");
 
   testRad.setHydronicTubingInsideDiameter(0.01);
@@ -126,10 +126,8 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   testRad.setHydronicTubingLength(200);
   boost::optional<double> length = testRad.hydronicTubingLength();
   EXPECT_EQ(*length, 200);
-  EXPECT_FALSE(testRad.isHydronicTubingLengthDefaulted());
   EXPECT_FALSE(testRad.isHydronicTubingLengthAutosized());
   testRad.resetHydronicTubingLength();
-  EXPECT_TRUE(testRad.isHydronicTubingLengthDefaulted());
   testRad.autosizeHydronicTubingLength();
   EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());
 
@@ -143,12 +141,12 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   EXPECT_EQ(cond1,0.35);
 
   testRad.setTemperatureControlType("MeanRadiantTemperature");
-  boost::optional<std::string> str2 = testRad.temperatureControlType();
+  str2 = testRad.temperatureControlType();
   EXPECT_EQ(*str2,"MeanRadiantTemperature");
   EXPECT_FALSE(testRad.isTemperatureControlTypeDefaulted());
   testRad.resetTemperatureControlType();
   EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
-  boost::optional<std::string> str3 = testRad.temperatureControlType();
+  str3 = testRad.temperatureControlType();
   EXPECT_EQ(*str3,"MeanAirTemperature");
 
   testRad.setRunningMeanOutdoorDryBulbTemperatureWeightingFactor(0.5);
@@ -198,9 +196,10 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   double circLength = testRad.circuitLength();
   EXPECT_EQ(circLength,200.0);
 
-  ScheduleConstant sch(m);
+  ScheduleConstant sch(model);
   EXPECT_TRUE(testRad.setChangeoverDelayTimePeriodSchedule(sch));
-  EXPECT_EQ(sch, testRad.changeoverDelayTimePeriodSchedule());
+  ASSERT_TRUE(testRad.changeoverDelayTimePeriodSchedule());
+  EXPECT_EQ(sch, testRad.changeoverDelayTimePeriodSchedule().get());
   testRad.resetChangeoverDelayTimePeriodSchedule();
   EXPECT_FALSE(testRad.changeoverDelayTimePeriodSchedule());
 
