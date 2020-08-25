@@ -1009,7 +1009,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypes) {
     {"Boiler Electric Power", "Boiler Electricity Rate"},
     {"Cooling Coil Water Heating Electric Power", "Cooling Coil Water Heating Electricity Rate"},
     {"Generator Requested Electric Power", "Generator Requested Electricity Rate"},
-    {"Air System DX Cooling Coil Electric Energy", "Air System DX Cooling Coil Electricity Rate"},
+    {"Air System DX Cooling Coil Electric Energy", "Air System DX Cooling Coil Electricity Energy"},
     // Introduce extra spaces on purpose...
     {"Water  Heater  Gas Rate", "Water Heater NaturalGas Rate"},
   });
