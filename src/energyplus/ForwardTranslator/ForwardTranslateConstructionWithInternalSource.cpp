@@ -77,7 +77,7 @@ namespace energyplus {
   //Layers
   MaterialVector layers = modelObject.layers();
 
-  unsigned fieldIndex = Construction_InternalSourceFields::TubeSpacing + 1;
+  unsigned fieldIndex = Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition + 1;
   for(unsigned layerIndex = 0; layerIndex < layers.size(); ++layerIndex ) {
     Material material = layers[layerIndex];
     translateAndMapModelObject(material);
