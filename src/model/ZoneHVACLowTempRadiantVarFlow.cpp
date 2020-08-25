@@ -167,10 +167,13 @@ namespace detail {
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::AvailabilityScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneHVACLowTempRadiantVarFlow","Availability"));
+    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::AvailabilityScheduleName) != e) {
+      result.push_back(ScheduleTypeKey("ZoneHVACLowTempRadiantVarFlow", "Availability"));
     }
+    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ChangeoverDelayTimePeriodSchedule) != e) {
+      result.push_back(ScheduleTypeKey("ZoneHVACLowTempRadiantVarFlow", "Changeover Delay Time Period"));
+    }
+
     return result;
   }
 
@@ -447,7 +450,7 @@ namespace detail {
   }
 
   bool ZoneHVACLowTempRadiantVarFlow_Impl::setHydronicTubingOutsideDiameter(double hydronicTubingOutsideDiameter) {
-    bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingInsideDiameter, hydronicTubingOutsideDiameter);
+    bool result = setDouble(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::HydronicTubingOutsideDiameter, hydronicTubingOutsideDiameter);
     return result;
   }
 
@@ -528,8 +531,8 @@ namespace detail {
 
   bool ZoneHVACLowTempRadiantVarFlow_Impl::setChangeoverDelayTimePeriodSchedule(Schedule& schedule) {
     bool result = setSchedule(OS_ZoneHVAC_LowTemperatureRadiant_VariableFlowFields::ChangeoverDelayTimePeriodSchedule,
-                              "ZoneHVACLowTemperatureRadiantVariableFlow",
-                              "Zone HVAC Low Temperature Radiant Variable Flow Schedule",
+                              "ZoneHVACLowTempRadiantVarFlow",
+                              "Changeover Delay Time Period",
                               schedule);
     return result;
   }

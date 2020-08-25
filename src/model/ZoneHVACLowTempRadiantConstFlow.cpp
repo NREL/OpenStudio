@@ -173,13 +173,14 @@ namespace detail {
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::AvailabilityScheduleName) != e)
-    {
+    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::AvailabilityScheduleName) != e) {
       result.push_back(ScheduleTypeKey("ZoneHVACLowTempRadiantConstFlow","Availability"));
     }
-    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::PumpFlowRateScheduleName) != e)
-    {
+    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::PumpFlowRateScheduleName) != e) {
       result.push_back(ScheduleTypeKey("ZoneHVACLowTempRadiantConstFlow","Pump Flow Rate"));
+    }
+    if (std::find(b,e,OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::ChangeoverDelayTimePeriodSchedule) != e) {
+      result.push_back(ScheduleTypeKey("ZoneHVACLowTempRadiantConstFlow","Changeover Delay Time Period"));
     }
     return result;
   }
@@ -631,8 +632,8 @@ namespace detail {
 
   bool ZoneHVACLowTempRadiantConstFlow_Impl::setChangeoverDelayTimePeriodSchedule(Schedule& schedule) {
     bool result = setSchedule(OS_ZoneHVAC_LowTemperatureRadiant_ConstantFlowFields::ChangeoverDelayTimePeriodSchedule,
-                              "ZoneHVACLowTemperatureRadiantConstantFlow",
-                              "Zone HVAC Low Temperature Radiant Constant Flow Schedule",
+                              "ZoneHVACLowTempRadiantConstFlow",
+                              "Changeover Delay Time Period",
                               schedule);
     return result;
   }
