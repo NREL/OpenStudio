@@ -59,7 +59,44 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlFiles) {
   // Get the unique object
   OutputControlFiles outputControlFiles = m.getUniqueModelObject<OutputControlFiles>();
 
+  Workspace w = ft.translateModel(m);
 
+  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::OutputControl_Files);
+  ASSERT_EQ(1u, idfObjs.size());
+
+  WorkspaceObject idf_outputControlFiles(idfObjs[0]);
+
+  EXPECT_EQ("No", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputCSV).get());
+  EXPECT_EQ("No", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputMTR).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputESO).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputEIO).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputTabular).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputSQLite).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputJSON).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputAUDIT).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputZoneSizing).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputSystemSizing).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputDXF).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputBND).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputRDD).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputMDD).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputMTD).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputEND).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputSHD).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputDFS).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputGLHE).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputDelightIn).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputDelightELdmp).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputDelightDFdmp).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputEDD).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputDBG).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputPerfLog).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputSLN).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputSCI).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputWRL).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputScreen).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputExtShd).get());
+  EXPECT_EQ("Yes", idf_outputControlFiles.getString(OutputControl_FilesFields::OutputTarcog).get());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlFiles) {
@@ -75,5 +112,40 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlFiles) {
   OptionalWorkspaceObject _i_outputControlFiles = w.addObject(IdfObject(IddObjectType::OutputControl_Files));
   ASSERT_TRUE(_i_outputControlFiles);
 
+  Model m2 = rt.translateWorkspace(w);
 
+  // Get the unique object
+  OutputControlFiles outputControlFiles = m2.getUniqueModelObject<OutputControlFiles>();
+
+  EXPECT_FALSE(outputControlFiles.outputCSV());
+  EXPECT_FALSE(outputControlFiles.outputMTR());
+  EXPECT_TRUE(outputControlFiles.outputESO());
+  EXPECT_TRUE(outputControlFiles.outputEIO());
+  EXPECT_TRUE(outputControlFiles.outputTabular());
+  EXPECT_TRUE(outputControlFiles.outputSQLite());
+  EXPECT_TRUE(outputControlFiles.outputJSON());
+  EXPECT_TRUE(outputControlFiles.outputAUDIT());
+  EXPECT_TRUE(outputControlFiles.outputZoneSizing());
+  EXPECT_TRUE(outputControlFiles.outputSystemSizing());
+  EXPECT_TRUE(outputControlFiles.outputDXF());
+  EXPECT_TRUE(outputControlFiles.outputBND());
+  EXPECT_TRUE(outputControlFiles.outputRDD());
+  EXPECT_TRUE(outputControlFiles.outputMDD());
+  EXPECT_TRUE(outputControlFiles.outputMTD());
+  EXPECT_TRUE(outputControlFiles.outputEND());
+  EXPECT_TRUE(outputControlFiles.outputSHD());
+  EXPECT_TRUE(outputControlFiles.outputDFS());
+  EXPECT_TRUE(outputControlFiles.outputGLHE());
+  EXPECT_TRUE(outputControlFiles.outputDelightIn());
+  EXPECT_TRUE(outputControlFiles.outputDelightELdmp());
+  EXPECT_TRUE(outputControlFiles.outputDelightDFdmp());
+  EXPECT_TRUE(outputControlFiles.outputEDD());
+  EXPECT_TRUE(outputControlFiles.outputDBG());
+  EXPECT_TRUE(outputControlFiles.outputPerfLog());
+  EXPECT_TRUE(outputControlFiles.outputSLN());
+  EXPECT_TRUE(outputControlFiles.outputSCI());
+  EXPECT_TRUE(outputControlFiles.outputWRL());
+  EXPECT_TRUE(outputControlFiles.outputScreen());
+  EXPECT_TRUE(outputControlFiles.outputExtShd());
+  EXPECT_TRUE(outputControlFiles.outputTarcog());
 }

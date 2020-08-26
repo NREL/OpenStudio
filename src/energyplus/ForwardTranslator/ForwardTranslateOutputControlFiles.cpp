@@ -173,7 +173,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputControlFiles( Outpu
     idfObject.setString(OutputControl_FilesFields::OutputDelightELdmp, "No");
   }
 
-  if (modelObject.outputDelightInDFdmp()) {
+  if (modelObject.outputDelightDFdmp()) {
     idfObject.setString(OutputControl_FilesFields::OutputDelightDFdmp, "Yes");
   } else {
     idfObject.setString(OutputControl_FilesFields::OutputDelightDFdmp, "No");
