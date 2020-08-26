@@ -54,6 +54,8 @@
 #include "../LifeCycleCostParameters_Impl.hpp"
 #include "../LightingSimulationControl.hpp"
 #include "../LightingSimulationControl_Impl.hpp"
+#include "../OutputControlFiles.hpp"
+#include "../OutputControlFiles_Impl.hpp"
 #include "../OutputControlReportingTolerances.hpp"
 #include "../OutputControlReportingTolerances_Impl.hpp"
 #include "../OutputDebuggingData.hpp"
@@ -345,6 +347,14 @@ TEST_F(ModelFixture, LightingSimulationControl_UniqueModelObject_Clone)
   LightingSimulationControl lightingSimulationControlClone2 = lightingSimulationControl.clone(model2).cast<LightingSimulationControl>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<LightingSimulationControl>());
   EXPECT_EQ("! Custom Object", lightingSimulationControlClone2.comment());
+}
+
+TEST_F(ModelFixture, OutputControlFiles_UniqueModelObject_Clone)
+{
+  // create a model to use
+  Model model;
+
+
 }
 
 TEST_F(ModelFixture, OutputControlReportingTolerances_UniqueModelObject_Clone)

@@ -3007,6 +3007,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(Node);
   REGISTER_CONSTRUCTOR(OtherEquipment);
   REGISTER_CONSTRUCTOR(OtherEquipmentDefinition);
+  REGISTER_CONSTRUCTOR(OutputControlFiles);
   REGISTER_CONSTRUCTOR(OutputControlReportingTolerances);
   REGISTER_CONSTRUCTOR(OutputDebuggingData);
   REGISTER_CONSTRUCTOR(OutputDiagnostics);
@@ -3506,6 +3507,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(Node);
   REGISTER_COPYCONSTRUCTORS(OtherEquipment);
   REGISTER_COPYCONSTRUCTORS(OtherEquipmentDefinition);
+  REGISTER_COPYCONSTRUCTORS(OutputControlFiles);
   REGISTER_COPYCONSTRUCTORS(OutputControlReportingTolerances);
   REGISTER_COPYCONSTRUCTORS(OutputDebuggingData);
   REGISTER_COPYCONSTRUCTORS(OutputDiagnostics);
