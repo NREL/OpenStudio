@@ -203,43 +203,43 @@ namespace detail {
   }
 
   bool OutputControlFiles_Impl::setOutputCSV(bool outputCSV) {
-    return setBooleanFieldValue(OS_OutputControl_FilesFields::Output, output);
+    return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputCSV, outputCSV);
   }
 
   bool OutputControlFiles_Impl::setOutputMTR(bool outputMTR) {
-    return setBooleanFieldValue(OS_OutputControl_FilesFields::Output, output);
+    return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputMTR, outputMTR);
   }
 
   bool OutputControlFiles_Impl::setOutputESO(bool outputESO) {
-    return setBooleanFieldValue(OS_OutputControl_FilesFields::Output, output);
+    return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputESO, outputESO);
   }
 
   bool OutputControlFiles_Impl::setOutputEIO(bool outputEIO) {
-    return setBooleanFieldValue(OS_OutputControl_FilesFields::Output, output);
+    return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputEIO, outputEIO);
   }
 
   bool OutputControlFiles_Impl::setOutputTabular(bool outputTabular) {
-    return setBooleanFieldValue(OS_OutputControl_FilesFields::Output, output);
+    return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputTabular, outputTabular);
   }
 
   bool OutputControlFiles_Impl::setOutputSQLite(bool outputSQLite) {
-    return setBooleanFieldValue(OS_OutputControl_FilesFields::Output, output);
+    return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputSQLite, outputSQLite);
   }
 
   bool OutputControlFiles_Impl::setOutputJSON(bool outputJSON) {
-    return setBooleanFieldValue(OS_OutputControl_FilesFields::Output, output);
+    return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputJSON, outputJSON);
   }
 
   bool OutputControlFiles_Impl::setOutputAUDIT(bool outputAUDIT) {
-    return setBooleanFieldValue(OS_OutputControl_FilesFields::Output, output);
+    return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputAUDIT, outputAUDIT);
   }
 
   bool OutputControlFiles_Impl::setOutputZoneSizing(bool outputZoneSizing) {
-    return setBooleanFieldValue(OS_OutputControl_FilesFields::Output, output);
+    return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputZoneSizing, outputZoneSizing);
   }
 
   bool OutputControlFiles_Impl::setOutputSystemSizing(bool outputSystemSizing) {
-    return setBooleanFieldValue(OS_OutputControl_FilesFields::Output, output);
+    return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputSystemSizing, outputSystemSizing);
   }
 
   bool OutputControlFiles_Impl::setOutputDXF(bool outputDXF) {
@@ -609,6 +609,7 @@ OutputControlFiles::OutputControlFiles(Model& model)
   setOutputDFS(true);
   setOutputGLHE(true);
   setOutputDelightIn(true);
+  setOutputDelightELdmp(true);
   setOutputDelightDFdmp(true);
   setOutputEDD(true);
   setOutputDBG(true);

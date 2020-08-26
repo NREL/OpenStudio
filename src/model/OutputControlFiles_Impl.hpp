@@ -30,7 +30,7 @@
 #ifndef MODEL_OUTPUTCONTROLFILES_IMPL_HPP
 #define MODEL_OUTPUTCONTROLFILES_IMPL_HPP
 
-#include "<model/ModelAPI.hpp>"
+#include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
 namespace openstudio {
