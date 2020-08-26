@@ -30885,6 +30885,169 @@ OS:UtilityBill,
 
 \group OpenStudio Output Requests
 
+OutputControl:Files,
+       \memo Conditionally turn on/off output from EnergyPlus.
+       \unique-object
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Output CSV
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A3,  \field Output MTR
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A4,  \field Output ESO
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A5,  \field Output EIO
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A6,  \field Output Tabular
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A7,  \field Output SQLite
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A8,  \field Output JSON
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A9,  \field Output AUDIT
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A10, \field Output Zone Sizing
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A11, \field Output System Sizing
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A12, \field Output DXF
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A13, \field Output BND
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A14, \field Output RDD
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A15, \field Output MDD
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A16, \field Output MTD
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A17, \field Output END
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A18, \field Output SHD
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A19, \field Output DFS
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A20, \field Output GLHE
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A21, \field Output DelightIn
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A22, \field Output DelightELdmp
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A23, \field Output DelightDFdmp
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A24, \field Output EDD
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A25, \field Output DBG
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A26, \field Output PerfLog
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A27, \field Output SLN
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A28, \field Output SCI
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A29, \field Output WRL
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A30, \field Output Screen
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A31, \field Output ExtShd
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+  A32; \field Output Tarcog
+       \note Not Implemented Yet
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+
 OS:OutputControl:ReportingTolerances,
        \memo Calculations of the time that setpoints are not met use a tolerance of 0.2C.
        \memo This object allows changing the tolerance used to determine when setpoints are being met.
