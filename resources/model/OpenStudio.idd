@@ -30895,158 +30895,158 @@ OutputControl:Files,
        \type choice
        \key Yes
        \key No
-       \default No
+       \required-field
   A3,  \field Output MTR
        \type choice
        \key Yes
        \key No
-       \default No
+       \required-field
   A4,  \field Output ESO
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A5,  \field Output EIO
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A6,  \field Output Tabular
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A7,  \field Output SQLite
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A8,  \field Output JSON
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A9,  \field Output AUDIT
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A10, \field Output Zone Sizing
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A11, \field Output System Sizing
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A12, \field Output DXF
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A13, \field Output BND
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A14, \field Output RDD
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A15, \field Output MDD
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A16, \field Output MTD
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A17, \field Output END
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A18, \field Output SHD
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A19, \field Output DFS
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A20, \field Output GLHE
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A21, \field Output DelightIn
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A22, \field Output DelightELdmp
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A23, \field Output DelightDFdmp
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A24, \field Output EDD
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A25, \field Output DBG
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A26, \field Output PerfLog
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A27, \field Output SLN
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A28, \field Output SCI
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A29, \field Output WRL
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A30, \field Output Screen
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A31, \field Output ExtShd
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
   A32; \field Output Tarcog
        \note Not Implemented Yet
        \type choice
        \key Yes
        \key No
-       \default Yes
+       \required-field
 
 OS:OutputControl:ReportingTolerances,
        \memo Calculations of the time that setpoints are not met use a tolerance of 0.2C.
