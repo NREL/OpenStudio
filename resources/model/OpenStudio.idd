@@ -30885,7 +30885,7 @@ OS:UtilityBill,
 
 \group OpenStudio Output Requests
 
-OutputControl:Files,
+OS:OutputControl:Files,
        \memo Conditionally turn on/off output from EnergyPlus.
        \unique-object
   A1,  \field Handle
