@@ -229,6 +229,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateNode.cpp
   ForwardTranslator/ForwardTranslateOtherEquipment.cpp
   ForwardTranslator/ForwardTranslateOutsideSurfaceConvectionAlgorithm.cpp
+  ForwardTranslator/ForwardTranslateOutputControlFiles.cpp
   ForwardTranslator/ForwardTranslateOutputControlReportingTolerances.cpp
   ForwardTranslator/ForwardTranslateOutputMeter.cpp
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
