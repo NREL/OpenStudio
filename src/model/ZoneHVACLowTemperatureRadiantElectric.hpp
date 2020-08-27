@@ -101,7 +101,7 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
 
   bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
 
-  bool setRadiantSurfaceType(std::string radiantSurfaceType);
+  bool setRadiantSurfaceType(const std::string& radiantSurfaceType);
 
   void resetRadiantSurfaceType();
 
@@ -111,11 +111,11 @@ class MODEL_API ZoneHVACLowTemperatureRadiantElectric : public ZoneHVACComponent
 
   void autosizeMaximumElectricalPowertoPanel();
 
-  bool setTemperatureControlType(std::string temperatureControlType);
+  bool setTemperatureControlType(const std::string& temperatureControlType);
 
   void resetTemperatureControlType();
 
-  bool setSetpointControlType(std::string setpointControlType);
+  bool setSetpointControlType(const std::string& setpointControlType);
 
   void resetSetpointControlType();
 

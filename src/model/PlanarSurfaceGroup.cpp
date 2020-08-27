@@ -126,6 +126,18 @@ namespace detail {
     return transformation;
   }
 
+  openstudio::BoundingBox PlanarSurfaceGroup_Impl::boundingBoxParentCoordinates() const {
+    return transformation() * boundingBox();
+  }
+
+  openstudio::BoundingBox PlanarSurfaceGroup_Impl::boundingBoxBuildingCoordinates() const {
+    return buildingTransformation() * boundingBox();
+  }
+
+  openstudio::BoundingBox PlanarSurfaceGroup_Impl::boundingBoxSiteCoordinates() const {
+    return siteTransformation() * boundingBox();
+  }
+
   void PlanarSurfaceGroup_Impl::clearCachedVariables()
   {
     m_cachedTransformation.reset();
@@ -234,6 +246,20 @@ openstudio::BoundingBox PlanarSurfaceGroup::boundingBox() const
   return getImpl<detail::PlanarSurfaceGroup_Impl>()->boundingBox();
 }
 
+openstudio::BoundingBox PlanarSurfaceGroup::boundingBoxParentCoordinates() const 
+{
+  return getImpl<detail::PlanarSurfaceGroup_Impl>()->boundingBoxParentCoordinates();
+}
+
+openstudio::BoundingBox PlanarSurfaceGroup::boundingBoxBuildingCoordinates() const 
+{
+  return getImpl<detail::PlanarSurfaceGroup_Impl>()->boundingBoxBuildingCoordinates();
+}
+
+openstudio::BoundingBox PlanarSurfaceGroup::boundingBoxSiteCoordinates() const 
+{
+  return getImpl<detail::PlanarSurfaceGroup_Impl>()->boundingBoxSiteCoordinates();
+}
 
 /// @cond
 PlanarSurfaceGroup::PlanarSurfaceGroup(std::shared_ptr<detail::PlanarSurfaceGroup_Impl> impl)

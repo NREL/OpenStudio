@@ -126,11 +126,11 @@ namespace detail {
 
     void autosizeMaximumElectricalPowertoPanel();
 
-    bool setTemperatureControlType(std::string temperatureControlType);
+    bool setTemperatureControlType(const std::string& temperatureControlType);
 
     void resetTemperatureControlType();
 
-    bool setSetpointControlType(std::string setpointControlType);
+    bool setSetpointControlType(const std::string& setpointControlType);
 
     void resetSetpointControlType();
 

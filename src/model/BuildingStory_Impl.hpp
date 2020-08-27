@@ -33,6 +33,9 @@
 #include "ModelObject_Impl.hpp"
 
 namespace openstudio {
+
+class BoundingBox;
+
 namespace model {
 
 class SpaceType;
@@ -82,6 +85,10 @@ namespace detail {
     boost::optional<double> nominalFloortoFloorHeight() const;
 
     boost::optional<double> nominalFloortoCeilingHeight() const;
+
+    openstudio::BoundingBox boundingBoxBuildingCoordinates() const;
+
+    openstudio::BoundingBox boundingBoxSiteCoordinates() const;
 
     //@}
     /** @name Setters */
