@@ -731,7 +731,12 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
   ASSERT_TRUE(model.getOptionalUniqueModelObject<openstudio::model::PerformancePrecisionTradeoffs>());
 
   openstudio::model::PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<openstudio::model::PerformancePrecisionTradeoffs>();
+  EXPECT_FALSE(performancePrecisionTradeoffs.isUseCoilDirectSolutionsDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.useCoilDirectSolutions());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isZoneRadiantExchangeAlgorithmDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName) {
