@@ -148,7 +148,7 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions)
         EXPECT_TRUE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
         EXPECT_TRUE(testRad.isHydronicTubingInsideDiameterDefaulted());
         EXPECT_TRUE(testRad.isHydronicTubingOutsideDiameterDefaulted());
-        EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());
+        EXPECT_FALSE(testRad.isHydronicTubingLengthAutosized());
         EXPECT_TRUE(testRad.isHydronicTubingConductivityDefaulted());
         EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
         EXPECT_TRUE(testRad.isRunningMeanOutdoorDryBulbTemperatureWeightingFactorDefaulted());
