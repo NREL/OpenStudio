@@ -1,59 +1,125 @@
 
 OS:Version,
-  {de0b43e8-576b-4019-bcca-10fdb2d09167}, !- Handle
+  {d8c4d6d3-7f12-4257-b6b9-4e721946a9e2}, !- Handle
   3.0.1;                                  !- Version Identifier
 
 OS:Output:Meter,
-  {09dd51a2-5239-4d9c-9fba-8b4aa6a8ec42}, !- Handle
+  {9971f442-3a31-4411-a5ee-df055d00739b}, !- Handle
   Gas:Facility;                           !- Name
 
+OS:EnergyManagementSystem:Sensor,
+  {63ca4b0d-58cd-446c-a976-6f2524dadbd7}, !- Handle
+  Gas_Facility,                           !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {9971f442-3a31-4411-a5ee-df055d00739b}; !- Output Variable or Output Meter Name
+
 OS:Output:Meter,
-  {c3aadfb0-125f-40ed-9899-55fb442d1cde}, !- Handle
+  {4c0460f2-6cda-4555-935c-5aecef03acf8}, !- Handle
   Heating:FuelOil_1;                      !- Name
 
+OS:EnergyManagementSystem:Sensor,
+  {e11dbb3b-05a8-4097-85d6-2c6d8a30ffe4}, !- Handle
+  Heating_FuelOil_1,                      !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {4c0460f2-6cda-4555-935c-5aecef03acf8}; !- Output Variable or Output Meter Name
+
 OS:Output:Meter,
-  {2fe20251-2b76-4488-ae52-4fa08ceaae94}, !- Handle
+  {33b40baf-b93c-4387-97f7-608fd42a7342}, !- Handle
   WaterSystems:Propane;                   !- Name
 
+OS:EnergyManagementSystem:Sensor,
+  {269a94f1-9d74-42e7-b70e-c977f4d11b96}, !- Handle
+  WaterSystems_Propane,                   !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {33b40baf-b93c-4387-97f7-608fd42a7342}; !- Output Variable or Output Meter Name
+
 OS:Output:Variable,
-  {dcc57d45-62f3-467c-b2f5-a35a18bb13ec}, !- Handle
+  {adc15efe-5b32-412a-994f-c567b7812f58}, !- Handle
   Boiler FuelOil#1 Energy,                !- Name
   ,                                       !- Key Value
   Boiler FuelOil#1 Energy;                !- Variable Name
 
+OS:EnergyManagementSystem:Sensor,
+  {b83cbd85-5990-4110-8772-cfd2e041ca36}, !- Handle
+  Boiler_FuelOil_1_Energy,                !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {adc15efe-5b32-412a-994f-c567b7812f58}; !- Output Variable or Output Meter Name
+
 OS:Output:Variable,
-  {e90223da-9584-451e-b52e-44db450c4800}, !- Handle
+  {80ad67f7-ffbb-4e36-800b-4f9f64afc3b9}, !- Handle
   Boiler Gas Rate,                        !- Name
   ,                                       !- Key Value
   Boiler Gas Rate;                        !- Variable Name
 
+OS:EnergyManagementSystem:Sensor,
+  {473741c1-8596-49d5-b667-382d426aa56b}, !- Handle
+  Boiler_Gas_Rate,                        !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {80ad67f7-ffbb-4e36-800b-4f9f64afc3b9}; !- Output Variable or Output Meter Name
+
 OS:Output:Variable,
-  {cbe8c53e-0530-4812-8884-4b424489fc8c}, !- Handle
+  {1ff3d1ef-4428-4fcb-9f74-77b246ed9831}, !- Handle
   Boiler Electric Power,                  !- Name
   ,                                       !- Key Value
   Boiler Electric Power;                  !- Variable Name
 
+OS:EnergyManagementSystem:Sensor,
+  {50c6d099-7e45-40a9-aceb-55a324714041}, !- Handle
+  Boiler_Electric_Power,                  !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {1ff3d1ef-4428-4fcb-9f74-77b246ed9831}; !- Output Variable or Output Meter Name
+
 OS:Output:Variable,
-  {0ed6eef2-0ec6-4657-b3c2-49119a503923}, !- Handle
+  {ae1f6a5b-b8d3-4470-84ff-a9cf19259273}, !- Handle
   Cooling Coil Water Heating Electric Power, !- Name
   ,                                       !- Key Value
   Cooling Coil Water Heating Electric Power; !- Variable Name
 
+OS:EnergyManagementSystem:Sensor,
+  {217152ee-76a4-4e71-8a3a-4ad2e982a6a2}, !- Handle
+  Cooling_Coil_Water_Heating_Electric_Power, !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {ae1f6a5b-b8d3-4470-84ff-a9cf19259273}; !- Output Variable or Output Meter Name
+
 OS:Output:Variable,
-  {c5fafa64-d53e-43e1-ac18-2e92634bf9ee}, !- Handle
+  {111a54e9-c7e9-476a-9e7b-9587e77c0733}, !- Handle
   Generator Requested Electric Power,     !- Name
   ,                                       !- Key Value
   Generator Requested Electric Power;     !- Variable Name
 
+OS:EnergyManagementSystem:Sensor,
+  {0bebe7b4-b437-495d-a79e-bb4c39d30762}, !- Handle
+  Generator_Requested_Electric_Power,     !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {111a54e9-c7e9-476a-9e7b-9587e77c0733}; !- Output Variable or Output Meter Name
+
 OS:Output:Variable,
-  {f0b18ac9-0770-4bd8-a331-5fe503467c2e}, !- Handle
+  {9fb525db-0319-4c21-bed8-111a439f927b}, !- Handle
   Air System DX Cooling Coil Electric Energy, !- Name
   ,                                       !- Key Value
   Air System DX Cooling Coil Electric Energy; !- Variable Name
 
+OS:EnergyManagementSystem:Sensor,
+  {c9ab8952-71ae-407a-990e-bcda3f2de0b3}, !- Handle
+  Air_System_DX_Cooling_Coil_Electric_Energy, !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {9fb525db-0319-4c21-bed8-111a439f927b}; !- Output Variable or Output Meter Name
+
 OS:Output:Variable,
-  {35c88651-daca-4567-84c8-0df1a80e96e3}, !- Handle
+  {9d26d014-6dd5-4091-a369-bf93c1fc2343}, !- Handle
   Water  Heater  Gas Rate,                !- Name
   ,                                       !- Key Value
   Water  Heater  Gas Rate;                !- Variable Name
+
+OS:EnergyManagementSystem:Sensor,
+  {4c9f1b84-38e4-4f26-8842-2cd9010d0067}, !- Handle
+  Water__Heater__Gas_Rate,                !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  {9d26d014-6dd5-4091-a369-bf93c1fc2343}; !- Output Variable or Output Meter Name
+
+OS:EnergyManagementSystem:Sensor,
+  {756792ff-471b-4be3-9360-14f62a3772e8}, !- Handle
+  Facility_Total_HVAC_Electric_Demand_Power, !- Name
+  ,                                       !- Output Variable or Output Meter Index Key Name
+  Facility Total HVAC Electric Demand Power; !- Output Variable or Output Meter Name
 

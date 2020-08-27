@@ -5399,7 +5399,7 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
 
   // Making the map case-insentive by providing a Comparator `IstringCompare`
   // https://github.com/NREL/EnergyPlus/blob/v9.4.0-IOFreeze/src/Transition/SupportFiles/Report%20Variables%209-3-0%20to%209-4-0.csv
-  const std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
+  const static std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
     {"Other Equipment FuelOil#1 Rate", "Other Equipment FuelOilNo1 Rate"},
     {"Other Equipment FuelOil#2 Rate", "Other Equipment FuelOilNo2 Rate"},
     {"Exterior Equipment FuelOil#1 Energy", "Exterior Equipment FuelOilNo1 Energy"},
@@ -5949,7 +5949,7 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
 *                                                          Output:Meter fuel types renames                                                          *
 *****************************************************************************************************************************************************/
 
-  const std::map<std::string, std::string> meterFuelTypesMap({
+  const static std::map<std::string, std::string> meterFuelTypesMap({
     {"FuelOil_1", "FuelOilNo1"},
     {"FuelOil_2", "FuelOilNo2"},
     {"Gas", "NaturalGas"},
@@ -6008,7 +6008,7 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
 
       std::string name = object.nameString();
 
-      // Structured bindings! Woohoo
+      // Structured bindings
       for (const auto& [k, v] : meterFuelTypesMap) {
         name = boost::regex_replace(name, boost::regex(k, boost::regex::icase), v);
       }
@@ -6038,7 +6038,7 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
       }
 
 
-    } else if (iddname == "OS:Output:Variable") {
+    } else if ((iddname == "OS:Output:Variable") || (iddname == "OS:EnergyManagementSystem:Sensor")) {
 
       unsigned variableNameIndex = 3;
 
@@ -6077,6 +6077,69 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
         ss << object;
       }
 
+    } else if ((iddname == "OS:Meter:Custom") || (iddname == "OS:Meter:CustomDecrement")) {
+
+      bool isReplaceNeeded = false;
+
+      // First pass scan to see if any of the extensible "Output Variable or Meter Name" need replacing
+      for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
+        if ((value = eg.getString(1))) {
+
+          std::string variableName = value.get();
+          // Strip consecutive spaces and all
+          variableName = boost::regex_replace(variableName, re_strip_multiple_spaces, " ");
+
+          auto it = replaceOutputVariablesMap.find(variableName);
+          if (it != replaceOutputVariablesMap.end()) {
+            isReplaceNeeded = true;
+            break;
+          }
+        }
+      }
+      if (!isReplaceNeeded) {
+        // No-op
+        ss << object;
+      } else {
+
+        // Copy everything but 'Variable Name' field
+        auto iddObject = idd_3_1_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        // Copy non extensible fields in place
+        for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+          if( (value = object.getString(i)) ) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Now deal with the extensibles
+        for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
+          IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();
+          // Copy Key Name as-is
+          if (value == eg.getString(0)) {
+            new_eg.setString(0, value.get());
+          }
+          if ((value = eg.getString(1))) {
+
+            std::string variableName = value.get();
+            // Strip consecutive spaces and all
+            variableName = boost::regex_replace(variableName, re_strip_multiple_spaces, " ");
+            auto it = replaceOutputVariablesMap.find(variableName);
+            if (it != replaceOutputVariablesMap.end()) {
+              new_eg.setString(1, it->second);
+            } else {
+              new_eg.setString(1, value.get());
+            }
+          }
+
+        }
+
+        m_refactored.push_back( RefactoredObjectData(object,  newObject) );
+        ss << newObject;
+      }
+
+
+    // Note: Would have needed to do UtilityCost:Tariff too, but not wrapped
 
     // No-op
     } else {

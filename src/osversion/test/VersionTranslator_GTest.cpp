@@ -49,6 +49,8 @@
 #include "../../utilities/core/StringHelpers.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/core/Compare.hpp"
@@ -975,7 +977,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AirLoopHVAC) {
 
 }
 
-TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypes) {
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
@@ -1026,4 +1028,58 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypes) {
       << "Output:Variable named " << name << " did not get the expected rename for Variable Name field";
   }
 
+
+  std::vector<WorkspaceObject> emsSensors = model->getObjectsByType("OS:EnergyManagementSystem:Sensor");
+  ASSERT_EQ(11u, emsSensors.size());
+
+  EXPECT_NE(std::find_if(emsSensors.begin(),
+                         emsSensors.end(),
+                         [](const WorkspaceObject& wo) {
+                            return openstudio::istringEqual(wo.nameString(),
+                                                            "Facility_Total_HVAC_Electric_Demand_Power");
+                          }),
+            emsSensors.end());
+
+  for (const auto& emsSensor : emsSensors) {
+    if (openstudio::istringEqual(emsSensor.nameString(), "Facility_Total_HVAC_Electric_Demand_Power")) {
+      // Facility Total HVAC Electric Demand Power => Facility Total HVAC Electricity Demand Rate
+      EXPECT_EQ("Facility Total HVAC Electricity Demand Rate", emsSensor.getString(3).get());
+    } else {
+      // All of these have actual handles stored at string, these shouldn't have been touched
+      boost::optional<std::string> handle = emsSensor.getString(3);
+      ASSERT_TRUE(handle.is_initialized());
+      UUID uid = toUUID(handle.get());
+      boost::optional<WorkspaceObject> object = model->getObject(uid);
+      ASSERT_TRUE(object);
+      EXPECT_TRUE(openstudio::istringEqual(object->iddObject().name(), "OS:Output:Variable") ||
+                  openstudio::istringEqual(object->iddObject().name(), "OS:Output:Meter"));
+    }
+  }
+
+}
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames_MeterCustoms) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames_MeterCustoms.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames_MeterCustoms_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> meterCustoms = model->getObjectsByType("OS:Meter:Custom");
+  ASSERT_EQ(1u, meterCustoms.size());
+  std::vector<WorkspaceObject> meterCustomDecrements = model->getObjectsByType("OS:Meter:CustomDecrement");
+  ASSERT_EQ(1u, meterCustomDecrements.size());
+
+  for (const auto& wo: {meterCustoms[0], meterCustomDecrements[0]}) {
+
+    for (const IdfExtensibleGroup& eg : wo.extensibleGroups()) {
+      const auto varName = eg.getString(1).get();
+      // Facility Total HVAC Electric Demand Power => Facility Total HVAC Electricity Demand Rate
+      // Generator Blower Electric Power => Generator Blower Electricity Rate
+      EXPECT_TRUE(openstudio::istringEqual(varName, "Facility Total HVAC Electricity Demand Rate") ||
+                  openstudio::istringEqual(varName, "Generator Blower Electricity Rate"))
+        << "Failed for " << wo.nameString() << ", found '" << varName << "'.";
+    }
+  }
 }
