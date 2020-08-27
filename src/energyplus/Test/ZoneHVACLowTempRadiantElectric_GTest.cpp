@@ -118,6 +118,11 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantElectric_Set_Flow_Fractions)
     for (ModelObject equipment : thermalZone.equipment()){
       if (equipment.optionalCast<ZoneHVACLowTemperatureRadiantElectric>()){
         ZoneHVACLowTemperatureRadiantElectric testRad = equipment.optionalCast<ZoneHVACLowTemperatureRadiantElectric>().get();
+        EXPECT_TRUE(testRad.isMaximumElectricalPowertoPanelDefaulted());
+        EXPECT_TRUE(testRad.isMaximumElectricalPowertoPanelAutosized());
+        EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
+        EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
+        EXPECT_TRUE(testRad.isHeatingThrottlingRangeDefaulted());
         for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()){
           EXPECT_EQ(0.25,extGrp.getDouble(1,false));
         }

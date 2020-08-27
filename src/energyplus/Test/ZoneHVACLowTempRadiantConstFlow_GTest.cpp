@@ -44,7 +44,7 @@
 #include "../../model/ThermalZone.hpp"
 #include "../../model/Space.hpp"
 
-#include <utilities/idd/ZoneHVAC_LowTemperatureRadiant_VariableFlow_FieldEnums.hxx>
+#include <utilities/idd/ZoneHVAC_LowTemperatureRadiant_ConstantFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -56,6 +56,87 @@
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
+
+TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions)
+{
+  //make the example model
+  Model model = model::exampleModel();
+
+  //loop through all zones and add a radiant system to each one
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
+
+    //make a variable flow radiant unit
+    ScheduleConstant availabilitySched(model);
+    ScheduleConstant coolingControlTemperatureSchedule(model);
+    ScheduleConstant heatingControlTemperatureSchedule(model);
+
+    availabilitySched.setValue(1.0);
+    coolingControlTemperatureSchedule.setValue(15.0);
+    heatingControlTemperatureSchedule.setValue(10.0);
+
+    CoilCoolingLowTempRadiantConstFlow testCC(model,coolingControlTemperatureSchedule);
+    CoilHeatingLowTempRadiantConstFlow testHC(model,heatingControlTemperatureSchedule);
+
+    HVACComponent testCC1 = testCC.cast<HVACComponent>();
+    HVACComponent testHC1 = testHC.cast<HVACComponent>();
+
+    ZoneHVACLowTempRadiantConstFlow testRad(model,availabilitySched,testHC1,testCC1);
+
+    //set the coils
+    testRad.setHeatingCoil(testHC1);
+    testRad.setCoolingCoil(testCC1);
+
+    //add it to the thermal zone
+    testRad.addToThermalZone(thermalZone);
+
+    //attach to ceilings
+    testRad.setRadiantSurfaceType("Ceilings");
+
+    //test that "surfaces" method returns 0 since no
+    //ceilings have an internal source construction
+    EXPECT_EQ(0,testRad.surfaces().size());
+
+  }
+
+  // Create some materials and make an internal source construction
+  StandardOpaqueMaterial exterior(model);
+  StandardOpaqueMaterial interior(model);
+  OpaqueMaterialVector layers;
+  layers.push_back(exterior);
+  layers.push_back(interior);
+  ConstructionWithInternalSource construction(layers);
+
+  //set building's default ceiling construction to internal source construction
+  DefaultConstructionSet defConSet = model.getModelObjects<DefaultConstructionSet>()[0];
+  defConSet.defaultExteriorSurfaceConstructions()->setRoofCeilingConstruction(construction);
+
+  //translate the model to EnergyPlus
+  ForwardTranslator trans;
+  Workspace workspace = trans.translateModel(model);
+
+  //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
+
+    //get the radiant zone equipment
+    for (ModelObject equipment : thermalZone.equipment()){
+      if (equipment.optionalCast<ZoneHVACLowTempRadiantConstFlow>()){
+        ZoneHVACLowTempRadiantConstFlow testRad = equipment.optionalCast<ZoneHVACLowTempRadiantConstFlow>().get();
+        EXPECT_TRUE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
+        EXPECT_TRUE(testRad.isHydronicTubingInsideDiameterDefaulted());
+        EXPECT_TRUE(testRad.isHydronicTubingOutsideDiameterDefaulted());
+        EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());
+        EXPECT_TRUE(testRad.isHydronicTubingConductivityDefaulted());
+        EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
+        EXPECT_TRUE(testRad.isRunningMeanOutdoorDryBulbTemperatureWeightingFactorDefaulted());
+        EXPECT_TRUE(testRad.isFractionofMotorInefficienciestoFluidStreamDefaulted());
+        for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()){
+          EXPECT_EQ(0.25,extGrp.getDouble(1,false));
+        }
+      }
+    }
+  }
+
+}
 
 TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantConstFlow_Crash_no_constructions) {
 
@@ -85,8 +166,6 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantConstFlow_Crash_no_constructions
 
   // Make a radiant low temperature system
   Schedule alwaysOn = m.alwaysOnDiscreteSchedule();
-
-
 
   ScheduleConstant availabilitySched(m);
   ScheduleConstant coolingHighWaterTempSched(m);
