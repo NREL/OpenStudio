@@ -66,7 +66,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantElectric_Set_Flow_Fractions)
+TEST_F(EnergyPlusFixture,ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fractions)
 {
   //make the example model
   Model model = model::exampleModel();
@@ -118,11 +118,11 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantElectric_Set_Flow_Fractions)
     for (ModelObject equipment : thermalZone.equipment()){
       if (equipment.optionalCast<ZoneHVACLowTemperatureRadiantElectric>()){
         ZoneHVACLowTemperatureRadiantElectric testRad = equipment.optionalCast<ZoneHVACLowTemperatureRadiantElectric>().get();
-        EXPECT_TRUE(testRad.isMaximumElectricalPowertoPanelDefaulted());
+        EXPECT_FALSE(testRad.isMaximumElectricalPowertoPanelDefaulted());
         EXPECT_TRUE(testRad.isMaximumElectricalPowertoPanelAutosized());
-        EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
+        EXPECT_EQ("MeanAirTemperature", testRad.temperatureControlType());
         EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
-        EXPECT_TRUE(testRad.isHeatingThrottlingRangeDefaulted());
+        EXPECT_EQ(2.0, testRad.heatingThrottlingRange());
         for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()){
           EXPECT_EQ(0.25,extGrp.getDouble(1,false));
         }
@@ -131,7 +131,7 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantElectric_Set_Flow_Fractions)
   }
 }
 
-TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantElectric_Crash_no_constructions) {
+TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Crash_no_constructions) {
 
   ForwardTranslator ft;
 

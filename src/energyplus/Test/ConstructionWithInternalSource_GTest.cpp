@@ -36,6 +36,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/ConstructionWithInternalSource.hpp"
 #include "../../model/ConstructionWithInternalSource_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
@@ -53,33 +55,54 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ConstructionWithInternalSource) {
 
   ForwardTranslator ft;
 
-  // Create a model
-  Model m;
+  Model model;
 
-  // TODO
+  ConstructionWithInternalSource construction(model);
+  construction.setName("Construction Internal Source 1");
+  construction.setTubeSpacing(0.5);
+  construction.setTwoDimensionalTemperatureCalculationPosition(0.75);
+
+  ForwardTranslator trans;
+  Workspace workspace = trans.translateModel(model);
+
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Construction_InternalSource).size());
+
+  std::vector<WorkspaceObject> objVector(workspace.getObjectsByType(IddObjectType::Construction_InternalSource));
+  ASSERT_EQ(1u, objVector.size());
+  WorkspaceObject wo(objVector.at(0));
+
+  EXPECT_EQ("Construction Internal Source 1", wo.getString(Construction_InternalSourceFields::Name).get());
+  EXPECT_EQ(1, wo.getInt(Construction_InternalSourceFields::SourcePresentAfterLayerNumber).get());
+  EXPECT_EQ(1, wo.getInt(Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber).get());
+  EXPECT_EQ(1, wo.getInt(Construction_InternalSourceFields::DimensionsfortheCTFCalculation).get());
+  EXPECT_EQ(0.5, wo.getDouble(Construction_InternalSourceFields::TubeSpacing).get());
+  EXPECT_EQ(0.75, wo.getDouble(Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition).get());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ConstructionWithInternalSource) {
 
-  openstudio::Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
 
-  openstudio::IdfObject idfObject1(openstudio::IddObjectType::Construction_InternalSource);
+  IdfObject idfObject1(IddObjectType::Construction_InternalSource);
   idfObject1.setString(Construction_InternalSourceFields::Name, "Construction Internal Source 1");
-  idfObject1.setInt(Construction_InternalSourceFields::SourcePresentAfterLayerNumber, 2);
-  idfObject1.setInt(Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber, 3);
-  idfObject1.setInt(Construction_InternalSourceFields::DimensionsfortheCTFCalculation, 2);
   idfObject1.setDouble(Construction_InternalSourceFields::TubeSpacing, 0.5);
   idfObject1.setDouble(Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition, 0.75);
 
-  openstudio::WorkspaceObject epConstr = workspace.addObject(idfObject1).get();
+  WorkspaceObject epConstr = workspace.addObject(idfObject1).get();
 
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<ConstructionWithInternalSource> constrs = model.getModelObjects<ConstructionWithInternalSource>();
-  ASSERT_EQ(1u, constrs.size());
-  ConstructionWithInternalSource constr = constrs[0];
-  // TODO
+  std::vector<ConstructionWithInternalSource> constructions = model.getModelObjects<ConstructionWithInternalSource>();
+  ASSERT_EQ(1u, constructions.size());
+  ConstructionWithInternalSource construction = constructions[0];
+  EXPECT_EQ(0, construction.numLayers());
+  EXPECT_EQ(0, construction.layers().size());
+  EXPECT_EQ(1, construction.sourcePresentAfterLayerNumber());
+  EXPECT_EQ(1, construction.temperatureCalculationRequestedAfterLayerNumber());
+  EXPECT_EQ(1, construction.dimensionsForTheCTFCalculation());
+  EXPECT_EQ(0.5, construction.tubeSpacing());
+  EXPECT_EQ(0.75, construction.twoDimensionalTemperatureCalculationPosition());
 }
 

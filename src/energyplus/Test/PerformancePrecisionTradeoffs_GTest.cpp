@@ -53,22 +53,27 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PerformancePrecisionTradeoffs) {
 
   ForwardTranslator ft;
 
-  // Create a model
-  Model m;
+  Model model;
 
   // Get the unique object
-  PerformancePrecisionTradeoffs performancePrecisionTradeoffs = m.getUniqueModelObject<PerformancePrecisionTradeoffs>();
+  PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<PerformancePrecisionTradeoffs>();
+  EXPECT_TRUE(performancePrecisionTradeoffs.isUseCoilDirectSolutionsDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isZoneRadiantExchangeAlgorithmDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
 
-  Workspace w = ft.translateModel(m);
+  Workspace workspace = ft.translateModel(model);
 
-  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::PerformancePrecisionTradeoffs);
+  WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::PerformancePrecisionTradeoffs);
   ASSERT_EQ(1u, idfObjs.size());
 
   WorkspaceObject idf_perf(idfObjs[0]);
 
+  EXPECT_FALSE(idf_perf.isEmpty(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions));
   EXPECT_EQ("No", idf_perf.getString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions).get());
-  EXPECT_EQ("ScriptF", idf_perf.getString(PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm).get());
-  EXPECT_EQ("Normal", idf_perf.getString(PerformancePrecisionTradeoffsFields::OverrideMode).get());
-  EXPECT_EQ(0.3, idf_perf.getDouble(PerformancePrecisionTradeoffsFields::MaxZoneTempDiff).get());
-  EXPECT_EQ(0.002, idf_perf.getDouble(PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp).get());
+  EXPECT_TRUE(idf_perf.isEmpty(PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm));
+  EXPECT_TRUE(idf_perf.isEmpty(PerformancePrecisionTradeoffsFields::OverrideMode));
+  EXPECT_TRUE(idf_perf.isEmpty(PerformancePrecisionTradeoffsFields::MaxZoneTempDiff));
+  EXPECT_TRUE(idf_perf.isEmpty(PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp));
 }
