@@ -5399,7 +5399,7 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
 
   // Making the map case-insentive by providing a Comparator `IstringCompare`
   // https://github.com/NREL/EnergyPlus/blob/v9.4.0-IOFreeze/src/Transition/SupportFiles/Report%20Variables%209-3-0%20to%209-4-0.csv
-  const std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
+  const static std::map<std::string, std::string, openstudio::IstringCompare> replaceOutputVariablesMap({
     {"Other Equipment FuelOil#1 Rate", "Other Equipment FuelOilNo1 Rate"},
     {"Other Equipment FuelOil#2 Rate", "Other Equipment FuelOilNo2 Rate"},
     {"Exterior Equipment FuelOil#1 Energy", "Exterior Equipment FuelOilNo1 Energy"},
@@ -5949,7 +5949,7 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
 *                                                          Output:Meter fuel types renames                                                          *
 *****************************************************************************************************************************************************/
 
-  const std::map<std::string, std::string> meterFuelTypesMap({
+  const static std::map<std::string, std::string> meterFuelTypesMap({
     {"FuelOil_1", "FuelOilNo1"},
     {"FuelOil_2", "FuelOilNo2"},
     {"Gas", "NaturalGas"},
@@ -6004,11 +6004,155 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else if (iddname == "OS:Construction:InternalSource") {
+
+      // Two-Dimensional Temperature Calculation Position, inserted at position 6 (0-indexed)
+      // Object has extensible groups too
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            newObject.setString(i, value.get());
+          } else {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // If we made it required-field, set new field per IDD default, same as Model Ctor
+      // newObject.setDouble(6, 0.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:Electric") {
+
+      // Inserted a field 'Sepoint Control Type' with a default at position 6 (0-indexed)
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            newObject.setString(i, value.get());
+          } else {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+    } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow") {
+
+      // Insertion points (0-indexed)
+      // * Fluid to Radiant Surface Heat Transfer Model: 4
+      // * Hydronic Tubing Outside Diameter: 6
+      // * Hydronic Tubing Conductivity: 8
+      // * Running Mean Outdoor Dry-Bulb Temperature Weighting Factor: 10
+      // * Changeover Delay Time Period Schedule: 21 : last field, optional
+
+      // Mapping:
+      // * Hydronic Tubing Inside Diameter - 4 => 5
+      // * Hydronic Tubing Length - 5 => 7
+      // * Temperature Control Type - 6 => 9
+      // * Low Temp Radiant Constant Flow Heating Coil Name - 7 => 11
+      // * Low Temp Radiant Constant Flow Cooling Coil Name - 8 => 12
+      // * Rated Flow Rate - 9 => 13
+      // * Pump Flow Rate Schedule Name - 10 => 14
+      // * Rated Pump Head - 11 => 15
+      // * Rated Power Consumption - 12 => 16
+      // * Motor Efficiency - 13 => 17
+      // * Fraction of Motor Inefficiencies to Fluid Stream - 14 => 18
+      // * Number of Circuits - 15 => 19
+      // * Circuit Length - 16 => 20
+
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 4) {
+            newObject.setString(i, value.get());
+          } else if (i < 5){
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          } else if (i < 6) {
+            newObject.setString(i + 2, value.get());
+          } else if (i < 7) {
+            newObject.setString(i + 3, value.get());
+          } else {
+            newObject.setString(i + 4, value.get());
+          }
+        }
+      }
+
+      // If we wanted to make them required-field, these are the defaults
+      // newObject.setString(4, "ConvectionOnly");
+      // newObject.setDouble(6, 0.016);
+      // newObject.setDouble(8, 0.35);
+      // newObject.setDouble(10, 0.8);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow") {
+
+      // Insertion points (0-indexed)
+      // * Fluid to Radiant Surface Heat Transfer Model * 6
+      // * Hydronic Tubing Outside Diameter * 8
+      // * Hydronic Tubing Conductivity * 10
+      // * Setpoint Control Type * 12
+      // * Changeover Delay Time Period Schedule * 15
+
+      // Mapping:
+      // * Hydronic Tubing Inside Diameter - 6 => 7
+      // * Hydronic Tubing Length - 7 => 9
+      // * Temperature Control Type - 8 => 11
+      // * Number of Circuits - 9 => 13
+      // * Circuit Length - 10 => 14
+
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            newObject.setString(i, value.get());
+          } else if (i < 7){
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          } else if (i < 8) {
+            newObject.setString(i + 2, value.get());
+          } else if (i < 9) {
+            newObject.setString(i + 3, value.get());
+          } else {
+            newObject.setString(i + 4, value.get());
+          }
+        }
+      }
+
+      // If we wanted to make them required-field, these are the defaults
+      // newObject.setString(6, "ConvectionOnly");
+      // newObject.setDouble(8, 0.016);
+      // newObject.setDouble(10, 0.35);
+      // newObject.setString(23, "HalfFlowPower");
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     } else if (iddname == "OS:Output:Meter") {
 
       std::string name = object.nameString();
 
-      // Structured bindings! Woohoo
+      // Structured bindings
       for (const auto& [k, v] : meterFuelTypesMap) {
         name = boost::regex_replace(name, boost::regex(k, boost::regex::icase), v);
       }
@@ -6038,7 +6182,7 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
       }
 
 
-    } else if (iddname == "OS:Output:Variable") {
+    } else if ((iddname == "OS:Output:Variable") || (iddname == "OS:EnergyManagementSystem:Sensor")) {
 
       unsigned variableNameIndex = 3;
 
@@ -6077,6 +6221,68 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
         ss << object;
       }
 
+    } else if ((iddname == "OS:Meter:Custom") || (iddname == "OS:Meter:CustomDecrement")) {
+
+      bool isReplaceNeeded = false;
+
+      // First pass scan to see if any of the extensible "Output Variable or Meter Name" need replacing
+      for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
+        if ((value = eg.getString(1))) {
+
+          std::string variableName = value.get();
+          // Strip consecutive spaces and all
+          variableName = boost::regex_replace(variableName, re_strip_multiple_spaces, " ");
+
+          auto it = replaceOutputVariablesMap.find(variableName);
+          if (it != replaceOutputVariablesMap.end()) {
+            isReplaceNeeded = true;
+            break;
+          }
+        }
+      }
+      if (!isReplaceNeeded) {
+        // No-op
+        ss << object;
+      } else {
+
+        // Copy everything but 'Variable Name' field
+        auto iddObject = idd_3_1_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        // Copy non extensible fields in place
+        for( size_t i = 0; i < object.numNonextensibleFields(); ++i ) {
+          if( (value = object.getString(i)) ) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Now deal with the extensibles
+        for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
+          IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup();
+          // Copy Key Name as-is
+          if (value == eg.getString(0)) {
+            new_eg.setString(0, value.get());
+          }
+          if ((value = eg.getString(1))) {
+
+            std::string variableName = value.get();
+            // Strip consecutive spaces and all
+            variableName = boost::regex_replace(variableName, re_strip_multiple_spaces, " ");
+            auto it = replaceOutputVariablesMap.find(variableName);
+            if (it != replaceOutputVariablesMap.end()) {
+              new_eg.setString(1, it->second);
+            } else {
+              new_eg.setString(1, value.get());
+            }
+          }
+
+        }
+
+        m_refactored.push_back( RefactoredObjectData(object,  newObject) );
+        ss << newObject;
+      }
+
+    // Note: Would have needed to do UtilityCost:Tariff too, but not wrapped
 
     // No-op
     } else {

@@ -445,7 +445,7 @@ namespace detail {
 
   // Pending https://github.com/NREL/EnergyPlus/issues/8066 the SQL won't have this field.
   boost::optional<double> CoilCoolingDXCurveFitOperatingMode_Impl::autosizedNominalEvaporativeCondenserPumpPower() {
-    return getAutosizedValue("TODO_CHECK_SQL Nominal Evaporative Condenser Pump Power", "W");
+    return getAutosizedValue("Nominal Evaporative Condenser Pump Power", "W");
   }
 
   void CoilCoolingDXCurveFitOperatingMode_Impl::autosize() {
