@@ -637,6 +637,7 @@ set(${target_name}_test_src
   Test/OutputJSON_GTest.cpp
   Test/OutputTableSummaryReports_GTest.cpp
   Test/People_GTest.cpp
+  Test/PerformancePrecisionTradeoffs_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp
   Test/RunPeriod_GTest.cpp
