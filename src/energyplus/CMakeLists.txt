@@ -425,7 +425,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateCoilSystemCoolingDX.cpp
   ReverseTranslator/ReverseTranslateConstruction.cpp
   ReverseTranslator/ReverseTranslateConstructionAirBoundary.cpp
- # ReverseTranslator/ReverseTranslateConstructionWithInternalSource.cpp # DLM: todo this is missing
+  ReverseTranslator/ReverseTranslateConstructionWithInternalSource.cpp
   ReverseTranslator/ReverseTranslateConvergenceLimits.cpp
   ReverseTranslator/ReverseTranslateCurveBicubic.cpp
   ReverseTranslator/ReverseTranslateCurveBiquadratic.cpp
@@ -603,6 +603,7 @@ set(${target_name}_test_src
   Test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   Test/CoilCoolingDXVariableSpeed_GTest.cpp
   Test/Construction_GTest.cpp
+  Test/ConstructionWithInternalSource_GTest.cpp
   Test/ControllerOutdoorAir_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
