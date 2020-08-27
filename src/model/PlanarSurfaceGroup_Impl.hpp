@@ -115,6 +115,15 @@ namespace detail {
     /** Get the BoundingBox in local coordinates. */
     virtual openstudio::BoundingBox boundingBox() const = 0;
 
+    /** Get the BoundingBox in parent coordinates. */
+    openstudio::BoundingBox boundingBoxParentCoordinates() const;
+
+    /** Get the BoundingBox in building coordinates. */
+    openstudio::BoundingBox boundingBoxBuildingCoordinates() const;
+
+    /** Get the BoundingBox in site coordinates. */
+    openstudio::BoundingBox boundingBoxSiteCoordinates() const;
+
     //@}
    //private slots:
    private:

@@ -315,9 +315,9 @@ namespace openstudio
       boost::optional<PlanarSurfaceGroup> planarSurfaceGroup = planarSurface.planarSurfaceGroup();
 
       // get the transformation to site coordinates
-      Transformation siteTransformation;
+      Transformation buildingTransformation;
       if (planarSurfaceGroup){
-        siteTransformation = planarSurfaceGroup->siteTransformation();
+        buildingTransformation = planarSurfaceGroup->buildingTransformation();
       }
 
       // get the vertices
@@ -349,8 +349,8 @@ namespace openstudio
       Point3dVector allVertices;
       std::vector<size_t> faceIndices;
       for (const auto& finalFaceVerts : finalFaceVertices) {
-        Point3dVector finalVerts = siteTransformation*t*finalFaceVerts;
-        //normal = siteTransformation.rotationMatrix*r*z
+        Point3dVector finalVerts = buildingTransformation*t*finalFaceVerts;
+        //normal = buildingTransformation.rotationMatrix*r*z
 
         // https://github.com/mrdoob/three.js/wiki/JSON-Model-format-3
         // 0 indicates triangle
@@ -393,13 +393,13 @@ namespace openstudio
         boost::optional<PlanarSurface> adjacentPlanarSurface = planarSurface.model().getModelObject<PlanarSurface>(adjacentHandle);
         OS_ASSERT(adjacentPlanarSurface);
 
-        Transformation otherSiteTransformation;
+        Transformation otherBuildingTransformation;
         if (adjacentPlanarSurface->planarSurfaceGroup()){
-          otherSiteTransformation = adjacentPlanarSurface->planarSurfaceGroup()->siteTransformation();
+          otherBuildingTransformation = adjacentPlanarSurface->planarSurfaceGroup()->buildingTransformation();
         }
 
-        Point3dVector otherVertices = otherSiteTransformation*adjacentPlanarSurface->vertices();
-        if (circularEqual(siteTransformation*vertices, reverse(otherVertices))){
+        Point3dVector otherVertices = otherBuildingTransformation*adjacentPlanarSurface->vertices();
+        if (circularEqual(buildingTransformation*vertices, reverse(otherVertices))){
           userData.setCoincidentWithOutsideObject(true);
         } else{
           userData.setCoincidentWithOutsideObject(false);

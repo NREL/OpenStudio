@@ -151,12 +151,27 @@ namespace openstudio{
     /// unit system, "ip" or "si"
     std::string units() const;
     bool setUnits(const std::string& units);
-    void resetUnits();
+    void resetUnits();  
 
     /// degrees from Building North to True North measured clockwise, opposite of EnergyPlus convention
     double northAxis() const;
     bool setNorthAxis(double northAxis);
     void resetNorthAxis();
+
+    /// degrees, North is positive, South is negative
+    double latitude() const;
+    bool setLatitude(double latitude);
+    void resetLatitude();
+
+    /// degrees, West is negative, East is positive
+    double longitude() const;
+    bool setLongitude(double longitude);
+    void resetLongitude();
+
+    /// elevation from sea level
+    double elevation() const;
+    bool setElevation(double elevation);
+    void resetElevation();
 
     /// update object names in Floorplan with external data
     /// if object with same handle exists, name will be updated
