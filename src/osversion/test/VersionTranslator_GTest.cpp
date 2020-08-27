@@ -1118,3 +1118,101 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ConstructionWithInternalSource) {
     EXPECT_EQ("OS:Material", w_eg.getTarget(0).get().iddObject().name());
   }
 }
+
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ZoneHVACLowTemp) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_ZoneHVACLowTemp.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_ZoneHVACLowTemp_updated.osm");
+  model->save(outPath, true);
+
+  // New fields: have defaults... If we make them required-field, switch these two bools to the opposite
+  bool returnDefault = true;
+  bool returnUninitializedEmpty = false;
+
+  {
+    std::vector<WorkspaceObject> lowtempradiants = model->getObjectsByType("OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow");
+    ASSERT_EQ(1u, lowtempradiants.size());
+    WorkspaceObject lowtempradiant = lowtempradiants[0];
+
+    EXPECT_EQ("Floors", lowtempradiant.getString(3, false, true).get());
+
+    // New fields
+    EXPECT_EQ("ConvectionOnly", lowtempradiant.getString(4, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ(0.016, lowtempradiant.getDouble(6, returnDefault).get());
+    EXPECT_EQ(0.35, lowtempradiant.getDouble(8, returnDefault).get());
+    EXPECT_EQ(0.8, lowtempradiant.getDouble(10, returnDefault).get());
+
+    EXPECT_EQ(0.154, lowtempradiant.getDouble(5, false).get());
+    EXPECT_EQ(200.0, lowtempradiant.getDouble(7, false).get());
+    EXPECT_EQ("MeanRadiantTemperature", lowtempradiant.getString(9, false, true).get());
+
+    ASSERT_TRUE(lowtempradiant.getTarget(11));
+    EXPECT_EQ("OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow", lowtempradiant.getTarget(11).get().iddObject().name());
+    ASSERT_TRUE(lowtempradiant.getTarget(12));
+    EXPECT_EQ("OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow", lowtempradiant.getTarget(12).get().iddObject().name());
+
+    EXPECT_EQ(0.005, lowtempradiant.getDouble(13, false).get());
+    ASSERT_TRUE(lowtempradiant.getTarget(14)); // Pump Flow Rate Schedule Name
+
+
+    EXPECT_EQ(30000.0, lowtempradiant.getDouble(15, false).get()); // head
+    EXPECT_EQ(1200.0, lowtempradiant.getDouble(16, false).get()); // Rated power
+    EXPECT_EQ(0.9, lowtempradiant.getDouble(17, false).get()); // Motor eff
+    EXPECT_EQ(0.7, lowtempradiant.getDouble(18, false).get()); /// Fraction of motor inef
+
+
+    EXPECT_EQ("CalculateFromCircuitLength", lowtempradiant.getString(19, false, true).get());
+    EXPECT_EQ(120.0, lowtempradiant.getDouble(20, false).get()); /// Fraction of motor inef
+
+    // Changeover Delay Time Period Schedule
+    EXPECT_FALSE(lowtempradiant.getString(21, false, true));
+  }
+
+
+  {
+    std::vector<WorkspaceObject> lowtempradiants = model->getObjectsByType("OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow");
+    ASSERT_EQ(1u, lowtempradiants.size());
+    WorkspaceObject lowtempradiant = lowtempradiants[0];
+
+    ASSERT_TRUE(lowtempradiant.getTarget(3));
+    EXPECT_EQ("OS:Coil:Heating:LowTemperatureRadiant:VariableFlow", lowtempradiant.getTarget(3).get().iddObject().name());
+    ASSERT_TRUE(lowtempradiant.getTarget(4));
+    EXPECT_EQ("OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow", lowtempradiant.getTarget(4).get().iddObject().name());
+    EXPECT_EQ("Floors", lowtempradiant.getString(5, false, true).get());
+
+
+    // New Fields
+    EXPECT_EQ("ConvectionOnly", lowtempradiant.getString(6, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ(0.016, lowtempradiant.getDouble(8, returnDefault).get());
+    EXPECT_EQ(0.35, lowtempradiant.getDouble(10, returnDefault).get());
+    EXPECT_EQ("HalfFlowPower", lowtempradiant.getString(12, returnDefault, returnUninitializedEmpty).get());
+
+    EXPECT_EQ(0.154, lowtempradiant.getDouble(7, false).get());
+    EXPECT_EQ(200, lowtempradiant.getDouble(9, false).get());
+    EXPECT_EQ("MeanRadiantTemperature", lowtempradiant.getString(11, false, true).get());
+    EXPECT_EQ("CalculateFromCircuitLength", lowtempradiant.getString(13, false, true).get());
+    EXPECT_EQ(120, lowtempradiant.getDouble(14, false).get());
+
+    // Changeover Delay Time Period Schedule
+    EXPECT_FALSE(lowtempradiant.getString(15, false, true));
+  }
+
+  {
+    std::vector<WorkspaceObject> lowtempradiants = model->getObjectsByType("OS:ZoneHVAC:LowTemperatureRadiant:Electric");
+    ASSERT_EQ(1u, lowtempradiants.size());
+    WorkspaceObject lowtempradiant = lowtempradiants[0];
+
+    EXPECT_EQ("Floors", lowtempradiant.getString(3, false, true).get());
+    EXPECT_EQ(1000, lowtempradiant.getDouble(4, returnDefault).get());
+    EXPECT_EQ("MeanRadiantTemperature", lowtempradiant.getString(5, false, true).get());
+
+    // New fields
+    EXPECT_EQ("HalfFlowPower", lowtempradiant.getString(6, returnDefault, returnUninitializedEmpty).get());
+
+    EXPECT_EQ(2, lowtempradiant.getDouble(7, returnDefault).get());
+    ASSERT_TRUE(lowtempradiant.getTarget(8)); // Heating Setpoint Temperature Schedule Name
+  }
+}

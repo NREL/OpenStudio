@@ -6028,6 +6028,126 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
 
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
+
+    } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:Electric") {
+
+      // Inserted a field 'Sepoint Control Type' with a default at position 6 (0-indexed)
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            newObject.setString(i, value.get());
+          } else {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+    } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow") {
+
+      // Insertion points (0-indexed)
+      // * Fluid to Radiant Surface Heat Transfer Model: 4
+      // * Hydronic Tubing Outside Diameter: 6
+      // * Hydronic Tubing Conductivity: 8
+      // * Running Mean Outdoor Dry-Bulb Temperature Weighting Factor: 10
+      // * Changeover Delay Time Period Schedule: 21 : last field, optional
+
+      // Mapping:
+      // * Hydronic Tubing Inside Diameter - 4 => 5
+      // * Hydronic Tubing Length - 5 => 7
+      // * Temperature Control Type - 6 => 9
+      // * Low Temp Radiant Constant Flow Heating Coil Name - 7 => 11
+      // * Low Temp Radiant Constant Flow Cooling Coil Name - 8 => 12
+      // * Rated Flow Rate - 9 => 13
+      // * Pump Flow Rate Schedule Name - 10 => 14
+      // * Rated Pump Head - 11 => 15
+      // * Rated Power Consumption - 12 => 16
+      // * Motor Efficiency - 13 => 17
+      // * Fraction of Motor Inefficiencies to Fluid Stream - 14 => 18
+      // * Number of Circuits - 15 => 19
+      // * Circuit Length - 16 => 20
+
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 4) {
+            newObject.setString(i, value.get());
+          } else if (i < 5){
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          } else if (i < 6) {
+            newObject.setString(i + 2, value.get());
+          } else if (i < 7) {
+            newObject.setString(i + 3, value.get());
+          } else {
+            newObject.setString(i + 4, value.get());
+          }
+        }
+      }
+
+      // If we wanted to make them required-field, these are the defaults
+      // newObject.setString(4, "ConvectionOnly");
+      // newObject.setDouble(6, 0.016);
+      // newObject.setDouble(8, 0.35);
+      // newObject.setDouble(10, 0.8);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow") {
+
+      // Insertion points (0-indexed)
+      // * Fluid to Radiant Surface Heat Transfer Model * 6
+      // * Hydronic Tubing Outside Diameter * 8
+      // * Hydronic Tubing Conductivity * 10
+      // * Setpoint Control Type * 12
+      // * Changeover Delay Time Period Schedule * 15
+
+      // Mapping:
+      // * Hydronic Tubing Inside Diameter - 6 => 7
+      // * Hydronic Tubing Length - 7 => 9
+      // * Temperature Control Type - 8 => 11
+      // * Number of Circuits - 9 => 13
+      // * Circuit Length - 10 => 14
+
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            newObject.setString(i, value.get());
+          } else if (i < 7){
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          } else if (i < 8) {
+            newObject.setString(i + 2, value.get());
+          } else if (i < 9) {
+            newObject.setString(i + 3, value.get());
+          } else {
+            newObject.setString(i + 4, value.get());
+          }
+        }
+      }
+
+      // If we wanted to make them required-field, these are the defaults
+      // newObject.setString(6, "ConvectionOnly");
+      // newObject.setDouble(8, 0.016);
+      // newObject.setDouble(10, 0.35);
+      // newObject.setString(23, "HalfFlowPower");
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     } else if (iddname == "OS:Output:Meter") {
 
       std::string name = object.nameString();
