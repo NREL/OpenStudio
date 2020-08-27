@@ -32,6 +32,12 @@
 #include "RenderingColor.hpp"
 #include "ConstructionBase.hpp"
 #include "ConstructionBase_Impl.hpp"
+#include "Site.hpp"
+#include "Site_Impl.hpp"
+#include "Facility.hpp"
+#include "Facility_Impl.hpp"
+#include "Building.hpp"
+#include "Building_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "SpaceType.hpp"
@@ -86,6 +92,9 @@ namespace openstudio
     ModelMerger::ModelMerger()
     {
       // DLM: TODO expose this to user to give more control over merging?
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Site);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Facility);
+      m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Building);
       m_iddObjectTypesToMerge.push_back(IddObjectType::OS_Space);
       m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ShadingSurfaceGroup);
       m_iddObjectTypesToMerge.push_back(IddObjectType::OS_ThermalZone);
@@ -139,6 +148,18 @@ namespace openstudio
             // handle is in both models
             result[handle] = handle;
             continue;
+          }
+
+          if ((iddObjectType == IddObjectType::OS_Site) ||
+              (iddObjectType == IddObjectType::OS_Facility) ||
+              (iddObjectType == IddObjectType::OS_Building)) 
+          {
+            // this is a unique object
+            if (std::get<0>(currentLookup).size() == 1) {
+              Handle currentHandle = *(std::get<0>(currentLookup).begin());
+              result[currentHandle] = handle;
+              continue;
+            }
           }
 
           ModelObject modelObject = object.cast<ModelObject>();
@@ -211,6 +232,110 @@ namespace openstudio
         return it->second;
       }
       return boost::none;
+    }
+
+    void ModelMerger::mergeSite(Site& currentSite, const Site& newSite)
+    {
+      if (m_newMergedHandles.find(newSite.handle()) != m_newMergedHandles.end()) {
+        // already merged
+        return;
+      }
+      m_newMergedHandles.insert(newSite.handle());
+
+      currentSite.setName(newSite.nameString());
+  
+      if (!newSite.isLatitudeDefaulted()) {
+        currentSite.setLatitude(newSite.latitude());
+      }
+      
+      if (!newSite.isLongitudeDefaulted()) {
+        currentSite.setLongitude(newSite.longitude());
+      }
+      
+      if (!newSite.isTimeZoneDefaulted()) {
+        currentSite.setTimeZone(newSite.timeZone());
+      }
+
+      if (!newSite.isElevationDefaulted()) {
+        currentSite.setElevation(newSite.elevation());
+      }
+
+      if (!newSite.isTerrainDefaulted()) {
+        currentSite.setTerrain(newSite.terrain());
+      }
+    }
+
+    void ModelMerger::mergeFacility(Facility& currentFacility, const Facility& newFacility)
+    {
+      if (m_newMergedHandles.find(newFacility.handle()) != m_newMergedHandles.end()) {
+        // already merged
+        return;
+      }
+      m_newMergedHandles.insert(newFacility.handle());
+
+      currentFacility.setName(newFacility.nameString());
+    }
+
+    void ModelMerger::mergeBuilding(Building& currentBuilding, const Building& newBuilding)
+    {
+      if (m_newMergedHandles.find(newBuilding.handle()) != m_newMergedHandles.end()) {
+        // already merged
+        return;
+      }
+      m_newMergedHandles.insert(newBuilding.handle());
+
+      currentBuilding.setName(newBuilding.nameString());
+
+      if (!newBuilding.isNorthAxisDefaulted()) {
+        currentBuilding.setNorthAxis(newBuilding.northAxis());
+      }
+
+      if (newBuilding.nominalFloortoFloorHeight()) {
+        currentBuilding.setNominalFloortoFloorHeight(newBuilding.nominalFloortoFloorHeight().get());
+      }
+
+      if (newBuilding.nominalFloortoCeilingHeight()) {
+        currentBuilding.setNominalFloortoCeilingHeight(newBuilding.nominalFloortoCeilingHeight().get());
+      }
+
+      if (newBuilding.standardsNumberOfStories()) {
+        currentBuilding.setStandardsNumberOfStories(newBuilding.standardsNumberOfStories().get());
+      }
+
+      if (newBuilding.standardsNumberOfAboveGroundStories()) {
+        currentBuilding.setStandardsNumberOfAboveGroundStories(newBuilding.standardsNumberOfAboveGroundStories().get());
+      }
+
+      if (newBuilding.standardsNumberOfLivingUnits()) {
+        currentBuilding.setStandardsNumberOfLivingUnits(newBuilding.standardsNumberOfLivingUnits().get());
+      }
+
+      if (newBuilding.standardsTemplate()) {
+        currentBuilding.setStandardsTemplate(newBuilding.standardsTemplate().get());
+      }
+
+      if (newBuilding.standardsBuildingType()) {
+        currentBuilding.setStandardsBuildingType(newBuilding.standardsBuildingType().get());
+      }
+
+      if (!newBuilding.isRelocatableDefaulted()) {
+        currentBuilding.setRelocatable(newBuilding.relocatable());
+      }
+
+      // default construction set
+      if (boost::optional<DefaultConstructionSet> newDefaultConstructionSet = newBuilding.defaultConstructionSet()) {
+        boost::optional<WorkspaceObject> currentObject = getCurrentModelObject(*newDefaultConstructionSet);
+        if (currentObject) {
+          DefaultConstructionSet currentDefaultConstructionSet = currentObject->cast<DefaultConstructionSet>();
+          currentBuilding.setDefaultConstructionSet(currentDefaultConstructionSet);
+        } else {
+          currentBuilding.resetDefaultConstructionSet();
+        }
+      } else {
+        currentBuilding.resetDefaultConstructionSet();
+      }
+
+      // TODO: default schedule sets
     }
 
     void ModelMerger::mergeSpace(Space& currentSpace, const Space& newSpace)
@@ -776,13 +901,22 @@ namespace openstudio
       if (currentHandle){
         currentObject = m_currentModel.getObject(*currentHandle);
         if (!currentObject){
-          LOG(Error, "Could not find object in current model for handle " << *currentHandle);
+          LOG(Error, "Could not find object in current model for handle " << *currentHandle << " of type " << iddObjectType.valueName());
         }
       }
 
       // create object in current model if needed
       if (!currentObject){
         switch (iddObjectType.value()){
+        case IddObjectType::OS_Site:
+          currentObject = m_currentModel.getUniqueModelObject<Site>();
+          break;
+        case IddObjectType::OS_Facility:
+          currentObject = m_currentModel.getUniqueModelObject<Facility>();
+          break;
+        case IddObjectType::OS_Building:
+          currentObject = m_currentModel.getUniqueModelObject<Building>();
+          break;
         case IddObjectType::OS_Space:
           currentObject = model::Space(m_currentModel);
           break;
@@ -815,6 +949,24 @@ namespace openstudio
 
       // merge objects
       switch (iddObjectType.value()){
+      case IddObjectType::OS_Site: {
+        Site currentSite = currentObject->cast<Site>();
+        Site newSite = newObject.cast<Site>();
+        mergeSite(currentSite, newSite);
+      } 
+        break;
+      case IddObjectType::OS_Facility: {
+        Facility currentFacility = currentObject->cast<Facility>();
+        Facility newFacility = newObject.cast<Facility>();
+        mergeFacility(currentFacility, newFacility);
+      } 
+        break;
+      case IddObjectType::OS_Building: {
+        Building currentBuilding = currentObject->cast<Building>();
+        Building newBuilding = newObject.cast<Building>();
+        mergeBuilding(currentBuilding, newBuilding);
+      } 
+        break;
       case IddObjectType::OS_Space:
       {
         Space currentSpace = currentObject->cast<Space>();

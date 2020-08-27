@@ -49,6 +49,8 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
+#include "../utilities/geometry/Point3d.hpp"
 
 namespace openstudio {
 namespace model {
@@ -97,6 +99,24 @@ namespace detail {
   boost::optional<double> BuildingStory_Impl::nominalFloortoCeilingHeight() const {
     boost::optional<double> value = getDouble(OS_BuildingStoryFields::NominalFloortoCeilingHeight, true);
     return value;
+  }
+
+  openstudio::BoundingBox BuildingStory_Impl::boundingBoxBuildingCoordinates() const
+  {
+    BoundingBox result;
+    for (const auto& space : spaces()) {
+      result.addPoints(space.boundingBoxBuildingCoordinates().corners());
+    }
+    return result;
+  }
+
+  openstudio::BoundingBox BuildingStory_Impl::boundingBoxSiteCoordinates() const 
+  {
+    BoundingBox result;
+    for (const auto& space : spaces()) {
+      result.addPoints(space.boundingBoxSiteCoordinates().corners());
+    }
+    return result;
   }
 
   bool BuildingStory_Impl::setNominalZCoordinate(double nominalZCoordinate) {
@@ -321,6 +341,14 @@ boost::optional<double> BuildingStory::nominalFloortoFloorHeight() const {
 
 boost::optional<double> BuildingStory::nominalFloortoCeilingHeight() const {
   return getImpl<detail::BuildingStory_Impl>()->nominalFloortoCeilingHeight();
+}
+
+openstudio::BoundingBox BuildingStory::boundingBoxBuildingCoordinates() const {
+  return getImpl<detail::BuildingStory_Impl>()->boundingBoxBuildingCoordinates();
+}
+
+openstudio::BoundingBox BuildingStory::boundingBoxSiteCoordinates() const {
+  return getImpl<detail::BuildingStory_Impl>()->boundingBoxSiteCoordinates();
 }
 
 bool BuildingStory::setNominalZCoordinate(double nominalZCoordinate) {

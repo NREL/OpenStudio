@@ -113,6 +113,15 @@ class MODEL_API PlanarSurfaceGroup : public ParentObject {
   /** Get the BoundingBox in local coordinates. */
   openstudio::BoundingBox boundingBox() const;
 
+  /** Get the BoundingBox in parent coordinates. */
+  openstudio::BoundingBox boundingBoxParentCoordinates() const;
+
+  /** Get the BoundingBox in building coordinates. */
+  openstudio::BoundingBox boundingBoxBuildingCoordinates() const;
+
+  /** Get the BoundingBox in site coordinates. */
+  openstudio::BoundingBox boundingBoxSiteCoordinates() const;
+
  protected:
   /** @name Constructors and Destructors */
   //@{
