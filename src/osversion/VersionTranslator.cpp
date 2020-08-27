@@ -6004,6 +6004,30 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
 
+    } else if (iddname == "OS:Construction:InternalSource") {
+
+      // Two-Dimensional Temperature Calculation Position, inserted at position 6 (0-indexed)
+      // Object has extensible groups too
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 6) {
+            newObject.setString(i, value.get());
+          } else {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // If we made it required-field, set new field per IDD default, same as Model Ctor
+      // newObject.setDouble(6, 0.0);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
     } else if (iddname == "OS:Output:Meter") {
 
       std::string name = object.nameString();
@@ -6137,7 +6161,6 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
         m_refactored.push_back( RefactoredObjectData(object,  newObject) );
         ss << newObject;
       }
-
 
     // Note: Would have needed to do UtilityCost:Tariff too, but not wrapped
 

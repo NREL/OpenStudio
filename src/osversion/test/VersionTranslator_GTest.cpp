@@ -51,6 +51,8 @@
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/core/Compare.hpp"
@@ -1081,5 +1083,38 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames_MeterCustoms) {
                   openstudio::istringEqual(varName, "Generator Blower Electricity Rate"))
         << "Failed for " << wo.nameString() << ", found '" << varName << "'.";
     }
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ConstructionWithInternalSource) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_ConstructionWithInternalSource.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_ConstructionWithInternalSource_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> constructions = model->getObjectsByType("OS:Construction:InternalSource");
+  ASSERT_EQ(1u, constructions.size());
+  WorkspaceObject c = constructions[0];
+
+  // Before insertion point: Tube Spacing
+  ASSERT_TRUE(c.getDouble(5, false));
+  EXPECT_EQ(0.2, c.getDouble(5).get());
+
+  // Insertion point
+  // ASSERT_TRUE(c.getDouble(6));
+  // EXPECT_EQ(0.0, c.getDouble(6).get());
+  EXPECT_EQ(0.0, c.getDouble(6, true).get());
+
+  // Surface rendering name
+  ASSERT_TRUE(c.getTarget(7));
+  EXPECT_EQ("RenderingColor for InternalSource", c.getTarget(7).get().nameString());
+
+  EXPECT_EQ(3u, c.extensibleGroups().size());
+  for (const IdfExtensibleGroup& eg : c.extensibleGroups()) {
+    WorkspaceExtensibleGroup w_eg = eg.cast<WorkspaceExtensibleGroup>();
+    ASSERT_TRUE(w_eg.getTarget(0));
+    EXPECT_EQ("OS:Material", w_eg.getTarget(0).get().iddObject().name());
   }
 }
