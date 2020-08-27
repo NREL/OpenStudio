@@ -56,12 +56,30 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ConstructionWithInternalSource) {
   // Create a model
   Model m;
 
+  // TODO
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ConstructionWithInternalSource) {
 
-  ReverseTranslator rt;
+  openstudio::Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  openstudio::IdfObject idfObject1(openstudio::IddObjectType::Construction_InternalSource);
+  idfObject1.setString(Construction_InternalSourceFields::Name, "Construction Internal Source 1");
+  idfObject1.setInt(Construction_InternalSourceFields::SourcePresentAfterLayerNumber, 2);
+  idfObject1.setInt(Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber, 3);
+  idfObject1.setInt(Construction_InternalSourceFields::DimensionsfortheCTFCalculation, 2);
+  idfObject1.setDouble(Construction_InternalSourceFields::TubeSpacing, 0.5);
+  idfObject1.setDouble(Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition, 0.75);
+
+  openstudio::WorkspaceObject epConstr = workspace.addObject(idfObject1).get();
+
+  ReverseTranslator trans;
+  ASSERT_NO_THROW(trans.translateWorkspace(workspace));
+  Model model = trans.translateWorkspace(workspace);
+
+  std::vector<ConstructionWithInternalSource> constrs = model.getModelObjects<ConstructionWithInternalSource>();
+  ASSERT_EQ(1u, constrs.size());
+  ConstructionWithInternalSource constr = constrs[0];
+  // TODO
 }
 

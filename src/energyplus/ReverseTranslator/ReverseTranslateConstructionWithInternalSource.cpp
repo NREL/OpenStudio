@@ -31,6 +31,8 @@
 
 #include "../../model/ConstructionWithInternalSource.hpp"
 #include "../../model/ConstructionWithInternalSource_Impl.hpp"
+#include "../../model/ModelPartitionMaterial.hpp"
+#include "../../model/ModelPartitionMaterial_Impl.hpp"
 
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
@@ -54,6 +56,52 @@ OptionalModelObject ReverseTranslator::translateConstructionWithInternalSource( 
   }
 
   openstudio::model::ConstructionWithInternalSource construction(m_model);
+
+  OptionalString s;
+  OptionalDouble d;
+  OptionalInt i;
+  OptionalWorkspaceObject target;
+
+  s = workspaceObject.name();
+  if(s){
+    construction.setName(*s);
+  }
+
+  i = workspaceObject.getInt(Construction_InternalSourceFields::SourcePresentAfterLayerNumber);
+  if(i){
+    construction.setSourcePresentAfterLayerNumber(*i);
+  }
+
+  i = workspaceObject.getInt(Construction_InternalSourceFields::TemperatureCalculationRequestedAfterLayerNumber);
+  if(i){
+    construction.setTemperatureCalculationRequestedAfterLayerNumber(*i);
+  }
+
+  i = workspaceObject.getInt(Construction_InternalSourceFields::DimensionsfortheCTFCalculation);
+  if(i){
+    construction.setDimensionsForTheCTFCalculation(*i);
+  }
+
+  d = workspaceObject.getDouble(Construction_InternalSourceFields::TubeSpacing);
+  if(d){
+    construction.setTubeSpacing(*d);
+  }
+
+  d = workspaceObject.getDouble(Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition);
+  if(d){
+    construction.setTwoDimensionalTemperatureCalculationPosition(*d);
+  }
+
+  // get extensible groups for layers
+  for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
+    WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+    OptionalWorkspaceObject target = workspaceGroup.getTarget(Construction_InternalSourceExtensibleFields::Layer);
+    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+    
+    // set the layer
+    construction.setLayer(modelObject->cast<ModelPartitionMaterial>());
+  }
+
 
   return construction;
 }
