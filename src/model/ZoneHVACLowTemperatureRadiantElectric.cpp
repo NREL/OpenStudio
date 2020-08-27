@@ -342,7 +342,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setTemperatureControlType(std::string temperatureControlType)
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setTemperatureControlType(const std::string& temperatureControlType)
   {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType, temperatureControlType);
     return result;
@@ -354,7 +354,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setSetpointControlType(std::string setpointControlType)
+  bool ZoneHVACLowTemperatureRadiantElectric_Impl::setSetpointControlType(const std::string& setpointControlType)
   {
     bool result = setString(OS_ZoneHVAC_LowTemperatureRadiant_ElectricFields::SetpointControlType, setpointControlType);
     return result;
@@ -591,7 +591,7 @@ bool ZoneHVACLowTemperatureRadiantElectric::setHeatingSetpointTemperatureSchedul
   return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setHeatingSetpointTemperatureSchedule(schedule);
 }
 
-bool ZoneHVACLowTemperatureRadiantElectric::setRadiantSurfaceType(std::string radiantSurfaceType)
+bool ZoneHVACLowTemperatureRadiantElectric::setRadiantSurfaceType(const std::string& radiantSurfaceType)
 {
   return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setRadiantSurfaceType(radiantSurfaceType);
 }
@@ -616,7 +616,7 @@ void ZoneHVACLowTemperatureRadiantElectric::autosizeMaximumElectricalPowertoPane
   getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->autosizeMaximumElectricalPowertoPanel();
 }
 
-bool ZoneHVACLowTemperatureRadiantElectric::setTemperatureControlType(std::string temperatureControlType)
+bool ZoneHVACLowTemperatureRadiantElectric::setTemperatureControlType(const std::string& temperatureControlType)
 {
   return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setTemperatureControlType(temperatureControlType);
 }
@@ -626,7 +626,7 @@ void ZoneHVACLowTemperatureRadiantElectric::resetTemperatureControlType()
   getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->resetTemperatureControlType();
 }
 
-bool ZoneHVACLowTemperatureRadiantElectric::setSetpointControlType(std::string setpointControlType)
+bool ZoneHVACLowTemperatureRadiantElectric::setSetpointControlType(const std::string& setpointControlType)
 {
   return getImpl<detail::ZoneHVACLowTemperatureRadiantElectric_Impl>()->setSetpointControlType(setpointControlType);
 }
