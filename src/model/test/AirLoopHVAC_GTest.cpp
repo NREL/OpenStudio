@@ -110,6 +110,8 @@
 // Casting in AVM test
 #include "../AvailabilityManagerNightCycle_Impl.hpp"
 
+#include <utilities/idd/IddEnums.hxx>
+
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, AirLoopHVAC_AirLoopHVAC) {
@@ -1414,4 +1416,70 @@ TEST_F(ModelFixture, AirLoopHVAC_designReturnAirFlowFractionofSupplyAirFlow) {
   EXPECT_EQ(0.5, a.designReturnAirFlowFractionofSupplyAirFlow());
   // TODO: Not sure if we need to limit the idd to \maximum 1.0 or not
   // In theory it can be >1.0 for negative pressurization with a return fan flow that is > than supply. I can't say I've tested that use case.
+}
+
+
+TEST_F(ModelFixture,AirLoopHVAC_dualDuct_Clone)
+{
+  Model m;
+  AirLoopHVAC a(m, true);
+
+  EXPECT_TRUE(a.isDualDuct());
+
+
+  EXPECT_EQ(2u,a.supplyOutletNodes().size());
+  EXPECT_EQ(4u,a.supplyComponents().size());
+
+  EXPECT_EQ(2u,a.supplySplitterOutletNodes().size());
+  ASSERT_TRUE(a.supplySplitterInletNode());
+  EXPECT_EQ(a.supplySplitterInletNode().get(),a.supplyInletNode());
+
+  ASSERT_TRUE(a.supplySplitter());
+  EXPECT_TRUE(a.supplyComponent(a.supplySplitter()->handle()));
+  EXPECT_TRUE(a.supplyComponent(a.supplyOutletNodes().front().handle()));
+  EXPECT_TRUE(a.supplyComponent(a.supplyOutletNodes().back().handle()));
+
+  EXPECT_EQ(6u, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(6u, a.components(openstudio::IddObjectType::OS_Node).size());
+
+  // Clone
+  AirLoopHVAC aClone = a.clone(m).cast<AirLoopHVAC>();
+
+  EXPECT_EQ(12u, m.getConcreteModelObjects<Node>().size());
+
+  {
+    EXPECT_EQ(2u,a.supplyOutletNodes().size());
+    EXPECT_EQ(4u,a.supplyComponents().size());
+
+    EXPECT_EQ(2u,a.supplySplitterOutletNodes().size());
+
+    EXPECT_EQ(6u, a.components(openstudio::IddObjectType::OS_Node).size());
+
+    ASSERT_TRUE(a.supplySplitterInletNode());
+    EXPECT_EQ(a.supplySplitterInletNode().get(),a.supplyInletNode());
+
+    ASSERT_TRUE(a.supplySplitter());
+    EXPECT_TRUE(a.supplyComponent(a.supplySplitter()->handle()));
+    EXPECT_TRUE(a.supplyComponent(a.supplyOutletNodes().front().handle()));
+    EXPECT_TRUE(a.supplyComponent(a.supplyOutletNodes().back().handle()));
+
+  }
+
+  {
+    EXPECT_EQ(2u,aClone.supplyOutletNodes().size());
+    EXPECT_EQ(4u,aClone.supplyComponents().size());
+
+    EXPECT_EQ(2u,aClone.supplySplitterOutletNodes().size());
+
+    EXPECT_EQ(6u, aClone.components(openstudio::IddObjectType::OS_Node).size());
+
+    ASSERT_TRUE(aClone.supplySplitterInletNode());
+    EXPECT_EQ(aClone.supplySplitterInletNode().get(),aClone.supplyInletNode());
+
+    ASSERT_TRUE(aClone.supplySplitter());
+    EXPECT_TRUE(aClone.supplyComponent(aClone.supplySplitter()->handle()));
+    EXPECT_TRUE(aClone.supplyComponent(aClone.supplyOutletNodes().front().handle()));
+    EXPECT_TRUE(aClone.supplyComponent(aClone.supplyOutletNodes().back().handle()));
+  }
+
 }
