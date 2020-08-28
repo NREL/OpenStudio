@@ -69,8 +69,6 @@ namespace detail {
   const std::vector<std::string>& OutputControlFiles_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result;
-    if (result.empty()){
-    }
     return result;
   }
 
