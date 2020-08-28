@@ -60,6 +60,7 @@ class Schedule;
 class Node;
 class SpaceType;
 class FoundationKivaSettings;
+class OutputControlFiles;
 class OutputTableSummaryReports;
 class PerformancePrecisionTradeoffs;
 
@@ -119,6 +120,10 @@ class MODEL_API Model : public openstudio::Workspace {
   /** Get the FoundationKivaSettings object if there is one, this implementation uses a cached reference to the FoundationKivaSettings
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<FoundationKivaSettings>(). */
   boost::optional<FoundationKivaSettings> foundationKivaSettings() const;
+
+  /** Get the OutputControlFiles object if there is one, this implementation uses a cached reference to the OutputControlFiles
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlFiles>(). */
+  boost::optional<OutputControlFiles> outputControlFiles() const;
 
   /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputTableSummaryReports>(). */
@@ -527,6 +532,9 @@ MODEL_API Building Model::getUniqueModelObject<Building>();
 
 template <>
 MODEL_API FoundationKivaSettings Model::getUniqueModelObject<FoundationKivaSettings>();
+
+template <>
+MODEL_API OutputControlFiles Model::getUniqueModelObject<OutputControlFiles>();
 
 template <>
 MODEL_API OutputTableSummaryReports Model::getUniqueModelObject<OutputTableSummaryReports>();
