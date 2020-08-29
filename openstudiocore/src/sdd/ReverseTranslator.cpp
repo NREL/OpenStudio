@@ -908,6 +908,11 @@ namespace sdd {
         }
       }
 
+      const auto & zones = result->getModelObjects<model::ThermalZone>();
+      for( auto & z : zones ) {
+        z.zoneAirNode().setName(z.nameString() + " Room Air Node");
+      }
+
       bool ok;
       // timestep
       QDomElement numTimeStepsPerHrElement = projectElement.firstChildElement("NumTimeStepsPerHr");

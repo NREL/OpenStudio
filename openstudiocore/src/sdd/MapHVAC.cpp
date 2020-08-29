@@ -5807,18 +5807,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     if( setpointSchedule )
     {
       model::SetpointManagerScheduled spm(model,setpointSchedule.get());
-
+      spm.setName(plantLoop.nameString() + " Setpoint Manager");
       spm.addToNode(supplyOutletNode);
     }
 
     if( waterHeaters.size() > 0 )
     {
       model::PumpVariableSpeed pumpVariableSpeed(model);
-
+      pumpVariableSpeed.setName(plantLoop.nameString() + " Pump");
       model::Node supplyInletNode = plantLoop.supplyInletNode();
-
       pumpVariableSpeed.addToNode(supplyInletNode);
-
       pumpVariableSpeed.setRatedPumpHead(0.0);
     }
   }
