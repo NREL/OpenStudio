@@ -157,7 +157,7 @@ namespace sdd {
     QDomElement findAirSysElement(const QString & airSysName,const QDomDocument & doc);
 
     // Return the "TrmlUnit" element serving zoneName
-    QDomElement findTrmlUnitElementForZone(const QString & zoneName,const QDomDocument & doc);
+    QDomElement findTrmlUnitElementForZone(const QString & zoneName, const std::string & airLoopName, const QDomDocument & doc);
 
     model::Schedule alwaysOnSchedule(openstudio::model::Model& model);
     boost::optional<model::Schedule> m_alwaysOnSchedule;

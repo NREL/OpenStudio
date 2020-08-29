@@ -4671,12 +4671,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     }
   }
 
+  // return true if zone is already connected to loop
+  auto zoneisConnectedToLoop = [](const model::ThermalZone & zone, const model::AirLoopHVAC & loop) {
+    const auto currentLoops = zone.airLoopHVACs();
+    return (std::find(currentLoops.begin(), currentLoops.end(), loop) != currentLoops.end());
+  };
+
   if( translateVentSys ) {
     airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(ventSysRefElement.text().toStdString());
 
-    if( airLoopHVAC && ! thermalZone.airLoopHVAC() )
+    if( airLoopHVAC && (! zoneisConnectedToLoop(thermalZone, airLoopHVAC.get())))
     {
-      QDomElement trmlUnitElement = findTrmlUnitElementForZone(nameElement.text(),doc);
+      QDomElement trmlUnitElement = findTrmlUnitElementForZone(nameElement.text(), airLoopHVAC->nameString(), doc);
       if( ! trmlUnitElement.isNull() ) {
         if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement,doc,model) )
         {
@@ -4762,9 +4768,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
     {
       airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(sysInfo.SysRefElement.text().toStdString());
 
-      if( airLoopHVAC )
+      if( airLoopHVAC && (! zoneisConnectedToLoop(thermalZone, airLoopHVAC.get())))
       {
-        QDomElement trmlUnitElement = findTrmlUnitElementForZone(nameElement.text(),doc);
+        QDomElement trmlUnitElement = findTrmlUnitElementForZone(nameElement.text(), airLoopHVAC->nameString(), doc);
         if( ! trmlUnitElement.isNull() ) {
           if( boost::optional<model::ModelObject> trmlUnit = translateTrmlUnit(trmlUnitElement,doc,model) )
           {
@@ -10058,13 +10064,19 @@ QDomElement ReverseTranslator::findZnSysElement(const QString & znSysName,const 
   return QDomElement();
 }
 
-QDomElement ReverseTranslator::findTrmlUnitElementForZone(const QString & zoneName,const QDomDocument & doc)
+QDomElement ReverseTranslator::findTrmlUnitElementForZone(const QString & zoneName, const std::string & airLoopName, const QDomDocument & doc)
 {
   QDomNodeList airSystemElements = doc.documentElement().elementsByTagName("AirSys");
 
   for( int i = 0; i < airSystemElements.count(); i++ )
   {
     QDomElement airSystemElement = airSystemElements.at(i).toElement();
+
+    const auto & thisSystemName = airSystemElement.firstChildElement("Name").text().toStdString();
+    if(airLoopName != thisSystemName) {
+      continue;
+    }
+
     QDomNodeList terminalElements = airSystemElement.elementsByTagName("TrmlUnit");
     for( int j = 0; j < terminalElements.count(); j++ )
     {
