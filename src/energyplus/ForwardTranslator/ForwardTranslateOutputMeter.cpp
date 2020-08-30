@@ -53,7 +53,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputMeter( OutputMeter 
 {
   boost::optional<IdfObject> idfObject;
 
-  const auto name = openstudio::replace(modelObject.name(), "FuelOil_", "FuelOil#");
+  auto name = modelObject.name();
 
   if (modelObject.meterFileOnly() && modelObject.cumulative()){
     idfObject = IdfObject (openstudio::IddObjectType::Output_Meter_Cumulative_MeterFileOnly);

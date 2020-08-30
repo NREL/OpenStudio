@@ -91,8 +91,8 @@ namespace detail {
       "Ice Thermal Storage Cooling Discharge Energy",
       "Ice Thermal Storage Cooling Charge Rate",
       "Ice Thermal Storage Cooling Charge Energy",
-      "Ice Thermal Storage Ancillary Electric Power",
-      "Ice Thermal Storage Ancillary Electric Energy",
+      "Ice Thermal Storage Ancillary Electricity Rate",
+      "Ice Thermal Storage Ancillary Electricity Energy",
       "Ice Thermal Storage On Coil Fraction"
     };
     return result;

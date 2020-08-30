@@ -78,8 +78,8 @@ namespace detail {
     static const std::vector<std::string> result{
       // TODO: implement checks
       // FOR CONDENSERS COOLING SYSTEMS SERVING CASES AND/OR WALKINS:
-      "Refrigeration System Condenser Fan Electric Power",
-      "Refrigeration System Condenser Fan Electric Energy",
+      "Refrigeration System Condenser Fan Electricity Rate",
+      "Refrigeration System Condenser Fan Electricity Energy",
       "Refrigeration System Condenser Heat Transfer Rate",
       "Refrigeration System Condenser Heat Transfer Energy",
       "Refrigeration System Condenser Total Recovered Heat Transfer Rate",
@@ -88,7 +88,7 @@ namespace detail {
       "Refrigeration System Condenser Defrost Recovered Heat Transfer Rate",
       "Refrigeration System Condenser Defrost Recovered Heat Transfer Energy",
       // FOR CONDENSERS COOLING SYSTEMS SERVING AIR CHILLERS:
-      "Refrigeration System Condenser Fan Electric Power",
+      "Refrigeration System Condenser Fan Electricity Rate",
       "Refrigeration System Condenser Fan Electric Consumption",
       "Refrigeration Air Chiller System Condenser Heat Transfer Rate",
       "Refrigeration Air Chiller System Condenser Heat Transfer Energy",

@@ -529,15 +529,24 @@ OS:PerformancePrecisionTradeoffs,
       \key Mode03
       \key Mode04
       \key Mode05
+      \key Mode06
+      \key Mode07
       \key Advanced
       \default Normal
-  N1; \field MaxZoneTempDiff
+  N1, \field MaxZoneTempDiff
       \note Maximum zone temperature change before HVAC timestep is shortened.
       \note Only used when Override Mode is set to Advanced
       \type real
       \minimum 0.1
       \maximum 3.0
       \default 0.3
+  N2; \field MaxAllowedDelTemp
+      \note Maximum surface temperature change before HVAC timestep is shortened.
+      \note Only used when Override Mode is set to Advanced
+      \type real
+      \minimum 0.002
+      \maximum 0.1
+      \default 0.002
 
 OS:Sizing:Parameters,
        \unique-object
@@ -1852,7 +1861,7 @@ OS:UtilityCost:Tariff,
        \type alpha
        \required-field
   A3, \field Output Meter Name
-       \note The name of any standard meter or custom meter or but usually set to either Electricity:Facility or Gas:Facility
+       \note The name of any standard meter or custom meter or but usually set to either Electricity:Facility or NaturalGas:Facility
        \type alpha
        \required-field
   A4, \field Conversion Factor Choice
@@ -3661,11 +3670,11 @@ OS:Construction:FfactorGroundFloor,
 
 OS:Construction:InternalSource,
        \memo Start with outside layer and work your way to the inside Layer
-       \memo Up to 10 layers total, 8 for windows
+       \memo Up to 10 layers total
        \memo Enter the material name for each layer
        \extensible:1
-       \min-fields 8
-       \max-fields 17
+       \min-fields 9
+       \max-fields 18
   A1, \field Handle
        \type handle
        \required-field
@@ -3678,11 +3687,13 @@ OS:Construction:InternalSource,
        \type integer
        \default 1
        \minimum 1
+       \maximum 10
   N2, \field Temperature Calculation Requested After Layer Number
        \note refers to the list of materials which follows
        \type integer
        \default 1
        \minimum 1
+       \maximum 10
   N3, \field Dimensions for the CTF Calculation
        \note 1 = 1-dimensional calculation, 2 = 2-dimensional calculation
        \type integer
@@ -3695,6 +3706,17 @@ OS:Construction:InternalSource,
        \type real
        \default 0.154
        \units m
+       \minimum 0.0
+       \maximum< 1.0
+  N5 , \field Two-Dimensional Temperature Calculation Position
+       \minimum 0.0
+       \maximum 1.0
+       \default 0.0
+       \units dimensionless
+       \note used in conjunction with field Temperature Calculation Requested After Layer Number
+       \note this field is the location perpendicular to the main direction of heat transfer
+       \note 0.0 means in line with the tubing, 1.0 means at the midpoint between two adjacent pipes
+       \note this field is ignored for 1-D calculations
   A3, \field Surface Rendering Name
        \type object-list
        \object-list SurfaceRenderingNames
@@ -17078,6 +17100,7 @@ OS:Coil:Heating:Gas,
        \key Propane
        \key Diesel
        \key Gasoline
+       \key Coal
        \key FuelOilNo1
        \key FuelOilNo2
        \key OtherFuel1
@@ -18762,15 +18785,17 @@ OS:Controller:WaterCoil,
        \default Autosize
   N2, \field Maximum Actuated Flow
        \type real
+       \minimum 0
        \autosizable
        \units m3/s
        \ip-units gal/min
        \default Autosize
   N3; \field Minimum Actuated Flow
        \type real
+       \minimum 0
        \units m3/s
        \ip-units gal/min
-       \default 0.0000001
+       \default 0.0
 
 OS:Curve:Linear,
        \min-fields 1
@@ -19735,10 +19760,10 @@ OS:Curve:DoubleExponentialDecay,
   N3, \field Coefficient3 C3
        \type real
        \required-field
-  N4, \field Coefficient3 C4
+  N4, \field Coefficient4 C4
        \type real
        \required-field
-  N5, \field Coefficient3 C5
+  N5, \field Coefficient5 C5
        \type real
        \required-field
   N6, \field Minimum Value of x
@@ -24359,7 +24384,7 @@ OS:ZoneHVAC:HighTemperatureRadiant,
         \required-field
 
 OS:ZoneHVAC:LowTemperatureRadiant:Electric,
-  \min-fields 8
+  \min-fields 9
    A1 , \field Handle
         \type handle
         \required-field
@@ -24391,12 +24416,20 @@ OS:ZoneHVAC:LowTemperatureRadiant:Electric,
         \key OperativeTemperature
         \key OutdoorDryBulbTemperature
         \key OutdoorWetBulbTemperature
+        \key SurfaceFaceTemperature
+        \key SurfaceInteriorTemperature
         \default MeanAirTemperature
+   A6,  \field Setpoint Control Type
+        \note How setpoint temperature is defined
+        \type choice
+        \key HalfFlowPower
+        \key ZeroFlowPower
+        \default HalfFlowPower
    N2 , \field Heating Throttling Range
         \units deltaC
         \minimum 0
         \default 0
-   A6 ; \field Heating Setpoint Temperature Schedule Name
+   A7 ; \field Heating Setpoint Temperature Schedule Name
         \type object-list
         \object-list ScheduleNames
 
@@ -24697,7 +24730,7 @@ OS:ZoneHVAC:FourPipeFanCoil,
         \required-field
 
 OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
-        \min-fields 15
+        \min-fields 19
    A1 , \field Handle
         \type handle
         \required-field
@@ -24715,17 +24748,42 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \key CeilingsAndFloors
         \key AllSurfaces
         \default Ceilings
+   A5 , \field Fluid to Radiant Surface Heat Transfer Model
+        \note This parameter identifies how the heat transfer between
+        \note fluid being circulated through the radiant system and
+        \note the radiant system (slab) is modeled.  ConvectionOnly
+        \note means that only convection between the fluid and the
+        \note inside surface of the pipe is modeled using a conventional
+        \note equation for flow inside a pipe.  ISOStandard models
+        \note convection between the fluid and the inside of
+        \note of the pipe and conduction through the pipe material using
+        \note equations specific to ISO Standard 11855-2.
+        \type choice
+        \key ConvectionOnly
+        \key ISOStandard
+        \default ConvectionOnly
    N1 , \field Hydronic Tubing Inside Diameter
         \units m
         \minimum> 0
         \default 0.013
-   N2 , \field Hydronic Tubing Length
+        \ip-units in
+   N2 , \field Hydronic Tubing Outside Diameter
+        \units m
+        \minimum> 0
+        \default 0.016
+        \ip-units in
+   N3 , \field Hydronic Tubing Length
         \note Total length of pipe embedded in surface
         \units m
         \minimum> 0
         \autosizable
         \required-field
-   A5 , \field Temperature Control Type
+   N4 , \field Hydronic Tubing Conductivity
+        \note Conductivity of the tubing/piping material
+        \units W/m-K
+        \minimum> 0
+        \default 0.35
+   A6 , \field Temperature Control Type
         \note Temperature used to control system
         \type choice
         \key MeanAirTemperature
@@ -24733,20 +24791,31 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \key OperativeTemperature
         \key OutdoorDryBulbTemperature
         \key OutdoorWetBulbTemperature
+        \key SurfaceFaceTemperature
+        \key SurfaceInteriorTemperature
+        \key RunningMeanOutdoorDryBulbTemperature
         \default MeanAirTemperature
-   A6 , \field Low Temp Radiant Constant Flow Heating Coil Name
+   N5 , \field Running Mean Outdoor Dry-Bulb Temperature Weighting Factor
+        \note this is the weighting factor in the equation that calculate the running mean outdoor dry-bulb temperature
+        \note as a weighted average of the previous day’s running mean outdoor dry-bulb temperature and the previous day’s
+        \note average outdoor dry-bulb temperature this value is only used by EnergyPlus when the user elects to use the
+        \note RunningMeanOutdoorDryBulbTemperature control type
+        \minimum 0.0
+        \maximum 1.0
+        \default 0.8
+   A7 , \field Low Temp Radiant Constant Flow Heating Coil Name
         \type object-List
         \required-field
         \object-list CoilHeatingLowTempRadiantConstantFlow
-   A7 , \field Low Temp Radiant Constant Flow Cooling Coil Name
+   A8 , \field Low Temp Radiant Constant Flow Cooling Coil Name
         \type object-List
         \required-field
         \object-list CoilCoolingLowTempRadiantConstantFlow
-   N3 , \field Rated Flow Rate
+   N6 , \field Rated Flow Rate
         \units m3/s
         \ip-units gal/min
         \autosizable
-   A8 , \field Pump Flow Rate Schedule Name
+   A9 , \field Pump Flow Rate Schedule Name
         \note Modifies the Rated Flow Rate of the pump on a time basis
         \note the default is that the pump is ON and runs according to its other
         \note operational requirements specified above.  The schedule is for special
@@ -24754,33 +24823,39 @@ OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
         \note on the previous field (Rated Flow Rate).
         \type object-list
         \object-list ScheduleNames
-   N4 , \field Rated Pump Head
+   N6 , \field Rated Pump Head
         \units Pa
         \ip-units ftH2O
         \default 179352
         \note default head is 60 feet
-   N5 , \field Rated Power Consumption
+   N7 , \field Rated Power Consumption
         \units W
-   N6 , \field Motor Efficiency
+   N8 , \field Motor Efficiency
         \type real
         \minimum 0.0
         \maximum 1.0
         \default 0.9
-   N7 , \field Fraction of Motor Inefficiencies to Fluid Stream
+   N9 , \field Fraction of Motor Inefficiencies to Fluid Stream
         \minimum 0.0
         \maximum 1.0
         \default 0.0
-   A9, \field Number of Circuits
+   A10, \field Number of Circuits
         \type choice
         \key OnePerSurface
         \key CalculateFromCircuitLength
         \default OnePerSurface
-   N8 ; \field Circuit Length
+   N10, \field Circuit Length
         \units m
         \default 106.7
+   A11; \field Changeover Delay Time Period Schedule
+        \note Changeover delay schedule name for this system.  Schedule value <= 0 allows changeover with no delay
+        \note The schedule values are interpretted as hours.
+        \note If this field is blank, the system allows changeover with no delay
+        \type object-list
+        \object-list ScheduleNames
 
 OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
-        \min-fields 9
+        \min-fields 12
    A1 , \field Handle
         \type handle
         \required-field
@@ -24806,18 +24881,42 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \key CeilingsAndFloors
         \key AllSurfaces
         \default Ceilings
+   A7 , \field Fluid to Radiant Surface Heat Transfer Model
+        \note This parameter identifies how the heat transfer between
+        \note fluid being circulated through the radiant system and
+        \note the radiant system (slab) is modeled.  ConvectionOnly
+        \note means that only convection between the fluid and the
+        \note inside surface of the pipe is modeled using a conventional
+        \note equation for flow inside a pipe.  ISOStandard models
+        \note convection between the fluid and the inside of
+        \note of the pipe and conduction through the pipe material using
+        \note equations specific to ISO Standard 11855-2.
+        \type choice
+        \key ConvectionOnly
+        \key ISOStandard
+        \default ConvectionOnly
    N1 , \field Hydronic Tubing Inside Diameter
         \units m
         \minimum> 0
         \default 0.013
         \ip-units in
-   N2 , \field Hydronic Tubing Length
+   N2 , \field Hydronic Tubing Outside Diameter
+        \units m
+        \minimum> 0
+        \default 0.016
+        \ip-units in
+   N3 , \field Hydronic Tubing Length
         \note (total length of pipe embedded in surface)
         \units m
         \minimum> 0
         \autosizable
         \default autosize
-   A7 , \field Temperature Control Type
+   N4 , \field Hydronic Tubing Conductivity
+        \note Conductivity of the tubing/piping material
+        \units W/m-K
+        \minimum> 0
+        \default 0.35
+   A8 , \field Temperature Control Type
         \note (Temperature on which unit is controlled)
         \type choice
         \key MeanAirTemperature
@@ -24825,15 +24924,29 @@ OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
         \key OperativeTemperature
         \key OutdoorDryBulbTemperature
         \key OutdoorWetBulbTemperature
+        \key SurfaceFaceTemperature
+        \key SurfaceInteriorTemperature
         \default MeanAirTemperature
-   A8 , \field Number of Circuits
+   A9 , \field Setpoint Control Type
+        \note How setpoint temperature is defined
+        \type choice
+        \key HalfFlowPower
+        \key ZeroFlowPower
+        \default HalfFlowPower
+   A10, \field Number of Circuits
         \type choice
         \key OnePerSurface
         \key CalculateFromCircuitLength
         \default OnePerSurface
-   N3 ; \field Circuit Length
+   N5 , \field Circuit Length
         \units m
         \default 106.7
+   A11; \field Changeover Delay Time Period Schedule
+        \note Changeover delay schedule name for this system.  Schedule value <= 0 allows changeover with no delay
+        \note The schedule values are interpretted as hours.
+        \note If this field is blank, the system allows changeover with no delay
+        \type object-list
+        \object-list ScheduleNames
 
 OS:ZoneHVAC:PackagedTerminalHeatPump,
        \min-fields 24
@@ -30772,6 +30885,169 @@ OS:UtilityBill,
 
 \group OpenStudio Output Requests
 
+OS:OutputControl:Files,
+       \memo Conditionally turn on/off output from EnergyPlus.
+       \unique-object
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Output CSV
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A3,  \field Output MTR
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A4,  \field Output ESO
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A5,  \field Output EIO
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A6,  \field Output Tabular
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A7,  \field Output SQLite
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A8,  \field Output JSON
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A9,  \field Output AUDIT
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A10, \field Output Zone Sizing
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A11, \field Output System Sizing
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A12, \field Output DXF
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A13, \field Output BND
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A14, \field Output RDD
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A15, \field Output MDD
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A16, \field Output MTD
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A17, \field Output END
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A18, \field Output SHD
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A19, \field Output DFS
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A20, \field Output GLHE
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A21, \field Output DelightIn
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A22, \field Output DelightELdmp
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A23, \field Output DelightDFdmp
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A24, \field Output EDD
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A25, \field Output DBG
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A26, \field Output PerfLog
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A27, \field Output SLN
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A28, \field Output SCI
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A29, \field Output WRL
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A30, \field Output Screen
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A31, \field Output ExtShd
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+  A32; \field Output Tarcog
+       \note Not Implemented Yet
+       \type choice
+       \key Yes
+       \key No
+       \required-field
+
 OS:OutputControl:ReportingTolerances,
        \memo Calculations of the time that setpoints are not met use a tolerance of 0.2C.
        \memo This object allows changing the tolerance used to determine when setpoints are being met.
@@ -30909,13 +31185,16 @@ OS:Meter:Custom,
         \key Propane
         \key FuelOilNo1
         \key FuelOilNo2
-        \key Coal
         \key Diesel
         \key Gasoline
-        \key Water
-        \key Generic
+        \key Coal
         \key OtherFuel1
         \key OtherFuel2
+        \key Steam
+        \key DistrictHeating
+        \key DistrictCooling
+        \key Water
+        \key Generic
    A4,  \field Key Name
         \begin-extensible
    A5;  \field Output Variable or Meter Name
@@ -30937,13 +31216,16 @@ OS:Meter:CustomDecrement,
         \key Propane
         \key FuelOilNo1
         \key FuelOilNo2
-        \key Coal
         \key Diesel
         \key Gasoline
-        \key Water
-        \key Generic
+        \key Coal
         \key OtherFuel1
         \key OtherFuel2
+        \key Steam
+        \key DistrictHeating
+        \key DistrictCooling
+        \key Water
+        \key Generic
    A4,  \field Source Meter Name
         \required-field
    A5,  \field Key Name
@@ -31161,6 +31443,9 @@ OS:Output:Table:SummaryReports,
        \key MechanicalVentilationLoadsMonthly
        \key HeatEmissionsSummary
        \key HeatEmissionsReportMonthly
+       \key ThermalResilienceSummary
+       \key CO2ResilienceSummary
+       \key VisualResilienceSummary
 
 \group Energy Management System (EMS)
 
@@ -31230,6 +31515,7 @@ OS:EnergyManagementSystem:ProgramCallingManager,
   A3, \field EnergyPlus Model Calling Point
        \type choice
        \key BeginNewEnvironment
+       \key BeginZoneTimestepBeforeSetCurrentWeather
        \key AfterNewEnvironmentWarmUpIsComplete
        \key BeginZoneTimestepBeforeInitHeatBalance
        \key BeginZoneTimestepAfterInitHeatBalance

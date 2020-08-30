@@ -95,8 +95,8 @@ namespace detail {
   const std::vector<std::string>& GeneratorFuelCell_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Generator Produced Electric Power",
-      "Generator Produced Electric Energy",
+      "Generator Produced AC Electricity Rate",
+      "Generator Produced AC Electricity Energy",
       "Generator Produced Thermal Rate",
       "Generator Produced Thermal Energy",
       "Generator Fuel HHV Basis Energy",
@@ -109,8 +109,8 @@ namespace detail {
       "FuelCell Radiation Heat Loss Rate to Zone",
 
       // From FuelSupply object
-      "Generator Fuel Compressor Electric Power",
-      "Generator Fuel Compressor Electric Energy",
+      "Generator Fuel Compressor Electricity Rate",
+      "Generator Fuel Compressor Electricity Energy",
       "Generator Fuel Compressor Skin Heat Loss Rate"
 
     };

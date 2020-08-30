@@ -48,8 +48,6 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-
 TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Constructor)
 {
 
@@ -181,6 +179,19 @@ TEST_F(ModelFixture,ZoneHVACLowTemperatureRadiantElectric_Check_Setters_Getters)
   testTemperatureControlType = zoneHVACLowTemperatureRadiantElectric.temperatureControlType();
   EXPECT_EQ(testTemperatureControlType,"MeanAirTemperature");
   EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.isTemperatureControlTypeDefaulted());
+
+  // Field A6 Setpoint Control Type. Test set and get Setpoint Control Type, and test default and reset functions
+
+  EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.setSetpointControlType("ZeroFlowPower"));
+  std::string testSetpointControlType = zoneHVACLowTemperatureRadiantElectric.setpointControlType();
+
+  EXPECT_EQ(testSetpointControlType,"ZeroFlowPower");
+  EXPECT_FALSE(zoneHVACLowTemperatureRadiantElectric.isSetpointControlTypeDefaulted());
+
+  zoneHVACLowTemperatureRadiantElectric.resetSetpointControlType();
+  testSetpointControlType = zoneHVACLowTemperatureRadiantElectric.setpointControlType();
+  EXPECT_EQ(testSetpointControlType,"HalfFlowPower");
+  EXPECT_TRUE(zoneHVACLowTemperatureRadiantElectric.isSetpointControlTypeDefaulted());
 
   // Field N2 Heating Throttling Range. Test set and get Heating Throttling Range, and test default and reset functions
 

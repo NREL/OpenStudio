@@ -94,7 +94,7 @@ namespace detail {
       "Unitary System Sensible Heating Rate",
       "Unitary System Latent Cooling Rate",
       "Unitary System Latent Heating Rate",
-      "Unitary System Ancillary Electric Power",
+      "Unitary System Ancillary Electricity Rate",
 
       // Load based and SingleZoneVAV control outputs
       "Unitary System Predicted Sensible Load to Setpoint Heat Transfer Rate",
@@ -108,10 +108,10 @@ namespace detail {
       "Unitary System DX Coil Cycling Ratio",
       "Unitary System DX Coil Speed Ratio",
       "Unitary System DX Coil Speed Level",
-      "Unitary System Electric Power",
-      "Unitary System Electric Energy",
-      "Unitary System Cooling Ancillary Electric Energy",
-      "Unitary System Heating Ancillary Electric Energy",
+      "Unitary System Electricity Rate",
+      "Unitary System Electricity Energy",
+      "Unitary System Cooling Ancillary Electricity Energy",
+      "Unitary System Heating Ancillary Electricity Energy",
 
       // Multi speed coil outputs(If heat recovery is specified)
       "Unitary System Heat Recovery Rate",

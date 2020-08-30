@@ -1,0 +1,181 @@
+
+OS:Version,
+  {2338aab6-ccdd-44d2-919a-37ce41d79555}, !- Handle
+  3.0.1;                                  !- Version Identifier
+
+OS:Schedule:Constant,
+  {c9b524ae-590f-4478-b33a-9d2ef5e4a1b9}, !- Handle
+  Schedule Constant 1,                    !- Name
+  {f8690d2d-3bc9-435f-817d-726c8154ca2a}, !- Schedule Type Limits Name
+  10;                                     !- Value
+
+OS:Schedule:Constant,
+  {6e9176cc-239e-409a-af99-2ed371c6c3d1}, !- Handle
+  Always On Discrete,                     !- Name
+  {1531150e-7977-46c4-80e7-69e8c7a5c2e6}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {1531150e-7977-46c4-80e7-69e8c7a5c2e6}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:ZoneHVAC:LowTemperatureRadiant:Electric,
+  {299c4b9c-dd60-4af9-8ab6-b8106b18b728}, !- Handle
+  Zone HVAC Low Temperature Radiant Electric 1, !- Name
+  {6e9176cc-239e-409a-af99-2ed371c6c3d1}, !- Availability Schedule Name
+  Floors,                                 !- Radiant Surface Type
+  1000,                                   !- Maximum Electrical Power to Panel {W}
+  MeanRadiantTemperature,                 !- Temperature Control Type
+  2,                                      !- Heating Throttling Range {deltaC}
+  {c9b524ae-590f-4478-b33a-9d2ef5e4a1b9}; !- Heating Setpoint Temperature Schedule Name
+
+OS:ScheduleTypeLimits,
+  {f8690d2d-3bc9-435f-817d-726c8154ca2a}, !- Handle
+  Temperature,                            !- Name
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Schedule:Constant,
+  {fd181b78-914a-412e-92e8-abe99d6a0a25}, !- Handle
+  Schedule Constant 2,                    !- Name
+  {f8690d2d-3bc9-435f-817d-726c8154ca2a}, !- Schedule Type Limits Name
+  15;                                     !- Value
+
+OS:Schedule:Constant,
+  {a8c73fce-40c7-4a35-8bb4-b50dff9c71c9}, !- Handle
+  Schedule Constant 3,                    !- Name
+  {f8690d2d-3bc9-435f-817d-726c8154ca2a}, !- Schedule Type Limits Name
+  10;                                     !- Value
+
+OS:Schedule:Constant,
+  {fef6b67a-9fba-488b-bb25-b586e04fc347}, !- Handle
+  Schedule Constant 4,                    !- Name
+  {f8690d2d-3bc9-435f-817d-726c8154ca2a}, !- Schedule Type Limits Name
+  25;                                     !- Value
+
+OS:Schedule:Constant,
+  {2bbfb690-b66f-4dbb-9f7a-aa421799b909}, !- Handle
+  Schedule Constant 5,                    !- Name
+  {f8690d2d-3bc9-435f-817d-726c8154ca2a}, !- Schedule Type Limits Name
+  21;                                     !- Value
+
+OS:Schedule:Constant,
+  {24511cc5-1a6a-44ef-b836-1cdbdfbd846f}, !- Handle
+  Schedule Constant 6,                    !- Name
+  {f8690d2d-3bc9-435f-817d-726c8154ca2a}, !- Schedule Type Limits Name
+  50;                                     !- Value
+
+OS:Schedule:Constant,
+  {f4fce618-afd8-430b-97ea-17ff2f9c1730}, !- Handle
+  Schedule Constant 7,                    !- Name
+  {f8690d2d-3bc9-435f-817d-726c8154ca2a}, !- Schedule Type Limits Name
+  30;                                     !- Value
+
+OS:Schedule:Constant,
+  {54f0a7c5-3115-4f3d-8d3d-a43d0f12573a}, !- Handle
+  Schedule Constant 8,                    !- Name
+  {f8690d2d-3bc9-435f-817d-726c8154ca2a}, !- Schedule Type Limits Name
+  20;                                     !- Value
+
+OS:Schedule:Constant,
+  {7eba6f6d-fb7e-461d-a530-4265f51bf113}, !- Handle
+  Schedule Constant 9,                    !- Name
+  {f8690d2d-3bc9-435f-817d-726c8154ca2a}, !- Schedule Type Limits Name
+  17;                                     !- Value
+
+OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow,
+  {8691de93-1568-4384-aea3-7eb4a3aab239}, !- Handle
+  Coil Heating Low Temperature Radiant Constant Flow 1, !- Name
+  ,                                       !- Heating Water Inlet Node Name
+  ,                                       !- Heating Water Outlet Node Name
+  {24511cc5-1a6a-44ef-b836-1cdbdfbd846f}, !- Heating High Water Temperature Schedule Name
+  {f4fce618-afd8-430b-97ea-17ff2f9c1730}, !- Heating Low Water Temperature Schedule Name
+  {54f0a7c5-3115-4f3d-8d3d-a43d0f12573a}, !- Heating High Control Temperature Schedule Name
+  {7eba6f6d-fb7e-461d-a530-4265f51bf113}; !- Heating Low Control Temperature Schedule Name
+
+OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow,
+  {61776ff9-0108-44b9-9e16-13b941e59537}, !- Handle
+  Coil Cooling Low Temperature Radiant Constant Flow 1, !- Name
+  ,                                       !- Cooling Water Inlet Node Name
+  ,                                       !- Cooling Water Outlet Node Name
+  {fd181b78-914a-412e-92e8-abe99d6a0a25}, !- Cooling High Water Temperature Schedule Name
+  {a8c73fce-40c7-4a35-8bb4-b50dff9c71c9}, !- Cooling Low Water Temperature Schedule Name
+  {fef6b67a-9fba-488b-bb25-b586e04fc347}, !- Cooling High Control Temperature Schedule Name
+  {2bbfb690-b66f-4dbb-9f7a-aa421799b909}, !- Cooling Low Control Temperature Schedule Name
+  ,                                       !- Condensation Control Type
+  ;                                       !- Condensation Control Dewpoint Offset {C}
+
+OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow,
+  {7ba0984c-01f3-4539-98b9-5951fb210fb1}, !- Handle
+  ZoneHVACLowTempRadiantConstFlow,        !- Name
+  {6e9176cc-239e-409a-af99-2ed371c6c3d1}, !- Availability Schedule Name
+  Floors,                                 !- Radiant Surface Type
+  0.154,                                  !- Hydronic Tubing Inside Diameter {m}
+  200,                                    !- Hydronic Tubing Length {m}
+  MeanRadiantTemperature,                 !- Temperature Control Type
+  {8691de93-1568-4384-aea3-7eb4a3aab239}, !- Low Temp Radiant Constant Flow Heating Coil Name
+  {61776ff9-0108-44b9-9e16-13b941e59537}, !- Low Temp Radiant Constant Flow Cooling Coil Name
+  0.005,                                  !- Rated Flow Rate {m3/s}
+  {46d2fe97-d4d0-4c84-af6d-c41dfa8a015b}, !- Pump Flow Rate Schedule Name
+  30000,                                  !- Rated Pump Head {Pa}
+  1200,                                   !- Rated Power Consumption {W}
+  0.9,                                    !- Motor Efficiency
+  0.7,                                    !- Fraction of Motor Inefficiencies to Fluid Stream
+  CalculateFromCircuitLength,             !- Number of Circuits
+  120;                                    !- Circuit Length {m}
+
+OS:Schedule:Constant,
+  {46d2fe97-d4d0-4c84-af6d-c41dfa8a015b}, !- Handle
+  Schedule Constant 10,                   !- Name
+  {1531150e-7977-46c4-80e7-69e8c7a5c2e6}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:Schedule:Constant,
+  {612427d7-d713-4620-a920-86c8a9a5e5c5}, !- Handle
+  Schedule Constant 11,                   !- Name
+  {f8690d2d-3bc9-435f-817d-726c8154ca2a}, !- Schedule Type Limits Name
+  10;                                     !- Value
+
+OS:Schedule:Constant,
+  {59976847-bbf2-4fe9-8e15-77cf925dd2ef}, !- Handle
+  Schedule Constant 12,                   !- Name
+  {f8690d2d-3bc9-435f-817d-726c8154ca2a}, !- Schedule Type Limits Name
+  15;                                     !- Value
+
+OS:Coil:Heating:LowTemperatureRadiant:VariableFlow,
+  {05085188-bf17-4373-969c-d79b4ff5d42d}, !- Handle
+  Coil Heating Low Temperature Radiant Variable Flow 1, !- Name
+  ,                                       !- Maximum Hot Water Flow {m3/s}
+  ,                                       !- Heating Water Inlet Node Name
+  ,                                       !- Heating Water Outlet Node Name
+  ,                                       !- Heating Control Throttling Range {deltaC}
+  {612427d7-d713-4620-a920-86c8a9a5e5c5}; !- Heating Control Temperature Schedule Name
+
+OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,
+  {667da733-3682-4563-a7c1-6fe93f81a488}, !- Handle
+  Coil Cooling Low Temperature Radiant Variable Flow 1, !- Name
+  ,                                       !- Maximum Cold Water Flow {m3/s}
+  ,                                       !- Cooling Water Inlet Node Name
+  ,                                       !- Cooling Water Outlet Node Name
+  ,                                       !- Cooling Control Throttling Range {deltaC}
+  {59976847-bbf2-4fe9-8e15-77cf925dd2ef}; !- Cooling Control Temperature Schedule Name
+
+OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow,
+  {6ce7670b-c4a2-4e2b-bc2e-33151f7fca07}, !- Handle
+  Zone HVAC Low Temperature Radiant Variable Flow 1, !- Name
+  {6e9176cc-239e-409a-af99-2ed371c6c3d1}, !- Availability Schedule Name
+  {05085188-bf17-4373-969c-d79b4ff5d42d}, !- Low Temp Radiant Variable Flow Heating Coil Name
+  {667da733-3682-4563-a7c1-6fe93f81a488}, !- Low Temp Radiant Variable Flow Cooling Coil Name
+  Floors,                                 !- Radiant Surface Type
+  0.154,                                  !- Hydronic Tubing Inside Diameter {m}
+  200,                                    !- Hydronic Tubing Length {m}
+  MeanRadiantTemperature,                 !- Temperature Control Type
+  CalculateFromCircuitLength,             !- Number of Circuits
+  120;                                    !- Circuit Length {m}
+

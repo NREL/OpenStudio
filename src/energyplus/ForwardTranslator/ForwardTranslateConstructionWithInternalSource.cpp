@@ -71,10 +71,13 @@ namespace energyplus {
   // Tube Spacing
   idfObject.setDouble(Construction_InternalSourceFields::TubeSpacing, modelObject.tubeSpacing());
 
+  // Two Dimensional Temperature Calculation Position
+  idfObject.setDouble(Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition, modelObject.twoDimensionalTemperatureCalculationPosition());
+
   //Layers
   MaterialVector layers = modelObject.layers();
 
-  unsigned fieldIndex = Construction_InternalSourceFields::TubeSpacing + 1;
+  unsigned fieldIndex = Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition + 1;
   for(unsigned layerIndex = 0; layerIndex < layers.size(); ++layerIndex ) {
     Material material = layers[layerIndex];
     translateAndMapModelObject(material);

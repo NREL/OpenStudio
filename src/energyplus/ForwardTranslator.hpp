@@ -283,6 +283,7 @@ class MeterCustomDecrement;
 class Node;
 class OtherEquipment;
 class OutsideSurfaceConvectionAlgorithm;
+class OutputControlFiles;
 class OutputControlReportingTolerances;
 class OutputDebuggingData;
 class OutputDiagnostics;
@@ -465,7 +466,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "9.3"
+#define ENERGYPLUS_VERSION "9.4"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -1015,6 +1016,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateOtherEquipment(model::OtherEquipment& modelObject);
 
   boost::optional<IdfObject> translateOutsideSurfaceConvectionAlgorithm( model::OutsideSurfaceConvectionAlgorithm & modelObject );
+
+  boost::optional<IdfObject> translateOutputControlFiles( model::OutputControlFiles & modelObject );
 
   boost::optional<IdfObject> translateOutputControlReportingTolerances( model::OutputControlReportingTolerances & modelObject );
 

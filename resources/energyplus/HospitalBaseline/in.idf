@@ -100,7 +100,7 @@
 ! End SimMetaData
 ! Number of Zones: 130
 
-  Version,9.3;
+  Version,9.4;
 
   Timestep,6;
 
@@ -109,7 +109,9 @@
     Yes,                     !- Do System Sizing Calculation
     Yes,                     !- Do Plant Sizing Calculation
     Yes,                     !- Run Simulation for Sizing Periods
-    No;                      !- Run Simulation for Weather File Run Periods
+    No,                      !- Run Simulation for Weather File Run Periods
+    No,                      !- Do HVAC Sizing Simulation for Sizing Periods
+    1;                       !- Maximum Number of HVAC Sizing Simulation Passes
 
   RunPeriod,
     RUNPERIOD 1,             !- Name
@@ -253,7 +255,7 @@
     9.69,                    !- Annual Average Outdoor Air Temperature {C}
     28.10;                   !- Maximum Difference In Monthly Average Outdoor Air Temperatures {deltaC}
 
- ! CHICAGO_IL_USA Annual Heating 99.6%, MaxDB=-20.6°C
+ ! CHICAGO_IL_USA Annual Heating 99.6%, MaxDB=-20.6ï¿½C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Htg 99.6% Condns DB,  !- Name
@@ -283,7 +285,7 @@
     0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
 
- ! CHICAGO_IL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2°C MWB=23.8°C
+ ! CHICAGO_IL_USA Annual Cooling (DB=>MWB) .4%, MaxDB=33.2ï¿½C MWB=23.8ï¿½C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Clg .4% Condns DB=>MWB,  !- Name
@@ -313,7 +315,7 @@
     0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     1.00;                    !- Sky Clearness
 
- ! CHICAGO_IL_USA Annual Cooling (WB=>MDB) .4%, MDB=31.2°C WB=25.5°C
+ ! CHICAGO_IL_USA Annual Cooling (WB=>MDB) .4%, MDB=31.2ï¿½C WB=25.5ï¿½C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Clg .4% Condns WB=>MDB,  !- Name
@@ -68524,7 +68526,7 @@
 
   UtilityCost:Tariff,
     IN_EIAMonthlyRateGas,    !- Name
-    Gas:Facility,            !- Output Meter Name
+    NaturalGas:Facility,            !- Output Meter Name
     MCF,                     !- Conversion Factor Choice
     ,                        !- Energy Conversion Factor
     ,                        !- Demand Conversion Factor
@@ -68713,7 +68715,7 @@
     2,                       !- Digits After Decimal
     Electricity:Facility,    !- Variable or Meter 1 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 1
-    Gas:Facility,            !- Variable or Meter 2 Name
+    NaturalGas:Facility,     !- Variable or Meter 2 Name
     SumOrAverage;            !- Aggregation Type for Variable or Meter 2
 
   Output:Table:Monthly,

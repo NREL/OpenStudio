@@ -78,14 +78,14 @@ namespace detail {
     static const std::vector<std::string> result{
       // TODO: Implement checks
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE CASES AND/OR WALKINS:
-      "Refrigeration Compressor Electric Power",
-      "Refrigeration Compressor Electric Energy",
+      "Refrigeration Compressor Electricity Rate",
+      "Refrigeration Compressor Electricity Energy",
       "Refrigeration Compressor Heat Transfer Rate",
       "Refrigeration Compressor Heat Transfer Energy",
       "Refrigeration Compressor Run Time Fraction",
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE AIR CHILLERS:
-      "Refrigeration Air Chiller System Compressor Electric Power",
-      "Refrigeration Air Chiller System Compressor Electric Energy",
+      "Refrigeration Air Chiller System Compressor Electricity Rate",
+      "Refrigeration Air Chiller System Compressor Electricity Energy",
       "Refrigeration Air Chiller System Compressor Heat Transfer Rate",
       "Refrigeration Air Chiller System Compressor Heat Transfer Energy",
       "Refrigeration Chiller Compressor Run TimeFraction"

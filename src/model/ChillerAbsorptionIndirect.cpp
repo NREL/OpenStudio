@@ -77,8 +77,8 @@ namespace detail {
     static const std::vector<std::string> result{
 
     // Common variables
-    "Chiller Electric Power",
-    "Chiller Electric Energy",
+    "Chiller Electricity Rate",
+    "Chiller Electricity Energy",
     "Chiller Evaporator Cooling Rate",
     "Chiller Evaporator Cooling Energy",
     "Chiller Evaporator Inlet Temperature",

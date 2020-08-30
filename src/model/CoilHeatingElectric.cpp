@@ -90,8 +90,8 @@ namespace detail {
     static const std::vector<std::string> result{
       "Heating Coil Air Heating Energy",
       "Heating Coil Air Heating Rate",
-      "Heating Coil Electric Energy",
-      "Heating Coil Electric Power"
+      "Heating Coil Electricity Energy",
+      "Heating Coil Electricity Rate"
     };
     return result;
   }

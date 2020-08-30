@@ -115,6 +115,8 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateConstructionAirBoundary(const WorkspaceObject & workspaceObject);
 
+  boost::optional<model::ModelObject> translateConstructionWithInternalSource(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateConvergenceLimits(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateCurveBicubic(const WorkspaceObject& workspaceObject);
@@ -230,6 +232,8 @@ class ENERGYPLUS_API ReverseTranslator {
   boost::optional<model::ModelObject> translateMeterCustom(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateMeterCustomDecrement(const WorkspaceObject & workspaceObject);
+
+  boost::optional<model::ModelObject> translateOutputControlFiles(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateOutputDebuggingData(const WorkspaceObject & workspaceObject);
 

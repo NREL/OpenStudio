@@ -1082,14 +1082,16 @@ namespace openstudio{
     OptionalDouble SqlFile_Impl::annualTotalCost(const FuelType& fuel) const
     {
       if (fuel == FuelType::Electricity){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Electric') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
+        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Electricity') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
       }
       else if (fuel == FuelType::Gas){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Gas') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
+        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Natural Gas') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
       }
       else {
         // E+ lumps all other fuel types under "Other," so we are forced to use the meters table instead.
         // This is fragile if there are custom submeters, but this is the only option
+        // TODO Isn't this missing a few?! Coal, OtherFuel1, OtherFuel2, Steam
+
         std::string meterName;
 
         if (fuel == FuelType::DistrictCooling){
@@ -1108,10 +1110,10 @@ namespace openstudio{
           meterName = "DIESEL:FACILITY";
         }
         else if (fuel == FuelType::FuelOil_1){
-          meterName = "FUELOIL#1:FACILITY";
+          meterName = "FUELOILNO1:FACILITY";
         }
         else if (fuel == FuelType::FuelOil_2){
-          meterName = "FUELOIL#2:FACILITY";
+          meterName = "FUELOILNO2:FACILITY";
         }
         else if (fuel == FuelType::Propane){
           meterName = "PROPANE:FACILITY";
@@ -1177,7 +1179,12 @@ namespace openstudio{
       double totalCost = 0;
 
       // List of all fuel types
-      auto fuelTypes = {FuelType::Electricity, FuelType::Gas, FuelType::DistrictCooling, FuelType::DistrictHeating, FuelType::Water, FuelType::Gasoline, FuelType::Diesel, FuelType::FuelOil_1, FuelType::FuelOil_2, FuelType::Propane, FuelType::EnergyTransfer};
+      // TODO Isn't this missing a few?! Coal, OtherFuel1, OtherFuel2, Steam
+      auto fuelTypes = {
+        FuelType::Electricity, FuelType::Gas, FuelType::DistrictCooling, FuelType::DistrictHeating,
+        FuelType::Water, FuelType::Gasoline, FuelType::Diesel, FuelType::FuelOil_1, FuelType::FuelOil_2,
+        FuelType::Propane, FuelType::EnergyTransfer
+      };
 
       // Loop through all fuels and add up their costs
       for (const auto& fuelType : fuelTypes) {
@@ -1346,10 +1353,10 @@ namespace openstudio{
     {
       std::string fuelType;
       if(bGetGas){
-        fuelType = "'Gas'";
+        fuelType = "'Natural Gas'";
       }
       else{
-        fuelType = "'Electric'";
+        fuelType = "'Electricity'";
       }
 
       std::string query("select value from tabulardatawithstrings where TableName = 'Annual Cost' and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)')) and ColumnName = ");

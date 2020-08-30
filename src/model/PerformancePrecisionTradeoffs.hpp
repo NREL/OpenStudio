@@ -76,6 +76,9 @@ class MODEL_API PerformancePrecisionTradeoffs : public ModelObject {
   double maxZoneTempDiff() const;
   bool isMaxZoneTempDiffDefaulted() const;
 
+  double maxAllowedDelTemp() const;
+  bool isMaxAllowedDelTempDefaulted() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -91,6 +94,9 @@ class MODEL_API PerformancePrecisionTradeoffs : public ModelObject {
 
   bool setMaxZoneTempDiff(double maxZoneTempDiff);
   void resetMaxZoneTempDiff();
+
+  bool setMaxAllowedDelTemp(double maxAllowedDelTemp);
+  void resetMaxAllowedDelTemp();
 
   //@}
   /** @name Other */

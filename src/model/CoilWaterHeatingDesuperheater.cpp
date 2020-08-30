@@ -90,13 +90,13 @@ namespace detail {
       "Water Heater Part Load Ratio",
       "Water Heater Heating Rate",
       "Water Heater Heating Energy",
-      "Water Heater Pump Electric Power",
-      "Water Heater Pump Electric Energy",
+      "Water Heater Pump Electricity Rate",
+      "Water Heater Pump Electricity Energy",
       "Water Heater Heat Reclaim Efficiency Modifier Multiplier",
-      "Water Heater On Cycle Parasitic Electric Power",
-      "Water Heater On Cycle Parasitic Electric Energy",
-      "Water Heater Off Cycle Parasitic Electric Power",
-      "Water Heater Off Cycle Parasitic Electric Energy"
+      "Water Heater On Cycle Parasitic Electricity Rate",
+      "Water Heater On Cycle Parasitic Electricity Energy",
+      "Water Heater Off Cycle Parasitic Electricity Rate",
+      "Water Heater Off Cycle Parasitic Electricity Energy"
     };
     return result;
   }

@@ -68,14 +68,16 @@
 ! ***GENERAL SIMULATION PARAMETERS***
 ! Number of Zones: 19
 
-  Version,9.3;
+  Version,9.4;
 
   SimulationControl,
     YES,                     !- Do Zone Sizing Calculation
     YES,                     !- Do System Sizing Calculation
     YES,                     !- Do Plant Sizing Calculation
     YES,                     !- Run Simulation for Sizing Periods
-    NO;                      !- Run Simulation for Weather File Run Periods
+    NO,                      !- Run Simulation for Weather File Run Periods
+    No,                      !- Do HVAC Sizing Simulation for Sizing Periods
+    1;                       !- Maximum Number of HVAC Sizing Simulation Passes
 
   Building,
     Ref Bldg Large Office New2004_v1.3_5.0,  !- Name
@@ -253,7 +255,7 @@
     -6.00,                   !- Time Zone {hr}
     190;                     !- Elevation {m}
 
- ! CHICAGO_IL_USA Annual Heating 99.6%, MaxDB=-20.6°C
+ ! CHICAGO_IL_USA Annual Heating 99.6%, MaxDB=-20.6ï¿½C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Htg 99.6% Condns DB,  !- Name
@@ -283,7 +285,7 @@
     0,                       !- ASHRAE Clear Sky Optical Depth for Diffuse Irradiance (taud) {dimensionless}
     0.00;                    !- Sky Clearness
 
- ! CHICAGO_IL_USA Annual Cooling (WB=>MDB) .4%, MDB=31.2°C WB=25.5°C
+ ! CHICAGO_IL_USA Annual Cooling (WB=>MDB) .4%, MDB=31.2ï¿½C WB=25.5ï¿½C
 
   SizingPeriod:DesignDay,
     CHICAGO Ann Clg .4% Condns WB=>MDB,  !- Name
@@ -9295,7 +9297,7 @@
 
   UtilityCost:Tariff,
     IN_EIAMonthlyRateGas,    !- Name
-    Gas:Facility,            !- Output Meter Name
+    NaturalGas:Facility,            !- Output Meter Name
     MCF,                     !- Conversion Factor Choice
     ,                        !- Energy Conversion Factor
     ,                        !- Demand Conversion Factor
@@ -9373,13 +9375,13 @@
 
   Output:Meter,InteriorEquipment:Electricity,HOURLY;
 
-  Output:Meter,Gas:Facility,HOURLY;
+  Output:Meter,NaturalGas:Facility,HOURLY;
 
-  Output:Meter,Heating:Gas,HOURLY;
+  Output:Meter,Heating:NaturalGas,HOURLY;
 
-  Output:Meter,InteriorEquipment:Gas,HOURLY;
+  Output:Meter,InteriorEquipment:NaturalGas,HOURLY;
 
-  Output:Meter,Water Heater:WaterSystems:Gas,HOURLY;
+  Output:Meter,Water Heater:WaterSystems:NaturalGas,HOURLY;
 
   Output:Variable,*,Outdoor Dry Bulb,HOURLY;
 
@@ -9387,7 +9389,7 @@
 
   Output:Variable,*,Outdoor Relative Humidity,HOURLY;
 
-  Output:Variable,*,Boiler Gas Consumption,HOURLY;
+  Output:Variable,*,Boiler NaturalGas Consumption,HOURLY;
 
   Output:Variable,*,Boiler Water Inlet Temp,HOURLY;
 
@@ -9521,9 +9523,9 @@
   Output:Table:Monthly,
     Fan Part Load Performance,  !- Name
     0,                       !- Digits After Decimal
-    Fan Electric Power,      !- Variable or Meter 1 Name
+    Fan Electricity Rate,    !- Variable or Meter 1 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 1
-    Fan Electric Power,      !- Variable or Meter 2 Name
+    Fan Electricity Rate,    !- Variable or Meter 2 Name
     Maximum;                 !- Aggregation Type for Variable or Meter 2
 
   Output:Table:TimeBins,

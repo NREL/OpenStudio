@@ -36,7 +36,7 @@ Required,       ,,,
   ,ZoneCrossMixing,,(would be nice) ,
   ,InternalMass,(split into definition and instance),(would be nice) ,
   ,Fan:ConstantVolume,,,Yes
-  ,Coil:Heating:Gas,,,Yes
+  ,Coil:Heating:NaturalGas,,,Yes
   ,Coil:Cooling:DX:SingleSpeed,,,Yes
   ,ZoneControl:Thermostat,,,?
   ,ThermostatSetpoint:DualSetpoint,,,?

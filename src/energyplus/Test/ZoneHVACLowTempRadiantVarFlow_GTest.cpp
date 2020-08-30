@@ -135,6 +135,14 @@ TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions)
     for (ModelObject equipment : thermalZone.equipment()){
       if (equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>()){
         ZoneHVACLowTempRadiantVarFlow testRad = equipment.optionalCast<ZoneHVACLowTempRadiantVarFlow>().get();
+        EXPECT_TRUE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
+        EXPECT_TRUE(testRad.isHydronicTubingInsideDiameterDefaulted());
+        EXPECT_TRUE(testRad.isHydronicTubingOutsideDiameterDefaulted());
+        EXPECT_TRUE(testRad.isHydronicTubingLengthDefaulted());
+        EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());
+        EXPECT_TRUE(testRad.isHydronicTubingConductivityDefaulted());
+        EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
+        EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
         for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()){
           EXPECT_EQ(0.25,extGrp.getDouble(1,false));
         }

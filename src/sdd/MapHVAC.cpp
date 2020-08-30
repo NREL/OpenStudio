@@ -6424,7 +6424,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateBoil
   }
   else if( openstudio::istringEqual(fuelSrc, "oil") )
   {
-    boiler.setFuelType("FuelOil#2");
+    boiler.setFuelType("FuelOilNo2");
   }
 
   // ParasiticLd

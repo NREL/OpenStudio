@@ -79,7 +79,7 @@ namespace detail {
   const std::vector<std::string>& RefrigerationCondenserEvaporativeCooled_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Refrigeration System Condenser Fan Electric Power",
+      "Refrigeration System Condenser Fan Electricity Rate",
       "Refrigeration System Condenser Fan Electric Consumption",
 
       // TODO: Implement checks
@@ -92,10 +92,10 @@ namespace detail {
       "Refrigeration System Condenser Non Refrigeration Recovered Heat Transfer Energy",
       "Refrigeration System Condenser Defrost Recovered Heat Transfer Rate",
       "Refrigeration System Condenser Defrost Recovered Heat Transfer Energy",
-      "Refrigeration System Condenser Pump Electric Power",
-      "Refrigeration System Condenser Pump Electric Energy",
-      "Refrigeration System Condenser Basin Heater Electric Power",
-      "Refrigeration System Condenser Basin Heater Electric Energy",
+      "Refrigeration System Condenser Pump Electricity Rate",
+      "Refrigeration System Condenser Pump Electricity Energy",
+      "Refrigeration System Condenser Basin Heater Electricity Rate",
+      "Refrigeration System Condenser Basin Heater Electricity Energy",
       "Refrigeration System Condenser Evaporated Water Volume Flow Rate",
       "Refrigeration System Condenser Evaporated Water Volume",
       // FOR CONDENSERS COOLING SYSTEMS SERVING AIR CHILLERS:
@@ -107,10 +107,10 @@ namespace detail {
       "Refrigeration Air Chiller System Condenser Non Refrigeration Recovered Heat Transfer Energy",
       "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Rate",
       "Refrigeration Air Chiller System Condenser Defrost Recovered Heat Transfer Energy",
-      "Refrigeration Air Chiller System Condenser Pump Electric Power",
-      "Refrigeration Air Chiller System Condenser Pump Electric Energy",
-      "Refrigeration Air Chiller System Condenser Basin Heater Electric Power",
-      "Refrigeration Air Chiller System Condenser Basin Heater Electric Energy",
+      "Refrigeration Air Chiller System Condenser Pump Electricity Rate",
+      "Refrigeration Air Chiller System Condenser Pump Electricity Energy",
+      "Refrigeration Air Chiller System Condenser Basin Heater Electricity Rate",
+      "Refrigeration Air Chiller System Condenser Basin Heater Electricity Energy",
       "Refrigeration Air Chiller System Condenser Evaporated Water Volume Flow Rate",
       "Refrigeration Air Chiller System Condenser Evaporated Water Volume"
     };

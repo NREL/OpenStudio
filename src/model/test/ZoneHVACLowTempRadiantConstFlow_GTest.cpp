@@ -96,6 +96,15 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   boost::optional<std::string> str1 = testRad.radiantSurfaceType();
   EXPECT_EQ(*str1,"Floors");
 
+  testRad.setFluidtoRadiantSurfaceHeatTransferModel("ISOStandard");
+  boost::optional<std::string> str2 = testRad.fluidtoRadiantSurfaceHeatTransferModel();
+  EXPECT_EQ(*str2,"ISOStandard");
+  EXPECT_FALSE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
+  testRad.resetFluidtoRadiantSurfaceHeatTransferModel();
+  EXPECT_TRUE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
+  boost::optional<std::string> str3 = testRad.fluidtoRadiantSurfaceHeatTransferModel();
+  EXPECT_EQ(*str3,"ConvectionOnly");
+
   testRad.setHydronicTubingInsideDiameter(0.01);
   double inDia = testRad.hydronicTubingInsideDiameter();
   EXPECT_EQ(inDia, 0.01);
@@ -105,18 +114,49 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   double inDia1 = testRad.hydronicTubingInsideDiameter();
   EXPECT_EQ(inDia1,0.013);
 
+  testRad.setHydronicTubingOutsideDiameter(0.01);
+  double outDia = testRad.hydronicTubingOutsideDiameter();
+  EXPECT_EQ(outDia, 0.01);
+  EXPECT_FALSE(testRad.isHydronicTubingOutsideDiameterDefaulted());
+  testRad.resetHydronicTubingOutsideDiameter();
+  EXPECT_TRUE(testRad.isHydronicTubingOutsideDiameterDefaulted());
+  double outDia1 = testRad.hydronicTubingOutsideDiameter();
+  EXPECT_EQ(outDia1,0.016);
+
   testRad.setHydronicTubingLength(200);
   boost::optional<double> length = testRad.hydronicTubingLength();
   EXPECT_EQ(*length, 200);
+  EXPECT_FALSE(testRad.isHydronicTubingLengthAutosized());
+  testRad.resetHydronicTubingLength();
+  testRad.autosizeHydronicTubingLength();
+  EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());
+
+  testRad.setHydronicTubingConductivity(0.01);
+  double cond = testRad.hydronicTubingConductivity();
+  EXPECT_EQ(cond, 0.01);
+  EXPECT_FALSE(testRad.isHydronicTubingConductivityDefaulted());
+  testRad.resetHydronicTubingConductivity();
+  EXPECT_TRUE(testRad.isHydronicTubingConductivityDefaulted());
+  double cond1 = testRad.hydronicTubingConductivity();
+  EXPECT_EQ(cond1,0.35);
 
   testRad.setTemperatureControlType("MeanRadiantTemperature");
-  boost::optional<std::string> str2 = testRad.temperatureControlType();
+  str2 = testRad.temperatureControlType();
   EXPECT_EQ(*str2,"MeanRadiantTemperature");
   EXPECT_FALSE(testRad.isTemperatureControlTypeDefaulted());
   testRad.resetTemperatureControlType();
   EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
-  boost::optional<std::string> str3 = testRad.temperatureControlType();
+  str3 = testRad.temperatureControlType();
   EXPECT_EQ(*str3,"MeanAirTemperature");
+
+  testRad.setRunningMeanOutdoorDryBulbTemperatureWeightingFactor(0.5);
+  double running = testRad.runningMeanOutdoorDryBulbTemperatureWeightingFactor();
+  EXPECT_EQ(running, 0.5);
+  EXPECT_FALSE(testRad.isRunningMeanOutdoorDryBulbTemperatureWeightingFactorDefaulted());
+  testRad.resetRunningMeanOutdoorDryBulbTemperatureWeightingFactor();
+  EXPECT_TRUE(testRad.isRunningMeanOutdoorDryBulbTemperatureWeightingFactorDefaulted());
+  double running1 = testRad.runningMeanOutdoorDryBulbTemperatureWeightingFactor();
+  EXPECT_EQ(running1,0.8);
 
   //test Pump Flow Rate Schedule
   ScheduleConstant pumpFlowRateSched(model);
@@ -156,6 +196,13 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   double circLength = testRad.circuitLength();
   EXPECT_EQ(circLength,200.0);
 
+  ScheduleConstant sch(model);
+  EXPECT_TRUE(testRad.setChangeoverDelayTimePeriodSchedule(sch));
+  ASSERT_TRUE(testRad.changeoverDelayTimePeriodSchedule());
+  EXPECT_EQ(sch, testRad.changeoverDelayTimePeriodSchedule().get());
+  testRad.resetChangeoverDelayTimePeriodSchedule();
+  EXPECT_FALSE(testRad.changeoverDelayTimePeriodSchedule());
+
   //test add and remove from thermal zone
   ThermalZone thermalZone(model);
   EXPECT_EQ(0u,thermalZone.equipment().size());
@@ -168,7 +215,6 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
 
   EXPECT_TRUE(testCC1.containingZoneHVACComponent());
 
-
   EXPECT_TRUE(testRad.isRatedFlowRateAutosized());
   EXPECT_FALSE(testRad.ratedFlowRate());
   EXPECT_TRUE(testRad.setRatedFlowRate(0.75));
@@ -178,7 +224,6 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantConstFlow_SetGetFields) {
   testRad.autosizeRatedFlowRate();
   EXPECT_TRUE(testRad.isRatedFlowRateAutosized());
   EXPECT_FALSE(testRad.ratedFlowRate());
-
 
   testRad.autosizeHydronicTubingLength();
   EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());

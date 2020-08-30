@@ -40,11 +40,26 @@
 #include "../../model/CoilHeatingLowTempRadiantConstFlow.hpp"
 #include "../../model/CoilHeatingLowTempRadiantConstFlow_Impl.hpp"
 #include "../../model/ConstructionWithInternalSource.hpp"
+#include "../../model/ConstructionWithInternalSource_Impl.hpp"
+#include "../../model/DefaultConstructionSet.hpp"
+#include "../../model/DefaultConstructionSet_Impl.hpp"
+#include "../../model/DefaultSurfaceConstructions.hpp"
+#include "../../model/DefaultSurfaceConstructions_Impl.hpp"
+#include "../../model/HVACComponent.hpp"
+#include "../../model/HVACComponent_Impl.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include "../../model/ScheduleConstant.hpp"
+#include "../../model/ScheduleConstant_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 
-#include <utilities/idd/ZoneHVAC_LowTemperatureRadiant_VariableFlow_FieldEnums.hxx>
+#include <utilities/idd/ZoneHVAC_LowTemperatureRadiant_ConstantFlow_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -56,6 +71,96 @@
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
+
+TEST_F(EnergyPlusFixture,ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions)
+{
+  //make the example model
+  Model model = model::exampleModel();
+
+  //loop through all zones and add a radiant system to each one
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
+
+    //make a constant flow radiant unit
+    ScheduleConstant availabilitySched(model);
+    ScheduleConstant coolingHighWaterTempSched(model);
+    ScheduleConstant coolingLowWaterTempSched(model);
+    ScheduleConstant coolingHighControlTempSched(model);
+    ScheduleConstant coolingLowControlTempSched(model);
+    ScheduleConstant heatingHighWaterTempSched(model);
+    ScheduleConstant heatingLowWaterTempSched(model);
+    ScheduleConstant heatingHighControlTempSched(model);
+    ScheduleConstant heatingLowControlTempSched(model);
+
+    availabilitySched.setValue(1.0);
+    coolingHighWaterTempSched.setValue(15.0);
+    coolingLowWaterTempSched.setValue(10.0);
+    coolingHighControlTempSched.setValue(26.0);
+    coolingLowControlTempSched.setValue(22.0);
+    heatingHighWaterTempSched.setValue(50.0);
+    heatingLowWaterTempSched.setValue(30.0);
+    heatingHighControlTempSched.setValue(21.0);
+    heatingLowControlTempSched.setValue(15.0);
+
+    CoilCoolingLowTempRadiantConstFlow testCC(model,coolingHighWaterTempSched,coolingLowWaterTempSched,coolingHighControlTempSched,coolingLowControlTempSched);
+    CoilHeatingLowTempRadiantConstFlow testHC(model,heatingHighWaterTempSched,heatingLowWaterTempSched,heatingHighControlTempSched,heatingLowControlTempSched);
+
+    ZoneHVACLowTempRadiantConstFlow testRad(model,availabilitySched,testHC,testCC, 100.0);
+
+    //set the coils
+    testRad.setHeatingCoil(testHC);
+    testRad.setCoolingCoil(testCC);
+
+    //add it to the thermal zone
+    testRad.addToThermalZone(thermalZone);
+
+    //attach to ceilings
+    testRad.setRadiantSurfaceType("Ceilings");
+
+    //test that "surfaces" method returns 0 since no
+    //ceilings have an internal source construction
+    EXPECT_EQ(0,testRad.surfaces().size());
+
+  }
+
+  // Create some materials and make an internal source construction
+  StandardOpaqueMaterial exterior(model);
+  StandardOpaqueMaterial interior(model);
+  OpaqueMaterialVector layers;
+  layers.push_back(exterior);
+  layers.push_back(interior);
+  ConstructionWithInternalSource construction(layers);
+
+  //set building's default ceiling construction to internal source construction
+  DefaultConstructionSet defConSet = model.getModelObjects<DefaultConstructionSet>()[0];
+  defConSet.defaultExteriorSurfaceConstructions()->setRoofCeilingConstruction(construction);
+
+  //translate the model to EnergyPlus
+  ForwardTranslator trans;
+  Workspace workspace = trans.translateModel(model);
+
+  //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
+
+    //get the radiant zone equipment
+    for (ModelObject equipment : thermalZone.equipment()){
+      if (equipment.optionalCast<ZoneHVACLowTempRadiantConstFlow>()){
+        ZoneHVACLowTempRadiantConstFlow testRad = equipment.optionalCast<ZoneHVACLowTempRadiantConstFlow>().get();
+        EXPECT_TRUE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
+        EXPECT_TRUE(testRad.isHydronicTubingInsideDiameterDefaulted());
+        EXPECT_TRUE(testRad.isHydronicTubingOutsideDiameterDefaulted());
+        EXPECT_FALSE(testRad.isHydronicTubingLengthAutosized());
+        EXPECT_TRUE(testRad.isHydronicTubingConductivityDefaulted());
+        EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
+        EXPECT_TRUE(testRad.isRunningMeanOutdoorDryBulbTemperatureWeightingFactorDefaulted());
+        EXPECT_TRUE(testRad.isFractionofMotorInefficienciestoFluidStreamDefaulted());
+        for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()){
+          EXPECT_EQ(0.25,extGrp.getDouble(1,false));
+        }
+      }
+    }
+  }
+
+}
 
 TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantConstFlow_Crash_no_constructions) {
 
@@ -85,8 +190,6 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantConstFlow_Crash_no_constructions
 
   // Make a radiant low temperature system
   Schedule alwaysOn = m.alwaysOnDiscreteSchedule();
-
-
 
   ScheduleConstant availabilitySched(m);
   ScheduleConstant coolingHighWaterTempSched(m);

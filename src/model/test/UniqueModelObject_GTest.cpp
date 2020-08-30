@@ -54,6 +54,8 @@
 #include "../LifeCycleCostParameters_Impl.hpp"
 #include "../LightingSimulationControl.hpp"
 #include "../LightingSimulationControl_Impl.hpp"
+#include "../OutputControlFiles.hpp"
+#include "../OutputControlFiles_Impl.hpp"
 #include "../OutputControlReportingTolerances.hpp"
 #include "../OutputControlReportingTolerances_Impl.hpp"
 #include "../OutputDebuggingData.hpp"
@@ -345,6 +347,32 @@ TEST_F(ModelFixture, LightingSimulationControl_UniqueModelObject_Clone)
   LightingSimulationControl lightingSimulationControlClone2 = lightingSimulationControl.clone(model2).cast<LightingSimulationControl>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<LightingSimulationControl>());
   EXPECT_EQ("! Custom Object", lightingSimulationControlClone2.comment());
+}
+
+TEST_F(ModelFixture, OutputControlFiles_UniqueModelObject_Clone)
+{
+  // create a model to use
+  Model model;
+
+  // Get the Unique ModelObject
+  EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputControlFiles>());
+  OutputControlFiles outputControlFiles = model.getUniqueModelObject<OutputControlFiles>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputControlFiles>());
+  // We use a comment to see if cloning to another model works
+  outputControlFiles.setComment("Custom Object");
+
+  // clone it into same model
+  OutputControlFiles outputControlFilesClone = outputControlFiles.clone(model).cast<OutputControlFiles>();
+  // UniqueModelObject: should be the same as the original
+  EXPECT_EQ(outputControlFiles, outputControlFilesClone);
+  EXPECT_EQ("! Custom Object", outputControlFilesClone.comment());
+
+  // clone it into a different model
+  Model model2;
+  EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputControlFiles>());
+  OutputControlFiles outputControlFilesClone2 = outputControlFiles.clone(model2).cast<OutputControlFiles>();
+  EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputControlFiles>());
+  EXPECT_EQ("! Custom Object", outputControlFilesClone2.comment());
 }
 
 TEST_F(ModelFixture, OutputControlReportingTolerances_UniqueModelObject_Clone)

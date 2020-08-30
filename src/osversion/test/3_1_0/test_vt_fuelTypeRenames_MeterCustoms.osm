@@ -1,0 +1,24 @@
+
+OS:Version,
+  {09f0463f-b35c-4c30-a34d-45e4da4a54f5}, !- Handle
+  3.0.1;                                  !- Version Identifier
+
+OS:Meter:Custom,
+  {3241d7aa-1936-4085-8a03-b6b4bb7de9da}, !- Handle
+  Meter Custom 1,                         !- Name
+  Electricity,                            !- Fuel Type
+  *,                                      !- Key Name 1
+  Facility Total HVAC Electric Demand Power, !- Output Variable or Meter Name 1
+  *,                                      !- Key Name 2
+  Generator Blower      Electric Power   ; !- Output Variable or Meter Name 2
+
+OS:Meter:CustomDecrement,
+  {37ea5eb2-9b35-4338-bacf-ff76209c7920}, !- Handle
+  Meter Custom Decrement 1,               !- Name
+  NaturalGas,                             !- Fuel Type
+  NaturalGas:Facility,                    !- Source Meter Name
+  *,                                      !- Key Name 1
+  Facility     Total HVAC Electric    Demand Power, !- Output Variable or Meter Name 1
+  *,                                      !- Key Name 2
+  Generator Blower Electric Power;        !- Output Variable or Meter Name 2
+

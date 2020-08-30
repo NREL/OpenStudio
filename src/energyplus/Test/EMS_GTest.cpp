@@ -375,8 +375,8 @@ Model prepareSensor2_EMS() {
   ThermalZone zone2(model);
   zone2.setName("Zone 2");
 
-  // add Zone Lights Electric Power to both zones
-  OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
+  // add Zone Lights Electricity Rate to both zones
+  OutputVariable lightsElectricPower("Zone Lights Electricity Rate", model);
 
   // add light sensor on zone1
   EnergyManagementSystemSensor lights(model, lightsElectricPower);
@@ -405,7 +405,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensor2_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
   EXPECT_EQ("Zone 1", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
-  EXPECT_EQ("Zone Lights Electric Power", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
+  EXPECT_EQ("Zone Lights Electricity Rate", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
 
   // model.save(toPath("./EMS_sensor2.osm"), true);
   // workspace.save(toPath("./EMS_sensor2.idf"), true);

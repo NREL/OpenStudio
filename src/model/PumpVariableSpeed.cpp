@@ -81,8 +81,8 @@ namespace detail {
   const std::vector<std::string>& PumpVariableSpeed_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Pump Electric Power",
-      "Pump Electric Energy",
+      "Pump Electricity Rate",
+      "Pump Electricity Energy",
       "Pump Shaft Power",
       "Pump Fluid Heat Gain Rate",
       "Pump Fluid Heat Gain Energy",

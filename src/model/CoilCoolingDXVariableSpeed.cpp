@@ -99,7 +99,7 @@ namespace detail {
   const std::vector<std::string>& CoilCoolingDXVariableSpeed_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Cooling Coil Electric Power",
+      "Cooling Coil Electricity Rate",
       "Cooling Coil Total Cooling Rate",
       "Cooling Coil Sensible Cooling Rate",
       "Cooling Coil Source Side Heat Transfer Rate",
@@ -113,22 +113,22 @@ namespace detail {
       "Cooling Coil Upper Speed Level",
       "Cooling Coil Neighboring Speed Levels Ratio",
       "VSAirtoAirHP Recoverable Waste Heat",
-      "Cooling Coil Electric Energy",
+      "Cooling Coil Electricity Energy",
       "Cooling Coil Total Cooling Energy",
       "Cooling Coil Sensible Cooling Energy",
       "Cooling Coil Latent Cooling Energy",
       "Cooling Coil Source Side Heat Transfer Energy",
-      "Cooling Coil Crankcase Heater Electric Power",
-      "Cooling Coil Crankcase Heater Electric Energy",
+      "Cooling Coil Crankcase Heater Electricity Rate",
+      "Cooling Coil Crankcase Heater Electricity Energy",
       "Cooling Coil Condensate Volume Flow Rate",
       "Cooling Coil Condensate Volume",
       "Cooling Coil Condenser Inlet Temperature",
       "Cooling Coil Evaporative Condenser Water Volume",
       "Cooling Coil Evaporative Condenser Mains Water Volume",
-      "Cooling Coil Evaporative Condenser Pump Electric Power",
-      "Cooling Coil Evaporative Condenser Pump Electric Energy",
-      "Cooling Coil Basin Heater Electric Power",
-      "Cooling Coil Basin Heater Electric Energy"
+      "Cooling Coil Evaporative Condenser Pump Electricity Rate",
+      "Cooling Coil Evaporative Condenser Pump Electricity Energy",
+      "Cooling Coil Basin Heater Electricity Rate",
+      "Cooling Coil Basin Heater Electricity Energy"
     };
     return result;
   }

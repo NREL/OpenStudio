@@ -75,7 +75,7 @@ boost::optional<IdfObject> ForwardTranslator::translateMeterCustomDecrement( Met
   // FuelType
   if( (s = modelObject.fuelType()) )
   {
-    idfObject.setString(Meter_CustomDecrementFields::FuelType,s.get());
+    idfObject.setString(Meter_CustomDecrementFields::ResourceType,s.get());
   }
 
   // Source Meter Name
