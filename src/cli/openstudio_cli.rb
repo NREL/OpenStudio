@@ -293,6 +293,14 @@ end
 # parse the main args, those that come before the sub command
 def parse_main_args(main_args)
 
+  # Unset RUBY ENVs if previously set (e.g. rvm sets these in shell) 
+
+  ENV.delete('GEM_HOME') if ENV['GEM_HOME']
+  ENV.delete('GEM_PATH') if ENV['GEM_PATH']
+  ENV.delete('BUNDLE_GEMFILE') if ENV['BUNDLE_GEMFILE']
+  ENV.delete('BUNDLE_PATH') if ENV['BUNDLE_PATH']
+  ENV.delete('BUNDLE_WITHOUT') if ENV['BUNDLE_WITHOUT']
+
   $logger.debug "Parsing main_args #{main_args}"
 
   # verbose already handled
