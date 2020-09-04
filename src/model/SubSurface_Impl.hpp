@@ -152,6 +152,12 @@ namespace detail {
 
     boost::optional<ShadingControl> shadingControl() const;
 
+    std::vector<ShadingControl> shadingControls();
+
+    ShadingControl getShadingControl(unsigned shadingControlIndex);
+
+    unsigned int numberofShadingControls();
+
     bool allowWindowPropertyFrameAndDivider() const;
 
     boost::optional<WindowPropertyFrameAndDivider> windowPropertyFrameAndDivider() const;
@@ -185,6 +191,14 @@ namespace detail {
     bool setShadingControl(const ShadingControl& shadingControl);
 
     void resetShadingControl();
+
+    bool setShadingControls(const std::vector<ShadingControl> &shadingControls);
+
+    bool insertShadingControl(unsigned shadingControlIndex, const ShadingControl &shadingControl);
+
+    bool removeShadingControl(unsigned shadingControlIndex);
+
+    bool removeAllShadingControls();
 
     bool setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider);
 

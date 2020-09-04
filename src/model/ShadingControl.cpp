@@ -207,9 +207,29 @@ namespace detail {
     OS_ASSERT(test);
   }
 
+  unsigned int ShadingControl_Impl::numberofSubSurfaces() const {
+    
+  }
+
+  bool ShadingControl_Impl::addSubSurface(const SubSurface& subSurface) {
+    
+  }
+
+  bool ShadingControl_Impl::removeSubSurface(unsigned groupIndex) {
+    
+  }
+
+  void ShadingControl_Impl::removeAllSubSurfaces() {
+    
+  }
+
   std::vector<SubSurface> ShadingControl_Impl::subSurfaces() const
   {
     return getObject<ShadingControl>().getModelObjectSources<SubSurface>();
+  }
+
+  bool ShadingControl_Impl::addSubSurfaces(const std::vector<SubSurface> &subSurfaces) {
+    
   }
 
 } // detail
@@ -378,8 +398,28 @@ void ShadingControl::resetSetpoint(){
   getImpl<detail::ShadingControl_Impl>()->resetSetpoint();
 }
 
+unsigned int ShadingControl::numberofSubSurfaces() const {
+  
+}
+
+bool ShadingControl::addSubSurface(const SubSurface& subSurface) {
+  
+}
+
+void ShadingControl::removeSubSurface(int groupIndex) {
+  
+}
+
+void ShadingControl::removeAllSubSurfaces() {
+  
+}
+
 std::vector<SubSurface> ShadingControl::subSurfaces() const {
   return getImpl<detail::ShadingControl_Impl>()->subSurfaces();
+}
+
+bool ShadingControl::addSubSurfaces(const std::vector<SubSurface> &subSurfaces) {
+  
 }
 
 /// @cond

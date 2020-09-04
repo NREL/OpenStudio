@@ -132,7 +132,7 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   void resetWindowPropertyFrameAndDivider();
 
-  bool setMultiplier(double multiplShadingControlier);
+  bool setMultiplier(double multiplier);
 
   void resetMultiplier();
 

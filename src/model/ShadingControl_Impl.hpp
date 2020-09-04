@@ -92,6 +92,8 @@ namespace detail {
 
     bool isSetpointDefaulted() const;
 
+    unsigned int numberofSubSurfaces() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -114,8 +116,16 @@ namespace detail {
     /** @name Other */
     //@{
 
+    bool addSubSurface(const SubSurface& subSurface);
+
+    bool removeSubSurface(unsigned groupIndex);
+
+    void removeAllSubSurfaces();
+
     std::vector<SubSurface> subSurfaces() const;
-    
+
+    bool addSubSurfaces(const std::vector<SubSurface> &subSurfaces);
+
     //@}
    protected:
 

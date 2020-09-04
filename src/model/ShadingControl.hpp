@@ -94,6 +94,8 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   bool isSetpointDefaulted() const;
 
+  unsigned int numberofSubSurfaces() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -119,7 +121,15 @@ class MODEL_API ShadingControl : public ResourceObject {
   /** @name Other */
   //@{
 
+  bool addSubSurface(const SubSurface& subSurface);
+
+  bool removeSubSurface(unsigned groupIndex);
+
+  void removeAllSubSurfaces();
+
   std::vector<SubSurface> subSurfaces() const;
+
+  bool addSubSurfaces(const std::vector<SubSurface> &subSurfaces);
 
   //@}
  protected:
