@@ -60,6 +60,8 @@ class MODEL_API AvailabilityManagerAssignmentList : public ModelObject {
    */
   explicit AvailabilityManagerAssignmentList(const Loop& loop);
 
+  explicit AvailabilityManagerAssignmentList(const Model& model);
+
   virtual ~AvailabilityManagerAssignmentList() {}
 
   //@}
