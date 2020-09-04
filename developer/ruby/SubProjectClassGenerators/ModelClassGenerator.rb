@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -88,6 +88,10 @@ class ModelObjectField
 
   def isObjectList?
     return (@iddField.properties.type == "ObjectListType".to_IddFieldType)
+  end
+
+  def isNode?
+    return (@iddField.properties.type == "node".to_IddFieldType)
   end
 
   def isSchedule?
@@ -235,7 +239,12 @@ class ModelObjectField
     return result
   end
 
-  def getterReturnType
+  # Compute return type
+  # @param forceOptional [Bool, or nil]: whether to force optional return type.
+  # Useful for the reverse translator
+  # if nil, will check optionalGetter
+  # @return result [String]: the getter return type
+  def getterReturnType(forceOptional=nil)
     result = nil
     if isInteger?
       result = "int"
@@ -249,10 +258,18 @@ class ModelObjectField
       end
     elsif isObjectList?
       result = objectListClassName
+    elsif isNode?
+      result = "Node"
     end
 
-    if result and optionalGetter?
-      result = "boost::optional<" + result + ">"
+    if result
+      if forceOptional.nil?
+        if optionalGetter?
+          result = "boost::optional<" + result + ">"
+        end
+      elsif forceOptional
+        result = "boost::optional<" + result + ">"
+      end
     end
 
     raise "Unexpected field type " + @iddField.properties.type.valueName + "." if not result
@@ -270,6 +287,8 @@ class ModelObjectField
       result = "getString"
     elsif isObjectList?
       result = "getObject<ModelObject>().getModelObjectTarget<" + objectListClassName + ">"
+    elsif isNode?
+      result = "getObject<ModelObject>().getModelObjectTarget<Node>"
     end
     return result
   end
@@ -403,7 +422,7 @@ end
 class ModelClassGenerator < SubProjectClassGenerator
   attr_accessor :iddObjectType, :idfObject, :iddObject, :isOS
   attr_accessor :requiredObjectListFields, :requiredDataFields
-  attr_accessor :hasRealFields, :hasScheduleFields, :autosizedGetterNames
+  attr_accessor :hasRealFields, :hasScheduleFields, :autosizedGetterNames, :autosizeSetterNames
 
   def initialize(className, baseClassName, pImpl, qobject, iddObjectType)
     super(className, baseClassName, pImpl, qobject)
@@ -430,10 +449,12 @@ class ModelClassGenerator < SubProjectClassGenerator
 
       # Determine if the object has any autosizable fields
       @autosizedGetterNames = []
+      @autosizeSetterNames = []
       @iddObject.nonextensibleFields.each do |iddField|
         modelObjectField = ModelObjectField.new(@iddObject, iddField)
         if modelObjectField.canAutosize?
           @autosizedGetterNames << modelObjectField.autosizedName
+          @autosizeSetterNames << modelObjectField.autosizeName
         end
       end
 
@@ -467,8 +488,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         end
       }
       if @hasScheduleFields
-        result << "#include \"../../model/ScheduleTypeLimits.hpp\"\n"
-        result << "#include \"../../model/ScheduleTypeRegistry.hpp\"\n"
+        result << "#include \"ScheduleTypeLimits.hpp\"\n"
+        result << "#include \"ScheduleTypeRegistry.hpp\"\n"
       end
 
       result << "\n" if preamble == ""
@@ -482,7 +503,7 @@ class ModelClassGenerator < SubProjectClassGenerator
       result << "#include <utilities/idd/" << @iddObjectType.valueName << "_FieldEnums.hxx>\n\n"
 
       if @hasRealFields
-		result << "#include \"../utilities/units/Unit.hpp\"\n\n"
+        result << "#include \"../utilities/units/Unit.hpp\"\n\n"
       end
 
       result << "#include \"../utilities/core/Assert.hpp\"\n\n"
@@ -745,7 +766,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.setCanFail?
           result << "  bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         else
-          result << "  void " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
+          # Note: JM 2018-10-17: even if the setter can't fail, we return bool
+          result << "  bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         end
 
         if field.hasReset?
@@ -861,7 +883,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.setCanFail?
           result << "    bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         else
-          result << "    void " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
+          # Note: JM 2018-10-17: even if the setter can't fail, we return bool
+          result << "    bool " << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ");\n\n"
         end
 
         if field.hasReset?
@@ -1044,7 +1067,8 @@ class ModelClassGenerator < SubProjectClassGenerator
         if field.setCanFail?
           result << "  bool "
         else
-          result << "  void "
+          # Note: JM 2018-10-17: even if the setter can't fail, we return bool
+          result << "  bool "
         end
 
         result << @className << "_Impl::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
@@ -1148,7 +1172,7 @@ class ModelClassGenerator < SubProjectClassGenerator
       if @autosizedGetterNames.size > 0
         # autosize()
         result << "  void " << @className << "_Impl::autosize() {\n"
-        @autosizedGetterNames.each do |name|
+        @autosizeSetterNames.each do |name|
           result << "    #{name}();\n"
         end
         result << "  }\n\n"
@@ -1243,7 +1267,7 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "  return getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
           result << "}\n\n"
         else
-          result << "void " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
+          result << "bool " << @className << "::" << field.setterName << "(" << field.publicClassSetterType << " " << field.setterArgumentName << ") {\n"
           result << "  getImpl<detail::" << @className << "_Impl>()->" << field.setterName << "(" << field.setterArgumentName << ");\n"
           result << "}\n\n"
         end
@@ -1391,21 +1415,195 @@ class ModelClassGenerator < SubProjectClassGenerator
     end
   end
 
-  def gtest()
+
+  def gtestIncludes()
     result = String.new
-    if @hasRealFields
-      result << "#include <model/test/ModelFixture.hpp>\n\n"
-      result << "#include \"../" << @className << ".hpp\"\n"
-      result << "#include \"../" << @className << "_Impl.hpp\"\n\n"
-      result << "using namespace openstudio;\n"
-      result << "using namespace openstudio::model;\n\n"
 
-      instanceName = OpenStudio::toLowerCamelCase(@className)
+    result << "#include \"ModelFixture.hpp\"\n\n"
+    result << "#include \"../" << @className << ".hpp\"\n"
+    result << "#include \"../" << @className << "_Impl.hpp\"\n\n"
 
-      @nonextensibleFields.each { |field|
+    preamble = "// TODO: Check the following class names against object getters and setters.\n"
 
-      }
-    end
+    # Check for ObjectList fields, to see which we need to include
+    @nonextensibleFields.each { |field|
+      if field.isObjectList?
+        result << preamble
+        result << "#include \"../" << field.objectListClassName << ".hpp\"\n"
+        result << "#include \"../" << field.objectListClassName << "_Impl.hpp\"\n\n"
+        preamble = ""
+      end
+    }
+
+
+    result << "using namespace openstudio;\n"
+    result << "using namespace openstudio::model;\n\n"
+
+    return result;
+  end
+
+  def gtestGetterSetters
+
+    result = String.new
+
+    instanceName = OpenStudio::toLowerCamelCase(@className)
+
+    result << "TEST_F(ModelFixture, " << className << "_GettersSetters) {\n"
+    result << "  Model m;\n"
+    result << "  // TODO: Check regular Ctor arguments\n"
+    result << "  " << className << " #{instanceName}(m);\n"
+    result << "  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)\n"
+    result << "  // " << className << " #{instanceName} = m.getUniqueModelObject<" << className << ">();\n\n"
+
+    @nonextensibleFields.each { |field|
+      next if field.isHandle?
+
+      if field.isName?
+        result << "  #{instanceName}.setName(\"My #{className}\");\n"
+
+      elsif field.isObjectList? or field.isNode?
+
+        # Comment
+        result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << (field.isNode? ? " Node": " Object") << "\n"
+
+
+        result << "  " << field.getterReturnType << " obj(m);\n"
+        result << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(obj));\n"
+
+        if field.optionalGetter?
+
+          result << "  ASSERT_TRUE(#{instanceName}." << field.getterName << "());\n"
+          result << "  EXPECT_EQ(obj, #{instanceName}." << field.getterName << "().get());\n"
+
+        else
+
+          result << "EXPECT_EQ(obj, #{instanceName}." << field.getterName << "());\n"
+        end
+
+      else
+        prefix = ""
+        need_closing = false
+
+
+        if field.isBooleanChoice?
+          result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " Boolean\n"
+          result << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(true));\n";
+          if field.optionalGetter?
+            result << "  EXPECT_TRUE(#{instanceName}." << field.getterName << "().get());\n"
+          else
+            result << "  EXPECT_TRUE(#{instanceName}." << field.getterName << "());\n"
+          end
+          result << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(false));\n";
+          if field.optionalGetter?
+            result << "  EXPECT_FALSE(#{instanceName}." << field.getterName << "().get());\n"
+          else
+            result << "  EXPECT_FALSE(#{instanceName}." << field.getterName << "());\n"
+          end
+
+        else
+
+          # Note, assignment isn't used any#{instanceName}re since I no longer use high level
+          # variables
+          isNumber = false;
+
+          if field.isInteger?
+            # assignment = "_i"
+            cat = "Integer"
+            isNumber = true
+          elsif field.isReal?
+            # assignment = "_d"
+            cat = "Double"
+            isNumber = true
+          elsif field.isChoice? or field.isAlpha? or field.isExternalList?
+            # assignment = "_s"
+            cat = "String"
+          else
+            # Not handled...
+            # assignment = "#{field.getterReturnType(true)} #{field.getterName}"
+            cat = "Unsure of Category... TODO: Check!"
+          end
+
+          result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " " << cat << "\n"
+
+          # Comment
+          if field.canAutosize?
+
+            result << "  #{instanceName}." << field.autosizeName << "();\n"
+            result << "  EXPECT_TRUE(#{instanceName}." << field.isAutosizeName << "());\n"
+
+            prefix = "  "
+            closing = "  EXPECT_FALSE(#{instanceName}.#{field.isAutosizeName}());\n"
+
+            need_closing = true
+          elsif field.canAutocalculate?
+
+            result << "  #{instanceName}." << field.autocalculateName << "();\n"
+            result << "  EXPECT_TRUE(#{instanceName}." << field.isAutocalculateName << "());\n"
+
+            closing = "  EXPECT_FALSE(#{instanceName}.#{field.isAutocalculateName}());\n"
+            need_closing = true
+          end
+
+
+          if isNumber
+            good_val = 10
+            min_bound = field.iddField.properties.minBoundValue
+            max_bound = field.iddField.properties.maxBoundValue
+            if (min_bound.is_initialized && max_bound.is_initialized)
+              good_val = (min_bound.get + max_bound.get) / 2
+              bad_val = min_bound.get - 10
+            elsif (min_bound.is_initialized)
+              good_val = min_bound.get + 0.1
+              bad_val = min_bound.get - 10
+            elsif (max_bound.is_initialized)
+              good_val = max_bound.get - 0.1
+              bad_val = max_bound.get + 10
+            else
+              good_val = 3
+              bad_val = nil
+            end
+          elsif field.isChoice?
+            good_val = "\"#{field.choices[0].name}\""
+            bad_val = "\"BADENUM\""
+          end
+
+          result << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(#{good_val}));\n";
+
+          if field.optionalGetter?
+
+            result << "  ASSERT_TRUE(#{instanceName}." << field.getterName << "());\n"
+            result << "  EXPECT_EQ(#{good_val}, #{instanceName}." << field.getterName << "().get());\n"
+
+          else
+            result << "  EXPECT_EQ(#{good_val}, #{instanceName}." << field.getterName << "());\n"
+
+          end
+
+          if !bad_val.nil?
+            result << "  // Bad Value\n";
+            result << "  EXPECT_FALSE(#{instanceName}." << field.setterName << "(#{bad_val}));\n";
+
+            if field.optionalGetter?
+
+              result << "  ASSERT_TRUE(#{instanceName}." << field.getterName << "());\n"
+              result << "  EXPECT_EQ(#{good_val}, #{instanceName}." << field.getterName << "().get());\n"
+
+            else
+              result << "  EXPECT_EQ(#{good_val}, #{instanceName}." << field.getterName << "());\n"
+
+            end
+          end
+        end
+
+        if need_closing
+          result << closing
+        end
+
+
+      end
+
+      result << "\n"
+    }
     return result
   end
 

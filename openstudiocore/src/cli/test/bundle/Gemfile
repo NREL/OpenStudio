@@ -1,4 +1,0 @@
-source 'http://rubygems.org'
-
-gem 'openstudio-standards', '0.2.0'
-gem 'tilt', '2.0.8'

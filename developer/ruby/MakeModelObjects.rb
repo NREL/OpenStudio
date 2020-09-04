@@ -114,13 +114,16 @@ objects = []
 
 #objects << ["OS:PlantComponent:UserDefined", "PlantComponentUserDefined", "ModelObject"]
 #objects << ["OS:ElectricLoadCenter:Transformer", "ElectricLoadCenterTransformer", "ParentObject"]
-objects << ["OS:ElectricLoadCenter:Transformer", "ElectricLoadCenterTransformer", "ModelObject"]
+#objects << ["OS:ElectricLoadCenter:Transformer", "ElectricLoadCenterTransformer", "ModelObject"]
+
+objects << ["OS:Construction:AirBoundary", "ConstructionAirBoundary", "ConstructionBase"]
 
 includePath = nil
 if /mswin/.match(RUBY_PLATFORM) || /mingw/.match(RUBY_PLATFORM)
   #includePath = "../../build/OSCore-prefix/src/OSCore-build/ruby/Debug"
-  includePath = "../../build/Products/ruby/Debug"
   #includePath = "../../build/OSCore-prefix/src/OSCore-build/ruby/Release"
+  #includePath = "../../build/Products/ruby/Debug"
+  includePath = "../../build-release/Products/ruby/Release"
 else
   includePath = "../../build/OSCore-prefix/src/OSCore-build/ruby"
 end

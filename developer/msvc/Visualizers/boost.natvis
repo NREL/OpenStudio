@@ -10,8 +10,37 @@
     </Expand>
 </Type>
 
+<!--  boost < 1.61 -->
+<Type Name="boost::atomics::atomic&lt;*&gt;">
+    <DisplayString>{*($T1 *)&amp;m_storage}</DisplayString>
+    <Expand>
+        <Item Name="[value]">*($T1 *)&amp;m_storage</Item>
+    </Expand>
+</Type>
+
+<!--  boost < 1.61 -->
+<Type Name="boost::atomics::atomic_flag" Priority="MediumLow">
+    <DisplayString>{(bool)(m_storage &amp; 1)}</DisplayString>
+    <Expand/>
+</Type>
+
+<!--  boost >= 1.61 -->
+<Type Name="boost::atomic&lt;*&gt;">
+    <DisplayString>{*($T1 *)&amp;m_storage}</DisplayString>
+    <Expand>
+        <Item Name="[value]">*($T1 *)&amp;m_storage</Item>
+    </Expand>
+</Type>
+
+<!--  boost >= 1.61 -->
+<Type Name="boost::atomics::atomic_flag" Priority="Medium">
+    <DisplayString>{(bool)(m_storage.value &amp; 1)}</DisplayString>
+    <Expand/>
+</Type>
+
 <Type Name="boost::filesystem::path">
     <DisplayString>path={m_pathname}</DisplayString>
+    <StringView>m_pathname,su</StringView>
     <Expand>
         <ExpandedItem>m_pathname</ExpandedItem>
     </Expand>
@@ -60,23 +89,34 @@
     </Expand>
 </Type>
 
-<!--Copyright Daniel Kruegler 2008. Use, modification and distribution are subject to-->
-<!--the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt-->
-<!--or copy at http://www.boost.org/LICENSE_1_0.txt)-->
-<!--@guid     D02681E0-021B-11DD-95FF-0800200C9A66-->
-<!--@platform msvc-8, msvc-9-->
-<!--@version  1.0-->
-<!--@author   Daniel Kruegler-->
-<!--@email    daniel dot kruegler at bdal dot de-->
-<!--Usage-->
-<!--All of the following text must be placed in the autoexp.dat file.-->
-<!--Usage is automatic. No extra code is required.-->
-<Type Name="boost::optional&lt;*&gt;">
-    <AlternativeType Name="boost::optional_detail::optional_base&lt;*&gt;" />
-    <DisplayString Condition="!m_initialized">empty</DisplayString>
-    <DisplayString Condition="m_initialized">{*(($T1 *)m_storage.dummy_.data)}</DisplayString>
+<Type Name="boost::detail::reference_content&lt;*&gt;">
+    <DisplayString>{content_}</DisplayString>
     <Expand>
-        <Item Name="value" Condition="m_initialized">*(($T1 *)m_storage.dummy_.data)</Item>
+        <ExpandedItem>content_</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::optional_detail::aligned_storage&lt;*&gt;">
+    <DisplayString>{*(($T1 *)dummy_.data)}</DisplayString>
+    <Expand>
+        <ExpandedItem>*(($T1 *)dummy_.data)</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::optional&lt;*&gt;" Priority="Medium">
+    <AlternativeType Name="boost::optional_detail::optional_base&lt;*&gt;" />
+    <DisplayString Condition="m_initialized">{m_storage}</DisplayString>
+    <Expand>
+        <Item Condition="m_initialized" Name="value">m_storage</Item>
+    </Expand>
+</Type>
+
+<Type Name="boost::optional&lt;*&gt;" Priority="MediumLow">
+    <AlternativeType Name="boost::optional_detail::optional_base&lt;*&gt;" />
+    <DisplayString Condition="ptr_ == 0">empty</DisplayString>
+    <DisplayString Condition="ptr_ != 0">{*ptr_}</DisplayString>
+    <Expand>
+        <Item Condition="ptr_ != 0" Name="value">*ptr_</Item>
     </Expand>
 </Type>
 
@@ -93,25 +133,6 @@
     <DisplayString>#if(m_offset==1) (#("null")) #else (#("non-null"))</DisplayString>
     <Expand>
         <Item Name="[ptr]" Condition="m_offset != 1">($T1*)(((char*)(void*)this)+m_offset)</Item>
-    </Expand>
-</Type>
-
-<!--boost::basic_regex from <regex>-->
-<Type Name="boost::basic_regex&lt;char,*&gt;">
-    <DisplayString Condition="m_pimpl.px == 0">empty</DisplayString>
-    <DisplayString Condition="m_pimpl.px != 0">regex {m_pimpl.px-&lt;m_expression,s}</DisplayString>
-    <StringView Condition="m_pimpl.px != 0">m_pimpl.px-&lt;m_expression,s</StringView>
-    <Expand>
-        <Item Name="[ptr]" Condition="m_pimpl.px != 0">*(m_pimpl.px)</Item>
-    </Expand>
-</Type>
-
-<Type Name="boost::basic_regex&lt;wchar_t,*&gt;">
-    <DisplayString Condition="m_pimpl.px == 0">empty</DisplayString>
-    <DisplayString Condition="m_pimpl.px != 0">regex {m_pimpl.px-&lt;m_expression,su}</DisplayString>
-    <StringView Condition="m_pimpl.px != 0">m_pimpl.px-&lt;m_expression,su</StringView>
-    <Expand>
-        <Item Name="[ptr]" Condition="m_pimpl.px != 0">*(m_pimpl.px)</Item>
     </Expand>
 </Type>
 
@@ -215,20 +236,40 @@
     <Expand/>
 </Type>
 
+<Type Name="boost::basic_string_view&lt;*&gt;">
+    <AlternativeType Name="boost::basic_string_ref&lt;*&gt;" />
+    <DisplayString>{ptr_,[len_]}</DisplayString>
+    <StringView>ptr_,[len_]</StringView>
+    <Expand>
+        <Item Name="[size]" ExcludeView="simple">len_</Item>
+        <ArrayItems>
+            <Size>len_</Size>
+            <ValuePointer>ptr_</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
 <Type Name="boost::tuples::tuple&lt;boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
+    <AlternativeType Name="boost::tuples::tuple&lt;&gt;" />
+    <DisplayString IncludeView="noparens"></DisplayString>
+    <DisplayString ExcludeView="noparens">({*this,view(noparens)})</DisplayString>
     <DisplayString>()</DisplayString>
     <Expand/>
 </Type>
 
 <Type Name="boost::tuples::tuple&lt;*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
-    <DisplayString>({head})</DisplayString>
+    <AlternativeType Name="boost::tuples::tuple&lt;*&gt;" />
+    <DisplayString IncludeView="noparens">{head,na}</DisplayString>
+    <DisplayString ExcludeView="noparens">({*this,view(noparens)})</DisplayString>
     <Expand>
         <Item Name="[0]">head</Item>
     </Expand>
 </Type>
 
 <Type Name="boost::tuples::tuple&lt;*,*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
-    <DisplayString>({head}, {tail.head})</DisplayString>
+    <AlternativeType Name="boost::tuples::tuple&lt;*,*&gt;" />
+    <DisplayString IncludeView="noparens">{head,na}, {tail.head,na}</DisplayString>
+    <DisplayString ExcludeView="noparens">({*this,view(noparens)})</DisplayString>
     <Expand>
         <Item Name="[0]">head</Item>
         <Item Name="[1]">tail.head</Item>
@@ -236,7 +277,9 @@
 </Type>
 
 <Type Name="boost::tuples::tuple&lt;*,*,*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
-    <DisplayString>({head}, {tail.head}, {tail.tail.head})</DisplayString>
+    <AlternativeType Name="boost::tuples::tuple&lt;*,*,*&gt;" />
+    <DisplayString IncludeView="noparens">{head,na}, {tail.head,na}, {tail.tail.head,na}</DisplayString>
+    <DisplayString ExcludeView="noparens">({*this,view(noparens)})</DisplayString>
     <Expand>
         <Item Name="[0]">head</Item>
         <Item Name="[1]">tail.head</Item>
@@ -245,7 +288,9 @@
 </Type>
 
 <Type Name="boost::tuples::tuple&lt;*,*,*,*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
-    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head})</DisplayString>
+    <AlternativeType Name="boost::tuples::tuple&lt;*,*,*,*&gt;" />
+    <DisplayString IncludeView="noparens">{head,na}, {tail.head,na}, {tail.tail.head,na}, {tail.tail.tail.head,na}</DisplayString>
+    <DisplayString ExcludeView="noparens">({*this,view(noparens)})</DisplayString>
     <Expand>
         <Item Name="[0]">head</Item>
         <Item Name="[1]">tail.head</Item>
@@ -255,7 +300,9 @@
 </Type>
 
 <Type Name="boost::tuples::tuple&lt;*,*,*,*,*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
-    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head}, {tail.tail.tail.tail.head})</DisplayString>
+    <AlternativeType Name="boost::tuples::tuple&lt;*,*,*,*,*&gt;" />
+    <DisplayString IncludeView="noparens">{head,na}, {tail.head,na}, {tail.tail.head,na}, {tail.tail.tail.head,na}, {tail.tail.tail.tail.head,na}</DisplayString>
+    <DisplayString ExcludeView="noparens">({*this,view(noparens)})</DisplayString>
     <Expand>
         <Item Name="[0]">head</Item>
         <Item Name="[1]">tail.head</Item>
@@ -266,7 +313,9 @@
 </Type>
 
 <Type Name="boost::tuples::tuple&lt;*,*,*,*,*,*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
-    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head}, {tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.head})</DisplayString>
+    <AlternativeType Name="boost::tuples::tuple&lt;*,*,*,*,*,*&gt;" />
+    <DisplayString IncludeView="noparens">{head,na}, {tail.head,na}, {tail.tail.head,na}, {tail.tail.tail.head,na}, {tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.head,na}</DisplayString>
+    <DisplayString ExcludeView="noparens">({*this,view(noparens)})</DisplayString>
     <Expand>
         <Item Name="[0]">head</Item>
         <Item Name="[1]">tail.head</Item>
@@ -278,7 +327,9 @@
 </Type>
 
 <Type Name="boost::tuples::tuple&lt;*,*,*,*,*,*,*,boost::tuples::null_type,boost::tuples::null_type,boost::tuples::null_type&gt;">
-    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head}, {tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.head})</DisplayString>
+    <AlternativeType Name="boost::tuples::tuple&lt;*,*,*,*,*,*,*&gt;" />
+    <DisplayString IncludeView="noparens">{head,na}, {tail.head,na}, {tail.tail.head,na}, {tail.tail.tail.head,na}, {tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.tail.head,na}</DisplayString>
+    <DisplayString ExcludeView="noparens">({*this,view(noparens)})</DisplayString>
     <Expand>
         <Item Name="[0]">head</Item>
         <Item Name="[1]">tail.head</Item>
@@ -291,7 +342,9 @@
 </Type>
 
 <Type Name="boost::tuples::tuple&lt;*,*,*,*,*,*,*,*,boost::tuples::null_type,boost::tuples::null_type&gt;">
-    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head}, {tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.tail.head})</DisplayString>
+    <AlternativeType Name="boost::tuples::tuple&lt;*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString IncludeView="noparens">{head,na}, {tail.head,na}, {tail.tail.head,na}, {tail.tail.tail.head,na}, {tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.tail.tail.head,na}</DisplayString>
+    <DisplayString ExcludeView="noparens">({*this,view(noparens)})</DisplayString>
     <Expand>
         <Item Name="[0]">head</Item>
         <Item Name="[1]">tail.head</Item>
@@ -305,7 +358,9 @@
 </Type>
 
 <Type Name="boost::tuples::tuple&lt;*,*,*,*,*,*,*,*,*,boost::tuples::null_type&gt;">
-    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head}, {tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.tail.tail.head})</DisplayString>
+    <AlternativeType Name="boost::tuples::tuple&lt;*,*,*,*,*,*,*,*,*&gt;" />
+    <DisplayString IncludeView="noparens">{head,na}, {tail.head,na}, {tail.tail.head,na}, {tail.tail.tail.head,na}, {tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.tail.tail.tail.head,na}</DisplayString>
+    <DisplayString ExcludeView="noparens">({*this,view(noparens)})</DisplayString>
     <Expand>
         <Item Name="[0]">head</Item>
         <Item Name="[1]">tail.head</Item>
@@ -320,7 +375,8 @@
 </Type>
 
 <Type Name="boost::tuples::tuple&lt;*,*,*,*,*,*,*,*,*,*&gt;">
-    <DisplayString>({head}, {tail.head}, {tail.tail.head}, {tail.tail.tail.head}, {tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.tail.tail.head}, {tail.tail.tail.tail.tail.tail.tail.tail.tail.head})</DisplayString>
+    <DisplayString IncludeView="noparens">{head,na}, {tail.head,na}, {tail.tail.head,na}, {tail.tail.tail.head,na}, {tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.tail.tail.tail.head,na}, {tail.tail.tail.tail.tail.tail.tail.tail.tail.head,na}</DisplayString>
+    <DisplayString ExcludeView="noparens">({*this,view(noparens)})</DisplayString>
     <Expand>
         <Item Name="[0]">head</Item>
         <Item Name="[1]">tail.head</Item>
@@ -336,6 +392,57 @@
 </Type>
 
 <Type Name="boost::uuids::uuid">
-    <DisplayString>{*(_GUID*)this}</DisplayString>
+    <DisplayString LegacyAddin="CPPDebuggerVisualizersNatvisAddIn.dll" Export="BoostUuidFormatter" />
+    <Expand>
+        <Synthetic Name="variant" Condition="(data[8] &amp; 0x80) == 0x00 &amp;&amp; (data[8] &amp; 0xC0) != 0x80
+             &amp;&amp; (data[8] &amp; 0xE0) != 0xC0">
+            <DisplayString>ncs</DisplayString>
+        </Synthetic>
+        <Synthetic Name="variant" Condition="(data[8] &amp; 0xE0) != 0xC0 &amp;&amp; (data[8] &amp; 0xC0) == 0x80
+             &amp;&amp; (data[8] &amp; 0xE0) != 0xC0">
+            <DisplayString>rfc 4122</DisplayString>
+        </Synthetic>
+        <Synthetic Name="variant" Condition="(data[8] &amp; 0xE0) != 0xC0 &amp;&amp; (data[8] &amp; 0xC0) != 0x80
+             &amp;&amp; (data[8] &amp; 0xE0) == 0xC0">
+            <DisplayString>microsoft</DisplayString>
+        </Synthetic>
+        <Synthetic Name="variant" Condition="(data[8] &amp; 0xE0) != 0xC0 &amp;&amp; (data[8] &amp; 0xC0) != 0x80
+             &amp;&amp; (data[8] &amp; 0xE0) != 0xC0">
+            <DisplayString>future</DisplayString>
+        </Synthetic>
+        <Synthetic Name="version" Condition="(data[6] &amp; 0xF0) == 0x10">
+            <DisplayString>time based</DisplayString>
+        </Synthetic>
+        <Synthetic Name="version" Condition="(data[6] &amp; 0xF0) == 0x20">
+            <DisplayString>dce security</DisplayString>
+        </Synthetic>
+        <Synthetic Name="version" Condition="(data[6] &amp; 0xF0) == 0x30">
+            <DisplayString>name based md5</DisplayString>
+        </Synthetic>
+        <Synthetic Name="version" Condition="(data[6] &amp; 0xF0) == 0x40">
+            <DisplayString>random number based</DisplayString>
+        </Synthetic>
+        <Synthetic Name="version" Condition="(data[6] &amp; 0xF0) == 0x50">
+            <DisplayString>name based sha1</DisplayString>
+        </Synthetic>
+        <ArrayItems>
+            <Size>16</Size>
+            <ValuePointer>data,x</ValuePointer>
+        </ArrayItems>
+    </Expand>
+</Type>
+
+<Type Name="boost::value_initialized&lt;*&gt;">
+    <DisplayString>{*(($T1 *)(&amp;m_data.x))}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_data</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="boost::initialized&lt;*&gt;">
+    <DisplayString>{*(($T1 *)(&amp;x))}</DisplayString>
+    <Expand>
+        <ExpandedItem>x</ExpandedItem>
+    </Expand>
 </Type>
 </AutoVisualizer>

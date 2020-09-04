@@ -3,26 +3,15 @@
 .bundle
 test_gems
 test_fails.txt
-/build/
-/build_debug/
-/build-debug/
-/build-meta/
-/build_release/
-/build-release/
-/build_64/
-/build-64/
-/build-relwithdebinfo/
-/build_relwithdebinfo/
-/build_profile/
-/build-profile/
-/core-build/
-/super-build/
-
-*.sublime-workspace
-
-*.sublime-project
-cmake-build-debug
+# Ignore build folders (at root level only)
+/build*/
+/debug*/
+/release*/
 
 developer/msvc/Visualizers/all_concat.natvis
 .vscode/
-
+.vs/
+*.sublime-workspace
+*.sublime-projet
+*.cache
+.clangd/

@@ -1,0 +1,751 @@
+
+OS:Version,
+  {83c1c294-1b84-462b-b743-eb19f61e9718}, !- Handle
+  2.9.1;                                  !- Version Identifier
+
+OS:Meter:CustomDecrement,
+  {5da34f18-ca94-4dda-a295-048aaecd25a8}, !- Handle
+  Meter Custom Decrement 1,               !- Name
+  PropaneGas,                             !- Fuel Type
+  MeterCustomDecrement;                   !- Source Meter Name
+
+OS:EnergyManagementSystem:MeteredOutputVariable,
+  {6e55e627-d314-45ef-84a2-d803aaa4b3ee}, !- Handle
+  Energy Management System Metered Output Variable 1, !- Name
+  Cooucou,                                !- EMS Variable Name
+  SystemTimestep,                         !- Update Frequency
+  ,                                       !- EMS Program or Subroutine Name
+  FuelOil#1,                              !- Resource Type
+  Building,                               !- Group Type
+  Fans;                                   !- End-Use Category
+
+OS:OtherEquipment:Definition,
+  {86102c06-56f6-4305-973b-86370cef62ba}, !- Handle
+  Other Equipment Definition 1,           !- Name
+  EquipmentLevel,                         !- Design Level Calculation Method
+  0,                                      !- Design Level {W}
+  ,                                       !- Watts per Space Floor Area {W/m2}
+  ;                                       !- Watts per Person {W/Person}
+
+OS:OtherEquipment,
+  {1f51b735-7e25-48bf-aef8-3c8a970b688b}, !- Handle
+  Other Equipment 1,                      !- Name
+  {86102c06-56f6-4305-973b-86370cef62ba}, !- Other Equipment Definition Name
+  ,                                       !- Space or SpaceType Name
+  ,                                       !- Schedule Name
+  ,                                       !- Multiplier
+  PropaneGas,                             !- Fuel Type
+  General;                                !- End-Use Subcategory
+
+OS:Exterior:FuelEquipment:Definition,
+  {0d456e44-6780-4b93-ac0a-a846156cca47}, !- Handle
+  Exterior Fuel Equipment Definition 1,   !- Name
+  0;                                      !- Design Level {W}
+
+OS:Exterior:FuelEquipment,
+  {b74fd153-719c-48cb-8cc6-b9c3d1bd1b88}, !- Handle
+  Exterior Fuel Equipment 1,              !- Name
+  {0d456e44-6780-4b93-ac0a-a846156cca47}, !- Exterior Fuel Equipment Definition Name
+  {25fd2dc8-0aab-4b27-b3f7-59a21b1043d5}, !- Schedule Name
+  FuelOil#2,                              !- Fuel Use Type
+  ,                                       !- Multiplier
+  General;                                !- End-Use Subcategory
+
+OS:Schedule:Constant,
+  {25fd2dc8-0aab-4b27-b3f7-59a21b1043d5}, !- Handle
+  Always On Discrete,                     !- Name
+  {0dad43cd-fc10-47c0-821c-f98704c474b5}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {0dad43cd-fc10-47c0-821c-f98704c474b5}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:AirConditioner:VariableRefrigerantFlow,
+  {6bcece3f-ede4-49d7-8da1-0105a90de7a2}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1, !- Name
+  {25fd2dc8-0aab-4b27-b3f7-59a21b1043d5}, !- Availability Schedule
+  autosize,                               !- Gross Rated Total Cooling Capacity {W}
+  3.3,                                    !- Gross Rated Cooling COP {W/W}
+  -5,                                     !- Minimum Outdoor Temperature in Cooling Mode {C}
+  43,                                     !- Maximum Outdoor Temperature in Cooling Mode {C}
+  {a06bf89a-ee5a-40b4-bf38-3880806d2ea1}, !- Cooling Capacity Ratio Modifier Function of Low Temperature Curve Name
+  {70fe112b-4bc2-4c69-ae2d-220ee367544a}, !- Cooling Capacity Ratio Boundary Curve Name
+  {e9dc397d-59d4-4e82-9def-d45632b0e613}, !- Cooling Capacity Ratio Modifier Function of High Temperature Curve Name
+  {9e6384fa-eaa7-413d-9417-c412fe78508c}, !- Cooling Energy Input Ratio Modifier Function of Low Temperature Curve Name
+  {08d7fe10-96e8-452c-b717-fcf2accf2d36}, !- Cooling Energy Input Ratio Boundary Curve Name
+  {d751b53a-0dc4-4830-85ce-653d2153b107}, !- Cooling Energy Input Ratio Modifier Function of High Temperature Curve Name
+  {658c1e27-697a-4ed0-8d34-d8a6b704705e}, !- Cooling Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve Name
+  {66a147f6-2437-45b3-a5d1-c110af2bb274}, !- Cooling Energy Input Ratio Modifier Function of High Part-Load Ratio Curve Name
+  {f4eac9ed-871e-42cd-9bc4-2efaf0d3526b}, !- Cooling Combination Ratio Correction Factor Curve Name
+  {3d49c036-6913-40be-bf89-65e834455102}, !- Cooling Part-Load Fraction Correlation Curve Name
+  autosize,                               !- Gross Rated Heating Capacity {W}
+  1,                                      !- Rated Heating Capacity Sizing Ratio {W/W}
+  3.5,                                    !- Rated Heating COP {W/W}
+  -20,                                    !- Minimum Outdoor Temperature in Heating Mode {C}
+  30,                                     !- Maximum Outdoor Temperature in Heating Mode {C}
+  {5ceaa133-a2a5-467a-99c8-0b5b22f0550f}, !- Heating Capacity Ratio Modifier Function of Low Temperature Curve Name
+  {61cbc59b-1398-4459-ac11-7dae4ea2489c}, !- Heating Capacity Ratio Boundary Curve Name
+  {4b220c16-f195-4f0b-8f97-ad5e84f78896}, !- Heating Capacity Ratio Modifier Function of High Temperature Curve Name
+  {91778f52-a29f-4e4d-81da-80a8d8d3703d}, !- Heating Energy Input Ratio Modifier Function of Low Temperature Curve Name
+  {4fde9d2d-88cd-4368-a12a-ce95b10c5896}, !- Heating Energy Input Ratio Boundary Curve Name
+  {b53fd085-3515-4f7c-94ab-6d3f5e734237}, !- Heating Energy Input Ratio Modifier Function of High Temperature Curve Name
+  WetBulbTemperature,                     !- Heating Performance Curve Outdoor Temperature Type
+  {b30f0306-5f8d-4a85-96cf-ac0fc707f115}, !- Heating Energy Input Ratio Modifier Function of Low Part-Load Ratio Curve Name
+  {990f5854-8fc8-4f33-ab0d-f4304fa9ba26}, !- Heating Energy Input Ratio Modifier Function of High Part-Load Ratio Curve Name
+  {70f05b28-1cce-44a3-9cf7-922873856e0f}, !- Heating Combination Ratio Correction Factor Curve Name
+  {3d49c036-6913-40be-bf89-65e834455102}, !- Heating Part-Load Fraction Correlation Curve Name
+  0.25,                                   !- Minimum Heat Pump Part-Load Ratio {dimensionless}
+  ,                                       !- Zone Name for Master Thermostat Location
+  LoadPriority,                           !- Master Thermostat Priority Control Type
+  ,                                       !- Thermostat Priority Schedule
+  {1616068f-2f2a-4cce-bddf-1e248a72e96b}, !- Zone Terminal Unit List
+  No,                                     !- Heat Pump Waste Heat Recovery
+  30,                                     !- Equivalent Piping Length used for Piping Correction Factor in Cooling Mode {m}
+  10,                                     !- Vertical Height used for Piping Correction Factor {m}
+  {a888220f-8ad6-4958-8f77-abfdf1787cf8}, !- Piping Correction Factor for Length in Cooling Mode Curve Name
+  -0.000386,                              !- Piping Correction Factor for Height in Cooling Mode Coefficient {1/m}
+  30,                                     !- Equivalent Piping Length used for Piping Correction Factor in Heating Mode {m}
+  ,                                       !- Piping Correction Factor for Length in Heating Mode Curve Name
+  0,                                      !- Piping Correction Factor for Height in Heating Mode Coefficient {1/m}
+  15,                                     !- Crankcase Heater Power per Compressor {W}
+  3,                                      !- Number of Compressors {dimensionless}
+  0.33,                                   !- Ratio of Compressor Size to Total Compressor Capacity {W/W}
+  7,                                      !- Maximum Outdoor Dry-bulb Temperature for Crankcase Heater {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  ,                                       !- Defrost Energy Input Ratio Modifier Function of Temperature Curve Name
+  0.058333,                               !- Defrost Time Period Fraction {dimensionless}
+  1e-07,                                  !- Resistive Defrost Heater Capacity {W}
+  7,                                      !- Maximum Outdoor Dry-bulb Temperature for Defrost Operation {C}
+  ,                                       !- Condenser Type
+  ,                                       !- Condenser Inlet Node
+  ,                                       !- Condenser Outlet Node
+  autosize,                               !- Water Condenser Volume Flow Rate {m3/s}
+  0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
+  autosize,                               !- Evaporative Condenser Air Flow Rate {m3/s}
+  autosize,                               !- Evaporative Condenser Pump Rated Power Consumption {W}
+  ,                                       !- Supply Water Storage Tank
+  0,                                      !- Basin Heater Capacity {W/K}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  ,                                       !- Basin Heater Operating Schedule
+  PropaneGas,                             !- Fuel Type
+  0,                                      !- Minimum Outdoor Temperature in Heat Recovery Mode {C}
+  20,                                     !- Maximum Outdoor Temperature in Heat Recovery Mode {C}
+  ,                                       !- Heat Recovery Cooling Capacity Modifier Curve Name
+  0.5,                                    !- Initial Heat Recovery Cooling Capacity Fraction {W/W}
+  0.083,                                  !- Heat Recovery Cooling Capacity Time Constant {hr}
+  ,                                       !- Heat Recovery Cooling Energy Modifier Curve Name
+  1,                                      !- Initial Heat Recovery Cooling Energy Fraction {W/W}
+  0,                                      !- Heat Recovery Cooling Energy Time Constant {hr}
+  ,                                       !- Heat Recovery Heating Capacity Modifier Curve Name
+  0.5,                                    !- Initial Heat Recovery Heating Capacity Fraction {W/W}
+  0.083,                                  !- Heat Recovery Heating Capacity Time Constant {hr}
+  ,                                       !- Heat Recovery Heating Energy Modifier Curve Name
+  0.5,                                    !- Initial Heat Recovery Heating Energy Fraction {W/W}
+  0;                                      !- Heat Recovery Heating Energy Time Constant {hr}
+
+OS:Curve:Biquadratic,
+  {a06bf89a-ee5a-40b4-bf38-3880806d2ea1}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCoolCapFT, !- Name
+  0.576882692,                            !- Coefficient1 Constant
+  0.017447952,                            !- Coefficient2 x
+  0.000583269,                            !- Coefficient3 x**2
+  -1.76324e-06,                           !- Coefficient4 y
+  -7.474e-09,                             !- Coefficient5 y**2
+  -1.30413e-07,                           !- Coefficient6 x*y
+  15,                                     !- Minimum Value of x
+  24,                                     !- Maximum Value of x
+  -5,                                     !- Minimum Value of y
+  23;                                     !- Maximum Value of y
+
+OS:Curve:Cubic,
+  {70fe112b-4bc2-4c69-ae2d-220ee367544a}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCoolCapFTBoundary, !- Name
+  25.73,                                  !- Coefficient1 Constant
+  -0.03150043,                            !- Coefficient2 x
+  -0.01416595,                            !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  11,                                     !- Minimum Value of x
+  30;                                     !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {e9dc397d-59d4-4e82-9def-d45632b0e613}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCoolCapFTHi, !- Name
+  0.6867358,                              !- Coefficient1 Constant
+  0.0207631,                              !- Coefficient2 x
+  0.0005447,                              !- Coefficient3 x**2
+  -0.0016218,                             !- Coefficient4 y
+  -4.259e-07,                             !- Coefficient5 y**2
+  -0.0003392,                             !- Coefficient6 x*y
+  15,                                     !- Minimum Value of x
+  24,                                     !- Maximum Value of x
+  16,                                     !- Minimum Value of y
+  43;                                     !- Maximum Value of y
+
+OS:Curve:Biquadratic,
+  {9e6384fa-eaa7-413d-9417-c412fe78508c}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCoolEIRFT, !- Name
+  0.989010541,                            !- Coefficient1 Constant
+  -0.02347967,                            !- Coefficient2 x
+  0.000199711,                            !- Coefficient3 x**2
+  0.005968336,                            !- Coefficient4 y
+  -1.0289e-07,                            !- Coefficient5 y**2
+  -0.00015686,                            !- Coefficient6 x*y
+  15,                                     !- Minimum Value of x
+  24,                                     !- Maximum Value of x
+  -5,                                     !- Minimum Value of y
+  23;                                     !- Maximum Value of y
+
+OS:Curve:Cubic,
+  {08d7fe10-96e8-452c-b717-fcf2accf2d36}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCoolEIRFTBoundary, !- Name
+  25.73473775,                            !- Coefficient1 Constant
+  -0.03150043,                            !- Coefficient2 x
+  -0.01416595,                            !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  15,                                     !- Minimum Value of x
+  24;                                     !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {d751b53a-0dc4-4830-85ce-653d2153b107}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCoolEIRFTHi, !- Name
+  -1.4395110176,                          !- Coefficient1 Constant
+  0.1619850459,                           !- Coefficient2 x
+  -0.0034911781,                          !- Coefficient3 x**2
+  0.0269442645,                           !- Coefficient4 y
+  0.0001346163,                           !- Coefficient5 y**2
+  -0.0006714941,                          !- Coefficient6 x*y
+  15,                                     !- Minimum Value of x
+  23.9,                                   !- Maximum Value of x
+  16.8,                                   !- Minimum Value of y
+  43.3;                                   !- Maximum Value of y
+
+OS:Curve:Cubic,
+  {658c1e27-697a-4ed0-8d34-d8a6b704705e}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 CoolingEIRLowPLR, !- Name
+  0.4541226192,                           !- Coefficient1 Constant
+  -0.1729687081,                          !- Coefficient2 x
+  1.0828661347,                           !- Coefficient3 x**2
+  -0.3618480897,                          !- Coefficient4 x**3
+  0.5,                                    !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {66a147f6-2437-45b3-a5d1-c110af2bb274}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 CoolingEIRHiPLR, !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  1,                                      !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {f4eac9ed-871e-42cd-9bc4-2efaf0d3526b}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 CoolingCombRatio, !- Name
+  0.576593263,                            !- Coefficient1 Constant
+  0.6349408697,                           !- Coefficient2 x
+  -0.3076093963,                          !- Coefficient3 x**2
+  0.0960752636,                           !- Coefficient4 x**3
+  1,                                      !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {3d49c036-6913-40be-bf89-65e834455102}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFCPLFFPLR, !- Name
+  0.85,                                   !- Coefficient1 Constant
+  0.15,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  1,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {5ceaa133-a2a5-467a-99c8-0b5b22f0550f}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFHeatCapFT, !- Name
+  1.012090154,                            !- Coefficient1 Constant
+  -0.0012467553,                          !- Coefficient2 x
+  -0.0001271847,                          !- Coefficient3 x**2
+  0.0267564328,                           !- Coefficient4 y
+  -4.986e-07,                             !- Coefficient5 y**2
+  -0.0002635239,                          !- Coefficient6 x*y
+  21.1,                                   !- Minimum Value of x
+  27.2,                                   !- Maximum Value of x
+  -20,                                    !- Minimum Value of y
+  3.33;                                   !- Maximum Value of y
+
+OS:Curve:Cubic,
+  {61cbc59b-1398-4459-ac11-7dae4ea2489c}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFHeatCapFTBoundary, !- Name
+  58.577,                                 !- Coefficient1 Constant
+  -3.0255,                                !- Coefficient2 x
+  0.0193,                                 !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  15,                                     !- Minimum Value of x
+  23.9;                                   !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {4b220c16-f195-4f0b-8f97-ad5e84f78896}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFHeatCapFTHi, !- Name
+  2.5859872368,                           !- Coefficient1 Constant
+  -0.0953227101,                          !- Coefficient2 x
+  0.0009553288,                           !- Coefficient3 x**2
+  0,                                      !- Coefficient4 y
+  0,                                      !- Coefficient5 y**2
+  0,                                      !- Coefficient6 x*y
+  21.1,                                   !- Minimum Value of x
+  27.2,                                   !- Maximum Value of x
+  -9.44,                                  !- Minimum Value of y
+  15;                                     !- Maximum Value of y
+
+OS:Curve:Biquadratic,
+  {91778f52-a29f-4e4d-81da-80a8d8d3703d}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFHeatEIRFT, !- Name
+  0.7224292683,                           !- Coefficient1 Constant
+  0.0034566628,                           !- Coefficient2 x
+  0.0006507028,                           !- Coefficient3 x**2
+  -0.0026435362,                          !- Coefficient4 y
+  0.0012464766,                           !- Coefficient5 y**2
+  -0.0001009161,                          !- Coefficient6 x*y
+  21.1,                                   !- Minimum Value of x
+  27.2,                                   !- Maximum Value of x
+  -20,                                    !- Minimum Value of y
+  3.33;                                   !- Maximum Value of y
+
+OS:Curve:Cubic,
+  {4fde9d2d-88cd-4368-a12a-ce95b10c5896}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFHeatEIRFTBoundary, !- Name
+  58.577,                                 !- Coefficient1 Constant
+  -3.0255,                                !- Coefficient2 x
+  0.0193,                                 !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  15,                                     !- Minimum Value of x
+  23.9;                                   !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {b53fd085-3515-4f7c-94ab-6d3f5e734237}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 VRFHeatEIRFTHi, !- Name
+  1.3885703646,                           !- Coefficient1 Constant
+  -0.0229771462,                          !- Coefficient2 x
+  0.000537274,                            !- Coefficient3 x**2
+  -0.0273936962,                          !- Coefficient4 y
+  0.0004030426,                           !- Coefficient5 y**2
+  -5.9786e-05,                            !- Coefficient6 x*y
+  21.1,                                   !- Minimum Value of x
+  27.2,                                   !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  1;                                      !- Maximum Value of y
+
+OS:Curve:Cubic,
+  {b30f0306-5f8d-4a85-96cf-ac0fc707f115}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 HeatingEIRLowPLR, !- Name
+  0.3924742025,                           !- Coefficient1 Constant
+  0.076016374,                            !- Coefficient2 x
+  0.6983235783,                           !- Coefficient3 x**2
+  -0.1688407813,                          !- Coefficient4 x**3
+  0.5,                                    !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {990f5854-8fc8-4f33-ab0d-f4304fa9ba26}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 HeatingEIRHiPLR, !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  1,                                      !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {70f05b28-1cce-44a3-9cf7-922873856e0f}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 HeatingCombRatio, !- Name
+  0.7667196604,                           !- Coefficient1 Constant
+  0.2617302019,                           !- Coefficient2 x
+  -0.0159110245,                          !- Coefficient3 x**2
+  -0.0125388376,                          !- Coefficient4 x**3
+  1,                                      !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {a888220f-8ad6-4958-8f77-abfdf1787cf8}, !- Handle
+  Air Conditioner Variable Refrigerant Flow 1 CoolingLengthCorrectionFactor, !- Name
+  2.0388158625,                           !- Coefficient1 Constant
+  -0.0024260645,                          !- Coefficient2 x
+  3.5512e-06,                             !- Coefficient3 x**2
+  -1.6858129772,                          !- Coefficient4 y
+  0.668703358,                            !- Coefficient5 y**2
+  -4.5706e-05,                            !- Coefficient6 x*y
+  7.62,                                   !- Minimum Value of x
+  182.88,                                 !- Maximum Value of x
+  0.8,                                    !- Minimum Value of y
+  1.5;                                    !- Maximum Value of y
+
+OS:ModelObjectList,
+  {1616068f-2f2a-4cce-bddf-1e248a72e96b}, !- Handle
+  {5d7bf2c0-e989-47e3-bc03-b07292eca363}; !- Name
+
+OS:Boiler:HotWater,
+  {08816f63-3309-40ce-a44e-52d8235b4f90}, !- Handle
+  Boiler Hot Water 1,                     !- Name
+  FuelOil#2,                              !- Fuel Type
+  ,                                       !- Nominal Capacity {W}
+  ,                                       !- Nominal Thermal Efficiency
+  ,                                       !- Efficiency Curve Temperature Evaluation Variable
+  ,                                       !- Normalized Boiler Efficiency Curve Name
+  ,                                       !- Design Water Outlet Temperature {C}
+  ,                                       !- Design Water Flow Rate {m3/s}
+  ,                                       !- Minimum Part Load Ratio
+  ,                                       !- Maximum Part Load Ratio
+  ,                                       !- Optimum Part Load Ratio
+  ,                                       !- Boiler Water Inlet Node Name
+  ,                                       !- Boiler Water Outlet Node Name
+  99,                                     !- Water Outlet Upper Temperature Limit {C}
+  ConstantFlow,                           !- Boiler Flow Mode
+  0,                                      !- Parasitic Electric Load {W}
+  1,                                      !- Sizing Factor
+  General;                                !- End-Use Subcategory
+
+OS:Boiler:Steam,
+  {a2924a6a-c1be-46a4-83bd-d61d9234a2c7}, !- Handle
+  Boiler Steam 1,                         !- Name
+  FuelOil#1,                              !- Fuel Type
+  160000,                                 !- Maximum Operating Pressure {kPa}
+  0.8,                                    !- Theoretical Efficiency
+  115,                                    !- Design Outlet Steam Temperature {C}
+  autosize,                               !- Nominal Capacity {W}
+  1e-05,                                  !- Minimum Part Load Ratio
+  1,                                      !- Maximum Part Load Ratio
+  0.2,                                    !- Optimum Part Load Ratio
+  0.8,                                    !- Coefficient 1 of Fuel Use Function of Part Load Ratio Curve
+  0.1,                                    !- Coefficient 2 of Fuel Use Function of Part Load Ratio Curve
+  0.1,                                    !- Coefficient 3 of Fuel Use Function of Part Load Ratio Curve
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Steam Outlet Node Name
+  1,                                      !- Sizing Factor
+  General;                                !- End-Use Subcategory
+
+OS:Coil:Cooling:DX:MultiSpeed,
+  {98a8d4a0-9b5c-4c58-9d29-9d8e4c87f9a5}, !- Handle
+  Coil Cooling DX Multi Speed 1,          !- Name
+  ,                                       !- Availability Schedule
+  ,                                       !- Air Inlet Node
+  ,                                       !- Air Outlet Node
+  ,                                       !- Condenser Air Inlet Node
+  AirCooled,                              !- Condenser Type
+  ,                                       !- Supply Water Storage Tank
+  ,                                       !- Condensate Collection Water Storage Tank
+  No,                                     !- Apply Part Load Fraction to Speeds Greater than 1
+  ,                                       !- Apply Latent Degradation to Speeds Greater than 1
+  0,                                      !- Crankcase Heater Capacity {W}
+  10,                                     !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  0,                                      !- Basin Heater Capacity {W/K}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  ,                                       !- Basin Heater Operating Schedule
+  PropaneGas;                             !- Fuel Type
+
+OS:Coil:Heating:Gas,
+  {e612d929-9939-46c3-80ad-fe2f57f38fa5}, !- Handle
+  Coil Heating Gas 1,                     !- Name
+  {25fd2dc8-0aab-4b27-b3f7-59a21b1043d5}, !- Availability Schedule Name
+  0.8,                                    !- Gas Burner Efficiency
+  AutoSize,                               !- Nominal Capacity {W}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Temperature Setpoint Node Name
+  0,                                      !- Parasitic Electric Load {W}
+  ,                                       !- Part Load Fraction Correlation Curve Name
+  0,                                      !- Parasitic Gas Load {W}
+  FuelOil#1;                              !- Fuel Type
+
+OS:Coil:Heating:DX:MultiSpeed,
+  {680d484b-7746-40ab-b9ca-aedded36779c}, !- Handle
+  Coil Heating DX Multi Speed 1,          !- Name
+  {25fd2dc8-0aab-4b27-b3f7-59a21b1043d5}, !- Availability Schedule Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  -8,                                     !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Outdoor Dry-Bulb Temperature to Turn On Compressor {C}
+  0,                                      !- Crankcase Heater Capacity {W}
+  10,                                     !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  5,                                      !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  Resistive,                              !- Defrost Strategy
+  OnDemand,                               !- Defrost Control
+  0.058333,                               !- Defrost Time Period Fraction
+  autosize,                               !- Resistive Defrost Heater Capacity {W}
+  No,                                     !- Apply Part Load Fraction to Speeds Greater than 1
+  PropaneGas,                             !- Fuel Type
+  4,                                      !- Region number for Calculating HSPF
+  {86aabda2-56cc-4d20-993d-25c1d942d8f2}; !- Stage Data List
+
+OS:ModelObjectList,
+  {86aabda2-56cc-4d20-993d-25c1d942d8f2}, !- Handle
+  Coil Heating DX Multi Speed 1 Stage Data List; !- Name
+
+OS:WaterHeater:Mixed,
+  {7e79dbaa-78d6-479b-8758-6a53b7db388a}, !- Handle
+  Water Heater Mixed 1,                   !- Name
+  0.3785,                                 !- Tank Volume {m3}
+  {60826cd9-84b8-462f-b1af-0daa441a7dab}, !- Setpoint Temperature Schedule Name
+  2,                                      !- Deadband Temperature Difference {deltaC}
+  82.22,                                  !- Maximum Temperature Limit {C}
+  Cycle,                                  !- Heater Control Type
+  845000,                                 !- Heater Maximum Capacity {W}
+  ,                                       !- Heater Minimum Capacity {W}
+  ,                                       !- Heater Ignition Minimum Flow Rate {m3/s}
+  ,                                       !- Heater Ignition Delay {s}
+  FuelOil#2,                              !- Heater Fuel Type
+  0.8,                                    !- Heater Thermal Efficiency
+  ,                                       !- Part Load Factor Curve Name
+  20,                                     !- Off Cycle Parasitic Fuel Consumption Rate {W}
+  FuelOil#2,                              !- Off Cycle Parasitic Fuel Type
+  0.8,                                    !- Off Cycle Parasitic Heat Fraction to Tank
+  ,                                       !- On Cycle Parasitic Fuel Consumption Rate {W}
+  FuelOil#1,                              !- On Cycle Parasitic Fuel Type
+  ,                                       !- On Cycle Parasitic Heat Fraction to Tank
+  Schedule,                               !- Ambient Temperature Indicator
+  {d2be390b-c79b-47dc-8428-ea00b214180c}, !- Ambient Temperature Schedule Name
+  ,                                       !- Ambient Temperature Thermal Zone Name
+  ,                                       !- Ambient Temperature Outdoor Air Node Name
+  6,                                      !- Off Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       !- Off Cycle Loss Fraction to Thermal Zone
+  6,                                      !- On Cycle Loss Coefficient to Ambient Temperature {W/K}
+  ,                                       !- On Cycle Loss Fraction to Thermal Zone
+  ,                                       !- Peak Use Flow Rate {m3/s}
+  ,                                       !- Use Flow Rate Fraction Schedule Name
+  ,                                       !- Cold Water Supply Temperature Schedule Name
+  ,                                       !- Use Side Inlet Node Name
+  ,                                       !- Use Side Outlet Node Name
+  1,                                      !- Use Side Effectiveness
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  1,                                      !- Source Side Effectiveness
+  autosize,                               !- Use Side Design Flow Rate {m3/s}
+  autosize,                               !- Source Side Design Flow Rate {m3/s}
+  1.5,                                    !- Indirect Water Heating Recovery Time {hr}
+  IndirectHeatPrimarySetpoint,            !- Source Side Flow Control Mode
+  ,                                       !- Indirect Alternate Setpoint Temperature Schedule Name
+  General;                                !- End-Use Subcategory
+
+OS:Schedule:Ruleset,
+  {d2be390b-c79b-47dc-8428-ea00b214180c}, !- Handle
+  Schedule Ruleset 1,                     !- Name
+  {bf8bd63f-f5f6-4bcd-94b9-d85810bc1edb}, !- Schedule Type Limits Name
+  {4468cc33-0aee-488d-9f36-7cab569ffb89}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {4468cc33-0aee-488d-9f36-7cab569ffb89}, !- Handle
+  Schedule Day 1,                         !- Name
+  {bf8bd63f-f5f6-4bcd-94b9-d85810bc1edb}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  22;                                     !- Value Until Time 1
+
+OS:ScheduleTypeLimits,
+  {bf8bd63f-f5f6-4bcd-94b9-d85810bc1edb}, !- Handle
+  Temperature,                            !- Name
+  ,                                       !- Lower Limit Value
+  ,                                       !- Upper Limit Value
+  Continuous,                             !- Numeric Type
+  Temperature;                            !- Unit Type
+
+OS:Schedule:Ruleset,
+  {60826cd9-84b8-462f-b1af-0daa441a7dab}, !- Handle
+  Schedule Ruleset 2,                     !- Name
+  {bf8bd63f-f5f6-4bcd-94b9-d85810bc1edb}, !- Schedule Type Limits Name
+  {afc5be7b-561a-43f3-852f-fc3b61a8bf47}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {afc5be7b-561a-43f3-852f-fc3b61a8bf47}, !- Handle
+  Schedule Day 2,                         !- Name
+  {bf8bd63f-f5f6-4bcd-94b9-d85810bc1edb}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  60;                                     !- Value Until Time 1
+
+OS:WaterHeater:Stratified,
+  {8281fb0b-886f-4e2a-b8b4-1fbbe895bb30}, !- Handle
+  Water Heater Stratified 1,              !- Name
+  General,                                !- End-Use Subcategory
+  0.1893,                                 !- Tank Volume {m3}
+  1.4,                                    !- Tank Height {m}
+  VerticalCylinder,                       !- Tank Shape
+  ,                                       !- Tank Perimeter {m}
+  82.22,                                  !- Maximum Temperature Limit {C}
+  MasterSlave,                            !- Heater Priority Control
+  {912c56a2-4329-4fd6-894d-b41a06cf0b0c}, !- Heater 1 Setpoint Temperature Schedule Name
+  2,                                      !- Heater 1 Deadband Temperature Difference {deltaC}
+  4500,                                   !- Heater 1 Capacity {W}
+  1,                                      !- Heater 1 Height {m}
+  {5dd6141c-f432-4d0d-8ff2-849c4ccba657}, !- Heater 2 Setpoint Temperature Schedule Name
+  5,                                      !- Heater 2 Deadband Temperature Difference {deltaC}
+  4500,                                   !- Heater 2 Capacity {W}
+  0,                                      !- Heater 2 Height {m}
+  PropaneGas,                             !- Heater Fuel Type
+  0.98,                                   !- Heater Thermal Efficiency
+  10,                                     !- Off Cycle Parasitic Fuel Consumption Rate {W}
+  FuelOil#1,                              !- Off Cycle Parasitic Fuel Type
+  0,                                      !- Off Cycle Parasitic Heat Fraction to Tank
+  0,                                      !- Off Cycle Parasitic Height {m}
+  10,                                     !- On Cycle Parasitic Fuel Consumption Rate {W}
+  PropaneGas,                             !- On Cycle Parasitic Fuel Type
+  0,                                      !- On Cycle Parasitic Heat Fraction to Tank
+  0,                                      !- On Cycle Parasitic Height {m}
+  Schedule,                               !- Ambient Temperature Indicator
+  {347f7cf7-8701-4249-979f-d56a8635db53}, !- Ambient Temperature Schedule Name
+  ,                                       !- Ambient Temperature Thermal Zone Name
+  ,                                       !- Ambient Temperature Outdoor Air Node Name
+  0.846,                                  !- Uniform Skin Loss Coefficient per Unit Area to Ambient Temperature {W/m2-K}
+  1,                                      !- Skin Loss Fraction to Zone
+  0,                                      !- Off Cycle Flue Loss Coefficient to Ambient Temperature {W/K}
+  1,                                      !- Off Cycle Flue Loss Fraction to Zone
+  ,                                       !- Peak Use Flow Rate {m3/s}
+  ,                                       !- Use Flow Rate Fraction Schedule Name
+  ,                                       !- Cold Water Supply Temperature Schedule Name
+  ,                                       !- Use Side Inlet Node Name
+  ,                                       !- Use Side Outlet Node Name
+  1,                                      !- Use Side Effectiveness
+  0,                                      !- Use Side Inlet Height {m}
+  autocalculate,                          !- Use Side Outlet Height {m}
+  ,                                       !- Source Side Inlet Node Name
+  ,                                       !- Source Side Outlet Node Name
+  1,                                      !- Source Side Effectiveness
+  autocalculate,                          !- Source Side Inlet Height {m}
+  0,                                      !- Source Side Outlet Height {m}
+  Fixed,                                  !- Inlet Mode
+  autosize,                               !- Use Side Design Flow Rate {m3/s}
+  autosize,                               !- Source Side Design Flow Rate {m3/s}
+  1.5,                                    !- Indirect Water Heating Recovery Time {hr}
+  6,                                      !- Number of Nodes
+  0.1,                                    !- Additional Destratification Conductivity {W/m-K}
+  0.15,                                   !- Node 1 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 2 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 3 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 4 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 5 Additional Loss Coefficient {W/m2-K}
+  0.1,                                    !- Node 6 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 7 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 8 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 9 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 10 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 11 Additional Loss Coefficient {W/m2-K}
+  0,                                      !- Node 12 Additional Loss Coefficient {W/m2-K}
+  IndirectHeatPrimarySetpoint;            !- Source Side Flow Control Mode
+
+OS:Schedule:Ruleset,
+  {912c56a2-4329-4fd6-894d-b41a06cf0b0c}, !- Handle
+  Schedule Ruleset 3,                     !- Name
+  {bf8bd63f-f5f6-4bcd-94b9-d85810bc1edb}, !- Schedule Type Limits Name
+  {45ade34f-057b-41f2-b5ba-2503a1c131ae}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {45ade34f-057b-41f2-b5ba-2503a1c131ae}, !- Handle
+  Schedule Day 3,                         !- Name
+  {bf8bd63f-f5f6-4bcd-94b9-d85810bc1edb}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  48.89;                                  !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {5dd6141c-f432-4d0d-8ff2-849c4ccba657}, !- Handle
+  Schedule Ruleset 4,                     !- Name
+  {bf8bd63f-f5f6-4bcd-94b9-d85810bc1edb}, !- Schedule Type Limits Name
+  {caac20e4-e68c-430a-a23f-d83f140bcdad}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {caac20e4-e68c-430a-a23f-d83f140bcdad}, !- Handle
+  Schedule Day 4,                         !- Name
+  {bf8bd63f-f5f6-4bcd-94b9-d85810bc1edb}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  48.89;                                  !- Value Until Time 1
+
+OS:Schedule:Ruleset,
+  {347f7cf7-8701-4249-979f-d56a8635db53}, !- Handle
+  Schedule Ruleset 5,                     !- Name
+  {bf8bd63f-f5f6-4bcd-94b9-d85810bc1edb}, !- Schedule Type Limits Name
+  {f7a665e8-3532-4738-bf50-28c8b8f14dd5}; !- Default Day Schedule Name
+
+OS:Schedule:Day,
+  {f7a665e8-3532-4738-bf50-28c8b8f14dd5}, !- Handle
+  Schedule Day 5,                         !- Name
+  {bf8bd63f-f5f6-4bcd-94b9-d85810bc1edb}, !- Schedule Type Limits Name
+  ,                                       !- Interpolate to Timestep
+  24,                                     !- Hour 1
+  0,                                      !- Minute 1
+  22;                                     !- Value Until Time 1
+
+OS:Generator:MicroTurbine,
+  {0d2a6fc1-f64d-4ad6-b53c-ed1f1bd840cc}, !- Handle
+  Generator Micro Turbine 1,              !- Name
+  ,                                       !- Availability Schedule Name
+  65000,                                  !- Reference Electrical Power Output {W}
+  ,                                       !- Minimum Full Load Electrical Power Output {W}
+  ,                                       !- Maximum Full Load Electrical Power Output {W}
+  0.29,                                   !- Reference Electrical Efficiency Using Lower Heating Value
+  ,                                       !- Reference Combustion Air Inlet Temperature {C}
+  ,                                       !- Reference Combustion Air Inlet Humidity Ratio {kgWater/kgDryAir}
+  ,                                       !- Reference Elevation {m}
+  {6f1cb718-1960-491c-b041-118a313e7888}, !- Electrical Power Function of Temperature and Elevation Curve Name
+  {5dfb0990-570c-4347-9706-5a4bc51ff619}, !- Electrical Efficiency Function of Temperature Curve Name
+  {f147702a-ea2b-416a-b393-76452de8a966}, !- Electrical Efficiency Function of Part Load Ratio Curve Name
+  PropaneGas;                             !- Fuel Type
+
+OS:Curve:Biquadratic,
+  {6f1cb718-1960-491c-b041-118a313e7888}, !- Handle
+  Generator Micro Turbine 1 Capstone C65 Power_vs_Temp_Elev, !- Name
+  1.2027697,                              !- Coefficient1 Constant
+  -0.009671305,                           !- Coefficient2 x
+  -4.860793e-06,                          !- Coefficient3 x**2
+  -0.0001542394,                          !- Coefficient4 y
+  9.111418e-09,                           !- Coefficient5 y**2
+  8.797885e-07,                           !- Coefficient6 x*y
+  -17.8,                                  !- Minimum Value of x
+  50,                                     !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  3050;                                   !- Maximum Value of y
+
+OS:Curve:Cubic,
+  {5dfb0990-570c-4347-9706-5a4bc51ff619}, !- Handle
+  Generator Micro Turbine 1 Capstone C65 Efficiency_vs_Temp, !- Name
+  1.0402217,                              !- Coefficient1 Constant
+  -0.0017314,                             !- Coefficient2 x
+  -6.49704e-05,                           !- Coefficient3 x**2
+  5.133175e-07,                           !- Coefficient4 x**3
+  -20,                                    !- Minimum Value of x
+  50;                                     !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {f147702a-ea2b-416a-b393-76452de8a966}, !- Handle
+  Generator Micro Turbine 1 Capstone C65 Efficiency_vs_PLR, !- Name
+  0.21529,                                !- Coefficient1 Constant
+  2.561463,                               !- Coefficient2 x
+  -3.24613,                               !- Coefficient3 x**2
+  1.497306,                               !- Coefficient4 x**3
+  0.03,                                   !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:ElectricLoadCenter:Distribution,
+  {4af87307-0318-423b-8375-d97d72a9ff79}, !- Handle
+  Electric Load Center Distribution 1,    !- Name
+  {36a644c8-9d24-4be9-903a-18fae2262290}; !- Generator List Name
+
+OS:ModelObjectList,
+  {36a644c8-9d24-4be9-903a-18fae2262290}, !- Handle
+  {1360b4e9-1d1f-4a60-b423-0d58f21c2796}, !- Name
+  {0d2a6fc1-f64d-4ad6-b53c-ed1f1bd840cc}; !- Model Object 1
+
+OS:Meter:Custom,
+  {3e437ca2-af0b-4944-b84e-db5c0bb26f49}, !- Handle
+  Meter Custom 1,                         !- Name
+  FuelOil#1;                              !- Fuel Type
+

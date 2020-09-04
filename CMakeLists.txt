@@ -1,12 +1,100 @@
-cmake_minimum_required(VERSION 3.7.0)
+cmake_minimum_required(VERSION 3.14.0)
+cmake_policy(SET CMP0048 NEW)
 
-project(OpenStudioMeta)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Do not enable compiler specific extensions, for eg on GCC use -std=c++1z (=c++17) and not -std=gnu++17
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_VERSION_MAJOR 2)
-set(CMAKE_VERSION_MINOR 7)
-set(CMAKE_VERSION_PATCH 2)
+# Use ccache if available, has to be before "project()"
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+  # Support Unix Makefiles and Ninja
+  message(STATUS "Using CCACHE")
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+endif()
 
-set(CMAKE_VERSION_BUILD "Unknown" CACHE STRING "Build number")
+# Project macro can only take digits in the version, it splits these out to specific variables
+project(OpenStudio VERSION 3.1.0)
+
+# The RT Manifest file and C# SDK only support the digit portion of patch
+string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
+
+# CPack package version does not support extended patch version
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
+    "MinSizeRel" "RelWithDebInfo")
+endif()
+
+if ( APPLE )
+  find_library(SECURITY_FRAMEWORK Security)
+endif()
+
+include(CPackComponent)
+include(CheckCXXCompilerFlag)
+
+if(POLICY CMP0020)
+  cmake_policy(SET CMP0020 NEW)
+endif()
+if(POLICY CMP0022)
+  cmake_policy(SET CMP0022 NEW)
+endif()
+if(POLICY CMP0042)
+  cmake_policy(SET CMP0042 NEW)
+endif()
+if(POLICY CMP0054)
+  cmake_policy(SET CMP0054 NEW)
+endif()
+if(POLICY CMP0077)
+  cmake_policy(SET CMP0077 NEW)
+endif()
+
+###############################################################################
+#                                  N I N J A                                  #
+###############################################################################
+# Ninja support: has to be atop for it to take effect before anything else is done
+# Add Color Output if Using Ninja
+macro(AddCXXFlagIfSupported flag test)
+  CHECK_CXX_COMPILER_FLAG(${flag} ${test})
+  if(${${test}})
+    message("adding ${flag}")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
+  endif()
+endmacro()
+
+if("Ninja" STREQUAL ${CMAKE_GENERATOR})
+  # Will be passed to OpenStudio.in to deal with the Win32 case
+  set(NINJA TRUE)
+  # Clang
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    AddCXXFlagIfSupported(-fcolor-diagnostics COMPILER_SUPPORTS_fcolor-diagnostics)
+  endif()
+
+  # g++
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    # For some reason it doesn't say its supported, but it works...
+    # AddCXXFlagIfSupported(-fdiagnostics-color COMPILER_SUPPORTS_fdiagnostics-color)
+    message(STATUS "Ninja: Forcing -fdiagnostics-color=always")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+  endif()
+endif()
+
+# Xcode/Ninja generators undefined MAKE
+if(CMAKE_GENERATOR MATCHES "Make")
+  set(MAKE "$(MAKE)")
+else()
+  set(MAKE make)
+endif()
+
+###############################################################################
+# Project version information
+set(PROJECT_VERSION_BUILD "Unknown" CACHE STRING "Build number") # git sha
 find_package(Git)
 
 if(NOT GIT_FOUND)
@@ -17,16 +105,30 @@ if(NOT GIT_FOUND)
 endif()
 
 if(GIT_FOUND)
+  # Git SHA (length 10)
   execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--short=10" "HEAD"
-                  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
                   TIMEOUT 10
                   RESULT_VARIABLE RESULT
                   OUTPUT_VARIABLE GIT_VERSION
                   ERROR_QUIET
                   OUTPUT_STRIP_TRAILING_WHITESPACE)
-  if(${RESULT} EQUAL 0 AND NOT "${GIT_VERSION}" EQUAL "${CMAKE_VERSION_BUILD}")
-    set(CMAKE_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha
+  if(${RESULT} EQUAL 0 AND NOT "${GIT_VERSION}" EQUAL "${PROJECT_VERSION_BUILD}")
+    set(PROJECT_VERSION_BUILD ${GIT_VERSION} CACHE STRING "Build number" FORCE) # git sha
   endif()
+
+  # Git branch name
+  execute_process(COMMAND "${GIT_EXECUTABLE}" "rev-parse" "--abbrev-ref" "HEAD"
+                  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+                  TIMEOUT 10
+                  RESULT_VARIABLE RESULT
+                  OUTPUT_VARIABLE GIT_BRANCH
+                  ERROR_QUIET
+                  OUTPUT_STRIP_TRAILING_WHITESPACE)
+  if(${RESULT} EQUAL 0 AND NOT "${GIT_BRANCH}" EQUAL "${PROJECT_GIT_BRANCH}")
+    set(PROJECT_GIT_BRANCH ${GIT_BRANCH} CACHE STRING "Git Branch Name" FORCE)
+  endif()
+
 
   get_filename_component(GIT_DIR "${GIT_EXECUTABLE}" DIRECTORY)
 else()
@@ -39,32 +141,110 @@ if(PATCH_EXE_NOTFOUND)
   message(SEND_ERROR "Required program patch not found")
 endif()
 
-option(NIGHTLY_BUILD "Use configurations for Nightly Build" OFF)
+# Check if scope has a parent
+get_directory_property(hasParent PARENT_DIRECTORY)
 
-set(OPENSTUDIO_VERSION "${CMAKE_VERSION_MAJOR}.${CMAKE_VERSION_MINOR}.${CMAKE_VERSION_PATCH}")
+# README: what's the difference between all these versions?
 
-# Search for modules in the openstudiocore dir first to override cmake ones
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/openstudiocore/CMake" "${CMAKE_SOURCE_DIR}")
+# The "OpenStudio_VERSION" ones should be used in CMakeLists.txt
+# * OpenStudio_VERSION: includes the prerelease tag if any: '3.0.0-rc1'
+# * OpenStudio_VERSION_PATCH: Patch + prelrease tag if any
+
+# The "OPENSTUDIO_VERSION" ones should only be used in OpenStudio.in (aside from using the the long version for naming the installer)
+# * OPENSTUDIO_VERSION: just major.minor.patch: '3.0.0'
+# * OPENSTUDIO_LONG_VERSION: includes prelrease and build sha: "3.0.0-rc1+ejfbxhza'
+
+# TODO: Modify the more specific variables as needed to indicate prerelease, etc
+# Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
+set(PROJECT_VERSION_PRERELEASE "alpha")
+
+# OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
+set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
+
+if (NOT "${PROJECT_VERSION_PRERELEASE}" STREQUAL "")
+  message(STATUS "We have a prerelease tag set to '${PROJECT_VERSION_PRERELEASE}'")
+  if("${PROJECT_GIT_BRANCH}" STREQUAL "master")
+    message(AUTHOR_WARNING "You are building branch 'master', perhaps you shouldn't have included a pre-release tag")
+  endif()
+  string(APPEND OpenStudio_VERSION "-${PROJECT_VERSION_PRERELEASE}")
+  string(APPEND OpenStudio_VERSION_PATCH "-${PROJECT_VERSION_PRERELEASE}")
+  # Long version, include prerelease and build metadata. eg '3.0.0-rc1+6383a191dc'
+  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}-${PROJECT_VERSION_PRERELEASE}+${PROJECT_VERSION_BUILD}")
+else()
+  message(STATUS "We do not have a prerelease tag")
+  if(NOT "${PROJECT_GIT_BRANCH}" STREQUAL "master")
+    message(AUTHOR_WARNING "You are building another branch than master but you do not have a prerelease tag, consider adding one such as 'beta'")
+  endif()
+  # Long version, include build metadata. eg '3.0.0+6383a191dc' for an official release
+  set(OPENSTUDIO_LONG_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}+${PROJECT_VERSION_BUILD}")
+endif()
+
+# Export to parent scope
+if(hasParent)
+  set(OPENSTUDIO_VERSION "${OPENSTUDIO_VERSION}" PARENT_SCOPE)
+  set(OPENSTUDIO_LONG_VERSION "${OPENSTUDIO_LONG_VERSION}" PARENT_SCOPE)
+endif()
+
+# EnergyPlus Idd version
+set(ENERGYPLUS_VERSION_MAJOR 9)
+set(ENERGYPLUS_VERSION_MINOR 3)
+set(ENERGYPLUS_VERSION_PATCH 0)
+set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
+# Build SHA is not required to have a value, but if it does OpenStudio will require this build.
+set(ENERGYPLUS_BUILD_SHA "baff08990c")
+
+# ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
+# from the github releases
+set(ENERGYPLUS_RELEASE_NAME "v9.3.0")
+
+# Radiance
+set(RADIANCE_VERSION "5.0.a.12")
+
+# configure file with version information
+configure_file(${PROJECT_SOURCE_DIR}/OpenStudio.in ${PROJECT_BINARY_DIR}/src/OpenStudio.hxx)
+
+# Deployment target
+if(APPLE)
+  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12" CACHE STRING "Minimum OS X deployment version")
+endif()
+
+# compiler id for about boxes
+if(MSVC)
+  set(ABOUT_COMPILER "${CMAKE_GENERATOR}")
+elseif(APPLE)
+  set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID} ${CMAKE_OSX_ARCHITECTURES} - OSX ${CMAKE_OSX_DEPLOYMENT_TARGET}")
+else()
+  set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID}")
+endif()
+
+###############################################################################
+
+###############################################################################
+# Build options
+
+if(UNIX AND NOT APPLE)
+  # the RPATH to be used when installing
+  set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+endif()
+
+# TODO: should this be only in OpenStudioApplication?
+option(BUILD_PAT "Build PAT" OFF)
 
 # Build C++ documentation using Doxygen
 # Requires: doxygen
 option(BUILD_DOCUMENTATION "Build Documentation" OFF)
 
-if(BUILD_DOCUMENTATION)
-  find_package(Doxygen REQUIRED)
-endif()
-
 # Build CSharp bindings
-# Requires: SWIG
 option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
+option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 
 # Build Java bindings
 # Requires: SWIG
 option(BUILD_JAVA_BINDINGS "Build Java bindings" OFF)
 
-# Build Node V8 bindings
-# Requires: SWIG
-option(BUILD_V8_BINDINGS "Build V8 bindings" OFF)
+# Build V8 Node bindings
+# Requires: SWIG, Node
+option(BUILD_V8_BINDINGS "Build Node V8 bindings" OFF)
 
 # Build Python bindings
 # Requires: SWIG Python
@@ -74,602 +254,1130 @@ option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
 # Requires: EnergyPlus
 option(BUILD_TESTING "Build testing targets" OFF)
 
-# Build package
-# Requires: EnergyPlus
-option(BUILD_PACKAGE "Build package" OFF)
+# Build with OpenSSL support
+set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
 
-# Build regressions
-option(BUILD_REGRESSIONS "Build regressions" OFF)
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  add_definitions(-Qunused-arguments)
+endif()
 
-# Build shared libraries, configuration affects OpenStudioCore
-option(BUILD_SHARED_LIBS "Build OS libs as shared libraries" OFF)
+# Enable runtime checking features
+if(CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  option(ENABLE_THREAD_SANITIZER "Enable thread sanitizer testing in gcc/clang" OFF)
+  if(ENABLE_THREAD_SANITIZER)
+    add_definitions(-fsanitize=thread -g)
+    set(SANITIZER_LINKER_FLAGS "${SANITIZER_LINKER_FLAGS} -fsanitize=thread")
+  endif()
 
-set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
-mark_as_advanced(MAXIMIZE_CPU_USAGE)
+  option(ENABLE_ADDRESS_SANITIZER "Enable address sanitizer testing in gcc/clang" OFF)
+  if(ENABLE_ADDRESS_SANITIZER)
+    add_definitions(-fsanitize=address -g)
+    set(SANITIZER_LINKER_FLAGS "${SANITIZER_LINKER_FLAGS} -fsanitize=address")
+  endif()
 
-#if(MSVC)
-#  # Visual Studio compiler check
-#  # http://en.wikipedia.org/wiki/Visual_C%2B%2B#32-bit_and_64-bit_versions
-#  if    (${CMAKE_C_COMPILER_VERSION} VERSION_LESS "18.0.21005.1")
-#    message(FATAL_ERROR "Visual Studio earlier than VS2013 is not supported")
-#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.0.21005.1")
-#    # VS2013
-#    message(SEND_ERROR "Update 4 for Visual Studio 2013 is required")
-#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30501")
-#    # VS2013 Update 2:
-#    message(SEND_ERROR "Update 4 for Visual Studio 2013 is required")
-#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.30723")
-#    message(WARNING "Update 4 for Visual Studio 2013 is strongly recommended")
-#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.31101")
-#    # VS2013 Update 4: no-op
-#  elseif(${CMAKE_C_COMPILER_VERSION} VERSION_EQUAL "18.00.40629")
-#    # VS2013 Update 5: no-op
-#  endif()
-#
-#  if ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 12 2013 Win64")
-#    set(CMAKE_GENERATOR_TOOLSET "v120</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v120")
-#  elseif ("${CMAKE_GENERATOR}" STREQUAL "Visual Studio 14 2015 Win64")
-#    set(CMAKE_GENERATOR_TOOLSET "v140</PlatformToolset><PreferredToolArchitecture>x64</PreferredToolArchitecture><PlatformToolset>v140")
-#  else()
-#    message(STATUS "This version of Visual Studio will not use the 64 bit linker. Build times will likely suffer.")
-#  endif()
-#
-#  # Build with Multiple Processes
-#  set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
-#  mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
+  option(ENABLE_UNDEFINED_SANITIZER "Enable undefined behavior sanitizer testing in gcc/clang" OFF)
+  if(ENABLE_UNDEFINED_SANITIZER)
+    add_definitions(-fsanitize=undefined -g)
+    set(SANITIZER_LINKER_FLAGS "${SANITIZER_LINKER_FLAGS} -fsanitize=undefined")
+  endif()
+
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${SANITIZER_LINKER_FLAGS}")
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${SANITIZER_LINKER_FLAGS}")
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${SANITIZER_LINKER_FLAGS}")
+
+
+  mark_as_advanced(ENABLE_THREAD_SANITIZER ENABLE_ADDRESS_SANITIZER ENABLE_UNDEFINED_SANITIZER)
+
+endif()
+
+if(APPLE)
+  find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+  add_definitions(-D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
+  #add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
+endif()
+
+if(UNIX AND NOT APPLE)
+  # Enable libgtest linking
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pthread")
+endif()
+
+if(WIN32)
+  if(CMAKE_CL_64)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
+  else()
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
+  endif()
+endif()
+
+if(BUILD_V8_BINDINGS)
+  option(BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON)
+endif()
+
+option(USE_LTO "Use Link-Time-Optimization" OFF)
+
+if (USE_LTO)
+  include(CheckIPOSupported)
+
+  check_ipo_supported()
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+endif()
+
+if(WIN32)
+  add_definitions(-DNOMINMAX)
+endif()
+
+if(MSVC AND NOT NINJA)
+  # Build with Multiple Processes
+  set(BUILD_WITH_MULTIPLE_PROCESSES ON CACHE BOOL "/MP compiler flag for full processor utilization")
+  mark_as_advanced(BUILD_WITH_MULTIPLE_PROCESSES)
+endif()
+
+###############################################################################
+
+###############################################################################
+# Conan
+
+# Note JM 2019-04-24: Another option is to globally set "print_run_commands = True" in ~/.conan/conan.conf
+option(CONAN_PRINT_RUN_COMMANDS "Log every conan self.run command" OFF)
+mark_as_advanced(CONAN_PRINT_RUN_COMMANDS)
+if(CONAN_PRINT_RUN_COMMANDS)
+  set(ENV{CONAN_PRINT_RUN_COMMANDS} "1")
+  message(STATUS "Setting CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
+else()
+  unset(ENV{CONAN_PRINT_RUN_COMMANDS})
+  message(STATUS "CONAN_PRINT_RUN_COMMANDS: $ENV{CONAN_PRINT_RUN_COMMANDS}")
+endif()
+
+# Attempt to run, it'll do the right thing if the calling cmake script already ran it
+set(CONAN_INSTALL_FILE "${PROJECT_SOURCE_DIR}/ConanInstall.cmake")
+include("${CONAN_INSTALL_FILE}")
+
+# A macro to find a conan related value especially when using multi-config builds (MSVC)
+# But it also works with single-config builds
+macro(FindValue ValueName)
+  set(LocalVar "")
+  set(LocalVar $<$<CONFIG:Debug>:${${ValueName}_DEBUG}>$<$<CONFIG:Release>:${${ValueName}_RELEASE}>$<$<CONFIG:RelWithDebInfo>:${$ValueName}_RELWITHDEBINFO}>$<$<CONFIG:MinSizeRel>:${${ValueName}_MINSIZEREL}>
+  )
+#  list(JOIN LocalVar "" LocalVar)
+  string(STRIP ${LocalVar} LocalVar)
+  set(CURRENT_${ValueName} $<IF:$<BOOL:${LocalVar}>,${LocalVar},${${ValueName}}>)
+  # For debug purposes
+  # message(STATUS "Found '${ValueName}' as '${CURRENT_${ValueName}}'")
+endmacro()
+
+###############################################################################
+
+get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
+
+# Export to Parent
+if(hasParent)
+  set(RUBY_INCLUDE_DIRS "${RUBY_INCLUDE_DIRS}" PARENT_SCOPE)
+endif()
+
+###############################################################################
+# CMake control
+
+# High level project configuration
+# TODO: Do we actually want everything to go to CMAKE_BINARY_DIR/Products,
+# so that when you build OpenStudioApplication you get both OpenStudio (core) and Application in the same place?
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
+
+set(LIBRARY_SEARCH_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Release" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug")
+
+# TODO: move App macros to a local ProjectMacros.cmake
+# Include project specific macros
+include("${PROJECT_SOURCE_DIR}/ProjectMacros.cmake")
+
+# Search first in the binary dir, where conan will install finders, then
+# search for modules in the root dir to override cmake ones
+# Start with ROOT, then PROJECT_BINARY_DIR
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR} ${PROJECT_BINARY_DIR}" "${PROJECT_SOURCE_DIR}/CMake")
+
+# Use CTest
+set(ALL_TESTING_TARGETS "") # global list
+if(BUILD_TESTING)
+  enable_testing()
+  include(CTest)
+endif()
+
+###############################################################################
+
+###############################################################################
+# Compiler and system specific options
+if(UNIX)
+
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -fPIC -fno-strict-aliasing")
+
+  # all warnings
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -fPIC -fno-strict-aliasing -Winvalid-pch -Wnon-virtual-dtor")
+  # Treat all warnings as errors
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+  if(APPLE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -ftemplate-depth=1024")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
+    # DLM: had to add this due to issues with boost optional and gcc, may be resolved if we move to std::optional
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized")
+  endif()
+
+  # Note: CMAKE_CXX_STANDARD (with no extensions) already sets -std=c++17 (or std=c++1z).
+  if(APPLE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+  endif()
+endif()
+
+if(MINGW)
+  # all warnings
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+  # effective c++
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++")
+  # treat warnings as errors
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+
+  # wchar not supported for MinGW
+  #add_definitions(-DBOOST_LOG_USE_CHAR)
+  #add_definitions(-DBOOST_LOG_NO_COMPILER_TLS)
+endif()
+
+if(MSVC)
+  # warning level 3
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3")
+
+  # warning level 4 - DLM: we should shoot for this
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+
+  # all warnings - DLM: probably too high to ever use
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall")
+
+  # create compiler processes on all effective processors
+  # /MP is useless for ninja and will cause problems. BUILD_WITH_MULTIPLE_PROCESSES shouldn't have been set if ninja but let's be safe
+  if(BUILD_WITH_MULTIPLE_PROCESSES AND NOT NINJA)
+    add_definitions(/MP)
+  endif()
+
+  # Enable warning on thread un-safe static member initialization - DLM: we have been bit by this many times
+  # TODO: JM 2019-09-19: Disabling for now
+  # Using the righg flag (/w14460 and not the previously mispelled /w44640) will make compilation fail with many warnings treated as error,
+  # eg: IddRegex.cpp all scoped `const static std::string result` inside functions will issue that and make it fatal
+  # add_definitions(/w14640)
+
+  # ignore decorated name length exceeded
+  add_definitions(/wd4503)
+
+  # ignore needs to have dll-interface to be used by clients of class
+  # we will not rely on exporting templates instead all libraries must
+  # be linked against the same runtime
+  add_definitions(/wd4251)
+
+  # ignore base class not dll-exported error
+  add_definitions(/wd4275)
+
+  add_definitions(/bigobj)
+
+  if(CMAKE_CL_64)
+    # ignore conversion from size_t to int for now
+    add_definitions(/wd4267)
+  endif()
+
+  # treat warnings as errors
+  # DLM: only do this for our code, added in later
+  # add_definitions(/WX)
+
+  # ignore warnings about the stl being insecure
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
+
+  # ignore c++17 deprecation warnings generated by boost
+  add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
+  add_definitions(-D_SILENCE_FPOS_SEEKPOS_DEPRECATION_WARNING)
+
+endif()
+
+##############################################################################
+
+
+###############################################################################
+# Check version of gcc
+if(CMAKE_COMPILER_IS_GNUCC)
+  execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion
+                  OUTPUT_VARIABLE GCC_VERSION)
+endif()
+
+
+###############################################################################
+# Dependencies
+
+# If Linux, check LSB_RELEASE globally so we can use it after
+if(UNIX AND NOT APPLE)
+
+  find_program(LSB_RELEASE lsb_release)
+  # -rs outputs only 16.04, or 18.04
+  execute_process(COMMAND ${LSB_RELEASE} -rs
+    OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+  message(STATUS "LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
+endif()
+
+# EnergyPlus
+
+if(UNIX)
+  if(APPLE)
+    set(ENERGYPLUS_EXPECTED_HASH 20c12af58cb9ed8b3c30c206f7123498)
+    set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
+  elseif(EXISTS "/etc/redhat-release")
+    # TODO: There aren't any redhat releases anymore, see PR #3145 too
+    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
+    set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
+  else()
+    set(ENERGYPLUS_EXPECTED_HASH d146ddaef57b79ca9272cd64bc75babd)
+    set(ENERGYPLUS_PLATFORM "Linux-x86_64")
+  endif()
+  set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
+  if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz")
+    file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" ENERGYPLUS_HASH)
+  endif()
+  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
+    message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
+
+    if(EXISTS "/etc/redhat-release")
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+           INACTIVITY_TIMEOUT 300 # 5-min timeout
+           SHOW_PROGRESS
+           EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    else()
+      file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+           INACTIVITY_TIMEOUT 300 # 5-min timeout
+           SHOW_PROGRESS
+           EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+    endif()
+
+    # Remove the old extracted dir if exists
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+
+  endif()
+
+elseif(WIN32)
+  if(CMAKE_CL_64)
+    set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
+    set(ENERGYPLUS_ARCH 64)
+    set(ENERGYPLUS_EXPECTED_HASH 0d47ac399199de733a6efc548f474f55)
+  else()
+    set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
+    set(ENERGYPLUS_ARCH 32)
+    ## TODO: update md5 hash, but not present on GitHub as .zip, only .exe for now at least
+    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_a2cbd995acd1928a7baa18407bb8e949)
+  endif()
+  if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
+    file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
+  endif()
+  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
+    message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
+
+    file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip"
+         INACTIVITY_TIMEOUT 300 # 5 minute timeout
+         SHOW_PROGRESS
+         EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
+
+    # Remove the old extracted dir if exists
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+
+  endif()
+
+endif()
+
+# Allows placing the archive manually in the build dir too
+if (NOT EXISTS "${ENERGYPLUS_PATH}")
+  unset(ENERGYPLUS_FOUND CACHE)
+  unset(ENERGYPLUS_EXE CACHE)
+  unset(ENERGYPLUS_IDD CACHE)
+  unset(ENERGYPLUS_WEATHER_DIR CACHE)
+  if (UNIX)
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+  else()
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+  endif()
+endif()
+
+# Prior to E+ 9.1.0 (OS 2.7.2), zip/tar.gz would extract to something like `./EnergyPlus-9.0.0-buildsha-Linux-x86_64/EnergyPlus-9-0-0`
+if (ENERGYPLUS_VERSION VERSION_LESS "9.1.0")
+  set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}/EnergyPlus-${ENERGYPLUS_VERSION_MAJOR}-${ENERGYPLUS_VERSION_MINOR}-${ENERGYPLUS_VERSION_PATCH}")
+else()
+  # After 9.1.0, due to QtIFW/Mac packaging (NREL/EnergPlus#7148), it is going directly to `./EnergyPlus-9.1.0-buildsha-Linux-x86_64/`
+  set(ENV{ENERGYPLUSDIR} "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+endif()
+
+# Find EnergyPlus, which will set the ENERGYPLUS_XXX variables and cache them
+find_package(EnergyPlus "${ENERGYPLUS_VERSION}" REQUIRED)
+
+# Radiance
+if(UNIX)
+  if(APPLE)
+    set(RADIANCE_EXPECTED_HASH 115ef9052ad5011d3fc7cebc2991644f)
+    set(RADIANCE_PLATFORM "Darwin")
+  elseif(EXISTS "/etc/redhat-release")
+    # DLM: note that the installer expects the extracted directory to be named radiance-5.0.a.12-Linux
+    set(RADIANCE_EXPECTED_HASH f75898bbfd238a740c1902d385c42b92)
+    set(RADIANCE_PLATFORM "Redhat")
+  else()
+    set(RADIANCE_EXPECTED_HASH 7b9e4df2b6050fe51c6e138e4c0e6a5a)
+    set(RADIANCE_PLATFORM "Linux")
+  endif()
+  set(RADIANCE_PATH "radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}")
+  if(EXISTS "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz")
+    file(MD5 "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" RADIANCE_HASH)
+  endif()
+  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
+  message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
+  if(EXISTS "/etc/redhat-release")
+    message("http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz")
+    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+  else()
+    file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+  endif()
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+  endif()
+  set(RADIANCE_LOCATION "${PROJECT_BINARY_DIR}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}/usr/local/radiance")
+elseif(WIN32)
+  if(CMAKE_CL_64)
+    set(RADIANCE_ARCH 64)
+    set(RADIANCE_EXPECTED_HASH 7bd7a418d181365b4153c8bc146ede06)
+  else()
+    message(WARNING "32 bit Radiance build is not available")
+    message(WARNING "Using 64 bit build of Radiance with a 32 bit build of OpenStudio")
+    set(RADIANCE_ARCH 64)
+    set(RADIANCE_EXPECTED_HASH 7bd7a418d181365b4153c8bc146ede06)
+    #set(RADIANCE_ARCH 32)
+    #set(RADIANCE_EXPECTED_HASH 78eda5d4b0215cd675cc3ec8975e6122)
+  endif()
+  set(RADIANCE_PATH "radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}")
+  set(RADIANCE_PLATFORM "win${RADIANCE_ARCH}")
+  if(EXISTS "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip")
+    file(MD5 "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip" RADIANCE_HASH)
+  endif()
+  if(NOT EXISTS "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
+    message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_ARCH}-bit)")
+    file(DOWNLOAD "http://github.com/NREL/Radiance/releases/download/${RADIANCE_VERSION}/Radiance-${RADIANCE_VERSION}-win${RADIANCE_ARCH}.zip" "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}")
+    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+  endif()
+  set(RADIANCE_LOCATION "${PROJECT_BINARY_DIR}/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}/")
+endif()
+
+# Perl
+if(NOT UNIX)
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_SOURCE_DIR}/dependencies/strawberry-perl-5.16.2.1-32bit-portable-reduced.tar.bz2"
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+    RESULT_VARIABLE rv)
+  set(PERL_EXE "${PROJECT_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl/bin/perl.exe")
+endif()
+
+include(FetchRubyMinGW.cmake)
+FetchRubyMinGW()
+
+# openstudio gems
+# CI will build and upload openstudio gems to s3 at https://github.com/NREL/OpenStudio-gems
+# need to  update the MD5sum for each platform and url below
+if(UNIX)
+   if(APPLE)
+     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-darwin.tar.gz")
+     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4212a009d37e38b087aad51b4b2800e0")
+   else()
+     set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-linux.tar.gz")
+     set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "eb52b76926b82f6c0505fb57d2f46c5b")
+   endif()
+elseif(WIN32)
+  if(CMAKE_CL_64)
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200622-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "52c80458909142726b1287dabe0da7a3")
+  endif()
+endif()
+
+set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
+set(OPENSTUDIO_GEMS_DIR "${PROJECT_BINARY_DIR}/openstudio-gems")
+set(OPENSTUDIO_GEMS_TARGETS_FILE "${OPENSTUDIO_GEMS_DIR}/export-extensions.cmake")
+set(OPENSTUDIO_GEMS_INIT_FILE "${OPENSTUDIO_GEMS_DIR}/init-extensions.cpp")
+if(EXISTS "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}")
+  file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
+endif()
+
+if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
+  message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
+  file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
+    ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
+    INACTIVITY_TIMEOUT 300 # 5 minute timeout
+    SHOW_PROGRESS
+    EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
+
+  file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
+  execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+
+  file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/src/cli/embedded_files")
+endif()
+
+# SWIG
+
+# Note: JM 2019-10-16
+# We use conan swig_installer 4.0 which enhances our PATH to include the CONAN_BIN_DIRS_SWIG_INSTALLER already
+# So I could just do:
+# set(SWIG_EXECUTABLE swig)
+# But will have the probblem with the swiglib anyways.
+# Plus, it doesn't appear to work on windows either, the PATH doesn't include it.
+#find_program(SWIG_EXECUTABLE swig PATHS CURRENT_CONAN_SWIG_ROOT NO_DEFAULT_PATH)
+#if(NOT SWIG_EXECUTABLE)
+#  message(FATAL_ERROR "Couldn't find swig, which shouldn't happen. CONAN_BIN_DIRS_SWIG_INSTALLER=${CONAN_BIN_DIRS_SWIG_INSTALLER}, CONAN_SWIG_ROOT_RELEASE=${CONAN_SWIG_ROOT_RELEASE}, CURRENT_CONAN_SWIG_ROOT=${CURRENT_CONAN_SWIG_ROOT}, ${ENV{SWIG_LIB}}, ${ENV{SWIG_INSTALLER_ROOT}}")
 #endif()
 
+# Another thing I tried is to use the `virtualenv` generator (`conan_cmake_run( ... GENERATORS virtualenv)`),
+# but you end up having to call the activation script on each call, and the call is dependent on the platform which is even more annoying
+# (either cmake -E cmd /C activate.bat, or cmake -E source activate.sh)
+# I also tried using CMake to extract the value from the activate.sh script on all plaftorms but it seems even more of a hack
 
-# Apple Sanity Check
-if(APPLE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  #if(NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-  #  message(FATAL_ERROR "OSX Deployment Target Must Be Set")
-  #endif()
+# So instead, we use a generator expression to find the right value. At least it makes sense, and should be robust.
+FindValue(CONAN_SWIG_ROOT)
 
-  #set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "Arch" FORCE)
+set(SWIG_EXECUTABLE "${CURRENT_CONAN_SWIG_ROOT}/bin/swig")
 
-  #if(NOT CMAKE_OSX_SYSROOT)
-  #  message(FATAL_ERROR "OSX Sysroot must be set")
-  #elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.9.*")
-  #  set(OSX_SDK "10.9")
-  #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  #elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.10.*")
-  #  set(OSX_SDK "10.10")
-  #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  #elseif(CMAKE_OSX_SYSROOT MATCHES ".*10\\.11.*")
-  #  set(OSX_SDK "10.11")
-  #  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11 -std=c++11 -stdlib=libc++")
-  #else()
-  #  message(FATAL_ERROR "OSX Sysroot must use the 10.9, 10.10, or 10.11 SDK")
-  #endif()
+# The conan-provided binary has a built-in swiglib (`swig -swiglib`) that points to the build box on which it was built, which is problematic for us.
+set(SWIG_LIB "${CURRENT_CONAN_SWIG_ROOT}/bin/swiglib")
 
+# Export SWIG to parent scope
+if(hasParent)
+  set(SWIG_EXECUTABLE "${SWIG_EXECUTABLE}" PARENT_SCOPE)
+  set(SWIG_LIB "${SWIG_LIB}" PARENT_SCOPE)
+endif()
+
+set(ALL_RUBY_BINDING_TARGETS "") # global list
+
+# build rdoc
+if(BUILD_DOCUMENTATION)
+  if(WIN32)
+    get_filename_component(RUBY_BIN_DIR "${RUBY_EXECUTABLE}" DIRECTORY)
+    find_file(RDOC NAMES rdoc.bat HINTS $ENV{PATH} "${RUBY_BIN_DIR}")
+    find_file(RI NAMES ri.bat HINTS $ENV{PATH} "${RUBY_BIN_DIR}")
+  else()
+    find_program(RDOC NAMES rdoc)
+    find_program(RI NAMES ri)
+  endif()
+
+  mark_as_advanced(
+    RDOC
+    RI
+  )
+
+  set(ALL_RDOC_TARGETS ${ALL_RUBY_BINDING_TARGETS})
+endif()
+
+# C#
+if(BUILD_CSHARP_BINDINGS)
+  set(ALL_CSHARP_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
+  set(ALL_CSHARP_WRAPPER_FILES "") # global list of generated wrapper cxx files
+  set(ALL_CSHARP_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
+endif()
+
+# JAVA
+if(BUILD_JAVA_BINDINGS)
+  find_package(JNI)
+  find_package(Java)
+  set(ALL_JAVA_BINDING_TARGETS "") # global list
+  set(ALL_JAVA_SRC_DIRECTORIES "") # global list
+endif()
+
+
+if(BUILD_NODE_MODULES)
+  add_definitions(-DBUILD_NODE_MODULE)
+endif()
+
+if(BUILD_PYTHON_BINDINGS)
+
+  find_package(Python COMPONENTS Interpreter Development REQUIRED)
+
+  include_directories(SYSTEM ${Python_INCLUDE_DIRS})
+  set(ALL_PYTHON_BINDINGS "") # global list of python bindings
+  set(ALL_PYTHON_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
+  set(ALL_PYTHON_WRAPPER_FILES "") # global list of generated wrapper cxx files
+  set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
+endif()
+
+# Threading library
+find_package(Threads)
+if(UNIX)
+  set(CMAKE_THREAD_LIBS "${CMAKE_THREAD_LIBS_INIT}" CACHE STRING "Thread library used.")
+  mark_as_advanced(CMAKE_THREAD_LIBS)
+endif()
+
+###############################################################################
+# Add to include path
+
+# Project source directory
+include_directories("${PROJECT_SOURCE_DIR}/src/")
+
+# Project binary directory
+include_directories("${PROJECT_BINARY_DIR}/src/")
+
+###############################################################################
+
+###############################################################################
+# RPATH settings
+# Conan set this to true, which is not the cmake default and not what we want
+# for the openstudio targets
+set(CMAKE_SKIP_RPATH FALSE)
+###############################################################################
+
+###############################################################################
+# Add project sub directories
+
+if(MSVC)
+  # treat warnings as errors
+  add_definitions(/WX)
+elseif()
+  add_definitions(-Werror)
+endif()
+
+include("embedded/EmbedFiles.cmake")
+add_subdirectory("embedded")
+if(BUILD_PAT)
+  add_subdirectory("pat")
+endif()
+
+# Each subfolder of src is a major sub-project
+set(project_directories
+  generateiddfactory
+  utilities
+  model
+  energyplus
+  radiance
+  gbxml
+  airflow
+  isomodel
+  osversion
+  measure
+  sdd
+  lib
+  cli
+  install_utility
+)
+
+# Include the resources, should happen after find EnergyPlus
+add_subdirectory(resources)
+
+foreach(D ${project_directories})
+  add_subdirectory(src/${D})
+endforeach()
+
+add_subdirectory(ruby)
+
+
+# csharp, after loading projects
+if(BUILD_CSHARP_BINDINGS)
+  add_subdirectory(csharp)
+endif()
+
+# java, after loading projects
+if(BUILD_JAVA_BINDINGS)
+  add_subdirectory(java)
+endif()
+
+# python, after loading projects
+if(BUILD_PYTHON_BINDINGS)
+  add_subdirectory(python)
+endif()
+
+# v8-node
+if(BUILD_NODE_MODULES)
+  add_subdirectory(v8-node)
+endif()
+
+###############################################################################
+
+###############################################################################
+# Targets that combine all bindings targets
+add_custom_target(ALL_RUBY_BINDINGS)
+add_dependencies(ALL_RUBY_BINDINGS ${ALL_RUBY_BINDING_TARGETS})
+
+if(BUILD_PYTHON_BINDINGS)
+  add_custom_target(ALL_PYTHON_BINDINGS)
+  #add_dependencies(ALL_PYTHON_BINDINGS python_sdk ${ALL_PYTHON_BINDING_TARGETS})
+endif()
+
+
+if(BUILD_CSHARP_BINDINGS)
+  add_custom_target(ALL_CSHARP_BINDINGS)
+  add_dependencies(ALL_CSHARP_BINDINGS csharp_sdk ${ALL_CSHARP_BINDING_TARGETS})
+endif()
+
+
+if(BUILD_JAVA_BINDINGS)
+  add_custom_target(ALL_JAVA_BINDINGS)
+  #add_dependencies(ALL_JAVA_BINDINGS java_sdk ${ALL_JAVA_BINDING_TARGETS})
 endif()
 
 
 if(BUILD_V8_BINDINGS)
+  add_custom_target(ALL_V8_BINDINGS)
+  add_dependencies(ALL_V8_BINDINGS ${ALL_V8_BINDING_TARGETS})
+endif()
+
+set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
+mark_as_advanced(MAXIMIZE_CPU_USAGE)
+
+
+###############################################################################
+# Targets that combine all documentation targets
+
+# Doxygen
+if(BUILD_DOCUMENTATION)
+  # need doxygen
+  find_package(Doxygen REQUIRED)
+
+  # if have dot you have more options
+  #if(DOXYGEN_DOT_FOUND)
+
+  #endif()
+
+  configure_file(${PROJECT_SOURCE_DIR}/doc/index.html ${PROJECT_BINARY_DIR}/doc/index.html COPYONLY)
+
+  set(doxygen_directories ${project_directories})
+  # Add the idd files to the documentation list as a separate entry, along with shared_gui_components
+  list(APPEND doxygen_directories utilities/idd shared_gui_components)
+
+  # Remove directories we don't want documentation generated for
+  list(REMOVE_ITEM doxygen_directories generateiddfactory)
+
+  add_custom_target(openstudio_doc_resources
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/doc/css" "css"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/doc/fonts" "fonts"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/doc/js" "js"
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc
+  )
+
+  foreach(D ${doxygen_directories})
+    string(REPLACE "/" "_" DOC_NAME ${D})
+
+    set(DOXY_INPUT_DIR "\"${PROJECT_SOURCE_DIR}/src/${D}\"")
+    set(DOXY_ADDITIONAL_DIR "")
+    set(DOXY_EXCLUDE_DIR "")
+    set(DOXY_TAGFILES "")
+
+
+    # Specific settings
+    if(${D} STREQUAL "utilities/idd")
+      # We want to build the idd documentation separately because of the generated files
+      set(DOXY_ADDITIONAL_DIR "\"${PROJECT_BINARY_DIR}/src/${D}\"")
+    elseif(${D} STREQUAL "utilities")
+      # Exclude the idd directory when building the utilities documentation
+      set(DOXY_EXCLUDE_DIR "\"${PROJECT_SOURCE_DIR}/src/utilities/idd\"")
+      set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html")
+    elseif(${D} STREQUAL "model")
+      set(DOXY_TAGFILES "utilities_idd/utilities_idd.tag=../../utilities_idd/html utilities/utilities.tag=../../utilities/html")
+    endif()
+    configure_file(${PROJECT_SOURCE_DIR}/Doxyfile.in ${PROJECT_BINARY_DIR}/doc/${DOC_NAME}.cfg)
+
+    add_custom_target(openstudio_${DOC_NAME}_doc
+      COMMAND ${CMAKE_COMMAND} -E remove_directory "${DOC_NAME}"
+      COMMAND ${CMAKE_COMMAND} -E make_directory "${DOC_NAME}"
+      COMMAND ${DOXYGEN_EXECUTABLE} ${DOC_NAME}.cfg
+      COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/doc/search" "${DOC_NAME}/html/search"
+      COMMAND ${PATCH_EXE} "${DOC_NAME}/html/search/search.js" < "${PROJECT_SOURCE_DIR}/doc/patch/search.js.patch"
+      DEPENDS openstudio_doc_resources
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc
+    )
+
+    set(ALL_CPP_DOC_TARGETS ${ALL_CPP_DOC_TARGETS}
+      openstudio_${DOC_NAME}_doc
+    )
+
+  endforeach()
+
+  # Set up dependencies after all targets have been created
+  add_dependencies(openstudio_utilities
+    CreateEmbeddedSource
+  )
+  add_dependencies(openstudio_utilities_doc
+    openstudio_utilities_idd_doc
+  )
+  add_dependencies(openstudio_model_doc
+    openstudio_utilities_doc
+    openstudio_utilities_idd_doc
+  )
+
+endif()
+
+
+if(BUILD_DOCUMENTATION)
+
+  add_custom_target(ALL_DOXYGEN)
+  add_dependencies(ALL_DOXYGEN ${ALL_CPP_DOC_TARGETS})
+
+  add_custom_target(ALL_RDOC)
+  add_dependencies(ALL_RDOC ${ALL_RDOC_TARGETS})
+
+  # Zip documentation
   if(WIN32)
-    message(SEND_ERROR "V8 is only tested and supported on Unix like systems")
-  endif()
-
-  option(BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON)
-
-  if(BUILD_NODE_MODULES)
-    # Build Node for linking to Node modules
-    option(BUILD_NODE "Build Node" ON)
-  else()
-    option(BUILD_V8 "Build V8" ON)
-  endif()
-
-endif()
-
-if(MSVC)
-  mark_as_advanced(CMAKE_CONFIGURATION_TYPES)
-endif()
-
-# Use PCH
-option(USE_PCH "Use precompiled headers" OFF)
-
-include(ExternalProject)
-include(ProcessorCount)
-
-# set number of cores to be used when building boost and qt, idea is you will do make -jX so boost and qt will build in parallel
-ProcessorCount(CPUCOUNT)
-if(CPUCOUNT EQUAL 0)
-  set(CPUCOUNT 1)
-endif()
-
-if(UNIX)
-  if(CPUCOUNT EQUAL 1)
-    set(BOOST_CPUCOUNT "1")
-    set(QT_CPUCOUNT "1")
-  elseif(CPUCOUNT EQUAL 2)
-    set(BOOST_CPUCOUNT "1")
-    set(QT_CPUCOUNT "1")
-  elseif(CPUCOUNT EQUAL 4)
-    set(BOOST_CPUCOUNT "1")
-    set(QT_CPUCOUNT "3")
-  elseif(CPUCOUNT EQUAL 8)
-    set(BOOST_CPUCOUNT "2")
-    set(QT_CPUCOUNT "6")
-  elseif(CPUCOUNT EQUAL 12)
-    set(BOOST_CPUCOUNT "3")
-    set(QT_CPUCOUNT "9")
-  elseif(CPUCOUNT EQUAL 16)
-    set(BOOST_CPUCOUNT "4")
-    set(QT_CPUCOUNT "12")
-  else()
-    set(BOOST_CPUCOUNT "1")
-    set(QT_CPUCOUNT "1")
-  endif()
-endif()
-
-mark_as_advanced(
-  ProcessorCount_cmd_getconf
-  ProcessorCount_cmd_sysctl
-)
-
-if(BUILD_WITH_MULTIPLE_PROCESSES)
-  add_definitions(/MP)
-endif()
-
-# Build with OpenSSL support
-set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Connections")
-if(UNIX)
-  find_package(OpenSSL)
-  if(NOT ${OPENSSL_FOUND})
-    message(SEND_ERROR "OpenSSL could not be found, and is required for HTTPS communication")
-    message(SEND_ERROR "Please install OpenSSL development libraries using your package management system (possibly libssl-dev)")
-  else()
-    mark_as_advanced(
-      LIB_EAY_DEBUG
-      LIB_EAY_RELEASE
-      SSL_EAY_DEBUG
-      SSL_EAY_RELEASE
+    if(NOT EXISTS "${PROJECT_BINARY_DIR}/7za.exe")
+      message(STATUS "Downloading 7za.zip")
+      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/7za.zip" "${PROJECT_BINARY_DIR}/7za.zip" TIMEOUT 120 INACTIVITY_TIMEOUT 120 EXPECTED_MD5 860077d3f314e939abab680218a3febe)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${PROJECT_BINARY_DIR}/7za.zip" WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
+    endif()
+    add_custom_command(TARGET ALL_DOXYGEN
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OpenStudio_VERSION}-doc.zip
+      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OpenStudio_VERSION}-doc.zip * -r -x!*.cfg -x!*.tag -x!*.map -x!*.md5
+      COMMAND ${PROJECT_BINARY_DIR}/7za d OpenStudio-${OpenStudio_VERSION}-doc.zip index.html
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc
+    )
+    add_custom_command(TARGET ALL_RDOC
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E remove OpenStudio-${OpenStudio_VERSION}-rdoc.zip
+      COMMAND ${PROJECT_BINARY_DIR}/7za a -mmt -mx9 -tzip OpenStudio-${OpenStudio_VERSION}-rdoc.zip * -r
+      WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/rdoc
     )
   endif()
+
+endif()
+
+
+###############################################################################
+# Export targets and generate OpenStudioCoreConfig.cmake
+
+set(all_lib_targets
+  openstudio_osversion
+  openstudio_model
+  openstudio_utilities
+  openstudio_energyplus
+  openstudio_measure
+  openstudio_radiance
+  openstudio_gbxml
+  openstudio_isomodel
+  openstudio_sdd
+  openstudio_airflow
+  ${ALL_RUBY_BINDING_TARGETS}
+)
+
+set(all_exe_targets
+  GenerateIddFactory
+  #gbXMLToIdf
+  openstudio
+)
+
+if(UNIX AND NOT APPLE)
+  foreach(targ ${all_lib_targets} ${all_exe_targets} ${ALL_TESTING_TARGETS})
+    set_target_properties(${targ} PROPERTIES VERSION ${OpenStudio_VERSION})
+  endforeach()
+endif()
+
+configure_file("${PROJECT_SOURCE_DIR}/OpenStudioCoreConfig.cmake.in"
+  "${PROJECT_BINARY_DIR}/OpenStudioCoreConfig.cmake" @ONLY)
+
+if(UNIX AND NOT APPLE)
+  set(examplesdir share/openstudio-${OpenStudio_VERSION}/examples)
+else()
+  set(examplesdir Examples)
+endif()
+
+# Install additional Documents, such as release notes
+install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_0_0_20200424.pdf" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}//LICENSE.md" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}//CHANGELOG.md" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}//copyright.txt" DESTINATION .)
+
+###############################################################################
+
+if(NOT UNIX)
+  install(DIRECTORY "${PROJECT_BINARY_DIR}/strawberry-perl-5.16.2.1-32bit-portable-reduced/perl" DESTINATION ./Perl/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
+
+  #set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
+  include(InstallRequiredSystemLibraries)
+  if(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS)
+    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "bin")
+    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "Ruby" COMPONENT "RubyAPI")
+    install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "CSharp/openstudio/" COMPONENT "CSharpAPI")
+  endif()
+endif()
+
+set(CPACK_PACKAGE_VENDOR "National Renewable Energy Laboratory")
+set(CPACK_PACKAGE_VERSION_MAJOR ${OpenStudio_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${OpenStudio_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH}) # This one includes the prerelease tag if any
+# set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
+
+# Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
+set(CPACK_DEBIAN_PACKAGE_NAME "openstudio-${OpenStudio_VERSION}")
+# CPACK_DEBIAN_PACKAGE_DESCRIPTION defaults to this one too. dpkg-deb -I xxx.deb will show this description
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenStudio is a cross-platform collection of software tools to support whole building energy modeling using EnergyPlus and advanced daylight analysis using Radiance")
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://www.openstudio.net")
+
+# The actual .deb file name on disk
+set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}")
+set(CPACK_PACKAGE_CONTACT "openstudio@nrel.gov")
+
+if(APPLE)
+  set(CPACK_IFW_TARGET_DIRECTORY /Applications/OpenStudio-${OpenStudio_VERSION}/)
+elseif(UNIX)
+  # Default method doesn't use IFW but Deb, so this one is probably useless (but harmless)
+  set(CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/)
+  # These two will set the .deb install path correctly
+  set(CPACK_SET_DESTDIR ON)
+  set(CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/)
+
+  # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio,
+  # UNLESS it's from the OpenStudioApplication
+  if (NOT hasParent)
+    # # Add an arbitrary link (broken) at build/openstudio (if build/ is your build folder) that already points to the **future** /usr/local/openstudio-x.y.z/bin/openstudio
+    # execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}/bin/openstudio ${CMAKE_CURRENT_BINARY_DIR}/openstudio)
+    # # Plus a versioned one
+    # execute_process(COMMAND ln -sf ${CPACK_INSTALL_PREFIX}/bin/openstudio ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION})
+    # # Have this link be installed with the .deb package in /usr/local/bin
+    # install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio DESTINATION /usr/local/bin COMPONENT CLI)
+    # install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openstudio-${OpenStudio_VERSION} DESTINATION /usr/local/bin COMPONENT CLI)
+
+    # We use a postinstallation script so we don't get conflicts when we have OSApp installed first (or another OpenStudio (sdk) version)
+    set(POSTINST_FILE "${PROJECT_BINARY_DIR}/postinst")
+    set(POSTRM_FILE "${PROJECT_BINARY_DIR}/postrm")
+    configure_file(${PROJECT_SOURCE_DIR}/debian/postinst.in ${POSTINST_FILE} @ONLY)
+    configure_file(${PROJECT_SOURCE_DIR}/debian/postrm.in ${POSTRM_FILE} @ONLY)
+    execute_process(COMMAND chmod 755 "${POSTINST_FILE}")
+    execute_process(COMMAND chmod 755 "${POSTRM_FILE}")
+
+    set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CPACK_DEBIAN_BIN_PACKAGE_CONTROL_EXTRA};${POSTINST_FILE};${POSTRM_FILE}")
+
+  endif()
+
+  # TODO: for now since Mac and Windows installers aren't doing it for core, not doing it for Unix either.
+  ## Copy the icons
+  # set(ICON_FOLDER "${PROJECT_SOURCE_DIR}/icons")
+  ## Cf. http://standards.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
+  #foreach(_size 16 32 48 64 128 256)
+
+  #  # Install OSM mimetypes icons
+  #  install(
+  #    FILES "${ICON_FOLDER}/osm_${_size}.png"
+  #    DESTINATION "/usr/share/icons/hicolor/${_size}x${_size}/mimetypes"
+  #    RENAME application-x-openstudio.png
+  #  )
+  #endforeach()
+
+endif()
+
+if(WIN32)
+  set(CPACK_PACKAGE_INSTALL_DIRECTORY "openstudio-${OpenStudio_VERSION}")
+  set(CPACK_IFW_TARGET_DIRECTORY "C:/${CPACK_PACKAGE_INSTALL_DIRECTORY}")
+  set(CPACK_BINARY_IFW ON CACHE BOOL "Enable to build IFW packages")
+  set(CPACK_BINARY_NSIS OFF CACHE BOOL "Enable to build NSIS packages")
+endif()
+
+install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
+install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
+install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/openstudio-gems.gemspec" DESTINATION ./Ruby/ COMPONENT "RubyAPI" )
+
+get_filename_component(ENERGYPLUS_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
+file(GLOB ENERGYPLUS_FILES "${ENERGYPLUS_DIR}/energyplus*")
+file(GLOB ENERGYPLUS_LIB_FILES "${ENERGYPLUS_DIR}/libenergyplus*")
+file(GLOB EXPAND_OBJECTS "${ENERGYPLUS_DIR}/ExpandObjects*")
+
+install(FILES "${ENERGYPLUS_IDD}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+install(DIRECTORY "${ENERGYPLUS_DIR}/python_standard_lib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+
+if(APPLE)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/Python" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 elseif(WIN32)
-  if(CMAKE_CL_64)
-    set(OPENSSL_ARCH 64)
-    set(OPENSSL_EXPECTED_HASH 3f9c88523634c7b1e27f4026e7c3f3ee)
-  else()
-    set(OPENSSL_ARCH 32)
-    set(OPENSSL_EXPECTED_HASH fb2aa1a8ceb85f68055044a85f1dbc94)
-  endif()
-  set(OPENSSL_VERSION "1.0.2a")
-  set(OPENSSL_PATH "OpenSSL-Win${OPENSSL_ARCH}")
-  if(EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip")
-    file(MD5 "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OPENSSL_HASH)
-  endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" OR NOT "${OPENSSL_HASH}" MATCHES "${OPENSSL_EXPECTED_HASH}")
-    message(STATUS "Downloading OpenSSL ${OPENSSL_VERSION} (${OPENSSL_ARCH}-bit)")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/OpenSSL-Win${OPENSSL_ARCH}-${OPENSSL_VERSION}.zip" "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${OPENSSL_EXPECTED_HASH})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}.zip" WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
-  endif()
-  set(OPENSSL_ROOT_DIR "${CMAKE_BINARY_DIR}/${OPENSSL_PATH}")
-endif()
-
-if(BUILD_NODE)
-  # OSX can work with a static ruby library
-  ExternalProject_Add(Node
-    URL http://nodejs.org/dist/v0.10.28/node-v0.10.28.tar.gz
-    CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && sh -c "./configure --prefix=${CMAKE_BINARY_DIR}/Node-prefix/src/Node-install"
-    BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && $(MAKE)
-    INSTALL_COMMAND cd ${CMAKE_BINARY_DIR}/Node-prefix/src/Node && $(MAKE) install && $(MAKE) install-includes && ../Node-install/bin/npm install jasmine-node node-gyp -g && ../Node-install/bin/node ../Node-install/bin/node-gyp install
-  )
-  set(NODE_BIN_DIR ${CMAKE_BINARY_DIR}/Node-prefix/src/Node-install/bin/)
-  set(NODE_INCLUDE_DIR "$ENV{HOME}/.node-gyp/0.10.28")
-endif()
-
-if(BUILD_V8)
-  ExternalProject_Add(V8
-    SVN_REPOSITORY http://v8.googlecode.com/svn/branches/3.19
-    CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/V8-prefix/src/V8 && $(MAKE) dependencies
-    BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/V8-prefix/src/V8 && $(MAKE) x64
-    INSTALL_COMMAND ""
-  )
-  set(V8_INCLUDE_DIR ${CMAKE_BINARY_DIR}/V8-prefix/src/V8/include)
-endif()
-
-# Ruby
-option(BUILD_RUBY "Build Ruby" OFF)
-if( BUILD_RUBY )
-  if( NOT UNIX )
-
-    ExternalProject_Add(ZLib
-      URL_HASH SHA256=c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1
-      URL http://zlib.net/zlib-1.2.11.tar.gz
-      BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-build" --config Release --config Debug --target INSTALL
-      CMAKE_CACHE_ARGS
-        -DINSTALL_BIN_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/bin/
-        -DINSTALL_INC_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/include/
-        -DINSTALL_LIB_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/lib/
-        -DINSTALL_MAN_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/share/man/
-        -DINSTALL_PKGCONFIG_DIR:STRING=${CMAKE_BINARY_DIR}/ZLib-prefix/src/ZLib-install/share/pkgconfig/
-    )
-  endif()
-
-  if( UNIX )
-    set(RUBY_EXT_CONFIG "")
-    if (NOT Apple)
-      # DLM: still missing: curses, dbm, gdbm
-      # sudo apt-get -y install ruby autoconf automake libtool bison libgdbm-dev zlib1g-dev libffi-dev libssl-dev
-      # sudo apt-get -y install build-essential libssl-dev libreadline-dev zlib1g-dev
-      set(RUBY_EXT_CONFIG "--with-openssl-dir=/usr --with-readline-dir=/usr --with-zlib-dir=/usr")
-    endif()
-
-    # KSB: For Mac, you may need to install some things...
-    # brew install homebrew/dupes/zlib
-    # brew link --overwrite --force homebrew/dupes/zlib
-    # brew install autoconf automake libtool
-    # brew link autoconf automake libtool
-    ExternalProject_Add(Ruby
-      URL https://codeload.github.com/ruby/ruby/tar.gz/v2_2_4
-      URL_MD5 3f0d280116092dc5278b6cff31948aad
-      BUILD_IN_SOURCE 1
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch
-      CONFIGURE_COMMAND autoconf && sh -c "./configure --with-static-linked-ext ${RUBY_EXT_CONFIG} --disable-install-doc --prefix=${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install"
-      BUILD_COMMAND $(MAKE) # cd ext/openssl && ../../ruby extconf.rb && cd ../readline && ../../ruby extconf.rb && cd ../../ && $(MAKE)
-      INSTALL_COMMAND $(MAKE) install && sh -c "cp ./rbconfig.rb ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ruby/2.2.0/." && sh -c "rm -rf ./ext/-test-" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext" && sh -c "mkdir ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc" && sh -c "find ./ext -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/ext/" && sh -c "find ./enc -name '*.a' | xargs -I {} cp {} ${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/enc"
-    )
-    find_file( RUBY_CONFIG_INCLUDE_DIR config.h PATHS "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/" )
-    set(RUBY_LIBRARY "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/lib/libruby-static.a")
-    set(RUBY_INCLUDE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/include/ruby-2.2.0")
-    set(RUBY_EXECUTABLE "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install/bin/ruby")
-    set(RUBY_SOURCE_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby")
-    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install")
-  else()
-    configure_file("${CMAKE_SOURCE_DIR}/dependencies/ruby/build_ruby.bat.in" "${CMAKE_BINARY_DIR}/build_ruby.bat")
-    # This will require bison, sed, and at least ruby 1.8 in your path
-    # Please install DevKit even though the build will be done by msvc the ruby build system uses some traditionally unix tools
-    ExternalProject_Add(Ruby
-      DEPENDS ZLib
-      URL https://codeload.github.com/ruby/ruby/tar.gz/v2_2_4
-      URL_MD5 3f0d280116092dc5278b6cff31948aad
-      BUILD_IN_SOURCE 1
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/ruby/Ruby.patch
-      CONFIGURE_COMMAND ""
-      BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/build_ruby.bat"
-      INSTALL_COMMAND ""
-    )
-    set(RUBY_INSTALL_DIR "${CMAKE_BINARY_DIR}/Ruby-prefix/src/Ruby-install")
-  endif()
-endif()
-
-# OpenStudio Gems
-
-option(BUILD_OPENSTUDIO_GEMS "Build OpenStudio Gems" OFF)
-if(BUILD_OPENSTUDIO_GEMS)
-  # depends on system Ruby and Git, Ruby must be same version as OpenStudio
-  if (WIN32)
-    file(GLOB POTENTIAL_RUBY_LOCATIONS "c:/ruby*2.2.*/bin")
-    get_filename_component(POTENTIAL_TAR_LOCATIONS ${GIT_EXECUTABLE} DIRECTORY )
-    list(APPEND POTENTIAL_TAR_LOCATIONS "${POTENTIAL_TAR_LOCATIONS}/../bin" "${POTENTIAL_TAR_LOCATIONS}/../usr/bin")
-  endif()
-  find_program(RUBY_EXE ruby HINTS ${POTENTIAL_RUBY_LOCATIONS})
-  find_program(TAR_EXE tar HINTS ${POTENTIAL_TAR_LOCATIONS})
-  set(OPENSTUDIO_GEMS_DIR "${CMAKE_BINARY_DIR}/openstudio-gems")
-  add_custom_target(openstudio-gems ALL
-                    ${RUBY_EXE} "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb" "${OPENSTUDIO_GEMS_DIR}" "${TAR_EXE}" "2.2.4"
-                    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/dependencies/ruby/"
-                    DEPENDS "${CMAKE_SOURCE_DIR}/dependencies/ruby/Gemfile" "${CMAKE_SOURCE_DIR}/dependencies/ruby/build_openstudio_gems.rb")
-endif()
-
-option(BUILD_BOOST "Build Boost" OFF)
-if(BUILD_BOOST)
-  if(APPLE)
-    set(apple-flags "-std=c11 -std=c++11 -stdlib=libc++")
-    ExternalProject_Add(Boost
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_55_0.tar.gz
-      URL_MD5 93780777cfbf999a600f62883bd54b17
-      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/xcode_51.patch && ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/fchmodat.patch
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 toolset=clang cxxflags=${apple-flags} linkflags=${apple-flags} variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
-      INSTALL_COMMAND ""
-    )
-    set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
-    set(BOOST_LIBRARYDIR ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install/lib)
-  elseif(UNIX)
-    ExternalProject_Add(Boost
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_55_0.tar.gz
-      URL_MD5 93780777cfbf999a600f62883bd54b17
-      CONFIGURE_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./bootstrap.sh
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/Boost/gcc_5_no_cxx11.patch
-      BUILD_COMMAND cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && ./b2 cxxflags=-fPIC link=static variant=debug,release define=BOOST_CHRONO_HEADER_ONLY --layout=tagged --with-atomic --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${BOOST_CPUCOUNT} install
-      INSTALL_COMMAND ""
-    )
-    set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
-    set(BOOST_LIBRARYDIR ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install/lib)
-  else()
-    # The call to cmd and VS_UNICODE_OUTPUT is to fix an oddity where boost configuration complains about missing ICU when it shouldn't
-    # be trying to find it
-
-    set(B2_TOOLSET "")
-    if(MSVC12)
-      set(B2_TOOLSET "toolset=msvc-12.0")
-    endif()
-
-    if(CMAKE_CL_64)
-      ExternalProject_Add(Boost
-        URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_55_0.tar.gz
-        URL_MD5 93780777cfbf999a600f62883bd54b17
-        CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
-        PATCH_COMMAND "${PATCH_EXE}" "${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost/boost/archive/iterators/transform_width.hpp" "${CMAKE_SOURCE_DIR}/dependencies/Boost/transform_width.diff"
-        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=64 define=BOOST_CHRONO_HEADER_ONLY --build-type=minimal --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
-        INSTALL_COMMAND ""
-      )
-    else()
-      ExternalProject_Add(Boost
-        URL http://openstudio-resources.s3.amazonaws.com/dependencies/boost_1_55_0.tar.gz
-        URL_MD5 93780777cfbf999a600f62883bd54b17
-        CONFIGURE_COMMAND cmd /C "cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && bootstrap.bat"
-        PATCH_COMMAND "${PATCH_EXE}" "${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost/boost/archive/iterators/transform_width.hpp" "${CMAKE_SOURCE_DIR}/dependencies/Boost/transform_width.diff"
-        BUILD_COMMAND cmd /C "set VS_UNICODE_OUTPUT=& cd ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost && b2 ${B2_TOOLSET} link=static address-model=32 define=BOOST_CHRONO_HEADER_ONLY --build-type=minimal --with-filesystem --with-regex --with-program_options --with-system --with-thread --with-date_time --with-log --prefix=${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install -j${CPUCOUNT}" install
-        INSTALL_COMMAND ""
-      )
-    endif()
-
-    set(BOOST_ROOT ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install)
-    set(BOOST_LIBRARYDIR ${CMAKE_BINARY_DIR}/Boost-prefix/src/Boost-install/lib)
-  endif()
-endif()
-
-option(BUILD_QT "Build Qt" OFF)
-option(Qt5Static "Build Static Qt" OFF)
-
-if(BUILD_QT)
-
-  if(APPLE)
-    execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
-    if( Qt5Static )
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
-    else()
-      message(WARNING "Shared Apple Qt build untested")
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -qt-pcre -qt-harfbuzz -shared -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -confirm-license -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
-    endif()
-    ExternalProject_Add(Qt
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.tar.gz
-      URL_MD5 ed16ef2a30c674f91f8615678005d44c
-      CONFIGURE_COMMAND sh -c "./configure ${QT_CONFIGURE_COMMAND}"
-      PATCH_COMMAND ""
-      BUILD_COMMAND sh -c "make -j${CPUCOUNT} && make install"
-      INSTALL_COMMAND ""
-      BUILD_IN_SOURCE 1
-    )
-    set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/")
-
-  elseif( UNIX )
-    # install deps according to here http://doc.qt.io/qt-5/linux-requirements.html
-    # also reference https://wiki.qt.io/Building_Qt_5_from_Git
-    # need to apply the workaround at https://bugreports.qt.io/browse/QTBUG-52605 manually
-    if( Qt5Static )
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -static -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install")
-    else()
-      message(WARNING "Shared Unix Qt build untested")
-      set(QT_CONFIGURE_COMMAND "-v -release -opensource -shared -openssl -no-pch -no-ssse3 -qt-sql-sqlite -plugin-sql-sqlite -skip enginio -no-compile-examples -nomake examples -nomake tests -nomake tools -skip qtmultimedia -qt-xcb -confirm-license  -no-qml-debug -prefix ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install")
-    endif()
-    ExternalProject_Add(Qt
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.tar.gz
-      URL_MD5 ed16ef2a30c674f91f8615678005d44c
-      CONFIGURE_COMMAND sh -c "./configure ${QT_CONFIGURE_COMMAND}"
-      PATCH_COMMAND ${PATCH_EXE} -p1 < ${CMAKE_SOURCE_DIR}/dependencies/qt/qstatic_version_tag.patch
-      BUILD_COMMAND sh -c "make -j${CPUCOUNT} && make install"
-      INSTALL_COMMAND ""
-      BUILD_IN_SOURCE 1
-    )
-    set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/")
-
-  else()
-    # to initialize command prompt run: "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" amd64
-    configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_static_qt.bat.in" "${CMAKE_BINARY_DIR}/build_static_qt.bat")
-    configure_file("${CMAKE_SOURCE_DIR}/dependencies/qt/build_shared_qt.bat.in" "${CMAKE_BINARY_DIR}/build_shared_qt.bat")
-    if( Qt5Static )
-      set(QT_BUILD_SCRIPT "build_static_qt.bat")
-    else()
-      set(QT_BUILD_SCRIPT "build_shared_qt.bat")
-    endif()
-    ExternalProject_Add(Qt
-      URL http://openstudio-resources.s3.amazonaws.com/dependencies/qt-everywhere-opensource-src-5.6.1.zip
-      URL_MD5 c18a4904d9773894437c10c25f93e50f
-      BUILD_IN_SOURCE 1
-      CONFIGURE_COMMAND ""
-      PATCH_COMMAND ""
-      BUILD_COMMAND cmd /C "${CMAKE_BINARY_DIR}/${QT_BUILD_SCRIPT}"
-      INSTALL_COMMAND ""
-    )
-    set(QT_INSTALL_DIR "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/")
-  endif()
-
+  file(GLOB ENERGYPLUS_MSVC_FILES "${ENERGYPLUS_DIR}/msvc*.dll")
+  foreach(msvc_file IN LISTS ENERGYPLUS_MSVC_FILES)
+    install(PROGRAMS "${msvc_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endforeach()
+  file(GLOB ENERGYPLUS_VCRUNTIME_FILES "${ENERGYPLUS_DIR}/vcruntime*.dll")
+  foreach(vcruntime_file IN LISTS ENERGYPLUS_VCRUNTIME_FILES)
+    install(PROGRAMS "${vcruntime_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endforeach()
+  file(GLOB ENERGYPLUS_UCRT_FILES "${ENERGYPLUS_DIR}/ucrt*.dll")
+  foreach(ucrt_file IN LISTS ENERGYPLUS_UCRT_FILES)
+    install(PROGRAMS "${ucrt_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endforeach()
+  file(GLOB ENERGYPLUS_MSAPI_FILES "${ENERGYPLUS_DIR}/api-ms*.dll")
+  foreach(msapi_file IN LISTS ENERGYPLUS_MSAPI_FILES)
+    install(PROGRAMS "${msapi_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endforeach()
+  install(PROGRAMS "${ENERGYPLUS_DIR}/python37.dll" DESTINATION ./EnergyPlus/)
+  #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
+  #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
+elseif(UNIX)
+	install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.6m.so.1.0" DESTINATION ./EnergyPlus/)
 else()
-  set(QT_INSTALL_DIR "")
+  #install(PROGRAMS "${ENERGYPLUS_PATH}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/)
+  #install(PROGRAMS "${ENERGYPLUS_PATH}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/)
 endif()
 
-option(BUILD_DVIEW "Build DView" OFF)
-if( BUILD_DVIEW )
-    ExternalProject_Add(curl
-      URL https://curl.haxx.se/download/curl-7.55.1.tar.gz
-      CONFIGURE_COMMAND ""
-      BUILD_COMMAND ""
-      INSTALL_COMMAND ""
-    )
-
-    ExternalProject_Add(lk
-      GIT_REPOSITORY git://github.com/NREL/lk
-      GIT_TAG 1e4291ab85b2679fbb06391c3eaf23c8053e8481
-      CONFIGURE_COMMAND ""
-      BUILD_COMMAND ""
-      INSTALL_COMMAND ""
-    )
-
-    ExternalProject_Add(DView
-      DEPENDS lk curl
-      GIT_REPOSITORY https://github.com/NREL/wex.git
-      GIT_TAG 2e28be26a5b4690b95863e960276c2d8e4aa0867
-      CMAKE_CACHE_ARGS
-        -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-        -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-        -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-        -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-        -DLK_DIR:DIR=${CMAKE_BINARY_DIR}/lk-prefix/src/lk/
-        -DCURL_DIR:DIR=${CMAKE_BINARY_DIR}/curl-prefix/src/curl/
-        -DCMAKE_INSTALL_PREFIX:DIR=${CMAKE_BINARY_DIR}/DView-prefix/src/DView-install
-        -DwxWidgets_EXCLUDE_COMMON_LIBRARIES:BOOL=false
-        -DwxWidgets_USE_STATIC:BOOL=true
-    )
-endif()
-
-set(OpenStudioCore_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
-
-# Set up the dependencies for OpenStudioCore
-
-if(BUILD_BOOST)
-  list(APPEND OpenStudioCore_DEPENDS Boost)
-endif()
-
-if(BUILD_RUBY)
-  list(APPEND OpenStudioCore_DEPENDS Ruby)
-endif()
-
-if(BUILD_NODE)
-  list(APPEND OpenStudioCore_DEPENDS Node)
-endif()
-
-if(BUILD_V8)
-  list(APPEND OpenStudioCore_DEPENDS V8)
-endif()
-
-if(MSVC)
-  set(OS_BUILD_COMMAND BUILD_COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build" --config $(Configuration) -- /maxcpucount)
+if(WIN32)
+  install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
 else()
-  set(OS_BUILD_COMMAND "")
+  string(REPLACE "-Redhat" "-Linux" RADIANCE_PATH ${RADIANCE_PATH})
+  install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./Radiance/ COMPONENT Radiance USE_SOURCE_PERMISSIONS)
 endif()
 
-ExternalProject_Add(OSCore
-  DEPENDS ${OpenStudioCore_DEPENDS}
-  SOURCE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore
-  ${OS_BUILD_COMMAND}
-  CMAKE_CACHE_ARGS
-    -DCMAKE_OSX_ARCHITECTURES:STRING=${CMAKE_OSX_ARCHITECTURES}
-    -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${CMAKE_OSX_DEPLOYMENT_TARGET}
-    -DCMAKE_OSX_SYSROOT:STRING=${CMAKE_OSX_SYSROOT}
-    -DBUILD_DOCUMENTATION:BOOL=${BUILD_DOCUMENTATION}
-    -DBUILD_CSHARP_BINDINGS:BOOL=${BUILD_CSHARP_BINDINGS}
-    -DBUILD_JAVA_BINDINGS:BOOL=${BUILD_JAVA_BINDINGS}
-    -DBUILD_V8_BINDINGS:BOOL=${BUILD_V8_BINDINGS}
-    -DBUILD_NODE_MODULES:BOOL=${BUILD_NODE_MODULES}
-    -DBUILD_PYTHON_BINDINGS:BOOL=${BUILD_PYTHON_BINDINGS}
-    -DBUILD_TESTING:BOOL=${BUILD_TESTING}
-    -DBUILD_PACKAGE:BOOL=${BUILD_PACKAGE}
-    -DBUILD_PAT:BOOL=${BUILD_PAT}
-    -DBUILD_WITH_MULTIPLE_PROCESSES:BOOL=${BUILD_WITH_MULTIPLE_PROCESSES}
-    -DUSE_PCH:BOOL=${USE_PCH}
-    -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-    -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-    -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-    -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
-    -DCMAKE_EXE_LINKER_FLAGS:STRING=${CMAKE_EXE_LINKER_FLAGS}
-    -DCMAKE_MODULE_LINKER_FLAGS:STRING=${CMAKE_MODULE_LINKER_FLAGS}
-    -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-    -DCMAKE_INSTALL_PREFIX:STRING=${CMAKE_INSTALL_PREFIX}
-    -DCMAKE_PREFIX_PATH:STRING=${CMAKE_PREFIX_PATH}
-    -DBOOST_ROOT:STRING=${BOOST_ROOT}
-    -DBOOST_LIBRARYDIR:STRING=${BOOST_LIBRARYDIR}
-    -DQT_INSTALL_DIR:PATH=${QT_INSTALL_DIR}
-    -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
-    -DNODE_BIN_DIR:STRING=${NODE_BIN_DIR}
-    -DNODE_INCLUDE_DIR:STRING=${NODE_INCLUDE_DIR}
-    -DV8_INCLUDE_DIR:STRING=${V8_INCLUDE_DIR}
-    -DDOXYGEN_EXECUTABLE:STRING=${DOXYGEN_EXECUTABLE}
-    -DDOXYGEN_DOT_EXECUTABLE:STRING=${DOXYGEN_DOT_EXECUTABLE}
-    -DMAXIMIZE_CPU_USAGE:BOOL=${MAXIMIZE_CPU_USAGE}
-    -DRUBY_INSTALL_DIR:PATH=${RUBY_INSTALL_DIR}
-    INSTALL_COMMAND ""
+if(BUILD_PAT AND APPLE)
+  install(FILES "${ENERGYPLUS_IDD}" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  install(PROGRAMS ${ENERGYPLUS_FILES} DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
+endif()
+
+export(TARGETS
+         openstudio_airflow
+         openstudio_model
+         openstudio_energyplus
+         openstudio_measure
+         openstudio_osversion
+         openstudio_sdd
+         openstudio_isomodel
+         openstudio_gbxml
+         openstudio_radiance
+         openstudio_utilities
+         openstudiolib
+         openstudio_rb
+       NAMESPACE "openstudio::"
+       FILE "${PROJECT_BINARY_DIR}/openstudioConfig.cmake"
+       )
+
+install(EXPORT openstudio
+        DESTINATION lib/cmake/openstudio
+        NAMESPACE "openstudio::"
+        COMPONENT "CPPAPI"
+        FILE openstudioConfig.cmake)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${PROJECT_BINARY_DIR}/openstudioConfigVersion.cmake"
+  VERSION ${CMAKE_PROJECT_VERSION}
+  COMPATIBILITY AnyNewerVersion
 )
 
-#if(BUILD_QT AND MSVC)
-#  file(GLOB dlls ${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-install/bin/*.dll)
-#  foreach(dll ${dlls})
-#    get_filename_component(filename "${dll}" NAME_WE)
-#    ExternalProject_Add_Step(OSCore "Install${filename}ReleaseDLL"
-#      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release"
-#      DEPENDERS configure
-#    )
-#    ExternalProject_Add_Step(OSCore "Install${filename}DebugDLL"
-#      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug"
-#      DEPENDERS configure
-#    )
-#    ExternalProject_Add_Step(OSCore "Install${filename}RelWithDebInfoDLL"
-#      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo"
-#      DEPENDERS configure
-#    )
-#    ExternalProject_Add_Step(OSCore "Install${filename}MinSizeRelDLL"
-#      COMMAND ${CMAKE_COMMAND} -E copy_if_different "${dll}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel"
-#      DEPENDERS configure
-#    )
-#  endforeach()
-#endif()
+install(
+  FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/openstudioConfigVersion.cmake"
+  DESTINATION
+    lib/cmake/openstudio/
+  COMPONENT "CPPAPI"
+)
 
-#if(MSVC)
-#  ExternalProject_Add_Step(OSCore MakeRubyReleaseFolder
-#    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release
-#    DEPENDERS configure
-#  )
-#  ExternalProject_Add_Step(OSCore MakeRubyDebugFolder
-#    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug
-#    DEPENDERS configure
-#  )
-#  ExternalProject_Add_Step(OSCore MakeRubyRelWithDebInfoFolder
-#    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo
-#    DEPENDERS configure
-#  )
-#  ExternalProject_Add_Step(OSCore MakeRubyMinSizeRelFolder
-#    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel
-#    DEPENDERS configure
-#  )
-#
-#
-#  ExternalProject_Add_Step(OSCore MakeRubyReleaseDLL
-#    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Release/${RUBY_DLL}"
-#    DEPENDERS configure
-#  )
-#  ExternalProject_Add_Step(OSCore MakeRubyDebugDLL
-#    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/Debug/${RUBY_DLL}"
-#    DEPENDERS configure
-#  )
-#  ExternalProject_Add_Step(OSCore MakeRubyRelWithDebInfoDLL
-#    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/RelWithDebInfo/${RUBY_DLL}"
-#    DEPENDERS configure
-#  )
-#  ExternalProject_Add_Step(OSCore MakeRubyMinSizeRelDLL
-#    COMMAND ${CMAKE_COMMAND} -E copy "${RUBY_DLLPATH}" "${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products/MinSizeRel/${RUBY_DLL}"
-#    DEPENDERS configure
-#  )
-#
-#endif()
+install(
+  FILES
+    "${CMAKE_CURRENT_SOURCE_DIR}/FetchRubyMinGW.cmake"
+  DESTINATION
+    lib/cmake/openstudio/
+  COMPONENT "CPPAPI"
+)
 
-
-set(OPENSTUDIOCORE_BUILD_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build)
-set(OPENSTUDIOCORE_LIB_DIR ${CMAKE_BINARY_DIR}/OSCore-prefix/src/OSCore-build/Products)
-set(OPENSTUDIOCORE_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/openstudiocore/src)
-set(OPENSTUDIOCORE_ROOT_DIR ${CMAKE_SOURCE_DIR}/openstudiocore/)
-
-###############################################################################
-# Use CPack
-if(BUILD_PACKAGE)
-  include(OpenStudioCPack.cmake)
+if (NOT DELAY_INCLUDE_CPACK)
+  include(CPack)
 endif()
-###############################################################################
 
+include(CPackIFW)
 
-if(BUILD_REGRESSIONS)
-  ExternalProject_Add(Regressions
-    DEPENDS OSCore
-    GIT_REPOSITORY git://github.com/NREL/OpenStudio-resources
-    GIT_TAG develop
-    CMAKE_CACHE_ARGS
-      -DOPENSTUDIO_BUILD_DIR:PATH=${CMAKE_BINARY_DIR}
-      -DQT_INSTALL_DIR:PATH=${QT_INSTALL_DIR}
-    INSTALL_COMMAND ""
+cpack_add_component(CLI
+  DISPLAY_NAME "Command Line Interface"
+  DESCRIPTION "Command Line Interface"
+)
+
+cpack_add_component(RubyAPI
+  DISPLAY_NAME "Ruby API"
+  DESCRIPTION "Ruby API"
+)
+
+cpack_add_component(EnergyPlus
+  DISPLAY_NAME "EnergyPlus"
+  DESCRIPTION "Minimal EnergyPlus installation"
+)
+
+cpack_add_component(Radiance
+  DISPLAY_NAME "Radiance"
+  DESCRIPTION "Full Radiance installation"
+)
+
+cpack_add_component(CPPAPI
+  DISPLAY_NAME "C++ API"
+  DESCRIPTION "Libraries and headers for OpenStudio C++ API"
+)
+
+cpack_ifw_configure_component(CLI
+  SCRIPT src/cli/install_operations.qs
+  REQUIRES_ADMIN_RIGHTS
+)
+
+cpack_ifw_configure_component(RubyAPI
+  REQUIRES_ADMIN_RIGHTS
+)
+
+cpack_ifw_configure_component(EnergyPlus
+  REQUIRES_ADMIN_RIGHTS
+)
+
+cpack_ifw_configure_component(Radiance
+  REQUIRES_ADMIN_RIGHTS
+)
+
+cpack_ifw_configure_component(Unspecified
+  SCRIPT src/install_utility/install_operations.qs
+  REQUIRES_ADMIN_RIGHTS
+)
+
+if(BUILD_CSHARP_BINDINGS)
+  cpack_add_component(CSharpAPI
+    DISPLAY_NAME "C# API"
+    DESCRIPTION "C# API"
+  )
+
+  cpack_ifw_configure_component(CSharpAPI
+    REQUIRES_ADMIN_RIGHTS
   )
 endif()
+
+if(BUILD_PAT)
+  cpack_add_component(PAT
+    DISPLAY_NAME "Parametric Analysis Tool"
+    DESCRIPTION "Parametric Analysis Tool"
+  )
+
+  cpack_ifw_configure_component(PAT
+    DEPENDS CLI RubyAPI
+    SCRIPT pat/install_operations.qs
+    REQUIRES_ADMIN_RIGHTS
+  )
+endif()
+
+if( BUILD_NUGET_PACKAGE AND NOT BUILD_CSHARP_BINDINGS)
+  message("If BUILD_NUGET_PACKAGE=ON, you must use BUILD_CSHARP_BINDINGS=ON too")
+  # Rest moved to csharp/CMakeLists.txt
+endif()
+
+
+if (MSVC)
+  if (NOT USE_LTO)
+    message(WARNING "Suppressing 121,000+ linker warnings, see src/lib/CMakeLists.txt for details")
+    # The actual solution to this is to use the new openstudio_EXPORTS preprocessor
+    # definition and make all of the libs truely one large lib with a single set of exports
+    # the problem is that somehow using this now causes the openstudio_model.lib to grow too large
+    # and we get a linker error
+
+    # The alternative is to suppress these warnings.
+    # The problem is that we are using export/import of symbols between function calls
+    # within the same library. This may result in less efficient function calls.
+
+    # The potential inefficiency goes away if we use LTO linking
+    target_link_libraries(openstudiolib PRIVATE -IGNORE:4217,4049)
+    target_link_libraries(openstudio PRIVATE -IGNORE:4217,4049)
+    target_link_libraries(openstudio_rb PRIVATE -IGNORE:4217,4049)
+  endif()
+endif()
+

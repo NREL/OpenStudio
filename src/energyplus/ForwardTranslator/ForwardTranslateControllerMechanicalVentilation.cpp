@@ -1,0 +1,143 @@
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
+
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem.hpp"
+#include "../../model/AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "../../model/ControllerMechanicalVentilation.hpp"
+#include "../../model/ControllerMechanicalVentilation_Impl.hpp"
+#include "../../model/DesignSpecificationOutdoorAir.hpp"
+#include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../../model/ControllerOutdoorAir.hpp"
+#include "../../model/ControllerOutdoorAir_Impl.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/WorkspaceObjectOrder.hpp"
+#include "../../utilities/core/Logger.hpp"
+#include <utilities/idd/Controller_MechanicalVentilation_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
+using namespace openstudio::model;
+
+namespace openstudio {
+
+namespace energyplus {
+
+boost::optional<IdfObject> ForwardTranslator::translateControllerMechanicalVentilation( ControllerMechanicalVentilation& modelObject )
+{
+  OptionalString s;
+  OptionalDouble d;
+  OptionalModelObject temp;
+
+  IdfObject idfObject(IddObjectType::Controller_MechanicalVentilation);
+
+  // Name
+  s = modelObject.name();
+  if(s)
+  {
+    idfObject.setName(*s);
+  }
+
+  // Availability Schedule
+  // If there is a ControllerOutdoorAir::minimumOutdoorAirSchedule
+  // then use that for the ControllerMechanicalVentilation::availabilitySchedule
+  // Note that this scheme will not support fractions (schedule values above 0) because anything greater than 0 will
+  // make the mechanical ventilation controller avaiable and thus taking precedence.
+  bool useAvailabiltySchedule = true;
+  auto availabilitySchedule = modelObject.availabilitySchedule();
+
+  // Find the associated oa controller
+  auto oaControllers = modelObject.model().getConcreteModelObjects<ControllerOutdoorAir>();
+  auto predicate = [&] (const ControllerOutdoorAir & oaController) {
+    auto mechanicalVentilationController = oaController.controllerMechanicalVentilation();
+    if( mechanicalVentilationController.handle() == modelObject.handle() ) {
+      return true;
+    }
+    return false;
+  };
+  auto oaController = std::find_if(oaControllers.begin(),oaControllers.end(),predicate);
+  // alwaysOnDiscreteSchedule is the default availability schedule for the mechanical ventilation controller
+  // if the default is still in place BUT the user has defined a minimumOutdoorAirSchedule for the oa controller,
+  // then use the minimumOutdoorAirSchedule for the mechanical ventilation controller availability schedule
+  // The minimumOutdoorAirSchedule will not do its job while the controller mechanical ventilation object is available.
+  if( availabilitySchedule == modelObject.model().alwaysOnDiscreteSchedule() ) {
+    if( oaController != oaControllers.end() ) {
+      if( auto minOASchedule = oaController->minimumOutdoorAirSchedule() ) {
+        auto _schedule = translateAndMapModelObject(minOASchedule.get());
+        OS_ASSERT(_schedule);
+        idfObject.setString(Controller_MechanicalVentilationFields::AvailabilityScheduleName,_schedule->name().get());
+        useAvailabiltySchedule = false;
+      }
+    }
+  }
+
+  if( useAvailabiltySchedule ) {
+    boost::optional<IdfObject> availabilityScheduleIdf = translateAndMapModelObject(availabilitySchedule);
+    OS_ASSERT(availabilityScheduleIdf);
+    idfObject.setString(openstudio::Controller_MechanicalVentilationFields::AvailabilityScheduleName,availabilityScheduleIdf->name().get());
+  }
+
+  // Demand Controlled Ventilation
+  if( modelObject.demandControlledVentilation() )
+  {
+    idfObject.setString(openstudio::Controller_MechanicalVentilationFields::DemandControlledVentilation,"Yes");
+  }
+  else
+  {
+    idfObject.setString(openstudio::Controller_MechanicalVentilationFields::DemandControlledVentilation,"No");
+  }
+
+  // System Outdoor Air Method
+  s = modelObject.systemOutdoorAirMethod();
+  if( s )
+  {
+    if( istringEqual("ProportionalControl",s.get()) ) {
+      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,"ProportionalControlBasedonOccupancySchedule");
+    } else {
+      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,s.get());
+    }
+  }
+
+  m_idfObjects.push_back(idfObject);
+  return boost::optional<IdfObject>(idfObject);
+}
+
+} // energyplus
+
+} // openstudio
+

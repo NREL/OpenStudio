@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+<!-- Start with debug_adapor -->
+<Type Name="boost::multiprecision::number&lt;boost::multiprecision::backends::debug_adaptor&lt;*&gt;,*&gt;">
+    <DisplayString>{m_backend.debug_value}</DisplayString>
+</Type>
+
+<!-- Next comes the various cpp_int flavors -->
+
+<Type Name="boost::multiprecision::number&lt;boost::multiprecision::backends::cpp_int_backend&lt;*,*,1,*,void&gt;,*&gt;">
+    <DisplayString Condition="(m_backend.m_limbs == 1) &amp;&amp; m_backend.m_sign">{-1 * (__int64)(m_backend.m_wrapper.m_data[0])}</DisplayString>
+    <DisplayString Condition="(m_backend.m_limbs == 1) &amp;&amp; (m_backend.m_sign == 0)">{(__int64)(m_backend.m_wrapper.m_data[0])}</DisplayString>
+    <DisplayString Condition="(m_backend.m_limbs == 2) &amp;&amp; (m_backend.m_wrapper.m_data[1] &lt; 0x80000000) &amp;&amp; m_backend.m_sign">{ -1 * (__int64)(m_backend.m_wrapper.m_data[0] | ((__int64)m_backend.m_wrapper.m_data[1] &lt;&lt; 32))}</DisplayString>
+    <DisplayString Condition="(m_backend.m_limbs == 2) &amp;&amp; (m_backend.m_sign == 0)">{(__int64)(m_backend.m_wrapper.m_data[0] | ((__int64)m_backend.m_wrapper.m_data[1] &lt;&lt; 32))}</DisplayString>
+    <Expand>
+        <Item Name="SignBit">m_backend.m_sign</Item>
+        <IndexListItems>
+            <Size>m_backend.m_limbs</Size>
+            <ValueNode>m_backend.m_wrapper.m_data[m_backend.m_limbs - $i - 1],x</ValueNode>
+        </IndexListItems>
+        <Item Name="Size">m_backend.m_limbs</Item>
+    </Expand>
+</Type>
+<Type Name="boost::multiprecision::number&lt;boost::multiprecision::backends::cpp_int_backend&lt;*,*,0,*,void&gt;,*&gt;">
+    <DisplayString Condition="(m_backend.m_limbs == 1)">{(__int64)(m_backend.m_wrapper.m_data[0])}</DisplayString>
+    <DisplayString Condition="(m_backend.m_limbs == 2)">{(__int64)(m_backend.m_wrapper.m_data[0] | ((__int64)m_backend.m_wrapper.m_data[1] &lt;&lt; 32))}</DisplayString>
+    <Expand>
+        <IndexListItems>
+            <Size>m_backend.m_limbs</Size>
+            <ValueNode>m_backend.m_wrapper.m_data[m_backend.m_limbs - $i - 1],x</ValueNode>
+        </IndexListItems>
+        <Item Name="Size">m_backend.m_limbs</Item>
+    </Expand>
+</Type>
+<Type Name="boost::multiprecision::number&lt;boost::multiprecision::backends::cpp_int_backend&lt;*,*,1,*,*&gt;,*&gt;">
+    <DisplayString Condition="m_backend.m_internal &amp;&amp; (m_backend.m_limbs == 1) &amp;&amp; m_backend.m_sign">{-1 * (__int64)(m_backend.m_data.first)}</DisplayString>
+    <DisplayString Condition="m_backend.m_internal &amp;&amp; (m_backend.m_limbs == 1) &amp;&amp; (m_backend.m_sign == 0)">{(__int64)(m_backend.m_data.first)}</DisplayString>
+    <DisplayString Condition="m_backend.m_internal &amp;&amp; (m_backend.m_limbs == 2) &amp;&amp; m_backend.m_sign &amp;&amp; (m_backend.m_data.la[1] &lt; 0x80000000)">{ -1 * (__int64)(m_backend.m_data.double_first)}</DisplayString>
+    <DisplayString Condition="m_backend.m_internal &amp;&amp; (m_backend.m_limbs == 2) &amp;&amp; (m_backend.m_sign == 0)">{(__int64)(m_backend.m_data.double_first)}</DisplayString>
+    <DisplayString Condition="(m_backend.m_internal == 0) &amp;&amp; (m_backend.m_limbs == 1) &amp;&amp; m_backend.m_sign">{-1 * (__int64)(m_backend.m_data.ld.data[0])}</DisplayString>
+    <DisplayString Condition="(m_backend.m_internal == 0) &amp;&amp; (m_backend.m_limbs == 1) &amp;&amp; (m_backend.m_sign == 0)">{(__int64)(m_backend.m_data.ld.data[0])}</DisplayString>
+    <DisplayString Condition="(m_backend.m_internal == 0) &amp;&amp; (m_backend.m_limbs == 2) &amp;&amp; m_backend.m_sign &amp;&amp; (m_backend.m_data.la[1] &lt; 0x80000000)">{ -1 * (__int64)(m_backend.m_data.ld.data[0] | ((__int64)m_backend.m_data.ld.data[1] &lt;&lt; 32))}</DisplayString>
+    <DisplayString Condition="(m_backend.m_internal == 0) &amp;&amp; (m_backend.m_limbs == 2) &amp;&amp; (m_backend.m_sign == 0)">{(__int64)(m_backend.m_data.ld.data[0] | ((__int64)m_backend.m_data.ld.data[1] &lt;&lt; 32))}</DisplayString>
+    <Expand>
+        <Item Name="SignBit">m_backend.m_sign</Item>
+        <Item Name="Size">m_backend.m_limbs</Item>
+        <IndexListItems Condition="m_backend.m_internal">
+            <Size>m_backend.m_limbs</Size>
+            <ValueNode>m_backend.m_data.la[m_backend.m_limbs - $i - 1],x</ValueNode>
+        </IndexListItems>
+        <IndexListItems Condition="m_backend.m_internal == 0">
+            <Size>m_backend.m_limbs</Size>
+            <ValueNode>m_backend.m_data.ld.data[m_backend.m_limbs - $i - 1],x</ValueNode>
+        </IndexListItems>
+    </Expand>
+</Type>
+
+<!-- cpp_dec_float -->
+
+<Type Name="boost::multiprecision::number&lt;boost::multiprecision::backends::cpp_dec_float&lt;*,*,void&gt;,*&gt;">
+    <DisplayString Condition="(m_backend.fpclass == 0) &amp;&amp; (m_backend.exp != 0) &amp;&amp; m_backend.neg">-{m_backend.data._Elems[0],u}.{m_backend.data._Elems[1],u}{m_backend.data._Elems[2],u}...e{m_backend.exp,d}</DisplayString>
+    <DisplayString Condition="(m_backend.fpclass == 0) &amp;&amp; (m_backend.exp != 0) &amp;&amp; (m_backend.neg == 0)">{m_backend.data._Elems[0],u}.{m_backend.data._Elems[1],u}{m_backend.data._Elems[2],u}...e{m_backend.exp,d}</DisplayString>
+    <DisplayString Condition="(m_backend.fpclass == 0) &amp;&amp; (m_backend.exp == 0) &amp;&amp; m_backend.neg">-{m_backend.data._Elems[0],u}.{m_backend.data._Elems[1],u}{m_backend.data._Elems[2],u}</DisplayString>
+    <DisplayString Condition="(m_backend.fpclass == 0) &amp;&amp; (m_backend.exp == 0) &amp;&amp; (m_backend.neg == 0)">{m_backend.data._Elems[0],u}.{m_backend.data._Elems[1],u}{m_backend.data._Elems[2],u}</DisplayString>
+    <DisplayString Condition="(m_backend.fpclass == 1) &amp;&amp; m_backend.neg">-INF</DisplayString>
+    <DisplayString Condition="(m_backend.fpclass == 1) &amp;&amp; (m_backend.neg == 0)">+INF</DisplayString>
+    <DisplayString Condition="(m_backend.fpclass &gt; 1)">NaN</DisplayString>
+    <Expand>
+        <Item Name="SignBit">m_backend.neg</Item>
+        <Item Name="Exponent">m_backend.exp</Item>
+        <IndexListItems>
+            <Size>m_backend.prec_elem</Size>
+            <ValueNode>m_backend.data._Elems[$i],u</ValueNode>
+        </IndexListItems>
+    </Expand>
+</Type>
+
+<!-- cpp_int_backend, this helps with visualizing cpp_bin_float -->
+
+<Type Name="boost::multiprecision::backends::cpp_int_backend&lt;*,*,1,*,void&gt;">
+    <DisplayString Condition="(m_limbs == 1) &amp;&amp; m_sign">{-1 * (__int64)(m_wrapper.m_data[0])}</DisplayString>
+    <DisplayString Condition="(m_limbs == 1) &amp;&amp; (m_sign == 0)">{(__int64)(m_wrapper.m_data[0])}</DisplayString>
+    <DisplayString Condition="(m_limbs == 2) &amp;&amp; (m_wrapper.m_data[1] &lt; 0x80000000) &amp;&amp; m_sign">{ -1 * (__int64)(m_wrapper.m_data[0] | ((__int64)m_wrapper.m_data[1] &lt;&lt; 32))}</DisplayString>
+    <DisplayString Condition="(m_limbs == 2) &amp;&amp; (m_sign == 0)">{(__int64)(m_wrapper.m_data[0] | ((__int64)m_wrapper.m_data[1] &lt;&lt; 32))}</DisplayString>
+    <Expand>
+        <Item Name="SignBit">m_sign</Item>
+        <IndexListItems>
+            <Size>m_limbs</Size>
+            <ValueNode>m_wrapper.m_data[m_limbs - $i - 1],x</ValueNode>
+        </IndexListItems>
+        <Item Name="Size">m_limbs</Item>
+    </Expand>
+</Type>
+<Type Name="boost::multiprecision::backends::cpp_int_backend&lt;*,*,0,*,void&gt;">
+    <DisplayString Condition="(m_limbs == 1)">{(__int64)(m_wrapper.m_data[0])}</DisplayString>
+    <DisplayString Condition="(m_limbs == 2)">{(__int64)(m_wrapper.m_data[0] | ((__int64)m_wrapper.m_data[1] &lt;&lt; 32))}</DisplayString>
+    <Expand>
+        <IndexListItems>
+            <Size>m_limbs</Size>
+            <ValueNode>m_wrapper.m_data[m_limbs - $i - 1],x</ValueNode>
+        </IndexListItems>
+        <Item Name="Size">m_limbs</Item>
+    </Expand>
+</Type>
+<Type Name="boost::multiprecision::backends::cpp_int_backend&lt;*,*,1,*,*&gt;">
+    <DisplayString Condition="m_internal &amp;&amp; (m_limbs == 1) &amp;&amp; m_sign">{-1 * (__int64)(m_data.first)}</DisplayString>
+    <DisplayString Condition="m_internal &amp;&amp; (m_limbs == 1) &amp;&amp; (m_sign == 0)">{(__int64)(m_data.first)}</DisplayString>
+    <DisplayString Condition="m_internal &amp;&amp; (m_limbs == 2) &amp;&amp; m_sign &amp;&amp; (m_data.la[1] &lt; 0x80000000)">{ -1 * (__int64)(m_data.double_first)}</DisplayString>
+    <DisplayString Condition="m_internal &amp;&amp; (m_limbs == 2) &amp;&amp; (m_sign == 0)">{(__int64)(m_data.double_first)}</DisplayString>
+    <DisplayString Condition="(m_internal == 0) &amp;&amp; (m_limbs == 1) &amp;&amp; m_sign">{-1 * (__int64)(m_data.ld.data[0])}</DisplayString>
+    <DisplayString Condition="(m_internal == 0) &amp;&amp; (m_limbs == 1) &amp;&amp; (m_sign == 0)">{(__int64)(m_data.ld.data[0])}</DisplayString>
+    <DisplayString Condition="(m_internal == 0) &amp;&amp; (m_limbs == 2) &amp;&amp; m_sign &amp;&amp; (m_data.la[1] &lt; 0x80000000)">{ -1 * (__int64)(m_data.ld.data[0] | ((__int64)m_data.ld.data[1] &lt;&lt; 32))}</DisplayString>
+    <DisplayString Condition="(m_internal == 0) &amp;&amp; (m_limbs == 2) &amp;&amp; (m_sign == 0)">{(__int64)(m_data.ld.data[0] | ((__int64)m_data.ld.data[1] &lt;&lt; 32))}</DisplayString>
+    <Expand>
+        <Item Name="SignBit">m_sign</Item>
+        <Item Name="Size">m_limbs</Item>
+        <IndexListItems Condition="m_internal">
+            <Size>m_limbs</Size>
+            <ValueNode>m_data.la[m_limbs - $i - 1],x</ValueNode>
+        </IndexListItems>
+        <IndexListItems Condition="m_internal == 0">
+            <Size>m_limbs</Size>
+            <ValueNode>m_data.ld.data[m_limbs - $i - 1],x</ValueNode>
+        </IndexListItems>
+    </Expand>
+</Type>
+
+<!-- cpp_bin_float -->
+
+<Type Name="boost::multiprecision::number&lt;boost::multiprecision::backends::cpp_bin_float&lt;*,*,*,*,*,*&gt;,*&gt;">
+    <DisplayString Condition="m_backend.m_exponent == m_backend.exponent_zero">0</DisplayString>
+    <DisplayString Condition="(m_backend.m_exponent == m_backend.exponent_infinity) &amp;&amp; (m_backend.m_sign == 0)">+INF</DisplayString>
+    <DisplayString Condition="(m_backend.m_exponent == m_backend.exponent_infinity) &amp;&amp; (m_backend.m_sign == 1)">-INF</DisplayString>
+    <DisplayString Condition="m_backend.m_exponent == m_backend.exponent_nan">NaN</DisplayString>
+    <Expand>
+        <Item Name="SignBit">m_backend.m_sign</Item>
+        <Item Name="Exponent">m_backend.m_exponent</Item>
+        <Item Name="Digits">m_backend.m_data</Item>
+    </Expand>
+</Type>
+
+<!-- cpp_rational -->
+
+<Type Name="boost::multiprecision::number&lt;boost::multiprecision::backends::rational_adaptor&lt;boost::multiprecision::backends::cpp_int_backend&lt;*,*,*,*,*&gt;&gt;,*&gt;">
+    <DisplayString>{m_backend.m_value}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_backend.m_value</ExpandedItem>
+    </Expand>
+</Type>
+
+
+
+<!-- mpz_int -->
+
+<Type Name="boost::multiprecision::number&lt;boost::multiprecision::backends::gmp_int,*&gt;">
+    <DisplayString >{m_backend.m_data[0]}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_backend.m_data[0]</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="__mpz_struct">
+    <DisplayString Condition="_mp_size == 1">{_mp_d[0]}</DisplayString>
+    <DisplayString Condition="_mp_size == -1">{-((long long)_mp_d[0])}</DisplayString>
+    <DisplayString Condition="_mp_size == 0">0</DisplayString>
+    <Expand>
+        <Item Condition="_mp_size &lt; 0" Name="SignBit">1</Item>
+        <Item Condition="_mp_size &gt;= 0" Name="SignBit">0</Item>
+        <Item Condition="_mp_size == 0" Name="Bits">0</Item>
+        <IndexListItems Condition="_mp_size &lt; 0">
+            <Size>-_mp_size</Size>
+            <ValueNode>_mp_d[-_mp_size - $i - 1],x</ValueNode>
+        </IndexListItems>
+        <IndexListItems Condition="_mp_size &gt; 0">
+            <Size>_mp_size</Size>
+            <ValueNode>_mp_d[_mp_size - $i - 1],x</ValueNode>
+        </IndexListItems>
+    </Expand>
+</Type>
+
+<!-- mpq_rational -->
+
+<Type Name="boost::multiprecision::number&lt;boost::multiprecision::backends::gmp_rational,*&gt;">
+    <DisplayString >{m_backend.m_data[0]}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_backend.m_data[0]</ExpandedItem>
+    </Expand>
+</Type>
+
+<Type Name="__mpq_struct">
+    <DisplayString>{_mp_num} / {_mp_den}</DisplayString>
+    <Expand>
+        <Item Name="Numerator">_mp_num</Item>
+        <Item Name="Denominator">_mp_den</Item>
+    </Expand>
+</Type>
+
+<!-- mpf_float -->
+
+<Type Name="boost::multiprecision::number&lt;boost::multiprecision::backends::gmp_float&lt;*&gt;,*&gt;">
+    <DisplayString >{m_backend.m_data[0]}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_backend.m_data[0]</ExpandedItem>
+    </Expand>
+</Type>
+
+<!-- There's no visualizer for __mpf_struct because we don't know how to decode it! -->
+
+<!-- mpfr_float -->
+
+<Type Name="boost::multiprecision::number&lt;boost::multiprecision::backends::mpfr_float_backend&lt;*&gt;,*&gt;">
+    <DisplayString >{m_backend.m_data[0]}</DisplayString>
+    <Expand>
+        <ExpandedItem>m_backend.m_data[0]</ExpandedItem>
+    </Expand>
+</Type>
+
+<!-- There's no visualizer for __mpfr_struct because we don't know how to decode it easily! -->
+
+</AutoVisualizer>
