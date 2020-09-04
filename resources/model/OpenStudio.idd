@@ -5706,13 +5706,7 @@ OS:SubSurface,
        \minimum 0
        \maximum 1
        \default autocalculate
-  A7, \field Shading Control Name
-       \note enter the name of a WindowProperty:ShadingControl object
-       \note used for windows and glass doors only
-       \note If not specified, window or glass door has no shading (blind, roller shade, etc.)
-       \type object-list
-       \object-list WindowShadeControlNames
-  A8, \field Frame and Divider Name
+  A7, \field Frame and Divider Name
        \note Enter the name of a WindowProperty:FrameAndDivider object
        \note Used only for exterior windows (rectangular) and glass doors.
        \note Unused for triangular windows.
@@ -5878,13 +5872,20 @@ OS:ShadingControl,
        \note Used only if Shading Type = InteriorBlind, ExteriorBlind or BetweenGlassBlind.
        \note Required if Type of Slat Angle Control for Blinds = ScheduledSlatAngle
        \note Schedule values should be degrees (0 minimum, 180 maximum)
-  N2 ; \field Setpoint 2
+  N2 , \field Setpoint 2
        \note W/m2 for solar-based controls, deg C for temperature-based controls.
        \note Used only as the second setpoint for the following two-setpoint control types:
        \note OnIfHighOutdoorAirTempAndHighSolarOnWindow, OnIfHighOutdoorAirTempAndHighHorizontalSolar,
        \note OnIfHighZoneAirTempAndHighSolarOnWindow, and OnIfHighZoneAirTempAndHighHorizontalSolar
        \type real
        \ip-units unknown
+  A12; \field Sub Surface Name
+       \required-field
+       \begin-extensible
+       \type object-list
+       \object-list GlazedExtSubSurfNames
+       \note When Multiple Surface Control Type is set to Sequential the shades will be deployed for the referenced surface objects in order.
+       \note When that field is set to Group the entire list is controlled simultaneously.
 
 OS:WindowProperty:FrameAndDivider,
          \memo Specifies the dimensions of a window frame, dividers, and reveal surfaces.
