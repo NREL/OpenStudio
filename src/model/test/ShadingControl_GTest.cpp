@@ -44,7 +44,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 
-TEST_F(ModelFixture,ShadingControl_Construction) {
+TEST_F(ModelFixture, ShadingControl_Construction) {
   Model model;
 
   Construction construction(model);
@@ -77,7 +77,6 @@ TEST_F(ModelFixture,ShadingControl_Construction) {
   ASSERT_TRUE(subSurface.shadingControl()->construction());
   EXPECT_EQ(construction.handle(), subSurface.shadingControl()->construction()->handle());
 }
-
 
 TEST_F(ModelFixture,ShadingControl_Material) {
   Model model;
@@ -117,4 +116,39 @@ TEST_F(ModelFixture, ShadingControl_PurgeUnusedModelObjects) {
   model.purgeUnusedResourceObjects();
 
   EXPECT_EQ(0, model.objects().size());
+}
+
+TEST_F(ModelFixture, ShadingControl_SubSurfaces) {
+  Model model;
+
+  Blind blind(model);
+  ShadingControl shadingControl(blind);
+
+  std::vector<Point3d> vertices1;
+  vertices1.push_back(Point3d(0,0,1));
+  vertices1.push_back(Point3d(0,0,0));
+  vertices1.push_back(Point3d(1,0,0));
+  vertices1.push_back(Point3d(1,0,1));
+  SubSurface subSurface1(vertices1, model);
+
+  std::vector<Point3d> vertices2;
+  vertices2.push_back(Point3d(0,0,1));
+  vertices2.push_back(Point3d(0,0,0));
+  vertices2.push_back(Point3d(1,0,0));
+  vertices2.push_back(Point3d(1,0,1));
+  SubSurface subSurface2(vertices2, model);
+
+  EXPECT_EQ(0, shadingControl.numberofSubSurfaces());
+  EXPECT_TRUE(shadingControl.addSubSurface(subSurface1));
+  EXPECT_EQ(1, shadingControl.numberofSubSurfaces());
+  shadingControl.removeSubSurface(subSurface1);
+  EXPECT_EQ(0, shadingControl.numberofSubSurfaces());
+
+  std::vector<SubSurface> subSurfaces;
+  subSurfaces.push_back(subSurface1);
+  subSurfaces.push_back(subSurface2);
+  EXPECT_TRUE(shadingControl.addSubSurfaces(subSurfaces));
+  EXPECT_EQ(2, shadingControl.numberofSubSurfaces());
+  shadingControl.removeAllSubSurfaces();
+  EXPECT_EQ(0, shadingControl.numberofSubSurfaces());
 }
