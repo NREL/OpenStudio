@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "PlanarSurface.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -92,7 +93,11 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   bool allowShadingControl() const;
 
-  boost::optional<ShadingControl> shadingControl() const;
+  OS_DEPRECATED boost::optional<ShadingControl> shadingControl() const;
+
+  std::vector<ShadingControl> shadingControls() const;
+
+  unsigned int numberofShadingControls() const;
 
   bool allowWindowPropertyFrameAndDivider() const;
 
@@ -124,9 +129,17 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   void autocalculateViewFactortoGround();
 
-  bool setShadingControl(const ShadingControl& shadingControl);
+  OS_DEPRECATED bool setShadingControl(const ShadingControl& shadingControl);
 
-  void resetShadingControl();
+  OS_DEPRECATED void resetShadingControl();
+
+  bool addShadingControl(const ShadingControl& shadingControl);
+
+  bool addShadingControls(const std::vector<ShadingControl> &shadingControls);
+
+  void removeShadingControl(const ShadingControl& shadingControl);
+
+  void removeAllShadingControls();
 
   bool setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider);
 

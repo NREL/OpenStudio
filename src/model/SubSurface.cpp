@@ -487,7 +487,24 @@ namespace detail {
 
   boost::optional<ShadingControl> SubSurface_Impl::shadingControl() const
   {
-    return getObject<SubSurface>().getModelObjectTarget<ShadingControl>(OS_SubSurfaceFields::ShadingControlName);
+    if (numberofShadingControls() > 1) {
+      return boost::none;
+    } else {
+      return shadingControls()[0];
+    }    
+  }
+
+  std::vector<ShadingControl> SubSurface_Impl::shadingControls() const
+  {
+    // TODO
+    // loop thru shading control objects
+    // loop thru extensible groups
+    // if group.handle() == this.handle(), add to list
+  }
+
+  unsigned int SubSurface_Impl::numberofShadingControls() const
+  {
+    return shadingControls().size();
   }
 
   bool SubSurface_Impl::allowWindowPropertyFrameAndDivider() const
@@ -598,17 +615,37 @@ namespace detail {
 
   bool SubSurface_Impl::setShadingControl(const ShadingControl& shadingControl)
   {
-    bool result = false;
-    if (allowShadingControl()){
-      result = setPointer(OS_SubSurfaceFields::ShadingControlName, shadingControl.handle());
-    }
-    return result;
+    resetShadingControl();
+    shadingControl.addSubSurface(this);
   }
 
   void SubSurface_Impl::resetShadingControl()
   {
-    bool result = setString(OS_SubSurfaceFields::ShadingControlName, "");
-    OS_ASSERT(result);
+    removeAllShadingControls();
+  }
+
+  bool SubSurface_Impl::addShadingControl(const ShadingControl& shadingControl)
+  {
+    shadingControl.addSubSurface(this);
+  }
+
+  bool SubSurface_Impl::addShadingControls(const std::vector<ShadingControl> &shadingControls)
+  {
+    for (const ShadingControl& shadingControl : shadingControls) {
+      shadingControl.addSubSurface(this);
+    }
+  }
+
+  void SubSurface_Impl::removeShadingControl(const ShadingControl& shadingControl)
+  {
+    shadingControl.removeSubSurface(this);
+  }
+  
+  void SubSurface_Impl::removeAllShadingControls()
+  {
+    for (const ShadingControl& shadingControl : shadingControls()) {
+     shadingControl.removeSubSurface(this);
+    }
   }
 
   bool SubSurface_Impl::setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider)
@@ -1212,6 +1249,16 @@ boost::optional<ShadingControl> SubSurface::shadingControl() const
   return getImpl<detail::SubSurface_Impl>()->shadingControl();
 }
 
+std::vector<ShadingControl> SubSurface::shadingControls() const
+{
+  return getImpl<detail::SubSurface_Impl>()->shadingControls();
+}
+
+unsigned int SubSurface::numberofShadingControls() const {
+  return getImpl<detail::SubSurface_Impl>()->numberofShadingControls();
+}
+
+
 bool SubSurface::allowWindowPropertyFrameAndDivider() const
 {
   return getImpl<detail::SubSurface_Impl>()->allowWindowPropertyFrameAndDivider();
@@ -1296,6 +1343,26 @@ bool SubSurface::setShadingControl(const ShadingControl& shadingControl) {
 
 void SubSurface::resetShadingControl() {
   getImpl<detail::SubSurface_Impl>()->resetShadingControl();
+}
+
+bool SubSurface::addShadingControl(const ShadingControl& shadingControl)
+{
+  return getImpl<detail::SubSurface_Impl>()->addShadingControl(shadingControl);
+}
+
+bool SubSurface::addShadingControls(const std::vector<ShadingControl> &shadingControls)
+{
+  return getImpl<detail::SubSurface_Impl>()->addShadingControls(shadingControls);
+}
+
+void SubSurface::removeShadingControl(const ShadingControl& shadingControl)
+{
+  getImpl<detail::SubSurface_Impl>()->removeShadingControl(shadingControl);
+}
+
+void SubSurface::removeAllShadingControls()
+{
+  getImpl<detail::SubSurface_Impl>()->removeAllShadingControls();
 }
 
 bool SubSurface::setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider)
