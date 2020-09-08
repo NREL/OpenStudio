@@ -47,6 +47,7 @@
 #include "SubSurface_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "ModelExtensibleGroup.hpp"
 
 #include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
@@ -148,7 +149,7 @@ namespace detail {
 
   std::vector<SubSurface> ShadingControl_Impl::subSurfaces() const
   {
-    std::vector<SubSurfaces> result;
+    std::vector<SubSurface> result;
 
     std::vector<IdfExtensibleGroup> groups = extensibleGroups();
 
@@ -237,7 +238,7 @@ namespace detail {
   {
     bool result;
 
-    WorkspaceExtensibleGroup eg = getObject<ModelObject<().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
     bool subsurface = eg.setPointer(OS_ShadingControlExtensibleFields::SubSurfaceName, subSurface.handle());
     if (subsurface) {
       result = true;
@@ -255,7 +256,7 @@ namespace detail {
   {
     for (unsigned i = 0; i < numberofSubSurfaces(); ++i) {
       ModelExtensibleGroup group = getExtensibleGroup(i).cast<ModelExtensibleGroup>();
-      if (subSurface.handle() == group.getString(OS_ShadingControlExtensibleFields::SubSurfaceName)) {
+      if (std::to_string(*subSurface.handle()) == group.getString(OS_ShadingControlExtensibleFields::SubSurfaceName).get()) {
         getObject<ModelObject>().eraseExtensibleGroup(i);
       }
     }
@@ -449,7 +450,7 @@ unsigned int ShadingControl::numberofSubSurfaces() const {
 }
 
 bool ShadingControl::addSubSurface(const SubSurface& subSurface) {
-  return getImpl<detail:ShadingControl_Impl>()->addSubSUrface(subSurface);
+  return getImpl<detail::ShadingControl_Impl>()->addSubSurface(subSurface);
 }
 
 void ShadingControl::removeSubSurface(const SubSurface& subSurface) {

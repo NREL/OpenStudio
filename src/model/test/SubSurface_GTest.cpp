@@ -46,6 +46,8 @@
 #include "../DefaultConstructionSet.hpp"
 #include "../SurfacePropertyOtherSideCoefficients.hpp"
 #include "../SurfacePropertyOtherSideConditionsModel.hpp"
+#include "../Blind.hpp"
+#include "../ShadingControl.hpp"
 #include "../Model_Impl.hpp"
 
 #include "../../utilities/geometry/Geometry.hpp"
@@ -1207,7 +1209,9 @@ TEST_F(ModelFixture, SubSurface_SurfacePropertyOtherSideConditionsModel)
 }
 
 TEST_F(ModelFixture, SubSurface_ShadingControls)
-}
+{
+  Model model;
+
   std::vector<Point3d> vertices;
   vertices.push_back(Point3d(0,0,1));
   vertices.push_back(Point3d(0,0,0));

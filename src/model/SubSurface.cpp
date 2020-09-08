@@ -501,7 +501,9 @@ namespace detail {
 
     std::vector<ShadingControl> shadingControls;
 
-    for (const ShadingControl& shadingControl : getObjectsByType(ShadingControl::iddObjectType())) {
+    for (const auto& object: thisSubSurface.model().getObjectsByType(ShadingControl::iddObjectType())) {
+      ModelObject modelObject = object.cast<ModelObject>();
+      ShadingControl shadingControl = modelObject.cast<ShadingControl>();
       for (const SubSurface& subSurface : shadingControl.subSurfaces()) {
         if (subSurface.handle() == thisSubSurface.handle()) {
           shadingControls.push_back(shadingControl);
