@@ -167,6 +167,7 @@ namespace detail {
   {
     ModelObject newParentAsModelObject = ModelObject_Impl::clone(model);
     ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
+
     for (ModelObject child : children())
     {
       ModelObject newChild = child.clone(model);
@@ -175,6 +176,14 @@ namespace detail {
         newChild.cast<SubSurface>().setSubSurfaceType(child.cast<SubSurface>().subSurfaceType());
       }
     }
+
+    auto coefficients = surfacePropertyConvectionCoefficients();
+    if (coefficients)
+    {
+      auto coefficientsClone = coefficients->clone(model).cast<SurfacePropertyConvectionCoefficients>();
+      coefficientsClone.setSurface(newParentAsModelObject);
+    }
+
     return newParentAsModelObject;
   }
 

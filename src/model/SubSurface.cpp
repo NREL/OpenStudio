@@ -152,7 +152,16 @@ namespace detail {
 
   ModelObject SubSurface_Impl::clone(Model model) const
   {
-    return ParentObject_Impl::clone(model);
+    auto clone = ParentObject_Impl::clone(model);
+
+    auto coefficients = surfacePropertyConvectionCoefficients();
+    if (coefficients)
+    {
+      auto coefficientsClone = coefficients->clone(model).cast<SurfacePropertyConvectionCoefficients>();
+      coefficientsClone.setSurface(clone);
+    }
+
+    return clone;
   }
 
   const std::vector<std::string>& SubSurface_Impl::outputVariableNames() const

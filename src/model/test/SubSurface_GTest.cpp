@@ -44,6 +44,7 @@
 #include "../Construction.hpp"
 #include "../DefaultSubSurfaceConstructions.hpp"
 #include "../DefaultConstructionSet.hpp"
+#include "../SurfacePropertyConvectionCoefficients.hpp"
 #include "../SurfacePropertyOtherSideCoefficients.hpp"
 #include "../SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../Model_Impl.hpp"
@@ -1205,3 +1206,23 @@ TEST_F(ModelFixture, SubSurface_SurfacePropertyOtherSideConditionsModel)
   Model model;
   SurfacePropertyOtherSideConditionsModel otherSideModel(model);
 }
+
+TEST_F(ModelFixture, SubSurface_Clone)
+{
+  Model model;
+  std::vector<Point3d> vertices;
+
+  // normal 0,0,1
+  vertices.clear();
+  vertices.push_back(Point3d(0, 1, 0));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 1, 0));
+
+  SubSurface s1(vertices, model);
+  SurfacePropertyConvectionCoefficients cc(s1);
+
+  SubSurface s2 = s1.clone(model).cast<SubSurface>();
+  EXPECT_TRUE(s2.surfacePropertyConvectionCoefficients());
+}
+
