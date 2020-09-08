@@ -152,13 +152,20 @@ namespace detail {
 
   ModelObject SubSurface_Impl::clone(Model model) const
   {
-    auto clone = ParentObject_Impl::clone(model);
+    auto clone = ParentObject_Impl::clone(model).cast<SubSurface>();
 
     auto coefficients = surfacePropertyConvectionCoefficients();
     if (coefficients)
     {
       auto coefficientsClone = coefficients->clone(model).cast<SurfacePropertyConvectionCoefficients>();
       coefficientsClone.setSurface(clone);
+    }
+
+    auto sc = shadingControl();
+    if (sc)
+    {
+      auto shadingConrolClone = sc->clone(model).cast<ShadingControl>();
+      clone.setShadingControl(shadingConrolClone);
     }
 
     return clone;

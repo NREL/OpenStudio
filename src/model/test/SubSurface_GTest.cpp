@@ -30,6 +30,8 @@
 #include <gtest/gtest.h>
 
 #include "ModelFixture.hpp"
+#include "../Blind.hpp"
+#include "../ShadingControl.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
 #include "../Surface.hpp"
@@ -1222,7 +1224,12 @@ TEST_F(ModelFixture, SubSurface_Clone)
   SubSurface s1(vertices, model);
   SurfacePropertyConvectionCoefficients cc(s1);
 
+  Blind blind(model);
+  ShadingControl shadingControl(blind);
+  s1.setShadingControl(shadingControl);
+
   SubSurface s2 = s1.clone(model).cast<SubSurface>();
   EXPECT_TRUE(s2.surfacePropertyConvectionCoefficients());
+  EXPECT_TRUE(s2.shadingControl());
 }
 
