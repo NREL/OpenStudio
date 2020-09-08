@@ -1205,3 +1205,45 @@ TEST_F(ModelFixture, SubSurface_SurfacePropertyOtherSideConditionsModel)
   Model model;
   SurfacePropertyOtherSideConditionsModel otherSideModel(model);
 }
+
+TEST_F(ModelFixture, SubSurface_ShadingControls)
+}
+  std::vector<Point3d> vertices;
+  vertices.push_back(Point3d(0,0,1));
+  vertices.push_back(Point3d(0,0,0));
+  vertices.push_back(Point3d(1,0,0));
+  vertices.push_back(Point3d(1,0,1));
+  SubSurface subSurface(vertices, model);
+
+  Blind blind1(model);
+  ShadingControl shadingControl1(blind1);
+
+  Blind blind2(model);
+  ShadingControl shadingControl2(blind2);
+
+  EXPECT_EQ(0, subSurface.numberofShadingControls());
+  EXPECT_TRUE(subSurface.addShadingControl(shadingControl1));
+  EXPECT_EQ(1, subSurface.numberofShadingControls());
+  subSurface.removeShadingControl(shadingControl1);
+  EXPECT_EQ(0, subSurface.numberofShadingControls());
+
+  std::vector<ShadingControl> shadingControls;
+  shadingControls.push_back(shadingControl1);
+  shadingControls.push_back(shadingControl2);
+  EXPECT_TRUE(subSurface.addShadingControls(shadingControls));
+  EXPECT_EQ(2, subSurface.numberofShadingControls());
+  subSurface.removeAllShadingControls();
+  EXPECT_EQ(0, subSurface.numberofShadingControls());
+
+  // Test deprecated methods
+  subSurface.addShadingControls(shadingControls);
+  EXPECT_EQ(2, subSurface.numberofShadingControls());
+  EXPECT_FALSE(subSurface.shadingControl());
+  EXPECT_TRUE(subSurface.setShadingControl(shadingControl1));
+  EXPECT_EQ(1, subSurface.numberofShadingControls());
+  EXPECT_TRUE(subSurface.shadingControl());
+  EXPECT_TRUE(subSurface.addShadingControl(shadingControl2));
+  EXPECT_EQ(2, subSurface.numberofShadingControls());
+  subSurface.resetShadingControl();
+  EXPECT_EQ(0, subSurface.numberofShadingControls());
+}
