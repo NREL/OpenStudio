@@ -48,6 +48,8 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_ShadingControl_FieldEnums.hxx>
@@ -139,8 +141,32 @@ namespace detail {
     return result;
   }
 
-  bool ShadingControl_Impl::isSetpointDefaulted() const{
+  bool ShadingControl_Impl::isSetpointDefaulted() const
+  {
     return isEmpty(OS_ShadingControlFields::Setpoint);
+  }
+
+  std::vector<SubSurface> ShadingControl_Impl::subSurfaces() const
+  {
+    std::vector<SubSurfaces> result;
+
+    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
+
+    for (const auto & group : groups) {
+      boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ShadingControlExtensibleFields::SubSurfaceName);
+      boost::optional<SubSurface> subsurface = wo->optionalCast<SubSurface>();
+
+      if (subsurface) {
+        result.push_back(subsurface.get());
+      }
+    }
+
+    return result;
+  }
+
+  unsigned int ShadingControl_Impl::numberofSubSurfaces() const
+  {
+    return numExtensibleGroups();
   }
 
   bool ShadingControl_Impl::setShadingType(const std::string& shadingType)
@@ -207,29 +233,45 @@ namespace detail {
     OS_ASSERT(test);
   }
 
-  unsigned int ShadingControl_Impl::numberofSubSurfaces() const {
-    
-  }
-
-  bool ShadingControl_Impl::addSubSurface(const SubSurface& subSurface) {
-    
-  }
-
-  bool ShadingControl_Impl::removeSubSurface(unsigned groupIndex) {
-    
-  }
-
-  void ShadingControl_Impl::removeAllSubSurfaces() {
-    
-  }
-
-  std::vector<SubSurface> ShadingControl_Impl::subSurfaces() const
+  bool ShadingControl_Impl::addSubSurface(const SubSurface& subSurface)
   {
-    return getObject<ShadingControl>().getModelObjectSources<SubSurface>();
+    bool result;
+
+    WorkspaceExtensibleGroup eg = getObject<ModelObject<().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    bool subsurface = eg.setPointer(OS_ShadingControlExtensibleFields::SubSurfaceName, subSurface.handle());
+    if (subsurface) {
+      result = true;
+    } else {
+      // Something went wrong
+      // So erase the new extensible group
+      getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      result = false;
+    }
+    result = true;
+    return result;
   }
 
-  bool ShadingControl_Impl::addSubSurfaces(const std::vector<SubSurface> &subSurfaces) {
-    
+  void ShadingControl_Impl::removeSubSurface(const SubSurface& subSurface)
+  {
+    for (unsigned i = 0; i < numberofSubSurfaces(); ++i) {
+      ModelExtensibleGroup group = getExtensibleGroup(i).cast<ModelExtensibleGroup>();
+      if (subSurface.handle() == group.getString(OS_ShadingControlExtensibleFields::SubSurfaceName)) {
+        getObject<ModelObject>().eraseExtensibleGroup(i);
+      }
+    }
+  }
+
+  bool ShadingControl_Impl::addSubSurfaces(const std::vector<SubSurface> &subSurfaces)
+  {
+    for (const SubSurface& subSurface : subSurfaces) {
+      addSubSurface(subSurface);
+    }
+    return true;
+  }
+
+  void ShadingControl_Impl::removeAllSubSurfaces()
+  {
+    getObject<ModelObject>.clearExtensibleGroups();
   }
 
 } // detail
@@ -398,28 +440,28 @@ void ShadingControl::resetSetpoint(){
   getImpl<detail::ShadingControl_Impl>()->resetSetpoint();
 }
 
-unsigned int ShadingControl::numberofSubSurfaces() const {
-  
-}
-
-bool ShadingControl::addSubSurface(const SubSurface& subSurface) {
-  
-}
-
-void ShadingControl::removeSubSurface(int groupIndex) {
-  
-}
-
-void ShadingControl::removeAllSubSurfaces() {
-  
-}
-
 std::vector<SubSurface> ShadingControl::subSurfaces() const {
   return getImpl<detail::ShadingControl_Impl>()->subSurfaces();
 }
 
+unsigned int ShadingControl::numberofSubSurfaces() const {
+  return getImpl<detail::ShadingControl_Impl>()->numberofSubSurfaces();
+}
+
+bool ShadingControl::addSubSurface(const SubSurface& subSurface) {
+  return getImpl<detail:ShadingControl_Impl>()->addSubSUrface(subSurface);
+}
+
+void ShadingControl::removeSubSurface(const SubSurface& subSurface) {
+  getImpl<detail::ShadingControl_Impl>()->removeSubSurface(subSurface);
+}
+
 bool ShadingControl::addSubSurfaces(const std::vector<SubSurface> &subSurfaces) {
-  
+  return getImpl<detail::ShadingControl_Impl>()->addSubSurfaces(subSurfaces);
+}
+
+void ShadingControl::removeAllSubSurfaces() {
+  getImpl<detail::ShadingControl_Impl>()->removeAllSubSurfaces();
 }
 
 /// @cond

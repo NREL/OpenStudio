@@ -663,7 +663,7 @@ void FoundationKiva::removeCustomBlock(int groupIndex) {
 }
 
 void FoundationKiva::removeAllCustomBlocks() {
-  return getImpl<detail::FoundationKiva_Impl>()->removeAllCustomBlocks();
+  getImpl<detail::FoundationKiva_Impl>()->removeAllCustomBlocks();
 }
 
 std::vector<CustomBlock> FoundationKiva::customBlocks() const {

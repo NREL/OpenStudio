@@ -94,6 +94,8 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   bool isSetpointDefaulted() const;
 
+  std::vector<SubSurface> subSurfaces() const;
+
   unsigned int numberofSubSurfaces() const;
 
   //@}
@@ -117,19 +119,17 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   void resetSetpoint();
 
-  //@}
-  /** @name Other */
-  //@{
-
   bool addSubSurface(const SubSurface& subSurface);
 
-  bool removeSubSurface(unsigned groupIndex);
+  void removeSubSurface(const SubSurface& subSurface);
+
+  bool addSubSurfaces(const std::vector<SubSurface> &subSurfaces);
 
   void removeAllSubSurfaces();
 
-  std::vector<SubSurface> subSurfaces() const;
-
-  bool addSubSurfaces(const std::vector<SubSurface> &subSurfaces);
+  //@}
+  /** @name Other */
+  //@{
 
   //@}
  protected:
