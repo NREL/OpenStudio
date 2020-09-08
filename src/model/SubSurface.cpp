@@ -491,15 +491,25 @@ namespace detail {
       return boost::none;
     } else {
       return shadingControls()[0];
-    }    
+    }
+    return boost::none;
   }
 
   std::vector<ShadingControl> SubSurface_Impl::shadingControls() const
   {
-    // TODO
-    // loop thru shading control objects
-    // loop thru extensible groups
-    // if group.handle() == this.handle(), add to list
+    SubSurface thisSubSurface = getObject<SubSurface>();
+
+    std::vector<ShadingControl> shadingControls;
+
+    for (const ShadingControl& shadingControl : getObjectsByType(ShadingControl::iddObjectType())) {
+      for (const SubSurface& subSurface : shadingControl.subSurfaces()) {
+        if (subSurface.handle() == thisSubSurface.handle()) {
+          shadingControls.push_back(shadingControl);
+        }
+      }
+    }
+
+    return shadingControls;
   }
 
   unsigned int SubSurface_Impl::numberofShadingControls() const
@@ -615,8 +625,9 @@ namespace detail {
 
   bool SubSurface_Impl::setShadingControl(const ShadingControl& shadingControl)
   {
+    SubSurface thisSubSurface = getObject<SubSurface>();
     resetShadingControl();
-    shadingControl.addSubSurface(this);
+    shadingControl.addSubSurface(thisSubSurface);
   }
 
   void SubSurface_Impl::resetShadingControl()
@@ -626,25 +637,29 @@ namespace detail {
 
   bool SubSurface_Impl::addShadingControl(const ShadingControl& shadingControl)
   {
-    shadingControl.addSubSurface(this);
+    SubSurface thisSubSurface = getObject<SubSurface>();
+    shadingControl.addSubSurface(thisSubSurface);
   }
 
   bool SubSurface_Impl::addShadingControls(const std::vector<ShadingControl> &shadingControls)
   {
+    SubSurface thisSubSurface = getObject<SubSurface>();
     for (const ShadingControl& shadingControl : shadingControls) {
-      shadingControl.addSubSurface(this);
+      shadingControl.addSubSurface(thisSubSurface);
     }
   }
 
   void SubSurface_Impl::removeShadingControl(const ShadingControl& shadingControl)
   {
-    shadingControl.removeSubSurface(this);
+    SubSurface thisSubSurface = getObject<SubSurface>();
+    shadingControl.removeSubSurface(thisSubSurface);
   }
-  
+
   void SubSurface_Impl::removeAllShadingControls()
   {
+    SubSurface thisSubSurface = getObject<SubSurface>();
     for (const ShadingControl& shadingControl : shadingControls()) {
-     shadingControl.removeSubSurface(this);
+     shadingControl.removeSubSurface(thisSubSurface);
     }
   }
 
