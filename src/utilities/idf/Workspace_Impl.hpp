@@ -428,6 +428,9 @@ namespace detail {
      *  public interface. Used in constructing Workspaces. */
     IdfObject versionObjectToAdd() const;
 
+    // Tries to locate an equivalent object. Looks for candidates by type and name, then checks for equivalency by looking at all fields
+    boost::optional<WorkspaceObject> getEquivalentObject(const IdfObject& other) const;
+
     //@}
     /** @name Serialization and File Management*/
     //@{
@@ -549,8 +552,6 @@ namespace detail {
 
     /** Returns objectName in with any suffix integers removed. */
     std::string getBaseName(const std::string& objectName) const;
-
-    boost::optional<WorkspaceObject> getEquivalentObject(const IdfObject& other) const;
 
     // SETTERS
 

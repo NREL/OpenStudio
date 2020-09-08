@@ -453,6 +453,9 @@ class UTILITIES_API Workspace {
   // disconnect a progress bar
   bool disconnectProgressBar(openstudio::ProgressBar &progressBar);
 
+  // Tries to locate an equivalent object. Looks for candidates by type and name, then checks for equivalency by looking at all fields
+  boost::optional<WorkspaceObject> getEquivalentObject(const IdfObject& other) const;
+
   //@}
   /** @name Type Casing */
   //@{

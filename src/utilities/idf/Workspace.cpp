@@ -2948,6 +2948,9 @@ std::vector<WorkspaceObject> Workspace::getObjectsByTypeAndName(const std::strin
   return getObjectsByTypeAndName(IddObjectType(objectTypeName), name);
 }
 
+boost::optional<WorkspaceObject> Workspace::getEquivalentObject(const IdfObject& other) const {
+  return m_impl->getEquivalentObject(other);
+}
 
 // PROTECTED
 
