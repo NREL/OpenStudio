@@ -6281,6 +6281,51 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
         m_refactored.push_back( RefactoredObjectData(object,  newObject) );
         ss << newObject;
       }
+    } else if (iddname == "OS:ShadingControl") {
+      // get all subsurfaces
+      // loop thru subsurfaces
+      // check if shading control name equals this handle
+      // add extensible field with subsurface handle
+      // remove shading control name field from subsurface
+      auto iddObjectShadingControl = idd_3_1_0.getObject("OS:ShadingControl");
+      IdfObject newShadingControl(iddObjectShadingControl.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          newShadingControl.setString(i, value.get());
+        }
+      }
+
+      std::vector<IdfObject> subSurfaces = idf_3_0_1.getObjectsByType(idf_3_0_1.iddFile().getObject("OS:SubSurface").get());
+      for ( auto & subSurface : subSurfaces ) {
+        value = subSurface.getString(7); // Shading Control Name
+        if (value) {
+          if (value.get() == object.getString(0)) {
+            newShadingControl.setString(13, subSurface.getString(0).get());
+
+            auto iddObjectSubSurface = idd_3_1_0.getObject("OS:SubSurface");
+            IdfObject newSubSurface(iddObjectSubSurface.get());
+
+            for (size_t i = 0; i < subSurface.numFields(); ++i) {
+              if ((value = subSurface.getString(i))) {
+                if (i < 7) {
+                  newSubSurface.setString(i, value.get());
+                } else if (i == 7) { // Shading Control Name
+                  // no-op
+                } else {
+                  newSubSurface.setString(i - 1, value.get());
+                }
+              }
+            }
+
+            m_refactored.push_back(RefactoredObjectData(subSurface, newSubSurface));
+            ss << subSurface;
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newShadingControl));
+      ss << newShadingControl;
 
     // Note: Would have needed to do UtilityCost:Tariff too, but not wrapped
 
