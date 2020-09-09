@@ -241,10 +241,33 @@ namespace detail {
     }
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationCondenserCascade_Impl::heatRejectingSystem() const {
+    boost::optional<RefrigerationSystem> result;
+
+    RefrigerationCondenserCascade refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
+    for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
+      if (auto cond = refrigerationSystem.refrigerationCondenser()) {
+        if (cond.get() == refrigerationCondenserCascade) {
+          result = refrigerationSystem;
+          break;
+        }
+      }
+    }
+    return result;
+  }
+
+  void RefrigerationCondenserCascade_Impl::removeFromHeatRejectingSystem() {
+    if (boost::optional<RefrigerationSystem> refrigerationSystem = this->heatRejectingSystem()) {
+      refrigerationSystem->resetRefrigerationCondenser();
+    }
+  }
+
   std::vector<IdfObject> RefrigerationCondenserCascade_Impl::remove()
   {
     // Remove from ModelObjectList in RefrigerationSystem(s) if needed
     this->removeFromSystem();
+
+    // It's uncessary to remove it from the heatRejectingSystem since it's a classic object-list field
 
     return ModelObject_Impl::remove();
   }
@@ -368,6 +391,14 @@ boost::optional<RefrigerationSystem> RefrigerationCondenserCascade::system() con
 
 void RefrigerationCondenserCascade::removeFromSystem() {
   getImpl<detail::RefrigerationCondenserCascade_Impl>()->removeFromSystem();
+}
+
+boost::optional<RefrigerationSystem> RefrigerationCondenserCascade::heatRejectingSystem() const {
+  return getImpl<detail::RefrigerationCondenserCascade_Impl>()->heatRejectingSystem();
+}
+
+void RefrigerationCondenserCascade::removeFromHeatRejectingSystem() {
+  getImpl<detail::RefrigerationCondenserCascade_Impl>()->removeFromHeatRejectingSystem();
 }
 
 /// @cond

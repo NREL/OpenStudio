@@ -82,9 +82,6 @@ class MODEL_API RefrigerationCondenserCascade : public ModelObject {
 
   boost::optional<double> condensatePipingRefrigerantInventory() const;
 
-  // Returns the parent RefrigerationSystem if any
-  boost::optional<RefrigerationSystem> system() const;
-
   //@}
   /** @name Setters */
   //@{
@@ -113,12 +110,21 @@ class MODEL_API RefrigerationCondenserCascade : public ModelObject {
 
   void resetCondensatePipingRefrigerantInventory();
 
-  // Remove from parent system if any
-  void removeFromSystem();
-
   //@}
   /** @name Other */
   //@{
+
+  // Returns the parent RefrigerationSystem if any, that lists it in its TransferLoadList: this Cascade Condenser is **cooled** by this system
+  boost::optional<RefrigerationSystem> system() const;
+
+  // Remove from parent system in CondenserCascadeLoads if any
+  void removeFromSystem();
+
+  // Returns the parent RefrigerationSystem if any that lists it in 'Condenser Name':
+  // this Cascade Condenser is **absorbing heat rejected by this system**
+  boost::optional<RefrigerationSystem> heatRejectingSystem() const;
+
+  void removeFromHeatRejectingSystem();
 
   //@}
  protected:

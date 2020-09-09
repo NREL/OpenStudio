@@ -92,8 +92,6 @@ namespace detail {
 
     boost::optional<double> condensatePipingRefrigerantInventory() const;
 
-    boost::optional<RefrigerationSystem> system() const;
-
     //@}
     /** @name Setters */
     //@{
@@ -122,11 +120,15 @@ namespace detail {
 
     void resetCondensatePipingRefrigerantInventory();
 
-    void removeFromSystem();
-
     //@}
     /** @name Other */
     //@{
+
+    boost::optional<RefrigerationSystem> system() const;
+    void removeFromSystem();
+
+    boost::optional<RefrigerationSystem> heatRejectingSystem() const;
+    void removeFromHeatRejectingSystem();
 
     //@}
    protected:
