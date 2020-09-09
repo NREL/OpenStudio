@@ -174,6 +174,7 @@ namespace detail {
   {
     std::vector<IdfObject> result;
 
+    // TODO: technically this object can be shared accross multiple systems..
     if ( boost::optional<ModelObject> condenser = this->optionalRefrigerationCondenser() ) {
       std::vector<IdfObject> removedCondenser = condenser->remove();
       result.insert(result.end(), removedCondenser.begin(), removedCondenser.end());
@@ -189,24 +190,35 @@ namespace detail {
       result.insert(result.end(), removedTransferLoads.begin(), removedTransferLoads.end());
     }
 
+    // We're clearing the compressor/HighStage compressor list objects first. otherwise a compressor on the high stage list will call
+    // RefrgerationCompressor_Impl::system which will try to locate the compressorList which was deleted first
+    for (auto& c: compressors()) {
+      std::vector<IdfObject> removedCompressor = c.remove();
+      result.insert(result.end(), removedCompressor.begin(), removedCompressor.end());
+    }
+    for (auto& c: highStageCompressors()) {
+      std::vector<IdfObject> removedCompressor = c.remove();
+      result.insert(result.end(), removedCompressor.begin(), removedCompressor.end());
+    }
     if (boost::optional<ModelObjectList> compressorList = this->compressorList()) {
       std::vector<IdfObject> removedCompressors = compressorList->remove();
       result.insert(result.end(), removedCompressors.begin(), removedCompressors.end());
     }
+    if (boost::optional<ModelObjectList> highStageCompressorList = this->highStageCompressorList()) {
+      std::vector<IdfObject> removedHighStageCompressors = highStageCompressorList->remove();
+      result.insert(result.end(), removedHighStageCompressors.begin(), removedHighStageCompressors.end());
+    }
 
+    // TODO: technically this object can be shared accross multiple systems..
     if ( boost::optional<RefrigerationSubcoolerMechanical> mechSubcooler = this->mechanicalSubcooler() ) {
       std::vector<IdfObject> removedMechSubcooler = mechSubcooler->remove();
       result.insert(result.end(), removedMechSubcooler.begin(), removedMechSubcooler.end());
     }
 
+    // TODO: technically this object can be shared accross multiple systems..
     if ( boost::optional<RefrigerationSubcoolerLiquidSuction> liqSuctionSubcooler = this->liquidSuctionHeatExchangerSubcooler() ) {
       std::vector<IdfObject> removedLiqSuctionSubcooler = liqSuctionSubcooler->remove();
       result.insert(result.end(), removedLiqSuctionSubcooler.begin(), removedLiqSuctionSubcooler.end());
-    }
-
-    if (boost::optional<ModelObjectList> highStageCompressorList = this->highStageCompressorList()) {
-      std::vector<IdfObject> removedHighStageCompressors = highStageCompressorList->remove();
-      result.insert(result.end(), removedHighStageCompressors.begin(), removedHighStageCompressors.end());
     }
 
     std::vector<IdfObject> removedRefrigerationSystem = ModelObject_Impl::remove();
@@ -451,6 +463,8 @@ namespace detail {
 
     if( boost::optional<RefrigerationSystem> currentSystem = refrigerationCase.system() )
     {
+      LOG(Warn, refrigerationCase.briefDescription() << " was removed from its existing RefrigerationSystem named '"
+          << currentSystem->nameString() << "'.");
       currentSystem->removeCase(refrigerationCase);
     }
     boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
@@ -478,6 +492,8 @@ namespace detail {
 
     if( boost::optional<RefrigerationSystem> currentSystem = refrigerationWalkin.system() )
     {
+      LOG(Warn, refrigerationWalkin.briefDescription() << " was removed from its existing RefrigerationSystem named '"
+          << currentSystem->nameString() << "'.");
       currentSystem->removeWalkin(refrigerationWalkin);
     }
     boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
@@ -495,6 +511,14 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addCompressor(const RefrigerationCompressor& refrigerationCompressor) {
+    // Enforce unicity
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationCompressor.system() )
+    {
+      LOG(Warn, refrigerationCompressor.briefDescription() << " was removed from its existing RefrigerationSystem (non High Stage) named '"
+          << currentSystem->nameString() << "'.");
+      currentSystem->removeCompressor(refrigerationCompressor);
+    }
+
     return compressorList().addModelObject(refrigerationCompressor);
   }
 
@@ -507,6 +531,13 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addHighStageCompressor( const RefrigerationCompressor& refrigerationHighStageCompressor ) {
+    // Enforce unicity
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationHighStageCompressor.system() )
+    {
+      LOG(Warn, refrigerationHighStageCompressor.briefDescription() << " was removed from its existing RefrigerationSystem (High Stage) named '"
+          << currentSystem->nameString() << "'.");
+      currentSystem->removeCompressor(refrigerationHighStageCompressor);
+    }
     boost::optional<ModelObjectList> modelObjectList = highStageCompressorList();
     return addTemplate<RefrigerationCompressor>(refrigerationHighStageCompressor, modelObjectList);
   }
@@ -522,6 +553,13 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addSecondarySystemLoad( const RefrigerationSecondarySystem& refrigerationSecondarySystem) {
+    // Enforce unicity
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationSecondarySystem.system() )
+    {
+      LOG(Warn, refrigerationSecondarySystem.briefDescription() << " was removed from its existing RefrigerationSystem named '"
+          << currentSystem->nameString() << "'.");
+      currentSystem->removeSecondarySystemLoad(refrigerationSecondarySystem);
+    }
     boost::optional<ModelObjectList> modelObjectList = refrigerationTransferLoadList();
     return addTemplate<RefrigerationSecondarySystem>(refrigerationSecondarySystem, modelObjectList);
   }
@@ -537,6 +575,13 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addCascadeCondenserLoad( const RefrigerationCondenserCascade& refrigerationCondenserCascade) {
+    // Enforce unicity
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationCondenserCascade.system() )
+    {
+      LOG(Warn, refrigerationCondenserCascade.briefDescription() << " was removed from its existing RefrigerationSystem named '"
+          << currentSystem->nameString() << "'.");
+      currentSystem->removeCascadeCondenserLoad(refrigerationCondenserCascade);
+    }
     boost::optional<ModelObjectList> modelObjectList = refrigerationTransferLoadList();
     return addTemplate<RefrigerationCondenserCascade>(refrigerationCondenserCascade, modelObjectList);
   }
@@ -570,6 +615,8 @@ namespace detail {
     // Enforce unicity
     if( boost::optional<RefrigerationSystem> currentSystem = refrigerationAirChiller.system() )
     {
+      LOG(Warn, refrigerationAirChiller.briefDescription() << " was removed from its existing RefrigerationSystem named '"
+          << currentSystem->nameString() << "'.");
       currentSystem->removeAirChiller(refrigerationAirChiller);
     }
 

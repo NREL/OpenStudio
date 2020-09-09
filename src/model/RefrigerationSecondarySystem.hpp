@@ -33,6 +33,8 @@
 #include "ModelAPI.hpp"
 #include "ParentObject.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
@@ -153,8 +155,11 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   bool isEndUseSubcategoryDefaulted() const;
 
+  // Returns the parent RefrigerationSystem if any
+  boost::optional<RefrigerationSystem> system() const;
+
   // Returns the parent RefrigerationSystem(s)
-  std::vector<RefrigerationSystem> systems() const;
+  OS_DEPRECATED std::vector<RefrigerationSystem> systems() const;
 
   //@}
   /** @name Setters */
@@ -241,7 +246,10 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
   void resetEndUseSubcategory();
 
   // Remove from parent system if any
-  void removeFromSystems();
+  void removeFromSystem();
+
+  // Remove from parent system(s)
+  OS_DEPRECATED void removeFromSystems();
 
   //@}
   /** @name Other */

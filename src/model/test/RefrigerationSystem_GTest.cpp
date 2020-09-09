@@ -1506,7 +1506,7 @@ TEST_F(ModelFixture, RefrigerationSystem_Compressor_AddMultipleTimes)
   EXPECT_EQ(compressor, system.highStageCompressors()[0]);
 
   // Shouldn't throw, and should remove the Compressor too
-  EXPECT_NO_THROW(system.remove());
+  system.remove();
   EXPECT_EQ(0, model.getModelObjects<RefrigerationCompressor>().size());
 }
 

@@ -77,7 +77,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   ModelObject clone(Model model) const;
 
-  // RefrigerationCase will be removed from any ModelObjectList it is already on. Clone the case if you need want it on several.
+  // RefrigerationCase will be removed from any ModelObjectList it is already on. Clone the case if you want it on several.
   bool addCase( const RefrigerationCase & refrigerationCase);
 
   // Removes child from the list, but does not remove the child object itself
@@ -88,7 +88,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   std::vector<RefrigerationCase> cases() const;
 
-  // RefrigerationWalkIn will be removed from any ModelObjectList it is already on. Clone the walkin if you need want it on several.
+  // RefrigerationWalkIn will be removed from any ModelObjectList it is already on. Clone the walkin if you want it on several.
   bool addWalkin( const RefrigerationWalkIn & refrigerationWalkin);
 
   // Removes child from the list, but does not remove the child object itself
@@ -100,7 +100,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   std::vector<RefrigerationWalkIn> walkins() const;
 
   // Compressor will be removed from any ModelObjectList (either as a compressor or high stage compressor) it is already on.
-  // Clone the walkin if you need want it on several.
+  // Clone the walkin if you want it on several.
   bool addCompressor( const RefrigerationCompressor & compressor);
 
   // Removes child from the list, but does not remove the child object itself
@@ -112,7 +112,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   std::vector<RefrigerationCompressor> compressors() const;
 
   // Compressor will be removed from any ModelObjectList (either as a compressor or high stage compressor) it is already on.
-  // Clone the walkin if you need want it on several.
+  // Clone the walkin if you want it on several.
   bool addHighStageCompressor( const RefrigerationCompressor & highStageCompressor);
 
   // Removes child from the list, but does not remove the child object itself
@@ -123,7 +123,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   std::vector<RefrigerationCompressor> highStageCompressors() const;
 
-  // RefrigerationSecondarySystem will be removed from any ModelObjectList it is already on. Clone it if you need want it on several.
+  // RefrigerationSecondarySystem will be removed from any ModelObjectList it is already on. Clone it if you want it on several.
   bool addSecondarySystemLoad( const RefrigerationSecondarySystem & refrigerationSecondarySystem);
 
   // Removes child from the list, but does not remove the child object itself
@@ -134,7 +134,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   std::vector<RefrigerationSecondarySystem> secondarySystemLoads() const;
 
-  // RefrigerationCondenserCascade will be removed from any ModelObjectList it is already on. Clone it if you need want it on several.
+  // RefrigerationCondenserCascade will be removed from any ModelObjectList it is already on. Clone it if you want it on several.
   bool addCascadeCondenserLoad( const RefrigerationCondenserCascade & refrigerationCondenserCascade);
 
   // Removes child from the list, but does not remove the child object itself
@@ -145,7 +145,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   std::vector<RefrigerationCondenserCascade> cascadeCondenserLoads() const;
 
-  // RefrigerationAirChiller will be removed from any ModelObjectList it is already on. Clone it if you need want it on several.
+  // RefrigerationAirChiller will be removed from any ModelObjectList it is already on. Clone it if you want it on several.
   bool addAirChiller( const RefrigerationAirChiller & airChiller);
 
   // Removes child from the list, but does not remove the child object itself

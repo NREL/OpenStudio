@@ -155,7 +155,7 @@ namespace detail {
 
     bool isEndUseSubcategoryDefaulted() const;
 
-    std::vector<RefrigerationSystem> systems() const;
+    boost::optional<RefrigerationSystem> system() const;
 
     //@}
     /** @name Setters */
@@ -270,7 +270,7 @@ namespace detail {
 
     void resetEndUseSubcategory();
 
-    void removeFromSystems();
+    void removeFromSystem();
 
     //@}
     /** @name Other */

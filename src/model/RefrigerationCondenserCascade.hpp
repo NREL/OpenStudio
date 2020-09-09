@@ -33,6 +33,8 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
@@ -82,8 +84,11 @@ class MODEL_API RefrigerationCondenserCascade : public ModelObject {
 
   boost::optional<double> condensatePipingRefrigerantInventory() const;
 
+  // Returns the parent RefrigerationSystem if any
+  boost::optional<RefrigerationSystem> system() const;
+
   // Returns the parent RefrigerationSystem(s)
-  std::vector<RefrigerationSystem> systems() const;
+  OS_DEPRECATED std::vector<RefrigerationSystem> systems() const;
 
   //@}
   /** @name Setters */
@@ -113,8 +118,11 @@ class MODEL_API RefrigerationCondenserCascade : public ModelObject {
 
   void resetCondensatePipingRefrigerantInventory();
 
+  // Remove from parent system if any
+  void removeFromSystem();
+
   // Remove from parent system(s)
-  void removeFromSystems();
+  OS_DEPRECATED void removeFromSystems();
 
   //@}
   /** @name Other */

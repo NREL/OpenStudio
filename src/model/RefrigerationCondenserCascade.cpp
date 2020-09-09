@@ -219,14 +219,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  std::vector<RefrigerationSystem> RefrigerationCondenserCascade_Impl::systems() const {
-    std::vector<RefrigerationSystem> result;
+  boost::optional<RefrigerationSystem> RefrigerationCondenserCascade_Impl::system() const {
+    boost::optional<RefrigerationSystem> result;
 
     RefrigerationCondenserCascade refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
     for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
       RefrigerationCondenserCascadeVector refrigerationCondenserCascades = refrigerationSystem.cascadeCondenserLoads();
       if ( !refrigerationCondenserCascades.empty() && std::find(refrigerationCondenserCascades.begin(), refrigerationCondenserCascades.end(), refrigerationCondenserCascade) != refrigerationCondenserCascades.end() ) {
-        result.push_back(refrigerationSystem);
+        result = refrigerationSystem;
         break;
       }
     }
@@ -234,18 +234,17 @@ namespace detail {
     return result;
   }
 
-  void RefrigerationCondenserCascade_Impl::removeFromSystems() {
-    RefrigerationCondenserCascade refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
-
-    for (RefrigerationSystem& refrigerationSystem: this->systems()) {
-      refrigerationSystem.removeCascadeCondenserLoad(refrigerationCondenserCascade);
+  void RefrigerationCondenserCascade_Impl::removeFromSystem() {
+    if (boost::optional<RefrigerationSystem> refrigerationSystem = this->system()) {
+      RefrigerationCondenserCascade refrigerationCondenserCascade = this->getObject<RefrigerationCondenserCascade>();
+      refrigerationSystem->removeCascadeCondenserLoad(refrigerationCondenserCascade);
     }
   }
 
   std::vector<IdfObject> RefrigerationCondenserCascade_Impl::remove()
   {
     // Remove from ModelObjectList in RefrigerationSystem(s) if needed
-    this->removeFromSystems();
+    this->removeFromSystem();
 
     return ModelObject_Impl::remove();
   }
@@ -363,18 +362,33 @@ void RefrigerationCondenserCascade::resetCondensatePipingRefrigerantInventory() 
   getImpl<detail::RefrigerationCondenserCascade_Impl>()->resetCondensatePipingRefrigerantInventory();
 }
 
-std::vector<RefrigerationSystem> RefrigerationCondenserCascade::systems() const {
-  return getImpl<detail::RefrigerationCondenserCascade_Impl>()->systems();
+boost::optional<RefrigerationSystem> RefrigerationCondenserCascade::system() const {
+  return getImpl<detail::RefrigerationCondenserCascade_Impl>()->system();
 }
 
-void RefrigerationCondenserCascade::removeFromSystems() {
-  getImpl<detail::RefrigerationCondenserCascade_Impl>()->removeFromSystems();
+void RefrigerationCondenserCascade::removeFromSystem() {
+  getImpl<detail::RefrigerationCondenserCascade_Impl>()->removeFromSystem();
 }
 
 /// @cond
 RefrigerationCondenserCascade::RefrigerationCondenserCascade(std::shared_ptr<detail::RefrigerationCondenserCascade_Impl> impl)
   : ModelObject(std::move(impl))
 {}
+
+// DEPRECATED
+std::vector<RefrigerationSystem> RefrigerationCondenserCascade::systems() const {
+  std::vector<RefrigerationSystem> result;
+  if (const auto& s = system()) {
+    result.push_back(s.get());
+  }
+  return result;
+}
+
+// DEPRECATED
+void RefrigerationCondenserCascade::removeFromSystems() {
+  getImpl<detail::RefrigerationCondenserCascade_Impl>()->removeFromSystem();
+}
+
 /// @endcond
 
 } // model
