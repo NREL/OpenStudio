@@ -108,6 +108,8 @@ class MODEL_API WaterHeaterHeatPump : public ZoneHVACComponent {
 
   double minimumInletAirTemperatureforCompressorOperation() const;
 
+  double maximumInletAirTemperatureforCompressorOperation() const;
+
   std::string compressorLocation() const;
 
   boost::optional<Schedule> compressorAmbientTemperatureSchedule() const;
@@ -165,6 +167,8 @@ class MODEL_API WaterHeaterHeatPump : public ZoneHVACComponent {
   bool setDXCoil(const ModelObject& coil);
 
   bool setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation);
+
+  bool setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation);
 
   bool setCompressorLocation(std::string compressorLocation);
 

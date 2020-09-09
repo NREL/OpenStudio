@@ -124,3 +124,14 @@ TEST_F(ModelFixture,WaterHeaterHeatPump_SystemConnections)
   EXPECT_TRUE(tank.handle().isNull());
 }
 
+TEST_F(ModelFixture,WaterHeaterHeatPump_InletAirTemperatureforCompressorOperation)
+{
+  // Test for #4053
+  Model m;
+  WaterHeaterHeatPump hpwh(m);
+
+  EXPECT_TRUE(hpwh.setMinimumInletAirTemperatureforCompressorOperation(-10.0));
+  EXPECT_TRUE(hpwh.setMaximumInletAirTemperatureforCompressorOperation(40.0));
+  EXPECT_EQ(-10.0, hpwh.minimumInletAirTemperatureforCompressorOperation());
+  EXPECT_EQ(40.0, hpwh.maximumInletAirTemperatureforCompressorOperation());
+}

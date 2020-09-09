@@ -6048,6 +6048,30 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
 
       m_refactored.push_back(RefactoredObjectData(object, newObject));
       ss << newObject;
+
+    } else if (iddname == "OS:WaterHeater:HeatPump") {
+
+      // Inserted a field 'Maximum Inlet Air Temperature for Compressor Operation' at position 16 (0-indexed)
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 16) {
+            newObject.setString(i, value.get());
+          } else {
+            // Shifted by one field
+            newObject.setString(i + 1, value.get());
+          }
+        }
+      }
+
+      // Made it a required-field with the E+ IDD default value set in Ctor, so set it here too
+      newObject.setDouble(16, 48.89);
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     } else if (iddname == "OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow") {
 
       // Insertion points (0-indexed)

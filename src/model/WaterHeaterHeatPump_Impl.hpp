@@ -101,6 +101,8 @@ namespace detail {
 
     double minimumInletAirTemperatureforCompressorOperation() const;
 
+    double maximumInletAirTemperatureforCompressorOperation() const;
+
     std::string compressorLocation() const;
 
     boost::optional<Schedule> compressorAmbientTemperatureSchedule() const;
@@ -166,6 +168,8 @@ namespace detail {
     bool setDXCoil(const ModelObject& coil);
 
     bool setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation);
+
+    bool setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation);
 
     bool setCompressorLocation(std::string compressorLocation);
 

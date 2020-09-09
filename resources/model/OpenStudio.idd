@@ -26371,6 +26371,7 @@ OS:WaterHeater:HeatPump,
   N2 , \field Condenser Water Flow Rate
        \type real
        \units m3/s
+       \ip-units gal/min
        \minimum> 0
        \autosizable
        \note Actual water flow rate through the heat pump's water coil (condenser).
@@ -26435,9 +26436,16 @@ OS:WaterHeater:HeatPump,
        \type real
        \units C
        \required-field
-       \minimum -5
        \note Heat pump compressor will not operate when the inlet air dry-bulb temperature
        \note is below this value.
+  N5 , \field Maximum Inlet Air Temperature for Compressor Operation
+       \type real
+       \units C
+       \required-field
+       \minimum 26
+       \maximum 94
+       \note Heat pump compressor will not operate when the inlet air dry-bulb temperature
+       \note is above this value.
   A13, \field Compressor Location
        \required-field
        \type choice
@@ -26466,14 +26474,14 @@ OS:WaterHeater:HeatPump,
        \required-field
        \note BlowThrough means the fan is located before the air coil (upstream).
        \note DrawThrough means the fan is located after the air coil (downstream).
-  N5 , \field On Cycle Parasitic Electric Load
+  N6 , \field On Cycle Parasitic Electric Load
        \type real
        \units W
        \minimum 0.0
        \required-field
        \note Parasitic electric power consumed when the heat pump compressor operates.
        \note Does not contribute to water heating but can impact the zone air heat balance.
-  N6 , \field Off Cycle Parasitic Electric Load
+  N7 , \field Off Cycle Parasitic Electric Load
        \type real
        \units W
        \minimum 0.0
@@ -26865,7 +26873,6 @@ OS:WaterHeater:HeatPump:WrappedCondenser,
   N5 , \field Minimum Inlet Air Temperature for Compressor Operation
        \type real
        \units C
-       \minimum -5
        \required-field
        \note Heat pump compressor will not operate when the inlet air dry-bulb temperature
        \note is below this value.

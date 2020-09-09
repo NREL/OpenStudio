@@ -612,7 +612,7 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterStratified( Wa
 
   // Node 12 Additional Loss Coefficient
   value = modelObject.node12AdditionalLossCoefficient();
-  if (value && (num_nodes >= 12)
+  if (value && (num_nodes >= 12))
   {
     idfObject.setDouble(WaterHeater_StratifiedFields::Node12AdditionalLossCoefficient,value.get());
   }
