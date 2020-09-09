@@ -29,109 +29,28 @@
 
 #include <gtest/gtest.h>
 #include "ModelFixture.hpp"
-#include "../WaterHeaterHeatPump.hpp"
-#include "../WaterHeaterHeatPump_Impl.hpp"
+#include "../WaterHeaterHeatPumpWrappedCondenser.hpp"
+#include "../WaterHeaterHeatPumpWrappedCondenser_Impl.hpp"
 #include "../FanOnOff.hpp"
 #include "../FanOnOff_Impl.hpp"
-#include "../CoilWaterHeatingAirToWaterHeatPump.hpp"
-#include "../CoilWaterHeatingAirToWaterHeatPump_Impl.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpWrapped.hpp"
+#include "../CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl.hpp"
 #include "../HVACComponent.hpp"
 #include "../HVACComponent_Impl.hpp"
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../ScheduleConstant.hpp"
-#include "../WaterHeaterMixed.hpp"
+#include "../WaterHeaterStratified.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,WaterHeaterHeatPump)
-{
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  // Create
-  ASSERT_EXIT (
-  {
-     Model m;
-     WaterHeaterHeatPump hpwh(m);
-
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
-}
-
-TEST_F(ModelFixture,WaterHeaterHeatPump_Relationships)
-{
-  Model m;
-  WaterHeaterHeatPump hpwh(m);
-
-  auto dxCoil = hpwh.dXCoil();
-  ASSERT_FALSE(dxCoil.handle().isNull());
-  auto fan = hpwh.fan();
-  ASSERT_FALSE(fan.handle().isNull());
-  auto tank = hpwh.tank();
-  ASSERT_FALSE(tank.handle().isNull());
-
-  auto zoneHVAC = tank.containingZoneHVACComponent();
-  ASSERT_TRUE(zoneHVAC);
-  EXPECT_EQ(hpwh,zoneHVAC.get());
-}
-
-TEST_F(ModelFixture,WaterHeaterHeatPump_Remove)
-{
-  Model m;
-  WaterHeaterHeatPump hpwh(m);
-
-  auto dxCoil = hpwh.dXCoil();
-  auto fan = hpwh.fan();
-  auto tank = hpwh.tank();
-
-  hpwh.remove();
-
-  EXPECT_TRUE(hpwh.handle().isNull());
-  EXPECT_TRUE(dxCoil.handle().isNull());
-  EXPECT_TRUE(fan.handle().isNull());
-  EXPECT_TRUE(tank.handle().isNull());
-}
-
-TEST_F(ModelFixture,WaterHeaterHeatPump_ThermalZone)
-{
-  Model m;
-  WaterHeaterHeatPump hpwh(m);
-
-  ThermalZone zone(m);
-  EXPECT_TRUE(hpwh.addToThermalZone(zone));
-  EXPECT_EQ(1u,zone.equipment().size());
-
-  hpwh.remove();
-  EXPECT_TRUE(hpwh.handle().isNull());
-  EXPECT_TRUE(zone.equipment().empty());
-}
-
-TEST_F(ModelFixture,WaterHeaterHeatPump_SystemConnections)
-{
-  Model m;
-  WaterHeaterHeatPump hpwh(m);
-
-  PlantLoop plant(m);
-  auto demandCount = plant.supplyComponents().size();
-  auto tank = hpwh.tank();
-  EXPECT_TRUE(plant.addSupplyBranchForComponent(tank));
-  EXPECT_TRUE(plant.supplyComponent(tank.handle()));
-
-  hpwh.remove();
-
-  EXPECT_EQ(demandCount,plant.supplyComponents().size());
-  EXPECT_TRUE(hpwh.handle().isNull());
-  EXPECT_TRUE(tank.handle().isNull());
-}
-
-TEST_F(ModelFixture, WaterHeaterHeatPump_GettersSetters) {
+TEST_F(ModelFixture, WaterHeaterHeatPumpWrappedCondenser_GettersSetters) {
   Model m;
 
-  WaterHeaterHeatPump hpwh(m);
-  hpwh.setName("My WaterHeaterHeatPump");
+  WaterHeaterHeatPumpWrappedCondenser hpwh(m);
+  hpwh.setName("My WaterHeaterHeatPumpWrappedCondenser");
 
   // Availability Schedule: Optional Object
   {
@@ -155,21 +74,23 @@ TEST_F(ModelFixture, WaterHeaterHeatPump_GettersSetters) {
   EXPECT_FALSE(hpwh.setDeadBandTemperatureDifference(-10.0));
   EXPECT_EQ(10.0, hpwh.deadBandTemperatureDifference());
 
-  // Condenser Water Flow Rate: Optional Double
-  hpwh.autosizeCondenserWaterFlowRate();
-  EXPECT_TRUE(hpwh.isCondenserWaterFlowRateAutosized());
-  EXPECT_TRUE(hpwh.setCondenserWaterFlowRate(0.1));
-  ASSERT_TRUE(hpwh.condenserWaterFlowRate());
-  EXPECT_EQ(0.1, hpwh.condenserWaterFlowRate().get());
+  // Condenser Bottom Location: Required Double
+  EXPECT_TRUE(hpwh.setCondenserBottomLocation(0.1));
+  EXPECT_EQ(0.1, hpwh.condenserBottomLocation());
   // Bad Value
-  EXPECT_FALSE(hpwh.setCondenserWaterFlowRate(-10.0));
-  ASSERT_TRUE(hpwh.condenserWaterFlowRate());
-  EXPECT_EQ(0.1, hpwh.condenserWaterFlowRate().get());
-  EXPECT_FALSE(hpwh.isCondenserWaterFlowRateAutosized());
+  EXPECT_FALSE(hpwh.setCondenserBottomLocation(-10.0));
+  EXPECT_EQ(0.1, hpwh.condenserBottomLocation());
 
-  // Evaporator Air Flow Rate: Optional Double
-  hpwh.autosizeEvaporatorAirFlowRate();
-  EXPECT_TRUE(hpwh.isEvaporatorAirFlowRateAutosized());
+  // Condenser Top Location: Required Double
+  EXPECT_TRUE(hpwh.setCondenserTopLocation(0.1));
+  EXPECT_EQ(0.1, hpwh.condenserTopLocation());
+  // Bad Value
+  EXPECT_FALSE(hpwh.setCondenserTopLocation(-10.0));
+  EXPECT_EQ(0.1, hpwh.condenserTopLocation());
+
+  // Evaporator Air Flow Rate: Required Double
+  hpwh.autocalculateEvaporatorAirFlowRate();
+  EXPECT_TRUE(hpwh.isEvaporatorAirFlowRateAutocalculated());
   EXPECT_TRUE(hpwh.setEvaporatorAirFlowRate(0.1));
   ASSERT_TRUE(hpwh.evaporatorAirFlowRate());
   EXPECT_EQ(0.1, hpwh.evaporatorAirFlowRate().get());
@@ -177,7 +98,7 @@ TEST_F(ModelFixture, WaterHeaterHeatPump_GettersSetters) {
   EXPECT_FALSE(hpwh.setEvaporatorAirFlowRate(-10.0));
   ASSERT_TRUE(hpwh.evaporatorAirFlowRate());
   EXPECT_EQ(0.1, hpwh.evaporatorAirFlowRate().get());
-  EXPECT_FALSE(hpwh.isEvaporatorAirFlowRateAutosized());
+  EXPECT_FALSE(hpwh.isEvaporatorAirFlowRateAutocalculated());
 
   // Inlet Air Configuration: Required String
   EXPECT_TRUE(hpwh.setInletAirConfiguration("OutdoorAirOnly"));
@@ -203,12 +124,12 @@ TEST_F(ModelFixture, WaterHeaterHeatPump_GettersSetters) {
   }
 
   // Tank: Required Object
-  WaterHeaterMixed wh(m);
+  WaterHeaterStratified wh(m);
   EXPECT_TRUE(hpwh.setTank(wh));
   EXPECT_EQ(wh, hpwh.tank());
 
-  // DX Coil: Required Object
-  CoilWaterHeatingAirToWaterHeatPump coil(m);
+  // DX Coil Name: Required Object
+  CoilWaterHeatingAirToWaterHeatPumpWrapped coil(m);
   EXPECT_TRUE(hpwh.setDXCoil(coil));
   EXPECT_EQ(coil, hpwh.dXCoil());
 
@@ -223,7 +144,7 @@ TEST_F(ModelFixture, WaterHeaterHeatPump_GettersSetters) {
   EXPECT_TRUE(hpwh.setMaximumInletAirTemperatureforCompressorOperation(60.0));
   EXPECT_EQ(60.0, hpwh.maximumInletAirTemperatureforCompressorOperation());
   // Bad Value
-  EXPECT_FALSE(hpwh.setMaximumInletAirTemperatureforCompressorOperation(0.0));
+  EXPECT_FALSE(hpwh.setMaximumInletAirTemperatureforCompressorOperation(16.0));
   EXPECT_EQ(60.0, hpwh.maximumInletAirTemperatureforCompressorOperation());
 
   // Compressor Location: Required String
@@ -241,7 +162,8 @@ TEST_F(ModelFixture, WaterHeaterHeatPump_GettersSetters) {
     EXPECT_EQ(obj, hpwh.compressorAmbientTemperatureSchedule().get());
   }
 
-  // Fan: Required Object
+
+  // Fan Name: Required Object
   FanOnOff fan(m);
   EXPECT_TRUE(hpwh.setFan(fan));
   EXPECT_EQ(fan, hpwh.fan());
@@ -274,29 +196,43 @@ TEST_F(ModelFixture, WaterHeaterHeatPump_GettersSetters) {
   EXPECT_FALSE(hpwh.setParasiticHeatRejectionLocation("BADENUM"));
   EXPECT_EQ("Zone", hpwh.parasiticHeatRejectionLocation());
 
-  // Inlet Air Mixer Schedule: Required Object
+  // Inlet Air Mixer Schedule: Optional Object (for some reason unline the WaterHeaterHeatPump(PumpedCondenser) object...)
   {
     ScheduleConstant obj(m);
     EXPECT_TRUE(hpwh.setInletAirMixerSchedule(obj));
-    EXPECT_EQ(obj, hpwh.inletAirMixerSchedule());
+    ASSERT_TRUE(hpwh.inletAirMixerSchedule());
+    EXPECT_EQ(obj, hpwh.inletAirMixerSchedule().get());
   }
 
-  // Control Sensor Location In Stratified Tank: Required String
-  EXPECT_TRUE(hpwh.setControlSensorLocationInStratifiedTank("Heater1"));
-  EXPECT_EQ("Heater1", hpwh.controlSensorLocationInStratifiedTank());
+  // Tank Element Control Logic: Required String
+  EXPECT_TRUE(hpwh.setTankElementControlLogic("MutuallyExclusive"));
+  EXPECT_EQ("MutuallyExclusive", hpwh.tankElementControlLogic());
   // Bad Value
-  EXPECT_FALSE(hpwh.setControlSensorLocationInStratifiedTank("BADENUM"));
-  EXPECT_EQ("Heater1", hpwh.controlSensorLocationInStratifiedTank());
-}
+  EXPECT_FALSE(hpwh.setTankElementControlLogic("BADENUM"));
+  EXPECT_EQ("MutuallyExclusive", hpwh.tankElementControlLogic());
 
-TEST_F(ModelFixture,WaterHeaterHeatPump_InletAirTemperatureforCompressorOperation)
-{
-  // Test for #4053
-  Model m;
-  WaterHeaterHeatPump hpwh(m);
+  // Control Sensor 1 Height In Stratified Tank: Optional Double
+  EXPECT_TRUE(hpwh.setControlSensor1HeightInStratifiedTank(0.1));
+  ASSERT_TRUE(hpwh.controlSensor1HeightInStratifiedTank());
+  EXPECT_EQ(0.1, hpwh.controlSensor1HeightInStratifiedTank().get());
+  // Bad Value
+  EXPECT_FALSE(hpwh.setControlSensor1HeightInStratifiedTank(-10.0));
+  ASSERT_TRUE(hpwh.controlSensor1HeightInStratifiedTank());
+  EXPECT_EQ(0.1, hpwh.controlSensor1HeightInStratifiedTank().get());
 
-  EXPECT_TRUE(hpwh.setMinimumInletAirTemperatureforCompressorOperation(-10.0));
-  EXPECT_TRUE(hpwh.setMaximumInletAirTemperatureforCompressorOperation(40.0));
-  EXPECT_EQ(-10.0, hpwh.minimumInletAirTemperatureforCompressorOperation());
-  EXPECT_EQ(40.0, hpwh.maximumInletAirTemperatureforCompressorOperation());
+  // Control Sensor 1 Weight: Required Double
+  EXPECT_TRUE(hpwh.setControlSensor1Weight(0.5));
+  EXPECT_EQ(0.5, hpwh.controlSensor1Weight());
+  // Bad Value
+  EXPECT_FALSE(hpwh.setControlSensor1Weight(-10.0));
+  EXPECT_EQ(0.5, hpwh.controlSensor1Weight());
+
+  // Control Sensor 2 Height In Stratified Tank: Optional Double
+  EXPECT_TRUE(hpwh.setControlSensor2HeightInStratifiedTank(0.1));
+  ASSERT_TRUE(hpwh.controlSensor2HeightInStratifiedTank());
+  EXPECT_EQ(0.1, hpwh.controlSensor2HeightInStratifiedTank().get());
+  // Bad Value
+  EXPECT_FALSE(hpwh.setControlSensor2HeightInStratifiedTank(-10.0));
+  ASSERT_TRUE(hpwh.controlSensor2HeightInStratifiedTank());
+  EXPECT_EQ(0.1, hpwh.controlSensor2HeightInStratifiedTank().get());
 }
