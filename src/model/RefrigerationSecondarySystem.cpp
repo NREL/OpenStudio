@@ -1116,21 +1116,6 @@ void RefrigerationSecondarySystem::removeFromSystem() {
 RefrigerationSecondarySystem::RefrigerationSecondarySystem(std::shared_ptr<detail::RefrigerationSecondarySystem_Impl> impl)
   : ParentObject(std::move(impl))
 {}
-
-// DEPRECATED
-std::vector<RefrigerationSystem> RefrigerationSecondarySystem::systems() const {
-  std::vector<RefrigerationSystem> result;
-  if (const auto& s = system()) {
-    result.push_back(s.get());
-  }
-  return result;
-}
-
-// DEPRECATED
-void RefrigerationSecondarySystem::removeFromSystems() {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->removeFromSystem();
-}
-
 /// @endcond
 
 } // model

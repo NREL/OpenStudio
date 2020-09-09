@@ -374,21 +374,6 @@ void RefrigerationCondenserCascade::removeFromSystem() {
 RefrigerationCondenserCascade::RefrigerationCondenserCascade(std::shared_ptr<detail::RefrigerationCondenserCascade_Impl> impl)
   : ModelObject(std::move(impl))
 {}
-
-// DEPRECATED
-std::vector<RefrigerationSystem> RefrigerationCondenserCascade::systems() const {
-  std::vector<RefrigerationSystem> result;
-  if (const auto& s = system()) {
-    result.push_back(s.get());
-  }
-  return result;
-}
-
-// DEPRECATED
-void RefrigerationCondenserCascade::removeFromSystems() {
-  getImpl<detail::RefrigerationCondenserCascade_Impl>()->removeFromSystem();
-}
-
 /// @endcond
 
 } // model

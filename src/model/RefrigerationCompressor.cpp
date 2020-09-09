@@ -580,20 +580,6 @@ void RefrigerationCompressor::removeFromSystem() {
 RefrigerationCompressor::RefrigerationCompressor(std::shared_ptr<detail::RefrigerationCompressor_Impl> impl)
   : ParentObject(std::move(impl))
 {}
-
-// DEPRECATED
-std::vector<RefrigerationSystem> RefrigerationCompressor::systems() const {
-  std::vector<RefrigerationSystem> result;
-  if (const auto& s = system()) {
-    result.push_back(s.get());
-  }
-  return result;
-}
-
-// DEPRECATED
-void RefrigerationCompressor::removeFromSystems() {
-  getImpl<detail::RefrigerationCompressor_Impl>()->removeFromSystem();
-}
 /// @endcond
 
 } // model

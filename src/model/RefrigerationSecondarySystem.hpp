@@ -33,8 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ParentObject.hpp"
 
-#include "../utilities/core/Deprecated.hpp"
-
 namespace openstudio {
 
 namespace model {
@@ -158,9 +156,6 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
   // Returns the parent RefrigerationSystem if any
   boost::optional<RefrigerationSystem> system() const;
 
-  // Returns the parent RefrigerationSystem(s)
-  OS_DEPRECATED std::vector<RefrigerationSystem> systems() const;
-
   //@}
   /** @name Setters */
   //@{
@@ -247,9 +242,6 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   // Remove from parent system if any
   void removeFromSystem();
-
-  // Remove from parent system(s)
-  OS_DEPRECATED void removeFromSystems();
 
   //@}
   /** @name Other */
