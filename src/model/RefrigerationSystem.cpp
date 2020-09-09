@@ -745,7 +745,7 @@ namespace detail {
       // Enforce unicity
       if( boost::optional<RefrigerationSystem> currentSystem = refrigerationSubcoolerMechanical->system() )
       {
-        LOG(Warn, refrigerationSubcoolerMechanical->briefDescription() << " was removed from its existing RefrigerationSystem (non High Stage) named '"
+        LOG(Warn, refrigerationSubcoolerMechanical->briefDescription() << " was removed from its existing RefrigerationSystem named '"
             << currentSystem->nameString() << "'.");
         currentSystem->resetMechanicalSubcooler();
       }
@@ -769,7 +769,7 @@ namespace detail {
       // Enforce unicity
       if( boost::optional<RefrigerationSystem> currentSystem = refrigerationSubcoolerLiquidSuction->system() )
       {
-        LOG(Warn, refrigerationSubcoolerLiquidSuction->briefDescription() << " was removed from its existing RefrigerationSystem (non High Stage) named '"
+        LOG(Warn, refrigerationSubcoolerLiquidSuction->briefDescription() << " was removed from its existing RefrigerationSystem named '"
             << currentSystem->nameString() << "'.");
         currentSystem->resetLiquidSuctionHeatExchangerSubcooler();
       }

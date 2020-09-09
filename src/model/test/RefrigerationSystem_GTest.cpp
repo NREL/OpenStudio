@@ -1746,10 +1746,10 @@ TEST_F(ModelFixture, RefrigerationSystem_Subcoolers_Unicity)
 {
   Model model;
 
-  RefrigerationSystem system = RefrigerationSystem(model);
-  RefrigerationSystem system2 = RefrigerationSystem(model);
-
   {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
     RefrigerationSubcoolerMechanical subcooler(model);
     EXPECT_FALSE(subcooler.system());
     EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerMechanical>().size());
@@ -1776,6 +1776,9 @@ TEST_F(ModelFixture, RefrigerationSystem_Subcoolers_Unicity)
   }
 
   {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
     RefrigerationSubcoolerLiquidSuction subcooler(model);
     EXPECT_FALSE(subcooler.system());
     EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerLiquidSuction>().size());
