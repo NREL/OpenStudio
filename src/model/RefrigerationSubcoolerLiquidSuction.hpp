@@ -37,6 +37,8 @@ namespace openstudio {
 
 namespace model {
 
+class RefrigerationSystem;
+
 namespace detail {
 
   class RefrigerationSubcoolerLiquidSuction_Impl;
@@ -85,6 +87,10 @@ class MODEL_API RefrigerationSubcoolerLiquidSuction : public ModelObject {
   //@}
   /** @name Other */
   //@{
+
+  // The parent RefrigerationSystem, for which condensate is cooled.
+  // This is a convenience method to find any RefrigerationSystem that uses this subcooler
+  boost::optional<RefrigerationSystem> system() const;
 
   //@}
  protected:

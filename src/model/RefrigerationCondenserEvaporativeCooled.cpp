@@ -30,6 +30,8 @@
 #include "RefrigerationCondenserEvaporativeCooled.hpp"
 #include "RefrigerationCondenserEvaporativeCooled_Impl.hpp"
 
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
 // WaterStorageTank object not used
 //#include "WaterStorageTank.hpp"
 //#include "WaterStorageTank_Impl.hpp"
@@ -604,6 +606,21 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationCondenserEvaporativeCooled_Impl::system() const {
+
+    boost::optional<RefrigerationSystem> system;
+    // We use getModelObjectSources to check if more than one
+    std::vector<RefrigerationSystem> systems = getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
+
+    if( systems.size() > 0u) {
+      if( systems.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
+      }
+      system = systems[0];
+    }
+    return system;
+  }
+
 } // detail
 
 RefrigerationCondenserEvaporativeCooled::RefrigerationCondenserEvaporativeCooled(const Model& model)
@@ -986,6 +1003,10 @@ bool RefrigerationCondenserEvaporativeCooled::setCondensatePipingRefrigerantInve
 
 void RefrigerationCondenserEvaporativeCooled::resetCondensatePipingRefrigerantInventory() {
   getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->resetCondensatePipingRefrigerantInventory();
+}
+
+boost::optional<RefrigerationSystem> RefrigerationCondenserEvaporativeCooled::system() const {
+  return getImpl<detail::RefrigerationCondenserEvaporativeCooled_Impl>()->system();
 }
 
 /// @cond

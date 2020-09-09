@@ -38,6 +38,7 @@ namespace model {
 
 // WaterStorageTank object not used
 //class WaterStorageTank;
+class RefrigerationSystem;
 class Schedule;
 
 namespace detail {
@@ -255,6 +256,8 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    boost::optional<RefrigerationSystem> system() const;
 
     //@}
    protected:

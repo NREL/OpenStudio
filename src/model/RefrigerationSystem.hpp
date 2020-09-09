@@ -198,7 +198,7 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   //@{
 
   /** \fn bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser)
-      \brief Sets the refrigeration condenser for this refrigeration system.
+      \brief Sets the refrigeration condenser for this refrigeration system. Will remove it from any existing Refrigeration System (unicity enforced)
       \param[in] refrigerationCondenser The refrigeration condenser.
 
       Valid inputs: \n
@@ -209,6 +209,8 @@ class MODEL_API RefrigerationSystem : public ModelObject {
   */
   bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
 
+  void resetRefrigerationCondenser();
+
   bool setMinimumCondensingTemperature(double minimumCondensingTemperature);
 
   bool setRefrigerationSystemWorkingFluidType(std::string refrigerationSystemWorkingFluidType);
@@ -217,10 +219,12 @@ class MODEL_API RefrigerationSystem : public ModelObject {
 
   void resetSuctionTemperatureControlType();
 
+  // Will remove it from any existing Refrigeration System (unicity enforced)
   bool setMechanicalSubcooler(const RefrigerationSubcoolerMechanical& refrigerationSubcoolerMechanical);
 
   void resetMechanicalSubcooler();
 
+  // Will remove it from any existing Refrigeration System (unicity enforced)
   bool setLiquidSuctionHeatExchangerSubcooler(const RefrigerationSubcoolerLiquidSuction& refrigerationSubcoolerLiquidSuction);
 
   void resetLiquidSuctionHeatExchangerSubcooler();

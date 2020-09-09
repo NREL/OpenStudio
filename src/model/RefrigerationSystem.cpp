@@ -48,6 +48,13 @@
 #include "RefrigerationSubcoolerLiquidSuction_Impl.hpp"
 #include "RefrigerationSubcoolerMechanical.hpp"
 #include "RefrigerationSubcoolerMechanical_Impl.hpp"
+#include "RefrigerationCondenserAirCooled.hpp"
+#include "RefrigerationCondenserAirCooled_Impl.hpp"
+#include "RefrigerationCondenserWaterCooled.hpp"
+#include "RefrigerationCondenserWaterCooled_Impl.hpp"
+#include "RefrigerationCondenserEvaporativeCooled.hpp"
+#include "RefrigerationCondenserEvaporativeCooled_Impl.hpp"
+
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "Model.hpp"
@@ -174,7 +181,6 @@ namespace detail {
   {
     std::vector<IdfObject> result;
 
-    // TODO: technically this object can be shared accross multiple systems..
     if ( boost::optional<ModelObject> condenser = this->optionalRefrigerationCondenser() ) {
       std::vector<IdfObject> removedCondenser = condenser->remove();
       result.insert(result.end(), removedCondenser.begin(), removedCondenser.end());
@@ -209,13 +215,11 @@ namespace detail {
       result.insert(result.end(), removedHighStageCompressors.begin(), removedHighStageCompressors.end());
     }
 
-    // TODO: technically this object can be shared accross multiple systems..
     if ( boost::optional<RefrigerationSubcoolerMechanical> mechSubcooler = this->mechanicalSubcooler() ) {
       std::vector<IdfObject> removedMechSubcooler = mechSubcooler->remove();
       result.insert(result.end(), removedMechSubcooler.begin(), removedMechSubcooler.end());
     }
 
-    // TODO: technically this object can be shared accross multiple systems..
     if ( boost::optional<RefrigerationSubcoolerLiquidSuction> liqSuctionSubcooler = this->liquidSuctionHeatExchangerSubcooler() ) {
       std::vector<IdfObject> removedLiqSuctionSubcooler = liqSuctionSubcooler->remove();
       result.insert(result.end(), removedLiqSuctionSubcooler.begin(), removedLiqSuctionSubcooler.end());
@@ -669,8 +673,44 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::setRefrigerationCondenser(const ModelObject& refrigerationCondenser) {
+
+    boost::optional<RefrigerationSystem> currentSystem;
+    // Enforce unicity
+    if (auto refrigerationCondenserAirCooled = refrigerationCondenser.optionalCast<RefrigerationCondenserAirCooled>()) {
+      currentSystem = refrigerationCondenserAirCooled->system();
+    }
+
+    if (!currentSystem) {
+      if (auto refrigerationCondenserWaterCooled = refrigerationCondenser.optionalCast<RefrigerationCondenserWaterCooled>()) {
+        currentSystem = refrigerationCondenserWaterCooled->system();
+      }
+    }
+
+    if (!currentSystem) {
+      if (auto refrigerationCondenserEvaporativeCooled = refrigerationCondenser.optionalCast<RefrigerationCondenserEvaporativeCooled>()) {
+        currentSystem = refrigerationCondenserEvaporativeCooled->system();
+      }
+    }
+
+    if (!currentSystem) {
+      if (auto refrigerationCondenserCascade = refrigerationCondenser.optionalCast<RefrigerationCondenserCascade>()) {
+        currentSystem = refrigerationCondenserCascade->heatRejectingSystem();
+      }
+    }
+
     bool result = setPointer(OS_Refrigeration_SystemFields::RefrigerationCondenserName, refrigerationCondenser.handle());
+    if (result && currentSystem && (currentSystem->handle() != this->handle())) {
+      LOG(Warn, refrigerationCondenser.briefDescription() << " was removed from its existing RefrigerationSystem (Condenser Name) named '"
+          << currentSystem->nameString() << "'.");
+      currentSystem->resetRefrigerationCondenser();
+    }
+
     return result;
+  }
+
+  void RefrigerationSystem_Impl::resetRefrigerationCondenser() {
+    bool result = setString(OS_Refrigeration_SystemFields::RefrigerationCondenserName, "");
+    OS_ASSERT(result);
   }
 
   bool RefrigerationSystem_Impl::setCompressorList(const ModelObjectList& modelObjectList) {
@@ -702,6 +742,13 @@ namespace detail {
   bool RefrigerationSystem_Impl::setMechanicalSubcooler(const boost::optional<RefrigerationSubcoolerMechanical>& refrigerationSubcoolerMechanical) {
     bool result(false);
     if (refrigerationSubcoolerMechanical) {
+      // Enforce unicity
+      if( boost::optional<RefrigerationSystem> currentSystem = refrigerationSubcoolerMechanical->system() )
+      {
+        LOG(Warn, refrigerationSubcoolerMechanical->briefDescription() << " was removed from its existing RefrigerationSystem (non High Stage) named '"
+            << currentSystem->nameString() << "'.");
+        currentSystem->resetMechanicalSubcooler();
+      }
       result = setPointer(OS_Refrigeration_SystemFields::MechanicalSubcoolerName, refrigerationSubcoolerMechanical.get().handle());
     }
     else {
@@ -719,6 +766,13 @@ namespace detail {
   bool RefrigerationSystem_Impl::setLiquidSuctionHeatExchangerSubcooler(const boost::optional<RefrigerationSubcoolerLiquidSuction>& refrigerationSubcoolerLiquidSuction) {
     bool result(false);
     if (refrigerationSubcoolerLiquidSuction) {
+      // Enforce unicity
+      if( boost::optional<RefrigerationSystem> currentSystem = refrigerationSubcoolerLiquidSuction->system() )
+      {
+        LOG(Warn, refrigerationSubcoolerLiquidSuction->briefDescription() << " was removed from its existing RefrigerationSystem (non High Stage) named '"
+            << currentSystem->nameString() << "'.");
+        currentSystem->resetLiquidSuctionHeatExchangerSubcooler();
+      }
       result = setPointer(OS_Refrigeration_SystemFields::LiquidSuctionHeatExchangerSubcoolerName, refrigerationSubcoolerLiquidSuction.get().handle());
     }
     else {
@@ -1067,6 +1121,10 @@ void RefrigerationSystem::removeAllAirChillers() {
 
 bool RefrigerationSystem::setRefrigerationCondenser(const ModelObject& refrigerationCondenser) {
   return getImpl<detail::RefrigerationSystem_Impl>()->setRefrigerationCondenser(refrigerationCondenser);
+}
+
+void RefrigerationSystem::resetRefrigerationCondenser() {
+  return getImpl<detail::RefrigerationSystem_Impl>()->resetRefrigerationCondenser();
 }
 
 bool RefrigerationSystem::setMinimumCondensingTemperature(double minimumCondensingTemperature) {

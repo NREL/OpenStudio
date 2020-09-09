@@ -36,6 +36,8 @@
 namespace openstudio {
 namespace model {
 
+class RefrigerationSystem;
+
 namespace detail {
 
   /** RefrigerationSubcoolerLiquidSuction_Impl is a ModelObject_Impl that is the implementation class for RefrigerationSubcoolerLiquidSuction.*/
@@ -95,6 +97,8 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    boost::optional<RefrigerationSystem> system() const;
 
     //@}
    protected:
