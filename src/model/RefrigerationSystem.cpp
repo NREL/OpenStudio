@@ -773,7 +773,7 @@ namespace detail {
             << currentSystem->nameString() << "'.");
         currentSystem->resetLiquidSuctionHeatExchangerSubcooler();
       }
-      result = setPointer(OS_Refrigeration_SystemFields::LiquidSuctionHeatExchangerSubcoolerName, refrigerationSubcoolerLiquidSuction.get().handle());
+      result = setPointer(OS_Refrigeration_SystemFields::LiquidSuctionHeatExchangerSubcoolerName, refrigerationSubcoolerLiquidSuction->handle());
     }
     else {
       resetLiquidSuctionHeatExchangerSubcooler();
