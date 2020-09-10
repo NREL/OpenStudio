@@ -150,18 +150,15 @@ namespace detail {
   std::vector<SubSurface> ShadingControl_Impl::subSurfaces() const
   {
     std::vector<SubSurface> result;
-
-    std::vector<IdfExtensibleGroup> groups = extensibleGroups();
-
+    auto groups = extensibleGroups();
     for (const auto & group : groups) {
       boost::optional<WorkspaceObject> wo = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_ShadingControlExtensibleFields::SubSurfaceName);
-      boost::optional<SubSurface> subsurface = wo->optionalCast<SubSurface>();
-
-      if (subsurface) {
-        result.push_back(subsurface.get());
+      if (wo) {
+        if (auto subsurface = wo->optionalCast<SubSurface>()) {
+          result.push_back(subsurface.get());
+         }
       }
     }
-
     return result;
   }
 
@@ -248,7 +245,6 @@ namespace detail {
       getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
       result = false;
     }
-    result = true;
     return result;
   }
 

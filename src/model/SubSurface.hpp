@@ -129,8 +129,10 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   void autocalculateViewFactortoGround();
 
+  // This method is deprecated, please use addShadingControl or **<TODO>setShadingControls/addShadingControls**. This will remove this SubSurface from any shading control(s) it is on (`removeAllShadingControls()`) then will call `addShadingControl(shadingControl)`
   OS_DEPRECATED bool setShadingControl(const ShadingControl& shadingControl);
 
+  // Replaced with removeAllShadingControls
   OS_DEPRECATED void resetShadingControl();
 
   bool addShadingControl(const ShadingControl& shadingControl);

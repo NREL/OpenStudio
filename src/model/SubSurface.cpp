@@ -487,12 +487,14 @@ namespace detail {
 
   boost::optional<ShadingControl> SubSurface_Impl::shadingControl() const
   {
-    if (numberofShadingControls() > 1) {
-      return boost::none;
-    } else {
+    if (numberofShadingControls() > 0) {
+      if (numberofShadingControls() > 1) {
+        LOG(Warn, briefDescription() << " has more than one ShadingControl attached, returning first.");
+      }
       return shadingControls()[0];
-    }
-    return boost::none;
+    } else {
+      return boost::none;
+    }    
   }
 
   std::vector<ShadingControl> SubSurface_Impl::shadingControls() const
@@ -501,7 +503,7 @@ namespace detail {
 
     std::vector<ShadingControl> shadingControls;
 
-    for (const auto& object: thisSubSurface.model().getObjectsByType(ShadingControl::iddObjectType())) {
+    for (const auto& object: getObject<ModelObject>().getModelObjectSources<ShadingControl>()) {
       ModelObject modelObject = object.cast<ModelObject>();
       ShadingControl shadingControl = modelObject.cast<ShadingControl>();
       for (const SubSurface& subSurface : shadingControl.subSurfaces()) {
@@ -627,9 +629,13 @@ namespace detail {
 
   bool SubSurface_Impl::setShadingControl(const ShadingControl& shadingControl)
   {
-    SubSurface thisSubSurface = getObject<SubSurface>();
-    resetShadingControl();
-    shadingControl.addSubSurface(thisSubSurface);
+    bool result = false;
+    if (allowShadingControl()){
+      SubSurface thisSubSurface = getObject<SubSurface>();
+      resetShadingControl();
+      result = shadingControl.addSubSurface(thisSubSurface);
+    }
+    return result;
   }
 
   void SubSurface_Impl::resetShadingControl()
@@ -639,8 +645,12 @@ namespace detail {
 
   bool SubSurface_Impl::addShadingControl(const ShadingControl& shadingControl)
   {
-    SubSurface thisSubSurface = getObject<SubSurface>();
-    shadingControl.addSubSurface(thisSubSurface);
+    bool result = false;
+    if (allowShadingControl()){
+      SubSurface thisSubSurface = getObject<SubSurface>();
+      result = shadingControl.addSubSurface(thisSubSurface);
+    }
+    return result;
   }
 
   bool SubSurface_Impl::addShadingControls(const std::vector<ShadingControl> &shadingControls)
