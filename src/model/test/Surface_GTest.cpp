@@ -583,6 +583,9 @@ TEST_F(ModelFixture, Surface_Clone) {
   ASSERT_TRUE(surface.surfacePropertyConvectionCoefficients());
   EXPECT_TRUE(surface.surfacePropertyConvectionCoefficients().get() == cc);
 
+  auto optprop = surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
+  ASSERT_TRUE(optprop);
+
   // clone should maintain connection to Construction
   Surface clone1 = surface.clone().cast<Surface>();
   ASSERT_TRUE(clone1.model() == surface.model());
@@ -590,12 +593,22 @@ TEST_F(ModelFixture, Surface_Clone) {
   EXPECT_TRUE(clone1.construction().get() == construction);
   EXPECT_TRUE(clone1.surfacePropertyConvectionCoefficients());
 
+  ASSERT_TRUE(clone1.surfacePropertyExposedFoundationPerimeter());
+  EXPECT_TRUE(clone1.surfacePropertyExposedFoundationPerimeter().get() != optprop.get());
+  ASSERT_TRUE(clone1.surfacePropertyExposedFoundationPerimeter()->parent());
+  EXPECT_TRUE(clone1.surfacePropertyExposedFoundationPerimeter()->parent().get() == clone1);
+
   // even if through ModelObject
   Surface clone2 = surface.cast<ModelObject>().clone().cast<Surface>();
   ASSERT_TRUE(clone2.model() == surface.model());
   ASSERT_TRUE(clone2.construction());
   EXPECT_TRUE(clone2.construction().get() == construction);
   EXPECT_TRUE(clone2.surfacePropertyConvectionCoefficients());
+
+  ASSERT_TRUE(clone2.surfacePropertyExposedFoundationPerimeter());
+  EXPECT_TRUE(clone2.surfacePropertyExposedFoundationPerimeter().get() != optprop.get());
+  ASSERT_TRUE(clone2.surfacePropertyExposedFoundationPerimeter()->parent());
+  EXPECT_TRUE(clone2.surfacePropertyExposedFoundationPerimeter()->parent().get() == clone2);
 }
 
 TEST_F(ModelFixture, OutsideBoundaryConditionCapitalization)
