@@ -1244,7 +1244,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   EXPECT_EQ("Sequential", sc.getString(13, false, true).get());
   ASSERT_EQ(1u, sc.numExtensibleGroups());
 
-  WorkspaceExtensibleGroup w_eg = extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  WorkspaceExtensibleGroup w_eg = sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   ASSERT_TRUE(w_eg.getTarget(0));
   EXPECT_EQ("OS:SubSurface", w_eg.getTarget(0).get().iddObject().name());
 }
