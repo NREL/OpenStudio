@@ -5744,7 +5744,8 @@ OS:SubSurface,
        \units m
 
 OS:ShadingControl,
-       \min-fields 4
+       \extensible:1
+       \min-fields 15
   A1 , \field Handle
        \type handle
        \required-field
@@ -5887,7 +5888,8 @@ OS:ShadingControl,
        \note When Sequential is used the list of fenestration surfaces are controlled individually in the order specified
        \note When Group is used the entire list is controlled simultaneously and if glare control is needed the entire
        \note group of window shades are deployed together a the same time
-  A13; \field Sub Surface Name
+  A13; \field Sub Surface Name 1
+       \required-field
        \begin-extensible
        \type object-list
        \object-list GlazedExtSubSurfNames
