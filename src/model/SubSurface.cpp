@@ -1472,7 +1472,7 @@ boost::optional<ShadingControl> SubSurface::shadingControl() const
 }
 
 // DEPRECATED
-bool SubSurface::setShadingControl(const ShadingControl& shadingControl) {
+bool SubSurface::setShadingControl(ShadingControl& shadingControl) {
   removeAllShadingControls();
   return addShadingControl(shadingControl);
 }
