@@ -184,6 +184,13 @@ namespace detail {
       coefficientsClone.setSurface(newParentAsModelObject);
     }
 
+    auto foundation = adjacentFoundation();
+    if (foundation)
+    {
+        auto foundationClone = foundation->clone(model).cast<FoundationKiva>();
+        newParentAsModelObject.cast<Surface>().setAdjacentFoundation(foundationClone);
+    }
+
     return newParentAsModelObject;
   }
 
