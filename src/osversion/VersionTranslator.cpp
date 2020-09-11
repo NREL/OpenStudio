@@ -6296,6 +6296,9 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
         }
       }
 
+      // New field at end, before extensible, and I moved to E+ default to the Ctor and made it required, so need to set it here
+      newShadingControl.setString(13, "Sequential");
+
       std::vector<IdfObject> subSurfaces = idf_3_0_1.getObjectsByType(idf_3_0_1.iddFile().getObject("OS:SubSurface").get());
       for ( auto & subSurface : subSurfaces ) {
         value = subSurface.getString(7); // Shading Control Name
