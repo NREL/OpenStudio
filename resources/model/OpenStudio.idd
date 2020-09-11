@@ -5888,7 +5888,6 @@ OS:ShadingControl,
        \note When Group is used the entire list is controlled simultaneously and if glare control is needed the entire
        \note group of window shades are deployed together a the same time
   A13; \field Sub Surface Name
-       \required-field
        \begin-extensible
        \type object-list
        \object-list GlazedExtSubSurfNames
