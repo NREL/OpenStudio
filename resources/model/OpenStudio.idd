@@ -5879,7 +5879,15 @@ OS:ShadingControl,
        \note OnIfHighZoneAirTempAndHighSolarOnWindow, and OnIfHighZoneAirTempAndHighHorizontalSolar
        \type real
        \ip-units unknown
-  A12; \field Sub Surface Name
+  A12, \field Multiple Surface Control Type
+       \type choice
+       \key Sequential
+       \key Group
+       \required-field
+       \note When Sequential is used the list of fenestration surfaces are controlled individually in the order specified
+       \note When Group is used the entire list is controlled simultaneously and if glare control is needed the entire
+       \note group of window shades are deployed together a the same time
+  A13; \field Sub Surface Name
        \required-field
        \begin-extensible
        \type object-list

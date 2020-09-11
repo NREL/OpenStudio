@@ -92,6 +92,8 @@ namespace detail {
 
     bool isSetpointDefaulted() const;
 
+    std::string multipleSurfaceControlType() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -109,6 +111,8 @@ namespace detail {
     bool setSetpoint(double setpoint);
 
     void resetSetpoint();
+
+    bool setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType);
 
     //@}
     /** @name Other */

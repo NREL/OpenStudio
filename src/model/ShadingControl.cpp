@@ -211,7 +211,17 @@ namespace detail {
     OS_ASSERT(test);
   }
 
+  std::string ShadingControl_Impl::multipleSurfaceControlType() const
+  {
+    boost::optional<std::string> result = getString(OS_ShadingControlFields::MultipleSurfaceControlType, true);
+    OS_ASSERT(result);
+    return result.get();
+  }
 
+  bool ShadingControl_Impl::setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType)
+  {
+    return setString(OS_ShadingControlFields::MultipleSurfaceControlType, multipleSurfaceControlType);
+  }
 
   unsigned int ShadingControl_Impl::numberofSubSurfaces() const
   {
@@ -414,6 +424,9 @@ ShadingControl::ShadingControl(const Construction& construction)
   bool test = this->setShadingType(position + type);
   OS_ASSERT(test);
 
+  test = setMultipleSurfaceControlType("Sequential"); // E+ IDD Default
+  OS_ASSERT(test);
+
   test = this->setPointer(OS_ShadingControlFields::ConstructionwithShadingName, construction.handle());
   OS_ASSERT(test);
 }
@@ -439,6 +452,9 @@ ShadingControl::ShadingControl(const ShadingMaterial& shadingMaterial)
   bool test = this->setShadingType(type);
   OS_ASSERT(test);
 
+  test = setMultipleSurfaceControlType("Sequential"); // E+ IDD Default
+  OS_ASSERT(test);
+
   test = this->setPointer(OS_ShadingControlFields::ShadingDeviceMaterialName, shadingMaterial.handle());
   OS_ASSERT(test);
 }
@@ -455,6 +471,11 @@ std::vector<std::string> ShadingControl::shadingTypeValues() {
 std::vector<std::string> ShadingControl::shadingControlTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_ShadingControlFields::ShadingControlType);
+}
+
+std::vector<std::string> ShadingControl::multipleSurfaceControlTypeValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_ShadingControlFields::MultipleSurfaceControlType);
 }
 
 boost::optional<Construction> ShadingControl::construction() const {
@@ -516,6 +537,19 @@ bool ShadingControl::setSetpoint(double setpoint){
 void ShadingControl::resetSetpoint(){
   getImpl<detail::ShadingControl_Impl>()->resetSetpoint();
 }
+
+std::string ShadingControl::multipleSurfaceControlType() const {
+  return getImpl<detail::ShadingControl_Impl>()->multipleSurfaceControlType();
+}
+
+
+bool ShadingControl::setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType){
+  return getImpl<detail::ShadingControl_Impl>()->setMultipleSurfaceControlType(multipleSurfaceControlType);
+}
+
+
+
+// Extensible Fields
 
 std::vector<SubSurface> ShadingControl::subSurfaces() const {
   return getImpl<detail::ShadingControl_Impl>()->subSurfaces();

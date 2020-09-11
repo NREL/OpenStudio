@@ -75,6 +75,8 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   static std::vector<std::string> shadingControlTypeValues();
 
+  static std::vector<std::string> multipleSurfaceControlTypeValues();
+
   /** @name Getters */
   //@{
 
@@ -93,6 +95,8 @@ class MODEL_API ShadingControl : public ResourceObject {
   boost::optional<double> setpoint() const;
 
   bool isSetpointDefaulted() const;
+
+  std::string multipleSurfaceControlType() const;
 
   //@}
   /** @name Setters */
@@ -114,6 +118,8 @@ class MODEL_API ShadingControl : public ResourceObject {
   bool setSetpoint(double setpoint);
 
   void resetSetpoint();
+
+  bool setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType);
 
   //@}
   /** @name Other */
