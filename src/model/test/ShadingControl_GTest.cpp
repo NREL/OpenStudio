@@ -151,4 +151,12 @@ TEST_F(ModelFixture, ShadingControl_SubSurfaces) {
   EXPECT_EQ(2, shadingControl.numberofSubSurfaces());
   shadingControl.removeAllSubSurfaces();
   EXPECT_EQ(0, shadingControl.numberofSubSurfaces());
+
+  EXPECT_TRUE(shadingControl.addSubSurfaces(subSurfaces));
+  EXPECT_EQ(2, shadingControl.numberofSubSurfaces());
+  subSurface2.remove();
+  // EXPECT_EQ(1, shadingControl.numberofSubSurfaces());
+
+  // ShadingControl shadingControlClone = shadingControl.clone(model).cast<ShadingControl>();
+  // EXPECT_EQ(0, shadingControlClone.numberofSubSurfaces());
 }
