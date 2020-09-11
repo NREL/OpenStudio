@@ -103,3 +103,64 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_RunPeriodControlSpecialDays)
   }
 
 }
+
+// TODO: RT of RunPeriodControlSpecialDays is disabled
+TEST_F(EnergyPlusFixture, DISABLED_ReverseTranslator_RunPeriodControlSpecialDays) {
+
+  ReverseTranslator rt;
+
+  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+
+  // Not there, Model shouldn't have it either
+  {
+    Model m = rt.translateWorkspace(w);
+    EXPECT_EQ(0u, m.getConcreteModelObjects<RunPeriodControlSpecialDays>().size());
+  }
+
+  OptionalWorkspaceObject _i_specialDay = w.addObject(IdfObject(IddObjectType::RunPeriodControl_SpecialDays));
+  ASSERT_TRUE(_i_specialDay);
+
+  EXPECT_TRUE(_i_specialDay->setName("Memorial Day"));
+  EXPECT_TRUE(_i_specialDay->setString(RunPeriodControl_SpecialDaysFields::StartDate, "last MoNday    in Aug"));
+  EXPECT_TRUE(_i_specialDay->setInt(RunPeriodControl_SpecialDaysFields::Duration, 1));
+  EXPECT_TRUE(_i_specialDay->setString(RunPeriodControl_SpecialDaysFields::SpecialDayType, "Holiday"));
+
+  {
+    Model m = rt.translateWorkspace(w);
+
+    std::vector<openstudio::model::RunPeriodControlSpecialDays> specialDays = m.getModelObjects<openstudio::model::RunPeriodControlSpecialDays>();
+    ASSERT_EQ(1u, specialDays.size());
+    RunPeriodControlSpecialDays specialDay = specialDays[0];
+
+    EXPECT_EQ("Memorial Day", specialDay.nameString());
+    EXPECT_EQ("last MoNday    in Aug", specialDay.getString(OS_RunPeriodControl_SpecialDaysFields::StartDate).get());
+    ASSERT_NO_THROW(specialDay.startDate());
+    // Assumed base year is 2009, so last one falls on the 31th
+    EXPECT_EQ(31u, specialDay.startDate().dayOfMonth());
+    EXPECT_EQ(MonthOfYear::Aug, specialDay.startDate().monthOfYear().value());
+    EXPECT_EQ(DayOfWeek::Monday, specialDay.startDate().dayOfWeek().value());
+    EXPECT_EQ(1u, specialDay.duration());
+    EXPECT_EQ("Holiday", specialDay.specialDayType());
+  }
+
+  EXPECT_TRUE(_i_specialDay->setString(RunPeriodControl_SpecialDaysFields::StartDate, "7/1"));
+  EXPECT_TRUE(_i_specialDay->setInt(RunPeriodControl_SpecialDaysFields::Duration, 15));
+  EXPECT_TRUE(_i_specialDay->setString(RunPeriodControl_SpecialDaysFields::SpecialDayType, "CustomDay1"));
+
+  {
+    Model m = rt.translateWorkspace(w);
+
+    std::vector<openstudio::model::RunPeriodControlSpecialDays> specialDays = m.getModelObjects<openstudio::model::RunPeriodControlSpecialDays>();
+    ASSERT_EQ(1u, specialDays.size());
+    RunPeriodControlSpecialDays specialDay = specialDays[0];
+
+    EXPECT_EQ("7/1", specialDay.getString(OS_RunPeriodControl_SpecialDaysFields::StartDate).get());
+    ASSERT_NO_THROW(specialDay.startDate());
+    // Assumed base year is 2009, so last one falls on the 31th
+    EXPECT_EQ(1u, specialDay.startDate().dayOfMonth());
+    EXPECT_EQ(MonthOfYear::Jul, specialDay.startDate().monthOfYear().value());
+    EXPECT_EQ(15u, specialDay.duration());
+    EXPECT_EQ("CustomDay1", specialDay.specialDayType());
+  }
+
+}
