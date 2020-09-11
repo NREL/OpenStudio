@@ -615,7 +615,7 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool SubSurface_Impl::addShadingControl(const ShadingControl& shadingControl)
+  bool SubSurface_Impl::addShadingControl(ShadingControl& shadingControl)
   {
     bool result = false;
     if (allowShadingControl()){
@@ -625,15 +625,17 @@ namespace detail {
     return result;
   }
 
-  bool SubSurface_Impl::addShadingControls(const std::vector<ShadingControl> &shadingControls)
+  bool SubSurface_Impl::addShadingControls(std::vector<ShadingControl>& shadingControls)
   {
+    bool ok = true;
     SubSurface thisSubSurface = getObject<SubSurface>();
-    for (const ShadingControl& shadingControl : shadingControls) {
-      shadingControl.addSubSurface(thisSubSurface);
+    for (ShadingControl& shadingControl : shadingControls) {
+      ok &= shadingControl.addSubSurface(thisSubSurface);
     }
+    return ok;
   }
 
-  void SubSurface_Impl::removeShadingControl(const ShadingControl& shadingControl)
+  void SubSurface_Impl::removeShadingControl(ShadingControl& shadingControl)
   {
     SubSurface thisSubSurface = getObject<SubSurface>();
     shadingControl.removeSubSurface(thisSubSurface);
@@ -642,7 +644,7 @@ namespace detail {
   void SubSurface_Impl::removeAllShadingControls()
   {
     SubSurface thisSubSurface = getObject<SubSurface>();
-    for (const ShadingControl& shadingControl : shadingControls()) {
+    for (ShadingControl& shadingControl : shadingControls()) {
      shadingControl.removeSubSurface(thisSubSurface);
     }
   }
@@ -1331,17 +1333,17 @@ void SubSurface::autocalculateNumberofVertices() {
   getImpl<detail::SubSurface_Impl>()->autocalculateNumberofVertices();
 }
 
-bool SubSurface::addShadingControl(const ShadingControl& shadingControl)
+bool SubSurface::addShadingControl(ShadingControl& shadingControl)
 {
   return getImpl<detail::SubSurface_Impl>()->addShadingControl(shadingControl);
 }
 
-bool SubSurface::addShadingControls(const std::vector<ShadingControl> &shadingControls)
+bool SubSurface::addShadingControls(std::vector<ShadingControl>& shadingControls)
 {
   return getImpl<detail::SubSurface_Impl>()->addShadingControls(shadingControls);
 }
 
-void SubSurface::removeShadingControl(const ShadingControl& shadingControl)
+void SubSurface::removeShadingControl(ShadingControl& shadingControl)
 {
   getImpl<detail::SubSurface_Impl>()->removeShadingControl(shadingControl);
 }

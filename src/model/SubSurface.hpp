@@ -135,11 +135,11 @@ class MODEL_API SubSurface : public PlanarSurface {
   // Replaced with removeAllShadingControls
   OS_DEPRECATED void resetShadingControl();
 
-  bool addShadingControl(const ShadingControl& shadingControl);
+  bool addShadingControl(ShadingControl& shadingControl);
 
-  bool addShadingControls(const std::vector<ShadingControl> &shadingControls);
+  bool addShadingControls(std::vector<ShadingControl>& shadingControls);
 
-  void removeShadingControl(const ShadingControl& shadingControl);
+  void removeShadingControl(ShadingControl& shadingControl);
 
   void removeAllShadingControls();
 
