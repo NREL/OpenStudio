@@ -66,7 +66,8 @@ A number of API-breaking changes have been implemented in OpenStudio 3.1.0:
 * [#3960](https://github.com/NREL/OpenStudio/pull/3960) - Added support for building the C# bindings via `dotnet` CLI, including on Unix platforms.
 * [#3959](https://github.com/NREL/OpenStudio/pull/3959) - Also included some improvements in the generated C# bindings by reducing build warnings and properly exposing some types via SWIG
     * `ScheduleTypeKey` (which is normally only use by OpenStudio internals in ScheduleTypeRegistry checks) previously mapped to a `std::pair<std::string, std::string>` which was SWIGed in ruby as an Array of strings of size two, but improperly exposed in C#. It now uses a dedicated helper class with two methods `ScheduleTypeKey::className()` and `ScheduleTypeKey::scheduleDisplayName()`
-
+* [#4050](https://github.com/NREL/OpenStudio/pull/4050) - Fix #3921 - some children of RefrigerationSystem can be added several times and produce a fatal when System is removed.
+    * `RefrigerationSystem` will now be enforcing unicity for all children. This was already the case for a few of the child objects such as Case and WalkIns, it is now the case for all objects (`RefrigerationCondenserCascade`, `RefrigerationSubcoolerMechanical` and `RefrigerationSubcoolerLiquidSuction`, etc.). What this means is that setter methods (or add methods in case of a list) will remove the child for any current RefrigerationSystem it is on first.
 
 ## Minor changes:
 
