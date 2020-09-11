@@ -94,10 +94,6 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   bool isSetpointDefaulted() const;
 
-  std::vector<SubSurface> subSurfaces() const;
-
-  unsigned int numberofSubSurfaces() const;
-
   //@}
   /** @name Setters */
   //@{
@@ -119,17 +115,72 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   void resetSetpoint();
 
-  bool addSubSurface(const SubSurface& subSurface);
-
-  void removeSubSurface(const SubSurface& subSurface);
-
-  bool addSubSurfaces(const std::vector<SubSurface> &subSurfaces);
-
-  void removeAllSubSurfaces();
-
   //@}
   /** @name Other */
   //@{
+
+  // Extensible: Surfaces
+  std::vector<SubSurface> subSurfaces() const;
+  unsigned int numberofSubSurfaces() const;
+
+  /*
+   * Get the index of a given SubSurface (1-indexed)
+   */
+  boost::optional<unsigned> subSurfaceIndex(const SubSurface& subSurface) const;
+
+  /*
+   * Add a new SubSurface at the end of all of the existing SubSurfaces
+   */
+  bool addSubSurface(const SubSurface& subSurface);
+
+  /*
+   * Add a new SubSurface to the list which a given index (1 to x).
+   * Internally calls addSubSurface then setSubSurfaceIndex, see remarks there
+   */
+  bool addSubSurface(const SubSurface& subSurface, unsigned index);
+
+  /*
+   * You can shuffle the priority of a given SubSurface after having added it
+   * If index is below 1, it's reset to 1.
+   * If index is greater than the number of SubSurfaces, will reset to last
+   */
+  bool setSubSurfaceIndex(const SubSurface& subSurface, unsigned index);
+
+  /*
+   * Remove the given SubSurface from this object's subsurfaces
+   */
+  bool removeSubSurface(const SubSurface& subSurface);
+
+  /*
+   * Remove the SubSurface at the given index (1-indexed)
+   */
+  bool removeSubSurface(unsigned index);
+
+  // Bulk operations
+
+  /**
+   * Does not clear any subSurfaces already added, just calls calls addSubSurface for each
+   * It will return the global status, but will continue trying if there are problems
+   * (eg: if you make or a vector that has a subSurface from another model, the valid subSurfaces will be
+   * added indeed, but it'll eventually return false)
+   */
+
+  bool addSubSurfaces(const std::vector<SubSurface> &subSurfaces);
+
+
+  /*
+   * Set all SubSurfaces using a vector of SubSurface
+   * Internally calls removeAllSubSurfaces(), then addSubSurfaces
+   * It will return the global status, but will continue trying if there are problems
+   * (eg: if you make or a vector that has a subSurface from another model, the valid subSurface will be
+   * added indeed, but it'll eventually return false)
+   */
+  bool setSubSurfaces(const std::vector<SubSurface> &subSurfaces);
+
+  /*
+   * Removes all SubSurfaces in this object
+   */
+  void removeAllSubSurfaces();
 
   //@}
  protected:

@@ -92,10 +92,6 @@ namespace detail {
 
     bool isSetpointDefaulted() const;
 
-    std::vector<SubSurface> subSurfaces() const;
-
-    unsigned int numberofSubSurfaces() const;
-
     //@}
     /** @name Setters */
     //@{
@@ -114,17 +110,25 @@ namespace detail {
 
     void resetSetpoint();
 
-    bool addSubSurface(const SubSurface& subSurface);
-
-    void removeSubSurface(const SubSurface& subSurface);
-
-    bool addSubSurfaces(const std::vector<SubSurface> &subSurfaces);
-
-    void removeAllSubSurfaces();
-
     //@}
     /** @name Other */
     //@{
+
+    // Extensible: Surfaces
+    std::vector<SubSurface> subSurfaces() const;
+    unsigned numberofSubSurfaces() const;
+    boost::optional<unsigned> subSurfaceIndex(const SubSurface& subSurface) const;
+
+    bool addSubSurface(const SubSurface& subSurface);
+    bool addSubSurface(const SubSurface& subSurface, unsigned index);
+    bool setSubSurfaceIndex(const SubSurface& subSurface, unsigned index);
+    bool removeSubSurface(const SubSurface& subSurface);
+    bool removeSubSurface(unsigned index);
+    // Bulk operations
+    bool addSubSurfaces(const std::vector<SubSurface> &subSurfaces);
+    // Clears existing first, then bulk add
+    bool setSubSurfaces(const std::vector<SubSurface> &subSurfaces);
+    void removeAllSubSurfaces();
 
     //@}
    protected:
