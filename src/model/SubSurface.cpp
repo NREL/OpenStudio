@@ -485,18 +485,6 @@ namespace detail {
     return result;
   }
 
-  boost::optional<ShadingControl> SubSurface_Impl::shadingControl() const
-  {
-    if (numberofShadingControls() > 0) {
-      if (numberofShadingControls() > 1) {
-        LOG(Warn, briefDescription() << " has more than one ShadingControl attached, returning first.");
-      }
-      return shadingControls()[0];
-    } else {
-      return boost::none;
-    }    
-  }
-
   std::vector<ShadingControl> SubSurface_Impl::shadingControls() const
   {
     SubSurface thisSubSurface = getObject<SubSurface>();
@@ -574,7 +562,7 @@ namespace detail {
     if (result){
 
       if (!allowShadingControl()){
-        this->resetShadingControl();
+        this->removeAllShadingControls();
       }
 
       if (!allowWindowPropertyFrameAndDivider()){
@@ -591,7 +579,7 @@ namespace detail {
       boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
       if (adjacentSubSurface){
         adjacentSubSurface->setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
-        adjacentSubSurface->resetShadingControl();
+        adjacentSubSurface->removeAllShadingControls();
       }
     }
     return result;
@@ -625,22 +613,6 @@ namespace detail {
   void SubSurface_Impl::autocalculateViewFactortoGround() {
     bool result = setString(OS_SubSurfaceFields::ViewFactortoGround, "Autocalculate");
     OS_ASSERT(result);
-  }
-
-  bool SubSurface_Impl::setShadingControl(const ShadingControl& shadingControl)
-  {
-    bool result = false;
-    if (allowShadingControl()){
-      SubSurface thisSubSurface = getObject<SubSurface>();
-      resetShadingControl();
-      result = shadingControl.addSubSurface(thisSubSurface);
-    }
-    return result;
-  }
-
-  void SubSurface_Impl::resetShadingControl()
-  {
-    removeAllShadingControls();
   }
 
   bool SubSurface_Impl::addShadingControl(const ShadingControl& shadingControl)
@@ -812,12 +784,12 @@ namespace detail {
 
         result = setPointer(OS_SubSurfaceFields::OutsideBoundaryConditionObject, subSurface.handle());
         OS_ASSERT(result);
-        this->resetShadingControl();
+        this->removeAllShadingControls();
 
         if (!isSameSubSurface){
           result = subSurface.setPointer(OS_SubSurfaceFields::OutsideBoundaryConditionObject, this->handle());
           OS_ASSERT(result);
-          subSurface.resetShadingControl();
+          subSurface.removeAllShadingControls();
         }
       }
     }
@@ -1271,11 +1243,6 @@ bool SubSurface::allowShadingControl() const
   return getImpl<detail::SubSurface_Impl>()->allowShadingControl();
 }
 
-boost::optional<ShadingControl> SubSurface::shadingControl() const
-{
-  return getImpl<detail::SubSurface_Impl>()->shadingControl();
-}
-
 std::vector<ShadingControl> SubSurface::shadingControls() const
 {
   return getImpl<detail::SubSurface_Impl>()->shadingControls();
@@ -1362,14 +1329,6 @@ void SubSurface::resetNumberofVertices() {
 
 void SubSurface::autocalculateNumberofVertices() {
   getImpl<detail::SubSurface_Impl>()->autocalculateNumberofVertices();
-}
-
-bool SubSurface::setShadingControl(const ShadingControl& shadingControl) {
-  return getImpl<detail::SubSurface_Impl>()->setShadingControl(shadingControl);
-}
-
-void SubSurface::resetShadingControl() {
-  getImpl<detail::SubSurface_Impl>()->resetShadingControl();
 }
 
 bool SubSurface::addShadingControl(const ShadingControl& shadingControl)
@@ -1495,6 +1454,31 @@ boost::optional<DaylightingDeviceShelf> SubSurface::addDaylightingDeviceShelf() 
 SubSurface::SubSurface(std::shared_ptr<detail::SubSurface_Impl> impl)
   : PlanarSurface(std::move(impl))
 {}
+
+// DEPRECATED
+boost::optional<ShadingControl> SubSurface::shadingControl() const
+{
+  boost::optional<ShadingControl> result;
+  auto scs = shadingControls();
+  if (scs.size() >= 1) {
+    if (scs.size() > 1) {
+      LOG(Warn, briefDescription() << " has more than one ShadingControl and you're using a deprecated method. Use shadingControls() instead");
+    }
+    result = scs[0];
+  }
+  return result;
+}
+
+// DEPRECATED
+bool SubSurface::setShadingControl(const ShadingControl& shadingControl) {
+  removeAllShadingControls();
+  return addShadingControl(shadingControl);
+}
+
+// DEPRECATED
+void SubSurface::resetShadingControl() {
+  removeAllShadingControls();
+}
 /// @endcond
 
 std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d> >& pattern, const std::vector<Space>& spaces, const boost::optional<ConstructionBase>& construction)

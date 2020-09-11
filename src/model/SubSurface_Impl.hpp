@@ -150,8 +150,6 @@ namespace detail {
 
     bool allowShadingControl() const;
 
-    boost::optional<ShadingControl> shadingControl() const;
-
     std::vector<ShadingControl> shadingControls() const;
 
     unsigned int numberofShadingControls() const;
@@ -185,10 +183,6 @@ namespace detail {
     void resetViewFactortoGround();
 
     void autocalculateViewFactortoGround();
-
-    bool setShadingControl(const ShadingControl& shadingControl);
-
-    void resetShadingControl();
 
     bool addShadingControl(const ShadingControl& shadingControl);
 
