@@ -149,6 +149,13 @@ TEST_F(ModelFixture, ShadingControl_SubSurfaces) {
   subSurfaces.push_back(subSurface2);
   EXPECT_TRUE(shadingControl.addSubSurfaces(subSurfaces));
   EXPECT_EQ(2, shadingControl.numberofSubSurfaces());
+
+  EXPECT_EQ("Sequential", shadingControl.multipleSurfaceControlType());
+  EXPECT_TRUE(shadingControl.setMultipleSurfaceControlType("Group"));
+  EXPECT_EQ("Group", shadingControl.multipleSurfaceControlType());
+  EXPECT_FALSE(shadingControl.setMultipleSurfaceControlType("BADENUM"));
+  EXPECT_EQ("Group", shadingControl.multipleSurfaceControlType());
+
   shadingControl.removeAllSubSurfaces();
   EXPECT_EQ(0, shadingControl.numberofSubSurfaces());
 
