@@ -63,7 +63,8 @@ boost::optional<ModelObject> ReverseTranslator::translateWindowShadingControl( c
   OptionalWorkspaceObject target;
 
   boost::optional<Construction> construction;
-  if (target = workspaceObject.getTarget(WindowShadingControlFields::ConstructionwithShadingName)){
+  target = workspaceObject.getTarget(WindowShadingControlFields::ConstructionwithShadingName);
+  if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
       if (modelObject->optionalCast<Construction>()){
@@ -73,7 +74,8 @@ boost::optional<ModelObject> ReverseTranslator::translateWindowShadingControl( c
   }
 
   boost::optional<ShadingMaterial> shadingMaterial;
-  if (target = workspaceObject.getTarget(WindowShadingControlFields::ShadingDeviceMaterialName)){
+  target = workspaceObject.getTarget(WindowShadingControlFields::ShadingDeviceMaterialName);
+  if (target){
     OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
     if (modelObject){
       if (modelObject->optionalCast<ShadingMaterial>()){
