@@ -609,6 +609,7 @@ namespace detail {
     boost::optional < double > result;
 
     std::string setpointType = "Low";
+    std::string setpointParam = "DOAS Design " + setpointType + " Setpoint Temperature {C}";
 
     // Get the parent ThermalZone
     ThermalZone parZone = thermalZone();
@@ -632,15 +633,16 @@ namespace detail {
 
     // Query the Intialization Summary -> Zone Sizing DOAS Inputs Information table to get
     // the row names that contains information for this component.
-    std::stringstream rowsQuery;
-    rowsQuery << "SELECT RowName ";
-    rowsQuery << "FROM tabulardatawithstrings ";
-    rowsQuery << "WHERE ReportName='Initialization Summary' ";
-    rowsQuery << "AND ReportForString='Entire Facility' ";
-    rowsQuery << "AND TableName = 'Zone Sizing DOAS Inputs' ";
-    rowsQuery << "AND Value='" + sqlName + "'";
+    std::string rowsQuery = R"(
+      SELECT RowName FROM TabularDataWithStrings
+        WHERE ReportName = 'Initialization Summary'
+        AND ReportForString = 'Entire Facility'
+        AND TableName = 'Zone Sizing DOAS Inputs'
+        AND Value = ?;)";
 
-    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery,
+        // Bind args
+        sqlName);
 
     // Warn if the query failed
     if (!rowNames) {
@@ -651,15 +653,15 @@ namespace detail {
     // Query each row of the Intialization Summary -> Zone Sizing DOAS Inputs table
     // that contains this component to get the desired value.
     for (std::string rowName : rowNames.get()) {
-      std::stringstream valQuery;
-      valQuery << "SELECT Value ";
-      valQuery << "FROM tabulardatawithstrings ";
-      valQuery << "WHERE ReportName='Initialization Summary' ";
-      valQuery << "AND ReportForString='Entire Facility' ";
-      valQuery << "AND TableName = 'Zone Sizing DOAS Inputs' ";
-      valQuery << "AND RowName='" << rowName << "' ";
-      valQuery << "AND ColumnName='DOAS Design " << setpointType << " Setpoint Temperature {C}'";
-      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      std::string valQuery = R"(
+        SELECT Value FROM TabularDataWithStrings
+          WHERE ReportName = 'Initialization Summary'
+          AND ReportForString = 'Entire Facility'
+          AND TableName = 'Zone Sizing DOAS Inputs'
+          AND RowName = ?
+          AND ColumnName = ?;)";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery, rowName, setpointParam);
+
       // Check if the query succeeded
       if (val) {
         result = val.get();
@@ -678,6 +680,7 @@ namespace detail {
     boost::optional < double > result;
 
     std::string setpointType = "High";
+    std::string setpointParam = "DOAS Design " + setpointType + " Setpoint Temperature {C}";
 
     // Get the parent ThermalZone
     ThermalZone parZone = thermalZone();
@@ -701,34 +704,35 @@ namespace detail {
 
     // Query the Intialization Summary -> Zone Sizing DOAS Inputs Information table to get
     // the row names that contains information for this component.
-    std::stringstream rowsQuery;
-    rowsQuery << "SELECT RowName ";
-    rowsQuery << "FROM tabulardatawithstrings ";
-    rowsQuery << "WHERE ReportName='Initialization Summary' ";
-    rowsQuery << "AND ReportForString='Entire Facility' ";
-    rowsQuery << "AND TableName = 'Zone Sizing DOAS Inputs' ";
-    rowsQuery << "AND Value='" + sqlName + "'";
+    std::string rowsQuery = R"(
+      SELECT RowName FROM TabularDataWithStrings
+        WHERE ReportName = 'Initialization Summary'
+        AND ReportForString = 'Entire Facility'
+        AND TableName = 'Zone Sizing DOAS Inputs'
+        AND Value = ?;)";
 
-    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery,
+        // Bind args
+        sqlName);
 
     // Warn if the query failed
     if (!rowNames) {
-      LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Zone Sizing DOAS Inputs table.");
+      LOG(Debug, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Zone Sizing DOAS Inputs table.");
       return result;
     }
 
     // Query each row of the Intialization Summary -> Zone Sizing DOAS Inputs table
     // that contains this component to get the desired value.
     for (std::string rowName : rowNames.get()) {
-      std::stringstream valQuery;
-      valQuery << "SELECT Value ";
-      valQuery << "FROM tabulardatawithstrings ";
-      valQuery << "WHERE ReportName='Initialization Summary' ";
-      valQuery << "AND ReportForString='Entire Facility' ";
-      valQuery << "AND TableName = 'Zone Sizing DOAS Inputs' ";
-      valQuery << "AND RowName='" << rowName << "' ";
-      valQuery << "AND ColumnName='DOAS Design " << setpointType << " Setpoint Temperature {C}'";
-      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      std::string valQuery = R"(
+        SELECT Value FROM TabularDataWithStrings
+          WHERE ReportName = 'Initialization Summary'
+          AND ReportForString = 'Entire Facility'
+          AND TableName = 'Zone Sizing DOAS Inputs'
+          AND RowName = ?
+          AND ColumnName = ?;)";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery, rowName, setpointParam);
+
       // Check if the query succeeded
       if (val) {
         result = val.get();
