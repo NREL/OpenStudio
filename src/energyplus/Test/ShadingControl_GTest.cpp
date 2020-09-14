@@ -115,7 +115,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
 
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
 
-  std::vector<WorkspaceObject> objVector(workspace.getObjectsByType(IddObjectType::WindowShadingControl).size());
+  std::vector<WorkspaceObject> objVector(workspace.getObjectsByType(IddObjectType::WindowShadingControl));
   ASSERT_EQ(2u, objVector.size());
   WorkspaceObject wo1(objVector.at(0));
   WorkspaceObject wo2(objVector.at(1));
@@ -190,7 +190,23 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
 
   openstudio::WorkspaceObject epSubSurface = workspace.addObject(idfObject2).get();
 
-  // TODO
+  openstudio::IdfObject idfObject3(openstudio::IddObjectType::WindowMaterial_Shade);
+  idfObject3.setString(WindowMaterial_ShadeFields::Name, "Shade 1");
+
+  openstudio::IdfObject idfObject4(openstudio::IddObjectType::WindowShadingControl);
+  idfObject4.setString(WindowShadingControlFields::Name, "Shading Control 1");
+  idfObject4.setString(WindowShadingControlFields::ZoneName, "");
+  idfObject4.setString(WindowShadingControlFields::ShadingControlType, "AlwaysOn");
+  idfObject4.setInt(WindowShadingControlFields::ShadingControlSequenceNumber, 1);
+  idfObject4.setString(WindowShadingControlFields::ShadingType, "InteriorShade");
+  idfObject4.setString(WindowShadingControlFields::ShadingDeviceMaterialName, "Shade 1");
+  idfObject4.setDouble(WindowShadingControlFields::Setpoint, 100);
+  idfObject4.setString(WindowShadingControlFields::GlareControlIsActive, "No");
+  idfObject4.setString(WindowShadingControlFields::MultipleSurfaceControlType, "Sequential");
+  IdfExtensibleGroup group9 = idfObject4.pushExtensibleGroup(); // sub surface
+  group9.setString(0, "Sub Surface 1");
+
+  openstudio::WorkspaceObject epWindowShadingControl = workspace.addObject(idfObject4).get();
 
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
@@ -198,7 +214,20 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
 
   EXPECT_EQ(1u, model.getModelObjects<Surface>().size());
   EXPECT_EQ(1u, model.getModelObjects<SubSurface>().size());
-  EXPECT_EQ(1u, model.getModelObjects<ShadingControl>().size());
 
-  // TODO
+  std::vector<ShadingControl> shadingControls = model.getModelObjects<ShadingControl>();
+  ASSERT_EQ(1u, shadingControls.size());
+  ShadingControl shadingControl = shadingControls[0];
+  EXPECT_EQ(1, shadingControl.numberofSubSurfaces());
+  EXPECT_EQ("Sequential", shadingControl.multipleSurfaceControlType());
+
+  std::vector<SubSurface> subSurfaces = model.getModelObjects<SubSurface>();
+  ASSERT_EQ(1u, subSurfaces.size());
+  SubSurface subSurface = subSurfaces[0];
+  EXPECT_EQ("Sub Surface 1", subSurface.name().get());
+
+  ASSERT_EQ(1, subSurface.numberofShadingControls());
+  ASSERT_TRUE(subSurface.shadingControl());
+  ShadingControl shadingControl2 = subSurface.shadingControl().get();
+  EXPECT_EQ(shadingControl, shadingControl2);
 }
