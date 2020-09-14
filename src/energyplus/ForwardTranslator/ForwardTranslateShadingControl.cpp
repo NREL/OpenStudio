@@ -160,6 +160,8 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl(model::Sha
 
   //idfObject.setDouble(WindowShadingControlFields::Setpoint2, 0.0);
 
+  idfObject.setString(WindowShadingControlFields::MultipleSurfaceControlType, modelObject.multipleSurfaceControlType());
+
   idfObject.clearExtensibleGroups();
   for (const SubSurface& subSurface : subSurfaces) {
     IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
