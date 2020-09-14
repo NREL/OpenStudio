@@ -1069,6 +1069,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     modelObject = translateWindowPropertyFrameAndDivider(workspaceObject);
     break;
   }
+  case openstudio::IddObjectType::WindowShadingControl:
+  {
+    modelObject = translateWindowShadingControl(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::Zone:
     {
       modelObject = translateZone(workspaceObject);

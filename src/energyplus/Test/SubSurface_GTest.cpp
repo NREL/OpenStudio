@@ -128,5 +128,3 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_SubSurface)
   ASSERT_TRUE(subSurfaceObject.getTarget(FenestrationSurface_DetailedFields::FrameandDividerName));
   EXPECT_EQ(frameObject.handle(), subSurfaceObject.getTarget(FenestrationSurface_DetailedFields::FrameandDividerName)->handle());
 }
-
-
