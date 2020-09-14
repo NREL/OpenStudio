@@ -34,9 +34,9 @@
 #include "../ShadingControl.hpp"
 #include "../ShadingControl_Impl.hpp"
 #include "../Construction.hpp"
-#include "../Construction_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../Blind.hpp"
+#include "../Blind_Impl.hpp"
 #include "../SimpleGlazing.hpp"
 #include "../SubSurface.hpp"
 
@@ -217,7 +217,7 @@ TEST_F(ModelFixture, ShadingControl_Clone) {
     EXPECT_EQ(2u, shadingControl.numExtensibleGroups());
     EXPECT_EQ(0u, shadingControlClone.numberofSubSurfaces());
     EXPECT_EQ(0u, shadingControlClone.numExtensibleGroups());
-    EXPECT_EQ(1u, model2.getConcreteModelObjects<Construction>().size());
+    EXPECT_EQ(1u, model2.getConcreteModelObjects<Blind>().size());
     EXPECT_TRUE(shadingControlClone.shadingMaterial());
     EXPECT_NE(shadingControl.shadingMaterial().get(), shadingControlClone.shadingMaterial().get());
   }
