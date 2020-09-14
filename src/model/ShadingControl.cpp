@@ -96,6 +96,16 @@ namespace detail {
     return ShadingControl::iddObjectType();
   }
 
+  ModelObject ShadingControl_Impl::clone(Model model) const {
+    ShadingControl scClone = ResourceObject_Impl::clone(model).cast<ShadingControl>();
+
+    if (model != this->model()) {
+      scClone.removeAllSubSurfaces();
+    }
+
+    return scClone;
+  }
+
   boost::optional<Construction> ShadingControl_Impl::construction() const
   {
     return getObject<ShadingControl>().getModelObjectTarget<Construction>(OS_ShadingControlFields::ConstructionwithShadingName);
