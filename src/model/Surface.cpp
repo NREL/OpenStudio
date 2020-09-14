@@ -69,6 +69,8 @@
 #include "AirflowNetworkHorizontalOpening_Impl.hpp"
 #include "FoundationKiva.hpp"
 #include "FoundationKiva_Impl.hpp"
+#include "FoundationKivaSettings.hpp"
+#include "FoundationKivaSettings_Impl.hpp"
 #include "SurfacePropertyExposedFoundationPerimeter.hpp"
 #include "SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
 
@@ -187,8 +189,8 @@ namespace detail {
     auto foundation = adjacentFoundation();
     if (foundation)
     {
-        auto foundationClone = foundation->clone(model).cast<FoundationKiva>();
-        newParentAsModelObject.cast<Surface>().setAdjacentFoundation(foundationClone);
+      auto foundationClone = foundation->clone(model).cast<FoundationKiva>();
+      newParentAsModelObject.cast<Surface>().setAdjacentFoundation(foundationClone);
     }
 
     return newParentAsModelObject;
@@ -2442,4 +2444,3 @@ boost::optional<AirflowNetworkSurface> Surface::airflowNetworkSurface() const
 
 } // model
 } // openstudio
-
