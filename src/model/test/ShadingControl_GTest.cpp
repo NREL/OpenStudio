@@ -32,9 +32,11 @@
 #include "ModelFixture.hpp"
 
 #include "../ShadingControl.hpp"
+#include "../ShadingControl_Impl.hpp"
 #include "../Construction.hpp"
 #include "../Schedule.hpp"
 #include "../Blind.hpp"
+#include "../Blind_Impl.hpp"
 #include "../SimpleGlazing.hpp"
 #include "../SubSurface.hpp"
 
@@ -138,17 +140,103 @@ TEST_F(ModelFixture, ShadingControl_SubSurfaces) {
   vertices2.push_back(Point3d(1,0,1));
   SubSurface subSurface2(vertices2, model);
 
-  EXPECT_EQ(0, shadingControl.numberofSubSurfaces());
+  EXPECT_EQ(0u, shadingControl.numberofSubSurfaces());
   EXPECT_TRUE(shadingControl.addSubSurface(subSurface1));
-  EXPECT_EQ(1, shadingControl.numberofSubSurfaces());
+  EXPECT_EQ(1u, shadingControl.numberofSubSurfaces());
   shadingControl.removeSubSurface(subSurface1);
-  EXPECT_EQ(0, shadingControl.numberofSubSurfaces());
+  EXPECT_EQ(0u, shadingControl.numberofSubSurfaces());
 
   std::vector<SubSurface> subSurfaces;
   subSurfaces.push_back(subSurface1);
   subSurfaces.push_back(subSurface2);
   EXPECT_TRUE(shadingControl.addSubSurfaces(subSurfaces));
-  EXPECT_EQ(2, shadingControl.numberofSubSurfaces());
+  EXPECT_EQ(2u, shadingControl.numberofSubSurfaces());
+
+  EXPECT_EQ("Sequential", shadingControl.multipleSurfaceControlType());
+  EXPECT_TRUE(shadingControl.setMultipleSurfaceControlType("Group"));
+  EXPECT_EQ("Group", shadingControl.multipleSurfaceControlType());
+  EXPECT_FALSE(shadingControl.setMultipleSurfaceControlType("BADENUM"));
+  EXPECT_EQ("Group", shadingControl.multipleSurfaceControlType());
+
   shadingControl.removeAllSubSurfaces();
-  EXPECT_EQ(0, shadingControl.numberofSubSurfaces());
+  EXPECT_EQ(0u, shadingControl.numberofSubSurfaces());
+
+  EXPECT_TRUE(shadingControl.addSubSurfaces(subSurfaces));
+  EXPECT_EQ(2u, shadingControl.numberofSubSurfaces());
+  subSurface1.remove();
+  EXPECT_EQ(1u, shadingControl.numberofSubSurfaces());
+  EXPECT_EQ(1u, shadingControl.numExtensibleGroups());
+  ASSERT_TRUE(shadingControl.subSurfaceIndex(subSurface2));
+  EXPECT_EQ(1u, shadingControl.subSurfaceIndex(subSurface2).get());
+}
+
+TEST_F(ModelFixture, ShadingControl_Clone) {
+  Model model;
+
+  Blind blind(model);
+  ShadingControl shadingControl(blind);
+
+  std::vector<Point3d> vertices1;
+  vertices1.push_back(Point3d(0,0,1));
+  vertices1.push_back(Point3d(0,0,0));
+  vertices1.push_back(Point3d(1,0,0));
+  vertices1.push_back(Point3d(1,0,1));
+  SubSurface subSurface1(vertices1, model);
+
+  std::vector<Point3d> vertices2;
+  vertices2.push_back(Point3d(0,0,1));
+  vertices2.push_back(Point3d(0,0,0));
+  vertices2.push_back(Point3d(1,0,0));
+  vertices2.push_back(Point3d(1,0,1));
+  SubSurface subSurface2(vertices2, model);
+
+  shadingControl.setSubSurfaces({subSurface1, subSurface2});
+  EXPECT_EQ(2, shadingControl.numberofSubSurfaces());
+
+  // Clone same model
+  {
+    // TODO: what is the expected behavior here? Should the clone reference the same subSurfaces as the original?
+    ShadingControl shadingControlClone = shadingControl.clone(model).cast<ShadingControl>();
+    ASSERT_TRUE(shadingControlClone.shadingMaterial());
+    EXPECT_EQ(shadingControl.shadingMaterial()->handle(), shadingControlClone.shadingMaterial()->handle());
+    EXPECT_EQ(2u, shadingControl.numberofSubSurfaces());
+    EXPECT_EQ(2u, shadingControl.numExtensibleGroups());
+    EXPECT_EQ(2u, shadingControlClone.numberofSubSurfaces());
+    EXPECT_EQ(2u, shadingControlClone.numExtensibleGroups());
+    EXPECT_EQ(shadingControl.subSurfaces(), shadingControlClone.subSurfaces());
+
+  }
+
+  // Clone other model
+  {
+    Model model2;
+
+    // TODO: what is the expected behavior here? It will clone the Construction and ShadingMaterial (ResourceObject...) referenced here, but not the subSurfaces
+    ShadingControl shadingControlClone = shadingControl.clone(model2).cast<ShadingControl>();
+    EXPECT_EQ(2u, shadingControl.numberofSubSurfaces());
+    EXPECT_EQ(2u, shadingControl.numExtensibleGroups());
+    EXPECT_EQ(0u, shadingControlClone.numberofSubSurfaces());
+    EXPECT_EQ(0u, shadingControlClone.numExtensibleGroups());
+    EXPECT_EQ(1u, model2.getConcreteModelObjects<Blind>().size());
+    EXPECT_TRUE(shadingControlClone.shadingMaterial());
+    EXPECT_NE(shadingControl.shadingMaterial().get(), shadingControlClone.shadingMaterial().get());
+  }
+}
+
+TEST_F(ModelFixture, ShadingControl_RemoveRequiredObject) {
+  Model model;
+
+  Blind blind(model);
+  ShadingControl shadingControl(blind);
+
+  blind.remove();
+
+  EXPECT_FALSE(shadingControl.shadingMaterial());
+  EXPECT_FALSE(shadingControl.construction());
+
+  // TODO: You're now in a broken, and unfixable state: you neither have a Construction nor a ShadingMaterial,
+  // and the model API has no setters to help you fix the state (setShadingMaterial / setConstruction)
+  // This WILL get forward translated anyways. We need to determine whether we want to add setters in the Model API or have the FT do a check and not
+  // translate the object if it doesn't have either. Throwing here so we do not forget to do it
+  ASSERT_TRUE(false);
 }

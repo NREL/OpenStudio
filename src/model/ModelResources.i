@@ -26,6 +26,12 @@
   %ignore openstudio::model::SpaceLoadDefinition::instances;
   %ignore openstudio::model::ExteriorLoadDefinition::instances;
   %ignore openstudio::model::ShadingControl::subSurfaces;
+  %ignore openstudio::model::ShadingControl::subSurfaceIndex;
+  %ignore openstudio::model::ShadingControl::addSubSurface;
+  %ignore openstudio::model::ShadingControl::setSubSurfaceIndex;
+  %ignore openstudio::model::ShadingControl::removeSubSurface(const SubSurface& subSurface); // The unsigned index overload is fine
+  %ignore openstudio::model::ShadingControl::addSubSurfaces;
+  %ignore openstudio::model::ShadingControl::setSubSurfaces;
 
   // TODO: why?
   // ignore schedule type
@@ -47,6 +53,8 @@ namespace model {
 
 // forward declarations
 class ShadingControl;
+%feature("valuewrapper") SubSurface;
+class SubSurface;
 
 }
 }

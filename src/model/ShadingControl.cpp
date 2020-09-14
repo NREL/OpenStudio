@@ -96,6 +96,16 @@ namespace detail {
     return ShadingControl::iddObjectType();
   }
 
+  ModelObject ShadingControl_Impl::clone(Model model) const {
+    ShadingControl scClone = ResourceObject_Impl::clone(model).cast<ShadingControl>();
+
+    if (model != this->model()) {
+      scClone.removeAllSubSurfaces();
+    }
+
+    return scClone;
+  }
+
   boost::optional<Construction> ShadingControl_Impl::construction() const
   {
     return getObject<ShadingControl>().getModelObjectTarget<Construction>(OS_ShadingControlFields::ConstructionwithShadingName);
@@ -265,6 +275,13 @@ namespace detail {
 
   bool ShadingControl_Impl::addSubSurface(const SubSurface& subSurface)
   {
+    // Check if subSurface already exists
+    boost::optional<unsigned> _existingIndex = subSurfaceIndex(subSurface);
+    if (_existingIndex) {
+      LOG(Warn, "For " << briefDescription() << ", SubSurface already exists.");
+      return true;
+    }
+
     bool result;
 
     WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
@@ -317,8 +334,6 @@ namespace detail {
     return ok;
   }
 
-
-
   bool ShadingControl_Impl::removeSubSurface(const SubSurface& subSurface)
   {
     boost::optional<unsigned> idx = subSurfaceIndex(subSurface);
@@ -346,7 +361,7 @@ namespace detail {
     for (const SubSurface& subSurface : subSurfaces) {
       ok &= addSubSurface(subSurface);
     }
-    return ok;;
+    return ok;
   }
 
   void ShadingControl_Impl::removeAllSubSurfaces()

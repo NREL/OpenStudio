@@ -1255,7 +1255,15 @@ TEST_F(ModelFixture, SubSurface_ShadingControls)
   EXPECT_EQ(0, subSurface.numberofShadingControls());
   EXPECT_TRUE(subSurface.addShadingControl(shadingControl1));
   EXPECT_EQ(1, subSurface.numberofShadingControls());
+  EXPECT_TRUE(subSurface.addShadingControl(shadingControl1));
+  EXPECT_EQ(1, subSurface.numberofShadingControls());
+  EXPECT_TRUE(subSurface.addShadingControl(shadingControl2));
+  EXPECT_EQ(2, subSurface.numberofShadingControls());
   subSurface.removeShadingControl(shadingControl1);
+  EXPECT_EQ(1, subSurface.numberofShadingControls());
+  subSurface.removeShadingControl(shadingControl1);
+  EXPECT_EQ(1, subSurface.numberofShadingControls());
+  subSurface.removeShadingControl(shadingControl2);
   EXPECT_EQ(0, subSurface.numberofShadingControls());
 
   std::vector<ShadingControl> shadingControls;
@@ -1269,12 +1277,14 @@ TEST_F(ModelFixture, SubSurface_ShadingControls)
   // Test deprecated methods
   subSurface.addShadingControls(shadingControls);
   EXPECT_EQ(2, subSurface.numberofShadingControls());
-  EXPECT_FALSE(subSurface.shadingControl());
-  EXPECT_TRUE(subSurface.setShadingControl(shadingControl1));
+  ASSERT_TRUE(subSurface.shadingControl());
+  // EXPECT_EQ(subSurface.shadingControl()->handle(), shadingControl1.handle()); // no guarantee that it's shadingControl1
+  EXPECT_TRUE(subSurface.setShadingControl(shadingControl2));
   EXPECT_EQ(1, subSurface.numberofShadingControls());
-  EXPECT_TRUE(subSurface.shadingControl());
+  ASSERT_TRUE(subSurface.shadingControl());
+  EXPECT_EQ(subSurface.shadingControl().get(), shadingControl2);
   EXPECT_TRUE(subSurface.addShadingControl(shadingControl2));
-  EXPECT_EQ(2, subSurface.numberofShadingControls());
+  EXPECT_EQ(1, subSurface.numberofShadingControls());
   subSurface.resetShadingControl();
   EXPECT_EQ(0, subSurface.numberofShadingControls());
 }

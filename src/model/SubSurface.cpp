@@ -147,6 +147,11 @@ namespace detail {
       this->resetAdjacentSubSurface();
     }
 
+    // Remove it from the extensible groups in ShadingControl(s)
+    for (auto& sc: shadingControls()) {
+      sc.removeSubSurface(this->getObject<SubSurface>());
+    }
+
     return ParentObject_Impl::remove();
   }
 
