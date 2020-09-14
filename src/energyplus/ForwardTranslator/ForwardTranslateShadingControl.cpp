@@ -118,8 +118,6 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl(model::Sha
     LOG(Error, modelObject.briefDescription() << " has unknown Shading Control Sequence Number");
   }
 
-  idfObject.setString(WindowShadingControlFields::MultipleSurfaceControlType, "Group");
-
   std::string shadingType = modelObject.shadingType();
   if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)) {
     idfObject.setString(WindowShadingControlFields::ShadingType, "InteriorBlind");
