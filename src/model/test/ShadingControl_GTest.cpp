@@ -197,8 +197,8 @@ TEST_F(ModelFixture, ShadingControl_Clone) {
   {
     // TODO: what is the expected behavior here? Should the clone reference the same subSurfaces as the original?
     ShadingControl shadingControlClone = shadingControl.clone(model).cast<ShadingControl>();
-    ASSERT_TRUE(shadingControlClone.construction());
-    EXPECT_EQ(shadingControl.construction()->handle(), shadingControlClone.construction()->handle());
+    ASSERT_TRUE(shadingControlClone.shadingMaterial());
+    EXPECT_EQ(shadingControl.shadingMaterial()->handle(), shadingControlClone.shadingMaterial()->handle());
     EXPECT_EQ(2u, shadingControl.numberofSubSurfaces());
     EXPECT_EQ(2u, shadingControl.numExtensibleGroups());
     EXPECT_EQ(2u, shadingControlClone.numberofSubSurfaces());
@@ -211,14 +211,14 @@ TEST_F(ModelFixture, ShadingControl_Clone) {
   {
     Model model2;
 
-    // TODO: what is the expected behavior here? It will clone the Construction (ResourceObject...) referenced here, but not the subSurfaces
+    // TODO: what is the expected behavior here? It will clone the Construction and ShadingMaterial (ResourceObject...) referenced here, but not the subSurfaces
     ShadingControl shadingControlClone = shadingControl.clone(model2).cast<ShadingControl>();
     EXPECT_EQ(2u, shadingControl.numberofSubSurfaces());
     EXPECT_EQ(2u, shadingControl.numExtensibleGroups());
     EXPECT_EQ(0u, shadingControlClone.numberofSubSurfaces());
     EXPECT_EQ(0u, shadingControlClone.numExtensibleGroups());
     EXPECT_EQ(1u, model2.getConcreteModelObjects<Construction>().size());
-    EXPECT_TRUE(shadingControlClone.construction());
-    EXPECT_NE(shadingControl.construction().get(), shadingControlClone.construction().get());
+    EXPECT_TRUE(shadingControlClone.shadingMaterial());
+    EXPECT_NE(shadingControl.shadingMaterial().get(), shadingControlClone.shadingMaterial().get());
   }
 }
