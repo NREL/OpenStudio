@@ -89,58 +89,65 @@ boost::optional<ModelObject> ReverseTranslator::translateWindowShadingControl( c
     openstudio::model::ShadingControl shadingControl(*shadingMaterial);
   }
 
-  OptionalString s;
-  OptionalDouble d;
+  if (shadingControl) {
 
-  s = workspaceObject.name();
-  if(s){
-    shadingControl->setName(*s);
-  }
+    OptionalString s;
+    OptionalDouble d;
 
-  s = workspaceObject.getString(WindowShadingControlFields::ShadingType);
-  if(s){
-    if(istringEqual("InteriorBlind", *s)){
-      shadingControl->setShadingType("InteriorDaylightRedirectionDevice");
-    } else {
-      shadingControl->setShadingType(*s);
+    s = workspaceObject.name();
+    if(s){
+      shadingControl->setName(*s);
     }
-  }
 
-  s = workspaceObject.getString(WindowShadingControlFields::ShadingControlType);
-  if(s){
-    shadingControl->setShadingControlType(*s);
-  }
-
-  d = workspaceObject.getDouble(WindowShadingControlFields::Setpoint);
-  if(s){
-    shadingControl->setSetpoint(*d);
-  }
-
-  if ((target = workspaceObject.getTarget(WindowShadingControlFields::ScheduleName))){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<Schedule>()){
-        shadingControl->setSchedule(modelObject->cast<Schedule>());
+    s = workspaceObject.getString(WindowShadingControlFields::ShadingType);
+    if(s){
+      if(istringEqual("InteriorBlind", *s)){
+        shadingControl->setShadingType("InteriorDaylightRedirectionDevice");
+      } else {
+        shadingControl->setShadingType(*s);
       }
     }
-  }
 
-  s = workspaceObject.getString(WindowShadingControlFields::MultipleSurfaceControlType);
-  if(s){
-    shadingControl->setMultipleSurfaceControlType(*s);
-  }
+    s = workspaceObject.getString(WindowShadingControlFields::ShadingControlType);
+    if(s){
+      shadingControl->setShadingControlType(*s);
+    }
 
-  // get extensible groups for sub surfaces
-  for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
-    WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
-    OptionalWorkspaceObject target = workspaceGroup.getTarget(WindowShadingControlExtensibleFields::FenestrationSurfaceName);
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    
-    // add the sub surface
-    shadingControl->addSubSurface(modelObject->cast<SubSurface>());
-  }
+    if ((target = workspaceObject.getTarget(WindowShadingControlFields::ScheduleName))){
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject){
+        if (modelObject->optionalCast<Schedule>()){
+          shadingControl->setSchedule(modelObject->cast<Schedule>());
+        }
+      }
+    }
 
-  return shadingControl.get();
+    d = workspaceObject.getDouble(WindowShadingControlFields::Setpoint);
+    if(s){
+      shadingControl->setSetpoint(*d);
+    }
+
+    s = workspaceObject.getString(WindowShadingControlFields::MultipleSurfaceControlType);
+    if(s){
+      shadingControl->setMultipleSurfaceControlType(*s);
+    }
+
+    // get extensible groups for sub surfaces
+    for (const IdfExtensibleGroup& idfGroup : workspaceObject.extensibleGroups()){
+      WorkspaceExtensibleGroup workspaceGroup = idfGroup.cast<WorkspaceExtensibleGroup>();
+      OptionalWorkspaceObject target = workspaceGroup.getTarget(WindowShadingControlExtensibleFields::FenestrationSurfaceName);
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+
+      // add the sub surface
+      shadingControl->addSubSurface(modelObject->cast<SubSurface>());
+    }
+
+    return shadingControl.get();
+  } else {
+    LOG(Error, "Unknown error translating " << workspaceObject.briefDescription());
+
+    return boost::none;
+  }
 }
 
 } // energyplus

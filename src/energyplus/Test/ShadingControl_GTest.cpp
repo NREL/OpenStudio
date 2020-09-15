@@ -47,6 +47,8 @@
 #include "../../model/ShadingControl_Impl.hpp"
 #include "../../model/Blind.hpp"
 #include "../../model/Blind_Impl.hpp"
+#include "../../model/ScheduleConstant.hpp"
+#include "../../model/ScheduleConstant_Impl.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -61,6 +63,7 @@
 #include <utilities/idd/FenestrationSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/WindowShadingControl_FieldEnums.hxx>
+#include <utilities/idd/WindowMaterial_Blind_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -103,6 +106,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
 
   Blind blind1(model);
   ShadingControl shadingControl1(blind1);
+  shadingControl1.setMultipleSurfaceControlType("Group");
   subSurface.addShadingControl(shadingControl1);
 
   Blind blind2(model);
@@ -120,7 +124,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
   WorkspaceObject wo1(objVector.at(0));
   WorkspaceObject wo2(objVector.at(1));
 
-  EXPECT_EQ("Sequential", wo1.getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
+  EXPECT_EQ("Group", wo1.getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
   EXPECT_EQ("Group", wo2.getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
 
   ASSERT_EQ(1u, wo1.extensibleGroups().size());
@@ -131,11 +135,16 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
 {
   openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
 
+  openstudio::IdfObject idf_zone(openstudio::IddObjectType::Zone);
+  idf_zone.setName("Thermal Zone 1");
+
+  openstudio::WorkspaceObject epZone = workspace.addObject(idf_zone).get();
+
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::BuildingSurface_Detailed);
   idfObject1.setString(BuildingSurface_DetailedFields::Name, "Surface 1");
   idfObject1.setString(BuildingSurface_DetailedFields::SurfaceType, "Wall");
   idfObject1.setString(BuildingSurface_DetailedFields::ConstructionName, "");
-  idfObject1.setString(BuildingSurface_DetailedFields::ZoneName, "");
+  idfObject1.setString(BuildingSurface_DetailedFields::ZoneName, "Thermal Zone 1");
   idfObject1.setString(BuildingSurface_DetailedFields::OutsideBoundaryCondition, "Outdoors");
   idfObject1.setString(BuildingSurface_DetailedFields::OutsideBoundaryConditionObject, "");
   idfObject1.setString(BuildingSurface_DetailedFields::SunExposure, "SunExposed");
@@ -190,23 +199,43 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
 
   openstudio::WorkspaceObject epSubSurface = workspace.addObject(idfObject2).get();
 
-  openstudio::IdfObject idfObject3(openstudio::IddObjectType::WindowMaterial_Shade);
-  idfObject3.setString(WindowMaterial_ShadeFields::Name, "Shade 1");
+  openstudio::IdfObject idfObject3(openstudio::IddObjectType::WindowMaterial_Blind);
+  idfObject3.setString(WindowMaterial_BlindFields::Name, "Shade 1");
 
-  openstudio::IdfObject idfObject4(openstudio::IddObjectType::WindowShadingControl);
-  idfObject4.setString(WindowShadingControlFields::Name, "Shading Control 1");
-  idfObject4.setString(WindowShadingControlFields::ZoneName, "");
-  idfObject4.setString(WindowShadingControlFields::ShadingControlType, "AlwaysOn");
-  idfObject4.setInt(WindowShadingControlFields::ShadingControlSequenceNumber, 1);
-  idfObject4.setString(WindowShadingControlFields::ShadingType, "InteriorShade");
-  idfObject4.setString(WindowShadingControlFields::ShadingDeviceMaterialName, "Shade 1");
-  idfObject4.setDouble(WindowShadingControlFields::Setpoint, 100);
-  idfObject4.setString(WindowShadingControlFields::GlareControlIsActive, "No");
-  idfObject4.setString(WindowShadingControlFields::MultipleSurfaceControlType, "Sequential");
-  IdfExtensibleGroup group9 = idfObject4.pushExtensibleGroup(); // sub surface
+  openstudio::WorkspaceObject epBlind = workspace.addObject(idfObject3).get();
+
+  openstudio::IdfObject idfObject4(openstudio::IddObjectType::Schedule_Constant);
+  idfObject4.setString(0, "Schedule 1");
+  idfObject4.setString(1, "0.5");
+
+  openstudio::WorkspaceObject epSchedule = workspace.addObject(idfObject4).get();
+
+  openstudio::IdfObject idfObject5(openstudio::IddObjectType::WindowShadingControl);
+  idfObject5.setString(WindowShadingControlFields::Name, "Shading Control 1");
+  idfObject5.setString(WindowShadingControlFields::ZoneName, "");
+  idfObject5.setString(WindowShadingControlFields::ShadingControlSequenceNumber, "1");
+  idfObject5.setString(WindowShadingControlFields::ShadingType, "InteriorBlind");
+  idfObject5.setString(WindowShadingControlFields::ConstructionwithShadingName, "");
+  idfObject5.setString(WindowShadingControlFields::ShadingControlType, "OnIfScheduleAllows");
+  idfObject5.setString(WindowShadingControlFields::ScheduleName, "Schedule 1");
+  idfObject5.setString(WindowShadingControlFields::Setpoint, "100");
+  idfObject5.setString(WindowShadingControlFields::ShadingControlIsScheduled, "Yes");
+  idfObject5.setString(WindowShadingControlFields::GlareControlIsActive, "No");
+  idfObject5.setString(WindowShadingControlFields::ShadingDeviceMaterialName, "Shade 1");
+  idfObject5.setString(WindowShadingControlFields::TypeofSlatAngleControlforBlinds, "");
+  idfObject5.setString(WindowShadingControlFields::SlatAngleScheduleName, "");
+  idfObject5.setString(WindowShadingControlFields::Setpoint2, "");
+  idfObject5.setString(WindowShadingControlFields::MultipleSurfaceControlType, "Sequential");
+  IdfExtensibleGroup group9 = idfObject5.pushExtensibleGroup(); // sub surface
   group9.setString(0, "Sub Surface 1");
 
-  openstudio::WorkspaceObject epWindowShadingControl = workspace.addObject(idfObject4).get();
+  openstudio::WorkspaceObject epWindowShadingControl = workspace.addObject(idfObject5).get();
+
+  std::vector<WorkspaceObject> objVector(workspace.getObjectsByType(IddObjectType::WindowShadingControl));
+  ASSERT_EQ(1u, objVector.size());
+  WorkspaceObject wo1(objVector.at(0));
+  EXPECT_EQ("Sequential", wo1.getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
+  ASSERT_EQ(1u, wo1.extensibleGroups().size());
 
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
@@ -214,6 +243,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
 
   EXPECT_EQ(1u, model.getModelObjects<Surface>().size());
   EXPECT_EQ(1u, model.getModelObjects<SubSurface>().size());
+  EXPECT_EQ(1u, model.getModelObjects<ScheduleConstant>().size());
 
   std::vector<ShadingControl> shadingControls = model.getModelObjects<ShadingControl>();
   ASSERT_EQ(1u, shadingControls.size());
