@@ -135,13 +135,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
   ShadingControl shadingControl1(blind1);
   EXPECT_TRUE(shadingControl1.setShadingType("ExteriorBlind"));
 
-  EXPECT_TRUE(shadingControl1.setShadingControlType("OnNightIfLowOutdoorTempAndOffDay"));
+  EXPECT_TRUE(shadingControl1.setShadingControlType("OnIfHighZoneAirTempAndHighSolarOnWindow"));
   EXPECT_TRUE(shadingControl1.isControlTypeValueAllowingSchedule());
   EXPECT_TRUE(shadingControl1.isControlTypeValueNeedingSetpoint1());
+  EXPECT_TRUE(shadingControl1.isControlTypeValueNeedingSetpoint2());
 
   ScheduleConstant shadingControl1Schedule(model);
   EXPECT_TRUE(shadingControl1.setSchedule(shadingControl1Schedule));
-  EXPECT_TRUE(shadingControl1.setSetpoint(3.0));
+  EXPECT_TRUE(shadingControl1.setSetpoint(25.0));
+  EXPECT_TRUE(shadingControl1.setSetpoint2(500.0));
   EXPECT_TRUE(shadingControl1.setMultipleSurfaceControlType("Sequential"));
   EXPECT_TRUE(shadingControl1.addSubSurface(subSurfaceA));
   // Convenience method that calls ShadingControl::addSubSurface()
@@ -176,8 +178,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
       EXPECT_EQ(1, _wo->getInt(WindowShadingControlFields::ShadingControlSequenceNumber, false).get());
       EXPECT_EQ("ExteriorBlind", _wo->getString(WindowShadingControlFields::ShadingType, false, true).get());
       EXPECT_FALSE(_wo->getString(WindowShadingControlFields::ConstructionwithShadingName, false, true));
-      EXPECT_EQ("OnNightIfLowOutdoorTempAndOffDay", _wo->getString(WindowShadingControlFields::ShadingControlType, false, true).get());
-      EXPECT_EQ(3.0, _wo->getDouble(WindowShadingControlFields::Setpoint, false).get());
+      EXPECT_EQ("OnIfHighZoneAirTempAndHighSolarOnWindow", _wo->getString(WindowShadingControlFields::ShadingControlType, false, true).get());
+      EXPECT_EQ(25.0, _wo->getDouble(WindowShadingControlFields::Setpoint, false).get());
+      EXPECT_EQ(500.0, _wo->getDouble(WindowShadingControlFields::Setpoint2, false).get());
 
       EXPECT_EQ(shadingControl1Schedule.nameString(), _wo->getString(WindowShadingControlFields::ScheduleName, false, true).get());
       EXPECT_EQ("Yes", _wo->getString(WindowShadingControlFields::ShadingControlIsScheduled, false, true).get());
@@ -185,7 +188,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
       EXPECT_EQ("No", _wo->getString(WindowShadingControlFields::GlareControlIsActive, false, true).get());
       EXPECT_EQ(blind1.nameString(), _wo->getString(WindowShadingControlFields::ShadingDeviceMaterialName, false, true).get());
       EXPECT_FALSE(_wo->getString(WindowShadingControlFields::SlatAngleScheduleName, false, true));
-      EXPECT_FALSE(_wo->getString(WindowShadingControlFields::Setpoint2, false, true));
       EXPECT_FALSE(_wo->getString(WindowShadingControlFields::DaylightingControlObjectName, false, true));
       EXPECT_EQ("Sequential", _wo->getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
       ASSERT_EQ(2u, _wo->extensibleGroups().size());

@@ -94,7 +94,9 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   boost::optional<double> setpoint() const;
 
-  bool isSetpointDefaulted() const;
+  bool isSetpointDefaulted() const; // TODO: This makes little sense. Based on the shadingControlType, it's basically required. There's a default harcoded only for OnIfHighSolarOnWindow
+
+  boost::optional<double> setpoint2() const;
 
   std::string multipleSurfaceControlType() const;
 
@@ -117,13 +119,26 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   bool setSetpoint(double setpoint);
 
-  void resetSetpoint();
+  void resetSetpoint(); // TODO: makes little sense like isSetpointDefaulted
+
+  bool setSetpoint2(double setpoint2);
 
   bool setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType);
 
   //@}
   /** @name Other */
   //@{
+
+
+  // Check if the current ShadingControlType requires Setpoint(1)
+  bool isControlTypeValueNeedingSetpoint1();
+  // Check if the current ShadingControlType requires Setpoint(2)
+  bool isControlTypeValueNeedingSetpoint2();
+
+  // Check if the current ShadingControlType allows a Schedule
+  bool isControlTypeValueAllowingSchedule();
+  // Check if the current ShadingControlType requires a Schedule
+  bool isControlTypeValueRequiringSchedule();
 
   // Extensible: Surfaces
   std::vector<SubSurface> subSurfaces() const;

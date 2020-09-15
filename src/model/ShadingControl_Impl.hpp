@@ -63,6 +63,7 @@ namespace detail {
 
     virtual ~ShadingControl_Impl() {}
 
+
     //@}
 
     /** @name Virtual Methods */
@@ -77,6 +78,15 @@ namespace detail {
     virtual ModelObject clone(Model model) const;
 
     //@}
+
+    static bool isControlTypeValueNeedingSetpoint1(const std::string& controlType);
+    static bool isControlTypeValueNeedingSetpoint2(const std::string& controlType);
+
+    // **Allows** a schedule
+    static bool isControlTypeValueAllowingSchedule(const std::string& controlType);
+    // **Requires** a Schedule
+    static bool isControlTypeValueRequiringSchedule(const std::string& controlType);
+
     /** @name Getters */
     //@{
 
@@ -95,6 +105,8 @@ namespace detail {
     boost::optional<double> setpoint() const;
 
     bool isSetpointDefaulted() const;
+
+    boost::optional<double> setpoint2() const;
 
     std::string multipleSurfaceControlType() const;
 
@@ -115,6 +127,11 @@ namespace detail {
     bool setSetpoint(double setpoint);
 
     void resetSetpoint();
+
+    bool setSetpoint2(double setpoint2);
+
+    // Impl only
+    void resetSetpoint2();
 
     bool setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType);
 
@@ -137,6 +154,7 @@ namespace detail {
     // Clears existing first, then bulk add
     bool setSubSurfaces(const std::vector<SubSurface> &subSurfaces);
     void removeAllSubSurfaces();
+
 
     //@}
    protected:
