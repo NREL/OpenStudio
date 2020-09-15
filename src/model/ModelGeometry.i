@@ -365,11 +365,11 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
       }
 
       public bool addSubSurfaces(SubSurfaceVector subSurfaces) {
-        return OpenStudio.OpenStudioModelHVAC.addSubSurfacesForShadingControl(this, subSurfaces);
+        return OpenStudio.OpenStudioModelGeometry.addSubSurfacesForShadingControl(this, subSurfaces);
       }
 
       public bool setSubSurfaces(SubSurfaceVector subSurfaces) {
-        return OpenStudio.OpenStudioModelHVAC.setSubSurfacesForShadingControl(this, subSurfaces);
+        return OpenStudio.OpenStudioModelGeometry.setSubSurfacesForShadingControl(this, subSurfaces);
       }
     }
 
