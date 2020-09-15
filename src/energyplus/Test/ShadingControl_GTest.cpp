@@ -357,6 +357,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
   EXPECT_EQ("Sequential", wo1.getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
   ASSERT_EQ(1u, wo1.extensibleGroups().size());
 
+  workspace.save(toPath("./ReverseTranslator_ShadingControls.idf"), true);
+
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);

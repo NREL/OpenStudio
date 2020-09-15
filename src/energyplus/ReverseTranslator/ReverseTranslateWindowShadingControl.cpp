@@ -84,9 +84,12 @@ boost::optional<ModelObject> ReverseTranslator::translateWindowShadingControl( c
 
   boost::optional<ShadingControl> shadingControl;
   if (construction){
-    openstudio::model::ShadingControl shadingControl(*construction);
+    shadingControl = openstudio::model::ShadingControl(*construction);
   } else if (shadingMaterial){
-    openstudio::model::ShadingControl shadingControl(*shadingMaterial);
+    shadingControl = openstudio::model::ShadingControl(*shadingMaterial);
+  } else {
+    LOG(Error, workspaceObject.briefDescription() << " does not appear to have a valid Construction or Shading Material Name attached to it");
+    return boost::none;
   }
 
   if (shadingControl) {
