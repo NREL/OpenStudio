@@ -404,11 +404,6 @@ def parse_main_args(main_args)
     ENV['BUNDLE_GEMFILE'] = gemfile
     use_bundler = true
 
-  elsif ENV['BUNDLE_GEMFILE']
-    # no argument but env var is set
-    $logger.info "ENV['BUNDLE_GEMFILE'] set to '#{ENV['BUNDLE_GEMFILE']}'"
-    use_bundler = true
-
   end
 
   if main_args.include? '--bundle_path'
@@ -420,10 +415,6 @@ def parse_main_args(main_args)
 
     $logger.info "Setting BUNDLE_PATH to #{bundle_path}"
     ENV['BUNDLE_PATH'] = bundle_path
-
-  elsif ENV['BUNDLE_PATH']
-    # no argument but env var is set
-    $logger.info "ENV['BUNDLE_PATH'] set to '#{ENV['BUNDLE_PATH']}'"
 
   elsif use_bundler
     # bundle was requested but bundle_path was not provided
@@ -443,10 +434,6 @@ def parse_main_args(main_args)
 
     $logger.info "Setting BUNDLE_WITHOUT to #{bundle_without}"
     ENV['BUNDLE_WITHOUT'] = bundle_without
-
-  elsif ENV['BUNDLE_WITHOUT']
-    # no argument but env var is set
-    $logger.info "ENV['BUNDLE_WITHOUT'] set to '#{ENV['BUNDLE_WITHOUT']}'"
 
   elsif use_bundler
     # bundle was requested but bundle_path was not provided
