@@ -66,7 +66,14 @@ A number of API-breaking changes have been implemented in OpenStudio 3.1.0:
 * [#3960](https://github.com/NREL/OpenStudio/pull/3960) - Added support for building the C# bindings via `dotnet` CLI, including on Unix platforms.
 * [#3959](https://github.com/NREL/OpenStudio/pull/3959) - Also included some improvements in the generated C# bindings by reducing build warnings and properly exposing some types via SWIG
     * `ScheduleTypeKey` (which is normally only use by OpenStudio internals in ScheduleTypeRegistry checks) previously mapped to a `std::pair<std::string, std::string>` which was SWIGed in ruby as an Array of strings of size two, but improperly exposed in C#. It now uses a dedicated helper class with two methods `ScheduleTypeKey::className()` and `ScheduleTypeKey::scheduleDisplayName()`
-
+* [#4066](https://github.com/NREL/OpenStudio/pull/4066) - Multiple shading controls referenced by a single subsurface
+    * `SubSurface` was historically the one referencing the `ShadingControl` object. Now it's a many-to-many relationship where `ShadingControl` has an extensible 'Surface Name' field, and multiple `ShadingControl` can reference the same `SubSurface`. This is trickling down from a change introduced in EnergyPlus version 9.4, and specifically in PR [NREL/EnergyPlus#8196](https://github.com/NREL/EnergyPlus/pull/8196)
+    * Methods in `SubSurface` have been deprecated but keep for backward compatibility. They will be removed in a future version of OpenStudio:
+        * `shadingControl()`: prefer `shadingControls()`
+        * `setShadingControl(ShadingControl&)`: use `addShadingControl(SubSurface&)`, `addShadingControls(std::vector<SubSurface>&)` or `setShadingControls(std::vector<SubSurface>&)`
+        * `resetShadingControl()`: use `removeAllShadingControls()` instead
+    * All Shading Control Type values should now be supported. Refer to issue [#4074](https://github.com/NREL/OpenStudio/issues/4074) for more information
+    * Fields `Setpoint2` and 'Multiple Surface Control Type' are now implemented as well
 
 ## Minor changes:
 
