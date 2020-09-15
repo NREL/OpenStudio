@@ -222,21 +222,3 @@ TEST_F(ModelFixture, ShadingControl_Clone) {
     EXPECT_NE(shadingControl.shadingMaterial().get(), shadingControlClone.shadingMaterial().get());
   }
 }
-
-TEST_F(ModelFixture, ShadingControl_RemoveRequiredObject) {
-  Model model;
-
-  Blind blind(model);
-  ShadingControl shadingControl(blind);
-
-  blind.remove();
-
-  EXPECT_FALSE(shadingControl.shadingMaterial());
-  EXPECT_FALSE(shadingControl.construction());
-
-  // TODO: You're now in a broken, and unfixable state: you neither have a Construction nor a ShadingMaterial,
-  // and the model API has no setters to help you fix the state (setShadingMaterial / setConstruction)
-  // This WILL get forward translated anyways. We need to determine whether we want to add setters in the Model API or have the FT do a check and not
-  // translate the object if it doesn't have either. Throwing here so we do not forget to do it
-  ASSERT_TRUE(false);
-}

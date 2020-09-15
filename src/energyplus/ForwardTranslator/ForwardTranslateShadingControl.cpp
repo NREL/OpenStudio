@@ -58,7 +58,11 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl(model::Sha
   std::vector<SubSurface> subSurfaces = modelObject.subSurfaces();
 
   if (subSurfaces.empty()) {
-    LOG(Warn, modelObject.briefDescription() << " does not control any SubSurfaces, will not be translated");
+    LOG(Warn, modelObject.briefDescription() << " does not control any SubSurfaces, it will not be translated");
+    return boost::none;
+  }
+  if (!modelObject.shadingMaterial() && !modelObject.construction()) {
+    LOG(Error, modelObject.briefDescription() << " does not have either a Shading Material or a Construction assigned, it will not be translated");
     return boost::none;
   }
 
