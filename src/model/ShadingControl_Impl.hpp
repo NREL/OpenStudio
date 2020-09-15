@@ -75,7 +75,7 @@ namespace detail {
 
     // If cloning in the same model, will keep on referencing the same SubSurfaces as the original
     // If cloning in another model, will clear out its extensible Sub Surface Name group
-    virtual ModelObject clone(Model model) const;
+    virtual ModelObject clone(Model model) const override;
 
     //@}
 
