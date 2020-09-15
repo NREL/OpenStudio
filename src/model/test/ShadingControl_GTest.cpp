@@ -35,6 +35,7 @@
 #include "../ShadingControl_Impl.hpp"
 #include "../Construction.hpp"
 #include "../Schedule.hpp"
+#include "../ScheduleConstant.hpp"
 #include "../Blind.hpp"
 #include "../Blind_Impl.hpp"
 #include "../SimpleGlazing.hpp"
@@ -221,4 +222,71 @@ TEST_F(ModelFixture, ShadingControl_Clone) {
     EXPECT_TRUE(shadingControlClone.shadingMaterial());
     EXPECT_NE(shadingControl.shadingMaterial().get(), shadingControlClone.shadingMaterial().get());
   }
+}
+
+TEST_F(ModelFixture, ShadingControl_ShadingControlTypeLogic) {
+
+  Model m;
+
+  Blind b(m);
+  ShadingControl sc(b);
+
+  EXPECT_TRUE(sc.setSetpoint(32.0));
+  ASSERT_TRUE(sc.setpoint());
+  EXPECT_EQ(32.0, sc.setpoint().get());
+
+  ScheduleConstant sch(m);
+
+  // Allows nothing
+  EXPECT_TRUE(sc.setShadingControlType("AlwaysOn"));
+  EXPECT_FALSE(sc.isControlTypeValueNeedingSetpoint1());
+  EXPECT_FALSE(sc.isControlTypeValueNeedingSetpoint2());
+  EXPECT_FALSE(sc.isControlTypeValueAllowingSchedule());
+  EXPECT_FALSE(sc.setSetpoint(30.0));
+  EXPECT_FALSE(sc.setSetpoint2(500.0));
+  EXPECT_FALSE(sc.setSchedule(sch));
+  EXPECT_FALSE(sc.setpoint());
+  EXPECT_FALSE(sc.setpoint2());
+  EXPECT_FALSE(sc.schedule());
+
+  // Allows schedules, required two setpoints
+  EXPECT_TRUE(sc.setShadingControlType("OnIfHighZoneAirTempAndHighSolarOnWindow"));
+  EXPECT_TRUE(sc.isControlTypeValueNeedingSetpoint1());
+  EXPECT_TRUE(sc.isControlTypeValueNeedingSetpoint2());
+  EXPECT_TRUE(sc.isControlTypeValueAllowingSchedule());
+  EXPECT_TRUE(sc.setSetpoint(30.0));
+  EXPECT_TRUE(sc.setSetpoint2(500.0));
+  EXPECT_TRUE(sc.setSchedule(sch));
+  ASSERT_TRUE(sc.setpoint());
+  EXPECT_EQ(30.0, sc.setpoint().get());
+  ASSERT_TRUE(sc.setpoint2());
+  EXPECT_EQ(500.0, sc.setpoint2().get());
+  ASSERT_TRUE(sc.schedule());
+  EXPECT_EQ(sch, sc.schedule().get());
+
+  // Shouldn't allow reseting setpoints since required
+  sc.resetSetpoint();
+  ASSERT_TRUE(sc.setpoint());
+  EXPECT_EQ(30.0, sc.setpoint().get());
+  ASSERT_TRUE(sc.setpoint2());
+  EXPECT_EQ(500.0, sc.setpoint2().get());
+  // Note: I'm not providing resetSetpoint2 on purpose
+
+  sc.resetSchedule();
+  EXPECT_FALSE(sc.schedule());
+  EXPECT_TRUE(sc.setSchedule(sch));
+
+  // OnIfHighGlare: needs setpoint1 only and not Setpoint2, allows schedule
+  EXPECT_TRUE(sc.setShadingControlType("OnIfHighZoneCooling"));
+  EXPECT_TRUE(sc.isControlTypeValueNeedingSetpoint1());
+  EXPECT_FALSE(sc.isControlTypeValueNeedingSetpoint2());
+  EXPECT_TRUE(sc.isControlTypeValueAllowingSchedule());
+
+  // Setpoint 1 has been cleared because we're switching Shading Control Type and that was the historical behavior
+  EXPECT_FALSE(sc.setpoint2());
+  // Setpoint2 is cleared because the new Shading Control Type does not support Setpoint 2
+  EXPECT_FALSE(sc.setpoint2());
+  // Schedule is kept, user should be responsible to ensure the Schedule still makes sense, instead of always clearing it
+  EXPECT_TRUE(sc.schedule());
+
 }
