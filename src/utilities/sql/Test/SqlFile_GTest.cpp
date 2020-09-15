@@ -42,6 +42,7 @@
 #include <iostream>
 #include <boost/regex.hpp>
 #include <resources.hxx>
+#include <stdexcept>
 
 using namespace std;
 using namespace boost;
@@ -184,8 +185,14 @@ TEST_F(SqlFileFixture, TimeSeries)
 
 TEST_F(SqlFileFixture, BadStatement)
 {
-  OptionalDouble result = sqlFile.execAndReturnFirstDouble("SELECT * FROM NonExistantTable");
-  EXPECT_FALSE(result);
+  const std::string query = "SELECT * FROM NonExistantTable;";
+  try {
+    sqlFile.execAndReturnFirstDouble(query);
+    FAIL() << "BadStatement should fail";
+  } catch (std::runtime_error& e) {
+    std::string expectedError("Error creating prepared statement: SELECT * FROM NonExistantTable; with error code 1, extended code 1, errmsg: no such table: NonExistantTable");
+    EXPECT_EQ(expectedError, std::string{e.what()});
+  }
 }
 
 TEST_F(SqlFileFixture, CreateSqlFile)
@@ -658,3 +665,110 @@ TEST_F(SqlFileFixture, SqlFile_LeapYear)
     EXPECT_EQ(original_datetimes, reloaded_datetimes);
   }
 }
+
+TEST_F(SqlFileFixture, SqlFile_Escapes_injection)
+{
+  openstudio::path outfile = openstudio::tempDir() / openstudio::toPath("OpenStudioSqlFileTest_escapes.sql");
+  if (openstudio::filesystem::exists(outfile))
+  {
+    openstudio::filesystem::remove(outfile);
+  }
+
+  openstudio::Calendar c(2012);
+  c.standardHolidays();
+
+
+  std::vector<double> values;
+  values.push_back(100);
+  values.push_back(10);
+  values.push_back(1);
+  values.push_back(100.5);
+
+  TimeSeries timeSeries(c.startDate(), openstudio::Time(0,1), openstudio::createVector(values), "lux");
+
+  {
+    openstudio::SqlFile sql(outfile,
+        openstudio::EpwFile(resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw")),
+        openstudio::DateTime::now(),
+        c);
+
+    ASSERT_TRUE(sql.connectionOpen());
+
+    sql.insertTimeSeriesData("Sum", "Zone", "Zone", "DAYLIGHTING WINDOW", "Daylight Luminance", openstudio::ReportingFrequency::Hourly,
+        boost::optional<std::string>(), "lux", timeSeries);
+
+    sql.insertZone("CLASSROOM",
+        0,
+        0,0,0,
+        1,1,1,
+        3,
+        1,
+        1,
+        0, 2,
+        0, 2,
+        0, 2,
+        2,
+        8,
+        3,
+        3,
+        4,
+        4,
+        2,
+        2,
+        true);
+
+    auto zoneNames = sql.execAndReturnVectorOfString("SELECT ZoneName from Zones");
+    ASSERT_TRUE(zoneNames);
+    EXPECT_EQ(1u, zoneNames->size());
+  }
+
+  {
+    openstudio::SqlFile sql(outfile);
+    EXPECT_TRUE(sql.connectionOpen());
+
+    std::vector<std::string> envPeriods = sql.availableEnvPeriods();
+    EXPECT_EQ(1u, envPeriods.size());
+
+    auto _s = sql.execAndReturnFirstString("SELECT name FROM sqlite_master WHERE type='table' AND name='EnvironmentPeriods';");
+    EXPECT_TRUE(_s) << "Table EnvironmentPeriods doesn't exists";
+
+    //  This finishes the 'insert into zones' statement; calls drop table; then adds a comment so the rest is ignored. Classic SQL Injection
+    std::string zoneName {"Little Bobby Tables', 0, 0, 0, 0, 1, 1, 1, 3, 1, 1, 0, 2, 0, 2, 0, 2, 2, 8, 3, 3, 4, 4, 2, 2, 1); DROP TABLE EnvironmentPeriods;--"};
+    EXPECT_NO_THROW(sql.insertZone(zoneName,
+        0,
+        0,0,0,
+        1,1,1,
+        3,
+        1,
+        1,
+        0, 2,
+        0, 2,
+        0, 2,
+        2,
+        8,
+        3,
+        3,
+        4,
+        4,
+        2,
+        2,
+        true));
+  }
+
+
+  {
+    openstudio::SqlFile sql(outfile);
+    EXPECT_TRUE(sql.connectionOpen());
+
+    std::vector<std::string> envPeriods = sql.availableEnvPeriods();
+    EXPECT_EQ(1u, envPeriods.size());
+
+    auto _s = sql.execAndReturnFirstString("SELECT name FROM sqlite_master WHERE type='table' AND name='EnvironmentPeriods';");
+    EXPECT_TRUE(_s) << "Table EnvironmentPeriods doesn't exists";
+
+    auto zoneNames = sql.execAndReturnVectorOfString("SELECT ZoneName from Zones");
+    ASSERT_TRUE(zoneNames);
+    EXPECT_EQ(2u, zoneNames->size());
+  }
+}
+
