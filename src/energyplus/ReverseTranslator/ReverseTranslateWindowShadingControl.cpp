@@ -130,6 +130,11 @@ boost::optional<ModelObject> ReverseTranslator::translateWindowShadingControl( c
       shadingControl->setSetpoint(*d);
     }
 
+    d = workspaceObject.getDouble(WindowShadingControlFields::Setpoint2);
+    if(s){
+      shadingControl->setSetpoint2(*d);
+    }
+
     s = workspaceObject.getString(WindowShadingControlFields::MultipleSurfaceControlType);
     if(s){
       shadingControl->setMultipleSurfaceControlType(*s);

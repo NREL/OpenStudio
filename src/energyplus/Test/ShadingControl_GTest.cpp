@@ -319,10 +319,28 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
 
   openstudio::WorkspaceObject epSubSurface = workspace.addObject(idfObject2).get();
 
-  openstudio::IdfObject idfObject3(openstudio::IddObjectType::WindowMaterial_Blind);
-  idfObject3.setString(WindowMaterial_BlindFields::Name, "Shade 1");
+  // Currently WindowMaterial:Blind is not ReverseTranslated... So we'll fake something using a Construction (and not a Shading Material Name) that
+  // has no blind on it...
+  // openstudio::IdfObject idfObject3(openstudio::IddObjectType::WindowMaterial_Blind);
+  // idfObject3.setString(WindowMaterial_BlindFields::Name, "Shade 1");
 
-  openstudio::WorkspaceObject epBlind = workspace.addObject(idfObject3).get();
+  // openstudio::WorkspaceObject epBlind = workspace.addObject(idfObject3).get();
+
+  IdfObject glazing(IddObjectType::WindowMaterial_Glazing);
+  IdfObject gas(IddObjectType::WindowMaterial_Gas);
+  glazing.setName("Glazing Material");
+  gas.setName("Gas Material");
+  IdfObject construction(IddObjectType::Construction);
+  construction.setName("Construction A");
+  ASSERT_EQ(0u,construction.numExtensibleGroups());
+  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u,glazing.name().get())).empty());
+  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u,gas.name().get())).empty());
+  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u,glazing.name().get())).empty());
+  IdfObjectVector objects;
+  objects.push_back(glazing);
+  objects.push_back(gas);
+  objects.push_back(construction);
+  EXPECT_EQ(3u,workspace.addObjects(objects).size());
 
   openstudio::IdfObject idfObject4(openstudio::IddObjectType::Schedule_Constant);
   idfObject4.setString(0, "Schedule 1");
@@ -335,16 +353,17 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
   idfObject5.setString(WindowShadingControlFields::ZoneName, "");
   idfObject5.setString(WindowShadingControlFields::ShadingControlSequenceNumber, "1");
   idfObject5.setString(WindowShadingControlFields::ShadingType, "InteriorBlind");
-  idfObject5.setString(WindowShadingControlFields::ConstructionwithShadingName, "");
-  idfObject5.setString(WindowShadingControlFields::ShadingControlType, "OnIfScheduleAllows");
+  idfObject5.setString(WindowShadingControlFields::ConstructionwithShadingName, construction.nameString());
+  // This Shading Control Type accepts 2 setpoints and a Schedule
+  idfObject5.setString(WindowShadingControlFields::ShadingControlType, "OnIfHighZoneAirTempAndHighSolarOnWindow");
   idfObject5.setString(WindowShadingControlFields::ScheduleName, "Schedule 1");
-  idfObject5.setString(WindowShadingControlFields::Setpoint, "100");
+  idfObject5.setString(WindowShadingControlFields::Setpoint, "30");
   idfObject5.setString(WindowShadingControlFields::ShadingControlIsScheduled, "Yes");
   idfObject5.setString(WindowShadingControlFields::GlareControlIsActive, "No");
-  idfObject5.setString(WindowShadingControlFields::ShadingDeviceMaterialName, "Shade 1");
+  // idfObject5.setString(WindowShadingControlFields::ShadingDeviceMaterialName, "Shade 1");
   idfObject5.setString(WindowShadingControlFields::TypeofSlatAngleControlforBlinds, "");
   idfObject5.setString(WindowShadingControlFields::SlatAngleScheduleName, "");
-  idfObject5.setString(WindowShadingControlFields::Setpoint2, "");
+  idfObject5.setString(WindowShadingControlFields::Setpoint2, "500.0");
   idfObject5.setString(WindowShadingControlFields::MultipleSurfaceControlType, "Sequential");
   IdfExtensibleGroup group9 = idfObject5.pushExtensibleGroup(); // sub surface
   group9.setString(0, "Sub Surface 1");
@@ -357,8 +376,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
   EXPECT_EQ("Sequential", wo1.getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
   ASSERT_EQ(1u, wo1.extensibleGroups().size());
 
-  workspace.save(toPath("./ReverseTranslator_ShadingControls.idf"), true);
-
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
@@ -370,8 +387,15 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
   std::vector<ShadingControl> shadingControls = model.getModelObjects<ShadingControl>();
   ASSERT_EQ(1u, shadingControls.size());
   ShadingControl shadingControl = shadingControls[0];
-  EXPECT_EQ(1, shadingControl.numberofSubSurfaces());
+  EXPECT_EQ("InteriorDaylightRedirectionDevice", shadingControl.shadingType()); // InteriorBlind maps to InteriorDaylightRedirectionDevice for some reason
+  EXPECT_EQ("OnIfHighZoneAirTempAndHighSolarOnWindow", shadingControl.shadingControlType());
+  EXPECT_TRUE(shadingControl.schedule());
+  ASSERT_TRUE(shadingControl.setpoint());
+  EXPECT_EQ(30.0, shadingControl.setpoint().get());
+  ASSERT_TRUE(shadingControl.setpoint2());
+  EXPECT_EQ(500.0, shadingControl.setpoint2().get());
   EXPECT_EQ("Sequential", shadingControl.multipleSurfaceControlType());
+  EXPECT_EQ(1, shadingControl.numberofSubSurfaces());
 
   std::vector<SubSurface> subSurfaces = model.getModelObjects<SubSurface>();
   ASSERT_EQ(1u, subSurfaces.size());
