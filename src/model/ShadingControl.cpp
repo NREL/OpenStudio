@@ -106,7 +106,7 @@ namespace detail {
       "OnIfHighOutdoorAirTemperature",
       "OnIfHighZoneAirTemperature",
       "OnIfHighZoneCooling",
-      "OnIfHighGlare",
+      //"OnIfHighGlare",
       //"MeetDaylightIlluminanceSetpoint",
       "OnNightIfLowOutdoorTempAndOffDay",
       "OnNightIfLowInsideTempAndOffDay",
@@ -129,6 +129,8 @@ namespace detail {
 
   bool ShadingControl_Impl::isControlTypeValueNeedingSetpoint2(const std::string& controlType) {
     static constexpr std::array data{
+      "OnIfHighOutdoorAirTempAndHighSolarOnWindow",
+      "OnIfHighOutdoorAirTempAndHighHorizontalSolar",
       "OnIfHighZoneAirTempAndHighSolarOnWindow",
       "OnIfHighZoneAirTempAndHighHorizontalSolar"
     };
@@ -174,6 +176,25 @@ namespace detail {
     return openstudio::istringEqual("OnIfScheduleAllows", controlType);
   }
 
+  bool ShadingControl_Impl::isTypeValueAllowingSlatAngleControl(const std::string& type) {
+    static constexpr std::array data{
+      //"InteriorShade",
+      //"ExteriorShade",
+      //"ExteriorScreen",
+      "InteriorBlind",
+      "ExteriorBlind",
+      //"BetweenGlassShade",
+      "BetweenGlassBlind",
+      //"SwitchableGlazing",
+      //"InteriorDaylightRedirectionDevice"
+    };
+    return std::find_if(data.begin(),
+                        data.end(),
+                        [&type](auto c){
+                          return openstudio::istringEqual(type, c);
+                        }) != data.end();
+  }
+
   IddObjectType ShadingControl_Impl::iddObjectType() const
   {
     return ShadingControl::iddObjectType();
@@ -189,6 +210,13 @@ namespace detail {
     return scClone;
   }
 
+  std::string ShadingControl_Impl::shadingType() const
+  {
+    boost::optional<std::string> result = getString(OS_ShadingControlFields::ShadingType, true);
+    OS_ASSERT(result);
+    return result.get();
+  }
+
   boost::optional<Construction> ShadingControl_Impl::construction() const
   {
     return getObject<ShadingControl>().getModelObjectTarget<Construction>(OS_ShadingControlFields::ConstructionwithShadingName);
@@ -197,13 +225,6 @@ namespace detail {
   boost::optional<ShadingMaterial> ShadingControl_Impl::shadingMaterial() const
   {
     return getObject<ShadingControl>().getModelObjectTarget<ShadingMaterial>(OS_ShadingControlFields::ShadingDeviceMaterialName);
-  }
-
-  std::string ShadingControl_Impl::shadingType() const
-  {
-    boost::optional<std::string> result = getString(OS_ShadingControlFields::ShadingType, true);
-    OS_ASSERT(result);
-    return result.get();
   }
 
   std::string ShadingControl_Impl::shadingControlType() const
@@ -240,31 +261,29 @@ namespace detail {
     return isEmpty(OS_ShadingControlFields::Setpoint);
   }
 
-  bool ShadingControl_Impl::setSetpoint(double setpoint)
+  bool ShadingControl_Impl::glareControlIsActive() const
   {
-    bool result = false;
-    std::string shadingControlType = this->shadingControlType();
-    if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint1(shadingControlType)) {
-      result = setDouble(OS_ShadingControlFields::Setpoint, setpoint);
-    } else {
-      LOG(Warn, briefDescription() << " has a Shading Control Type '" << shadingControlType << "' which does not require a Setpoint");
-    }
-    return result;
+    boost::optional<std::string> value = getString(OS_ShadingControlFields::GlareControlIsActive, true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "Yes");
   }
 
-  void ShadingControl_Impl::resetSetpoint()
+  std::string ShadingControl_Impl::typeofSlatAngleControlforBlinds() const
   {
-    std::string shadingControlType = this->shadingControlType();
-    if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint1(shadingControlType) &&
-        !openstudio::istringEqual("OnIfHighSolarOnWindow", shadingControlType))
-    {
-      LOG(Warn, briefDescription() << " has a Shading Control Type '" << shadingControlType << "' which does require a Setpoint, not resetting it");
-    } else {
-      bool test = setString(OS_ShadingControlFields::Setpoint, "");
-      OS_ASSERT(test);
-    }
+    boost::optional<std::string> result = getString(OS_ShadingControlFields::TypeofSlatAngleControlforBlinds, true);
+    OS_ASSERT(result);
+    return result.get();
   }
 
+  bool ShadingControl_Impl::isTypeofSlatAngleControlforBlindsDefaulted() const
+  {
+    return isEmpty(OS_ShadingControlFields::TypeofSlatAngleControlforBlinds);
+  }
+
+  boost::optional<Schedule> ShadingControl_Impl::slatAngleSchedule() const
+  {
+    return getObject<ShadingControl>().getModelObjectTarget<Schedule>(OS_ShadingControlFields::SlatAngleScheduleName);
+  }
 
   boost::optional<double> ShadingControl_Impl::setpoint2() const
   {
@@ -278,27 +297,11 @@ namespace detail {
     return result;
   }
 
-  bool ShadingControl_Impl::setSetpoint2(double setpoint2)
+  std::string ShadingControl_Impl::multipleSurfaceControlType() const
   {
-    bool result = false;
-    std::string shadingControlType = this->shadingControlType();
-    if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint2(shadingControlType)) {
-      result = setDouble(OS_ShadingControlFields::Setpoint2, setpoint2);
-    } else {
-      LOG(Warn, briefDescription() << " has a Shading Control Type '" << shadingControlType << "' which does not require a Setpoint2");
-    }
-    return result;
-  }
-
-  void ShadingControl_Impl::resetSetpoint2()
-  {
-    std::string shadingControlType = this->shadingControlType();
-    if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint1(shadingControlType)) {
-      LOG(Warn, briefDescription() << " has a Shading Control Type '" << shadingControlType << "' which does require a Setpoint2, not resetting it");
-    } else {
-      bool test = setString(OS_ShadingControlFields::Setpoint2, "");
-      OS_ASSERT(test);
-    }
+    boost::optional<std::string> result = getString(OS_ShadingControlFields::MultipleSurfaceControlType, true);
+    OS_ASSERT(result);
+    return result.get();
   }
 
   bool ShadingControl_Impl::setShadingType(const std::string& shadingType)
@@ -386,11 +389,113 @@ namespace detail {
     }
   }
 
-  std::string ShadingControl_Impl::multipleSurfaceControlType() const
+  bool ShadingControl_Impl::setSetpoint(double setpoint)
   {
-    boost::optional<std::string> result = getString(OS_ShadingControlFields::MultipleSurfaceControlType, true);
+    bool result = false;
+    std::string shadingControlType = this->shadingControlType();
+    if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint1(shadingControlType)) {
+      result = setDouble(OS_ShadingControlFields::Setpoint, setpoint);
+    } else {
+      LOG(Warn, briefDescription() << " has a Shading Control Type '" << shadingControlType << "' which does not require a Setpoint");
+    }
+    return result;
+  }
+
+  void ShadingControl_Impl::resetSetpoint()
+  {
+    std::string shadingControlType = this->shadingControlType();
+    if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint1(shadingControlType) &&
+        !openstudio::istringEqual("OnIfHighSolarOnWindow", shadingControlType))
+    {
+      LOG(Warn, briefDescription() << " has a Shading Control Type '" << shadingControlType << "' which does require a Setpoint, not resetting it");
+    } else {
+      bool test = setString(OS_ShadingControlFields::Setpoint, "");
+      OS_ASSERT(test);
+    }
+  }
+
+  bool ShadingControl_Impl::setGlareControlIsActive(bool glareControlIsActive)
+  {
+    bool result = false;
+    if (glareControlIsActive) {
+      result = setString(OS_ShadingControlFields::GlareControlIsActive, "Yes");
+    } else {
+      result = setString(OS_ShadingControlFields::GlareControlIsActive, "No");
+    }
     OS_ASSERT(result);
-    return result.get();
+    return result;
+  }
+
+  void ShadingControl_Impl::resetGlareControlIsActive()
+  {
+    bool result = setString(OS_ShadingControlFields::GlareControlIsActive, "");
+    OS_ASSERT(result);
+  }
+
+  bool ShadingControl_Impl::setTypeofSlatAngleControlforBlinds(const std::string& typeofSlatAngleControlforBlinds)
+  {
+    bool result = false;
+    std::string shadingType = this->shadingType();
+    if (ShadingControl_Impl::isTypeValueAllowingSlatAngleControl(shadingType)) {
+      result = setString(OS_ShadingControlFields::TypeofSlatAngleControlforBlinds, typeofSlatAngleControlforBlinds);
+    }
+    return result;
+  }
+
+  void ShadingControl_Impl::resetTypeofSlatAngleControlforBlinds()
+  {
+    bool result = setString(OS_ShadingControlFields::TypeofSlatAngleControlforBlinds, "");
+    OS_ASSERT(result);
+  }
+
+  bool ShadingControl_Impl::setSlatAngleSchedule(const Schedule& slatAngleSchedule)
+  {
+    bool result = false;
+    std::string shadingType = this->shadingType();
+    if (ShadingControl_Impl::isTypeValueAllowingSlatAngleControl(shadingType)) {
+      result = setPointer(OS_ShadingControlFields::SlatAngleScheduleName, slatAngleSchedule.handle());
+      if (result){
+        bool test = setString(OS_ShadingControlFields::TypeofSlatAngleControlforBlinds, "ScheduledSlatAngle");
+        OS_ASSERT(test);
+      }
+    } else {
+      LOG(Warn, briefDescription() << " has a Shading Type '" << shadingType << "' which does not allow a Slat Angle Schedule");
+    }
+    return result;
+  }
+
+  void ShadingControl_Impl::resetSlatAngleSchedule()
+  {
+    bool result = false;
+
+    result = setString(OS_ShadingControlFields::SlatAngleScheduleName, "");
+    OS_ASSERT(result);
+
+    result = setString(OS_ShadingControlFields::TypeofSlatAngleControlforBlinds, "");
+    OS_ASSERT(result);
+  }
+
+  bool ShadingControl_Impl::setSetpoint2(double setpoint2)
+  {
+    bool result = false;
+    std::string shadingControlType = this->shadingControlType();
+    if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint2(shadingControlType)) {
+      result = setDouble(OS_ShadingControlFields::Setpoint2, setpoint2);
+    } else {
+      LOG(Warn, briefDescription() << " has a Shading Control Type '" << shadingControlType << "' which does not require a Setpoint2");
+    }
+    return result;
+  }
+
+  void ShadingControl_Impl::resetSetpoint2()
+  {
+    std::string shadingControlType = this->shadingControlType();
+    if (ShadingControl_Impl::isControlTypeValueNeedingSetpoint1(shadingControlType)) {
+      LOG(Warn, briefDescription() << " has a Shading Control Type '" << shadingControlType << "' which does require a Setpoint2, not resetting it");
+    } else {
+      bool test = setString(OS_ShadingControlFields::Setpoint2, "");
+      OS_ASSERT(test);
+    }
   }
 
   bool ShadingControl_Impl::setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType)
@@ -437,7 +542,6 @@ namespace detail {
     return result;
   }
 
-
   bool ShadingControl_Impl::addSubSurface(const SubSurface& subSurface)
   {
     // Check if subSurface already exists
@@ -461,7 +565,6 @@ namespace detail {
     }
     return result;
   }
-
 
   bool ShadingControl_Impl::setSubSurfaceIndex(const SubSurface& subSurface, unsigned index)
   {
@@ -542,7 +645,6 @@ namespace detail {
   }
 
 } // detail
-
 
 ShadingControl::ShadingControl(const Construction& construction)
   : ResourceObject(ShadingControl::iddObjectType(),construction.model())
@@ -674,16 +776,20 @@ bool ShadingControl::isControlTypeValueRequiringSchedule() {
   return getImpl<detail::ShadingControl_Impl>()->isControlTypeValueRequiringSchedule(this->shadingControlType());
 }
 
+bool ShadingControl::isTypeValueAllowingSlatAngleControl() {
+  return getImpl<detail::ShadingControl_Impl>()->isTypeValueAllowingSlatAngleControl(this->shadingType());
+}
+
+std::string ShadingControl::shadingType() const {
+  return getImpl<detail::ShadingControl_Impl>()->shadingType();
+}
+
 boost::optional<Construction> ShadingControl::construction() const {
   return getImpl<detail::ShadingControl_Impl>()->construction();
 }
 
 boost::optional<ShadingMaterial> ShadingControl::shadingMaterial() const {
   return getImpl<detail::ShadingControl_Impl>()->shadingMaterial();
-}
-
-std::string ShadingControl::shadingType() const {
-  return getImpl<detail::ShadingControl_Impl>()->shadingType();
 }
 
 std::string ShadingControl::shadingControlType() const {
@@ -702,24 +808,32 @@ boost::optional<double> ShadingControl::setpoint() const {
   return getImpl<detail::ShadingControl_Impl>()->setpoint();
 }
 
-bool ShadingControl::isSetpointDefaulted() const{
+bool ShadingControl::isSetpointDefaulted() const {
   return getImpl<detail::ShadingControl_Impl>()->isSetpointDefaulted();
 }
 
-bool ShadingControl::setSetpoint(double setpoint){
-  return getImpl<detail::ShadingControl_Impl>()->setSetpoint(setpoint);
+bool ShadingControl::glareControlIsActive() const {
+  return getImpl<detail::ShadingControl_Impl>()->glareControlIsActive();
 }
 
-void ShadingControl::resetSetpoint(){
-  getImpl<detail::ShadingControl_Impl>()->resetSetpoint();
+std::string ShadingControl::typeofSlatAngleControlforBlinds() const {
+  return getImpl<detail::ShadingControl_Impl>()->typeofSlatAngleControlforBlinds();
+}
+
+bool ShadingControl::isTypeofSlatAngleControlforBlindsDefaulted() const {
+  return getImpl<detail::ShadingControl_Impl>()->isTypeofSlatAngleControlforBlindsDefaulted();
+}
+
+boost::optional<Schedule> ShadingControl::slatAngleSchedule() const {
+  return getImpl<detail::ShadingControl_Impl>()->slatAngleSchedule();
 }
 
 boost::optional<double> ShadingControl::setpoint2() const {
   return getImpl<detail::ShadingControl_Impl>()->setpoint2();
 }
 
-bool ShadingControl::setSetpoint2(double setpoint2){
-  return getImpl<detail::ShadingControl_Impl>()->setSetpoint2(setpoint2);
+std::string ShadingControl::multipleSurfaceControlType() const {
+  return getImpl<detail::ShadingControl_Impl>()->multipleSurfaceControlType();
 }
 
 bool ShadingControl::setShadingType(const std::string& shadingType){
@@ -742,16 +856,45 @@ void ShadingControl::resetSchedule(){
   getImpl<detail::ShadingControl_Impl>()->resetSchedule();
 }
 
-std::string ShadingControl::multipleSurfaceControlType() const {
-  return getImpl<detail::ShadingControl_Impl>()->multipleSurfaceControlType();
+bool ShadingControl::setSetpoint(double setpoint){
+  return getImpl<detail::ShadingControl_Impl>()->setSetpoint(setpoint);
 }
 
+void ShadingControl::resetSetpoint(){
+  getImpl<detail::ShadingControl_Impl>()->resetSetpoint();
+}
+
+bool ShadingControl::setGlareControlIsActive(bool glareControlIsActive){
+  return getImpl<detail::ShadingControl_Impl>()->setGlareControlIsActive(glareControlIsActive);
+}
+
+void ShadingControl::resetGlareControlIsActive(){
+  getImpl<detail::ShadingControl_Impl>()->resetGlareControlIsActive();
+}
+
+bool ShadingControl::setTypeofSlatAngleControlforBlinds(const std::string& typeofSlatAngleControlforBlinds){
+  return getImpl<detail::ShadingControl_Impl>()->setTypeofSlatAngleControlforBlinds(typeofSlatAngleControlforBlinds);
+}
+
+void ShadingControl::resetTypeofSlatAngleControlforBlinds(){
+  getImpl<detail::ShadingControl_Impl>()->resetTypeofSlatAngleControlforBlinds();
+}
+
+bool ShadingControl::setSlatAngleSchedule(const Schedule& slatAngleSchedule){
+  return getImpl<detail::ShadingControl_Impl>()->setSlatAngleSchedule(slatAngleSchedule);
+}
+
+void ShadingControl::resetSlatAngleSchedule(){
+  getImpl<detail::ShadingControl_Impl>()->resetSlatAngleSchedule();
+}
+
+bool ShadingControl::setSetpoint2(double setpoint2){
+  return getImpl<detail::ShadingControl_Impl>()->setSetpoint2(setpoint2);
+}
 
 bool ShadingControl::setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType){
   return getImpl<detail::ShadingControl_Impl>()->setMultipleSurfaceControlType(multipleSurfaceControlType);
 }
-
-
 
 // Extensible Fields
 

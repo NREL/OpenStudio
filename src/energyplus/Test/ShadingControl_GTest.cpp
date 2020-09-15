@@ -130,7 +130,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
   subSurfaceB.setSurface(surface);
   subSurfaceB.assignDefaultSubSurfaceType();
 
-
   Blind blind1(model);
   ShadingControl shadingControl1(blind1);
   EXPECT_TRUE(shadingControl1.setShadingType("ExteriorBlind"));
@@ -139,11 +138,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
   EXPECT_TRUE(shadingControl1.isControlTypeValueAllowingSchedule());
   EXPECT_TRUE(shadingControl1.isControlTypeValueNeedingSetpoint1());
   EXPECT_TRUE(shadingControl1.isControlTypeValueNeedingSetpoint2());
+  EXPECT_TRUE(shadingControl1.isTypeValueAllowingSlatAngleControl());
 
   ScheduleConstant shadingControl1Schedule(model);
   EXPECT_TRUE(shadingControl1.setSchedule(shadingControl1Schedule));
   EXPECT_TRUE(shadingControl1.setSetpoint(25.0));
   EXPECT_TRUE(shadingControl1.setSetpoint2(500.0));
+  EXPECT_TRUE(shadingControl1.setGlareControlIsActive(true));
   EXPECT_TRUE(shadingControl1.setMultipleSurfaceControlType("Sequential"));
   EXPECT_TRUE(shadingControl1.addSubSurface(subSurfaceA));
   // Convenience method that calls ShadingControl::addSubSurface()
@@ -154,11 +155,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
 
   Blind blind2(model);
   ShadingControl shadingControl2(blind2);
+  EXPECT_TRUE(shadingControl2.setTypeofSlatAngleControlforBlinds("BlockBeamSolar"));
   EXPECT_TRUE(shadingControl2.setMultipleSurfaceControlType("Group"));
   EXPECT_TRUE(subSurfaceA.addShadingControl(shadingControl2));
   ASSERT_EQ(1u, shadingControl2.subSurfaces().size());
   EXPECT_EQ(1u, shadingControl2.subSurfaceIndex(subSurfaceA).get());
-
 
   EXPECT_EQ(2u, subSurfaceA.shadingControls().size());
   EXPECT_EQ(1u, subSurfaceB.shadingControls().size());
@@ -185,9 +186,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
       EXPECT_EQ(shadingControl1Schedule.nameString(), _wo->getString(WindowShadingControlFields::ScheduleName, false, true).get());
       EXPECT_EQ("Yes", _wo->getString(WindowShadingControlFields::ShadingControlIsScheduled, false, true).get());
 
-      EXPECT_EQ("No", _wo->getString(WindowShadingControlFields::GlareControlIsActive, false, true).get());
+      EXPECT_EQ("Yes", _wo->getString(WindowShadingControlFields::GlareControlIsActive, false, true).get());
       EXPECT_EQ(blind1.nameString(), _wo->getString(WindowShadingControlFields::ShadingDeviceMaterialName, false, true).get());
       EXPECT_FALSE(_wo->getString(WindowShadingControlFields::SlatAngleScheduleName, false, true));
+      EXPECT_EQ("FixedSlatAngle", _wo->getString(WindowShadingControlFields::TypeofSlatAngleControlforBlinds, false, true).get());
       EXPECT_FALSE(_wo->getString(WindowShadingControlFields::DaylightingControlObjectName, false, true));
       EXPECT_EQ("Sequential", _wo->getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
       ASSERT_EQ(2u, _wo->extensibleGroups().size());
@@ -219,6 +221,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
       EXPECT_EQ("No", _wo->getString(WindowShadingControlFields::GlareControlIsActive, false, true).get());
       EXPECT_EQ(blind2.nameString(), _wo->getString(WindowShadingControlFields::ShadingDeviceMaterialName, false, true).get());
       EXPECT_FALSE(_wo->getString(WindowShadingControlFields::SlatAngleScheduleName, false, true));
+      EXPECT_EQ("BlockBeamSolar", _wo->getString(WindowShadingControlFields::TypeofSlatAngleControlforBlinds, false, true).get());
       EXPECT_FALSE(_wo->getString(WindowShadingControlFields::Setpoint2, false, true));
       EXPECT_FALSE(_wo->getString(WindowShadingControlFields::DaylightingControlObjectName, false, true));
       EXPECT_EQ("Group", _wo->getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
@@ -396,6 +399,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
   EXPECT_EQ(500.0, shadingControl.setpoint2().get());
   EXPECT_EQ("Sequential", shadingControl.multipleSurfaceControlType());
   EXPECT_EQ(1, shadingControl.numberofSubSurfaces());
+  EXPECT_FALSE(shadingControl.slatAngleSchedule());
+  EXPECT_TRUE(shadingControl.isTypeofSlatAngleControlforBlindsDefaulted());
 
   std::vector<SubSurface> subSurfaces = model.getModelObjects<SubSurface>();
   ASSERT_EQ(1u, subSurfaces.size());

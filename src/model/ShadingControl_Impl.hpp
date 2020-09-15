@@ -63,7 +63,6 @@ namespace detail {
 
     virtual ~ShadingControl_Impl() {}
 
-
     //@}
 
     /** @name Virtual Methods */
@@ -87,14 +86,17 @@ namespace detail {
     // **Requires** a Schedule
     static bool isControlTypeValueRequiringSchedule(const std::string& controlType);
 
+    // **Allows** a slat angle control
+    static bool isTypeValueAllowingSlatAngleControl(const std::string& type);
+
     /** @name Getters */
     //@{
+
+    std::string shadingType() const;
 
     boost::optional<Construction> construction() const;
 
     boost::optional<ShadingMaterial> shadingMaterial() const;
-
-    std::string shadingType() const;
 
     std::string shadingControlType() const;
 
@@ -105,6 +107,14 @@ namespace detail {
     boost::optional<double> setpoint() const;
 
     bool isSetpointDefaulted() const;
+
+    bool glareControlIsActive() const; 
+
+    std::string typeofSlatAngleControlforBlinds() const;
+
+    bool isTypeofSlatAngleControlforBlindsDefaulted() const;
+
+    boost::optional<Schedule> slatAngleSchedule() const;
 
     boost::optional<double> setpoint2() const;
 
@@ -127,6 +137,18 @@ namespace detail {
     bool setSetpoint(double setpoint);
 
     void resetSetpoint();
+
+    bool setGlareControlIsActive(bool glareControlIsActive);
+
+    void resetGlareControlIsActive();
+
+    bool setTypeofSlatAngleControlforBlinds(const std::string& typeofSlatAngleControlforBlinds);
+
+    void resetTypeofSlatAngleControlforBlinds();
+
+    bool setSlatAngleSchedule(const Schedule& slatAngleSchedule);
+
+    void resetSlatAngleSchedule();
 
     bool setSetpoint2(double setpoint2);
 
@@ -154,7 +176,6 @@ namespace detail {
     // Clears existing first, then bulk add
     bool setSubSurfaces(const std::vector<SubSurface> &subSurfaces);
     void removeAllSubSurfaces();
-
 
     //@}
    protected:

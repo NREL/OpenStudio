@@ -130,6 +130,29 @@ boost::optional<ModelObject> ReverseTranslator::translateWindowShadingControl( c
       shadingControl->setSetpoint(*d);
     }
 
+    s = workspaceObject.getString(WindowShadingControlFields::GlareControlIsActive);
+    if(s){
+      if (istringEqual(*s, "Yes")) {
+        shadingControl->setGlareControlIsActive(true);
+      } else if (istringEqual(*s, "No")) {
+        shadingControl->setGlareControlIsActive(false);
+      }
+    }
+
+    s = workspaceObject.getString(WindowShadingControlFields::TypeofSlatAngleControlforBlinds);
+    if(s){
+      shadingControl->setTypeofSlatAngleControlforBlinds(*s);
+    }
+
+    if ((target = workspaceObject.getTarget(WindowShadingControlFields::SlatAngleScheduleName))){
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject){
+        if (modelObject->optionalCast<Schedule>()){
+          shadingControl->setSlatAngleSchedule(modelObject->cast<Schedule>());
+        }
+      }
+    }
+
     d = workspaceObject.getDouble(WindowShadingControlFields::Setpoint2);
     if(s){
       shadingControl->setSetpoint2(*d);

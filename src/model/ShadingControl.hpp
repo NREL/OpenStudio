@@ -80,11 +80,11 @@ class MODEL_API ShadingControl : public ResourceObject {
   /** @name Getters */
   //@{
 
+  std::string shadingType() const;
+
   boost::optional<Construction> construction() const;
 
   boost::optional<ShadingMaterial> shadingMaterial() const;
-
-  std::string shadingType() const;
 
   std::string shadingControlType() const;
 
@@ -95,6 +95,14 @@ class MODEL_API ShadingControl : public ResourceObject {
   boost::optional<double> setpoint() const;
 
   bool isSetpointDefaulted() const; // TODO: This makes little sense. Based on the shadingControlType, it's basically required. There's a default harcoded only for OnIfHighSolarOnWindow
+
+  bool glareControlIsActive() const; 
+
+  std::string typeofSlatAngleControlforBlinds() const;
+
+  bool isTypeofSlatAngleControlforBlindsDefaulted() const;
+
+  boost::optional<Schedule> slatAngleSchedule() const;
 
   boost::optional<double> setpoint2() const;
 
@@ -121,6 +129,18 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   void resetSetpoint(); // TODO: makes little sense like isSetpointDefaulted
 
+  bool setGlareControlIsActive(bool glareControlIsActive);
+
+  void resetGlareControlIsActive();
+
+  bool setTypeofSlatAngleControlforBlinds(const std::string& typeofSlatAngleControlforBlinds);
+
+  void resetTypeofSlatAngleControlforBlinds();
+
+  bool setSlatAngleSchedule(const Schedule& slatAngleSchedule);
+
+  void resetSlatAngleSchedule();
+
   bool setSetpoint2(double setpoint2);
 
   bool setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType);
@@ -128,7 +148,6 @@ class MODEL_API ShadingControl : public ResourceObject {
   //@}
   /** @name Other */
   //@{
-
 
   // Check if the current ShadingControlType requires Setpoint(1)
   bool isControlTypeValueNeedingSetpoint1();
@@ -139,6 +158,9 @@ class MODEL_API ShadingControl : public ResourceObject {
   bool isControlTypeValueAllowingSchedule();
   // Check if the current ShadingControlType requires a Schedule
   bool isControlTypeValueRequiringSchedule();
+
+  // Check if the current ShadingType allows a Slat Angle Control
+  bool isTypeValueAllowingSlatAngleControl();
 
   // Extensible: Surfaces
   std::vector<SubSurface> subSurfaces() const;

@@ -63,6 +63,7 @@ TEST_F(ModelFixture, ShadingControl_Construction) {
   EXPECT_EQ(construction.handle(), shadingControl.construction()->handle());
   EXPECT_FALSE(shadingControl.shadingMaterial());
   EXPECT_EQ("InteriorBlind", shadingControl.shadingType());
+  EXPECT_TRUE(shadingControl.isTypeValueAllowingSlatAngleControl());
   EXPECT_EQ("OnIfHighSolarOnWindow", shadingControl.shadingControlType());
   EXPECT_FALSE(shadingControl.schedule());
 
@@ -91,6 +92,7 @@ TEST_F(ModelFixture,ShadingControl_Material) {
   ASSERT_TRUE(shadingControl.shadingMaterial());
   EXPECT_EQ(blind.handle(), shadingControl.shadingMaterial()->handle());
   EXPECT_EQ("InteriorBlind", shadingControl.shadingType());
+  EXPECT_TRUE(shadingControl.isTypeValueAllowingSlatAngleControl());
   EXPECT_EQ("OnIfHighSolarOnWindow", shadingControl.shadingControlType());
   EXPECT_FALSE(shadingControl.schedule());
 
@@ -242,6 +244,7 @@ TEST_F(ModelFixture, ShadingControl_ShadingControlTypeLogic) {
   EXPECT_FALSE(sc.isControlTypeValueNeedingSetpoint1());
   EXPECT_FALSE(sc.isControlTypeValueNeedingSetpoint2());
   EXPECT_FALSE(sc.isControlTypeValueAllowingSchedule());
+  EXPECT_TRUE(sc.isTypeValueAllowingSlatAngleControl());
   EXPECT_FALSE(sc.setSetpoint(30.0));
   EXPECT_FALSE(sc.setSetpoint2(500.0));
   EXPECT_FALSE(sc.setSchedule(sch));
@@ -254,6 +257,7 @@ TEST_F(ModelFixture, ShadingControl_ShadingControlTypeLogic) {
   EXPECT_TRUE(sc.isControlTypeValueNeedingSetpoint1());
   EXPECT_TRUE(sc.isControlTypeValueNeedingSetpoint2());
   EXPECT_TRUE(sc.isControlTypeValueAllowingSchedule());
+  EXPECT_TRUE(sc.isTypeValueAllowingSlatAngleControl());
   EXPECT_TRUE(sc.setSetpoint(30.0));
   EXPECT_TRUE(sc.setSetpoint2(500.0));
   EXPECT_TRUE(sc.setSchedule(sch));
@@ -281,6 +285,7 @@ TEST_F(ModelFixture, ShadingControl_ShadingControlTypeLogic) {
   EXPECT_TRUE(sc.isControlTypeValueNeedingSetpoint1());
   EXPECT_FALSE(sc.isControlTypeValueNeedingSetpoint2());
   EXPECT_TRUE(sc.isControlTypeValueAllowingSchedule());
+  EXPECT_TRUE(sc.isTypeValueAllowingSlatAngleControl());
 
   // Setpoint 1 has been cleared because we're switching Shading Control Type and that was the historical behavior
   EXPECT_FALSE(sc.setpoint2());
@@ -289,4 +294,22 @@ TEST_F(ModelFixture, ShadingControl_ShadingControlTypeLogic) {
   // Schedule is kept, user should be responsible to ensure the Schedule still makes sense, instead of always clearing it
   EXPECT_TRUE(sc.schedule());
 
+  EXPECT_TRUE(sc.isTypeofSlatAngleControlforBlindsDefaulted());
+  EXPECT_TRUE(sc.setSlatAngleSchedule(sch));
+  EXPECT_TRUE(sc.slatAngleSchedule());
+  EXPECT_FALSE(sc.isTypeofSlatAngleControlforBlindsDefaulted());
+  EXPECT_EQ("ScheduledSlatAngle", sc.typeofSlatAngleControlforBlinds());
+  sc.resetSlatAngleSchedule();
+  EXPECT_FALSE(sc.slatAngleSchedule());
+  EXPECT_TRUE(sc.isTypeofSlatAngleControlforBlindsDefaulted());
+  EXPECT_TRUE(sc.setTypeofSlatAngleControlforBlinds("BlockBeamSolar"));
+  EXPECT_FALSE(sc.isTypeofSlatAngleControlforBlindsDefaulted());
+  EXPECT_EQ("BlockBeamSolar", sc.typeofSlatAngleControlforBlinds());
+  sc.resetTypeofSlatAngleControlforBlinds();
+  EXPECT_TRUE(sc.isTypeofSlatAngleControlforBlindsDefaulted());
+  EXPECT_FALSE(sc.glareControlIsActive());
+  EXPECT_TRUE(sc.setGlareControlIsActive(true));
+  EXPECT_TRUE(sc.glareControlIsActive());
+  sc.resetGlareControlIsActive();
+  EXPECT_FALSE(sc.glareControlIsActive());
 }

@@ -172,15 +172,25 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl(model::Sha
     idfObject.setDouble(WindowShadingControlFields::Setpoint, modelObject.setpoint().get());
   }
 
+  if (modelObject.glareControlIsActive() || istringEqual("OnIfHighGlare", shadingControlType)) {
+    idfObject.setString(WindowShadingControlFields::GlareControlIsActive, "Yes");
+  } else {
+    idfObject.setString(WindowShadingControlFields::GlareControlIsActive, "No");
+  }
+
+  boost::optional<Schedule> slatAngleSchedule = modelObject.slatAngleSchedule();
+  if (slatAngleSchedule) {
+    idfObject.setString(WindowShadingControlFields::SlatAngleScheduleName, slatAngleSchedule->name().get());
+    idfObject.setString(WindowShadingControlFields::TypeofSlatAngleControlforBlinds, "ScheduledSlatAngle");
+  } else {
+    if (!istringEqual("ScheduledSlatAngle", modelObject.typeofSlatAngleControlforBlinds())) {
+      idfObject.setString(WindowShadingControlFields::TypeofSlatAngleControlforBlinds, modelObject.typeofSlatAngleControlforBlinds());
+    }
+  }
+
   if (modelObject.isControlTypeValueNeedingSetpoint2()) {
     idfObject.setDouble(WindowShadingControlFields::Setpoint2, modelObject.setpoint2().get());
   }
-
-  idfObject.setString(WindowShadingControlFields::GlareControlIsActive, "No");
-
-  //idfObject.setString(WindowShadingControlFields::TypeofSlatAngleControlforBlinds, "FixedSlatAngle");
-
-  //idfObject.setString(WindowShadingControlFields::SlatAngleScheduleName, "");
 
   idfObject.setString(WindowShadingControlFields::MultipleSurfaceControlType, modelObject.multipleSurfaceControlType());
 
