@@ -49,6 +49,7 @@
 #include "../../model/Blind_Impl.hpp"
 #include "../../model/ScheduleConstant.hpp"
 #include "../../model/ScheduleConstant_Impl.hpp"
+#include "../../model/Construction.hpp"
 
 #include "../../utilities/core/Optional.hpp"
 #include "../../utilities/core/Checksum.hpp"
@@ -79,6 +80,9 @@ using namespace openstudio::model;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
 {
+
+  ForwardTranslator forwardTranslator;
+
   Model model;
 
   ThermalZone thermalZone(model);
@@ -94,41 +98,155 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
   Surface surface(vertices, model);
   surface.setSpace(space);
 
+  // Here's the position of the two subSurfaces onto the base Surface
+  // 2 _____________
+  //   |     |  B  |
+  // 1 |_____|_____|
+  //   |  A  |     |
+  //   |_____|_____|
+  //  0      1     2
+
+  // A
   vertices.clear();
   vertices.push_back(Point3d(0, 1, 0));
   vertices.push_back(Point3d(0, 0, 0));
   vertices.push_back(Point3d(1, 0, 0));
   vertices.push_back(Point3d(1, 1, 0));
 
-  SubSurface subSurface(vertices, model);
-  subSurface.setSurface(surface);
-  subSurface.assignDefaultSubSurfaceType();
+  SubSurface subSurfaceA(vertices, model);
+  subSurfaceA.setName("SubSurface A");
+  subSurfaceA.setSurface(surface);
+  subSurfaceA.assignDefaultSubSurfaceType();
+
+  // B
+  vertices.clear();
+  vertices.push_back(Point3d(1, 2, 0));
+  vertices.push_back(Point3d(1, 1, 0));
+  vertices.push_back(Point3d(2, 1, 0));
+  vertices.push_back(Point3d(2, 2, 0));
+
+  SubSurface subSurfaceB(vertices, model);
+  subSurfaceB.setName("SubSurface B");
+  subSurfaceB.setSurface(surface);
+  subSurfaceB.assignDefaultSubSurfaceType();
+
 
   Blind blind1(model);
   ShadingControl shadingControl1(blind1);
-  shadingControl1.setMultipleSurfaceControlType("Group");
-  subSurface.addShadingControl(shadingControl1);
+  EXPECT_TRUE(shadingControl1.setShadingType("ExteriorBlind"));
+
+  EXPECT_TRUE(shadingControl1.setShadingControlType("OnNightIfLowOutdoorTempAndOffDay"));
+  EXPECT_TRUE(shadingControl1.isControlTypeValueAllowingSchedule());
+  EXPECT_TRUE(shadingControl1.isControlTypeValueNeedingSetpoint1());
+
+  ScheduleConstant shadingControl1Schedule(model);
+  EXPECT_TRUE(shadingControl1.setSchedule(shadingControl1Schedule));
+  EXPECT_TRUE(shadingControl1.setSetpoint(3.0));
+  EXPECT_TRUE(shadingControl1.setMultipleSurfaceControlType("Sequential"));
+  EXPECT_TRUE(shadingControl1.addSubSurface(subSurfaceA));
+  // Convenience method that calls ShadingControl::addSubSurface()
+  EXPECT_TRUE(subSurfaceB.addShadingControl(shadingControl1));
+  ASSERT_EQ(2u, shadingControl1.subSurfaces().size());
+  EXPECT_EQ(1u, shadingControl1.subSurfaceIndex(subSurfaceA).get());
+  EXPECT_EQ(2u, shadingControl1.subSurfaceIndex(subSurfaceB).get());
 
   Blind blind2(model);
   ShadingControl shadingControl2(blind2);
-  shadingControl2.setMultipleSurfaceControlType("Group");
-  subSurface.addShadingControl(shadingControl2);
+  EXPECT_TRUE(shadingControl2.setMultipleSurfaceControlType("Group"));
+  EXPECT_TRUE(subSurfaceA.addShadingControl(shadingControl2));
+  ASSERT_EQ(1u, shadingControl2.subSurfaces().size());
+  EXPECT_EQ(1u, shadingControl2.subSurfaceIndex(subSurfaceA).get());
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
+  EXPECT_EQ(2u, subSurfaceA.shadingControls().size());
+  EXPECT_EQ(1u, subSurfaceB.shadingControls().size());
 
-  std::vector<WorkspaceObject> objVector(workspace.getObjectsByType(IddObjectType::WindowShadingControl));
-  ASSERT_EQ(2u, objVector.size());
-  WorkspaceObject wo1(objVector.at(0));
-  WorkspaceObject wo2(objVector.at(1));
+  {
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  EXPECT_EQ("Group", wo1.getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
-  EXPECT_EQ("Group", wo2.getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
+    ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::WindowShadingControl).size());
 
-  ASSERT_EQ(1u, wo1.extensibleGroups().size());
-  ASSERT_EQ(1u, wo2.extensibleGroups().size());
+    // Test ShadingControl1: it has all the fields set. We also check that it's control sequence number is 1.
+    {
+      boost::optional<WorkspaceObject> _wo = workspace.getObjectByTypeAndName(IddObjectType::WindowShadingControl, shadingControl1.nameString());
+      ASSERT_TRUE(_wo);
+
+      EXPECT_EQ(thermalZone.nameString(), _wo->getString(WindowShadingControlFields::ZoneName, false, true).get());
+      EXPECT_EQ(1, _wo->getInt(WindowShadingControlFields::ShadingControlSequenceNumber, false).get());
+      EXPECT_EQ("ExteriorBlind", _wo->getString(WindowShadingControlFields::ShadingType, false, true).get());
+      EXPECT_FALSE(_wo->getString(WindowShadingControlFields::ConstructionwithShadingName, false, true));
+      EXPECT_EQ("OnNightIfLowOutdoorTempAndOffDay", _wo->getString(WindowShadingControlFields::ShadingControlType, false, true).get());
+      EXPECT_EQ(3.0, _wo->getDouble(WindowShadingControlFields::Setpoint, false).get());
+
+      EXPECT_EQ(shadingControl1Schedule.nameString(), _wo->getString(WindowShadingControlFields::ScheduleName, false, true).get());
+      EXPECT_EQ("Yes", _wo->getString(WindowShadingControlFields::ShadingControlIsScheduled, false, true).get());
+
+      EXPECT_EQ("No", _wo->getString(WindowShadingControlFields::GlareControlIsActive, false, true).get());
+      EXPECT_EQ(blind1.nameString(), _wo->getString(WindowShadingControlFields::ShadingDeviceMaterialName, false, true).get());
+      EXPECT_FALSE(_wo->getString(WindowShadingControlFields::SlatAngleScheduleName, false, true));
+      EXPECT_FALSE(_wo->getString(WindowShadingControlFields::Setpoint2, false, true));
+      EXPECT_FALSE(_wo->getString(WindowShadingControlFields::DaylightingControlObjectName, false, true));
+      EXPECT_EQ("Sequential", _wo->getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
+      ASSERT_EQ(2u, _wo->extensibleGroups().size());
+      {
+        WorkspaceExtensibleGroup w_eg = _wo->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+        EXPECT_EQ(subSurfaceA.nameString(), w_eg.getString(WindowShadingControlExtensibleFields::FenestrationSurfaceName, false).get());
+      }
+      {
+        WorkspaceExtensibleGroup w_eg = _wo->extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+        EXPECT_EQ(subSurfaceB.nameString(), w_eg.getString(WindowShadingControlExtensibleFields::FenestrationSurfaceName, false).get());
+      }
+    }
+
+    {
+      boost::optional<WorkspaceObject> _wo = workspace.getObjectByTypeAndName(IddObjectType::WindowShadingControl, shadingControl2.nameString());
+      ASSERT_TRUE(_wo);
+
+      EXPECT_EQ(thermalZone.nameString(), _wo->getString(WindowShadingControlFields::ZoneName, false, true).get());
+      // Number 2 this time
+      EXPECT_EQ(2, _wo->getInt(WindowShadingControlFields::ShadingControlSequenceNumber, false).get());
+      EXPECT_EQ("InteriorBlind", _wo->getString(WindowShadingControlFields::ShadingType, false, true).get());
+      EXPECT_FALSE(_wo->getString(WindowShadingControlFields::ConstructionwithShadingName, false, true));
+      EXPECT_EQ("OnIfHighSolarOnWindow", _wo->getString(WindowShadingControlFields::ShadingControlType, false, true).get());
+      EXPECT_EQ(shadingControl2.setpoint().get(), _wo->getDouble(WindowShadingControlFields::Setpoint, false).get()); // Model setpoint at 27 W/m2 for some reason
+
+      EXPECT_FALSE(_wo->getString(WindowShadingControlFields::ScheduleName, false, true));
+      EXPECT_EQ("No", _wo->getString(WindowShadingControlFields::ShadingControlIsScheduled, false, true).get());
+
+      EXPECT_EQ("No", _wo->getString(WindowShadingControlFields::GlareControlIsActive, false, true).get());
+      EXPECT_EQ(blind2.nameString(), _wo->getString(WindowShadingControlFields::ShadingDeviceMaterialName, false, true).get());
+      EXPECT_FALSE(_wo->getString(WindowShadingControlFields::SlatAngleScheduleName, false, true));
+      EXPECT_FALSE(_wo->getString(WindowShadingControlFields::Setpoint2, false, true));
+      EXPECT_FALSE(_wo->getString(WindowShadingControlFields::DaylightingControlObjectName, false, true));
+      EXPECT_EQ("Group", _wo->getString(WindowShadingControlFields::MultipleSurfaceControlType, false).get());
+      ASSERT_EQ(1u, _wo->extensibleGroups().size());
+      {
+        WorkspaceExtensibleGroup w_eg = _wo->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+        EXPECT_EQ(subSurfaceA.nameString(), w_eg.getString(WindowShadingControlExtensibleFields::FenestrationSurfaceName, false).get());
+      }
+    }
+
+  }
+
+  {
+    blind1.remove();
+
+    EXPECT_FALSE(shadingControl1.shadingMaterial());
+    EXPECT_FALSE(shadingControl1.construction());
+
+    // You're now in a broken, and unfixable state: you neither have a Construction nor a ShadingMaterial,
+    // and the model API has no setters to help you fix the state (setShadingMaterial / setConstruction)
+    // We test that the FT catches this and does not translate the ShadingControl
+
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
+
+    std::vector<WorkspaceObject> objVector(workspace.getObjectsByType(IddObjectType::WindowShadingControl));
+    EXPECT_EQ(1u, objVector.size());
+    EXPECT_EQ(shadingControl2.nameString(), objVector[0].nameString());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls)
