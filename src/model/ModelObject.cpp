@@ -326,7 +326,7 @@ namespace detail {
         AND Value = ?;)";
 
     boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery,
-        // Bind args
+        // bindArgs
         sqlName);
 
     // Warn if the query failed
@@ -346,7 +346,7 @@ namespace detail {
 
     for (std::string rowName : rowNames.get()) {
       std::string rowCheckQuery = R"(
-        SELECT RowName FROM TabularDataWithStrings
+        SELECT Value FROM TabularDataWithStrings
           WHERE ReportName = 'Initialization Summary'
           AND ReportForString = 'Entire Facility'
           AND TableName = 'Component Sizing Information'
@@ -366,9 +366,10 @@ namespace detail {
           AND ReportForString = 'Entire Facility'
           AND TableName = 'Component Sizing Information'
           AND ColumnName='Value'
-          AND RowName = ?
-          AND Value = ?;)";
-      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery, rowName);
+          AND RowName = ?;)";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery,
+          // bindArgs
+          rowName);
       // Check if the query succeeded
       if (val) {
         result = val.get();
