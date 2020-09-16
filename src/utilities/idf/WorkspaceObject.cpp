@@ -825,7 +825,25 @@ namespace detail {
     UnsignedVector myFields = objectListFields();
     UnsignedVector otherFields = other.objectListFields();
     // require same managedObjectLists fields to at least exist
-    if (myFields != otherFields) { return false; }
+    // Can't do `if (myFields != otherFields) { return false; }` because cloning could initialize fields at end of object,
+    // eg Humidistat Name in ThermalZone
+    auto mySize = myFields.size();
+    auto otherSize = otherFields.size();
+    for (size_t i = 0; i < std::max(mySize, otherSize); ++i) {
+      if (i >= mySize) {
+        if (other.getTarget(otherFields[i])) {
+          return false;
+        }
+      } else if (i >= otherSize) {
+        if (getTarget(myFields[i])) {
+          return false;
+        }
+      } else {
+        if (myFields[i] != otherFields[i]) {
+          return false;
+        }
+      }
+    }
 
     // iddObject() same--compare data
     for (const unsigned i : myFields) {
