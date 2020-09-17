@@ -75,6 +75,8 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   static std::vector<std::string> shadingControlTypeValues();
 
+  static std::vector<std::string> typeofSlatAngleControlforBlindsValues();
+
   static std::vector<std::string> multipleSurfaceControlTypeValues();
 
   /** @name Getters */
@@ -96,7 +98,7 @@ class MODEL_API ShadingControl : public ResourceObject {
 
   bool isSetpointDefaulted() const; // TODO: This makes little sense. Based on the shadingControlType, it's basically required. There's a default harcoded only for OnIfHighSolarOnWindow
 
-  bool glareControlIsActive() const; 
+  bool glareControlIsActive() const;
 
   std::string typeofSlatAngleControlforBlinds() const;
 

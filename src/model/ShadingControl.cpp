@@ -755,6 +755,11 @@ std::vector<std::string> ShadingControl::shadingControlTypeValues() {
                         OS_ShadingControlFields::ShadingControlType);
 }
 
+std::vector<std::string> ShadingControl::typeofSlatAngleControlforBlindsValues() {
+  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                        OS_ShadingControlFields::TypeofSlatAngleControlforBlinds);
+}
+
 std::vector<std::string> ShadingControl::multipleSurfaceControlTypeValues() {
   return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                         OS_ShadingControlFields::MultipleSurfaceControlType);
