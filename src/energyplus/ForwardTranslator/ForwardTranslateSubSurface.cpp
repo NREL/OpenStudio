@@ -36,8 +36,6 @@
 #include "../../model/Surface_Impl.hpp"
 #include "../../model/ConstructionBase.hpp"
 #include "../../model/ConstructionBase_Impl.hpp"
-#include "../../model/ShadingControl.hpp"
-#include "../../model/ShadingControl_Impl.hpp"
 #include "../../model/WindowPropertyFrameAndDivider.hpp"
 #include "../../model/WindowPropertyFrameAndDivider_Impl.hpp"
 #include "../../model/SurfacePropertyOtherSideCoefficients.hpp"

@@ -5956,6 +5956,21 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
   });
 
 
+/*****************************************************************************************************************************************************
+*                                                        Shading Control Refactor: pre-scan                                                         *
+*****************************************************************************************************************************************************/
+
+  std::map<std::string, std::string> shadingControlToSurfaceMap;
+  std::vector<IdfObject> subSurfaces = idf_3_0_1.getObjectsByType(idf_3_0_1.iddFile().getObject("OS:SubSurface").get());
+  for ( auto & subSurface : subSurfaces ) {
+    value = subSurface.getString(7); // Shading Control Name
+    if (value) {
+      // TEMP
+      LOG(Warn, value.get() << ": " << subSurface.getString(0).get());
+      shadingControlToSurfaceMap[value.get()] = subSurface.getString(0).get();
+    }
+  }
+
   for (const IdfObject& object : idf_3_0_1.objects()) {
     auto iddname = object.iddObject().name();
 
@@ -6306,7 +6321,56 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
         ss << newObject;
       }
 
-    // Note: Would have needed to do UtilityCost:Tariff too, but not wrapped
+    // Note: Would have needed to do UtilityCost:Tariff for Fuel Type renames too, but not wrapped
+
+    } else if (iddname == "OS:ShadingControl") {
+      // get all subsurfaces
+      // loop thru subsurfaces
+      // check if shading control name equals this handle
+      // add extensible field with subsurface handle
+      // remove shading control name field from subsurface
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          newObject.setString(i, value.get());
+        }
+      }
+
+      // New field at end, before extensible, and I moved to E+ default to the Ctor and made it required, so need to set it here
+      newObject.setString(13, "Sequential");
+
+      // Add the SubSurface to the list if any
+      auto subSurfaceHandleIt = shadingControlToSurfaceMap.find(object.getString(0).get());
+      if ( subSurfaceHandleIt != shadingControlToSurfaceMap.end() ) {
+        // TEMP
+        LOG(Warn, object.getString(0).get() << " maps to " << subSurfaceHandleIt->second);
+        newObject.pushExtensibleGroup(StringVector(1u, subSurfaceHandleIt->second));
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
+    } else if (iddname == "OS:SubSurface") {
+
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 7) {
+            newObject.setString(i, value.get());
+          } else if (i == 7) { // Shading Control Name
+            // no-op
+          } else {
+            newObject.setString(i - 1, value.get());
+          }
+        }
+      }
+
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
 
     // No-op
     } else {

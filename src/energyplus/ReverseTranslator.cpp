@@ -850,7 +850,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::RunPeriodControl_SpecialDays :
     {
-      //modelObject = translateRunPeriodControlSpecialDays(workspaceObject);
+      modelObject = translateRunPeriodControlSpecialDays(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::Schedule_Compact :
@@ -1067,6 +1067,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
   case openstudio::IddObjectType::WindowProperty_FrameAndDivider:
   {
     modelObject = translateWindowPropertyFrameAndDivider(workspaceObject);
+    break;
+  }
+  case openstudio::IddObjectType::WindowShadingControl:
+  {
+    modelObject = translateWindowShadingControl(workspaceObject);
     break;
   }
   case openstudio::IddObjectType::Zone:
