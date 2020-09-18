@@ -30,6 +30,8 @@
 #include "RefrigerationCondenserAirCooled.hpp"
 #include "RefrigerationCondenserAirCooled_Impl.hpp"
 
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
 #include "CurveLinear.hpp"
 #include "CurveLinear_Impl.hpp"
 #include "ThermalZone.hpp"
@@ -336,6 +338,21 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationCondenserAirCooled_Impl::system() const {
+
+    boost::optional<RefrigerationSystem> system;
+    // We use getModelObjectSources to check if more than one
+    std::vector<RefrigerationSystem> systems = getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
+
+    if( systems.size() > 0u) {
+      if( systems.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
+      }
+      system = systems[0];
+    }
+    return system;
+  }
+
 } // detail
 
 RefrigerationCondenserAirCooled::RefrigerationCondenserAirCooled(const Model& model)
@@ -520,6 +537,10 @@ bool RefrigerationCondenserAirCooled::setCondensatePipingRefrigerantInventory(do
 
 void RefrigerationCondenserAirCooled::resetCondensatePipingRefrigerantInventory() {
   getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->resetCondensatePipingRefrigerantInventory();
+}
+
+boost::optional<RefrigerationSystem> RefrigerationCondenserAirCooled::system() const {
+  return getImpl<detail::RefrigerationCondenserAirCooled_Impl>()->system();
 }
 
 /// @cond

@@ -38,6 +38,7 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
+class RefrigerationSystem;
 
 namespace detail {
 
@@ -161,6 +162,10 @@ class MODEL_API RefrigerationCondenserWaterCooled : public StraightComponent {
   //@}
   /** @name Other */
   //@{
+
+  // The parent RefrigerationSystem, which rejects heat to this condenser
+  // This is a convenience method to find any RefrigerationSystem that uses this condenser
+  boost::optional<RefrigerationSystem> system() const;
 
   //@}
  protected:

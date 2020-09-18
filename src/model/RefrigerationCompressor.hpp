@@ -89,8 +89,8 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
 
-  // Returns the parent RefrigerationSystem(s)
-  std::vector<RefrigerationSystem> systems() const;
+  // Returns the parent RefrigerationSystem if any
+  boost::optional<RefrigerationSystem> system() const;
 
   //@}
   /** @name Setters */
@@ -132,8 +132,8 @@ class MODEL_API RefrigerationCompressor : public ParentObject {
 
   void resetTranscriticalCompressorCapacityCurve();
 
-  // Remove from parent system(s)
-  void removeFromSystems();
+  // Remove from parentt system if any
+  void removeFromSystem();
 
   //@}
   /** @name Other */

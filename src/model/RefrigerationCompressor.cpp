@@ -107,7 +107,7 @@ namespace detail {
   std::vector<IdfObject> RefrigerationCompressor_Impl::remove()
   {
     // Remove from ModelObjectList(s) in RefrigerationSystem(s) if needed
-    this->removeFromSystems();
+    this->removeFromSystem();
 
     return ParentObject_Impl::remove();
   }
@@ -353,19 +353,19 @@ namespace detail {
     return getObject<ModelObject>().getModelObjectTarget<CurveBicubic>(OS_Refrigeration_CompressorFields::RefrigerationCompressorCapacityCurveName);
   }
 
-  std::vector<RefrigerationSystem> RefrigerationCompressor_Impl::systems() const {
-    std::vector<RefrigerationSystem> result;
+  boost::optional<RefrigerationSystem> RefrigerationCompressor_Impl::system() const {
+    boost::optional<RefrigerationSystem> result;
 
     RefrigerationCompressor refrigerationCompressor = this->getObject<RefrigerationCompressor>();
     for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
       RefrigerationCompressorVector refrigerationCompressors = refrigerationSystem.compressors();
       if ( !refrigerationCompressors.empty() && std::find(refrigerationCompressors.begin(), refrigerationCompressors.end(), refrigerationCompressor) != refrigerationCompressors.end() ) {
-        result.push_back(refrigerationSystem);
+        result = refrigerationSystem;
         break;
       } else {
         RefrigerationCompressorVector refrigerationHighStageCompressors = refrigerationSystem.highStageCompressors();
         if ( !refrigerationHighStageCompressors.empty() && std::find(refrigerationHighStageCompressors.begin(), refrigerationHighStageCompressors.end(), refrigerationCompressor) != refrigerationHighStageCompressors.end() ) {
-          result.push_back(refrigerationSystem);
+          result = refrigerationSystem;
           break;
         }
       }
@@ -374,12 +374,11 @@ namespace detail {
     return result;
   }
 
-  void RefrigerationCompressor_Impl::removeFromSystems() {
-    RefrigerationCompressor refrigerationCompressor = this->getObject<RefrigerationCompressor>();
-
-    for (RefrigerationSystem& refrigerationSystem: this->systems()) {
-      refrigerationSystem.removeCompressor(refrigerationCompressor);
-      refrigerationSystem.removeHighStageCompressor(refrigerationCompressor);
+  void RefrigerationCompressor_Impl::removeFromSystem() {
+    if (boost::optional<RefrigerationSystem> refrigerationSystem = this->system()) {
+      RefrigerationCompressor refrigerationCompressor = this->getObject<RefrigerationCompressor>();
+      refrigerationSystem->removeCompressor(refrigerationCompressor);
+      refrigerationSystem->removeHighStageCompressor(refrigerationCompressor);
     }
   }
 
@@ -569,12 +568,12 @@ void RefrigerationCompressor::resetTranscriticalCompressorCapacityCurve() {
   getImpl<detail::RefrigerationCompressor_Impl>()->resetTranscriticalCompressorCapacityCurve();
 }
 
-std::vector<RefrigerationSystem> RefrigerationCompressor::systems() const {
-  return getImpl<detail::RefrigerationCompressor_Impl>()->systems();
+boost::optional<RefrigerationSystem> RefrigerationCompressor::system() const {
+  return getImpl<detail::RefrigerationCompressor_Impl>()->system();
 }
 
-void RefrigerationCompressor::removeFromSystems() {
-  getImpl<detail::RefrigerationCompressor_Impl>()->removeFromSystems();
+void RefrigerationCompressor::removeFromSystem() {
+  getImpl<detail::RefrigerationCompressor_Impl>()->removeFromSystem();
 }
 
 /// @cond

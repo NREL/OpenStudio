@@ -214,6 +214,12 @@ namespace detail {
     return value.get();
   }
 
+  double WaterHeaterHeatPump_Impl::maximumInletAirTemperatureforCompressorOperation() const {
+    boost::optional<double> value = getDouble(OS_WaterHeater_HeatPumpFields::MaximumInletAirTemperatureforCompressorOperation,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
   std::string WaterHeaterHeatPump_Impl::compressorLocation() const {
     boost::optional<std::string> value = getString(OS_WaterHeater_HeatPumpFields::CompressorLocation,true);
     OS_ASSERT(value);
@@ -383,6 +389,11 @@ namespace detail {
 
   bool WaterHeaterHeatPump_Impl::setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation) {
     bool result = setDouble(OS_WaterHeater_HeatPumpFields::MinimumInletAirTemperatureforCompressorOperation, minimumInletAirTemperatureforCompressorOperation);
+    return result;
+  }
+
+  bool WaterHeaterHeatPump_Impl::setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation) {
+    bool result = setDouble(OS_WaterHeater_HeatPumpFields::MaximumInletAirTemperatureforCompressorOperation, maximumInletAirTemperatureforCompressorOperation);
     return result;
   }
 
@@ -594,6 +605,7 @@ WaterHeaterHeatPump::WaterHeaterHeatPump(const Model& model,
   autosizeEvaporatorAirFlowRate();
   setInletAirConfiguration("Schedule");
   setMinimumInletAirTemperatureforCompressorOperation(10.0);
+  setMaximumInletAirTemperatureforCompressorOperation(48.89);
   setCompressorLocation("Schedule");
   setFanPlacement("DrawThrough");
   setOnCycleParasiticElectricLoad(0.0);
@@ -651,6 +663,7 @@ WaterHeaterHeatPump::WaterHeaterHeatPump(const Model& model)
   autosizeEvaporatorAirFlowRate();
   setInletAirConfiguration("Schedule");
   setMinimumInletAirTemperatureforCompressorOperation(10.0);
+  setMaximumInletAirTemperatureforCompressorOperation(48.89);
   setCompressorLocation("Schedule");
   setFanPlacement("DrawThrough");
   setOnCycleParasiticElectricLoad(0.0);
@@ -738,6 +751,10 @@ ModelObject WaterHeaterHeatPump::dXCoil() const {
 
 double WaterHeaterHeatPump::minimumInletAirTemperatureforCompressorOperation() const {
   return getImpl<detail::WaterHeaterHeatPump_Impl>()->minimumInletAirTemperatureforCompressorOperation();
+}
+
+double WaterHeaterHeatPump::maximumInletAirTemperatureforCompressorOperation() const {
+  return getImpl<detail::WaterHeaterHeatPump_Impl>()->maximumInletAirTemperatureforCompressorOperation();
 }
 
 std::string WaterHeaterHeatPump::compressorLocation() const {
@@ -846,6 +863,10 @@ bool WaterHeaterHeatPump::setDXCoil(const ModelObject& coil) {
 
 bool WaterHeaterHeatPump::setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation) {
   return getImpl<detail::WaterHeaterHeatPump_Impl>()->setMinimumInletAirTemperatureforCompressorOperation(minimumInletAirTemperatureforCompressorOperation);
+}
+
+bool WaterHeaterHeatPump::setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation) {
+  return getImpl<detail::WaterHeaterHeatPump_Impl>()->setMaximumInletAirTemperatureforCompressorOperation(maximumInletAirTemperatureforCompressorOperation);
 }
 
 bool WaterHeaterHeatPump::setCompressorLocation(std::string compressorLocation) {

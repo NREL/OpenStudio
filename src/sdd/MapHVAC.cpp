@@ -5753,7 +5753,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     // Sort them by index too so we push them in the right order
     std::sort(eqpListNameElements.begin(), eqpListNameElements.end(), sortByIndex);
 
-    for (const pugi::xml_node eqpListNameElement: eqpListNameElements) {
+    for (const auto& eqpListNameElement: eqpListNameElements) {
       equipmentList.push_back(eqpListNameElement.text().as_string());
     }
 

@@ -62,6 +62,7 @@ class MODEL_API RefrigerationSubcoolerMechanical : public ModelObject {
   /** @name Getters */
   //@{
 
+  // The system that provides the cooling capacity
   boost::optional<RefrigerationSystem> capacityProvidingSystem() const;
 
   boost::optional<double> outletControlTemperature() const;
@@ -81,6 +82,10 @@ class MODEL_API RefrigerationSubcoolerMechanical : public ModelObject {
   //@}
   /** @name Other */
   //@{
+
+  // The parent RefrigerationSystem, for which condensate is cooled.
+  // This is a convenience method to find any RefrigerationSystem that uses this subcooler
+  boost::optional<RefrigerationSystem> system() const;
 
   //@}
  protected:

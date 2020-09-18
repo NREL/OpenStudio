@@ -1217,6 +1217,34 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ZoneHVACLowTemp) {
   }
 }
 
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_WaterHeaterHeatPump) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_WaterHeaterHeatPump.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_WaterHeaterHeatPump_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> whs = model->getObjectsByType("OS:WaterHeater:HeatPump");
+  ASSERT_EQ(1u, whs.size());
+  WorkspaceObject wh = whs[0];
+
+  // Before insertion point: Minimum Inlet Air Temperature for Compressor Operation
+  ASSERT_TRUE(wh.getDouble(15, false));
+  EXPECT_EQ(12.5, wh.getDouble(15).get());
+
+  // Insertion point
+  ASSERT_TRUE(wh.getDouble(16, false));
+  EXPECT_EQ(48.89, wh.getDouble(16).get());
+
+  // Compressor Location
+  ASSERT_TRUE(wh.getString(17, false, true));
+  EXPECT_EQ("Outdoors", wh.getString(17, false, true).get());
+
+  // Last Field: Control Sensor Location In Stratified Tank
+  ASSERT_TRUE(wh.getString(25, false, true));
+  EXPECT_EQ("Heater2", wh.getString(25, false, true).get());
+}
 
 TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_ShadingControl.osm");

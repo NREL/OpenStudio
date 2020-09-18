@@ -108,7 +108,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDiagnostics) {
                                   // Oops, this one is twice
                                   "ReportDuringHVACSizingSimulation", "ReportDuringHVACSizingSimulation"});
 
-    for (const auto key: keys) {
+    for (const auto& key: keys) {
       IdfExtensibleGroup eg = _i_outputDiagnostics->pushExtensibleGroup();
       EXPECT_TRUE(eg.setString(Output_DiagnosticsExtensibleFields::Key, key));
     }

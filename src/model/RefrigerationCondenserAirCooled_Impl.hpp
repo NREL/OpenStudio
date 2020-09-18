@@ -36,6 +36,7 @@
 namespace openstudio {
 namespace model {
 
+class RefrigerationSystem;
 class CurveLinear;
 class ThermalZone;
 
@@ -162,6 +163,8 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    boost::optional<RefrigerationSystem> system() const;
 
     //@}
    protected:
