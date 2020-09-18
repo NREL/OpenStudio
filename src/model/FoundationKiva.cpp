@@ -30,6 +30,8 @@
 #include <vector>
 #include "FoundationKiva.hpp"
 #include "FoundationKiva_Impl.hpp"
+#include "FoundationKivaSettings.hpp"
+#include "FoundationKivaSettings_Impl.hpp"
 #include "Material.hpp"
 #include "Material_Impl.hpp"
 #include "ConstructionBase.hpp"
@@ -102,6 +104,24 @@ namespace detail {
                                            bool keepHandle)
     : ModelObject_Impl(other,model,keepHandle)
   {}
+
+  ModelObject FoundationKiva_Impl::clone(Model model) const {
+    auto result = ModelObject_Impl::clone(model);
+
+    // FoundationKiva cannot be used without FoundationKivaSettings.
+    // Note that FoundationKiva can be constructed without FoundationKivaSettings
+    auto targetModelSettings = model.getOptionalUniqueModelObject<FoundationKivaSettings>();
+    if (! targetModelSettings) {
+      // If the target model does not already have FoundationKivaSettings,
+      // and the source model does have settings, then bring them over
+      auto sourceModelSettings = this->model().getOptionalUniqueModelObject<FoundationKivaSettings>();
+      if (sourceModelSettings) {
+        sourceModelSettings->clone(model);
+      }
+    }
+
+    return result;
+  }
 
   const std::vector<std::string>& FoundationKiva_Impl::outputVariableNames() const
   {
@@ -663,7 +683,7 @@ void FoundationKiva::removeCustomBlock(int groupIndex) {
 }
 
 void FoundationKiva::removeAllCustomBlocks() {
-  return getImpl<detail::FoundationKiva_Impl>()->removeAllCustomBlocks();
+  getImpl<detail::FoundationKiva_Impl>()->removeAllCustomBlocks();
 }
 
 std::vector<CustomBlock> FoundationKiva::customBlocks() const {

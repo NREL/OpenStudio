@@ -139,4 +139,34 @@ SWIG_UNIQUEMODELOBJECT(FoundationKivaSettings);
 SWIG_UNIQUEMODELOBJECT(OutputTableSummaryReports);
 SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
 
+#if defined SWIGCSHARP || defined(SWIGJAVA)
+
+  %inline {
+    namespace openstudio {
+      namespace model {
+        boost::optional<OutputControlFiles> outputControlFiles(const openstudio::model::Model& model){
+          return model.outputControlFiles();
+        }
+      }
+    }
+  }
+
 #endif
+
+#if defined(SWIGCSHARP)
+  //%pragma(csharp) imclassimports=%{
+  %pragma(csharp) moduleimports=%{
+
+    using System;
+    using System.Runtime.InteropServices;
+
+    public partial class Model : Workspace {
+      public OptionalOutputControlFiles outputControlFiles()
+      {
+        return OpenStudio.OpenStudioModelSimulation.outputControlFiles(this);
+      }
+    }
+  %}
+#endif
+
+#endif // MODEL_GEOMETRY_I

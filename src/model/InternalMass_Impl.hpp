@@ -129,6 +129,8 @@ namespace detail {
      *  floorArea (m^2) and numPeople. */
     double getSurfaceAreaPerPerson(double floorArea, double numPeople) const;
 
+    virtual ModelObject clone(Model model) const override;
+
     //@}
    protected:
 

@@ -445,6 +445,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
+  // TODO: Is this still needed?
   // ensure shading controls only reference windows in a single zone and determine control sequence number
   // DLM: ideally E+ would not need to know the zone, shading controls could work across zones
   std::vector<ShadingControl> shadingControls = model.getConcreteModelObjects<ShadingControl>();
@@ -477,7 +478,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
             thisZoneHandleSet.insert(zoneHandle);
             ShadingControl clone = shadingControl.clone(model).cast<ShadingControl>();
             // assign clone to control subSurface
-            subSurface.setShadingControl(clone);
+            clone.addSubSurface(subSurface);
             auto it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
             if (it == zoneHandleToShadingControlVectorMap.end()) {
               zoneHandleToShadingControlVectorMap.insert(std::make_pair(zoneHandle, std::vector<ShadingControl>()));

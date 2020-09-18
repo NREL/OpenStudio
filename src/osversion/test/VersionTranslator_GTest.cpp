@@ -1216,3 +1216,35 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ZoneHVACLowTemp) {
     ASSERT_TRUE(lowtempradiant.getTarget(8)); // Heating Setpoint Temperature Schedule Name
   }
 }
+
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_ShadingControl.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_ShadingControl_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> sss = model->getObjectsByType("OS:SubSurface");
+  ASSERT_EQ(1u, sss.size());
+  WorkspaceObject ss = sss[0];
+
+  EXPECT_EQ(0.5, ss.getDouble(6));
+  EXPECT_EQ(4u, ss.numExtensibleGroups());
+  auto eg = ss.extensibleGroups()[3];
+  EXPECT_EQ(1, eg.getInt(0, false).get());
+  EXPECT_EQ(0, eg.getInt(1, false).get());
+  EXPECT_EQ(0, eg.getInt(2, false).get());
+
+  std::vector<WorkspaceObject> scs = model->getObjectsByType("OS:ShadingControl");
+  ASSERT_EQ(1u, scs.size());
+  WorkspaceObject sc = scs[0];
+
+  EXPECT_EQ("Sequential", sc.getString(13, false, true).get());
+  ASSERT_EQ(1u, sc.numExtensibleGroups());
+
+  WorkspaceExtensibleGroup w_eg = sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  ASSERT_TRUE(w_eg.getTarget(0));
+  EXPECT_EQ("OS:SubSurface", w_eg.getTarget(0).get().iddObject().name());
+}

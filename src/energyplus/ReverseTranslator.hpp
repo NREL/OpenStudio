@@ -347,6 +347,8 @@ class ENERGYPLUS_API ReverseTranslator {
 
   boost::optional<model::ModelObject> translateWindowPropertyFrameAndDivider(const WorkspaceObject & workspaceObject);
 
+  boost::optional<model::ModelObject> translateWindowShadingControl(const WorkspaceObject & workspaceObject);
+
   boost::optional<model::ModelObject> translateZone(const WorkspaceObject & workspaceObject);
 
   boost::optional<model::ModelObject> translateZoneAirHeatBalanceAlgorithm(const WorkspaceObject & workspaceObject);

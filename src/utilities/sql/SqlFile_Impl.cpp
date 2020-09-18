@@ -2721,7 +2721,7 @@ namespace openstudio{
       ReportingFrequency rf = *(wquery.reportingFrequency());
       std::string tsName = *(wquery.timeSeries().get().name());
       if (wquery.keyValues()) {
-        for (const std::string kvName : wquery.keyValues().get().names()) {
+        for (const std::string & kvName : wquery.keyValues().get().names()) {
           OptionalTimeSeries ots = timeSeries(envPeriod,rf.valueDescription(),tsName,kvName);
           if (ots) { result.push_back(*ots); }
         }

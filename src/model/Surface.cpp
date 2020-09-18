@@ -69,6 +69,8 @@
 #include "AirflowNetworkHorizontalOpening_Impl.hpp"
 #include "FoundationKiva.hpp"
 #include "FoundationKiva_Impl.hpp"
+#include "FoundationKivaSettings.hpp"
+#include "FoundationKivaSettings_Impl.hpp"
 #include "SurfacePropertyExposedFoundationPerimeter.hpp"
 #include "SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
 
@@ -167,6 +169,7 @@ namespace detail {
   {
     ModelObject newParentAsModelObject = ModelObject_Impl::clone(model);
     ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
+
     for (ModelObject child : children())
     {
       ModelObject newChild = child.clone(model);
@@ -175,6 +178,21 @@ namespace detail {
         newChild.cast<SubSurface>().setSubSurfaceType(child.cast<SubSurface>().subSurfaceType());
       }
     }
+
+    auto coefficients = surfacePropertyConvectionCoefficients();
+    if (coefficients)
+    {
+      auto coefficientsClone = coefficients->clone(model).cast<SurfacePropertyConvectionCoefficients>();
+      coefficientsClone.setSurface(newParentAsModelObject);
+    }
+
+    auto foundation = adjacentFoundation();
+    if (foundation)
+    {
+      auto foundationClone = foundation->clone(model).cast<FoundationKiva>();
+      newParentAsModelObject.cast<Surface>().setAdjacentFoundation(foundationClone);
+    }
+
     return newParentAsModelObject;
   }
 
@@ -1864,8 +1882,7 @@ namespace detail {
       surface->setVertices(vertices);
 
       // loop over all sub surfaces and reparent
-      typedef std::pair<Handle, Point3dVector> MapType;
-      for (const MapType& p : handleToFaceVertexMap){
+      for (const auto& p : handleToFaceVertexMap){
         // if surface includes a single point it will include them all
         if (pointInPolygon(p.second[0], newFace, tol)){
           boost::optional<SubSurface> subSurface = model.getModelObject<SubSurface>(p.first);
@@ -2467,4 +2484,3 @@ boost::optional<AirflowNetworkSurface> Surface::airflowNetworkSurface() const
 
 } // model
 } // openstudio
-
