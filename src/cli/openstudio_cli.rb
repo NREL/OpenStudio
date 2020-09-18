@@ -369,9 +369,6 @@ def parse_main_args(main_args)
   remove_indices.reverse_each {|i| main_args.delete_at(i)}
 
   if !new_path.empty?
-    if ENV['GEM_PATH']
-      new_path << ENV['GEM_PATH'].to_s
-    end
 
     new_path = new_path.join(File::PATH_SEPARATOR)
 
