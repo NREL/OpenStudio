@@ -307,13 +307,22 @@ namespace detail {
     std::vector<std::string> result;
     if (OptionalUnsigned index = nameFieldIndex()) {
       result = m_fields[*index].properties().references;
-      // To ensure uniqueness of name within a given class, we add a fake reference by class 
+      // To ensure uniqueness of name within a given class, we add a fake reference by class
       // https://github.com/NREL/OpenStudio/issues/3079
       //if (result.empty()) {
         std::string ref = name();
         result.push_back(ref + "UniqueNames");
       //}
+    } else {
+      std::string n = name();
+      if (n == "OS:PortList") {
+        result.push_back("ConnectionObject");
+        result.push_back("PortLists");
+      } else if (n == "OS:Connection") {
+        result.push_back("ConnectionNames");
+      }
     }
+
     return result;
   }
 

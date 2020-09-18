@@ -360,7 +360,7 @@ bool PortList_Impl::setHVACComponent(const HVACComponent & hvacComponent)
 } // detail
 
 PortList::PortList(const HVACComponent& comp)
-  : ModelObject(PortList::iddObjectType(),comp.model(),true)
+  : ModelObject(PortList::iddObjectType(), comp.model(), false) // No FastName
 {
   OS_ASSERT(getImpl<detail::PortList_Impl>());
 

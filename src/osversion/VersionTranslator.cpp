@@ -6284,6 +6284,24 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
 
     // Note: Would have needed to do UtilityCost:Tariff too, but not wrapped
 
+    } else if ((iddname == "OS:Connection") || (iddname == "OS:PortList")) {
+      // Deleted the 'Name' field
+      auto iddObject = idd_3_1_0.getObject(iddname);
+      IdfObject newObject(iddObject.get());
+      for (size_t i = 0; i < object.numFields(); ++i) {
+        if ((value = object.getString(i))) {
+          if (i < 1) {
+            newObject.setString(i, value.get());
+          } else if ( i == 1 ) {
+            // Deleted the name: no-op
+          } else {
+            newObject.setString(i-1, value.get());
+          }
+        }
+      }
+      m_refactored.push_back(RefactoredObjectData(object, newObject));
+      ss << newObject;
+
     // No-op
     } else {
       ss << object;

@@ -126,7 +126,7 @@ namespace detail {
 } // detail
 
 Connection::Connection(const Model& model)
-  : ModelObject(Connection::iddObjectType(), model, true)
+  : ModelObject(Connection::iddObjectType(), model, false) // No FastName
 {
   OS_ASSERT(getImpl<detail::Connection_Impl>());
 }

@@ -1231,6 +1231,10 @@ namespace detail {
     }
     WorkspaceObjectVector candidates = m_workspace->getObjectsByReference(iddObject().references());
     for (const WorkspaceObject& candidate : candidates) {
+      if ((candidate.iddObject().type() == openstudio::IddObjectType::OS_Connection) ||
+          (candidate.iddObject().type() == openstudio::IddObjectType::OS_PortList)) {
+        continue;
+      }
       OptionalString candidateName = candidate.name();
       OS_ASSERT(candidateName);
       if ((istringEqual(*oName,*candidateName) &&
