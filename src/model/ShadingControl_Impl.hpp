@@ -77,14 +77,26 @@ namespace detail {
     virtual ModelObject clone(Model model) const override;
 
     //@}
+
+    static bool isControlTypeValueNeedingSetpoint1(const std::string& controlType);
+    static bool isControlTypeValueNeedingSetpoint2(const std::string& controlType);
+
+    // **Allows** a schedule
+    static bool isControlTypeValueAllowingSchedule(const std::string& controlType);
+    // **Requires** a Schedule
+    static bool isControlTypeValueRequiringSchedule(const std::string& controlType);
+
+    // **Allows** a slat angle control
+    static bool isTypeValueAllowingSlatAngleControl(const std::string& type);
+
     /** @name Getters */
     //@{
+
+    std::string shadingType() const;
 
     boost::optional<Construction> construction() const;
 
     boost::optional<ShadingMaterial> shadingMaterial() const;
-
-    std::string shadingType() const;
 
     std::string shadingControlType() const;
 
@@ -95,6 +107,16 @@ namespace detail {
     boost::optional<double> setpoint() const;
 
     bool isSetpointDefaulted() const;
+
+    bool glareControlIsActive() const; 
+
+    std::string typeofSlatAngleControlforBlinds() const;
+
+    bool isTypeofSlatAngleControlforBlindsDefaulted() const;
+
+    boost::optional<Schedule> slatAngleSchedule() const;
+
+    boost::optional<double> setpoint2() const;
 
     std::string multipleSurfaceControlType() const;
 
@@ -115,6 +137,23 @@ namespace detail {
     bool setSetpoint(double setpoint);
 
     void resetSetpoint();
+
+    bool setGlareControlIsActive(bool glareControlIsActive);
+
+    void resetGlareControlIsActive();
+
+    bool setTypeofSlatAngleControlforBlinds(const std::string& typeofSlatAngleControlforBlinds);
+
+    void resetTypeofSlatAngleControlforBlinds();
+
+    bool setSlatAngleSchedule(const Schedule& slatAngleSchedule);
+
+    void resetSlatAngleSchedule();
+
+    bool setSetpoint2(double setpoint2);
+
+    // Impl only
+    void resetSetpoint2();
 
     bool setMultipleSurfaceControlType(const std::string& multipleSurfaceControlType);
 

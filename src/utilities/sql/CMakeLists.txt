@@ -8,6 +8,7 @@ set(sql_src
   sql/SqlFile_Impl.cpp
   sql/SqlFileTimeSeriesQuery.hpp
   sql/SqlFileTimeSeriesQuery.cpp
+  sql/PreparedStatement.hpp
 )
 
 set(sql_test_src

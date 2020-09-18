@@ -655,27 +655,45 @@ namespace detail {
       OptionalDouble outputResult;
       // opaque exterior
       if (sqlFile && constructionName && oConstruction->isOpaque()) {
-        std::string query = "SELECT RowId FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Opaque Exterior' AND ColumnName='Construction' AND Value='" +
-            to_upper_copy(*constructionName) + "'";
-        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query);
+        std::string query = R"(SELECT RowId from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Opaque Exterior'
+                                        AND ColumnName = 'Construction'
+                                        AND Value = ?;)";
+        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query, to_upper_copy(*constructionName) );
+
         if (rowId) {
-          std::stringstream ss;
-          ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Opaque Exterior' AND RowId='";
-          ss << *rowId << "' AND ColumnName='U-Factor with Film' AND Units='W/m2-K'";
-          query = ss.str();
-          outputResult = sqlFile->execAndReturnFirstDouble(query);
+          std::string query = R"(SELECT Value from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Opaque Exterior'
+                                        AND ColumnName = 'U-Factor with Film'
+                                        AND Units='W/m2-K'
+                                        AND RowId = ?;)";
+          outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
         }
       }
+
       // fenestration
       if (sqlFile && constructionName && oConstruction->isFenestration()) {
-        std::string query = "SELECT RowId FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' and ReportForString = 'Entire Facility' AND TableName = 'Exterior Fenestration' AND ColumnName='Construction' AND Value='" + to_upper_copy(*constructionName) + "'";
-        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query);
+        std::string query = R"(SELECT RowId from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Exterior Fenestration'
+                                        AND ColumnName = 'Construction'
+                                        AND Value = ?;)";
+        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query, to_upper_copy(*constructionName) );
+
         if (rowId) {
-          std::stringstream ss;
-          ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' and ReportForString = 'Entire Facility' AND TableName = 'Exterior Fenestration' AND RowId='";
-          ss << *rowId << "' AND ColumnName ='Glass U-Factor' AND Units = 'W/m2-K'";
-          query = ss.str();
-          outputResult = sqlFile->execAndReturnFirstDouble(query);
+          std::string query = R"(SELECT Value from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Exterior Fenestration
+                                        AND ColumnName = 'Glass U-Factor'
+                                        AND Units='W/m2-K'
+                                        AND RowId = ?;)";
+          outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
         }
       }
 
@@ -705,28 +723,51 @@ namespace detail {
       OptionalDouble outputResult;
       // opaque exterior
       if (sqlFile && constructionName && oConstruction->isOpaque()) {
-        std::string query = "SELECT RowId FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Opaque Exterior' AND ColumnName='Construction' AND Value='" + to_upper_copy(*constructionName) + "'";
-        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query);
+        std::string query = R"(SELECT RowId from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Opaque Exterior'
+                                        AND ColumnName = 'Construction'
+                                        AND Value = ?;)";
+        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query, to_upper_copy(*constructionName) );
+
         if (rowId) {
-          std::stringstream ss;
-          ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Opaque Exterior' AND RowId='";
-          ss << *rowId << "' AND ColumnName='U-Factor no Film' AND Units='W/m2-K'";
-          query = ss.str();
-          outputResult = sqlFile->execAndReturnFirstDouble(query);
+          std::string query = R"(SELECT Value from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Opaque Exterior'
+                                        AND ColumnName = 'U-Factor no Film'
+                                        AND Units='W/m2-K'
+                                        AND RowId = ?;)";
+          outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
         }
       }
+
       // fenestration
       if (sqlFile && constructionName && oConstruction->isFenestration()) {
+
         // get u-factor, then subtract film coefficients
-        std::string query = "SELECT RowId FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' and ReportForString = 'Entire Facility' AND TableName = 'Exterior Fenestration' AND ColumnName='Construction' AND Value='" + to_upper_copy(*constructionName) + "'";
-        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query);
+
+        std::string query = R"(SELECT RowId from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Exterior Fenestration'
+                                        AND ColumnName = 'Construction'
+                                        AND Value = ?;)";
+        OptionalInt rowId = sqlFile->execAndReturnFirstInt(query, to_upper_copy(*constructionName) );
+
         if (rowId) {
-          std::stringstream ss;
-          ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' and ReportForString = 'Entire Facility' AND TableName = 'Exterior Fenestration' AND RowId='";
-          ss << *rowId << "' AND ColumnName ='Glass U-Factor' AND Units = 'W/m2-K'";
-          query = ss.str();
-          outputResult = sqlFile->execAndReturnFirstDouble(query);
+          // TODO: this is exactly the same as the uFactor one
+          std::string query = R"(SELECT Value from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Exterior Fenestration
+                                        AND ColumnName = 'Glass U-Factor'
+                                        AND Units='W/m2-K'
+                                        AND RowId = ?;)";
+          outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
         }
+
         if (outputResult) {
           outputResult = 1.0/(1.0/(*outputResult) - filmResistance());
         }
@@ -1841,8 +1882,7 @@ namespace detail {
       surface->setVertices(vertices);
 
       // loop over all sub surfaces and reparent
-      typedef std::pair<Handle, Point3dVector> MapType;
-      for (const MapType& p : handleToFaceVertexMap){
+      for (const auto& p : handleToFaceVertexMap){
         // if surface includes a single point it will include them all
         if (pointInPolygon(p.second[0], newFace, tol)){
           boost::optional<SubSurface> subSurface = model.getModelObject<SubSurface>(p.first);

@@ -66,8 +66,6 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/units/Unit.hpp"
 
-#include <boost/bind.hpp>
-
 namespace openstudio{
 namespace model{
 

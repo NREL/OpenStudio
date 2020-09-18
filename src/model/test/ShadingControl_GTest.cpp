@@ -35,6 +35,7 @@
 #include "../ShadingControl_Impl.hpp"
 #include "../Construction.hpp"
 #include "../Schedule.hpp"
+#include "../ScheduleConstant.hpp"
 #include "../Blind.hpp"
 #include "../Blind_Impl.hpp"
 #include "../SimpleGlazing.hpp"
@@ -62,6 +63,7 @@ TEST_F(ModelFixture, ShadingControl_Construction) {
   EXPECT_EQ(construction.handle(), shadingControl.construction()->handle());
   EXPECT_FALSE(shadingControl.shadingMaterial());
   EXPECT_EQ("InteriorBlind", shadingControl.shadingType());
+  EXPECT_TRUE(shadingControl.isTypeValueAllowingSlatAngleControl());
   EXPECT_EQ("OnIfHighSolarOnWindow", shadingControl.shadingControlType());
   EXPECT_FALSE(shadingControl.schedule());
 
@@ -90,6 +92,7 @@ TEST_F(ModelFixture,ShadingControl_Material) {
   ASSERT_TRUE(shadingControl.shadingMaterial());
   EXPECT_EQ(blind.handle(), shadingControl.shadingMaterial()->handle());
   EXPECT_EQ("InteriorBlind", shadingControl.shadingType());
+  EXPECT_TRUE(shadingControl.isTypeValueAllowingSlatAngleControl());
   EXPECT_EQ("OnIfHighSolarOnWindow", shadingControl.shadingControlType());
   EXPECT_FALSE(shadingControl.schedule());
 
@@ -223,20 +226,90 @@ TEST_F(ModelFixture, ShadingControl_Clone) {
   }
 }
 
-TEST_F(ModelFixture, ShadingControl_RemoveRequiredObject) {
-  Model model;
+TEST_F(ModelFixture, ShadingControl_ShadingControlTypeLogic) {
 
-  Blind blind(model);
-  ShadingControl shadingControl(blind);
+  Model m;
 
-  blind.remove();
+  Blind b(m);
+  ShadingControl sc(b);
 
-  EXPECT_FALSE(shadingControl.shadingMaterial());
-  EXPECT_FALSE(shadingControl.construction());
+  EXPECT_TRUE(sc.setSetpoint(32.0));
+  ASSERT_TRUE(sc.setpoint());
+  EXPECT_EQ(32.0, sc.setpoint().get());
 
-  // TODO: You're now in a broken, and unfixable state: you neither have a Construction nor a ShadingMaterial,
-  // and the model API has no setters to help you fix the state (setShadingMaterial / setConstruction)
-  // This WILL get forward translated anyways. We need to determine whether we want to add setters in the Model API or have the FT do a check and not
-  // translate the object if it doesn't have either. Throwing here so we do not forget to do it
-  ASSERT_TRUE(false);
+  ScheduleConstant sch(m);
+
+  // Allows nothing
+  EXPECT_TRUE(sc.setShadingControlType("AlwaysOn"));
+  EXPECT_FALSE(sc.isControlTypeValueNeedingSetpoint1());
+  EXPECT_FALSE(sc.isControlTypeValueNeedingSetpoint2());
+  EXPECT_FALSE(sc.isControlTypeValueAllowingSchedule());
+  EXPECT_TRUE(sc.isTypeValueAllowingSlatAngleControl());
+  EXPECT_FALSE(sc.setSetpoint(30.0));
+  EXPECT_FALSE(sc.setSetpoint2(500.0));
+  EXPECT_FALSE(sc.setSchedule(sch));
+  EXPECT_FALSE(sc.setpoint());
+  EXPECT_FALSE(sc.setpoint2());
+  EXPECT_FALSE(sc.schedule());
+
+  // Allows schedules, required two setpoints
+  EXPECT_TRUE(sc.setShadingControlType("OnIfHighZoneAirTempAndHighSolarOnWindow"));
+  EXPECT_TRUE(sc.isControlTypeValueNeedingSetpoint1());
+  EXPECT_TRUE(sc.isControlTypeValueNeedingSetpoint2());
+  EXPECT_TRUE(sc.isControlTypeValueAllowingSchedule());
+  EXPECT_TRUE(sc.isTypeValueAllowingSlatAngleControl());
+  EXPECT_TRUE(sc.setSetpoint(30.0));
+  EXPECT_TRUE(sc.setSetpoint2(500.0));
+  EXPECT_TRUE(sc.setSchedule(sch));
+  ASSERT_TRUE(sc.setpoint());
+  EXPECT_EQ(30.0, sc.setpoint().get());
+  ASSERT_TRUE(sc.setpoint2());
+  EXPECT_EQ(500.0, sc.setpoint2().get());
+  ASSERT_TRUE(sc.schedule());
+  EXPECT_EQ(sch, sc.schedule().get());
+
+  // Shouldn't allow reseting setpoints since required
+  sc.resetSetpoint();
+  ASSERT_TRUE(sc.setpoint());
+  EXPECT_EQ(30.0, sc.setpoint().get());
+  ASSERT_TRUE(sc.setpoint2());
+  EXPECT_EQ(500.0, sc.setpoint2().get());
+  // Note: I'm not providing resetSetpoint2 on purpose
+
+  sc.resetSchedule();
+  EXPECT_FALSE(sc.schedule());
+  EXPECT_TRUE(sc.setSchedule(sch));
+
+  // OnIfHighGlare: needs setpoint1 only and not Setpoint2, allows schedule
+  EXPECT_TRUE(sc.setShadingControlType("OnIfHighZoneCooling"));
+  EXPECT_TRUE(sc.isControlTypeValueNeedingSetpoint1());
+  EXPECT_FALSE(sc.isControlTypeValueNeedingSetpoint2());
+  EXPECT_TRUE(sc.isControlTypeValueAllowingSchedule());
+  EXPECT_TRUE(sc.isTypeValueAllowingSlatAngleControl());
+
+  // Setpoint 1 has been cleared because we're switching Shading Control Type and that was the historical behavior
+  EXPECT_FALSE(sc.setpoint2());
+  // Setpoint2 is cleared because the new Shading Control Type does not support Setpoint 2
+  EXPECT_FALSE(sc.setpoint2());
+  // Schedule is kept, user should be responsible to ensure the Schedule still makes sense, instead of always clearing it
+  EXPECT_TRUE(sc.schedule());
+
+  EXPECT_TRUE(sc.isTypeofSlatAngleControlforBlindsDefaulted());
+  EXPECT_TRUE(sc.setSlatAngleSchedule(sch));
+  EXPECT_TRUE(sc.slatAngleSchedule());
+  EXPECT_FALSE(sc.isTypeofSlatAngleControlforBlindsDefaulted());
+  EXPECT_EQ("ScheduledSlatAngle", sc.typeofSlatAngleControlforBlinds());
+  sc.resetSlatAngleSchedule();
+  EXPECT_FALSE(sc.slatAngleSchedule());
+  EXPECT_TRUE(sc.isTypeofSlatAngleControlforBlindsDefaulted());
+  EXPECT_TRUE(sc.setTypeofSlatAngleControlforBlinds("BlockBeamSolar"));
+  EXPECT_FALSE(sc.isTypeofSlatAngleControlforBlindsDefaulted());
+  EXPECT_EQ("BlockBeamSolar", sc.typeofSlatAngleControlforBlinds());
+  sc.resetTypeofSlatAngleControlforBlinds();
+  EXPECT_TRUE(sc.isTypeofSlatAngleControlforBlindsDefaulted());
+  EXPECT_FALSE(sc.glareControlIsActive());
+  EXPECT_TRUE(sc.setGlareControlIsActive(true));
+  EXPECT_TRUE(sc.glareControlIsActive());
+  sc.resetGlareControlIsActive();
+  EXPECT_FALSE(sc.glareControlIsActive());
 }

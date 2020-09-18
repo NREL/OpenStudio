@@ -33,6 +33,8 @@
   %ignore openstudio::model::ShadingControl::addSubSurfaces;
   %ignore openstudio::model::ShadingControl::setSubSurfaces;
 
+  // CoilCoolingDX is defined in StraightComponent.i
+  %ignore openstudio::model::CoilCoolingDXCurveFitPerformance::coilCoolingDXs;
   // TODO: why?
   // ignore schedule type
   // %ignore openstudio::model::ScheduleType;
@@ -55,6 +57,8 @@ namespace model {
 class ShadingControl;
 %feature("valuewrapper") SubSurface;
 class SubSurface;
+%feature("valuewrapper") CoilCoolingDX;
+class CoilCoolingDX;
 
 }
 }

@@ -538,7 +538,7 @@ namespace detail {
     if (isOpaque()) {
       OpaqueMaterialVector opaqueLayers = castVector<OpaqueMaterial>(layers());
       double thermalResistance(0.0);
-      for (const OpaqueMaterial layer : opaqueLayers) {
+      for (const OpaqueMaterial & layer : opaqueLayers) {
         thermalResistance += layer.thermalResistance();
       }
       return 1.0/thermalResistance;
@@ -561,7 +561,7 @@ namespace detail {
     if (isOpaque()) {
       OpaqueMaterialVector opaqueLayers = castVector<OpaqueMaterial>(layers());
       double heatCapacity(0.0);
-      for (const OpaqueMaterial layer : opaqueLayers) {
+      for (const auto & layer : opaqueLayers) {
         OptionalDouble temp = layer.heatCapacity();
         if (temp) { heatCapacity += *temp; }
       }
