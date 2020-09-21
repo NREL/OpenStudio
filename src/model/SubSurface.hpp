@@ -131,7 +131,9 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   // This method is deprecated, please use addShadingControl or addShadingControls.
   // This will remove this SubSurface from any shading control(s) it is on (`removeAllShadingControls()`) then will call `addShadingControl(shadingControl)`
-  OS_DEPRECATED bool setShadingControl(ShadingControl& shadingControl);
+  // NOTE: for backward compatibility with C++ interfaces, the argument is kept as `const ShadingControl&`,
+  // but internally this will do a const_cast since the ShadingControl will be mutated
+  OS_DEPRECATED bool setShadingControl(const ShadingControl& shadingControl);
 
   // Replaced with removeAllShadingControls
   OS_DEPRECATED void resetShadingControl();
