@@ -532,7 +532,7 @@ endif()
 # If Linux, check LSB_RELEASE globally so we can use it after
 # But also infer the new E+ package names (starting at 9.4.0)
 if(APPLE)
-  set(ENERGYPLUS_SYSTEM_VERSION "-macOS-10.13")
+  set(ENERGYPLUS_SYSTEM_VERSION "-macOS10.13")
 elseif(UNIX)
   # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
   find_program(LSB_RELEASE lsb_release)
@@ -551,7 +551,7 @@ elseif(UNIX)
   )
 
   # eg: `-Ubuntu18.04`
-  set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
+  set(ENERGYPLUS_SYSTEM_VERSION "${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
 elseif(MSVC)
   # no-op
   set(ENERGYPLUS_SYSTEM_VERSION "")
