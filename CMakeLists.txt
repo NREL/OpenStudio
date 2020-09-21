@@ -559,6 +559,8 @@ endif()
 
 # EnergyPlus
 
+set(OLD_EXTRACTED_DIR "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+
 if(UNIX)
   if(APPLE)
     set(ENERGYPLUS_EXPECTED_HASH 56add3a7c8e2290f3ba98e8316c781f9)
@@ -595,6 +597,7 @@ if(UNIX)
     endif()
 
     # Remove the old extracted dir if exists
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_EXTRACTED_DIR}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 
   endif()
@@ -621,6 +624,7 @@ elseif(WIN32)
          EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
 
     # Remove the old extracted dir if exists
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_EXTRACTED_DIR}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 
   endif()
