@@ -849,7 +849,7 @@ namespace openstudio{
       const std::string rowName = t_monthOfYear.valueDescription();
 
 
-      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings WHERE
+      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings
                                   WHERE ReportName=?
                                   AND ReportForString='Meter'
                                   AND RowName=?
@@ -870,7 +870,7 @@ namespace openstudio{
         " {AT MAX/MIN}";
       const std::string rowName = t_monthOfYear.valueDescription();
 
-      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings WHERE
+      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings
                                   WHERE ReportName=?
                                   AND ReportForString='Meter'
                                   AND RowName=?
