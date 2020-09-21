@@ -559,7 +559,7 @@ endif()
 
 # EnergyPlus
 
-set(OLD_EXTRACTED_DIR "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
+get_filename_component(OLD_EXTRACTED_DIR ${ENERGYPLUS_EXE} DIRECTORY)
 
 if(UNIX)
   if(APPLE)
