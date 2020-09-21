@@ -588,7 +588,7 @@ OutputControlFiles::OutputControlFiles(Model& model)
   // This is a required-field, so pick one...
   // Same defaults as EnergyPlus IDD
   setOutputCSV(false);
-  setOutputMTR(false);
+  setOutputMTR(true);
   setOutputESO(true);
   setOutputEIO(true);
   setOutputTabular(true);
