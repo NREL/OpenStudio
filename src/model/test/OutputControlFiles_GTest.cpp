@@ -46,7 +46,7 @@ TEST_F(ModelFixture,OutputControlFiles_GettersSetters) {
   EXPECT_TRUE(outputControlFiles.setOutputCSV(true));
   EXPECT_TRUE(outputControlFiles.outputCSV());
 
-  EXPECT_FALSE(outputControlFiles.outputMTR());
+  EXPECT_TRUE(outputControlFiles.outputMTR());
   EXPECT_TRUE(outputControlFiles.setOutputMTR(false));
   EXPECT_FALSE(outputControlFiles.outputMTR());
   EXPECT_TRUE(outputControlFiles.setOutputMTR(true));
