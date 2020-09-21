@@ -191,11 +191,11 @@ set(ENERGYPLUS_VERSION_MINOR 4)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "908c5cedf5")
+set(ENERGYPLUS_BUILD_SHA "5a40ebd3b9")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.4.0-IOFreeze")
+set(ENERGYPLUS_RELEASE_NAME "v9.4.0-RC1")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -530,30 +530,50 @@ endif()
 # Dependencies
 
 # If Linux, check LSB_RELEASE globally so we can use it after
-if(UNIX AND NOT APPLE)
-
+# But also infer the new E+ package names (starting at 9.4.0)
+if(APPLE)
+  set(ENERGYPLUS_SYSTEM_VERSION "-macOS-10.13")
+elseif(UNIX)
+  # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
   find_program(LSB_RELEASE lsb_release)
   # -rs outputs only 16.04, or 18.04
   execute_process(COMMAND ${LSB_RELEASE} -rs
+    OUTPUT_VARIABLE LSB_RELEASE_VERSION_SHORT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  message(STATUS "LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
+
+  # -is outputs "Ubuntu" or "Fedora"
+  execute_process(COMMAND ${LSB_RELEASE} -is
     OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
-  message(STATUS "LSB_RELEASE_ID_SHORT = ${LSB_RELEASE_ID_SHORT}")
+
+  # eg: `-Ubuntu18.04`
+  set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
+elseif(MSVC)
+  # no-op
+  set(ENERGYPLUS_SYSTEM_VERSION "")
 endif()
 
 # EnergyPlus
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 9d826964da5afad88200b6b9bb8b8577)
-    set(ENERGYPLUS_PLATFORM "Darwin-x86_64")
+    set(ENERGYPLUS_EXPECTED_HASH 56add3a7c8e2290f3ba98e8316c781f9)
+    set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
-    set(ENERGYPLUS_EXPECTED_HASH dd941a89d176b406c27228277b55f139)
-    set(ENERGYPLUS_PLATFORM "Linux-x86_64")
+    if(LSB_RELEASE_ID_SHORT MATCHES "20.04")
+      set(ENERGYPLUS_EXPECTED_HASH aaa27ac29d3f6a499e21121310ae5741)
+    else() # 18.04
+      set(ENERGYPLUS_EXPECTED_HASH dacf173884f3a68ddf002936dee4e993)
+    endif()
+    set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   endif()
   set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-${ENERGYPLUS_PLATFORM}")
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz")
@@ -583,11 +603,11 @@ elseif(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 6ca2b3e6eb5dbb6dea1c06d1dc4704d6)
+    set(ENERGYPLUS_EXPECTED_HASH d6afb9e7f5c939c388b28a14ae6bb9fe)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH b7f06f3ed8e139b0da9c12982a713976)
+    set(ENERGYPLUS_EXPECTED_HASH f6faad9c6022c7cbc5af550708440a9f)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
