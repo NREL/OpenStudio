@@ -1207,7 +1207,7 @@ install(DIRECTORY "${ENERGYPLUS_DIR}/python_standard_lib" DESTINATION ./EnergyPl
 if(APPLE)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/Python" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.7m.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libpythonwrapper.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
 elseif(WIN32)
   file(GLOB ENERGYPLUS_MSVC_FILES "${ENERGYPLUS_DIR}/msvc*.dll")
