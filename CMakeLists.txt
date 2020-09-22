@@ -559,7 +559,10 @@ endif()
 
 # EnergyPlus
 
-get_filename_component(OLD_EXTRACTED_DIR ${ENERGYPLUS_EXE} DIRECTORY)
+if((DEFINED ENERGYPLUS_EXE) AND NOT (ENERGYPLUS_EXE STREQUAL ""))
+  get_filename_component(OLD_ENERGYPLUS_EXTRACTED_DIR "${ENERGYPLUS_EXE}" DIRECTORY)
+  message("OLD_ENERGYPLUS_EXTRACTED_DIR=${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+endif()
 
 if(UNIX)
   if(APPLE)
@@ -598,7 +601,9 @@ if(UNIX)
     endif()
 
     # Remove the old extracted dir if exists
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_EXTRACTED_DIR}")
+    if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+    endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 
   endif()
@@ -625,7 +630,9 @@ elseif(WIN32)
          EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
 
     # Remove the old extracted dir if exists
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_EXTRACTED_DIR}")
+    if(DEFINED OLD_ENERGYPLUS_EXTRACTED_DIR)
+      execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${OLD_ENERGYPLUS_EXTRACTED_DIR}")
+    endif()
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}")
 
   endif()
