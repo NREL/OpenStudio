@@ -448,7 +448,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
   // TODO: Is this still needed?
   // ensure shading controls only reference windows in a single zone and determine control sequence number
   // DLM: ideally E+ would not need to know the zone, shading controls could work across zones
-  std::vector<ShadingControl> shadingControls = model.getConcreteModelObjects<ShadingControl>();
+  /*std::vector<ShadingControl> shadingControls = model.getConcreteModelObjects<ShadingControl>();
   std::sort(shadingControls.begin(), shadingControls.end(), WorkspaceObjectNameLess());
   std::map<Handle, ShadingControlVector> zoneHandleToShadingControlVectorMap;
   for (auto& shadingControl : shadingControls) {
@@ -495,7 +495,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
         LOG(Warn, "Cannot find Space for " << subSurface.briefDescription() << " referencing " << shadingControl.briefDescription());
       }
     }
-  }
+  }*/
 
   if (!m_keepRunControlSpecialDays){
     LOG(Warn, "You have manually choosen to not translate the RunPeriodControlSpecialDays, ignoring them.");

@@ -134,7 +134,8 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl(model::Sha
     LOG(Error, "Cannot find ThermalZone for " << modelObject.briefDescription());
   }
 
-  boost::optional<int> sequenceNumber = modelObject.additionalProperties().getFeatureAsInteger("Shading Control Sequence Number");
+  //boost::optional<int> sequenceNumber = modelObject.additionalProperties().getFeatureAsInteger("Shading Control Sequence Number");
+  boost::optional<int> sequenceNumber = 1;
   if (sequenceNumber) {
     idfObject.setInt(WindowShadingControlFields::ShadingControlSequenceNumber, *sequenceNumber);
   } else {
