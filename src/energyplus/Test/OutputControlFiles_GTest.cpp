@@ -80,7 +80,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlFiles) {
     EXPECT_TRUE(outputControlFiles.setOutputRDD(status[12]));
     EXPECT_TRUE(outputControlFiles.setOutputMDD(status[13]));
     EXPECT_TRUE(outputControlFiles.setOutputMTD(status[14]));
-    EXPECT_TRUE(outputControlFiles.setOutputEND(status[15]));
     EXPECT_TRUE(outputControlFiles.setOutputSHD(status[16]));
     EXPECT_TRUE(outputControlFiles.setOutputDFS(status[17]));
     EXPECT_TRUE(outputControlFiles.setOutputGLHE(status[18]));
@@ -118,7 +117,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlFiles) {
     EXPECT_EQ(boolToString(status[12]), idf_outputControlFiles.getString(OutputControl_FilesFields::OutputRDD).get());
     EXPECT_EQ(boolToString(status[13]), idf_outputControlFiles.getString(OutputControl_FilesFields::OutputMDD).get());
     EXPECT_EQ(boolToString(status[14]), idf_outputControlFiles.getString(OutputControl_FilesFields::OutputMTD).get());
-    EXPECT_EQ(boolToString(status[15]), idf_outputControlFiles.getString(OutputControl_FilesFields::OutputEND).get());
+    EXPECT_EQ(boolToString(true), idf_outputControlFiles.getString(OutputControl_FilesFields::OutputEND).get());
     EXPECT_EQ(boolToString(status[16]), idf_outputControlFiles.getString(OutputControl_FilesFields::OutputSHD).get());
     EXPECT_EQ(boolToString(status[17]), idf_outputControlFiles.getString(OutputControl_FilesFields::OutputDFS).get());
     EXPECT_EQ(boolToString(status[18]), idf_outputControlFiles.getString(OutputControl_FilesFields::OutputGLHE).get());
@@ -207,7 +206,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlFiles) {
     EXPECT_EQ(status[12], outputControlFiles.outputRDD());
     EXPECT_EQ(status[13], outputControlFiles.outputMDD());
     EXPECT_EQ(status[14], outputControlFiles.outputMTD());
-    EXPECT_EQ(status[15], outputControlFiles.outputEND());
+    EXPECT_EQ(true, outputControlFiles.outputEND());
     EXPECT_EQ(status[16], outputControlFiles.outputSHD());
     EXPECT_EQ(status[17], outputControlFiles.outputDFS());
     EXPECT_EQ(status[18], outputControlFiles.outputGLHE());

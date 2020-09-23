@@ -153,8 +153,6 @@ class MODEL_API OutputControlFiles : public ModelObject {
 
   bool setOutputMTD(bool outputMTD);
 
-  bool setOutputEND(bool outputEND);
-
   bool setOutputSHD(bool outputSHD);
 
   bool setOutputDFS(bool outputDFS);
@@ -205,6 +203,8 @@ class MODEL_API OutputControlFiles : public ModelObject {
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.OutputControlFiles");
+
+  bool setOutputEND(bool outputEND);
 };
 
 /** \relates OutputControlFiles*/

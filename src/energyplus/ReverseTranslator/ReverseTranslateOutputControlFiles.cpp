@@ -168,13 +168,7 @@ boost::optional<ModelObject> ReverseTranslator::translateOutputControlFiles( con
     }
   }
 
-  if (boost::optional<std::string> _outputEND = workspaceObject.getString(OutputControl_FilesFields::OutputEND, true)) {
-    if(istringEqual("Yes", _outputEND.get())) {
-      modelObject.setOutputEND(true);
-    } else {
-      modelObject.setOutputEND(false);
-    }
-  }
+  modelObject.setString(16, "Yes"); // Output END
 
   if (boost::optional<std::string> _outputSHD = workspaceObject.getString(OutputControl_FilesFields::OutputSHD, true)) {
     if(istringEqual("Yes", _outputSHD.get())) {
