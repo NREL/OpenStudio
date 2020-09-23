@@ -45,6 +45,10 @@
 #include "Schedule_Impl.hpp"
 #include "SubSurface.hpp"
 #include "SubSurface_Impl.hpp"
+#include "Space.hpp"
+#include "Space_Impl.hpp"
+#include "ThermalZone.hpp"
+#include "ThermalZone_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
@@ -549,6 +553,29 @@ namespace detail {
     if (_existingIndex) {
       LOG(Warn, "For " << briefDescription() << ", SubSurface already exists.");
       return true;
+    }
+
+    // Check if zone of subSurface not zone of existing subSurfaces
+    bool ok = true;
+    boost::optional<Space> space = subSurface.space();
+    if (space) {
+      boost::optional<ThermalZone> thermalZone = space->thermalZone();
+      if (thermalZone) {
+        for (auto& subSurface2 : subSurfaces()) {
+          boost::optional<Space> space2 = subSurface2.space();
+          if (space2) {
+            boost::optional<ThermalZone> thermalZone2 = space2->thermalZone();
+            if (thermalZone2) {
+              if (thermalZone->handle() != thermalZone2->handle()) {
+                ok = false;
+              }
+            }
+          }
+        }
+      }
+    }
+    if (!ok) {
+      return false;
     }
 
     bool result;
