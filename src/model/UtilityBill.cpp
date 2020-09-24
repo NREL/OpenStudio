@@ -647,6 +647,14 @@ namespace detail {
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
+      case FuelType::OtherFuel_1:
+        result.push_back("kBtu");
+        result.push_back("MBtu");
+        break;
+      case FuelType::OtherFuel_2:
+        result.push_back("kBtu");
+        result.push_back("MBtu");
+        break;
       case FuelType::EnergyTransfer:
         result.push_back("kBtu");
         result.push_back("MBtu");
@@ -688,6 +696,10 @@ namespace detail {
       case FuelType::DistrictCooling:
         break;
       case FuelType::DistrictHeating:
+        break;
+      case FuelType::OtherFuel_1:
+        break;
+      case FuelType::OtherFuel_2:
         break;
       case FuelType::EnergyTransfer:
         break;

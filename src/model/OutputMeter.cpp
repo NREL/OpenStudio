@@ -467,7 +467,7 @@ IddObjectType OutputMeter::iddObjectType() {
 boost::regex OutputMeter::meterRegex()
 {
   // DLM: Must put more specific terms, e.g. HeatingCoils, before less specific terms, e.g. Heating
-  static const boost::regex result("^(.*?)?:?(InteriorLights|ExteriorLights|InteriorEquipment|ExteriorEquipment|Fans|Pumps|HeatingCoils|Heating|CoolingCoils|Cooling|HeatRejection|Humidifier|HeatRecoveryForCooling|HeatRecoveryForHeating|HeatRecovery|WaterSystems|Cogeneration|Refrigeration|Chillers|Boilers|Baseboard)?:?(Electricity|Gasoline|NaturalGas|Diesel|Coal|FuelOilNo1|FuelOilNo2|Propane|Water|Steam|DistrictCooling|DistrictHeating|EnergyTransfer)?:?(Facility|Building|HVAC|Zone|System|Plant)?:?([^:]*?)?$");
+  static const boost::regex result("^(.*?)?:?(InteriorLights|ExteriorLights|InteriorEquipment|ExteriorEquipment|Fans|Pumps|HeatingCoils|Heating|CoolingCoils|Cooling|HeatRejection|Humidifier|HeatRecoveryForCooling|HeatRecoveryForHeating|HeatRecovery|WaterSystems|Cogeneration|Refrigeration|Chillers|Boilers|Baseboard)?:?(Electricity|Gasoline|NaturalGas|Diesel|Coal|FuelOilNo1|FuelOilNo2|Propane|Water|Steam|DistrictCooling|DistrictHeating|OtherFuel1|OtherFuel2|EnergyTransfer)?:?(Facility|Building|HVAC|Zone|System|Plant)?:?([^:]*?)?$");
   return result;
 }
 
