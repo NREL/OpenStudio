@@ -645,6 +645,10 @@ namespace detail {
       OS_ASSERT(result);
       result = setString(OS_LifeCycleCost_ParametersFields::WaterInflation,"");
       OS_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::OtherFuel1Inflation,"");
+      OS_ASSERT(result);
+      result = setString(OS_LifeCycleCost_ParametersFields::OtherFuel2Inflation,"");
+      OS_ASSERT(result);
     }
 
     return result;
@@ -835,6 +839,55 @@ namespace detail {
     bool test = setString(OS_LifeCycleCost_ParametersFields::WaterInflation,"");
     OS_ASSERT(test);
   }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::otherFuel1Inflation() const
+  {
+    boost::optional<double> result;
+    if (!this->useNISTFuelEscalationRates()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::OtherFuel1Inflation, true);
+    }
+    return result;
+  }
+
+  bool LifeCycleCostParameters_Impl::setOtherFuel1Inflation(double otherFuel1Inflation)
+  {
+    bool result = false;
+    if (!useNISTFuelEscalationRates()){
+      result = setDouble(OS_LifeCycleCost_ParametersFields::OtherFuel1Inflation,otherFuel1Inflation);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetOtherFuel1Inflation()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::OtherFuel1Inflation,"");
+    OS_ASSERT(test);
+  }
+
+  boost::optional<double> LifeCycleCostParameters_Impl::otherFuel2Inflation() const
+  {
+    boost::optional<double> result;
+    if (!this->useNISTFuelEscalationRates()){
+      result = getDouble(OS_LifeCycleCost_ParametersFields::OtherFuel2Inflation, true);
+    }
+    return result;
+  }
+
+  bool LifeCycleCostParameters_Impl::setOtherFuel2Inflation(double otherFuel2Inflation)
+  {
+    bool result = false;
+    if (!useNISTFuelEscalationRates()){
+      result = setDouble(OS_LifeCycleCost_ParametersFields::OtherFuel2Inflation,otherFuel2Inflation);
+    }
+    return result;
+  }
+
+  void LifeCycleCostParameters_Impl::resetOtherFuel2Inflation()
+  {
+    bool test = setString(OS_LifeCycleCost_ParametersFields::OtherFuel2Inflation,"");
+    OS_ASSERT(test);
+  }
+
 
 } // detail
 
@@ -1234,6 +1287,30 @@ bool LifeCycleCostParameters::setWaterInflation(double waterInflation) {
 
 void LifeCycleCostParameters::resetWaterInflation() {
   getImpl<detail::LifeCycleCostParameters_Impl>()->resetWaterInflation();
+}
+
+boost::optional<double> LifeCycleCostParameters::otherFuel1Inflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->otherFuel1Inflation();
+}
+
+bool LifeCycleCostParameters::setOtherFuel1Inflation(double otherFuel1Inflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setOtherFuel1Inflation(otherFuel1Inflation);
+}
+
+void LifeCycleCostParameters::resetOtherFuel1Inflation() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetOtherFuel1Inflation();
+}
+
+boost::optional<double> LifeCycleCostParameters::otherFuel2Inflation() const {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->otherFuel2Inflation();
+}
+
+bool LifeCycleCostParameters::setOtherFuel2Inflation(double otherFuel2Inflation) {
+  return getImpl<detail::LifeCycleCostParameters_Impl>()->setOtherFuel2Inflation(otherFuel2Inflation);
+}
+
+void LifeCycleCostParameters::resetOtherFuel2Inflation() {
+  getImpl<detail::LifeCycleCostParameters_Impl>()->resetOtherFuel2Inflation();
 }
 
 std::vector<std::string> LifeCycleCostParameters::validAnalysisTypeValues() {

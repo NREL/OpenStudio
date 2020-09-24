@@ -30712,7 +30712,17 @@ OS:LifeCycleCost:Parameters,
        \note Enter the rate of inflation for propane as a decimal. For a 2% rate enter
        \note the value 0.02.
        \type real
-  N17; \field Water Inflation
+  N17, \field Water Inflation
+       \note Applies only if Analysis Use NIST Fuel Escalation Rates is No
+       \note Enter the rate of inflation for water as a decimal. For a 2% rate enter
+       \note the value 0.02.
+       \type real
+  N18, \field OtherFuel1 Inflation
+       \note Applies only if Analysis Use NIST Fuel Escalation Rates is No
+       \note Enter the rate of inflation for water as a decimal. For a 2% rate enter
+       \note the value 0.02.
+       \type real
+  N19; \field OtherFuel2 Inflation
        \note Applies only if Analysis Use NIST Fuel Escalation Rates is No
        \note Enter the rate of inflation for water as a decimal. For a 2% rate enter
        \note the value 0.02.
