@@ -130,8 +130,6 @@ TEST_F(ModelFixture,OutputControlFiles_GettersSetters) {
   EXPECT_TRUE(outputControlFiles.setOutputMTD(true));
   EXPECT_TRUE(outputControlFiles.outputMTD());
 
-  EXPECT_TRUE(outputControlFiles.outputEND());
-
   EXPECT_TRUE(outputControlFiles.outputSHD());
   EXPECT_TRUE(outputControlFiles.setOutputSHD(false));
   EXPECT_FALSE(outputControlFiles.outputSHD());

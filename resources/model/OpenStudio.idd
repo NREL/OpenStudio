@@ -30983,11 +30983,6 @@ OS:OutputControl:Files,
        \key Yes
        \key No
        \required-field
-  A17, \field Output END
-       \type choice
-       \key Yes
-       \key No
-       \required-field
   A18, \field Output SHD
        \type choice
        \key Yes

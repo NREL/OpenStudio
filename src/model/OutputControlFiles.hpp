@@ -87,8 +87,6 @@ class MODEL_API OutputControlFiles : public ModelObject {
 
   bool outputMTD() const;
 
-  bool outputEND() const;
-
   bool outputSHD() const;
 
   bool outputDFS() const;
@@ -203,8 +201,6 @@ class MODEL_API OutputControlFiles : public ModelObject {
   /// @endcond
  private:
   REGISTER_LOGGER("openstudio.model.OutputControlFiles");
-
-  bool setOutputEND(bool outputEND);
 };
 
 /** \relates OutputControlFiles*/
