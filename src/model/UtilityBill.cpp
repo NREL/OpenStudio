@@ -594,14 +594,14 @@ namespace detail {
         result.push_back("kBtu");
         result.push_back("MBtu");
         break;
-      //case FuelType::Coal:
+      case FuelType::Coal:
       //  result.push_back("tons");
       //  result.push_back("lbs");
       //  result.push_back("kLbs");
       //  result.push_back("MLbs");
-      //  result.push_back("kBtu");
-      //  result.push_back("MBtu");
-      //  break;
+        result.push_back("kBtu");
+        result.push_back("MBtu");
+        break;
       case FuelType::FuelOil_1:
         result.push_back("gal");
         result.push_back("L");
@@ -681,8 +681,8 @@ namespace detail {
         break;
       case FuelType::Diesel:
         break;
-      //case FuelType::Coal:
-      //  break;
+      case FuelType::Coal:
+        break;
       case FuelType::FuelOil_1:
         break;
       case FuelType::FuelOil_2:
