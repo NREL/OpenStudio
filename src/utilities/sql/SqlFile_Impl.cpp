@@ -843,9 +843,13 @@ namespace openstudio{
         const openstudio::EndUseCategoryType &t_categoryType,
         const openstudio::MonthOfYear &t_monthOfYear) const
     {
+      // For backward compatibilty, we had to preserve enum valueNames (first param in enum, ((valueName)(valueDescription))
+      // You need to be careful about what you are passing here... valueName or valueDescription
       const std::string reportName = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription());
+      // So this gets tricky, but we have ((Gas)(Natural Gas)). We didn't want to change to ((NaturalGas)(Natural Gas))
+      // So here we take valueDescription ('Natural Gas', then remove the spaces to be NaturalGas)
       const std::string columnName = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":" +
-        boost::algorithm::to_upper_copy(t_fuelType.valueName());
+        boost::algorithm::to_upper_copy(boost::algorithm::erase_all_copy(t_fuelType.valueDescription(), " "));
       const std::string rowName = t_monthOfYear.valueDescription();
 
 
@@ -866,7 +870,7 @@ namespace openstudio{
     {
       const std::string reportName = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription()) + " PEAK DEMAND";
       const std::string columnName = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":" +
-        boost::algorithm::to_upper_copy(t_fuelType.valueName()) +
+        boost::algorithm::to_upper_copy(boost::algorithm::erase_all_copy(t_fuelType.valueDescription(), " ")) +
         " {AT MAX/MIN}";
       const std::string rowName = t_monthOfYear.valueDescription();
 
