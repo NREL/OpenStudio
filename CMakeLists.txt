@@ -191,11 +191,11 @@ set(ENERGYPLUS_VERSION_MINOR 4)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "4856dd3d6e")
+set(ENERGYPLUS_BUILD_SHA "29b2ffa34a")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v9.4.0-RC2")
+set(ENERGYPLUS_RELEASE_NAME "v9.4.0-RC9")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -532,7 +532,7 @@ endif()
 # If Linux, check LSB_RELEASE globally so we can use it after
 # But also infer the new E+ package names (starting at 9.4.0)
 if(APPLE)
-  set(ENERGYPLUS_SYSTEM_VERSION "-macOS10.13")
+  set(ENERGYPLUS_SYSTEM_VERSION "-macOS10.15")
 elseif(UNIX)
   # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
   find_program(LSB_RELEASE lsb_release)
@@ -566,7 +566,7 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH 224744fba233866dbca13ca794220b3f)
+    set(ENERGYPLUS_EXPECTED_HASH 646d14d6890d5382c7599ad138b34c05)
     set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
@@ -574,9 +574,9 @@ if(UNIX)
     set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
   else()
     if(LSB_RELEASE_ID_SHORT MATCHES "20.04")
-      set(ENERGYPLUS_EXPECTED_HASH c1354f31ce2462fa792eb07ac7bb9307)
+      set(ENERGYPLUS_EXPECTED_HASH 5c705bdd4d1b64e2d2f8c71d7b426717)
     else() # 18.04
-      set(ENERGYPLUS_EXPECTED_HASH dafbcf202e7af66d4e4166a60c693dfa)
+      set(ENERGYPLUS_EXPECTED_HASH 092dce096b6fad383810ec13e6ce426c)
     endif()
     set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   endif()
@@ -612,11 +612,11 @@ elseif(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH 452e1571e09f933437f7eef024b0f353)
+    set(ENERGYPLUS_EXPECTED_HASH f2033c76ec30c553755b3f24f207f8e4)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH 71e57d5ac7f6759b3f64615a0a3e8555)
+    set(ENERGYPLUS_EXPECTED_HASH 5dbc660d8f09cdc9f3ecd3cd24f065cb)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
