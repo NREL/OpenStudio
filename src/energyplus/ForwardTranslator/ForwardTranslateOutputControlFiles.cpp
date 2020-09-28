@@ -137,11 +137,7 @@ boost::optional<IdfObject> ForwardTranslator::translateOutputControlFiles( Outpu
     idfObject.setString(OutputControl_FilesFields::OutputMTD, "No");
   }
 
-  if (modelObject.outputEND()) {
-    idfObject.setString(OutputControl_FilesFields::OutputEND, "Yes");
-  } else {
-    idfObject.setString(OutputControl_FilesFields::OutputEND, "No");
-  }
+  idfObject.setString(OutputControl_FilesFields::OutputEND, "Yes");
 
   if (modelObject.outputSHD()) {
     idfObject.setString(OutputControl_FilesFields::OutputSHD, "Yes");
