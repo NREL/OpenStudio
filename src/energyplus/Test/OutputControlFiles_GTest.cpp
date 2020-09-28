@@ -206,6 +206,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlFiles) {
     EXPECT_EQ(status[12], outputControlFiles.outputRDD());
     EXPECT_EQ(status[13], outputControlFiles.outputMDD());
     EXPECT_EQ(status[14], outputControlFiles.outputMTD());
+    // EXPECT_EQ(true, outputControlFiles.outputEND()); // not reverse translated
     EXPECT_EQ(status[16], outputControlFiles.outputSHD());
     EXPECT_EQ(status[17], outputControlFiles.outputDFS());
     EXPECT_EQ(status[18], outputControlFiles.outputGLHE());
