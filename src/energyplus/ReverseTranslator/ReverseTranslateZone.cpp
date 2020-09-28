@@ -236,29 +236,29 @@ OptionalModelObject ReverseTranslator::translateZone( const WorkspaceObject & wo
           };
           // Group 1
           {
-            boost::optional<std::string> thermostatType = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control1ObjectType);
-            boost::optional<std::string> thermostatName = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control1Name);
+            boost::optional<std::string> thermostatType = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control1ObjectType, false, true);
+            boost::optional<std::string> thermostatName = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control1Name, false, true);
             checkIfDualSetpointAndTranslate(thermostatType, thermostatName);
           }
 
           // Group 2
           {
-            boost::optional<std::string> thermostatType = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control2ObjectType);
-            boost::optional<std::string> thermostatName = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control2Name);
+            boost::optional<std::string> thermostatType = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control2ObjectType, false, true);
+            boost::optional<std::string> thermostatName = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control2Name, false, true);
             checkIfDualSetpointAndTranslate(thermostatType, thermostatName);
           }
 
           // Group 3
           {
-            boost::optional<std::string> thermostatType = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control3ObjectType);
-            boost::optional<std::string> thermostatName = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control3Name);
+            boost::optional<std::string> thermostatType = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control3ObjectType, false, true);
+            boost::optional<std::string> thermostatName = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control3Name, false, true);
             checkIfDualSetpointAndTranslate(thermostatType, thermostatName);
           }
 
           // Group 4
           {
-            boost::optional<std::string> thermostatType = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control4ObjectType);
-            boost::optional<std::string> thermostatName = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control4Name);
+            boost::optional<std::string> thermostatType = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control4ObjectType, false, true);
+            boost::optional<std::string> thermostatName = _zoneControlThermostat.getString(ZoneControl_ThermostatFields::Control4Name, false, true);
             checkIfDualSetpointAndTranslate(thermostatType, thermostatName);
           }
 
