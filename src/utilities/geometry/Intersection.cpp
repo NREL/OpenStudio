@@ -49,11 +49,15 @@
 #include <boost/geometry/strategies/cartesian/point_in_poly_crossings_multiply.hpp>
 #include <boost/geometry/algorithms/within.hpp>
 #include <boost/geometry/algorithms/simplify.hpp>
+#include <boost/geometry/algorithms/buffer.hpp>
+
+
 #if defined(_MSC_VER)
   #pragma warning(pop)
 #endif
 
-typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
+typedef double coordinate_type;
+typedef boost::geometry::model::d2::point_xy<coordinate_type> BoostPoint;
 typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
 typedef boost::geometry::model::ring<BoostPoint> BoostRing;
 typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
@@ -498,6 +502,34 @@ namespace openstudio{
 
   }
 
+  boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon1, double amount, double tol) {
+
+    std::vector<Point3d> allPoints;
+    boost::optional<BoostPolygon> boostPolygon1 = nonIntersectingBoostPolygonFromVertices(polygon1, allPoints, tol);
+
+    if (!boostPolygon1) {
+      return boost::none;
+    }
+
+    const double buffer_distance = 1.0;
+    const int points_per_circle = 36;
+    boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> distance_strategy(amount);
+    boost::geometry::strategy::buffer::join_miter join_strategy;
+    boost::geometry::strategy::buffer::end_flat end_strategy;
+    boost::geometry::strategy::buffer::side_straight side_strategy;
+    boost::geometry::strategy::buffer::point_circle point_strategy;
+
+    BoostMultiPolygon polygons;
+    polygons.push_back(*boostPolygon1);
+
+    BoostMultiPolygon result;
+
+    boost::geometry::buffer(polygons, result, distance_strategy, side_strategy, join_strategy, end_strategy, point_strategy);
+
+    std::vector<Point3d> xxx = verticesFromBoostPolygon(result[0], allPoints, tol);
+    return xxx;
+  }
+
   boost::optional<std::vector<Point3d> > join(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol)
   {
     // convert vertices to boost rings
@@ -558,6 +590,35 @@ namespace openstudio{
     unionVertices = removeCollinearLegacy(unionVertices);
 
     return unionVertices;
+  }
+
+  std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vector<Point3d>>& polygons, double tol, double offset) 
+  {
+    std::vector<std::vector<Point3d>> result;
+
+    size_t N = polygons.size();
+    if (N <= 1) {
+      return polygons;
+    }
+
+    std::vector<std::vector<Point3d>> xpolygons;
+
+    for (unsigned i = 0; i < N; i++) {
+      xpolygons.push_back(*buffer(polygons[i], offset, tol));
+    }
+    
+    Matrix A(N, N, 0.0);
+    for (unsigned i = 0; i < N; ++i) {
+      A(i, i) = 1.0;
+      for (unsigned j = i + 1; j < N; ++j) {
+        if (join(xpolygons[i], xpolygons[j], tol)) {
+          A(i, j) = 1.0;
+          A(j, i) = 1.0;
+        }
+      }
+    }
+
+    return result;
   }
 
   std::vector<std::vector<Point3d> > joinAll(const std::vector<std::vector<Point3d> >& polygons, double tol)

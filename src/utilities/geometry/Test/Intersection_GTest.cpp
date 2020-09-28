@@ -993,6 +993,8 @@ TEST_F(GeometryFixture, JoinAll_2527) {
   polygons.push_back(poly7);
   polygons.push_back(poly8);
 
+  joinAllWithBuffer(polygons, tol, 5.0);
+
   test = joinAll(polygons, tol);
 
   // We know this fails because join all does not in fact join all
