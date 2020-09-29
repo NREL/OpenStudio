@@ -38,6 +38,13 @@
 #include "../../data/TimeSeries.hpp"
 #include "../../filetypes/EpwFile.hpp"
 #include "../../units/UnitFactory.hpp"
+#include "../../idf/Workspace.hpp"
+#include "../../idf/WorkspaceObject.hpp"
+#include "../../idd/IddEnums.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/Exterior_FuelEquipment_FieldEnums.hxx>
+#include <utilities/idd/Exterior_WaterEquipment_FieldEnums.hxx>
 
 #include <iostream>
 #include <boost/regex.hpp>
@@ -774,3 +781,79 @@ TEST_F(SqlFileFixture, SqlFile_Escapes_injection)
   }
 }
 
+TEST_F(SqlFileFixture, EndUseFuelTypes_test) {
+
+  openstudio::path idfPath = resourcesPath()/toPath("energyplus/AllFuelTypes/in.idf");
+  auto _w = openstudio::Workspace::load(idfPath, openstudio::IddFileType::EnergyPlus);
+  ASSERT_TRUE(_w);
+  Workspace w = _w.get();
+
+  openstudio::path path = resourcesPath()/toPath("energyplus/AllFuelTypes/eplusout.sql");
+  openstudio::SqlFile sqlFile(path);
+
+  auto get_design_value = [&w](const openstudio::EndUseFuelType& end_use_fuel_type) -> double {
+    double result = 0;
+    // valueNames match between FuelType and EndUseFuelType...
+    openstudio::FuelType fuel_type(end_use_fuel_type.valueName());
+
+    if (end_use_fuel_type == openstudio::EndUseFuelType::Water) {
+      auto idf_objects = w.getObjectsByType(openstudio::IddObjectType::Exterior_WaterEquipment);
+      result = idf_objects[0].getDouble(openstudio::Exterior_WaterEquipmentFields::DesignLevel).get();
+    } else {
+      auto idf_objects = w.getObjectsByType(openstudio::IddObjectType::Exterior_FuelEquipment);
+      auto it = std::find_if(idf_objects.begin(), idf_objects.end(), [&fuel_type](const auto& idf_object) {
+          return (idf_object.getString(Exterior_FuelEquipmentFields::FuelUseType).get() == fuel_type.valueDescription());
+      });
+      result = it->getDouble(Exterior_FuelEquipmentFields::DesignLevel).get();
+    }
+
+    return result;
+
+  };
+
+  std::map<openstudio::MonthOfYear, int> daysInMonth = {
+    {MonthOfYear::Jan, 31},
+    {MonthOfYear::Feb, 28},
+    {MonthOfYear::Mar, 31},
+    {MonthOfYear::Apr, 30},
+    {MonthOfYear::May, 31},
+    {MonthOfYear::Jun, 30},
+    {MonthOfYear::Jul, 31},
+    {MonthOfYear::Aug, 31},
+    {MonthOfYear::Sep, 30},
+    {MonthOfYear::Oct, 31},
+    {MonthOfYear::Nov, 30},
+    {MonthOfYear::Dec, 31},
+  };
+
+
+  // This will test that queries do not throw at least
+  for (const auto& [i_month, monthDescription] : openstudio::MonthOfYear::getDescriptions()) {
+    if (i_month > 12) {
+      break;
+    }
+    openstudio::MonthOfYear monthOfYear(i_month);
+    // for (const auto& [i_category, categoryDescription] : openstudio::EndUseCategoryType::getDescriptions()) {
+      //openstudio::EndUseCategoryType category(i_category);
+      openstudio::EndUseCategoryType category = openstudio::EndUseCategoryType::ExteriorEquipment;
+      std::string categoryDescription = category.valueDescription();
+
+      for (const auto& [i_fuelType, fuelTypeDescription] : openstudio::EndUseFuelType::getDescriptions()) {
+        openstudio::EndUseFuelType fuelType(i_fuelType);
+
+        double designLevel = get_design_value(fuelType);
+
+        auto _v = sqlFile.energyConsumptionByMonth(fuelType, category, monthOfYear);
+        ASSERT_TRUE(_v) << "energyConsumptionByMonth failed for " << fuelTypeDescription << ", "
+          << categoryDescription << ", " << monthDescription;
+        EXPECT_DOUBLE_EQ(designLevel*24*3600*daysInMonth[monthOfYear], _v.get())
+          << "energyConsumptionByMonth value failed for " << fuelTypeDescription << ", "
+          << categoryDescription << ", " << monthDescription;
+        auto _v_peak = sqlFile.peakEnergyDemandByMonth(fuelType, category, monthOfYear);
+        ASSERT_TRUE(_v_peak)  << "peakEnergyDemandByMonth failed for " << fuelTypeDescription << ", "
+          << categoryDescription << ", " << monthDescription;
+        EXPECT_EQ(designLevel, _v_peak.get());
+      }
+    //}
+  }
+}

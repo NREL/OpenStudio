@@ -910,7 +910,10 @@ namespace sdd {
           fuelType == FuelType::Propane ||
           fuelType == FuelType::Water ||
           fuelType == FuelType::Steam ||
+          fuelType == FuelType::OtherFuel_1 ||
+          fuelType == FuelType::OtherFuel_2 ||
           fuelType == FuelType::EnergyTransfer){
+        // TODO: why are we ignoring these?! Aside from EnergyTransfer at least
         // skip these to avoid E+ warning, EnergyTransfer is internal to the simulation
         continue;
       }

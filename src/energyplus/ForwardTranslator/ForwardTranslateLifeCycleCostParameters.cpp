@@ -165,6 +165,8 @@ boost::optional<IdfObject> ForwardTranslator::translateLifeCycleCostParameters( 
     makeUsePriceEscalation(modelObject.fuelOil2Inflation(),    "FuelOilNo2", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
     makeUsePriceEscalation(modelObject.propaneInflation(),     "Propane", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
     makeUsePriceEscalation(modelObject.waterInflation(),       "Water", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
+    makeUsePriceEscalation(modelObject.otherFuel1Inflation(),  "OtherFuel1", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
+    makeUsePriceEscalation(modelObject.otherFuel2Inflation(),  "OtherFuel2", baseDateMonth, baseDateYear, lengthOfStudyPeriodInYears, m_idfObjects);
   }
 
   return idfObject;
