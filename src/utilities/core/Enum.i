@@ -43,7 +43,15 @@
     static std::string enumName(); \
     static std::set<int> getValues(); \
   };  \
-  ENUM_CONVERSION(_name);
+  ENUM_CONVERSION(_name); \
+  inline std::ostream &operator<<(std::ostream &os, const _name &e); \
+  %extend _name { \
+    std::string __str__() const{ \
+      std::ostringstream os; \
+      os << *self; \
+      return os.str(); \
+    } \
+  };
 
 
 #endif // UTILITIES_CORE_ENUM_I
