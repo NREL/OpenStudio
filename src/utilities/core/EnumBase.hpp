@@ -71,7 +71,7 @@ template<typename Enum>
         auto itr = m.find(t_value);
         if (itr == m.end())
         {
-          throw std::runtime_error("Invalid domain for OpenStudio Enum");
+          throw std::runtime_error("Invalid domain for OpenStudio Enum " + Enum::enumName());
         }
         return itr->second;
       }
@@ -147,7 +147,7 @@ template<typename Enum>
         {
           return itr->second;
         }
-        throw std::runtime_error("Unknown OpenStudio Enum Value '" + t_name + "'");
+        throw std::runtime_error("Unknown OpenStudio Enum Value '" + t_name + "' for Enum " + Enum::enumName());
       }
 
       /** Returns t_value if it is in the domain. Otherwise throws std::runtime_error. */
@@ -158,7 +158,7 @@ template<typename Enum>
         {
           return t_value;
         } else {
-          throw std::runtime_error("Unknown OpenStudio Enum Value = " + std::to_string(t_value));
+          throw std::runtime_error("Unknown OpenStudio Enum Value = " + std::to_string(t_value) + "' for Enum " + Enum::enumName());
         }
       }
 
