@@ -86,9 +86,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
   Model model;
 
   ThermalZone thermalZone(model);
+  ThermalZone thermalZone2(model);
 
   Space space(model);
+  Space space2(model);
   space.setThermalZone(thermalZone);
+  space2.setThermalZone(thermalZone2);
 
   std::vector<Point3d> vertices;
   vertices.push_back(Point3d(0, 2, 0));
@@ -96,7 +99,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
   vertices.push_back(Point3d(2, 0, 0));
   vertices.push_back(Point3d(2, 2, 0));
   Surface surface(vertices, model);
+  Surface surface2(vertices, model);
   surface.setSpace(space);
+  surface2.setSpace(space2);
 
   // Here's the position of the two subSurfaces onto the base Surface
   // 2 _____________
@@ -130,6 +135,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
   subSurfaceB.setSurface(surface);
   subSurfaceB.assignDefaultSubSurfaceType();
 
+  // C
+  vertices.clear();
+  vertices.push_back(Point3d(1, 2, 0));
+  vertices.push_back(Point3d(1, 1, 0));
+  vertices.push_back(Point3d(2, 1, 0));
+  vertices.push_back(Point3d(2, 2, 0));
+
+  SubSurface subSurfaceC(vertices, model);
+  subSurfaceC.setName("SubSurface C");
+  subSurfaceC.setSurface(surface2);
+  subSurfaceC.assignDefaultSubSurfaceType();
+
   Blind blind1(model);
   ShadingControl shadingControl1(blind1);
   EXPECT_TRUE(shadingControl1.setShadingType("ExteriorBlind"));
@@ -147,6 +164,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
   EXPECT_TRUE(shadingControl1.setGlareControlIsActive(true));
   EXPECT_TRUE(shadingControl1.setMultipleSurfaceControlType("Sequential"));
   EXPECT_TRUE(shadingControl1.addSubSurface(subSurfaceA));
+  EXPECT_FALSE(shadingControl1.addSubSurface(subSurfaceC));
   // Convenience method that calls ShadingControl::addSubSurface()
   EXPECT_TRUE(subSurfaceB.addShadingControl(shadingControl1));
   ASSERT_EQ(2u, shadingControl1.subSurfaces().size());
@@ -167,7 +185,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
   {
     Workspace workspace = forwardTranslator.translateModel(model);
 
-    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
+    EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
     ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::WindowShadingControl).size());
 
     // Test ShadingControl1: it has all the fields set. We also check that it's control sequence number is 1.
@@ -246,7 +264,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls)
 
     Workspace workspace = forwardTranslator.translateModel(model);
 
-    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
+    EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
 
     std::vector<WorkspaceObject> objVector(workspace.getObjectsByType(IddObjectType::WindowShadingControl));
     EXPECT_EQ(1u, objVector.size());

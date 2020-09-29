@@ -445,49 +445,26 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
-  // TODO: Is this still needed?
-  // ensure shading controls only reference windows in a single zone and determine control sequence number
+  // determine control sequence number
   // DLM: ideally E+ would not need to know the zone, shading controls could work across zones
   std::vector<ShadingControl> shadingControls = model.getConcreteModelObjects<ShadingControl>();
   std::sort(shadingControls.begin(), shadingControls.end(), WorkspaceObjectNameLess());
   std::map<Handle, ShadingControlVector> zoneHandleToShadingControlVectorMap;
   for (auto& shadingControl : shadingControls) {
-    std::set<Handle> thisZoneHandleSet;
     for (auto& subSurface : shadingControl.subSurfaces()) {
       boost::optional<Space> space = subSurface.space();
       if (space) {
         boost::optional<ThermalZone> thermalZone = space->thermalZone();
         if (thermalZone) {
           Handle zoneHandle = thermalZone->handle();
-          if (thisZoneHandleSet.empty()) {
-            // first thermal zone, no clone
-            thisZoneHandleSet.insert(zoneHandle);
-            auto it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
-            if (it == zoneHandleToShadingControlVectorMap.end()) {
-              zoneHandleToShadingControlVectorMap.insert(std::make_pair(zoneHandle, std::vector<ShadingControl>()));
-            }
-            it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
-            OS_ASSERT(it != zoneHandleToShadingControlVectorMap.end());
-            it->second.push_back(shadingControl);
-            shadingControl.additionalProperties().setFeature("Shading Control Sequence Number", (int)it->second.size());
-          } else if (thisZoneHandleSet.find(zoneHandle) != thisZoneHandleSet.end()) {
-            // already in here, good to go
-
-          } else {
-            // additional thermal zone, must clone
-            thisZoneHandleSet.insert(zoneHandle);
-            ShadingControl clone = shadingControl.clone(model).cast<ShadingControl>();
-            // assign clone to control subSurface
-            clone.addSubSurface(subSurface);
-            auto it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
-            if (it == zoneHandleToShadingControlVectorMap.end()) {
-              zoneHandleToShadingControlVectorMap.insert(std::make_pair(zoneHandle, std::vector<ShadingControl>()));
-            }
-            it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
-            OS_ASSERT(it != zoneHandleToShadingControlVectorMap.end());
-            it->second.push_back(clone);
-            clone.additionalProperties().setFeature("Shading Control Sequence Number", (int)it->second.size());
+          auto it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
+          if (it == zoneHandleToShadingControlVectorMap.end()) {
+            zoneHandleToShadingControlVectorMap.insert(std::make_pair(zoneHandle, std::vector<ShadingControl>()));
           }
+          it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
+          OS_ASSERT(it != zoneHandleToShadingControlVectorMap.end());
+          it->second.push_back(shadingControl);
+          shadingControl.additionalProperties().setFeature("Shading Control Sequence Number", (int)it->second.size());
         } else {
           LOG(Warn, "Cannot find ThermalZone for " << subSurface.briefDescription() << " referencing " << shadingControl.briefDescription());
         }
