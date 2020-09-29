@@ -1,5 +1,3 @@
-! TODO: This file is from v9.4.0-IOFreeze. Redo it when E+ official is out
-
 !-Generator IDFEditor 1.34
 !-Option OriginalOrderTop UseSpecialFormat
 !-NOTE: All comments with '!-' are ignored by the IDFEditor and are generated automatically.
@@ -87,7 +85,9 @@
     No,                      !- Do System Sizing Calculation
     No,                      !- Do Plant Sizing Calculation
     Yes,                     !- Run Simulation for Sizing Periods
-    Yes;                     !- Run Simulation for Weather File Run Periods
+    Yes,                     !- Run Simulation for Weather File Run Periods
+    No,                      !- Do HVAC Sizing Simulation for Sizing Periods
+    1;                       !- Maximum Number of HVAC Sizing Simulation Passes
 
   RunPeriod,
     Run Period 1,            !- Name

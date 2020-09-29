@@ -150,6 +150,10 @@ class MODEL_API LifeCycleCostParameters : public ParentObject {
 
   boost::optional<double> waterInflation() const;
 
+  boost::optional<double> otherFuel1Inflation() const;
+
+  boost::optional<double> otherFuel2Inflation() const;
+
   //@}
   /** @name Setters */
 
@@ -268,6 +272,16 @@ class MODEL_API LifeCycleCostParameters : public ParentObject {
   bool setWaterInflation(double waterInflation);
 
   void resetWaterInflation();
+
+  /// This cannot be set when use NIST fuel escalation rates is true
+  bool setOtherFuel1Inflation(double otherFuel1Inflation);
+
+  void resetOtherFuel1Inflation();
+
+  /// This cannot be set when use NIST fuel escalation rates is true
+  bool setOtherFuel2Inflation(double otherFuel2Inflation);
+
+  void resetOtherFuel2Inflation();
 
   //@}
 

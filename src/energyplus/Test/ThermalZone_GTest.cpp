@@ -57,6 +57,10 @@
 #include <utilities/idd/Daylighting_Controls_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/ZoneHVAC_EquipmentList_FieldEnums.hxx>
+#include <utilities/idd/Schedule_Constant_FieldEnums.hxx>
+#include <utilities/idd/ThermostatSetpoint_DualSetpoint_FieldEnums.hxx>
+#include <utilities/idd/ZoneControl_Thermostat_FieldEnums.hxx>
+
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -811,6 +815,50 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LoadDistributionScheme)
   WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::ZoneHVAC_EquipmentList);
   EXPECT_EQ(1u, idfObjs.size());
   WorkspaceObject idf_eqlist(idfObjs[0]);
- 
+
   EXPECT_EQ("UniformLoad", idf_eqlist.getString(ZoneHVAC_EquipmentListFields::LoadDistributionScheme).get());
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneControlThermostat) {
+  ReverseTranslator rt;
+
+  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+
+  OptionalWorkspaceObject _i_zone = w.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(_i_zone);
+  EXPECT_TRUE(_i_zone->setName("Zone1"));
+
+  auto _i_tstat = w.addObject(IdfObject(IddObjectType::ThermostatSetpoint_DualSetpoint));
+  ASSERT_TRUE(_i_tstat);
+  EXPECT_TRUE(_i_tstat->setName("Thermostat Setpoint Dual Setpoint"));
+
+  auto _i_heating_sch =  w.addObject(IdfObject(openstudio::IddObjectType::Schedule_Constant));
+  ASSERT_TRUE(_i_heating_sch);
+  EXPECT_TRUE(_i_heating_sch->setName("Heating Schedule"));
+  EXPECT_TRUE(_i_heating_sch->setDouble(Schedule_ConstantFields::HourlyValue, 19.0));
+  EXPECT_TRUE(_i_tstat->setPointer(ThermostatSetpoint_DualSetpointFields::HeatingSetpointTemperatureScheduleName, _i_heating_sch->handle()));
+
+  auto _i_cooling_sch =  w.addObject(IdfObject(openstudio::IddObjectType::Schedule_Constant));
+  ASSERT_TRUE(_i_cooling_sch);
+  EXPECT_TRUE(_i_cooling_sch->setName("Cooling Schedule"));
+  EXPECT_TRUE(_i_cooling_sch->setDouble(Schedule_ConstantFields::HourlyValue, 26.0));
+  EXPECT_TRUE(_i_tstat->setPointer(ThermostatSetpoint_DualSetpointFields::CoolingSetpointTemperatureScheduleName, _i_cooling_sch->handle()));
+
+  auto _i_zc = w.addObject(IdfObject(IddObjectType::ZoneControl_Thermostat));
+  ASSERT_TRUE(_i_zc);
+  EXPECT_TRUE(_i_zc->setName("Zone Control Thermostat"));
+  EXPECT_TRUE(_i_zc->setPointer(ZoneControl_ThermostatFields::ZoneorZoneListName, _i_zone->handle()));
+
+  auto _i_control_sch =  w.addObject(IdfObject(openstudio::IddObjectType::Schedule_Constant));
+  ASSERT_TRUE(_i_control_sch);
+  EXPECT_TRUE(_i_control_sch->setName("Control Type Schedule"));
+  EXPECT_TRUE(_i_control_sch->setDouble(Schedule_ConstantFields::HourlyValue, 4.0));
+
+  // Make sure like in #4096, we end up with blank "Control Object Type / Name" groups
+  EXPECT_TRUE(_i_zc->setString(ZoneControl_ThermostatFields::Control1ObjectType, _i_tstat->iddObject().name()));
+  EXPECT_TRUE(_i_zc->setString(ZoneControl_ThermostatFields::Control1Name, _i_tstat->name().get()));
+  EXPECT_TRUE(_i_zc->setDouble(ZoneControl_ThermostatFields::TemperatureDifferenceBetweenCutoutAndSetpoint, 0.0));
+
+  ASSERT_NO_THROW(rt.translateWorkspace(w));
+  Model m = rt.translateWorkspace(w);
 }

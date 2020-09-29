@@ -7521,10 +7521,10 @@
     ,                        !- Nominal Capacity {W}
     ,                        !- Free Convection Capacity {W}
     0.1,                     !- Free Convection Nominal Capacity Sizing Factor
-    1.25,                    !- Design Inlet Air Dry-Bulb Temperature {C}
+    35.0,                    !- Design Inlet Air Dry-Bulb Temperature {C}
     25.6,                    !- Design Inlet Air Wet-Bulb Temperature {C}
     Autosize,                !- Design Approach Temperature {deltaC}
-    0.1,                     !- Design Range Temperature {deltaC}
+    Autosize,                !- Design Range Temperature {deltaC}
     0.0,                     !- Basin Heater Capacity {W/K}
     2.0,                     !- Basin Heater Setpoint Temperature {C}
     ,                        !- Basin Heater Operating Schedule Name
@@ -9297,7 +9297,7 @@
 
   UtilityCost:Tariff,
     IN_EIAMonthlyRateGas,    !- Name
-    NaturalGas:Facility,            !- Output Meter Name
+    NaturalGas:Facility,     !- Output Meter Name
     MCF,                     !- Conversion Factor Choice
     ,                        !- Energy Conversion Factor
     ,                        !- Demand Conversion Factor

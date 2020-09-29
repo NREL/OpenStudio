@@ -2127,7 +2127,7 @@ TEST_F(IdfFixture, Workspace_getObjects_Type_StringOverload) {
 
   // And check with a bad std::string, that it throws, and that we get an informative message (#1741)
   ASSERT_THROW(workspace.getObjectsByType("BadEnum"), std::runtime_error);
-  std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'BADENUM'");
+  std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'BADENUM' for Enum IddObjectType");
   try {
     workspace.getObjectsByType("BadEnum");
   } catch (std::runtime_error& e) {

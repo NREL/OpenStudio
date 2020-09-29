@@ -9551,7 +9551,7 @@
 
   UtilityCost:Tariff,
     Large CG,                !- Name
-    NaturalGas:Facility,            !- Output Meter Name
+    NaturalGas:Facility,     !- Output Meter Name
     MMBtu,                   !- Conversion Factor Choice
     ,                        !- Energy Conversion Factor
     ,                        !- Demand Conversion Factor
@@ -9655,7 +9655,7 @@
 
   UtilityCost:Tariff,
     Generic Fuel Oil 1,      !- Name
-    FuelOilNo1:Facility,      !- Output Meter Name
+    FuelOilNo1:Facility,     !- Output Meter Name
     ,                        !- Conversion Factor Choice
     ,                        !- Energy Conversion Factor
     ,                        !- Demand Conversion Factor
