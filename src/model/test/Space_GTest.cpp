@@ -73,6 +73,9 @@
 #include "../../utilities/core/Compare.hpp"
 
 #include <iostream>
+#include <windows.h>
+#include <random>
+
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -739,6 +742,431 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest)
   matchSurfaces(spaces);
 
   // model.save(toPath("./Space_SurfaceMatch_LargeTest.osm"), true);
+}
+
+/// <summary>
+/// One space below, two smaller spaces above. Verifies we triangulate concave surfaces correctly (we do not)
+///
+/// +---------------------------------------------+
+/// |                                             |
+/// |      +-------------+--------------+         |
+/// |      |             |              |         |
+/// |      +-------------+--------------+         |
+/// |                                             |
+/// +---------------------------------------------+
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, Issue_2560_4) {
+  Model model;
+
+  BuildingStory bottom(model);
+  BuildingStory top(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(-60.675, 0, 0));
+  points1.push_back(Point3d(-60.675, 14.945, 0));
+  points1.push_back(Point3d(0, 14.945, 0));
+  boost::optional<Space> space1 = Space::fromFloorPrint(points1, 3.8608, model);
+  ASSERT_TRUE(space1);
+  space1->setXOrigin(60.715931);
+  space1->setYOrigin(.040869);
+  space1->setZOrigin(0);
+  space1->setBuildingStory(bottom);
+
+  Point3dVector points10;
+  points10.push_back(Point3d(0, 0, 0));
+  points10.push_back(Point3d(-19.771131, 0, 0));
+  points10.push_back(Point3d(-19.771131, 7.538262, 0));
+  points10.push_back(Point3d(0, 7.538262, 0));
+  boost::optional<Space> space10 = Space::fromFloorPrint(points10, 3.8608, model);
+  ASSERT_TRUE(space10);
+  space10->setXOrigin(50.251);
+  space10->setYOrigin(3.8608);
+  space10->setZOrigin(3.8608);
+  space10->setBuildingStory(top);
+
+  Point3dVector points11;
+  points11.push_back(Point3d(0, 0, 0));
+  points11.push_back(Point3d(-19.771131, 0, 0));
+  points11.push_back(Point3d(-19.771131, 7.538262, 0));
+  points11.push_back(Point3d(0, 7.538262, 0));
+  boost::optional<Space> space11 = Space::fromFloorPrint(points11, 3.8608, model);
+  ASSERT_TRUE(space11);
+  space11->setXOrigin(30.4809);
+  space11->setYOrigin(3.8608);
+  space11->setZOrigin(3.8608);
+  space11->setBuildingStory(top);
+
+  model.save(toPath("./issue2560_4_original_model.osm"), true);
+  SpaceVector spaces = model.getModelObjects<Space>();
+
+  intersectSurfaces(spaces);
+  model.save(toPath("./issue2560_4_intersected_model.osm"), true);
+
+  matchSurfaces(spaces);
+  model.save(toPath("./issue2560_4_matched_model.osm"), true);
+}
+
+/// <summary>
+/// Two spaces below, two smaller spaces above. Verifies we triangulate concave surfaces correctly (we do not)
+///
+/// +---------------------------------------------+
+/// |                                             |
+/// |      +-------------+--------------+         |
+/// +------|-------------|--------------|---------+
+/// |      +-------------+--------------+         |
+/// |                                             |
+/// +---------------------------------------------+
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, Issue_2560_3) {
+  Model model;
+
+  BuildingStory bottom(model);
+  BuildingStory top(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(-60.675, 0, 0));
+  points1.push_back(Point3d(-60.675, 7.4725, 0));
+  points1.push_back(Point3d(0, 7.4725, 0));
+  boost::optional<Space> space1 = Space::fromFloorPrint(points1, 3.8608, model);
+  ASSERT_TRUE(space1);
+  space1->setXOrigin(60.715931);
+  space1->setYOrigin(.040869);
+  space1->setZOrigin(0);
+  space1->setBuildingStory(bottom);
+
+  Point3dVector points2;
+  points2.push_back(Point3d(0, 0, 0));
+  points2.push_back(Point3d(-60.675, 0, 0));
+  points2.push_back(Point3d(-60.675, 7.4725, 0));
+  points2.push_back(Point3d(0, 7.4725, 0));
+  boost::optional<Space> space2 = Space::fromFloorPrint(points2, 3.8608, model);
+  ASSERT_TRUE(space2);
+  space2->setXOrigin(60.715931);
+  space2->setYOrigin(.040869 + 7.4725);
+  space2->setZOrigin(0);
+  space2->setBuildingStory(bottom);
+
+  Point3dVector points10;
+  points10.push_back(Point3d(0, 0, 0));
+  points10.push_back(Point3d(-19.771131, 0, 0));
+  points10.push_back(Point3d(-19.771131, 7.538262, 0));
+  points10.push_back(Point3d(0, 7.538262, 0));
+  boost::optional<Space> space10 = Space::fromFloorPrint(points10, 3.8608, model);
+  ASSERT_TRUE(space10);
+  space10->setXOrigin(50.251);
+  space10->setYOrigin(3.8608);
+  space10->setZOrigin(3.8608);
+  space10->setBuildingStory(top);
+
+  Point3dVector points11;
+  points11.push_back(Point3d(0, 0, 0));
+  points11.push_back(Point3d(-19.771131, 0, 0));
+  points11.push_back(Point3d(-19.771131, 7.538262, 0));
+  points11.push_back(Point3d(0, 7.538262, 0));
+  boost::optional<Space> space11 = Space::fromFloorPrint(points11, 3.8608, model);
+  ASSERT_TRUE(space11);
+  space11->setXOrigin(30.4809);
+  space11->setYOrigin(3.8608);
+  space11->setZOrigin(3.8608);
+  space11->setBuildingStory(top);
+
+  model.save(toPath("./issue2560_3_original_model.osm"), true);
+  SpaceVector spaces = model.getModelObjects<Space>();
+
+  intersectSurfaces(spaces);
+  model.save(toPath("./issue2560_3_intersected_model.osm"), true);
+
+  matchSurfaces(spaces);
+  model.save(toPath("./issue2560_3_matched_model.osm"), true);
+}
+
+/// <summary>
+/// Two spaces below, one smaller space above. Verifies we triangulate concave surfaces correctly (we do not)
+/// 
+/// +---------------------------------------------+
+/// |                                             |
+/// |      +----------------------------+         |
+/// +------|----------------------------|---------+
+/// |      +----------------------------+         |
+/// |                                             |
+/// +---------------------------------------------+
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, Issue_2560_2) {
+  Model model;
+
+  BuildingStory bottom(model);
+  BuildingStory top(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(-60.675, 0, 0));
+  points1.push_back(Point3d(-60.675, 7.4725, 0));
+  points1.push_back(Point3d(0, 7.4725, 0));
+  boost::optional<Space> space1 = Space::fromFloorPrint(points1, 3.8608, model);
+  ASSERT_TRUE(space1);
+  space1->setXOrigin(60.715931);
+  space1->setYOrigin(.040869);
+  space1->setZOrigin(0);
+  space1->setBuildingStory(bottom);
+
+    Point3dVector points2;
+  points2.push_back(Point3d(0, 0, 0));
+  points2.push_back(Point3d(-60.675, 0, 0));
+  points2.push_back(Point3d(-60.675, 7.4725, 0));
+  points2.push_back(Point3d(0, 7.4725, 0));
+  boost::optional<Space> space2 = Space::fromFloorPrint(points2, 3.8608, model);
+  ASSERT_TRUE(space2);
+  space2->setXOrigin(60.715931);
+  space2->setYOrigin(.040869 + 7.4725);
+  space2->setZOrigin(0);
+  space2->setBuildingStory(bottom);
+
+  Point3dVector points10;
+  points10.push_back(Point3d(0, 0, 0));
+  points10.push_back(Point3d(-39.542262, 0, 0));
+  points10.push_back(Point3d(-39.542262, 7.538262, 0));
+  points10.push_back(Point3d(0, 7.538262, 0));
+  boost::optional<Space> space10 = Space::fromFloorPrint(points10, 3.8608, model);
+  ASSERT_TRUE(space10);
+  space10->setXOrigin(50.251);
+  space10->setYOrigin(3.8608);
+  space10->setZOrigin(3.8608);
+  space10->setBuildingStory(top);
+
+  model.save(toPath("./issue2560_2_original_model.osm"), true);
+  SpaceVector spaces = model.getModelObjects<Space>();
+
+  intersectSurfaces(spaces);
+  model.save(toPath("./issue2560_2_intersected_model.osm"), true);
+
+  matchSurfaces(spaces);
+  model.save(toPath("./issue2560_2_matched_model.osm"), true);
+}
+
+/// <summary>
+/// +---------------------------------------------+
+/// |                                             |
+/// |      +----------------------------+         |
+/// |      |                            |         |
+/// |      +----------------------------+         |
+/// |                                             |
+/// +---------------------------------------------+
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, Issue_2560_1) {
+  Model model;
+
+  BuildingStory bottom(model);
+  BuildingStory top(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(-60.675, 0, 0));
+  points1.push_back(Point3d(-60.675, 14.945, 0));
+  points1.push_back(Point3d(0, 14.945, 0));
+  boost::optional<Space> space1 = Space::fromFloorPrint(points1, 3.8608, model);
+  ASSERT_TRUE(space1);
+  space1->setXOrigin(60.715931);
+  space1->setYOrigin(.040869);
+  space1->setZOrigin(0);
+  space1->setBuildingStory(bottom);
+
+  Point3dVector points10;
+  points10.push_back(Point3d(0, 0, 0));
+  points10.push_back(Point3d(-39.542262, 0, 0));
+  points10.push_back(Point3d(-39.542262, 7.538262, 0));
+  points10.push_back(Point3d(0, 7.538262, 0));
+  boost::optional<Space> space10 = Space::fromFloorPrint(points10, 3.8608, model);
+  ASSERT_TRUE(space10);
+  space10->setXOrigin(50.251);
+  space10->setYOrigin(3.8608);
+  space10->setZOrigin(3.8608);
+  space10->setBuildingStory(top);
+
+  model.save(toPath("./issue2560_1_original_model.osm"), true);
+  SpaceVector spaces = model.getModelObjects<Space>();
+
+  intersectSurfaces(spaces);
+  model.save(toPath("./issue2560_1_intersected_model.osm"), true);
+
+  matchSurfaces(spaces);
+  model.save(toPath("./issue2560_1_matched_model.osm"), true);
+}
+TEST_F(ModelFixture, Issue_2560) {
+  Model model;
+
+  BuildingStory bottom(model);
+  BuildingStory top(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(0, 0, 0));
+  points1.push_back(Point3d(-6.045331, 0, 0));
+  points1.push_back(Point3d(-6.045331, 6.04433, 0));
+  points1.push_back(Point3d(0, 6.0443, 0));
+  std::reverse(points1.begin(), points1.end());
+
+  boost::optional<Space> space1 = Space::fromFloorPrint(points1, 3.8608, model);
+  ASSERT_TRUE(space1);
+  space1->setXOrigin(60.715931);
+  space1->setYOrigin(.040869);
+  space1->setZOrigin(0);
+  space1->setBuildingStory(bottom);
+
+  Point3dVector points2;
+  points2.push_back(Point3d(0, 0, 0));
+  points2.push_back(Point3d(-48.585401, 0, 0));
+  points2.push_back(Point3d(-48.585401, 6.04433, 0));
+  points2.push_back(Point3d(0, 6.0443, 0));
+  boost::optional<Space> space2 = Space::fromFloorPrint(points2, 3.8608, model);
+  ASSERT_TRUE(space2);
+  space2->setXOrigin(54.6704);
+  space2->setYOrigin(.040869);
+  space2->setZOrigin(0);
+  space2->setBuildingStory(bottom);
+
+  Point3dVector points3;
+  points3.push_back(Point3d(0, 0, 0));
+  points3.push_back(Point3d(-6.04431, 0, 0));
+  points3.push_back(Point3d(-6.04431, 6.04433, 0));
+  points3.push_back(Point3d(0, 6.04431, 0));
+  boost::optional<Space> space3 = Space::fromFloorPrint(points3, 3.8608, model);
+  ASSERT_TRUE(space3);
+  space3->setXOrigin(6.0852);
+  space3->setYOrigin(.040869);
+  space3->setZOrigin(0);
+  space3->setBuildingStory(bottom);
+
+  Point3dVector points4;
+  points4.push_back(Point3d(0, 0, 0));
+  points4.push_back(Point3d(-6.04431, 0, 0));
+  points4.push_back(Point3d(-6.04431, 2.8654, 0));
+  points4.push_back(Point3d(0, 2.8654, 0));
+  boost::optional<Space> space4 = Space::fromFloorPrint(points4, 3.8608, model);
+  ASSERT_TRUE(space3);
+  space4->setXOrigin(6.0852);
+  space4->setYOrigin(6.0852);
+  space4->setZOrigin(0);
+  space4->setBuildingStory(bottom);
+
+  Point3dVector points5;
+  points5.push_back(Point3d(0, 0, 0));
+  points5.push_back(Point3d(0, 6.0453, 0));
+  points5.push_back(Point3d(6.044331, 6.04433, 0));
+  points5.push_back(Point3d(6.044331, 0, 0));
+  boost::optional<Space> space5 = Space::fromFloorPrint(points5, 3.8608, model);
+  ASSERT_TRUE(space5);
+  space5->setXOrigin(.040869);
+  space5->setYOrigin(8.9506);
+  space5->setZOrigin(0);
+  space5->setBuildingStory(bottom);
+
+  Point3dVector points6;
+  points6.push_back(Point3d(0, 0, 0));
+  points6.push_back(Point3d(48.585401, 0, 0));
+  points6.push_back(Point3d(48.585501, -6.04533, 0));
+  points6.push_back(Point3d(0, -6.04533, 0));
+  boost::optional<Space> space6 = Space::fromFloorPrint(points6, 3.8608, model);
+  ASSERT_TRUE(space6);
+  space6->setXOrigin(6.085199);
+  space6->setYOrigin(14.9998);
+  space6->setZOrigin(0);
+  space6->setBuildingStory(bottom);
+
+  Point3dVector points7;
+  points7.push_back(Point3d(0, 0, 0));
+  points7.push_back(Point3d(-6.045331, 0, 0));
+  points7.push_back(Point3d(-6.045331, 6.045331, 0));
+  points7.push_back(Point3d(0, 6.045331, 0));
+  boost::optional<Space> space7 = Space::fromFloorPrint(points7, 3.8608, model);
+  ASSERT_TRUE(space7);
+  space7->setXOrigin(60.715931);
+  space7->setYOrigin(8.9526);
+  space7->setZOrigin(0);
+  space7->setBuildingStory(bottom);
+
+  Point3dVector points8;
+  points8.push_back(Point3d(0, 0, 0));
+  points8.push_back(Point3d(0, 2.8654, 0));
+  points8.push_back(Point3d(6.045331, 2.8654, 0));
+  points8.push_back(Point3d(6.045331, 0, 0));
+  boost::optional<Space> space8 = Space::fromFloorPrint(points8, 3.8608, model);
+  ASSERT_TRUE(space8);
+  space8->setXOrigin(54.6706);
+  space8->setYOrigin(6.0852);
+  space8->setZOrigin(0);
+  space8->setBuildingStory(bottom);
+
+  Point3dVector points9;
+  points9.push_back(Point3d(0, 0, 0));
+  points9.push_back(Point3d(0, -2.8654, 0));
+  points9.push_back(Point3d(-48.585401, -2.8654, 0));
+  points9.push_back(Point3d(-48.585401, -0, 0));
+  boost::optional<Space> space9 = Space::fromFloorPrint(points9, 3.8608, model);
+  ASSERT_TRUE(space9);
+  space9->setXOrigin(54.6706);
+  space9->setYOrigin(8.9506);
+  space9->setZOrigin(0);
+  space9->setBuildingStory(bottom);
+
+  Point3dVector points10;
+  points10.push_back(Point3d(0, 0, 0));
+  points10.push_back(Point3d(-39.542262, 0, 0));
+  points10.push_back(Point3d(-39.542262, 7.538262, 0));
+  points10.push_back(Point3d(0, 7.538262, 0));
+  boost::optional<Space> space10 = Space::fromFloorPrint(points10, 3.8608, model);
+  ASSERT_TRUE(space10);
+  space10->setXOrigin(50.251);
+  space10->setYOrigin(3.8608);
+  space10->setZOrigin(3.8608);
+  space10->setBuildingStory(top);
+
+  model.save(toPath("./issue2560_original_model.osm"), true);
+
+  SpaceVector spaces = model.getModelObjects<Space>();
+
+  ASSERT_EQ(spaces.size(), 10);
+
+  // This should randomize the o
+  //auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+  //    std::random_device rd;
+  //    std::default_random_engine rng();
+
+  auto rng = std::default_random_engine{};
+
+  std::shuffle(std::begin(spaces), std::end(spaces), rng);
+
+  intersectSurfaces(spaces);
+  model.save(toPath("./issue2560_intersected_model.osm"), true);
+
+  matchSurfaces(spaces);
+  model.save(toPath("./issue2560_matched_model.osm"), true);
+  int adjacentFloors = 0;
+  int adjacentWalls = 0;
+
+  for (const Space& space : spaces) {
+    int n = space.surfaces().size();
+
+    for (const Surface& surface : space.surfaces()) {
+      boost::optional<Surface> adjacent = surface.adjacentSurface();
+      std::string sType = surface.surfaceType();
+      if (sType == "Floor" || sType == "RoofCeiling") {
+        if (adjacent.has_value()) adjacentFloors++;
+      } else if (sType == "Wall")
+        if (adjacent.has_value()) adjacentWalls++;
+    }
+  }
+
+  ASSERT_EQ(adjacentFloors, 6);
+  ASSERT_EQ(adjacentWalls, 24);
 }
 
 TEST_F(ModelFixture, Space_FindSurfaces)

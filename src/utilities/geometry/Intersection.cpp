@@ -170,6 +170,26 @@ namespace openstudio{
     return result;
   }
 
+  /// <summary>
+  /// Prototype method to use poly partition to divide concave polygons into convext polygons.
+  /// Note that poly partition tests the input polygon to see if it is already convex, if it 
+  /// is then it does nothing, we would have to do that test anyway so in that regard why not
+  /// just invoke poly partition on all surfaces as otherwise we would have to do the same 
+  /// tests ourselves. The added bonus is this deals with polygons with holes and concave polygons
+  /// at the same time.
+  /// </summary>
+  /// <param name="polygons"></param>
+  /// <returns></returns>
+  std::vector<BoostPolygon> makeConvex(const std::vector<BoostPolygon>& polygons) 
+  {
+    std::vector<BoostPolygon> result;
+    for (const BoostPolygon polygon : polygons) {
+        std::vector<BoostPolygon> temp = removeHoles(polygon);
+        result.insert(result.end(), temp.begin(), temp.end());
+    }
+    return result;
+  }
+
   // convert a Point3d to a BoostPoint
   boost::tuple<double, double> boostPointFromPoint3d(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol)
   {
@@ -734,7 +754,7 @@ namespace openstudio{
     }
 
     intersectionResult = removeSpikes(intersectionResult);
-    intersectionResult = removeHoles(intersectionResult);
+    intersectionResult = makeConvex(intersectionResult);
 
     // check for multiple intersections
     if (intersectionResult.size() > 1){
@@ -799,7 +819,7 @@ namespace openstudio{
     std::vector<BoostPolygon> differenceResult1;
     boost::geometry::difference(*boostPolygon1, *boostPolygon2, differenceResult1);
     differenceResult1 = removeSpikes(differenceResult1);
-    differenceResult1 = removeHoles(differenceResult1);
+    differenceResult1 = makeConvex(differenceResult1);
 
     // create new polygon for each difference
     for (unsigned i = 0; i < differenceResult1.size(); ++i){
@@ -828,7 +848,7 @@ namespace openstudio{
     std::vector<BoostPolygon> differenceResult2;
     boost::geometry::difference(*boostPolygon2, *boostPolygon1, differenceResult2);
     differenceResult2 = removeSpikes(differenceResult2);
-    differenceResult2 = removeHoles(differenceResult2);
+    differenceResult2 = makeConvex(differenceResult2);
 
     // create new polygon for each difference
     for (unsigned i = 0; i < differenceResult2.size(); ++i){

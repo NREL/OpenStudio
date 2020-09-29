@@ -2370,6 +2370,7 @@ namespace detail {
 
       for (Surface surface : surfaces){
         std::string surfaceHandle = toString(surface.handle());
+        std::string surfaceName = surface.name().value();
         if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()){
           hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
           hasAdjacentSurfaceMap[surfaceHandle] = surface.adjacentSurface().has_value();
@@ -2381,7 +2382,8 @@ namespace detail {
 
         for (Surface otherSurface : otherSurfaces){
           std::string otherSurfaceHandle = toString(otherSurface.handle());
-          if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()){
+          std::string otherSurfaceName = otherSurface.name().value();
+          if (hasSubSurfaceMap.find(otherSurfaceHandle) == hasSubSurfaceMap.end()) {
             hasSubSurfaceMap[otherSurfaceHandle] = !otherSurface.subSurfaces().empty();
             hasAdjacentSurfaceMap[otherSurfaceHandle] = otherSurface.adjacentSurface().has_value();
           }
