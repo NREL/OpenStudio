@@ -60,7 +60,7 @@ TEST(Enum, EnumThrows)
   try {
     openstudio::enums::TestEnum("forth");
   } catch (std::runtime_error& e) {
-    std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'FORTH'");
+    std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'FORTH' for Enum TestEnum");
     EXPECT_EQ(expectedErrorMessage, std::string(e.what()));
   }
 
@@ -69,7 +69,7 @@ TEST(Enum, EnumThrows)
   try {
     openstudio::enums::TestEnum(3);
   } catch (std::runtime_error& e) {
-    std::string expectedErrorMessage("Unknown OpenStudio Enum Value = 3");
+    std::string expectedErrorMessage("Unknown OpenStudio Enum Value = 3 for Enum TestEnum");
     EXPECT_EQ(expectedErrorMessage, std::string(e.what()));
   }
 
