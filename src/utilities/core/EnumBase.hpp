@@ -158,7 +158,7 @@ template<typename Enum>
         {
           return t_value;
         } else {
-          throw std::runtime_error("Unknown OpenStudio Enum Value = " + std::to_string(t_value) + "' for Enum " + Enum::enumName());
+          throw std::runtime_error("Unknown OpenStudio Enum Value = " + std::to_string(t_value) + " for Enum " + Enum::enumName());
         }
       }
 
