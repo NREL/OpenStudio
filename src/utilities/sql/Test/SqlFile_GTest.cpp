@@ -322,26 +322,28 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
     double annualTotalCost_FuelOil_1;
   };
 
-  // Actual values
-  SqlResults ep_910 = {195052539.91, 27600.69, 427.17, 324.04, 782.87, 3256405.15, 191767000.0};
-  SqlResults ep_920 = {194898706.43, 27595.94, 426.75, 324.25, 782.28, 3256577.21, 191613000.0};
-  SqlResults ep_930 = {194906985.51, 27596.57, 426.75, 324.25, 782.28, 3262855.66, 191615000.0};
-  SqlResults ep_940 = {194908854.32, 27605.85, 426.75, 324.50, 782.28, 3265714.94, 191614000.0};
+  // Actual values:   { Total      , Elec    ,  Gas    , DC    , DH    , Water   , FuelOil_1  }
+  // SqlResults ep_910 = {195052539.91, 27600.69, 427.17, 324.04, 782.87, 3256405.15, 191767000.0};
+  // SqlResults ep_920 = {194898706.43, 27595.94, 426.75, 324.25, 782.28, 3256577.21, 191613000.0};
+  // SqlResults ep_930 = {194906985.51, 27596.57, 426.75, 324.25, 782.28, 3262855.66, 191615000.0};
+  SqlResults ep_940 = {191927299.41, 27898.69, 407.55, 361.09, 776.63, 3322855.45, 188575000.0};
 
   // =========== Check that you are within relatively normal ranges compared to previous versions  =================
 
-  for (auto& ep: {ep_910, ep_920, ep_930}) {
-    // Total annual costs for all fuel types. Here I'm explicitly passing a tolerance of 0.1% (which is the default really, so omitting it after)
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.001));
+  // TODO: probably remplement after 9.4+. 9.4 had such a huge variation (as high as 11.36% for district cooling) that bumping the tolerance that high
+  // would make that test pointless
+  //for (auto& ep: {ep_910, ep_920, ep_930}) {
+    //// Total annual costs for all fuel types. Here I'm explicitly passing a tolerance of 0.1% (which is the default really, so omitting it after)
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.001));
 
-    // Costs by fuel type
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get()));
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get()));
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get(), 0.002));
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get()));
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get(), 0.003));
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get()));
-  }
+    //// Costs by fuel type
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get()));
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get()));
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get(), 0.002));
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get()));
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get(), 0.003));
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get()));
+  //}
 
   // =========== Check that within our development based on the current E+ version we do not make the results vary (at all)  =================
 
@@ -360,11 +362,11 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   // These have a relatively high tolerance and shouldn't fail, and they depend on the above values divided by square footage which shouldn't vary
   // So it's fine to keep it as is
   // Costs by total building area by fuel type
-  EXPECT_NEAR(11.50, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1); // (E+ 9.2.0 = 11.498308333333332)
+  EXPECT_NEAR(11.62, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1); // (E+ 9.2.0 = 11.498308333333332)
   EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Gas)), 0.1);          // (E+ 9.2.0 = 0.1778125)
 
   // Costs by conditioned building area by fuel type
-  EXPECT_NEAR(11.50, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(11.62, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Electricity)), 0.1);
   EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Gas)), 0.1);
 
 }

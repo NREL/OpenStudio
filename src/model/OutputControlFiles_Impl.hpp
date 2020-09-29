@@ -102,8 +102,6 @@ namespace detail {
 
     bool outputMTD() const;
 
-    bool outputEND() const;
-
     bool outputSHD() const;
 
     bool outputDFS() const;
@@ -167,8 +165,6 @@ namespace detail {
     bool setOutputMDD(bool outputMDD);
 
     bool setOutputMTD(bool outputMTD);
-
-    bool setOutputEND(bool outputEND);
 
     bool setOutputSHD(bool outputSHD);
 
