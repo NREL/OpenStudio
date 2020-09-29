@@ -98,8 +98,8 @@ class ReportingMeasureNameTest < Minitest::Test
     assert_equal(1, arguments.size)
   end
 
-  def test_with_drybulub_temp
-    test_name = 'test_with_drybulub_temp'
+  def test_with_drybulb_temp
+    test_name = 'test_with_drybulb_temp'
 
     # create an instance of the measure
     measure = ReportingMeasureName.new
@@ -160,8 +160,8 @@ class ReportingMeasureNameTest < Minitest::Test
     assert(File.exist?(report_path(test_name)))
   end
 
-  def test_without_drybulub_temp
-    test_name = 'test_without_drybulub_temp'
+  def test_without_drybulb_temp
+    test_name = 'test_without_drybulb_temp'
 
     # create an instance of the measure
     measure = ReportingMeasureName.new
