@@ -87,8 +87,6 @@ class MODEL_API OutputControlFiles : public ModelObject {
 
   bool outputMTD() const;
 
-  bool outputEND() const;
-
   bool outputSHD() const;
 
   bool outputDFS() const;
@@ -152,8 +150,6 @@ class MODEL_API OutputControlFiles : public ModelObject {
   bool setOutputMDD(bool outputMDD);
 
   bool setOutputMTD(bool outputMTD);
-
-  bool setOutputEND(bool outputEND);
 
   bool setOutputSHD(bool outputSHD);
 
