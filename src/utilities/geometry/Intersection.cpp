@@ -522,6 +522,41 @@ namespace openstudio{
 
   }
 
+  /// <summary>
+  /// Buffers one or more polygons
+  /// </summary>
+  /// <param name="polygons"></param>
+  /// <param name="amount"></param>
+  /// <param name="tol"></param>
+  /// <returns></returns>
+  boost::optional<std::vector<Point3d>> buffer(const std::vector<std::vector<Point3d>>& polygons, double amount, double tol) {
+    BoostMultiPolygon source;
+    std::vector<Point3d> allPoints;
+
+    for (std::vector<Point3d> polygon : polygons) {
+      boost::optional<BoostPolygon> boostPolygon = nonIntersectingBoostPolygonFromVertices(polygon, allPoints, tol);
+      source.push_back(*boostPolygon);
+    }
+
+    const double buffer_distance = 1.0;
+    const int points_per_circle = 36;
+    boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(amount);
+    boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> ahrink(-amount);
+    boost::geometry::strategy::buffer::join_miter join_strategy;
+    boost::geometry::strategy::buffer::end_flat end_strategy;
+    boost::geometry::strategy::buffer::side_straight side_strategy;
+    boost::geometry::strategy::buffer::point_circle point_strategy;
+
+    BoostMultiPolygon resultExpand;
+    BoostMultiPolygon resultShrink;
+    boost::geometry::buffer(source, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy); 
+    boost::geometry::buffer(resultExpand, resultShrink, expand, side_strategy, join_strategy, end_strategy, point_strategy);
+
+    std::vector<Point3d> xxx = verticesFromBoostPolygon(resultShrink[0], allPoints, tol);
+
+    return xxx;
+  }
+
   boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon1, double amount, double tol) {
 
     std::vector<Point3d> allPoints;
@@ -754,7 +789,7 @@ namespace openstudio{
     }
 
     intersectionResult = removeSpikes(intersectionResult);
-    intersectionResult = makeConvex(intersectionResult);
+    intersectionResult = removeHoles(intersectionResult);
 
     // check for multiple intersections
     if (intersectionResult.size() > 1){
@@ -819,7 +854,7 @@ namespace openstudio{
     std::vector<BoostPolygon> differenceResult1;
     boost::geometry::difference(*boostPolygon1, *boostPolygon2, differenceResult1);
     differenceResult1 = removeSpikes(differenceResult1);
-    differenceResult1 = makeConvex(differenceResult1);
+    differenceResult1 = removeHoles(differenceResult1);
 
     // create new polygon for each difference
     for (unsigned i = 0; i < differenceResult1.size(); ++i){
@@ -848,7 +883,7 @@ namespace openstudio{
     std::vector<BoostPolygon> differenceResult2;
     boost::geometry::difference(*boostPolygon2, *boostPolygon1, differenceResult2);
     differenceResult2 = removeSpikes(differenceResult2);
-    differenceResult2 = makeConvex(differenceResult2);
+    differenceResult2 = removeHoles(differenceResult2);
 
     // create new polygon for each difference
     for (unsigned i = 0; i < differenceResult2.size(); ++i){

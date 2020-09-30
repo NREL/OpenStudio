@@ -69,8 +69,10 @@
 #include "../../utilities/geometry/Transformation.hpp"
 #include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/geometry/BoundingBox.hpp"
+#include "../../utilities/geometry/Intersection.hpp"
 #include "../../utilities/idf/WorkspaceObjectWatcher.hpp"
 #include "../../utilities/core/Compare.hpp"
+#include "../../osversion/VersionTranslator.hpp"
 
 #include <iostream>
 #include <windows.h>
@@ -745,6 +747,47 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest)
 }
 
 /// <summary>
+/// 
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, JoinAllSpaceFootprints) {
+
+  osversion::VersionTranslator translator;
+  //model::OptionalModel model = translator.loadModel(toPath("./secondary_school.osm"));
+  model::OptionalModel model = translator.loadModel(toPath("./example_model.osm"));
+  EXPECT_TRUE(model);
+
+  SpaceVector spaces = model->getModelObjects<Space>();
+
+  std::vector<std::vector<Point3d>> polygons;
+
+  for (const Space& space : spaces) {
+    int n = space.surfaces().size();
+    double z = space.zOrigin();
+    if (z > 0.1) continue;
+    std::string spaceName = space.name().value();
+    Transformation spaceTransformation = space.transformation();
+
+    for (const Surface& surface : space.surfaces()) {
+      std::string surfaceName = surface.name().value();
+      std::vector<Point3d> vertices = surface.vertices();
+      boost::optional<Vector3d> outwardNormal = getOutwardNormal(vertices);
+      if (outwardNormal->z() > -1 + tol) continue;
+      polygons.push_back(spaceTransformation * vertices);
+    }
+  }
+
+  std::reverse(polygons.begin(), polygons.end());
+  auto rng = std::default_random_engine{};
+  std::shuffle(std::begin(polygons), std::end(polygons), rng);
+  openstudio::Point3dVectorVector result = openstudio::joinAll(polygons, 0.01);
+  openstudio::buffer(polygons, 0.1, 0.01);
+ 
+}
+
+
+  /// <summary>
 /// One space below, two smaller spaces above. Verifies we triangulate concave surfaces correctly (we do not)
 ///
 /// +---------------------------------------------+
