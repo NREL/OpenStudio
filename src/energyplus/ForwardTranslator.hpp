@@ -413,6 +413,7 @@ class SwimmingPoolIndoor;
 class TableMultiVariableLookup;
 class TemperingValve;
 class ThermalZone;
+class ThermalStoragePcmSimple;
 class ThermalStorageIceDetailed;
 class ThermalStorageChilledWaterStratified;
 class ThermostatSetpointDualSetpoint;
@@ -1274,6 +1275,8 @@ class ENERGYPLUS_API ForwardTranslator {
   boost::optional<IdfObject> translateTableMultiVariableLookup( model::TableMultiVariableLookup & modelObject );
 
   boost::optional<IdfObject> translateTemperingValve( model::TemperingValve & modelObject );
+
+  boost::optional<IdfObject> translateThermalStoragePcmSimple( model::ThermalStoragePcmSimple & modelObject );
 
   boost::optional<IdfObject> translateThermalStorageIceDetailed( model::ThermalStorageIceDetailed & modelObject );
 
