@@ -30193,7 +30193,7 @@ Coil:Cooling:DX:VariableSpeed,
         \memo ten sets of performance data and will interpolate between speeds. Modeled as a
         \memo single coil with variable-speed compressor.
         \extensible:10
-        \min-fields 31
+        \min-fields 36
    A1,  \field Name
         \required-field
         \type alpha
@@ -30306,62 +30306,84 @@ Coil:Cooling:DX:VariableSpeed,
         \note air dry-bulb temperature is below the basin heater setpoint temperature.
         \note If a schedule name is not entered, the basin heater is allowed to operate
         \note throughout the entire simulation.
-   N13, \field Speed 1 Reference Unit Gross Rated Total Cooling Capacity
+   A10, \field Grid Signal Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note This field refers to a grid signal pattern, e.g. price 
+   N13, \field Lower Bound to Apply Grid Responsive Control
+        \type real
+        \units dimensionless
+        \default 100.0
+   N14, \field Upper Bound to Apply Grid Responsive Control
+        \type real
+        \units dimensionless
+        \default -100.0
+   N15, \field Max Speed Level During Grid-Responsive Control
+        \type real
+        \units dimensionless   
+        \default 10
+   A11, \field Load Control during Grid Responsive Operation
+        \type choice
+        \key Sensible
+        \key Latent
+        \key SenLat
+        \default SenLat
+   N16, \field Speed 1 Reference Unit Gross Rated Total Cooling Capacity
         \note Total cooling capacity not accounting for the effect of supply air fan heat
         \units W
         \type real
         \minimum 0
         \required-field
         \begin-extensible
-   N14, \field Speed 1 Reference Unit Gross Rated Sensible Heat Ratio
+   N17, \field Speed 1 Reference Unit Gross Rated Sensible Heat Ratio
         \units dimensionless
         \type real
         \minimum 0
         \maximum 1.0
         \required-field
-   N15, \field Speed 1 Reference Unit Gross Rated Cooling COP
+   N18, \field Speed 1 Reference Unit Gross Rated Cooling COP
         \type real
         \units W/W
         \minimum> 0.0
         \required-field
-   N16, \field Speed 1 Reference Unit Rated Air Flow Rate
+   N19, \field Speed 1 Reference Unit Rated Air Flow Rate
         \units m3/s
         \type real
         \minimum 0
         \required-field
-   N17, \field Speed 1 Reference Unit Rated Condenser Air Flow Rate
+   N20, \field Speed 1 Reference Unit Rated Condenser Air Flow Rate
         \units m3/s
         \type real
         \minimum 0
         \note This field is only used for Condenser Type = EvaporativelyCooled
-   N18, \field Speed 1 Reference Unit Rated Pad Effectiveness of Evap Precooling
+   N21, \field Speed 1 Reference Unit Rated Pad Effectiveness of Evap Precooling
         \units dimensionless
         \type real
         \minimum 0
         \maximum 1.0
         \note This field is only used for Condenser Type = EvaporativelyCooled
-   A10, \field Speed 1 Total Cooling Capacity Function of Temperature Curve Name
+   A12, \field Speed 1 Total Cooling Capacity Function of Temperature Curve Name
         \required-field
         \type object-list
         \object-list BivariateFunctions
         \note curve = a + b*wb + c*wb**2 + d*odb + e*odb**2 + f*wb*odb
         \note wb = entering wet-bulb temperature (C)
         \note odb = air entering temperature seen by the condenser (C)
-   A11, \field Speed 1 Total Cooling Capacity Function of Air Flow Fraction Curve Name
+   A13, \field Speed 1 Total Cooling Capacity Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
         \object-list UnivariateFunctions
         \note quadratic curve = a + b*ffa + c*ffa**2
         \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
         \note ffa = Fraction of the full load Air Flow
-   A12, \field Speed 1 Energy Input Ratio Function of Temperature Curve Name
+   A14, \field Speed 1 Energy Input Ratio Function of Temperature Curve Name
         \required-field
         \type object-list
         \object-list BivariateFunctions
         \note curve = a + b*wb + c*wb**2 + d*odb + e*odb**2 + f*wb*odb
         \note wb = entering wet-bulb temperature (C)
         \note odb = air entering temperature seen by the condenser (C)
-   A13; \field Speed 1 Energy Input Ratio Function of Air Flow Fraction Curve Name
+   A15; \field Speed 1 Energy Input Ratio Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
         \object-list UnivariateFunctions

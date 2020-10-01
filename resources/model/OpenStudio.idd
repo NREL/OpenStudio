@@ -17999,7 +17999,7 @@ OS:Coil:Heating:DX:VariableSpeed:SpeedData,
         \object-list UniVariateTables
 
 OS:Coil:Cooling:DX:VariableSpeed,
-        \min-fields 21
+        \min-fields 26
    A1,  \field Handle
         \type handle
         \required-field
@@ -18094,7 +18094,29 @@ OS:Coil:Cooling:DX:VariableSpeed,
    A10, \field Basin Heater Operating Schedule Name
         \type object-list
         \object-list ScheduleNames
-   A11; \field Speed Data List
+   A11, \field Grid Signal Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note This field refers to a grid signal pattern, e.g. price 
+   N12, \field Lower Bound to Apply Grid Responsive Control
+        \type real
+        \units dimensionless
+        \default 100.0
+   N13, \field Upper Bound to Apply Grid Responsive Control
+        \type real
+        \units dimensionless
+        \default -100.0
+   N14, \field Max Speed Level During Grid-Responsive Control
+        \type real
+        \units dimensionless   
+        \default 10
+   A12, \field Load Control during Grid Responsive Operation
+        \type choice
+        \key Sensible
+        \key Latent
+        \key SenLat
+        \default SenLat
+   A13; \field Speed Data List
         \type object-list
         \object-list ModelObjectLists
 
