@@ -48118,6 +48118,62 @@ ThermalStorage:Ice:Simple,
       \type node
       \required-field
 
+ThermalStorage:Pcm:Simple,
+      \min-fields 5
+      \memo This pcm storage model is a simplified model
+      \memo It requires a setpoint placed on the Chilled Water Side Outlet Node
+      \memo It should be placed in the chilled water supply side outlet branch
+      \memo followed by a pipe.
+      \memo Use the PlantEquipmentOperation:ComponentSetpoint plant operation scheme.
+  A1, \field Name
+      \type alpha
+      \required-field
+      \reference IceThermalStorageEquipment
+      \reference-class-name validBranchEquipmentTypes
+      \reference validBranchEquipmentNames
+  A2, \field Ice Storage Type
+      \note IceOnCoilInternal = Ice-on-Coil, internal melt
+      \note IceOnCoilExternal = Ice-on-Coil, external melt
+      \type choice
+      \required-field
+      \key IceOnCoilInternal
+      \key IceOnCoilExternal
+  N1, \field Capacity
+      \required-field
+      \type real
+      \units GJ
+      \ip-units ton-hrs
+  A3, \field Inlet Node Name
+      \type node
+      \required-field
+  A4, \field Outlet Node Name
+      \type node
+      \required-field
+  N2, \field Onset Temperature of phase change
+      \type real
+      \units deltaC
+      \note This input field is optional. If specified, it is used for replace the default value.
+      \note If blank or omitted, the default value specified 
+      \default 5.5
+  N3, \field Finish Temperature of phase change
+      \type real
+      \units deltaC
+      \note This input field is optional. If specified, it is used for replace the default value.
+      \note If blank or omitted, the default value specified 
+      \default 7.0
+  N4, \field UA at soild phase of phase change material
+      \type real
+      \units W/K
+      \note This input field is optional. If specified, it is used for replace the default value.
+      \note If blank or omitted, the default value specified 
+      \default 20000
+  N5; \field UA at liquid phase of phase change material
+      \type real
+      \units W/K
+      \note This input field is optional. If specified, it is used for replace the default value.
+      \note If blank or omitted, the default value specified 
+      \default 20000
+
 ThermalStorage:Ice:Detailed,
     \min-fields 14
        \memo This input syntax is intended to describe a thermal storage system that
