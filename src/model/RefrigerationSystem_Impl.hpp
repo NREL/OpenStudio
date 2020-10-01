@@ -213,6 +213,8 @@ namespace detail {
 
     bool setRefrigerationCondenser(const ModelObject& refrigerationCondenser);
 
+    void resetRefrigerationCondenser();
+
     bool setCompressorList(const ModelObjectList& modelObjectList);
 
     bool setMinimumCondensingTemperature(double minimumCondensingTemperature);

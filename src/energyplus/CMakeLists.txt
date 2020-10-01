@@ -229,6 +229,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateNode.cpp
   ForwardTranslator/ForwardTranslateOtherEquipment.cpp
   ForwardTranslator/ForwardTranslateOutsideSurfaceConvectionAlgorithm.cpp
+  ForwardTranslator/ForwardTranslateOutputControlFiles.cpp
   ForwardTranslator/ForwardTranslateOutputControlReportingTolerances.cpp
   ForwardTranslator/ForwardTranslateOutputMeter.cpp
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
@@ -425,7 +426,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateCoilSystemCoolingDX.cpp
   ReverseTranslator/ReverseTranslateConstruction.cpp
   ReverseTranslator/ReverseTranslateConstructionAirBoundary.cpp
- # ReverseTranslator/ReverseTranslateConstructionWithInternalSource.cpp # DLM: todo this is missing
+  ReverseTranslator/ReverseTranslateConstructionWithInternalSource.cpp
   ReverseTranslator/ReverseTranslateConvergenceLimits.cpp
   ReverseTranslator/ReverseTranslateCurveBicubic.cpp
   ReverseTranslator/ReverseTranslateCurveBiquadratic.cpp
@@ -485,6 +486,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateMeterCustom.cpp
   ReverseTranslator/ReverseTranslateMeterCustomDecrement.cpp
   ReverseTranslator/ReverseTranslateOtherEquipment.cpp
+  ReverseTranslator/ReverseTranslateOutputControlFiles.cpp
   ReverseTranslator/ReverseTranslateOutputDebuggingData.cpp
   ReverseTranslator/ReverseTranslateOutputDiagnostics.cpp
   ReverseTranslator/ReverseTranslateOutputEnergyManagementSystem.cpp
@@ -540,6 +542,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateWindowMaterialGlazing.cpp
   ReverseTranslator/ReverseTranslateWindowMaterialSimpleGlazingSystem.cpp
   ReverseTranslator/ReverseTranslateWindowPropertyFrameAndDivider.cpp
+  ReverseTranslator/ReverseTranslateWindowShadingControl.cpp
   ReverseTranslator/ReverseTranslateZoneAirHeatBalanceAlgorithm.cpp
   ReverseTranslator/ReverseTranslateZoneAirMassFlowConservation.cpp
   ReverseTranslator/ReverseTranslateZone.cpp
@@ -603,6 +606,7 @@ set(${target_name}_test_src
   Test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   Test/CoilCoolingDXVariableSpeed_GTest.cpp
   Test/Construction_GTest.cpp
+  Test/ConstructionWithInternalSource_GTest.cpp
   Test/ControllerOutdoorAir_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
@@ -632,18 +636,22 @@ set(${target_name}_test_src
   Test/Lights_GTest.cpp
   Test/Luminaire_GTest.cpp
   Test/Meter_GTest.cpp
+  Test/OutputControlFiles_GTest.cpp
   Test/OutputDebuggingData_GTest.cpp
   Test/OutputDiagnostics_GTest.cpp
   Test/OutputJSON_GTest.cpp
   Test/OutputTableSummaryReports_GTest.cpp
   Test/People_GTest.cpp
+  Test/PerformancePrecisionTradeoffs_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp
   Test/RunPeriod_GTest.cpp
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
+  Test/RunPeriodControlSpecialDays_GTest.cpp
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp
   Test/SetpointManagerFollowGroundTemperature_GTest.cpp
+  Test/ShadingControl_GTest.cpp
   Test/ShadingSurface_GTest.cpp
   Test/ShadowCalculation_GTest.cpp
   Test/SimulationControl_GTest.cpp
@@ -664,9 +672,8 @@ set(${target_name}_test_src
   Test/WindowPropertyFrameAndDivider_GTest.cpp
   Test/WaterHeaterMixed_GTest.cpp
   Test/WaterHeaterStratified_GTest.cpp
-  Test/ZoneHVACLowTemperatureRadiantConstFlow_GTest.cpp
+  Test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
-  Test/ZoneHVACLowTempRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
   Test/ZoneHVACTerminalUnitVariableRefrigerantFlow_GTest.cpp
   Test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
@@ -738,7 +745,6 @@ if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" "${${target_name}_test_depends}")
 
   add_dependencies(${target_name}_tests
-    ResultsViewer_resources
     openstudio_energyplus_resources
   )
 

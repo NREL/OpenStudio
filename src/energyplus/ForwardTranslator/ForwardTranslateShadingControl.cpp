@@ -58,7 +58,32 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl(model::Sha
   std::vector<SubSurface> subSurfaces = modelObject.subSurfaces();
 
   if (subSurfaces.empty()) {
-    LOG(Warn, modelObject.briefDescription() << " does not control any SubSurfaces, will not be translated");
+    LOG(Warn, modelObject.briefDescription() << " does not control any SubSurfaces, it will not be translated");
+    return boost::none;
+  }
+  if (!modelObject.shadingMaterial() && !modelObject.construction()) {
+    LOG(Error, modelObject.briefDescription() << " does not have either a Shading Material or a Construction assigned, it will not be translated");
+    return boost::none;
+  }
+
+  // Read this now, since we'll use it to test if a Warn is needed
+  std::string shadingControlType = modelObject.shadingControlType();
+
+  if (modelObject.isControlTypeValueNeedingSetpoint1() && !modelObject.setpoint()) {
+    LOG(Error, modelObject.briefDescription() << " is using Shading Control Type '" << shadingControlType
+        << "' which requires a Setpoint which is missing, it will not be translated");
+    return boost::none;
+  }
+
+  if (modelObject.isControlTypeValueNeedingSetpoint2() && !modelObject.setpoint2()) {
+    LOG(Error, modelObject.briefDescription() << " is using Shading Control Type '" << shadingControlType
+        << "' which requires a Setpoint2 which is missing, it will not be translated");
+    return boost::none;
+  }
+
+  if (modelObject.isControlTypeValueRequiringSchedule() && !modelObject.schedule()) {
+    LOG(Error, modelObject.briefDescription() << " is using Shading Control Type '" << shadingControlType
+        << "' which requires a Schedule which is missing, it will not be translated");
     return boost::none;
   }
 
@@ -90,8 +115,6 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl(model::Sha
   }
   idfObject.setString(WindowShadingControlFields::ZoneName, zoneName);
 
-  // Read this now, since we'll use it to test if a Warn is needed
-  std::string shadingControlType = modelObject.shadingControlType();
   idfObject.setString(WindowShadingControlFields::ShadingControlType, shadingControlType);
 
   if (zone) {
@@ -118,8 +141,6 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl(model::Sha
     LOG(Error, modelObject.briefDescription() << " has unknown Shading Control Sequence Number");
   }
 
-  idfObject.setString(WindowShadingControlFields::MultipleSurfaceControlType, "Group");
-
   std::string shadingType = modelObject.shadingType();
   if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)) {
     idfObject.setString(WindowShadingControlFields::ShadingType, "InteriorBlind");
@@ -135,30 +156,43 @@ boost::optional<IdfObject> ForwardTranslator::translateShadingControl(model::Sha
     idfObject.setString(WindowShadingControlFields::ShadingDeviceMaterialName, shadingMaterial->name().get());
   }
 
-  boost::optional<Schedule> schedule = modelObject.schedule();
-  if (schedule) {
-    idfObject.setString(WindowShadingControlFields::ScheduleName, schedule->name().get());
-    idfObject.setString(WindowShadingControlFields::ShadingControlIsScheduled, "Yes");
+  if (modelObject.isControlTypeValueAllowingSchedule()) {
+    boost::optional<Schedule> schedule = modelObject.schedule();
+    if (schedule) {
+      idfObject.setString(WindowShadingControlFields::ScheduleName, schedule->name().get());
+      idfObject.setString(WindowShadingControlFields::ShadingControlIsScheduled, "Yes");
+    } else {
+      idfObject.setString(WindowShadingControlFields::ShadingControlIsScheduled, "No");
+    }
   } else {
     idfObject.setString(WindowShadingControlFields::ShadingControlIsScheduled, "No");
   }
 
-  boost::optional<double> setpoint = modelObject.setpoint();
-  if (istringEqual("OnIfHighSolarOnWindow", shadingControlType)) {
-    if (!setpoint) {
-      setpoint = 100;  // W/m2
-    }
-    OS_ASSERT(setpoint);
-    idfObject.setDouble(WindowShadingControlFields::Setpoint, *setpoint);
+  if (modelObject.isControlTypeValueNeedingSetpoint1()) {
+    idfObject.setDouble(WindowShadingControlFields::Setpoint, modelObject.setpoint().get());
   }
 
-  idfObject.setString(WindowShadingControlFields::GlareControlIsActive, "No");
+  if (modelObject.glareControlIsActive() || istringEqual("OnIfHighGlare", shadingControlType)) {
+    idfObject.setString(WindowShadingControlFields::GlareControlIsActive, "Yes");
+  } else {
+    idfObject.setString(WindowShadingControlFields::GlareControlIsActive, "No");
+  }
 
-  //idfObject.setString(WindowShadingControlFields::TypeofSlatAngleControlforBlinds, "FixedSlatAngle");
+  boost::optional<Schedule> slatAngleSchedule = modelObject.slatAngleSchedule();
+  if (slatAngleSchedule) {
+    idfObject.setString(WindowShadingControlFields::SlatAngleScheduleName, slatAngleSchedule->name().get());
+    idfObject.setString(WindowShadingControlFields::TypeofSlatAngleControlforBlinds, "ScheduledSlatAngle");
+  } else {
+    if (!istringEqual("ScheduledSlatAngle", modelObject.typeofSlatAngleControlforBlinds())) {
+      idfObject.setString(WindowShadingControlFields::TypeofSlatAngleControlforBlinds, modelObject.typeofSlatAngleControlforBlinds());
+    }
+  }
 
-  //idfObject.setString(WindowShadingControlFields::SlatAngleScheduleName, "");
+  if (modelObject.isControlTypeValueNeedingSetpoint2()) {
+    idfObject.setDouble(WindowShadingControlFields::Setpoint2, modelObject.setpoint2().get());
+  }
 
-  //idfObject.setDouble(WindowShadingControlFields::Setpoint2, 0.0);
+  idfObject.setString(WindowShadingControlFields::MultipleSurfaceControlType, modelObject.multipleSurfaceControlType());
 
   idfObject.clearExtensibleGroups();
   for (const SubSurface& subSurface : subSurfaces) {

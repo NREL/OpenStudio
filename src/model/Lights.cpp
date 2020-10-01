@@ -76,7 +76,7 @@ namespace detail {
   const std::vector<std::string>& Lights_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Lights Electric Power",
+      "Lights Electricity Rate",
       "Lights Radiant Heat Gain",
       "Lights Radiant Heating Rate",
       "Lights Visible Radiation Heating Energy",
@@ -87,10 +87,10 @@ namespace detail {
       "Lights Return Air Heating Rate",
       "Lights Total Heating Energy",
       "Lights Total Heating Rate",
-      "Lights Electric Energy"
+      "Lights Electricity Energy"
 
       // Reported in ThermalZone
-      //"Zone Lights Electric Power",
+      //"Zone Lights Electricity Rate",
       //"Zone Lights Radiant Heating Energy",
       //"Zone Lights Radiant Heating Rate",
       //"Zone Lights Visible Radiation Heating Energy",
@@ -101,7 +101,7 @@ namespace detail {
       //"Zone Lights Return Air Heating Rate",
       //"Zone Lights Total Heating Energy",
       //"Zone Lights Total Heating Rate",
-      //"Zone Lights Electric Energy"
+      //"Zone Lights Electricity Energy"
     };
     return result;
   }

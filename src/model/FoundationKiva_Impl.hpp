@@ -200,6 +200,8 @@ namespace detail {
     /** @name Other */
     //@{
 
+    virtual ModelObject clone(Model model) const override;
+
     //@}
    protected:
    private:

@@ -96,7 +96,7 @@ TEST_F(ModelFixture, MeterRegex)
   EXPECT_EQ("Facility", string(matches[4].first, matches[4].second));
   EXPECT_EQ("", string(matches[5].first, matches[5].second));
 
-  subject = "Gas:Facility";
+  subject = "NaturalGas:Facility";
   ASSERT_TRUE(boost::regex_search(subject, matches, OutputMeter::meterRegex()));
   ASSERT_TRUE(matches[1].matched);
   EXPECT_FALSE(matches[2].matched);
@@ -104,7 +104,7 @@ TEST_F(ModelFixture, MeterRegex)
   ASSERT_TRUE(matches[4].matched);
   ASSERT_TRUE(matches[5].matched);
   EXPECT_EQ("", string(matches[1].first, matches[1].second));
-  EXPECT_EQ("Gas", string(matches[3].first, matches[3].second));
+  EXPECT_EQ("NaturalGas", string(matches[3].first, matches[3].second));
   EXPECT_EQ("Facility", string(matches[4].first, matches[4].second));
   EXPECT_EQ("", string(matches[5].first, matches[5].second));
 
@@ -203,7 +203,7 @@ TEST_F(ModelFixture, MeterConstructor)
   EXPECT_TRUE(meter.isCumulativeDefaulted());
 
   // check order of operations
-  // this is a corner case of EnergyPlus, there is no 'Heating:Gas:Facility', it is just 'Heating:Gas'
+  // this is a corner case of EnergyPlus, there is no 'Heating:NaturalGas:Facility', it is just 'Heating:NaturalGas'
   meter = OutputMeter(model);
   EXPECT_TRUE(meter.setFuelType(FuelType::Gas));
   EXPECT_TRUE(meter.setInstallLocationType(InstallLocationType::Facility));
@@ -268,7 +268,7 @@ TEST_F(ModelFixture, MeterFromModel)
   LOG(Debug,"OutputMeter text: " << std::endl << idfObjects.back());
 
   idfObjects.push_back(IdfObject(IddObjectType::OS_Output_Meter));
-  idfObjects.back().setString(OS_Output_MeterFields::Name,"Gas:Building");
+  idfObjects.back().setString(OS_Output_MeterFields::Name,"NaturalGas:Building");
   idfObjects.back().setString(OS_Output_MeterFields::ReportingFrequency,"hourly");
 
   idfObjects.push_back(IdfObject(IddObjectType::OS_Output_Meter));
@@ -301,10 +301,10 @@ TEST_F(ModelFixture, MeterFromModel)
   EXPECT_EQ(InstallLocationType::Facility, meter->installLocationType().get().value());
   EXPECT_FALSE(meter->specificInstallLocation());
 
-  //"Output:OutputMeter:MeterFileOnly,Gas:Building,hourly;"
+  //"Output:OutputMeter:MeterFileOnly,NaturalGas:Building,hourly;"
   meter = model.getModelObject<OutputMeter>(handles[1]);
   ASSERT_TRUE(meter);
-  EXPECT_EQ("Gas:Building", meter->name());
+  EXPECT_EQ("NaturalGas:Building", meter->name());
   EXPECT_FALSE(meter->cumulative());
   EXPECT_FALSE(meter->specificEndUse());
   EXPECT_FALSE(meter->endUseType());

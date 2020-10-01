@@ -41,19 +41,6 @@ namespace detail {
   /** CurveDoubleExponentialDecay_Impl is a Curve_Impl that is the implementation class for CurveDoubleExponentialDecay.*/
   class MODEL_API CurveDoubleExponentialDecay_Impl : public Curve_Impl {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
    public:
 
     /** @name Constructors and Destructors */
@@ -93,9 +80,9 @@ namespace detail {
 
     double coefficient3C3() const;
 
-    double coefficient3C4() const;
+    double coefficient4C4() const;
 
-    double coefficient3C5() const;
+    double coefficient5C5() const;
 
     double minimumValueofx() const;
 
@@ -123,9 +110,9 @@ namespace detail {
 
     bool setCoefficient3C3(double coefficient3C3);
 
-    bool setCoefficient3C4(double coefficient3C4);
+    bool setCoefficient4C4(double coefficient4C4);
 
-    bool setCoefficient3C5(double coefficient3C5);
+    bool setCoefficient5C5(double coefficient5C5);
 
     bool setMinimumValueofx(double minimumValueofx);
 

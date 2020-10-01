@@ -1428,15 +1428,379 @@ TEST_F(ModelFixture, RefrigerationSystem_CasesAndWalkinsList_Unicity)
 }
 
 // Test for #3921
-TEST_F(ModelFixture, DISABLED_RefrigerationSystem_AddCompressorMultipleTimes)
+TEST_F(ModelFixture, RefrigerationSystem_Case_AddMultipleTimes)
 {
   Model model;
-  RefrigerationSystem testObject = RefrigerationSystem(model);
+  RefrigerationSystem system = RefrigerationSystem(model);
 
   ScheduleCompact s1(model);
-  RefrigerationCompressor compressor1(model);
+  RefrigerationCase c(model, s1);
 
-  EXPECT_TRUE(testObject.addCompressor(compressor1));
-  EXPECT_TRUE(testObject.addCompressor(compressor1));
-  EXPECT_NO_THROW(testObject.remove());
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCase>().size());
+
+  EXPECT_TRUE(system.addCase(c));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCase>().size());
+  ASSERT_EQ(1, system.cases().size());
+  EXPECT_EQ(c, system.cases()[0]);
+  EXPECT_TRUE(system.addCase(c));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCase>().size());
+  ASSERT_EQ(1, system.cases().size());
+  EXPECT_EQ(c, system.cases()[0]);
+
+  // Shouldn't throw, and should remove the Case too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationCase>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_WalkIn_AddMultipleTimes)
+{
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationWalkIn walkIn(model, s1);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationWalkIn>().size());
+
+  EXPECT_TRUE(system.addWalkin(walkIn));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationWalkIn>().size());
+  ASSERT_EQ(1, system.walkins().size());
+  EXPECT_EQ(walkIn, system.walkins()[0]);
+  EXPECT_TRUE(system.addWalkin(walkIn));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationWalkIn>().size());
+  ASSERT_EQ(1, system.walkins().size());
+  EXPECT_EQ(walkIn, system.walkins()[0]);
+
+  // Shouldn't throw, and should remove the WalkIn too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationWalkIn>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_Compressor_AddMultipleTimes)
+{
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  RefrigerationCompressor compressor(model);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressor>().size());
+
+  EXPECT_TRUE(system.addCompressor(compressor));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressor>().size());
+  ASSERT_EQ(1, system.compressors().size());
+  EXPECT_EQ(compressor, system.compressors()[0]);
+  EXPECT_EQ(0, system.highStageCompressors().size());
+  EXPECT_TRUE(system.addCompressor(compressor));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressor>().size());
+  ASSERT_EQ(1, system.compressors().size());
+  EXPECT_EQ(compressor, system.compressors()[0]);
+  EXPECT_EQ(0, system.highStageCompressors().size());
+
+  // Test on the High Stage too
+  EXPECT_TRUE(system.addHighStageCompressor(compressor));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(0, system.compressors().size());
+  ASSERT_EQ(1, system.highStageCompressors().size());
+  EXPECT_EQ(compressor, system.highStageCompressors()[0]);
+
+  // Shouldn't throw, and should remove the Compressor too
+  system.remove();
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationCompressor>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_SecondarySystemLoad_AddMultipleTimes)
+{
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  RefrigerationSecondarySystem secondarySystem(model);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationSecondarySystem>().size());
+
+  EXPECT_TRUE(system.addSecondarySystemLoad(secondarySystem));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationSecondarySystem>().size());
+  ASSERT_EQ(1, system.secondarySystemLoads().size());
+  EXPECT_EQ(secondarySystem, system.secondarySystemLoads()[0]);
+  EXPECT_TRUE(system.addSecondarySystemLoad(secondarySystem));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationSecondarySystem>().size());
+  ASSERT_EQ(1, system.secondarySystemLoads().size());
+  EXPECT_EQ(secondarySystem, system.secondarySystemLoads()[0]);
+
+  // Shouldn't throw, and should remove the SecondarySystem too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationSecondarySystem>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_CondenserCascadeLoad_AddMultipleTimes)
+{
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  RefrigerationCondenserCascade condenserCascade(model);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+
+  EXPECT_TRUE(system.addCascadeCondenserLoad(condenserCascade));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+  ASSERT_EQ(1, system.cascadeCondenserLoads().size());
+  EXPECT_EQ(condenserCascade, system.cascadeCondenserLoads()[0]);
+  EXPECT_TRUE(system.addCascadeCondenserLoad(condenserCascade));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+  ASSERT_EQ(1, system.cascadeCondenserLoads().size());
+  EXPECT_EQ(condenserCascade, system.cascadeCondenserLoads()[0]);
+
+  // Shouldn't throw, and should remove the CondenserCascade too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserCascade>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_AirChiller_AddMultipleTimes)
+{
+  Model model;
+  RefrigerationSystem system = RefrigerationSystem(model);
+
+  ScheduleCompact s1(model);
+  RefrigerationAirChiller airChiller(model, s1);
+
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationAirChiller>().size());
+
+  EXPECT_TRUE(system.addAirChiller(airChiller));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationAirChiller>().size());
+  ASSERT_EQ(1, system.airChillers().size());
+  EXPECT_EQ(airChiller, system.airChillers()[0]);
+  EXPECT_TRUE(system.addAirChiller(airChiller));
+  EXPECT_EQ(1, model.getModelObjects<RefrigerationAirChiller>().size());
+  ASSERT_EQ(1, system.airChillers().size());
+  EXPECT_EQ(airChiller, system.airChillers()[0]);
+
+  // Shouldn't throw, and should remove the AirChiller too
+  EXPECT_NO_THROW(system.remove());
+  EXPECT_EQ(0, model.getModelObjects<RefrigerationAirChiller>().size());
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_RefrigerationCondenser_Unicity)
+{
+  Model model;
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationCondenserAirCooled condenser(model);
+    EXPECT_FALSE(condenser.system());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
+
+    EXPECT_TRUE(system.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system.refrigerationCondenser());
+    EXPECT_EQ(condenser, system.refrigerationCondenser().get());
+    EXPECT_FALSE(system2.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system2.refrigerationCondenser());
+    EXPECT_EQ(condenser, system2.refrigerationCondenser().get());
+    EXPECT_FALSE(system.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system2, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
+  }
+
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationCondenserAirCooled condenser(model);
+    EXPECT_FALSE(condenser.system());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
+
+    EXPECT_TRUE(system.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system.refrigerationCondenser());
+    EXPECT_EQ(condenser, system.refrigerationCondenser().get());
+    EXPECT_FALSE(system2.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system2.refrigerationCondenser());
+    EXPECT_EQ(condenser, system2.refrigerationCondenser().get());
+    EXPECT_FALSE(system.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system2, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserAirCooled>().size());
+  }
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationCondenserWaterCooled condenser(model);
+    EXPECT_FALSE(condenser.system());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserWaterCooled>().size());
+
+    EXPECT_TRUE(system.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system.refrigerationCondenser());
+    EXPECT_EQ(condenser, system.refrigerationCondenser().get());
+    EXPECT_FALSE(system2.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserWaterCooled>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system2.refrigerationCondenser());
+    EXPECT_EQ(condenser, system2.refrigerationCondenser().get());
+    EXPECT_FALSE(system.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system2, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserWaterCooled>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserWaterCooled>().size());
+  }
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationCondenserEvaporativeCooled condenser(model);
+    EXPECT_FALSE(condenser.system());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserEvaporativeCooled>().size());
+
+    EXPECT_TRUE(system.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system.refrigerationCondenser());
+    EXPECT_EQ(condenser, system.refrigerationCondenser().get());
+    EXPECT_FALSE(system2.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserEvaporativeCooled>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system2.refrigerationCondenser());
+    EXPECT_EQ(condenser, system2.refrigerationCondenser().get());
+    EXPECT_FALSE(system.refrigerationCondenser());
+    ASSERT_TRUE(condenser.system());
+    EXPECT_EQ(system2, condenser.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserEvaporativeCooled>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserEvaporativeCooled>().size());
+  }
+
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationCondenserCascade condenser(model);
+    EXPECT_FALSE(condenser.system());
+    EXPECT_FALSE(condenser.heatRejectingSystem());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+
+    EXPECT_TRUE(system.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system.refrigerationCondenser());
+    EXPECT_EQ(condenser, system.refrigerationCondenser().get());
+    EXPECT_FALSE(system2.refrigerationCondenser());
+    EXPECT_FALSE(condenser.system());
+    ASSERT_TRUE(condenser.heatRejectingSystem());
+    EXPECT_EQ(system, condenser.heatRejectingSystem().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setRefrigerationCondenser(condenser));
+    ASSERT_TRUE(system2.refrigerationCondenser());
+    EXPECT_EQ(condenser, system2.refrigerationCondenser().get());
+    EXPECT_FALSE(system.refrigerationCondenser());
+    EXPECT_FALSE(condenser.system());
+    ASSERT_TRUE(condenser.heatRejectingSystem());
+    EXPECT_EQ(system2, condenser.heatRejectingSystem().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationCondenserCascade>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationCondenserCascade>().size());
+
+  }
+
+}
+
+// Test for #3921
+TEST_F(ModelFixture, RefrigerationSystem_Subcoolers_Unicity)
+{
+  Model model;
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationSubcoolerMechanical subcooler(model);
+    EXPECT_FALSE(subcooler.system());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerMechanical>().size());
+
+    EXPECT_TRUE(system.setMechanicalSubcooler(subcooler));
+    ASSERT_TRUE(system.mechanicalSubcooler());
+    EXPECT_EQ(subcooler, system.mechanicalSubcooler().get());
+    EXPECT_FALSE(system2.mechanicalSubcooler());
+    ASSERT_TRUE(subcooler.system());
+    EXPECT_EQ(system, subcooler.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerMechanical>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setMechanicalSubcooler(subcooler));
+    ASSERT_TRUE(system2.mechanicalSubcooler());
+    EXPECT_EQ(subcooler, system2.mechanicalSubcooler().get());
+    EXPECT_FALSE(system.mechanicalSubcooler());
+    ASSERT_TRUE(subcooler.system());
+    EXPECT_EQ(system2, subcooler.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerMechanical>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationSubcoolerMechanical>().size());
+  }
+
+  {
+    RefrigerationSystem system = RefrigerationSystem(model);
+    RefrigerationSystem system2 = RefrigerationSystem(model);
+
+    RefrigerationSubcoolerLiquidSuction subcooler(model);
+    EXPECT_FALSE(subcooler.system());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerLiquidSuction>().size());
+
+    EXPECT_TRUE(system.setLiquidSuctionHeatExchangerSubcooler(subcooler));
+    ASSERT_TRUE(system.liquidSuctionHeatExchangerSubcooler());
+    EXPECT_EQ(subcooler, system.liquidSuctionHeatExchangerSubcooler().get());
+    EXPECT_FALSE(system2.liquidSuctionHeatExchangerSubcooler());
+    ASSERT_TRUE(subcooler.system());
+    EXPECT_EQ(system, subcooler.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerLiquidSuction>().size());
+
+    // Adding it to another one? It should remove it from the first
+    EXPECT_TRUE(system2.setLiquidSuctionHeatExchangerSubcooler(subcooler));
+    ASSERT_TRUE(system2.liquidSuctionHeatExchangerSubcooler());
+    EXPECT_EQ(subcooler, system2.liquidSuctionHeatExchangerSubcooler().get());
+    EXPECT_FALSE(system.liquidSuctionHeatExchangerSubcooler());
+    ASSERT_TRUE(subcooler.system());
+    EXPECT_EQ(system2, subcooler.system().get());
+    EXPECT_EQ(1, model.getModelObjects<RefrigerationSubcoolerLiquidSuction>().size());
+
+    system2.remove();
+    EXPECT_EQ(0, model.getModelObjects<RefrigerationSubcoolerLiquidSuction>().size());
+  }
 }

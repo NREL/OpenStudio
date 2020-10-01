@@ -101,11 +101,8 @@ namespace detail {
    */
   ModelObject AvailabilityManagerAssignmentList_Impl::clone(Model model) const
   {
-    boost::optional<Loop> thisLoop = loop();
-    OS_ASSERT(thisLoop);
-
     // Create a new, blank, one
-    AvailabilityManagerAssignmentList avmListClone(*thisLoop);
+    AvailabilityManagerAssignmentList avmListClone(model);
 
     // Clone all AVMs and populate the clone
     std::vector<AvailabilityManager> avmVector = availabilityManagers();
@@ -407,6 +404,12 @@ AvailabilityManagerAssignmentList::AvailabilityManagerAssignmentList(const Loop&
   OS_ASSERT(getImpl<detail::AvailabilityManagerAssignmentList_Impl>());
 
   this->setName(loop.name().get() + " AvailabilityManagerAssignmentList");
+}
+
+AvailabilityManagerAssignmentList::AvailabilityManagerAssignmentList(const Model& model)
+  : ModelObject(AvailabilityManagerAssignmentList::iddObjectType(),model)
+{
+  OS_ASSERT(getImpl<detail::AvailabilityManagerAssignmentList_Impl>());
 }
 
 IddObjectType AvailabilityManagerAssignmentList::iddObjectType() {

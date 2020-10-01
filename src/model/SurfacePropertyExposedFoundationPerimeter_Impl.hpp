@@ -65,9 +65,9 @@ namespace detail {
     /** @name Virtual Methods */
     //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+    virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+    virtual IddObjectType iddObjectType() const override;
 
     //@}
     /** @name Getters */
@@ -94,6 +94,10 @@ namespace detail {
     bool setExposedPerimeterFraction(double exposedPerimeterFraction);
     
     void resetExposedPerimeterFraction();
+
+    virtual bool setParent(ParentObject& newParent) override;
+
+    virtual boost::optional<ParentObject> parent() const override;
 
     //@}
     /** @name Other */

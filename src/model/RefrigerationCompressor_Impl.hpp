@@ -105,11 +105,7 @@ namespace detail {
 
     boost::optional<CurveBicubic> transcriticalCompressorCapacityCurve() const;
 
-    // There isn't any unicity enforced, so a compressor can be listed multiple times on a single system, or on several system
-    // Additionally, a compressor can be either listed on the CompressorList or the High Stage Compressor List
-    // Returns systems this is listed on, either as compressor or high stage compressor
-    std::vector<RefrigerationSystem> systems() const;
-
+    boost::optional<RefrigerationSystem> system() const;
 
     //@}
     /** @name Setters */
@@ -151,7 +147,7 @@ namespace detail {
 
     void resetTranscriticalCompressorCapacityCurve();
 
-    void removeFromSystems();
+    void removeFromSystem();
 
     //@}
     /** @name Other */

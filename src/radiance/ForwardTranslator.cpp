@@ -1214,7 +1214,12 @@ namespace radiance {
               continue;
             }
 
-            boost::optional<model::ShadingControl> shadingControl = subSurface.shadingControl();
+            // TODO: This is going to need update!
+            boost::optional<model::ShadingControl> shadingControl;
+            auto scs = subSurface.shadingControls();
+            if (!scs.empty()) {
+              shadingControl = scs[0];
+            }
 
             // future support for mullion factor
             double visibleTransmittanceMultiplier = 1.0;
@@ -2499,7 +2504,7 @@ namespace radiance {
     outputVariable = openstudio::model::OutputVariable("Zone People Occupant Count", outmodel);
     outputVariable.setReportingFrequency("Hourly");
 
-    outputVariable = openstudio::model::OutputVariable("Zone Lights Electric Power", outmodel);
+    outputVariable = openstudio::model::OutputVariable("Zone Lights Electricity Rate", outmodel);
     outputVariable.setReportingFrequency("Hourly");
 
     // only report weather periods

@@ -275,6 +275,21 @@ namespace detail {
     return m_cachedFoundationKivaSettings;
   }
 
+  boost::optional<OutputControlFiles> Model_Impl::outputControlFiles() const
+  {
+    if (m_cachedOutputControlFiles){
+      return m_cachedOutputControlFiles;
+    }
+
+    boost::optional<OutputControlFiles> result = this->model().getOptionalUniqueModelObject<OutputControlFiles>();
+    if (result){
+      m_cachedOutputControlFiles = result;
+      result->getImpl<OutputControlFiles_Impl>().get()->OutputControlFiles_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputControlFiles>(const_cast<openstudio::model::detail::Model_Impl *>(this));
+    }
+
+    return m_cachedOutputControlFiles;
+  }
+
   boost::optional<OutputTableSummaryReports> Model_Impl::outputTableSummaryReports() const
   {
     if (m_cachedOutputTableSummaryReports){
@@ -1005,6 +1020,7 @@ namespace detail {
     Handle dummy;
     clearCachedBuilding(dummy);
     clearCachedFoundationKivaSettings(dummy);
+    clearCachedOutputControlFiles(dummy);
     clearCachedOutputTableSummaryReports(dummy);
     clearCachedLifeCycleCostParameters(dummy);
     clearCachedRunPeriod(dummy);
@@ -1021,6 +1037,11 @@ namespace detail {
   void Model_Impl::clearCachedFoundationKivaSettings(const Handle &)
   {
     m_cachedFoundationKivaSettings.reset();
+  }
+
+  void Model_Impl::clearCachedOutputControlFiles(const Handle &)
+  {
+    m_cachedOutputControlFiles.reset();
   }
 
   void Model_Impl::clearCachedOutputTableSummaryReports(const Handle &)
@@ -1216,6 +1237,11 @@ boost::optional<Building> Model::building() const
 boost::optional<FoundationKivaSettings> Model::foundationKivaSettings() const
 {
   return getImpl<detail::Model_Impl>()->foundationKivaSettings();
+}
+
+boost::optional<OutputControlFiles> Model::outputControlFiles() const
+{
+  return getImpl<detail::Model_Impl>()->outputControlFiles();
 }
 
 boost::optional<OutputTableSummaryReports> Model::outputTableSummaryReports() const
@@ -2632,6 +2658,15 @@ FoundationKivaSettings Model::getUniqueModelObject<FoundationKivaSettings>() {
 }
 
 template <>
+OutputControlFiles Model::getUniqueModelObject<OutputControlFiles>() {
+  if (boost::optional<OutputControlFiles> _b = outputControlFiles()) {
+    return _b.get();
+  } else {
+    return OutputControlFiles(*this);
+  }
+}
+
+template <>
 OutputTableSummaryReports Model::getUniqueModelObject<OutputTableSummaryReports>() {
   if (boost::optional<OutputTableSummaryReports> _b = outputTableSummaryReports()) {
     return _b.get();
@@ -3007,6 +3042,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(Node);
   REGISTER_CONSTRUCTOR(OtherEquipment);
   REGISTER_CONSTRUCTOR(OtherEquipmentDefinition);
+  REGISTER_CONSTRUCTOR(OutputControlFiles);
   REGISTER_CONSTRUCTOR(OutputControlReportingTolerances);
   REGISTER_CONSTRUCTOR(OutputDebuggingData);
   REGISTER_CONSTRUCTOR(OutputDiagnostics);
@@ -3506,6 +3542,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(Node);
   REGISTER_COPYCONSTRUCTORS(OtherEquipment);
   REGISTER_COPYCONSTRUCTORS(OtherEquipmentDefinition);
+  REGISTER_COPYCONSTRUCTORS(OutputControlFiles);
   REGISTER_COPYCONSTRUCTORS(OutputControlReportingTolerances);
   REGISTER_COPYCONSTRUCTORS(OutputDebuggingData);
   REGISTER_COPYCONSTRUCTORS(OutputDiagnostics);

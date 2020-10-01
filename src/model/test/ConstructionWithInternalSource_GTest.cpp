@@ -53,6 +53,7 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_DefaultConstructed)
   EXPECT_EQ(1, construction.temperatureCalculationRequestedAfterLayerNumber());
   EXPECT_EQ(1, construction.dimensionsForTheCTFCalculation());
   EXPECT_EQ(0.154, construction.tubeSpacing());
+  EXPECT_EQ(0, construction.twoDimensionalTemperatureCalculationPosition());
 }
 
 TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers)
@@ -89,6 +90,7 @@ TEST_F(ModelFixture, ConstructionWithInternalSource_FromLayers)
   EXPECT_EQ(1, construction.temperatureCalculationRequestedAfterLayerNumber());
   EXPECT_EQ(1, construction.dimensionsForTheCTFCalculation());
   EXPECT_EQ(0.154, construction.tubeSpacing());
+  EXPECT_EQ(0, construction.twoDimensionalTemperatureCalculationPosition());
 
   // check that we can't mess up the construction
   EXPECT_FALSE(construction.setSourcePresentAfterLayerNumber(3));

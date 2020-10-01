@@ -73,7 +73,7 @@ OptionalModelObject ReverseTranslator::translateMeterCustomDecrement( const Work
   }
 
   // Fuel Type
-  s = workspaceObject.getString(Meter_CustomDecrementFields::FuelType);
+  s = workspaceObject.getString(Meter_CustomDecrementFields::ResourceType);
   if (s) {
     // TODO: JM to DLM: should I also check it's part of the validFuelTypes?
     meterCustomDecrement.setFuelType(s.get());

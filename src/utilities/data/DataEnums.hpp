@@ -66,13 +66,16 @@ OPENSTUDIO_ENUM(FuelType,
   ((Gas)(NaturalGas))
   ((Gasoline))
   ((Diesel))
-  ((FuelOil_1))
-  ((FuelOil_2))
+  ((Coal))
+  ((FuelOil_1)(FuelOilNo1))
+  ((FuelOil_2)(FuelOilNo2))
   ((Propane))
   ((Water))
   ((Steam))
   ((DistrictCooling))
   ((DistrictHeating))
+  ((OtherFuel_1)(OtherFuel1))
+  ((OtherFuel_2)(OtherFuel2))
   ((EnergyTransfer)));
  *  \endcode */
 OPENSTUDIO_ENUM(FuelType,
@@ -80,13 +83,16 @@ OPENSTUDIO_ENUM(FuelType,
   ((Gas)(NaturalGas))
   ((Gasoline))
   ((Diesel))
-  ((FuelOil_1))
-  ((FuelOil_2))
+  ((Coal))
+  ((FuelOil_1)(FuelOilNo1))
+  ((FuelOil_2)(FuelOilNo2))
   ((Propane))
   ((Water))
   ((Steam))
   ((DistrictCooling))
   ((DistrictHeating))
+  ((OtherFuel_1)(OtherFuel1))
+  ((OtherFuel_2)(OtherFuel2))
   ((EnergyTransfer)));
 
 /** \relates FuelType */
@@ -103,18 +109,32 @@ typedef std::vector<FuelType> FuelTypeVector;
 OPENSTUDIO_ENUM(EndUseFuelType,
   ((Electricity)(Electricity))
   ((Gas)(Natural Gas))
-  ((OtherFuel)(Other Fuel))
+  ((Gasoline))
+  ((Diesel))
+  ((Coal))
+  ((FuelOil_1)(Fuel Oil No 1))
+  ((FuelOil_2)(Fuel Oil No 2))
+  ((Propane))
+  ((OtherFuel_1)(Other Fuel 1))
+  ((OtherFuel_2)(Other Fuel 2))
   ((DistrictCooling)(District Cooling))
   ((DistrictHeating)(District Heating))
-  ((Water)(Water)));
+  ((Water)));
  *  \endcode */
 OPENSTUDIO_ENUM(EndUseFuelType,
   ((Electricity)(Electricity))
   ((Gas)(Natural Gas))
-  ((AdditionalFuel)(Additional Fuel))
+  ((Gasoline))
+  ((Diesel))
+  ((Coal))
+  ((FuelOil_1)(Fuel Oil No 1))
+  ((FuelOil_2)(Fuel Oil No 2))
+  ((Propane))
+  ((OtherFuel_1)(Other Fuel 1))
+  ((OtherFuel_2)(Other Fuel 2))
   ((DistrictCooling)(District Cooling))
   ((DistrictHeating)(District Heating))
-  ((Water)(Water)));
+  ((Water)));
 
 /** \class EndUseCategoryType
  *  \brief End use categories reported by OpenStudio.  These correspond to the "End Uses" table in the ABUPs report.

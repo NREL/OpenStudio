@@ -124,16 +124,35 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Check_Constructor)
   str1 = testRad.radiantSurfaceType();
   EXPECT_EQ(*str1,"Ceilings");
 
+  // Test set and get Fluid to Radiant Surface Heat Transfer Model
+  testRad.setFluidtoRadiantSurfaceHeatTransferModel("ISOStandard");
+  boost::optional<std::string> str2 = testRad.fluidtoRadiantSurfaceHeatTransferModel();
+  EXPECT_EQ(*str2,"ISOStandard");
+  EXPECT_FALSE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
+  testRad.resetFluidtoRadiantSurfaceHeatTransferModel();
+  EXPECT_TRUE(testRad.isFluidtoRadiantSurfaceHeatTransferModelDefaulted());
+  boost::optional<std::string> str3 = testRad.fluidtoRadiantSurfaceHeatTransferModel();
+  EXPECT_EQ(*str3,"ConvectionOnly");
+
   // Test set and get Hydronic Tubing Inside Diameter
   testRad.setHydronicTubingInsideDiameter(0.01);
   double inDia = testRad.hydronicTubingInsideDiameter();
   EXPECT_EQ(inDia, 0.01);
   EXPECT_FALSE(testRad.isHydronicTubingInsideDiameterDefaulted());
-
   testRad.resetHydronicTubingInsideDiameter();
   EXPECT_TRUE(testRad.isHydronicTubingInsideDiameterDefaulted());
   double inDia1 = testRad.hydronicTubingInsideDiameter();
   EXPECT_EQ(inDia1,0.013);
+
+  // Test set and get Hydronic Tubing Outside Diameter
+  testRad.setHydronicTubingOutsideDiameter(0.01);
+  double outDia = testRad.hydronicTubingOutsideDiameter();
+  EXPECT_EQ(outDia, 0.01);
+  EXPECT_FALSE(testRad.isHydronicTubingOutsideDiameterDefaulted());
+  testRad.resetHydronicTubingOutsideDiameter();
+  EXPECT_TRUE(testRad.isHydronicTubingOutsideDiameterDefaulted());
+  double outDia1 = testRad.hydronicTubingOutsideDiameter();
+  EXPECT_EQ(outDia1,0.016);
 
   // Test set and get Hydronic Tubing Length
   testRad.setHydronicTubingLength(200);
@@ -141,23 +160,40 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Check_Constructor)
   EXPECT_EQ(*length, 200);
   EXPECT_FALSE(testRad.isHydronicTubingLengthDefaulted());
   EXPECT_FALSE(testRad.isHydronicTubingLengthAutosized());
-
   testRad.resetHydronicTubingLength();
   EXPECT_TRUE(testRad.isHydronicTubingLengthDefaulted());
-
   testRad.autosizeHydronicTubingLength();
   EXPECT_TRUE(testRad.isHydronicTubingLengthAutosized());
 
+  // Test set and get Hydronic Tubing Conductivity
+  testRad.setHydronicTubingConductivity(0.01);
+  double cond = testRad.hydronicTubingConductivity();
+  EXPECT_EQ(cond, 0.01);
+  EXPECT_FALSE(testRad.isHydronicTubingConductivityDefaulted());
+  testRad.resetHydronicTubingConductivity();
+  EXPECT_TRUE(testRad.isHydronicTubingConductivityDefaulted());
+  double cond1 = testRad.hydronicTubingConductivity();
+  EXPECT_EQ(cond1,0.35);
+
   // Test set and get Temperature Control Type
   testRad.setTemperatureControlType("OutdoorDryBulbTemperature");
-  boost::optional<std::string> str2 = testRad.temperatureControlType();
+  str2 = testRad.temperatureControlType();
   EXPECT_EQ(*str2,"OutdoorDryBulbTemperature");
   EXPECT_FALSE(testRad.isTemperatureControlTypeDefaulted());
-
   testRad.resetTemperatureControlType();
   EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
-  boost::optional<std::string> str3 = testRad.temperatureControlType();
+  str3 = testRad.temperatureControlType();
   EXPECT_EQ(*str3,"MeanAirTemperature");
+
+  // Test set and get Setpoint Control Type
+  EXPECT_TRUE(testRad.setSetpointControlType("ZeroFlowPower"));
+  std::string testSetpointControlType = testRad.setpointControlType();
+  EXPECT_EQ(testSetpointControlType,"ZeroFlowPower");
+  EXPECT_FALSE(testRad.isSetpointControlTypeDefaulted());
+  testRad.resetSetpointControlType();
+  testSetpointControlType = testRad.setpointControlType();
+  EXPECT_EQ(testSetpointControlType,"HalfFlowPower");
+  EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
 
   //test number of circuits
   testRad.setNumberofCircuits("CalculateFromCircuitLength");
@@ -168,6 +204,14 @@ TEST_F(ModelFixture,ZoneHVACLowTempRadiantVarFlow_Check_Constructor)
   testRad.setCircuitLength(200.0);
   double circLength = testRad.circuitLength();
   EXPECT_EQ(circLength,200.0);
+
+  // Test set and get Changeover Delay Time Period Schedule
+  ScheduleConstant sch(model);
+  EXPECT_TRUE(testRad.setChangeoverDelayTimePeriodSchedule(sch));
+  ASSERT_TRUE(testRad.changeoverDelayTimePeriodSchedule());
+  EXPECT_EQ(sch, testRad.changeoverDelayTimePeriodSchedule().get());
+  testRad.resetChangeoverDelayTimePeriodSchedule();
+  EXPECT_FALSE(testRad.changeoverDelayTimePeriodSchedule());
 
 }
 

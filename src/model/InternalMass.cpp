@@ -247,6 +247,21 @@ namespace detail {
     return false;
   }
 
+
+  ModelObject InternalMass_Impl::clone(Model model) const
+  {
+    auto clone = ModelObject_Impl::clone(model).cast<InternalMass>();
+
+    auto coefficients = surfacePropertyConvectionCoefficients();
+    if (coefficients)
+    {
+      auto coefficientsClone = coefficients->clone(model).cast<SurfacePropertyConvectionCoefficients>();
+      coefficientsClone.setSurface(clone);
+    }
+
+    return clone;
+  }
+
 } // detail
 
 InternalMass::InternalMass(const InternalMassDefinition& internalMassDefinition)

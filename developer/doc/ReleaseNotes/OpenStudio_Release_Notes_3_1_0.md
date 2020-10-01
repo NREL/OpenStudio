@@ -9,7 +9,6 @@ These release notes describe version 3.1.0 of the OpenStudio SDK developed by th
 -  Installation Notes
 -  OpenStudio SDK: Changelog
 
-
 # Overview
 
 Following an important announcement related to future development of the OpenStudio Application released in September 2019 ([A Shift in BTO’s BEM Strategy: A New Future for the OpenStudio Application](https://www.openstudio.net/new-future-for-openstudio-application)), **this release marks the first installment of the separated OpenStudio SDK from the Application.**
@@ -45,6 +44,7 @@ OpenStudio 3.x now uses **Ruby 2.5.5** as the supported version (2.2.4 previousl
 
 As usual, you can refer to the **[OpenStudio Compatibility Matrix](https://github.com/NREL/OpenStudio/wiki/OpenStudio-Version-Compatibility-Matrix)** for more information.
 
+
 ## Installation Steps
 
 - Download and install OpenStudio SDK and/or [OpenStudioApplication]( depending on your needs. Select components for installation. Note that OpenStudio Application is a standalone app and does not require you to install OpenStudio SDK.
@@ -66,7 +66,16 @@ A number of API-breaking changes have been implemented in OpenStudio 3.1.0:
 * [#3960](https://github.com/NREL/OpenStudio/pull/3960) - Added support for building the C# bindings via `dotnet` CLI, including on Unix platforms.
 * [#3959](https://github.com/NREL/OpenStudio/pull/3959) - Also included some improvements in the generated C# bindings by reducing build warnings and properly exposing some types via SWIG
     * `ScheduleTypeKey` (which is normally only use by OpenStudio internals in ScheduleTypeRegistry checks) previously mapped to a `std::pair<std::string, std::string>` which was SWIGed in ruby as an Array of strings of size two, but improperly exposed in C#. It now uses a dedicated helper class with two methods `ScheduleTypeKey::className()` and `ScheduleTypeKey::scheduleDisplayName()`
-
+* [#4050](https://github.com/NREL/OpenStudio/pull/4050) - Fix #3921 - some children of RefrigerationSystem can be added several times and produce a fatal when System is removed.
+    * `RefrigerationSystem` will now be enforcing unicity for all children. This was already the case for a few of the child objects such as Case and WalkIns, it is now the case for all objects (`RefrigerationCondenserCascade`, `RefrigerationSubcoolerMechanical` and `RefrigerationSubcoolerLiquidSuction`, etc.). What this means is that setter methods (or add methods in case of a list) will remove the child for any current RefrigerationSystem it is on first.
+* [#4066](https://github.com/NREL/OpenStudio/pull/4066) - Multiple shading controls referenced by a single subsurface
+    * `SubSurface` was historically the one referencing the `ShadingControl` object. Now it's a many-to-many relationship where `ShadingControl` has an extensible 'Sub Surface Name' field, and multiple `ShadingControl` objects can reference the same `SubSurface`. This is trickling down from a change introduced in EnergyPlus version 9.4, and specifically in PR [NREL/EnergyPlus#8196](https://github.com/NREL/EnergyPlus/pull/8196)
+    * Methods in `SubSurface` have been deprecated but are kept for backward compatibility. They will be removed in a future version of OpenStudio:
+        * `shadingControl()`: prefer `shadingControls()`
+        * `setShadingControl(ShadingControl&)`: use `addShadingControl(SubSurface&)`, `addShadingControls(std::vector<SubSurface>&)` or `setShadingControls(std::vector<SubSurface>&)`
+        * `resetShadingControl()`: use `removeAllShadingControls()` instead
+    * All Shading Control Type values should now be supported. Refer to issue [#4074](https://github.com/NREL/OpenStudio/issues/4074) for more information
+    * Fields 'Glare Control Is Active', 'Type of Slat Angle Control for Blinds', 'Slat Angle Schedule Name', 'Setpoint2', and 'Multiple Surface Control Type' are now implemented as well
 
 ## Minor changes:
 

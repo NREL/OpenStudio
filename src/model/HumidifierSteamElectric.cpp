@@ -72,8 +72,8 @@ namespace detail {
     static const std::vector<std::string> result{
       "Humidifier Water Volume Flow Rate",
       "Humidifier Water Volume",
-      "Humidifier Electric Power",
-      "Humidifier Electric Energy",
+      "Humidifier Electricity Rate",
+      "Humidifier Electricity Energy",
       "Humidifier Mains Water Volume"
 
       // Water Storage Tank Name isn't implemented

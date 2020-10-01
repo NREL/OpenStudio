@@ -29,6 +29,7 @@
 
 #include "SqlFile_Impl.hpp"
 #include "SqlFileTimeSeriesQuery.hpp"
+#include "PreparedStatement.hpp"
 #include "OpenStudio.hxx"
 
 #include "../time/Calendar.hpp"
@@ -36,7 +37,7 @@
 #include "../core/Containers.hpp"
 #include "../core/Assert.hpp"
 
-
+#include <sqlite3.h>
 
 using boost::multi_index_container;
 using boost::multi_index::indexed_by;
@@ -234,78 +235,22 @@ namespace openstudio{
       close();
     }
 
-    struct PreparedStatement
+    void SqlFile_Impl::execAndThrowOnError(const std::string &t_stmt)
     {
-      sqlite3 *m_db;
-      sqlite3_stmt *m_statement;
-      bool m_transaction;
-
-      PreparedStatement & operator=(const PreparedStatement&) = delete;
-      PreparedStatement(const PreparedStatement&) = delete;
-
-      PreparedStatement(const std::string &t_stmt, sqlite3 *t_db, bool t_transaction = false)
-        : m_db(t_db), m_statement(nullptr), m_transaction(t_transaction)
+      char *err = nullptr;
+      if (sqlite3_exec(m_db, t_stmt.c_str(), nullptr, nullptr, &err) != SQLITE_OK)
       {
-        if (m_transaction)
+        std::string errstr;
+
+        if (err)
         {
-          sqlite3_exec(m_db, "BEGIN", nullptr, nullptr, nullptr);
+          errstr = err;
+          sqlite3_free(err);
         }
 
-        sqlite3_prepare_v2(m_db, t_stmt.c_str(), t_stmt.size(), &m_statement, nullptr);
-
-        if (!m_statement)
-        {
-          throw std::runtime_error("Error creating prepared statement: " + t_stmt);
-        }
-
+        throw std::runtime_error("Error executing SQL statement: " + t_stmt + " " + errstr);
       }
-
-      ~PreparedStatement()
-      {
-        if (m_statement)
-        {
-          sqlite3_finalize(m_statement);
-        }
-
-        if (m_transaction)
-        {
-          sqlite3_exec(m_db, "COMMIT", nullptr, nullptr, nullptr);
-        }
-      }
-
-      void bind(int position, const std::string &t_str)
-      {
-        sqlite3_bind_text(m_statement, position, t_str.c_str(), t_str.size(), SQLITE_TRANSIENT);
-      }
-
-      void bind(int position, int val)
-      {
-        sqlite3_bind_int(m_statement, position, val);
-      }
-
-      void bind(int position, unsigned int val)
-      {
-        sqlite3_bind_int(m_statement, position, val);
-      }
-
-
-      void bind(int position, double val)
-      {
-        sqlite3_bind_double(m_statement, position, val);
-      }
-
-      void execute()
-      {
-        if (sqlite3_step(m_statement) != SQLITE_DONE)
-        {
-          sqlite3_reset(m_statement);
-          throw std::runtime_error("Error executing SQL statement step");
-        } else {
-          sqlite3_reset(m_statement);
-        }
-      }
-
-    };
+    }
 
 
     void SqlFile_Impl::addSimulation(const openstudio::EpwFile &t_epwFile, const openstudio::DateTime &t_simulationTime,
@@ -315,25 +260,38 @@ namespace openstudio{
       std::stringstream timeStamp;
       timeStamp << t_simulationTime.date().year() << "." << t_simulationTime.date().monthOfYear().value() << "." << t_simulationTime.date().dayOfMonth() << " " << t_simulationTime.time().toString();
 
-      std::stringstream insertSimulation;
+      std::stringstream version;
+      version << "EnergyPlus, VERSION " << energyPlusVersionMajor() << "." << energyPlusVersionMinor() << ", (OpenStudio) YMD=" << timeStamp.str();
 
+      std::string insertSimulation = R"(INSERT INTO Simulations (SimulationIndex, EnergyPlusVersion, TimeStamp,
+                                                                 NumTimestepsPerHour, Completed, CompletedSuccessfully)
+                                        VALUES (?, ?, ?, ?, ?, ?);)";
 
-      insertSimulation << "insert into simulations (SimulationIndex, EnergyPlusVersion, TimeStamp, NumTimestepsPerHour, Completed, CompletedSuccessfully) values ("
-        << nextSimulationIndex << ", 'EnergyPlus, VERSION " << energyPlusVersionMajor() << "." << energyPlusVersionMinor() << ", (OpenStudio) YMD=" << timeStamp.str() << "', '" << timeStamp.str() << "', 6, 1, 1);";
+      execAndThrowOnError(insertSimulation,
+          // bindArgs
+          nextSimulationIndex,
+          version.str(),
+          timeStamp.str(),
+          6,
+          6,
+          1);
 
-      execAndThrowOnError(insertSimulation.str());
+      int nextEnvironmentPeriodIndex = getNextIndex("EnvironmentPeriods", "EnvironmentPeriodIndex");
 
+      std::stringstream envName;
+      envName << t_epwFile.stateProvinceRegion() << " WMO#=" << t_epwFile.wmoNumber();
 
-      int nextEnvironmentPeriodIndex = getNextIndex("environmentperiods", "EnvironmentPeriodIndex");
+      std::string insertEnvironment = R"(INSERT INTO EnvironmentPeriods (EnvironmentPeriodIndex, SimulationIndex,
+                                                                         EnvironmentName, EnvironmentType) VALUES (?, ?, ?, ?);)";
+      execAndThrowOnError(insertEnvironment,
+          // bindArgs
+          nextEnvironmentPeriodIndex,
+          nextSimulationIndex,
+          envName.str(),
+          3);
 
-      std::stringstream insertEnvironment;
-      insertEnvironment << "insert into environmentperiods (EnvironmentPeriodIndex, SimulationIndex, EnvironmentName, EnvironmentType) values ("
-        << nextEnvironmentPeriodIndex << ", " << nextSimulationIndex << ", '" << t_epwFile.stateProvinceRegion() << " WMO#=" << t_epwFile.wmoNumber() << "', 3);";
-
-      execAndThrowOnError(insertEnvironment.str());
 
       int nextTimeIndex = getNextIndex("time", "TimeIndex");
-
 
       std::shared_ptr<PreparedStatement> stmt;
       if (hasYear()) {
@@ -368,7 +326,7 @@ namespace openstudio{
 
           stmt->bind(++b, nextEnvironmentPeriodIndex);
 
-          stmt->execute();
+          stmt->execAndThrowOnError();
 
           ++nextTimeIndex;
         }
@@ -378,23 +336,6 @@ namespace openstudio{
 
     }
 
-    void SqlFile_Impl::execAndThrowOnError(const std::string &t_stmt)
-    {
-      char *err = nullptr;
-      if (sqlite3_exec(m_db, t_stmt.c_str(), nullptr, nullptr, &err) != SQLITE_OK)
-      {
-        std::string errstr;
-
-        if (err)
-        {
-          errstr = err;
-          sqlite3_free(err);
-        }
-
-        throw std::runtime_error("Error executing SQL statement: " + t_stmt + " " + errstr);
-      }
-    }
-
     bool SqlFile_Impl::connectionOpen() const
     {
       return m_connectionOpen;
@@ -402,7 +343,10 @@ namespace openstudio{
 
     int SqlFile_Impl::getNextIndex(const std::string &t_tableName, const std::string &t_columnName)
     {
-      boost::optional<int> maxindex = execAndReturnFirstInt("select max(" + t_columnName + ") from " + t_tableName);
+      // Interestingly, you CANNOT bind any database identifier (such as the table name / column name) but only litteral values...
+      // boost::optional<int> maxindex = execAndReturnFirstInt("SELECT MAX( ? ) FROM ?", t_columnName, t_tableName);
+      std::string query = "SELECT MAX(" + t_columnName + ") FROM " + t_tableName + ";";
+      boost::optional<int> maxindex = execAndReturnFirstInt(query);
 
       if (maxindex)
       {
@@ -542,38 +486,9 @@ namespace openstudio{
     {
       int zoneIndex = getNextIndex("zones", "ZoneIndex");
 
-      std::stringstream insertZone;
-      insertZone << "insert into zones (ZoneIndex, ZoneName, RelNorth, OriginX, OriginY, OriginZ, CentroidX, CentroidY, CentroidZ, OfType, Multiplier, ListMultiplier, MinimumX, MaximumX, MinimumY, MaximumY, MinimumZ, MaximumZ, CeilingHeight, Volume, InsideConvectionAlgo, OutsideConvectionAlgo, FloorArea, ExtGrossWallArea, ExtNetWallArea, ExtWindowArea, IsPartOfTotalArea) values ("
-        << zoneIndex << ", "
-        << "'" << t_name << "', "
-        << t_relNorth << ", "
-        << t_originX << ", "
-        << t_originY << ", "
-        << t_originZ << ", "
-        << t_centroidX << ", "
-        << t_centroidY << ", "
-        << t_centroidZ << ", "
-        << t_ofType << ", "
-        << t_multiplier << ", "
-        << t_listMultiplier << ", "
-        << t_minimumX << ", "
-        << t_maximumX << ", "
-        << t_minimumY << ", "
-        << t_maximumY << ", "
-        << t_minimumZ << ", "
-        << t_maximumZ << ", "
-        << t_ceilingHeight << ", "
-        << t_volume << ", "
-        << t_insideConvectionAlgo << ", "
-        << t_outsideConvectionAlgo << ", "
-        << t_floorArea << ", "
-        << t_extGrossWallArea << ", "
-        << t_extNetWallArea << ", "
-        << t_extWindowArea << ", "
-        << t_isPartOfTotalArea << ");";
-
-      execAndThrowOnError(insertZone.str());
-
+      execAndThrowOnError("insert into zones (ZoneIndex, ZoneName, RelNorth, OriginX, OriginY, OriginZ, CentroidX, CentroidY, CentroidZ, OfType, Multiplier, ListMultiplier, MinimumX, MaximumX, MinimumY, MaximumY, MinimumZ, MaximumZ, CeilingHeight, Volume, InsideConvectionAlgo, OutsideConvectionAlgo, FloorArea, ExtGrossWallArea, ExtNetWallArea, ExtWindowArea, IsPartOfTotalArea) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          // Bind Args
+          zoneIndex, t_name, t_relNorth, t_originX, t_originY, t_originZ, t_centroidX, t_centroidY, t_centroidZ, t_ofType, t_multiplier, t_listMultiplier, t_minimumX, t_maximumX, t_minimumY, t_maximumY, t_minimumZ, t_maximumZ, t_ceilingHeight, t_volume, t_insideConvectionAlgo, t_outsideConvectionAlgo, t_floorArea, t_extGrossWallArea, t_extNetWallArea, t_extWindowArea, t_isPartOfTotalArea);
 
       return zoneIndex;
     }
@@ -583,7 +498,7 @@ namespace openstudio{
         const std::string &t_environmentName, const std::vector<DateTime> &t_times,
         const std::vector<double> &t_xs, const std::vector<double> &t_ys, double t_z, const std::vector<Matrix> &t_maps)
     {
-      boost::optional<int> zoneIndex = execAndReturnFirstInt("select ZoneIndex from zones where ZoneName='" + t_zoneName + "';");
+      boost::optional<int> zoneIndex = execAndReturnFirstInt("select ZoneIndex from zones where ZoneName=?;", t_zoneName);
 
       if (!zoneIndex)
       {
@@ -659,7 +574,7 @@ namespace openstudio{
         stmt1->bind(++b, dayOfMonth);
         stmt1->bind(++b, hours);
 
-        stmt1->execute();
+        stmt1->execAndThrowOnError();
 
         if (t_xs.size() != t_maps[dateidx].size1()
             || t_ys.size() != t_maps[dateidx].size2())
@@ -680,7 +595,7 @@ namespace openstudio{
             stmt2.bind(3, t_ys[yidx]);
             stmt2.bind(4, t_maps[dateidx](xidx, yidx));
 
-            stmt2.execute();
+            stmt2.execAndThrowOnError();
           }
         }
 
@@ -776,7 +691,7 @@ namespace openstudio{
         stmt->bind(++b, datadicindex);
         stmt->bind(++b, value);
 
-        stmt->execute();
+        stmt->execAndThrowOnError();
       }
     }
 
@@ -928,52 +843,56 @@ namespace openstudio{
         const openstudio::EndUseCategoryType &t_categoryType,
         const openstudio::MonthOfYear &t_monthOfYear) const
     {
-      const std::string reportname = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription());
-      const std::string columnname = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":" +
-        boost::algorithm::to_upper_copy(t_fuelType.valueName());
-      const std::string rowname = t_monthOfYear.valueDescription();
+      // For backward compatibilty, we had to preserve enum valueNames (first param in enum, ((valueName)(valueDescription))
+      // You need to be careful about what you are passing here... valueName or valueDescription
+      const std::string reportName = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription());
+      // So this gets tricky, but we have ((Gas)(Natural Gas)). We didn't want to change to ((NaturalGas)(Natural Gas))
+      // So here we take valueDescription ('Natural Gas', then remove the spaces to be NaturalGas)
+      const std::string columnName = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":" +
+        boost::algorithm::to_upper_copy(boost::algorithm::erase_all_copy(t_fuelType.valueDescription(), " "));
+      const std::string rowName = t_monthOfYear.valueDescription();
 
-      const std::string& s = "SELECT Value FROM tabulardatawithstrings WHERE \
-                              ReportName='" + reportname + "' and \
-                              ReportForString='Meter' AND \
-                              RowName='" + rowname + "' AND \
-                              ColumnName='" + columnname + "' AND \
-                              Units='J'";
 
-      return execAndReturnFirstDouble(s);
+      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings
+                                  WHERE ReportName=?
+                                  AND ReportForString='Meter'
+                                  AND RowName=?
+                                  AND ColumnName=?
+                                  AND Units='J')";
+
+      return execAndReturnFirstDouble(s, reportName, rowName, columnName);
     }
 
-    //TODO
     boost::optional<double> SqlFile_Impl::peakEnergyDemandByMonth(
         const openstudio::EndUseFuelType &t_fuelType,
         const openstudio::EndUseCategoryType &t_categoryType,
         const openstudio::MonthOfYear &t_monthOfYear) const
     {
-      const std::string reportname = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription()) + " PEAK DEMAND";
-      const std::string columnname = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":" +
-        boost::algorithm::to_upper_copy(t_fuelType.valueName()) +
+      const std::string reportName = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription()) + " PEAK DEMAND";
+      const std::string columnName = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":" +
+        boost::algorithm::to_upper_copy(boost::algorithm::erase_all_copy(t_fuelType.valueDescription(), " ")) +
         " {AT MAX/MIN}";
-      const std::string rowname = t_monthOfYear.valueDescription();
+      const std::string rowName = t_monthOfYear.valueDescription();
 
-      const std::string& s = "SELECT Value FROM tabulardatawithstrings WHERE \
-                              ReportName='" + reportname + "' and \
-                              ReportForString='Meter' AND \
-                              RowName='" + rowname + "' AND \
-                              ColumnName='" + columnname + "' AND \
-                              Units='W'";
+      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings
+                                  WHERE ReportName=?
+                                  AND ReportForString='Meter'
+                                  AND RowName=?
+                                  AND ColumnName=?
+                                  AND Units='W')";
 
-      return execAndReturnFirstDouble(s);
+      return execAndReturnFirstDouble(s, reportName, rowName, columnName);
     }
 
     /// hours simulated
     boost::optional<double> SqlFile_Impl::hoursSimulated() const
     {
-      const std::string& s = "SELECT Value FROM tabulardatawithstrings WHERE \
-                              ReportName='InputVerificationandResultsSummary' AND \
-                              ReportForString='Entire Facility' AND \
-                              TableName='General' AND \
-                              RowName='Hours Simulated' AND \
-                              Units='hrs'";
+      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings
+                                  WHERE ReportName='InputVerificationandResultsSummary'
+                                  AND ReportForString='Entire Facility'
+                                  AND TableName='General'
+                                  AND RowName='Hours Simulated'
+                                  AND Units='hrs')";
       boost::optional<double> ret = execAndReturnFirstDouble(s);
 
       if (ret) return ret;
@@ -997,13 +916,13 @@ namespace openstudio{
         LOG(Warn, "Reporting Net Site Energy with " << *hours << " hrs");
       }
 
-      std::string s = "SELECT Value FROM tabulardatawithstrings WHERE \
-                              ReportName='AnnualBuildingUtilityPerformanceSummary' AND \
-                              ReportForString='Entire Facility' AND \
-                              TableName='Site and Source Energy' AND \
-                              RowName='Net Site Energy' AND \
-                              ColumnName='Total Energy' AND \
-                              Units='GJ'";
+      std::string s = R"(SELECT Value FROM TabularDataWithStrings
+                           WHERE ReportName='AnnualBuildingUtilityPerformanceSummary'
+                           AND ReportForString='Entire Facility'
+                           AND TableName='Site and Source Energy'
+                           AND RowName='Net Site Energy'
+                           AND ColumnName='Total Energy'
+                           AND Units='GJ')";
       boost::optional<double> d = execAndReturnFirstDouble(s);
 
       if (!d) {
@@ -1028,14 +947,14 @@ namespace openstudio{
         LOG(Warn, "Reporting Net Source Energy with " << *hours << " hrs");
       }
 
-      const std::string& s = "SELECT Value FROM tabulardatawithstrings WHERE \
-                              ReportName='AnnualBuildingUtilityPerformanceSummary' AND \
-                              ReportForString='Entire Facility' AND \
-                              TableName='Site and Source Energy' AND \
-                              RowName='Net Source Energy' AND \
-                              ColumnName='Total Energy' AND \
-                              Units='GJ'";
-      return execAndReturnFirstDouble(s);
+      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings
+                                  WHERE ReportName='AnnualBuildingUtilityPerformanceSummary'
+                                  AND ReportForString='Entire Facility'
+                                  AND TableName='Site and Source Energy'
+                                  AND RowName='Net Source Energy'
+                                  AND ColumnName='Total Energy'
+                                  AND Units='GJ')";
+          return execAndReturnFirstDouble(s);
     }
 
 
@@ -1048,13 +967,13 @@ namespace openstudio{
         LOG(Warn, "Reporting Total Site Energy with " << *hours << " hrs");
       }
 
-      const std::string& s = "SELECT Value FROM tabulardatawithstrings WHERE \
-                              ReportName='AnnualBuildingUtilityPerformanceSummary' AND \
-                              ReportForString='Entire Facility' AND \
-                              TableName='Site and Source Energy' AND \
-                              RowName='Total Site Energy' AND \
-                              ColumnName='Total Energy' AND \
-                              Units='GJ'";
+      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings
+                                  WHERE ReportName='AnnualBuildingUtilityPerformanceSummary'
+                                  AND ReportForString='Entire Facility'
+                                  AND TableName='Site and Source Energy'
+                                  AND RowName='Total Site Energy'
+                                  AND ColumnName='Total Energy'
+                                  AND Units='GJ')";
       return execAndReturnFirstDouble(s);
     }
 
@@ -1068,13 +987,13 @@ namespace openstudio{
         LOG(Warn, "Reporting Total Source Energy with " << *hours << " hrs");
       }
 
-      const std::string& s = "SELECT Value FROM tabulardatawithstrings WHERE \
-                              ReportName='AnnualBuildingUtilityPerformanceSummary' AND \
-                              ReportForString='Entire Facility' AND \
-                              TableName='Site and Source Energy' AND \
-                              RowName='Total Source Energy' AND \
-                              ColumnName='Total Energy' AND \
-                              Units='GJ'";
+      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings
+                                  WHERE ReportName='AnnualBuildingUtilityPerformanceSummary'
+                                  AND ReportForString='Entire Facility'
+                                  AND TableName='Site and Source Energy'
+                                  AND RowName='Total Source Energy'
+                                  AND ColumnName='Total Energy'
+                                  AND Units='GJ')";
       return execAndReturnFirstDouble(s);
     }
 
@@ -1082,50 +1001,19 @@ namespace openstudio{
     OptionalDouble SqlFile_Impl::annualTotalCost(const FuelType& fuel) const
     {
       if (fuel == FuelType::Electricity){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Electric') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
+        return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Electricity') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
       }
       else if (fuel == FuelType::Gas){
-        return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Gas') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
+        return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Natural Gas') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
       }
       else {
         // E+ lumps all other fuel types under "Other," so we are forced to use the meters table instead.
         // This is fragile if there are custom submeters, but this is the only option
-        std::string meterName;
+        std::string meterName = boost::to_upper_copy(fuel.valueDescription()) + ":FACILITY";
 
-        if (fuel == FuelType::DistrictCooling){
-          meterName = "DISTRICTCOOLING:FACILITY";
-        }
-        else if (fuel == FuelType::DistrictHeating){
-          meterName = "DISTRICTHEATING:FACILITY";
-        }
-        else if (fuel == FuelType::Water){
-          meterName = "WATER:FACILITY";
-        }
-        else if (fuel == FuelType::Gasoline){
-          meterName = "GASOLINE:FACILITY";
-        }
-        else if (fuel == FuelType::Diesel){
-          meterName = "DIESEL:FACILITY";
-        }
-        else if (fuel == FuelType::FuelOil_1){
-          meterName = "FUELOIL#1:FACILITY";
-        }
-        else if (fuel == FuelType::FuelOil_2){
-          meterName = "FUELOIL#2:FACILITY";
-        }
-        else if (fuel == FuelType::Propane){
-          meterName = "PROPANE:FACILITY";
-        }
-        else if (fuel == FuelType::Steam){
-          meterName = "STEAM:FACILITY";
-        }
-        else if (fuel == FuelType::EnergyTransfer){
-          meterName = "ENERGYTRANSFER:FACILITY";
-        }
-
-        auto rowName = execAndReturnFirstString("SELECT RowName FROM tabulardatawithstrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND Value='" + meterName + "'");
+        auto rowName = execAndReturnFirstString("SELECT RowName FROM TabularDataWithStrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND Value='" + meterName + "'");
         if (rowName){
-          return execAndReturnFirstDouble("SELECT Value FROM tabulardatawithstrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND RowName='" + rowName.get() + "' AND ColumnName='Annual Cost (~~$~~)'");
+          return execAndReturnFirstDouble("SELECT Value FROM TabularDataWithStrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND RowName='" + rowName.get() + "' AND ColumnName='Annual Cost (~~$~~)'");
         }
         else {
           return boost::none; // Return an empty optional double, indicating that there is no annual cost for this energy type
@@ -1139,7 +1027,7 @@ namespace openstudio{
     OptionalDouble SqlFile_Impl::annualTotalCostPerBldgArea(const FuelType& fuel) const
     {
       // Get the total building area
-      boost::optional<double> totalBuildingArea = execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'Building Area') and (ColumnName = 'Area') and (RowName = 'Total Building Area') and (Units = 'm2')");
+      boost::optional<double> totalBuildingArea = execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'Building Area') and (ColumnName = 'Area') and (RowName = 'Total Building Area') and (Units = 'm2')");
 
       // Get the annual energy cost
       boost::optional<double> annualEnergyCost = annualTotalCost(fuel);
@@ -1157,7 +1045,7 @@ namespace openstudio{
     OptionalDouble SqlFile_Impl::annualTotalCostPerNetConditionedBldgArea(const FuelType& fuel) const
     {
       // Get the total building area
-      boost::optional<double> totalBuildingArea = execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'Building Area') and (ColumnName = 'Area') and (RowName = 'Net Conditioned Building Area') and (Units = 'm2')");
+      boost::optional<double> totalBuildingArea = execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'Building Area') and (ColumnName = 'Area') and (RowName = 'Net Conditioned Building Area') and (Units = 'm2')");
 
       // Get the annual energy cost
       boost::optional<double> annualEnergyCost = annualTotalCost(fuel);
@@ -1176,14 +1064,12 @@ namespace openstudio{
     {
       double totalCost = 0;
 
-      // List of all fuel types
-      auto fuelTypes = {FuelType::Electricity, FuelType::Gas, FuelType::DistrictCooling, FuelType::DistrictHeating, FuelType::Water, FuelType::Gasoline, FuelType::Diesel, FuelType::FuelOil_1, FuelType::FuelOil_2, FuelType::Propane, FuelType::EnergyTransfer};
-
       // Loop through all fuels and add up their costs
-      for (const auto& fuelType : fuelTypes) {
+      for (int i : openstudio::FuelType::getValues()) {
+        openstudio::FuelType fuelType(i);
+
         // Get the annual energy cost
-        boost::optional<double> cost = annualTotalCost(fuelType);
-        if (cost) {
+        if (boost::optional<double> cost = annualTotalCost(fuelType)) {
           totalCost += *cost;
         }
       }
@@ -1271,8 +1157,8 @@ namespace openstudio{
     boost::optional<EnvironmentType> SqlFile_Impl::environmentType(const std::string& envPeriod) const
     {
       boost::optional<EnvironmentType> result;
-      std::string query = "SELECT EnvironmentType FROM environmentperiods WHERE EnvironmentName='" + envPeriod + "' COLLATE NOCASE";
-      boost::optional<int> temp = execAndReturnFirstInt(query);
+      std::string query = "SELECT EnvironmentType FROM environmentperiods WHERE EnvironmentName=? COLLATE NOCASE";
+      boost::optional<int> temp = execAndReturnFirstInt(query, envPeriod);
       if (temp){
         try{
           result = EnvironmentType(*temp);
@@ -1285,7 +1171,7 @@ namespace openstudio{
 
     OptionalDouble SqlFile_Impl::economicsEnergyCost() const
     {
-      return execAndReturnFirstDouble("SELECT * from tabulardatawithstrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Total') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
+      return execAndReturnFirstDouble("SELECT * from TabularDataWithStrings where (reportname = 'Economics Results Summary Report') and (ReportForString = 'Entire Facility') and (TableName = 'Annual Cost') and (ColumnName ='Total') and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)'))");
     }
 
     OptionalDouble SqlFile_Impl::getElecOrGasUse(bool bGetGas) const
@@ -1304,11 +1190,11 @@ namespace openstudio{
         fuelType = "'COMM ELECT'";
       }
 
-      std::string query("select rowname from tabulardatawithstrings where TableName = 'Tariff Summary' and ColumnName = 'Group' and Value = ");
+      std::string query("select rowname from TabularDataWithStrings where TableName = 'Tariff Summary' and ColumnName = 'Group' and Value = ");
       query += fuelType;
 
-      selectedRowNames = execAndReturnVectorOfString("select rowname from tabulardatawithstrings where TableName = 'Tariff Summary' and (ColumnName = 'Selected' and Value = 'Yes')");
-      qualifiedRowNames = execAndReturnVectorOfString("select rowname from tabulardatawithstrings where TableName = 'Tariff Summary' and (ColumnName = 'Qualified' and Value = 'Yes')");
+      selectedRowNames = execAndReturnVectorOfString("select rowname from TabularDataWithStrings where TableName = 'Tariff Summary' and (ColumnName = 'Selected' and Value = 'Yes')");
+      qualifiedRowNames = execAndReturnVectorOfString("select rowname from TabularDataWithStrings where TableName = 'Tariff Summary' and (ColumnName = 'Qualified' and Value = 'Yes')");
       fuelTypeRowNames = execAndReturnVectorOfString(query);
 
       if(!selectedRowNames || !qualifiedRowNames || !fuelTypeRowNames) return result;
@@ -1333,7 +1219,7 @@ namespace openstudio{
       }
       if(name.size() == 0) return result;
 
-      query = "SELECT value from tabulardatawithstrings where ReportName = 'Tariff Report' and ReportForString = '";
+      query = "SELECT value from TabularDataWithStrings where ReportName = 'Tariff Report' and ReportForString = '";
       query += name;
       query +=  "' and TableName = 'Native Variables' and ColumnName = 'Sum' and RowName = 'TotalEnergy'";
       result = execAndReturnFirstDouble(query);
@@ -1346,13 +1232,13 @@ namespace openstudio{
     {
       std::string fuelType;
       if(bGetGas){
-        fuelType = "'Gas'";
+        fuelType = "'Natural Gas'";
       }
       else{
-        fuelType = "'Electric'";
+        fuelType = "'Electricity'";
       }
 
-      std::string query("select value from tabulardatawithstrings where TableName = 'Annual Cost' and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)')) and ColumnName = ");
+      std::string query("select value from TabularDataWithStrings where TableName = 'Annual Cost' and (((RowName = 'Cost') and (Units = '~~$~~')) or (RowName = 'Cost (~~$~~)')) and ColumnName = ");
       query += fuelType;
 
       return execAndReturnFirstDouble(query);
@@ -1366,7 +1252,7 @@ namespace openstudio{
         std::string units = result.getUnitsForFuelType(fuelType);
         for (EndUseCategoryType category : result.categories()){
 
-          std::string query = "SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='" + \
+          std::string query = "SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='" + \
                                fuelType.valueDescription() + "') and (RowName ='" + category.valueDescription() + "') and (Units = '" + units + "')";
 
           boost::optional<double> value = execAndReturnFirstDouble(query);
@@ -1385,454 +1271,454 @@ namespace openstudio{
 
     OptionalDouble SqlFile_Impl::electricityHeating() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Heating') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Heating') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::electricityCooling() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Cooling') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Cooling') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::electricityInteriorLighting() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Interior Lighting') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Interior Lighting') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::electricityExteriorLighting() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Exterior Lighting') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Exterior Lighting') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::electricityInteriorEquipment() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Interior Equipment') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Interior Equipment') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::electricityExteriorEquipment() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Exterior Equipment') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Exterior Equipment') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::electricityFans() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Fans') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Fans') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::electricityPumps() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Pumps') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Pumps') and (Units = 'GJ')");
     }
 
 
     OptionalDouble SqlFile_Impl::electricityHeatRejection() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName ='Heat Rejection') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::electricityHumidification() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Humidification') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName = 'Humidification') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::electricityHeatRecovery() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName ='Heat Recovery') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::electricityWaterSystems() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName ='Water Systems') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName ='Water Systems') and (Units = 'GJ')");
     }
 
 
     OptionalDouble SqlFile_Impl::electricityRefrigeration() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName ='Refrigeration') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName ='Refrigeration') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::electricityGenerators() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName ='Generators') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName ='Generators') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::electricityTotalEndUses() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName ='Total End Uses') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Electricity') and (RowName ='Total End Uses') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasHeating() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Heating') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Heating') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasCooling() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Cooling') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Cooling') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasInteriorLighting() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Interior Lighting') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Interior Lighting') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasExteriorLighting() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasInteriorEquipment() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Interior Equipment') and (Units = 'GJ')");
     }
     OptionalDouble SqlFile_Impl::naturalGasExteriorEquipment() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasFans() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Fans') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Fans') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasPumps() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Pumps') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Pumps') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasHeatRejection() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Heat Rejection') and (Units = 'GJ')");
     }
 
 
     OptionalDouble SqlFile_Impl::naturalGasHumidification() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Humidification') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Humidification') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasHeatRecovery() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Heat Recovery') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasWaterSystems() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Water Systems') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Water Systems') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasRefrigeration() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Refrigeration') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Refrigeration') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasGenerators() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Generators') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Generators') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::naturalGasTotalEndUses() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Total End Uses') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Natural Gas') and (RowName ='Total End Uses') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelHeating() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Heating') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Heating') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelCooling() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Cooling') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Cooling') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelInteriorLighting() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Interior Lighting') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Interior Lighting') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelExteriorLighting() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelInteriorEquipment() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Interior Equipment') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelExteriorEquipment() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelFans() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Fans') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Fans') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelPumps() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Pumps') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Pumps') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelHeatRejection() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Heat Rejection') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelHumidification() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Humidification') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Humidification') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelHeatRecovery() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Heat Recovery') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelWaterSystems() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Water Systems') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Water Systems') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelRefrigeration() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Refrigeration') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Refrigeration') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelGenerators() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Generators') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Generators') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::otherFuelTotalEndUses() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Total End Uses') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Additional Fuel') and (RowName ='Total End Uses') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingHeating() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Heating') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Heating') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingCooling() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Cooling') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Cooling') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingInteriorLighting() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Interior Lighting') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Interior Lighting') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingExteriorLighting() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Exterior Lighting') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingInteriorEquipment() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Interior Equipment') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingExteriorEquipment() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingFans() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Fans') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Fans') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingPumps() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Pumps') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Pumps') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingHeatRejection() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Heat Rejection') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingHumidification() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Humidification') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Humidification') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingHeatRecovery() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Heat Recovery') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingWaterSystems() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Water Systems') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Water Systems') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingRefrigeration() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Refrigeration') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Refrigeration') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingGenerators() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Generators') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Generators') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtCoolingTotalEndUses() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Total End Uses') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Cooling') and (RowName ='Total End Uses') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingHeating() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Heating') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Heating') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingCooling() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Cooling') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Cooling') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingInteriorLighting() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Interior Lights') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Interior Lights') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingExteriorLighting() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Exterior Lights') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Exterior Lights') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingInteriorEquipment() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Interior Equipment') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Interior Equipment') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingExteriorEquipment() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Exterior Equipment') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingFans() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Fans') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Fans') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingPumps() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Pumps') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Pumps') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingHeatRejection() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Heat Rejection') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Heat Rejection') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingHumidification() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Humidification') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Humidification') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingHeatRecovery() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Heat Recovery') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Heat Recovery') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingWaterSystems() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Water Systems') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Water Systems') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingRefrigeration() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Refrigeration') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Refrigeration') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingGenerators() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Generators') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Generators') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::districtHeatingTotalEndUses() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Total End Uses') and (Units = 'GJ')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='District Heating') and (RowName ='Total End Uses') and (Units = 'GJ')");
     }
 
     OptionalDouble SqlFile_Impl::waterHeating() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Heating') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Heating') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterCooling() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Cooling') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Cooling') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterInteriorLighting() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Interior Lighting') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Interior Lighting') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterExteriorLighting() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Exterior Lighting') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Exterior Lighting') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterInteriorEquipment() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Interior Equipment') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Interior Equipment') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterExteriorEquipment() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Exterior Equipment') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Exterior Equipment') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterFans() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Fans') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Fans') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterPumps() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Pumps') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Pumps') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterHeatRejection() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Heat Rejection') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Heat Rejection') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterHumidification() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Humidification') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Humidification') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterHeatRecovery() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Heat Recovery') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Heat Recovery') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterWaterSystems() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Water Systems') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Water Systems') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterRefrigeration() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Refrigeration') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Refrigeration') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterGenerators() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Generators') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Generators') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::waterTotalEndUses() const
     {
-      return execAndReturnFirstDouble("SELECT Value from tabulardatawithstrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Total End Uses') and (Units = 'm3')");
+      return execAndReturnFirstDouble("SELECT Value from TabularDataWithStrings where (reportname = 'AnnualBuildingUtilityPerformanceSummary') and (ReportForString = 'Entire Facility') and (TableName = 'End Uses'  ) and (ColumnName ='Water') and (RowName ='Total End Uses') and (Units = 'm3')");
     }
 
     OptionalDouble SqlFile_Impl::hoursHeatingSetpointNotMet() const
@@ -1935,191 +1821,6 @@ namespace openstudio{
       s << boost::lexical_cast<std::string>(iEpRfNKv->envPeriodIndex);
 
       return execAndReturnFirstDouble(s.str());
-    }
-
-    boost::optional<double> SqlFile_Impl::execAndReturnFirstDouble(const std::string& statement) const
-    {
-      boost::optional<double> value;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-
-        code = sqlite3_step(sqlStmtPtr);
-        if (code == SQLITE_ROW)
-        {
-          value = sqlite3_column_double(sqlStmtPtr, 0);
-        }
-
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-      return value;
-    }
-
-    boost::optional<int> SqlFile_Impl::execAndReturnFirstInt(const std::string& statement) const
-    {
-      boost::optional<int> value;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-
-        code = sqlite3_step(sqlStmtPtr);
-        if (code == SQLITE_ROW)
-        {
-          value = sqlite3_column_int(sqlStmtPtr, 0);
-        }
-
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-      return value;
-    }
-
-    boost::optional<std::string> SqlFile_Impl::execAndReturnFirstString(const std::string& statement) const
-    {
-      boost::optional<std::string> value;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-
-        code = sqlite3_step(sqlStmtPtr);
-        if (code == SQLITE_ROW)
-        {
-          value = columnText(sqlite3_column_text(sqlStmtPtr, 0));
-        }
-
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-      return value;
-    }
-
-    boost::optional<std::vector<double> > SqlFile_Impl::execAndReturnVectorOfDouble(const std::string& statement) const
-    {
-      boost::optional<double> value;
-      boost::optional<std::vector<double> > valueVector;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-        while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
-        {
-          if (!valueVector){
-            valueVector = std::vector<double>();
-          }
-
-          code = sqlite3_step(sqlStmtPtr);
-          if (code == SQLITE_ROW)
-          {
-            value = sqlite3_column_double(sqlStmtPtr, 0);
-            valueVector->push_back(*value);
-          }
-          else  // i didn't get a row.  something is wrong so set the exit condition.
-          {     // should never get here since i test for all documented return states above
-            code = SQLITE_DONE;
-          }
-
-        }// end loop
-
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-
-      return valueVector;
-    }
-
-    boost::optional<std::vector<int> > SqlFile_Impl::execAndReturnVectorOfInt(const std::string& statement) const
-    {
-      boost::optional<int> value;
-      boost::optional<std::vector<int> > valueVector;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-        while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
-        {
-          if (!valueVector){
-            valueVector = std::vector<int>();
-          }
-
-          code = sqlite3_step(sqlStmtPtr);
-          if (code == SQLITE_ROW)
-          {
-            value = sqlite3_column_int(sqlStmtPtr, 0);
-            valueVector->push_back(*value);
-          }
-          else  // i didn't get a row.  something is wrong so set the exit condition.
-          {     // should never get here since i test for all documented return states above
-            code = SQLITE_DONE;
-          }
-
-        }// end loop
-
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-
-      return valueVector;
-    }
-
-    boost::optional<std::vector<std::string> > SqlFile_Impl::execAndReturnVectorOfString(const std::string& statement) const
-    {
-      boost::optional<std::string> value;
-      boost::optional<std::vector<std::string> > valueVector;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        int code = sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-        while ((code!= SQLITE_DONE) && (code != SQLITE_BUSY)&& (code != SQLITE_ERROR) && (code != SQLITE_MISUSE)  )//loop until SQLITE_DONE
-        {
-          if (!valueVector){
-            valueVector = std::vector<std::string>();
-          }
-
-          code = sqlite3_step(sqlStmtPtr);
-          if (code == SQLITE_ROW)
-          {
-            value = columnText(sqlite3_column_text(sqlStmtPtr, 0));
-            valueVector->push_back(*value);
-          }
-          else  // i didn't get a row.  something is wrong so set the exit condition.
-          {     // should never get here since i test for all documented return states above
-            code = SQLITE_DONE;
-          }
-
-        }// end loop
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-      return valueVector;
-    }
-
-
-    // execute a statement and return the error code, used for create/drop tables
-    int SqlFile_Impl::execute(const std::string& statement)
-    {
-      int code = SQLITE_ERROR;
-      if (m_db)
-      {
-        sqlite3_stmt* sqlStmtPtr;
-
-        sqlite3_prepare_v2(m_db, statement.c_str(), -1, &sqlStmtPtr, nullptr);
-
-        code = sqlite3_step(sqlStmtPtr);
-
-        // must finalize to prevent memory leaks
-        sqlite3_finalize(sqlStmtPtr);
-      }
-      return code;
     }
 
     std::vector<double> SqlFile_Impl::timeSeriesValues(const DataDictionaryItem& dataDictionary)
@@ -2984,7 +2685,7 @@ namespace openstudio{
       ReportingFrequency rf = *(wquery.reportingFrequency());
       std::string tsName = *(wquery.timeSeries().get().name());
       if (wquery.keyValues()) {
-        for (const std::string kvName : wquery.keyValues().get().names()) {
+        for (const std::string & kvName : wquery.keyValues().get().names()) {
           OptionalTimeSeries ots = timeSeries(envPeriod,rf.valueDescription(),tsName,kvName);
           if (ots) { result.push_back(*ots); }
         }
@@ -3126,26 +2827,15 @@ namespace openstudio{
     /// get names of all available illuminance maps for the given environment period
     std::vector<std::string> SqlFile_Impl::illuminanceMapNames(const std::string& envPeriod) const
     {
+
+
       std::vector<std::string> names;
 
-      std::stringstream s;
-      s << "select MapName from daylightmaps where Environment = '" << envPeriod << "' COLLATE NOCASE";
-
-      sqlite3_stmt* sqlStmtPtr;
-
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
-      code = sqlite3_step(sqlStmtPtr);
-
-      while (code == SQLITE_ROW)
-      {
-        names.push_back(columnText(sqlite3_column_text(sqlStmtPtr,0)));
-
-        // step to next row
-        code = sqlite3_step(sqlStmtPtr);
+      if(auto _vec = execAndReturnVectorOfString("SELECT MapName FROM DaylightMaps WHERE Environment = ? COLLATE NOCASE",
+          // Bind Args
+          envPeriod)) {
+        names = _vec.get();
       }
-
-      /// must finalize to prevent memory leaks
-      sqlite3_finalize(sqlStmtPtr);
 
       return names;
     }
@@ -3304,24 +2994,11 @@ namespace openstudio{
     {
       std::vector<std::string> names;
 
-      std::stringstream s;
-      s << "select ZoneName from zones where ZoneIndex in (select Zone from daylightmaps where MapNumber = " << mapIndex << ")";
-
-      sqlite3_stmt* sqlStmtPtr;
-
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
-      code = sqlite3_step(sqlStmtPtr);
-
-      while (code == SQLITE_ROW)
-      {
-        names.push_back(columnText(sqlite3_column_text(sqlStmtPtr,0)));
-
-        // step to next row
-        code = sqlite3_step(sqlStmtPtr);
+      if (auto _vec = execAndReturnVectorOfString("SELECT ZoneName FROM Zones WHERE ZoneIndex in (SELECT Zone from DaylightMaps WHERE MapNumber = ?",
+          // Bind Args
+          mapIndex)) {
+        names = _vec.get();
       }
-
-      /// must finalize to prevent memory leaks
-      sqlite3_finalize(sqlStmtPtr);
 
       return names;
     }
@@ -3330,24 +3007,11 @@ namespace openstudio{
     Vector SqlFile_Impl::illuminanceMapX(const int& hourlyReportIndex) const
     {
       std::vector<double> xv;
-      std::stringstream s;
-      s << "select X from daylightmaphourlydata where HourlyReportIndex=" << hourlyReportIndex << " group by X";
-
-      sqlite3_stmt* sqlStmtPtr;
-
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
-      code = sqlite3_step(sqlStmtPtr);
-
-      while (code == SQLITE_ROW)
-      {
-        xv.push_back(sqlite3_column_double(sqlStmtPtr,0));
-
-        // step to next row
-        code = sqlite3_step(sqlStmtPtr);
+      if (auto _vec = execAndReturnVectorOfDouble("SELECT X FROM DaylightMapHourlyData WHERE HourlyReportIndex = ? GROUP BY X",
+          // Bind Args
+          hourlyReportIndex)) {
+        xv = _vec.get();
       }
-
-      /// must finalize to prevent memory leaks
-      sqlite3_finalize(sqlStmtPtr);
 
       // copy std::vector to Vector, will be sorted in ascending order
       Vector x(xv.size());
@@ -3381,24 +3045,12 @@ namespace openstudio{
     Vector SqlFile_Impl::illuminanceMapY(const int& hourlyReportIndex) const
     {
       std::vector<double> yv;
-      std::stringstream s;
-      s << "select Y from daylightmaphourlydata where HourlyReportIndex=" << hourlyReportIndex << " group by Y";
 
-      sqlite3_stmt* sqlStmtPtr;
-
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
-      code = sqlite3_step(sqlStmtPtr);
-
-      while (code == SQLITE_ROW)
-      {
-        yv.push_back(sqlite3_column_double(sqlStmtPtr,0));
-
-        // step to next row
-        code = sqlite3_step(sqlStmtPtr);
+      if (auto _vec = execAndReturnVectorOfDouble("SELECT Y FROM DaylightMapHourlyData WHERE HourlyReportIndex = ? GROUP BY Y",
+          // Bind Args
+          hourlyReportIndex)) {
+        yv = _vec.get();
       }
-
-      /// must finalize to prevent memory leaks
-      sqlite3_finalize(sqlStmtPtr);
 
       // copy std::vector to Vector, will be sorted in ascending order
       Vector y(yv.size());
@@ -3444,25 +3096,15 @@ namespace openstudio{
 
     std::vector<int> SqlFile_Impl::illuminanceMapHourlyReportIndices(const int& mapIndex) const
     {
-      std::vector<int> reportIndices;
-      std::stringstream s;
-      s << "select HourlyReportIndex from daylightmaphourlyreports where MapNumber=" << mapIndex;
+      std::vector<int> result;
 
-      sqlite3_stmt* sqlStmtPtr;
-
-      int code = sqlite3_prepare_v2(m_db, s.str().c_str(),-1,&sqlStmtPtr,nullptr);
-      code = sqlite3_step(sqlStmtPtr);
-      while (code == SQLITE_ROW)
-      {
-        reportIndices.push_back( sqlite3_column_int(sqlStmtPtr,0) );
-        // step to next row
-        code = sqlite3_step(sqlStmtPtr);
+      if (auto _vec = execAndReturnVectorOfInt("SELECT HourlyReportIndex FROM DaylightMapHourlyReports WHERE MapNumber=?",
+          // Bind Args
+          mapIndex)) {
+        result = _vec.get();
       }
 
-      /// must finalize to prevent memory leaks
-      sqlite3_finalize(sqlStmtPtr);
-
-      return reportIndices;
+      return result;
     }
 
 
@@ -3769,22 +3411,13 @@ namespace openstudio{
     // find the illuminance map index by name
     boost::optional<int> SqlFile_Impl::illuminanceMapIndex(const std::string& name) const
     {
-      boost::optional<int> index;
-
-      const std::string& s = "select MapNumber from daylightmaps where MapName like '%" + name + "%'";
-
-      sqlite3_stmt* sqlStmtPtr;
-
-      int code = sqlite3_prepare_v2(m_db, s.c_str(),-1,&sqlStmtPtr,nullptr);
-      code = sqlite3_step(sqlStmtPtr);
-
-      if(code == SQLITE_ROW)
-        index = sqlite3_column_int(sqlStmtPtr,0);
-
-      /// must finalize to prevent memory leaks
-      sqlite3_finalize(sqlStmtPtr);
-
-      return index;
+      // TODO: haven't figured out how to bind properly to the LIKE statement, tried
+      // LIKE ?
+      // LIKE %?%  => sqlite3_prepare_v2 fails
+      // LIKE %%?%%
+      // LIKE '%?%' (not recognized as a placeholder)
+      const std::string& s = "SELECT MapNumber FROM DaylightMaps WHERE MapName LIKE '%" + name + "%'";
+      return execAndReturnFirstInt(s);
     }
 
     void SqlFile_Impl::mf_makeConsistent(std::vector<SqlFileTimeSeriesQuery>& queries)

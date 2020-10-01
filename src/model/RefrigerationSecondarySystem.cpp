@@ -88,8 +88,8 @@ namespace detail {
     static const std::vector<std::string> result{
       // TODO: implement checks
       // FOR SECONDARY SYSTEMS SERVING CASES AND/OR WALKINS:
-      "Refrigeration Secondary Loop Pump Electric Power",
-      "Refrigeration Secondary Loop Pump Electric Energy",
+      "Refrigeration Secondary Loop Pump Electricity Rate",
+      "Refrigeration Secondary Loop Pump Electricity Energy",
       "Refrigeration Secondary Loop Load Heat Transfer Rate",
       "Refrigeration Secondary Loop Load Heat Transfer Energy",
       "Refrigeration Secondary Loop Total Heat Transfer Rate",
@@ -100,8 +100,8 @@ namespace detail {
       "Refrigeration Secondary Loop Receiver Heat Gain Rate",
       "Refrigeration Secondary Loop Receiver Heat Gain Energy",
       // FOR SECONDARY SYSTEMS SERVING AIR CHILLERS:
-      "Refrigeration Air Chiller Secondary Loop Pump Electric Power",
-      "Refrigeration Air Chiller Secondary Loop Pump Electric Energy",
+      "Refrigeration Air Chiller Secondary Loop Pump Electricity Rate",
+      "Refrigeration Air Chiller Secondary Loop Pump Electricity Energy",
       "Refrigeration Air Chiller Secondary Loop Load Heat Transfer Rate",
       "Refrigeration Air Chiller Secondary Loop Load Heat Transfer Energy",
       "Refrigeration Air Chiller Secondary Loop Total Heat Transfer Rate",
@@ -125,7 +125,7 @@ namespace detail {
     std::vector<IdfObject> result;
 
     // Remove from ModelObjectList in RefrigerationSystem(s) if needed
-    this->removeFromSystems();
+    this->removeFromSystem();
 
     if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
       std::vector<IdfObject> removedCasesAndWalkins = caseAndWalkinList->remove();
@@ -713,14 +713,14 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  std::vector<RefrigerationSystem> RefrigerationSecondarySystem_Impl::systems() const {
-    std::vector<RefrigerationSystem> result;
+  boost::optional<RefrigerationSystem> RefrigerationSecondarySystem_Impl::system() const {
+    boost::optional<RefrigerationSystem> result;
 
     RefrigerationSecondarySystem refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
     for (RefrigerationSystem refrigerationSystem : this->model().getConcreteModelObjects<RefrigerationSystem>()) {
       RefrigerationSecondarySystemVector refrigerationSecondarySystems = refrigerationSystem.secondarySystemLoads();
       if ( !refrigerationSecondarySystems.empty() && std::find(refrigerationSecondarySystems.begin(), refrigerationSecondarySystems.end(), refrigerationSecondarySystem) != refrigerationSecondarySystems.end() ) {
-        result.push_back(refrigerationSystem);
+        result = refrigerationSystem;
         break;
       }
     }
@@ -728,11 +728,10 @@ namespace detail {
     return result;
   }
 
-  void RefrigerationSecondarySystem_Impl::removeFromSystems() {
-    RefrigerationSecondarySystem refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
-
-    for (RefrigerationSystem& refrigerationSystem: this->systems()) {
-      refrigerationSystem.removeSecondarySystemLoad(refrigerationSecondarySystem);
+  void RefrigerationSecondarySystem_Impl::removeFromSystem() {
+    if (boost::optional<RefrigerationSystem> refrigerationSystem = this->system()) {
+      RefrigerationSecondarySystem refrigerationSecondarySystem = this->getObject<RefrigerationSecondarySystem>();
+      refrigerationSystem->removeSecondarySystemLoad(refrigerationSecondarySystem);
     }
   }
 
@@ -1105,12 +1104,12 @@ void RefrigerationSecondarySystem::resetEndUseSubcategory() {
   getImpl<detail::RefrigerationSecondarySystem_Impl>()->resetEndUseSubcategory();
 }
 
-std::vector<RefrigerationSystem> RefrigerationSecondarySystem::systems() const {
-  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->systems();
+boost::optional<RefrigerationSystem> RefrigerationSecondarySystem::system() const {
+  return getImpl<detail::RefrigerationSecondarySystem_Impl>()->system();
 }
 
-void RefrigerationSecondarySystem::removeFromSystems() {
-  getImpl<detail::RefrigerationSecondarySystem_Impl>()->removeFromSystems();
+void RefrigerationSecondarySystem::removeFromSystem() {
+  getImpl<detail::RefrigerationSecondarySystem_Impl>()->removeFromSystem();
 }
 
 /// @cond

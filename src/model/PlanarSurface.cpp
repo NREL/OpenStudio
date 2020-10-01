@@ -376,8 +376,10 @@ namespace model {
         if (sqlFile) {
           OptionalString constructionName = oConstruction->name();
           if (constructionName){
-            std::string query = "SELECT InsideAbsorpVis FROM constructions WHERE Name='" + to_upper_copy(*constructionName) + "'";
-            outputResult = sqlFile->execAndReturnFirstDouble(query);
+            std::string query = "SELECT InsideAbsorpVis FROM constructions WHERE Name=?;";
+            outputResult = sqlFile->execAndReturnFirstDouble(query,
+                // bindArgs
+                to_upper_copy(*constructionName));
           }
         }
 
@@ -410,8 +412,8 @@ namespace model {
         if (sqlFile) {
           OptionalString constructionName = oConstruction->name();
           if (constructionName){
-            std::string query = "SELECT OutsideAbsorpVis FROM constructions WHERE Name='" + to_upper_copy(*constructionName) + "'";
-            outputResult = sqlFile->execAndReturnFirstDouble(query);
+            std::string query = "SELECT OutsideAbsorpVis FROM constructions WHERE Name=?;";
+            outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*constructionName) );
           }
         }
 
@@ -448,20 +450,24 @@ namespace model {
           std::string query;
           if (surfaceName){
 
-            if (!outputResult){
-              std::stringstream ss;
-              ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Exterior Fenestration' AND RowName='";
-              ss << to_upper_copy(*surfaceName) << "' AND ColumnName='Glass Visible Transmittance'";
-              query = ss.str();
-              outputResult = sqlFile->execAndReturnFirstDouble(query);
+            if (!outputResult) {
+              std::string query = R"(SELECT Value from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Exterior Fenestration'
+                                        AND ColumnName = 'Glass Visible Transmittance'
+                                        AND RowName = ?;)";
+              outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*surfaceName) );
             }
 
-            if (!outputResult){
-              std::stringstream ss;
-              ss << "SELECT Value FROM tabulardatawithstrings WHERE ReportName='EnvelopeSummary' AND ReportForString='Entire Facility' AND TableName='Interior Fenestration' AND RowName='";
-              ss << to_upper_copy(*surfaceName) << "' AND ColumnName='Glass Visible Transmittance'";
-              query = ss.str();
-              outputResult = sqlFile->execAndReturnFirstDouble(query);
+            if (!outputResult) {
+              std::string query = R"(SELECT Value from TabularDataWithStrings
+                                      WHERE ReportName = 'EnvelopeSummary'
+                                        AND ReportForString = 'Entire Facility'
+                                        AND TableName = 'Interior Fenestration'
+                                        AND ColumnName = 'Glass Visible Transmittance'
+                                        AND RowName = ?;)";
+              outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*surfaceName) );
             }
           }
         }

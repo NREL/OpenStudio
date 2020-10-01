@@ -164,6 +164,12 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACLowTemperatureRad
     idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ElectricFields::TemperatureControlType,tempCtrlType.get());
   }
 
+  // Field Setpoint Control Type
+  if(boost::optional<std::string> setpCtrlType= modelObject.setpointControlType() )
+  {
+    idfObject.setString(ZoneHVAC_LowTemperatureRadiant_ElectricFields::SetpointControlType,setpCtrlType.get());
+  }
+
   // Field Heating Throttling Range
   if( (value = modelObject.heatingThrottlingRange()) )
   {

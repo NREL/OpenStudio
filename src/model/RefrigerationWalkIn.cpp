@@ -91,19 +91,19 @@ namespace detail {
       "Refrigeration Walk In Evaporator Sensible Cooling Energy",
       "Refrigeration Walk In Evaporator Latent Cooling Rate",
       "Refrigeration Walk In Evaporator Latent Cooling Energy",
-      "Refrigeration Walk In Ancillary Electric Power",
-      "Refrigeration Walk In Ancillary Electric Energy",
-      "Refrigeration Walk In Fan Electric Power",
-      "Refrigeration Walk In Fan Electric Energy",
-      "Refrigeration Walk In Lighting Electric Power",
-      "Refrigeration Walk In Lighting Electric Energy",
-      "Refrigeration Walk In Heater Electric Power",
-      "Refrigeration Walk In Heater Electric Energy",
+      "Refrigeration Walk In Ancillary Electricity Rate",
+      "Refrigeration Walk In Ancillary Electricity Energy",
+      "Refrigeration Walk In Fan Electricity Rate",
+      "Refrigeration Walk In Fan Electricity Energy",
+      "Refrigeration Walk In Lighting Electricity Rate",
+      "Refrigeration Walk In Lighting Electricity Energy",
+      "Refrigeration Walk In Heater Electricity Rate",
+      "Refrigeration Walk In Heater Electricity Energy",
 
       // TODO: Implement checks
       // Report only for WalkIns using electric defrost
-      "Refrigeration Walk In Defrost Electric Power",
-      "Refrigeration Walk In Defrost Electric Energy"
+      "Refrigeration Walk In Defrost Electricity Rate",
+      "Refrigeration Walk In Defrost Electricity Energy"
 
       // Reported in ThermalZone
       // Report for each Zone exchanging energy with the WalkIn

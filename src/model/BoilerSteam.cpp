@@ -79,20 +79,20 @@ namespace detail {
       // until then, make this include all possible outputVariableNames for class regardless of fuelType
       // std::string fuelType = this->fuelType(,
       // if (fuelType == "Electricity") {
-        "Boiler Electric Power",
-        "Boiler Electric Energy",
+        "Boiler Electricity Rate",
+        "Boiler Electricity Energy",
       // } else if (fuelType == "NaturalGas") {
-        "Boiler Gas Rate",
-        "Boiler Gas Energy",
+        "Boiler NaturalGas Rate",
+        "Boiler NaturalGas Energy",
       // } else if (fuelType == "Propane") {
         "Boiler Propane Rate",
         "Boiler Propane Energy",
       // } else if (fuelType == "FuelOilNo1") {
-        "Boiler FuelOil#1 Rate",
-        "Boiler FuelOil#1 Energy",
+        "Boiler FuelOilNo1 Rate",
+        "Boiler FuelOilNo1 Energy",
       // } else if (fuelType == "FuelOilNo2") {
-        "Boiler FuelOil#2 Rate",
-        "Boiler FuelOil#2 Energy",
+        "Boiler FuelOilNo2 Rate",
+        "Boiler FuelOilNo2 Energy",
       // } else if (fuelType == "Coal") {
         "Boiler Coal Rate",
         "Boiler Coal Energy",

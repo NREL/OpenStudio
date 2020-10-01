@@ -53,16 +53,16 @@ boost::optional<ModelObject> ReverseTranslator::translateOutputDebuggingData( co
 
   // Note: E+ is wrong here: IDD uses numeric fields to store what is really a boolean. If 1 = true, else false.
 
-  // Report Debugging Data: Optional Double **as a boolean...**
-  if (boost::optional<double> _reportDebuggingData = wo.getDouble(Output_DebuggingDataFields::ReportDebuggingData)) {
-    if (openstudio::equal(1.0, _reportDebuggingData.get())) {
+  // Report Debugging Data: Optional Boolean
+  if (boost::optional<std::string> _reportDebuggingData = wo.getString(Output_DebuggingDataFields::ReportDebuggingData, true)) {
+    if(istringEqual("Yes", _reportDebuggingData.get())) {
       reportDebuggingData = true;
     }
   }
 
-  // Report During Warmup: Optional Double **as a boolean...**
-  if (boost::optional<double> _reportDuringWarmup = wo.getDouble(Output_DebuggingDataFields::ReportDuringWarmup)) {
-    if (openstudio::equal(1.0, _reportDuringWarmup.get())) {
+  // Report During Warmup: Optional Boolean
+  if (boost::optional<std::string> _reportDuringWarmup = wo.getString(Output_DebuggingDataFields::ReportDuringWarmup, true)) {
+    if(istringEqual("Yes", _reportDuringWarmup.get())) {
       reportDuringWarmup = true;
     }
   }

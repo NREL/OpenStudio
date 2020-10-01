@@ -98,9 +98,17 @@ namespace detail {
 
     std::vector<Surface> surfaces() const;
 
+    std::string fluidtoRadiantSurfaceHeatTransferModel() const;
+
+    bool isFluidtoRadiantSurfaceHeatTransferModelDefaulted() const;
+
     double hydronicTubingInsideDiameter() const;
 
     bool isHydronicTubingInsideDiameterDefaulted() const;
+
+    double hydronicTubingOutsideDiameter() const;
+
+    bool isHydronicTubingOutsideDiameterDefaulted() const;
 
     boost::optional<double> hydronicTubingLength() const;
 
@@ -108,13 +116,23 @@ namespace detail {
 
     bool isHydronicTubingLengthAutosized() const;
 
+    double hydronicTubingConductivity() const;
+
+    bool isHydronicTubingConductivityDefaulted() const;
+
     std::string temperatureControlType() const;
 
     bool isTemperatureControlTypeDefaulted() const;
 
+    std::string setpointControlType() const;
+
+    bool isSetpointControlTypeDefaulted() const;
+
     std::string numberofCircuits() const;
 
     double circuitLength() const;
+
+    boost::optional<Schedule> changeoverDelayTimePeriodSchedule() const;
 
     boost::optional<double> autosizedHydronicTubingLength() const ;
 
@@ -140,9 +158,17 @@ namespace detail {
 
     void resetRadiantSurfaceType();
 
+    bool setFluidtoRadiantSurfaceHeatTransferModel(const std::string& fluidtoRadiantSurfaceHeatTransferModel);
+
+    void resetFluidtoRadiantSurfaceHeatTransferModel();
+
     bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
 
     void resetHydronicTubingInsideDiameter();
+
+    bool setHydronicTubingOutsideDiameter(double hydronicTubingOutsideDiameter);
+
+    void resetHydronicTubingOutsideDiameter();
 
     bool setHydronicTubingLength(boost::optional<double> hydronicTubingLength);
 
@@ -150,13 +176,25 @@ namespace detail {
 
     void autosizeHydronicTubingLength();
 
-    bool setTemperatureControlType(std::string temperatureControlType);
+    bool setHydronicTubingConductivity(double hydronicTubingConductivity);
+
+    void resetHydronicTubingConductivity();
+
+    bool setTemperatureControlType(const std::string& temperatureControlType);
 
     void resetTemperatureControlType();
 
-    bool setNumberofCircuits(std::string numberofCircuits);
+    bool setSetpointControlType(const std::string& setpointControlType);
+
+    void resetSetpointControlType();
+
+    bool setNumberofCircuits(const std::string& numberofCircuits);
 
     bool setCircuitLength(double circuitLength);
+
+    bool setChangeoverDelayTimePeriodSchedule(Schedule& schedule);
+
+    void resetChangeoverDelayTimePeriodSchedule();
 
     boost::optional<ThermalZone> thermalZone() const override;
 

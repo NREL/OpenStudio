@@ -70,8 +70,8 @@ namespace detail {
   const std::vector<std::string>& FluidCoolerSingleSpeed_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Cooling Tower Fan Electric Power",
-      "Cooling Tower Fan Electric Energy",
+      "Cooling Tower Fan Electricity Rate",
+      "Cooling Tower Fan Electricity Energy",
       "Cooling Tower Heat Transfer Rate",
       "Cooling Tower Inlet Temperature",
       "Cooling Tower Outlet Temperature",

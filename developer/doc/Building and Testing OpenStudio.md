@@ -9,7 +9,6 @@ Configured build environments: https://github.com/NREL/OpenStudio/wiki/Configuri
 - VMWare
 - IncrediBuild
 - S3
-- SketchUp
 - MarkdownPad 2
 
 
@@ -455,32 +454,13 @@ At https://github.com/NREL/OpenStudio/blob/develop/openstudiocore/src/osversion/
 
 With Git, commit above files (Commit Message = `Update version to X.Y.Z+1`) to the develop branch
 
-SketchUp Extension Signature
-=========
-Check if either file below has been updated:
-- `openstudiocore/ruby/openstudio/sketchup_plugin/OpenStudio.rb` (Note: not valid in OS2.x)
-- `openstudiocore/sketchup_plugin/plugin/OpenStudio/Startup.rb`
-
-If either file was updated, the SketchUp Extension Signature must be updated in
-- `openstudiocore/sketchup_plugin/plugin/OpenStudio/OpenStudio.hash`
-
-To do this: (Note: not valid in OS2.x)
-- Build an OpenStudio package
-- Zip the contents (OpenStudio.rb and OpenStudio folder) in `build\_CPack_Packages\win64\NSIS\OpenStudio-x.y.z.sha-Win64\Ruby\Plugins`
-- Change the extension of the zip file from .zip to .rbz
-- Login to https://extensions.sketchup.com/en/developer_center/extension_signature as openstudio@nrel.gov
-- Drag the .rbz file into the upload box, upload the file, click 'Sign The Extension' (do not select any options to encrypt the ruby files)
-- Download the signed .rbz file, and extract the files over the originals in `build\_CPack_Packages\win64\NSIS\OpenStudio-x.y.z.sha-Win64\Ruby\Plugins`
-- Copy the new OpenStudio.hash file over the existing one in `openstudiocore/ruby/openstudio/sketchup_plugin`, and commit the new OpenStudio.hash file
-- Rebuild the OpenStudio package
-
 AMI BUILD
 =========
 TBD
 
 Compatibility Matrix
 ====================
-On https://github.com/NREL/OpenStudio/wiki/OpenStudio-Version-Compatibility-Matrix
+On https://github.com/NREL/OpenStudio/wiki/OpenStudio-SDK-Version-Compatibility-Matrix
 
 - Select `Edit` and add a new row of information
 

@@ -36,6 +36,7 @@
 namespace openstudio {
 namespace model {
 
+class RefrigerationSystem;
 class Schedule;
 
 namespace detail {
@@ -177,6 +178,8 @@ namespace detail {
     //@}
     /** @name Other */
     //@{
+
+    boost::optional<RefrigerationSystem> system() const;
 
     //@}
    protected:

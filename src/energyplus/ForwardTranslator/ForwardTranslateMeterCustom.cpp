@@ -75,7 +75,7 @@ boost::optional<IdfObject> ForwardTranslator::translateMeterCustom( MeterCustom 
   // FuelType
   if( (s = modelObject.fuelType()) )
   {
-    idfObject.setString(Meter_CustomFields::FuelType,s.get());
+    idfObject.setString(Meter_CustomFields::ResourceType,s.get());
   }
 
   // Handle the (Key Name, Output Variable or Meter Name) pairs

@@ -40,6 +40,7 @@ namespace model {
 // WaterStorageTank object not used
 //class WaterStorageTank;
 class Schedule;
+class RefrigerationSystem;
 
 namespace detail {
 
@@ -243,6 +244,10 @@ class MODEL_API RefrigerationCondenserEvaporativeCooled : public ParentObject {
   //@}
   /** @name Other */
   //@{
+
+  // The parent RefrigerationSystem, which rejects heat to this condenser
+  // This is a convenience method to find any RefrigerationSystem that uses this condenser
+  boost::optional<RefrigerationSystem> system() const;
 
   //@}
  protected:

@@ -75,6 +75,9 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_PerformancePrecisionTradeoffs
 
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
   EXPECT_EQ(0.3, performancePrecisionTradeoffs.maxZoneTempDiff());
+
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_EQ(0.002, performancePrecisionTradeoffs.maxAllowedDelTemp());
 }
 
 // test setting and getting
@@ -123,6 +126,16 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_SetGetFields) {
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
   EXPECT_EQ(0.3, performancePrecisionTradeoffs.maxZoneTempDiff());
 
+  EXPECT_TRUE(performancePrecisionTradeoffs.setMaxAllowedDelTemp(0.05));
+  EXPECT_FALSE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_EQ(0.05, performancePrecisionTradeoffs.maxAllowedDelTemp());
+  // max 0.1
+  EXPECT_FALSE(performancePrecisionTradeoffs.setMaxAllowedDelTemp(1));
+  EXPECT_FALSE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_EQ(0.05, performancePrecisionTradeoffs.maxAllowedDelTemp());
+  performancePrecisionTradeoffs.resetMaxAllowedDelTemp();
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_EQ(0.002, performancePrecisionTradeoffs.maxAllowedDelTemp());
 }
 
 // test cloning it
@@ -139,6 +152,7 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone)
   EXPECT_TRUE(performancePrecisionTradeoffs.setZoneRadiantExchangeAlgorithm("CarrollMRT"));
   EXPECT_TRUE(performancePrecisionTradeoffs.setOverrideMode("Advanced"));
   EXPECT_TRUE(performancePrecisionTradeoffs.setMaxZoneTempDiff(0.65));
+  EXPECT_TRUE(performancePrecisionTradeoffs.setMaxAllowedDelTemp(0.05));
 
   // clone it into the same model
   PerformancePrecisionTradeoffs performancePrecisionTradeoffsClone = performancePrecisionTradeoffs.clone(model).cast<PerformancePrecisionTradeoffs>();
@@ -150,6 +164,8 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone)
   EXPECT_EQ("Advanced", performancePrecisionTradeoffsClone.overrideMode());
   EXPECT_FALSE(performancePrecisionTradeoffsClone.isMaxZoneTempDiffDefaulted());
   EXPECT_EQ(0.65, performancePrecisionTradeoffsClone.maxZoneTempDiff());
+  EXPECT_FALSE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_EQ(0.05, performancePrecisionTradeoffs.maxAllowedDelTemp());
 
   // clone it into a different model
   Model model2;
@@ -162,6 +178,8 @@ TEST_F(ModelFixture, PerformancePrecisionTradeoffs_Clone)
   EXPECT_EQ("Advanced", performancePrecisionTradeoffsClone2.overrideMode());
   EXPECT_FALSE(performancePrecisionTradeoffsClone2.isMaxZoneTempDiffDefaulted());
   EXPECT_EQ(0.65, performancePrecisionTradeoffsClone2.maxZoneTempDiff());
+  EXPECT_FALSE(performancePrecisionTradeoffsClone2.isMaxAllowedDelTempDefaulted());
+  EXPECT_EQ(0.05, performancePrecisionTradeoffsClone2.maxAllowedDelTemp());
 }
 
 // check that remove works

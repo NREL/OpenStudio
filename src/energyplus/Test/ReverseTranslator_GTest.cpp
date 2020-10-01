@@ -434,7 +434,7 @@ TEST_F(EnergyPlusFixture,ReverseTranslatorTest_TranslateSite)
 }
 
 TEST_F(EnergyPlusFixture,ReverseTranslatorTest_SmallOffice) {
-  openstudio::path p = resourcesPath() / toPath("resultsviewer/SmallOffice/SmallOffice.idf");
+  openstudio::path p = resourcesPath() / toPath("energyplus/SmallOffice/SmallOffice.idf");
   Workspace ws = Workspace::load(p).get();
   ReverseTranslator rt;
   Model model = rt.translateWorkspace(ws);
@@ -731,7 +731,12 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
   ASSERT_TRUE(model.getOptionalUniqueModelObject<openstudio::model::PerformancePrecisionTradeoffs>());
 
   openstudio::model::PerformancePrecisionTradeoffs performancePrecisionTradeoffs = model.getUniqueModelObject<openstudio::model::PerformancePrecisionTradeoffs>();
+  EXPECT_FALSE(performancePrecisionTradeoffs.isUseCoilDirectSolutionsDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.useCoilDirectSolutions());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isZoneRadiantExchangeAlgorithmDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName) {
@@ -806,7 +811,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   openstudio::WorkspaceObject epBuildingSurfaceDetailed2 = workspace.addObject(idf_surface2).get();
 
 
-  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
+  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
   idf_zoneProp.setString(0, "Thermal Zone 1"); // Zone or ZoneList Name
   idf_zoneProp.setString(1, "Surface 1"); // From Surface 1
   idf_zoneProp.setString(2, "Surface 2"); // To Surface 2
@@ -877,7 +882,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   openstudio::WorkspaceObject epBuildingSurfaceDetailed = workspace.addObject(idf_surface).get();
 
 
-  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName);
+  openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
   idf_zoneProp.setString(0, "Thermal Zone 1"); // Zone or ZoneList Name
   idf_zoneProp.setString(1, "Surface 1"); // From Surface 1
   idf_zoneProp.setString(2, "Surface 1"); // To Surface 1

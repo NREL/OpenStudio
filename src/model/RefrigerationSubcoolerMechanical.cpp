@@ -139,6 +139,21 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical_Impl::system() const {
+
+    boost::optional<RefrigerationSystem> system;
+    // We use getModelObjectSources to check if more than one
+    std::vector<RefrigerationSystem> systems = getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
+
+    if( systems.size() > 0u) {
+      if( systems.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
+      }
+      system = systems[0];
+    }
+    return system;
+  }
+
 } // detail
 
 RefrigerationSubcoolerMechanical::RefrigerationSubcoolerMechanical(const Model& model)
@@ -175,6 +190,10 @@ bool RefrigerationSubcoolerMechanical::setOutletControlTemperature(double outlet
 
 void RefrigerationSubcoolerMechanical::resetOutletControlTemperature() {
   getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->resetOutletControlTemperature();
+}
+
+boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical::system() const {
+  return getImpl<detail::RefrigerationSubcoolerMechanical_Impl>()->system();
 }
 
 /// @cond

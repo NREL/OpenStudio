@@ -427,6 +427,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     modelObject = translateConstructionAirBoundary(workspaceObject);
     break;
   }
+  case openstudio::IddObjectType::Construction_InternalSource:
+  {
+    modelObject = translateConstructionWithInternalSource(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::Controller_OutdoorAir :
     {
       //modelObject = translateControllerOutdoorAir(workspaceObject);
@@ -804,6 +809,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
       modelObject = translateOutputVariable(workspaceObject);
       break;
     }
+  case openstudio::IddObjectType::OutputControl_Files:
+  {
+    modelObject = translateOutputControlFiles(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::OutputControl_Table_Style :
     {
       break; // no-op
@@ -840,7 +850,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     }
   case openstudio::IddObjectType::RunPeriodControl_SpecialDays :
     {
-      //modelObject = translateRunPeriodControlSpecialDays(workspaceObject);
+      modelObject = translateRunPeriodControlSpecialDays(workspaceObject);
       break;
     }
   case openstudio::IddObjectType::Schedule_Compact :
@@ -1059,6 +1069,11 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     modelObject = translateWindowPropertyFrameAndDivider(workspaceObject);
     break;
   }
+  case openstudio::IddObjectType::WindowShadingControl:
+  {
+    modelObject = translateWindowShadingControl(workspaceObject);
+    break;
+  }
   case openstudio::IddObjectType::Zone:
     {
       modelObject = translateZone(workspaceObject);
@@ -1114,7 +1129,7 @@ boost::optional<ModelObject> ReverseTranslator::translateAndMapWorkspaceObject(c
     modelObject = translateZoneMixing(workspaceObject);
     break;
   }
-  case openstudio::IddObjectType::ZoneProperty_UserViewFactors_bySurfaceName:
+  case openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName:
   {
     modelObject = translateZonePropertyUserViewFactorsBySurfaceName(workspaceObject);
     break;

@@ -30,6 +30,9 @@
 #include "RefrigerationSubcoolerLiquidSuction.hpp"
 #include "RefrigerationSubcoolerLiquidSuction_Impl.hpp"
 
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
+
 #include <utilities/idd/OS_Refrigeration_Subcooler_LiquidSuction_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -148,6 +151,21 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationSubcoolerLiquidSuction_Impl::system() const {
+
+    boost::optional<RefrigerationSystem> system;
+    // We use getModelObjectSources to check if more than one
+    std::vector<RefrigerationSystem> systems = getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
+
+    if( systems.size() > 0u) {
+      if( systems.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
+      }
+      system = systems[0];
+    }
+    return system;
+  }
+
 } // detail
 
 RefrigerationSubcoolerLiquidSuction::RefrigerationSubcoolerLiquidSuction(const Model& model)
@@ -203,6 +221,10 @@ bool RefrigerationSubcoolerLiquidSuction::setDesignVaporInletTemperature(double 
 
 void RefrigerationSubcoolerLiquidSuction::resetDesignVaporInletTemperature() {
   getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->resetDesignVaporInletTemperature();
+}
+
+boost::optional<RefrigerationSystem> RefrigerationSubcoolerLiquidSuction::system() const {
+  return getImpl<detail::RefrigerationSubcoolerLiquidSuction_Impl>()->system();
 }
 
 /// @cond

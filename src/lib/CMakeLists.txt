@@ -22,6 +22,7 @@ target_link_libraries(
 target_link_libraries(
  openstudiolib
  INTERFACE
+ CONAN_PKG::sqlite3
  CONAN_PKG::boost
  CONAN_PKG::jsoncpp
  CONAN_PKG::cpprestsdk

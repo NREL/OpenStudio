@@ -124,6 +124,11 @@ boost::optional<IdfObject> ForwardTranslator::translateWaterHeaterHeatPump(
     idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::MinimumInletAirTemperatureforCompressorOperation,value);
   }
 
+  {
+    auto value = modelObject.maximumInletAirTemperatureforCompressorOperation();
+    idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::MaximumInletAirTemperatureforCompressorOperation,value);
+  }
+
   idfObject.setDouble(WaterHeater_HeatPump_PumpedCondenserFields::MaximumInletAirTemperatureforCompressorOperation,94);
 
   {

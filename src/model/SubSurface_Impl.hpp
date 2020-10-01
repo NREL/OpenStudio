@@ -150,7 +150,9 @@ namespace detail {
 
     bool allowShadingControl() const;
 
-    boost::optional<ShadingControl> shadingControl() const;
+    std::vector<ShadingControl> shadingControls() const;
+
+    unsigned int numberofShadingControls() const;
 
     bool allowWindowPropertyFrameAndDivider() const;
 
@@ -182,9 +184,13 @@ namespace detail {
 
     void autocalculateViewFactortoGround();
 
-    bool setShadingControl(const ShadingControl& shadingControl);
+    bool addShadingControl(ShadingControl& shadingControl);
 
-    void resetShadingControl();
+    bool addShadingControls(std::vector<ShadingControl>& shadingControls);
+
+    void removeShadingControl(ShadingControl& shadingControl);
+
+    void removeAllShadingControls();
 
     bool setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider);
 

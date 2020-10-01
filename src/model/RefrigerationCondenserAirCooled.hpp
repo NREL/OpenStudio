@@ -39,6 +39,7 @@ namespace model {
 
 class CurveLinear;
 class ThermalZone;
+class RefrigerationSystem;
 
 namespace detail {
 
@@ -148,6 +149,10 @@ class MODEL_API RefrigerationCondenserAirCooled : public ParentObject {
   //@}
   /** @name Other */
   //@{
+
+  // The parent RefrigerationSystem, which rejects heat to this condenser
+  // This is a convenience method to find any RefrigerationSystem that uses this condenser
+  boost::optional<RefrigerationSystem> system() const;
 
   //@}
  protected:

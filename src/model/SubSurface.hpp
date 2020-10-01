@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "PlanarSurface.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -92,7 +93,11 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   bool allowShadingControl() const;
 
-  boost::optional<ShadingControl> shadingControl() const;
+  OS_DEPRECATED boost::optional<ShadingControl> shadingControl() const;
+
+  std::vector<ShadingControl> shadingControls() const;
+
+  unsigned int numberofShadingControls() const;
 
   bool allowWindowPropertyFrameAndDivider() const;
 
@@ -124,15 +129,28 @@ class MODEL_API SubSurface : public PlanarSurface {
 
   void autocalculateViewFactortoGround();
 
-  bool setShadingControl(const ShadingControl& shadingControl);
+  // This method is deprecated, please use addShadingControl or addShadingControls.
+  // This will remove this SubSurface from any shading control(s) it is on (`removeAllShadingControls()`) then will call `addShadingControl(shadingControl)`
+  // NOTE: for backward compatibility with C++ interfaces, the argument is kept as `const ShadingControl&`,
+  // but internally this will do a const_cast since the ShadingControl will be mutated
+  OS_DEPRECATED bool setShadingControl(const ShadingControl& shadingControl);
 
-  void resetShadingControl();
+  // Replaced with removeAllShadingControls
+  OS_DEPRECATED void resetShadingControl();
+
+  bool addShadingControl(ShadingControl& shadingControl);
+
+  bool addShadingControls(std::vector<ShadingControl>& shadingControls);
+
+  void removeShadingControl(ShadingControl& shadingControl);
+
+  void removeAllShadingControls();
 
   bool setWindowPropertyFrameAndDivider(const WindowPropertyFrameAndDivider& windowPropertyFrameAndDivider);
 
   void resetWindowPropertyFrameAndDivider();
 
-  bool setMultiplier(double multiplShadingControlier);
+  bool setMultiplier(double multiplier);
 
   void resetMultiplier();
 

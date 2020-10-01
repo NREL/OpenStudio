@@ -168,6 +168,18 @@ namespace detail {
     return result;
   }
 
+  double ConstructionWithInternalSource_Impl::twoDimensionalTemperatureCalculationPosition() const
+  {
+    boost::optional<double> value = getDouble(OS_Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition,true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ConstructionWithInternalSource_Impl::setTwoDimensionalTemperatureCalculationPosition(double twoDimensionalTemperatureCalculationPosition) {
+    bool result = setDouble(OS_Construction_InternalSourceFields::TwoDimensionalTemperatureCalculationPosition,twoDimensionalTemperatureCalculationPosition);
+    return result;
+  }
+
   ConstructionWithInternalSource ConstructionWithInternalSource_Impl::reverseConstructionWithInternalSource() const
   {
     MaterialVector reverseLayers(this->layers());
@@ -178,6 +190,7 @@ namespace detail {
     int reverseTemperatureCalculationRequestedAfterLayerNumber = numLayers - this->temperatureCalculationRequestedAfterLayerNumber();
     int dimensionsForTheCTFCalculation = this->dimensionsForTheCTFCalculation();
     double tubeSpacing = this->tubeSpacing();
+    double twoDimensionalTemperatureCalculationPosition = this->twoDimensionalTemperatureCalculationPosition();
 
     Model model = this->model();
     for (const ConstructionWithInternalSource& other : model.getConcreteModelObjects<ConstructionWithInternalSource>()) {
@@ -195,6 +208,10 @@ namespace detail {
       }
 
       if (other.tubeSpacing() != tubeSpacing){
+        continue;
+      }
+
+      if (other.twoDimensionalTemperatureCalculationPosition() != twoDimensionalTemperatureCalculationPosition){
         continue;
       }
 
@@ -225,6 +242,7 @@ namespace detail {
     result.setTemperatureCalculationRequestedAfterLayerNumber(reverseTemperatureCalculationRequestedAfterLayerNumber);
     result.setDimensionsForTheCTFCalculation(dimensionsForTheCTFCalculation);
     result.setTubeSpacing(tubeSpacing);
+    result.setTwoDimensionalTemperatureCalculationPosition(twoDimensionalTemperatureCalculationPosition);
     result.setLayers(reverseLayers);
 
     return result;
@@ -308,6 +326,14 @@ double ConstructionWithInternalSource::tubeSpacing() const {
 
 bool ConstructionWithInternalSource::setTubeSpacing(double tubeSpacing) {
   return getImpl<detail::ConstructionWithInternalSource_Impl>()->setTubeSpacing(tubeSpacing);
+}
+
+double ConstructionWithInternalSource::twoDimensionalTemperatureCalculationPosition() const {
+  return getImpl<detail::ConstructionWithInternalSource_Impl>()->twoDimensionalTemperatureCalculationPosition();
+}
+
+bool ConstructionWithInternalSource::setTwoDimensionalTemperatureCalculationPosition(double twoDimensionalTemperatureCalculationPosition) {
+  return getImpl<detail::ConstructionWithInternalSource_Impl>()->setTwoDimensionalTemperatureCalculationPosition(twoDimensionalTemperatureCalculationPosition);
 }
 
 ConstructionWithInternalSource ConstructionWithInternalSource::reverseConstructionWithInternalSource() const

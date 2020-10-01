@@ -76,8 +76,8 @@ namespace detail {
   const std::vector<std::string>& ElectricEquipment_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Electric Equipment Electric Power",
-      "Electric Equipment Electric Energy",
+      "Electric Equipment Electricity Rate",
+      "Electric Equipment Electricity Energy",
       "Electric Equipment Radiant Heating Energy",
       "Electric Equipment Radiant Heating Rate",
       "Electric Equipment Convective Heating Energy",
@@ -90,8 +90,8 @@ namespace detail {
       "Electric Equipment Total Heating Rate"
 
       // Reported in ThermalZone
-      //"Zone Electric Equipment Electric Power",
-      //"Zone Electric Equipment Electric Energy",
+      //"Zone Electric Equipment Electricity Rate",
+      //"Zone Electric Equipment Electricity Energy",
       //"Zone Electric Equipment Radiant Heating Energy",
       //"Zone Electric Equipment Radiant Heating Rate",
       //"Zone Electric Equipment Convective Heating Energy",

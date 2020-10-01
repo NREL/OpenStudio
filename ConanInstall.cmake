@@ -37,7 +37,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   #conan_add_remote(NAME jmarrec
   #  URL https://api.bintray.com/conan/jmarrec/testing)
 
-  # Enable revisions in conan: check if they are already enabled, if not do it an warn user
+  # Enable revisions in conan: check if they are already enabled, if not do it and warn user
   execute_process(
     COMMAND ${CONAN_CMD} config get general.revisions_enabled
     OUTPUT_VARIABLE CONAN_REV_STATUS
@@ -65,7 +65,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     set(CONAN_GTEST "")
   endif()
 
-  # DLM: add option for shared libs if we are building shared?
+  if(BUILD_RUBY_BINDINGS)
+    set(CONAN_RUBY "openstudio_ruby/2.5.5@nrel/testing")
+  endif()
 
   # This will create the conanbuildinfo.cmake in the current binary dir, not the cmake_binary_dir
   conan_cmake_run(REQUIRES
@@ -73,7 +75,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     ${CONAN_QT}
     "openssl/1.1.0l#7f3fa5cfcfba31fffa344c71a9795176" # ruby 2.5.5 won't work with 1.1.1x, so use 1.1.0l here to try to force every package to align on the same as ruby
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    "openstudio_ruby/2.5.5@nrel/stable#dcdbeda50b48bbd0b2bf3dd1612b3896"    # TODO: Temp #@nrel/stable
+    "openstudio_ruby/2.5.5@nrel/stable#29449dcdcc813fb3f4730365902afc3c"    # TODO: Temp #@nrel/stable
     "boost/1.73.0#4129a76c9b83c300fc103e36d1908792"
     "pugixml/1.10#64b3ebc897bb9d9854c8a2443bf112a8"
     "jsoncpp/1.9.3#073a6d3cb40911d7c8027bddb6ae7dbf"

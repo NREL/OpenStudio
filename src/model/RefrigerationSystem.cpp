@@ -48,6 +48,13 @@
 #include "RefrigerationSubcoolerLiquidSuction_Impl.hpp"
 #include "RefrigerationSubcoolerMechanical.hpp"
 #include "RefrigerationSubcoolerMechanical_Impl.hpp"
+#include "RefrigerationCondenserAirCooled.hpp"
+#include "RefrigerationCondenserAirCooled_Impl.hpp"
+#include "RefrigerationCondenserWaterCooled.hpp"
+#include "RefrigerationCondenserWaterCooled_Impl.hpp"
+#include "RefrigerationCondenserEvaporativeCooled.hpp"
+#include "RefrigerationCondenserEvaporativeCooled_Impl.hpp"
+
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "Model.hpp"
@@ -94,8 +101,8 @@ namespace detail {
     static const std::vector<std::string> result{
       // TODO: Implement checks
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE CASES AND/OR WALKINS:
-      "Refrigeration System Total Compressor Electric Power",
-      "Refrigeration System Total Compressor Electric Energy",
+      "Refrigeration System Total Compressor Electricity Rate",
+      "Refrigeration System Total Compressor Electricity Energy",
       "Refrigeration System Average Compressor COP",
       "Refrigeration System Total Compressor Heat Transfer Rate",
       "Refrigeration System Total Compressor Heat Transfer Energy",
@@ -117,19 +124,19 @@ namespace detail {
       "Refrigeration System Suction Pipe Suction Temperature",
       "Refrigeration System Thermostatic Expansion Valve Liquid Temperature",
       "Refrigeration System Estimated High Stage Refrigerant Mass Flow Rate",
-      "Refrigeration System Total High Stage Compressor Electric Energy",
-      "Refrigeration System Total High Stage Compressor Electric Power",
+      "Refrigeration System Total High Stage Compressor Electricity Energy",
+      "Refrigeration System Total High Stage Compressor Electricity Rate",
       "Refrigeration System Total High Stage Compressor Heat Transfer Energy",
       "Refrigeration System Total High Stage Compressor Heat Transfer Rate",
-      "Refrigeration System Total Low and High Stage Compressor Electric Energy",
-      "Refrigeration System Total Low Stage Compressor Electric Energy",
-      "Refrigeration System Total Low Stage Compressor Electric Power",
+      "Refrigeration System Total Low and High Stage Compressor Electricity Energy",
+      "Refrigeration System Total Low Stage Compressor Electricity Energy",
+      "Refrigeration System Total Low Stage Compressor Electricity Rate",
       "Refrigeration System Total Low Stage Compressor Heat Transfer Energy",
       "Refrigeration System Total Low Stage Compressor Heat Transfer Rate",
       "Refrigeration System Estimated Low Stage Refrigerant Mass Flow Rate",
       // THE FOLLOWING OUTPUTS ARE AVAILABLE FOR SYSTEMS THAT SERVE AIR CHILLERS:
-      "Refrigeration Air Chiller System Total Compressor Electric Power",
-      "Refrigeration Air Chiller System Total Compressor Electric Energy",
+      "Refrigeration Air Chiller System Total Compressor Electricity Rate",
+      "Refrigeration Air Chiller System Total Compressor Electricity Energy",
       "Refrigeration Air Chiller System Average Compressor COP",
       "Refrigeration Air Chiller System Total Compressor Heat Transfer Rate",
       "Refrigeration Air Chiller System Total Compressor Heat Transfer Energy",
@@ -152,13 +159,13 @@ namespace detail {
       "Refrigeration Air Chiller System Suction Temperature",
       "Refrigeration Air Chiller System TXV Liquid Temperature",
       "Refrigeration Air Chiller System Estimated High Stage Refrigerant Mass Flow Rate",
-      "Refrigeration Air Chiller System Total High Stage Compressor Electric Energy",
-      "Refrigeration Air Chiller System Total High Stage Compressor Electric Power",
+      "Refrigeration Air Chiller System Total High Stage Compressor Electricity Energy",
+      "Refrigeration Air Chiller System Total High Stage Compressor Electricity Rate",
       "Refrigeration Air Chiller System Total High Stage Compressor Heat Transfer Energy",
       "Refrigeration Air Chiller System Total High Stage Compressor Heat Transfer Rate",
-      "Refrigeration Air Chiller System Total Low and High Stage Compressor Electric Energy",
-      "Refrigeration Air Chiller System Total Low Stage Compressor Electric Energy",
-      "Refrigeration Air Chiller System Total Low Stage Compressor Electric Power",
+      "Refrigeration Air Chiller System Total Low and High Stage Compressor Electricity Energy",
+      "Refrigeration Air Chiller System Total Low Stage Compressor Electricity Energy",
+      "Refrigeration Air Chiller System Total Low Stage Compressor Electricity Rate",
       "Refrigeration Air Chiller System Total Low Stage Compressor Heat Transfer Energy",
       "Refrigeration Air Chiller System Total Low Stage Compressor Heat Transfer Rate",
       "Refrigeration Air Chiller System Estimated Low Stage Refrigerant Mass Flow Rate"
@@ -189,9 +196,23 @@ namespace detail {
       result.insert(result.end(), removedTransferLoads.begin(), removedTransferLoads.end());
     }
 
+    // We're clearing the compressor/HighStage compressor list objects first. otherwise a compressor on the high stage list will call
+    // RefrgerationCompressor_Impl::system which will try to locate the compressorList which was deleted first
+    for (auto& c: compressors()) {
+      std::vector<IdfObject> removedCompressor = c.remove();
+      result.insert(result.end(), removedCompressor.begin(), removedCompressor.end());
+    }
+    for (auto& c: highStageCompressors()) {
+      std::vector<IdfObject> removedCompressor = c.remove();
+      result.insert(result.end(), removedCompressor.begin(), removedCompressor.end());
+    }
     if (boost::optional<ModelObjectList> compressorList = this->compressorList()) {
       std::vector<IdfObject> removedCompressors = compressorList->remove();
       result.insert(result.end(), removedCompressors.begin(), removedCompressors.end());
+    }
+    if (boost::optional<ModelObjectList> highStageCompressorList = this->highStageCompressorList()) {
+      std::vector<IdfObject> removedHighStageCompressors = highStageCompressorList->remove();
+      result.insert(result.end(), removedHighStageCompressors.begin(), removedHighStageCompressors.end());
     }
 
     if ( boost::optional<RefrigerationSubcoolerMechanical> mechSubcooler = this->mechanicalSubcooler() ) {
@@ -202,11 +223,6 @@ namespace detail {
     if ( boost::optional<RefrigerationSubcoolerLiquidSuction> liqSuctionSubcooler = this->liquidSuctionHeatExchangerSubcooler() ) {
       std::vector<IdfObject> removedLiqSuctionSubcooler = liqSuctionSubcooler->remove();
       result.insert(result.end(), removedLiqSuctionSubcooler.begin(), removedLiqSuctionSubcooler.end());
-    }
-
-    if (boost::optional<ModelObjectList> highStageCompressorList = this->highStageCompressorList()) {
-      std::vector<IdfObject> removedHighStageCompressors = highStageCompressorList->remove();
-      result.insert(result.end(), removedHighStageCompressors.begin(), removedHighStageCompressors.end());
     }
 
     std::vector<IdfObject> removedRefrigerationSystem = ModelObject_Impl::remove();
@@ -451,6 +467,8 @@ namespace detail {
 
     if( boost::optional<RefrigerationSystem> currentSystem = refrigerationCase.system() )
     {
+      LOG(Warn, refrigerationCase.briefDescription() << " was removed from its existing RefrigerationSystem named '"
+          << currentSystem->nameString() << "'.");
       currentSystem->removeCase(refrigerationCase);
     }
     boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
@@ -478,6 +496,8 @@ namespace detail {
 
     if( boost::optional<RefrigerationSystem> currentSystem = refrigerationWalkin.system() )
     {
+      LOG(Warn, refrigerationWalkin.briefDescription() << " was removed from its existing RefrigerationSystem named '"
+          << currentSystem->nameString() << "'.");
       currentSystem->removeWalkin(refrigerationWalkin);
     }
     boost::optional<ModelObjectList> modelObjectList = refrigeratedCaseAndWalkInList();
@@ -495,6 +515,14 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addCompressor(const RefrigerationCompressor& refrigerationCompressor) {
+    // Enforce unicity
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationCompressor.system() )
+    {
+      LOG(Warn, refrigerationCompressor.briefDescription() << " was removed from its existing RefrigerationSystem (non High Stage) named '"
+          << currentSystem->nameString() << "'.");
+      currentSystem->removeCompressor(refrigerationCompressor);
+    }
+
     return compressorList().addModelObject(refrigerationCompressor);
   }
 
@@ -507,6 +535,13 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addHighStageCompressor( const RefrigerationCompressor& refrigerationHighStageCompressor ) {
+    // Enforce unicity
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationHighStageCompressor.system() )
+    {
+      LOG(Warn, refrigerationHighStageCompressor.briefDescription() << " was removed from its existing RefrigerationSystem (High Stage) named '"
+          << currentSystem->nameString() << "'.");
+      currentSystem->removeCompressor(refrigerationHighStageCompressor);
+    }
     boost::optional<ModelObjectList> modelObjectList = highStageCompressorList();
     return addTemplate<RefrigerationCompressor>(refrigerationHighStageCompressor, modelObjectList);
   }
@@ -522,6 +557,13 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addSecondarySystemLoad( const RefrigerationSecondarySystem& refrigerationSecondarySystem) {
+    // Enforce unicity
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationSecondarySystem.system() )
+    {
+      LOG(Warn, refrigerationSecondarySystem.briefDescription() << " was removed from its existing RefrigerationSystem named '"
+          << currentSystem->nameString() << "'.");
+      currentSystem->removeSecondarySystemLoad(refrigerationSecondarySystem);
+    }
     boost::optional<ModelObjectList> modelObjectList = refrigerationTransferLoadList();
     return addTemplate<RefrigerationSecondarySystem>(refrigerationSecondarySystem, modelObjectList);
   }
@@ -537,6 +579,13 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::addCascadeCondenserLoad( const RefrigerationCondenserCascade& refrigerationCondenserCascade) {
+    // Enforce unicity
+    if( boost::optional<RefrigerationSystem> currentSystem = refrigerationCondenserCascade.system() )
+    {
+      LOG(Warn, refrigerationCondenserCascade.briefDescription() << " was removed from its existing RefrigerationSystem named '"
+          << currentSystem->nameString() << "'.");
+      currentSystem->removeCascadeCondenserLoad(refrigerationCondenserCascade);
+    }
     boost::optional<ModelObjectList> modelObjectList = refrigerationTransferLoadList();
     return addTemplate<RefrigerationCondenserCascade>(refrigerationCondenserCascade, modelObjectList);
   }
@@ -570,6 +619,8 @@ namespace detail {
     // Enforce unicity
     if( boost::optional<RefrigerationSystem> currentSystem = refrigerationAirChiller.system() )
     {
+      LOG(Warn, refrigerationAirChiller.briefDescription() << " was removed from its existing RefrigerationSystem named '"
+          << currentSystem->nameString() << "'.");
       currentSystem->removeAirChiller(refrigerationAirChiller);
     }
 
@@ -622,8 +673,44 @@ namespace detail {
   }
 
   bool RefrigerationSystem_Impl::setRefrigerationCondenser(const ModelObject& refrigerationCondenser) {
+
+    boost::optional<RefrigerationSystem> currentSystem;
+    // Enforce unicity
+    if (auto refrigerationCondenserAirCooled = refrigerationCondenser.optionalCast<RefrigerationCondenserAirCooled>()) {
+      currentSystem = refrigerationCondenserAirCooled->system();
+    }
+
+    if (!currentSystem) {
+      if (auto refrigerationCondenserWaterCooled = refrigerationCondenser.optionalCast<RefrigerationCondenserWaterCooled>()) {
+        currentSystem = refrigerationCondenserWaterCooled->system();
+      }
+    }
+
+    if (!currentSystem) {
+      if (auto refrigerationCondenserEvaporativeCooled = refrigerationCondenser.optionalCast<RefrigerationCondenserEvaporativeCooled>()) {
+        currentSystem = refrigerationCondenserEvaporativeCooled->system();
+      }
+    }
+
+    if (!currentSystem) {
+      if (auto refrigerationCondenserCascade = refrigerationCondenser.optionalCast<RefrigerationCondenserCascade>()) {
+        currentSystem = refrigerationCondenserCascade->heatRejectingSystem();
+      }
+    }
+
     bool result = setPointer(OS_Refrigeration_SystemFields::RefrigerationCondenserName, refrigerationCondenser.handle());
+    if (result && currentSystem && (currentSystem->handle() != this->handle())) {
+      LOG(Warn, refrigerationCondenser.briefDescription() << " was removed from its existing RefrigerationSystem (Condenser Name) named '"
+          << currentSystem->nameString() << "'.");
+      currentSystem->resetRefrigerationCondenser();
+    }
+
     return result;
+  }
+
+  void RefrigerationSystem_Impl::resetRefrigerationCondenser() {
+    bool result = setString(OS_Refrigeration_SystemFields::RefrigerationCondenserName, "");
+    OS_ASSERT(result);
   }
 
   bool RefrigerationSystem_Impl::setCompressorList(const ModelObjectList& modelObjectList) {
@@ -655,6 +742,13 @@ namespace detail {
   bool RefrigerationSystem_Impl::setMechanicalSubcooler(const boost::optional<RefrigerationSubcoolerMechanical>& refrigerationSubcoolerMechanical) {
     bool result(false);
     if (refrigerationSubcoolerMechanical) {
+      // Enforce unicity
+      if( boost::optional<RefrigerationSystem> currentSystem = refrigerationSubcoolerMechanical->system() )
+      {
+        LOG(Warn, refrigerationSubcoolerMechanical->briefDescription() << " was removed from its existing RefrigerationSystem named '"
+            << currentSystem->nameString() << "'.");
+        currentSystem->resetMechanicalSubcooler();
+      }
       result = setPointer(OS_Refrigeration_SystemFields::MechanicalSubcoolerName, refrigerationSubcoolerMechanical.get().handle());
     }
     else {
@@ -672,7 +766,14 @@ namespace detail {
   bool RefrigerationSystem_Impl::setLiquidSuctionHeatExchangerSubcooler(const boost::optional<RefrigerationSubcoolerLiquidSuction>& refrigerationSubcoolerLiquidSuction) {
     bool result(false);
     if (refrigerationSubcoolerLiquidSuction) {
-      result = setPointer(OS_Refrigeration_SystemFields::LiquidSuctionHeatExchangerSubcoolerName, refrigerationSubcoolerLiquidSuction.get().handle());
+      // Enforce unicity
+      if( boost::optional<RefrigerationSystem> currentSystem = refrigerationSubcoolerLiquidSuction->system() )
+      {
+        LOG(Warn, refrigerationSubcoolerLiquidSuction->briefDescription() << " was removed from its existing RefrigerationSystem named '"
+            << currentSystem->nameString() << "'.");
+        currentSystem->resetLiquidSuctionHeatExchangerSubcooler();
+      }
+      result = setPointer(OS_Refrigeration_SystemFields::LiquidSuctionHeatExchangerSubcoolerName, refrigerationSubcoolerLiquidSuction->handle());
     }
     else {
       resetLiquidSuctionHeatExchangerSubcooler();
@@ -1020,6 +1121,10 @@ void RefrigerationSystem::removeAllAirChillers() {
 
 bool RefrigerationSystem::setRefrigerationCondenser(const ModelObject& refrigerationCondenser) {
   return getImpl<detail::RefrigerationSystem_Impl>()->setRefrigerationCondenser(refrigerationCondenser);
+}
+
+void RefrigerationSystem::resetRefrigerationCondenser() {
+  return getImpl<detail::RefrigerationSystem_Impl>()->resetRefrigerationCondenser();
 }
 
 bool RefrigerationSystem::setMinimumCondensingTemperature(double minimumCondensingTemperature) {

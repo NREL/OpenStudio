@@ -90,7 +90,7 @@ namespace detail {
   const std::vector<std::string>& CoilHeatingDXVariableSpeed_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Heating Coil Electric Power",
+      "Heating Coil Electricity Rate",
       "Heating Coil Heating Rate",
       "Heating Coil Sensible Heating Rate",
       "Heating Coil Source Side Heat Transfer Rate",
@@ -104,13 +104,13 @@ namespace detail {
       "Heating Coil Upper Speed Level",
       "Heating Coil Neighboring Speed Levels Ratio",
       "VSAirtoAirHP Recoverable Waste Heat",
-      "Heating Coil Electric Energy",
+      "Heating Coil Electricity Energy",
       "Heating Coil Heating Energy",
       "Heating Coil Source Side Heat Transfer Energy",
-      "Heating Coil Defrost Electric Power",
-      "Heating Coil Defrost Electric Energy",
-      "Heating Coil Crankcase Heater Electric Power",
-      "Heating Coil Crankcase Heater Electric Energy"
+      "Heating Coil Defrost Electricity Rate",
+      "Heating Coil Defrost Electricity Energy",
+      "Heating Coil Crankcase Heater Electricity Rate",
+      "Heating Coil Crankcase Heater Electricity Energy"
     };
     return result;
   }

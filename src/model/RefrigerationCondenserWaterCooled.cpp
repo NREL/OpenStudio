@@ -30,6 +30,9 @@
 #include "RefrigerationCondenserWaterCooled.hpp"
 #include "RefrigerationCondenserWaterCooled_Impl.hpp"
 
+#include "RefrigerationSystem.hpp"
+#include "RefrigerationSystem_Impl.hpp"
+
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -406,6 +409,21 @@ namespace detail {
     OS_ASSERT(result);
   }
 
+  boost::optional<RefrigerationSystem> RefrigerationCondenserWaterCooled_Impl::system() const {
+
+    boost::optional<RefrigerationSystem> system;
+    // We use getModelObjectSources to check if more than one
+    std::vector<RefrigerationSystem> systems = getObject<ModelObject>().getModelObjectSources<RefrigerationSystem>(RefrigerationSystem::iddObjectType());
+
+    if( systems.size() > 0u) {
+      if( systems.size() > 1u) {
+        LOG(Error, briefDescription() << " is referenced by more than one RefrigerationSystem, returning the first");
+      }
+      system = systems[0];
+    }
+    return system;
+  }
+
 } // detail
 
 RefrigerationCondenserWaterCooled::RefrigerationCondenserWaterCooled(const Model& model)
@@ -628,6 +646,10 @@ bool RefrigerationCondenserWaterCooled::setCondensatePipingRefrigerantInventory(
 
 void RefrigerationCondenserWaterCooled::resetCondensatePipingRefrigerantInventory() {
   getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->resetCondensatePipingRefrigerantInventory();
+}
+
+boost::optional<RefrigerationSystem> RefrigerationCondenserWaterCooled::system() const {
+  return getImpl<detail::RefrigerationCondenserWaterCooled_Impl>()->system();
 }
 
 /// @cond

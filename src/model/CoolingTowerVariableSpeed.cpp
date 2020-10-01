@@ -80,8 +80,8 @@ namespace detail {
     static const std::vector<std::string> result{
 
     // Common Variables
-    "Cooling Tower Fan Electric Power",
-    "Cooling Tower Fan Electric Energy",
+    "Cooling Tower Fan Electricity Rate",
+    "Cooling Tower Fan Electricity Energy",
     "Cooling Tower Heat Transfer Rate",
     "Cooling Tower Inlet Temperature",
     "Cooling Tower Outlet Temperature",
@@ -116,7 +116,7 @@ namespace detail {
     // DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
     // if specified
     // if (this->basinHeaterCapacity() > 0) {
-      "Cooling Tower Basin Heater Electric Power",
+      "Cooling Tower Basin Heater Electricity Rate",
       "Cooling Tower Basin Heater Electric Energy"
     };
 

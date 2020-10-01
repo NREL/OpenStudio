@@ -38,6 +38,10 @@
 #include "../Model.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
+#include "../Site.hpp"
+#include "../Site_Impl.hpp"
+#include "../Facility.hpp"
+#include "../Facility_Impl.hpp"
 #include "../Building.hpp"
 #include "../Building_Impl.hpp"
 #include "../BuildingStory.hpp"
@@ -63,6 +67,8 @@
 
 #include "../../utilities/geometry/FloorplanJS.hpp"
 #include "../../utilities/geometry/ThreeJS.hpp"
+
+#include <resources.hxx>
 
 #include <json/json.h>
 
@@ -337,6 +343,93 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator) {
 }
 
 
+TEST_F(ModelFixture, FloorplanJSForwardTranslator_Merging) {
+  std::string json(
+    "{\"application\":{\"currentSelections\":{\"story\":{\"id\":\"1\",\"name\":\"Story "
+    "1\",\"handle\":null,\"geometry_id\":\"2\",\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":0,\"multiplier\":0,\"spaces\":[{\"id\":"
+    "\"3\",\"name\":\"Space 1 - "
+    "1\",\"color\":\"#007373\",\"handle\":null,\"face_id\":\"12\",\"daylighting_controls\":[],\"building_unit_id\":null,\"thermal_zone_id\":null,"
+    "\"space_type_id\":null,\"construction_set_id\":null,\"type\":\"space\"}],\"windows\":[],\"shading\":[],\"images\":[]},\"space\":{\"id\":\"3\","
+    "\"name\":\"Space 1 - "
+    "1\",\"color\":\"#007373\",\"handle\":null,\"face_id\":\"12\",\"daylighting_controls\":[],\"building_unit_id\":null,\"thermal_zone_id\":null,"
+    "\"space_type_id\":null,\"construction_set_id\":null,\"type\":\"space\"},\"shading\":null,\"image\":null,\"building_unit\":null,\"thermal_zone\":"
+    "null,\"space_type\":null,\"tool\":\"Rectangle\",\"mode\":\"spaces\"},\"modes\":[\"spaces\",\"shading\",\"building_units\",\"thermal_zones\","
+    "\"space_types\",\"images\"],\"tools\":[\"Pan\",\"Drag\",\"Rectangle\",\"Polygon\",\"Eraser\",\"Select\",\"Map\",\"Fill\"],\"scale\":{}},"
+    "\"project\":{\"config\":{\"units\":\"m\",\"language\":\"EN-US\",\"north_axis\":0},\"grid\":{\"visible\":true,\"spacing\":50},\"view\":{\"min_"
+    "x\":-502.5817565917968,\"min_y\":-194.06196213425125,\"max_x\":497.4182434082031,\"max_y\":194.06196213425122},\"map\":{\"initialized\":true,"
+    "\"enabled\":true,\"visible\":true,\"latitude\":39.7653,\"longitude\":-104.9863,\"zoom\":4.5,\"rotation\":0,\"elevation\":0},\"previous_story\":{"
+    "\"visible\":true}},\"stories\":[{\"id\":\"1\",\"name\":\"Story "
+    "1\",\"handle\":null,\"below_floor_plenum_height\":0,\"floor_to_ceiling_height\":0,\"multiplier\":0,\"spaces\":[{\"id\":\"3\",\"name\":\"Space 1 "
+    "- "
+    "1\",\"color\":\"#007373\",\"handle\":null,\"face_id\":\"12\",\"daylighting_controls\":[],\"building_unit_id\":null,\"thermal_zone_id\":null,"
+    "\"space_type_id\":null,\"construction_set_id\":null,\"type\":\"space\"}],\"windows\":[],\"shading\":[],\"images\":[],\"geometry\":{\"id\":\"2\","
+    "\"vertices\":[{\"id\":\"4\",\"x\":-152.22119140625,\"y\":0.5,\"edge_ids\":[\"8\",\"11\"]},{\"id\":\"5\",\"x\":99.5,\"y\":0.5,\"edge_ids\":["
+    "\"8\",\"9\"]},{\"id\":\"6\",\"x\":99.5,\"y\":-99.5,\"edge_ids\":[\"9\",\"10\"]},{\"id\":\"7\",\"x\":-152.22119140625,\"y\":-99.5,\"edge_ids\":["
+    "\"10\",\"11\"]}],\"edges\":[{\"id\":\"8\",\"vertex_ids\":[\"4\",\"5\"],\"face_ids\":[\"12\"]},{\"id\":\"9\",\"vertex_ids\":[\"5\",\"6\"],\"face_"
+    "ids\":[\"12\"]},{\"id\":\"10\",\"vertex_ids\":[\"6\",\"7\"],\"face_ids\":[\"12\"]},{\"id\":\"11\",\"vertex_ids\":[\"7\",\"4\"],\"face_ids\":["
+    "\"12\"]}],\"faces\":[{\"id\":\"12\",\"edge_ids\":[\"8\",\"9\",\"10\",\"11\"],\"edge_order\":[1,1,1,1]}]}}],\"building_units\":[],\"thermal_"
+    "zones\":[],\"space_types\":[],\"construction_sets\":[],\"windows\":[],\"daylighting_controls\":[]}");
+
+  boost::optional<FloorplanJS> floorplan1 = FloorplanJS::load(json);
+  ASSERT_TRUE(floorplan1);
+
+  // start with an empty model
+  Model currentModel;
+  Site site = currentModel.getUniqueModelObject<Site>();
+  Facility facility = currentModel.getUniqueModelObject<Facility>();
+  Building building = currentModel.getUniqueModelObject<Building>();
+
+  // translate the floorplan to a new model
+  ThreeJSReverseTranslator rt1;
+  ThreeScene threeScene1 = floorplan1->toThreeScene(false);
+  boost::optional<Model> newModel1 = rt1.modelFromThreeJS(threeScene1);
+  std::map<UUID, UUID> handleMapping1 = rt1.handleMapping();
+  ASSERT_TRUE(newModel1);
+
+  // add mappings between current model and new model for Site, Facility, and Building objects
+  handleMapping1[currentModel.getUniqueModelObject<Site>().handle()] = newModel1->getUniqueModelObject<Site>().handle();
+  handleMapping1[currentModel.getUniqueModelObject<Facility>().handle()] = newModel1->getUniqueModelObject<Facility>().handle();
+  handleMapping1[currentModel.getUniqueModelObject<Building>().handle()] = newModel1->getUniqueModelObject<Building>().handle();
+  
+  // merge new model into current model
+  ModelMerger mm1;
+  mm1.mergeModels(currentModel, *newModel1, handleMapping1);
+  EXPECT_EQ(0u, mm1.warnings().size());
+  EXPECT_EQ(0u, mm1.errors().size());
+
+  // should have original Site, Facility, and Building objects
+  EXPECT_EQ(site.handle(), currentModel.getUniqueModelObject<Site>().handle());
+  EXPECT_EQ(facility.handle(), currentModel.getUniqueModelObject<Facility>().handle());
+  EXPECT_EQ(building.handle(), currentModel.getUniqueModelObject<Building>().handle());
+
+  // update the floorplan with handles in the current model
+  model::FloorplanJSForwardTranslator ft;
+  FloorplanJS floorplan2 = ft.updateFloorplanJS(*floorplan1, currentModel, true);
+
+  // translate the floorplan to a second new model
+  ThreeJSReverseTranslator rt2;
+  ThreeScene threeScene2 = floorplan2.toThreeScene(false);
+  boost::optional<Model> newModel2 = rt2.modelFromThreeJS(threeScene2);
+  std::map<UUID, UUID> handleMapping2 = rt2.handleMapping();
+  ASSERT_TRUE(newModel2);
+
+  // add mappings between current model and new model for Site, Facility, and Building objects
+  handleMapping2[currentModel.getUniqueModelObject<Site>().handle()] = newModel2->getUniqueModelObject<Site>().handle();
+  handleMapping2[currentModel.getUniqueModelObject<Facility>().handle()] = newModel2->getUniqueModelObject<Facility>().handle();
+  handleMapping2[currentModel.getUniqueModelObject<Building>().handle()] = newModel2->getUniqueModelObject<Building>().handle();
+  
+  // merge second new model into current model
+  ModelMerger mm2;
+  mm2.mergeModels(currentModel, *newModel2, handleMapping2);
+  EXPECT_EQ(0u, mm2.warnings().size());
+  EXPECT_EQ(0u, mm2.errors().size());
+
+  // should have original Site, Facility, and Building objects
+  EXPECT_EQ(site.handle(), currentModel.getUniqueModelObject<Site>().handle());
+  EXPECT_EQ(facility.handle(), currentModel.getUniqueModelObject<Facility>().handle());
+  EXPECT_EQ(building.handle(), currentModel.getUniqueModelObject<Building>().handle());
+}
+
 TEST_F(ModelFixture, FloorplanJSForwardTranslator_Colors) {
 
   Model model;
@@ -496,15 +589,15 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue3267) {
   unsigned story1Doors = 0;
   double story1MinZ = std::numeric_limits<double>::max();
   double story1MaxZ = std::numeric_limits<double>::min();
-  for (const auto surface : space1->surfaces()) {
-    for (const auto vertex : surface.vertices()) {
+  for (const auto& surface : space1->surfaces()) {
+    for (const auto& vertex : surface.vertices()) {
       story1MinZ = std::min(story1MinZ, vertex.z());
       story1MaxZ = std::max(story1MaxZ, vertex.z());
     }
   }
-  for (const auto surface : space1->surfaces()) {
-    for (const auto subSurface : surface.subSurfaces()) {
-      for (const auto vertex : subSurface.vertices()) {
+  for (const auto& surface : space1->surfaces()) {
+    for (const auto& subSurface : surface.subSurfaces()) {
+      for (const auto& vertex : subSurface.vertices()) {
         EXPECT_GE(vertex.z(), story1MinZ);
         EXPECT_LT(vertex.z(), story1MaxZ);
       }
@@ -524,16 +617,16 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue3267) {
   unsigned story2Doors = 0;
   double story2MinZ = std::numeric_limits<double>::max();
   double story2MaxZ = std::numeric_limits<double>::min();
-  for (const auto surface : space2->surfaces()) {
-    for (const auto vertex : surface.vertices()) {
+  for (const auto& surface : space2->surfaces()) {
+    for (const auto& vertex : surface.vertices()) {
       story2MinZ = std::min(story2MinZ, vertex.z());
       story2MaxZ = std::max(story2MaxZ, vertex.z());
     }
   }
 
-  for (const auto surface : space2->surfaces()) {
-    for (const auto subSurface : surface.subSurfaces()) {
-      for (const auto vertex : subSurface.vertices()) {
+  for (const auto& surface : space2->surfaces()) {
+    for (const auto& subSurface : surface.subSurfaces()) {
+      for (const auto& vertex : subSurface.vertices()) {
         EXPECT_GE(vertex.z(), story2MinZ);
         EXPECT_LT(vertex.z(), story2MaxZ);
       }
@@ -610,8 +703,8 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_MultistoryShadingRotation) {
 
   double shadingMinZ = std::numeric_limits<double>::max();
   double shadingMaxZ = std::numeric_limits<double>::min();
-  for (const auto shadingSurface : shadingSurfaceGroup1->shadingSurfaces()) {
-    for (const auto vertex : shadingSurface.vertices()) {
+  for (const auto& shadingSurface : shadingSurfaceGroup1->shadingSurfaces()) {
+    for (const auto& vertex : shadingSurface.vertices()) {
       shadingMinZ = std::min(shadingMinZ, vertex.z());
       shadingMaxZ = std::max(shadingMaxZ, vertex.z());
     }
@@ -620,3 +713,79 @@ TEST_F(ModelFixture, FloorplanJSForwardTranslator_MultistoryShadingRotation) {
   EXPECT_NEAR(shadingMinZ, 0.3048*0.0, 0.01);
 }
 
+
+TEST_F(ModelFixture, FloorplanJSForwardTranslator_Issue4036) {
+  
+  openstudio::path beforeMergePath = resourcesPath() / toPath("utilities/Filetypes/Floorspace_Issue4036_BeforeMerge.json");
+  openstudio::path afterMergePath = resourcesPath() / toPath("utilities/Filetypes/Floorspace_Issue4036_AfterMerge.json");
+   
+  std::stringstream ss;
+  std::ifstream inFile;
+  inFile.open(beforeMergePath.string());
+  ss << inFile.rdbuf(); 
+  std::string beforeMergeString = ss.str();  
+  inFile.close();
+  ss.clear();
+
+  inFile.open(afterMergePath.string());
+  ss << inFile.rdbuf();
+  std::string afterMergeString = ss.str();
+  inFile.close();
+  ss.clear();
+
+  boost::optional<FloorplanJS> beforeFloorplan = FloorplanJS::load(beforeMergeString);
+  ASSERT_TRUE(beforeFloorplan);
+
+  boost::optional<FloorplanJS> afterFloorplan = FloorplanJS::load(afterMergeString);
+  ASSERT_TRUE(afterFloorplan);
+
+  // translate the floorplans to models
+  boost::optional<Model> beforeModel;
+  {
+    ThreeScene threeScene = beforeFloorplan->toThreeScene(true);
+    ThreeJSReverseTranslator rt;
+    beforeModel = rt.modelFromThreeJS(threeScene);
+  }
+  ASSERT_TRUE(beforeModel);
+
+  //beforeModel->save(toPath("beforeModel.osm"), true);
+
+  boost::optional<Model> afterModel;
+  {
+    ThreeScene threeScene = afterFloorplan->toThreeScene(true);
+    ThreeJSReverseTranslator rt;
+    afterModel = rt.modelFromThreeJS(threeScene);
+  }
+  ASSERT_TRUE(afterModel);
+
+  //afterModel->save(toPath("afterModel.osm"), true);
+
+  std::vector<Model> models {beforeModel.get(), afterModel.get()};
+  for (const auto& model : models) {
+    unsigned numSpaces = 0;
+    unsigned numZones = 0;
+    unsigned numPlenums = 0;
+    
+    SpaceType plenumSpaceType = model.plenumSpaceType();
+    for (const auto& space : model.getConcreteModelObjects<Space>()) {
+      numSpaces += 1;
+      ASSERT_TRUE(space.thermalZone());
+      if (space.spaceType() && space.spaceType()->handle() == plenumSpaceType.handle()) {
+        numPlenums += 1;
+        for (const auto& surface : space.surfaces()) {
+          // no doors or windows on the plenums
+          EXPECT_EQ(0, surface.subSurfaces().size());
+        }
+      }
+    }
+
+    for (const auto& zone : model.getConcreteModelObjects<ThermalZone>()) {
+      numZones += 1;
+      EXPECT_EQ(1u, zone.spaces().size());
+    }
+
+    EXPECT_EQ(numSpaces, 9);
+    EXPECT_EQ(numZones, 9);
+    EXPECT_EQ(numPlenums, 6);
+  }
+}

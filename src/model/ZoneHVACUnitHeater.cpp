@@ -119,8 +119,8 @@ namespace detail {
     static const std::vector<std::string> result{
       "Zone Unit Heater Heating Rate",
       "Zone Unit Heater Heating Energy",
-      "Zone Unit Heater Fan Electric Power",
-      "Zone Unit Heater Fan Electric Energy",
+      "Zone Unit Heater Fan Electricity Rate",
+      "Zone Unit Heater Fan Electricity Energy",
       "Zone Unit Heater Fan Availability Status",
       "Zone Unit Heater Fan Part Load Ratio"
     };

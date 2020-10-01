@@ -1178,6 +1178,11 @@ TEST_F(ModelFixture,AirLoopHVAC_AvailabilityManagers)
   AirLoopHVAC a2 = a.clone(m).cast<AirLoopHVAC>();
   ASSERT_EQ(9u, a2.availabilityManagers().size());
 
+  // Test Clone, different model
+  Model m2;
+  AirLoopHVAC a3 = a.clone(m2).cast<AirLoopHVAC>();
+  ASSERT_EQ(9u, a3.availabilityManagers().size());
+
   // reset shouldn't affect the clone
   a.resetAvailabilityManagers();
   ASSERT_EQ(0u, a.availabilityManagers().size());

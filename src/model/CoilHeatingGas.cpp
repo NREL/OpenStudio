@@ -113,8 +113,8 @@ namespace detail{
       "Heating Coil Air Heating Rate",
 
       // This is the parasitic electric load associated with the coil operation, such as an inducer fan
-      "Heating Coil Electric Energy",
-      "Heating Coil Electric Power",
+      "Heating Coil Electricity Energy",
+      "Heating Coil Electricity Rate",
 
       "Heating Coil Runtime Fraction",
 
@@ -123,28 +123,28 @@ namespace detail{
       // TODO: DLM: the return type of this method needs to change to std::vector<std::string> in ModelObject
       // until then, make this include all possible outputVariableNames for class regardless of fuelType
       // std::string fuelType = this->fuelType();
-      // => ["NaturalGas", "Propane", "Diesel", "Gasoline", "FuelOilNo1", "FuelOilNo2", "OtherFuel1", "OtherFuel2"]
+      // => ["NaturalGas", "Propane", "Diesel", "Gasoline", "Coal", "FuelOilNo1", "FuelOilNo2", "OtherFuel1", "OtherFuel2"]
       //         "Heating Coil <Fuel Type> Energy",
       // if (fuelType == "NaturalGas") {
-        "Heating Coil Gas Energy",
-        "Heating Coil Gas Rate",
-        "Heating Coil Ancillary Gas Energy",
-        "Heating Coil Ancillary Gas Rate",
+        "Heating Coil NaturalGas Energy",
+        "Heating Coil NaturalGas Rate",
+        "Heating Coil Ancillary NaturalGas Energy",
+        "Heating Coil Ancillary NaturalGas Rate",
       // } else if (fuelType == "Propane") {
         "Heating Coil Propane Energy",
         "Heating Coil Propane Rate",
         "Heating Coil Ancillary Propane Energy",
         "Heating Coil Ancillary Propane Rate",
       // } else if (fuelType == "FuelOilNo1") {
-        "Heating Coil FuelOil#1 Energy",
-        "Heating Coil FuelOil#1 Rate",
-        "Heating Coil Ancillary FuelOil#1 Energy",
-        "Heating Coil Ancillary FuelOil#1 Rate",
+        "Heating Coil FuelOilNo1 Energy",
+        "Heating Coil FuelOilNo1 Rate",
+        "Heating Coil Ancillary FuelOilNo1 Energy",
+        "Heating Coil Ancillary FuelOilNo1 Rate",
       // } else if (fuelType == "FuelOilNo2") {
-        "Heating Coil FuelOil#2 Energy",
-        "Heating Coil FuelOil#2 Rate",
-        "Heating Coil Ancillary FuelOil#2 Energy",
-        "Heating Coil Ancillary FuelOil#2 Rate",
+        "Heating Coil FuelOilNo2 Energy",
+        "Heating Coil FuelOilNo2 Rate",
+        "Heating Coil Ancillary FuelOilNo2 Energy",
+        "Heating Coil Ancillary FuelOilNo2 Rate",
       // } else if (fuelType == "Diesel") {
         "Heating Coil Diesel Energy",
         "Heating Coil Diesel Rate",
@@ -155,6 +155,11 @@ namespace detail{
         "Heating Coil Gasoline Rate",
         "Heating Coil Ancillary Gasoline Energy",
         "Heating Coil Ancillary Gasoline Rate",
+      // } else if (fuelType == "Coal") {
+        "Heating Coil Coal Energy",
+        "Heating Coil Coal Rate",
+        "Heating Coil Ancillary Coal Energy",
+        "Heating Coil Ancillary Coal Rate",
       // } else if (fuelType == "OtherFuel1") {
         "Heating Coil OtherFuel1 Energy",
         "Heating Coil OtherFuel1 Rate",

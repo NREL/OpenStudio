@@ -94,6 +94,8 @@ namespace detail {
     /** @name Other */
     //@{
 
+    boost::optional<RefrigerationSystem> system() const;
+
     //@}
    protected:
    private:

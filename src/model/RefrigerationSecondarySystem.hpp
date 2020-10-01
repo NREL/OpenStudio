@@ -153,8 +153,8 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
 
   bool isEndUseSubcategoryDefaulted() const;
 
-  // Returns the parent RefrigerationSystem(s)
-  std::vector<RefrigerationSystem> systems() const;
+  // Returns the parent RefrigerationSystem if any
+  boost::optional<RefrigerationSystem> system() const;
 
   //@}
   /** @name Setters */
@@ -241,7 +241,7 @@ class MODEL_API RefrigerationSecondarySystem : public ParentObject {
   void resetEndUseSubcategory();
 
   // Remove from parent system if any
-  void removeFromSystems();
+  void removeFromSystem();
 
   //@}
   /** @name Other */

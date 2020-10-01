@@ -88,12 +88,12 @@ namespace detail {
       "Refrigeration Zone Air Chiller Latent Cooling Rate",
       "Refrigeration Zone Air Chiller Latent Cooling Energy",
       "Refrigeration Zone Air Chiller Water Removed Mass Flow Rate",
-      "Refrigeration Zone Air Chiller Total Electric Power",
-      "Refrigeration Zone Air Chiller Total Electric Energy",
-      "Refrigeration Zone Air Chiller Fan Electric Power",
-      "Refrigeration Zone Air Chiller Fan Electric Energy",
-      "Refrigeration Zone Air Chiller Heater Electric Power",
-      "Refrigeration Zone Air Chiller Heater Electric Energy",
+      "Refrigeration Zone Air Chiller Total Electricity Rate",
+      "Refrigeration Zone Air Chiller Total Electricity Energy",
+      "Refrigeration Zone Air Chiller Fan Electricity Rate",
+      "Refrigeration Zone Air Chiller Fan Electricity Energy",
+      "Refrigeration Zone Air Chiller Heater Electricity Rate",
+      "Refrigeration Zone Air Chiller Heater Electricity Energy",
       "Refrigeration Zone Air Chiller Sensible Heat Ratio",
       "Refrigeration Zone Air Chiller Frost Accumulation Mass",
       "Refrigeration Zone Air Chiller Zone Total Cooling Rate",
@@ -105,8 +105,8 @@ namespace detail {
 
       // TODO: implement test
       // Report only for Air Chillers using electric defrost
-      "Refrigeration Zone Air Chiller Defrost Electric Power",
-      "Refrigeration Zone Air Chiller Defrost Electric Energy"
+      "Refrigeration Zone Air Chiller Defrost Electricity Rate",
+      "Refrigeration Zone Air Chiller Defrost Electricity Energy"
 
       // Reported in ThermalZone
       // Report for each Zone exchanging energy with the Air Chiller

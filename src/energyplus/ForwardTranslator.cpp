@@ -103,8 +103,7 @@ ForwardTranslator::ForwardTranslator()
   m_logSink.setThreadId(std::this_thread::get_id());
   createFluidPropertiesMap();
 
-  // temp code
-  m_keepRunControlSpecialDays = false;
+  m_keepRunControlSpecialDays = true; // At 3.1.0 this was changed to true.
   m_ipTabularOutput = false;
   m_excludeLCCObjects = false;
   m_excludeSQliteOutputReport = false;
@@ -161,7 +160,6 @@ std::vector<LogMessage> ForwardTranslator::errors() const
   return result;
 }
 
-// temp code
 void ForwardTranslator::setKeepRunControlSpecialDays(bool keepRunControlSpecialDays)
 {
   m_keepRunControlSpecialDays = keepRunControlSpecialDays;
@@ -447,6 +445,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
+  // TODO: Is this still needed?
   // ensure shading controls only reference windows in a single zone and determine control sequence number
   // DLM: ideally E+ would not need to know the zone, shading controls could work across zones
   std::vector<ShadingControl> shadingControls = model.getConcreteModelObjects<ShadingControl>();
@@ -479,7 +478,7 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
             thisZoneHandleSet.insert(zoneHandle);
             ShadingControl clone = shadingControl.clone(model).cast<ShadingControl>();
             // assign clone to control subSurface
-            subSurface.setShadingControl(clone);
+            clone.addSubSurface(subSurface);
             auto it = zoneHandleToShadingControlVectorMap.find(zoneHandle);
             if (it == zoneHandleToShadingControlVectorMap.end()) {
               zoneHandleToShadingControlVectorMap.insert(std::make_pair(zoneHandle, std::vector<ShadingControl>()));
@@ -498,12 +497,8 @@ Workspace ForwardTranslator::translateModelPrivate( model::Model & model, bool f
     }
   }
 
-
-  // TODO: is it time to uncomment that?
-  // temp code
   if (!m_keepRunControlSpecialDays){
-    // DLM: we will not translate these objects until we support holidays in the GUI
-    // we will not warn users because these objects are not exposed in the GUI
+    LOG(Warn, "You have manually choosen to not translate the RunPeriodControlSpecialDays, ignoring them.");
     for (model::RunPeriodControlSpecialDays holiday : model.getConcreteModelObjects<model::RunPeriodControlSpecialDays>()){
       holiday.remove();
     }
@@ -2438,10 +2433,16 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translatePumpVariableSpeed(pump);
       break;
     }
+  case openstudio::IddObjectType::OS_OutputControl_Files :
+    {
+      model::OutputControlFiles outputControlFiles = modelObject.cast<OutputControlFiles>();
+      retVal = translateOutputControlFiles(outputControlFiles);
+      break;
+    }
   case openstudio::IddObjectType::OS_OutputControl_ReportingTolerances :
     {
-      model::OutputControlReportingTolerances outputControl = modelObject.cast<OutputControlReportingTolerances>();
-      retVal = translateOutputControlReportingTolerances(outputControl);
+      model::OutputControlReportingTolerances outputControlReportingTolerances = modelObject.cast<OutputControlReportingTolerances>();
+      retVal = translateOutputControlReportingTolerances(outputControlReportingTolerances);
       break;
     }
   case openstudio::IddObjectType::OS_Output_DebuggingData :
@@ -3530,6 +3531,7 @@ std::vector<IddObjectType> ForwardTranslator::iddObjectsToTranslateInitializer()
   result.push_back(IddObjectType::OS_ZoneAirHeatBalanceAlgorithm);
   result.push_back(IddObjectType::OS_ZoneAirMassFlowConservation);
   result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
+  result.push_back(IddObjectType::OS_OutputControl_Files);
   result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
   result.push_back(IddObjectType::OS_Output_DebuggingData);
   result.push_back(IddObjectType::OS_Output_Diagnostics);

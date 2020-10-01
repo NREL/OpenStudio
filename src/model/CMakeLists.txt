@@ -968,6 +968,9 @@ set(${target_name}_src
   OpaqueMaterial.hpp
   OpaqueMaterial_Impl.hpp
   OpaqueMaterial.cpp
+  OutputControlFiles.hpp
+  OutputControlFiles_Impl.hpp
+  OutputControlFiles.cpp
   OutputControlReportingTolerances.hpp
   OutputControlReportingTolerances_Impl.hpp
   OutputControlReportingTolerances.cpp
@@ -1955,6 +1958,7 @@ set(${target_name}_test_src
   test/PortList_GTest.cpp
   test/OpaqueMaterial_GTest.cpp
   test/OtherEquipment_GTest.cpp
+  test/OutputControlFiles_GTest.cpp
   test/OutputControlReportingTolerances_GTest.cpp
   test/OutputDebuggingData_GTest.cpp
   test/OutputJSON_GTest.cpp
@@ -2085,6 +2089,7 @@ set(${target_name}_test_src
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterHeaterHeatPump_GTest.cpp
+  test/WaterHeaterHeatPumpWrappedCondenser_GTest.cpp
   test/WaterHeaterStratified_GTest.cpp
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp

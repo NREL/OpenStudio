@@ -67,10 +67,10 @@ namespace detail {
   const std::vector<std::string>& HeatPumpWaterToWaterEquationFitHeating_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Water to Water Heat Pump Electric Energy",
+      "Water to Water Heat Pump Electricity Energy",
       "Water to Water Heat Pump Load Side Heat Transfer Energy",
       "Water to Water Heat Pump Source Side Heat Transfer Energy",
-      "Water to Water Heat Pump Electric Power",
+      "Water to Water Heat Pump Electricity Rate",
       "Water to Water Heat Pump Load Side Heat Transfer Rate",
       "Water to Water Heat Pump Source Side Heat Transfer Rate",
       "Water to Water Heat Pump Load Side Outlet Temperature",

@@ -509,17 +509,17 @@ TEST_F(IdfFixture, Workspace_SameNameNotReference)
   ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
   EXPECT_EQ("", object2->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object1->setString(Output_MeterFields::KeyName, "Gas:Facility"));
+  EXPECT_TRUE(object1->setString(Output_MeterFields::KeyName, "NaturalGas:Facility"));
   ASSERT_TRUE(object1->getString(Output_MeterFields::KeyName));
-  EXPECT_EQ("Gas:Facility", object1->getString(Output_MeterFields::KeyName).get());
+  EXPECT_EQ("NaturalGas:Facility", object1->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "Gas:Building"));
+  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "NaturalGas:Building"));
   ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
-  EXPECT_EQ("Gas:Building", object2->getString(Output_MeterFields::KeyName).get());
+  EXPECT_EQ("NaturalGas:Building", object2->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "Gas:Facility"));
+  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "NaturalGas:Facility"));
   ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
-  EXPECT_EQ("Gas:Facility", object2->getString(Output_MeterFields::KeyName).get());
+  EXPECT_EQ("NaturalGas:Facility", object2->getString(Output_MeterFields::KeyName).get());
 
 }
 
@@ -2127,7 +2127,7 @@ TEST_F(IdfFixture, Workspace_getObjects_Type_StringOverload) {
 
   // And check with a bad std::string, that it throws, and that we get an informative message (#1741)
   ASSERT_THROW(workspace.getObjectsByType("BadEnum"), std::runtime_error);
-  std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'BADENUM'");
+  std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'BADENUM' for Enum IddObjectType");
   try {
     workspace.getObjectsByType("BadEnum");
   } catch (std::runtime_error& e) {

@@ -86,8 +86,8 @@ namespace detail {
   const std::vector<std::string>& GeneratorPhotovoltaic_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Generator Produced DC Electric Power",
-      "Generator Produced DC Electric Energy",
+      "Generator Produced DC Electricity Rate",
+      "Generator Produced DC Electricity Energy",
       "Generator PV Cell Temperature",
       "Generator PV Short Circuit Current",
       "Generator PV Open Circuit Voltage",

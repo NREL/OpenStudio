@@ -73,9 +73,9 @@ namespace detail{
   const std::vector<std::string>& EvaporativeCoolerDirectResearchSpecial_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-      "Evaporative Cooler Electric Power",
+      "Evaporative Cooler Electricity Rate",
       "Evaporative Cooler Stage Effectiveness",
-      "Evaporative Cooler Electric Energy",
+      "Evaporative Cooler Electricity Energy",
       "Evaporative Cooler Water Volume",
       "Evaporative Cooler Mains Water Volume"
 

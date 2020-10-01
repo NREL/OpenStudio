@@ -49,6 +49,10 @@
 #include "../../utilities/core/StringHelpers.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/core/Compare.hpp"
@@ -973,4 +977,302 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_AirLoopHVAC) {
   ASSERT_TRUE(a.getTarget(9));
   EXPECT_EQ("Supply Inlet Node", a.getTarget(9)->getTarget(4)->nameString());
 
+}
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> outputMeters = model->getObjectsByType("OS:Output:Meter");
+  ASSERT_EQ(3u, outputMeters.size());
+  EXPECT_NE(std::find_if(outputMeters.begin(),
+                         outputMeters.end(),
+                         [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "NaturalGas:Facility"); }),
+            outputMeters.end());
+  EXPECT_NE(std::find_if(outputMeters.begin(),
+                         outputMeters.end(),
+                         [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "Heating:FuelOilNo1"); }),
+            outputMeters.end());
+  EXPECT_NE(std::find_if(outputMeters.begin(),
+                         outputMeters.end(),
+                         [](const WorkspaceObject& wo) { return openstudio::istringEqual(wo.nameString(), "WaterSystems:Propane"); }),
+            outputMeters.end());
+
+
+
+  // In the preparation of the test model, I assigned the same value to the Output:Variable 'name' (unused in E+) and the 'Variable Name' field we
+  // care about. That allows us to easily have on the object the initial and the final values.
+  // {Old, New}
+  const std::map<std::string, std::string> renameMap({
+    {"Boiler FuelOil#1 Energy", "Boiler FuelOilNo1 Energy"},
+    {"Boiler Gas Rate", "Boiler NaturalGas Rate"},
+    {"Boiler Electric Power", "Boiler Electricity Rate"},
+    {"Cooling Coil Water Heating Electric Power", "Cooling Coil Water Heating Electricity Rate"},
+    {"Generator Requested Electric Power", "Generator Requested Electricity Rate"},
+    {"Air System DX Cooling Coil Electric Energy", "Air System DX Cooling Coil Electricity Energy"},
+    // Introduce extra spaces on purpose...
+    {"Water  Heater  Gas Rate", "Water Heater NaturalGas Rate"},
+  });
+
+  std::vector<WorkspaceObject> outputVariables = model->getObjectsByType("OS:Output:Variable");
+  ASSERT_EQ(renameMap.size(), outputVariables.size());
+  ASSERT_EQ(7u, outputVariables.size());
+
+  for (const auto& outputVariable : outputVariables) {
+    auto name = outputVariable.nameString();
+    auto it = renameMap.find(name);
+    ASSERT_NE(it,renameMap.end()) << "Output:Variable named " << name << " not in replaceMap";
+    EXPECT_EQ(it->second, outputVariable.getString(3).get())
+      << "Output:Variable named " << name << " did not get the expected rename for Variable Name field";
+  }
+
+
+  std::vector<WorkspaceObject> emsSensors = model->getObjectsByType("OS:EnergyManagementSystem:Sensor");
+  ASSERT_EQ(11u, emsSensors.size());
+
+  EXPECT_NE(std::find_if(emsSensors.begin(),
+                         emsSensors.end(),
+                         [](const WorkspaceObject& wo) {
+                            return openstudio::istringEqual(wo.nameString(),
+                                                            "Facility_Total_HVAC_Electric_Demand_Power");
+                          }),
+            emsSensors.end());
+
+  for (const auto& emsSensor : emsSensors) {
+    if (openstudio::istringEqual(emsSensor.nameString(), "Facility_Total_HVAC_Electric_Demand_Power")) {
+      // Facility Total HVAC Electric Demand Power => Facility Total HVAC Electricity Demand Rate
+      EXPECT_EQ("Facility Total HVAC Electricity Demand Rate", emsSensor.getString(3).get());
+    } else {
+      // All of these have actual handles stored at string, these shouldn't have been touched
+      boost::optional<std::string> handle = emsSensor.getString(3);
+      ASSERT_TRUE(handle.is_initialized());
+      UUID uid = toUUID(handle.get());
+      boost::optional<WorkspaceObject> object = model->getObject(uid);
+      ASSERT_TRUE(object);
+      EXPECT_TRUE(openstudio::istringEqual(object->iddObject().name(), "OS:Output:Variable") ||
+                  openstudio::istringEqual(object->iddObject().name(), "OS:Output:Meter"));
+    }
+  }
+
+}
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_fuelTypesRenames_MeterCustoms) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames_MeterCustoms.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_fuelTypeRenames_MeterCustoms_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> meterCustoms = model->getObjectsByType("OS:Meter:Custom");
+  ASSERT_EQ(1u, meterCustoms.size());
+  std::vector<WorkspaceObject> meterCustomDecrements = model->getObjectsByType("OS:Meter:CustomDecrement");
+  ASSERT_EQ(1u, meterCustomDecrements.size());
+
+  for (const auto& wo: {meterCustoms[0], meterCustomDecrements[0]}) {
+
+    for (const IdfExtensibleGroup& eg : wo.extensibleGroups()) {
+      const auto varName = eg.getString(1).get();
+      // Facility Total HVAC Electric Demand Power => Facility Total HVAC Electricity Demand Rate
+      // Generator Blower Electric Power => Generator Blower Electricity Rate
+      EXPECT_TRUE(openstudio::istringEqual(varName, "Facility Total HVAC Electricity Demand Rate") ||
+                  openstudio::istringEqual(varName, "Generator Blower Electricity Rate"))
+        << "Failed for " << wo.nameString() << ", found '" << varName << "'.";
+    }
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ConstructionWithInternalSource) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_ConstructionWithInternalSource.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_ConstructionWithInternalSource_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> constructions = model->getObjectsByType("OS:Construction:InternalSource");
+  ASSERT_EQ(1u, constructions.size());
+  WorkspaceObject c = constructions[0];
+
+  // Before insertion point: Tube Spacing
+  ASSERT_TRUE(c.getDouble(5, false));
+  EXPECT_EQ(0.2, c.getDouble(5).get());
+
+  // Insertion point
+  // ASSERT_TRUE(c.getDouble(6));
+  // EXPECT_EQ(0.0, c.getDouble(6).get());
+  EXPECT_EQ(0.0, c.getDouble(6, true).get());
+
+  // Surface rendering name
+  ASSERT_TRUE(c.getTarget(7));
+  EXPECT_EQ("RenderingColor for InternalSource", c.getTarget(7).get().nameString());
+
+  EXPECT_EQ(3u, c.extensibleGroups().size());
+  for (const IdfExtensibleGroup& eg : c.extensibleGroups()) {
+    WorkspaceExtensibleGroup w_eg = eg.cast<WorkspaceExtensibleGroup>();
+    ASSERT_TRUE(w_eg.getTarget(0));
+    EXPECT_EQ("OS:Material", w_eg.getTarget(0).get().iddObject().name());
+  }
+}
+
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ZoneHVACLowTemp) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_ZoneHVACLowTemp.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_ZoneHVACLowTemp_updated.osm");
+  model->save(outPath, true);
+
+  // New fields: have defaults... If we make them required-field, switch these two bools to the opposite
+  bool returnDefault = true;
+  bool returnUninitializedEmpty = false;
+
+  {
+    std::vector<WorkspaceObject> lowtempradiants = model->getObjectsByType("OS:ZoneHVAC:LowTemperatureRadiant:ConstantFlow");
+    ASSERT_EQ(1u, lowtempradiants.size());
+    WorkspaceObject lowtempradiant = lowtempradiants[0];
+
+    EXPECT_EQ("Floors", lowtempradiant.getString(3, false, true).get());
+
+    // New fields
+    EXPECT_EQ("ConvectionOnly", lowtempradiant.getString(4, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ(0.016, lowtempradiant.getDouble(6, returnDefault).get());
+    EXPECT_EQ(0.35, lowtempradiant.getDouble(8, returnDefault).get());
+    EXPECT_EQ(0.8, lowtempradiant.getDouble(10, returnDefault).get());
+
+    EXPECT_EQ(0.154, lowtempradiant.getDouble(5, false).get());
+    EXPECT_EQ(200.0, lowtempradiant.getDouble(7, false).get());
+    EXPECT_EQ("MeanRadiantTemperature", lowtempradiant.getString(9, false, true).get());
+
+    ASSERT_TRUE(lowtempradiant.getTarget(11));
+    EXPECT_EQ("OS:Coil:Heating:LowTemperatureRadiant:ConstantFlow", lowtempradiant.getTarget(11).get().iddObject().name());
+    ASSERT_TRUE(lowtempradiant.getTarget(12));
+    EXPECT_EQ("OS:Coil:Cooling:LowTemperatureRadiant:ConstantFlow", lowtempradiant.getTarget(12).get().iddObject().name());
+
+    EXPECT_EQ(0.005, lowtempradiant.getDouble(13, false).get());
+    ASSERT_TRUE(lowtempradiant.getTarget(14)); // Pump Flow Rate Schedule Name
+
+
+    EXPECT_EQ(30000.0, lowtempradiant.getDouble(15, false).get()); // head
+    EXPECT_EQ(1200.0, lowtempradiant.getDouble(16, false).get()); // Rated power
+    EXPECT_EQ(0.9, lowtempradiant.getDouble(17, false).get()); // Motor eff
+    EXPECT_EQ(0.7, lowtempradiant.getDouble(18, false).get()); /// Fraction of motor inef
+
+
+    EXPECT_EQ("CalculateFromCircuitLength", lowtempradiant.getString(19, false, true).get());
+    EXPECT_EQ(120.0, lowtempradiant.getDouble(20, false).get()); /// Fraction of motor inef
+
+    // Changeover Delay Time Period Schedule
+    EXPECT_FALSE(lowtempradiant.getString(21, false, true));
+  }
+
+
+  {
+    std::vector<WorkspaceObject> lowtempradiants = model->getObjectsByType("OS:ZoneHVAC:LowTemperatureRadiant:VariableFlow");
+    ASSERT_EQ(1u, lowtempradiants.size());
+    WorkspaceObject lowtempradiant = lowtempradiants[0];
+
+    ASSERT_TRUE(lowtempradiant.getTarget(3));
+    EXPECT_EQ("OS:Coil:Heating:LowTemperatureRadiant:VariableFlow", lowtempradiant.getTarget(3).get().iddObject().name());
+    ASSERT_TRUE(lowtempradiant.getTarget(4));
+    EXPECT_EQ("OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow", lowtempradiant.getTarget(4).get().iddObject().name());
+    EXPECT_EQ("Floors", lowtempradiant.getString(5, false, true).get());
+
+
+    // New Fields
+    EXPECT_EQ("ConvectionOnly", lowtempradiant.getString(6, returnDefault, returnUninitializedEmpty).get());
+    EXPECT_EQ(0.016, lowtempradiant.getDouble(8, returnDefault).get());
+    EXPECT_EQ(0.35, lowtempradiant.getDouble(10, returnDefault).get());
+    EXPECT_EQ("HalfFlowPower", lowtempradiant.getString(12, returnDefault, returnUninitializedEmpty).get());
+
+    EXPECT_EQ(0.154, lowtempradiant.getDouble(7, false).get());
+    EXPECT_EQ(200, lowtempradiant.getDouble(9, false).get());
+    EXPECT_EQ("MeanRadiantTemperature", lowtempradiant.getString(11, false, true).get());
+    EXPECT_EQ("CalculateFromCircuitLength", lowtempradiant.getString(13, false, true).get());
+    EXPECT_EQ(120, lowtempradiant.getDouble(14, false).get());
+
+    // Changeover Delay Time Period Schedule
+    EXPECT_FALSE(lowtempradiant.getString(15, false, true));
+  }
+
+  {
+    std::vector<WorkspaceObject> lowtempradiants = model->getObjectsByType("OS:ZoneHVAC:LowTemperatureRadiant:Electric");
+    ASSERT_EQ(1u, lowtempradiants.size());
+    WorkspaceObject lowtempradiant = lowtempradiants[0];
+
+    EXPECT_EQ("Floors", lowtempradiant.getString(3, false, true).get());
+    EXPECT_EQ(1000, lowtempradiant.getDouble(4, returnDefault).get());
+    EXPECT_EQ("MeanRadiantTemperature", lowtempradiant.getString(5, false, true).get());
+
+    // New fields
+    EXPECT_EQ("HalfFlowPower", lowtempradiant.getString(6, returnDefault, returnUninitializedEmpty).get());
+
+    EXPECT_EQ(2, lowtempradiant.getDouble(7, returnDefault).get());
+    ASSERT_TRUE(lowtempradiant.getTarget(8)); // Heating Setpoint Temperature Schedule Name
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_WaterHeaterHeatPump) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_WaterHeaterHeatPump.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_WaterHeaterHeatPump_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> whs = model->getObjectsByType("OS:WaterHeater:HeatPump");
+  ASSERT_EQ(1u, whs.size());
+  WorkspaceObject wh = whs[0];
+
+  // Before insertion point: Minimum Inlet Air Temperature for Compressor Operation
+  ASSERT_TRUE(wh.getDouble(15, false));
+  EXPECT_EQ(12.5, wh.getDouble(15).get());
+
+  // Insertion point
+  ASSERT_TRUE(wh.getDouble(16, false));
+  EXPECT_EQ(48.89, wh.getDouble(16).get());
+
+  // Compressor Location
+  ASSERT_TRUE(wh.getString(17, false, true));
+  EXPECT_EQ("Outdoors", wh.getString(17, false, true).get());
+
+  // Last Field: Control Sensor Location In Stratified Tank
+  ASSERT_TRUE(wh.getString(25, false, true));
+  EXPECT_EQ("Heater2", wh.getString(25, false, true).get());
+}
+
+TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_1_0/test_vt_ShadingControl.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;;
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_1_0/test_vt_ShadingControl_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> sss = model->getObjectsByType("OS:SubSurface");
+  ASSERT_EQ(1u, sss.size());
+  WorkspaceObject ss = sss[0];
+
+  EXPECT_EQ(0.5, ss.getDouble(6));
+  EXPECT_EQ(4u, ss.numExtensibleGroups());
+  auto eg = ss.extensibleGroups()[3];
+  EXPECT_EQ(1, eg.getInt(0, false).get());
+  EXPECT_EQ(0, eg.getInt(1, false).get());
+  EXPECT_EQ(0, eg.getInt(2, false).get());
+
+  std::vector<WorkspaceObject> scs = model->getObjectsByType("OS:ShadingControl");
+  ASSERT_EQ(1u, scs.size());
+  WorkspaceObject sc = scs[0];
+
+  EXPECT_EQ("Sequential", sc.getString(13, false, true).get());
+  ASSERT_EQ(1u, sc.numExtensibleGroups());
+
+  WorkspaceExtensibleGroup w_eg = sc.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  ASSERT_TRUE(w_eg.getTarget(0));
+  EXPECT_EQ("OS:SubSurface", w_eg.getTarget(0).get().iddObject().name());
 }

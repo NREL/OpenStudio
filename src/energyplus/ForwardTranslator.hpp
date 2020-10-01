@@ -283,6 +283,7 @@ class MeterCustomDecrement;
 class Node;
 class OtherEquipment;
 class OutsideSurfaceConvectionAlgorithm;
+class OutputControlFiles;
 class OutputControlReportingTolerances;
 class OutputDebuggingData;
 class OutputDiagnostics;
@@ -465,7 +466,7 @@ namespace detail
   struct ForwardTranslatorInitializer;
 };
 
-#define ENERGYPLUS_VERSION "9.3"
+#define ENERGYPLUS_VERSION "9.4"
 
 class ENERGYPLUS_API ForwardTranslator {
  public:
@@ -488,7 +489,7 @@ class ENERGYPLUS_API ForwardTranslator {
    */
   std::vector<LogMessage> errors() const;
 
-  /** Temporary code, use to preserve holidays in the model.
+  /** keepRunControlSpecialDays is enabled by default. You can use this method to NOT translate the holidays in the model.
    */
   void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
 
@@ -1016,6 +1017,8 @@ class ENERGYPLUS_API ForwardTranslator {
 
   boost::optional<IdfObject> translateOutsideSurfaceConvectionAlgorithm( model::OutsideSurfaceConvectionAlgorithm & modelObject );
 
+  boost::optional<IdfObject> translateOutputControlFiles( model::OutputControlFiles & modelObject );
+
   boost::optional<IdfObject> translateOutputControlReportingTolerances( model::OutputControlReportingTolerances & modelObject );
 
   boost::optional<IdfObject> translateOutputDebuggingData( model::OutputDebuggingData & modelObject );
@@ -1480,7 +1483,6 @@ class ENERGYPLUS_API ForwardTranslator {
 
   ProgressBar* m_progressBar;
 
-  // temp code
   bool m_keepRunControlSpecialDays;
   bool m_ipTabularOutput;
   bool m_excludeLCCObjects;

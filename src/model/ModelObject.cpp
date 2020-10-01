@@ -316,17 +316,18 @@ namespace detail {
       return result;
     }
 
-    // Query the Intialization Summary -> Component Sizing table to get
+    // Query the Initialization Summary -> Component Sizing table to get
     // the row names that contains information for this component.
-    std::stringstream rowsQuery;
-    rowsQuery << "SELECT RowName ";
-    rowsQuery << "FROM tabulardatawithstrings ";
-    rowsQuery << "WHERE ReportName='Initialization Summary' ";
-    rowsQuery << "AND ReportForString='Entire Facility' ";
-    rowsQuery << "AND TableName = 'Component Sizing Information' ";
-    rowsQuery << "AND Value='" + sqlName + "'";
+    std::string rowsQuery = R"(
+      SELECT RowName FROM TabularDataWithStrings
+        WHERE ReportName = 'Initialization Summary'
+        AND ReportForString = 'Entire Facility'
+        AND TableName = 'Component Sizing Information'
+        AND Value = ?;)";
 
-    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery.str());
+    boost::optional<std::vector<std::string>> rowNames = model().sqlFile().get().execAndReturnVectorOfString(rowsQuery,
+        // bindArgs
+        sqlName);
 
     // Warn if the query failed
     if (!rowNames) {
@@ -344,29 +345,31 @@ namespace detail {
     }
 
     for (std::string rowName : rowNames.get()) {
-      std::stringstream rowCheckQuery;
-      rowCheckQuery << "SELECT Value ";
-      rowCheckQuery << "FROM tabulardatawithstrings ";
-      rowCheckQuery << "WHERE ReportName='Initialization Summary' ";
-      rowCheckQuery << "AND ReportForString='Entire Facility' ";
-      rowCheckQuery << "AND TableName = 'Component Sizing Information' ";
-      rowCheckQuery << "AND RowName='" << rowName << "' ";
-      rowCheckQuery << "AND Value='" << valueNameAndUnits << "'";
-      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery.str());
+      std::string rowCheckQuery = R"(
+        SELECT Value FROM TabularDataWithStrings
+          WHERE ReportName = 'Initialization Summary'
+          AND ReportForString = 'Entire Facility'
+          AND TableName = 'Component Sizing Information'
+          AND RowName = ?
+          AND Value = ?;)";
+      boost::optional<std::string> rowValueName = model().sqlFile().get().execAndReturnFirstString(rowCheckQuery,
+          // bindArgs
+          rowName, valueNameAndUnits);
       // Check if the query succeeded
       if (!rowValueName) {
         continue;
       }
       // This is the right row
-      std::stringstream valQuery;
-      valQuery << "SELECT Value ";
-      valQuery << "FROM tabulardatawithstrings ";
-      valQuery << "WHERE ReportName='Initialization Summary' ";
-      valQuery << "AND ReportForString='Entire Facility' ";
-      valQuery << "AND TableName = 'Component Sizing Information' ";
-      valQuery << "AND ColumnName='Value' ";
-      valQuery << "AND RowName='" << rowName << "' ";
-      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery.str());
+      std::string valQuery = R"(
+        SELECT Value FROM TabularDataWithStrings
+          WHERE ReportName = 'Initialization Summary'
+          AND ReportForString = 'Entire Facility'
+          AND TableName = 'Component Sizing Information'
+          AND ColumnName='Value'
+          AND RowName = ?;)";
+      boost::optional<double> val = model().sqlFile().get().execAndReturnFirstDouble(valQuery,
+          // bindArgs
+          rowName);
       // Check if the query succeeded
       if (val) {
         result = val.get();

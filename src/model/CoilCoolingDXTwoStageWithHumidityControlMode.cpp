@@ -93,18 +93,18 @@ namespace detail {
       "Cooling Coil Sensible Cooling Energy",
       "Cooling Coil Latent Cooling Rate",
       "Cooling Coil Latent Cooling Energy",
-      "Cooling Coil Electric Power",
-      "Cooling Coil Electric Energy",
+      "Cooling Coil Electricity Rate",
+      "Cooling Coil Electricity Energy",
       "Cooling Coil Runtime Fraction",
 
       // condenserType = [AirCooled, EvaporativelyCooled]
       // if (this->condenserType() == "EvaporativelyCooled") {
         "Cooling Coil Condenser Inlet Temperature",
         "Cooling Coil Evaporative Condenser Water Volume",
-        "Cooling Coil Evaporative Condenser Pump Electric Power",
-        "Cooling Coil Evaporative Condenser Pump Electric Energy",
-        "Cooling Coil Basin Heater Electric Power",
-        "Cooling Coil Basin Heater Electric Energy",
+        "Cooling Coil Evaporative Condenser Pump Electricity Rate",
+        "Cooling Coil Evaporative Condenser Pump Electricity Energy",
+        "Cooling Coil Basin Heater Electricity Rate",
+        "Cooling Coil Basin Heater Electricity Energy",
         "Cooling Coil Evaporative Condenser Mains Supply Water Volume",
       // }
 
@@ -121,8 +121,8 @@ namespace detail {
       // If not part of AirLoopHVAC:UnitaryHeatPump:AirToAir
       // (if part of a heat pump, crankcase heater is reported only for the heating coil):
       // if ( !this->containingHVACComponent().empty() ) {
-      // "Cooling Coil Crankcase Heater Electric Power",
-      // "Cooling Coil Crankcase Heater Electric Energy"
+      // "Cooling Coil Crankcase Heater Electricity Rate",
+      // "Cooling Coil Crankcase Heater Electricity Energy"
       // }
 
     };
