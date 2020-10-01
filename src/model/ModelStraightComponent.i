@@ -165,6 +165,7 @@ MODELOBJECT_TEMPLATES(SolarCollectorFlatPlatePhotovoltaicThermal);
 MODELOBJECT_TEMPLATES(SolarCollectorFlatPlateWater);
 MODELOBJECT_TEMPLATES(SolarCollectorIntegralCollectorStorage);
 MODELOBJECT_TEMPLATES(TemperingValve);
+MODELOBJECT_TEMPLATES(ThermalStoragePcmSimple);
 MODELOBJECT_TEMPLATES(ThermalStorageIceDetailed);
 MODELOBJECT_TEMPLATES(WaterUseConnections);
 
@@ -243,6 +244,7 @@ SWIG_MODELOBJECT(SolarCollectorFlatPlatePhotovoltaicThermal,1);
 SWIG_MODELOBJECT(SolarCollectorFlatPlateWater,1);
 SWIG_MODELOBJECT(SolarCollectorIntegralCollectorStorage,1);
 SWIG_MODELOBJECT(TemperingValve,1);
+SWIG_MODELOBJECT(ThermalStoragePcmSimple,1);
 SWIG_MODELOBJECT(ThermalStorageIceDetailed,1);
 SWIG_MODELOBJECT(WaterUseConnections,1);
 

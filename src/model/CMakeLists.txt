@@ -1442,6 +1442,9 @@ set(${target_name}_src
   ThermalStorageChilledWaterStratified.hpp
   ThermalStorageChilledWaterStratified_Impl.hpp
   ThermalStorageChilledWaterStratified.cpp
+  ThermalStoragePcmSimple.hpp
+  ThermalStoragePcmSimple_Impl.hpp
+  ThermalStoragePcmSimple.cpp  
   ThermalStorageIceDetailed.hpp
   ThermalStorageIceDetailed_Impl.hpp
   ThermalStorageIceDetailed.cpp
