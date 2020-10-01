@@ -770,6 +770,7 @@ namespace detail {
     bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::LoadControlDuringGridResponsiveControl, "");
     OS_ASSERT(result);
   }
+
 } // detail
 
 CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(const Model& model)
@@ -1092,8 +1093,8 @@ bool CoilCoolingDXVariableSpeed::isMaxSpeedLevelDuringGridResponsiveControlDefau
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->isMaxSpeedLevelDuringGridResponsiveControlDefaulted();
 }
 
-std::string CoilCoolingDXVariableSpeed::isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const {
-  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->isMaxSpeedLevelDuringGridResponsiveControlDefaulted();
+std::string CoilCoolingDXVariableSpeed::loadControlDuringGridResponsiveControl() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->loadControlDuringGridResponsiveControl();
 }
 
 bool CoilCoolingDXVariableSpeed::isLoadControlDuringGridResponsiveControlDefaulted() const {

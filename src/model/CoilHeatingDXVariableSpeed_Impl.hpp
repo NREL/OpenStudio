@@ -122,15 +122,29 @@ namespace detail {
 
     bool isResistiveDefrostHeaterCapacityAutosized() const;
 
-  boost::optional<double> autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const ;
+    boost::optional<double> autosizedRatedHeatingCapacityAtSelectedNominalSpeedLevel() const ;
 
-  boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
+    boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
 
-  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+    boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
 
-  virtual void autosize() override;
+    virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+    virtual void applySizingValues() override;
+
+    boost::optional<Schedule> gridSignalSchedule() const;
+
+    double lowerBoundToApplyGridResponsiveControl() const;
+
+    bool isLowerBoundToApplyGridResponsiveControlDefaulted() const;
+
+    double upperBoundToApplyGridResponsiveControl() const;
+
+    bool isUpperBoundToApplyGridResponsiveControlDefaulted() const;
+
+    double maxSpeedLevelDuringGridResponsiveControl() const;
+
+    bool isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -173,6 +187,22 @@ namespace detail {
     bool setResistiveDefrostHeaterCapacity(boost::optional<double> resistiveDefrostHeaterCapacity);
 
     void autosizeResistiveDefrostHeaterCapacity();
+
+    bool setGridSignalSchedule(Schedule& schedule);
+
+    void resetGridSignalSchedule();
+
+    bool setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl);
+
+    void resetLowerBoundToApplyGridResponsiveControl();
+
+    bool setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl);
+
+    void resetUpperBoundToApplyGridResponsiveControl();
+
+    bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl);
+
+    void resetMaxSpeedLevelDuringGridResponsiveControl();
 
     //@}
     /** @name Other */

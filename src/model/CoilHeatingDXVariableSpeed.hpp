@@ -103,6 +103,20 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
 
   bool isResistiveDefrostHeaterCapacityAutosized() const;
 
+  boost::optional<Schedule> gridSignalSchedule() const;
+
+  double lowerBoundToApplyGridResponsiveControl() const;
+
+  bool isLowerBoundToApplyGridResponsiveControlDefaulted() const;
+
+  double upperBoundToApplyGridResponsiveControl() const;
+
+  bool isUpperBoundToApplyGridResponsiveControlDefaulted() const;
+
+  double maxSpeedLevelDuringGridResponsiveControl() const;
+
+  bool isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -144,6 +158,22 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
   bool setResistiveDefrostHeaterCapacity(double resistiveDefrostHeaterCapacity);
 
   void autosizeResistiveDefrostHeaterCapacity();
+
+  bool setGridSignalSchedule(Schedule& schedule);
+
+  void resetGridSignalSchedule();
+
+  bool setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl);
+
+  void resetLowerBoundToApplyGridResponsiveControl();
+
+  bool setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl);
+
+  void resetUpperBoundToApplyGridResponsiveControl();
+
+  bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl);
+
+  void resetMaxSpeedLevelDuringGridResponsiveControl();
 
   //@}
   /** @name Other */
