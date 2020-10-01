@@ -31762,8 +31762,8 @@ Coil:Heating:DX:VariableSpeed,
         \memo controls. Requires two to ten sets of performance data and will interpolate between
         \memo speeds.
    \extensible:7
-   \min-fields 25
-   \max-fields 88
+   \min-fields 29
+   \max-fields 92
    A1,  \field Name
         \required-field
         \type alpha
@@ -31864,45 +31864,61 @@ Coil:Heating:DX:VariableSpeed,
         \units W
         \note only applicable if resistive defrost strategy is specified
         \ip-units W
-   N12, \field Speed 1 Reference Unit Gross Rated Heating Capacity
-       \note Heating capacity not accounting for the effect of supply air fan heat
+   A8, \field Grid Signal Schedule Name
+        \type object-list
+        \object-list ScheduleNames
+        \note This field refers to a grid signal pattern, e.g. price 
+   N12, \field Lower Bound to Apply Grid Responsive Control
+        \type real
+        \units dimensionless
+        \default 100.0
+   N13, \field Upper Bound to Apply Grid Responsive Control
+        \type real
+        \units dimensionless
+        \default -100.0
+   N14, \field Max Speed Level During Grid-Responsive Control
+        \type real
+        \units dimensionless   
+        \default 10
+   N15, \field Speed 1 Reference Unit Gross Rated Heating Capacity
+        \note Heating capacity not accounting for the effect of supply air fan heat
         \units W
         \type real
         \minimum 0
         \required-field
         \begin-extensible
-   N13, \field Speed 1 Reference Unit Gross Rated Heating COP
+   N16, \field Speed 1 Reference Unit Gross Rated Heating COP
         \type real
         \units W/W
         \minimum> 0.0
         \required-field
-   N14,  \field Speed 1 Reference Unit Rated Air Flow Rate
+   N17, \field Speed 1 Reference Unit Rated Air Flow Rate
         \units m3/s
         \type real
         \minimum 0
         \required-field
-   A8,  \field Speed 1 Heating Capacity Function of Temperature Curve Name
+   A9,  \field Speed 1 Heating Capacity Function of Temperature Curve Name
         \required-field
         \type object-list
         \object-list BivariateFunctions
         \note curve = a + b*db + c*db**2 + d*oat + e*oat**2 + f*db*oat
         \note db = entering air dry-bulb temperature (C)
         \note oat = air entering temperature seen by the evaporator (C)
-   A9,  \field Speed 1 Total  Heating Capacity Function of Air Flow Fraction Curve Name
+   A10, \field Speed 1 Total  Heating Capacity Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
         \object-list UnivariateFunctions
         \note quadratic curve = a + b*ffa + c*ffa**2
         \note cubic curve = a + b*ffa + c*ffa**2 + d*ffa**3
         \note ffa = Fraction of the full load Air Flow
-   A10, \field Speed 1 Energy Input Ratio Function of Temperature Curve Name
+   A11, \field Speed 1 Energy Input Ratio Function of Temperature Curve Name
         \required-field
         \type object-list
         \object-list BivariateFunctions
         \note curve = a + b*db + c*db**2 + d*oat + e*oat**2 + f*db*oat
         \note db = entering air dry-bulb temperature (C)
         \note oat = air entering temperature seen by the evaporator (C)
-   A11; \field Speed 1 Energy Input Ratio Function of Air Flow Fraction Curve Name
+   A12; \field Speed 1 Energy Input Ratio Function of Air Flow Fraction Curve Name
         \required-field
         \type object-list
         \object-list UnivariateFunctions
