@@ -667,6 +667,109 @@ namespace detail {
 
   }
 
+  boost::optional<Schedule> CoilCoolingDXVariableSpeed_Impl::gridSignalSchedule() const {
+    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_DX_VariableSpeedFields::GridSignalScheduleName);
+  }
+
+  double CoilCoolingDXVariableSpeed_Impl::lowerBoundToApplyGridResponsiveControl() const {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::isLowerBoundToApplyGridResponsiveControlDefaulted() const {
+    return isEmpty(OS_Coil_Cooling_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl);
+  }
+
+  double CoilCoolingDXVariableSpeed_Impl::upperBoundToApplyGridResponsiveControl() const {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::isUpperBoundToApplyGridResponsiveControlDefaulted() const {
+    return isEmpty(OS_Coil_Cooling_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl);
+  }
+
+  double CoilCoolingDXVariableSpeed_Impl::maxSpeedLevelDuringGridResponsiveControl() const {
+    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const {
+    return isEmpty(OS_Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl);
+  }
+
+  std::string CoilCoolingDXVariableSpeed_Impl::loadControlDuringGridResponsiveControl() const {
+    boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_VariableSpeedFields::LoadControlDuringGridResponsiveControl, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::isLoadControlDuringGridResponsiveControlDefaulted() const {
+    boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_VariableSpeedFields::LoadControlDuringGridResponsiveControl, true);
+    OS_ASSERT(value);
+    return openstudio::istringEqual(value.get(), "SenLat");
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::setGridSignalSchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_Coil_Cooling_DX_VariableSpeedFields::GridSignalScheduleName,
+                              "CoilCoolingDXVariableSpeed",
+                              "Grid Signal",
+                              schedule);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void CoilCoolingDXVariableSpeed_Impl::resetGridSignalSchedule() {
+    bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::GridSignalScheduleName, "");
+    OS_ASSERT(result);
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl) {
+    bool result = setDouble(OS_Coil_Cooling_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, lowerBoundToApplyGridResponsiveControl);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void CoilCoolingDXVariableSpeed_Impl::resetLowerBoundToApplyGridResponsiveControl() {
+    bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::LowerBoundToApplyGridResponsiveControl, "");
+    OS_ASSERT(result);
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl) {
+    bool result = setDouble(OS_Coil_Cooling_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, upperBoundToApplyGridResponsiveControl);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void CoilCoolingDXVariableSpeed_Impl::resetUpperBoundToApplyGridResponsiveControl() {
+    bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl, "");
+    OS_ASSERT(result);
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
+    bool result = setDouble(OS_Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedlevelDuringGridResponsiveControl);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void CoilCoolingDXVariableSpeed_Impl::resetMaxSpeedLevelDuringGridResponsiveControl() {
+    bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, "");
+    OS_ASSERT(result);
+  }
+
+  bool CoilCoolingDXVariableSpeed_Impl::setLoadControlDuringGridResponsiveControl(std::string loadControlDuringGridResponsiveControl) {
+    bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::LoadControlDuringGridResponsiveControl, loadControlDuringGridResponsiveControl);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void CoilCoolingDXVariableSpeed_Impl::resetLoadControlDuringGridResponsiveControl() {
+    bool result = setString(OS_Coil_Cooling_DX_VariableSpeedFields::LoadControlDuringGridResponsiveControl, "");
+    OS_ASSERT(result);
+  }
 } // detail
 
 CoilCoolingDXVariableSpeed::CoilCoolingDXVariableSpeed(const Model& model)
@@ -959,6 +1062,82 @@ void CoilCoolingDXVariableSpeed::removeSpeed(const CoilCoolingDXVariableSpeedSpe
 
 void CoilCoolingDXVariableSpeed::removeAllSpeeds() {
   getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->removeAllSpeeds();
+}
+
+boost::optional<Schedule> CoilCoolingDXVariableSpeed::gridSignalSchedule() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->gridSignalSchedule();
+}
+
+double CoilCoolingDXVariableSpeed::lowerBoundToApplyGridResponsiveControl() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->lowerBoundToApplyGridResponsiveControl();
+}
+
+bool CoilCoolingDXVariableSpeed::isLowerBoundToApplyGridResponsiveControlDefaulted() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->isLowerBoundToApplyGridResponsiveControlDefaulted();
+}
+
+double CoilCoolingDXVariableSpeed::upperBoundToApplyGridResponsiveControl() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->upperBoundToApplyGridResponsiveControl();
+}
+
+bool CoilCoolingDXVariableSpeed::isUpperBoundToApplyGridResponsiveControlDefaulted() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->isUpperBoundToApplyGridResponsiveControlDefaulted();
+}
+
+double CoilCoolingDXVariableSpeed::maxSpeedLevelDuringGridResponsiveControl() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->maxSpeedLevelDuringGridResponsiveControl();
+}
+
+bool CoilCoolingDXVariableSpeed::isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->isMaxSpeedLevelDuringGridResponsiveControlDefaulted();
+}
+
+std::string CoilCoolingDXVariableSpeed::isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->isMaxSpeedLevelDuringGridResponsiveControlDefaulted();
+}
+
+bool CoilCoolingDXVariableSpeed::isLoadControlDuringGridResponsiveControlDefaulted() const {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->isLoadControlDuringGridResponsiveControlDefaulted();
+}
+
+bool CoilCoolingDXVariableSpeed::setGridSignalSchedule(Schedule& schedule) {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setGridSignalSchedule(schedule);
+}
+
+void CoilCoolingDXVariableSpeed::resetGridSignalSchedule() {
+  getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetGridSignalSchedule();
+}
+
+bool CoilCoolingDXVariableSpeed::setLowerBoundToApplyGridResponsiveControl(double lowerBoundToApplyGridResponsiveControl) {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setLowerBoundToApplyGridResponsiveControl(lowerBoundToApplyGridResponsiveControl);
+}
+
+void CoilCoolingDXVariableSpeed::resetLowerBoundToApplyGridResponsiveControl() {
+  getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetLowerBoundToApplyGridResponsiveControl();
+}
+
+bool CoilCoolingDXVariableSpeed::setUpperBoundToApplyGridResponsiveControl(double upperBoundToApplyGridResponsiveControl) {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setUpperBoundToApplyGridResponsiveControl(upperBoundToApplyGridResponsiveControl);
+}
+
+void CoilCoolingDXVariableSpeed::resetUpperBoundToApplyGridResponsiveControl() {
+  getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetUpperBoundToApplyGridResponsiveControl();
+}
+
+bool CoilCoolingDXVariableSpeed::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setMaxSpeedLevelDuringGridResponsiveControl(maxSpeedLevelDuringGridResponsiveControl);
+}
+
+void CoilCoolingDXVariableSpeed::resetMaxSpeedLevelDuringGridResponsiveControl() {
+  getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetMaxSpeedLevelDuringGridResponsiveControl();
+}
+
+bool CoilCoolingDXVariableSpeed::setLoadControlDuringGridResponsiveControl(std::string loadControlDuringGridResponsiveControl) {
+  return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setLoadControlDuringGridResponsiveControl(loadControlDuringGridResponsiveControl);
+}
+
+void CoilCoolingDXVariableSpeed::resetLoadControlDuringGridResponsiveControl() {
+  getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetLoadControlDuringGridResponsiveControl();
 }
 
 /// @cond
