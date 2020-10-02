@@ -27737,9 +27737,9 @@ OS:ThermalStorage:Pcm:Simple,
       \memo It should be placed in the chilled water supply side outlet branch
       \memo followed by a pipe.
       \memo Use the PlantEquipmentOperation:ComponentSetpoint plant operation scheme.
-  A1,  \field Handle
-       \type handle
-       \required-field
+  A1, \field Handle
+      \type handle
+      \required-field
   A2, \field Name
       \type alpha
       \required-field
@@ -27764,25 +27764,25 @@ OS:ThermalStorage:Pcm:Simple,
   A5, \field Outlet Node Name
       \type node
       \required-field
-  N2, \field Onset Temperature of phase change
+  N2, \field Onset Temperature Of Phase Change
       \type real
       \units deltaC
       \note This input field is optional. If specified, it is used for replace the default value.
       \note If blank or omitted, the default value specified 
       \default 5.5
-  N3, \field Finish Temperature of phase change
+  N3, \field Finish Temperature Of Phase Change
       \type real
       \units deltaC
       \note This input field is optional. If specified, it is used for replace the default value.
       \note If blank or omitted, the default value specified 
       \default 7.0
-  N4, \field UA at soild phase of phase change material
+  N4, \field UA At Soild Phase Of Phase Change Material
       \type real
       \units W/K
       \note This input field is optional. If specified, it is used for replace the default value.
       \note If blank or omitted, the default value specified 
       \default 20000
-  N5; \field UA at liquid phase of phase change material
+  N5; \field UA At Liquid Phase Of Phase Change Material
       \type real
       \units W/K
       \note This input field is optional. If specified, it is used for replace the default value.

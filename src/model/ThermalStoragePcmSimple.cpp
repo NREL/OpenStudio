@@ -65,7 +65,7 @@ namespace detail {
   const std::vector<std::string>& ThermalStoragePcmSimple_Impl::outputVariableNames() const
   {
     static const std::vector<std::string> result{
-
+      // TODO
     };
     return result;
   }
@@ -74,7 +74,113 @@ namespace detail {
     return ThermalStoragePcmSimple::iddObjectType();
   }
 
+  std::string ThermalStoragePcmSimple_Impl::iceStorageType() const {
+    boost::optional<std::string> value = getString(OS_ThermalStorage_Pcm_SimpleFields::IceStorageType, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
 
+  double ThermalStoragePcmSimple_Impl::capacity() const {
+    boost::optional<double> value = getString(OS_ThermalStorage_Pcm_SimpleFields::Capacity, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  double ThermalStoragePcmSimple_Impl::onsetTemperatureOfPhaseChange() const {
+    boost::optional<double> value = getString(OS_ThermalStorage_Pcm_SimpleFields::OnsetTemperatureOfPhaseChange, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ThermalStoragePcmSimple_Impl::isOnsetTemperatureOfPhaseChangeDefaulted() const {
+    return isEmpty(OS_ThermalStorage_Pcm_SimpleFields::OnsetTemperatureOfPhaseChange);
+  }
+
+  double ThermalStoragePcmSimple_Impl::finishTemperatureOfPhaseChange() const {
+    boost::optional<double> value = getString(OS_ThermalStorage_Pcm_SimpleFields::FinishTemperatureOfPhaseChange, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ThermalStoragePcmSimple_Impl::isFinishTemperatureOfPhaseChangeDefaulted() const {
+    return isEmpty(OS_ThermalStorage_Pcm_SimpleFields::FinishTemperatureOfPhaseChange);
+  }
+
+  double ThermalStoragePcmSimple_Impl::uaAtSolidPhaseOfPhaseChangeMaterial() const {
+    boost::optional<double> value = getString(OS_ThermalStorage_Pcm_SimpleFields::UAAtSolidPhaseOfPhaseChangeMaterial, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ThermalStoragePcmSimple_Impl::isUAAtSolidPhaseOfPhaseChangeMaterialDefaulted() const {
+    return isEmpty(OS_ThermalStorage_Pcm_SimpleFields::UAAtSolidPhaseOfPhaseChangeMaterial);
+  }
+
+  double ThermalStoragePcmSimple_Impl::uaAtLiquidPhaseOfPhaseChangeMaterial() const {
+    boost::optional<double> value = getString(OS_ThermalStorage_Pcm_SimpleFields::UAAtLiquidPhaseOfPhaseChangeMaterial, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ThermalStoragePcmSimple_Impl::isUAAtLiquidPhaseOfPhaseChangeMaterialDefaulted() const {
+    return isEmpty(OS_ThermalStorage_Pcm_SimpleFields::UAAtLiquidPhaseOfPhaseChangeMaterial);
+  }
+
+  bool ThermalStoragePcmSimple_Impl::setIceStorageType(std::string iceStorageType) {
+    bool result = setString(OS_ThermalStorage_Ice_DetailedFields::IceStorageType, iceStorageType);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  bool ThermalStoragePcmSimple_Impl::setCapacity(double capacity) {
+    bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::Capacity, capacity);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  bool ThermalStoragePcmSimple_Impl::setOnsetTemperatureOfPhaseChange(double onsetTemperatureOfPhaseChange) {
+    bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::OnsetTemperatureOfPhaseChange, onsetTemperatureOfPhaseChange);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void ThermalStoragePcmSimple_Impl::resetOnsetTemperatureOfPhaseChange() {
+    bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::OnsetTemperatureOfPhaseChange, "");
+    OS_ASSERT(result);
+  }
+
+  bool ThermalStoragePcmSimple_Impl::setFinishTemperatureOfPhaseChange(double finishTemperatureOfPhaseChange) {
+    bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::FinishTemperatureOfPhaseChange, finishTemperatureOfPhaseChange);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void ThermalStoragePcmSimple_Impl::resetFinishTemperatureOfPhaseChange() {
+    bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::FinishTemperatureOfPhaseChange, "");
+    OS_ASSERT(result);
+  }
+
+  bool ThermalStoragePcmSimple_Impl::setUAAtSolidPhaseOfPhaseChangeMaterial(double uaAtSolidPhaseOfPhaseChangeMaterial) {
+    bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::UAAtSolidPhaseOfPhaseChangeMaterial, uaAtSolidPhaseOfPhaseChangeMaterial);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void ThermalStoragePcmSimple_Impl::resetUAAtSolidPhaseOfPhaseChangeMaterial() {
+    bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::UAAtSolidPhaseOfPhaseChangeMaterial, "");
+    OS_ASSERT(result);
+  }
+
+  bool ThermalStoragePcmSimple_Impl::setUAAtLiquidPhaseOfPhaseChangeMaterial(double uaAtLiquidPhaseofPhaseChangeMaterial) {
+    bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::UAAtLiquidPhaseOfPhaseChangeMaterial, uaAtLiquidPhaseofPhaseChangeMaterial);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void ThermalStoragePcmSimple_Impl::resetUAAtLiquidPhaseOfPhaseChangeMaterial() {
+    bool result = setDouble(OS_ThermalStorage_Ice_DetailedFields::UAAtLiquidPhaseOfPhaseChangeMaterial, "");
+    OS_ASSERT(result);
+  }
 
   unsigned ThermalStoragePcmSimple_Impl::inletPort() const {
     return OS_ThermalStorage_Pcm_SimpleFields::InletNodeName;
@@ -102,8 +208,6 @@ namespace detail {
     return newMo;
   }
 
-
-
 } // detail
 
 ThermalStoragePcmSimple::ThermalStoragePcmSimple(const Model& model)
@@ -111,14 +215,93 @@ ThermalStoragePcmSimple::ThermalStoragePcmSimple(const Model& model)
 {
   OS_ASSERT(getImpl<detail::ThermalStoragePcmSimple_Impl>());
 
-
+  setIceStorageType("IceOnCoilInternal"); // TODO
+  setCapacity(0.0); // TODO
 }
 
 IddObjectType ThermalStoragePcmSimple::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ThermalStorage_Pcm_Simple);
 }
 
+std::string ThermalStoragePcmSimple::iceStorageType() const {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->iceStorageType();
+}
 
+double ThermalStoragePcmSimple::capacity() const {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->capacity();
+}
+
+double ThermalStoragePcmSimple::onsetTemperatureOfPhaseChange() const {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->onsetTemperatureOfPhaseChange();
+}
+
+bool ThermalStoragePcmSimple::isOnsetTemperatureOfPhaseChangeDefaulted() const {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->isOnsetTemperatureOfPhaseChangeDefaulted();
+}
+
+double ThermalStoragePcmSimple::finishTemperatureOfPhaseChange() const {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->finishTemperatureOfPhaseChange();
+}
+
+bool ThermalStoragePcmSimple::isFinishTemperatureOfPhaseChangeDefaulted() const {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->isFinishTemperatureOfPhaseChangeDefaulted();
+}
+
+double ThermalStoragePcmSimple::uaAtSolidPhaseOfPhaseChangeMaterial() const {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->uaAtSolidPhaseOfPhaseChangeMaterial();
+}
+
+bool ThermalStoragePcmSimple::isUAAtSolidPhaseOfPhaseChangeMaterialDefaulted() const {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->isUAAtSolidPhaseOfPhaseChangeMaterialDefaulted();
+}
+
+double ThermalStoragePcmSimple::uaAtLiquidPhaseOfPhaseChangeMaterial() const {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->uaAtLiquidPhaseOfPhaseChangeMaterial();
+}
+
+bool ThermalStoragePcmSimple::isUAAtLiquidPhaseOfPhaseChangeMaterialDefaulted() const {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->isUAAtLiquidPhaseOfPhaseChangeMaterialDefaulted();
+}
+
+bool ThermalStoragePcmSimple::setIceStorageType(std::string iceStorageType) {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->setIceStorageType(iceStorageType);
+}
+
+bool ThermalStoragePcmSimple::setCapacity(double capacity) {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->setCapacity(capacity);
+}
+
+bool ThermalStoragePcmSimple::setOnsetTemperatureOfPhaseChange(double onsetTemperatureOfPhaseChange) {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->setOnsetTemperatureOfPhaseChange(onsetTemperatureOfPhaseChange);
+}
+
+void ThermalStoragePcmSimple::resetOnsetTemperatureOfPhaseChange() {
+  getImpl<detail::ThermalStoragePcmSimple_Impl>()->resetOnsetTemperatureOfPhaseChange();
+}
+
+bool ThermalStoragePcmSimple::setFinishTemperatureOfPhaseChange(double finishTemperatureOfPhaseChange) {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->setFinishTemperatureOfPhaseChange(finishTemperatureOfPhaseChange);
+}
+
+void ThermalStoragePcmSimple::resetFinishTemperatureOfPhaseChange() {
+  getImpl<detail::ThermalStoragePcmSimple_Impl>()->resetFinishTemperatureOfPhaseChange();
+}
+
+bool ThermalStoragePcmSimple::setUAAtSolidPhaseOfPhaseChangeMaterial(double uaAtSolidPhaseOfPhaseChangeMaterial) {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->setUAAtSolidPhaseOfPhaseChangeMaterial(uaAtSolidPhaseOfPhaseChangeMaterial);
+}
+
+void ThermalStoragePcmSimple::resetUAAtSolidPhaseOfPhaseChangeMaterial() {
+  getImpl<detail::ThermalStoragePcmSimple_Impl>()->resetUAAtSolidPhaseOfPhaseChangeMaterial();
+}
+
+bool ThermalStoragePcmSimple::setUAAtLiquidPhaseOfPhaseChangeMaterial(double uaAtLiquidPhaseofPhaseChangeMaterial) {
+  return getImpl<detail::ThermalStoragePcmSimple_Impl>()->setUAAtLiquidPhaseOfPhaseChangeMaterial(uaAtLiquidPhaseofPhaseChangeMaterial);
+}
+
+void ThermalStoragePcmSimple::resetUAAtLiquidPhaseOfPhaseChangeMaterial() {
+  getImpl<detail::ThermalStoragePcmSimple_Impl>()->resetUAAtLiquidPhaseOfPhaseChangeMaterial();
+}
 
 /// @cond
 ThermalStoragePcmSimple::ThermalStoragePcmSimple(std::shared_ptr<detail::ThermalStoragePcmSimple_Impl> impl)

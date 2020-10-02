@@ -31,7 +31,8 @@
 #include "../../model/ThermalStoragePcmSimple.hpp"
 #include "../../model/ThermalStoragePcmSimple_Impl.hpp"
 #include "../../model/Model.hpp"
-
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/ThermalStorage_Pcm_Simple_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -54,7 +55,51 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStoragePcmSimple(
     idfObject.setName(*s);
   }
 
+  // InletNodeName
+  if( auto mo = modelObject.inletModelObject() ) {
+    if( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(ThermalStorage_Pcm_SimpleFields::InletNodeName,node->name().get());
+    }
+  }
 
+  // OutletNodeName
+  if( auto mo = modelObject.outletModelObject() ) {
+    if( auto node = mo->optionalCast<Node>() ) {
+      idfObject.setString(ThermalStorage_Pcm_SimpleFields::OutletNodeName,node->name().get());
+    }
+  }
+
+  // IceStorageType
+  {
+    auto value = modelObject.iceStorageType();
+    idfObject.setString(ThermalStorage_Pcm_SimpleFields::IceStorageType,value);
+  }
+
+  // Capacity
+  {
+    auto value = modelObject.capacity();
+    idfObject.setString(ThermalStorage_Pcm_SimpleFields::Capacity,value);
+  }
+
+  // OnsetTemperatureOfPhaseChange
+  if( (value = modelObject.onsetTemperatureOfPhaseChange()) ) {
+    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::OnsetTemperatureOfPhaseChange,value.get());
+  }
+
+  // FinishTemperatureOfPhaseChange
+  if( (value = modelObject.finishTemperatureOfPhaseChange()) ) {
+    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::FinishTemperatureOfPhaseChange,value.get());
+  }
+
+  // UAAtSolidPhaseOfPhaseChangeMaterial
+  if( (value = modelObject.uaAtSolidPhaseOfPhaseChangeMaterial()) ) {
+    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::UAAtSolidPhaseOfPhaseChangeMaterial,value.get());
+  }
+
+  // UAAtLiquidPhaseOfPhaseChangeMaterial
+  if( (value = modelObject.uaAtLiquidPhaseOfPhaseChangeMaterial()) ) {
+    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::UAAtLiquidPhaseOfPhaseChangeMaterial,value.get());
+  }
 
   return idfObject;
 }

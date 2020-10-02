@@ -36,8 +36,6 @@
 namespace openstudio {
 namespace model {
 
-
-
 namespace detail {
 
   /** ThermalStoragePcmSimple_Impl is a StraightComponent_Impl that is the implementation class for ThermalStoragePcmSimple.*/
@@ -68,18 +66,53 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
-
     //@}
     /** @name Getters */
     //@{
 
+    std::string iceStorageType() const;
 
+    double capacity() const;
+
+    double onsetTemperatureOfPhaseChange() const;
+
+    bool isOnsetTemperatureOfPhaseChangeDefaulted() const;
+
+    double finishTemperatureOfPhaseChange() const;
+
+    bool isFinishTemperatureOfPhaseChangeDefaulted() const;
+
+    double uaAtSolidPhaseOfPhaseChangeMaterial() const;
+
+    bool isUAAtSolidPhaseOfPhaseChangeMaterialDefaulted() const;
+
+    double uaAtLiquidPhaseOfPhaseChangeMaterial() const;
+
+    bool isUAAtLiquidPhaseOfPhaseChangeMaterialDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
+    bool setIceStorageType(std::string iceStorageType);
 
+    bool setCapacity(double capacity);
+
+    bool setOnsetTemperatureOfPhaseChange(double onsetTemperatureOfPhaseChange);
+
+    void resetOnsetTemperatureOfPhaseChange();
+
+    bool setFinishTemperatureOfPhaseChange(double finishTemperatureOfPhaseChange);
+
+    void resetFinishTemperatureOfPhaseChange();
+
+    bool setUAAtSolidPhaseOfPhaseChangeMaterial(double uaAtSolidPhaseOfPhaseChangeMaterial);
+
+    void resetUAAtSolidPhaseOfPhaseChangeMaterial();
+
+    bool setUAAtLiquidPhaseOfPhaseChangeMaterial(double uaAtLiquidPhaseofPhaseChangeMaterial);
+
+    void resetUAAtLiquidPhaseOfPhaseChangeMaterial();
 
     //@}
     /** @name Other */
@@ -96,8 +129,6 @@ namespace detail {
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.ThermalStoragePcmSimple");
-
-
   };
 
 } // detail
