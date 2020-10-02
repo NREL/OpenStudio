@@ -2872,6 +2872,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData);
   REGISTER_CONSTRUCTOR(CoilHeatingWaterBaseboard);
   REGISTER_CONSTRUCTOR(CoilHeatingWaterBaseboardRadiant);
+  REGISTER_CONSTRUCTOR(CoilLiquidDesiccantSimple);
   REGISTER_CONSTRUCTOR(CoilPerformanceDXCooling);
   REGISTER_CONSTRUCTOR(CoilSystemCoolingWaterHeatExchangerAssisted);
   REGISTER_CONSTRUCTOR(CoilSystemCoolingDXHeatExchangerAssisted);
@@ -3372,6 +3373,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData);
   REGISTER_COPYCONSTRUCTORS(CoilHeatingWaterBaseboard);
   REGISTER_COPYCONSTRUCTORS(CoilHeatingWaterBaseboardRadiant);
+  REGISTER_COPYCONSTRUCTORS(CoilLiquidDesiccantSimple);
   REGISTER_COPYCONSTRUCTORS(CoilPerformanceDXCooling);
   REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingWaterHeatExchangerAssisted);
   REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingDXHeatExchangerAssisted);

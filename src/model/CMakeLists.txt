@@ -405,6 +405,9 @@ set(${target_name}_src
   CoilHeatingWaterBaseboardRadiant.hpp
   CoilHeatingWaterBaseboardRadiant_Impl.hpp
   CoilHeatingWaterBaseboardRadiant.cpp
+  CoilLiquidDesiccantSimple.hpp
+  CoilLiquidDesiccantSimple_Impl.hpp
+  CoilLiquidDesiccantSimple.cpp
   CoilPerformanceDXCooling.hpp
   CoilPerformanceDXCooling_Impl.hpp
   CoilPerformanceDXCooling.cpp
@@ -1801,6 +1804,7 @@ set(${target_name}_test_src
   test/CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_GTest.cpp
   test/CoilHeatingWaterBaseboard_GTest.cpp
   test/CoilHeatingWaterBaseboardRadiant_GTest.cpp
+  test/CoilLiquidDesiccantSimple_GTest.cpp
   test/CoilSystemCoolingDXHeatExchangerAssisted_GTest.cpp
   test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
   test/CoilPerformanceDXCooling_GTest.cpp

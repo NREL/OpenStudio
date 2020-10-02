@@ -201,6 +201,7 @@ ScheduleTypeRegistrySingleton::ScheduleTypeRegistrySingleton()
     {"CoilHeatingLowTempRadiantVarFlow","Heating Control Temperature","heatingControlTemperature",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"CoilHeatingWater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilHeatingWaterBaseboard","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
+    {"CoilLiquidDesiccantSimple","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilWaterHeatingDesuperheater","Availability","availabilitySchedule",false,"Availability",0.0,1.0},
     {"CoilWaterHeatingDesuperheater","Setpoint Temperature","setpointTemperatureSchedule",true,"Temperature",OptionalDouble(),OptionalDouble()},
     {"ConstructionAirBoundary", "Simple Mixing", "simpleMixingSchedule", true, "", 0.0, OptionalDouble()},
