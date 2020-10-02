@@ -28829,7 +28829,7 @@ Fan:ComponentModel,
 Coil:Cooling:Water,
        \memo Chilled water cooling coil, NTU-effectiveness model, with inputs for design entering
        \memo and leaving conditions.
-   \min-fields 15
+       \min-fields 15
   A1 , \field Name
        \required-field
        \reference CoolingCoilName
@@ -28910,6 +28910,129 @@ Coil:Cooling:Water,
   N8 ; \field Design Water Temperature Difference
        \type real
        \units deltaC
+       \minimum> 0.0
+       \note This input field is optional. If specified, it is used for sizing the Design Water Flow Rate.
+       \note If blank or omitted, the Loop Design Temperature Difference value specified in Sizing:Plant
+       \note object is used for sizing the Design Water Flow Rate.
+
+Coil:LiquidDesiccant:Simple,
+       \memo Liduid desiccant dehumidification coil, NTU-effectiveness model, with inputs for design entering
+       \memo and leaving conditions.
+       \min-fields 20
+  A1 , \field Name
+       \required-field
+       \reference CoolingCoilName
+       \reference CoolingCoilsWater
+       \reference CoolingCoilsWaterNoHX
+       \reference AFNCoilNames
+       \reference SimpleCoils
+       \reference-class-name validBranchEquipmentTypes
+       \reference validBranchEquipmentNames
+       \reference-class-name validOASysEquipmentTypes
+       \reference validOASysEquipmentNames
+  A2 , \field Availability Schedule Name
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+  N1 , \field Design Water Flow Rate
+       \units m3/s
+       \autosizable
+       \default autosize
+       \minimum 0
+       \ip-units gal/min
+  N2 , \field Design Air Flow Rate
+       \units m3/s
+       \autosizable
+       \default autosize
+       \minimum 0
+  N3 , \field Design Inlet Water Temperature
+       \units C
+       \autosizable
+       \default autosize
+       \minimum> 0
+  N4 , \field Design Inlet Air Temperature
+       \units C
+       \autosizable
+       \default autosize
+       \minimum> 0
+  N5 , \field Design Outlet Air Temperature
+       \units C
+       \autosizable
+       \default autosize
+       \minimum> 0
+  N6 , \field Design Inlet Air Humidity Ratio
+       \units kgWater/kgDryAir
+       \autosizable
+       \default autosize
+       \minimum 0
+  N7 , \field Design Outlet Air Humidity Ratio
+       \units kgWater/kgDryAir
+       \autosizable
+       \default autosize
+       \minimum 0
+  N8 , \field Design Inlet Solution Concentration
+       \units dimensionless
+       \autosizable
+       \default autosize
+       \minimum 0
+  N9 , \field Design fan Power Per Unit Mass Flow Rate
+       \type real
+       \units watt
+       \autosizable
+       \default 50
+       \minimum 0
+  N10 ,\field Outdoor Air Flow Rates
+       \type real
+       \units m3/s
+       \autosizable
+       \default autosize
+       \minimum 0
+  N11 ,\field Design Pump Power 
+       \type real
+       \units watt
+       \autosizable
+       \default 100
+       \minimum 0
+  N12 ,\field Design Effectiveness At Normal Condition
+       \type real
+       \units watt
+       \autosizable
+       \default 1.0
+       \minimum 0.1
+  A3 , \field Water Inlet Node Name
+       \required-field
+       \type node
+  A4 , \field Water Outlet Node Name
+       \required-field
+       \type node
+  A5 , \field Air Inlet Node Name
+       \required-field
+       \type node
+  A6 , \field Air Outlet Node Name
+       \required-field
+       \type node
+  A7 , \field Type of operation mode
+       \type choice
+       \key RegenerationMode
+       \key DehumidificationMode
+       \default DehumidificationMode
+  A8 , \field Air Source
+       \type choice
+       \key OutdoorAirSource
+       \key ZoneAirSource
+       \default ZoneAirSource
+  A9 , \field Material
+       \type choice
+       \key LiCl
+       \key LiBr
+       \default LiCl
+  A10, \field Condensate Collection Water Storage Tank Name
+       \type object-list
+       \object-list WaterStorageTankNames
+  N13 ;\field Design Liquid Desiccant Concentration Difference
+       \type real
+       \units dimensionless
        \minimum> 0.0
        \note This input field is optional. If specified, it is used for sizing the Design Water Flow Rate.
        \note If blank or omitted, the Loop Design Temperature Difference value specified in Sizing:Plant
