@@ -78,6 +78,13 @@ namespace openstudio{
     /// check inequality
     bool operator!=(const Point3d& other) const;
 
+    // Assignment from another point
+    void setFrom(const Point3d& other) {
+      m_storage[0] = other.m_storage[0];
+      m_storage[1] = other.m_storage[1];
+      m_storage[2] = other.m_storage[2];
+    }
+
   private:
 
     REGISTER_LOGGER("utilities.Point3d");

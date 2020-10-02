@@ -86,9 +86,9 @@ namespace openstudio{
 
   /// compute the union of many polygons, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed)
   /// polygons are inflated by offset to improve adjacency calculation
-  UTILITIES_API std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vector<Point3d>>& polygons, double tol, double offset);
+  UTILITIES_API std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vector<Point3d>>& polygons, double offset, double tol);
 
-  UTILITIES_API boost::optional<std::vector<Point3d>> buffer(const std::vector<std::vector<Point3d>>& polygons, double amount, double tol);
+  UTILITIES_API std::vector<std::vector<Point3d>> buffer(const std::vector<std::vector<Point3d>>& polygons, double amount, double tol);
 
   /// intersect two polygons, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates but reversed)
   UTILITIES_API boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol);
@@ -113,6 +113,10 @@ namespace openstudio{
   /// simplify a list of vertices, requires that all vertices are in clockwise order on the z = 0 plane (i.e. in face coordinates)
   UTILITIES_API std::vector<Point3d> simplify(const std::vector<Point3d>& vertices, bool removeCollinear, double tol);
 
-} // openstudio
+  UTILITIES_API std::vector<std::vector<Point3d>> CanonicalPoints(const std::vector<std::vector<Point3d>>& polygons, double tol);
+
+  UTILITIES_API void Canonical(Point3d& point, std::vector<Point3d>& canonicalPoints, double tol);
+
+  } // openstudio
 
 #endif //UTILITIES_GEOMETRY_INTERSECTION_HPP

@@ -529,7 +529,7 @@ namespace openstudio{
   /// <param name="amount"></param>
   /// <param name="tol"></param>
   /// <returns></returns>
-  boost::optional<std::vector<Point3d>> buffer(const std::vector<std::vector<Point3d>>& polygons, double amount, double tol) {
+ std::vector<std::vector<Point3d>> buffer(const std::vector<std::vector<Point3d>>& polygons, double amount, double tol) {
     BoostMultiPolygon source;
     std::vector<Point3d> allPoints;
 
@@ -552,9 +552,13 @@ namespace openstudio{
     boost::geometry::buffer(source, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy); 
     boost::geometry::buffer(resultExpand, resultShrink, expand, side_strategy, join_strategy, end_strategy, point_strategy);
 
-    std::vector<Point3d> xxx = verticesFromBoostPolygon(resultShrink[0], allPoints, tol);
-
-    return xxx;
+    std::vector<std::vector<Point3d>> result;
+    for (auto boostPolygon : resultShrink) {
+      auto polygon = verticesFromBoostPolygon(boostPolygon, allPoints, tol);
+      polygon = simplify(polygon, true, tol);
+      result.push_back(polygon);
+    }
+    return result;
   }
 
   boost::optional<std::vector<Point3d>> buffer(const std::vector<Point3d>& polygon1, double amount, double tol) {
@@ -621,7 +625,7 @@ namespace openstudio{
     }else if (!unionResult[0].inners().empty()) {
       // check for holes
       LOG_FREE(Error, "utilities.geometry.join", "Union has inner loops");
-      return boost::none;
+      //return boost::none;
     };
 
     std::vector<Point3d> unionVertices = verticesFromBoostPolygon(unionResult[0], allPoints, tol);
@@ -647,7 +651,7 @@ namespace openstudio{
     return unionVertices;
   }
 
-  std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vector<Point3d>>& polygons, double tol, double offset) 
+  std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vector<Point3d>>& polygons, double offset, double tol) 
   {
     std::vector<std::vector<Point3d>> result;
 
@@ -656,24 +660,107 @@ namespace openstudio{
       return polygons;
     }
 
-    std::vector<std::vector<Point3d>> xpolygons;
+    std::vector<double> polygonAreas(N, 0.0);
+    for (unsigned i = 0; i < N; ++i) {
+      auto area = getArea(polygons[i]);
+      if (area) {
+        polygonAreas[i] = *area;
+      }
+    }
+
+    std::vector<std::vector<Point3d>> modifiedPolygons;
 
     for (unsigned i = 0; i < N; i++) {
-      xpolygons.push_back(*buffer(polygons[i], offset, tol));
+      modifiedPolygons.push_back(*buffer(polygons[i], offset, tol));
     }
     
     Matrix A(N, N, 0.0);
     for (unsigned i = 0; i < N; ++i) {
       A(i, i) = 1.0;
       for (unsigned j = i + 1; j < N; ++j) {
-        if (join(xpolygons[i], xpolygons[j], tol)) {
+        if (join(modifiedPolygons[i], modifiedPolygons[j], tol)) {
           A(i, j) = 1.0;
           A(j, i) = 1.0;
         }
       }
     }
 
+        std::vector<std::vector<unsigned>> connectedComponents = findConnectedComponents(A);
+    for (const std::vector<unsigned>& component : connectedComponents) {
+      std::vector<unsigned> orderedComponent(component);
+      std::sort(orderedComponent.begin(), orderedComponent.end(), [&polygonAreas](int ia, int ib) { return polygonAreas[ia] > polygonAreas[ib]; });
+
+      std::vector<Point3d> points;
+      std::set<unsigned> joinedComponents;
+
+      // try to join at most component.size() times
+      for (unsigned n = 0; n < component.size(); ++n) {
+
+        // loop over polygons to join in order
+        for (unsigned i : orderedComponent) {
+          if (points.empty()) {
+            points = modifiedPolygons[i];
+            joinedComponents.insert(i);
+          } else {
+            // if not already joined
+            if (joinedComponents.find(i) == joinedComponents.end()) {
+              boost::optional<std::vector<Point3d>> joined = join(points, modifiedPolygons[i], tol);
+              if (joined) {
+                points = *joined;
+                joinedComponents.insert(i);
+              }
+            }
+          }
+        }
+
+        // if all polygons have been joined then we are done
+        if (joinedComponents.size() == component.size()) {
+          break;
+        }
+      }
+
+      if (joinedComponents.size() != component.size()) {
+        LOG_FREE(Error, "utilities.geometry.joinAll", "Could not join all connected components");
+      }
+      points = simplify(points, true, tol);
+      result.push_back(points);
+    }
+
     return result;
+
+    return result;
+  }
+
+  /// <summary>
+  /// Creates a canonical set of points form th einput polygon. Any point that is within the tolerance of
+  /// a canonical point is adjyested to be equal to that point
+  /// </summary>
+  /// <param name="polygons"></param>
+  /// <param name="tol"></param>
+  /// <returns></returns>
+  std::vector<std::vector<Point3d>> CanonicalPoints(const std::vector<std::vector<Point3d>>& polygons, double tol) {
+
+    std::vector<Point3d> canonicalPoints;
+    for (auto polygon : polygons) {
+      for (auto point : polygon) {
+        Canonical(point, canonicalPoints, tol);
+      }
+    }
+
+    return polygons;
+  }
+
+
+  void Canonical(Point3d& point, std::vector<Point3d>& canonicalPoints, double tol) {
+
+    for (auto canonical : canonicalPoints) {
+      double dist = getDistance(canonical, point);
+      if (dist <= tol && dist > 0) {
+        point.setFrom(canonical);
+        return;
+      }
+    }
+    canonicalPoints.push_back(point);
   }
 
   std::vector<std::vector<Point3d> > joinAll(const std::vector<std::vector<Point3d> >& polygons, double tol)
@@ -693,12 +780,14 @@ namespace openstudio{
       }
     }
 
+    std::vector<std::vector<Point3d>> modifiedPolygons = polygons;  //CanonicalPoints(polygons, tol);
+
     // compute adjacency matrix
     Matrix A(N,N,0.0);
     for (unsigned i = 0; i < N; ++i){
       A(i,i) = 1.0;
       for (unsigned j = i+1; j < N; ++j){
-        if (join(polygons[i], polygons[j], tol)){
+        if (join(modifiedPolygons[i], modifiedPolygons[j], tol)) {
           A(i,j) = 1.0;
           A(j,i) = 1.0;
         }
@@ -721,12 +810,12 @@ namespace openstudio{
         // loop over polygons to join in order
         for (unsigned i : orderedComponent) {
           if (points.empty()){
-            points = polygons[i];
+            points = modifiedPolygons[i];
             joinedComponents.insert(i);
           }else{
             // if not already joined
             if (joinedComponents.find(i) == joinedComponents.end()) {
-              boost::optional<std::vector<Point3d> > joined = join(points, polygons[i], tol);
+              boost::optional<std::vector<Point3d>> joined = join(points, modifiedPolygons[i], tol);
               if (joined){
                 points = *joined;
                 joinedComponents.insert(i);

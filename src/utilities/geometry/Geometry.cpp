@@ -63,6 +63,15 @@ namespace openstudio{
     return result;
   }
 
+  double getPerimeter(const std::vector<Point3d>& points) {
+    double perimeter = 0;
+    for (int i = 0; i < points.size(); i++) {
+      perimeter += getDistance(points[i], points[(i + 1) % points.size()]);
+    }
+
+    return perimeter;
+  }
+
   // compute Newall vector from Point3dVector, direction is same as outward normal
   // magnitude is twice the area
   OptionalVector3d getNewallVector(const Point3dVector& points)

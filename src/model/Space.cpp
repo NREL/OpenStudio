@@ -3452,7 +3452,7 @@ Space::Space(std::shared_ptr<detail::Space_Impl> impl)
 void intersectSurfaces(std::vector<Space>& t_spaces)
 {
   std::vector<Space> spaces(t_spaces);
-  std::sort(spaces.begin(), spaces.end(), [](const Space & a, const Space & b) -> bool {return a.floorArea() < b.floorArea(); });
+  //std::sort(spaces.begin(), spaces.end(), [](const Space & a, const Space & b) -> bool {return a.floorArea() < b.floorArea(); });
 
   std::vector<BoundingBox> bounds;
   for (const Space& space : spaces){
@@ -3461,7 +3461,9 @@ void intersectSurfaces(std::vector<Space>& t_spaces)
 
   for (unsigned i = 0; i < spaces.size(); ++i){
     for (unsigned j = i+1; j < spaces.size(); ++j){
-      if (!bounds[i].intersects(bounds[j])){
+      std::string namei = spaces[i].name().value();
+      std::string namej = spaces[j].name().value();
+      if (!bounds[i].intersects(bounds[j])) {
         continue;
       }
       spaces[i].intersectSurfaces(spaces[j]);

@@ -1009,6 +1009,824 @@ TEST_F(GeometryFixture, JoinAll_2527) {
 
   EXPECT_TRUE(circularEqual(poly6, test[0]));
 }
+
+/// <summary>
+/// Polygons from roof slabs from BaseCase inmport (from our test data)
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(GeometryFixture, JoinAll_Points4) {
+  double tol = 2;
+
+  std::vector<Point3dVector> test;
+  std::vector<Point3dVector> polygons;
+
+  std::vector<Point3d> poly1;
+  poly1.push_back(Point3d(-14302, 37295, 0));
+  poly1.push_back(Point3d(-16228, 37295, 0));
+  poly1.push_back(Point3d(-16086, 41746, 0));
+  poly1.push_back(Point3d(-14302, 41746, 0));
+  poly1.push_back(Point3d(-14302, 37295, 0));
+
+  std::vector<Point3d> poly2;
+  poly2.push_back(Point3d(-11564, 43144, 0));
+  poly2.push_back(Point3d(-13645, 43144, 0));
+  poly2.push_back(Point3d(-13645, 44355, 0));
+  poly2.push_back(Point3d(-11564, 44355, 0));
+  poly2.push_back(Point3d(-11564, 43144, 0));
+
+  std::vector<Point3d> poly3;
+  poly3.push_back(Point3d(-11564, 41746, 0));
+  poly3.push_back(Point3d(-19601, 41746, 0));
+  poly3.push_back(Point3d(-19601, 43144, 0));
+  poly3.push_back(Point3d(-11564, 43144, 0));
+  poly3.push_back(Point3d(-11564, 41746, 0));
+
+  std::vector<Point3d> poly4;
+  poly4.push_back(Point3d(-11297, 37295, 0));
+  poly4.push_back(Point3d(-14302, 37295, 0));
+  poly4.push_back(Point3d(-14302, 39004, 0));
+  poly4.push_back(Point3d(-11297, 39004, 0));
+  poly4.push_back(Point3d(-11297, 37295, 0));
+
+  std::vector<Point3d> poly5;
+  poly5.push_back(Point3d(-2764, 43461, 0));
+  poly5.push_back(Point3d(-4041, 43461, 0));
+  poly5.push_back(Point3d(-3956, 45336, 0));
+  poly5.push_back(Point3d(-2764, 45282, 0));
+  poly5.push_back(Point3d(-2764, 43461, 0));
+
+  std::vector<Point3d> poly6;
+  poly6.push_back(Point3d(-2764, 41746, 0));
+  poly6.push_back(Point3d(-9244, 41746, 0));
+  poly6.push_back(Point3d(-9166, 43461, 0));
+  poly6.push_back(Point3d(-2764, 43461, 0));
+  poly6.push_back(Point3d(-2764, 41746, 0));
+
+  std::vector<Point3d> poly7;
+  poly7.push_back(Point3d(-2764, 39004, 0));
+  poly7.push_back(Point3d(-14302, 39004, 0));
+  poly7.push_back(Point3d(-14302, 41746, 0));
+  poly7.push_back(Point3d(-2764, 41746, 0));
+  poly7.push_back(Point3d(-2764, 39004, 0));
+
+  std::vector<Point3d> poly8;
+  poly8.push_back(Point3d(-19601, 41551, 0));
+  poly8.push_back(Point3d(-20590, 41551, 0));
+  poly8.push_back(Point3d(-20510, 43144, 0));
+  poly8.push_back(Point3d(-19601, 43144, 0));
+  poly8.push_back(Point3d(-19601, 41551, 0));
+
+  std::vector<Point3d> poly9;
+  poly9.push_back(Point3d(-13645, 43144, 0));
+  poly9.push_back(Point3d(-20510, 43144, 0));
+  poly9.push_back(Point3d(-20494, 43461, 0));
+  poly9.push_back(Point3d(-13645, 43461, 0));
+  poly9.push_back(Point3d(-13645, 43144, 0));
+
+  std::vector<Point3d> poly10;
+  poly10.push_back(Point3d(-9244, 41746, 0));
+  poly10.push_back(Point3d(-11564, 41746, 0));
+  poly10.push_back(Point3d(-11564, 43461, 0));
+  poly10.push_back(Point3d(-9166, 43461, 0));
+  poly10.push_back(Point3d(-9244, 41746, 0));
+
+  std::vector<Point3d> poly11;
+  poly11.push_back(Point3d(-13645, 43461, 0));
+  poly11.push_back(Point3d(-20494, 43461, 0));
+  poly11.push_back(Point3d(-20450, 44355, 0));
+  poly11.push_back(Point3d(-13645, 44355, 0));
+  poly11.push_back(Point3d(-13645, 43461, 0));
+
+  std::vector<Point3d> poly12;
+  poly12.push_back(Point3d(-11564, 44355, 0));
+  poly12.push_back(Point3d(-20450, 44355, 0));
+  poly12.push_back(Point3d(-20364, 46080, 0));
+  poly12.push_back(Point3d(-11564, 45681, 0));
+  poly12.push_back(Point3d(-11564, 44355, 0));
+
+  std::vector<Point3d> poly13;
+  poly13.push_back(Point3d(-4041, 43461, 0));
+  poly13.push_back(Point3d(-11564, 43461, 0));
+  poly13.push_back(Point3d(-11564, 45681, 0));
+  poly13.push_back(Point3d(-3956, 45336, 0));
+  poly13.push_back(Point3d(-4041, 43461, 0));
+
+  std::vector<Point3d> poly14;
+  poly14.push_back(Point3d(-46862, 25939, 0));
+  poly14.push_back(Point3d(-47174, 25939, 0));
+  poly14.push_back(Point3d(-47238, 27327, 0));
+  poly14.push_back(Point3d(-46987, 27523, 0));
+  poly14.push_back(Point3d(-46862, 25939, 0));
+
+  std::vector<Point3d> poly15;
+  poly15.push_back(Point3d(-46488, 21176, 0));
+  poly15.push_back(Point3d(-46987, 27523, 0));
+  poly15.push_back(Point3d(-46607, 27819, 0));
+  poly15.push_back(Point3d(-46488, 21176, 0));
+
+  std::vector<Point3d> poly16;
+  poly16.push_back(Point3d(-44219, 17156, 0));
+  poly16.push_back(Point3d(-46415, 17117, 0));
+  poly16.push_back(Point3d(-46607, 27819, 0));
+  poly16.push_back(Point3d(-46044, 28258, 0));
+  poly16.push_back(Point3d(-43736, 28258, 0));
+  poly16.push_back(Point3d(-44219, 17156, 0));
+
+  std::vector<Point3d> poly17;
+  poly17.push_back(Point3d(-30808, 28712, 0));
+  poly17.push_back(Point3d(-38011, 28712, 0));
+  poly17.push_back(Point3d(-37501, 42003, 0));
+  poly17.push_back(Point3d(-30808, 41746, 0));
+  poly17.push_back(Point3d(-30808, 28712, 0));
+
+  std::vector<Point3d> poly18;
+  poly18.push_back(Point3d(-37835, 47875, 0));
+  poly18.push_back(Point3d(-44738, 41123, 0));
+  poly18.push_back(Point3d(-44731, 48139, 0));
+  poly18.push_back(Point3d(-37835, 47875, 0));
+
+  std::vector<Point3d> poly19;
+  poly19.push_back(Point3d(-43736, 28258, 0));
+  poly19.push_back(Point3d(-46044, 28258, 0));
+  poly19.push_back(Point3d(-46496, 29382, 0));
+  poly19.push_back(Point3d(-46675, 39229, 0));
+  poly19.push_back(Point3d(-43108, 42717, 0));
+  poly19.push_back(Point3d(-43736, 28258, 0));
+
+  std::vector<Point3d> poly20;
+  poly20.push_back(Point3d(-40615, 20247, 0));
+  poly20.push_back(Point3d(-44084, 20247, 0));
+  poly20.push_back(Point3d(-43717, 28712, 0));
+  poly20.push_back(Point3d(-40615, 28712, 0));
+  poly20.push_back(Point3d(-40615, 20247, 0));
+
+  std::vector<Point3d> poly21;
+  poly21.push_back(Point3d(-38011, 28712, 0));
+  poly21.push_back(Point3d(-43717, 28712, 0));
+  poly21.push_back(Point3d(-43108, 42717, 0));
+  poly21.push_back(Point3d(-37835, 47875, 0));
+  poly21.push_back(Point3d(-37276, 47853, 0));
+  poly21.push_back(Point3d(-38011, 28712, 0));
+
+  std::vector<Point3d> poly22;
+  poly22.push_back(Point3d(-46496, 29382, 0));
+  poly22.push_back(Point3d(-47669, 32299, 0));
+  poly22.push_back(Point3d(-48139, 41675, 0));
+  poly22.push_back(Point3d(-46721, 41746, 0));
+  poly22.push_back(Point3d(-46496, 29382, 0));
+
+  std::vector<Point3d> poly23;
+  poly23.push_back(Point3d(-30808, 20247, 0));
+  poly23.push_back(Point3d(-36869, 20247, 0));
+  poly23.push_back(Point3d(-36869, 26461, 0));
+  poly23.push_back(Point3d(-30808, 26461, 0));
+  poly23.push_back(Point3d(-30808, 20247, 0));
+
+  std::vector<Point3d> poly24;
+  poly24.push_back(Point3d(-16373, 32765, 0));
+  poly24.push_back(Point3d(-17694, 31941, 0));
+  poly24.push_back(Point3d(-18761, 31941, 0));
+  poly24.push_back(Point3d(-18761, 37295, 0));
+  poly24.push_back(Point3d(-16228, 37295, 0));
+  poly24.push_back(Point3d(-16373, 32765, 0));
+
+  std::vector<Point3d> poly25;
+  poly25.push_back(Point3d(-23109, 29807, 0));
+  poly25.push_back(Point3d(-23109, 32671, 0));
+  poly25.push_back(Point3d(-22146, 32299, 0));
+  poly25.push_back(Point3d(-23109, 29807, 0));
+
+  std::vector<Point3d> poly26;
+  poly26.push_back(Point3d(-30808, 41746, 0));
+  poly26.push_back(Point3d(-30974, 46061, 0));
+  poly26.push_back(Point3d(-30808, 46058, 0));
+  poly26.push_back(Point3d(-30808, 41746, 0));
+
+  std::vector<Point3d> poly27;
+  poly27.push_back(Point3d(-24688, 28712, 0));
+  poly27.push_back(Point3d(-30808, 28712, 0));
+  poly27.push_back(Point3d(-30808, 46058, 0));
+  poly27.push_back(Point3d(-24056, 45909, 0));
+  poly27.push_back(Point3d(-24688, 28712, 0));
+
+  std::vector<Point3d> poly28;
+  poly28.push_back(Point3d(-24402, 26461, 0));
+  poly28.push_back(Point3d(-24771, 26461, 0));
+  poly28.push_back(Point3d(-24056, 45909, 0));
+  poly28.push_back(Point3d(-23109, 45888, 0));
+  poly28.push_back(Point3d(-23109, 29807, 0));
+  poly28.push_back(Point3d(-24402, 26461, 0));
+
+  std::vector<Point3d> poly29;
+  poly29.push_back(Point3d(-26122, 20247, 0));
+  poly29.push_back(Point3d(-26803, 20247, 0));
+  poly29.push_back(Point3d(-25316, 24095, 0));
+  poly29.push_back(Point3d(-25053, 22835, 0));
+  poly29.push_back(Point3d(-26122, 20247, 0));
+
+  std::vector<Point3d> poly30;
+  poly30.push_back(Point3d(-26803, 20247, 0));
+  poly30.push_back(Point3d(-30808, 20247, 0));
+  poly30.push_back(Point3d(-30808, 26461, 0));
+  poly30.push_back(Point3d(-24402, 26461, 0));
+  poly30.push_back(Point3d(-26803, 20247, 0));
+
+  std::vector<Point3d> poly31;
+  poly31.push_back(Point3d(-27224, 17579, 0));
+  poly31.push_back(Point3d(-28480, 16930, 0));
+  poly31.push_back(Point3d(-35780, 16930, 0));
+  poly31.push_back(Point3d(-35780, 20247, 0));
+  poly31.push_back(Point3d(-26122, 20247, 0));
+  poly31.push_back(Point3d(-27224, 17579, 0));
+
+  std::vector<Point3d> poly32;
+  poly32.push_back(Point3d(2649, 32120, 0));
+  poly32.push_back(Point3d(687, 32120, 0));
+  poly32.push_back(Point3d(2059, 32554, 0));
+  poly32.push_back(Point3d(2649, 32120, 0));
+
+  std::vector<Point3d> poly33;
+  poly33.push_back(Point3d(11822, 25369, 0));
+  poly33.push_back(Point3d(9904, 26780, 0));
+  poly33.push_back(Point3d(11822, 26780, 0));
+  poly33.push_back(Point3d(11822, 25369, 0));
+
+  std::vector<Point3d> poly34;
+  poly34.push_back(Point3d(12857, 8600, 0));
+  poly34.push_back(Point3d(4742, 15985, 0));
+  poly34.push_back(Point3d(6889, 21534, 0));
+  poly34.push_back(Point3d(12857, 8600, 0));
+
+  std::vector<Point3d> poly35;
+  poly35.push_back(Point3d(4742, 15985, 0));
+  poly35.push_back(Point3d(1490, 18944, 0));
+  poly35.push_back(Point3d(7393, 22835, 0));
+  poly35.push_back(Point3d(4742, 15985, 0));
+
+  std::vector<Point3d> poly36;
+  poly36.push_back(Point3d(8785, 23752, 0));
+  poly36.push_back(Point3d(1490, 18944, 0));
+  poly36.push_back(Point3d(-3792, 23752, 0));
+  poly36.push_back(Point3d(8785, 23752, 0));
+
+  std::vector<Point3d> poly37;
+  poly37.push_back(Point3d(11822, 23752, 0));
+  poly37.push_back(Point3d(-3792, 23752, 0));
+  poly37.push_back(Point3d(-12988, 32120, 0));
+  poly37.push_back(Point3d(2649, 32120, 0));
+  poly37.push_back(Point3d(11822, 25369, 0));
+  poly37.push_back(Point3d(11822, 23752, 0));
+
+  std::vector<Point3d> poly38;
+  poly38.push_back(Point3d(21882, 4655, 0));
+  poly38.push_back(Point3d(19153, 4655, 0));
+  poly38.push_back(Point3d(14896, 6843, 0));
+  poly38.push_back(Point3d(21882, 6843, 0));
+  poly38.push_back(Point3d(21882, 4655, 0));
+
+  std::vector<Point3d> poly39;
+  poly39.push_back(Point3d(19153, 4655, 0));
+  poly39.push_back(Point3d(17193, 4655, 0));
+  poly39.push_back(Point3d(14650, 6969, 0));
+  poly39.push_back(Point3d(19153, 4655, 0));
+
+  std::vector<Point3d> poly40;
+  poly40.push_back(Point3d(17193, 4655, 0));
+  poly40.push_back(Point3d(14678, 4655, 0));
+  poly40.push_back(Point3d(13287, 7670, 0));
+  poly40.push_back(Point3d(14650, 6969, 0));
+  poly40.push_back(Point3d(17193, 4655, 0));
+
+  std::vector<Point3d> poly41;
+  poly41.push_back(Point3d(-635, 4874, 0));
+  poly41.push_back(Point3d(-5034, 2956, 0));
+  poly41.push_back(Point3d(-5508, 4045, 0));
+  poly41.push_back(Point3d(-489, 6843, 0));
+  poly41.push_back(Point3d(-635, 4874, 0));
+
+  std::vector<Point3d> poly42;
+  poly42.push_back(Point3d(-8290, 7537, 0));
+  poly42.push_back(Point3d(-14302, 7537, 0));
+  poly42.push_back(Point3d(-14302, 7670, 0));
+  poly42.push_back(Point3d(-8640, 7670, 0));
+  poly42.push_back(Point3d(-8290, 7537, 0));
+
+  std::vector<Point3d> poly43;
+  poly43.push_back(Point3d(-7030, 7062, 0));
+  poly43.push_back(Point3d(-8640, 7670, 0));
+  poly43.push_back(Point3d(-7469, 7670, 0));
+  poly43.push_back(Point3d(-7030, 7062, 0));
+
+  std::vector<Point3d> poly44;
+  poly44.push_back(Point3d(-6508, 6338, 0));
+  poly44.push_back(Point3d(-7469, 7670, 0));
+  poly44.push_back(Point3d(-7089, 7670, 0));
+  poly44.push_back(Point3d(-6508, 6338, 0));
+
+  std::vector<Point3d> poly45;
+  poly45.push_back(Point3d(993, 7670, 0));
+  poly45.push_back(Point3d(-5508, 4045, 0));
+  poly45.push_back(Point3d(-7089, 7670, 0));
+  poly45.push_back(Point3d(993, 7670, 0));
+
+  std::vector<Point3d> poly46;
+  poly46.push_back(Point3d(9242, 7670, 0));
+  poly46.push_back(Point3d(-14302, 7670, 0));
+  poly46.push_back(Point3d(-14302, 26424, 0));
+  poly46.push_back(Point3d(9242, 7670, 0));
+
+  std::vector<Point3d> poly47;
+  poly47.push_back(Point3d(10768, 6453, 0));
+  poly47.push_back(Point3d(-14302, 26424, 0));
+  poly47.push_back(Point3d(-14302, 33315, 0));
+  poly47.push_back(Point3d(8432, 12627, 0));
+  poly47.push_back(Point3d(10768, 6453, 0));
+
+  std::vector<Point3d> poly48;
+  poly48.push_back(Point3d(14678, 4655, 0));
+  poly48.push_back(Point3d(11449, 4655, 0));
+  poly48.push_back(Point3d(8432, 12627, 0));
+  poly48.push_back(Point3d(12857, 8600, 0));
+  poly48.push_back(Point3d(14678, 4655, 0));
+
+  std::vector<Point3d> poly49;
+  poly49.push_back(Point3d(-25053, 22835, 0));
+  poly49.push_back(Point3d(-25316, 24095, 0));
+  poly49.push_back(Point3d(-22146, 32299, 0));
+  poly49.push_back(Point3d(-21283, 31965, 0));
+  poly49.push_back(Point3d(-25053, 22835, 0));
+
+  std::vector<Point3d> poly50;
+  poly50.push_back(Point3d(-14302, 34056, 0));
+  poly50.push_back(Point3d(-16373, 32765, 0));
+  poly50.push_back(Point3d(-16228, 37295, 0));
+  poly50.push_back(Point3d(-14302, 37295, 0));
+  poly50.push_back(Point3d(-14302, 34056, 0));
+
+  std::vector<Point3d> poly51;
+  poly51.push_back(Point3d(-14302, 31941, 0));
+  poly51.push_back(Point3d(-17694, 31941, 0));
+  poly51.push_back(Point3d(-14302, 34056, 0));
+  poly51.push_back(Point3d(-14302, 31941, 0));
+
+  std::vector<Point3d> poly52;
+  poly52.push_back(Point3d(-14302, 29267, 0));
+  poly52.push_back(Point3d(-21221, 31941, 0));
+  poly52.push_back(Point3d(-14302, 31941, 0));
+  poly52.push_back(Point3d(-14302, 29267, 0));
+
+  std::vector<Point3d> poly53;
+  poly53.push_back(Point3d(-14302, 24258, 0));
+  poly53.push_back(Point3d(-27224, 17579, 0));
+  poly53.push_back(Point3d(-21283, 31965, 0));
+  poly53.push_back(Point3d(-14302, 29267, 0));
+  poly53.push_back(Point3d(-14302, 24258, 0));
+
+  std::vector<Point3d> poly54;
+  poly54.push_back(Point3d(-14302, 16930, 0));
+  poly54.push_back(Point3d(-28480, 16930, 0));
+  poly54.push_back(Point3d(-14302, 24258, 0));
+  poly54.push_back(Point3d(-14302, 16930, 0));
+
+  std::vector<Point3d> poly55;
+  poly55.push_back(Point3d(-32955, 11085, 0));
+  poly55.push_back(Point3d(-34626, 10650, 0));
+  poly55.push_back(Point3d(-35780, 12361, 0));
+  poly55.push_back(Point3d(-35780, 12538, 0));
+  poly55.push_back(Point3d(-32955, 11085, 0));
+
+  std::vector<Point3d> poly56;
+  poly56.push_back(Point3d(-31609, 10392, 0));
+  poly56.push_back(Point3d(-35780, 12538, 0));
+  poly56.push_back(Point3d(-35780, 15168, 0));
+  poly56.push_back(Point3d(-31609, 10392, 0));
+
+  std::vector<Point3d> poly57;
+  poly57.push_back(Point3d(-20303, 5921, 0));
+  poly57.push_back(Point3d(-23641, 5921, 0));
+  poly57.push_back(Point3d(-19457, 7256, 0));
+  poly57.push_back(Point3d(-20303, 5921, 0));
+
+  std::vector<Point3d> poly58;
+  poly58.push_back(Point3d(-18577, 7537, 0));
+  poly58.push_back(Point3d(-23641, 5921, 0));
+  poly58.push_back(Point3d(-27704, 5921, 0));
+  poly58.push_back(Point3d(-29116, 7537, 0));
+  poly58.push_back(Point3d(-18577, 7537, 0));
+
+  std::vector<Point3d> poly59;
+  poly59.push_back(Point3d(-14302, 7537, 0));
+  poly59.push_back(Point3d(-29116, 7537, 0));
+  poly59.push_back(Point3d(-35780, 15168, 0));
+  poly59.push_back(Point3d(-35780, 16930, 0));
+  poly59.push_back(Point3d(-14302, 16930, 0));
+  poly59.push_back(Point3d(-14302, 7537, 0));
+
+  std::vector<Point3d> poly60;
+  poly60.push_back(Point3d(20568, -3237, 0));
+  poly60.push_back(Point3d(15885, 4655, 0));
+  poly60.push_back(Point3d(16436, 4655, 0));
+  poly60.push_back(Point3d(20568, -3237, 0));
+
+  std::vector<Point3d> poly61;
+  poly61.push_back(Point3d(16251, 26780, 0));
+  poly61.push_back(Point3d(15885, 26780, 0));
+  poly61.push_back(Point3d(15885, 34180, 0));
+  poly61.push_back(Point3d(16251, 34180, 0));
+  poly61.push_back(Point3d(16251, 26780, 0));
+
+  std::vector<Point3d> poly62;
+  poly62.push_back(Point3d(16251, 23752, 0));
+  poly62.push_back(Point3d(11822, 23752, 0));
+  poly62.push_back(Point3d(11822, 26780, 0));
+  poly62.push_back(Point3d(16251, 26780, 0));
+  poly62.push_back(Point3d(16251, 23752, 0));
+
+  std::vector<Point3d> poly63;
+  poly63.push_back(Point3d(21882, 6843, 0));
+  poly63.push_back(Point3d(16251, 6843, 0));
+  poly63.push_back(Point3d(16251, 34180, 0));
+  poly63.push_back(Point3d(21882, 34180, 0));
+  poly63.push_back(Point3d(21882, 6843, 0));
+
+  std::vector<Point3d> poly64;
+  poly64.push_back(Point3d(54136, 30997, 0));
+  poly64.push_back(Point3d(36405, 30997, 0));
+  poly64.push_back(Point3d(36405, 44997, 0));
+  poly64.push_back(Point3d(48522, 44532, 0));
+  poly64.push_back(Point3d(51939, 41757, 0));
+  poly64.push_back(Point3d(54136, 30997, 0));
+
+  std::vector<Point3d> poly65;
+  poly65.push_back(Point3d(59516, 4655, 0));
+  poly65.push_back(Point3d(33396, 4655, 0));
+  poly65.push_back(Point3d(33396, 30997, 0));
+  poly65.push_back(Point3d(54136, 30997, 0));
+  poly65.push_back(Point3d(59516, 4655, 0));
+
+  std::vector<Point3d> poly66;
+  poly66.push_back(Point3d(33396, 4655, 0));
+  poly66.push_back(Point3d(21882, 4655, 0));
+  poly66.push_back(Point3d(21882, 34180, 0));
+  poly66.push_back(Point3d(33396, 34180, 0));
+  poly66.push_back(Point3d(33396, 4655, 0));
+
+  std::vector<Point3d> poly67;
+  poly67.push_back(Point3d(59320, -4681, 0));
+  poly67.push_back(Point3d(21324, -4681, 0));
+  poly67.push_back(Point3d(16436, 4655, 0));
+  poly67.push_back(Point3d(59516, 4655, 0));
+  poly67.push_back(Point3d(60982, -2522, 0));
+  poly67.push_back(Point3d(59320, -4681, 0));
+
+  std::vector<Point3d> poly68;
+  poly68.push_back(Point3d(58688, -5503, 0));
+  poly68.push_back(Point3d(17848, -5503, 0));
+  poly68.push_back(Point3d(17848, -4681, 0));
+  poly68.push_back(Point3d(59320, -4681, 0));
+  poly68.push_back(Point3d(58688, -5503, 0));
+
+  std::vector<Point3d> poly69;
+  poly69.push_back(Point3d(-40615, 18792, 0));
+  poly69.push_back(Point3d(-42998, 17156, 0));
+  poly69.push_back(Point3d(-44219, 17156, 0));
+  poly69.push_back(Point3d(-44084, 20247, 0));
+  poly69.push_back(Point3d(-40615, 20247, 0));
+  poly69.push_back(Point3d(-40615, 18792, 0));
+
+  std::vector<Point3d> poly70;
+  poly70.push_back(Point3d(-35780, 17156, 0));
+  poly70.push_back(Point3d(-36869, 17156, 0));
+  poly70.push_back(Point3d(-36869, 20247, 0));
+  poly70.push_back(Point3d(-35780, 20247, 0));
+  poly70.push_back(Point3d(-35780, 17156, 0));
+
+  std::vector<Point3d> poly71;
+  poly71.push_back(Point3d(16251, 6843, 0));
+  poly71.push_back(Point3d(14896, 6843, 0));
+  poly71.push_back(Point3d(13287, 7670, 0));
+  poly71.push_back(Point3d(6889, 21534, 0));
+  poly71.push_back(Point3d(7393, 22835, 0));
+  poly71.push_back(Point3d(8785, 23752, 0));
+  poly71.push_back(Point3d(16251, 23752, 0));
+  poly71.push_back(Point3d(16251, 6843, 0));
+
+  std::vector<Point3d> poly72;
+  poly72.push_back(Point3d(2059, 32554, 0));
+  poly72.push_back(Point3d(687, 32120, 0));
+  poly72.push_back(Point3d(-12988, 32120, 0));
+  poly72.push_back(Point3d(-14302, 33315, 0));
+  poly72.push_back(Point3d(-14302, 34180, 0));
+  poly72.push_back(Point3d(-150, 34180, 0));
+  poly72.push_back(Point3d(2059, 32554, 0));
+
+  std::vector<Point3d> poly73;
+  poly73.push_back(Point3d(15885, 26780, 0));
+  poly73.push_back(Point3d(9904, 26780, 0));
+  poly73.push_back(Point3d(-150, 34180, 0));
+  poly73.push_back(Point3d(15885, 34180, 0));
+  poly73.push_back(Point3d(15885, 26780, 0));
+
+  std::vector<Point3d> poly74;
+  poly74.push_back(Point3d(-2764, 45282, 0));
+  poly74.push_back(Point3d(-3956, 45336, 0));
+  poly74.push_back(Point3d(-3901, 46545, 0));
+  poly74.push_back(Point3d(-2764, 46501, 0));
+  poly74.push_back(Point3d(-2764, 45282, 0));
+
+  std::vector<Point3d> poly75;
+  poly75.push_back(Point3d(33396, 39004, 0));
+  poly75.push_back(Point3d(-2764, 39004, 0));
+  poly75.push_back(Point3d(-2764, 46501, 0));
+  poly75.push_back(Point3d(33396, 45113, 0));
+  poly75.push_back(Point3d(33396, 39004, 0));
+
+  std::vector<Point3d> poly76;
+  poly76.push_back(Point3d(33396, 37295, 0));
+  poly76.push_back(Point3d(-11297, 37295, 0));
+  poly76.push_back(Point3d(-11297, 39004, 0));
+  poly76.push_back(Point3d(33396, 39004, 0));
+  poly76.push_back(Point3d(33396, 37295, 0));
+
+  std::vector<Point3d> poly77;
+  poly77.push_back(Point3d(33396, 34180, 0));
+  poly77.push_back(Point3d(-14302, 34180, 0));
+  poly77.push_back(Point3d(-14302, 37295, 0));
+  poly77.push_back(Point3d(33396, 37295, 0));
+  poly77.push_back(Point3d(33396, 34180, 0));
+
+  std::vector<Point3d> poly78;
+  poly78.push_back(Point3d(36405, 30997, 0));
+  poly78.push_back(Point3d(33396, 30997, 0));
+  poly78.push_back(Point3d(33396, 45113, 0));
+  poly78.push_back(Point3d(36405, 44997, 0));
+  poly78.push_back(Point3d(36405, 30997, 0));
+
+  std::vector<Point3d> poly79;
+  poly79.push_back(Point3d(-23109, 45888, 0));
+  poly79.push_back(Point3d(-30974, 46061, 0));
+  poly79.push_back(Point3d(-30994, 46562, 0));
+  poly79.push_back(Point3d(-23109, 46204, 0));
+  poly79.push_back(Point3d(-23109, 45888, 0));
+
+  std::vector<Point3d> poly80;
+  poly80.push_back(Point3d(-20590, 41551, 0));
+  poly80.push_back(Point3d(-23109, 41551, 0));
+  poly80.push_back(Point3d(-23109, 46204, 0));
+  poly80.push_back(Point3d(-20364, 46080, 0));
+  poly80.push_back(Point3d(-20590, 41551, 0));
+
+  std::vector<Point3d> poly81;
+  poly81.push_back(Point3d(-3956, 45336, 0));
+  poly81.push_back(Point3d(-30994, 46562, 0));
+  poly81.push_back(Point3d(-31033, 47587, 0));
+  poly81.push_back(Point3d(-3901, 46545, 0));
+  poly81.push_back(Point3d(-3956, 45336, 0));
+
+  std::vector<Point3d> poly82;
+  poly82.push_back(Point3d(20568, -3237, 0));
+  poly82.push_back(Point3d(14436, -3237, 0));
+  poly82.push_back(Point3d(11449, 4655, 0));
+  poly82.push_back(Point3d(15885, 4655, 0));
+  poly82.push_back(Point3d(20568, -3237, 0));
+
+  std::vector<Point3d> poly83;
+  poly83.push_back(Point3d(14436, -3237, 0));
+  poly83.push_back(Point3d(3075, -3237, 0));
+  poly83.push_back(Point3d(-610, 5215, 0));
+  poly83.push_back(Point3d(-489, 6843, 0));
+  poly83.push_back(Point3d(993, 7670, 0));
+  poly83.push_back(Point3d(9242, 7670, 0));
+  poly83.push_back(Point3d(10768, 6453, 0));
+  poly83.push_back(Point3d(14436, -3237, 0));
+
+  std::vector<Point3d> poly84;
+  poly84.push_back(Point3d(-29277, 1704, 0));
+  poly84.push_back(Point3d(-31968, 2681, 0));
+  poly84.push_back(Point3d(-34844, 5214, 0));
+  poly84.push_back(Point3d(-36576, 9001, 0));
+  poly84.push_back(Point3d(-36614, 9310, 0));
+  poly84.push_back(Point3d(-34626, 10650, 0));
+  poly84.push_back(Point3d(-32955, 11085, 0));
+  poly84.push_back(Point3d(-31609, 10392, 0));
+  poly84.push_back(Point3d(-27704, 5921, 0));
+  poly84.push_back(Point3d(-29277, 1704, 0));
+
+  std::vector<Point3d> poly85;
+  poly85.push_back(Point3d(-4173, -3237, 0));
+  poly85.push_back(Point3d(-19239, -3237, 0));
+  poly85.push_back(Point3d(-5182, 2891, 0));
+  poly85.push_back(Point3d(-4173, 576, 0));
+  poly85.push_back(Point3d(-4173, -3237, 0));
+
+  std::vector<Point3d> poly86;
+  poly86.push_back(Point3d(-5034, 2956, 0));
+  poly86.push_back(Point3d(-19239, -3237, 0));
+  poly86.push_back(Point3d(-20041, -3237, 0));
+  poly86.push_back(Point3d(-20303, -2535, 0));
+  poly86.push_back(Point3d(-20303, 5921, 0));
+  poly86.push_back(Point3d(-19457, 7256, 0));
+  poly86.push_back(Point3d(-18577, 7537, 0));
+  poly86.push_back(Point3d(-8290, 7537, 0));
+  poly86.push_back(Point3d(-7030, 7062, 0));
+  poly86.push_back(Point3d(-6508, 6338, 0));
+  poly86.push_back(Point3d(-5034, 2956, 0));
+
+  std::vector<Point3d> poly87;
+  poly87.push_back(Point3d(-46721, 41746, 0));
+  poly87.push_back(Point3d(-48139, 41675, 0));
+  poly87.push_back(Point3d(-48471, 48283, 0));
+  poly87.push_back(Point3d(-46839, 48220, 0));
+  poly87.push_back(Point3d(-46721, 41746, 0));
+
+  std::vector<Point3d> poly88;
+  poly88.push_back(Point3d(-44738, 41123, 0));
+  poly88.push_back(Point3d(-46675, 39229, 0));
+  poly88.push_back(Point3d(-46839, 48220, 0));
+  poly88.push_back(Point3d(-44731, 48139, 0));
+  poly88.push_back(Point3d(-44738, 41123, 0));
+
+  std::vector<Point3d> poly89;
+  poly89.push_back(Point3d(-36576, 9001, 0));
+  poly89.push_back(Point3d(-40525, 6338, 0));
+  poly89.push_back(Point3d(-40680, 6569, 0));
+  poly89.push_back(Point3d(-36614, 9310, 0));
+  poly89.push_back(Point3d(-36576, 9001, 0));
+
+  std::vector<Point3d> poly90;
+  poly90.push_back(Point3d(-30704, -2118, 0));
+  poly90.push_back(Point3d(-35947, -2118, 0));
+  poly90.push_back(Point3d(-38236, 2109, 0));
+  poly90.push_back(Point3d(-30393, 2109, 0));
+  poly90.push_back(Point3d(-29277, 1704, 0));
+  poly90.push_back(Point3d(-30704, -2118, 0));
+
+  std::vector<Point3d> poly91;
+  poly91.push_back(Point3d(-30393, 2109, 0));
+  poly91.push_back(Point3d(-31318, 2109, 0));
+  poly91.push_back(Point3d(-31968, 2681, 0));
+  poly91.push_back(Point3d(-30393, 2109, 0));
+
+  std::vector<Point3d> poly92;
+  poly92.push_back(Point3d(-31318, 2109, 0));
+  poly92.push_back(Point3d(-33423, 2109, 0));
+  poly92.push_back(Point3d(-34844, 5214, 0));
+  poly92.push_back(Point3d(-31318, 2109, 0));
+
+  std::vector<Point3d> poly93;
+  poly93.push_back(Point3d(-33423, 2109, 0));
+  poly93.push_back(Point3d(-38236, 2109, 0));
+  poly93.push_back(Point3d(-40525, 6338, 0));
+  poly93.push_back(Point3d(-36576, 9001, 0));
+  poly93.push_back(Point3d(-33423, 2109, 0));
+
+  std::vector<Point3d> poly94;
+  poly94.push_back(Point3d(-35947, -2118, 0));
+  poly94.push_back(Point3d(-45292, -2118, 0));
+  poly94.push_back(Point3d(-45516, 2972, 0));
+  poly94.push_back(Point3d(-40525, 6337, 0));
+  poly94.push_back(Point3d(-35947, -2118, 0));
+
+  std::vector<Point3d> poly95;
+  poly95.push_back(Point3d(-46488, 21176, 0));
+  poly95.push_back(Point3d(-46954, 21139, 0));
+  poly95.push_back(Point3d(-47174, 25939, 0));
+  poly95.push_back(Point3d(-46862, 25939, 0));
+  poly95.push_back(Point3d(-46488, 21176, 0));
+
+  polygons.push_back(poly1);
+  polygons.push_back(poly2);
+  polygons.push_back(poly3);
+  polygons.push_back(poly4);
+  polygons.push_back(poly5);
+  polygons.push_back(poly6);
+  polygons.push_back(poly7);
+  polygons.push_back(poly8);
+  polygons.push_back(poly9);
+  polygons.push_back(poly10);
+  polygons.push_back(poly11);
+  polygons.push_back(poly12);
+  polygons.push_back(poly13);
+  polygons.push_back(poly14);
+  polygons.push_back(poly15);
+  polygons.push_back(poly16);
+  polygons.push_back(poly17);
+  polygons.push_back(poly18);
+  polygons.push_back(poly19);
+  polygons.push_back(poly20);
+  polygons.push_back(poly21);
+  polygons.push_back(poly22);
+  polygons.push_back(poly23);
+  polygons.push_back(poly24);
+  polygons.push_back(poly25);
+  polygons.push_back(poly26);
+  polygons.push_back(poly27);
+  polygons.push_back(poly28);
+  polygons.push_back(poly29);
+  polygons.push_back(poly30);
+  polygons.push_back(poly31);
+  polygons.push_back(poly32);
+  polygons.push_back(poly33);
+  polygons.push_back(poly34);
+  polygons.push_back(poly35);
+  polygons.push_back(poly36);
+  polygons.push_back(poly37);
+  polygons.push_back(poly38);
+  polygons.push_back(poly39);
+  polygons.push_back(poly40);
+  polygons.push_back(poly41);
+  polygons.push_back(poly42);
+  polygons.push_back(poly43);
+  polygons.push_back(poly44);
+  polygons.push_back(poly45);
+  polygons.push_back(poly46);
+  polygons.push_back(poly47);
+  polygons.push_back(poly48);
+  polygons.push_back(poly49);
+  polygons.push_back(poly50);
+  polygons.push_back(poly51);
+  polygons.push_back(poly52);
+  polygons.push_back(poly53);
+  polygons.push_back(poly54);
+  polygons.push_back(poly55);
+  polygons.push_back(poly56);
+  polygons.push_back(poly57);
+  polygons.push_back(poly58);
+  polygons.push_back(poly59);
+  polygons.push_back(poly60);
+  polygons.push_back(poly61);
+  polygons.push_back(poly62);
+  polygons.push_back(poly63);
+  polygons.push_back(poly64);
+  polygons.push_back(poly65);
+  polygons.push_back(poly66);
+  polygons.push_back(poly67);
+  polygons.push_back(poly68);
+  polygons.push_back(poly69);
+  polygons.push_back(poly70);
+  polygons.push_back(poly71);
+  polygons.push_back(poly72);
+  polygons.push_back(poly73);
+  polygons.push_back(poly74);
+  polygons.push_back(poly75);
+  polygons.push_back(poly76);
+  polygons.push_back(poly77);
+  polygons.push_back(poly78);
+  polygons.push_back(poly79);
+  polygons.push_back(poly80);
+  polygons.push_back(poly81);
+  polygons.push_back(poly82);
+  polygons.push_back(poly83);
+  polygons.push_back(poly84);
+  polygons.push_back(poly85);
+  polygons.push_back(poly86);
+  polygons.push_back(poly87);
+  polygons.push_back(poly88);
+  polygons.push_back(poly89);
+  polygons.push_back(poly90);
+  polygons.push_back(poly91);
+  polygons.push_back(poly92);
+  polygons.push_back(poly93);
+  polygons.push_back(poly94);
+  polygons.push_back(poly95);
+
+  /* ASSERT_EQ(getArea(poly1), getArea(poly2));
+  ASSERT_EQ(getArea(poly2), getArea(poly3));
+  ASSERT_EQ(getArea(poly3), getArea(poly4));
+  ASSERT_EQ(getArea(poly4), getArea(poly1));*/
+
+  // Offsets the polygon slightly
+  test = joinAllWithBuffer(polygons, tol * 2, tol);
+  double a = getArea(test[0]).value();
+  double p = getPerimeter(test[0]);
+
+  // Original method
+  test = joinAll(polygons, tol);
+  a = getArea(test[0]).value();
+  // Completely different method
+  test = buffer(polygons, tol * 2, tol);
+  a = getArea(test[0]).value();
+  p = getPerimeter(test[0]);
+
+  // Should return one polygon
+  ASSERT_EQ(1u, test.size());
+
+  ofstream output("C:/Users/ggart/OneDrive/Desktop/joinAll_points4.csv");
+
+  for (auto point : test[0]) {
+    output << point.x() << "," << point.y() << "," << point.z() << endl;
+  }
+  output << " ";
+  output.close();
+  
+  // That polygon should have 75 points
+  // We know this fails because we know joinAll gives up when it ends up with a polygon with a hole
+  ASSERT_EQ(45, test[0].size());
+
+}
+
+
 TEST_F(GeometryFixture, RemoveSpikes_Down)
 {
   double tol = 0.01;

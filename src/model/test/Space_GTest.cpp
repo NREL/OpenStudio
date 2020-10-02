@@ -746,6 +746,78 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest)
   // model.save(toPath("./Space_SurfaceMatch_LargeTest.osm"), true);
 }
 
+TEST_F(ModelFixture, IntersectModelOnly) {
+  osversion::VersionTranslator translator;
+  //model::OptionalModel model = translator.loadModel(toPath("./whole_bldg_partially_matched.osm"));
+  boost::optional<Model> model = Model::load(toPath("./7-7 Windows Complete.osm"));
+
+  SpaceVector spaces = model->getModelObjects<Space>();
+
+  intersectSurfaces(spaces);
+}
+
+/// <summary>
+///
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, ShatteredModel) {
+
+  //osversion::VersionTranslator translator;
+  ////model::OptionalModel model = translator.loadModel(toPath("./secondary_school.osm"));
+  //model::OptionalModel model = translator.loadModel(toPath("./ShatterTest00.osm"));
+  //EXPECT_TRUE(model);
+
+  //SpaceVector spaces = model->getModelObjects<Space>();
+
+  //intersectSurfaces(spaces);
+
+  //model->save(toPath("./ShatterTest01.osm"), true);
+  Model model;
+  BuildingStory bottom(model);
+  BuildingStory top(model);
+
+  Point3dVector points1;
+  points1.push_back(Point3d(25.908, 24.384, 0));
+  points1.push_back(Point3d(25.908, -22.86, 0));
+  points1.push_back(Point3d(-38.1, -22.86, 0));
+  points1.push_back(Point3d(-38.1, 24.384, 0));
+  boost::optional<Space> space1 = Space::fromFloorPrint(points1, 2.4384, model);
+  ASSERT_TRUE(space1);
+  space1->setBuildingStory(bottom);
+
+  Point3dVector points2;
+  points2.push_back(Point3d(9.144, 10.668, 2.4384));
+  points2.push_back(Point3d(9.144, -9.144, 2.4384));
+  points2.push_back(Point3d(-19.812, -9.144, 2.4384));
+  points2.push_back(Point3d(-19.812, 10.668, 2.4384));
+  boost::optional<Space> space2 = Space::fromFloorPrint(points2, 2.4384, model);
+  ASSERT_TRUE(space2);
+  space2->setBuildingStory(top);
+
+  Point3dVector points3;
+  points3.push_back(Point3d(9.144, 24.384, 2.4384));
+  points3.push_back(Point3d(9.144, 10.668, 2.4384));
+  points3.push_back(Point3d(-38.1, 10.668, 2.4384));
+  points3.push_back(Point3d(-38.1, 24.384, 2.4384));
+  boost::optional<Space> space3 = Space::fromFloorPrint(points3, 2.4384, model);
+  ASSERT_TRUE(space3);
+  space3->setBuildingStory(top);
+  
+  std::vector<Space> spaces;
+  spaces.push_back(*space1);
+  spaces.push_back(*space3);
+  spaces.push_back(*space2);
+
+  // Model before intersection
+  model.save(toPath("./ShatterTest00.osm"), true);
+
+  intersectSurfaces(spaces);
+
+  // Model after intersection
+  model.save(toPath("./ShatterTest01.osm"), true);
+}
+
 /// <summary>
 /// 
 /// </summary>
@@ -1055,8 +1127,6 @@ TEST_F(ModelFixture, Issue_2560) {
   points1.push_back(Point3d(-6.045331, 0, 0));
   points1.push_back(Point3d(-6.045331, 6.04433, 0));
   points1.push_back(Point3d(0, 6.0443, 0));
-  std::reverse(points1.begin(), points1.end());
-
   boost::optional<Space> space1 = Space::fromFloorPrint(points1, 3.8608, model);
   ASSERT_TRUE(space1);
   space1->setXOrigin(60.715931);
