@@ -48161,7 +48161,7 @@ ThermalStorage:Pcm:Simple,
       \note This input field is optional. If specified, it is used for replace the default value.
       \note If blank or omitted, the default value specified 
       \default 7.0
-  N4, \field UA At Soild Phase Of Phase Change Material
+  N4, \field UA At Solid Phase Of Phase Change Material
       \type real
       \units W/K
       \note This input field is optional. If specified, it is used for replace the default value.

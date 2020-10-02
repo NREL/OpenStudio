@@ -78,8 +78,10 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStoragePcmSimple(
   // Capacity
   {
     auto value = modelObject.capacity();
-    idfObject.setString(ThermalStorage_Pcm_SimpleFields::Capacity,value);
+    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::Capacity,value);
   }
+
+  boost::optional<double> value;
 
   // OnsetTemperatureOfPhaseChange
   if( (value = modelObject.onsetTemperatureOfPhaseChange()) ) {
