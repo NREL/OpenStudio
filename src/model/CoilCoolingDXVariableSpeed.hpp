@@ -111,7 +111,7 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   boost::optional<Schedule> gridSignalSchedule() const;
 
-  double lowerBoundToApplyGridResponsiveControl();
+  double lowerBoundToApplyGridResponsiveControl() const;
 
   bool isLowerBoundToApplyGridResponsiveControlDefaulted() const;
 
@@ -119,7 +119,7 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   bool isUpperBoundToApplyGridResponsiveControlDefaulted() const;
 
-  double maxSpeedLevelDuringGridResponsiveControl() const;
+  int maxSpeedLevelDuringGridResponsiveControl() const;
 
   bool isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const;
 
@@ -211,13 +211,11 @@ class MODEL_API CoilCoolingDXVariableSpeed : public StraightComponent {
 
   void removeAllSpeeds();
 
-  boost::optional<double> autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const ;
+  boost::optional<double> autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const;
 
-  boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
+  boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const;
 
-  boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const ;
-
-
+  boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
   //@}
  protected:

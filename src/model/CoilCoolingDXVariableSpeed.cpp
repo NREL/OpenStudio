@@ -51,7 +51,6 @@
 #include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
-
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 #include "Node.hpp"
@@ -691,8 +690,8 @@ namespace detail {
     return isEmpty(OS_Coil_Cooling_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl);
   }
 
-  double CoilCoolingDXVariableSpeed_Impl::maxSpeedLevelDuringGridResponsiveControl() const {
-    boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, true);
+  int CoilCoolingDXVariableSpeed_Impl::maxSpeedLevelDuringGridResponsiveControl() const {
+    boost::optional<int> value = getInt(OS_Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, true);
     OS_ASSERT(value);
     return value.get();
   }
@@ -750,7 +749,7 @@ namespace detail {
   }
 
   bool CoilCoolingDXVariableSpeed_Impl::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
-    bool result = setDouble(OS_Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedlevelDuringGridResponsiveControl);
+    bool result = setInt(OS_Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedlevelDuringGridResponsiveControl);
     OS_ASSERT(result);
     return result;
   }
@@ -1085,7 +1084,7 @@ bool CoilCoolingDXVariableSpeed::isUpperBoundToApplyGridResponsiveControlDefault
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->isUpperBoundToApplyGridResponsiveControlDefaulted();
 }
 
-double CoilCoolingDXVariableSpeed::maxSpeedLevelDuringGridResponsiveControl() const {
+int CoilCoolingDXVariableSpeed::maxSpeedLevelDuringGridResponsiveControl() const {
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->maxSpeedLevelDuringGridResponsiveControl();
 }
 

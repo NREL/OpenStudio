@@ -148,7 +148,7 @@ namespace detail {
 
     bool isUpperBoundToApplyGridResponsiveControlDefaulted() const;
 
-    double maxSpeedLevelDuringGridResponsiveControl() const;
+    int maxSpeedLevelDuringGridResponsiveControl() const;
 
     bool isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const;
 
@@ -246,13 +246,12 @@ namespace detail {
 
     void removeAllSpeeds();
 
-
     // Autosize methods
-    boost::optional<double> autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const ;
+    boost::optional<double> autosizedGrossRatedTotalCoolingCapacityAtSelectedNominalSpeedLevel() const;
 
-    boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const ;
+    boost::optional<double> autosizedRatedAirFlowRateAtSelectedNominalSpeedLevel() const;
 
-    boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+    boost::optional<double> autosizedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
     //@}
    protected:

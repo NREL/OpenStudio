@@ -51,6 +51,10 @@
 #include "Model_Impl.hpp"
 #include "Node.hpp"
 #include "AirLoopHVAC.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
+#include "ScheduleTypeLimits.hpp"
+#include "ScheduleTypeRegistry.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_Coil_Heating_DX_VariableSpeed_FieldEnums.hxx>
@@ -583,8 +587,8 @@ namespace detail {
     return isEmpty(OS_Coil_Heating_DX_VariableSpeedFields::UpperBoundToApplyGridResponsiveControl);
   }
 
-  double CoilHeatingDXVariableSpeed_Impl::maxSpeedLevelDuringGridResponsiveControl() const {
-    boost::optional<double> value = getDouble(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, true);
+  int CoilHeatingDXVariableSpeed_Impl::maxSpeedLevelDuringGridResponsiveControl() const {
+    boost::optional<int> value = getInt(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, true);
     OS_ASSERT(value);
     return value.get();
   }
@@ -630,7 +634,7 @@ namespace detail {
   }
 
   bool CoilHeatingDXVariableSpeed_Impl::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
-    bool result = setDouble(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedlevelDuringGridResponsiveControl);
+    bool result = setInt(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedlevelDuringGridResponsiveControl);
     OS_ASSERT(result);
     return result;
   }
@@ -912,7 +916,7 @@ bool CoilHeatingDXVariableSpeed::isUpperBoundToApplyGridResponsiveControlDefault
   return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->isUpperBoundToApplyGridResponsiveControlDefaulted();
 }
 
-double CoilHeatingDXVariableSpeed::maxSpeedLevelDuringGridResponsiveControl() const {
+int CoilHeatingDXVariableSpeed::maxSpeedLevelDuringGridResponsiveControl() const {
   return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->maxSpeedLevelDuringGridResponsiveControl();
 }
 

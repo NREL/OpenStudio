@@ -595,7 +595,9 @@ set(${target_name}_test_src
 
   Test/CentralHeatPumpSystem_GTest.cpp
 
+  Test/CoilHeatingDesuperheater_GTest.cpp
   Test/CoilHeatingGas_GTest.cpp
+  Test/CoilHeatingDXVariableSpeed_GTest.cpp
   Test/CoilCoolingDX_GTest.cpp
   Test/CoilCoolingDXCurveFitPerformance_GTest.cpp
   Test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp

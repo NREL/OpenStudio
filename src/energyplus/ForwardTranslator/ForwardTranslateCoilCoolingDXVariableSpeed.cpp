@@ -177,9 +177,9 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXVariableSpee
     idfObject.setDouble(Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl,value.get());
   }
 
-  // LoadControlDuringGridResponsiveOperation
+  // LoadControlDuringGridResponsiveControl
   if( (s = modelObject.loadControlDuringGridResponsiveControl()) ) {
-    idfObject.setString(Coil_Cooling_DX_VariableSpeedFields::LoadControlDuringGridResponsiveOperation,s.get());
+    idfObject.setString(Coil_Cooling_DX_VariableSpeedFields::LoadControlDuringGridResponsiveControl,s.get());
   }
 
   auto const speeds = modelObject.speeds();

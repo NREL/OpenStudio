@@ -30310,19 +30310,19 @@ Coil:Cooling:DX:VariableSpeed,
         \type object-list
         \object-list ScheduleNames
         \note This field refers to a grid signal pattern, e.g. price 
-   N13, \field Lower Bound to Apply Grid Responsive Control
+   N13, \field Lower Bound To Apply Grid Responsive Control
         \type real
         \units dimensionless
         \default 100.0
-   N14, \field Upper Bound to Apply Grid Responsive Control
+   N14, \field Upper Bound To Apply Grid Responsive Control
         \type real
         \units dimensionless
         \default -100.0
-   N15, \field Max Speed Level During Grid-Responsive Control
-        \type real
+   N15, \field Max Speed Level During Grid Responsive Control
+        \type integer
         \units dimensionless   
         \default 10
-   A11, \field Load Control during Grid Responsive Operation
+   A11, \field Load Control During Grid Responsive Control
         \type choice
         \key Sensible
         \key Latent
@@ -31761,9 +31761,9 @@ Coil:Heating:DX:VariableSpeed,
         \memo (includes electric compressor and outdoor fan), variable-speed, with defrost
         \memo controls. Requires two to ten sets of performance data and will interpolate between
         \memo speeds.
-   \extensible:7
-   \min-fields 29
-   \max-fields 92
+        \extensible:7
+        \min-fields 29
+        \max-fields 92
    A1,  \field Name
         \required-field
         \type alpha
@@ -31868,16 +31868,16 @@ Coil:Heating:DX:VariableSpeed,
         \type object-list
         \object-list ScheduleNames
         \note This field refers to a grid signal pattern, e.g. price 
-   N12, \field Lower Bound to Apply Grid Responsive Control
+   N12, \field Lower Bound To Apply Grid Responsive Control
         \type real
         \units dimensionless
         \default 100.0
-   N13, \field Upper Bound to Apply Grid Responsive Control
+   N13, \field Upper Bound To Apply Grid Responsive Control
         \type real
         \units dimensionless
         \default -100.0
-   N14, \field Max Speed Level During Grid-Responsive Control
-        \type real
+   N14, \field Max Speed Level During Grid Responsive Control
+        \type integer
         \units dimensionless   
         \default 10
    N15, \field Speed 1 Reference Unit Gross Rated Heating Capacity

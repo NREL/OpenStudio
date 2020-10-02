@@ -17961,7 +17961,7 @@ OS:Coil:Heating:DX:VariableSpeed,
         \units dimensionless
         \default -100.0
    N13, \field Max Speed Level During Grid Responsive Control
-        \type real
+        \type integer
         \units dimensionless   
         \default 10
    A10; \field Speed Data List
@@ -18123,10 +18123,10 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \units dimensionless
         \default -100.0
    N14, \field Max Speed Level During Grid Responsive Control
-        \type real
+        \type integer
         \units dimensionless   
         \default 10
-   A12, \field Load Control During Grid Responsive Operation
+   A12, \field Load Control During Grid Responsive Control
         \type choice
         \key Sensible
         \key Latent

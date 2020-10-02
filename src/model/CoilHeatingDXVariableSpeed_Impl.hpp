@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
 class Curve;
+class Schedule;
 class CoilHeatingDXVariableSpeedSpeedData;
 class ModelObjectList;
 
@@ -142,7 +143,7 @@ namespace detail {
 
     bool isUpperBoundToApplyGridResponsiveControlDefaulted() const;
 
-    double maxSpeedLevelDuringGridResponsiveControl() const;
+    int maxSpeedLevelDuringGridResponsiveControl() const;
 
     bool isMaxSpeedLevelDuringGridResponsiveControlDefaulted() const;
 
