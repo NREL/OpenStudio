@@ -749,11 +749,72 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest)
 TEST_F(ModelFixture, IntersectModelOnly) {
   osversion::VersionTranslator translator;
   //model::OptionalModel model = translator.loadModel(toPath("./whole_bldg_partially_matched.osm"));
-  boost::optional<Model> model = Model::load(toPath("./7-7 Windows Complete.osm"));
+  //boost::optional<Model> model = Model::load(toPath("./7-7 Windows Complete.osm"));
+  boost::optional<Model> model = Model::load(toPath("./two_stories_pre_intersect.osm"));
 
   SpaceVector spaces = model->getModelObjects<Space>();
+  SpaceVector blacklist;
+
+  int nSurfaces = 0;
+  for (auto space : spaces) {
+    nSurfaces += space.surfaces().size();
+  }
+
+  for (auto space : spaces) {
+    std::string name = space.name().value();
+    Transformation spaceTransformation = space.transformation();
+
+    std::vector<Surface> surfaces = space.surfaces();
+    if (name == "Space TZ46-3") {
+
+      int hello = 1;
+    }
+    for (int i = 0; i < space.surfaces().size(); i++) {
+      Surface thisSurface = surfaces[i];
+      std::string thisName = thisSurface.name().value();
+      for (int j = i + 1; j < surfaces.size(); j++) {
+        Surface otherSurface = surfaces[j];
+        std::string otherName = otherSurface.name().value();
+
+        Plane plane = spaceTransformation * thisSurface.plane();
+        Plane otherPlane = spaceTransformation * otherSurface.plane();
+
+        if (plane.equal(otherPlane)) {
+
+          std::vector<Point3d> thisVertices = spaceTransformation * thisSurface.vertices();
+          std::vector<Point3d> otherVertices = spaceTransformation * otherSurface.vertices();
+          Transformation faceTransformation = Transformation::alignFace(thisVertices);
+          Transformation faceTransformationInverse = faceTransformation.inverse();
+          std::vector<Point3d> faceVertices = faceTransformationInverse * thisVertices;
+          std::vector<Point3d> otherFaceVertices = faceTransformationInverse * otherVertices;
+          boost::optional<Vector3d> outwardNormal = getOutwardNormal(faceVertices);               
+          if (outwardNormal->z() > -1 + tol) {
+            std::reverse(faceVertices.begin(), faceVertices.end());
+          }
+          boost::optional<Vector3d> otherOutwardNormal = getOutwardNormal(otherFaceVertices);
+          if (otherOutwardNormal->z() > -1 + tol) {
+            std::reverse(otherFaceVertices.begin(), otherFaceVertices.end());
+          }
+          boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, otherFaceVertices, tol);
+          if (intersection) {
+            LOG(Error, "Space " << name << " has surfaces that intersect with each other, namely " << thisName << " and "
+                                << otherName);
+            blacklist.push_back(space);
+          }
+        }
+      }
+    }
+  }
+
+  for (auto space: blacklist) {
+    auto it = std::find(spaces.begin(), spaces.end(), space);
+    auto index = distance(spaces.begin(), it);
+    spaces.erase(spaces.begin() + index);
+  }
 
   intersectSurfaces(spaces);
+  matchSurfaces(spaces);
+  model->save(toPath("./7-7 Windows Complete finished.osm"));
 }
 
 /// <summary>

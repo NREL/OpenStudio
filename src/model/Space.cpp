@@ -3466,6 +3466,13 @@ void intersectSurfaces(std::vector<Space>& t_spaces)
       if (!bounds[i].intersects(bounds[j])) {
         continue;
       }
+
+      if (namei == "Space TZ46-81" && namej == "Space TZ47-91") {
+
+        int hello = 1;
+      
+      }
+      LOG_FREE(Info, "intersectSurfaces","********* Intersecting space " << namei << " with space " << namej << "**********")
       spaces[i].intersectSurfaces(spaces[j]);
     }
   }
