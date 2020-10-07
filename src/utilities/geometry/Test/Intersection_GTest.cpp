@@ -1018,7 +1018,9 @@ TEST_F(GeometryFixture, JoinAll_2527) {
 TEST_F(GeometryFixture, JoinAll_Points4) {
   double tol = 2;
 
-  std::vector<Point3dVector> test;
+  std::vector<Point3dVector> test1;
+  std::vector<Point3dVector> test2;
+  std::vector<Point3dVector> test3;
   std::vector<Point3dVector> polygons;
 
   std::vector<Point3d> poly1;
@@ -1797,33 +1799,36 @@ TEST_F(GeometryFixture, JoinAll_Points4) {
   ASSERT_EQ(getArea(poly4), getArea(poly1));*/
 
   // Offsets the polygon slightly
-  test = joinAllWithBuffer(polygons, tol * 2, tol);
-  double a = getArea(test[0]).value();
-  double p = getPerimeter(test[0]);
+  test1 = joinAllWithBuffer(polygons, tol * 2, tol);
+  double a = getArea(test1[0]).value();
+  double p = getPerimeter(test1[0]);
 
   // Original method
-  test = joinAll(polygons, tol);
-  a = getArea(test[0]).value();
+  test2 = joinAll(polygons, tol);
+  a = getArea(test2[0]).value();
   // Completely different method
-  test = buffer(polygons, tol * 2, tol);
-  a = getArea(test[0]).value();
-  p = getPerimeter(test[0]);
+  test3 = buffer(polygons, tol * 2, tol);
+  a = getArea(test3[0]).value();
+  p = getPerimeter(test3[0]);
 
   // Should return one polygon
-  ASSERT_EQ(1u, test.size());
+  ASSERT_EQ(1u, test1.size());
+  //ASSERT_EQ(1u, test2.size());
+  ASSERT_EQ(1u, test3.size());
 
-  ofstream output("C:/Users/ggart/OneDrive/Desktop/joinAll_points4.csv");
+  //ofstream output("C:/Users/ggart/OneDrive/Desktop/joinAll_points4.csv");
 
-  for (auto point : test[0]) {
-    output << point.x() << "," << point.y() << "," << point.z() << endl;
-  }
-  output << " ";
-  output.close();
+  //for (auto point : test[0]) {
+  //  output << point.x() << "," << point.y() << "," << point.z() << endl;
+  //}
+  //output << " ";
+  //output.close();
   
-  // That polygon should have 75 points
+  // That polygon should have 45 points
   // We know this fails because we know joinAll gives up when it ends up with a polygon with a hole
-  ASSERT_EQ(45, test[0].size());
-
+  ASSERT_EQ(45, test1[0].size());
+  //ASSERT_EQ(45, test2[0].size());
+  ASSERT_EQ(45, test3[0].size());
 }
 
 
@@ -1951,6 +1956,28 @@ TEST_F(GeometryFixture, RemoveSpikes_Up)
     result = removeSpikes(points, tol);
     EXPECT_TRUE(circularEqual(expected, result)) << result;
   }
+}
+
+TEST_F(GeometryFixture, RemoveSpikesEx) {
+
+  Point3dVector points;
+  points.push_back(Point3d(5.2151752501290964, 3.2536679393838548, 0));
+  points.push_back(Point3d(2.2283021523278599, 2.1369218485506938, 0));
+  points.push_back(Point3d(2.8342973942709335, 0.87744335708321852, 0));
+  points.push_back(Point3d(5.7026437818419815, 1.9498741268516313, 0));
+  points.push_back(Point3d(0.48746853171293125, 0.0, 0));
+  points.push_back(Point3d(0, 1.3037938125323181, 0));
+
+  Point3dVector expected;
+  expected.push_back(Point3d(0, 1.3, 0));
+  expected.push_back(Point3d(2.22, 2.13, 0));
+  expected.push_back(Point3d(2.84, 0.87, 0));
+  expected.push_back(Point3d(0.48, 0, 0));
+
+  Point3dVector testPoints = removeSpikesEx(points, 0.01);
+
+  EXPECT_EQ(testPoints.size(), 4);
+  EXPECT_TRUE(circularEqual(expected, testPoints, 0.01)) << testPoints;
 }
 
 TEST_F(GeometryFixture, Subtract_SamePoints)

@@ -826,7 +826,6 @@ TEST_F(GeometryFixture, RemoveCollinear)
   EXPECT_TRUE(pointEqual(Point3d(2,0,0), testPoints[2]));
   EXPECT_TRUE(pointEqual(Point3d(2,2,0), testPoints[3]));
 }
-
 /*
 TEST_F(GeometryFixture, RemoveSpikes)
 {

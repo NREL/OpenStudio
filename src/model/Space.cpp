@@ -3463,15 +3463,11 @@ void intersectSurfaces(std::vector<Space>& t_spaces)
     for (unsigned j = i+1; j < spaces.size(); ++j){
       std::string namei = spaces[i].name().value();
       std::string namej = spaces[j].name().value();
+
       if (!bounds[i].intersects(bounds[j])) {
         continue;
       }
 
-      if (namei == "Space TZ46-81" && namej == "Space TZ47-91") {
-
-        int hello = 1;
-      
-      }
       LOG_FREE(Info, "intersectSurfaces","********* Intersecting space " << namei << " with space " << namej << "**********")
       spaces[i].intersectSurfaces(spaces[j]);
     }
@@ -3486,8 +3482,9 @@ void matchSurfaces(std::vector<Space>& spaces)
   }
 
   for (unsigned i = 0; i < spaces.size(); ++i){
+    std::string namei = spaces[i].name().value();
     for (unsigned j = i+1; j < spaces.size(); ++j){
-      if (!bounds[i].intersects(bounds[j])){
+      if (!bounds[i].intersects(bounds[j], 0.005)){
         continue;
       }
       spaces[i].matchSurfaces(spaces[j]);

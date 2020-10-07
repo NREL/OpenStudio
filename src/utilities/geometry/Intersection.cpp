@@ -36,8 +36,8 @@
 
 #undef BOOST_UBLAS_TYPE_CHECK
 #if defined(_MSC_VER)
-  #pragma warning(push)
-  #pragma warning(disable:4244)
+#pragma warning(push)
+#pragma warning(disable:4244)
 #endif
 #include <boost/geometry/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
@@ -53,7 +53,7 @@
 
 
 #if defined(_MSC_VER)
-  #pragma warning(pop)
+#pragma warning(pop)
 #endif
 
 typedef double coordinate_type;
@@ -64,25 +64,62 @@ typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
 
 #include <polypartition/polypartition.h>
 
-namespace openstudio{
+namespace openstudio {
 
-  // Private implementation functions
+    // Private implementation functions
 
-  BoostPolygon removeSpikes(const BoostPolygon& polygon)
-  {
-    BoostPolygon temp(polygon);
-    boost::geometry::remove_spikes(temp);
-    return temp;
-  }
-
-  std::vector<BoostPolygon> removeSpikes(const std::vector<BoostPolygon>& polygons)
-  {
-    std::vector<BoostPolygon> result;
-    for (const BoostPolygon& polygon : polygons){
-      result.push_back(removeSpikes(polygon));
+    BoostPolygon removeSpikes(const BoostPolygon& polygon)
+    {
+        BoostPolygon temp(polygon);
+        boost::geometry::remove_spikes(temp);
+        return temp;
     }
-    return result;
-  }
+
+    std::vector<BoostPolygon> removeSpikes(const std::vector<BoostPolygon>& polygons)
+    {
+        std::vector<BoostPolygon> result;
+        for (const BoostPolygon& polygon : polygons) {
+            result.push_back(removeSpikes(polygon));
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Uses buffer to shrink and expand polygons to remove spikey bits 
+    /// </summary>
+    /// <param name="polygon"></param>
+    /// <returns></returns>
+    BoostPolygon removeSpikesEx(const BoostPolygon& polygon) 
+    {
+
+      const double buffer_distance = 1.0;
+      const int points_per_circle = 36;
+      const double amount = 0.005;
+
+      boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(amount);
+      boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-amount);
+      boost::geometry::strategy::buffer::join_miter join_strategy;
+      boost::geometry::strategy::buffer::end_flat end_strategy;
+      boost::geometry::strategy::buffer::side_straight side_strategy;
+      boost::geometry::strategy::buffer::point_circle point_strategy;
+
+      BoostMultiPolygon resultExpand;
+      BoostMultiPolygon resultShrink;
+      boost::geometry::buffer(polygon, resultShrink, shrink, side_strategy, join_strategy, end_strategy, point_strategy);
+      boost::geometry::buffer(resultShrink, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
+
+      if (resultExpand.size() == 0) return polygon;
+      else
+        return resultExpand[0];
+    }
+
+    std::vector<BoostPolygon> removeSpikesEx(const std::vector<BoostPolygon>& polygons) {
+      std::vector<BoostPolygon> result;
+      for (const BoostPolygon& polygon : polygons) {
+        result.push_back(removeSpikesEx(polygon));
+      }
+      return result;
+    }
 
   std::vector<BoostPolygon> removeHoles(const BoostPolygon& boostPolygon)
   {
@@ -324,7 +361,7 @@ namespace openstudio{
       Point3d resultPoint = getCombinedPoint(point3d, allPoints, tol);
 
       // don't keep repeated vertices
-      if ((i > 0) && (result.back() == resultPoint)){
+       if ((i > 0) && (result.back() == resultPoint)){
         continue;
       }
       result.push_back(resultPoint);
@@ -471,6 +508,28 @@ namespace openstudio{
 
     return result;
   }
+
+      /// <summary>
+  /// This one we can call from unit tests
+  /// </summary>
+  /// <param name="polygon"></param>
+  /// <param name="tol"></param>
+  /// <returns></returns>
+  std::vector<Point3d> removeSpikesEx(const std::vector<Point3d>& polygon, double tol) {
+    std::vector<Point3d> allPoints;
+
+    boost::optional<BoostPolygon> boostPolygon = boostPolygonFromVertices(polygon, allPoints, tol);
+    if (!boostPolygon) {
+      return std::vector<Point3d>();
+    }
+
+    BoostPolygon boostResult = removeSpikesEx(*boostPolygon);
+
+    std::vector<Point3d> result = verticesFromBoostPolygon(boostResult, allPoints, tol);
+
+    return result;
+  }
+
 
   std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double tol)
   {
@@ -651,6 +710,13 @@ namespace openstudio{
     return unionVertices;
   }
 
+  /// <summary>
+  /// buffers the polygons to increase reliabilit of joining
+  /// </summary>
+  /// <param name="polygons"></param>
+  /// <param name="offset"></param>
+  /// <param name="tol"></param>
+  /// <returns></returns>
   std::vector<std::vector<Point3d>> joinAllWithBuffer(const std::vector<std::vector<Point3d>>& polygons, double offset, double tol) 
   {
     std::vector<std::vector<Point3d>> result;
@@ -942,7 +1008,7 @@ namespace openstudio{
     // polygon1 minus polygon2
     std::vector<BoostPolygon> differenceResult1;
     boost::geometry::difference(*boostPolygon1, *boostPolygon2, differenceResult1);
-    differenceResult1 = removeSpikes(differenceResult1);
+    differenceResult1 = removeSpikesEx(differenceResult1);
     differenceResult1 = removeHoles(differenceResult1);
 
     // create new polygon for each difference
@@ -971,7 +1037,7 @@ namespace openstudio{
     // polygon2 minus polygon1
     std::vector<BoostPolygon> differenceResult2;
     boost::geometry::difference(*boostPolygon2, *boostPolygon1, differenceResult2);
-    differenceResult2 = removeSpikes(differenceResult2);
+    differenceResult2 = removeSpikesEx(differenceResult2);
     differenceResult2 = removeHoles(differenceResult2);
 
     // create new polygon for each difference
@@ -1057,6 +1123,14 @@ namespace openstudio{
     return true;
   }
 
+  /// <summary>
+  /// Note to self - this returns true even of the intersection area is 0, that is the two polygons could
+  /// have coincident edges
+  /// </summary>
+  /// <param name="polygon1"></param>
+  /// <param name="polygon2"></param>
+  /// <param name="tol"></param>
+  /// <returns></returns>
   bool intersects(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol)
   {
     // convert vertices to boost rings
