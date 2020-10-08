@@ -29,6 +29,11 @@
 
 #include "CoilLiquidDesiccantSimple.hpp"
 #include "CoilLiquidDesiccantSimple_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
+#include "Model.hpp"
+#include "ScheduleCompact.hpp"
+#include "ScheduleCompact_Impl.hpp"
 
 #include <utilities/idd/OS_Coil_LiquidDesiccant_Simple_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -61,23 +66,28 @@ namespace detail {
 
   CoilLiquidDesiccantSimple_Impl::~CoilLiquidDesiccantSimple_Impl(){}
 
-  const std::vector<std::string>& CoilLiquidDesiccantSimple_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      // TODO
-    };
-    return result;
+  std::vector<openstudio::IdfObject> CoilLiquidDesiccantSimple_Impl::remove() {
+    if( isRemovable() ) {
+      return WaterToAirComponent_Impl::remove();
+    }
+
+    return std::vector<IdfObject>();
+  }
+
+  ModelObject CoilLiquidDesiccantSimple_Impl::clone(Model model) const {
+    CoilLiquidDesiccantSimple newCoil = WaterToAirComponent_Impl::clone( model ).optionalCast<CoilLiquidDesiccantSimple>().get();
+
+    return newCoil;
   }
 
   IddObjectType CoilLiquidDesiccantSimple_Impl::iddObjectType() const {
     return CoilLiquidDesiccantSimple::iddObjectType();
   }
 
-  std::vector<ModelObject> CoilLiquidDesiccantSimple_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
-    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+  const std::vector<std::string>& CoilLiquidDesiccantSimple_Impl::outputVariableNames() const {
+    static const std::vector<std::string> result{
+
+    };
     return result;
   }
 
@@ -86,12 +96,61 @@ namespace detail {
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_Coil_Cooling_WaterFields::AvailabilityScheduleName) != e)
+    if (std::find(b,e,OS_Coil_LiquidDesiccant_SimpleFields::AvailabilityScheduleName) != e)
     {
       result.push_back(ScheduleTypeKey("CoilLiquidDesiccantSimple","Availability"));
     }
     return result;
   }
+
+  unsigned CoilLiquidDesiccantSimple_Impl::airInletPort() const {
+    return OS_Coil_LiquidDesiccant_SimpleFields::AirInletNodeName;
+  }
+
+  unsigned CoilLiquidDesiccantSimple_Impl::airOutletPort() const {
+    return OS_Coil_LiquidDesiccant_SimpleFields::AirOutletNodeName;
+  }
+
+  unsigned CoilLiquidDesiccantSimple_Impl::waterInletPort() const {
+    return OS_Coil_LiquidDesiccant_SimpleFields::WaterInletNodeName;
+  }
+
+  unsigned CoilLiquidDesiccantSimple_Impl::waterOutletPort() const {
+    return OS_Coil_LiquidDesiccant_SimpleFields::WaterOutletNodeName;
+  }
+
+  std::vector<ModelObject> CoilLiquidDesiccantSimple_Impl::children() const {
+    std::vector<ModelObject> result;
+
+    return result;
+  }
+
+  Schedule CoilLiquidDesiccantSimple_Impl::availabilitySchedule() const {
+    OptionalSchedule value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_LiquidDesiccant_SimpleFields::AvailabilityScheduleName);
+    if (!value){
+      // it is an error if we get here, however we don't want to crash
+      // so we hook up to global always on schedule
+      LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
+      value = this->model().alwaysOnDiscreteSchedule();
+      OS_ASSERT(value);
+      const_cast<CoilLiquidDesiccantSimple_Impl*>(this)->setAvailabilitySchedule(*value);
+      value = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_LiquidDesiccant_SimpleFields::AvailabilityScheduleName);
+    }
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool CoilLiquidDesiccantSimple_Impl::setAvailabilitySchedule(Schedule& schedule) {
+    bool result = setSchedule(OS_Coil_LiquidDesiccant_SimpleFields::AvailabilityScheduleName,
+                              "CoilLiquidDesiccantSimple",
+                              "Availability",
+                              schedule);
+    return result;
+  }
+
+
+
+
 
 
 
@@ -113,15 +172,21 @@ CoilLiquidDesiccantSimple::CoilLiquidDesiccantSimple(const Model& model)
 {
   OS_ASSERT(getImpl<detail::CoilLiquidDesiccantSimple_Impl>());
 
-  auto schedule = model.alwaysOnDiscreteSchedule();
-  setAvailableSchedule(schedule);
+  auto availabilitySchedule = model.alwaysOnDiscreteSchedule();
+  setAvailabilitySchedule(availabilitySchedule);
 }
 
 CoilLiquidDesiccantSimple::CoilLiquidDesiccantSimple(std::shared_ptr<detail::CoilLiquidDesiccantSimple_Impl> p)
   : WaterToAirComponent(std::move(p))
 {}
 
+Schedule CoilLiquidDesiccantSimple::availabilitySchedule() const {
+  return getImpl<detail::CoilLiquidDesiccantSimple_Impl>()->availabilitySchedule();
+}
 
+bool CoilLiquidDesiccantSimple::setAvailabilitySchedule(Schedule& schedule) {
+  return getImpl<detail::CoilLiquidDesiccantSimple_Impl>()->setAvailabilitySchedule(schedule);
+}
 
 
 

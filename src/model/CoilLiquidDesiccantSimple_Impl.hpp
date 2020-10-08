@@ -62,7 +62,7 @@ namespace detail {
 
     virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual bool removeFromPlantLoop() override;
+    /* virtual bool removeFromPlantLoop() override; */
 
     virtual ModelObject clone(Model model) const override;
 
@@ -80,11 +80,11 @@ namespace detail {
 
     virtual unsigned waterOutletPort() const override;
 
-    virtual bool addToNode(Node & node) override;
+    /* virtual bool addToNode(Node & node) override; */
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+    /* virtual boost::optional<HVACComponent> containingHVACComponent() const override; */
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+    /* virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override; */
 
     virtual std::vector<ModelObject> children() const override;
 

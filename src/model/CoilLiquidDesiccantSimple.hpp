@@ -38,14 +38,13 @@ namespace openstudio {
 namespace model {
 
 class Schedule;
-class AirflowNetworkEquivalentDuct;
 
 namespace detail {
   class CoilLiquidDesiccantSimple_Impl;
 } // detail
 
 /** CoilLiquidDesiccantSimple is a WaterToAirComponent that wraps the IDD object named
- *  "OS:Coil:Cooling:Water".
+ *  "OS:Coil:LiquidDesiccant:Simple".
  *
  *  Polymorphic behavior:
  *  <ol>
