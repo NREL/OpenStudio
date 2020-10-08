@@ -822,7 +822,7 @@ TEST_F(ModelFixture, IntersectModelOnly) {
 /// </summary>
 /// <param name=""></param>
 /// <param name=""></param>
-TEST_F(ModelFixture, ShatteredModel) {
+TEST_F(ModelFixture, Issue_3424) {
 
   //osversion::VersionTranslator translator;
   ////model::OptionalModel model = translator.loadModel(toPath("./secondary_school.osm"));
@@ -921,7 +921,7 @@ TEST_F(ModelFixture, JoinAllSpaceFootprints) {
 
 
   /// <summary>
-/// One space below, two smaller spaces above. Verifies we triangulate concave surfaces correctly (we do not)
+/// One space below, two smaller spaces above. Verifies we surface with hole is decomposed
 ///
 /// +---------------------------------------------+
 /// |                                             |

@@ -684,7 +684,7 @@ namespace openstudio {
     }else if (!unionResult[0].inners().empty()) {
       // check for holes
       LOG_FREE(Error, "utilities.geometry.join", "Union has inner loops");
-      //return boost::none;
+      return boost::none;
     };
 
     std::vector<Point3d> unionVertices = verticesFromBoostPolygon(unionResult[0], allPoints, tol);
