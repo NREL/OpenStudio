@@ -818,7 +818,12 @@ TEST_F(ModelFixture, IntersectModelOnly) {
 }
 
 /// <summary>
-///
+/// Polygon decomposition is order dependent. IN this case if the first intersect makes a hole
+/// we triangulate, if it doesn't then triangulation is not needed
+/// Two space lists 1,3,2 and 4,5,6 where 1 and 4, 2 and 5, and 3 and 6 are the same (but shifted)
+/// so intersecting 1,3,3 should give the same result as 4,5,6 if order doesn't matter.
+/// In order to prove this we have to not order by area so an additional argument has been added to 
+/// intersect(spaces) to this affect
 /// </summary>
 /// <param name=""></param>
 /// <param name=""></param>
@@ -846,6 +851,7 @@ TEST_F(ModelFixture, Issue_3424) {
   boost::optional<Space> space1 = Space::fromFloorPrint(points1, 2.4384, model);
   ASSERT_TRUE(space1);
   space1->setBuildingStory(bottom);
+  double a1 = getArea(points1).value();
 
   Point3dVector points2;
   points2.push_back(Point3d(9.144, 10.668, 2.4384));
@@ -855,6 +861,7 @@ TEST_F(ModelFixture, Issue_3424) {
   boost::optional<Space> space2 = Space::fromFloorPrint(points2, 2.4384, model);
   ASSERT_TRUE(space2);
   space2->setBuildingStory(top);
+  double a2 = getArea(points2).value();
 
   Point3dVector points3;
   points3.push_back(Point3d(9.144, 24.384, 2.4384));
@@ -864,19 +871,64 @@ TEST_F(ModelFixture, Issue_3424) {
   boost::optional<Space> space3 = Space::fromFloorPrint(points3, 2.4384, model);
   ASSERT_TRUE(space3);
   space3->setBuildingStory(top);
+  double a3 = getArea(points3).value();
+
+    Point3dVector points4;
+  points4.push_back(Point3d(25.908, 24.384, 0));
+  points4.push_back(Point3d(25.908, -22.86, 0));
+  points4.push_back(Point3d(-38.1, -22.86, 0));
+  points4.push_back(Point3d(-38.1, 24.384, 0));
+  boost::optional<Space> space4 = Space::fromFloorPrint(points4, 2.4384, model);
+  ASSERT_TRUE(space4);
+  space4->setBuildingStory(bottom);
+  space4->setXOrigin(75);
+  double a4 = getArea(points4).value();
+
+  Point3dVector points5;
+  points5.push_back(Point3d(9.144, 10.668, 2.4384));
+  points5.push_back(Point3d(9.144, -9.144, 2.4384));
+  points5.push_back(Point3d(-19.812, -9.144, 2.4384));
+  points5.push_back(Point3d(-19.812, 10.668, 2.4384));
+  boost::optional<Space> space5 = Space::fromFloorPrint(points5, 2.4384, model);
+  ASSERT_TRUE(space5);
+  space5->setBuildingStory(top);
+  space5->setXOrigin(75);
+  double a5 = getArea(points5).value();
+
+  Point3dVector points6;
+  points6.push_back(Point3d(9.144, 24.384, 2.4384));
+  points6.push_back(Point3d(9.144, 10.668, 2.4384));
+  points6.push_back(Point3d(-38.1, 10.668, 2.4384));
+  points6.push_back(Point3d(-38.1, 24.384, 2.4384));
+  boost::optional<Space> space6 = Space::fromFloorPrint(points6, 2.4384, model);
+  ASSERT_TRUE(space6);
+  space6->setBuildingStory(top);
+  space6->setXOrigin(75);
+  double a6 = getArea(points6).value();
+
+  std::vector<Space> spaces1;
+  spaces1.push_back(*space1);
+  spaces1.push_back(*space3);
+  spaces1.push_back(*space2);
   
-  std::vector<Space> spaces;
-  spaces.push_back(*space1);
-  spaces.push_back(*space3);
-  spaces.push_back(*space2);
+  std::vector<Space> spaces2;
+  spaces2.push_back(*space4);
+  spaces2.push_back(*space5);
+  spaces2.push_back(*space6);
 
   // Model before intersection
   model.save(toPath("./ShatterTest00.osm"), true);
 
-  intersectSurfaces(spaces);
+  intersectSurfaces(spaces1, false);
+  intersectSurfaces(spaces2, false);
 
   // Model after intersection
   model.save(toPath("./ShatterTest01.osm"), true);
+
+  int nsurfaces1 = space1->surfaces().size();
+  int nsurfaces2 = space4->surfaces().size();
+  ASSERT_EQ(8, nsurfaces1);
+  ASSERT_EQ(12, nsurfaces2);
 }
 
 /// <summary>

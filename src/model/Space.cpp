@@ -2371,6 +2371,9 @@ namespace detail {
       for (Surface surface : surfaces){
         std::string surfaceHandle = toString(surface.handle());
         std::string surfaceName = surface.name().value();
+        if (surfaceName == "Surface 24") {
+          int stop = 1;
+        }
         if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()){
           hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
           hasAdjacentSurfaceMap[surfaceHandle] = surface.adjacentSurface().has_value();
@@ -3449,10 +3452,11 @@ Space::Space(std::shared_ptr<detail::Space_Impl> impl)
 {}
 /// @endcond
 
-void intersectSurfaces(std::vector<Space>& t_spaces)
+void intersectSurfaces(std::vector<Space>& t_spaces, bool sortByArea)
 {
   std::vector<Space> spaces(t_spaces);
-  //std::sort(spaces.begin(), spaces.end(), [](const Space & a, const Space & b) -> bool {return a.floorArea() < b.floorArea(); });
+  if (sortByArea)
+    std::sort(spaces.begin(), spaces.end(), [](const Space & a, const Space & b) -> bool {return a.floorArea() < b.floorArea(); });
 
   std::vector<BoundingBox> bounds;
   for (const Space& space : spaces){

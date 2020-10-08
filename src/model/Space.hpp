@@ -605,7 +605,7 @@ class MODEL_API Space : public PlanarSurfaceGroup {
 };
 
 /** Intersect surfaces within spaces. */
-MODEL_API void intersectSurfaces(std::vector<Space>& spaces);
+MODEL_API void intersectSurfaces(std::vector<Space>& spaces, bool sortByArea = true);
 
 /** Match surfaces and sub surfaces within spaces. */
 MODEL_API void matchSurfaces(std::vector<Space>& spaces);

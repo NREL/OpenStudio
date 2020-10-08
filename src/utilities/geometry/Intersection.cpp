@@ -105,12 +105,14 @@ namespace openstudio {
 
       BoostMultiPolygon resultExpand;
       BoostMultiPolygon resultShrink;
+      BoostMultiPolygon result;
       boost::geometry::buffer(polygon, resultShrink, shrink, side_strategy, join_strategy, end_strategy, point_strategy);
       boost::geometry::buffer(resultShrink, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
+      boost::geometry::simplify(resultExpand, result, amount);
 
-      if (resultExpand.size() == 0) return polygon;
+      if (result.size() == 0) return polygon;
       else
-        return resultExpand[0];
+        return result[0];
     }
 
     std::vector<BoostPolygon> removeSpikesEx(const std::vector<BoostPolygon>& polygons) {
@@ -648,7 +650,7 @@ namespace openstudio {
     return xxx;
   }
 
-  boost::optional<std::vector<Point3d> > join(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol)
+  boost::optional<std::vector<Point3d> > join(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol, bool stopOnHole)
   {
     // convert vertices to boost rings
     std::vector<Point3d> allPoints;
@@ -681,7 +683,7 @@ namespace openstudio {
       return boost::none;
     }else if (unionResult.size() > 1){
       return boost::none;
-    }else if (!unionResult[0].inners().empty()) {
+    }else if (!unionResult[0].inners().empty() && stopOnHole) {
       // check for holes
       LOG_FREE(Error, "utilities.geometry.join", "Union has inner loops");
       return boost::none;
@@ -744,7 +746,7 @@ namespace openstudio {
     for (unsigned i = 0; i < N; ++i) {
       A(i, i) = 1.0;
       for (unsigned j = i + 1; j < N; ++j) {
-        if (join(modifiedPolygons[i], modifiedPolygons[j], tol)) {
+        if (join(modifiedPolygons[i], modifiedPolygons[j], tol, false)) {
           A(i, j) = 1.0;
           A(j, i) = 1.0;
         }
@@ -770,7 +772,7 @@ namespace openstudio {
           } else {
             // if not already joined
             if (joinedComponents.find(i) == joinedComponents.end()) {
-              boost::optional<std::vector<Point3d>> joined = join(points, modifiedPolygons[i], tol);
+              boost::optional<std::vector<Point3d>> joined = join(points, modifiedPolygons[i], tol, false);
               if (joined) {
                 points = *joined;
                 joinedComponents.insert(i);
@@ -853,7 +855,7 @@ namespace openstudio {
     for (unsigned i = 0; i < N; ++i){
       A(i,i) = 1.0;
       for (unsigned j = i+1; j < N; ++j){
-        if (join(modifiedPolygons[i], modifiedPolygons[j], tol)) {
+        if (join(modifiedPolygons[i], modifiedPolygons[j], tol, false)) {
           A(i,j) = 1.0;
           A(j,i) = 1.0;
         }

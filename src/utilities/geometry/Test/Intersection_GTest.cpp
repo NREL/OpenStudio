@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+﻿/***********************************************************************************************************************
 *  OpenStudio(R), Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
@@ -1831,9 +1831,52 @@ TEST_F(GeometryFixture, JoinAll_Points4) {
   ASSERT_EQ(45, test3[0].size());
 }
 
+TEST_F(GeometryFixture, JoinAll_SegFault_Test) {
 
-TEST_F(GeometryFixture, RemoveSpikes_Down)
-{
+  double tol = 2;
+
+  std::vector<Point3dVector> test1;
+  std::vector<Point3dVector> test2;
+  std::vector<Point3dVector> test3;
+  std::vector<Point3dVector> polygons;
+
+  std::vector<Point3d> poly1;
+  poly1.push_back(Point3d(42060, 9682, 0));
+  poly1.push_back(Point3d(42059, 11170, 0));
+  poly1.push_back(Point3d(50082, 11170, 0));
+  poly1.push_back(Point3d(50099, 9691, 0));
+
+  std::vector<Point3d> poly2;
+  poly2.push_back(Point3d(29496, 9668, 0));
+  poly2.push_back(Point3d(31853, 9670, 0));
+  poly2.push_back(Point3d(31853, 11170, 0));
+  poly2.push_back(Point3d(29494, 11170, 0));
+  poly2.push_back(Point3d(29496, 9668, 0));
+
+  std::vector<Point3d> poly3;
+  poly3.push_back(Point3d(16010, 3634, 0));
+  poly3.push_back(Point3d(50167, 3607, 0));
+  poly3.push_back(Point3d(50099, 9681, 0));
+  poly3.push_back(Point3d(16138, 9660, 0));
+  poly3.push_back(Point3d(16010, 3634, 0));
+
+  std::vector<Point3d> poly4;
+  poly4.push_back(Point3d(-11983, 3656, 0));
+  poly4.push_back(Point3d(16010, 3634, 0));
+  poly4.push_back(Point3d(16170, 11170, 0));
+  poly4.push_back(Point3d(-5273, 11170, 0));
+  poly4.push_back(Point3d(-11983, 3656, 0));
+
+  polygons.push_back(poly1);
+  polygons.push_back(poly2);
+  polygons.push_back(poly3);
+  polygons.push_back(poly4);
+
+  test1 = joinAllWithBuffer(polygons, tol * 2, tol);
+  ASSERT_EQ(1u, test1.size());
+}
+
+TEST_F(GeometryFixture, RemoveSpikes_Down) {
   double tol = 0.01;
 
   std::vector<Point3d> points;
