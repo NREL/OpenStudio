@@ -44,7 +44,11 @@ class InstallPlatlib(install):
 
 setup(
     name='openstudio',
-    version='@OpenStudio_VERSION@'.replace('-', ''),
+    # eg 3.1.0rc3
+    # version='@OpenStudio_VERSION@'.replace('-', ''),
+    # eg: 3.1.0rc3.fdslkjsdj
+    # Do a post-release
+    version='@OPENSTUDIO_LONG_VERSION@'.replace('-', '').replace('+', '.'),
     description='OpenStudio python bindings.',
     long_description="""OpenStudio python bindings.
     """,
