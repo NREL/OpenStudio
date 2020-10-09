@@ -493,7 +493,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
              BUILD_WITH_INSTALL_RPATH TRUE
 
              # the RPATH to be used when installing
-             INSTALL_RPATH ""
+             INSTALL_RPATH $ORIGIN
          )
         # set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-Wl,-rpath,./")
         if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
