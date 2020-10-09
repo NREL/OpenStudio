@@ -145,6 +145,10 @@ namespace detail {
     {
       result.push_back(ScheduleTypeKey("CoilCoolingDXVariableSpeed","Basin Heater Operating"));
     }
+    if (std::find(b,e,OS_Coil_Cooling_DX_VariableSpeedFields::GridSignalScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("CoilCoolingDXVariableSpeed","Grid Schedule"));
+    }
     return result;
   }
 
@@ -748,8 +752,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool CoilCoolingDXVariableSpeed_Impl::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
-    bool result = setInt(OS_Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedlevelDuringGridResponsiveControl);
+  bool CoilCoolingDXVariableSpeed_Impl::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl) {
+    bool result = setInt(OS_Coil_Cooling_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedLevelDuringGridResponsiveControl);
     OS_ASSERT(result);
     return result;
   }
@@ -1124,7 +1128,7 @@ void CoilCoolingDXVariableSpeed::resetUpperBoundToApplyGridResponsiveControl() {
   getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->resetUpperBoundToApplyGridResponsiveControl();
 }
 
-bool CoilCoolingDXVariableSpeed::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
+bool CoilCoolingDXVariableSpeed::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl) {
   return getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setMaxSpeedLevelDuringGridResponsiveControl(maxSpeedLevelDuringGridResponsiveControl);
 }
 

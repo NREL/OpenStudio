@@ -123,6 +123,18 @@ namespace detail {
     return CoilHeatingDXVariableSpeed::iddObjectType();
   }
 
+  std::vector<ScheduleTypeKey> CoilHeatingDXVariableSpeed_Impl::getScheduleTypeKeys(const Schedule& schedule) const
+  {
+    std::vector<ScheduleTypeKey> result;
+    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+    if (std::find(b,e,OS_Coil_Heating_DX_VariableSpeedFields::GridSignalScheduleName) != e)
+    {
+      result.push_back(ScheduleTypeKey("CoilHeatingDXVariableSpeed","Grid Schedule"));
+    }
+    return result;
+  }
+
   unsigned CoilHeatingDXVariableSpeed_Impl::inletPort() const {
     return OS_Coil_Heating_DX_VariableSpeedFields::IndoorAirInletNodeName;
   }
@@ -633,8 +645,8 @@ namespace detail {
     OS_ASSERT(result);
   }
 
-  bool CoilHeatingDXVariableSpeed_Impl::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
-    bool result = setInt(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedlevelDuringGridResponsiveControl);
+  bool CoilHeatingDXVariableSpeed_Impl::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl) {
+    bool result = setInt(OS_Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl, maxSpeedLevelDuringGridResponsiveControl);
     OS_ASSERT(result);
     return result;
   }
@@ -948,7 +960,7 @@ void CoilHeatingDXVariableSpeed::resetUpperBoundToApplyGridResponsiveControl() {
   getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->resetUpperBoundToApplyGridResponsiveControl();
 }
 
-bool CoilHeatingDXVariableSpeed::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl) {
+bool CoilHeatingDXVariableSpeed::setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl) {
   return getImpl<detail::CoilHeatingDXVariableSpeed_Impl>()->setMaxSpeedLevelDuringGridResponsiveControl(maxSpeedLevelDuringGridResponsiveControl);
 }
 

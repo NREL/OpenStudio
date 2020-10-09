@@ -164,8 +164,8 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingDXVariableSpee
   }
 
   // MaxSpeedLevelDuringGridResponsiveControl
-  if( (value = modelObject.maxSpeedLevelDuringGridResponsiveControl()) ) {
-    idfObject.setDouble(Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl,value.get());
+  if( auto maxSpeedLevel = modelObject.maxSpeedLevelDuringGridResponsiveControl() ) {
+    idfObject.setInt(Coil_Heating_DX_VariableSpeedFields::MaxSpeedLevelDuringGridResponsiveControl,maxSpeedLevel);
   }
 
   auto const speeds = modelObject.speeds();

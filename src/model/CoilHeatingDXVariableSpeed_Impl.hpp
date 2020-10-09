@@ -71,6 +71,8 @@ namespace detail {
 
     virtual IddObjectType iddObjectType() const override;
 
+    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+
     virtual unsigned inletPort() const override;
 
     virtual unsigned outletPort() const override;
@@ -201,7 +203,7 @@ namespace detail {
 
     void resetUpperBoundToApplyGridResponsiveControl();
 
-    bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl);
+    bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl);
 
     void resetMaxSpeedLevelDuringGridResponsiveControl();
 

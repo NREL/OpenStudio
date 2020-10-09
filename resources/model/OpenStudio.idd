@@ -17962,7 +17962,8 @@ OS:Coil:Heating:DX:VariableSpeed,
         \default -100.0
    N13, \field Max Speed Level During Grid Responsive Control
         \type integer
-        \units dimensionless   
+        \units dimensionless
+        \minimum 0
         \default 10
    A10; \field Speed Data List
         \type object-list
@@ -18124,7 +18125,8 @@ OS:Coil:Cooling:DX:VariableSpeed,
         \default -100.0
    N14, \field Max Speed Level During Grid Responsive Control
         \type integer
-        \units dimensionless   
+        \units dimensionless
+        \minimum 0
         \default 10
    A12, \field Load Control During Grid Responsive Control
         \type choice

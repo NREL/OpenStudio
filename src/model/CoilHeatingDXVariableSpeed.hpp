@@ -172,7 +172,7 @@ class MODEL_API CoilHeatingDXVariableSpeed : public StraightComponent {
 
   void resetUpperBoundToApplyGridResponsiveControl();
 
-  bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedlevelDuringGridResponsiveControl);
+  bool setMaxSpeedLevelDuringGridResponsiveControl(int maxSpeedLevelDuringGridResponsiveControl);
 
   void resetMaxSpeedLevelDuringGridResponsiveControl();
 

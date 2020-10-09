@@ -123,7 +123,7 @@ TEST_F(ModelFixture,CoilCoolingDXVariableSpeed_Grid)
 
   EXPECT_EQ(-100.0, coil.upperBoundToApplyGridResponsiveControl());
   EXPECT_TRUE(coil.isUpperBoundToApplyGridResponsiveControlDefaulted());
-  EXPECT_TRUE(coil.setUpperBoundToApplyGridResponsiveControl(50.0));
+  EXPECT_TRUE(coil.setUpperBoundToApplyGridResponsiveControl(-50.0));
   EXPECT_EQ(-50.0, coil.upperBoundToApplyGridResponsiveControl());
   EXPECT_FALSE(coil.isUpperBoundToApplyGridResponsiveControlDefaulted());
   coil.resetUpperBoundToApplyGridResponsiveControl();
