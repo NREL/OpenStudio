@@ -434,7 +434,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     # TODO: really unsure what former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want...
     # We're not trying to make a CLI here
-    target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends}) # ${Python_LIBRARIES})
+    target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends} ${Python_LIBRARIES})
     add_dependencies(${swig_target} ${PARENT_TARGET})
 
     # add this target to a "global" variable so python tests can require these
@@ -505,7 +505,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
       # TODO: really unsure what former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want...
       # We're not trying to make a CLI here
-      target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends}) # ${Python_LIBRARIES})
+      target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends} ${Python_LIBRARIES})
       add_dependencies(${swig_target} ${PARENT_TARGET})
 
       list(APPEND ALL_PYTHON_PACKAGE_TARGETS "${swig_target}")
