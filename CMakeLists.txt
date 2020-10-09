@@ -156,7 +156,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "rc1")
+set(PROJECT_VERSION_PRERELEASE "rc3")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -742,16 +742,16 @@ if(BUILD_CLI)
   # need to  update the MD5sum for each platform and url below
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200928-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "a9bb3871127e5e4cfe09bd174cb568da")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201007-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4db81102902f11d610e1da7e7ee22dd6")
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200928-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "bb4e68a1fab97f71d7159b5adf14f106")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201007-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d39e1123578bbac44584d3d059027cd5")
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200928-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "a66e90694974bce755de16fad9920673")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201007-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "956742120980fba640adf5a2ca2743d9")
   endif()
 
   set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
