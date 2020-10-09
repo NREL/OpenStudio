@@ -856,16 +856,18 @@ if(BUILD_PYTHON_BINDINGS)
   find_package(Python COMPONENTS Interpreter Development REQUIRED)
 
   include_directories(SYSTEM ${Python_INCLUDE_DIRS})
-  set(ALL_PYTHON_BINDINGS "") # global list of python bindings
+  set(ALL_PYTHON_BINDING_TARGETS "") # global list of python bindings
   set(ALL_PYTHON_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
   set(ALL_PYTHON_WRAPPER_FILES "") # global list of generated wrapper cxx files
   set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
   set(ALL_PYTHON_GENERATED_SRCS "") # global list of generated .py files
-  set(ALL_PYTHON_PACKAGE_GENERATED_SRCS "") # global list of generated .py files for pyhton_package
 
   if(BUILD_PYTHON_PIP_PACKAGE)
     set(PYTHON_PACKAGE_FOLDER "${PROJECT_BINARY_DIR}/Products/python_package")
     file(MAKE_DIRECTORY "${PYTHON_PACKAGE_FOLDER}")
+    set(ALL_PYTHON_PACKAGE_TARGETS "") # global list of python bindings
+    set(ALL_PYTHON_PACKAGE_GENERATED_SRCS "") # global list of generated .py files for pyhton_package
+
   endif()
 endif()
 
