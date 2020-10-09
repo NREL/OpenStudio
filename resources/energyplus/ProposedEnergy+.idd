@@ -48174,6 +48174,104 @@ ThermalStorage:Pcm:Simple,
       \note If blank or omitted, the default value specified 
       \default 20000
 
+ThermalStorage:Heating:Pair,
+      \min-fields 10
+      \memo This object pairs a storage tank with a variable speed DX heating coil to sustain a few hours of operation
+  A1, \field Name
+      \type alpha
+      \required-field
+  A2, \field Heating Coil Object Type
+      \type choice
+      \key Coil:Heating:DX:VariableSpeed
+	    \default Coil:Heating:DX:VariableSpeed
+      \note  Only works with Coil:Heating:DX:VariableSpeed 
+  A3, \field Heating Coil Name
+      \required-field
+      \type object-list
+      \object-list HeatingCoilsDXVariableSpeed
+      \note  Needs to match in the DX heating coil object
+  A4, \field Tank Object Type
+      \type choice
+      \key WaterHeater:Mixed
+      \key WaterHeater:Stratified
+      \default WaterHeater:Mixed
+  A5, \field Tank Name
+      \required-field
+      \type object-list
+      \object-list WaterHeaterMixedNames
+      \object-list WaterHeaterStratifiedNames  
+  N1, \field Maximum Peak Operation Hours
+      \required-field
+      \type real
+      \units hrs
+      \ip-units hrs
+  N2, \field Temperature Change in Tank through Operation
+      \required-field
+      \type real
+	    \units K
+  A6, \field Recovery Unit Type
+      \type choice
+      \key COIL:WATERHEATING:AIRTOWATERHEATPUMP:VARIABLESPEED
+	    \default COIL:WATERHEATING:AIRTOWATERHEATPUMP:VARIABLESPEED
+  A7, \field Recovery Unit Name
+      \required-field
+      \type object-list
+      \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+  N3; \field Capacity Ratio of Recovery Unit to Main Cooling Coil
+      \type real
+	    \default 1.0
+
+ThermalStorage:Cooling:Pair,
+      \min-fields 11
+      \memo This object pairs a storage tank with a variable speed DX cooling coil to sustain a few hours of operation
+  A1, \field Name
+      \type alpha
+      \required-field
+  A2, \field Cooling Coil Object Type
+      \type choice
+      \key Coil:Cooling:DX:VariableSpeed
+	    \default Coil:Cooling:DX:VariableSpeed
+      \note  Only works with Coil:Cooling:DX:VariableSpeed 
+  A3, \field Cooling Coil Name
+      \required-field
+      \type object-list
+      \object-list CoolingCoilsDXVariableSpeed
+      \note  Needs to match in the DX cooling coil object
+  A4, \field Tank Object Type
+      \type choice
+      \key ThermalStorage:Ice:Detailed
+      \key ThermalStorage:Ice:Simple
+	    \key ThermalStorage:Pcm:Simple
+  A5, \field Tank Name
+      \required-field
+      \type object-list
+      \object-list IceThermalStorageEquipment 
+  N1, \field Maximum Peak Operation Hours
+      \required-field
+      \type real
+      \units hrs
+      \ip-units hrs
+  N2, \field Temperature or Concentration Change in Tank through Operation
+      \required-field
+	    \default 0.0
+  A6, \field Load Type
+      \type choice
+      \key TOTAL
+      \key LATENT
+      \default TOTAL
+      \note Select either total load or latent (moisture) load.
+  A7, \field Recovery Unit Type
+      \type choice
+      \key Chiller:Electric
+      \key Chiller:Electric:EIR
+  A8, \field Recovery Unit Name
+      \required-field
+      \type object-list
+      \object-list Chillers
+  N3; \field Capacity Ratio of Recovery Unit to Main Cooling Coil
+      \type real
+	    \default 1.0
+
 ThermalStorage:Ice:Detailed,
     \min-fields 14
        \memo This input syntax is intended to describe a thermal storage system that
