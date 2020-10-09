@@ -1444,7 +1444,13 @@ set(${target_name}_src
   ThermalStorageChilledWaterStratified.cpp
   ThermalStoragePcmSimple.hpp
   ThermalStoragePcmSimple_Impl.hpp
-  ThermalStoragePcmSimple.cpp  
+  ThermalStoragePcmSimple.cpp
+  ThermalStorageHeatingPair.hpp
+  ThermalStorageHeatingPair_Impl.hpp
+  ThermalStorageHeatingPair.cpp
+  ThermalStorageCoolingPair.hpp
+  ThermalStorageCoolingPair_Impl.hpp
+  ThermalStorageCoolingPair.cpp 
   ThermalStorageIceDetailed.hpp
   ThermalStorageIceDetailed_Impl.hpp
   ThermalStorageIceDetailed.cpp
@@ -2083,8 +2089,11 @@ set(${target_name}_test_src
   test/SwimmingPoolIndoor_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
-  test/ThermalStorageIceDetailed_GTest.cpp
   test/ThermalStorageChilledWaterStratified_GTest.cpp
+  test/ThermalStoragePcmSimple_GTest.cpp
+  test/ThermalStorageHeatingPair_GTest.cpp
+  test/ThermalStorageCoolingPair_GTest.cpp
+  test/ThermalStorageIceDetailed_GTest.cpp  
   test/TemperingValve_GTest.cpp
   test/ThreeJSForwardTranslator_GTest.cpp
   test/ThreeJSReverseTranslator_GTest.cpp
