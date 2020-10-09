@@ -67,7 +67,7 @@ setup(
     ],
     keywords='openstudio py3 setuptools development',
     packages=find_packages(include=['openstudio']),
-    package_data={"openstudio": ["*.so"]},
+    package_data={"openstudio": ["*.so", "*.pyd", "*.lib", "*.exp", "*.dll", "*.dylib", "*.bundle"]},
     install_requires=[
     ],
     cmdclass={
