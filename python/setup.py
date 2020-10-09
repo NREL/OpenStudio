@@ -42,7 +42,7 @@ class InstallPlatlib(install):
 
 setup(
     name='openstudio',
-    version='@OPENSTUDIO_LONG_VERSION@',
+    version='@OpenStudio_VERSION@'.replace('-', ''),
     description='OpenStudio python bindings.',
     long_description="""OpenStudio python bindings.
     """,
