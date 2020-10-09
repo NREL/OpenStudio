@@ -3114,6 +3114,18 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       retVal = translateThermalStoragePcmSimple(mo);
       break;
     }
+  case openstudio::IddObjectType::OS_ThermalStorage_Heating_Pair :
+    {
+      auto mo = modelObject.cast<ThermalStorageHeatingPair>();
+      retVal = translateThermalStorageHeatingPair(mo);
+      break;
+    }
+  case openstudio::IddObjectType::OS_ThermalStorage_Cooling_Pair :
+    {
+      auto mo = modelObject.cast<ThermalStorageCoolingPair>();
+      retVal = translateThermalStorageCoolingPair(mo);
+      break;
+    }
   case openstudio::IddObjectType::OS_ThermalStorage_Ice_Detailed :
     {
       auto mo = modelObject.cast<ThermalStorageIceDetailed>();
