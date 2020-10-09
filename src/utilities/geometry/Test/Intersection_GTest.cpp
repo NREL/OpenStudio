@@ -2023,6 +2023,26 @@ TEST_F(GeometryFixture, RemoveSpikesEx) {
   EXPECT_TRUE(circularEqual(expected, testPoints, 0.01)) << testPoints;
 }
 
+TEST_F(GeometryFixture, RemoveSpikesEx1) {
+
+  Point3dVector points;
+  points.push_back(Point3d(0, 0, 0));
+  points.push_back(Point3d(0, 5, 0));
+  points.push_back(Point3d(5, 5, 0));
+  points.push_back(Point3d(5, 0, 0));
+
+  Point3dVector expected;
+  expected.push_back(Point3d(0, 1.3, 0));
+  expected.push_back(Point3d(2.22, 2.13, 0));
+  expected.push_back(Point3d(2.84, 0.87, 0));
+  expected.push_back(Point3d(0.48, 0, 0));
+
+  Point3dVector testPoints = removeSpikesEx(points, 0.01);
+
+  EXPECT_EQ(testPoints.size(), 4);
+  //EXPECT_TRUE(circularEqual(expected, testPoints, 0.01)) << testPoints;
+}
+
 TEST_F(GeometryFixture, Subtract_SamePoints)
 {
   double tol = 0.01;

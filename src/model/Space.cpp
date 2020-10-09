@@ -3473,7 +3473,7 @@ void intersectSurfaces(std::vector<Space>& t_spaces, bool sortByArea)
       }
 
       LOG_FREE(Info, "intersectSurfaces","********* Intersecting space " << namei << " with space " << namej << "**********")
-      spaces[i].intersectSurfaces(spaces[j]);
+       spaces[i].intersectSurfaces(spaces[j]);
     }
   }
 }
