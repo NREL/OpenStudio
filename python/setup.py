@@ -18,9 +18,11 @@ try:
             python, abi, plat = _bdist_wheel.get_tag(self)
             # There is no ABI incompatibility
             python, abi = 'py3', 'none'
-            # Our bindings won't be compatible with all, so don't bother
-            # plat = plat.lower().replace('linux', 'manylinux1')
-            # plat = plat.lower().replace('darwin_x86_64', 'macosx_10_6_intel')
+            # Our bindings won't be compatible with all distributions,
+            # BUT pypi will refuse the upload if we do not replace
+            # Binary wheel 'openstudio-3.1.0rc3-py3-none-linux_x86_64.whl' has an unsupported platform tag 'linux_x86_64'
+            plat = plat.lower().replace('linux', 'manylinux1')
+            plat = plat.lower().replace('darwin_x86_64', 'macosx_10_6_intel')
             return python, abi, plat
 except ImportError:
     bdist_wheel = None
