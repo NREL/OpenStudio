@@ -48183,7 +48183,7 @@ ThermalStorage:Heating:Pair,
   A2, \field Heating Coil Object Type
       \type choice
       \key Coil:Heating:DX:VariableSpeed
-	    \default Coil:Heating:DX:VariableSpeed
+      \default Coil:Heating:DX:VariableSpeed
       \note  Only works with Coil:Heating:DX:VariableSpeed 
   A3, \field Heating Coil Name
       \required-field
@@ -48208,18 +48208,18 @@ ThermalStorage:Heating:Pair,
   N2, \field Temperature Change in Tank through Operation
       \required-field
       \type real
-	    \units K
+      \units K
   A6, \field Recovery Unit Type
       \type choice
       \key COIL:WATERHEATING:AIRTOWATERHEATPUMP:VARIABLESPEED
-	    \default COIL:WATERHEATING:AIRTOWATERHEATPUMP:VARIABLESPEED
+      \default COIL:WATERHEATING:AIRTOWATERHEATPUMP:VARIABLESPEED
   A7, \field Recovery Unit Name
       \required-field
       \type object-list
       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
   N3; \field Capacity Ratio of Recovery Unit to Main Cooling Coil
       \type real
-	    \default 1.0
+      \default 1.0
 
 ThermalStorage:Cooling:Pair,
       \min-fields 11
@@ -48230,7 +48230,7 @@ ThermalStorage:Cooling:Pair,
   A2, \field Cooling Coil Object Type
       \type choice
       \key Coil:Cooling:DX:VariableSpeed
-	    \default Coil:Cooling:DX:VariableSpeed
+      \default Coil:Cooling:DX:VariableSpeed
       \note  Only works with Coil:Cooling:DX:VariableSpeed 
   A3, \field Cooling Coil Name
       \required-field
@@ -48241,7 +48241,7 @@ ThermalStorage:Cooling:Pair,
       \type choice
       \key ThermalStorage:Ice:Detailed
       \key ThermalStorage:Ice:Simple
-	    \key ThermalStorage:Pcm:Simple
+      \key ThermalStorage:Pcm:Simple
   A5, \field Tank Name
       \required-field
       \type object-list
@@ -48253,7 +48253,7 @@ ThermalStorage:Cooling:Pair,
       \ip-units hrs
   N2, \field Temperature or Concentration Change in Tank through Operation
       \required-field
-	    \default 0.0
+      \default 0.0
   A6, \field Load Type
       \type choice
       \key TOTAL
@@ -48270,7 +48270,7 @@ ThermalStorage:Cooling:Pair,
       \object-list Chillers
   N3; \field Capacity Ratio of Recovery Unit to Main Cooling Coil
       \type real
-	    \default 1.0
+      \default 1.0
 
 ThermalStorage:Ice:Detailed,
     \min-fields 14

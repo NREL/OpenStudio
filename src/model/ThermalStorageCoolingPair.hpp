@@ -31,11 +31,13 @@
 #define MODEL_THERMALSTORAGECOOLINGPAIR_HPP
 
 #include "ModelAPI.hpp"
-#include "StraightComponent.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
 namespace model {
+
+class HVACComponent;
 
 namespace detail {
 
@@ -43,8 +45,8 @@ namespace detail {
 
 } // detail
 
-/** ThermalStorageCoolingPair is a StraightComponent that wraps the OpenStudio IDD object 'OS:ThermalStorage:Ice:Detailed'. */
-class MODEL_API ThermalStorageCoolingPair : public StraightComponent {
+/** ThermalStorageCoolingPair is a ModelObject that wraps the OpenStudio IDD object 'OS:ThermalStorage:Cooling:Pair'. */
+class MODEL_API ThermalStorageCoolingPair : public ModelObject {
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -60,13 +62,45 @@ class MODEL_API ThermalStorageCoolingPair : public StraightComponent {
   /** @name Getters */
   //@{
 
+  HVACComponent coolingCoil() const;
 
+  HVACComponent tank() const;
+
+  double maximumPeakOperationHours() const;
+
+  double temperatureOrConcentrationChangeInTankThroughOperation() const;
+
+  std::string loadType() const;
+
+  bool isLoadTypeDefaulted() const;
+
+  HVACComponent recoveryUnit() const;
+
+  double capacityRatioOfRecoveryUnitToMainCoolingCoil() const;
+
+  bool isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted() const;
 
   //@}
   /** @name Setters */
   //@{
 
+  bool setCoolingCoil(const HVACComponent& coolingCoil);
 
+  bool setTank(const HVACComponent& tank);
+
+  bool setMaximumPeakOperationHours(double maximumPeakOperationHours);
+
+  bool setTemperatureOrConcentrationChangeInTankThroughOperation(double temperatureOrConcentrationChangeInTankThroughOperation);
+
+  bool setLoadType(std::string loadType);
+
+  void resetLoadType();
+
+  bool setRecoveryUnit(const HVACComponent& recoveryUnit);
+
+  bool setCapacityRatioOfRecoveryUnitToMainCoolingCoil(double capacityRatioOfRecoveryUnitToMainCoolingCoil);
+
+  void resetCapacityRatioOfRecoveryUnitToMainCoolingCoil();
 
   //@}
   /** @name Other */

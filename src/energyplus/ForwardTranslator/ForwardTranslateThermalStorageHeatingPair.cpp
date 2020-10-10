@@ -45,7 +45,7 @@ namespace openstudio {
 namespace energyplus {
 
 boost::optional<IdfObject> ForwardTranslator::translateThermalStorageHeatingPair(
-    ThermalStoragePcmSimple & modelObject)
+    ThermalStorageHeatingPair & modelObject)
 {
   IdfObject idfObject(IddObjectType::ThermalStorage_Heating_Pair);
   m_idfObjects.push_back(idfObject);

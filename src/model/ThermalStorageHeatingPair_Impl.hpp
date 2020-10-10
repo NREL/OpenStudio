@@ -31,15 +31,17 @@
 #define MODEL_THERMALSTORAGEHEATINGPAIR_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "StraightComponent_Impl.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
+class HVACComponent;
+
 namespace detail {
 
-  /** ThermalStorageHeatingPair_Impl is a StraightComponent_Impl that is the implementation class for ThermalStorageHeatingPair.*/
-  class MODEL_API ThermalStorageHeatingPair_Impl : public StraightComponent_Impl {
+  /** ThermalStorageHeatingPair_Impl is a ModelObject_Impl that is the implementation class for ThermalStorageHeatingPair.*/
+  class MODEL_API ThermalStorageHeatingPair_Impl : public ModelObject_Impl {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -70,29 +72,50 @@ namespace detail {
     /** @name Getters */
     //@{
 
+    HVACComponent heatingCoil() const;
 
+    HVACComponent tank() const;
+
+    double maximumPeakOperationHours() const;
+
+    double temperatureChangeInTankThroughOperation() const;
+
+    HVACComponent recoveryUnit() const;
+
+    double capacityRatioOfRecoveryUnitToMainCoolingCoil() const;
+
+    bool isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
+    bool setHeatingCoil(const HVACComponent& heatingCoil);
 
+    bool setTank(const HVACComponent& tank);
+
+    bool setMaximumPeakOperationHours(double maximumPeakOperationHours);
+
+    bool setTemperatureChangeInTankThroughOperation(double temperatureChangeInTankThroughOperation);
+
+    bool setRecoveryUnit(const HVACComponent& recoveryUnit);
+
+    bool setCapacityRatioOfRecoveryUnitToMainCoolingCoil(double capacityRatioOfRecoveryUnitToMainCoolingCoil);
+
+    void resetCapacityRatioOfRecoveryUnitToMainCoolingCoil();
 
     //@}
     /** @name Other */
     //@{
 
-    virtual unsigned inletPort() const override;
-    virtual unsigned outletPort() const override;
-
-    bool addToNode(Node & node) override;
-    std::vector<ModelObject> children() const override;
-    ModelObject clone(Model model) const override;
-
     //@}
    protected:
    private:
     REGISTER_LOGGER("openstudio.model.ThermalStorageHeatingPair");
+
+    boost::optional<HVACComponent> optionalHeatingCoil() const;
+    boost::optional<HVACComponent> optionalTank() const;
+    boost::optional<HVACComponent> optionalRecoveryUnit() const;
   };
 
 } // detail

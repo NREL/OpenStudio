@@ -35,6 +35,8 @@
 #include "Node_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_ThermalStorage_Cooling_Pair_FieldEnums.hxx>
@@ -49,7 +51,7 @@ namespace detail {
   ThermalStorageCoolingPair_Impl::ThermalStorageCoolingPair_Impl(const IdfObject& idfObject,
                                                                  Model_Impl* model,
                                                                  bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
+    : ModelObject_Impl(idfObject,model,keepHandle)
   {
     OS_ASSERT(idfObject.iddObject().type() == ThermalStorageCoolingPair::iddObjectType());
   }
@@ -57,7 +59,7 @@ namespace detail {
   ThermalStorageCoolingPair_Impl::ThermalStorageCoolingPair_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                  Model_Impl* model,
                                                                  bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
+    : ModelObject_Impl(other,model,keepHandle)
   {
     OS_ASSERT(other.iddObject().type() == ThermalStorageCoolingPair::iddObjectType());
   }
@@ -65,7 +67,7 @@ namespace detail {
   ThermalStorageCoolingPair_Impl::ThermalStorageCoolingPair_Impl(const ThermalStorageCoolingPair_Impl& other,
                                                                  Model_Impl* model,
                                                                  bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
+    : ModelObject_Impl(other,model,keepHandle)
   {}
 
   const std::vector<std::string>& ThermalStorageCoolingPair_Impl::outputVariableNames() const
@@ -80,45 +82,127 @@ namespace detail {
     return ThermalStorageCoolingPair::iddObjectType();
   }
 
-
-
-  unsigned ThermalStorageCoolingPair_Impl::inletPort() const {
-    return OS_ThermalStorage_Cooling_PairFields::InletNodeName;
+  boost::optional<HVACComponent> ThermalStorageCoolingPair_Impl::optionalCoolingCoil() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ThermalStorage_Cooling_PairFields::CoolingCoilName);
   }
 
-  unsigned ThermalStorageCoolingPair_Impl::outletPort() const {
-    return OS_ThermalStorage_Cooling_PairFields::OutletNodeName;
-  }
-
-  bool ThermalStorageCoolingPair_Impl::addToNode(Node & node)
-  {
-    if( auto plant = node.plantLoop() ) {
-      if( ! plant->demandComponent(node.handle()) ) {
-        return StraightComponent_Impl::addToNode( node );
-      }
+  HVACComponent ThermalStorageCoolingPair_Impl::coolingCoil() const{
+    boost::optional<HVACComponent> value = optionalCoolingCoil();
+    if (!value) {
+      LOG_AND_THROW(briefDescription() << " does not have a Cooling Coil attached.");
     }
-
-    return false;
+    return value.get();
   }
 
-  ModelObject ThermalStorageCoolingPair_Impl::clone(Model model) const
-  {
-    auto newMo = StraightComponent_Impl::clone(model).cast<ThermalStorageCoolingPair>();
-
-    return newMo;
+  boost::optional<HVACComponent> ThermalStorageCoolingPair_Impl::optionalTank() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ThermalStorage_Cooling_PairFields::TankName);
   }
 
-  std::vector<ModelObject> ThermalStorageCoolingPair_Impl::children() const
-  {
-    std::vector<ModelObject> result;
+  HVACComponent ThermalStorageCoolingPair_Impl::tank() const {
+    boost::optional<HVACComponent> value = optionalTank();
+    if (!value) {
+      LOG_AND_THROW(briefDescription() << " does not have a Tank attached.");
+    }
+    return value.get();
+  }
 
+  double ThermalStorageCoolingPair_Impl::maximumPeakOperationHours() const {
+    boost::optional<double> value = getDouble(OS_ThermalStorage_Cooling_PairFields::MaximumPeakOperationHours, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  double ThermalStorageCoolingPair_Impl::temperatureOrConcentrationChangeInTankThroughOperation() const {
+    boost::optional<double> value = getDouble(OS_ThermalStorage_Cooling_PairFields::TemperatureOrConcentrationChangeInTankThroughOperation, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  std::string ThermalStorageCoolingPair_Impl::loadType() const {
+    boost::optional<std::string> value = getString(OS_ThermalStorage_Cooling_PairFields::LoadType, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ThermalStorageCoolingPair_Impl::isLoadTypeDefaulted() const {
+    return isEmpty(OS_ThermalStorage_Cooling_PairFields::LoadType);
+  }
+
+  boost::optional<HVACComponent> ThermalStorageCoolingPair_Impl::optionalRecoveryUnit() const {
+    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ThermalStorage_Cooling_PairFields::RecoveryUnitName);
+  }
+
+  HVACComponent ThermalStorageCoolingPair_Impl::recoveryUnit() const {
+    boost::optional<HVACComponent> value = optionalRecoveryUnit();
+    if (!value) {
+      LOG_AND_THROW(briefDescription() << " does not have a Recovery Unit attached.");
+    }
+    return value.get();
+  }
+
+  double ThermalStorageCoolingPair_Impl::capacityRatioOfRecoveryUnitToMainCoolingCoil() const {
+    boost::optional<double> value = getDouble(OS_ThermalStorage_Cooling_PairFields::CapacityRatioOfRecoveryUnitToMainCoolingCoil, true);
+    OS_ASSERT(value);
+    return value.get();
+  }
+
+  bool ThermalStorageCoolingPair_Impl::isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted() const {
+    return isEmpty(OS_ThermalStorage_Cooling_PairFields::CapacityRatioOfRecoveryUnitToMainCoolingCoil);
+  }
+
+  bool ThermalStorageCoolingPair_Impl::setCoolingCoil(const HVACComponent& coolingCoil) {
+    bool result = setPointer(OS_ThermalStorage_Cooling_PairFields::CoolingCoilName, coolingCoil.handle());
     return result;
+  }
+
+  bool ThermalStorageCoolingPair_Impl::setTank(const HVACComponent& tank) {
+    bool result = setPointer(OS_ThermalStorage_Cooling_PairFields::TankName, tank.handle());
+    return result;
+  }
+
+  bool ThermalStorageCoolingPair_Impl::setMaximumPeakOperationHours(double maximumPeakOperationHours) {
+    bool result = setDouble(OS_ThermalStorage_Cooling_PairFields::MaximumPeakOperationHours, maximumPeakOperationHours);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  bool ThermalStorageCoolingPair_Impl::setTemperatureOrConcentrationChangeInTankThroughOperation(double temperatureOrConcentrationChangeInTankThroughOperation) {
+    bool result = setDouble(OS_ThermalStorage_Cooling_PairFields::TemperatureOrConcentrationChangeInTankThroughOperation, temperatureOrConcentrationChangeInTankThroughOperation);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  bool ThermalStorageCoolingPair_Impl::setLoadType(std::string loadType) {
+    bool result = setString(OS_ThermalStorage_Cooling_PairFields::LoadType, loadType);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void ThermalStorageCoolingPair_Impl::resetLoadType() {
+    bool result = setString(OS_ThermalStorage_Cooling_PairFields::LoadType, "");
+    OS_ASSERT(result);
+  }
+
+  bool ThermalStorageCoolingPair_Impl::setRecoveryUnit(const HVACComponent& recoveryUnit) {
+    bool result = setPointer(OS_ThermalStorage_Cooling_PairFields::RecoveryUnitName, recoveryUnit.handle());
+    return result;
+  }
+
+  bool ThermalStorageCoolingPair_Impl::setCapacityRatioOfRecoveryUnitToMainCoolingCoil(double capacityRatioOfRecoveryUnitToMainCoolingCoil) {
+    bool result = setDouble(OS_ThermalStorage_Cooling_PairFields::CapacityRatioOfRecoveryUnitToMainCoolingCoil, capacityRatioOfRecoveryUnitToMainCoolingCoil);
+    OS_ASSERT(result);
+    return result;
+  }
+
+  void ThermalStorageCoolingPair_Impl::resetCapacityRatioOfRecoveryUnitToMainCoolingCoil() {
+    bool result = setString(OS_ThermalStorage_Cooling_PairFields::CapacityRatioOfRecoveryUnitToMainCoolingCoil, "");
+    OS_ASSERT(result);
   }
 
 } // detail
 
 ThermalStorageCoolingPair::ThermalStorageCoolingPair(const Model& model)
-  : StraightComponent(ThermalStorageCoolingPair::iddObjectType(),model)
+  : ModelObject(ThermalStorageCoolingPair::iddObjectType(),model)
 {
   OS_ASSERT(getImpl<detail::ThermalStorageCoolingPair_Impl>());
 
@@ -130,11 +214,81 @@ IddObjectType ThermalStorageCoolingPair::iddObjectType() {
   return IddObjectType(IddObjectType::OS_ThermalStorage_Cooling_Pair);
 }
 
+HVACComponent ThermalStorageCoolingPair::coolingCoil() const {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->coolingCoil();
+}
 
+HVACComponent ThermalStorageCoolingPair::tank() const {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->tank();
+}
+
+double ThermalStorageCoolingPair::maximumPeakOperationHours() const {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->maximumPeakOperationHours();
+}
+
+double ThermalStorageCoolingPair::temperatureOrConcentrationChangeInTankThroughOperation() const {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->temperatureOrConcentrationChangeInTankThroughOperation();
+}
+
+std::string ThermalStorageCoolingPair::loadType() const {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->loadType();
+}
+
+bool ThermalStorageCoolingPair::isLoadTypeDefaulted() const {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->isLoadTypeDefaulted();
+}
+
+HVACComponent ThermalStorageCoolingPair::recoveryUnit() const {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->recoveryUnit();
+}
+
+double ThermalStorageCoolingPair::capacityRatioOfRecoveryUnitToMainCoolingCoil() const {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->capacityRatioOfRecoveryUnitToMainCoolingCoil();
+}
+
+bool ThermalStorageCoolingPair::isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted() const {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted();
+}
+
+bool ThermalStorageCoolingPair::setCoolingCoil(const HVACComponent& coolingCoil) {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->setCoolingCoil(coolingCoil);
+}
+
+bool ThermalStorageCoolingPair::setTank(const HVACComponent& tank) {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->setTank(tank);
+}
+
+bool ThermalStorageCoolingPair::setMaximumPeakOperationHours(double maximumPeakOperationHours) {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->setMaximumPeakOperationHours(maximumPeakOperationHours);
+}
+
+bool ThermalStorageCoolingPair::setTemperatureOrConcentrationChangeInTankThroughOperation(double temperatureOrConcentrationChangeInTankThroughOperation) {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->setTemperatureOrConcentrationChangeInTankThroughOperation(temperatureOrConcentrationChangeInTankThroughOperation);
+}
+
+bool ThermalStorageCoolingPair::setLoadType(std::string loadType) {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->setLoadType(loadType);
+}
+
+void ThermalStorageCoolingPair::resetLoadType() {
+  getImpl<detail::ThermalStorageCoolingPair_Impl>()->resetLoadType();
+}
+
+bool ThermalStorageCoolingPair::setRecoveryUnit(const HVACComponent& recoveryUnit) {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->setRecoveryUnit(recoveryUnit);
+}
+
+bool ThermalStorageCoolingPair::setCapacityRatioOfRecoveryUnitToMainCoolingCoil(double capacityRatioOfRecoveryUnitToMainCoolingCoil) {
+  return getImpl<detail::ThermalStorageCoolingPair_Impl>()->setCapacityRatioOfRecoveryUnitToMainCoolingCoil(capacityRatioOfRecoveryUnitToMainCoolingCoil);
+}
+
+void ThermalStorageCoolingPair::resetCapacityRatioOfRecoveryUnitToMainCoolingCoil() {
+  getImpl<detail::ThermalStorageCoolingPair_Impl>()->resetCapacityRatioOfRecoveryUnitToMainCoolingCoil();
+}
 
 /// @cond
 ThermalStorageCoolingPair::ThermalStorageCoolingPair(std::shared_ptr<detail::ThermalStorageCoolingPair_Impl> impl)
-  : StraightComponent(std::move(impl))
+  : ModelObject(std::move(impl))
 {}
 /// @endcond
 
