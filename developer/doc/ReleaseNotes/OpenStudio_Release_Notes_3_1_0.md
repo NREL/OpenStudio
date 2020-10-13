@@ -61,10 +61,13 @@ You can find the list of Pull Requests that got into this release [here](https:/
 
 A number of API-breaking changes have been implemented in OpenStudio SDK 3.1.0:
 
-* [#3960](https://github.com/NREL/OpenStudio/pull/3960) - Added support for building the C# bindings via `dotnet` CLI, including on Unix platforms.
+* [#3960](https://github.com/NREL/OpenStudio/pull/3960) - Added support for building the C# bindings via `dotnet` CLI, including on Unix platforms
+* [#3966](https://github.com/NREL/OpenStudio/pull/3966) - Closes [#3945](https://github.com/NREL/OpenStudio/issues/3945) - Support the EnergyPlus object SurfaceControl:MovableInsulation which can be used to add insulation surface(s) on top of opaque surfaces, such as a transparent coating that affects the radiative gains to a roof surface
 * [#3959](https://github.com/NREL/OpenStudio/pull/3959) - Also included some improvements in the generated C# bindings by reducing build warnings and properly exposing some types via SWIG
     * `ScheduleTypeKey` (which is normally only use by OpenStudio internals in ScheduleTypeRegistry checks) previously mapped to a `std::pair<std::string, std::string>` which was SWIGed in ruby as an Array of strings of size two, but improperly exposed in C#. It now uses a dedicated helper class with two methods `ScheduleTypeKey::className()` and `ScheduleTypeKey::scheduleDisplayName()`
-* [#4050](https://github.com/NREL/OpenStudio/pull/4050) - Fix #3921 - some children of RefrigerationSystem can be added several times and produce a fatal when System is removed.
+* [#3987](https://github.com/NREL/OpenStudio/pull/3987) - Closes [#3907](https://github.com/NREL/OpenStudio/issues/3907) - Support new Coil:Cooling:DX, Coil:Cooling:DX:CurveFit:Performance, Coil:Cooling:DX:CurveFit:OperatingMode, Coil:Cooling:DX:CurveFit:Speed objects
+* [#4009](https://github.com/NREL/OpenStudio/pull/4009) - Closes [#4006](https://github.com/NREL/OpenStudio/issues/4006) - Add SwimmingPool:Indoor to SDK
+* [#4050](https://github.com/NREL/OpenStudio/pull/4050) - Fixes [#3921](https://github.com/NREL/OpenStudio/issues/3921) - Some children of RefrigerationSystem can be added several times and produce a fatal when System is removed
     * `RefrigerationSystem` will now be enforcing unicity for all children. This was already the case for a few of the child objects such as Case and WalkIns, it is now the case for all objects (`RefrigerationCondenserCascade`, `RefrigerationSubcoolerMechanical` and `RefrigerationSubcoolerLiquidSuction`, etc.). What this means is that setter methods (or add methods in case of a list) will remove the child for any current RefrigerationSystem it is on first.
 * [#4066](https://github.com/NREL/OpenStudio/pull/4066) - Multiple shading controls referenced by a single subsurface
     * `SubSurface` was historically the one referencing the `ShadingControl` object. Now it's a many-to-many relationship where `ShadingControl` has an extensible 'Sub Surface Name' field, and multiple `ShadingControl` objects can reference the same `SubSurface`. This is trickling down from a change introduced in EnergyPlus version 9.4, and specifically in PR [NREL/EnergyPlus#8196](https://github.com/NREL/EnergyPlus/pull/8196)
@@ -75,47 +78,41 @@ A number of API-breaking changes have been implemented in OpenStudio SDK 3.1.0:
     * All Shading Control Type values should now be supported. Refer to issue [#4074](https://github.com/NREL/OpenStudio/issues/4074) for more information
     * Fields 'Glare Control Is Active', 'Type of Slat Angle Control for Blinds', 'Slat Angle Schedule Name', 'Setpoint2', and 'Multiple Surface Control Type' are now implemented as well
 * [#4026](https://github.com/NREL/OpenStudio/pull/4026) - Fix OpenStudio Windows crashed during save attempt
-* [#4028](https://github.com/NREL/OpenStudio/pull/4028) - Fixes [#3835](https://github.com/NREL/OpenStudio/issues/3835) Decrease overall load time of CLI and lazy load OpenStudio ruby bindings when possible.
+* [#4028](https://github.com/NREL/OpenStudio/pull/4028) - Fixes [#3835](https://github.com/NREL/OpenStudio/issues/3835) - Decrease overall load time of CLI and lazy load OpenStudio ruby bindings when possible
+* [#4059](https://github.com/NREL/OpenStudio/pull/4059) - Add new OutputControl:Files object to SDK, which allows conditionally turning on/off output from EnergyPlus
 * [#4101](https://github.com/NREL/OpenStudio/pull/4101) - Update EnergyPlus v940 official  
 
 
 ## Minor changes:
 
-* [#3966](https://github.com/NREL/OpenStudio/pull/3966) - Closes [#3945](https://github.com/NREL/OpenStudio/issues/3945) Support the EnergyPlus object SurfaceControl:MovableInsulation. 
 * [#3961](https://github.com/NREL/OpenStudio/pull/3963) - Update cmake to use included FindPython method and fix zlib's crypt.h
-* [#3970](https://github.com/NREL/OpenStudio/pull/3970) - Update conan dependency  fmt/6.2.0 and use option to define FMT_HEADER_ONLY
+* [#3970](https://github.com/NREL/OpenStudio/pull/3970) - Update conan dependency fmt/6.2.0 and use option to define FMT_HEADER_ONLY
 * [#3979](#https://github.com/NREL/OpenStudio/pull/3979), [#4004](https://github.com/NREL/OpenStudio/pull/4004), [#4071](https://github.com/NREL/OpenStudio/pull/4071) - Update openstudio-gems to include openstudio-extension v0.3.0, openstudio-workflow v2.1.0, openstudio-standards v0.2.12, openstudio_measure_tester v0.2.3
-* [#3987](https://github.com/NREL/OpenStudio/pull/3987) - Closes [#3907](https://github.com/NREL/OpenStudio/issues/3907) - Support new object Coil:Cooling:DX, Coil:Cooling:DX:CurveFit:Performance, Coil:Cooling:DX:CurveFit:OperatingMode, Coil:Cooling:DX:CurveFit:Speed
-* [#4009](https://github.com/NREL/OpenStudio/pull/4009) - Closes [#4006](https://github.com/NREL/OpenStudio/issues/4006) - Add SwimmingPool:Indoor to SDK 
-* [#4015](https://github.com/NREL/OpenStudio/pull/4015),[#4047](https://github.com/NREL/OpenStudio/pull/4047)- Updates the conan dependencies to try and pin version using hash.  
+* [#4015](https://github.com/NREL/OpenStudio/pull/4015), [#4047](https://github.com/NREL/OpenStudio/pull/4047)- Updates the conan dependencies to try and pin version using hash
 * [#4027](https://github.com/NREL/OpenStudio/pull/4027) - Include 64/32 bit universal nuget package in cmake build process.
 * [#4029](https://github.com/NREL/OpenStudio/pull/4029) - Closes [#3832](https://github.com/NREL/OpenStudio/issues/3832) - Allow for silent install on windows
 * [#4055](https://github.com/NREL/OpenStudio/pull/4055) - Closes [#4054](https://github.com/NREL/OpenStudio/issues/4054) - Add latitude, longitude, elevation accessors to FloorplanJS
-* [#4059](https://github.com/NREL/OpenStudio/pull/4059) - Add new OutputControl:Files object to SDK
-* [#4068](https://github.com/NREL/OpenStudio/pull/4068) - Closes [#4067](https://github.com/NREL/OpenStudio/issues/4067) - Remove the ENV ruby bundle variables so the cli does not use them. 
-* [#4098](https://github.com/NREL/OpenStudio/pull/4098) - Remove setter/getter for OutputEND (since it is required by the openstudio-workflow-gem).
-
+* [#4068](https://github.com/NREL/OpenStudio/pull/4068) - Closes [#4067](https://github.com/NREL/OpenStudio/issues/4067) - Remove the ENV ruby bundle variables so the cli does not use them
 
 
 ## Minor Bug Fixes
 
-
 * [#3957](https://github.com/NREL/OpenStudio/pull/3969) - Fix for ruby bundle changes. 
-* [#3971](https://github.com/NREL/OpenStudio/pull/3971) - Fixes [#3943](https://github.com/NREL/OpenStudio/issues/3943) ThreeJS should handle ConstructionAirBoundary 
+* [#3971](https://github.com/NREL/OpenStudio/pull/3971) - Fixes [#3943](https://github.com/NREL/OpenStudio/issues/3943) - ThreeJS should handle ConstructionAirBoundary 
 * [#3973](#https://github.com/NREL/OpenStudio/pull/3973) - Fixes [#3972](https://github.com/NREL/OpenStudio/issues/3972) - ScheduleRuleset remove winterDD/summerDD/holiday ScheduleDay in reset. 
 * [#3978](https://github.com/NREL/OpenStudio/pull/3978) - Fixes [#3976](https://github.com/NREL/OpenStudio/issues/3976) - Add 'Minimum Outdoor Dry-Bulb Temperature for Compressor Operation' to all Coil:Cooling:DX:XXX objects
 * [#3980](https://github.com/NREL/OpenStudio/pull/3980) - Fixes [#2033](https://github.com/NREL/OpenStudio/issues/2033) - Properly connected the secondary/induced air node for ATUs
 * [#3981](https://github.com/NREL/OpenStudio/pull/3981) - Fixes [#2977](https://github.com/NREL/OpenStudio/issues/2977) -  Make VAVReheat Method consistent with IDD and other objects
 * [#3983](https://github.com/NREL/OpenStudio/pull/3983) - Fixes [#1058](https://github.com/NREL/OpenStudio/issues/1058) - Warn only if the file extension isn't OSM, OSC, IDF, IMF, or DDY
-* [#3985](https://github.com/NREL/OpenStudio/pull/3985) Fixes [#3926](https://github.com/NREL/OpenStudio/issues/3926), Fixes [#3984](https://github.com/NREL/OpenStudio/issues/3984) - handle multiple AirLoopHVACs and assign the DSOA to all ControllerMechanicalVentilation objects. AirLoopHVAC translates the AirLoopHVACOutdoorAirSystem, which in turns translates the ControllerOutdoorAir.
+* [#3985](https://github.com/NREL/OpenStudio/pull/3985) - Fixes [#3926](https://github.com/NREL/OpenStudio/issues/3926), Fixes [#3984](https://github.com/NREL/OpenStudio/issues/3984) - Handle multiple AirLoopHVACs and assign the DSOA to all ControllerMechanicalVentilation objects. AirLoopHVAC translates the AirLoopHVACOutdoorAirSystem, which in turns translates the ControllerOutdoorAir
 * [#3986](https://github.com/NREL/OpenStudio/pull/3986) - Fixes [#2797](https://github.com/NREL/OpenStudio/issues/2797) - Do not translate a ZoneHVACLowTempRadiant object if it doesn't have any surfaces with Internal Source
 * [#3988](https://github.com/NREL/OpenStudio/pull/3988) - Fix bug in GenerateClass.rb
 * [#3989](https://github.com/NREL/OpenStudio/pull/3989) - Fixes [#3076](https://github.com/NREL/OpenStudio/issues/3076) - Make openstudio::Vector "Enumerable" in ruby
-* [#3993](https://github.com/NREL/OpenStudio/pull/3993) - Added logic to rejoin previously triangulated window geometry before calling computeTriangulation on the base surface. Fixed several bugs in joinAll and translation to ThreeJS format.
+* [#3993](https://github.com/NREL/OpenStudio/pull/3993) - Added logic to rejoin previously triangulated window geometry before calling computeTriangulation on the base surface. Fixed several bugs in joinAll and translation to ThreeJS format
 * [#3995](https://github.com/NREL/OpenStudio/pull/3995) - Implements eql? and hash for UUID in Ruby so UUID can be used as a key in a Ruby Hash
 * [#3996](https://github.com/NREL/OpenStudio/pull/3996) - Fixes [#3990](https://github.com/NREL/OpenStudio/issues/3990) - Add an API to CoilCoolingDXMultiSpeed to add/remove stages
 * [#3998](https://github.com/NREL/OpenStudio/pull/3998) - Fixes [#3997](https://github.com/NREL/OpenStudio/issues/3997) - GbXMLReverseTranslator applies incorrect scaling to windows when unit isn't meter
-* [#3999](https://github.com/NREL/OpenStudio/pull/3999) - Removes a warning message that no longer makes sense:
+* [#3999](https://github.com/NREL/OpenStudio/pull/3999) - Removes a "Propane deprecated" warning message that no longer makes sense
 * [#4000](https://github.com/NREL/OpenStudio/pull/4000) - Fixes [#3314](https://github.com/NREL/OpenStudio/issues/3314) - GBXML translate spaces etc even if Facility and/or Building aren't isntantianted 
 * [#4002](https://github.com/NREL/OpenStudio/pull/4002) - Fixes [#2100](https://github.com/NREL/OpenStudio/issues/2100) - Remove if defaulted statements in ForwardTranslateThermalZone
 * [#4005](https://github.com/NREL/OpenStudio/pull/4005) - Fixes [#4001](https://github.com/NREL/OpenStudio/issues/4001) - gbXML issue on ForwardTranslation - surfaceType attribute written twice for SlabOnGrade
@@ -123,11 +120,10 @@ A number of API-breaking changes have been implemented in OpenStudio SDK 3.1.0:
 * [#4008](https://github.com/NREL/OpenStudio/pull/4008) - Fixes [#1906](https://github.com/NREL/OpenStudio/issues/1906) - Use sqlite
 * [#4010](https://github.com/NREL/OpenStudio/pull/4010) - Fixes [#4007](https://github.com/NREL/OpenStudio/issues/4007) - Model objects returned in inconsistent order
 * [#4011](https://github.com/NREL/OpenStudio/pull/4011) - Fixes [#1675](https://github.com/NREL/OpenStudio/issues/1675) - ForwardTranslate WaterHeater:Mixed when not on loop but has Peak Use Flow Rate (standalone operation)
-* [#4012](https://github.com/NREL/OpenStudio/pull/4012) - Fixes [#2895](https://github.com/NREL/OpenStudio/issues/2895) - Extend the list of acceptable SubSurface types to include Skylight.  
+* [#4012](https://github.com/NREL/OpenStudio/pull/4012) - Fixes [#2895](https://github.com/NREL/OpenStudio/issues/2895) - Extend the list of acceptable SubSurface types to include Skylight
 * [#4013](https://github.com/NREL/OpenStudio/pull/4013) - Fixes [32867](https://github.com/NREL/OpenStudio/issues/2867) - Sum of fraction radiant, fraction lost, etc can be > 1 
 * [#4021](https://github.com/NREL/OpenStudio/pull/4021) - Fixes [#4014](https://github.com/NREL/OpenStudio/issues/4014) - Extend download time to BCL 
-* [#4023](https://github.com/NREL/OpenStudio/pull/4023) - Fixes [#3936](https://github.com/NREL/OpenStudio/issues/3936) - SubSurface Type reset when assigned to surface 
-* [#4024](https://github.com/NREL/OpenStudio/pull/4024) Fixes [#3578](https://github.com/NREL/OpenStudio/issues/3578) - Addresses warning message when running measure test 'Cannot find current Workflow Step' 
+* [#4023](https://github.com/NREL/OpenStudio/pull/4023) - Fixes [#3936](https://github.com/NREL/OpenStudio/issues/3936) - SubSurface Type reset when assigned to surface
 * [#4030](https://github.com/NREL/OpenStudio/pull/4030) - Fixes [#4030](https://github.com/NREL/OpenStudio/issues/4020) - AvailabilityManagerNightCycle: Ensure ModelObjectLists are handled in clone/remove
 * [#4032](https://github.com/NREL/OpenStudio/pull/4032) - Fixes [#4016](https://github.com/NREL/OpenStudio/issues/4016) - Move VT from 2.9.0 to 3.0.0 for new fields at end of the ZoneHVAC:TerminalUnit:VariableRefrigerantFlow
 * [#4037](https://github.com/NREL/OpenStudio/pull/4037) - Fixes [#3369](https://github.com/NREL/OpenStudio/issues/3369) - Add missing fields to AvailabilityManager:HybridVentilation
@@ -136,12 +132,12 @@ A number of API-breaking changes have been implemented in OpenStudio SDK 3.1.0:
 * [#4065](https://github.com/NREL/OpenStudio/pull/4065) - Fixes [#4033](https://github.com/NREL/OpenStudio/issues/4033), Fixes [#4034](https://github.com/NREL/OpenStudio/issues/4034) - Fix AVMList clone between different models
 * [#4072](https://github.com/NREL/OpenStudio/pull/4072) - Fixes [#4064](https://github.com/NREL/OpenStudio/issues/4064) - RunPeriodControlSpecialDays are not Forward Translated 
 * [#4080](https://github.com/NREL/OpenStudio/pull/4080) - Fixes [#4079](https://github.com/NREL/OpenStudio/issues/4079) -  Install E+ pythonwrapper lib via CMake
-* [#4088](https://github.com/NREL/OpenStudio/pull/4088) - hotfix for sql queries
+* [#4088](https://github.com/NREL/OpenStudio/pull/4088) - Hotfix for sql queries
 * [#4093](https://github.com/NREL/OpenStudio/pull/4093) - Fixes [#4091](https://github.com/NREL/OpenStudio/issues/4091) - Update FuelType/EndUseFuelType (and Sql) to match E+ 9.4.0
 * [#4097](https://github.com/NREL/OpenStudio/pull/4097) - Fixes [#4096](https://github.com/NREL/OpenStudio/issues/4096) - RT error for ZoneControlThermostat
 * [#4099](https://github.com/NREL/OpenStudio/pull/4099) - Fixes [#4089](https://github.com/NREL/OpenStudio/issues/4089) - Confirm if idf_output_requests still works in reporting measure template
 * [#4104](https://github.com/NREL/OpenStudio/pull/4104) - Fixes [#4102](https://github.com/NREL/OpenStudio/issues/4102) - Fuel Type Renames in EMS Actuator Names 
-* [#4155](https://github.com/NREL/OpenStudio/pull/4115) - Fixes [#4109] - Fixes ruby bindings issue on windows when working with Sqlite3 db. 
+* [#4155](https://github.com/NREL/OpenStudio/pull/4115) - Fixes [#4109](https://github.com/NREL/OpenStudio/issues/4109) - Fixes ruby bindings issue on windows when working with Sqlite3 db
 
 ### OpenStudio Standards v0.2.12
 
