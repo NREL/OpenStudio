@@ -1,8 +1,8 @@
 # OpenStudio Version 3.1.0
 
-_Release Notes - 10/26/2020_
+_Release Notes - 10/16/2020_
 
-These release notes describe version 3.1.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Systems, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
+These release notes describe version 3.1.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
 -  Overview
 -  Where to Find OpenStudio Documentation
@@ -10,7 +10,7 @@ These release notes describe version 3.1.0 of the OpenStudio SDK developed by th
 -  OpenStudio SDK: Changelog
 
 # Overview
-As of April, 2020, development and distribution of the OpenStudioApplication has been moved to its own [openstudiocoalition/OpenStudioApplication](https://github.com/openstudiocoalition/OpenStudioApplication) repository. OpenStudio SDK is still actively developed and distributed by NREL and is released two times per year, in April and October. 
+As of April 2020, development and distribution of the OpenStudioApplication and the SketchUp plugin have transitioned to the OpenStudio Coalition, who is independently managing and distributing the software through its own [openstudiocoalition/OpenStudioApplication](https://github.com/openstudiocoalition/OpenStudioApplication) repository. The OpenStudio SDK is continuing to be actively developed and distributed by NREL and is released two times per year, through a spring and a fall release. 
 
 Below is the list of components that is included in this SDK installer:
 
@@ -21,26 +21,26 @@ __**OpenStudio SDK 3.1.0**__
 - Ruby API
 - C++ SDK
 
-**Note** that [PAT](https://github.com/NREL/OpenStudio-PAT) is not included in either the SDK or Application installers. You will need to install PAT separately which is distributed on the [OpenStudio-PAT](https://github.com/NREL/OpenStudio-PAT) GitHub page.
+**Note** that [PAT](https://github.com/NREL/OpenStudio-PAT) is not included in either the SDK or the OpenStudio Coalition's Application installers. You will need to install PAT separately which is distributed on the [OpenStudio-PAT](https://github.com/NREL/OpenStudio-PAT) GitHub page.
 
-# Where to Find OpenStudio Documentation
+# Where to Find OpenStudio SDK Documentation
 
-- OpenStudio release documentation, including these release notes, tutorials, and other user documentation, is available at [https://www.openstudio.net/](https://www.openstudio.net/.)
+- OpenStudio SDK release documentation, including these release notes, tutorials, and other user documentation, is available at [https://www.openstudio.net/](https://www.openstudio.net/.)
 - C++ API documentation is available at [https://openstudio-sdk-documentation.s3.amazonaws.com/index.html](https://openstudio-sdk-documentation.s3.amazonaws.com/index.html)
 - Measure development documentation is available at [http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/](http://nrel.github.io/OpenStudio-user-documentation/reference/measure_writing_guide/ )
 - A roadmap for planned features is available at http://nrel.github.io/OpenStudio-user-documentation/getting_started/roadmap/.
 
 # Installation Notes
 
-OpenStudio 3.1.0 is supported on 64-bit Windows 7 – 10, OS X 10.14 – 10.15, and Ubuntu 18.04.
+OpenStudio SDK 3.1.0 is supported on 64-bit Windows 7 – 10, OS X 10.14 – 10.15, and Ubuntu 18.04.
 
-OpenStudio 3.1.0 supports [EnergyPlus Release 9.4](https://github.com/NREL/EnergyPlus/releases/tag/v9.4.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio 3.1.0.
+OpenStudio SDK 3.1.0 supports [EnergyPlus Release 9.4](https://github.com/NREL/EnergyPlus/releases/tag/v9.4.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK 3.1.0.
 
-OpenStudio 3.1.0 supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio 3.1.0.
+OpenStudio SDK 3.1.0 supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio SDK 3.1.0.
 
-OpenStudio 3.x now uses **Ruby 2.5.5** as the supported version (2.2.4 previously).
+OpenStudio SDK 3.x now uses **Ruby 2.5.5** as the supported version (2.2.4 previously).
 
-As usual, you can refer to the **[OpenStudio Compatibility Matrix](https://github.com/NREL/OpenStudio/wiki/OpenStudio-Version-Compatibility-Matrix)** for more information.
+As usual, you can refer to the **[OpenStudio SDK Compatibility Matrix](https://github.com/NREL/OpenStudio/wiki/OpenStudio-Version-Compatibility-Matrix)** for more information.
 
 
 ## Installation Steps
@@ -59,7 +59,7 @@ You can find the list of Pull Requests that got into this release [here](https:/
 
 ## New Features, Major Fixes and API-breaking changes
 
-A number of API-breaking changes have been implemented in OpenStudio 3.1.0:
+A number of API-breaking changes have been implemented in OpenStudio SDK 3.1.0:
 
 * [#3960](https://github.com/NREL/OpenStudio/pull/3960) - Added support for building the C# bindings via `dotnet` CLI, including on Unix platforms.
 * [#3959](https://github.com/NREL/OpenStudio/pull/3959) - Also included some improvements in the generated C# bindings by reducing build warnings and properly exposing some types via SWIG
