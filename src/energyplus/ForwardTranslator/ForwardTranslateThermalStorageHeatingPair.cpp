@@ -44,8 +44,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateThermalStorageHeatingPair(
-    ThermalStorageHeatingPair & modelObject)
+boost::optional<IdfObject> ForwardTranslator::translateThermalStorageHeatingPair(ThermalStorageHeatingPair & modelObject)
 {
   IdfObject idfObject(IddObjectType::ThermalStorage_Heating_Pair);
   m_idfObjects.push_back(idfObject);
@@ -55,7 +54,51 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStorageHeatingPair
     idfObject.setName(*s);
   }
 
+  // Heating Coil
+  {
+    auto mo = modelObject.heatingCoil();
+    if( auto idf = translateAndMapModelObject(mo) ) {
+      idfObject.setString(ThermalStorage_Heating_PairFields::HeatingCoilObjectType, idf->iddObject().name());
+      idfObject.setString(ThermalStorage_Heating_PairFields::HeatingCoilName, idf->name().get());
+    }
+  }
 
+  // Tank
+  {
+    auto mo = modelObject.tank();
+    if( auto idf = translateAndMapModelObject(mo) ) {
+      idfObject.setString(ThermalStorage_Heating_PairFields::TankObjectType, idf->iddObject().name());
+      idfObject.setString(ThermalStorage_Heating_PairFields::TankName, idf->name().get());
+    }
+  }
+
+  // Maximum Peak Operation Hours
+  {
+    auto value = modelObject.maximumPeakOperationHours();
+    idfObject.setDouble(ThermalStorage_Heating_PairFields::MaximumPeakOperationHours, value);
+  }
+
+  // Temperature Change In Tank Through Operation
+  {
+    auto value = modelObject.temperatureChangeInTankThroughOperation();
+    idfObject.setDouble(ThermalStorage_Heating_PairFields::TemperatureChangeInTankThroughOperation, value);
+  }
+
+  // Recovery Unit
+  {
+    auto mo = modelObject.recoveryUnit();
+    if( auto idf = translateAndMapModelObject(mo) ) {
+      idfObject.setString(ThermalStorage_Heating_PairFields::RecoveryUnitType, idf->iddObject().name());
+      idfObject.setString(ThermalStorage_Heating_PairFields::RecoveryUnitName, idf->name().get());
+    }
+  }
+
+  boost::optional<double> value;
+
+  // Capacity Ratio Of Recovery Unit To Main Cooling Coil
+  if( (value = modelObject.capacityRatioOfRecoveryUnitToMainCoolingCoil()) ) {
+    idfObject.setDouble(ThermalStorage_Heating_PairFields::CapacityRatioOfRecoveryUnitToMainCoolingCoil, value.get());
+  }
 
   return idfObject;
 }

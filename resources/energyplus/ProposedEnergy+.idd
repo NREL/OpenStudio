@@ -48205,7 +48205,7 @@ ThermalStorage:Heating:Pair,
       \type real
       \units hrs
       \ip-units hrs
-  N2, \field Temperature Change in Tank through Operation
+  N2, \field Temperature Change In Tank Through Operation
       \required-field
       \type real
       \units K
@@ -48217,7 +48217,7 @@ ThermalStorage:Heating:Pair,
       \required-field
       \type object-list
       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
-  N3; \field Capacity Ratio of Recovery Unit to Main Cooling Coil
+  N3; \field Capacity Ratio Of Recovery Unit To Main Cooling Coil
       \type real
       \default 1.0
 
@@ -48251,7 +48251,7 @@ ThermalStorage:Cooling:Pair,
       \type real
       \units hrs
       \ip-units hrs
-  N2, \field Temperature or Concentration Change in Tank through Operation
+  N2, \field Temperature Or Concentration Change In Tank Through Operation
       \required-field
       \default 0.0
   A6, \field Load Type
@@ -48268,7 +48268,7 @@ ThermalStorage:Cooling:Pair,
       \required-field
       \type object-list
       \object-list Chillers
-  N3; \field Capacity Ratio of Recovery Unit to Main Cooling Coil
+  N3; \field Capacity Ratio Of Recovery Unit To Main Cooling Coil
       \type real
       \default 1.0
 

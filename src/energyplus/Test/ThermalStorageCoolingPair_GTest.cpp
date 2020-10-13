@@ -35,7 +35,6 @@
 #include "../../model/ThermalStorageCoolingPair.hpp"
 #include "../../model/Model.hpp"
 
-
 #include <utilities/idd/ThermalStorage_Cooling_Pair_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -44,10 +43,14 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageCoolingPair) {
-    Model model;
+  Model model;
 
-    ThermalStorageCoolingPair t(model);
+  ThermalStorageCoolingPair ts(model);
 
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
 
-
+  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ThermalStorage_Cooling_Pair));
+  EXPECT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_t(idfObjs[0]);
 }

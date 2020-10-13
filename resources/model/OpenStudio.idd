@@ -27759,11 +27759,13 @@ OS:ThermalStorage:Pcm:Simple,
       \units GJ
       \ip-units ton-hrs
   A4, \field Inlet Node Name
-      \type node
       \required-field
+      \type object-list
+      \object-list ConnectionNames
   A5, \field Outlet Node Name
-      \type node
       \required-field
+      \type object-list
+      \object-list ConnectionNames
   N2, \field Onset Temperature Of Phase Change
       \type real
       \units deltaC

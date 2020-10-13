@@ -44,8 +44,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateThermalStoragePcmSimple(
-    ThermalStoragePcmSimple & modelObject)
+boost::optional<IdfObject> ForwardTranslator::translateThermalStoragePcmSimple(ThermalStoragePcmSimple & modelObject)
 {
   IdfObject idfObject(IddObjectType::ThermalStorage_Pcm_Simple);
   m_idfObjects.push_back(idfObject);
@@ -56,51 +55,51 @@ boost::optional<IdfObject> ForwardTranslator::translateThermalStoragePcmSimple(
   }
 
   // InletNodeName
-  if( auto mo = modelObject.inletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(ThermalStorage_Pcm_SimpleFields::InletNodeName,node->name().get());
+  if( boost::optional<ModelObject> mo = modelObject.inletModelObject() ) {
+    if( boost::optional<Node> node = mo->optionalCast<Node>() ) {
+      idfObject.setString(ThermalStorage_Pcm_SimpleFields::InletNodeName, node->name().get());
     }
   }
 
   // OutletNodeName
-  if( auto mo = modelObject.outletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(ThermalStorage_Pcm_SimpleFields::OutletNodeName,node->name().get());
+  if( boost::optional<ModelObject> mo = modelObject.outletModelObject() ) {
+    if( boost::optional<Node> node = mo->optionalCast<Node>() ) {
+      idfObject.setString(ThermalStorage_Pcm_SimpleFields::OutletNodeName, node->name().get());
     }
   }
 
   // IceStorageType
   {
     auto value = modelObject.iceStorageType();
-    idfObject.setString(ThermalStorage_Pcm_SimpleFields::IceStorageType,value);
+    idfObject.setString(ThermalStorage_Pcm_SimpleFields::IceStorageType, value);
   }
 
   // Capacity
   {
     auto value = modelObject.capacity();
-    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::Capacity,value);
+    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::Capacity, value);
   }
 
   boost::optional<double> value;
 
   // OnsetTemperatureOfPhaseChange
   if( (value = modelObject.onsetTemperatureOfPhaseChange()) ) {
-    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::OnsetTemperatureOfPhaseChange,value.get());
+    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::OnsetTemperatureOfPhaseChange, value.get());
   }
 
   // FinishTemperatureOfPhaseChange
   if( (value = modelObject.finishTemperatureOfPhaseChange()) ) {
-    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::FinishTemperatureOfPhaseChange,value.get());
+    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::FinishTemperatureOfPhaseChange, value.get());
   }
 
   // UAAtSolidPhaseOfPhaseChangeMaterial
   if( (value = modelObject.uaAtSolidPhaseOfPhaseChangeMaterial()) ) {
-    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::UAAtSolidPhaseOfPhaseChangeMaterial,value.get());
+    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::UAAtSolidPhaseOfPhaseChangeMaterial, value.get());
   }
 
   // UAAtLiquidPhaseOfPhaseChangeMaterial
   if( (value = modelObject.uaAtLiquidPhaseOfPhaseChangeMaterial()) ) {
-    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::UAAtLiquidPhaseOfPhaseChangeMaterial,value.get());
+    idfObject.setDouble(ThermalStorage_Pcm_SimpleFields::UAAtLiquidPhaseOfPhaseChangeMaterial, value.get());
   }
 
   return idfObject;
