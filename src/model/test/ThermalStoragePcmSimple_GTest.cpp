@@ -28,23 +28,122 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
+#include <string>
+
 #include "ModelFixture.hpp"
+
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+
 #include "../ThermalStoragePcmSimple.hpp"
 #include "../ThermalStoragePcmSimple_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ThermalStoragePcmSimple)
-{
+TEST_F(ModelFixture, ThermalStoragePcmSimple_ThermalStoragePcmSimple) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT (
-  {
-     Model m;
-     ThermalStoragePcmSimple thermalStorage(m);
+    {
+       Model m;
+       ThermalStoragePcmSimple ts(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+       exit(0);
+    },
+    ::testing::ExitedWithCode(0),
+    ""
+  );
+
+  Model m;
+
+  ThermalStoragePcmSimple ts(m);
+
+  EXPECT_EQ("IceOnCoilInternal", ts.iceStorageType());
+  EXPECT_EQ(0.0, ts.capacity());
+  EXPECT_TRUE(ts.isOnsetTemperatureOfPhaseChangeDefaulted());
+  EXPECT_EQ(5.5, ts.onsetTemperatureOfPhaseChange());
+  EXPECT_TRUE(ts.isFinishTemperatureOfPhaseChangeDefaulted());
+  EXPECT_EQ(7.0, ts.finishTemperatureOfPhaseChange());
+  EXPECT_TRUE(ts.isUAAtSolidPhaseOfPhaseChangeMaterialDefaulted());
+  EXPECT_EQ(20000, ts.uaAtSolidPhaseOfPhaseChangeMaterial());
+  EXPECT_TRUE(ts.isUAAtLiquidPhaseOfPhaseChangeMaterialDefaulted());
+  EXPECT_EQ(20000, ts.uaAtLiquidPhaseOfPhaseChangeMaterial());
+}
+
+TEST_F(ModelFixture, ThermalStoragePcmSimple_SetGetFields) {
+  Model m;
+
+  ThermalStoragePcmSimple ts(m);
+
+  EXPECT_TRUE(ts.setIceStorageType("IceOnCoilExternal"));
+  EXPECT_TRUE(ts.setCapacity(1.5));
+  EXPECT_TRUE(ts.setOnsetTemperatureOfPhaseChange(25.0));
+  EXPECT_TRUE(ts.setFinishTemperatureOfPhaseChange(30.1));
+  EXPECT_TRUE(ts.setUAAtSolidPhaseOfPhaseChangeMaterial(10001));
+  EXPECT_TRUE(ts.setUAAtLiquidPhaseOfPhaseChangeMaterial(25234));
+
+  EXPECT_EQ("IceOnCoilExternal", ts.iceStorageType());
+  EXPECT_EQ(1.5, ts.capacity());
+  EXPECT_FALSE(ts.isOnsetTemperatureOfPhaseChangeDefaulted());
+  EXPECT_EQ(25.0, ts.onsetTemperatureOfPhaseChange());
+  EXPECT_FALSE(ts.isFinishTemperatureOfPhaseChangeDefaulted());
+  EXPECT_EQ(30.1, ts.finishTemperatureOfPhaseChange());
+  EXPECT_FALSE(ts.isUAAtSolidPhaseOfPhaseChangeMaterialDefaulted());
+  EXPECT_EQ(10001, ts.uaAtSolidPhaseOfPhaseChangeMaterial());
+  EXPECT_FALSE(ts.isUAAtLiquidPhaseOfPhaseChangeMaterialDefaulted());
+  EXPECT_EQ(25234, ts.uaAtLiquidPhaseOfPhaseChangeMaterial());
+
+  ts.resetOnsetTemperatureOfPhaseChange();
+  ts.resetFinishTemperatureOfPhaseChange();
+  ts.resetUAAtSolidPhaseOfPhaseChangeMaterial();
+  ts.resetUAAtLiquidPhaseOfPhaseChangeMaterial();
+
+  EXPECT_TRUE(ts.isOnsetTemperatureOfPhaseChangeDefaulted());
+  EXPECT_EQ(5.5, ts.onsetTemperatureOfPhaseChange());
+  EXPECT_TRUE(ts.isFinishTemperatureOfPhaseChangeDefaulted());
+  EXPECT_EQ(7.0, ts.finishTemperatureOfPhaseChange());
+  EXPECT_TRUE(ts.isUAAtSolidPhaseOfPhaseChangeMaterialDefaulted());
+  EXPECT_EQ(20000, ts.uaAtSolidPhaseOfPhaseChangeMaterial());
+  EXPECT_TRUE(ts.isUAAtLiquidPhaseOfPhaseChangeMaterialDefaulted());
+  EXPECT_EQ(20000, ts.uaAtLiquidPhaseOfPhaseChangeMaterial());
+}
+
+TEST_F(ModelFixture, ThermalStoragePcmSimple_Clone) {
+  Model m;
+
+  ThermalStoragePcmSimple ts(m);
+
+  ts.setOnsetTemperatureOfPhaseChange(6.25);
+
+  ThermalStoragePcmSimple tsClone = ts.clone(m).cast<ThermalStoragePcmSimple>();
+  ASSERT_EQ(0.0, tsClone.capacity());
+  ASSERT_FALSE(tsClone.isOnsetTemperatureOfPhaseChangeDefaulted());
+  ASSERT_TRUE(tsClone.isFinishTemperatureOfPhaseChangeDefaulted());
+
+  Model m2;
+  ThermalStoragePcmSimple tsClone2 = ts.clone(m2).cast<ThermalStoragePcmSimple>();
+  ASSERT_EQ(0.0, tsClone2.capacity());
+  ASSERT_FALSE(tsClone2.isOnsetTemperatureOfPhaseChangeDefaulted());
+  ASSERT_TRUE(tsClone2.isFinishTemperatureOfPhaseChangeDefaulted());
+}
+
+TEST_F(ModelFixture, ThermalStoragePcmSimple_Remove) {
+  Model m;
+
+  auto size = m.modelObjects().size();
+
+  ThermalStoragePcmSimple ts(m);
+
+  EXPECT_EQ(size+1, m.modelObjects().size());
+  EXPECT_FALSE(ts.remove().empty());
+  EXPECT_EQ(size, m.modelObjects().size());  
+}
+
+TEST_F(ModelFixture, ThermalStoragePcmSimple_addToNode) {
+  Model m;
+
+  ThermalStoragePcmSimple ts(m);
+
+  // TODO
 }

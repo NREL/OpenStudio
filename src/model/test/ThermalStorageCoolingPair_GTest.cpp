@@ -28,23 +28,96 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
+#include <string>
+
 #include "ModelFixture.hpp"
+
+#include "../Model.hpp"
+#include "../Model_Impl.hpp"
+
 #include "../ThermalStorageCoolingPair.hpp"
 #include "../ThermalStorageCoolingPair_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ThermalStorageCoolingPair)
-{
+TEST_F(ModelFixture,ThermalStorageCoolingPair) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT (
-  {
-     Model m;
-     ThermalStorageCoolingPair thermalStorage(m);
+    {
+       Model m;
+       ThermalStorageCoolingPair ts(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+       exit(0);
+    },
+    ::testing::ExitedWithCode(0),
+    ""
+  );
+
+  Model m;
+
+  ThermalStorageCoolingPair ts(m);
+
+  EXPECT_EQ(0.0, ts.maximumPeakOperationHours());
+  EXPECT_EQ(0.0, ts.temperatureOrConcentrationChangeInTankThroughOperation());
+  EXPECT_TRUE(ts.isLoadTypeDefaulted());
+  EXPECT_EQ("Total", ts.loadType());
+  EXPECT_TRUE(ts.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
+  EXPECT_EQ(1.0, ts.capacityRatioOfRecoveryUnitToMainCoolingCoil());
+}
+
+TEST_F(ModelFixture, ThermalStorageCoolingPair_SetGetFields) {
+  Model m;
+
+  ThermalStorageCoolingPair ts(m);
+
+  EXPECT_TRUE(ts.setMaximumPeakOperationHours(2.5));
+  EXPECT_TRUE(ts.setTemperatureOrConcentrationChangeInTankThroughOperation(4.5));
+  EXPECT_TRUE(ts.setLoadType("Latent"));
+  EXPECT_TRUE(ts.setCapacityRatioOfRecoveryUnitToMainCoolingCoil(1.5));
+
+  EXPECT_EQ(2.5, ts.maximumPeakOperationHours());
+  EXPECT_EQ(4.5, ts.temperatureOrConcentrationChangeInTankThroughOperation());
+  EXPECT_FALSE(ts.isLoadTypeDefaulted());
+  EXPECT_EQ("Latent", ts.loadType());
+  EXPECT_FALSE(ts.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
+  EXPECT_EQ(1.5, ts.capacityRatioOfRecoveryUnitToMainCoolingCoil());
+
+  ts.resetLoadType();
+  ts.resetCapacityRatioOfRecoveryUnitToMainCoolingCoil();
+
+  EXPECT_TRUE(ts.isLoadTypeDefaulted());
+  EXPECT_EQ("Total", ts.loadType());
+  EXPECT_TRUE(ts.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
+  EXPECT_EQ(1.0, ts.capacityRatioOfRecoveryUnitToMainCoolingCoil());
+}
+
+TEST_F(ModelFixture, ThermalStorageCoolingPair_Clone) {
+  Model m;
+
+  ThermalStorageCoolingPair ts(m);
+
+  ts.setCapacityRatioOfRecoveryUnitToMainCoolingCoil(2.0);
+
+  ThermalStorageCoolingPair tsClone = ts.clone(m).cast<ThermalStorageCoolingPair>();
+  ASSERT_EQ(0.0, tsClone.maximumPeakOperationHours());
+  ASSERT_FALSE(tsClone.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
+
+  Model m2;
+  ThermalStorageCoolingPair tsClone2 = ts.clone(m2).cast<ThermalStorageCoolingPair>();
+  ASSERT_EQ(0.0, tsClone2.maximumPeakOperationHours());
+  ASSERT_FALSE(tsClone2.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
+}
+
+TEST_F(ModelFixture, ThermalStorageCoolingPair_Remove) {
+  Model m;
+
+  auto size = m.modelObjects().size();
+
+  ThermalStorageCoolingPair ts(m);
+
+  EXPECT_EQ(size+1, m.modelObjects().size());
+  EXPECT_FALSE(ts.remove().empty());
+  EXPECT_EQ(size, m.modelObjects().size());
 }
