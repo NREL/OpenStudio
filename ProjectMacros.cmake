@@ -404,14 +404,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd4005") ## /wd4996 suppresses deprecated warning, /wd4005 suppresses macro redefinition warning
       set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
     elseif(UNIX)
-      # TODO: Probably something to be done here...
-
-      # set_target_properties(${swig_target}
-      #   PROPERTIES
-      #   BUILD_RPATH $<TARGET_FILE_DIR:openstudiolib>
-      #   INSTALL_RPATH ${CMAKE_INSTALL_LIBDIR}
-      # )
-      # set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-Wl,-rpath,./")
       if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
         set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-sometimes-uninitialized")
       else()
@@ -434,7 +426,10 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
     # TODO: really unsure what former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want...
     # We're not trying to make a CLI here
-    target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends} ${Python_LIBRARIES})
+    target_link_libraries(${swig_target} PUBLIC ${${PARENT_TARGET}_depends})
+    if (MSVC)
+      target_link_libraries(${swig_target} PRIVATE ${Python_LIBRARIES})
+    endif()
     add_dependencies(${swig_target} ${PARENT_TARGET})
 
     # add this target to a "global" variable so python tests can require these
@@ -486,8 +481,16 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
       elseif(UNIX)
         # TODO: Probably something to be done here...
-
-         set_target_properties(${swig_target}
+        # note: macOS is APPLE and also UNIX !
+        if(APPLE)
+          set_target_properties(${swig_target}
+           PROPERTIES
+            SUFFIX ".so"
+            BUILD_WITH_INSTALL_RPATH TRUE
+            INSTALL_RPATH "@loader_path"
+            )
+        elseif(UNIX)
+          set_target_properties(${swig_target}
            PROPERTIES
              # when building, use the install RPATH already
              BUILD_WITH_INSTALL_RPATH TRUE
@@ -495,6 +498,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
              # the RPATH to be used when installing
              INSTALL_RPATH $ORIGIN
          )
+        endif()
         # set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-Wl,-rpath,./")
         if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
           set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-sometimes-uninitialized")
@@ -505,7 +509,13 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
 
       # TODO: really unsure what former PYTHON_Libraries was doing and I really doubt linking to the python libs is something we want...
       # We're not trying to make a CLI here
-      target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends} ${Python_LIBRARIES})
+      # This is not working: "cannot open file 'python37.lib'"
+      target_link_libraries(${swig_target} PUBLIC  ${${PARENT_TARGET}_depends})
+      if (MSVC)
+        message("Python_LIBRARIES=${Python_LIBRARIES}")
+        target_link_libraries(${swig_target} PRIVATE ${Python_LIBRARIES})
+      endif()
+      #target_link_libraries(${swig_target} PUBLIC ${${PARENT_TARGET}_depends}) ${Python_LIBRARIES})
       add_dependencies(${swig_target} ${PARENT_TARGET})
 
       list(APPEND ALL_PYTHON_PACKAGE_TARGETS "${swig_target}")

@@ -35,6 +35,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/openstudio.py ${PROJECT_BINARY_DIR}/P
 
 foreach(p ${ALL_PYTHON_BINDING_TARGETS})
   target_link_libraries(${p}
+    PRIVATE
     openstudiolib
   )
 endforeach()
@@ -56,6 +57,7 @@ if (BUILD_PYTHON_PIP_PACKAGE)
 
   foreach(p ${ALL_PYTHON_PACKAGE_TARGETS})
     target_link_libraries(${p}
+      PRIVATE
       openstudiolib
     )
   endforeach()
