@@ -640,6 +640,7 @@
 #include "CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp"
 #include "CoilHeatingWaterBaseboard_Impl.hpp"
 #include "CoilHeatingWaterBaseboardRadiant_Impl.hpp"
+#include "CoilLiquidDesiccantSimple_Impl.hpp"
 #include "CoilPerformanceDXCooling_Impl.hpp"
 #include "CoilSystemCoolingWaterHeatExchangerAssisted_Impl.hpp"
 #include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"

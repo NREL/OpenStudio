@@ -39,13 +39,14 @@ namespace model {
 
 class Schedule;
 class AirflowNetworkEquivalentDuct;
+class ControllerWaterCoil;
 
 namespace detail {
   class CoilLiquidDesiccantSimple_Impl;
 } // detail
 
 /** CoilLiquidDesiccantSimple is a WaterToAirComponent that wraps the IDD object named
- *  "OS:Coil:Cooling:Water".
+ *  "OS:Coil:LiquidDesiccant:Simple".
  *
  *  Polymorphic behavior:
  *  <ol>
@@ -217,6 +218,12 @@ class MODEL_API CoilLiquidDesiccantSimple : public WaterToAirComponent {
   //@}
   /** @name Other */
   //@{
+
+  boost::optional<ControllerWaterCoil> controllerWaterCoil();
+
+  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+
+  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
   boost::optional<double> autosizedDesignWaterFlowRate() const;
 

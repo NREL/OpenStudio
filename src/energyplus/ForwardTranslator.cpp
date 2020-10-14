@@ -1259,6 +1259,12 @@ boost::optional<IdfObject> ForwardTranslator::translateAndMapModelObject(ModelOb
       // no-op
       return retVal;
     }
+  case openstudio::IddObjectType::OS_Coil_LiquidDesiccant_Simple :
+    {
+      model::CoilLiquidDesiccantSimple coil = modelObject.cast<CoilLiquidDesiccantSimple>();
+      retVal = translateCoilLiquidDesiccantSimple(coil);
+      break;
+    }
   case openstudio::IddObjectType::OS_CoilPerformance_DX_Cooling :
     {
       auto mo = modelObject.cast<CoilPerformanceDXCooling>();

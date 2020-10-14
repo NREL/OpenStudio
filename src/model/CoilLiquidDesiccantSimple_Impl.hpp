@@ -230,6 +230,10 @@ namespace detail {
     /** @name Other */
     //@{
 
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+
     boost::optional<double> autosizedDesignWaterFlowRate() const;
 
     boost::optional<double> autosizedDesignAirFlowRate() const;
