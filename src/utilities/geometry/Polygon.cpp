@@ -8,8 +8,10 @@
 // overload operators too, as in polygonC = polygonA + polygonB is the same as 
 // polygonC =  union(polygonA, polygonB), same with polygonA - polygonB. Bit what about intersect?
 
-#include "Polygon.h"
+
 #include "Point3d.hpp"
+#include "Transformation.hpp"
+#include "Polygon.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
 #if defined(_MSC_VER)
@@ -45,25 +47,31 @@ namespace openstudio {
 class Convert
 {
   public:
+  /// <summary>
+  /// COnverts a polygon to a bpoost polygon with an applied transdform (transform can be model -> face transform)
+  /// </summary>
+  /// <param name="polygon"></param>
+  /// <param name="transform"></param>
+  /// <returns></returns>
   static BoostPolygon ToBoostPolygon(const Polygon& polygon) {
     // Create a polygon, size the interior rings to the number of holes
     BoostPolygon boostPolygon;
     boost::geometry::interior_rings(boostPolygon).resize(polygon.holes.size());
 
     // Define the outer ring
-    for (auto point : polygon.points) {
+    for (auto point : polygon.getPoints()) {
       boost::geometry::append(boostPolygon, boost::make_tuple(point.x(), point.y()));
     }
-    boost::geometry::append(boostPolygon, boost::make_tuple(polygon.points[0].x(), polygon.points[0].y()));
+    boost::geometry::append(boostPolygon, boost::make_tuple(polygon.getPoints()[0].x(), polygon.getPoints()[0].y()));
 
     // And the inner rings
     int i = 0;
     for (auto hole : polygon.holes) {
 
-      for (auto point : hole.points) {
+      for (auto point : hole.getPoints()) {
         boost::geometry::append(boostPolygon.inners()[i], boost::make_tuple(point.x(), point.y()));
       }
-      boost::geometry::append(boostPolygon.inners()[i], boost::make_tuple(hole.points[0].x(), hole.points[0].y()));
+      boost::geometry::append(boostPolygon.inners()[i], boost::make_tuple(hole.getPoints()[0].x(), hole.getPoints()[0].y()));
 
       i++;
     }
@@ -79,24 +87,29 @@ class Convert
       return result;
     }
 
-    for (auto i = 0; i < outer.size(); i++) {
+    std::vector<Point3d> ring1;
+    for (auto i = 0; i < outer.size() - 1; i++) {
       Point3d point(outer[i].x(), outer[i].y(), 0.0);
-      result.points.push_back(point);
+      ring1.push_back(point);
     }
+
+    result.setPoints(ring1);
 
     for (auto inner : polygon.inners()) {
       Polygon hole;
       result.holes.push_back(hole);
-      for (auto i = 0; i < inner.size(); i++) {
+      std::vector<Point3d> ring;
+      for (auto i = 0; i < inner.size() - 1; i++) {
         Point3d point(inner[i].x(), inner[i].y(), 0.0);
-        hole.points.push_back(point);
+        ring.push_back(point);
       }
+      hole.setPoints(ring);
     }
     return result;
   }
 };
 
-class Cleaner
+class Clean
 {
   public:
   static BoostPolygon removeSpikes(const BoostPolygon& polygon) {
@@ -164,11 +177,54 @@ struct BoostPolygonAreaGreater
   }
 };
 
-// Not sure what this is returning yet - something similar to
-boost::optional<IntersectionResultEx> openstudio::Polygon::intersect(const Polygon& polygon, double tol) {
+void Polygon::setName(std::string value) {
+  name = value;
+}
+
+std::string Polygon::getName() {
+  return name;
+}
+
+void Polygon::setHandle(std::string value) {
+  handle = value;
+}
+
+std::string Polygon::getHandle() {
+  return handle;
+}
+
+void Polygon::setReference(void* value) {
+  reference = value;
+}
+
+void* Polygon::getReference() {
+  return reference;
+}
+
+void Polygon::reverse() {
+  std::reverse(points.begin(), points.end());
+}
+
+  // Not sure what this is returning yet - something similar to
+boost::optional<IntersectionResultEx> Polygon::intersect(const Polygon& polygon, double tol) {
+
   IntersectionResultEx solution;
 
-  // Convert our polygons to boost polygons
+  // goes from face coordinates of building vertices to building coordinates
+  Transformation faceTransform;
+  Transformation faceTransformInverse;
+  faceTransform = Transformation::alignFace(points);
+  faceTransformInverse = faceTransform.inverse();
+
+  // Transform polygons to face coordinates
+  Polygon facePolygon = faceTransformInverse * *this;
+  Polygon otherFacePolygon = faceTransformInverse * polygon;
+
+  // boost polygon wants vertices in clockwise order, faceVertices must be reversed, otherFaceVertices already CCW
+  // not sure if holes are meant to be CW...?
+  facePolygon.reverse();
+  
+  // Convert our polygons to boost polygons convertiung to face coordinates
   BoostPolygon thisPolygon = Convert::ToBoostPolygon(*this);
   BoostPolygon otherPolygon = Convert::ToBoostPolygon(polygon);
 
@@ -184,28 +240,34 @@ boost::optional<IntersectionResultEx> openstudio::Polygon::intersect(const Polyg
   if (result.empty()) return boost::none;
 
   // Do sone cleanup
-  result = Cleaner::removeSpikes(result);
+  result = Clean::removeSpikes(result);
 
   // If we have multiple intersections we want the primary intersection to be the largest so re-order the
   // boost polygons
   std::sort(result.begin(), result.end(), BoostPolygonAreaGreater());
 
+  Polygon p1 = faceTransform * Convert::FromBoostPolygon(result[0]);
+  Polygon p2 = faceTransform * Convert::FromBoostPolygon(result[0]);
+  solution.setMatchedPolygon1(p1);
+  solution.setMatchedPolygon2(p2);
+
   // production code converts back to vertex lists and checks for self-intersections, the presence of holes etc
   // but we won't worry about that right now as this is just proof of concept
-
-  solution.polygon1() = Convert::FromBoostPolygon(result[0]);
-  solution.polygon2() = Convert::FromBoostPolygon(result[0]);
-
+  // These are all the matched polygons., i.e. common areas
   for (unsigned i = 1; i < result.size(); i++) {
-    solution.polygons1().push_back(Convert::FromBoostPolygon(result[i]));
-    solution.polygons2().push_back(Convert::FromBoostPolygon(result[i]));
+    Polygon p1 = faceTransform * Convert::FromBoostPolygon(result[i]);
+    Polygon p2 = faceTransform * Convert::FromBoostPolygon(result[i]);
+    solution.polygons1().push_back(p1);
+    solution.polygons2().push_back(p2);
+    p1.setAdjacentPolygon(&p2);
+    p2.setAdjacentPolygon(&p1);
   }
 
   // Step 2 - subtract polygon 2 from polygon 1. Result is the area(s) for polygon 1 that
   // excludes the common areas between polygon 1 and polygon 2
   std::vector<BoostPolygon> differenceResult1;
   boost::geometry::difference(thisPolygon, otherPolygon, differenceResult1);
-  result = Cleaner::removeSpikesEx(result);
+  result = Clean::removeSpikesEx(result);
 
   for (auto boostPolygon : differenceResult1) {
     Polygon newPolygon = Convert::FromBoostPolygon(boostPolygon);
@@ -217,17 +279,34 @@ boost::optional<IntersectionResultEx> openstudio::Polygon::intersect(const Polyg
   // Step 2 - subtract polygon 1 from polygon 2. Result is the area(s) for polygon 2 that
   // excludes the common areas between polygon 1 and polygon 2
   std::vector<BoostPolygon> differenceResult2;
-  boost::geometry::difference(thisPolygon, otherPolygon, differenceResult2);
-  result = Cleaner::removeSpikesEx(result);
+  boost::geometry::difference(otherPolygon, thisPolygon, differenceResult2);
+  result = Clean::removeSpikesEx(result);
 
   for (auto boostPolygon : differenceResult2) {
     Polygon newPolygon = Convert::FromBoostPolygon(boostPolygon);
 
     // checks self intersection etc
     solution.polygons2().push_back(newPolygon);
-  } 
+  }
 
   return solution;
+}
+
+boost::optional<IntersectionResultEx> Polygon::computeIntersection(Polygon& polygon) {
+
+  // plane coordinates are in model coordinates
+  Plane plane = getPlane();
+  Plane otherPlane = polygon.getPlane();
+
+  if (!plane.reverseEqual(otherPlane)) {
+    //LOG(Info, "Planes are not reverse equal, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' fails");
+    return boost::none;
+  }
+
+  // Intersect the two polygons
+  boost::optional<IntersectionResultEx> result = intersect(polygon, 0.01);
+
+  return result;
 }
 }
 

@@ -132,6 +132,10 @@ set(geometry_src
   geometry/Plane.cpp
   geometry/Point3d.hpp
   geometry/Point3d.cpp
+  geometry/PolygonGroup.cpp
+  geometry/PolygonGroup.hpp
+  geometry/Polygon.hpp
+  geometry/Polygon.cpp
   geometry/PointLatLon.hpp
   geometry/PointLatLon.cpp
   geometry/RoofGeometry.cpp

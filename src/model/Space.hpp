@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "PlanarSurfaceGroup.hpp"
+#include "../utilities/geometry/PolygonGroup.hpp"
 
 namespace openstudio {
 namespace model {
@@ -606,6 +607,9 @@ class MODEL_API Space : public PlanarSurfaceGroup {
 
 /** Intersect surfaces within spaces. */
 MODEL_API void intersectSurfaces(std::vector<Space>& spaces, bool sortByArea = true);
+
+// Intersects susrafces within spaces, defers surface decomposition until all intersectiosn are completed
+MODEL_API std::vector<PolygonGroup*> intersectSurfacePolygons(std::vector<Space>& spaces, bool sortByArea = true);
 
 /** Match surfaces and sub surfaces within spaces. */
 MODEL_API void matchSurfaces(std::vector<Space>& spaces);

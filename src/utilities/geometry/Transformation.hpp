@@ -46,6 +46,7 @@ namespace openstudio{
   class Plane;
   class BoundingBox;
   class EulerAngles;
+  class Polygon;
 
   class UTILITIES_API Transformation{
   public:
@@ -107,6 +108,9 @@ namespace openstudio{
 
     /// apply the transformation to the vector
     Vector3d operator*(const Vector3d& vector) const;
+
+    // apply the transformation to a polygon
+    Polygon operator*(const Polygon& polygon) const;
 
     /// apply the transformation to the bounding box
     BoundingBox operator*(const BoundingBox& boundingBox) const;

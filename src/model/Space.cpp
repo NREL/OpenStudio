@@ -121,6 +121,7 @@
 
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/PolygonGroup.hpp"
 #include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/Vector3d.hpp"
 #include "../utilities/geometry/EulerAngles.hpp"
@@ -2371,9 +2372,7 @@ namespace detail {
       for (Surface surface : surfaces){
         std::string surfaceHandle = toString(surface.handle());
         std::string surfaceName = surface.name().value();
-        if (surfaceName == "Surface 24") {
-          int stop = 1;
-        }
+
         if (hasSubSurfaceMap.find(surfaceHandle) == hasSubSurfaceMap.end()){
           hasSubSurfaceMap[surfaceHandle] = !surface.subSurfaces().empty();
           hasAdjacentSurfaceMap[surfaceHandle] = surface.adjacentSurface().has_value();
@@ -2381,7 +2380,7 @@ namespace detail {
 
         if (hasSubSurfaceMap[surfaceHandle] || hasAdjacentSurfaceMap[surfaceHandle]){
           continue;
-        }
+        } 
 
         for (Surface otherSurface : otherSurfaces){
           std::string otherSurfaceHandle = toString(otherSurface.handle());
@@ -2403,6 +2402,7 @@ namespace detail {
             continue;
           }
           completedIntersections.insert(intersectionKey);
+          LOG(Info, "Intersecting surface " << surfaceName << " with " << otherSurfaceName);
 
           // number of surfaces in each space will only increase in intersect
           boost::optional<SurfaceIntersection> intersection = surface.computeIntersection(otherSurface);
@@ -3476,6 +3476,58 @@ void intersectSurfaces(std::vector<Space>& t_spaces, bool sortByArea)
        spaces[i].intersectSurfaces(spaces[j]);
     }
   }
+}
+
+std::vector<PolygonGroup*> intersectSurfacePolygons(std::vector<Space>& spaces, bool sortByArea) {
+  std::vector<BoundingBox> bounds;
+  
+  //Create our polygons and groups of polygons
+  std::vector<PolygonGroup*> polygonGroups;
+  
+  for (auto space : spaces) {
+    PolygonGroup *group=new PolygonGroup();
+    group->setReference(&space);
+    group->setName(space.name().value());
+    polygonGroups.push_back(group);
+    group->setTransformation(space.transformation());
+    std::vector<Polygon> surfaces;
+
+    for (auto surface : space.surfaces()) {
+      auto vertices = surface.vertices();
+      Polygon polygon(vertices);
+      polygon.setName(surface.name().value());
+      polygon.setReference(&surface);
+      polygon.setHandle(toString(surface.handle()));
+      surfaces.push_back(polygon);
+    }
+
+   group->setSurfaces(surfaces);
+  }
+
+  // Get the bounding boxes for the spaces
+  for (const Space& space : spaces) {
+    bounds.push_back(space.transformation() * space.boundingBox());
+  }
+
+  // Intersect the polygon groups
+  for (unsigned i = 0; i < polygonGroups.size(); ++i) {
+    for (unsigned j = i + 1; j < polygonGroups.size(); ++j) {
+      std::string namei = polygonGroups[i]->getName();
+      std::string namej = polygonGroups[j]->getName();
+
+      if (!bounds[i].intersects(bounds[j])) {
+        continue;
+      }
+
+      auto group1 = polygonGroups[i];
+      auto group2 = polygonGroups[j];
+
+      LOG_FREE(Info, "intersectSurfaces", "********* Intersecting group " << namei << " with group " << namej << "**********")
+      group1->intersectSurfaces(*group2);
+    }
+  }
+
+  return polygonGroups;
 }
 
 void matchSurfaces(std::vector<Space>& spaces)

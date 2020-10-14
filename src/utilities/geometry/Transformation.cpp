@@ -34,6 +34,8 @@
 #include "BoundingBox.hpp"
 #include "EulerAngles.hpp"
 #include "Geometry.hpp"
+#include "Polygon.hpp"
+
 #include "../core/Assert.hpp"
 
 #include <boost/math/constants/constants.hpp>
@@ -367,6 +369,21 @@ namespace openstudio{
     Vector3d newNormal = newRefPoint - newPoint;
 
     return Plane(newPoint, newNormal);
+  }
+
+  // apply the transform to a polygon
+  Polygon Transformation::operator*(const Polygon& polygon) const {
+
+      //Polygon result;
+      std::vector<Point3d> outer = (*this) * polygon.getPoints();
+      //result.setPoints(outer);
+
+      for (auto hole : polygon.holes) {
+        std::vector<Point3d> inner = (*this) * hole.getPoints();
+        //result.holes.push_back(inner);
+      }
+
+      return Polygon(outer);
   }
 
   /// apply the transformation to a vector of points

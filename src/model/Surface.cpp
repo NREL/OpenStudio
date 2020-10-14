@@ -1108,6 +1108,7 @@ namespace detail {
     Plane otherPlane = otherSpaceTransformation * otherSurface.plane();
 
     if (!plane.reverseEqual(otherPlane)){
+      LOG(Info, "Surfaces are not intersected because normals are not opposite or planes are not coincident");
       //LOG(Info, "Planes are not reverse equal, intersection of '" << this->name().get() << "' with '" << otherSurface.name().get() << "' fails");
       return boost::none;
     }

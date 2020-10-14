@@ -827,7 +827,7 @@ TEST_F(ModelFixture, IntersectModelOnly) {
 /// </summary>
 /// <param name=""></param>
 /// <param name=""></param>
-TEST_F(ModelFixture, Issue_3424) {
+TEST_F(ModelFixture, Issue_3424_ShatteredModel) {
 
   //osversion::VersionTranslator translator;
   ////model::OptionalModel model = translator.loadModel(toPath("./secondary_school.osm"));
@@ -918,6 +918,23 @@ TEST_F(ModelFixture, Issue_3424) {
 
   // Model before intersection
   model.save(toPath("./ShatterTest00.osm"), true);
+
+  // Run the prototype code first. Surface 6 and Surface 24 should both be subdivided into three surfaces giving a total of 8
+  // surfaces for group 1 and group 4 regardless of the order the spaces are intersected (1, 3, 2) (4, 5, 6)
+  // A PolygonGroup is a collection of Polygons as a Space is a collection of Surfaces
+  std::vector<PolygonGroup*> groups1 = intersectSurfacePolygons(spaces1, false);
+  std::vector<PolygonGroup*> groups2 = intersectSurfacePolygons(spaces2, false);
+
+ //  [](const auto& surface) { return surface.surfaceType() == "Wall"; }
+  auto group1 = std::find_if(groups1.begin(), groups1.end(), [](PolygonGroup* group) { return group->getName() == "Space 1"; });
+  auto group4 = std::find_if(groups2.begin(), groups2.end(), [](PolygonGroup* group) { return group->getName() == "Space 4"; });
+  ASSERT_NE(group1, groups1.end());
+  ASSERT_NE(group4, groups2.end());
+
+  PolygonGroup* g1 = *group1;
+  ASSERT_EQ(8, g1->getSurfaces().size());
+  PolygonGroup* g4 = *group4;
+  ASSERT_EQ(8, g4->getSurfaces().size());
 
   intersectSurfaces(spaces1, false);
   intersectSurfaces(spaces2, false);
