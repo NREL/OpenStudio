@@ -77,10 +77,16 @@ TEST_F(ModelFixture,CoilHeatingDXVariableSpeed_Grid)
   CoilHeatingDXVariableSpeed coil(m);
 
   EXPECT_FALSE(coil.gridSignalSchedule());
-  ScheduleConstant schedule(m);
-  schedule.setValue(0.5);
-  coil.setGridSignalSchedule(schedule);
+  ScheduleConstant sch_const(m);
+  sch_const.setValue(0.5);
+  coil.setGridSignalSchedule(sch_const);
   EXPECT_TRUE(coil.gridSignalSchedule());
+  boost::optional<Schedule> _sch = coil.gridSignalSchedule();
+  ASSERT_TRUE(_sch);
+  Schedule sch = _sch.get();
+  boost::optional<ScheduleConstant> scheduleConstant = sch.optionalCast<ScheduleConstant>();
+  ASSERT_TRUE(scheduleConstant);
+  EXPECT_EQ(0.5, (*scheduleConstant).value());
   coil.resetGridSignalSchedule();
   EXPECT_FALSE(coil.gridSignalSchedule());
 
