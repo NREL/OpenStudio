@@ -809,6 +809,66 @@ TEST_F(GeometryFixture, Join_Overlap2)
   ASSERT_TRUE(test);
 }
 
+/// <summary>
+/// This test demonstrates that join all fails because join fails if the resulting polygon has a hole
+/// join is used to test polygon adjacency so if join fails because of a hole then the algorithm 
+/// thinks that the two polygons are not adjacent, when they are adjacent.
+/// 
+/// This would not be good if joinall is being used to determine the perimeter of a building.
+/// 
+/// +----------+----------+----------+
+/// |    1     |     2    |    3     |
+/// |          +----+     |          |
+/// |          |    |     |          |
+/// |          +----+     |          |
+/// |          |          |          |
+/// +----------+----------+----------+
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(GeometryFixture, JoinAll_OrderTest) {
+  double tol = 0.01;
+
+  std::vector<Point3dVector> test;
+  std::vector<Point3dVector> polygons;
+
+  std::vector<Point3d> poly1;
+  poly1.push_back(Point3d(0, 0, 0));
+  poly1.push_back(Point3d(2000, 0, 0));
+  poly1.push_back(Point3d(2000, 4000, 0));
+  poly1.push_back(Point3d(0, 4000, 0));
+  std::reverse(poly1.begin(), poly1.end());
+
+  std::vector<Point3d> poly2;
+  poly2.push_back(Point3d(2000, 0, 0));
+  poly2.push_back(Point3d(4000, 0, 0));
+  poly2.push_back(Point3d(4000, 4000, 0));
+  poly2.push_back(Point3d(2000, 4000, 0));
+  poly2.push_back(Point3d(2000, 3000, 0));
+  poly2.push_back(Point3d(3000, 3000, 0));
+  poly2.push_back(Point3d(3000, 1000, 0));
+  poly2.push_back(Point3d(2000, 1000, 0));
+  std::reverse(poly2.begin(), poly2.end());
+
+  std::vector<Point3d> poly3;
+  poly3.push_back(Point3d(4000, 0, 0));
+  poly3.push_back(Point3d(6000, 0, 0));
+  poly3.push_back(Point3d(6000, 4000, 0));
+  poly3.push_back(Point3d(4000, 4000, 0));
+  std::reverse(poly3.begin(), poly3.end());
+
+  polygons.push_back(poly1);
+  polygons.push_back(poly2);
+  polygons.push_back(poly3);
+
+  // Call joinAll so it stops when a hole is detected, polygon 1 is not added to polygons 2 and 3
+  test = joinAll(polygons, tol);
+  ASSERT_EQ(2u, test.size());
+  // Call joinAll so it ignores holes and al polygons are added
+  test = joinAll(polygons, tol, false);
+  ASSERT_EQ(1u, test.size());
+}
+
 TEST_F(GeometryFixture, JoinAll)
 {
   double tol = 0.01;
