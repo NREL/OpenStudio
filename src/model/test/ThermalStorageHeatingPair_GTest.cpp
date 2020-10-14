@@ -37,11 +37,15 @@
 
 #include "../ThermalStorageHeatingPair.hpp"
 #include "../ThermalStorageHeatingPair_Impl.hpp"
+#include "../CoilHeatingDXVariableSpeed.hpp"
+#include "../CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "../WaterHeaterMixed.hpp"
+#include "../WaterHeaterMixed_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ThermalStorageHeatingPair) {
+TEST_F(ModelFixture, ThermalStorageHeatingPair_ThermalStorageHeatingPair) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT (
@@ -63,6 +67,14 @@ TEST_F(ModelFixture,ThermalStorageHeatingPair) {
   EXPECT_EQ(0.0, ts.temperatureChangeInTankThroughOperation());
   EXPECT_TRUE(ts.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
   EXPECT_EQ(1.0, ts.capacityRatioOfRecoveryUnitToMainCoolingCoil());
+
+  CoilHeatingDXVariableSpeed coil(m);
+  WaterHeaterMixed wh(m);
+  // CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
+
+  ts.setHeatingCoil(coil);
+  ts.setTank(wh);
+  // ts.setRecoveryUnit(cwh);
 }
 
 TEST_F(ModelFixture, ThermalStorageHeatingPair_SetGetFields) {

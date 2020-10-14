@@ -32,8 +32,9 @@
 
 #include "../ForwardTranslator.hpp"
 
-#include "../../model/ThermalStoragePcmSimple.hpp"
 #include "../../model/Model.hpp"
+#include "../../model/ThermalStoragePcmSimple.hpp"
+#include "../../model/ThermalStoragePcmSimple_Impl.hpp"
 
 #include <utilities/idd/ThermalStorage_Pcm_Simple_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -43,14 +44,14 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStoragePcmSimple) {
-  Model model;
+  Model m;
 
-  ThermalStoragePcmSimple ts(model);
+  ThermalStoragePcmSimple pcm(m);
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
 
-  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ThermalStorage_Pcm_Simple));
-  EXPECT_EQ(1u, idfObjs.size());
-  WorkspaceObject idf_t(idfObjs[0]);
+  WorkspaceObjectVector idf_tss(w.getObjectsByType(IddObjectType::ThermalStorage_Pcm_Simple));
+  EXPECT_EQ(1u, idf_tss.size());
+  WorkspaceObject idf_ts(idf_tss[0]);
 }

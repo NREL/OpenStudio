@@ -32,8 +32,13 @@
 
 #include "../ForwardTranslator.hpp"
 
-#include "../../model/ThermalStorageHeatingPair.hpp"
 #include "../../model/Model.hpp"
+#include "../../model/ThermalStorageHeatingPair.hpp"
+#include "../../model/ThermalStorageHeatingPair_Impl.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed.hpp"
+#include "../../model/CoilHeatingDXVariableSpeed_Impl.hpp"
+#include "../../model/WaterHeaterMixed.hpp"
+#include "../../model/WaterHeaterMixed_Impl.hpp"
 
 #include <utilities/idd/ThermalStorage_Heating_Pair_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -43,14 +48,34 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageHeatingPair) {
-  Model model;
+  Model m;
 
-  ThermalStorageHeatingPair ts(model);
+  ThermalStorageHeatingPair ts(m);
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  CoilHeatingDXVariableSpeed coil(m);
+  WaterHeaterMixed wh(m);
+  // CoilWaterHeatingAirToWaterHeatPumpVariableSpeed cwh(m);
 
-  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ThermalStorage_Heating_Pair));
-  EXPECT_EQ(1u, idfObjs.size());
-  WorkspaceObject idf_t(idfObjs[0]);
+  ts.setHeatingCoil(coil);
+  ts.setTank(wh);
+  // ts.setRecoveryUnit(cwh);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idf_coils(w.getObjectsByType(IddObjectType::Coil_Heating_DX_VariableSpeed));
+  ASSERT_EQ(1u, idf_coils.size());
+  WorkspaceObject idf_coil(idf_coils[0]);
+
+  WorkspaceObjectVector idf_whs(w.getObjectsByType(IddObjectType::WaterHeater_Mixed));
+  ASSERT_EQ(1u, idf_whs.size());
+  WorkspaceObject idf_wh(idf_whs[0]);
+
+/*   WorkspaceObjectVector idf_cwhs(w.getObjectsByType(IddObjectType::Coil_WaterHeating_AirToWaterHeatPump_VariableSpeed));
+  ASSERT_EQ(1u, idf_cwhs.size());
+  WorkspaceObject idf_cwh(idf_cwhs[0]); */
+
+  WorkspaceObjectVector idf_tss(w.getObjectsByType(IddObjectType::ThermalStorage_Heating_Pair));
+  EXPECT_EQ(1u, idf_tss.size());
+  WorkspaceObject idf_t(idf_tss[0]);
 }

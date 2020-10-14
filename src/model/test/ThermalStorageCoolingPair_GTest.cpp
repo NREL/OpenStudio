@@ -37,11 +37,17 @@
 
 #include "../ThermalStorageCoolingPair.hpp"
 #include "../ThermalStorageCoolingPair_Impl.hpp"
+#include "../ThermalStoragePcmSimple.hpp"
+#include "../ThermalStoragePcmSimple_Impl.hpp"
+#include "../CoilCoolingDXVariableSpeed.hpp"
+#include "../CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../ChillerElectricEIR.hpp"
+#include "../ChillerElectricEIR_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ThermalStorageCoolingPair) {
+TEST_F(ModelFixture, ThermalStorageCoolingPair_ThermalStorageCoolingPair) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT (
@@ -65,6 +71,14 @@ TEST_F(ModelFixture,ThermalStorageCoolingPair) {
   EXPECT_EQ("Total", ts.loadType());
   EXPECT_TRUE(ts.isCapacityRatioOfRecoveryUnitToMainCoolingCoilDefaulted());
   EXPECT_EQ(1.0, ts.capacityRatioOfRecoveryUnitToMainCoolingCoil());
+
+  CoilCoolingDXVariableSpeed coil(m);
+  ThermalStoragePcmSimple pcm(m);
+  ChillerElectricEIR ch(m);
+
+  ts.setCoolingCoil(coil);
+  ts.setTank(pcm);
+  ts.setRecoveryUnit(ch);
 }
 
 TEST_F(ModelFixture, ThermalStorageCoolingPair_SetGetFields) {

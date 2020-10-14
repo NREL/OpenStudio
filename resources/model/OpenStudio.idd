@@ -27744,8 +27744,7 @@ OS:ThermalStorage:Pcm:Simple,
       \type alpha
       \required-field
       \reference IceThermalStorageEquipment
-      \reference-class-name validBranchEquipmentTypes
-      \reference validBranchEquipmentNames
+      \reference ConnectionObject
   A3, \field Ice Storage Type
       \note IceOnCoilInternal = Ice-on-Coil, internal melt
       \note IceOnCoilExternal = Ice-on-Coil, external melt
@@ -27808,8 +27807,7 @@ OS:ThermalStorage:Heating:Pair,
   A4, \field Tank Name
       \required-field
       \type object-list
-      \object-list WaterHeaterMixedNames
-      \object-list WaterHeaterStratifiedNames
+      \object-list WaterHeaterNames
   N1, \field Maximum Peak Operation Hours
       \required-field
       \type real
@@ -27863,7 +27861,7 @@ OS:ThermalStorage:Cooling:Pair,
   A6,  \field Recovery Unit Name
        \required-field
        \type object-list
-       \object-list Chillers
+       \object-list ConnectionObject
   N3;  \field Capacity Ratio Of Recovery Unit To Main Cooling Coil
        \type real
        \default 1.0

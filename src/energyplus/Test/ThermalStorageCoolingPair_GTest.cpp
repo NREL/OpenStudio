@@ -32,8 +32,15 @@
 
 #include "../ForwardTranslator.hpp"
 
-#include "../../model/ThermalStorageCoolingPair.hpp"
 #include "../../model/Model.hpp"
+#include "../../model/ThermalStorageCoolingPair.hpp"
+#include "../../model/ThermalStorageCoolingPair_Impl.hpp"
+#include "../../model/ThermalStoragePcmSimple.hpp"
+#include "../../model/ThermalStoragePcmSimple_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../../model/ChillerElectricEIR.hpp"
+#include "../../model/ChillerElectricEIR_Impl.hpp"
 
 #include <utilities/idd/ThermalStorage_Cooling_Pair_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -43,14 +50,34 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageCoolingPair) {
-  Model model;
+  Model m;
 
-  ThermalStorageCoolingPair ts(model);
+  ThermalStorageCoolingPair ts(m);
 
-  ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  CoilCoolingDXVariableSpeed coil(m);
+  ThermalStoragePcmSimple pcm(m);
+  ChillerElectricEIR ch(m);
 
-  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ThermalStorage_Cooling_Pair));
-  EXPECT_EQ(1u, idfObjs.size());
-  WorkspaceObject idf_t(idfObjs[0]);
+  ts.setCoolingCoil(coil);
+  ts.setTank(pcm);
+  ts.setRecoveryUnit(ch);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idf_coils(w.getObjectsByType(IddObjectType::Coil_Cooling_DX_VariableSpeed));
+  ASSERT_EQ(1u, idf_coils.size());
+  WorkspaceObject idf_coil(idf_coils[0]);
+
+  WorkspaceObjectVector idf_pcms(w.getObjectsByType(IddObjectType::ThermalStorage_Pcm_Simple));
+  ASSERT_EQ(1u, idf_pcms.size());
+  WorkspaceObject idf_pcm(idf_pcms[0]);
+
+  WorkspaceObjectVector idf_chs(w.getObjectsByType(IddObjectType::Chiller_Electric_EIR));
+  ASSERT_EQ(1u, idf_chs.size());
+  WorkspaceObject idf_ch(idf_chs[0]);
+
+  WorkspaceObjectVector idf_tss(w.getObjectsByType(IddObjectType::ThermalStorage_Cooling_Pair));
+  ASSERT_EQ(1u, idf_tss.size());
+  WorkspaceObject idf_t(idf_tss[0]);
 }
