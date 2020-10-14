@@ -36,6 +36,8 @@
   %ignore openstudio::model::CoilCoolingWater::airflowNetworkEquivalentDuct;
   %ignore openstudio::model::CoilHeatingWater::getAirflowNetworkEquivalentDuct;
   %ignore openstudio::model::CoilHeatingWater::airflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilLiquidDesiccantSimple::getAirflowNetworkEquivalentDuct;
+  %ignore openstudio::model::CoilLiquidDesiccantSimple::airflowNetworkEquivalentDuct;
   %ignore openstudio::model::ControllerOutdoorAir::getAirflowNetworkOutdoorAirflow;
   %ignore openstudio::model::ControllerOutdoorAir::airflowNetworkOutdoorAirflow;
   %ignore openstudio::model::HeatExchangerAirToAirSensibleAndLatent::getAirflowNetworkEquivalentDuct;

@@ -29025,7 +29025,7 @@ Coil:LiquidDesiccant:Simple,
   A9 , \field Material
        \type choice
        \key LiCl
-       \key LiBr
+       \key CaCl2
        \default LiCl
   A10, \field Condensate Collection Water Storage Tank Name
        \type object-list

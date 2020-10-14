@@ -16683,60 +16683,60 @@ OS:Coil:LiquidDesiccant:Simple,
   A1,  \field Handle
        \type handle
        \required-field  
-  A2 , \field Name
+  A2,  \field Name
        \required-field
        \reference CoolingCoilName
        \reference CoolingCoilsWater
        \reference CoolingCoilsWaterNoHX
        \reference AFNCoilNames
        \reference ConnectionObject
-  A3 , \field Availability Schedule Name
+  A3,  \field Availability Schedule Name
        \note Availability schedule name for this system. Schedule value > 0 means the system is available.
        \note If this field is blank, the system is always available.
        \type object-list
        \object-list ScheduleNames
-  N1 , \field Design Water Flow Rate
+  N1,  \field Design Water Flow Rate
        \units m3/s
        \autosizable
        \required-field
        \minimum 0
        \ip-units gal/min
-  N2 , \field Design Air Flow Rate
+  N2,  \field Design Air Flow Rate
        \units m3/s
        \autosizable
        \required-field
        \minimum 0
-  N3 , \field Design Inlet Water Temperature
+  N3,  \field Design Inlet Water Temperature
        \units C
        \autosizable
        \required-field
        \minimum> 0
-  N4 , \field Design Inlet Air Temperature
+  N4,  \field Design Inlet Air Temperature
        \units C
        \autosizable
        \required-field
        \minimum> 0
-  N5 , \field Design Outlet Air Temperature
+  N5,  \field Design Outlet Air Temperature
        \units C
        \autosizable
        \required-field
        \minimum> 0
-  N6 , \field Design Inlet Air Humidity Ratio
+  N6,  \field Design Inlet Air Humidity Ratio
        \units kgWater/kgDryAir
        \autosizable
        \required-field
        \minimum 0
-  N7 , \field Design Outlet Air Humidity Ratio
+  N7,  \field Design Outlet Air Humidity Ratio
        \units kgWater/kgDryAir
        \autosizable
        \required-field
        \minimum 0
-  N8 , \field Design Inlet Solution Concentration
+  N8,  \field Design Inlet Solution Concentration
        \units dimensionless
        \autosizable
        \required-field
        \minimum 0
-  N9 , \field Design Fan Power Per Unit Mass Flow Rate
+  N9,  \field Design Fan Power Per Unit Mass Flow Rate
        \type real
        \units watt
        \autosizable
@@ -16760,28 +16760,28 @@ OS:Coil:LiquidDesiccant:Simple,
        \autosizable
        \required-field
        \minimum 0.1
-  A4 , \field Water Inlet Node Name
+  A4,  \field Water Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A5 , \field Water Outlet Node Name
+  A5,  \field Water Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A6 , \field Air Inlet Node Name
+  A6,  \field Air Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A7 , \field Air Outlet Node Name
+  A7,  \field Air Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A8 , \field Type Of Operation Mode
+  A8,  \field Type Of Operation Mode
        \type choice
        \key RegenerationMode
        \key DehumidificationMode
        \default DehumidificationMode
-  A9 , \field Air Source
+  A9,  \field Air Source
        \type choice
        \key OutdoorAirSource
        \key ZoneAirSource
@@ -16789,7 +16789,7 @@ OS:Coil:LiquidDesiccant:Simple,
   A10, \field Material
        \type choice
        \key LiCl
-       \key LiBr
+       \key CaCl2
        \default LiCl
   A11, \field Condensate Collection Water Storage Tank Name
        \type object-list

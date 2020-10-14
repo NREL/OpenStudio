@@ -36,6 +36,8 @@
 #include "Model.hpp"
 #include "ScheduleCompact.hpp"
 #include "ScheduleCompact_Impl.hpp"
+#include "ZoneHVACComponent.hpp"
+#include "ZoneHVACComponent_Impl.hpp"
 
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
@@ -70,28 +72,41 @@ namespace detail {
 
   CoilLiquidDesiccantSimple_Impl::~CoilLiquidDesiccantSimple_Impl(){}
 
-  const std::vector<std::string>& CoilLiquidDesiccantSimple_Impl::outputVariableNames() const
-  {
-    static const std::vector<std::string> result{
-      // TODO
-    };
-    return result;
+  std::vector<openstudio::IdfObject> CoilLiquidDesiccantSimple_Impl::remove() {
+    if( isRemovable() ) {
+      return WaterToAirComponent_Impl::remove();
+    }
+
+    return std::vector<IdfObject>();
+  }
+
+  bool CoilLiquidDesiccantSimple_Impl::removeFromPlantLoop() {
+    if( boost::optional<ControllerWaterCoil> controller = this->controllerWaterCoil() )
+    {
+      controller->remove();
+    }
+
+    return WaterToAirComponent_Impl::removeFromPlantLoop();
+  }
+
+  ModelObject CoilLiquidDesiccantSimple_Impl::clone(Model model) const {
+    CoilLiquidDesiccantSimple newCoil = WaterToAirComponent_Impl::clone( model ).optionalCast<CoilLiquidDesiccantSimple>().get();
+
+    return newCoil;
   }
 
   IddObjectType CoilLiquidDesiccantSimple_Impl::iddObjectType() const {
     return CoilLiquidDesiccantSimple::iddObjectType();
   }
 
-  std::vector<ModelObject> CoilLiquidDesiccantSimple_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
-    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
+  const std::vector<std::string>& CoilLiquidDesiccantSimple_Impl::outputVariableNames() const {
+    static const std::vector<std::string> result{
+      // TODO
+    };
     return result;
   }
 
-  std::vector<ScheduleTypeKey> CoilLiquidDesiccantSimple_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
+  std::vector<ScheduleTypeKey> CoilLiquidDesiccantSimple_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
     std::vector<ScheduleTypeKey> result;
     UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
     UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
@@ -99,6 +114,47 @@ namespace detail {
     {
       result.push_back(ScheduleTypeKey("CoilLiquidDesiccantSimple","Availability"));
     }
+    return result;
+  }
+
+  unsigned CoilLiquidDesiccantSimple_Impl::airInletPort() const {
+    return OS_Coil_LiquidDesiccant_SimpleFields::AirInletNodeName;
+  }
+
+  unsigned CoilLiquidDesiccantSimple_Impl::airOutletPort() const {
+    return OS_Coil_LiquidDesiccant_SimpleFields::AirOutletNodeName;
+  }
+
+  unsigned CoilLiquidDesiccantSimple_Impl::waterInletPort() const {
+    return OS_Coil_LiquidDesiccant_SimpleFields::WaterInletNodeName;
+  }
+
+  unsigned CoilLiquidDesiccantSimple_Impl::waterOutletPort() const {
+    return OS_Coil_LiquidDesiccant_SimpleFields::WaterOutletNodeName;
+  }
+
+  bool CoilLiquidDesiccantSimple_Impl::addToNode(Node & node) {
+    // TODO
+
+    // return success;
+  }
+
+  boost::optional<HVACComponent> CoilLiquidDesiccantSimple_Impl::containingHVACComponent() const {
+    // TODO
+
+    return boost::none;
+  }
+
+  boost::optional<ZoneHVACComponent> CoilLiquidDesiccantSimple_Impl::containingZoneHVACComponent() const {
+    // TODO
+
+    return boost::none;
+  }
+
+  std::vector<ModelObject> CoilLiquidDesiccantSimple_Impl::children() const {
+    std::vector<ModelObject> result;
+    std::vector<AirflowNetworkEquivalentDuct> myAFNItems = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
+    result.insert(result.end(), myAFNItems.begin(), myAFNItems.end());
     return result;
   }
 
@@ -117,6 +173,16 @@ namespace detail {
     return value.get();
   }
 
+
+
+
+
+
+
+
+
+
+
   bool CoilLiquidDesiccantSimple_Impl::setAvailabilitySchedule(Schedule& schedule) {
     bool result = setSchedule(OS_Coil_LiquidDesiccant_SimpleFields::AvailabilityScheduleName,
                               "CoilLiquidDesiccantSimple",
@@ -131,6 +197,66 @@ namespace detail {
 
 
 
+
+
+  AirflowNetworkEquivalentDuct CoilLiquidDesiccantSimple_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter) {
+    boost::optional<AirflowNetworkEquivalentDuct> opt = airflowNetworkEquivalentDuct();
+    if (opt) {
+      if (opt->airPathLength() != length){
+        opt->setAirPathLength(length);
+      }
+      if (opt->airPathHydraulicDiameter() != diameter){
+        opt->setAirPathHydraulicDiameter(diameter);
+      }
+      return opt.get();
+    }
+    return AirflowNetworkEquivalentDuct(model(), length, diameter, handle());
+  }
+
+  boost::optional<AirflowNetworkEquivalentDuct> CoilLiquidDesiccantSimple_Impl::airflowNetworkEquivalentDuct() const
+  {
+    std::vector<AirflowNetworkEquivalentDuct> myAFN = getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>
+      (AirflowNetworkEquivalentDuct::iddObjectType());
+    auto count = myAFN.size();
+    if (count == 1) {
+      return myAFN[0];
+    } else if (count > 1) {
+      LOG(Warn, briefDescription() << " has more than one AirflowNetwork EquivalentDuct attached, returning first.");
+      return myAFN[0];
+    }
+    return boost::none;
+  }
+
+
+
+
+
+
+
+
+  void CoilLiquidDesiccantSimple_Impl::autosize() {
+    // TODO
+  }
+
+  void CoilLiquidDesiccantSimple_Impl::applySizingValues() {
+    // TODO
+  }
+
+  boost::optional<ModelObject> CoilLiquidDesiccantSimple_Impl::availabilityScheduleAsModelObject() const {
+    OptionalModelObject result = availabilitySchedule();
+    return result;
+  }
+
+  bool CoilLiquidDesiccantSimple_Impl::setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+    if (modelObject) {
+      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+      if (intermediate) {
+        Schedule schedule(*intermediate);
+        return setAvailabilitySchedule(schedule);
+      }
+    }
+    return false;
+  }
 
 } // detail
 
@@ -155,13 +281,46 @@ CoilLiquidDesiccantSimple::CoilLiquidDesiccantSimple(std::shared_ptr<detail::Coi
   : WaterToAirComponent(std::move(p))
 {}
 
+IddObjectType CoilLiquidDesiccantSimple::iddObjectType() {
+  IddObjectType result(IddObjectType::OS_Coil_LiquidDesiccant_Simple);
+  return result;
+}
+
+boost::optional<ControllerWaterCoil> CoilLiquidDesiccantSimple::controllerWaterCoil() {
+  return getImpl<detail::CoilLiquidDesiccantSimple_Impl>()->controllerWaterCoil();
+}
+
 Schedule CoilLiquidDesiccantSimple::availabilitySchedule() const {
   return getImpl<detail::CoilLiquidDesiccantSimple_Impl>()->availabilitySchedule();
 }
 
+
+
+
+
+
+
+
+
 bool CoilLiquidDesiccantSimple::setAvailabilitySchedule(Schedule& schedule) {
   return getImpl<detail::CoilLiquidDesiccantSimple_Impl>()->setAvailabilitySchedule(schedule);
 }
+
+
+
+
+
+
+
+
+AirflowNetworkEquivalentDuct CoilLiquidDesiccantSimple::getAirflowNetworkEquivalentDuct(double length, double diameter) {
+  return getImpl<detail::CoilLiquidDesiccantSimple_Impl>()->getAirflowNetworkEquivalentDuct(length, diameter);
+}
+
+boost::optional<AirflowNetworkEquivalentDuct> CoilLiquidDesiccantSimple::airflowNetworkEquivalentDuct() const {
+  return getImpl<detail::CoilLiquidDesiccantSimple_Impl>()->airflowNetworkEquivalentDuct();
+}
+
 
 
 
