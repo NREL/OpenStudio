@@ -67,9 +67,15 @@ setup(
     ],
     keywords='openstudio py3 setuptools development',
     packages=find_packages(include=['openstudio']),
-    package_data={"openstudio": ["*.so", "*.pyd", "*.lib", "*.exp", "*.dll", "*.dylib", "*.bundle"]},
-    install_requires=[
-    ],
+    package_data={
+        "openstudio": [
+            "*.so",
+            "*.pyd", "*.dll",
+            "*.dylib", "*.bundle",
+            # "*.lib", "*.exp",
+        ],
+    },
+    install_requires=[],
     cmdclass={
         'bdist_wheel': bdist_wheel,
         'install': InstallPlatlib

@@ -428,7 +428,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     # We're not trying to make a CLI here
     target_link_libraries(${swig_target} PUBLIC ${${PARENT_TARGET}_depends})
     if (MSVC)
-      target_link_libraries(${swig_target} PRIVATE ${Python_LIBRARIES})
+      target_link_libraries(${swig_target} PRIVATE Python::Module)
     endif()
     add_dependencies(${swig_target} ${PARENT_TARGET})
 
@@ -513,7 +513,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       target_link_libraries(${swig_target} PUBLIC  ${${PARENT_TARGET}_depends})
       if (MSVC)
         message("Python_LIBRARIES=${Python_LIBRARIES}")
-        target_link_libraries(${swig_target} PRIVATE ${Python_LIBRARIES})
+        target_link_libraries(${swig_target} PRIVATE Python::Module)
       endif()
       #target_link_libraries(${swig_target} PUBLIC ${${PARENT_TARGET}_depends}) ${Python_LIBRARIES})
       add_dependencies(${swig_target} ${PARENT_TARGET})
