@@ -831,7 +831,7 @@ namespace openstudio {
     canonicalPoints.push_back(point);
   }
 
-  std::vector<std::vector<Point3d> > joinAll(const std::vector<std::vector<Point3d> >& polygons, double tol)
+  std::vector<std::vector<Point3d> > joinAll(const std::vector<std::vector<Point3d> >& polygons, double tol, bool stopOnHole)
   {
     std::vector<std::vector<Point3d> > result;
 
@@ -855,7 +855,7 @@ namespace openstudio {
     for (unsigned i = 0; i < N; ++i){
       A(i,i) = 1.0;
       for (unsigned j = i+1; j < N; ++j){
-        if (join(modifiedPolygons[i], modifiedPolygons[j], tol, false)) {
+        if (join(modifiedPolygons[i], modifiedPolygons[j], tol, stopOnHole)) {
           A(i,j) = 1.0;
           A(j,i) = 1.0;
         }
