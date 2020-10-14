@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages
 from setuptools.dist import Distribution
 from setuptools.command.install import install
+import platform
 
 try:
     from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
@@ -16,8 +17,10 @@ try:
         def get_tag(self):
             # Setting it up to build generic wheels.
             python, abi, plat = _bdist_wheel.get_tag(self)
-            # There is no ABI incompatibility
-            python, abi = 'py3', 'none'
+            if platform.system() != 'Windows':
+                # There is no ABI incompatibility on Unix
+                # On windows, there is... since we need to link to Python37.dll for eg
+                python, abi = 'py3', 'none'
             # Our bindings won't be compatible with all distributions,
             # BUT pypi will refuse the upload if we do not replace
             # Binary wheel 'openstudio-3.1.0rc3-py3-none-linux_x86_64.whl' has an unsupported platform tag 'linux_x86_64'
