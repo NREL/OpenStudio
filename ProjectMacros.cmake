@@ -477,6 +477,13 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${PYTHON_PACKAGE_FOLDER}/openstudio/")
       set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PYTHON_PACKAGE_FOLDER}/openstudio/")
       if(MSVC)
+        # Avoid having a python_package/openstudio/Release/*.pyd path.
+        set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+        set_target_properties(${swig_target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+        set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+        set_target_properties(${swig_target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_DEBUG "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+        set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${PYTHON_PACKAGE_FOLDER}/openstudio/")
+        set_target_properties(${swig_target} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${PYTHON_PACKAGE_FOLDER}/openstudio/")
         set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd4005") ## /wd4996 suppresses deprecated warning, /wd4005 suppresses macro redefinition warning
         set_target_properties(${swig_target} PROPERTIES SUFFIX ".pyd")
       elseif(UNIX)
