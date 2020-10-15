@@ -38,6 +38,13 @@
 #include "../../data/TimeSeries.hpp"
 #include "../../filetypes/EpwFile.hpp"
 #include "../../units/UnitFactory.hpp"
+#include "../../idf/Workspace.hpp"
+#include "../../idf/WorkspaceObject.hpp"
+#include "../../idd/IddEnums.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/Exterior_FuelEquipment_FieldEnums.hxx>
+#include <utilities/idd/Exterior_WaterEquipment_FieldEnums.hxx>
 
 #include <iostream>
 #include <boost/regex.hpp>
@@ -322,26 +329,28 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
     double annualTotalCost_FuelOil_1;
   };
 
-  // Actual values
-  SqlResults ep_910 = {195052539.91, 27600.69, 427.17, 324.04, 782.87, 3256405.15, 191767000.0};
-  SqlResults ep_920 = {194898706.43, 27595.94, 426.75, 324.25, 782.28, 3256577.21, 191613000.0};
-  SqlResults ep_930 = {194906985.51, 27596.57, 426.75, 324.25, 782.28, 3262855.66, 191615000.0};
-  SqlResults ep_940 = {194908854.32, 27605.85, 426.75, 324.50, 782.28, 3265714.94, 191614000.0};
+  // Actual values:   { Total      , Elec    ,  Gas    , DC    , DH    , Water   , FuelOil_1  }
+  // SqlResults ep_910 = {195052539.91, 27600.69, 427.17, 324.04, 782.87, 3256405.15, 191767000.0};
+  // SqlResults ep_920 = {194898706.43, 27595.94, 426.75, 324.25, 782.28, 3256577.21, 191613000.0};
+  // SqlResults ep_930 = {194906985.51, 27596.57, 426.75, 324.25, 782.28, 3262855.66, 191615000.0};
+  SqlResults ep_940 = {191927299.41, 27898.69, 407.55, 361.09, 776.63, 3322855.45, 188575000.0};
 
   // =========== Check that you are within relatively normal ranges compared to previous versions  =================
 
-  for (auto& ep: {ep_910, ep_920, ep_930}) {
-    // Total annual costs for all fuel types. Here I'm explicitly passing a tolerance of 0.1% (which is the default really, so omitting it after)
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.001));
+  // TODO: probably remplement after 9.4+. 9.4 had such a huge variation (as high as 11.36% for district cooling) that bumping the tolerance that high
+  // would make that test pointless
+  //for (auto& ep: {ep_910, ep_920, ep_930}) {
+    //// Total annual costs for all fuel types. Here I'm explicitly passing a tolerance of 0.1% (which is the default really, so omitting it after)
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.001));
 
-    // Costs by fuel type
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get()));
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get()));
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get(), 0.002));
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get()));
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get(), 0.003));
-    EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get()));
-  }
+    //// Costs by fuel type
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Electricity,     sqlFile2.annualTotalCost(FuelType::Electricity).get()));
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Gas,             sqlFile2.annualTotalCost(FuelType::Gas).get()));
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get(), 0.002));
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get()));
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_Water,           sqlFile2.annualTotalCost(FuelType::Water).get(), 0.003));
+    //EXPECT_TRUE(IsWithinRelativeTolerance(ep.annualTotalCost_FuelOil_1,       sqlFile2.annualTotalCost(FuelType::FuelOil_1).get()));
+  //}
 
   // =========== Check that within our development based on the current E+ version we do not make the results vary (at all)  =================
 
@@ -360,11 +369,11 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   // These have a relatively high tolerance and shouldn't fail, and they depend on the above values divided by square footage which shouldn't vary
   // So it's fine to keep it as is
   // Costs by total building area by fuel type
-  EXPECT_NEAR(11.50, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1); // (E+ 9.2.0 = 11.498308333333332)
+  EXPECT_NEAR(11.62, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Electricity)), 0.1); // (E+ 9.2.0 = 11.498308333333332)
   EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerBldgArea(FuelType::Gas)), 0.1);          // (E+ 9.2.0 = 0.1778125)
 
   // Costs by conditioned building area by fuel type
-  EXPECT_NEAR(11.50, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Electricity)), 0.1);
+  EXPECT_NEAR(11.62, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Electricity)), 0.1);
   EXPECT_NEAR(0.18, *(sqlFile2.annualTotalCostPerNetConditionedBldgArea(FuelType::Gas)), 0.1);
 
 }
@@ -772,3 +781,79 @@ TEST_F(SqlFileFixture, SqlFile_Escapes_injection)
   }
 }
 
+TEST_F(SqlFileFixture, EndUseFuelTypes_test) {
+
+  openstudio::path idfPath = resourcesPath()/toPath("energyplus/AllFuelTypes/in.idf");
+  auto _w = openstudio::Workspace::load(idfPath, openstudio::IddFileType::EnergyPlus);
+  ASSERT_TRUE(_w);
+  Workspace w = _w.get();
+
+  openstudio::path path = resourcesPath()/toPath("energyplus/AllFuelTypes/eplusout.sql");
+  openstudio::SqlFile sqlFile(path);
+
+  auto get_design_value = [&w](const openstudio::EndUseFuelType& end_use_fuel_type) -> double {
+    double result = 0;
+    // valueNames match between FuelType and EndUseFuelType...
+    openstudio::FuelType fuel_type(end_use_fuel_type.valueName());
+
+    if (end_use_fuel_type == openstudio::EndUseFuelType::Water) {
+      auto idf_objects = w.getObjectsByType(openstudio::IddObjectType::Exterior_WaterEquipment);
+      result = idf_objects[0].getDouble(openstudio::Exterior_WaterEquipmentFields::DesignLevel).get();
+    } else {
+      auto idf_objects = w.getObjectsByType(openstudio::IddObjectType::Exterior_FuelEquipment);
+      auto it = std::find_if(idf_objects.begin(), idf_objects.end(), [&fuel_type](const auto& idf_object) {
+          return (idf_object.getString(Exterior_FuelEquipmentFields::FuelUseType).get() == fuel_type.valueDescription());
+      });
+      result = it->getDouble(Exterior_FuelEquipmentFields::DesignLevel).get();
+    }
+
+    return result;
+
+  };
+
+  std::map<openstudio::MonthOfYear, int> daysInMonth = {
+    {MonthOfYear::Jan, 31},
+    {MonthOfYear::Feb, 28},
+    {MonthOfYear::Mar, 31},
+    {MonthOfYear::Apr, 30},
+    {MonthOfYear::May, 31},
+    {MonthOfYear::Jun, 30},
+    {MonthOfYear::Jul, 31},
+    {MonthOfYear::Aug, 31},
+    {MonthOfYear::Sep, 30},
+    {MonthOfYear::Oct, 31},
+    {MonthOfYear::Nov, 30},
+    {MonthOfYear::Dec, 31},
+  };
+
+
+  // This will test that queries do not throw at least
+  for (const auto& [i_month, monthDescription] : openstudio::MonthOfYear::getDescriptions()) {
+    if (i_month > 12) {
+      break;
+    }
+    openstudio::MonthOfYear monthOfYear(i_month);
+    // for (const auto& [i_category, categoryDescription] : openstudio::EndUseCategoryType::getDescriptions()) {
+      //openstudio::EndUseCategoryType category(i_category);
+      openstudio::EndUseCategoryType category = openstudio::EndUseCategoryType::ExteriorEquipment;
+      std::string categoryDescription = category.valueDescription();
+
+      for (const auto& [i_fuelType, fuelTypeDescription] : openstudio::EndUseFuelType::getDescriptions()) {
+        openstudio::EndUseFuelType fuelType(i_fuelType);
+
+        double designLevel = get_design_value(fuelType);
+
+        auto _v = sqlFile.energyConsumptionByMonth(fuelType, category, monthOfYear);
+        ASSERT_TRUE(_v) << "energyConsumptionByMonth failed for " << fuelTypeDescription << ", "
+          << categoryDescription << ", " << monthDescription;
+        EXPECT_DOUBLE_EQ(designLevel*24*3600*daysInMonth[monthOfYear], _v.get())
+          << "energyConsumptionByMonth value failed for " << fuelTypeDescription << ", "
+          << categoryDescription << ", " << monthDescription;
+        auto _v_peak = sqlFile.peakEnergyDemandByMonth(fuelType, category, monthOfYear);
+        ASSERT_TRUE(_v_peak)  << "peakEnergyDemandByMonth failed for " << fuelTypeDescription << ", "
+          << categoryDescription << ", " << monthDescription;
+        EXPECT_EQ(designLevel, _v_peak.get());
+      }
+    //}
+  }
+}

@@ -161,7 +161,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMax)
   boost::optional<double> maxValue;
   maxValue = sqlFile.illuminanceMapMaxValue(mapName);
   ASSERT_TRUE(maxValue);
-  ASSERT_EQ(3648,*maxValue);
+  ASSERT_EQ(3701,*maxValue);
 }
 
 TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMinMax)
@@ -172,7 +172,7 @@ TEST_F(IlluminanceMapFixture, IlluminanceMapPlotMinMax)
   double maxValue = std::numeric_limits<double>::max();
   sqlFile.illuminanceMapMaxValue(mapName,minValue,maxValue);
   ASSERT_EQ(0,minValue);
-  ASSERT_EQ(3648,maxValue);
+  ASSERT_EQ(3701,maxValue);
 }
 
 

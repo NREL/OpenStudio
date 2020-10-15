@@ -136,10 +136,6 @@ namespace detail {
     return getBooleanFieldValue(OS_OutputControl_FilesFields::OutputMTD);
   }
 
-  bool OutputControlFiles_Impl::outputEND() const {
-    return getBooleanFieldValue(OS_OutputControl_FilesFields::OutputEND);
-  }
-
   bool OutputControlFiles_Impl::outputSHD() const {
     return getBooleanFieldValue(OS_OutputControl_FilesFields::OutputSHD);
   }
@@ -258,10 +254,6 @@ namespace detail {
 
   bool OutputControlFiles_Impl::setOutputMTD(bool outputMTD) {
     return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputMTD, outputMTD);
-  }
-
-  bool OutputControlFiles_Impl::setOutputEND(bool outputEND) {
-    return setBooleanFieldValue(OS_OutputControl_FilesFields::OutputEND, outputEND);
   }
 
   bool OutputControlFiles_Impl::setOutputSHD(bool outputSHD) {
@@ -390,10 +382,6 @@ bool OutputControlFiles::outputMTD() const {
   return getImpl<detail::OutputControlFiles_Impl>()->outputMTD();
 }
 
-bool OutputControlFiles::outputEND() const {
-  return getImpl<detail::OutputControlFiles_Impl>()->outputEND();
-}
-
 bool OutputControlFiles::outputSHD() const {
   return getImpl<detail::OutputControlFiles_Impl>()->outputSHD();
 }
@@ -514,10 +502,6 @@ bool OutputControlFiles::setOutputMTD(bool outputMTD) {
   return getImpl<detail::OutputControlFiles_Impl>()->setOutputMTD(outputMTD);
 }
 
-bool OutputControlFiles::setOutputEND(bool outputEND) {
-  return getImpl<detail::OutputControlFiles_Impl>()->setOutputEND(outputEND);
-}
-
 bool OutputControlFiles::setOutputSHD(bool outputSHD) {
   return getImpl<detail::OutputControlFiles_Impl>()->setOutputSHD(outputSHD);
 }
@@ -588,7 +572,7 @@ OutputControlFiles::OutputControlFiles(Model& model)
   // This is a required-field, so pick one...
   // Same defaults as EnergyPlus IDD
   setOutputCSV(false);
-  setOutputMTR(false);
+  setOutputMTR(true);
   setOutputESO(true);
   setOutputEIO(true);
   setOutputTabular(true);
@@ -602,7 +586,6 @@ OutputControlFiles::OutputControlFiles(Model& model)
   setOutputRDD(true);
   setOutputMDD(true);
   setOutputMTD(true);
-  setOutputEND(true);
   setOutputSHD(true);
   setOutputDFS(true);
   setOutputGLHE(true);

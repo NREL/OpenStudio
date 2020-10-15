@@ -30712,7 +30712,17 @@ OS:LifeCycleCost:Parameters,
        \note Enter the rate of inflation for propane as a decimal. For a 2% rate enter
        \note the value 0.02.
        \type real
-  N17; \field Water Inflation
+  N17, \field Water Inflation
+       \note Applies only if Analysis Use NIST Fuel Escalation Rates is No
+       \note Enter the rate of inflation for water as a decimal. For a 2% rate enter
+       \note the value 0.02.
+       \type real
+  N18, \field OtherFuel1 Inflation
+       \note Applies only if Analysis Use NIST Fuel Escalation Rates is No
+       \note Enter the rate of inflation for water as a decimal. For a 2% rate enter
+       \note the value 0.02.
+       \type real
+  N19; \field OtherFuel2 Inflation
        \note Applies only if Analysis Use NIST Fuel Escalation Rates is No
        \note Enter the rate of inflation for water as a decimal. For a 2% rate enter
        \note the value 0.02.
@@ -30796,6 +30806,7 @@ OS:UtilityBill,
        \key Gas
        \key Gasoline
        \key Diesel
+       \key Coal
        \key FuelOil_1
        \key FuelOil_2
        \key Propane
@@ -30803,6 +30814,8 @@ OS:UtilityBill,
        \key Steam
        \key DistrictCooling
        \key DistrictHeating
+       \key OtherFuel_1
+       \key OtherFuel_2
        \key EnergyTransfer
   A4, \field Meter Install Location
        \note Location the meter associated with this utility bill object is installed.
@@ -30983,82 +30996,77 @@ OS:OutputControl:Files,
        \key Yes
        \key No
        \required-field
-  A17, \field Output END
+  A17, \field Output SHD
        \type choice
        \key Yes
        \key No
        \required-field
-  A18, \field Output SHD
+  A18, \field Output DFS
        \type choice
        \key Yes
        \key No
        \required-field
-  A19, \field Output DFS
+  A19, \field Output GLHE
        \type choice
        \key Yes
        \key No
        \required-field
-  A20, \field Output GLHE
+  A20, \field Output DelightIn
        \type choice
        \key Yes
        \key No
        \required-field
-  A21, \field Output DelightIn
+  A21, \field Output DelightELdmp
        \type choice
        \key Yes
        \key No
        \required-field
-  A22, \field Output DelightELdmp
+  A22, \field Output DelightDFdmp
        \type choice
        \key Yes
        \key No
        \required-field
-  A23, \field Output DelightDFdmp
+  A23, \field Output EDD
        \type choice
        \key Yes
        \key No
        \required-field
-  A24, \field Output EDD
+  A24, \field Output DBG
        \type choice
        \key Yes
        \key No
        \required-field
-  A25, \field Output DBG
+  A25, \field Output PerfLog
        \type choice
        \key Yes
        \key No
        \required-field
-  A26, \field Output PerfLog
+  A26, \field Output SLN
        \type choice
        \key Yes
        \key No
        \required-field
-  A27, \field Output SLN
+  A27, \field Output SCI
        \type choice
        \key Yes
        \key No
        \required-field
-  A28, \field Output SCI
+  A28, \field Output WRL
        \type choice
        \key Yes
        \key No
        \required-field
-  A29, \field Output WRL
+  A29, \field Output Screen
        \type choice
        \key Yes
        \key No
        \required-field
-  A30, \field Output Screen
+  A30, \field Output ExtShd
        \type choice
        \key Yes
        \key No
        \required-field
-  A31, \field Output ExtShd
-       \type choice
-       \key Yes
-       \key No
-       \required-field
-  A32; \field Output Tarcog
+  A31; \field Output Tarcog
        \note Not Implemented Yet
        \type choice
        \key Yes

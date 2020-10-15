@@ -60454,7 +60454,7 @@ OutputControl:Files,
        \type choice
        \key Yes
        \key No
-       \default No
+       \default Yes
   A3 , \field Output ESO
        \type choice
        \key Yes
@@ -60983,8 +60983,8 @@ PythonPlugin:OutputVariable,
        \key Gasoline
        \key Diesel
        \key Coal
-       \key FuelOil#1
-       \key FuelOil#2
+       \key FuelOilNo1
+       \key FuelOilNo2
        \key Propane
        \key OtherFuel1
        \key OtherFuel2

@@ -843,9 +843,13 @@ namespace openstudio{
         const openstudio::EndUseCategoryType &t_categoryType,
         const openstudio::MonthOfYear &t_monthOfYear) const
     {
+      // For backward compatibilty, we had to preserve enum valueNames (first param in enum, ((valueName)(valueDescription))
+      // You need to be careful about what you are passing here... valueName or valueDescription
       const std::string reportName = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription());
+      // So this gets tricky, but we have ((Gas)(Natural Gas)). We didn't want to change to ((NaturalGas)(Natural Gas))
+      // So here we take valueDescription ('Natural Gas', then remove the spaces to be NaturalGas)
       const std::string columnName = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":" +
-        boost::algorithm::to_upper_copy(t_fuelType.valueName());
+        boost::algorithm::to_upper_copy(boost::algorithm::erase_all_copy(t_fuelType.valueDescription(), " "));
       const std::string rowName = t_monthOfYear.valueDescription();
 
 
@@ -866,7 +870,7 @@ namespace openstudio{
     {
       const std::string reportName = "BUILDING ENERGY PERFORMANCE - " + boost::algorithm::to_upper_copy(t_fuelType.valueDescription()) + " PEAK DEMAND";
       const std::string columnName = boost::algorithm::to_upper_copy(t_categoryType.valueName()) + ":" +
-        boost::algorithm::to_upper_copy(t_fuelType.valueName()) +
+        boost::algorithm::to_upper_copy(boost::algorithm::erase_all_copy(t_fuelType.valueDescription(), " ")) +
         " {AT MAX/MIN}";
       const std::string rowName = t_monthOfYear.valueDescription();
 
@@ -1005,40 +1009,7 @@ namespace openstudio{
       else {
         // E+ lumps all other fuel types under "Other," so we are forced to use the meters table instead.
         // This is fragile if there are custom submeters, but this is the only option
-        // TODO Isn't this missing a few?! Coal, OtherFuel1, OtherFuel2, Steam
-
-        std::string meterName;
-
-        if (fuel == FuelType::DistrictCooling){
-          meterName = "DISTRICTCOOLING:FACILITY";
-        }
-        else if (fuel == FuelType::DistrictHeating){
-          meterName = "DISTRICTHEATING:FACILITY";
-        }
-        else if (fuel == FuelType::Water){
-          meterName = "WATER:FACILITY";
-        }
-        else if (fuel == FuelType::Gasoline){
-          meterName = "GASOLINE:FACILITY";
-        }
-        else if (fuel == FuelType::Diesel){
-          meterName = "DIESEL:FACILITY";
-        }
-        else if (fuel == FuelType::FuelOil_1){
-          meterName = "FUELOILNO1:FACILITY";
-        }
-        else if (fuel == FuelType::FuelOil_2){
-          meterName = "FUELOILNO2:FACILITY";
-        }
-        else if (fuel == FuelType::Propane){
-          meterName = "PROPANE:FACILITY";
-        }
-        else if (fuel == FuelType::Steam){
-          meterName = "STEAM:FACILITY";
-        }
-        else if (fuel == FuelType::EnergyTransfer){
-          meterName = "ENERGYTRANSFER:FACILITY";
-        }
+        std::string meterName = boost::to_upper_copy(fuel.valueDescription()) + ":FACILITY";
 
         auto rowName = execAndReturnFirstString("SELECT RowName FROM TabularDataWithStrings WHERE ReportName='Economics Results Summary Report' AND ReportForString='Entire Facility' AND TableName='Tariff Summary' AND Value='" + meterName + "'");
         if (rowName){
@@ -1093,19 +1064,12 @@ namespace openstudio{
     {
       double totalCost = 0;
 
-      // List of all fuel types
-      // TODO Isn't this missing a few?! Coal, OtherFuel1, OtherFuel2, Steam
-      auto fuelTypes = {
-        FuelType::Electricity, FuelType::Gas, FuelType::DistrictCooling, FuelType::DistrictHeating,
-        FuelType::Water, FuelType::Gasoline, FuelType::Diesel, FuelType::FuelOil_1, FuelType::FuelOil_2,
-        FuelType::Propane, FuelType::EnergyTransfer
-      };
-
       // Loop through all fuels and add up their costs
-      for (const auto& fuelType : fuelTypes) {
+      for (int i : openstudio::FuelType::getValues()) {
+        openstudio::FuelType fuelType(i);
+
         // Get the annual energy cost
-        boost::optional<double> cost = annualTotalCost(fuelType);
-        if (cost) {
+        if (boost::optional<double> cost = annualTotalCost(fuelType)) {
           totalCost += *cost;
         }
       }
