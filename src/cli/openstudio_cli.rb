@@ -293,7 +293,7 @@ end
 # parse the main args, those that come before the sub command
 def parse_main_args(main_args)
 
-  # Unset RUBY ENVs if previously set (e.g. rvm sets these in shell) 
+  # Unset RUBY ENVs if previously set (e.g. rvm sets these in shell)
 
   ENV.delete('GEM_HOME') if ENV['GEM_HOME']
   ENV.delete('GEM_PATH') if ENV['GEM_PATH']
@@ -711,6 +711,14 @@ class CLI
       # Help is next in short-circuiting everything. Print
       # the help and exit.
       help
+      return 0
+    end
+
+    if $main_args.include?('--version')
+      # Version is next in short-circuiting everything. Print it and exit.
+      # This is to have the same behavior as pretty much every CLI, you expect
+      # `<cli> --version` to return the version
+      safe_puts OpenStudio.openStudioLongVersion
       return 0
     end
 

@@ -5963,10 +5963,8 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
   std::map<std::string, std::string> shadingControlToSurfaceMap;
   std::vector<IdfObject> subSurfaces = idf_3_0_1.getObjectsByType(idf_3_0_1.iddFile().getObject("OS:SubSurface").get());
   for ( auto & subSurface : subSurfaces ) {
-    value = subSurface.getString(7); // Shading Control Name
+    value = subSurface.getString(7, false, true); // Shading Control Name
     if (value) {
-      // TEMP
-      LOG(Warn, value.get() << ": " << subSurface.getString(0).get());
       shadingControlToSurfaceMap[value.get()] = subSurface.getString(0).get();
     }
   }
@@ -6344,8 +6342,6 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
       // Add the SubSurface to the list if any
       auto subSurfaceHandleIt = shadingControlToSurfaceMap.find(object.getString(0).get());
       if ( subSurfaceHandleIt != shadingControlToSurfaceMap.end() ) {
-        // TEMP
-        LOG(Warn, object.getString(0).get() << " maps to " << subSurfaceHandleIt->second);
         newObject.pushExtensibleGroup(StringVector(1u, subSurfaceHandleIt->second));
       }
 

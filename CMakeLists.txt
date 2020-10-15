@@ -156,7 +156,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "rc3")
+set(PROJECT_VERSION_PRERELEASE "rc4")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -742,16 +742,16 @@ if(BUILD_CLI)
   # need to  update the MD5sum for each platform and url below
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201007-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4db81102902f11d610e1da7e7ee22dd6")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201015-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "f218ce68c2e29623039f0235953effd7")
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201007-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "d39e1123578bbac44584d3d059027cd5")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201015-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "84f95aae10293cf9659f2b44d8070fe5")
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201007-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "956742120980fba640adf5a2ca2743d9")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201015-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "3a25048694b4427d7cb1710223b29ff5")
   endif()
 
   set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
@@ -1114,7 +1114,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_0_0_20200424.pdf" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_1_0_20201014.pdf" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//LICENSE.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//CHANGELOG.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//copyright.txt" DESTINATION .)

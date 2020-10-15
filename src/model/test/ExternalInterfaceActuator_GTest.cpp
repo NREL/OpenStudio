@@ -94,7 +94,7 @@ TEST_F(ModelFixture, ExternalInterfaceActuator) {
   ElectricEquipmentDefinition definition(model);
   ElectricEquipment electricEquipment(definition);
   ComponentType = "ElectricEquipment";
-  std::string equipControlType = "Electric Power Level";
+  std::string equipControlType = "Electricity Rate";
   ExternalInterfaceActuator equipActuator(electricEquipment, ComponentType, equipControlType);
   EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
