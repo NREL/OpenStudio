@@ -28,13 +28,14 @@
 ***********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
+
 #include "../../model/Model.hpp"
 #include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/CoilCoolingWater.hpp"
 #include "../../model/CoilCoolingWater_Impl.hpp"
+
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/Coil_Cooling_Water_FieldEnums.hxx>
@@ -208,9 +209,6 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWater( CoilCoo
 
   return boost::optional<IdfObject>(idfObject);
 }
-
-//((Name)(Name))
-//((AvailabilityScheduleName)(Availability Schedule Name))
 
 } // energyplus
 

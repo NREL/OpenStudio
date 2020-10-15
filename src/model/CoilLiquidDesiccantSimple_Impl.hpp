@@ -40,11 +40,13 @@ class Schedule;
 namespace detail {
 
   class MODEL_API CoilLiquidDesiccantSimple_Impl : public WaterToAirComponent_Impl {
-      public:
+    public:
     /** @name Constructors and Destructors */
     //@{
 
-    CoilLiquidDesiccantSimple_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+    CoilLiquidDesiccantSimple_Impl(const IdfObject& idfObject,
+                                   Model_Impl* model,
+                                   bool keepHandle);
 
     CoilLiquidDesiccantSimple_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                    Model_Impl* model,
@@ -142,9 +144,9 @@ namespace detail {
 
     bool isDesignEffectivenessAtNornmalConditionAutosized();
 
-    std::string typeOfOperatingMode();
+    std::string typeOfOperationMode();
 
-    bool isTypeOfOperatingModeDefaulted();
+    bool isTypeOfOperationModeDefaulted();
 
     std::string airSource();
 
@@ -153,6 +155,8 @@ namespace detail {
     std::string material();
 
     bool isMaterialDefaulted();
+
+    // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
 
     boost::optional<double> designLiquidDesiccantConcentrationDifference();
 
@@ -166,7 +170,7 @@ namespace detail {
 
     void autosizeDesignWaterFlowRate();
 
-    bool setDesignAirFlowRate(double DesignAirFlowRate);
+    bool setDesignAirFlowRate(double designAirFlowRate);
 
     void autosizeDesignAirFlowRate();
 
@@ -221,6 +225,10 @@ namespace detail {
     bool setMaterial(std::string material);
 
     void resetMaterial();
+
+    // bool setCondensateCollectionWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
+
+    // void resetCondensateCollectionWaterStorageTank();
 
     bool setDesignLiquidDesiccantConcentrationDifference(double designLiquidDesiccantConcentrationDifference);
 

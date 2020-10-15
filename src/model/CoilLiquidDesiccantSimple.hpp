@@ -85,27 +85,27 @@ class MODEL_API CoilLiquidDesiccantSimple : public WaterToAirComponent {
 
   boost::optional<double> designWaterFlowRate();
 
-  bool isDesignWaterFlowRateAutosized();    
+  bool isDesignWaterFlowRateAutosized();
 
   boost::optional<double> designAirFlowRate();
 
-  bool isDesignAirFlowRateAutosized();    
+  bool isDesignAirFlowRateAutosized();
 
   boost::optional<double> designInletWaterTemperature();
 
-  bool isDesignInletWaterTemperatureAutosized();    
+  bool isDesignInletWaterTemperatureAutosized();
 
   boost::optional<double> designInletAirTemperature();
 
-  bool isDesignInletAirTemperatureAutosized();    
+  bool isDesignInletAirTemperatureAutosized();
 
   boost::optional<double> designOutletAirTemperature();
 
-  bool isDesignOutletAirTemperatureAutosized();    
+  bool isDesignOutletAirTemperatureAutosized();
 
   boost::optional<double> designInletAirHumidityRatio();
 
-  bool isDesignInletAirHumidityRatioAutosized();    
+  bool isDesignInletAirHumidityRatioAutosized();
 
   boost::optional<double> designOutletAirHumidityRatio();
 
@@ -131,9 +131,9 @@ class MODEL_API CoilLiquidDesiccantSimple : public WaterToAirComponent {
 
   bool isDesignEffectivenessAtNornmalConditionAutosized();
 
-  std::string typeOfOperatingMode();
+  std::string typeOfOperationMode();
 
-  bool isTypeOfOperatingModeDefaulted();
+  bool isTypeOfOperationModeDefaulted();
 
   std::string airSource();
 
@@ -142,6 +142,8 @@ class MODEL_API CoilLiquidDesiccantSimple : public WaterToAirComponent {
   std::string material();
 
   bool isMaterialDefaulted();
+
+  // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
 
   boost::optional<double> designLiquidDesiccantConcentrationDifference();
 
@@ -155,7 +157,7 @@ class MODEL_API CoilLiquidDesiccantSimple : public WaterToAirComponent {
 
   void autosizeDesignWaterFlowRate();
 
-  bool setDesignAirFlowRate(double DesignAirFlowRate);
+  bool setDesignAirFlowRate(double designAirFlowRate);
 
   void autosizeDesignAirFlowRate();
 
@@ -210,6 +212,10 @@ class MODEL_API CoilLiquidDesiccantSimple : public WaterToAirComponent {
   bool setMaterial(std::string material);
 
   void resetMaterial();
+
+  // bool setCondensateCollectionWaterStorageTank(const WaterStorageTank& waterStorageTank);
+
+  // void resetCondensateCollectionWaterStorageTank();
 
   bool setDesignLiquidDesiccantConcentrationDifference(double designLiquidDesiccantConcentrationDifference);
 

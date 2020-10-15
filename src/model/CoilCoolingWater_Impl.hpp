@@ -40,11 +40,13 @@ class Schedule;
 namespace detail {
 
   class MODEL_API CoilCoolingWater_Impl : public WaterToAirComponent_Impl {
-      public:
+    public:
     /** @name Constructors and Destructors */
     //@{
 
-    CoilCoolingWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+    CoilCoolingWater_Impl(const IdfObject& idfObject,
+                          Model_Impl* model,
+                          bool keepHandle);
 
     CoilCoolingWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                           Model_Impl* model,
