@@ -129,7 +129,7 @@ class MODEL_API CoilLiquidDesiccantSimple : public WaterToAirComponent {
 
   boost::optional<double> designEffectivenessAtNormalCondition();
 
-  bool isDesignEffectivenessAtNornmalConditionAutosized();
+  bool isDesignEffectivenessAtNormalConditionAutosized();
 
   std::string typeOfOperationMode();
 

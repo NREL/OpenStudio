@@ -28976,7 +28976,7 @@ Coil:LiquidDesiccant:Simple,
        \autosizable
        \default autosize
        \minimum 0
-  N9 , \field Design fan Power Per Unit Mass Flow Rate
+  N9 , \field Design Fan Power Per Unit Mass Flow Rate
        \type real
        \units watt
        \autosizable
@@ -29012,7 +29012,7 @@ Coil:LiquidDesiccant:Simple,
   A6 , \field Air Outlet Node Name
        \required-field
        \type node
-  A7 , \field Type of operation mode
+  A7 , \field Type Of Operation Mode
        \type choice
        \key RegenerationMode
        \key DehumidificationMode

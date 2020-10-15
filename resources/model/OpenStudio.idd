@@ -16696,69 +16696,77 @@ OS:Coil:LiquidDesiccant:Simple,
        \type object-list
        \object-list ScheduleNames
   N1,  \field Design Water Flow Rate
-       \units m3/s
+       \type real
        \autosizable
-       \required-field
-       \minimum 0
+       \units m3/s
        \ip-units gal/min
+       \minimum 0
+       \default autosize
   N2,  \field Design Air Flow Rate
+       \type real
+       \autosizable
        \units m3/s
-       \autosizable
-       \required-field
        \minimum 0
+       \default autosize
   N3,  \field Design Inlet Water Temperature
-       \units C
+       \type real
        \autosizable
-       \required-field
+       \units C
        \minimum> 0
+       \default autosize
   N4,  \field Design Inlet Air Temperature
-       \units C
+       \type real
        \autosizable
-       \required-field
+       \units C
        \minimum> 0
+       \default autosize
   N5,  \field Design Outlet Air Temperature
+       \type real
+       \autosizable
        \units C
-       \autosizable
-       \required-field
        \minimum> 0
+       \default autosize
   N6,  \field Design Inlet Air Humidity Ratio
-       \units kgWater/kgDryAir
+       \type real
        \autosizable
-       \required-field
+       \units kg-H2O/kg-air
        \minimum 0
+       \default autosize
   N7,  \field Design Outlet Air Humidity Ratio
-       \units kgWater/kgDryAir
+       \type real
        \autosizable
-       \required-field
+       \units kg-H2O/kg-air
        \minimum 0
+       \default autosize
   N8,  \field Design Inlet Solution Concentration
+       \type real
        \units dimensionless
        \autosizable
-       \required-field
+       \default autosize
        \minimum 0
   N9,  \field Design Fan Power Per Unit Mass Flow Rate
        \type real
        \units watt
        \autosizable
-       \required-field
+       \default 50
        \minimum 0
   N10, \field Outdoor Air Flow Rates
        \type real
        \units m3/s
        \autosizable
-       \required-field
+       \default autosize
        \minimum 0
   N11, \field Design Pump Power 
        \type real
        \units watt
        \autosizable
-       \required-field
+       \default 100
        \minimum 0
   N12, \field Design Effectiveness At Normal Condition
        \type real
        \units watt
        \autosizable
-       \required-field
+       \default 1.0
        \minimum 0.1
   A4,  \field Water Inlet Node Name
        \type object-list

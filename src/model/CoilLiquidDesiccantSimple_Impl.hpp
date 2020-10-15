@@ -142,7 +142,7 @@ namespace detail {
 
     boost::optional<double> designEffectivenessAtNormalCondition();
 
-    bool isDesignEffectivenessAtNornmalConditionAutosized();
+    bool isDesignEffectivenessAtNormalConditionAutosized();
 
     std::string typeOfOperationMode();
 

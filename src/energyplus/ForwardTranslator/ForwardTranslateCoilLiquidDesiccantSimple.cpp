@@ -66,7 +66,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilLiquidDesiccantSimple
     idfObject.setName(*s);
   }
 
-  Schedule sched = modelObject.availableSchedule();
+  Schedule sched = modelObject.availabilitySchedule();
   boost::optional<IdfObject> _sched = translateAndMapModelObject(sched);
   if( _sched )
   {
@@ -272,11 +272,7 @@ boost::optional<IdfObject> ForwardTranslator::translateCoilLiquidDesiccantSimple
 
   // DesignLiquidDesiccantConcentrationDifference
 
-  if( modelObject.isDesignLiquidDesiccantConcentrationDifferenceAutosized() )
-  {
-    idfObject.setString(Coil_LiquidDesiccant_SimpleFields::DesignLiquidDesiccantConcentrationDifference,"Autosize");
-  }
-  else if( (value = modelObject.designLiquidDesiccantConcentrationDifference()) )
+  if( (value = modelObject.designLiquidDesiccantConcentrationDifference()) )
   {
     idfObject.setDouble(Coil_LiquidDesiccant_SimpleFields::DesignLiquidDesiccantConcentrationDifference,value.get());
   }

@@ -327,7 +327,7 @@ namespace detail {
     return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignEffectivenessAtNormalCondition);
   }
 
-  bool CoilLiquidDesiccantSimple_Impl::isDesignEffectivenessAtNornmalConditionAutosized() {
+  bool CoilLiquidDesiccantSimple_Impl::isDesignEffectivenessAtNormalConditionAutosized() {
     bool result = false;
     boost::optional<std::string> value = getString(OS_Coil_LiquidDesiccant_SimpleFields::DesignEffectivenessAtNormalCondition, true);
     if (value) {
@@ -869,8 +869,8 @@ boost::optional<double> CoilLiquidDesiccantSimple::designEffectivenessAtNormalCo
   return getImpl<detail::CoilLiquidDesiccantSimple_Impl>()->designEffectivenessAtNormalCondition();
 }
 
-bool CoilLiquidDesiccantSimple::isDesignEffectivenessAtNornmalConditionAutosized() {
-  return getImpl<detail::CoilLiquidDesiccantSimple_Impl>()->isDesignEffectivenessAtNornmalConditionAutosized();
+bool CoilLiquidDesiccantSimple::isDesignEffectivenessAtNormalConditionAutosized() {
+  return getImpl<detail::CoilLiquidDesiccantSimple_Impl>()->isDesignEffectivenessAtNormalConditionAutosized();
 }
 
 std::string CoilLiquidDesiccantSimple::typeOfOperationMode() {
