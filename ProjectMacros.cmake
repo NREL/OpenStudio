@@ -406,6 +406,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     elseif(UNIX)
       if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
         set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-sometimes-uninitialized")
+        # Undefined suppress needed to avoid linking to Python::Module
+        set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-flat_namespace -undefined suppress")
       else()
         set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-misleading-indentation")
       endif()
@@ -509,6 +511,8 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
         # set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-Wl,-rpath,./")
         if(APPLE AND NOT CMAKE_COMPILER_IS_GNUCXX)
           set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-dynamic-class-memaccess -Wno-deprecated-declarations -Wno-sign-compare -Wno-sometimes-uninitialized")
+          # Undefined suppress needed to avoid linking to Python::Module
+          set_target_properties(${swig_target} PROPERTIES LINK_FLAGS "-flat_namespace -undefined suppress")
         else()
           set_target_properties(${swig_target} PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-sign-compare -Wno-misleading-indentation")
         endif()
