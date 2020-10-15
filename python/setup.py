@@ -17,15 +17,30 @@ try:
         def get_tag(self):
             # Setting it up to build generic wheels.
             python, abi, plat = _bdist_wheel.get_tag(self)
+            print("Original: (python, abi, plat) = ({}, {}, {})".format(python, abi, plat))
             if platform.system() != 'Windows':
                 # There is no ABI incompatibility on Unix
                 # On windows, there is... since we need to link to Python37.dll for eg
-                python, abi = 'py3', 'none'
+
+                # Edit: I later discovered that building on python3.9 for eg will
+                # not be compatible with installing on 3.8.6:
+                #    ImportError: /home/julien/Virtualenvs/py38/lib/python3.8/site-packages/openstudio/_openstudioairflow.so: undefined symbol: PyCMethod_New
+                # Commit that added it, which was in 3.9.0 but not in 3.8.x (3.8.6 included): https://github.com/python/cpython/commit/e1becf46b4e3ba6d7d32ebf4bbd3e0804766a423
+                # I think there is a chance that building on 3.8 will work for install on 3.9 though
+                python = 'py3'
+                if abi != 'cp39':
+                    abi = 'none'
+
             # Our bindings won't be compatible with all distributions,
             # BUT pypi will refuse the upload if we do not replace
             # Binary wheel 'openstudio-3.1.0rc3-py3-none-linux_x86_64.whl' has an unsupported platform tag 'linux_x86_64'
             plat = plat.lower().replace('linux', 'manylinux1')
             plat = plat.lower().replace('darwin_x86_64', 'macosx_10_6_intel')
+            if plat[:3] == 'mac':
+                # We don't use a fat binary ('intel' = both i386 and x86_64)
+                # but we set the platform to old one in the hope that it'll
+                # work for all
+                plat = 'macosx_10_9_x86_64'
             return python, abi, plat
 except ImportError:
     bdist_wheel = None
