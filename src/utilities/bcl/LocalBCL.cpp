@@ -1489,7 +1489,7 @@ namespace openstudio{
     }
 
     std::vector<BCLMeasure> result;
-    for (const auto uid : uids)
+    for (const auto& uid : uids)
     {
       boost::optional<BCLMeasure> measure = getMeasure(uid.first, uid.second);
       if (measure){
