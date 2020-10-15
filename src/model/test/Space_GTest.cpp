@@ -746,6 +746,11 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest)
   // model.save(toPath("./Space_SurfaceMatch_LargeTest.osm"), true);
 }
 
+/// <summary>
+/// Illustrates a fix for 
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
 TEST_F(ModelFixture, IntersectModelOnly) {
   osversion::VersionTranslator translator;
   //model::OptionalModel model = translator.loadModel(toPath("./whole_bldg_partially_matched.osm"));
@@ -936,16 +941,41 @@ TEST_F(ModelFixture, Issue_3424_ShatteredModel) {
   PolygonGroup* g4 = *group4;
   ASSERT_EQ(8, g4->getSurfaces().size());
 
+  // get all the upward facing polygons
+  std::vector<openstudio::Polygon> ceilingGroup1;
+  std::vector<openstudio::Polygon> ceilingGroup4;
+
+    for (auto polygon : g1->getSurfaces()) {
+        if (getOutwardNormal(polygon.getPoints())->z() == 1) ceilingGroup1.push_back(polygon);
+    }
+    for (auto polygon : g4->getSurfaces()) {
+      if (getOutwardNormal(polygon.getPoints())->z() == 1) ceilingGroup4.push_back(polygon);
+    }
+
+    ASSERT_EQ(3, ceilingGroup1.size());
+    ASSERT_EQ(3, ceilingGroup4.size());
+
   intersectSurfaces(spaces1, false);
   intersectSurfaces(spaces2, false);
 
   // Model after intersection
   model.save(toPath("./ShatterTest01.osm"), true);
 
-  int nsurfaces1 = space1->surfaces().size();
-  int nsurfaces2 = space4->surfaces().size();
-  ASSERT_EQ(8, nsurfaces1);
-  ASSERT_EQ(12, nsurfaces2);
+  ASSERT_EQ(8, space1->surfaces().size());
+  ASSERT_EQ(12, space4->surfaces().size());
+
+  std::vector<Surface> ceilingSpace1;
+  std::vector<Surface> ceilingSpace4;
+
+  for (auto surface : space1->surfaces()) {
+    if (getOutwardNormal(surface.vertices())->z() == 1) ceilingSpace1.push_back(surface);
+  }
+  for (auto surface : space4->surfaces()) {
+    if (getOutwardNormal(surface.vertices())->z() == 1) ceilingSpace4.push_back(surface);
+  }
+
+  ASSERT_EQ(3, ceilingSpace1.size());
+  ASSERT_EQ(7, ceilingSpace4.size());
 }
 
 /// <summary>
