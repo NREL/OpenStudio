@@ -13,6 +13,8 @@
   using namespace openstudio;
   #include <utilities/geometry/Vector3d.hpp>
   #include <utilities/geometry/Point3d.hpp>
+  #include <utilities/geometry/Polygon.hpp>
+  #include <utilities/geometry/PolygonGroup.hpp>
   #include <utilities/geometry/PointLatLon.hpp>
   #include <utilities/geometry/Plane.hpp>
   #include <utilities/geometry/EulerAngles.hpp>

@@ -34,7 +34,6 @@
 #include "../data/Matrix.hpp"
 #include "../data/Vector.hpp"
 #include "../core/Logger.hpp"
-#include "Polygon.hpp"
 
 #include <vector>
 #include <boost/optional.hpp>
