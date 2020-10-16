@@ -181,7 +181,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::designWaterFlowRate() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignWaterFlowRate);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignWaterFlowRate, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::isDesignWaterFlowRateAutosized() {
@@ -194,7 +194,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::designAirFlowRate() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignAirFlowRate);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignAirFlowRate, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::isDesignAirFlowRateAutosized() {
@@ -207,7 +207,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::designInletWaterTemperature() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignInletWaterTemperature);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignInletWaterTemperature, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::isDesignInletWaterTemperatureAutosized() {
@@ -220,7 +220,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::designInletAirTemperature() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignInletAirTemperature);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignInletAirTemperature, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::isDesignInletAirTemperatureAutosized() {
@@ -233,7 +233,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::designOutletAirTemperature() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignOutletAirTemperature);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignOutletAirTemperature, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::isDesignOutletAirTemperatureAutosized() {
@@ -246,7 +246,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::designInletAirHumidityRatio() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignInletAirHumidityRatio);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignInletAirHumidityRatio, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::isDesignInletAirHumidityRatioAutosized() {
@@ -259,7 +259,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::designOutletAirHumidityRatio() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignOutletAirHumidityRatio);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignOutletAirHumidityRatio, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::isDesignOutletAirHumidityRatioAutosized() {
@@ -272,7 +272,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::designInletSolutionConcentration() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignInletSolutionConcentration);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignInletSolutionConcentration, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::isDesignInletSolutionConcentrationAutosized() {
@@ -285,7 +285,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::designFanPowerPerUnitMassFlowRate() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignFanPowerPerUnitMassFlowRate);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignFanPowerPerUnitMassFlowRate, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::isDesignFanPowerPerUnitMassFlowRateAutosized() {
@@ -298,7 +298,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::outdoorAirFlowRates() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::OutdoorAirFlowRates);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::OutdoorAirFlowRates, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::isOutdoorAirFlowRatesAutosized() {
@@ -311,7 +311,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::designPumpPower() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignPumpPower);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignPumpPower, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::isDesignPumpPowerAutosized() {
@@ -324,7 +324,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::designEffectivenessAtNormalCondition() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignEffectivenessAtNormalCondition);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignEffectivenessAtNormalCondition, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::isDesignEffectivenessAtNormalConditionAutosized() {
@@ -371,7 +371,7 @@ namespace detail {
   // }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::designLiquidDesiccantConcentrationDifference() {
-    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignLiquidDesiccantConcentrationDifference);
+    return getDouble(OS_Coil_LiquidDesiccant_SimpleFields::DesignLiquidDesiccantConcentrationDifference, true);
   }
 
   bool CoilLiquidDesiccantSimple_Impl::CoilLiquidDesiccantSimple_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -636,7 +636,7 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::autosizedDesignFanPowerPerUnitMassFlowRate() const {
-    return getAutosizedValue("Design Size Design Can Power Per Unit Mass Flow Rate", "watt");
+    return getAutosizedValue("Design Size Design Can Power Per Unit Mass Flow Rate", "W");
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::autosizedOutdoorAirFlowRates() const {
@@ -644,11 +644,11 @@ namespace detail {
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::autosizedDesignPumpPower() const {
-    return getAutosizedValue("Design Size Design Pump Power", "watt");
+    return getAutosizedValue("Design Size Design Pump Power", "W");
   }
 
   boost::optional<double> CoilLiquidDesiccantSimple_Impl::autosizedDesignEffectivenessAtNormalCondition() const {
-    return getAutosizedValue("Design Size Design Effectiveness At Normal Condition", "watt");
+    return getAutosizedValue("Design Size Design Effectiveness At Normal Condition", "W");
   }
 
   void CoilLiquidDesiccantSimple_Impl::autosize() {

@@ -16746,7 +16746,7 @@ OS:Coil:LiquidDesiccant:Simple,
        \minimum 0
   N9,  \field Design Fan Power Per Unit Mass Flow Rate
        \type real
-       \units watt
+       \units W
        \autosizable
        \default 50
        \minimum 0
@@ -16758,13 +16758,13 @@ OS:Coil:LiquidDesiccant:Simple,
        \minimum 0
   N11, \field Design Pump Power 
        \type real
-       \units watt
+       \units W
        \autosizable
        \default 100
        \minimum 0
   N12, \field Design Effectiveness At Normal Condition
        \type real
-       \units watt
+       \units W
        \autosizable
        \default 1.0
        \minimum 0.1

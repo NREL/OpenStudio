@@ -36,8 +36,12 @@
 #include "../../model/CoilLiquidDesiccantSimple.hpp"
 #include "../../model/CoilLiquidDesiccantSimple_Impl.hpp"
 
-#include <utilities/idd/Coil_LiquidDesiccant_Simple_FieldEnums.hxx>
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/Coil_LiquidDesiccant_Simple_FieldEnums.hxx>
 
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
@@ -47,4 +51,31 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilLiquidDesiccantSimple) {
   Model m;
 
   CoilLiquidDesiccantSimple coil(m);
+
+  ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  EXPECT_EQ(3u, w.getObjectsByType(IddObjectType::Schedule_Constant).size());
+
+  std::vector<WorkspaceObject> objVector(w.getObjectsByType(IddObjectType::Coil_LiquidDesiccant_Simple));
+  ASSERT_EQ(1u, objVector.size());
+  WorkspaceObject wo(objVector.at(0));
+
+  EXPECT_EQ("Constant Schedule", wo.getString(Coil_LiquidDesiccant_SimpleFields::AvailabilityScheduleName).get());
+  EXPECT_EQ("Autosize", wo.getString(Coil_LiquidDesiccant_SimpleFields::DesignWaterFlowRate).get());
+  EXPECT_EQ("Autosize", wo.getString(Coil_LiquidDesiccant_SimpleFields::DesignAirFlowRate).get());
+  EXPECT_EQ("Autosize", wo.getString(Coil_LiquidDesiccant_SimpleFields::DesignInletWaterTemperature).get());
+  EXPECT_EQ("Autosize", wo.getString(Coil_LiquidDesiccant_SimpleFields::DesignInletAirTemperature).get());
+  EXPECT_EQ("Autosize", wo.getString(Coil_LiquidDesiccant_SimpleFields::DesignOutletAirTemperature).get());
+  EXPECT_EQ("Autosize", wo.getString(Coil_LiquidDesiccant_SimpleFields::DesignInletAirHumidityRatio).get());
+  EXPECT_EQ("Autosize", wo.getString(Coil_LiquidDesiccant_SimpleFields::DesignOutletAirHumidityRatio).get());
+  EXPECT_EQ("Autosize", wo.getString(Coil_LiquidDesiccant_SimpleFields::DesignInletSolutionConcentration).get());
+  EXPECT_EQ(50.0, wo.getDouble(Coil_LiquidDesiccant_SimpleFields::DesignFanPowerPerUnitMassFlowRate).get());
+  EXPECT_EQ("Autosize", wo.getString(Coil_LiquidDesiccant_SimpleFields::OutdoorAirFlowRates).get());
+  EXPECT_EQ(100.0, wo.getDouble(Coil_LiquidDesiccant_SimpleFields::DesignPumpPower).get());
+  EXPECT_EQ(1.0, wo.getDouble(Coil_LiquidDesiccant_SimpleFields::DesignEffectivenessAtNormalCondition).get());
+  EXPECT_EQ("DehumidificationMode", wo.getString(Coil_LiquidDesiccant_SimpleFields::TypeOfOperationMode).get());
+  EXPECT_EQ("ZoneAirSource", wo.getString(Coil_LiquidDesiccant_SimpleFields::AirSource).get());
+  EXPECT_EQ("LiCl", wo.getString(Coil_LiquidDesiccant_SimpleFields::Material).get());
+  EXPECT_EQ("", wo.getString(Coil_LiquidDesiccant_SimpleFields::DesignLiquidDesiccantConcentrationDifference).get());
 }
