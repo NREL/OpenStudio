@@ -41,6 +41,10 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "../../model/CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include <utilities/idd/ZoneHVAC_PackagedTerminalAirConditioner_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
@@ -50,6 +54,8 @@
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
+#include <utilities/idd/CoilSystem_Cooling_DX_HeatExchangerAssisted_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include "../../utilities/math/FloatCompare.hpp"
@@ -382,6 +388,16 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
       _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,coolingCoilInletNodeName);
 
       _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName,coolingCoilOutletNodeName);
+    } else if ( _coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted )
+    {
+      _coolingCoil->setString(CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirInletNodeName,coolingCoilInletNodeName);
+
+      _coolingCoil->setString(CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirOutletNodeName,coolingCoilOutletNodeName);
+    } else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed )
+    {
+      _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName,coolingCoilInletNodeName);
+
+      _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName,coolingCoilOutletNodeName);
     }
   }
 
