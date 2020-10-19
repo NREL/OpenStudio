@@ -864,9 +864,18 @@ TEST_F(GeometryFixture, JoinAll_OrderTest) {
   // Call joinAll so it stops when a hole is detected, polygon 1 is not added to polygons 2 and 3
   test = joinAll(polygons, tol);
   ASSERT_EQ(2u, test.size());
-  // Call joinAll so it ignores holes and al polygons are added
+  // Call joinAll so it ignores holes and all polygons are added
   test = joinAll(polygons, tol, false);
   ASSERT_EQ(1u, test.size());
+
+  // The final poly should look like this
+  std::vector<Point3d> result;
+  result.push_back(Point3d(6000,4000,0));
+  result.push_back(Point3d(6000,0,0));
+  result.push_back(Point3d(0,0,0));
+  result.push_back(Point3d(0,4000,0));
+
+  EXPECT_TRUE(circularEqual(result, test[0])) << test[0];
 }
 
 TEST_F(GeometryFixture, JoinAll)

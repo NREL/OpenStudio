@@ -883,7 +883,7 @@ namespace openstudio {
           }else{
             // if not already joined
             if (joinedComponents.find(i) == joinedComponents.end()) {
-              boost::optional<std::vector<Point3d>> joined = join(points, modifiedPolygons[i], tol);
+              boost::optional<std::vector<Point3d>> joined = join(points, modifiedPolygons[i], tol, stopOnHole);
               if (joined){
                 points = *joined;
                 joinedComponents.insert(i);
