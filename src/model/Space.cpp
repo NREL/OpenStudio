@@ -3486,13 +3486,17 @@ std::vector<PolygonGroup*> intersectSurfacePolygons(std::vector<Space>& spaces, 
   
   for (auto space : spaces) {
     PolygonGroup *group=new PolygonGroup();
-    group->setReference(&space);
+    //group->setReference(&space);
     group->setName(space.name().value());
     polygonGroups.push_back(group);
     group->setTransformation(space.transformation());
     std::vector<Polygon> surfaces;
 
-    for (auto surface : space.surfaces()) {
+    // Sort surfaces by area as the 
+    std::vector<Surface> ss = space.surfaces();
+    std::sort(ss.begin(), ss.end(), [](const Surface& a, const Surface& b) -> bool { return a.grossArea() > b.grossArea(); });
+
+    for (auto surface : ss) {
       auto vertices = surface.vertices();
       Polygon polygon(vertices);
       polygon.setName(surface.name().value());
