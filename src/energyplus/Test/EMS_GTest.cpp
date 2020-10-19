@@ -633,7 +633,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_Space_EMS) {
   space.setGasEquipmentPower(10, gasEquip);
 
   // add actuator
-  std::string ControlType = "Gas Power Level";
+  std::string ControlType = "NaturalGas Rate";
   std::string ComponentType = "GasEquipment";
   EnergyManagementSystemActuator fanActuator(gasEquip, ComponentType, ControlType);
   std::string actName = "Gas Equip Actuator";
@@ -682,7 +682,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType_EMS) {
   gasEquip.setSpaceType(spaceType);
 
   // add actuator
-  std::string ControlType = "Gas Power Level";
+  std::string ControlType = "NaturalGas Rate";
   std::string ComponentType = "GasEquipment";
   EnergyManagementSystemActuator fanActuator(gasEquip, ComponentType, ControlType);
   std::string actName = "Gas Equip Actuator";
@@ -824,7 +824,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad3_EMS) {
   //space.setGasEquipmentPower(10, gasEquip);
 
   // add actuator
-  std::string ControlType = "Gas Power Level";
+  std::string ControlType = "NaturalGas Rate";
   std::string ComponentType = "GasEquipment";
   EnergyManagementSystemActuator fanActuator(gasEquip, ComponentType, ControlType);
   std::string actName = "Gas Equip Actuator";
@@ -1892,15 +1892,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
   //This is the EDD file for the spaceload actuators for this model so far
   /*
   EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 PEOPLE 1,People,Number of People,[each]
-  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 LIGHTS 1,Lights,Electric Power Level,[W]
-  EnergyManagementSystem:Actuator Available,PRINTER,ElectricEquipment,Electric Power Level,[W]
-  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 ELECTRIC EQUIPMENT 1,ElectricEquipment,Electric Power Level,[W]
+  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 LIGHTS 1,Lights,Electricity Rate,[W]
+  EnergyManagementSystem:Actuator Available,PRINTER,ElectricEquipment,Electricity Rate,[W]
+  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 ELECTRIC EQUIPMENT 1,ElectricEquipment,Electricity Rate,[W]
   */
 
   //actuator settings
   //std::string ComponentType = "ElectricEquipment";
   std::string ComponentType = "Lights";
-  std::string ControlType = "Electric Power Level";
+  std::string ControlType = "Electricity Rate";
   EnergyManagementSystemActuator lightsActuator(lights[0], ComponentType, ControlType, space4.get());
   EXPECT_EQ(space4.get().thermalZone().get().handle(), lightsActuator.zoneName().get().handle());
 
@@ -1946,14 +1946,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
   //This is the EDD file for the spaceload actuators for this model so far
   /*
   EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 PEOPLE 1,People,Number of People,[each]
-  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 LIGHTS 1,Lights,Electric Power Level,[W]
-  EnergyManagementSystem:Actuator Available,PRINTER,ElectricEquipment,Electric Power Level,[W]
-  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 ELECTRIC EQUIPMENT 1,ElectricEquipment,Electric Power Level,[W]
+  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 LIGHTS 1,Lights,Electricity Rate,[W]
+  EnergyManagementSystem:Actuator Available,PRINTER,ElectricEquipment,Electricity Rate,[W]
+  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 ELECTRIC EQUIPMENT 1,ElectricEquipment,Electricity Rate,[W]
   */
 
   //actuator settings
   std::string ComponentType = "ElectricEquipment";
-  std::string ControlType = "Electric Power Level";
+  std::string ControlType = "Electricity Rate";
   //actuator on first electricEquipment object
   EnergyManagementSystemActuator electricActuator0(electricEquipment[0], ComponentType, ControlType);
   //actuator on second electricEquipment object
@@ -2009,20 +2009,20 @@ EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 PEOPLE 1, People, Nu
 EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 PEOPLE 1, People, Number of People, [each]
 EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 PEOPLE 1, People, Number of People, [each]
 EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 PEOPLE 1, People, Number of People, [each]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
 */
 
 //actuator settings
   std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
+  std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
   EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, spaces[2]);
   //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
@@ -2090,20 +2090,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API2_EMS) {
   EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 PEOPLE 1, People, Number of People, [each]
   EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 PEOPLE 1, People, Number of People, [each]
   EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 PEOPLE 1, People, Number of People, [each]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
   */
 
   //actuator settings
   std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
+  std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
   EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, thermalZone2);
   //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
@@ -2172,20 +2172,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 PEOPLE 1, People, Number of People, [each]
   EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 PEOPLE 1, People, Number of People, [each]
   EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 PEOPLE 1, People, Number of People, [each]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
   */
 
   //actuator settings
   std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
+  std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
   EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, thermalZone2);
   //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());

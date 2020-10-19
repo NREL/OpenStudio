@@ -374,7 +374,7 @@ namespace detail {
   }
 
   std::vector<EMSActuatorNames> Lights_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{ { "Lights", "Electric Power Level" } };
+    std::vector<EMSActuatorNames> actuators{ { "Lights", "Electricity Rate" } };
     return actuators;
   }
 

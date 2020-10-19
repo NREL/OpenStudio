@@ -100,7 +100,7 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitExportToActuator) {
   ElectricEquipmentDefinition definition(model);
   ElectricEquipment electricEquipment(definition);
   ComponentType = "ElectricEquipment";
-  std::string equipControlType = "Electric Power Level";
+  std::string equipControlType = "Electricity Rate";
   ExternalInterfaceFunctionalMockupUnitExportToActuator equipActuator(electricEquipment, ComponentType, equipControlType, "electric FMU", 1);
   EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());

@@ -369,7 +369,7 @@ namespace detail {
   }
 
   std::vector<EMSActuatorNames> ElectricEquipment_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{ { "ElectricEquipment", "Electric Power Level" } };
+    std::vector<EMSActuatorNames> actuators{ { "ElectricEquipment", "Electricity Rate" } };
     return actuators;
   }
 
