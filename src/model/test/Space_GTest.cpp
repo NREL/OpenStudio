@@ -1291,7 +1291,19 @@ TEST_F(ModelFixture, Issue_2560_1) {
   matchSurfaces(spaces);
   model.save(toPath("./issue2560_1_matched_model.osm"), true);
 }
-TEST_F(ModelFixture, Issue_2560) {
+
+/// <summary>
+/// Starts with a core, perimeter and corner on the first floor and single zone on the second floor
+/// The common surface between Space 7 & Space 8 is not matched using the default tolerance of 0.001
+/// but is matched if the tolerance is set to something less than or equal to the tolerance used for
+/// circularEqual, in this case 0.005. 
+/// 
+/// FIrst run with the default tolerance then unmatch and then run with the larger tolerance
+/// Asserts on the expected number of paired surfaces so this tests will always fail
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(ModelFixture, SurfMatch_A) {
   Model model;
 
   BuildingStory bottom(model);
@@ -1423,22 +1435,13 @@ TEST_F(ModelFixture, Issue_2560) {
 
   ASSERT_EQ(spaces.size(), 10);
 
-  // This should randomize the o
-  //auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-  //    std::random_device rd;
-  //    std::default_random_engine rng();
-
-  auto rng = std::default_random_engine{};
-
-  std::shuffle(std::begin(spaces), std::end(spaces), rng);
-
   intersectSurfaces(spaces);
   model.save(toPath("./issue2560_intersected_model.osm"), true);
 
   matchSurfaces(spaces);
-  model.save(toPath("./issue2560_matched_model.osm"), true);
-  int adjacentFloors = 0;
-  int adjacentWalls = 0;
+  model.save(toPath("./issue2560_matched1_model.osm"), true);
+  int adjacentFloors1 = 0;
+  int adjacentWalls1 = 0;
 
   for (const Space& space : spaces) {
     int n = space.surfaces().size();
@@ -1447,14 +1450,34 @@ TEST_F(ModelFixture, Issue_2560) {
       boost::optional<Surface> adjacent = surface.adjacentSurface();
       std::string sType = surface.surfaceType();
       if (sType == "Floor" || sType == "RoofCeiling") {
-        if (adjacent.has_value()) adjacentFloors++;
+        if (adjacent.has_value()) adjacentFloors1++;
       } else if (sType == "Wall")
-        if (adjacent.has_value()) adjacentWalls++;
+        if (adjacent.has_value()) adjacentWalls1++;
     }
   }
 
-  ASSERT_EQ(adjacentFloors, 6);
-  ASSERT_EQ(adjacentWalls, 24);
+  unmatchSurfaces(spaces);
+  matchSurfaces(spaces, 0.005);
+  model.save(toPath("./issue2560_matched2_model.osm"), true);
+  int adjacentFloors2 = 0;
+  int adjacentWalls2 = 0;
+  for (const Space& space : spaces) {
+    int n = space.surfaces().size();
+
+    for (const Surface& surface : space.surfaces()) {
+      boost::optional<Surface> adjacent = surface.adjacentSurface();
+      std::string sType = surface.surfaceType();
+      if (sType == "Floor" || sType == "RoofCeiling") {
+        if (adjacent.has_value()) adjacentFloors2++;
+      } else if (sType == "Wall")
+        if (adjacent.has_value()) adjacentWalls2++;
+    }
+  }
+  ASSERT_EQ(adjacentFloors2, 6);
+  ASSERT_EQ(adjacentWalls2, 24);
+
+  ASSERT_EQ(adjacentFloors1, 6);
+  ASSERT_EQ(adjacentWalls1, 24);
 }
 
 TEST_F(ModelFixture, Space_FindSurfaces)

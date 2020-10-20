@@ -3534,7 +3534,7 @@ std::vector<PolygonGroup*> intersectSurfacePolygons(std::vector<Space>& spaces, 
   return polygonGroups;
 }
 
-void matchSurfaces(std::vector<Space>& spaces)
+void matchSurfaces(std::vector<Space>& spaces, double tol)
 {
   std::vector<BoundingBox> bounds;
   for (const Space& space : spaces){
@@ -3544,7 +3544,7 @@ void matchSurfaces(std::vector<Space>& spaces)
   for (unsigned i = 0; i < spaces.size(); ++i){
     std::string namei = spaces[i].name().value();
     for (unsigned j = i+1; j < spaces.size(); ++j){
-      if (!bounds[i].intersects(bounds[j], 0.005)){
+      if (!bounds[i].intersects(bounds[j], tol)){
         continue;
       }
       spaces[i].matchSurfaces(spaces[j]);

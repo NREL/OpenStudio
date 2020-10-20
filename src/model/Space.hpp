@@ -612,7 +612,7 @@ MODEL_API void intersectSurfaces(std::vector<Space>& spaces, bool sortByArea = t
 MODEL_API std::vector<PolygonGroup*> intersectSurfacePolygons(std::vector<Space>& spaces, bool sortByArea = true);
 
 /** Match surfaces and sub surfaces within spaces. */
-MODEL_API void matchSurfaces(std::vector<Space>& spaces);
+MODEL_API void matchSurfaces(std::vector<Space>& spaces, double tol = 0.001);
 
 /** Un-match surfaces and sub surfaces within spaces. */
 MODEL_API void unmatchSurfaces(std::vector<Space>& spaces);
