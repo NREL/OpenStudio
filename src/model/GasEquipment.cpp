@@ -355,7 +355,7 @@ namespace detail {
   }
 
   std::vector<EMSActuatorNames> GasEquipment_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{ { "GasEquipment", "Gas Power Level" } };
+    std::vector<EMSActuatorNames> actuators{ { "GasEquipment", "NaturalGas Rate" } };
     return actuators;
   }
 
