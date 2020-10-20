@@ -2,7 +2,7 @@ name: buildDotNetSDK
 
 on: 
   push:
-    branches: [ master ]
+    branches: [ develop ]
 
 jobs:
   build:
@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: "Checkout Master Branch"
+      - name: "Checkout develop Branch"
         uses: actions/checkout@v2
+        with:
+          ref: develop
         
       - name: Setup DotNet
         run: |
