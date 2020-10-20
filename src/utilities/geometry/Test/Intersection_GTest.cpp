@@ -1079,20 +1079,7 @@ TEST_F(GeometryFixture, JoinAll_2527) {
   EXPECT_TRUE(circularEqual(poly6, test[0]));
 }
 
-/// <summary>
-/// Polygons from roof slabs from BaseCase import (from our test data points4), makes a 95 polygon test date set
-/// joinAll using the current method, results in 4(?) polygons
-/// joinAll using offset results in 1 polygon
-/// joinAll by buffering all polygons at the same time results in 1 polygon 
-/// </summary>
-/// <param name=""></param>
-/// <param name=""></param>
-TEST_F(GeometryFixture, SurfJoin_A) {
-  double tol = 2;
-
-  std::vector<Point3dVector> test1;
-  std::vector<Point3dVector> test2;
-  std::vector<Point3dVector> test3;
+std::vector<std::vector<Point3d>> SurfJoin_A_Setup() {
   std::vector<Point3dVector> polygons;
 
   std::vector<Point3d> poly1;
@@ -1865,42 +1852,76 @@ TEST_F(GeometryFixture, SurfJoin_A) {
   polygons.push_back(poly94);
   polygons.push_back(poly95);
 
-  /* ASSERT_EQ(getArea(poly1), getArea(poly2));
-  ASSERT_EQ(getArea(poly2), getArea(poly3));
-  ASSERT_EQ(getArea(poly3), getArea(poly4));
-  ASSERT_EQ(getArea(poly4), getArea(poly1));*/
+  return polygons;
+}
 
-  // Offsets the polygon slightly
-  test1 = joinAllWithBuffer(polygons, tol * 2, tol);
-  double a = getArea(test1[0]).value();
-  double p = getPerimeter(test1[0]);
+/// <summary>
+/// Polygons from roof slabs from BaseCase import (from our test data points4), makes a 95 polygon test date set
+/// joinAll using the current method, results in 4(?) polygons
+/// joinAll using offset results in 1 polygon
+/// joinAll by buffering all polygons at the same time results in 1 polygon 
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(GeometryFixture, SurfJoin_A_joinAll) {
+  double tol = 2;
+
+  std::vector<Point3dVector> test1;
+  std::vector<std::vector<Point3d>> polygons = SurfJoin_A_Setup();
 
   // Original method
-  test2 = joinAll(polygons, tol);
-  a = getArea(test2[0]).value();
-  // Completely different method
-  test3 = buffer(polygons, tol * 2, tol);
-  a = getArea(test3[0]).value();
-  p = getPerimeter(test3[0]);
+  test1 = joinAll(polygons, tol);
 
   // Should return one polygon
   ASSERT_EQ(1u, test1.size());
-  //ASSERT_EQ(1u, test2.size());
-  ASSERT_EQ(1u, test3.size());
-
-  //ofstream output("C:/Users/ggart/OneDrive/Desktop/joinAll_points4.csv");
-
-  //for (auto point : test[0]) {
-  //  output << point.x() << "," << point.y() << "," << point.z() << endl;
-  //}
-  //output << " ";
-  //output.close();
-  
-  // That polygon should have 45 points
-  // We know this fails because we know joinAll gives up when it ends up with a polygon with a hole
+  // Polygon should have 45 points
   ASSERT_EQ(45, test1[0].size());
-  //ASSERT_EQ(45, test2[0].size());
-  ASSERT_EQ(45, test3[0].size());
+}
+
+/// <summary>
+/// Polygons from roof slabs from BaseCase import (from our test data points4), makes a 95 polygon test date set
+/// joinAll using the current method, results in 4(?) polygons
+/// joinAll using offset results in 1 polygon
+/// joinAll by buffering all polygons at the same time results in 1 polygon
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(GeometryFixture, SurfJoin_A_joinAllModified) {
+  double tol = 2;
+
+  std::vector<Point3dVector> test1;
+  std::vector<std::vector<Point3d>> polygons = SurfJoin_A_Setup();
+
+  // Original method (amount to offset by and tolerance)
+  test1 = joinAllWithBuffer(polygons, tol*2, tol);
+
+  // Should return one polygon
+  ASSERT_EQ(1u, test1.size());
+  // Polygon should have 45 points
+  ASSERT_EQ(45, test1[0].size());
+}
+
+/// <summary>
+/// Polygons from roof slabs from BaseCase import (from our test data points4), makes a 95 polygon test date set
+/// joinAll using the current method, results in 4(?) polygons
+/// joinAll using offset results in 1 polygon
+/// joinAll by buffering all polygons at the same time results in 1 polygon
+/// </summary>
+/// <param name=""></param>
+/// <param name=""></param>
+TEST_F(GeometryFixture, SurfJoin_A_BoostBuffer) {
+  double tol = 2;
+
+  std::vector<Point3dVector> test1;
+  std::vector<std::vector<Point3d>> polygons = SurfJoin_A_Setup();
+
+  // Original method (amount to offset by and tolerance)
+  test1 = buffer(polygons, tol * 2, tol);
+
+  // Should return one polygon
+  ASSERT_EQ(1u, test1.size());
+  // Polygon should have 45 points
+  ASSERT_EQ(45, test1[0].size());
 }
 
 TEST_F(GeometryFixture, JoinAll_SegFault_Test) {

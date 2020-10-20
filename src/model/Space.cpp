@@ -3454,6 +3454,32 @@ Space::Space(std::shared_ptr<detail::Space_Impl> impl)
   : PlanarSurfaceGroup(std::move(impl))
 {}
 /// @endcond
+/// 
+
+PolygonGroup* Space::ToPolygonGroup() {
+  PolygonGroup* group = new PolygonGroup();
+  //group->setReference(&space);
+  group->setName(name().value());
+  group->setTransformation(transformation());
+  std::vector<openstudio::Polygon> surfaces;
+
+  // Sort surfaces by area as the
+  std::vector<Surface> ss = this->surfaces();
+  std::sort(ss.begin(), ss.end(), [](const Surface& a, const Surface& b) -> bool { return a.grossArea() > b.grossArea(); });
+
+  for (auto surface : ss) {
+    auto vertices = surface.vertices();
+    openstudio::Polygon polygon(vertices);
+    polygon.setName(surface.name().value());
+    polygon.setReference(&surface);
+    polygon.setHandle(toString(surface.handle()));
+    surfaces.push_back(polygon);
+  }
+
+  group->setSurfaces(surfaces);
+
+  return group;
+}
 
 void intersectSurfaces(std::vector<Space>& t_spaces, bool sortByArea, bool shrink)
 {
