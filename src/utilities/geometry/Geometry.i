@@ -57,6 +57,8 @@
 // create an instantiation of the vector classes
 // Note JM 2019-04-16: No need to ignore std::vector<T>::vector/resize when you have a default constructor
 %template(Point3dVector) std::vector<openstudio::Point3d>;
+%template(PolygonGroupVector) std::vector<openstudio::PolygonGroup>;
+%template(PolygonVector) std::vector<openstudio::Polygon>;
 %template(Point3dVectorVector) std::vector<std::vector<openstudio::Point3d> >; // for polygon subtraction routines
 %template(OptionalPoint3dVector) boost::optional< std::vector<openstudio::Point3d> >; // For openstudio::join (Intersection.hpp)
 %template(PointLatLonVector) std::vector<openstudio::PointLatLon>;
