@@ -1080,11 +1080,14 @@ TEST_F(GeometryFixture, JoinAll_2527) {
 }
 
 /// <summary>
-/// Polygons from roof slabs from BaseCase inmport (from our test data)
+/// Polygons from roof slabs from BaseCase import (from our test data points4), makes a 95 polygon test date set
+/// joinAll using the current method, results in 4(?) polygons
+/// joinAll using offset results in 1 polygon
+/// joinAll by buffering all polygons at the same time results in 1 polygon 
 /// </summary>
 /// <param name=""></param>
 /// <param name=""></param>
-TEST_F(GeometryFixture, JoinAll_Points4) {
+TEST_F(GeometryFixture, SurfJoin_A) {
   double tol = 2;
 
   std::vector<Point3dVector> test1;

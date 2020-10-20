@@ -747,11 +747,13 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest)
 }
 
 /// <summary>
-/// Illustrates a fix for 
+/// Illustrates a fix for surface intersection getting stuck in a loop
+/// First of all we need to remove surfaces that overlap within the same space
+/// Second of all we use a different removeSpikes method that shrinks and expands the polygon
 /// </summary>
 /// <param name=""></param>
 /// <param name=""></param>
-TEST_F(ModelFixture, IntersectModelOnly) {
+TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
   osversion::VersionTranslator translator;
   //model::OptionalModel model = translator.loadModel(toPath("./whole_bldg_partially_matched.osm"));
   //boost::optional<Model> model = Model::load(toPath("./7-7 Windows Complete.osm"));
@@ -817,7 +819,8 @@ TEST_F(ModelFixture, IntersectModelOnly) {
     spaces.erase(spaces.begin() + index);
   }
 
-  intersectSurfaces(spaces);
+  // Don't sort by area, use the shrink and expand to remove spikes
+  intersectSurfaces(spaces, false, true);
   matchSurfaces(spaces);
   model->save(toPath("./7-7 Windows Complete finished.osm"));
 }

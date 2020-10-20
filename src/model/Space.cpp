@@ -2346,7 +2346,7 @@ namespace detail {
     }
   }
 
-  void Space_Impl::intersectSurfaces(Space& other)
+  void Space_Impl::intersectSurfaces(Space& other, bool shrink)
   {
     if (this->handle() == other.handle()){
       return;
@@ -2363,8 +2363,11 @@ namespace detail {
     std::set<std::string> completedIntersections;
 
     bool anyNewSurfaces = true;
+    int nIterations = 0;
     while(anyNewSurfaces){
-
+      if (++nIterations==100) {
+        throw new Exception("Maximum number of iterations reached in intersectSurface ");
+      }
       anyNewSurfaces = false;
       std::vector<Surface> newSurfaces;
       std::vector<Surface> newOtherSurfaces;
@@ -3423,8 +3426,8 @@ void Space::matchSurfaces(Space& space) {
   getImpl<detail::Space_Impl>()->matchSurfaces(space);
 }
 
-void Space::intersectSurfaces(Space& space) {
-  getImpl<detail::Space_Impl>()->intersectSurfaces(space);
+void Space::intersectSurfaces(Space& space, bool shrink) {
+  getImpl<detail::Space_Impl>()->intersectSurfaces(space, shrink);
 }
 
 std::vector <Surface> Space::findSurfaces(boost::optional<double> minDegreesFromNorth,
@@ -3452,7 +3455,7 @@ Space::Space(std::shared_ptr<detail::Space_Impl> impl)
 {}
 /// @endcond
 
-void intersectSurfaces(std::vector<Space>& t_spaces, bool sortByArea)
+void intersectSurfaces(std::vector<Space>& t_spaces, bool sortByArea, bool shrink)
 {
   std::vector<Space> spaces(t_spaces);
   if (sortByArea)
@@ -3473,7 +3476,7 @@ void intersectSurfaces(std::vector<Space>& t_spaces, bool sortByArea)
       }
 
       LOG_FREE(Info, "intersectSurfaces","********* Intersecting space " << namei << " with space " << namej << "**********")
-       spaces[i].intersectSurfaces(spaces[j]);
+       spaces[i].intersectSurfaces(spaces[j], shrink);
     }
   }
 }

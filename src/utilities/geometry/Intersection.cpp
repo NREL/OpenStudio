@@ -907,7 +907,7 @@ namespace openstudio {
     return result;
   }
 
-  boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol)
+  boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygon1, const std::vector<Point3d>& polygon2, double tol, bool shrink)
   {
     std::vector<Point3d> resultPolygon1;
     std::vector<Point3d> resultPolygon2;
@@ -1010,7 +1010,11 @@ namespace openstudio {
     // polygon1 minus polygon2
     std::vector<BoostPolygon> differenceResult1;
     boost::geometry::difference(*boostPolygon1, *boostPolygon2, differenceResult1);
+    if (shrink)
     differenceResult1 = removeSpikesEx(differenceResult1);
+    else 
+    differenceResult1 = removeSpikes(differenceResult1);
+
     differenceResult1 = removeHoles(differenceResult1);
 
     // create new polygon for each difference
@@ -1039,7 +1043,10 @@ namespace openstudio {
     // polygon2 minus polygon1
     std::vector<BoostPolygon> differenceResult2;
     boost::geometry::difference(*boostPolygon2, *boostPolygon1, differenceResult2);
-    differenceResult2 = removeSpikesEx(differenceResult2);
+    if (shrink)
+      differenceResult2 = removeSpikesEx(differenceResult2);
+    else
+      differenceResult2 = removeSpikes(differenceResult2);
     differenceResult2 = removeHoles(differenceResult2);
 
     // create new polygon for each difference

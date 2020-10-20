@@ -1077,7 +1077,7 @@ namespace detail {
     return false;
   }
 
-  boost::optional<SurfaceIntersection> Surface_Impl::computeIntersection(Surface& otherSurface)
+  boost::optional<SurfaceIntersection> Surface_Impl::computeIntersection(Surface& otherSurface, bool shrink)
   {
     double tol = 0.01; // 1 cm tolerance
 
@@ -1143,7 +1143,7 @@ namespace detail {
 
     //LOG(Info, "Trying intersection of '" << this->name().get() << "' with '" << otherSurface.name().get());
 
-    boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, otherFaceVertices, tol);
+    boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, otherFaceVertices, tol, shrink);
     if (!intersection){
       //LOG(Info, "No intersection");
       return boost::none;
@@ -2282,8 +2282,8 @@ bool Surface::intersect(Surface& otherSurface) {
   return getImpl<detail::Surface_Impl>()->intersect(otherSurface);
 }
 
-boost::optional<SurfaceIntersection> Surface::computeIntersection(Surface& otherSurface) {
-  return getImpl<detail::Surface_Impl>()->computeIntersection(otherSurface);
+boost::optional<SurfaceIntersection> Surface::computeIntersection(Surface& otherSurface, bool shrink) {
+  return getImpl<detail::Surface_Impl>()->computeIntersection(otherSurface, shrink);
 }
 
 boost::optional<Surface> Surface::createAdjacentSurface(const Space& otherSpace)

@@ -223,7 +223,7 @@ namespace detail {
     void resetSurfacePropertyOtherSideConditionsModel();
 
     bool intersect(Surface& otherSurface);
-    boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface);
+    boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface, bool shrink=false);
 
     boost::optional<Surface> createAdjacentSurface(const Space& otherSpace);
 

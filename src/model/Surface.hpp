@@ -202,7 +202,7 @@ class MODEL_API Surface : public PlanarSurface {
    *  If the surfaces are the same, returns true but no new geometry is created.
    *  Returns true if an intersection occurred. Does not set surface adjacency. */
   bool intersect(Surface& otherSurface);
-  boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface);
+  boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface, bool shrink = false);
 
   /** Creates an adjacent Surface in another Space, also create adjacent SubSurface objects if needed.
       Returns the new Surface if created. */

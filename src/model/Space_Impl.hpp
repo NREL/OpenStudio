@@ -462,7 +462,7 @@ namespace detail {
     void matchSurfaces(Space& other);
 
     /** Intersect surfaces in this space with those in the other. */
-    void intersectSurfaces(Space& other);
+    void intersectSurfaces(Space& other, bool shrink);
 
     /** Find surfaces within angular range, specified in degrees and in the site coordinate system, an unset optional means no limit.
         Values for degrees from North are between 0 and 360 and for degrees tilt they are between 0 and 180.
