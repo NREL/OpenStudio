@@ -3456,11 +3456,11 @@ Space::Space(std::shared_ptr<detail::Space_Impl> impl)
 /// @endcond
 /// 
 
-PolygonGroup* Space::ToPolygonGroup() {
-  PolygonGroup* group = new PolygonGroup();
-  //group->setReference(&space);
-  group->setName(name().value());
-  group->setTransformation(transformation());
+PolygonGroup Space::ToPolygonGroup() {
+  PolygonGroup group;
+  group.setReference(this);
+  group.setName(name().value());
+  group.setTransformation(transformation());
   std::vector<openstudio::Polygon> surfaces;
 
   // Sort surfaces by area as the
@@ -3476,7 +3476,7 @@ PolygonGroup* Space::ToPolygonGroup() {
     surfaces.push_back(polygon);
   }
 
-  group->setSurfaces(surfaces);
+  group.setSurfaces(surfaces);
 
   return group;
 }
@@ -3507,27 +3507,27 @@ void intersectSurfaces(std::vector<Space>& t_spaces, bool sortByArea, bool shrin
   }
 }
 
-void intersectSurfacePolygons(std::vector<PolygonGroup*> polygonGroups, bool sortByArea) {
+void intersectPolygonGroups(std::vector<PolygonGroup>& polygonGroups, bool sortByArea) {
   std::vector<BoundingBox> bounds;
 
-  for (const PolygonGroup* space : polygonGroups) {
-    bounds.push_back(space->boundingBox());
+  for (const PolygonGroup space : polygonGroups) {
+    bounds.push_back(space.boundingBox());
   }
 
   for (unsigned i = 0; i < polygonGroups.size(); ++i) {
     for (unsigned j = i + 1; j < polygonGroups.size(); ++j) {
-      std::string namei = polygonGroups[i]->getName();
-      std::string namej = polygonGroups[j]->getName();
+      std::string namei = polygonGroups[i].getName();
+      std::string namej = polygonGroups[j].getName();
 
       if (!bounds[i].intersects(bounds[j])) {
         continue;
       }
 
-      auto group1 = polygonGroups[i];
-      auto group2 = polygonGroups[j];
+      PolygonGroup& group1 = polygonGroups[i];
+      PolygonGroup& group2 = polygonGroups[j];
 
       LOG_FREE(Info, "intersectSurfaces", "********* Intersecting group " << namei << " with group " << namej << "**********")
-      group1->intersectSurfaces(*group2);
+      group1.intersectSurfaces(group2);
     }
   }
 }

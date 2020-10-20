@@ -586,7 +586,7 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   */
   bool isPlenum() const;
 
-  PolygonGroup* ToPolygonGroup();
+  PolygonGroup ToPolygonGroup();
   //@}
  protected:
 
@@ -611,7 +611,7 @@ MODEL_API void intersectSurfaces(std::vector<Space>& spaces, bool sortByArea = t
 // Intersects susrafces within spaces, defers surface decomposition until all intersectiosn are completed
 MODEL_API std::vector<PolygonGroup*> intersectSurfacePolygons(std::vector<Space>& spaces, bool sortByArea = true);
 
-MODEL_API void intersectSurfacePolygons(std::vector<PolygonGroup*> groups, bool sortByArea = true);
+MODEL_API void intersectPolygonGroups(std::vector<PolygonGroup>& groups, bool sortByArea = true);
 /** Match surfaces and sub surfaces within spaces. */
 MODEL_API void matchSurfaces(std::vector<Space>& spaces, double tol = 0.001);
 

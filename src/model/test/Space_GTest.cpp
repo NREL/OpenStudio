@@ -954,14 +954,13 @@ TEST_F(ModelFixture, ShatteredModel) {
   spaces2.push_back(*space5);
   spaces2.push_back(*space6);
 
-  std::vector<PolygonGroup*> polygonGroups1;
-  PolygonGroup* g1 = space1->ToPolygonGroup();
-  polygonGroups1.push_back(g1);
+  std::vector<PolygonGroup> polygonGroups1;
+  polygonGroups1.push_back(space1->ToPolygonGroup());
   polygonGroups1.push_back(space2->ToPolygonGroup());
   polygonGroups1.push_back(space3->ToPolygonGroup());
-  std::vector<PolygonGroup*> polygonGroups2;
-  PolygonGroup* g4 = space4->ToPolygonGroup();
-  polygonGroups2.push_back(g4);
+  std::vector<PolygonGroup> polygonGroups2;
+  PolygonGroup& g4 = space4->ToPolygonGroup();
+  polygonGroups2.push_back(space4->ToPolygonGroup());
   polygonGroups2.push_back(space5->ToPolygonGroup());
   polygonGroups2.push_back(space6->ToPolygonGroup());
 
@@ -974,23 +973,26 @@ TEST_F(ModelFixture, ShatteredModel) {
     // Run the prototype code first. Surface 6 and Surface 24 should both be subdivided into three surfaces giving a total of 8
     // surfaces for group 1 and group 4 regardless of the order the spaces are intersected (1, 3, 2) (4, 5, 6)
     // A PolygonGroup is a collection of Polygons as a Space is a collection of Surfaces
-    intersectSurfacePolygons(polygonGroups1, false);
+    intersectPolygonGroups(polygonGroups1, false);
     LOG(Info, "Completed first polygon intersections");
 
-    intersectSurfacePolygons(polygonGroups2, false);
+    intersectPolygonGroups(polygonGroups2, false);
     LOG(Info, "Completed second polygon intersections");
 
-    ASSERT_EQ(8, g1->getSurfaces().size());
-    ASSERT_EQ(8, g4->getSurfaces().size());
+    PolygonGroup& g1 = polygonGroups1[0];
+    PolygonGroup& g4 = polygonGroups2[0];
+
+    ASSERT_EQ(8, g1.getSurfaces().size());
+    ASSERT_EQ(8, g4.getSurfaces().size());
 
     // get all the upward facing polygons
     std::vector<openstudio::Polygon> ceilingGroup1;
     std::vector<openstudio::Polygon> ceilingGroup4;
 
-    for (auto polygon : g1->getSurfaces()) {
+    for (auto polygon : g1.getSurfaces()) {
       if (getOutwardNormal(polygon.getPoints())->z() == 1) ceilingGroup1.push_back(polygon);
     }
-    for (auto polygon : g4->getSurfaces()) {
+    for (auto polygon : g4.getSurfaces()) {
       if (getOutwardNormal(polygon.getPoints())->z() == 1) ceilingGroup4.push_back(polygon);
     }
 
