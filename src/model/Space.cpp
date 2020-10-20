@@ -2408,7 +2408,7 @@ namespace detail {
           LOG(Info, "Intersecting surface " << surfaceName << " with " << otherSurfaceName);
 
           // number of surfaces in each space will only increase in intersect
-          boost::optional<SurfaceIntersection> intersection = surface.computeIntersection(otherSurface);
+          boost::optional<SurfaceIntersection> intersection = surface.computeIntersection(otherSurface, shrink);
           if (intersection){
             std::vector<Surface> newSurfaces1 = intersection->newSurfaces1();
             newSurfaces.insert(newSurfaces.end(), newSurfaces1.begin(), newSurfaces1.end());
