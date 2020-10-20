@@ -73,6 +73,8 @@
 #include "../../utilities/idf/WorkspaceObjectWatcher.hpp"
 #include "../../utilities/core/Compare.hpp"
 #include "../../osversion/VersionTranslator.hpp"
+#include "../../utilities/geometry/Polygon.hpp"
+#include "../../utilities/geometry/PolygonGroup.hpp"
 
 #include <iostream>
 #include <windows.h>
@@ -825,6 +827,31 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
   model->save(toPath("./7-7 Windows Complete finished.osm"));
 }
 
+PolygonGroup* FromSpace(const Space& space) {
+  PolygonGroup* group = new PolygonGroup();
+  //group->setReference(&space);
+  group->setName(space.name().value());
+  group->setTransformation(space.transformation());
+  std::vector<openstudio::Polygon> surfaces;
+
+  // Sort surfaces by area as the
+  std::vector<Surface> ss = space.surfaces();
+  std::sort(ss.begin(), ss.end(), [](const Surface& a, const Surface& b) -> bool { return a.grossArea() > b.grossArea(); });
+
+  for (auto surface : ss) {
+    auto vertices = surface.vertices();
+    openstudio::Polygon polygon(vertices);
+    polygon.setName(surface.name().value());
+    polygon.setReference(&surface);
+    polygon.setHandle(toString(surface.handle()));
+    surfaces.push_back(polygon);
+  }
+
+  group->setSurfaces(surfaces);
+
+  return group;
+}
+
 /// <summary>
 /// Polygon decomposition is order dependent. IN this case if the first intersect makes a hole
 /// we triangulate, if it doesn't then triangulation is not needed
@@ -832,10 +859,12 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps) {
 /// so intersecting 1,3,3 should give the same result as 4,5,6 if order doesn't matter.
 /// In order to prove this we have to not order by area so an additional argument has been added to 
 /// intersect(spaces) to this affect
+/// 
+/// Issue 3424
 /// </summary>
 /// <param name=""></param>
 /// <param name=""></param>
-TEST_F(ModelFixture, Issue_3424_ShatteredModel) {
+TEST_F(ModelFixture, ShatteredModel) {
 
   //osversion::VersionTranslator translator;
   ////model::OptionalModel model = translator.loadModel(toPath("./secondary_school.osm"));
@@ -914,6 +943,7 @@ TEST_F(ModelFixture, Issue_3424_ShatteredModel) {
   space6->setXOrigin(75);
   double a6 = getArea(points6).value();
 
+  // Make two lists of spaces (so we can call intersect with the space sin different orders)
   std::vector<Space> spaces1;
   spaces1.push_back(*space1);
   spaces1.push_back(*space3);
@@ -924,6 +954,17 @@ TEST_F(ModelFixture, Issue_3424_ShatteredModel) {
   spaces2.push_back(*space5);
   spaces2.push_back(*space6);
 
+  std::vector<PolygonGroup*> polygonGroups1;
+  PolygonGroup* g1 = FromSpace(*space1);
+  polygonGroups1.push_back(g1);
+  polygonGroups1.push_back(FromSpace(*space2));
+  polygonGroups1.push_back(FromSpace(*space3));
+  std::vector<PolygonGroup*> polygonGroups2;
+  PolygonGroup* g4 = FromSpace(*space4);
+  polygonGroups2.push_back(g4);
+  polygonGroups2.push_back(FromSpace(*space5));
+  polygonGroups2.push_back(FromSpace(*space6));
+
   // Model before intersection
   model.save(toPath("./ShatterTest00.osm"), true);
   LOG(Info, "Saved model before intersection");
@@ -933,21 +974,13 @@ TEST_F(ModelFixture, Issue_3424_ShatteredModel) {
     // Run the prototype code first. Surface 6 and Surface 24 should both be subdivided into three surfaces giving a total of 8
     // surfaces for group 1 and group 4 regardless of the order the spaces are intersected (1, 3, 2) (4, 5, 6)
     // A PolygonGroup is a collection of Polygons as a Space is a collection of Surfaces
-    std::vector<PolygonGroup*> groups1 = intersectSurfacePolygons(spaces1, false);
+    intersectSurfacePolygons(polygonGroups1, false);
     LOG(Info, "Completed first polygon intersections");
 
-    std::vector<PolygonGroup*> groups2 = intersectSurfacePolygons(spaces2, false);
+    intersectSurfacePolygons(polygonGroups2, false);
     LOG(Info, "Completed second polygon intersections");
 
-    //  [](const auto& surface) { return surface.surfaceType() == "Wall"; }
-    auto group1 = std::find_if(groups1.begin(), groups1.end(), [](PolygonGroup* group) { return group->getName() == "Space 1"; });
-    auto group4 = std::find_if(groups2.begin(), groups2.end(), [](PolygonGroup* group) { return group->getName() == "Space 4"; });
-    ASSERT_NE(group1, groups1.end());
-    ASSERT_NE(group4, groups2.end());
-
-    PolygonGroup* g1 = *group1;
     ASSERT_EQ(8, g1->getSurfaces().size());
-    PolygonGroup* g4 = *group4;
     ASSERT_EQ(8, g4->getSurfaces().size());
 
     // get all the upward facing polygons

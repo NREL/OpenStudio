@@ -91,7 +91,16 @@ namespace openstudio {
       anyNewSurfaces = true;
     }
   }
+  
   }
 
+  BoundingBox PolygonGroup::boundingBox() const {
+    BoundingBox result;
 
-}  // namespace openstudio
+    for (Polygon surface : surfaces) {
+      result.addPoints(surface.getPoints());
+    }
+
+    return result;
+  }
+  }  // namespace openstudio

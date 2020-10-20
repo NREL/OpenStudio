@@ -3481,6 +3481,31 @@ void intersectSurfaces(std::vector<Space>& t_spaces, bool sortByArea, bool shrin
   }
 }
 
+void intersectSurfacePolygons(std::vector<PolygonGroup*> polygonGroups, bool sortByArea) {
+  std::vector<BoundingBox> bounds;
+
+  for (const PolygonGroup* space : polygonGroups) {
+    bounds.push_back(space->boundingBox());
+  }
+
+  for (unsigned i = 0; i < polygonGroups.size(); ++i) {
+    for (unsigned j = i + 1; j < polygonGroups.size(); ++j) {
+      std::string namei = polygonGroups[i]->getName();
+      std::string namej = polygonGroups[j]->getName();
+
+      if (!bounds[i].intersects(bounds[j])) {
+        continue;
+      }
+
+      auto group1 = polygonGroups[i];
+      auto group2 = polygonGroups[j];
+
+      LOG_FREE(Info, "intersectSurfaces", "********* Intersecting group " << namei << " with group " << namej << "**********")
+      group1->intersectSurfaces(*group2);
+    }
+  }
+}
+
 std::vector<PolygonGroup*> intersectSurfacePolygons(std::vector<Space>& spaces, bool sortByArea) {
   std::vector<BoundingBox> bounds;
   

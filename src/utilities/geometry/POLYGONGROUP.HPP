@@ -5,6 +5,7 @@
 #include <vector>
 #include "Polygon.hpp"
 #include "transformation.hpp"
+#include "boundingBox.hpp"
 
 namespace openstudio {
 
@@ -45,6 +46,8 @@ class UTILITIES_API PolygonGroup
     return transform;
   }
   void intersectSurfaces(PolygonGroup& otherGroup);
+
+  BoundingBox boundingBox() const;
 
   private:
   void* reference;
