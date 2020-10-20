@@ -24,7 +24,10 @@ jobs:
           sudo apt-get update && \
           sudo apt-get install -y dotnet-sdk-3.1
 
-      - run: python -m pip install conan
+      - name: Install conan
+        run: |
+          python -m pip install conan
+          sudo ln -s ~/.local/bin/conan /usr/bin/conan
 
       - name: Compile
         run: |
