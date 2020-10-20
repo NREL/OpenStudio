@@ -957,7 +957,7 @@ TEST_F(ModelFixture, ShatteredModel) {
   std::vector<PolygonGroup*> polygonGroups1;
   PolygonGroup* g1 = space1->ToPolygonGroup();
   polygonGroups1.push_back(g1);
-  polygonGroups1.push_back(space2->ToPolygonGroup()));
+  polygonGroups1.push_back(space2->ToPolygonGroup());
   polygonGroups1.push_back(space3->ToPolygonGroup());
   std::vector<PolygonGroup*> polygonGroups2;
   PolygonGroup* g4 = space4->ToPolygonGroup();
@@ -1334,7 +1334,7 @@ TEST_F(ModelFixture, Issue_2560_1) {
 /// but is matched if the tolerance is set to something less than or equal to the tolerance used for
 /// circularEqual, in this case 0.005. 
 /// 
-/// FIrst run with the default tolerance then unmatch and then run with the larger tolerance
+/// First run with the default tolerance then unmatch and then run with the larger tolerance
 /// Asserts on the expected number of paired surfaces so this tests will always fail
 /// </summary>
 /// <param name=""></param>
