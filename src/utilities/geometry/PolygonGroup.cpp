@@ -2,6 +2,7 @@
 #include "Point3d.hpp"
 #include "../core/LogMessage.hpp"
 #include "../core/Logger.hpp"
+#include "BoundingBox.hpp"
 
 namespace openstudio {
 
@@ -91,8 +92,7 @@ namespace openstudio {
       anyNewSurfaces = true;
     }
   }
-  
-  }
+}
 
   BoundingBox PolygonGroup::boundingBox() const {
     BoundingBox result;

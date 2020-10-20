@@ -107,6 +107,9 @@ class IntersectionResultEx
 
 };
 
+  typedef std::vector<Polygon> PolygonVector;
+
+
 }  // namespace openstudio
 
 #endif
