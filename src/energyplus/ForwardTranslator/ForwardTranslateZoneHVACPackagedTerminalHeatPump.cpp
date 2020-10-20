@@ -393,11 +393,9 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
       _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,coolingCoilInletNodeName);
 
       _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName,coolingCoilOutletNodeName);
-    } else if ( _coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted )
+    } else if( _coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted )
     {
-      _coolingCoil->setString(CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirInletNodeName,coolingCoilInletNodeName);
-
-      _coolingCoil->setString(CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirOutletNodeName,coolingCoilOutletNodeName);
+      // TODO
     } else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed )
     {
       _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName,coolingCoilInletNodeName);
