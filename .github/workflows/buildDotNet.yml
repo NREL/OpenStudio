@@ -1,0 +1,34 @@
+name: buildDotNetSDK
+
+on: 
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: "Build and release CSharp SDK"
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: "Checkout Master Branch"
+        uses: actions/checkout@v2
+        
+      - name: Setup DotNet
+        run: |
+          wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+          sudo dpkg -i packages-microsoft-prod.deb
+          sudo apt-get update; \
+          sudo apt-get install -y apt-transport-https && \
+          sudo apt-get update && \
+          sudo apt-get install -y dotnet-sdk-3.1
+
+      - run: pip3 install conan
+
+      - name: Compile
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+
+
+
