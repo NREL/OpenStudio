@@ -48,6 +48,10 @@
 #include "../CoilCoolingWater_Impl.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
 #include "../CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../CoilCoolingDXVariableSpeed.hpp"
+#include "../CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "../CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
 #include "../ScheduleCompact.hpp"
@@ -263,3 +267,24 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalAirConditioner_clone)
   }
 }
 
+TEST_F(ModelFixture,ZoneHVACPackagedTerminalAirConditioner_CoilCoolingDXVariableSpeed)
+{
+  model::Model m;
+  model::CoilHeatingWater heatingCoil(m);
+  model::CoilCoolingDXVariableSpeed coolingCoil(m);
+  model::FanConstantVolume fan(m);
+  auto s = m.alwaysOnDiscreteSchedule();
+
+  model::ZoneHVACPackagedTerminalAirConditioner ptac(m, s, fan, heatingCoil, coolingCoil);
+}
+
+TEST_F(ModelFixture,ZoneHVACPackagedTerminalAirConditioner_CoilSystemCoolingDXHeatExchangerAssisted)
+{
+  model::Model m;
+  model::CoilHeatingWater heatingCoil(m);
+  model::CoilSystemCoolingDXHeatExchangerAssisted coolingCoil(m);
+  model::FanConstantVolume fan(m);
+  auto s = m.alwaysOnDiscreteSchedule();
+
+  model::ZoneHVACPackagedTerminalAirConditioner ptac(m, s, fan, heatingCoil, coolingCoil);
+}

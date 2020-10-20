@@ -570,7 +570,7 @@ namespace detail {
     if((hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed) ||
        (hvacComponent.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted) ||
        (hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_VariableSpeed))
-      ) {
+    {
       isAllowedType = true;
     }
 
