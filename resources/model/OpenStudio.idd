@@ -16436,7 +16436,7 @@ OS:CoilSystem:Cooling:DX:HeatExchangerAssisted,
        \memo cooling coil and reuses this energy to reheat the supply air leaving the cooling
        \memo coil. This heat exchange process improves the latent removal performance of the
        \memo cooling coil (lower sensible heat ratio).
-  A1, \field Handle
+  A1,  \field Handle
        \type handle
        \required-field
   A2 , \field Name
@@ -16445,23 +16445,323 @@ OS:CoilSystem:Cooling:DX:HeatExchangerAssisted,
        \reference CoolingCoilsDXSingleSpeed
        \reference CoolingCoilsDXMultiModeOrSingleSpeed
        \reference ConnectionObject
-  A3, \field Air Inlet Node Name
+  A3,  \field Air Inlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A4, \field Air Outlet Node Name
+  A4,  \field Air Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A5 , \field Heat Exchanger
+  A5,  \field Heat Exchanger
        \required-field
        \type object-list
        \object-list HXAirToAirNames
-  A6 ; \field Cooling Coil
+  A6;  \field Cooling Coil
        \required-field
        \type object-list
        \object-list CoolingCoilsDXSingleSpeed
        \object-list CoolingCoilsDXVariableSpeed
+
+OS:CoilSystem:IntegratedHeatPump:AirSource,
+       \memo This object is used for air-source integrated heat pump, a collection of its working modes.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference IntegratedHeatPumps
+       \note Unique name for this instance of an air-source integrated heat pump.
+  A3,  \field Air Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A4,  \field Air Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A5,  \field Supply Hot Water Flow Sensor Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A6,  \field Space Cooling Coil
+       \required-field
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A7,  \field Space Heating Coil
+       \type object-list
+       \object-list HeatingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
+  A8,  \field Dedicated Water Heating Coil
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A9,  \field SCWH Coil
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A10, \field SCDWH Cooling Coil
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A11, \field SCDWH Water Heating Coil
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A12, \field SHDWH Heating Coil
+       \type object-list
+       \object-list HeatingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
+  A13, \field SHDWH Water Heating Coil
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  N1 , \field Indoor Temperature Limit For SCWH Mode
+       \type real
+       \units C
+       \minimum> 15.0
+       \default 20.0
+       \note Indoor Temperature above which Indoor Overcooling is Allowed during Cooling Operation
+  N2 , \field Ambient Temperature Limit For SCWH Mode
+       \type real
+       \units C
+       \minimum> 20.0
+       \default 27.0
+       \note Ambient Temperature above which Indoor Overcooling is Allowed during Cooling Operation
+  N3 , \field Indoor Temperature Above Which WH Has Higher Priority
+       \type real
+       \units C
+       \minimum> 15.0
+       \default 20.0
+       \note Indoor Temperature above which Water Heating has the higher priority and Space Heating Call Can be ignored.
+  N4 , \field Ambient Temperature Above Which WH Has Higher Priority
+       \type real
+       \units C
+       \minimum> 15.0
+       \default 20.0
+       \note Ambient Temperature above which Water Heating has the higher priority and Space Heating Call Can be ignored.
+  N5,  \field Flag to Indicate Load Control In SCWH Mode
+       \units dimensionless
+       \type integer
+       \default 0
+       \note 0: match space cooling load in SCWH mode, 1: match water heating load in SCWH mode
+  N6,  \field Minimum Speed Level For SCWH Mode
+       \units dimensionless
+       \type integer
+       \default 1
+       \minimum> 0
+       \maximum< 10
+  N7 , \field Maximum Water Flow Volume Before Switching From SCDWH To SCWH Mode
+       \type real
+       \units m3
+       \default 0.0
+  N8,  \field Minimum Speed Level For SCDWH Mode
+       \units dimensionless
+       \type integer
+       \default 1
+       \minimum> 0
+       \maximum< 10
+  N9,  \field Maximum Running Time Before Allowing Electric Resistance Heat Use During SHDWH Mode
+       \type real
+       \units s
+       \minimum> 0.0
+       \default 360.0
+  N10; \field Minimum Speed Level For SHDWH Mode
+       \units dimensionless
+       \type integer
+       \default 1
+       \minimum> 0
+       \maximum< 10
+
+OS:CoilSystem:DesiccantStorageHeatPump:AirSource,
+       \memo This object is used for air-source integrated heat pump with liquid desiccant storage, a collection of its working modes.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference IntegratedHeatPumps
+       \note Unique name for this instance of an air-source integrated heat pump.
+  A3,  \field Air Inlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A4,  \field Air Outlet Node Name
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A5,  \field Space Cooling Coil
+       \required-field
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A6,  \field Space Heating Coil
+       \type object-list
+       \object-list HeatingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
+  A7,  \field Dedicated Water Heating Coil
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A8,  \field Dedicated Water Heating Coil Belongs To A Single Or Separate Unit
+       \type choice
+       \key Single
+       \key Separate
+       \default Single
+  A9,  \field SCWH Coil
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A10, \field SCDWH Cooling Coil
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A11, \field SCDWH Water Heating Coil
+       \type object-list
+       \object-list HeatPumpWaterHeaterDXCoilsVariableSpeed
+       \note Must match the name used in the corresponding Coil:WaterHeating:AirToWaterHeatPump:VariableSpeed object.
+  A12, \field Enhanced Dehumidification Cooling Coil
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A13, \field Grid Response Cooling Coil
+       \type object-list
+       \object-list CoolingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Cooling:DX:VariableSpeed object.
+  A14, \field Dehumidification Desiccant Coil
+       \required-field
+       \type object-list
+       \object-list SimpleCoils
+  A15, \field Regeneration Desiccant Coil
+       \required-field
+       \type object-list
+       \object-list SimpleCoils
+  A16, \field Evaporative Cooler
+       \required-field
+       \type object-list
+       \object-list EvapCoolerNames
+  A17, \field Grid Response Space Heating Coil
+       \type object-list
+       \object-list HeatingCoilsDXVariableSpeed
+       \note Must match the name used in the corresponding Coil:Heating:DX:VariableSpeed object.
+  A18, \field Supplemental Liquid Desicccant Heating Fuel Type
+       \type choice
+       \key Electric
+       \key Gas
+       \key None
+       \Default None		
+  A19, \field Zone Equipment
+       \required-field
+       \type object-list
+       \object-list ZoneEquipmentNames
+  N1 , \field Minimum Speed Level For SCWH Mode
+       \units dimensionless
+       \type integer
+       \default 1
+       \minimum> 0
+       \maximum< 10
+  N2 , \field Minimum Speed Level For SCDWH Mode
+       \units dimensionless
+       \type integer
+       \default 1
+       \minimum> 0
+       \maximum< 10
+  N3 , \field Water Inlet Temperature Limit Below Which Combined Space Cooling And Water Heating With Full Condensing Is Allowed
+       \type real
+       \units C
+       \minimum> 0.0
+       \default 51.1
+  N4 , \field Water Inlet Temperature Limit Below Which Combined Space Cooling And Water Heating with Desuperheating Is Allowed
+       \type real
+       \units C
+       \minimum> 0.0
+       \default 70.0
+  N5 , \field Water Inlet Temperature Limit Below Which Dedicated Water Heating Is Allowed
+       \type real
+       \units C
+       \minimum> 0.0
+       \default 51.1
+  N6 , \field Regeneration Target Liquid Desiccant Temperature 
+       \type real
+	     \units C
+       \minimum> 0.0
+       \default 80.0   
+  N7 , \field Salt Concentration Setting Point
+       \type real
+	     \units dimensionless
+       \minimum> 0.0
+       \default 0.45
+  N8 , \field Salt Concentration Dead Band
+       \type real
+	     \units dimensionless
+       \minimum> 0.0
+       \default 0.05
+  N9,  \field Dehumidification Coil Liquid Dessicant Circulation Mass Flow Rate Sizing Ratio To DWH Or SCWH Water Flow Rate
+       \type real
+	     \units dimensionless
+       \minimum> 0.0
+       \default 1.0  
+  N10, \field Dehumidification Coil Air Mass Flow Rate Sizing Ratio To Space Cooling Coil Norminal Air Flow Rate
+       \type real
+	     \units dimensionless
+       \minimum> 0.0
+       \default 1.0	 
+  N11, \field Regeneration Coil Air Mass Flow Rate Sizing Ratio To Space Cooling Coil Norminal Air Flow Rate
+       \type real
+	     \units dimensionless
+       \minimum> 0.0
+       \default 1.0		   
+  N12, \field Sizing Ratio Of Space Heating Coil To Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N13, \field Sizing Ratio Of Dedicated Water Heating Coil To Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N14, \field Sizing Ratio Of Combined Space Cooling And Water Heating Coil With Full Condensing To Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N15, \field Sizing Ratio Of Combined Space Cooling And Water Heating Coil With Desuperheating Cooling Capacity To Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 1.0
+       \minimum> 0
+	     \maximum< 5.0
+  N16, \field Sizing Ratio Of Combined Space Cooling And Water Heating Coil With Desuperheating Water Heating Capacity To Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.15
+       \minimum> 0
+	     \maximum< 5.0
+  N17, \field Sizing Ratio Of Enhanced Dehumidification Coil To Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.9
+       \minimum> 0
+	     \maximum< 5.0
+  N18, \field Sizing Ratio Of Grid Response Coil To Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.9
+       \minimum> 0
+	     \maximum< 5.0
+  N19; \field Sizing Ratio Of Grid Response Heating Coil To Space Cooling Coil
+       \units dimensionless
+       \type real
+	     \default 0.9
+       \minimum> 0
+	     \maximum< 5.0
 
 OS:Coil:Cooling:DX:VariableRefrigerantFlow,
   A1, \field Handle
