@@ -22,6 +22,8 @@ namespace openstudio {
       std::string surfaceName = surface.getName();
       std::string surfaceHandle = surface.getHandle();
 
+      LOG_FREE(Info, "XXX", surface.getPoints());
+
       for (auto otherSurface : otherGroup.surfaces) {
         std::string otherSurfaceName = otherSurface.getName();
         std::string otherSurfaceHandle = otherSurface.getHandle();
