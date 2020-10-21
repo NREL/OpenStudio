@@ -167,7 +167,9 @@ namespace detail {
           return airLoopHVACUnitaryHeatPumpAirToAir;
         }
       }
-    }   return boost::none;
+    }
+
+    return boost::none;
   }
 
   boost::optional<ZoneHVACComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::containingZoneHVACComponent() const

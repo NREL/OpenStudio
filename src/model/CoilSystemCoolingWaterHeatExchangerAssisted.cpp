@@ -138,7 +138,6 @@ namespace detail {
       }
     }
 
-
     return boost::none;
   }
 
