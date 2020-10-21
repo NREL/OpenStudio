@@ -51,17 +51,18 @@ jobs:
                 -DBUILD_PACKAGE=ON  -DCPACK_BINARY_DEB=ON  -DCPACK_BINARY_TGZ=ON \
                 -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF \
                 -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../
+          
+          make -j2
 
       - name: list files
         run: |
-          cd ./build
-          ls -R
-          
+          ls
+          ls ./build/
+          ls -R ./build/csharp_wrapper
+
       - name: Zip Build Artifact
         run: |
-          cd  ./build
-          zip -r OpenStudio_CSharpSDK.zip .
-          cp ./OpenStudio_CSharpSDK.zip ./../OpenStudio_CSharpSDK.zip
+          zip -r OpenStudio_CSharpSDK.zip ./build/csharp_wrapper
           
       - name: Upload artifact
         uses: actions/upload-artifact@v1
