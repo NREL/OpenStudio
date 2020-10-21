@@ -41,6 +41,8 @@
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "../../model/HeatExchangerAirToAirSensibleAndLatent.hpp"
+#include "../../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
@@ -59,7 +61,7 @@
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/CoilSystem_Cooling_DX_HeatExchangerAssisted_FieldEnums.hxx>
+#include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -395,7 +397,13 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
       _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName,coolingCoilOutletNodeName);
     } else if( _coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted )
     {
-      // TODO
+      boost::optional<IdfObject> _heatExchanger = translateAndMapModelObject(coolingCoil.cast<CoilSystemCoolingDXHeatExchangerAssisted>().heatExchanger());
+      if( _heatExchanger ) {
+        if( _heatExchanger->iddObject().type() == IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent ) {
+          _heatExchanger->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName,coolingCoilInletNodeName);
+          _heatExchanger->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName,coolingCoilOutletNodeName);
+        }
+      }
     } else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed )
     {
       _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName,coolingCoilInletNodeName);
