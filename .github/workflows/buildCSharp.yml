@@ -56,12 +56,21 @@ jobs:
 
       - name: list files
         run: |
+          echo "Listing the top directory=========================================="
           ls
+
+          echo "Listing ./build/=========================================="
           ls ./build/
+
+          echo "Listing ./build/Products/=========================================="
+          ls ./build/Products
+
+          echo "Listing ./build/csharp_wrapper/=========================================="
           ls -R ./build/csharp_wrapper
 
       - name: Zip Build Artifact
         run: |
+          zip -r OpenStudio_lib.zip ./build/Products
           zip -r OpenStudio_CSharpSDK.zip ./build/csharp_wrapper
           
       - name: Upload artifact
@@ -69,4 +78,10 @@ jobs:
         with:
           name: OpenStudio_CSharpSDK
           path: OpenStudio_CSharpSDK.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: OpenStudio_lib
+          path: OpenStudio_lib.zip
 
