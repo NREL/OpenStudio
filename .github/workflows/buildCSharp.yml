@@ -33,13 +33,13 @@ jobs:
       - name: Install conan
         shell: bash
         run: |
-            set -x
-            python --version
-            pip install conan
-            conan --version
-            echo "Enabling conan revisions and setting parallel_download"
-            conan config set general.revisions_enabled=True
-            conan config set general.parallel_download=8
+          set -x
+          python --version
+          pip install conan
+          conan --version
+          echo "Enabling conan revisions and setting parallel_download"
+          conan config set general.revisions_enabled=True
+          conan config set general.parallel_download=8
 
       - name: Compile
         shell: bash
@@ -52,5 +52,20 @@ jobs:
                 -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF \
                 -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../
 
-
+      - name: list files
+        run: |
+          cd ./build
+          ls -R
+          
+      - name: Zip Build Artifact
+        run: |
+          cd  ./build
+          zip -r OpenStudio_CSharpSDK.zip .
+          cp ./OpenStudio_CSharpSDK.zip ./../OpenStudio_CSharpSDK.zip
+          
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: OpenStudio_CSharpSDK
+          path: OpenStudio_CSharpSDK.zip
 
