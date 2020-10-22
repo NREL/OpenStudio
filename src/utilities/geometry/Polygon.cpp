@@ -93,20 +93,24 @@ class Convert
       ring1.push_back(point);
     }
 
-    result.setPoints(ring1);
-
+    //result.setPoints(ring1);
+    std::vector<Polygon> holes;
+    std::vector<Polygon*> pholes;
     for (auto inner : polygon.inners()) {
-      Polygon hole;
-      result.holes.push_back(hole);
+      Polygon* hole = new Polygon();
+      holes.push_back(*hole);
+      pholes.push_back(hole);
+      hole->setName("Ahole");
+      //result.holes.push_back(hole);
       std::vector<Point3d> ring;
       for (auto i = 0; i < inner.size() - 1; i++) {
         Point3d point(inner[i].x(), inner[i].y(), 0.0);
         ring.push_back(point);
       }
-      hole.setPoints(ring);
+      hole->setPoints(ring);
     }
-    return result;
-  }
+    return Polygon(ring1, holes);
+    }
 };
 
 class Clean
@@ -177,6 +181,19 @@ struct BoostPolygonAreaGreater
   }
 };
 
+ Polygon::Polygon(std::vector<Point3d> vertices) {
+  points = vertices;
+}
+Polygon::Polygon(std::vector<Point3d> vertices, std::vector<Polygon> aholes) {
+  points = vertices;
+  holes = aholes;
+}
+
+//Polygon::Polygon(const Polygon& other) {
+//  points = other.points;
+//  holes = other.holes;
+//}
+
 void Polygon::setName(std::string value) {
   name = value;
 }
@@ -225,13 +242,13 @@ boost::optional<IntersectionResultEx> Polygon::intersect(const Polygon& polygon,
   facePolygon.reverse();
   
   // Convert our polygons to boost polygons convertiung to face coordinates
-  BoostPolygon thisPolygon = Convert::ToBoostPolygon(*this);
-  BoostPolygon otherPolygon = Convert::ToBoostPolygon(polygon);
+  BoostPolygon thisBoostPolygon = Convert::ToBoostPolygon(facePolygon);
+  BoostPolygon otherBoostPolygon = Convert::ToBoostPolygon(otherFacePolygon);
 
   // Step 1 - Intersect the two polygons to get the common area
   std::vector<BoostPolygon> result;
   try {
-    boost::geometry::intersection(thisPolygon, otherPolygon, result);
+    boost::geometry::intersection(thisBoostPolygon, otherBoostPolygon, result);
   } catch (boost::geometry::overlay_invalid_input_exception&) {
     return boost::none;
   }
@@ -266,11 +283,11 @@ boost::optional<IntersectionResultEx> Polygon::intersect(const Polygon& polygon,
   // Step 2 - subtract polygon 2 from polygon 1. Result is the area(s) for polygon 1 that
   // excludes the common areas between polygon 1 and polygon 2
   std::vector<BoostPolygon> differenceResult1;
-  boost::geometry::difference(thisPolygon, otherPolygon, differenceResult1);
+  boost::geometry::difference(thisBoostPolygon, otherBoostPolygon, differenceResult1);
   result = Clean::removeSpikesEx(result);
 
   for (auto boostPolygon : differenceResult1) {
-    Polygon newPolygon = Convert::FromBoostPolygon(boostPolygon);
+    Polygon newPolygon = faceTransform * Convert::FromBoostPolygon(boostPolygon);
 
     // checks self intersection etc
     solution.polygons1().push_back(newPolygon);
@@ -279,11 +296,11 @@ boost::optional<IntersectionResultEx> Polygon::intersect(const Polygon& polygon,
   // Step 2 - subtract polygon 1 from polygon 2. Result is the area(s) for polygon 2 that
   // excludes the common areas between polygon 1 and polygon 2
   std::vector<BoostPolygon> differenceResult2;
-  boost::geometry::difference(otherPolygon, thisPolygon, differenceResult2);
+  boost::geometry::difference(otherBoostPolygon, thisBoostPolygon, differenceResult2);
   result = Clean::removeSpikesEx(result);
 
   for (auto boostPolygon : differenceResult2) {
-    Polygon newPolygon = Convert::FromBoostPolygon(boostPolygon);
+    Polygon newPolygon = faceTransform * Convert::FromBoostPolygon(boostPolygon);
 
     // checks self intersection etc
     solution.polygons2().push_back(newPolygon);

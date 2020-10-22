@@ -16,13 +16,9 @@ namespace openstudio {
     class UTILITIES_API Polygon
     {
   public:
-      Polygon(std::vector<Point3d> vertices) {
-        points = vertices;
-      }
-      Polygon(std::vector<Point3d> vertices, std::vector<Polygon>aholes) {
-        points = vertices;
-        holes = aholes;
-      }
+      Polygon(std::vector<Point3d> vertices);
+      Polygon(std::vector<Point3d> vertices, std::vector<Polygon> aholes);
+      //Polygon(const Polygon& other);
       Polygon() : reference(nullptr) {}
 
       std::vector<Polygon> holes;

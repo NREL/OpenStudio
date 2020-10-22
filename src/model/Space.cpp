@@ -3456,6 +3456,10 @@ Space::Space(std::shared_ptr<detail::Space_Impl> impl)
 /// @endcond
 /// 
 
+/// <summary>
+/// Creates a PolygonGroup. The points are transformed to modl coordinates for convenience
+/// </summary>
+/// <returns></returns>
 PolygonGroup Space::ToPolygonGroup() {
   PolygonGroup group;
   group.setReference(this);
@@ -3468,7 +3472,7 @@ PolygonGroup Space::ToPolygonGroup() {
   std::sort(ss.begin(), ss.end(), [](const Surface& a, const Surface& b) -> bool { return a.grossArea() > b.grossArea(); });
 
   for (auto surface : ss) {
-    auto vertices = surface.vertices();
+    auto vertices = transformation() * surface.vertices();
     openstudio::Polygon polygon(vertices);
     polygon.setName(surface.name().value());
     polygon.setReference(&surface);

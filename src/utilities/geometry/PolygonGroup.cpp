@@ -18,13 +18,11 @@ namespace openstudio {
     std::vector<Polygon> newSurfaces;
     std::vector<Polygon> newOtherSurfaces;
 
-    for (auto surface : surfaces) {
+    for (Polygon& surface : surfaces) {
       std::string surfaceName = surface.getName();
       std::string surfaceHandle = surface.getHandle();
 
-      LOG_FREE(Info, "XXX", surface.getPoints());
-
-      for (auto otherSurface : otherGroup.surfaces) {
+      for (Polygon& otherSurface : otherGroup.surfaces) {
         std::string otherSurfaceName = otherSurface.getName();
         std::string otherSurfaceHandle = otherSurface.getHandle();
 
@@ -32,37 +30,36 @@ namespace openstudio {
         std::string intersectionKey = surfaceHandle + otherSurfaceHandle;
         if (completedIntersections.find(intersectionKey) != completedIntersections.end()) continue;
         completedIntersections.insert(intersectionKey);
-        LOG_FREE(Info, "XXX", "Intersecting surface " << surfaceName << " with " << otherSurfaceName);
 
         boost::optional<IntersectionResultEx> result = surface.computeIntersection(otherSurface);
-        LOG_FREE(Info, "XXX", "Intersected surface " << surfaceName << " with " << otherSurfaceName);
         if (result) {
           LOG_FREE(Info, "XXX", "Intersection found " << surfaceName << " with " << otherSurfaceName);
+          LOG_FREE(Info, "XXX", surfaceName << " " << surface.getPoints());
+          LOG_FREE(Info, "XXX", otherSurfaceName << " " << otherSurface.getPoints());
+
           // Found an intersection
           // The first polygon in matchedPolygons1 replaces the vertices in surface
           // The first polygon in matchedPolygons2 replaces the vertces in otherSurface
           // The remaining polygons in matchedPolygons1 and matchedPolygons2 create new polygons in
           // this group and otherGroup (but are matched!(
-          //
+          LOG_FREE(Info, "XXX", "Common area " << result->getMatchedPolygon1().getPoints());
           surface.setPoints(result->getMatchedPolygon1().getPoints());
           surface.reverse();
-          LOG_FREE(Info, "XXX", "Updated original polygon surface with new points");
           otherSurface.setPoints(result->getMatchedPolygon2().getPoints());
-          LOG_FREE(Info, "XXX", "Updated original polygon surface with new points");
 
           for (int i = 0; i < result->polygons1().size(); i++) {
             Polygon p = result->polygons1()[i];
             p.reverse();
             newSurfaces.push_back(p);
             //surfaces.push_back(p);
-            LOG_FREE(Info, "XXX", "Added new polygons to polygon group " << getName());
+            LOG_FREE(Info, "XXX", "Added new polygon to this polygon group " << p.getPoints());
           }
 
           for (int i = 0; i < result->polygons2().size(); i++) {
             Polygon p = result->polygons2()[i];
             newOtherSurfaces.push_back(p);
             //otherGroup.surfaces.push_back(p);
-            LOG_FREE(Info, "XXX", "Added new polygons to polygon group " << otherGroup.getName());
+            LOG_FREE(Info, "XXX", "Added new polygon to other polygon group " << p.getPoints());
           }
 
           // I'm really not getting what this is doing
@@ -80,8 +77,7 @@ namespace openstudio {
               completedIntersections.insert(ineligibleIntersectionKey);
             }
           }
-        } else
-          LOG_FREE(Info, "XXX", "No intersection found");
+        } 
       }
     }
 

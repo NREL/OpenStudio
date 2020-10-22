@@ -374,16 +374,16 @@ namespace openstudio{
   // apply the transform to a polygon
   Polygon Transformation::operator*(const Polygon& polygon) const {
 
-      //Polygon result;
       std::vector<Point3d> outer = (*this) * polygon.getPoints();
-      //result.setPoints(outer);
 
+      std::vector<Polygon> holes;
       for (auto hole : polygon.holes) {
         std::vector<Point3d> inner = (*this) * hole.getPoints();
+        holes.push_back(Polygon(inner));
         //result.holes.push_back(inner);
       }
 
-      return Polygon(outer);
+      return Polygon(outer, holes);
   }
 
   /// apply the transformation to a vector of points
