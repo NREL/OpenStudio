@@ -2876,6 +2876,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(CoilSystemCoolingWaterHeatExchangerAssisted);
   REGISTER_CONSTRUCTOR(CoilSystemCoolingDXHeatExchangerAssisted);
   REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPump);
+  REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed);
   REGISTER_CONSTRUCTOR(CoilWaterHeatingAirToWaterHeatPumpWrapped);
   REGISTER_CONSTRUCTOR(CoilWaterHeatingDesuperheater);
   REGISTER_CONSTRUCTOR(ComponentCostAdjustments);
@@ -3202,6 +3203,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_CONSTRUCTOR(Version);
   REGISTER_CONSTRUCTOR(WaterHeaterMixed);
   REGISTER_CONSTRUCTOR(WaterHeaterHeatPump);
+  REGISTER_CONSTRUCTOR(WaterHeaterHeatPumpPumpedCondenser);
   REGISTER_CONSTRUCTOR(WaterHeaterHeatPumpWrappedCondenser);
   REGISTER_CONSTRUCTOR(WaterHeaterStratified);
   REGISTER_CONSTRUCTOR(WaterUseConnections);
@@ -3376,6 +3378,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingWaterHeatExchangerAssisted);
   REGISTER_COPYCONSTRUCTORS(CoilSystemCoolingDXHeatExchangerAssisted);
   REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPump);
+  REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpVariableSpeed);
   REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingAirToWaterHeatPumpWrapped);
   REGISTER_COPYCONSTRUCTORS(CoilWaterHeatingDesuperheater);
   REGISTER_COPYCONSTRUCTORS(ComponentCostAdjustments);
@@ -3702,6 +3705,7 @@ detail::Model_Impl::ModelObjectCreator::ModelObjectCreator() {
   REGISTER_COPYCONSTRUCTORS(Version);
   REGISTER_COPYCONSTRUCTORS(WaterHeaterMixed);
   REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPump);
+  REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPumpPumpedCondenser);
   REGISTER_COPYCONSTRUCTORS(WaterHeaterHeatPumpWrappedCondenser);
   REGISTER_COPYCONSTRUCTORS(WaterHeaterStratified);
   REGISTER_COPYCONSTRUCTORS(WaterUseConnections);
