@@ -1152,11 +1152,11 @@ TEST_F(ModelFixture, ShatteredModel_New) {
     // Run the prototype code first. Surface 6 and Surface 24 should both be subdivided into three surfaces giving a total of 8
     // surfaces for group 1 and group 4 regardless of the order the spaces are intersected (1, 3, 2) (4, 5, 6)
     // A PolygonGroup is a collection of Polygons as a Space is a collection of Surfaces
-    intersectPolygonGroups(polygonGroups2, false);
-    LOG(Info, "Completed first polygon intersections");
-
     intersectPolygonGroups(polygonGroups1, false);
     LOG(Info, "Completed second polygon intersections");
+
+    intersectPolygonGroups(polygonGroups2, false);
+    LOG(Info, "Completed first polygon intersections");
 
     PolygonGroup& g1 = polygonGroups1[0];
     PolygonGroup& g4 = polygonGroups2[0];

@@ -3460,7 +3460,7 @@ Space::Space(std::shared_ptr<detail::Space_Impl> impl)
 /// Creates a PolygonGroup. The points are transformed to modl coordinates for convenience
 /// </summary>
 /// <returns></returns>
-PolygonGroup Space::ToPolygonGroup() {
+boost::optional<PolygonGroup> Space::ToPolygonGroup() {
   PolygonGroup group;
   group.setReference(this);
   group.setName(name().value());

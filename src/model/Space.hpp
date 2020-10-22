@@ -586,7 +586,7 @@ class MODEL_API Space : public PlanarSurfaceGroup {
   */
   bool isPlenum() const;
 
-  PolygonGroup ToPolygonGroup();
+  boost::optional<PolygonGroup> ToPolygonGroup();
   //@}
  protected:
 

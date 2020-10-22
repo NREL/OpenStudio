@@ -80,6 +80,21 @@ class Convert
     return boostPolygon;
   }
 
+  static std::vector<Point3d> FromBoostRing(const BoostRing& ring) {
+    std::vector<Point3d> vector;
+    for (auto i = 0; i < ring.size() - 1; i++) {
+      Point3d point(ring[i].x(), ring[i].y(), 0.0);
+      vector.push_back(point);
+    }
+    return vector;
+  }
+
+  static Polygon PolyFromBoostRing(const BoostRing& ring) {
+    Polygon polygon(FromBoostRing(ring));
+    polygon.setName("Ahole");
+    return polygon;
+  }
+
   static Polygon FromBoostPolygon(BoostPolygon polygon) {
     Polygon result;
     BoostRing outer = polygon.outer();
@@ -87,27 +102,14 @@ class Convert
       return result;
     }
 
-    std::vector<Point3d> ring1;
-    for (auto i = 0; i < outer.size() - 1; i++) {
-      Point3d point(outer[i].x(), outer[i].y(), 0.0);
-      ring1.push_back(point);
-    }
+    std::vector<Point3d> ring1 = FromBoostRing(outer);
 
-    //result.setPoints(ring1);
     std::vector<Polygon> holes;
-    std::vector<Polygon*> pholes;
     for (auto inner : polygon.inners()) {
-      Polygon* hole = new Polygon();
-      holes.push_back(*hole);
-      pholes.push_back(hole);
-      hole->setName("Ahole");
-      //result.holes.push_back(hole);
-      std::vector<Point3d> ring;
-      for (auto i = 0; i < inner.size() - 1; i++) {
-        Point3d point(inner[i].x(), inner[i].y(), 0.0);
-        ring.push_back(point);
-      }
-      hole->setPoints(ring);
+      //std::vector<Point3d> points = FromBoostRing(inner);
+      //Polygon* hole = new Polygon(FromBoostRing(inner));
+      Polygon hole = PolyFromBoostRing(inner);
+      holes.push_back(hole);
     }
     return Polygon(ring1, holes);
     }
@@ -190,8 +192,16 @@ Polygon::Polygon(std::vector<Point3d> vertices, std::vector<Polygon> aholes) {
 }
 
 //Polygon::Polygon(const Polygon& other) {
-//  points = other.points;
-//  holes = other.holes;
+//  for (Point3d& p : other.points)
+//    points.push_back(Point3d(p));
+//
+//  points = std::vector<Point3d>(other.points);
+//  holes = std::vector<Polygon>(other.holes);
+//  //points.insert(points.end(), other.points.begin(), other.points.end());
+//  //holes.insert(holes.end(), other.holes.begin(), other.holes.end());
+//  name = name;
+//  reference = reference;
+//  handle = handle;
 //}
 
 void Polygon::setName(std::string value) {
