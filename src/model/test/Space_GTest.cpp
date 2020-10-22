@@ -1134,14 +1134,14 @@ TEST_F(ModelFixture, ShatteredModel_New) {
   spaces2.push_back(*space6);
 
   std::vector<PolygonGroup> polygonGroups1;
-  polygonGroups1.push_back(space1->ToPolygonGroup());
-  polygonGroups1.push_back(space3->ToPolygonGroup());
-  polygonGroups1.push_back(space2->ToPolygonGroup());
+  polygonGroups1.push_back(*space1->ToPolygonGroup());
+  polygonGroups1.push_back(*space3->ToPolygonGroup());
+  polygonGroups1.push_back(*space2->ToPolygonGroup());
   std::vector<PolygonGroup> polygonGroups2;
-  PolygonGroup& g4 = space4->ToPolygonGroup();
-  polygonGroups2.push_back(space4->ToPolygonGroup());
-  polygonGroups2.push_back(space5->ToPolygonGroup());
-  polygonGroups2.push_back(space6->ToPolygonGroup());
+  PolygonGroup& g4 = *space4->ToPolygonGroup();
+  polygonGroups2.push_back(*space4->ToPolygonGroup());
+  polygonGroups2.push_back(*space5->ToPolygonGroup());
+  polygonGroups2.push_back(*space6->ToPolygonGroup());
 
   // Model before intersection
   model.save(toPath("./ShatterTest00.osm"), true);
