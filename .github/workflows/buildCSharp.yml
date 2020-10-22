@@ -52,7 +52,7 @@ jobs:
                 -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF \
                 -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../
           
-          make -j8
+          make -j2
 
       - name: list files
         run: |
@@ -118,6 +118,7 @@ jobs:
       - name: Compile
         shell: bash
         env:
+          CC: clang
           CMAKE_OSX_ARCHITECTURES: x86_64
         run: |
           mkdir build
@@ -129,7 +130,7 @@ jobs:
                 -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF \
                 -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../
           
-          make -j8
+          make -j2
 
       - name: list files
         run: |
