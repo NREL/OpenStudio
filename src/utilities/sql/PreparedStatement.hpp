@@ -44,7 +44,7 @@ struct sqlite3_stmt;
 
 namespace openstudio {
 
-struct PreparedStatement
+class UTILITIES_API PreparedStatement
 {
 private:
   sqlite3 *m_db;
