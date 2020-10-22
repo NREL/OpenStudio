@@ -52,7 +52,7 @@ jobs:
                 -DCPACK_BINARY_IFW=OFF -DCPACK_BINARY_NSIS=OFF -DCPACK_BINARY_RPM=OFF -DCPACK_BINARY_STGZ=OFF \
                 -DCPACK_BINARY_TBZ2=OFF -DCPACK_BINARY_TXZ=OFF -DCPACK_BINARY_TZ=OFF ../
           
-          make -j2
+          make -j8
 
       - name: list files
         run: |
@@ -70,18 +70,15 @@ jobs:
 
       - name: Zip Build Artifact
         run: |
-          zip -r OpenStudio_lib.zip ./build/Products
-          zip -r OpenStudio_CSharpSDK.zip ./build/csharp_wrapper
+          mkdir ./build/zip
+          cp ./build/Products/*.so ./build/zip
+          cp ./build/Products/csharp/Release/netcoreapp3.0/OpenStudio.dll ./build/zip
+
+          zip -r OpenStudio_CSharpSDK.zip ./build/zip
           
       - name: Upload artifact
         uses: actions/upload-artifact@v1
         with:
           name: OpenStudio_CSharpSDK
           path: OpenStudio_CSharpSDK.zip
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: OpenStudio_lib
-          path: OpenStudio_lib.zip
 
