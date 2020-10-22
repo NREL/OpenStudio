@@ -447,16 +447,16 @@ namespace openstudio{
       // m_hasYear & m_hasIlluminanceMapYear are both default initialized to true
       if (version < VersionString(9, 2)) {
         m_hasIlluminanceMapYear = false;
+      }
 
-        if (version < VersionString(8, 9)) {
+      if (version < VersionString(8, 9)) {
+        m_hasYear = false;
+      } else {
+        // Check if zero
+        boost::optional<int> maxYear = execAndReturnFirstInt("SELECT MAX(Year) FROM Time");
+        if (!maxYear.is_initialized() || maxYear.get() <= 0) {
+          LOG(Warn, "Using EnergyPlusVersion version " << version.str() << " which should have 'Year' field, but it's always zero");
           m_hasYear = false;
-        } else if (version < VersionString(9, 0)) {
-          // Check if zero
-          boost::optional<int> maxYear = execAndReturnFirstInt("SELECT MAX(Year) FROM Time");
-          if (!maxYear.is_initialized() || maxYear.get() <= 0) {
-            LOG(Warn, "Using EnergyPlusVersion version " << version.str() << " which should have 'Year' field, but it's always zero");
-            m_hasYear = false;
-          }
         }
       }
 
