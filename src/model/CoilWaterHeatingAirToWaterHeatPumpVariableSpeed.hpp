@@ -59,82 +59,17 @@ class MODEL_API CoilWaterHeatingAirToWaterHeatPumpVariableSpeed : public ModelOb
 
   static IddObjectType iddObjectType();
 
-  static std::vector<std::string> evaporatorAirTemperatureTypeforCurveObjectsValues();
 
   /** @name Getters */
   //@{
 
-  double ratedHeatingCapacity() const;
 
-  double ratedCOP() const;
-
-  double ratedSensibleHeatRatio() const;
-
-  double ratedEvaporatorInletAirDryBulbTemperature() const;
-
-  double ratedEvaporatorInletAirWetBulbTemperature() const;
-
-  double ratedCondenserWaterTemperature() const;
-
-  boost::optional<double> ratedEvaporatorAirFlowRate() const;
-
-  bool isRatedEvaporatorAirFlowRateAutocalculated() const;
-
-  bool evaporatorFanPowerIncludedinRatedCOP() const;
-
-  double crankcaseHeaterCapacity() const;
-
-  double maximumAmbientTemperatureforCrankcaseHeaterOperation() const;
-
-  std::string evaporatorAirTemperatureTypeforCurveObjects() const;
-
-  Curve heatingCapacityFunctionofTemperatureCurve() const;
-
-  Curve heatingCapacityFunctionofAirFlowFractionCurve() const;
-
-  Curve heatingCOPFunctionofTemperatureCurve() const;
-
-  Curve heatingCOPFunctionofAirFlowFractionCurve() const;
-
-  Curve partLoadFractionCorrelationCurve() const;
 
   //@}
   /** @name Setters */
   //@{
 
-  bool setRatedHeatingCapacity(double ratedHeatingCapacity);
 
-  bool setRatedCOP(double ratedCOP);
-
-  bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
-
-  bool setRatedEvaporatorInletAirDryBulbTemperature(double ratedEvaporatorInletAirDryBulbTemperature);
-
-  bool setRatedEvaporatorInletAirWetBulbTemperature(double ratedEvaporatorInletAirWetBulbTemperature);
-
-  bool setRatedCondenserWaterTemperature(double ratedCondenserWaterTemperature);
-
-  bool setRatedEvaporatorAirFlowRate(double ratedEvaporatorAirFlowRate);
-
-  void autocalculateRatedEvaporatorAirFlowRate();
-
-  bool setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
-
-  bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
-
-  bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
-
-  bool setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects);
-
-  bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
-
-  bool setHeatingCapacityFunctionofAirFlowFractionCurve(const Curve& curve);
-
-  bool setHeatingCOPFunctionofTemperatureCurve(const Curve& curve);
-
-  bool setHeatingCOPFunctionofAirFlowFractionCurve(const Curve& curve);
-
-  bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
   //@}
   /** @name Other */

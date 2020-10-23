@@ -72,77 +72,13 @@ namespace detail {
     /** @name Getters */
     //@{
 
-    double ratedHeatingCapacity() const;
 
-    double ratedCOP() const;
-
-    double ratedSensibleHeatRatio() const;
-
-    double ratedEvaporatorInletAirDryBulbTemperature() const;
-
-    double ratedEvaporatorInletAirWetBulbTemperature() const;
-
-    double ratedCondenserWaterTemperature() const;
-
-    boost::optional<double> ratedEvaporatorAirFlowRate() const;
-
-    bool isRatedEvaporatorAirFlowRateAutocalculated() const;
-
-    bool evaporatorFanPowerIncludedinRatedCOP() const;
-
-    double crankcaseHeaterCapacity() const;
-
-    double maximumAmbientTemperatureforCrankcaseHeaterOperation() const;
-
-    std::string evaporatorAirTemperatureTypeforCurveObjects() const;
-
-    Curve heatingCapacityFunctionofTemperatureCurve() const;
-
-    Curve heatingCapacityFunctionofAirFlowFractionCurve() const;
-
-    Curve heatingCOPFunctionofTemperatureCurve() const;
-
-    Curve heatingCOPFunctionofAirFlowFractionCurve() const;
-
-    Curve partLoadFractionCorrelationCurve() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setRatedHeatingCapacity(double ratedHeatingCapacity);
 
-    bool setRatedCOP(double ratedCOP);
-
-    bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
-
-    bool setRatedEvaporatorInletAirDryBulbTemperature(double ratedEvaporatorInletAirDryBulbTemperature);
-
-    bool setRatedEvaporatorInletAirWetBulbTemperature(double ratedEvaporatorInletAirWetBulbTemperature);
-
-    bool setRatedCondenserWaterTemperature(double ratedCondenserWaterTemperature);
-
-    bool setRatedEvaporatorAirFlowRate(boost::optional<double> ratedEvaporatorAirFlowRate);
-
-    void autocalculateRatedEvaporatorAirFlowRate();
-
-    bool setEvaporatorFanPowerIncludedinRatedCOP(bool evaporatorFanPowerIncludedinRatedCOP);
-
-    bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
-
-    bool setMaximumAmbientTemperatureforCrankcaseHeaterOperation(double maximumAmbientTemperatureforCrankcaseHeaterOperation);
-
-    bool setEvaporatorAirTemperatureTypeforCurveObjects(std::string evaporatorAirTemperatureTypeforCurveObjects);
-
-    bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& biquadraticCubicCurves);
-
-    bool setHeatingCapacityFunctionofAirFlowFractionCurve(const Curve& quadraticCubicCurves);
-
-    bool setHeatingCOPFunctionofTemperatureCurve(const Curve& biquadraticCubicCurves);
-
-    bool setHeatingCOPFunctionofAirFlowFractionCurve(const Curve& quadraticCubicCurves);
-
-    bool setPartLoadFractionCorrelationCurve(const Curve& quadraticCubicCurves);
 
     //@}
     /** @name Other */
@@ -153,11 +89,7 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.CoilWaterHeatingAirToWaterHeatPumpVariableSpeed");
 
-    boost::optional<Curve> optionalHeatingCapacityFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalHeatingCapacityFunctionofAirFlowFractionCurve() const;
-    boost::optional<Curve> optionalHeatingCOPFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalHeatingCOPFunctionofAirFlowFractionCurve() const;
-    boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
+
   };
 
 } // detail

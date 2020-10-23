@@ -77,56 +77,6 @@ namespace detail {
 
     boost::optional<Schedule> availabilitySchedule() const;
 
-    Schedule compressorSetpointTemperatureSchedule() const;
-
-    double deadBandTemperatureDifference() const;
-
-    double condenserBottomLocation() const;
-
-    double condenserTopLocation() const;
-
-    boost::optional<double> evaporatorAirFlowRate() const;
-
-    bool isEvaporatorAirFlowRateAutocalculated() const;
-
-    std::string inletAirConfiguration() const;
-
-    boost::optional<Schedule> inletAirTemperatureSchedule() const;
-
-    boost::optional<Schedule> inletAirHumiditySchedule() const;
-
-    HVACComponent tank() const;
-
-    ModelObject dXCoil() const;
-
-    double minimumInletAirTemperatureforCompressorOperation() const;
-
-    double maximumInletAirTemperatureforCompressorOperation() const;
-
-    std::string compressorLocation() const;
-
-    boost::optional<Schedule> compressorAmbientTemperatureSchedule() const;
-
-    HVACComponent fan() const;
-
-    std::string fanPlacement() const;
-
-    double onCycleParasiticElectricLoad() const;
-
-    double offCycleParasiticElectricLoad() const;
-
-    std::string parasiticHeatRejectionLocation() const;
-
-    boost::optional<Schedule> inletAirMixerSchedule() const;
-
-    std::string tankElementControlLogic() const;
-
-    boost::optional<double> controlSensor1HeightInStratifiedTank() const;
-
-    double controlSensor1Weight() const;
-
-    boost::optional<double> controlSensor2HeightInStratifiedTank() const;
-
     //@}
     /** @name Setters */
     //@{
@@ -134,68 +84,6 @@ namespace detail {
     bool setAvailabilitySchedule(Schedule& schedule);
 
     void resetAvailabilitySchedule();
-
-    bool setCompressorSetpointTemperatureSchedule(Schedule& schedule);
-
-    bool setDeadBandTemperatureDifference(double deadBandTemperatureDifference);
-
-    bool setCondenserBottomLocation(double condenserBottomLocation);
-
-    bool setCondenserTopLocation(double condenserTopLocation);
-
-    bool setEvaporatorAirFlowRate(boost::optional<double> evaporatorAirFlowRate);
-
-    void autocalculateEvaporatorAirFlowRate();
-
-    bool setInletAirConfiguration(std::string inletAirConfiguration);
-
-    bool setInletAirTemperatureSchedule(Schedule& schedule);
-
-    void resetInletAirTemperatureSchedule();
-
-    bool setInletAirHumiditySchedule(Schedule& schedule);
-
-    void resetInletAirHumiditySchedule();
-
-    bool setTank(const HVACComponent& tank);
-
-    bool setDXCoil(const ModelObject& coil);
-
-    bool setMinimumInletAirTemperatureforCompressorOperation(double minimumInletAirTemperatureforCompressorOperation);
-
-    bool setMaximumInletAirTemperatureforCompressorOperation(double maximumInletAirTemperatureforCompressorOperation);
-
-    bool setCompressorLocation(std::string compressorLocation);
-
-    bool setCompressorAmbientTemperatureSchedule(Schedule& schedule);
-
-    void resetCompressorAmbientTemperatureSchedule();
-
-    bool setFan(const HVACComponent& fan);
-
-    bool setFanPlacement(std::string fanPlacement);
-
-    bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
-
-    bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
-
-    bool setParasiticHeatRejectionLocation(std::string parasiticHeatRejectionLocation);
-
-    bool setInletAirMixerSchedule(Schedule& schedule);
-
-    void resetInletAirMixerSchedule();
-
-    bool setTankElementControlLogic(std::string tankElementControlLogic);
-
-    bool setControlSensor1HeightInStratifiedTank(boost::optional<double> controlSensor1HeightInStratifiedTank);
-
-    void resetControlSensor1HeightInStratifiedTank();
-
-    bool setControlSensor1Weight(double controlSensor1Weight);
-
-    bool setControlSensor2HeightInStratifiedTank(boost::optional<double> controlSensor2HeightInStratifiedTank);
-
-    void resetControlSensor2HeightInStratifiedTank();
 
     //@}
     /** @name Other */
@@ -215,10 +103,7 @@ namespace detail {
    private:
     REGISTER_LOGGER("openstudio.model.WaterHeaterHeatPumpPumpedCondenser");
 
-    boost::optional<Schedule> optionalCompressorSetpointTemperatureSchedule() const;
-    boost::optional<HVACComponent> optionalTank() const;
-    boost::optional<ModelObject> optionalDXCoil() const;
-    boost::optional<HVACComponent> optionalFan() const;
+
   };
 
 } // detail
