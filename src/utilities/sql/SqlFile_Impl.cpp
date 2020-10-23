@@ -2500,6 +2500,11 @@ namespace openstudio{
           boost::optional<unsigned> year;
           if (hasYear()) {
             year = sqlite3_column_int(sqlStmtPtr, b++);
+            // As of EnergyPlus 9.4 and perhaps earlier, the anual run periods will have a valid year,
+            // however the sizing periods will have year = 0
+            if (year.get() == 0) {
+              year.reset();
+            }
           }
 
           unsigned month = sqlite3_column_int(sqlStmtPtr, b++);
