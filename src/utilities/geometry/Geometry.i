@@ -13,10 +13,10 @@
   using namespace openstudio;
   #include <utilities/geometry/Vector3d.hpp>
   #include <utilities/geometry/Point3d.hpp>
+  #include <utilities/geometry/Plane.hpp>
   #include <utilities/geometry/Polygon.hpp>
   #include <utilities/geometry/PolygonGroup.hpp>
   #include <utilities/geometry/PointLatLon.hpp>
-  #include <utilities/geometry/Plane.hpp>
   #include <utilities/geometry/EulerAngles.hpp>
   #include <utilities/geometry/Geometry.hpp>
   #include <utilities/geometry/Transformation.hpp>
@@ -43,6 +43,8 @@
 // create an instantiation of the optional classes
 %template(OptionalPoint3d) boost::optional<openstudio::Point3d>;
 %template(OptionalPointLatLon) boost::optional<openstudio::PointLatLon>;
+%template(OptionalPolygon) boost::optional<openstudio::Polygon>;
+%template(OptionalPolygonGroup) boost::optional<openstudio::PolygonGroup>;
 %template(OptionalVector3d) boost::optional<openstudio::Vector3d>;
 %template(OptionalPlane) boost::optional<openstudio::Plane>;
 %template(OptionalEulerAngles) boost::optional<openstudio::EulerAngles>;
@@ -57,8 +59,8 @@
 // create an instantiation of the vector classes
 // Note JM 2019-04-16: No need to ignore std::vector<T>::vector/resize when you have a default constructor
 %template(Point3dVector) std::vector<openstudio::Point3d>;
-%template(PolygonGroupVector) std::vector<openstudio::PolygonGroup>;
 %template(PolygonVector) std::vector<openstudio::Polygon>;
+%template(PolygonGroupVector) std::vector<openstudio::PolygonGroup>;
 %template(Point3dVectorVector) std::vector<std::vector<openstudio::Point3d> >; // for polygon subtraction routines
 %template(OptionalPoint3dVector) boost::optional< std::vector<openstudio::Point3d> >; // For openstudio::join (Intersection.hpp)
 %template(PointLatLonVector) std::vector<openstudio::PointLatLon>;
@@ -97,6 +99,8 @@
 %include <utilities/geometry/Point3d.hpp>
 %include <utilities/geometry/PointLatLon.hpp>
 %include <utilities/geometry/Plane.hpp>
+%include <utilities/geometry/Polygon.hpp>
+%include <utilities/geometry/PolygonGroup.hpp>
 %include <utilities/geometry/EulerAngles.hpp>
 %include <utilities/geometry/Geometry.hpp>
 %include <utilities/geometry/Transformation.hpp>
