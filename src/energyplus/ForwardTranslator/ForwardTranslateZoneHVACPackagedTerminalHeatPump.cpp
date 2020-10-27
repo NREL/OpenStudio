@@ -39,12 +39,12 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "../../model/HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "../../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
-#include "../../model/CoilCoolingDXVariableSpeed.hpp"
-#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed_Impl.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
@@ -61,8 +61,8 @@
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
-#include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
+#include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include "../../utilities/math/FloatCompare.hpp"
@@ -395,6 +395,11 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
       _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirInletNodeName,coolingCoilInletNodeName);
 
       _coolingCoil->setString(Coil_Cooling_DX_SingleSpeedFields::AirOutletNodeName,coolingCoilOutletNodeName);
+    } else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed )
+    {
+      _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName,coolingCoilInletNodeName);
+
+      _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName,coolingCoilOutletNodeName);
     } else if( _coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted )
     {
       boost::optional<IdfObject> _heatExchanger = translateAndMapModelObject(coolingCoil.cast<CoilSystemCoolingDXHeatExchangerAssisted>().heatExchanger());
@@ -404,11 +409,6 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalH
           _heatExchanger->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName,coolingCoilOutletNodeName);
         }
       }
-    } else if( _coolingCoil->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed )
-    {
-      _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName,coolingCoilInletNodeName);
-
-      _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName,coolingCoilOutletNodeName);
     }
   }
 

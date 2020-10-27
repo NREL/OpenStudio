@@ -501,8 +501,8 @@ namespace detail {
     bool isAllowedType = false;
 
     if( (coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed) ||
-        (coolingCoil.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted) ||
-        (coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_VariableSpeed) )
+        (coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_VariableSpeed) ||
+        (coolingCoil.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted) )
     {
       isAllowedType = true;
     }
