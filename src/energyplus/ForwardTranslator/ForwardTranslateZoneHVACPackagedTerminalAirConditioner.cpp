@@ -397,7 +397,8 @@ boost::optional<IdfObject> ForwardTranslator::translateZoneHVACPackagedTerminalA
       _coolingCoil->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName,coolingCoilOutletNodeName);
     } else if( _coolingCoil->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted )
     {
-      boost::optional<IdfObject> _heatExchanger = translateAndMapModelObject(coolingCoil.cast<CoilSystemCoolingDXHeatExchangerAssisted>().heatExchanger());
+      auto hx = coolingCoil.cast<CoilSystemCoolingDXHeatExchangerAssisted>().heatExchanger();
+      boost::optional<IdfObject> _heatExchanger = translateAndMapModelObject(hx);
       if( _heatExchanger ) {
         if( _heatExchanger->iddObject().type() == IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent ) {
           _heatExchanger->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName,coolingCoilInletNodeName);
