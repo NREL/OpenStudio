@@ -199,6 +199,11 @@ namespace gbxml {
 
   bool ForwardTranslator::translateModel(const openstudio::model::Model& model, pugi::xml_document& document)
   {
+
+    // Clear the map & set
+    m_translatedObjects.clear();
+    m_materials.clear();
+
     auto gbXMLElement = document.append_child("gbXML");
     gbXMLElement.append_attribute("xmlns") = "http://www.gbxml.org/schema";
     gbXMLElement.append_attribute("xmlns:xhtml") = "http://www.w3.org/1999/xhtml";
