@@ -122,6 +122,31 @@ namespace gbxml {
     return false;
   }
 
+  std::string ForwardTranslator::modelToGbXMLString(const openstudio::model::Model& model, ProgressBar* progressBar)
+  {
+    std::string gbXML_str;
+
+    m_progressBar = progressBar;
+
+    m_logSink.setThreadId(std::this_thread::get_id());
+
+    m_logSink.resetStringStream();
+
+    pugi::xml_document doc;
+    //doc.createProcessingInstruction("xml", "version=\"1.0\" encoding=\"utf-8\"");
+    bool result = this->translateModel(model, doc);
+
+    if (result) {
+      // doc.save allows any ostream, so use a stringstream
+      std::stringstream ss;
+      doc.save(ss, "  ");
+      gbXML_str = ss.str();
+    }
+
+    return gbXML_str;
+  }
+
+
   std::vector<LogMessage> ForwardTranslator::warnings() const
   {
     std::vector<LogMessage> result;
