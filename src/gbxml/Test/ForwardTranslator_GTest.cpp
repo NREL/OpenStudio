@@ -329,3 +329,19 @@ TEST_F(gbXMLFixture, ForwardTranslator_surfaceType_4001)
   std::string expectedSurfaceType("SlabOnGrade");
   EXPECT_EQ(expectedSurfaceType, surfaceType);
 }
+
+TEST_F(gbXMLFixture, ForwardTranslator_exampleModel_State)
+{
+  // Test for #4135: translating a model twice should produce the same result
+  Model model = exampleModel();
+
+  ForwardTranslator forwardTranslator;
+  std::string gbXML_str1 = forwardTranslator.modelToGbXMLString(model);
+  EXPECT_FALSE(gbXML_str1.empty());
+
+  std::string gbXML_str2 = forwardTranslator.modelToGbXMLString(model);
+  EXPECT_FALSE(gbXML_str2.empty());
+
+  EXPECT_EQ(gbXML_str1.length(), gbXML_str2.length());
+  EXPECT_GT(gbXML_str1.length(), 50000);
+}
