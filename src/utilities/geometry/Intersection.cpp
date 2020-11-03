@@ -154,7 +154,7 @@ namespace openstudio{
   std::vector<BoostPolygon> removeHoles(const std::vector<BoostPolygon>& polygons)
   {
     std::vector<BoostPolygon> result;
-    for (const BoostPolygon polygon : polygons){
+    for (const BoostPolygon& polygon : polygons){
       if (polygon.inners().empty()){
         // DLM: might also want to partition if this polygon is self intersecting?
         result.push_back(polygon);
@@ -593,7 +593,7 @@ namespace openstudio{
     for (const std::vector<unsigned>& component : connectedComponents){
       std::vector<unsigned> orderedComponent(component);
       std::sort(orderedComponent.begin(), orderedComponent.end(), [&polygonAreas](int ia, int ib) {
-        return polygonAreas[ia] > polygonAreas[ib]; 
+        return polygonAreas[ia] > polygonAreas[ib];
       });
 
       std::vector<Point3d> points;
@@ -601,7 +601,7 @@ namespace openstudio{
 
       // try to join at most component.size() times
       for (unsigned n = 0; n < component.size(); ++n) {
-      
+
         // loop over polygons to join in order
         for (unsigned i : orderedComponent) {
           if (points.empty()){
@@ -618,7 +618,7 @@ namespace openstudio{
             }
           }
         }
-        
+
         // if all polygons have been joined then we are done
         if (joinedComponents.size() == component.size()) {
           break;

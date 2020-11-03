@@ -23,6 +23,12 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 // May be able to remove these includes once they are included by concrete classes
 %{
   #include <model/AirflowNetworkComponent.hpp>
