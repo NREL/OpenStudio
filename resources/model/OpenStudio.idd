@@ -16575,7 +16575,7 @@ OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow,
         \object-list ConnectionNames
    N2 , \field Cooling Control Throttling Range
         \units deltaC
-        \minimum 0.5
+        \minimum 0
         \default 0.5
    A5, \field Cooling Control Temperature Schedule Name
         \type object-list
@@ -17407,7 +17407,7 @@ OS:Coil:Heating:LowTemperatureRadiant:VariableFlow,
         \object-list ConnectionNames
    N2 , \field Heating Control Throttling Range
         \units deltaC
-        \minimum 0.5
+        \minimum 0
         \default 0.5
    A5 ; \field Heating Control Temperature Schedule Name
         \type object-list
