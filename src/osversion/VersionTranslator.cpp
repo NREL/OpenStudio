@@ -5943,6 +5943,10 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
     {"Heating Coil FuelOil#2 Rate", "Heating Coil FuelOilNo2 Rate"},
     {"Heating Coil FuelOil#1 Energy", "Heating Coil FuelOilNo1 Energy"},
     {"Heating Coil FuelOil#2 Rate", "Heating Coil FuelOilNo2 Rate"},
+
+    // EMS ACTUATORS
+    {"Electric Power Level", "Electricity Rate"},
+    {"Gas Power Level", "NaturalGas Rate"},
   });
 
 /*****************************************************************************************************************************************************
@@ -6219,9 +6223,14 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
       }
 
 
-    } else if ((iddname == "OS:Output:Variable") || (iddname == "OS:EnergyManagementSystem:Sensor")) {
+    } else if ((iddname == "OS:Output:Variable") || (iddname == "OS:EnergyManagementSystem:Sensor")
+               || (iddname == "OS:EnergyManagementSystem:Actuator")) {
 
       unsigned variableNameIndex = 3;
+      // Note: I forgot to add the EMSActuator case in 3.1.0, it was added after the release
+      if (iddname == "OS:EnergyManagementSystem:Actuator") {
+        variableNameIndex = 4; // Actuated Component Control Type
+      }
 
       if ((value = object.getString(variableNameIndex))) {
 
