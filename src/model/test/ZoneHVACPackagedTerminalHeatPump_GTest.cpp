@@ -44,8 +44,14 @@
 #include "../CoilHeatingElectric_Impl.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
 #include "../CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../CoilCoolingDXVariableSpeed.hpp"
+#include "../CoilCoolingDXVariableSpeed_Impl.hpp"
+#include "../CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "../CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
 #include "../CoilHeatingDXSingleSpeed.hpp"
 #include "../CoilHeatingDXSingleSpeed_Impl.hpp"
+#include "../CoilHeatingDXVariableSpeed.hpp"
+#include "../CoilHeatingDXVariableSpeed_Impl.hpp"
 #include "../ZoneHVACPackagedTerminalHeatPump.hpp"
 #include "../ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "../ScheduleCompact.hpp"
@@ -311,4 +317,28 @@ TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_Clone)
   pthp.remove();
 
   pthp2.remove();
+}
+
+TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_CoilDXVariableSpeed)
+{
+  model::Model m;
+  model::CoilHeatingDXVariableSpeed heatingCoil(m);
+  model::CoilCoolingDXVariableSpeed coolingCoil(m);
+  model::ScheduleCompact availabilitySchedule(m);
+  model::FanConstantVolume fan(m,availabilitySchedule);
+  model::CoilHeatingElectric supplementalHeatingCoil(m,availabilitySchedule);
+
+  model::ZoneHVACPackagedTerminalHeatPump pthp(m, availabilitySchedule, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
+}
+
+TEST_F(ModelFixture,ZoneHVACPackagedTerminalHeatPump_CoilSystemCoolingDXHeatExchangerAssisted)
+{
+  model::Model m;
+  model::CoilHeatingDXSingleSpeed heatingCoil(m);
+  model::CoilSystemCoolingDXHeatExchangerAssisted coolingCoil(m);
+  model::ScheduleCompact availabilitySchedule(m);
+  model::FanConstantVolume fan(m,availabilitySchedule);
+  model::CoilHeatingElectric supplementalHeatingCoil(m,availabilitySchedule);
+
+  model::ZoneHVACPackagedTerminalHeatPump pthp(m, availabilitySchedule, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
 }

@@ -500,7 +500,9 @@ namespace detail {
   {
     bool isAllowedType = false;
 
-    if( coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed )
+    if( (coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed) ||
+        (coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_VariableSpeed) ||
+        (coolingCoil.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted) )
     {
       isAllowedType = true;
     }
@@ -508,7 +510,7 @@ namespace detail {
     if( isAllowedType ) {
       return setPointer(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName,coolingCoil.handle());
     } else {
-      LOG(Warn, "Invalid Cooling Coil Type (expected CoilCoolingDXSingleSpeed, not '" << coolingCoil.iddObjectType().valueName()
+      LOG(Warn, "Invalid Cooling Coil Type (expected CoilCoolingDXSingleSpeed or CoilSystemCoolingDXHeatExchangerAssisted or CoilCoolingDXVariableSpeed, not '" << coolingCoil.iddObjectType().valueName()
              << "') for " << briefDescription());
       return false;
     }
