@@ -4679,7 +4679,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateTher
   auto createInletSideMixerForZoneSys = [&](const SysInfo & sysInfo) {
     if( sysInfo.ModelObject ) {
     	auto elements = makeVectorOfChildren(thermalZoneElement, "VentByPriAirCondgSys");
-    	for (int i = 0; i < elements.size(); i++) {
+    	for (std::size_t i = 0; i < elements.size(); i++) {
     	  const auto & element = elements[i];
     	  auto index = lexicalCastToInt(element.attribute("index"));
     	  if( index ) {
@@ -6689,7 +6689,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
 
       tower.resetUFactorTimesAreaValueatFreeConvectionAirFlowRate();
       tower.resetUFactorTimesAreaValueatDesignAirFlowRate();
-      
+
       if( ! autosize() )
       {
         // PerformanceInputMethod
@@ -6710,7 +6710,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         {
           tower.setDesignAirFlowRate(unitToUnit(airFlowCap.get(),"cfm","m^3/s").get());
         }
-        
+
         auto wtrFlowCap = lexicalCastToDouble(htRejElement.child("WtrFlowCapSim"));
         if( wtrFlowCap )
         {
@@ -6751,7 +6751,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
 
       if( dsgnSupWtrDelT )
       {
-        dsgnSupWtrDelT = dsgnSupWtrDelT.get() * 5.0 / 9.0; 
+        dsgnSupWtrDelT = dsgnSupWtrDelT.get() * 5.0 / 9.0;
       }
 
       dsgnWBT = lexicalCastToDouble(htRejElement.root().child("Proj").child("DsgnWBT"));
@@ -6801,7 +6801,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
         {
           tower.setDesignAirFlowRate(unitToUnit(airFlowCap.get(),"cfm","m^3/s").get());
         }
-        
+
         auto wtrFlowCap = lexicalCastToDouble(htRejElement.child("WtrFlowCapSim"));
         if( wtrFlowCap )
         {
@@ -7039,7 +7039,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHtRe
       if ( lowSpdPwrRat ) {
         fluidCooler.setLowFanSpeedFanPowerSizingFactor(lowSpdPwrRat.get());
       }
-      
+
       result = fluidCooler;
     }
   } else if ( istringEqual(type,"ClosedTowerEvaporative") )  {
