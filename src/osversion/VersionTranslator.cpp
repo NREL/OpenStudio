@@ -5943,6 +5943,10 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
     {"Heating Coil FuelOil#2 Rate", "Heating Coil FuelOilNo2 Rate"},
     {"Heating Coil FuelOil#1 Energy", "Heating Coil FuelOilNo1 Energy"},
     {"Heating Coil FuelOil#2 Rate", "Heating Coil FuelOilNo2 Rate"},
+
+    // EMS ACTUATORS
+    {"Electric Power Level", "Electricity Rate"},
+    {"Gas Power Level", "NaturalGas Rate"},
   });
 
 /*****************************************************************************************************************************************************
@@ -5963,10 +5967,8 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
   std::map<std::string, std::string> shadingControlToSurfaceMap;
   std::vector<IdfObject> subSurfaces = idf_3_0_1.getObjectsByType(idf_3_0_1.iddFile().getObject("OS:SubSurface").get());
   for ( auto & subSurface : subSurfaces ) {
-    value = subSurface.getString(7); // Shading Control Name
+    value = subSurface.getString(7, false, true); // Shading Control Name
     if (value) {
-      // TEMP
-      LOG(Warn, value.get() << ": " << subSurface.getString(0).get());
       shadingControlToSurfaceMap[value.get()] = subSurface.getString(0).get();
     }
   }
@@ -6221,9 +6223,14 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
       }
 
 
-    } else if ((iddname == "OS:Output:Variable") || (iddname == "OS:EnergyManagementSystem:Sensor")) {
+    } else if ((iddname == "OS:Output:Variable") || (iddname == "OS:EnergyManagementSystem:Sensor")
+               || (iddname == "OS:EnergyManagementSystem:Actuator")) {
 
       unsigned variableNameIndex = 3;
+      // Note: I forgot to add the EMSActuator case in 3.1.0, it was added after the release
+      if (iddname == "OS:EnergyManagementSystem:Actuator") {
+        variableNameIndex = 4; // Actuated Component Control Type
+      }
 
       if ((value = object.getString(variableNameIndex))) {
 
@@ -6344,8 +6351,6 @@ std::string VersionTranslator::update_3_0_1_to_3_1_0(const IdfFile& idf_3_0_1, c
       // Add the SubSurface to the list if any
       auto subSurfaceHandleIt = shadingControlToSurfaceMap.find(object.getString(0).get());
       if ( subSurfaceHandleIt != shadingControlToSurfaceMap.end() ) {
-        // TEMP
-        LOG(Warn, object.getString(0).get() << " maps to " << subSurfaceHandleIt->second);
         newObject.pushExtensibleGroup(StringVector(1u, subSurfaceHandleIt->second));
       }
 

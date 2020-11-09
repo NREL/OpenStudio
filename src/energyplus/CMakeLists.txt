@@ -675,6 +675,8 @@ set(${target_name}_test_src
   Test/ZoneHVACLowTemperatureRadiantElectric_GTest.cpp
   Test/ZoneHVACLowTempRadiantConstFlow_GTest.cpp
   Test/ZoneHVACLowTempRadiantVarFlow_GTest.cpp
+  Test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
+  Test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   Test/ZoneHVACTerminalUnitVariableRefrigerantFlow_GTest.cpp
   Test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   Test/ZoneVentilationWindandStackOpenArea_GTest.cpp

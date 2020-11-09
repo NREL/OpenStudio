@@ -811,7 +811,9 @@ namespace openstudio{
       // Variadic arguments are the bind arguments if any, to replace '?' placeholders in the statement string
       template<typename... Args>
       int execute(const std::string& statement, Args&& ... args) const {
-        int code = SQLITE_ERROR;
+        // copied in here to avoid including sqlite3 header everywhere
+        constexpr auto SQLITE_ERROR = 1;
+        auto code = SQLITE_ERROR;
         if (m_db) {
           PreparedStatement stmt(statement, m_db, false, args...);
           code = stmt.execute();

@@ -742,16 +742,16 @@ if(BUILD_CLI)
   # need to  update the MD5sum for each platform and url below
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200928-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "a9bb3871127e5e4cfe09bd174cb568da")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201016-darwin.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "12c0dd279e31b9a5a5744c4f5207a6d0")
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200928-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "bb4e68a1fab97f71d7159b5adf14f106")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201016-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "15e17dfe1980e2cc51cf469c60f1c9f3")
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20200928-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "a66e90694974bce755de16fad9920673")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20201016-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0ac723d631f28ba11d55cdee0668659d")
   endif()
 
   set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
@@ -851,14 +851,24 @@ if(BUILD_NODE_MODULES)
 endif()
 
 if(BUILD_PYTHON_BINDINGS)
+  option(BUILD_PYTHON_PIP_PACKAGE "Prepare a folder to build a pip module" OFF)
 
   find_package(Python COMPONENTS Interpreter Development REQUIRED)
 
   include_directories(SYSTEM ${Python_INCLUDE_DIRS})
-  set(ALL_PYTHON_BINDINGS "") # global list of python bindings
+  set(ALL_PYTHON_BINDING_TARGETS "") # global list of python bindings
   set(ALL_PYTHON_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
   set(ALL_PYTHON_WRAPPER_FILES "") # global list of generated wrapper cxx files
   set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
+  set(ALL_PYTHON_GENERATED_SRCS "") # global list of generated .py files
+
+  if(BUILD_PYTHON_PIP_PACKAGE)
+    set(PYTHON_PACKAGE_FOLDER "${PROJECT_BINARY_DIR}/Products/python_package")
+    file(MAKE_DIRECTORY "${PYTHON_PACKAGE_FOLDER}")
+    set(ALL_PYTHON_PACKAGE_TARGETS "") # global list of python bindings
+    set(ALL_PYTHON_PACKAGE_GENERATED_SRCS "") # global list of generated .py files for pyhton_package
+
+  endif()
 endif()
 
 # Threading library
@@ -969,7 +979,7 @@ endif()
 
 if(BUILD_PYTHON_BINDINGS)
   add_custom_target(ALL_PYTHON_BINDINGS)
-  #add_dependencies(ALL_PYTHON_BINDINGS python_sdk ${ALL_PYTHON_BINDING_TARGETS})
+  add_dependencies(ALL_PYTHON_BINDINGS ${ALL_PYTHON_BINDING_TARGETS})
 endif()
 
 
@@ -1114,7 +1124,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_0_0_20200424.pdf" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_1_0_20201014.pdf" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//LICENSE.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//CHANGELOG.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//copyright.txt" DESTINATION .)

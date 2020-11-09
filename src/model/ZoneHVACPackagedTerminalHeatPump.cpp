@@ -528,7 +528,8 @@ namespace detail {
   {
     bool isAllowedType = false;
 
-    if( hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Heating_DX_SingleSpeed )
+    if(( hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Heating_DX_SingleSpeed ) ||
+       ( hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Heating_DX_VariableSpeed ))
     {
       isAllowedType = true;
     }
@@ -536,7 +537,7 @@ namespace detail {
     if( isAllowedType ) {
       return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingCoilName,hvacComponent.handle());
     } else {
-      LOG(Warn, "Invalid Cooling Coil Type (expected CoilHeatingDXSingleSpeed, not '" << hvacComponent.iddObjectType().valueName()
+      LOG(Warn, "Invalid Heating Coil Type (expected CoilHeatingDXSingleSpeed or CoilHeatingDXVariableSpeed, not '" << hvacComponent.iddObjectType().valueName()
              << "') for " << briefDescription());
       return false;
     }
@@ -567,15 +568,16 @@ namespace detail {
     bool isAllowedType = false;
 
     if((hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed) ||
-       (hvacComponent.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted)
-      ) {
+       (hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_VariableSpeed) ||
+       (hvacComponent.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted))
+    {
       isAllowedType = true;
     }
 
     if( isAllowedType ) {
       return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilName,hvacComponent.handle());
     } else {
-      LOG(Warn, "Invalid Cooling Coil Type (expected CoilCoolingDXSingleSpeed, not '" << hvacComponent.iddObjectType().valueName()
+      LOG(Warn, "Invalid Cooling Coil Type (expected CoilCoolingDXSingleSpeed or CoilSystemCoolingDXHeatExchangerAssisted or CoilCoolingDXVariableSpeed, not '" << hvacComponent.iddObjectType().valueName()
              << "') for " << briefDescription());
       return false;
     }
